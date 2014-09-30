@@ -13,6 +13,8 @@ public:
     explicit Playo(QWidget *parent = 0);
     ~Playo();
 
+protected:
+    void init();
 private:
     Ui::Playo *ui;
 };

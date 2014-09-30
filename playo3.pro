@@ -15,7 +15,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
         playo.cpp \
     modules/json/data_store.cpp \
-    modules/model_items/model_item.cpp
+    modules/model_items/model_item.cpp \
+    modules/models/base_model.cpp \
+    dockbars.cpp \
+    modules/controls/tabber.cpp \
+    modules/controls/tab.cpp
 
 HEADERS  += playo.h \
     misc/conversions.h \
@@ -28,6 +32,12 @@ HEADERS  += playo.h \
     modules/json/data_store.h \
     modules/model_items/model_item_json_fields.h \
     modules/controls/control_json_fields.h \
-    modules/model_items/model_item_state.h
+    modules/model_items/model_item_state.h \
+    dockbars.h \
+    modules/controls/tray.h \
+    modules/controls/tabber.h \
+    misc/stylesheets.h \
+    modules/controls/tab.h \
+    modules/controls/view_types.h
 
 FORMS    += playo.ui

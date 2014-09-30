@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QAbstractItemModel>
 
+#include "../model_items/model_item.h"
+#include "../controls/control_json_fields.h"
+
 namespace Models {
     class BaseModel : public QAbstractItemModel {
         Q_OBJECT
@@ -26,20 +29,20 @@ namespace Models {
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
-//        void appendRow(ModelItem * item);
+//        void appendRow(ModelItems::ModelItem * item);
         bool removeRow(int row, const QModelIndex &parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex());
 
         void clearAll(bool emitChanges = false);
 
-        ModelItem *getItem(const QModelIndex &index) const;
+        ModelItems::ModelItem *getItem(const QModelIndex &index) const;
     //    template<class T> T *getItem(const QModelIndex &index) const;
-        ModelItem * root() const;
+        ModelItems::ModelItem * root() const;
 
-        ModelItem * buildPath(QString path);
+        ModelItems::ModelItem * buildPath(QString path);
         bool isFolderExist(QString folderName, ModelItem * parent);
-        ModelItem * addFolder(QString folderPath, QString folderName, ModelItem * parent, QString remoteID = "");
-        ModelItem * addFolder(QString folder_name, ModelItem * parent, QString remoteID = "");
+        ModelItems::ModelItem * addFolder(QString folderPath, QString folderName, ModelItem * parent, QString remoteID = "");
+        ModelItems::ModelItem * addFolder(QString folder_name, ModelItem * parent, QString remoteID = "");
 
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
@@ -47,8 +50,8 @@ namespace Models {
         bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
         virtual QModelIndex dropProcession(const QList<QUrl> & list) = 0;
 
-//        void refreshItem(ModelItem * item);
-//        void removeFolderPrebuild(ModelItem * temp);
+//        void refreshItem(ModelItems::ModelItem * item);
+//        void removeFolderPrebuild(ModelItems::ModelItem * temp);
 
 //        virtual WebApi * getApi() { return 0; } //stub
     signals:
@@ -63,17 +66,17 @@ namespace Models {
         void updated();
 
     public slots:
-        void libraryResponse();
-        virtual void refresh();
+//        void libraryResponse();
+//        virtual void refresh();
         void expanded(const QModelIndex &index);
         void collapsed(const QModelIndex &index);
 
     protected:
-        virtual ModelItem * createItem(QString path, ModelItem * parent);
+        virtual ModelItems::ModelItem * createItem(QString path, ModelItems::ModelItem * parent);
         QString folderName(QFileInfo & info);
 
         int count;
-        ModelItem * rootItem;
+        ModelItems::ModelItem * rootItem;
     };
 }
 
