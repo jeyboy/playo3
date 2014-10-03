@@ -5,15 +5,8 @@
 #include <QBoxLayout>
 #include <QJsonObject>
 
-//#include "model/view_types.h"
-
-//#include "model/list/list_view.h"
-//#include "model/tree/tree_view.h"
-//#include "model/level_tree/level_tree_view.h"
-//#include "model/level_tree_breadcrumb/level_tree_breadcrumb_view.h"
-//#include "model/web/vk/vk_view.h"
-//#include "model/web/soundcloud/soundcloud_view.h"
-
+#include "views/index.h"
+#include "tab_settings.h"
 #include "../models/base_model.h"
 #include "../model_items/model_item.h"
 
@@ -28,9 +21,9 @@
 class Tab : public QWidget {
     Q_OBJECT
 public:
-    void init(CBHash params, QJsonObject * hash = 0);
+    void init(TabSettings params, QJsonObject * hash = 0);
 
-    explicit Tab(CBHash params, QWidget * parent = 0);
+    explicit Tab(TabSettings params, QWidget * parent = 0);
     explicit Tab(QJsonObject hash, QWidget * parent = 0);
     ~Tab();
 
@@ -45,18 +38,18 @@ public:
 public slots:
     void updateHeader(int new_count = -1);
 
-protected slots:
-    void startRoutine();
-    void stopRoutine();
+//protected slots:
+//    void startRoutine();
+//    void stopRoutine();
 
 protected:
     void setNameWithCount(QString name);
 
 private:
 //    View * view;
-    QTabWidget * tabber;
+//    QTabWidget * tabber;
 
-    QLabel * spinnerContainer;
+//    QLabel * spinnerContainer;
 };
 
 #endif // TAB_H

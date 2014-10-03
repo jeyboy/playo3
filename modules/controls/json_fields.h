@@ -2,12 +2,10 @@
 #define CONTROL_JSON_FIELDS_H
 
 namespace Controls {
-    enum JsonType {
-        tab_item_count = "l",
-        tab_name = "n",
-        tab_settings = "set",
-        vk_tab_settings = "vk"
-    };
+    #define JSON_TYPE_TAB_ITEM_COUNT "l"
+    #define JSON_TYPE_TAB_NAME "n"
+    #define JSON_TYPE_TAB_SETTINGS "set"
+    #define JSON_TYPE_VK_TAB_SETTINGS "vk"
 }
 
 /// a - item info

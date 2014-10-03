@@ -1,11 +1,13 @@
 #include "model_item.h"
+#include "misc/filename_conversions.h"
 
-namespace ModelItems {
 //    #include "model_item.h"
 //    #include "media/library.h"
 //    #include "media/player.h"
 //    #include "misc/rand.h"
 //    #include <algorithm>
+
+namespace ModelItems {
 
 /////////////////////////////////////////////////////////
 
@@ -93,7 +95,7 @@ namespace ModelItems {
     }
 
     QString ModelItem::getDownloadTitle() const {
-        QString ret = Library::instance() -> filenameFilter(getTitle());
+        QString ret = filenameFilter(getTitle());
 
         if (!extension.isEmpty())
             ret = ret + '.' + extension;
@@ -240,12 +242,12 @@ namespace ModelItems {
     }
 
     void ModelItem::setState(int new_state, bool append_to_library) {
-        if (state -> setBit(new_state) && append_to_library) {
-            if (state -> isListened())
-                Library::instance() -> addItem(this, STATE_LISTENED);
-            else if (state -> isLiked())
-                Library::instance() -> addItem(this, STATE_LIKED);
-        }
+//        if (state -> setBit(new_state) && append_to_library) {
+//            if (state -> isListened())
+//                Library::instance() -> addItem(this, STATE_LISTENED);
+//            else if (state -> isLiked())
+//                Library::instance() -> addItem(this, STATE_LIKED);
+//        }
     }
 
 
@@ -281,12 +283,12 @@ namespace ModelItems {
     QList<ModelItem *> * ModelItem::childItemsList() { return 0;}
 
     void ModelItem::shuffle() {
-        if (isFolder()) {
-            Rand::shuffle(childItemsList());
+//        if (isFolder()) {
+//            Rand::shuffle(childItemsList());
 
-            foreach(ModelItem * item, *childItemsList())
-                item -> shuffle();
-        }
+//            foreach(ModelItem * item, *childItemsList())
+//                item -> shuffle();
+//        }
     }
 
 }

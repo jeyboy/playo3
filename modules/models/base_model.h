@@ -4,15 +4,15 @@
 #include <QObject>
 #include <QAbstractItemModel>
 
-#include "../model_items/model_item.h"
-#include "../controls/control_json_fields.h"
+#include "../model_items/base_item.h"
+#include "../controls/json_fields.h"
 
 namespace Models {
     class BaseModel : public QAbstractItemModel {
         Q_OBJECT
     public:
-        Model(QJsonObject *hash = 0, QObject *parent = 0);
-        ~Model();
+        BaseModel(QJsonObject *hash = 0, QObject *parent = 0);
+        ~BaseModel();
 
         QVariant data(const QModelIndex &index, int role) const;
         bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -40,9 +40,9 @@ namespace Models {
         ModelItems::ModelItem * root() const;
 
         ModelItems::ModelItem * buildPath(QString path);
-        bool isFolderExist(QString folderName, ModelItem * parent);
-        ModelItems::ModelItem * addFolder(QString folderPath, QString folderName, ModelItem * parent, QString remoteID = "");
-        ModelItems::ModelItem * addFolder(QString folder_name, ModelItem * parent, QString remoteID = "");
+        bool isFolderExist(QString folderName, ModelItems::ModelItem * parent);
+        ModelItems::ModelItem * addFolder(QString folderPath, QString folderName, ModelItems::ModelItem * parent, QString remoteID = "");
+        ModelItems::ModelItem * addFolder(QString folder_name, ModelItems::ModelItem * parent, QString remoteID = "");
 
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;

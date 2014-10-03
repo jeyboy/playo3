@@ -2,21 +2,20 @@
 #define MODEL_ITEM_JSON_FIELDS_H
 
 namespace ModelItems {
-    enum JsonType {
-        info = "a",
-        bytes_size = "b",
-        childs = "c",
-        duration = "d",
-        extension = "e",
-        genre_id = "g",
-        item_type = "i",
-        bpm = "m",
-        path = "p",
-        state = "s",
-        owner_id = "o",
-        title = "t",
-        uid = "u"
-    };
+    #define JSON_TYPE_INFO "a"
+    #define JSON_TYPE_BYTES_SIZE "b"
+    #define JSON_TYPE_CHILDS "c"
+    #define JSON_TYPE_DURATION "d"
+    #define JSON_TYPE_EXTENSION "e"
+    #define JSON_TYPE_GENRE_ID "g"
+    #define JSON_TYPE_ITEM_TYPE "i"
+
+    #define JSON_TYPE_BPM "m"
+    #define JSON_TYPE_PATH "p"
+    #define JSON_TYPE_STATE "s"
+    #define JSON_TYPE_OWNER_ID "o"
+    #define JSON_TYPE_TITLE "t"
+    #define JSON_TYPE_UID "u"
 }
 
 /// a - item info

@@ -1,12 +1,15 @@
 #ifndef DATA_STORE_H
 #define DATA_STORE_H
 
-namespace Json {
-    #include <QJsonDocument>
-    #include <QFile>
-    #include <QStringList>
-    #include <QVariant>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
 
+#include <QFile>
+#include <QStringList>
+#include <QVariant>
+
+namespace Json {
     class DataStore {
         public:
             DataStore(QString name);

@@ -14,6 +14,8 @@ namespace ModelItems {
         proceeded = 1
     };
 
+#define DEFAULT_MODEL_ITEM_STATE (checked | new_item)
+
 //    #define STATE_UNPROCESSED 256
 //    #define STATE_DEFAULT 128
 //    #define STATE_LISTENED 64
@@ -27,10 +29,10 @@ namespace ModelItems {
 //    #define STATE_NOT_EXIST 2
 //    #define STATE_LIST_PROCEED 1
 
-    class ModelItemState {
+    class State {
         public:
-            ModelItemState();
-            ModelItemState(int state);
+            State();
+            State(int state);
 
             bool isNone();
             bool isListened();
