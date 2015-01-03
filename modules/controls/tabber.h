@@ -10,7 +10,7 @@
 //#include "tab.h"
 //#include "tab_settings.h"
 
-namespace Playo {
+namespace Playo3 {
     class Tabber : public QTabWidget {
         Q_OBJECT
     public:

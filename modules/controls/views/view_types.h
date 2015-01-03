@@ -1,7 +1,7 @@
 #ifndef VIEW_TYPES_H
 #define VIEW_TYPES_H
 
-namespace Playo {
+namespace Playo3 {
     enum ViewType {
         list = 1,
         level_tree = 2,

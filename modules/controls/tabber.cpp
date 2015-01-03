@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
-using namespace Playo;
+using namespace Playo3;
 
 Tabber::Tabber(QWidget *parent) : QTabWidget(parent) {
 //    commonPlaylist = 0;

@@ -1,7 +1,7 @@
 #ifndef MODEL_ITEM_TYPES_H
 #define MODEL_ITEM_TYPES_H
 
-namespace Playo {
+namespace Playo3 {
     namespace Type {
         #define FILE_ITEM 100
         #define FOLDER_ITEM 200

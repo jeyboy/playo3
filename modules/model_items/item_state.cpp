@@ -1,6 +1,6 @@
 #include "item_state.h"
 
-using namespace Playo;
+using namespace Playo3;
 
 bool ItemState::set(enum ItemStateFlag flag) {
     switch(flag) {

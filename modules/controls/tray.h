@@ -4,7 +4,7 @@
 #include <QSystemTrayIcon>
 #include <qmenu.h>
 
-namespace Playo {
+namespace Playo3 {
     class Tray : public QObject {
         Q_OBJECT
     public:

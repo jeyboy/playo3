@@ -6,7 +6,7 @@
 #include "item_state.h"
 #include "json_fields.h"
 
-namespace Playo {
+namespace Playo3 {
     #define TITLEID Qt::UserRole - 1
     #define EXTENSIONID Qt::UserRole - 2
     #define PATHID Qt::UserRole - 3

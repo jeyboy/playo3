@@ -9,7 +9,7 @@
 #include <QStringList>
 #include <QVariant>
 
-namespace Playo {
+namespace Playo3 {
     class DataStore {
         public:
             DataStore(QString name);

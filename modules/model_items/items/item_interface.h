@@ -8,7 +8,7 @@
 #include "../item_types.h"
 #include "../item_fields.h"
 
-namespace Playo {
+namespace Playo3 {
     class ItemInterface : public ItemFields {
     public:
         explicit ItemInterface(const QVector<QVariant> &data, ItemInterface *parent = 0);

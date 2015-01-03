@@ -1,6 +1,6 @@
 #include "model_interface.h"
 
-using namespace Playo;
+using namespace Playo3;
 
 ModelInterface::ModelInterface(const QStringList &headers, const QString &data, QObject *parent)
     : QAbstractItemModel(parent) {

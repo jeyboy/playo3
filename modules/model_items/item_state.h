@@ -1,7 +1,7 @@
 #ifndef MODEL_ITEM_STATE_H
 #define MODEL_ITEM_STATE_H
 
-namespace Playo {
+namespace Playo3 {
     #define DEFAULT_MODEL_ITEM_STATE (ItemState::checked | ItemState::new_item | ItemState::unprocessed)
 
 //    #define STATE_UNPROCESSED 256

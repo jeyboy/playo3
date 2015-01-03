@@ -13,9 +13,16 @@
   <property name="windowTitle">
    <string>Playo</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="Tabber" name="tabber"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Playo::Tabber</class>
+   <extends>QTabWidget</extends>
+   <header location="global">modules/controls/tabber.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

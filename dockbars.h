@@ -7,7 +7,7 @@
 
 #include "modules/json/data_store.h"
 
-namespace Playo {
+namespace Playo3 {
     class Dockbars : public QObject {
         Q_OBJECT
     public:

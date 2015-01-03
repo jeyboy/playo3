@@ -1,7 +1,7 @@
 #include "item_interface.h"
 //#include <qstringlist.h>
 
-using namespace Playo;
+using namespace Playo3;
 
 ItemInterface::ItemInterface(const QVector<QVariant> &data, ItemInterface * parent) {
     parentItem = parent;

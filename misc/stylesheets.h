@@ -158,6 +158,7 @@ public:
 
     static QString treeViewStyles() {
         return QString(
+                    "background-color: black;"
                     "QTreeView::indicator {"
                     "   width: 18px;"
                     "   height: 18px;"

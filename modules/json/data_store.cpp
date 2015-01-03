@@ -1,6 +1,6 @@
 #include "data_store.h"
 
-using namespace Playo;
+using namespace Playo3;
 
 DataStore::DataStore(QString name) {
     filename = name;

@@ -1,6 +1,6 @@
 #include "dockbars.h"
 
-using namespace Playo;
+using namespace Playo3;
 
 Dockbars *Dockbars::self = 0;
 

@@ -5,7 +5,7 @@
 #include <qvariant.h>
 #include "modules/model_items/items/item_interface.h"
 
-namespace Playo {
+namespace Playo3 {
     class ModelInterface : public QAbstractItemModel {
         Q_OBJECT
     public:
