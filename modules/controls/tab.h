@@ -5,10 +5,9 @@
 #include <QBoxLayout>
 #include <QJsonObject>
 
-#include "views/index.h"
-#include "tab_settings.h"
-#include "../models/base_model.h"
-#include "../model_items/model_item.h"
+//#include "views/index.h"
+//#include "tab_settings.h"
+//#include "../models/model_interface.h"
 
 //#ifndef CBHASH
 //#define CBHASH
@@ -18,39 +17,39 @@
 //  Q_DECLARE_METATYPE(CBHash);
 //#endif // CBHASH
 
-class Tab : public QWidget {
-    Q_OBJECT
-public:
-    void init(TabSettings params, QJsonObject * hash = 0);
+    class Tab : public QWidget {
+        Q_OBJECT
+    //public:
+    //    void init(TabSettings params, QJsonObject * hash = 0);
 
-    explicit Tab(TabSettings params, QWidget * parent = 0);
-    explicit Tab(QJsonObject hash, QWidget * parent = 0);
-    ~Tab();
+    //    explicit Tab(TabSettings params, QWidget * parent = 0);
+    //    explicit Tab(QJsonObject hash, QWidget * parent = 0);
+    //    ~Tab();
 
-    QString getName() const;
-    void setName(QString newName);
+    //    QString getName() const;
+    //    void setName(QString newName);
 
-//    View * getView() const;
-    QJsonObject toJSON(QString name);
+    ////    View * getView() const;
+    //    QJsonObject toJSON(QString name);
 
-    bool isEditable() const;
+    //    bool isEditable() const;
 
-public slots:
-    void updateHeader(int new_count = -1);
+    //public slots:
+    //    void updateHeader(int new_count = -1);
 
-//protected slots:
-//    void startRoutine();
-//    void stopRoutine();
+    ////protected slots:
+    ////    void startRoutine();
+    ////    void stopRoutine();
 
-protected:
-    void setNameWithCount(QString name);
+    //protected:
+    //    void setNameWithCount(QString name);
 
-private:
-//    View * view;
-//    QTabWidget * tabber;
+    //private:
+    //    View * view;
+    //    QTabWidget * tabber;
 
-//    QLabel * spinnerContainer;
-};
+    //    QLabel * spinnerContainer;
+    };
 
 #endif // TAB_H
 
@@ -72,5 +71,3 @@ private:
 //proxyModel->setFilterRegExp(QRegExp(".png", Qt::CaseInsensitive,
 //                                    QRegExp::FixedString));
 //proxyModel->setFilterKeyColumn(1);
-
-#endif // TAB_H

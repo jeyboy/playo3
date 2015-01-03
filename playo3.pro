@@ -15,19 +15,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         playo.cpp \
     modules/json/data_store.cpp \
-    modules/model_items/items/base_item.cpp \
-    modules/models/base_model.cpp \
     modules/controls/tabber.cpp \
     modules/controls/tab.cpp \
-    dockbars.cpp
+    dockbars.cpp \
+    modules/models/_base_model.cpp \
+    modules/model_items/items/_base_item.cpp \
+    modules/model_items/items/item_interface.cpp \
+    modules/models/model_interface.cpp \
+    modules/model_items/item_state.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
     misc/conversions.h \
     misc/stylesheets.h \
     misc/filename_conversions.h \
-    modules/models/model_index.h \
-    modules/models/base_model.h \
     modules/json/data_store.h \
     modules/controls/tray.h \
     modules/controls/tabber.h \
@@ -35,11 +36,14 @@ HEADERS  += playo.h \
     modules/controls/tab_settings.h \
     modules/controls/views/index.h \
     modules/controls/views/view_types.h \
-    modules/model_items/items/base_item.h \
-    modules/model_items/fields.h \
     modules/model_items/json_fields.h \
-    modules/model_items/state.h \
-    modules/model_items/types.h \
-    modules/controls/json_fields.h
+    modules/controls/json_fields.h \
+    modules/models/_base_model.h \
+    modules/model_items/items/_base_item.h \
+    modules/model_items/items/item_interface.h \
+    modules/models/model_interface.h \
+    modules/model_items/item_state.h \
+    modules/model_items/item_fields.h \
+    modules/model_items/item_types.h
 
 FORMS    += playo.ui

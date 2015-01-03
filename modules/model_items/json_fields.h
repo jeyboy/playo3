@@ -1,7 +1,7 @@
 #ifndef MODEL_ITEM_JSON_FIELDS_H
 #define MODEL_ITEM_JSON_FIELDS_H
 
-namespace ModelItems {
+namespace Playo {
     #define JSON_TYPE_INFO "a"
     #define JSON_TYPE_BYTES_SIZE "b"
     #define JSON_TYPE_CHILDS "c"

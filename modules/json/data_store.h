@@ -9,7 +9,7 @@
 #include <QStringList>
 #include <QVariant>
 
-namespace Json {
+namespace Playo {
     class DataStore {
         public:
             DataStore(QString name);

@@ -2,8 +2,9 @@
 #define TRAY_H
 
 #include <QSystemTrayIcon>
+#include <qmenu.h>
 
-namespace Controls {
+namespace Playo {
     class Tray : public QObject {
         Q_OBJECT
     public:
@@ -11,7 +12,7 @@ namespace Controls {
 
         static Tray * instance(QObject * parent);
         static void close() {
-            m_tray.hide();
+            self -> m_tray.hide();
             delete self;
         }
 

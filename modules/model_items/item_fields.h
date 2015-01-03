@@ -1,27 +1,27 @@
 #ifndef MODEL_ITEM_FIELDS_H
 #define MODEL_ITEM_FIELDS_H
 
-#include <QJsonObject>
+#include <qjsonobject.h>
 
-#include "state.h"
+#include "item_state.h"
 #include "json_fields.h"
 
-namespace ModelItems {
-    #define TITLEID Qt::UserRole + 1
-    #define EXTENSIONID Qt::UserRole + 2
-    #define PATHID Qt::UserRole + 3
-    #define FOLDERID Qt::UserRole + 4
-    #define STATEID Qt::UserRole + 5
-    #define TITLESCACHEID Qt::UserRole + 6
-    #define PROGRESSID Qt::UserRole + 7
-    #define INFOID Qt::UserRole + 8
-    #define ADDFONTID Qt::UserRole + 9
+namespace Playo {
+    #define TITLEID Qt::UserRole - 1
+    #define EXTENSIONID Qt::UserRole - 2
+    #define PATHID Qt::UserRole - 3
+    #define FOLDERID Qt::UserRole - 4
+    #define STATEID Qt::UserRole - 5
+    #define TITLESCACHEID Qt::UserRole - 6
+    #define PROGRESSID Qt::UserRole - 7
+    #define INFOID Qt::UserRole - 8
+    #define ADDFONTID Qt::UserRole - 9
 
-    struct Fields {
-        Fields() {}
+    class ItemFields : public ItemState {
+    public:
+        ItemFields() {}
 
-        Fields(QJsonObject * hash) {
-            state = new State(hash -> value(JSON_TYPE_STATE).toInt());
+        ItemFields(QJsonObject * hash) : ItemState(hash -> value(JSON_TYPE_STATE).toInt()) {
             path = hash -> value(JSON_TYPE_PATH).toString();
             title = hash -> value(JSON_TYPE_TITLE).toString();
             extension = hash -> value(JSON_TYPE_EXTENSION).toString();
@@ -37,10 +37,9 @@ namespace ModelItems {
 
         }
 
-        State * state;
+    protected:
         QString path, title, extension, duration, info;
         int genreID, size, bpm;
-
     };
 }
 

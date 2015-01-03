@@ -1,5 +1,7 @@
 #include "dockbars.h"
 
+using namespace Playo;
+
 Dockbars *Dockbars::self = 0;
 
 Dockbars *Dockbars::instance(QObject * parent) {

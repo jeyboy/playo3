@@ -1,77 +1,77 @@
 #include "data_store.h"
 
-namespace Json {
-    DataStore::DataStore(QString name) {
-        filename = name;
-        state = load();
-    }
-    DataStore::~DataStore() {
-    //    save();
+using namespace Playo;
+
+DataStore::DataStore(QString name) {
+    filename = name;
+    state = load();
+}
+DataStore::~DataStore() {
+//    save();
+}
+
+bool DataStore::load() {
+    QFile loadFile(filename);
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return false;
     }
 
-    bool DataStore::load() {
-        QFile loadFile(filename);
+    QByteArray saveData = qUncompress(loadFile.readAll());
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    json = loadDoc.object();
 
-        if (!loadFile.open(QIODevice::ReadOnly)) {
-            qWarning("Couldn't open save file.");
-            return false;
-        }
+    return true;
+}
+bool DataStore::save() {
+    QFile saveFile(filename);
 
-        QByteArray saveData = qUncompress(loadFile.readAll());
-        QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-        json = loadDoc.object();
-
-        return true;
-    }
-    bool DataStore::save() {
-        QFile saveFile(filename);
-
-        if (!saveFile.open(QIODevice::WriteOnly)) {
-            qWarning("Couldn't open save file.");
-            return false;
-        }
-
-        QJsonDocument saveDoc(json);
-        saveFile.write(qCompress(saveDoc.toJson(), 9));
-
-        return true;
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return false;
     }
 
-    void DataStore::clear() {
-        json = QJsonObject();
-    }
+    QJsonDocument saveDoc(json);
+    saveFile.write(qCompress(saveDoc.toJson(), 9));
 
-    QStringList DataStore::keys() {
-        return json.keys();
-    }
+    return true;
+}
 
-    QJsonValue DataStore::read(QString key) {
-        return json.value(key);
-    }
+void DataStore::clear() {
+    json = QJsonObject();
+}
 
-    void DataStore::write(QString key, double value) {
-        json[key] = value;
-    }
+QStringList DataStore::keys() {
+    return json.keys();
+}
 
-    void DataStore::write(QString key, QJsonArray value) {
-        json[key] = value;
-    }
-    void DataStore::write(QString key, QJsonObject value) {
-        json[key] = value;
-    }
-    void DataStore::write(QString key, QString value) {
-        json[key] = value;
-    }
-    void DataStore::write(QString key, int value) {
-        json[key] = value;
-    }
-    void DataStore::write(QString key, QVariant value) {
-        json.insert(key, QJsonValue::fromVariant(value));
-    }
+QJsonValue DataStore::read(QString key) {
+    return json.value(key);
+}
 
-    void DataStore::append(QString key, QString subkey, QString value) {
-        QJsonObject subObj;
-        subObj[subkey] = value;
-        json[key].toArray().append(subObj);
-    }
+void DataStore::write(QString key, double value) {
+    json[key] = value;
+}
+
+void DataStore::write(QString key, QJsonArray value) {
+    json[key] = value;
+}
+void DataStore::write(QString key, QJsonObject value) {
+    json[key] = value;
+}
+void DataStore::write(QString key, QString value) {
+    json[key] = value;
+}
+void DataStore::write(QString key, int value) {
+    json[key] = value;
+}
+void DataStore::write(QString key, QVariant value) {
+    json.insert(key, QJsonValue::fromVariant(value));
+}
+
+void DataStore::append(QString key, QString subkey, QString value) {
+    QJsonObject subObj;
+    subObj[subkey] = value;
+    json[key].toArray().append(subObj);
 }

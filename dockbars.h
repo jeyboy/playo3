@@ -7,28 +7,30 @@
 
 #include "modules/json/data_store.h"
 
-class Dockbars : public QObject {
-    Q_OBJECT
-public:
-    ~Dockbars() {
+namespace Playo {
+    class Dockbars : public QObject {
+        Q_OBJECT
+    public:
+        ~Dockbars() {
 
-    }
+        }
 
-    static Dockbars * instance(QObject * parent);
-    static void close() {
-        delete self;
-    }
+        static Dockbars * instance(QObject * parent);
+        static void close() {
+            delete self;
+        }
 
-    void load(QMainWindow * window, QJsonArray & bars);
-    void save(QMainWindow * window, DataStore * settings);
+        void load(QMainWindow * window, QJsonArray & bars);
+        void save(QMainWindow * window, DataStore * settings);
 
-    QDockWidget * createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
-private:
-    Dockbars(QObject * parent) : QObject(parent) {
+        QDockWidget * createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
+    private:
+        Dockbars(QObject * parent) : QObject(parent) {
 
-    }
+        }
 
-    static Dockbars *self;
-};
+        static Dockbars *self;
+    };
+}
 
 #endif // DOCKBARS_H
