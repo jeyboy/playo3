@@ -34,7 +34,7 @@ namespace Playo3 {
         }
 
         QJsonObject * toJson() {
-
+            return 0;
         }
 
     protected:

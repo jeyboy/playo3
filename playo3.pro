@@ -22,7 +22,13 @@ SOURCES += main.cpp\
     modules/model_items/items/_base_item.cpp \
     modules/model_items/items/item_interface.cpp \
     modules/models/model_interface.cpp \
-    modules/model_items/item_state.cpp
+    modules/model_items/item_state.cpp \
+    toolbars.cpp \
+    modules/controls/toolbar.cpp \
+    modules/controls/toolbarbutton.cpp \
+    dialogs/toolbarbuttondialog.cpp \
+    dialogs/toolbardialog.cpp \
+    single_application.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
@@ -44,6 +50,17 @@ HEADERS  += playo.h \
     modules/models/model_interface.h \
     modules/model_items/item_state.h \
     modules/model_items/item_fields.h \
-    modules/model_items/item_types.h
+    modules/model_items/item_types.h \
+    toolbars.h \
+    modules/controls/toolbar.h \
+    modules/controls/toolbarbutton.h \
+    dialogs/toolbarbuttondialog.h \
+    dialogs/toolbardialog.h \
+    single_application.h
 
-FORMS    += playo.ui
+FORMS    += playo.ui \
+    dialogs/toolbarbuttondialog.ui \
+    dialogs/toolbardialog.ui
+
+RESOURCES += \
+    resources.qrc

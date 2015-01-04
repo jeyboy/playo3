@@ -1,7 +1,7 @@
 #ifndef CONTROL_JSON_FIELDS_H
 #define CONTROL_JSON_FIELDS_H
 
-namespace Controls {
+namespace Playo3 {
     #define JSON_TYPE_TAB_ITEM_COUNT "l"
     #define JSON_TYPE_TAB_NAME "n"
     #define JSON_TYPE_TAB_SETTINGS "set"
