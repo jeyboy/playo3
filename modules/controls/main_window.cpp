@@ -22,18 +22,24 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_PaintOnScreen);
 
+    QVector<qreal> penPattern;
+    penPattern.append(6); penPattern.append(6);
+//    penPattern.append(4); penPattern.append(4);
+
     pen.setColor(QColor::fromRgb(23, 23, 23));
     pen.setWidth(2);
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setStyle(Qt::DashLine);
-    pen.setDashOffset(2);
+    pen.setDashOffset(3);
+    pen.setDashPattern(penPattern);
 
-    bevelPen.setColor(QColor::fromRgb(224, 224, 224));
+    bevelPen.setColor(QColor::fromRgb(255, 255, 255));
     bevelPen.setWidth(2);
     bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setJoinStyle(Qt::RoundJoin);
+    bevelPen.setDashPattern(penPattern);
 }
 
 MainWindow::~MainWindow() {
