@@ -8,13 +8,14 @@
 Playo::Playo(QWidget * parent) : QMainWindow(parent),
     ui(new Ui::Playo), borderWidth(4), radius(12),
     resizeFlagX(false), resizeFlagY(false),
-    moveFlag(false), brush(0) {
+    moveFlag(false), inAction(false), brush(0) {
     ui -> setupUi(this);
 
     QApplication::setWindowIcon(QIcon(":ico"));
     setWindowTitle("Playo");
     setAcceptDrops(true);
     setContentsMargins(borderWidth * 2, borderWidth * 2, borderWidth * 2, borderWidth * 2);
+    setMouseTracking(true);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -29,6 +30,9 @@ Playo::Playo(QWidget * parent) : QMainWindow(parent),
 
 Playo::~Playo() {
     delete ui;
+
+    delete brush;
+    delete backRect;
 }
 
 //stop(0%,rgba(174,188,191,1)), color-stop(50%,rgba(110,119,116,1)), color-stop(51%,rgba(10,14,10,1)), color-stop(100%,rgba(10,8,9,1))); /*
@@ -42,6 +46,7 @@ void Playo::init() {
     pen.setBrush(grad);
     pen.setWidth(borderWidth);
     pen.setCosmetic(true);
+    pen.setJoinStyle(Qt::RoundJoin);
 
 //    stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1))); /*
 
@@ -54,6 +59,7 @@ void Playo::initMenuWidget() {
     QWidget *menuWidget = new QWidget;
     QGridLayout *vLayout = new QGridLayout();
     menuWidget -> setLayout(vLayout);
+    menuWidget -> setMouseTracking(true);
     vLayout -> addWidget(coolLabel, 0, 0, Qt::AlignLeft);
     QPushButton * close = new QPushButton("Close", this);
     connect(close, SIGNAL(clicked()), this, SLOT(close()));
@@ -69,6 +75,9 @@ void Playo::resizeEvent(QResizeEvent * event) {
     brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 224));
 
 
+
+    backRect = new QRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2);
+
 //    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
 ////    brush -> setColorAt(0.5, QColor::fromRgb(241,241,241));
 ////    brush -> setColorAt(0.51, QColor::fromRgb(225,225,225));
@@ -79,6 +88,7 @@ void Playo::resizeEvent(QResizeEvent * event) {
 
 void Playo::mousePressEvent(QMouseEvent * event) {
     if (event -> button() == Qt::LeftButton) {
+        inAction = true;
         moveFlag = !isResizeable();
         dragPos = event -> globalPos();
         geom = geometry();
@@ -123,7 +133,22 @@ void Playo::mouseMoveEvent(QMouseEvent * event) {
             move(event -> globalPos() - (dragPos - geom.topLeft()));
         else
             QMainWindow::mouseMoveEvent(event);
-    } else QMainWindow::mouseMoveEvent(event);
+    } else {
+        if (isResizeable()) {
+            if (atBottom || atTop) {
+                if (atLeft)
+                    setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
+                else if (atRight)
+                    setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
+                else
+                    setCursor(Qt::SizeVerCursor);
+            } else setCursor(Qt::SizeHorCursor);
+
+//            dropFlags();
+        }
+
+        QMainWindow::mouseMoveEvent(event);
+    }
 }
 
 void Playo::paintEvent(QPaintEvent *) {
@@ -134,14 +159,19 @@ void Playo::paintEvent(QPaintEvent *) {
     int offset = borderWidth;
     QRect dRect(rect().x() + offset, rect().y() + offset, rect().width() - offset * 2, rect().height() - offset * 2);
     painter.drawRoundedRect(dRect, radius, radius, Qt::AbsoluteSize);
-    painter.drawPixmap(QRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2), QPixmap(":main"));
+    painter.drawPixmap(*backRect, QPixmap(":main"));
 }
 
 bool Playo::isResizeable() {
     QPoint pos = mapFromGlobal(QCursor::pos());
 
-    resizeFlagX = ((atLeft = (pos.x() >= 0 && pos.x() <= borderWidth * 3)) || (pos.x() >= width() - borderWidth * 3 && pos.x() <= width()));
-    resizeFlagY = ((atBottom = (pos.y() >= height() - borderWidth * 3 && pos.y() <= height())) || (pos.y() >= 0 && pos.y() <= borderWidth * 3));
+    atLeft = pos.x() >= 0 && pos.x() <= borderWidth * 3;
+    atRight = pos.x() >= width() - borderWidth * 3 && pos.x() <= width();
+    atTop = pos.y() >= 0 && pos.y() <= borderWidth * 3;
+    atBottom = pos.y() >= height() - borderWidth * 3 && pos.y() <= height();
+
+    resizeFlagX = atLeft || atRight;
+    resizeFlagY = atTop || atBottom;
 
     return resizeFlagX || resizeFlagY;
 }

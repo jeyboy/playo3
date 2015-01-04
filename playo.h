@@ -23,9 +23,21 @@ protected:
     void resizeEvent(QResizeEvent * event);
     void mousePressEvent(QMouseEvent *event);
     inline void mouseReleaseEvent(QMouseEvent * event) {
-        if (event -> button() == Qt::LeftButton)
-            resizeFlagX = resizeFlagY = moveFlag = false;
+        if (event -> button() == Qt::LeftButton) {
+            dropFlags();
+            inAction = false;
+        }
         QMainWindow::mouseReleaseEvent(event);
+    }
+    inline bool event(QEvent * event) {
+        if (event -> type() == QEvent::HoverMove) {
+            if ((resizeFlagX || resizeFlagY) && !inAction)
+                dropFlags();
+            else
+                setCursor(Qt::ArrowCursor);
+        }
+
+        return QMainWindow::event(event);
     }
     void mouseMoveEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *);
@@ -33,14 +45,17 @@ private:
     Ui::Playo *ui;
 
     bool isResizeable();
+    inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = atLeft = atBottom = false; }
 
     int borderWidth, radius;
-    bool resizeFlagX, resizeFlagY, moveFlag;
-    bool atBottom, atLeft;
+    bool resizeFlagX, resizeFlagY, moveFlag, inAction;
+    bool atBottom, atLeft, atRight, atTop;
     QPoint dragPos;
     QRect geom;
+
     QPen pen;
     QLinearGradient * brush;
+    QRect * backRect;
 };
 
 #endif // PLAYO_H
