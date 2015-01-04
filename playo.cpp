@@ -64,10 +64,15 @@ void Playo::initMenuWidget() {
 void Playo::resizeEvent(QResizeEvent * event) {
     delete brush;
     brush = new QLinearGradient(0, 0, rect().width(), rect().height());
-    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
-//    brush -> setColorAt(0.5, QColor::fromRgb(241,241,241));
-//    brush -> setColorAt(0.51, QColor::fromRgb(225,225,225));
-    brush -> setColorAt(1, QColor::fromRgb(99,147,193));
+    brush -> setColorAt(0, QColor::fromRgb(181, 189, 200, 224));
+    brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 224));
+    brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 224));
+
+
+//    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
+////    brush -> setColorAt(0.5, QColor::fromRgb(241,241,241));
+////    brush -> setColorAt(0.51, QColor::fromRgb(225,225,225));
+//    brush -> setColorAt(1, QColor::fromRgb(99,147,193));
 
     QMainWindow::resizeEvent(event);
 }
@@ -129,7 +134,7 @@ void Playo::paintEvent(QPaintEvent *) {
     int offset = borderWidth;
     QRect dRect(rect().x() + offset, rect().y() + offset, rect().width() - offset * 2, rect().height() - offset * 2);
     painter.drawRoundedRect(dRect, radius, radius, Qt::AbsoluteSize);
-//    painter.restore();
+    painter.drawPixmap(QRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2), QPixmap(":main"));
 }
 
 bool Playo::isResizeable() {

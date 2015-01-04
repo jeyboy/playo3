@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="ico">playo.ico</file>
+        <file alias="main">images/main.png</file>
+        <file alias="ico">images/playo.ico</file>
     </qresource>
 </RCC>
