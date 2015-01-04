@@ -10,7 +10,7 @@ using namespace Playo3;
 #include <qbitmap.h>
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    borderWidth(4), radius(12),
+    borderWidth(6), radius(12), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
@@ -22,20 +22,23 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_PaintOnScreen);
 
-    QLinearGradient grad(0, 0, rect().width(), 0);
-    grad.setColorAt(0, QColor::fromRgb(181,189,200));
-    grad.setColorAt(0.5, QColor::fromRgb(40,52,59));
-    grad.setColorAt(1, QColor::fromRgb(130,140,149));
-
-    pen.setBrush(grad);
-    pen.setWidth(borderWidth);
+    pen.setColor(QColor::fromRgb(23, 23, 23));
+    pen.setWidth(2);
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
+    pen.setStyle(Qt::DashLine);
+    pen.setDashOffset(2);
+
+    bevelPen.setColor(QColor::fromRgb(224, 224, 224));
+    bevelPen.setWidth(2);
+    bevelPen.setCosmetic(true);
+    bevelPen.setStyle(Qt::DashLine);
+    bevelPen.setJoinStyle(Qt::RoundJoin);
 }
 
 MainWindow::~MainWindow() {
     delete brush;
-    delete backRect;
+    delete background;
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
@@ -45,7 +48,20 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 224));
     brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 224));
 
-    backRect = new QRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2);
+    backRect.setRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2);
+    int offset = borderWidth / 3;
+    borderRect.setRect(
+                rect().x() + offset,
+                rect().y() + offset,
+                rect().width() - offset * 2,
+                rect().height() - offset * 2
+    );
+    bevelRect.setRect(
+                rect().x() + borderWidth - offset,
+                rect().y() + borderWidth - offset,
+                rect().width() - (borderWidth - offset) * 2,
+                rect().height() - (borderWidth - offset) * 2
+    );
 
 //    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
 ////    brush -> setColorAt(0.5, QColor::fromRgb(241,241,241));
@@ -123,15 +139,18 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
     }
 }
 
-void MainWindow::paintEvent(QPaintEvent *) {
+void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
-//    painter.save();
+    painter.save();
     painter.setPen(pen);
     painter.setBrush(*brush);
-    int offset = borderWidth;
-    QRect dRect(rect().x() + offset, rect().y() + offset, rect().width() - offset * 2, rect().height() - offset * 2);
-    painter.drawRoundedRect(dRect, radius, radius, Qt::AbsoluteSize);
-    painter.drawPixmap(*backRect, QPixmap(":main"));
+    painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
+    painter.drawPixmap(backRect, *background);
+    painter.setPen(bevelPen);
+    painter.drawRoundedRect(bevelRect, radius, radius, Qt::AbsoluteSize);
+    painter.restore();
+
+    QMainWindow::paintEvent(event);
 }
 
 bool MainWindow::isResizeable() {

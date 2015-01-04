@@ -40,14 +40,15 @@ namespace Playo3 {
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
         int borderWidth, radius;
+        QPixmap * background;
         bool resizeFlagX, resizeFlagY, moveFlag, inAction;
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
         QRect geom;
 
-        QPen pen;
+        QPen pen, bevelPen;
         QLinearGradient * brush;
-        QRect * backRect;
+        QRect backRect, borderRect, bevelRect;
     };
 }
 
