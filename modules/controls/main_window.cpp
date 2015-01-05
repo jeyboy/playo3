@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setAttribute(Qt::WA_PaintOnScreen);
 
     QVector<qreal> penPattern;
-    penPattern.append(4); penPattern.append(8);
+    penPattern.append(1); penPattern.append(3);
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
     pen.setWidth(borderWidth / 2);
