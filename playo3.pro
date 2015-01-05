@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     dialogs/toolbardialog.cpp \
     single_application.cpp \
     modules/controls/main_window.cpp \
-    modules/controls/button.cpp
+    modules/controls/button.cpp \
+    modules/controls/clickable_label.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
@@ -60,7 +61,8 @@ HEADERS  += playo.h \
     dialogs/toolbardialog.h \
     single_application.h \
     modules/controls/main_window.h \
-    modules/controls/button.h
+    modules/controls/button.h \
+    modules/controls/clickable_label.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

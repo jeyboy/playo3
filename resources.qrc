@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file alias="main">images/main.png</file>
         <file alias="ico">images/playo.ico</file>
+        <file alias="close_button">images/temp/close_temp.png</file>
     </qresource>
 </RCC>
