@@ -11,7 +11,7 @@ namespace Playo3 {
 
     public:
         explicit ClickableLabel(QWidget *parent = 0, Qt::WindowFlags f = 0);
-        explicit ClickableLabel(const QString &text, QWidget *parent = 0, Qt::WindowFlags f = 0);
+        explicit ClickableLabel(const QString &text, QWidget *parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char *slot = 0);
         explicit ClickableLabel(const QPixmap &icon, const QObject * receiver, const char *slot, QWidget *parent = 0, Qt::WindowFlags f = 0);
         ~ClickableLabel();
 
