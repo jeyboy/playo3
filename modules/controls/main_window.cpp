@@ -1,16 +1,14 @@
 #include "main_window.h"
+#include <QGridLayout>
 
 using namespace Playo3;
 
-#include <QGridLayout>
-//#include <qbitmap.h>
-
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    borderWidth(6), radius(12), background(new QPixmap(":main")),
+    borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2), radius(12), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
-    setContentsMargins(borderWidth * 2, borderWidth * 2 + 20, borderWidth * 2, borderWidth * 2);
+    setContentsMargins(doubleBorderWidth, doubleBorderWidth + 20, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
@@ -19,26 +17,22 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setAttribute(Qt::WA_PaintOnScreen);
 
     QVector<qreal> penPattern;
-    penPattern.append(1); penPattern.append(3);
+    penPattern.append(1); penPattern.append(halfBorderWidth);
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
-    pen.setWidth(borderWidth / 2);
+    pen.setWidth(halfBorderWidth);
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
 
 
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(borderWidth / 2);
+    bevelPen.setWidth(halfBorderWidth);
     bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
 
-    menuWidget = new QWidget(this);
-    menuWidget -> setContentsMargins(0, 5, 0, 0);
-    menuWidget -> setMouseTracking(true);
-    menuWidget -> setStyleSheet("border-bottom: 1px solid white; margin: 0 " + QString::number(borderWidth * 2) + "px 0 " + QString::number(borderWidth * 2) + "px;");
-    (new QGridLayout(menuWidget)) -> setContentsMargins(0, 0, 0, 0);
+    initMenuWidget();
 }
 
 MainWindow::~MainWindow() {
@@ -58,12 +52,11 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     int minSide = qMin(rect().width(), centralWidget() -> rect().height()) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, rect().height() / 2 - minSideHalf, minSide, minSide);
 
-    int offset = borderWidth / 2;
     borderRect.setRect(
-                rect().x() + offset,
-                rect().y() + offset,
-                rect().width() - offset * 2,
-                rect().height() - offset * 2
+                rect().x() + halfBorderWidth,
+                rect().y() + halfBorderWidth,
+                rect().width() - borderWidth,
+                rect().height() - borderWidth
     );
 
 //    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
@@ -143,10 +136,10 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 bool MainWindow::isResizeable() {
     QPoint pos = mapFromGlobal(QCursor::pos());
 
-    atLeft = pos.x() >= 0 && pos.x() <= borderWidth * 2;
-    atRight = pos.x() >= width() - borderWidth * 2 && pos.x() <= width();
-    atTop = pos.y() >= 0 && pos.y() <= borderWidth * 2;
-    atBottom = pos.y() >= height() - borderWidth * 2 && pos.y() <= height();
+    atLeft = pos.x() >= 0 && pos.x() <= doubleBorderWidth;
+    atRight = pos.x() >= width() - doubleBorderWidth && pos.x() <= width();
+    atTop = pos.y() >= 0 && pos.y() <= doubleBorderWidth;
+    atBottom = pos.y() >= height() - doubleBorderWidth && pos.y() <= height();
 
     resizeFlagX = atLeft || atRight;
     resizeFlagY = atTop || atBottom;
@@ -154,3 +147,33 @@ bool MainWindow::isResizeable() {
     return resizeFlagX || resizeFlagY;
 }
 
+void MainWindow::initMenuWidget() {
+    menuWidget = new QWidget(this);
+    menuWidget -> setObjectName("TitleBar");
+    menuWidget -> setContentsMargins(doubleBorderWidth, borderWidth, doubleBorderWidth, 0);
+    menuWidget -> setMouseTracking(true);
+    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 1px solid white; margin: 0 " + QString::number(doubleBorderWidth) + "px 0 " + QString::number(doubleBorderWidth) + "px; }");
+    QGridLayout * l = new QGridLayout(menuWidget);
+    l -> setContentsMargins(0, 0, 0, 0);
+//    l -> setMargin(0);
+//    l -> setSpacing(0);
+
+    titleLabel = new QLabel("The coolest text in the world", menuWidget);
+    l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
+    l -> addWidget(
+                new ClickableLabel(QPixmap(":mini_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMinimized()), menuWidget),
+                0, 1, Qt::AlignRight | Qt::AlignVCenter);
+    l -> addWidget(
+                new ClickableLabel(QPixmap(":maxi_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMaximized()), menuWidget),
+                0, 2, Qt::AlignRight | Qt::AlignVCenter);
+    l -> addWidget(
+                new ClickableLabel(QPixmap(":close_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
+                0, 3, Qt::AlignRight | Qt::AlignVCenter);
+
+    l -> setColumnStretch(0, 10);
+    l -> setColumnStretch(1, 0);
+    l -> setColumnStretch(2, 0);
+    l -> setColumnStretch(3, 0);
+
+//    setMenuWidget(menuWidget);
+}

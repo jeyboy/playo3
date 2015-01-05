@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QMouseEvent>
+#include <qDebug>
 
 namespace Playo3 {
     class ClickableLabel : public QLabel {

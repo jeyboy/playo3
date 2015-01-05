@@ -1,11 +1,8 @@
 #include "playo.h"
 #include "ui_playo.h"
-#include <QLabel>
 #include <QDockWidget>
-#include <QMenuBar>
 
 #include "modules/controls/button.h"
-#include "modules/controls/clickable_label.h"
 
 using namespace Playo3;
 
@@ -18,7 +15,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //    setAttribute(Qt::WA_DeleteOnClose);
 
-    initMenuWidget();
     init();
 }
 
@@ -30,13 +26,4 @@ void Playo::init() {
     addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
     addToolBar("lalka");
     addToolBar("lalka2");
-}
-
-void Playo::initMenuWidget() {
-    QLabel *coolLabel = new QLabel("The coolest text in the world", menuWidget);
-    ((QGridLayout *)menuWidget -> layout()) -> addWidget(coolLabel, 0, 0, Qt::AlignLeft);
-    ((QGridLayout *)menuWidget -> layout()) -> addWidget(
-                new ClickableLabel(QPixmap(":close_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
-                0, 1, Qt::AlignRight | Qt::AlignVCenter);
-//    setMenuWidget(menuWidget);
 }

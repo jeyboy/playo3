@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <qevent.h>
-//#include <qbitmap.h>
+#include "modules/controls/clickable_label.h"
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {
@@ -12,6 +12,9 @@ namespace Playo3 {
     public:
         explicit MainWindow(QWidget * parent = 0);
         ~MainWindow();
+
+    public slots:
+        inline void setWindowTitle(const QString & newTitle) { titleLabel -> setText(newTitle);}
 
     protected:
         void resizeEvent(QResizeEvent *);
@@ -48,10 +51,13 @@ namespace Playo3 {
         QWidget * menuWidget;
 
     private:
+        QLabel * titleLabel;
+
         bool isResizeable();
+        void initMenuWidget();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
-        int borderWidth, radius;
+        int borderWidth, doubleBorderWidth, halfBorderWidth, radius;
         QPixmap * background;
         bool resizeFlagX, resizeFlagY, moveFlag, inAction;
         bool atBottom, atLeft, atRight, atTop;

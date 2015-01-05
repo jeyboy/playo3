@@ -3,10 +3,10 @@
 using namespace Playo3;
 
 ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f) : QLabel(parent, f) {
-
+    setContentsMargins(0,0,0,0);
 }
 ClickableLabel::ClickableLabel(const QString &text, QWidget *parent, Qt::WindowFlags f) : QLabel(text, parent, f) {
-
+    setContentsMargins(0,0,0,0);
 }
 
 ClickableLabel::ClickableLabel(const QPixmap &icon, const QObject * receiver, const char *slot, QWidget *parent, Qt::WindowFlags f) : QLabel("", parent, f) {
