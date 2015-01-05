@@ -28,19 +28,21 @@ namespace Playo3 {
         }
         inline bool event(QEvent * event) {
             if (event -> type() == QEvent::HoverMove) {
-                if (!inAction && isResizeable()) {
-                    if (atBottom || atTop) {
-                        if (atLeft)
-                            setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
-                        else if (atRight)
-                            setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
-                        else
-                            setCursor(Qt::SizeVerCursor);
-                    } else setCursor(Qt::SizeHorCursor);
+                if (!inAction) {
+                    if (isResizeable()) {
+                        if (atBottom || atTop) {
+                            if (atLeft)
+                                setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
+                            else if (atRight)
+                                setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
+                            else
+                                setCursor(Qt::SizeVerCursor);
+                        } else setCursor(Qt::SizeHorCursor);
 
-                    dropFlags();
-                } else
-                    setCursor(Qt::ArrowCursor);
+                        dropFlags();
+                    } else
+                        setCursor(Qt::ArrowCursor);
+                }
             }
 
             return QMainWindow::event(event);

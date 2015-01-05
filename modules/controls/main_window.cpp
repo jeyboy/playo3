@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
 
-
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
     bevelPen.setWidth(halfBorderWidth);
     bevelPen.setCosmetic(true);
@@ -59,11 +58,6 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
                 rect().width() - borderWidth,
                 rect().height() - borderWidth
     );
-
-//    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
-////    brush -> setColorAt(0.5, QColor::fromRgb(241,241,241));
-////    brush -> setColorAt(0.51, QColor::fromRgb(225,225,225));
-//    brush -> setColorAt(1, QColor::fromRgb(99,147,193));
 
     QMainWindow::resizeEvent(event);
 }
@@ -110,7 +104,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             }
             setGeometry(nr);
             event -> accept();
-//            QMainWindow::mouseMoveEvent(event);
         }
         else if(moveFlag) {
             move(event -> globalPos() - (dragPos - geom.topLeft()));
