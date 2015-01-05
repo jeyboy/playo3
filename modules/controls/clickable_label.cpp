@@ -19,8 +19,9 @@ ClickableLabel::~ClickableLabel() {
 }
 
 void ClickableLabel::mousePressEvent(QMouseEvent *ev) {
-    if (ev -> button() == Qt::LeftButton)
+    if (ev -> button() == Qt::LeftButton) {
+        ev -> accept();
         emit clicked();
-
-    QLabel::mousePressEvent(ev);
+    } else
+        QLabel::mousePressEvent(ev);
 }

@@ -1,5 +1,6 @@
 #include "main_window.h"
 #include <QGridLayout>
+//#include <QApplication>
 
 using namespace Playo3;
 
@@ -69,13 +70,13 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
 
 void MainWindow::mousePressEvent(QMouseEvent * event) {
     if (event -> button() == Qt::LeftButton) {
+//        qDebug() << QApplication::widgetAt(QCursor::pos());
         inAction = true;
         moveFlag = !isResizeable();
         dragPos = event -> globalPos();
         geom = geometry();
-    }
-
-    QMainWindow::mousePressEvent(event);
+        event -> accept();
+    } else QMainWindow::mousePressEvent(event);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent * event) {
@@ -108,11 +109,13 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
                     nr.moveBottomLeft(geom.bottomLeft());
             }
             setGeometry(nr);
-            QMainWindow::mouseMoveEvent(event);
+            event -> accept();
+//            QMainWindow::mouseMoveEvent(event);
         }
-        else if(moveFlag)
+        else if(moveFlag) {
             move(event -> globalPos() - (dragPos - geom.topLeft()));
-        else
+            event -> accept();
+        } else
             QMainWindow::mouseMoveEvent(event);
     } else
         QMainWindow::mouseMoveEvent(event);
@@ -121,12 +124,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
     painter.save();
-    painter.drawPixmap(backRect, *background);
     painter.setPen(pen);
     painter.setBrush(*brush);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.setPen(bevelPen);
-    painter.setBrush(Qt::NoBrush);
+    painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.restore();
 
