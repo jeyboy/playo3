@@ -25,7 +25,7 @@ namespace Playo3 {
         }
         inline bool event(QEvent * event) {
             if (event -> type() == QEvent::HoverMove) {
-                if (isResizeable() && !inAction) {
+                if (!inAction && isResizeable()) {
                     if (atBottom || atTop) {
                         if (atLeft)
                             setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);

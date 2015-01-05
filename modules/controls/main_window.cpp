@@ -128,11 +128,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
     painter.save();
+    painter.drawPixmap(backRect, *background);
     painter.setPen(pen);
     painter.setBrush(*brush);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
-    painter.drawPixmap(backRect, *background);
     painter.setPen(bevelPen);
+    painter.setBrush(Qt::NoBrush);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.restore();
 
