@@ -35,6 +35,9 @@ namespace Playo3 {
         }
         void mouseMoveEvent(QMouseEvent *);
         void paintEvent(QPaintEvent *);
+    protected:
+        QWidget * menuWidget;
+
     private:
         bool isResizeable();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }

@@ -2,19 +2,15 @@
 
 using namespace Playo3;
 
-#include "playo.h"
-#include "ui_playo.h"
-#include <QLabel>
 #include <QGridLayout>
-#include <QPushButton>
-#include <qbitmap.h>
+//#include <qbitmap.h>
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), radius(12), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
-    setContentsMargins(borderWidth * 2, borderWidth * 2, borderWidth * 2, borderWidth * 2);
+    setContentsMargins(borderWidth * 2, borderWidth * 2 + 20, borderWidth * 2, borderWidth * 2);
     setMouseTracking(true);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
@@ -40,6 +36,11 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
+
+    menuWidget = new QWidget(this);
+    menuWidget -> setMouseTracking(true);
+    menuWidget -> setStyleSheet("border: 1px solid red; padding: 0; margin:");
+    new QGridLayout(menuWidget);
 }
 
 MainWindow::~MainWindow() {
@@ -48,6 +49,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
+    menuWidget -> resize(event -> size().width(), menuWidget -> height());
+
     delete brush;
     brush = new QLinearGradient(0, 0, rect().width(), rect().height());
     brush -> setColorAt(0, QColor::fromRgb(181, 189, 200, 224));
