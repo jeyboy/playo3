@@ -19,19 +19,16 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setAttribute(Qt::WA_PaintOnScreen);
 
     QVector<qreal> penPattern;
-    penPattern.append(6); penPattern.append(6);
-//    penPattern.append(4); penPattern.append(4);
+    penPattern.append(4); penPattern.append(8);
 
-    pen.setColor(QColor::fromRgb(23, 23, 23));
-    pen.setWidth(2);
+    pen.setColor(QColor::fromRgb(255, 255, 255));
+    pen.setWidth(borderWidth / 2);
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
-    pen.setStyle(Qt::DashLine);
-    pen.setDashOffset(3);
-    pen.setDashPattern(penPattern);
 
-    bevelPen.setColor(QColor::fromRgb(255, 255, 255));
-    bevelPen.setWidth(2);
+
+    bevelPen.setColor(QColor::fromRgb(23, 23, 23));
+    bevelPen.setWidth(borderWidth / 2);
     bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setJoinStyle(Qt::RoundJoin);
@@ -54,25 +51,19 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
 
     delete brush;
     brush = new QLinearGradient(0, 0, rect().width(), rect().height());
-    brush -> setColorAt(0, QColor::fromRgb(181, 189, 200, 224));
-    brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 224));
-    brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 224));
+    brush -> setColorAt(0, QColor::fromRgb(181, 189, 200, 212));
+    brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 212));
+    brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 212));
 
     int minSide = qMin(rect().width(), centralWidget() -> rect().height()) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, rect().height() / 2 - minSideHalf, minSide, minSide);
 
-    int offset = borderWidth / 3;
+    int offset = borderWidth / 2;
     borderRect.setRect(
                 rect().x() + offset,
                 rect().y() + offset,
                 rect().width() - offset * 2,
                 rect().height() - offset * 2
-    );
-    bevelRect.setRect(
-                rect().x() + borderWidth - offset,
-                rect().y() + borderWidth - offset,
-                rect().width() - (borderWidth - offset) * 2,
-                rect().height() - (borderWidth - offset) * 2
     );
 
 //    brush -> setColorAt(0, QColor::fromRgb(207,231,250));
@@ -159,7 +150,7 @@ void MainWindow::paintEvent(QPaintEvent * event) {
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.drawPixmap(backRect, *background);
     painter.setPen(bevelPen);
-    painter.drawRoundedRect(bevelRect, radius, radius, Qt::AbsoluteSize);
+    painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.restore();
 
     QMainWindow::paintEvent(event);

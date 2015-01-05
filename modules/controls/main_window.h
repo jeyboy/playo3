@@ -51,7 +51,7 @@ namespace Playo3 {
 
         QPen pen, bevelPen;
         QLinearGradient * brush;
-        QRect backRect, borderRect, bevelRect;
+        QRect backRect, borderRect;
     };
 }
 
