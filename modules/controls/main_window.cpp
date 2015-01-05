@@ -41,8 +41,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     menuWidget -> setContentsMargins(0, 5, 0, 0);
     menuWidget -> setMouseTracking(true);
     menuWidget -> setStyleSheet("border-bottom: 1px solid white; margin: 0 " + QString::number(borderWidth * 2) + "px 0 " + QString::number(borderWidth * 2) + "px;");
-    QGridLayout * l = new QGridLayout(menuWidget);
-    l -> setContentsMargins(0, 0, 0, 0);
+    (new QGridLayout(menuWidget)) -> setContentsMargins(0, 0, 0, 0);
 }
 
 MainWindow::~MainWindow() {

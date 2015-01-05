@@ -35,6 +35,8 @@ void Playo::init() {
 void Playo::initMenuWidget() {
     QLabel *coolLabel = new QLabel("The coolest text in the world", menuWidget);
     ((QGridLayout *)menuWidget -> layout()) -> addWidget(coolLabel, 0, 0, Qt::AlignLeft);
-    ((QGridLayout *)menuWidget -> layout()) -> addWidget(new ClickableLabel(QPixmap(":close_button"), this, SLOT(close()), menuWidget), 0, 1, Qt::AlignRight | Qt::AlignVCenter);
+    ((QGridLayout *)menuWidget -> layout()) -> addWidget(
+                new ClickableLabel(QPixmap(":close_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
+                0, 1, Qt::AlignRight | Qt::AlignVCenter);
 //    setMenuWidget(menuWidget);
 }
