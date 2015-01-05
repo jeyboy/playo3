@@ -54,7 +54,9 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 224));
     brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 224));
 
-    backRect.setRect(rect().width()/2 - rect().width()/4, rect().height()/2 - rect().height()/4, rect().width()/2, rect().height()/2);
+    int minSide = qMin(rect().width(), centralWidget() -> rect().height()) / 2, minSideHalf = minSide / 2;
+    backRect.setRect(rect().width() / 2 - minSideHalf, rect().height() / 2 - minSideHalf, minSide, minSide);
+
     int offset = borderWidth / 3;
     borderRect.setRect(
                 rect().x() + offset,
