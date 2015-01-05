@@ -121,25 +121,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             move(event -> globalPos() - (dragPos - geom.topLeft()));
         else
             QMainWindow::mouseMoveEvent(event);
-    } else {
-
-        ////////////// maybe this block must be in event handler////////////////
-        if (isResizeable()) {
-            if (atBottom || atTop) {
-                if (atLeft)
-                    setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
-                else if (atRight)
-                    setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
-                else
-                    setCursor(Qt::SizeVerCursor);
-            } else setCursor(Qt::SizeHorCursor);
-
-//            dropFlags();
-        }
-        //////////////////////////////
-
+    } else
         QMainWindow::mouseMoveEvent(event);
-    }
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
@@ -159,10 +142,10 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 bool MainWindow::isResizeable() {
     QPoint pos = mapFromGlobal(QCursor::pos());
 
-    atLeft = pos.x() >= 0 && pos.x() <= borderWidth * 3;
-    atRight = pos.x() >= width() - borderWidth * 3 && pos.x() <= width();
-    atTop = pos.y() >= 0 && pos.y() <= borderWidth * 3;
-    atBottom = pos.y() >= height() - borderWidth * 3 && pos.y() <= height();
+    atLeft = pos.x() >= 0 && pos.x() <= borderWidth * 2;
+    atRight = pos.x() >= width() - borderWidth * 2 && pos.x() <= width();
+    atTop = pos.y() >= 0 && pos.y() <= borderWidth * 2;
+    atBottom = pos.y() >= height() - borderWidth * 2 && pos.y() <= height();
 
     resizeFlagX = atLeft || atRight;
     resizeFlagY = atTop || atBottom;
