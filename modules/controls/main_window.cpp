@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
     menuWidget = new QWidget(this);
     menuWidget -> setMouseTracking(true);
-    menuWidget -> setStyleSheet("border: 1px solid red; padding: 0; margin:");
+    menuWidget -> setStyleSheet("border-bottom: 1px solid white; margin: 0 " + QString::number(borderWidth * 2) + "px 0 " + QString::number(borderWidth * 2) + "px;");
     new QGridLayout(menuWidget);
 }
 
