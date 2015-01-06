@@ -6,7 +6,7 @@ using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), titleHeight(26), background(new QPixmap(":main")),
+    radius(12), titleHeight(32), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
@@ -147,14 +147,15 @@ void MainWindow::initMenuWidget() {
     menuWidget = new QWidget(this);
     menuWidget -> setObjectName("TitleBar");
     menuWidget -> setContentsMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0);
-    menuWidget -> setMouseTracking(true);
-    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 1px solid white; margin: 0 " + QString::number(borderWidth) + "px 0 " + QString::number(borderWidth) + "px; }");
+    menuWidget -> setFixedHeight(36);
+//    menuWidget -> setMouseTracking(true);
+    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 2px solid white; }");
     QGridLayout * l = new QGridLayout(menuWidget);
     l -> setContentsMargins(0, 0, 0, 0);
 //    l -> setMargin(0);
 //    l -> setSpacing(0);
 
-    titleLabel = new QLabel("The coolest text in the world", menuWidget);
+    titleLabel = new QLabel("", menuWidget);
     QFont font = titleLabel -> font();
     font.setPointSize(12);
     font.setBold(true);
