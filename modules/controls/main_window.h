@@ -59,7 +59,7 @@ namespace Playo3 {
         void initMenuWidget();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
-        int borderWidth, doubleBorderWidth, halfBorderWidth, radius;
+        int borderWidth, doubleBorderWidth, halfBorderWidth, radius, titleHeight;
         QPixmap * background;
         bool resizeFlagX, resizeFlagY, moveFlag, inAction;
         bool atBottom, atLeft, atRight, atTop;

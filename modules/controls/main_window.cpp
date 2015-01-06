@@ -5,11 +5,12 @@
 using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2), radius(12), background(new QPixmap(":main")),
+    borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
+    radius(12), titleHeight(30), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
-    setContentsMargins(doubleBorderWidth, doubleBorderWidth + 20, doubleBorderWidth, doubleBorderWidth);
+    setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
@@ -156,13 +157,13 @@ void MainWindow::initMenuWidget() {
     titleLabel = new QLabel("The coolest text in the world", menuWidget);
     l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":mini_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMinimized()), menuWidget),
+                new ClickableLabel(QPixmap(":mini_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMinimized()), menuWidget),
                 0, 1, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":maxi_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMaximized()), menuWidget),
+                new ClickableLabel(QPixmap(":maxi_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMaximized()), menuWidget),
                 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":close_button").scaled(40, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
+                new ClickableLabel(QPixmap(":close_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
                 0, 3, Qt::AlignRight | Qt::AlignVCenter);
 
     l -> setColumnStretch(0, 10);
