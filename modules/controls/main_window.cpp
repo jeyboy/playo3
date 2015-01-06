@@ -6,7 +6,7 @@ using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), titleHeight(30), background(new QPixmap(":main")),
+    radius(12), titleHeight(26), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
@@ -146,20 +146,25 @@ bool MainWindow::isResizeable() {
 void MainWindow::initMenuWidget() {
     menuWidget = new QWidget(this);
     menuWidget -> setObjectName("TitleBar");
-    menuWidget -> setContentsMargins(doubleBorderWidth, borderWidth, doubleBorderWidth, 0);
+    menuWidget -> setContentsMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0);
     menuWidget -> setMouseTracking(true);
-    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 1px solid white; margin: 0 " + QString::number(doubleBorderWidth) + "px 0 " + QString::number(doubleBorderWidth) + "px; }");
+    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 1px solid white; margin: 0 " + QString::number(borderWidth) + "px 0 " + QString::number(borderWidth) + "px; }");
     QGridLayout * l = new QGridLayout(menuWidget);
     l -> setContentsMargins(0, 0, 0, 0);
 //    l -> setMargin(0);
 //    l -> setSpacing(0);
 
     titleLabel = new QLabel("The coolest text in the world", menuWidget);
+    QFont font = titleLabel -> font();
+    font.setPointSize(12);
+    font.setBold(true);
+    titleLabel -> setFont(font);
+
     l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
     l -> addWidget(
                 new HoverableLabel(
-                    QPixmap(":mini_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":mini_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":mini_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":mini_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     menuWidget,
                     0,
                     this,
@@ -168,8 +173,8 @@ void MainWindow::initMenuWidget() {
                 0, 1, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
                 new HoverableLabel(
-                    QPixmap(":maxi_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":maxi_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":maxi_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":maxi_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     menuWidget,
                     0,
                     this,
@@ -178,8 +183,8 @@ void MainWindow::initMenuWidget() {
                 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
                 new HoverableLabel(
-                    QPixmap(":close_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":close_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":close_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":close_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     menuWidget,
                     0,
                     this,
