@@ -69,12 +69,16 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
 void MainWindow::mousePressEvent(QMouseEvent * event) {
     if (event -> button() == Qt::LeftButton) {
 //        qDebug() << QApplication::widgetAt(QCursor::pos());
-        inAction = true;
-        moveFlag = !isResizeable();
-        dragPos = event -> globalPos();
-        geom = geometry();
-        event -> accept();
-    } else QMainWindow::mousePressEvent(event);
+        moveFlag = !isResizeable() && !isMaximized();
+        if (moveFlag || resizeFlagX || resizeFlagY) {
+            inAction = true;
+            dragPos = event -> globalPos();
+            geom = geometry();
+            event -> accept();
+            return;
+        }
+    }
+    QMainWindow::mousePressEvent(event);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent * event) {
@@ -133,17 +137,21 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 }
 
 bool MainWindow::isResizeable() {
-    QPoint pos = mapFromGlobal(QCursor::pos());
+    if (isMaximized()) {
+        return (atLeft = atRight = atTop = atBottom = resizeFlagX = resizeFlagY = false);
+    } else {
+        QPoint pos = mapFromGlobal(QCursor::pos());
 
-    atLeft = pos.x() >= 0 && pos.x() <= doubleBorderWidth;
-    atRight = pos.x() >= width() - doubleBorderWidth && pos.x() <= width();
-    atTop = pos.y() >= 0 && pos.y() <= doubleBorderWidth;
-    atBottom = pos.y() >= height() - doubleBorderWidth && pos.y() <= height();
+        atLeft = pos.x() >= 0 && pos.x() <= doubleBorderWidth;
+        atRight = pos.x() >= width() - doubleBorderWidth && pos.x() <= width();
+        atTop = pos.y() >= 0 && pos.y() <= doubleBorderWidth;
+        atBottom = pos.y() >= height() - doubleBorderWidth && pos.y() <= height();
 
-    resizeFlagX = atLeft || atRight;
-    resizeFlagY = atTop || atBottom;
+        resizeFlagX = atLeft || atRight;
+        resizeFlagY = atTop || atBottom;
 
-    return resizeFlagX || resizeFlagY;
+        return resizeFlagX || resizeFlagY;
+    }
 }
 
 void MainWindow::initMenuWidget() {
