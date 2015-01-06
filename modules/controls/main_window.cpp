@@ -1,11 +1,9 @@
 #include "main_window.h"
 #include <QGridLayout>
+#include "misc/stylesheets.h"
 //#include <QApplication>
 
 using namespace Playo3;
-
-//TODO: add control reaction on window state change
-//TODO: block border in full screen
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
@@ -15,11 +13,14 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
+//    setTabShape(QTabWidget::Rounded);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_PaintOnScreen);
+
+    setStyleSheet(Stylesheets::mainWindowTabsStyle());
 
     QVector<qreal> penPattern;
     penPattern.append(1); penPattern.append(halfBorderWidth);

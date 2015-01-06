@@ -8,14 +8,14 @@
 #include "modules/json/data_store.h"
 
 namespace Playo3 {
-    class Dockbars : public QObject {
+    class Dockbars : public QWidget {
         Q_OBJECT
     public:
         ~Dockbars() {
 
         }
 
-        static Dockbars * instance(QObject * parent);
+        static Dockbars * instance(QWidget * parent);
         static void close() {
             delete self;
         }
@@ -25,7 +25,7 @@ namespace Playo3 {
 
         QDockWidget * createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
     private:
-        Dockbars(QObject * parent) : QObject(parent) {
+        Dockbars(QWidget * parent) : QWidget(parent) {
 
         }
 

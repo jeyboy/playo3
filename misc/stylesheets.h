@@ -199,6 +199,94 @@ public:
                     "}"
                   );
     }
+
+    static QString mainWindowTabsStyle() {
+        return QString(
+                    "QTabBar::tab {"
+                    "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                    "                               stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
+                    "                               stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
+                    "   border: 2px solid #C4C4C3;"
+                    "   border-bottom-color: #C2C7CB;"
+                    "   min-width: 8ex;"
+                    "   padding: 2px;"
+                    "}"
+
+                    "QTabBar::tab:top {"
+                    "   border-top-left-radius: 4px;"
+                    "   border-top-right-radius: 4px;"
+                    "}"
+
+                    "QTabBar::tab:bottom {"
+                    "   border-bottom-left-radius: 4px;"
+                    "   border-bottom-right-radius: 4px;"
+                    "}"
+
+                    "QTabBar::tab:left {"
+                    "   border-top-left-radius: 4px;"
+                    "   border-bottom-left-radius: 4px;"
+                    "}"
+
+                    "QTabBar::tab:right {"
+                    "   border-top-right-radius: 4px;"
+                    "   border-bottom-right-radius: 4px;"
+                    "}"
+
+                    "QTabBar::tab:selected, QTabBar::tab:hover {"
+                    "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                    "                               stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
+                    "                               stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
+                    "}"
+
+                    "QTabBar::tab:selected {"
+                    "   border-color: #9B9B9B;"
+                    "   border-bottom-color: #C2C7CB;" /* same as pane color */
+                    "}"
+
+                    "QTabBar::tab:!selected {"
+                    "   margin-top: 2px;" /* make non-selected tabs look smaller */
+                    "}"
+
+                    /* make use of negative margins for overlapping tabs */
+                    "QTabBar::tab:selected {"
+                    "   margin-left: -4px;"
+                    "   margin-right: -4px;"
+                    "}"
+
+                    "QTabBar::tab:first:selected {"
+                    "   margin-left: 0;"
+                    "}"
+
+                    "QTabBar::tab:last:selected {"
+                    "   margin-right: 0;"
+                    "}"
+
+                    "QTabBar::tab:only-one {"
+                    "   margin: 0;"
+                    "}"
+
+//                    QTabBar::tear {
+//                        image: url(tear_indicator.png);
+//                    }
+
+                    "QTabBar::scroller {" /* the width of the scroll buttons */
+                    "    width: 20px;"
+                    "}"
+
+//                    "QTabBar QToolButton {" /* the scroll buttons are tool buttons */
+//                    "    border-image: url(scrollbutton.png) 2;"
+//                    "    border-width: 2px;"
+//                    "}"
+
+                    "QTabBar QToolButton::right-arrow {" /* the arrow mark in the tool buttons */
+                    "    image: url(rightarrow.png);"
+                    "}"
+
+                    "QTabBar QToolButton::left-arrow {"
+                    "    image: url(leftarrow.png);"
+                    "}"
+        );
+    }
 };
 
 #endif // STYLESHEETS_H

@@ -4,7 +4,7 @@ using namespace Playo3;
 
 Dockbars *Dockbars::self = 0;
 
-Dockbars *Dockbars::instance(QObject * parent) {
+Dockbars *Dockbars::instance(QWidget * parent) {
     if(!self)
         self = new Dockbars(parent);
     return self;
