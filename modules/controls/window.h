@@ -14,7 +14,7 @@ namespace Playo3 {
         ~MainWindow();
 
     public slots:
-        inline void setWindowTitle(const QString & newTitle) { titleLabel -> setText(newTitle);}
+        inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle);}
         inline void invertWindowState() {
             if (isMaximized())
                 showNormal();
@@ -55,14 +55,12 @@ namespace Playo3 {
         void mouseMoveEvent(QMouseEvent *);
         void paintEvent(QPaintEvent *);
     protected:
-        WindowTitle * menuWidget;
+        WindowTitle * titleWidget;
 
     private:
-        QLabel * titleLabel;
-
         QRect & stickCorrection(QRect & r);
         bool isResizeable();
-        void initMenuWidget();
+        void initTitle();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
         uint titleHeight, stickDist;
@@ -80,4 +78,3 @@ namespace Playo3 {
 }
 
 #endif // MAIN_WINDOW
-

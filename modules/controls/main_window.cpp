@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
 
-    initMenuWidget();
+    initTitle();
 }
 
 MainWindow::~MainWindow() {
@@ -44,7 +44,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
-    menuWidget -> resize(event -> size().width(), menuWidget -> height());
+    titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
     delete brush;
     brush = new QLinearGradient(0, 0, rect().width(), rect().height());
@@ -171,23 +171,16 @@ bool MainWindow::isResizeable() {
     }
 }
 
-void MainWindow::initMenuWidget() {
-    menuWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
-    connect(menuWidget, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
-    QGridLayout * l = (QGridLayout *)menuWidget -> layout();
+void MainWindow::initTitle() {
+    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
+    connect(titleWidget, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
+    QGridLayout * l = (QGridLayout *)titleWidget -> layout();
 
-    titleLabel = new QLabel("", menuWidget);
-    QFont font = titleLabel -> font();
-    font.setPointSize(12);
-    font.setBold(true);
-    titleLabel -> setFont(font);
-
-    l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
     l -> addWidget(
                 new HoverableLabel(
                     QPixmap(":mini_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     QPixmap(":mini_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    menuWidget,
+                    titleWidget,
                     0,
                     this,
                     SLOT(showMinimized())
@@ -197,7 +190,7 @@ void MainWindow::initMenuWidget() {
                 new HoverableLabel(
                     QPixmap(":maxi_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     QPixmap(":maxi_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    menuWidget,
+                    titleWidget,
                     0,
                     this,
                     SLOT(invertWindowState())
@@ -207,7 +200,7 @@ void MainWindow::initMenuWidget() {
                 new HoverableLabel(
                     QPixmap(":close_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                     QPixmap(":close_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    menuWidget,
+                    titleWidget,
                     0,
                     this,
                     SLOT(close())
