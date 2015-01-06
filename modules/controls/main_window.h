@@ -14,6 +14,11 @@ namespace Playo3 {
 
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleLabel -> setText(newTitle);}
+        inline void invertWindowState() {
+            if (isMaximized())
+                showNormal();
+            else showMaximized();
+        }
 
     protected:
         void resizeEvent(QResizeEvent *);

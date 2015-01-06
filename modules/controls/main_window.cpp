@@ -9,7 +9,7 @@ using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), titleHeight(32), background(new QPixmap(":main")),
+    radius(12), titleHeight(30), background(new QPixmap(":main")),
     resizeFlagX(false), resizeFlagY(false),
     moveFlag(false), inAction(false), brush(0) {
 
@@ -179,7 +179,7 @@ void MainWindow::initMenuWidget() {
                     menuWidget,
                     0,
                     this,
-                    SLOT(showMaximized())
+                    SLOT(invertWindowState())
                 ),
                 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
