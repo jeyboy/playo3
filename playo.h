@@ -2,7 +2,7 @@
 #define PLAYO_H
 
 #include <qdebug.h>
-#include "modules/controls/main_window.h"
+#include "modules/controls/window.h"
 
 namespace Ui {
     class Playo;

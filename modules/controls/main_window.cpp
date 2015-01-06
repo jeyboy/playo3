@@ -1,15 +1,14 @@
-#include "main_window.h"
-#include <QGridLayout>
+#include "window.h"
 #include "misc/stylesheets.h"
 #include "misc/screen.h"
 
 using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), titleHeight(30), stickDist(12), background(new QPixmap(":main")),
-    resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
-    brush(0) {
+    titleHeight(30), stickDist(12), borderWidth(6),
+    doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
+    radius(12), background(new QPixmap(":main")), resizeFlagX(false),
+    resizeFlagY(false), moveFlag(false), inAction(false), brush(0) {
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
@@ -139,16 +138,16 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
-    if (qAbs(screenRect.right() - rect.right()) < stickDist)
+    if (qAbs(screenRect.right() - rect.right()) < (int)stickDist)
         rect.moveRight(screenRect.right());
 
-    if (qAbs(screenRect.bottom() - rect.bottom()) < stickDist)
+    if (qAbs(screenRect.bottom() - rect.bottom()) < (int)stickDist)
         rect.moveBottom(screenRect.bottom());
 
-    if (qAbs(screenRect.left() - rect.left()) < stickDist)
+    if (qAbs(screenRect.left() - rect.left()) < (int)stickDist)
         rect.moveLeft(screenRect.left());
 
-    if (qAbs(screenRect.top() - rect.top()) < stickDist)
+    if (qAbs(screenRect.top() - rect.top()) < (int)stickDist)
         rect.moveTop(screenRect.top());
 
     return rect;
@@ -173,13 +172,9 @@ bool MainWindow::isResizeable() {
 }
 
 void MainWindow::initMenuWidget() {
-    menuWidget = new QWidget(this);
-    menuWidget -> setObjectName("TitleBar");
-    menuWidget -> setContentsMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0);
-    menuWidget -> setFixedHeight(titleHeight + 6);
-    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 2px solid white; margin: 0 " + QString::number(borderWidth) + "px 0 " + QString::number(borderWidth) + "px; }");
-    QGridLayout * l = new QGridLayout(menuWidget);
-    l -> setContentsMargins(0, 0, 0, 0);
+    menuWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
+    connect(menuWidget, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
+    QGridLayout * l = (QGridLayout *)menuWidget -> layout();
 
     titleLabel = new QLabel("", menuWidget);
     QFont font = titleLabel -> font();

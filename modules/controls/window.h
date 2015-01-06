@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <qpainter.h>
 #include "modules/controls/hoverable_label.h"
+#include "modules/controls/window_title.h"
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {
@@ -54,7 +55,7 @@ namespace Playo3 {
         void mouseMoveEvent(QMouseEvent *);
         void paintEvent(QPaintEvent *);
     protected:
-        QWidget * menuWidget;
+        WindowTitle * menuWidget;
 
     private:
         QLabel * titleLabel;

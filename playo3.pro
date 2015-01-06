@@ -61,11 +61,12 @@ HEADERS  += playo.h \
     dialogs/toolbarbuttondialog.h \
     dialogs/toolbardialog.h \
     single_application.h \
-    modules/controls/main_window.h \
     modules/controls/button.h \
     modules/controls/clickable_label.h \
     modules/controls/hoverable_label.h \
-    misc/screen.h
+    misc/screen.h \
+    modules/controls/window.h \
+    modules/controls/window_title.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
