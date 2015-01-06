@@ -58,9 +58,6 @@ public:
                     " image: url(:/elems/prev);"
                     "}"
 
-// "QTabBar::tear {"
-// " image: url(tear_indicator.png);"
-// "}"
 
                     "QTabBar::scroller {"
                     " height: 24px;"
@@ -209,27 +206,30 @@ public:
                     "   border: 2px solid #C4C4C3;"
                     "   border-bottom-color: #C2C7CB;"
                     "   min-width: 8ex;"
-                    "   padding: 2px;"
                     "}"
 
                     "QTabBar::tab:top {"
                     "   border-top-left-radius: 4px;"
                     "   border-top-right-radius: 4px;"
+                    "   padding: 0 6px;"
                     "}"
 
                     "QTabBar::tab:bottom {"
                     "   border-bottom-left-radius: 4px;"
                     "   border-bottom-right-radius: 4px;"
+                    "   padding: 0 6px;"
                     "}"
 
                     "QTabBar::tab:left {"
                     "   border-top-left-radius: 4px;"
                     "   border-bottom-left-radius: 4px;"
+                    "   padding: 6px 0;"
                     "}"
 
                     "QTabBar::tab:right {"
                     "   border-top-right-radius: 4px;"
                     "   border-bottom-right-radius: 4px;"
+                    "   padding: 6px 0;"
                     "}"
 
                     "QTabBar::tab:selected, QTabBar::tab:hover {"

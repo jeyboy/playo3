@@ -1,19 +1,18 @@
 #include "main_window.h"
 #include <QGridLayout>
 #include "misc/stylesheets.h"
-//#include <QApplication>
+#include "misc/screen.h"
 
 using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), titleHeight(30), background(new QPixmap(":main")),
-    resizeFlagX(false), resizeFlagY(false),
-    moveFlag(false), inAction(false), brush(0) {
+    radius(12), titleHeight(30), stickDist(12), background(new QPixmap(":main")),
+    resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
+    brush(0) {
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
-//    setTabShape(QTabWidget::Rounded);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -54,7 +53,7 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 212));
     brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 212));
 
-    int minSide = qMin(rect().width(), rect().height() - titleHeight) / 2, minSideHalf = minSide / 2;
+    int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
     borderRect.setRect(
@@ -72,6 +71,7 @@ void MainWindow::mousePressEvent(QMouseEvent * event) {
 //        qDebug() << QApplication::widgetAt(QCursor::pos());
         moveFlag = !isResizeable() && !isMaximized();
         if (moveFlag || resizeFlagX || resizeFlagY) {
+            screenRect = Screen::screenRect(this);
             inAction = true;
             dragPos = event -> globalPos();
             geom = geometry();
@@ -111,11 +111,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
                 else
                     nr.moveBottomLeft(geom.bottomLeft());
             }
-            setGeometry(nr);
+            setGeometry(stickCorrection(nr));
             event -> accept();
         }
         else if(moveFlag) {
-            move(event -> globalPos() - (dragPos - geom.topLeft()));
+            QRect newRect(geom); newRect.moveTopLeft(event -> globalPos() - (dragPos - geom.topLeft()));
+            move(stickCorrection(newRect).topLeft());
             event -> accept();
         } else
             QMainWindow::mouseMoveEvent(event);
@@ -135,6 +136,22 @@ void MainWindow::paintEvent(QPaintEvent * event) {
     painter.restore();
 
     QMainWindow::paintEvent(event);
+}
+
+QRect & MainWindow::stickCorrection(QRect & rect) {
+    if (qAbs(screenRect.right() - rect.right()) < stickDist)
+        rect.moveRight(screenRect.right());
+
+    if (qAbs(screenRect.bottom() - rect.bottom()) < stickDist)
+        rect.moveBottom(screenRect.bottom());
+
+    if (qAbs(screenRect.left() - rect.left()) < stickDist)
+        rect.moveLeft(screenRect.left());
+
+    if (qAbs(screenRect.top() - rect.top()) < stickDist)
+        rect.moveTop(screenRect.top());
+
+    return rect;
 }
 
 bool MainWindow::isResizeable() {

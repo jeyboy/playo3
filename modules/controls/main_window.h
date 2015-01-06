@@ -59,20 +59,22 @@ namespace Playo3 {
     private:
         QLabel * titleLabel;
 
+        QRect & stickCorrection(QRect & r);
         bool isResizeable();
         void initMenuWidget();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
-        int borderWidth, doubleBorderWidth, halfBorderWidth, radius, titleHeight;
+        uint titleHeight, stickDist;
+        int borderWidth, doubleBorderWidth, halfBorderWidth, radius;
         QPixmap * background;
-        bool resizeFlagX, resizeFlagY, moveFlag, inAction;
+        bool resizeFlagX, resizeFlagY, moveFlag, inAction, recursion;
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
         QRect geom;
 
         QPen pen, bevelPen;
         QLinearGradient * brush;
-        QRect backRect, borderRect;
+        QRect backRect, borderRect, screenRect;
     };
 }
 
