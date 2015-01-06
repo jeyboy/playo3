@@ -147,9 +147,9 @@ void MainWindow::initMenuWidget() {
     menuWidget = new QWidget(this);
     menuWidget -> setObjectName("TitleBar");
     menuWidget -> setContentsMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0);
-    menuWidget -> setFixedHeight(36);
+    menuWidget -> setFixedHeight(titleHeight + 6);
 //    menuWidget -> setMouseTracking(true);
-    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 2px solid white; }");
+    menuWidget -> setStyleSheet("#TitleBar { border-bottom: 2px solid white; margin: 0 " + QString::number(borderWidth) + "px 0 " + QString::number(borderWidth) + "px; }");
     QGridLayout * l = new QGridLayout(menuWidget);
     l -> setContentsMargins(0, 0, 0, 0);
 //    l -> setMargin(0);
