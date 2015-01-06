@@ -2,8 +2,7 @@
 #define MAIN_WINDOW
 
 #include <QMainWindow>
-#include <QPainter>
-#include <qevent.h>
+#include <qpainter.h>
 #include "modules/controls/hoverable_label.h"
 
 namespace Playo3 {

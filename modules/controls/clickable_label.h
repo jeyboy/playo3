@@ -1,9 +1,8 @@
 #ifndef CLICKABLE_LABEL_H
 #define CLICKABLE_LABEL_H
 
-#include <QLabel>
+#include <qlabel.h>
 #include <qevent.h>
-#include <qdebug.h>
 
 namespace Playo3 {
     class ClickableLabel : public QLabel {

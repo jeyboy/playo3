@@ -4,6 +4,9 @@
 
 using namespace Playo3;
 
+//TODO: add control reaction on window state change
+//TODO: block border in full screen
+
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     borderWidth(6), doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
     radius(12), titleHeight(32), background(new QPixmap(":main")),
@@ -50,8 +53,8 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 212));
     brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 212));
 
-    int minSide = qMin(rect().width(), centralWidget() -> rect().height()) / 2, minSideHalf = minSide / 2;
-    backRect.setRect(rect().width() / 2 - minSideHalf, rect().height() / 2 - minSideHalf, minSide, minSide);
+    int minSide = qMin(rect().width(), rect().height() - titleHeight) / 2, minSideHalf = minSide / 2;
+    backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
     borderRect.setRect(
                 rect().x() + halfBorderWidth,
@@ -148,12 +151,9 @@ void MainWindow::initMenuWidget() {
     menuWidget -> setObjectName("TitleBar");
     menuWidget -> setContentsMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0);
     menuWidget -> setFixedHeight(titleHeight + 6);
-//    menuWidget -> setMouseTracking(true);
     menuWidget -> setStyleSheet("#TitleBar { border-bottom: 2px solid white; margin: 0 " + QString::number(borderWidth) + "px 0 " + QString::number(borderWidth) + "px; }");
     QGridLayout * l = new QGridLayout(menuWidget);
     l -> setContentsMargins(0, 0, 0, 0);
-//    l -> setMargin(0);
-//    l -> setSpacing(0);
 
     titleLabel = new QLabel("", menuWidget);
     QFont font = titleLabel -> font();

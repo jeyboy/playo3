@@ -35,16 +35,6 @@
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="tabber">
-   <property name="acceptDrops">
-    <bool>true</bool>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
-    </item>
-   </layout>
-  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

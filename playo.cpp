@@ -8,6 +8,7 @@ using namespace Playo3;
 
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);
+//    ui-> centralWidget -> hide();
 
     QApplication::setWindowIcon(QIcon(":ico"));
     setWindowTitle("Playo");
@@ -24,6 +25,7 @@ Playo::~Playo() {
 
 void Playo::init() {
     addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
+    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pipido", this));
     addToolBar("lalka");
     addToolBar("lalka2");
 }
