@@ -157,13 +157,34 @@ void MainWindow::initMenuWidget() {
     titleLabel = new QLabel("The coolest text in the world", menuWidget);
     l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":mini_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMinimized()), menuWidget),
+                new HoverableLabel(
+                    QPixmap(":mini_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":mini_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    menuWidget,
+                    0,
+                    this,
+                    SLOT(showMinimized())
+                ),
                 0, 1, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":maxi_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(showMaximized()), menuWidget),
+                new HoverableLabel(
+                    QPixmap(":maxi_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":maxi_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    menuWidget,
+                    0,
+                    this,
+                    SLOT(showMaximized())
+                ),
                 0, 2, Qt::AlignRight | Qt::AlignVCenter);
     l -> addWidget(
-                new ClickableLabel(QPixmap(":close_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, SLOT(close()), menuWidget),
+                new HoverableLabel(
+                    QPixmap(":close_button").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    QPixmap(":close_button_hover").scaled(titleHeight * 2, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                    menuWidget,
+                    0,
+                    this,
+                    SLOT(close())
+                ),
                 0, 3, Qt::AlignRight | Qt::AlignVCenter);
 
     l -> setColumnStretch(0, 10);

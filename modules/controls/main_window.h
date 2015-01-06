@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <qevent.h>
-#include "modules/controls/clickable_label.h"
+#include "modules/controls/hoverable_label.h"
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {

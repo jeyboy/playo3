@@ -5,5 +5,8 @@
         <file alias="close_button">images/temp/close_temp.png</file>
         <file alias="maxi_button">images/temp/maxi_temp.png</file>
         <file alias="mini_button">images/temp/mini_temp.png</file>
+        <file alias="close_button_hover">images/temp/close_temp_hover.png</file>
+        <file alias="maxi_button_hover">images/temp/maxi_temp_hover.png</file>
+        <file alias="mini_button_hover">images/temp/mini_temp_hover.png</file>
     </qresource>
 </RCC>

@@ -2,23 +2,26 @@
 
 using namespace Playo3;
 
-ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f) : QLabel(parent, f) {
-    setContentsMargins(0,0,0,0);
-}
+//ClickableLabel::ClickableLabel(QWidget *parent, Qt::WindowFlags f) : QLabel(parent, f) {
+//    setContentsMargins(0,0,0,0);
+//}
 
-ClickableLabel::ClickableLabel(const QString &text, QWidget *parent, Qt::WindowFlags f, const QObject * receiver, const char *slot) : QLabel(text, parent, f) {
+ClickableLabel::ClickableLabel(const QString &text, QWidget *parent, Qt::WindowFlags f, const QObject * receiver, const char *slot)
+    : QLabel(text, parent, f) {
     setContentsMargins(0,0,0,0);
     if (receiver && slot)
         connect(this, SIGNAL(clicked()), receiver, slot);
 }
 
-ClickableLabel::ClickableLabel(const QPixmap &icon, const QObject * receiver, const char *slot, QWidget *parent, Qt::WindowFlags f) : QLabel("", parent, f) {
+ClickableLabel::ClickableLabel(const QPixmap &icon, QWidget *parent, Qt::WindowFlags f, const QObject * receiver, const char *slot)
+    : QLabel("", parent, f) {
     setPixmap(icon);
-    connect(this, SIGNAL(clicked()), receiver, slot);
+    if (receiver && slot)
+        connect(this, SIGNAL(clicked()), receiver, slot);
 }
 
-ClickableLabel::~ClickableLabel() {
 
+ClickableLabel::~ClickableLabel() {
 }
 
 void ClickableLabel::mousePressEvent(QMouseEvent *ev) {
@@ -27,4 +30,13 @@ void ClickableLabel::mousePressEvent(QMouseEvent *ev) {
         emit clicked();
     } else
         QLabel::mousePressEvent(ev);
+}
+
+bool ClickableLabel::event(QEvent * e) {
+    if (e -> type() == QEvent::Enter)
+        emit hoverIn();
+    else if (e -> type() == QEvent::Leave)
+        emit hoverOut();
+
+    return QLabel::event(e);
 }
