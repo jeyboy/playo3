@@ -1,6 +1,7 @@
 #include "toolbar.h"
 #include <QLabel>
 #include <QAction>
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -8,7 +9,7 @@ ToolBar::ToolBar(const QString &title, QWidget * parent) : QToolBar(title, paren
     setAcceptDrops(true);
     setObjectName("tool_" + title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
-    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
+//    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
 
     QLabel * titleLabel = new QLabel(this);
     titleLabel -> setStyleSheet("color: white;");
@@ -16,9 +17,13 @@ ToolBar::ToolBar(const QString &title, QWidget * parent) : QToolBar(title, paren
     f.setBold(true);
     f.setPixelSize(10);
     titleLabel -> setFont(f);
-    QFontMetrics metrics(f);
+    QString row = titleLabel -> fontMetrics().elidedText(title, Qt::ElideRight, 30, Qt::TextWrapAnywhere);
+    if (row.size() < title.size()) {
+        row.chop(1);
+        row = row + title.at(row.size()) + "\n" + title.mid(row.length() + 1, row.length()) + ((title.size() > (row.length() * 2) + 1) ? ".." : "");
+    }
 
-    titleLabel -> setText(metrics.elidedText(title, Qt::ElideRight, 30, Qt::TextWrapAnywhere));
+    titleLabel -> setText(row);
     titleLabel -> setMinimumSize(30, 30);
     titleLabel -> setMaximumSize(30, 30);
     titleLabel -> setAlignment(Qt::AlignCenter);
