@@ -89,8 +89,8 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
 void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
-        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
+//        barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
+//        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -143,7 +143,7 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
                     && bar -> windowTitle() != "Media+Time"
                     && bar -> windowTitle() != "Media+Volume"
                     && bar -> windowTitle() != "Controls"
-                    && bar -> windowTitle() != "Spectrum"
+//                    && bar -> windowTitle() != "Spectrum"
                ) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
@@ -171,7 +171,7 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
     //        bar -> toolButtonStyle();
         }
 
-        settings -> write("bars", toolbar_array);
+        settings -> write(ToolBars::settingsName(), toolbar_array);
     }
 }
 

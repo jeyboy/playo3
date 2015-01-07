@@ -6,24 +6,26 @@
 #include <QMouseEvent>
 #include <QFileInfo>
 
-class ToolBar : public QToolBar {
-    Q_OBJECT
+namespace Playo3 {
+    class ToolBar : public QToolBar {
+        Q_OBJECT
 
-public:
-    ToolBar(const QString &title, QWidget *parent = 0);
-    ~ToolBar();
+    public:
+        ToolBar(const QString &title, QWidget *parent = 0);
+        ~ToolBar();
 
-protected:
-    void dropEvent(QDropEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
-    bool event(QEvent * ev) {
-        emit(eventTriggered(ev));
-        return QToolBar::event(ev);
-    }
+    protected:
+        void dropEvent(QDropEvent *event);
+        void dragEnterEvent(QDragEnterEvent *event);
+        bool event(QEvent * ev) {
+            emit(eventTriggered(ev));
+            return QToolBar::event(ev);
+        }
 
-signals:
-    void eventTriggered(QEvent * ev);
-    void folderDropped(QString name, QString path);
-};
+    signals:
+        void eventTriggered(QEvent * ev);
+        void folderDropped(QString name, QString path);
+    };
+}
 
 #endif // TOOLBAR_H

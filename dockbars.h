@@ -20,6 +20,8 @@ namespace Playo3 {
             delete self;
         }
 
+        static inline QString settingsName() { return "docks"; }
+
         void load(QMainWindow * window, QJsonArray & bars);
         void save(QMainWindow * window, DataStore * settings);
 

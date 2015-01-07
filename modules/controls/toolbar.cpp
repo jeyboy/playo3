@@ -1,5 +1,6 @@
 #include "toolbar.h"
-#include <QDebug>
+
+using namespace Playo3;
 
 ToolBar::ToolBar(const QString &title, QWidget * parent) : QToolBar(title, parent) {
     setAcceptDrops(true);
@@ -11,11 +12,10 @@ ToolBar::~ToolBar() {
 }
 
 void ToolBar::dragEnterEvent(QDragEnterEvent *event) {
-   if (event -> mimeData() -> hasFormat("text/uri-list")) {
+   if (event -> mimeData() -> hasFormat("text/uri-list"))
        event -> accept();
-   } else {
+   else
        event -> ignore();
-   }
 }
 
 void ToolBar::dropEvent(QDropEvent *event) {
@@ -29,6 +29,6 @@ void ToolBar::dropEvent(QDropEvent *event) {
                 }
             }
         }
-        event->accept();
+        event -> accept();
     } else {  event -> ignore(); }
 }

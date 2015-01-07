@@ -43,6 +43,8 @@ namespace Playo3 {
             delete self;
         }
 
+        static inline QString settingsName() { return "bars"; }
+
         QMenu * improvePopupMenu(QMainWindow * window, QMenu * menu);
 
         void load(QMainWindow * window, QJsonArray & bars);

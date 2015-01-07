@@ -29,6 +29,8 @@ public:
     explicit Playo(QWidget *parent = 0);
     ~Playo();
 
+    QMenu * createPopupMenu();
+
 protected:
     void closeEvent(QCloseEvent *);
     void init();

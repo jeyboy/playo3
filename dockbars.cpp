@@ -96,7 +96,7 @@ void Dockbars::save(QMainWindow * window, DataStore * settings) {
 //    //        bar -> toolButtonStyle();
 //        }
 
-//        settings -> write("bars", toolbar_array);
+//        settings -> write(Dockbars::settingsName(), toolbar_array);
 //    }
 }
 

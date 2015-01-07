@@ -1,6 +1,5 @@
 #include "playo.h"
 #include "ui_playo.h"
-#include <QDockWidget>
 
 #include "modules/controls/button.h"
 
@@ -42,6 +41,10 @@ Playo::~Playo() {
     delete settings;
 }
 
+QMenu * Playo::createPopupMenu() {
+    return ToolBars::instance(this) -> improvePopupMenu(this, QMainWindow::createPopupMenu());
+}
+
 void Playo::closeEvent(QCloseEvent * e) {
     settings -> clear();
 
@@ -49,6 +52,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
     ToolBars::instance(this) -> save(this, settings);
+    Dockbars::instance(this) -> save(this, settings);
 
     settings -> write("settings", Settings::instance() -> toJson());
     settings -> save();
@@ -93,8 +97,11 @@ void Playo::init() {
     ///////////////////////////////////////////////////////////
     /// toolbars
     ///////////////////////////////////////////////////////////
-    QJsonArray bars = settings -> read("bars").toArray();
+    QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance(this) -> load(this, bars);
+
+    QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
+    Dockbars::instance(this) -> load(this, docks);
 
     QVariant objState = stateSettings.value("windowState");
     if (objState.isValid())
@@ -103,6 +110,4 @@ void Playo::init() {
 //    ui -> tabber -> load();
 
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
-
-//    showActiveElem();
 }
