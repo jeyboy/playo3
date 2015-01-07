@@ -178,6 +178,10 @@ public:
                   );
     }
 
+    static QString toolbarStyle() {
+        return QString("QToolBar { border: none; }");
+    }
+
     static QString toolbarButtonStyle() {
         return QString(
                     "QToolButton {"

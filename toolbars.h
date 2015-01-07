@@ -19,6 +19,7 @@
 
 #include "dialogs/toolbardialog.h"
 #include "dialogs/toolbarbuttondialog.h"
+#include "misc/stylesheets.h"
 
 namespace Playo3 {
     class ToolBars : public QObject {
@@ -85,8 +86,9 @@ namespace Playo3 {
         inline void updateToolbarMovable(QToolBar * bar, bool movable) {
             bar -> setMovable(movable);
 
-            if (QString(bar -> metaObject() -> className()) == "QToolBar")
-                bar -> setStyleSheet(movable ? "" : "QToolBar { border: none; }");
+            if (!movable && QString(bar -> metaObject() -> className()) == "QToolBar")
+                bar -> setStyleSheet(Stylesheets::toolbarStyle());
+            else bar -> setStyleSheet("");
         }
 
         ToolBars(QObject * parent) : QObject(parent),
@@ -98,7 +100,7 @@ namespace Playo3 {
         QToolButton * vkToolButton;
         QToolButton * soundcloudToolButton;
 
-        QWidget * highlighted;
+        QToolBar * highlighted;
 
         Spectrum * spectrum;
         QToolBar * underMouseBar, * activeBar;

@@ -414,14 +414,14 @@ void ToolBars::panelHighlight(QAction *action) {
         emit removePanelHighlight();
 
     if (widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
-        highlighted = action -> parentWidget();
+        highlighted = (QToolBar *)action -> parentWidget();
         highlighted -> setStyleSheet("QToolBar { border: 2px dashed #00FFFF; }" );
     }
 }
 
 void ToolBars::removePanelHighlight() {
     if (highlighted != 0) {
-        highlighted -> setStyleSheet("");
+        updateToolbarMovable(highlighted, highlighted -> isMovable());
         highlighted = 0;
     }
 }

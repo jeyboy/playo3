@@ -29,9 +29,41 @@ public:
     explicit Playo(QWidget *parent = 0);
     ~Playo();
 
-    QMenu * createPopupMenu();
+public slots:
+//    void outputActiveItem(ModelItem *, ModelItem *);
+    void receiveMessage(QString);
+    void showAttCurrTabDialog();
+
+private slots:
+//    void showError(QString);
+
+    void showActiveElem();
+    void showSettingsDialog();
+
+//    void showVKRelTabDialog();
+//    void showSoundcloudRelTabDialog();
+
+//    void openVKTabDialog();
+//    void showVKTabDialog();
+//    void openSoundcloudTabDialog();
+//    void showSoundcloudTabDialog();
+
+//    void showAttTabDialog(Tab * tab = 0);
+    void openFolderTriggered();
+
+    void nextItemTriggered();
+    void nextItemWithDelTriggered();
+    void prevItemTriggered();
+
+//    void dropEvent(QDropEvent * event);
+
 
 protected:
+//    void putToCommonTab(QList<QUrl> urls);
+//    void dragEnterEvent(QDragEnterEvent *);
+//    void dragMoveEvent(QDragMoveEvent *);
+//    void dropEvent(QDropEvent *);
+    QMenu * createPopupMenu();
     void closeEvent(QCloseEvent *);
     void init();
 private:
