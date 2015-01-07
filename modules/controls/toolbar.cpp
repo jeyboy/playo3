@@ -1,4 +1,6 @@
 #include "toolbar.h"
+#include <QLabel>
+#include <QAction>
 
 using namespace Playo3;
 
@@ -6,6 +8,22 @@ ToolBar::ToolBar(const QString &title, QWidget * parent) : QToolBar(title, paren
     setAcceptDrops(true);
     setObjectName("tool_" + title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
+    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
+
+    QLabel * titleLabel = new QLabel(this);
+    titleLabel -> setStyleSheet("color: white;");
+    QFont f = titleLabel -> font();
+    f.setBold(true);
+    f.setPixelSize(10);
+    titleLabel -> setFont(f);
+    QFontMetrics metrics(f);
+
+    titleLabel -> setText(metrics.elidedText(title, Qt::ElideRight, 30, Qt::TextWrapAnywhere));
+    titleLabel -> setMinimumSize(30, 30);
+    titleLabel -> setMaximumSize(30, 30);
+    titleLabel -> setAlignment(Qt::AlignCenter);
+    titleLabel -> setContentsMargins(0,0,0,0);
+    addWidget(titleLabel) -> setObjectName("*Title");
 }
 
 ToolBar::~ToolBar() {

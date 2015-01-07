@@ -88,7 +88,7 @@ namespace Playo3 {
         ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), /*spectrum(0),*/
             underMouseBar(0), activeBar(0), underMouseButton(0) {
-            pal.setColor(QPalette::Button, QColor("#E1E0E0")); // background color for droppable panels
+
         }
 
         QToolButton * vkToolButton;
@@ -100,7 +100,6 @@ namespace Playo3 {
         QToolBar * underMouseBar, * activeBar;
         ToolbarButton * underMouseButton;
 
-        QPalette pal;
         QPoint lastClickPoint;
 
         static ToolBars *self;

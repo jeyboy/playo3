@@ -9,7 +9,7 @@
         <file alias="mini_button_hover">images/controls/mini_temp.png</file>
         <file alias="mini_button">images/controls/mini_temp2.png</file>
         <file>images/elements/active_tab.png</file>
-        <file>images/elements/add.png</file>
+        <file alias="add">images/elements/add.png</file>
         <file>images/elements/add_soundcloud.png</file>
         <file>images/elements/add_soundcloud_on.png</file>
         <file>images/elements/add_vk.png</file>
@@ -20,22 +20,22 @@
         <file alias="drop_remove">images/elements/drop-remove.png</file>
         <file>images/elements/error.png</file>
         <file>images/elements/expand.png</file>
-        <file>images/elements/like.png</file>
+        <file alias="like">images/elements/like.png</file>
         <file>images/elements/link.png</file>
         <file alias="locked">images/elements/locked.png</file>
         <file alias="mute">images/elements/mute2.png</file>
-        <file>images/elements/next.png</file>
+        <file alias="next">images/elements/next.png</file>
         <file alias="panel_add">images/elements/panel-add.png</file>
         <file alias="panel_remove">images/elements/panel-close.png</file>
         <file>images/elements/panels.png</file>
-        <file>images/elements/pause.png</file>
-        <file>images/elements/play.png</file>
+        <file alias="pause">images/elements/pause.png</file>
+        <file alias="play">images/elements/play.png</file>
         <file>images/elements/playlist.png</file>
-        <file>images/elements/prev.png</file>
+        <file alias="prev">images/elements/prev.png</file>
         <file>images/elements/remote.png</file>
         <file>images/elements/remove.png</file>
-        <file>images/elements/settings.png</file>
-        <file>images/elements/stop.png</file>
+        <file alias="settings">images/elements/settings.png</file>
+        <file alias="stop">images/elements/stop.png</file>
         <file alias="unlocked">images/elements/unlocked.png</file>
         <file alias="volume">images/elements/volume2.png</file>
     </qresource>

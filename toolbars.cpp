@@ -151,14 +151,14 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
                     QJsonObject curr_act;
 
                     foreach(QAction * act, actions) {
-                        if (QString(act -> metaObject() -> className()) == "QWidgetAction") {
+                        if (act -> objectName() != "*Title" && QString(act -> metaObject() -> className()) == "QWidgetAction") {
                             curr_act = QJsonObject();
                             button = (ToolbarButton*) bar -> widgetForAction(act);
 
                             curr_act.insert("path", button -> path);
                             curr_act.insert("name", button -> text());
+                            action_array.append(curr_act);
                         }
-                        action_array.append(curr_act);
                     }
 
                     if (action_array.count() > 0)
@@ -209,27 +209,9 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
 
 QToolBar * ToolBars::createToolBar(QString name) {
     ToolBar * ptb = new ToolBar(name, (QWidget *)parent());
+    ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
     connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(folderDropped(QString, QString)));
-
-//    ptb->addAction(QPixmap(QString(":/like")), "1", this, SLOT(slotNoImpl()));
-//    ptb->addAction(QPixmap(QString(":/next")), "2", this, SLOT(slotNoImpl()));
-//    ptb->addSeparator();
-//    ptb->addAction(QPixmap(QString(":/like")), "3", this, SLOT(slotNoImpl()));
-//    ptb->addAction(QPixmap(QString(":/next")), "4", this, SLOT(slotNoImpl()));
-
-//    toolbar->setMovable(false);
-
-//    QToolButton * button = new QToolButton(this);
-//    toolbar->addWidget(button);
-
-//    //way 1: It display a picture
-//    toolbar->setStyleSheet("background-image: url(:/images/toolbarBg)");
-
-//    ptb -> adjustSize();
-//    connect(ptb, SIGNAL(eventTriggered(QEvent *)), this, SLOT(ToolbarEvent(QEvent *)));
     return ptb;
 }
 
