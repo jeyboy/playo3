@@ -28,7 +28,6 @@ namespace Playo3 {
         Q_OBJECT
     public:
         ~ToolBars() {
-//            delete underMouseBar;
             if (vkToolButton)
                 delete vkToolButton -> menu();
             delete vkToolButton;
@@ -86,16 +85,9 @@ namespace Playo3 {
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
     private:
-        ToolBars(QObject * parent) : QObject(parent) {
-            highlighted = 0;
-            vkToolButton = 0;
-            soundcloudToolButton = 0;
-    //        spectrum = 0;
-
-            activeBar = 0;
-            underMouseBar = 0;
-            underMouseButton = 0;
-
+        ToolBars(QObject * parent) : QObject(parent),
+            vkToolButton(0), soundcloudToolButton(0), highlighted(0), /*spectrum(0),*/
+            underMouseBar(0), activeBar(0), underMouseButton(0) {
             pal.setColor(QPalette::Button, QColor("#E1E0E0")); // background color for droppable panels
         }
 

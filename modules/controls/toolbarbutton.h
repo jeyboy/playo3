@@ -10,17 +10,19 @@
 //#include "model/view.h"
 //#include "web/socials/vk_api.h"
 
-class ToolbarButton : public QToolButton {
-    Q_OBJECT
+namespace Playo3 {
+    class ToolbarButton : public QToolButton {
+        Q_OBJECT
 
-protected:
-    void dropEvent(QDropEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
+    protected:
+        void dropEvent(QDropEvent *event);
+        void dragEnterEvent(QDragEnterEvent *event);
 
-public:
-    ToolbarButton(QString text, QString folderPath, QWidget * parent=0);
+    public:
+        ToolbarButton(QString text, QString folderPath, QWidget * parent=0);
 
-    QString path;
-};
+        QString path;
+    };
+}
 
 #endif // TOOLBARBUTTON_H

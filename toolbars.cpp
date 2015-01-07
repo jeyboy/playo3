@@ -1,4 +1,5 @@
 #include "toolbars.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -15,14 +16,13 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     connect(menu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
 
-    menu -> insertSeparator(menu->actions().first());
+    menu -> insertSeparator(menu -> actions().first());
 
     lastClickPoint = QCursor::pos();
     QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint));
     QString widgetClassName = QString(widget -> metaObject() -> className());
 
-
-    if (widgetClassName == "ToolbarButton") {
+    if (widgetClassName == "Playo3::ToolbarButton") {
         underMouseButton = ((ToolbarButton*)widget);
         underMouseBar = ((ToolBar*)underMouseButton -> parentWidget());
     } else {
@@ -30,13 +30,13 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     }
 
     QAction * removeButtonAct = new QAction(QIcon(":drop_remove"), "Remove drop point", menu);
-    removeButtonAct -> setEnabled(widgetClassName == "ToolbarButton");
+    removeButtonAct -> setEnabled(widgetClassName == "Playo3::ToolbarButton");
     menu -> insertAction(menu->actions().first(), removeButtonAct);
     connect(removeButtonAct, SIGNAL(triggered(bool)), this, SLOT(removePanelButtonTriggered()));
 
 
     QAction * addButtonAct = new QAction(QIcon(":drop_add"), "Add drop point", menu);
-    addButtonAct -> setEnabled(widgetClassName == "ToolBar");
+    addButtonAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
     menu -> insertAction(menu->actions().first(), addButtonAct);
     connect(addButtonAct, SIGNAL(triggered(bool)), this, SLOT(addPanelButtonTriggered()));
 
@@ -44,7 +44,7 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     menu -> insertSeparator(menu->actions().first());
 
     QAction * removePanelAct = new QAction(QIcon(":panel_remove"), "Remove panel", menu);
-    removePanelAct -> setEnabled(widgetClassName == "ToolBar");
+    removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
     connect(removePanelAct, SIGNAL(triggered(bool)), this, SLOT(removePanelTriggered()));
     menu -> insertAction(menu->actions().first(), removePanelAct);
 
@@ -58,7 +58,7 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     //    activeBar
 
     ////////////////////////// for bar movable fixing ////////////////////////////////
-    if (widgetClassName == "QToolBar" || widgetClassName == "ToolBar" || widgetClassName == "Spectrum") {
+    if (widgetClassName == "QToolBar" || widgetClassName == "Playo3::ToolBar" || widgetClassName == "Playo3::Spectrum") {
         activeBar = ((QToolBar*)widget);
     } else {
         activeBar = ((QToolBar*)widget -> parentWidget());
@@ -84,7 +84,6 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
 
     return menu;
 }
-
 
 void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
     if (bars.count() > 0) {
@@ -208,8 +207,8 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     }
 }
 
-QToolBar* ToolBars::createToolBar(QString name) {
-    ToolBar* ptb = new ToolBar(name, (QWidget *)parent());
+QToolBar * ToolBars::createToolBar(QString name) {
+    ToolBar * ptb = new ToolBar(name, (QWidget *)parent());
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
     ptb -> setAutoFillBackground(true);
     ptb -> setPalette(pal);
@@ -432,7 +431,7 @@ void ToolBars::panelHighlight(QAction *action) {
     if (highlighted != 0)
         emit removePanelHighlight();
 
-    if (widgetClassName == "ToolBar" || widgetClassName == "QToolBar") {
+    if (widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
         highlighted = action -> parentWidget();
         highlighted -> setStyleSheet("QToolBar { border: 2px dashed #00FFFF; }" );
     }
