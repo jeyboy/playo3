@@ -12,7 +12,6 @@ ToolBars *ToolBars::instance(QObject * parent) {
 }
 
 QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
-    //TODO: add label with name on panel
     connect(menu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
 
@@ -473,8 +472,7 @@ void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
 }
 
 void ToolBars::changeToolbarMovable() {
-    activeBar -> setMovable(!activeBar -> isMovable());
-    activeBar -> repaint();
+    updateToolbarMovable(activeBar, !activeBar -> isMovable());
 }
 
 void ToolBars::changeToolbarsMovable() {
@@ -482,10 +480,8 @@ void ToolBars::changeToolbarsMovable() {
 
     QList<QToolBar *> toolbars = parent() -> findChildren<QToolBar *>();
 
-    foreach(QToolBar * bar, toolbars) {
-        bar -> setMovable(movable);
-//        bar -> repaint();
-    }
+    foreach(QToolBar * bar, toolbars)
+        updateToolbarMovable(bar, movable);
 }
 
 void ToolBars::folderDropped(QString name, QString path) {

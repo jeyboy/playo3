@@ -85,6 +85,13 @@ namespace Playo3 {
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
     private:
+        inline void updateToolbarMovable(QToolBar * bar, bool movable) {
+            bar -> setMovable(movable);
+
+            if (QString(bar -> metaObject() -> className()) == "QToolBar")
+                bar -> setStyleSheet(movable ? "" : "QToolBar { border: none; }");
+        }
+
         ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), /*spectrum(0),*/
             underMouseBar(0), activeBar(0), underMouseButton(0) {
