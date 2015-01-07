@@ -49,25 +49,10 @@ namespace Playo3 {
         void load(QMainWindow * window, QJsonArray & bars);
         void save(QMainWindow * window, DataStore * settings);
         void createToolbars(QMainWindow * window);
-        QToolBar * linkNameToToolbars(QString barName);
-
-
-        QToolBar* createToolBar(QString name);
-        QToolBar* createMediaBar();
-        QToolBar* createAdditionalMediaBar();
-        QToolBar* createPositionMediaBar();
-        QToolBar* createTimeMediaBar();
-        QToolBar* createVolumeMediaBar();
-        QToolBar* createControlToolBar();
-        Spectrum* getSpectrum();
-
-
-        QToolButton * initiateVkButton();
-        QToolButton * initiateSoundcloudButton();
-
         void addPanelButton(QString name, QString path, QToolBar * bar);
 
-        bool isToolbarNameUniq(QMainWindow * window, QString name);
+        inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
+        Spectrum * getSpectrum();
 
     public slots:
         void folderDropped(QString name, QString path);
@@ -83,6 +68,20 @@ namespace Playo3 {
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
     private:
+        QToolBar * linkNameToToolbars(QString barName);
+
+        QToolBar* createToolBar(QString name);
+        QToolBar* createMediaBar();
+        QToolBar* createAdditionalMediaBar();
+        QToolBar* createPositionMediaBar();
+        QToolBar* createTimeMediaBar();
+        QToolBar* createVolumeMediaBar();
+        QToolBar* createControlToolBar();
+
+        QToolButton * initiateVkButton();
+        QToolButton * initiateSoundcloudButton();
+
+        bool isToolbarNameUniq(QString name);
         inline void updateToolbarMovable(QToolBar * bar, bool movable) {
             bar -> setMovable(movable);
 

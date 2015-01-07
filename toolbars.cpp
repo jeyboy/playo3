@@ -23,9 +23,11 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
 
     if (widgetClassName == "Playo3::ToolbarButton") {
         underMouseButton = ((ToolbarButton*)widget);
-        underMouseBar = ((ToolBar*)underMouseButton -> parentWidget());
+        underMouseBar = ((ToolBar *)underMouseButton -> parentWidget());
+    } else if (widgetClassName == "QLabel") {
+        underMouseBar = (ToolBar *)widget -> parentWidget();
     } else {
-        underMouseBar = ((ToolBar*)widget);
+        underMouseBar = ((ToolBar *)widget);
     }
 
     QAction * removeButtonAct = new QAction(QIcon(":drop_remove"), "Remove drop point", menu);
@@ -43,7 +45,7 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     menu -> insertSeparator(menu->actions().first());
 
     QAction * removePanelAct = new QAction(QIcon(":panel_remove"), "Remove panel", menu);
-    removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
+    removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar" || widgetClassName == "QLabel");
     connect(removePanelAct, SIGNAL(triggered(bool)), this, SLOT(removePanelTriggered()));
     menu -> insertAction(menu->actions().first(), removePanelAct);
 
@@ -121,15 +123,15 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
 }
 
 void ToolBars::save(QMainWindow * window, DataStore * settings) {
-    QList<QToolBar *> toolbars = window -> findChildren<QToolBar *>();
+    QList<QToolBar *> bars = toolbars();
 
-    if (toolbars.length() > 0) {
+    if (bars.length() > 0) {
         QJsonArray toolbar_array = QJsonArray();
         QJsonObject curr_tab;
         QList<QAction*> actions;
         ToolbarButton* button;
 
-        foreach(QToolBar * bar, toolbars) {
+        foreach(QToolBar * bar, bars) {
             curr_tab = QJsonObject();
 
             curr_tab.insert("area", window -> toolBarArea(bar));
@@ -330,7 +332,6 @@ Spectrum * ToolBars::getSpectrum() {
     return spectrum;
 }
 
-
 // move to the vk class
 QToolButton * ToolBars::initiateVkButton() {
     if (vkToolButton == 0) {
@@ -391,10 +392,8 @@ void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
     connect(button, SIGNAL(clicked()), parent(), SLOT(openFolderTriggered()));
 }
 
-bool ToolBars::isToolbarNameUniq(QMainWindow * window, QString name) {
-    QList<QToolBar *> ToolBars = window -> findChildren<QToolBar *>();
-
-    foreach(QToolBar * bar, ToolBars) {
+bool ToolBars::isToolbarNameUniq(QString name) {
+    foreach(QToolBar * bar, toolbars()) {
         if (bar -> windowTitle() == name)
             return false;
     }
@@ -429,7 +428,7 @@ void ToolBars::addPanelTriggered() {
     ToolbarDialog dialog((QWidget *)parent());
 
     while (dialog.exec() == QDialog::Accepted) {
-        if (isToolbarNameUniq((QMainWindow *)parent(), dialog.getName())) {
+        if (isToolbarNameUniq(dialog.getName())) {
             ((QMainWindow *)parent()) -> addToolBar(Qt::BottomToolBarArea, createToolBar(dialog.getName()));
             return;
         }
@@ -477,10 +476,7 @@ void ToolBars::changeToolbarMovable() {
 
 void ToolBars::changeToolbarsMovable() {
     bool movable = !activeBar -> isMovable();
-
-    QList<QToolBar *> toolbars = parent() -> findChildren<QToolBar *>();
-
-    foreach(QToolBar * bar, toolbars)
+    foreach(QToolBar * bar, toolbars())
         updateToolbarMovable(bar, movable);
 }
 

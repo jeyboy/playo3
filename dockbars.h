@@ -6,6 +6,7 @@
 #include <QBoxLayout>
 
 #include "modules/json/data_store.h"
+#include "modules/controls/dockbar.h"
 
 namespace Playo3 {
     class Dockbars : public QWidget {
@@ -25,7 +26,9 @@ namespace Playo3 {
         void load(QMainWindow * window, QJsonArray & bars);
         void save(QMainWindow * window, DataStore * settings);
 
-        QDockWidget * createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
+        DockBar * createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
+    private slots:
+        void activeChanged();
     private:
         Dockbars(QWidget * parent) : QWidget(parent) {
 
