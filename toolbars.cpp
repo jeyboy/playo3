@@ -99,7 +99,8 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
             barName = obj.value("title").toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
-            curr_bar -> setMovable(obj.value("movable").toBool());
+//            curr_bar -> setMovable(obj.value("movable").toBool());
+            updateToolbarMovable(curr_bar, obj.value("movable").toBool());
 
             window -> addToolBar((Qt::ToolBarArea)obj.value("area").toInt(), curr_bar);
 
@@ -200,7 +201,7 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     } else if (barName == "Controls") {
         return createControlToolBar();
     } else if (barName == "Spectrum") {
-        return 0;//        return getSpectrum();
+        return getSpectrum();
     } else {
         return createToolBar(barName);
     }
@@ -217,9 +218,9 @@ QToolBar * ToolBars::createToolBar(QString name) {
 QToolBar* ToolBars::createMediaBar() {
     QToolBar* ptb = new QToolBar("Media");
     ptb -> setObjectName("_Media");
+    ptb -> setMinimumSize(30, 30);
 
     connect(ptb, SIGNAL(visibilityChanged(bool)), this, SLOT(toolbarVisibilityChanged(bool)));
-    ptb -> setMinimumSize(30, 30);
 
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
     Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
@@ -247,6 +248,7 @@ QToolBar* ToolBars::createPositionMediaBar() {
     QToolBar* ptb = new QToolBar("Media+Position");
     ptb -> setObjectName("_Media+Position");
     ptb -> setMinimumSize(30, 30);
+
     connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
 
     Slider * slider = new Slider(ptb, true);
@@ -279,7 +281,6 @@ QToolBar* ToolBars::createTimeMediaBar() {
 QToolBar* ToolBars::createVolumeMediaBar() {
     QToolBar* ptb = new QToolBar("Media+Volume");
     ptb -> setObjectName("_Media+Volume");
-
     ptb -> setMinimumSize(30, 30);
 
     connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
@@ -320,15 +321,15 @@ QToolBar* ToolBars::createControlToolBar() {
     return ptb;
 }
 
-//Spectrum * ToolBars::getSpectrum() {
-//    if (spectrum == 0) {
-//        spectrum = new Spectrum((QWidget *)parent());
+Spectrum * ToolBars::getSpectrum() {
+    if (spectrum == 0) {
+        spectrum = new Spectrum((QWidget *)parent());
 //        spectrum -> setAutoFillBackground(true);
 //        spectrum -> setPalette(pal);
-//    }
+    }
 
-//    return spectrum;
-//}
+    return spectrum;
+}
 
 
 // move to the vk class

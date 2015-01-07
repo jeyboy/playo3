@@ -15,10 +15,7 @@
 #include "modules/controls/slider.h"
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
-//#include "override/slider_style.h"
-//#include "override/clickable_label.h"
-//#include "override/slider.h"
-//#include "override/spectrum.h"
+#include "modules/controls/spectrum.h"
 
 #include "dialogs/toolbardialog.h"
 #include "dialogs/toolbarbuttondialog.h"
@@ -61,7 +58,7 @@ namespace Playo3 {
         QToolBar* createTimeMediaBar();
         QToolBar* createVolumeMediaBar();
         QToolBar* createControlToolBar();
-    //    Spectrum* getSpectrum();
+        Spectrum* getSpectrum();
 
 
         QToolButton * initiateVkButton();
@@ -103,7 +100,7 @@ namespace Playo3 {
 
         QWidget * highlighted;
 
-    //    Spectrum * spectrum;
+        Spectrum * spectrum;
         QToolBar * underMouseBar, * activeBar;
         ToolbarButton * underMouseButton;
 
