@@ -236,16 +236,11 @@ void Player::mute() {
     setChannelVolume(prevVolumeVal);
 
     if (muteButton == 0) return;
-
-    if ((prevVolumeVal = curr) == 0)
-        muteButton -> setIcon(QIcon(":/mute"));
-    else {
-        muteButton -> setIcon(QIcon(":/volume"));
-    }
+    prevVolumeVal = curr;
 }
 
 void Player::unmuteCheck(int) {
-    muteButton -> setIcon(QIcon(":/mute"));
+//    muteButton -> setChecked(false);
     prevVolumeVal = 0;
 }
 

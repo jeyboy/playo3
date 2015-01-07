@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     modules/models/hotkey_model/hotkey_editor.cpp \
     modules/models/hotkey_model/hotkey_model.cpp \
     modules/models/hotkey_model/hotkey_model_item.cpp \
-    globalshortcut/qxtglobalshortcut.cpp
+    globalshortcut/qxtglobalshortcut.cpp \
+    modules/controls/slider.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
@@ -99,7 +100,9 @@ HEADERS  += playo.h \
     globalshortcut/qxtglobal.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
-    modules/controls/popa.h
+    modules/controls/popa.h \
+    modules/controls/slider.h \
+    modules/controls/slider_style.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

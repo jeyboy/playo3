@@ -115,7 +115,8 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
             }
         }
 
-        recreateToolbars(window, barsList);
+        while(barsList.length() > 0)
+            window -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbars(barsList.takeFirst()));
     } else {
         createToolbars(window);
     }
@@ -143,7 +144,7 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
                     && bar -> windowTitle() != "Media+Time"
                     && bar -> windowTitle() != "Media+Volume"
                     && bar -> windowTitle() != "Controls"
-//                    && bar -> windowTitle() != "Spectrum"
+                    && bar -> windowTitle() != "Spectrum"
                ) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
@@ -176,8 +177,6 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
 }
 
 void ToolBars::createToolbars(QMainWindow * window) {
-//    addDockWidget(Qt::LeftDockWidgetArea, createDockWidget());
-
   window -> addToolBar(Qt::TopToolBarArea, createMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createTimeMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createPositionMediaBar());
@@ -187,12 +186,6 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
   window -> addToolBar(Qt::BottomToolBarArea, createToolBar("Folder linker 1"));
 //  window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
-}
-
-void ToolBars::recreateToolbars(QMainWindow * window, QList<QString> & required) {
-    while(required.length() > 0) {
-        window -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbars(required.takeFirst()));
-    }
 }
 
 QToolBar * ToolBars::linkNameToToolbars(QString barName) {
@@ -209,8 +202,7 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     } else if (barName == "Controls") {
         return createControlToolBar();
     } else if (barName == "Spectrum") {
-        return 0;
-//        return getSpectrum();
+        return 0;//        return getSpectrum();
     } else {
         return createToolBar(barName);
     }
@@ -219,6 +211,8 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
 QToolBar* ToolBars::createToolBar(QString name) {
     ToolBar* ptb = new ToolBar(name, (QWidget *)parent());
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
+    ptb -> setAutoFillBackground(true);
+    ptb -> setPalette(pal);
     connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(folderDropped(QString, QString)));
 
 //    ptb->addAction(QPixmap(QString(":/like")), "1", this, SLOT(slotNoImpl()));
@@ -244,15 +238,12 @@ QToolBar* ToolBars::createMediaBar() {
     QToolBar* ptb = new QToolBar("Media");
     ptb -> setObjectName("_Media");
 
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
-
     connect(ptb, SIGNAL(visibilityChanged(bool)), this, SLOT(toolbarVisibilityChanged(bool)));
-    ptb -> setMinimumHeight(30);
+    ptb -> setMinimumSize(30, 30);
 
-//    Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
-//    Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
-//    Player::instance() -> setStopButton(ptb -> addAction(QIcon(":/stop"), "Stop"));
+    Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
+    Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
+    Player::instance() -> setStopButton(ptb -> addAction(QIcon(":/stop"), "Stop"));
 
     ptb -> adjustSize();
 
@@ -262,12 +253,10 @@ QToolBar* ToolBars::createMediaBar() {
 QToolBar* ToolBars::createAdditionalMediaBar() {
     QToolBar* ptb = new QToolBar("Media+");
     ptb -> setObjectName("_Media+");
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
-    ptb -> setMinimumHeight(30);
+    ptb -> setMinimumSize(30, 30);
 
     ptb -> addAction(QIcon(":/prev"), "Prev track", parent(), SLOT(prevItemTriggered()));
-//    Player::instance() -> setLikeButton(ptb -> addAction(QIcon(":/like"), "Liked"));
+    Player::instance() -> setLikeButton(ptb -> addAction(QIcon(":/like"), "Liked"));
     ptb -> addAction(QIcon(":/next"), "Next track", parent(), SLOT(nextItemTriggered()));
     ptb -> adjustSize();
 
@@ -277,20 +266,17 @@ QToolBar* ToolBars::createAdditionalMediaBar() {
 QToolBar* ToolBars::createPositionMediaBar() {
     QToolBar* ptb = new QToolBar("Media+Position");
     ptb -> setObjectName("_Media+Position");
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
+    ptb -> setMinimumSize(30, 30);
     connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
-    ptb -> setMinimumHeight(30);
 
-//    Slider * slider = new Slider(ptb, true);
-//    slider -> setStyle(new SliderStyle());
-//    slider -> setTickInterval(60000);
-//    slider -> setOrientation(Qt::Horizontal);
-//    slider -> setMinimumSize(30, 30);
+    Slider * slider = new Slider(ptb, true);
+    slider -> setTickInterval(60000);
+    slider -> setOrientation(Qt::Horizontal);
+    slider -> setMinimumSize(30, 30);
 
-//    Player::instance() -> setTrackBar(slider);
+    Player::instance() -> setTrackBar(slider);
 
-//    ptb -> addWidget(slider);
+    ptb -> addWidget(slider);
     ptb -> adjustSize();
 
     return ptb;
@@ -299,16 +285,12 @@ QToolBar* ToolBars::createPositionMediaBar() {
 QToolBar* ToolBars::createTimeMediaBar() {
     QToolBar* ptb = new QToolBar("Media+Time");
     ptb -> setObjectName("_Media+Time");
+    ptb -> setMinimumSize(30, 30);
 
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
-    ptb -> setMinimumHeight(30);
-
-//    ClickableLabel * timeLabel = new ClickableLabel("00:00");
-////    connect(timeLabel, SIGNAL(mousePressEvent(QMouseEvent *ev)), Player::instance(), SLOT(invertTimeCountdown()));
-//    timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
-//    ptb -> addWidget(timeLabel);
-//    Player::instance() -> setTimePanel(timeLabel);
+    ClickableLabel * timeLabel = new ClickableLabel("00:00");
+    timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
+    ptb -> addWidget(timeLabel);
+    Player::instance() -> setTimePanel(timeLabel);
     ptb -> adjustSize();
 
     return ptb;
@@ -318,24 +300,26 @@ QToolBar* ToolBars::createVolumeMediaBar() {
     QToolBar* ptb = new QToolBar("Media+Volume");
     ptb -> setObjectName("_Media+Volume");
 
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
-    ptb -> setMinimumHeight(30);
+    ptb -> setMinimumSize(30, 30);
 
     connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
 
-    QAction * act = ptb -> addAction(QIcon(":/mute"), "Mute");
+    QIcon ico;
+    ico.addPixmap(QPixmap(":/mute"), QIcon::Normal);
+    ico.addPixmap(QPixmap(":/volume"), QIcon::Normal, QIcon::On);
 
-//    Player::instance() -> setMuteButton(act);
+    QAction * act = ptb -> addAction(ico, "Mute");
+    act -> setCheckable(true);
 
-//    Slider * slider = new Slider();
-//    slider -> setStyle(new SliderStyle());
-//    slider -> setTickInterval(2000);
-//    slider -> setOrientation(Qt::Horizontal);
-//    slider -> setMinimumSize(30, 30);
+    Player::instance() -> setMuteButton(act);
 
-//    Player::instance() -> setVolumeTrackBar(slider);
-//    ptb -> addWidget(slider);
+    Slider * slider = new Slider();
+    slider -> setTickInterval(2000);
+    slider -> setOrientation(Qt::Horizontal);
+    slider -> setMinimumSize(30, 30);
+
+    Player::instance() -> setVolumeTrackBar(slider);
+    ptb -> addWidget(slider);
     ptb -> adjustSize();
 
     return ptb;
@@ -344,16 +328,13 @@ QToolBar* ToolBars::createVolumeMediaBar() {
 QToolBar* ToolBars::createControlToolBar() {
     QToolBar* ptb = new QToolBar("Controls");
     ptb -> setObjectName("_Controls");
-    ptb -> setAutoFillBackground(true);
-    ptb -> setPalette(pal);
-//    ptb -> setMinimumWidth(75);
+    ptb -> setMinimumSize(30, 30);
 
-    ptb -> addAction(QIcon(QString(":/add")), "Add new local tab", parent(), SLOT(showAttTabDialog()));
+    ptb -> addAction(QIcon(":/add"), "Add new local tab", parent(), SLOT(showAttTabDialog()));
     ptb -> addWidget(initiateVkButton());
-//    ptb -> addAction(QIcon(":/add_vk"), "Add Soundcloud(soundcloud.com) tab", this, SLOT(showSoundcloudTabDialog()));
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addSeparator();
-    ptb -> addAction(QIcon(QString(":/settings")), "Common setting", parent(), SLOT(showSettingsDialog()));
+    ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
     ptb -> adjustSize();
 
     return ptb;
@@ -370,6 +351,7 @@ QToolBar* ToolBars::createControlToolBar() {
 //}
 
 
+// move to the vk class
 QToolButton * ToolBars::initiateVkButton() {
     if (vkToolButton == 0) {
         vkToolButton = new QToolButton();
@@ -396,6 +378,7 @@ QToolButton * ToolBars::initiateVkButton() {
     return vkToolButton;
 }
 
+// move to the cloudsound class
 QToolButton * ToolBars::initiateSoundcloudButton() {
     if (soundcloudToolButton == 0) {
         soundcloudToolButton = new QToolButton();
@@ -451,11 +434,7 @@ void ToolBars::panelHighlight(QAction *action) {
 
     if (widgetClassName == "ToolBar" || widgetClassName == "QToolBar") {
         highlighted = action -> parentWidget();
-        highlighted -> setStyleSheet(
-                    "QToolBar {"
-                      "border: 2px dashed red;"
-                    "}"
-                   );
+        highlighted -> setStyleSheet("QToolBar { border: 2px dashed #00FFFF; }" );
     }
 }
 
@@ -524,7 +503,7 @@ void ToolBars::changeToolbarsMovable() {
 
     foreach(QToolBar * bar, toolbars) {
         bar -> setMovable(movable);
-        bar -> repaint();
+//        bar -> repaint();
     }
 }
 

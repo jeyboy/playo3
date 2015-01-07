@@ -6,11 +6,13 @@
 #include <QSlider>
 #include <qmenu.h>
 
+#include "media/player.h"
 #include "modules/json/data_store.h"
 
 //#include "web/socials/vk_api.h"
 //#include "web/socials/soundcloud_api.h"
 
+#include "modules/controls/slider.h"
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
 //#include "override/slider_style.h"
@@ -26,7 +28,7 @@ namespace Playo3 {
         Q_OBJECT
     public:
         ~ToolBars() {
-            delete underMouseBar;
+//            delete underMouseBar;
             if (vkToolButton)
                 delete vkToolButton -> menu();
             delete vkToolButton;
@@ -50,7 +52,6 @@ namespace Playo3 {
         void load(QMainWindow * window, QJsonArray & bars);
         void save(QMainWindow * window, DataStore * settings);
         void createToolbars(QMainWindow * window);
-        void recreateToolbars(QMainWindow * window, QList<QString> & required);
         QToolBar * linkNameToToolbars(QString barName);
 
 
@@ -95,7 +96,7 @@ namespace Playo3 {
             underMouseBar = 0;
             underMouseButton = 0;
 
-            pal.setColor(QPalette::Button, QColor("#E1E0E0")); // background color for not droppable panels
+            pal.setColor(QPalette::Button, QColor("#E1E0E0")); // background color for droppable panels
         }
 
         QToolButton * vkToolButton;

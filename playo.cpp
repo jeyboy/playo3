@@ -71,8 +71,6 @@ void Playo::init() {
 
     addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
     addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pipido", this));
-    addToolBar("lalka");
-    addToolBar("lalka2");
 
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");
