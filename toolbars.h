@@ -92,7 +92,7 @@ namespace Playo3 {
         }
 
         ToolBars(QObject * parent) : QObject(parent),
-            vkToolButton(0), soundcloudToolButton(0), highlighted(0), /*spectrum(0),*/
+            vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),
             underMouseBar(0), activeBar(0), underMouseButton(0) {
 
         }

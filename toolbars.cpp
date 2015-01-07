@@ -87,8 +87,8 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
 void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
-//        barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
-//        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
+        barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
+        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -99,7 +99,6 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
             barName = obj.value("title").toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
-//            curr_bar -> setMovable(obj.value("movable").toBool());
             updateToolbarMovable(curr_bar, obj.value("movable").toBool());
 
             window -> addToolBar((Qt::ToolBarArea)obj.value("area").toInt(), curr_bar);
