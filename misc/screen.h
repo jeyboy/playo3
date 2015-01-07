@@ -14,6 +14,21 @@ public:
         else
             return QRect();
     }
+
+    static void screenSize(int & width, int & height) {
+        QDesktopWidget * w = QApplication::desktop();
+        width = w -> width();
+        height = w -> height();
+    }
+
+    static void minimizeIfNeeded(int & width, int & height, float percentage) {
+        int screen_width, screen_height;
+        percentage /= 100;
+        screenSize(screen_width, screen_height);
+
+        width = qMin((int)(screen_width * percentage), width);
+        height = qMin((int)(screen_height * percentage), height);
+    }
 };
 
 #endif // SCREEN

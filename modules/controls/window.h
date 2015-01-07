@@ -5,6 +5,7 @@
 #include <qpainter.h>
 #include "modules/controls/hoverable_label.h"
 #include "modules/controls/window_title.h"
+#include "misc/screen.h"
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {
@@ -12,6 +13,8 @@ namespace Playo3 {
     public:
         explicit MainWindow(QWidget * parent = 0);
         ~MainWindow();
+
+        void locationCorrection();
 
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle);}

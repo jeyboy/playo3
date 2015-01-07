@@ -1,6 +1,5 @@
 #include "window.h"
 #include "misc/stylesheets.h"
-#include "misc/screen.h"
 
 using namespace Playo3;
 
@@ -41,6 +40,20 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 MainWindow::~MainWindow() {
     delete brush;
     delete background;
+}
+
+void MainWindow::locationCorrection() {
+    int width, height;
+    Screen::screenSize(width, height);
+    int left = x(), top = y();
+
+    if (left >= width)
+        left = width - 50;
+
+    if (top >= height)
+        top = height - 50;
+
+    move(left, top);
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {

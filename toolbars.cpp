@@ -16,7 +16,6 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
 
     menu -> insertSeparator(menu->actions().first());
-//    menu -> insertSection(menu -> actions().first(), "Panels list");
 
     lastClickPoint = QCursor::pos();
     QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint));

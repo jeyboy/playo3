@@ -5,38 +5,29 @@
 #include <qmenu.h>
 
 namespace Playo3 {
-    class Tray : public QObject {
+    class Tray : public QSystemTrayIcon {
         Q_OBJECT
     public:
-        ~Tray() {}
+        Tray(QWidget * parent) : QSystemTrayIcon(parent) {
+            setIcon(QIcon(":/ico"));
 
-        static Tray * instance(QObject * parent);
-        static void close() {
-            self -> m_tray.hide();
-            delete self;
-        }
-
-
-    private:
-        Tray(QObject * parent) : QObject(parent) {
-            m_tray.setIcon(QIcon(":/icon"));
-
-            if(m_tray.isSystemTrayAvailable()) {
+            if(isSystemTrayAvailable()) {
         //        m_tray.showMessage();
-                QMenu *pTrayMenu = new QMenu();
+                QMenu *pTrayMenu = new QMenu(parent);
         //        pTrayMenu->addAction("Add snippet", this, SLOT(onAddSnippet()),Qt::ControlModifier + Qt::Key_D);
         //        pTrayMenu->addAction("Search", this, SLOT(onSearch()),Qt::MetaModifier + Qt::Key_V);
         //        pTrayMenu->addSeparator();
         //        pTrayMenu->addAction("Save", this, SLOT(save()));
         //        pTrayMenu->addSeparator();
         //        pTrayMenu->addAction("Exit", this, SLOT(exit()));
-                m_tray.setContextMenu(pTrayMenu);
-                m_tray.show();
+                setContextMenu(pTrayMenu);
+                show();
             }
         }
 
-        static Tray *self;
-        QSystemTrayIcon m_tray;
+        ~Tray() {
+            hide();
+        }
     };
 }
 

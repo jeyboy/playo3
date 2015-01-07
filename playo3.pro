@@ -32,7 +32,21 @@ SOURCES += main.cpp\
     modules/controls/main_window.cpp \
     modules/controls/button.cpp \
     modules/controls/clickable_label.cpp \
-    modules/controls/hoverable_label.cpp
+    modules/controls/hoverable_label.cpp \
+    dialogs/settings_dialog.cpp \
+    dialogs/tabdialog.cpp \
+    misc/settings.cpp \
+    misc/hotkey_manager.cpp \
+    media/audio_player.cpp \
+    media/player.cpp \
+    media/duration.cpp \
+    media/format.cpp \
+    media/notify_timer.cpp \
+    modules/models/hotkey_model/hotkey_delegate.cpp \
+    modules/models/hotkey_model/hotkey_editor.cpp \
+    modules/models/hotkey_model/hotkey_model.cpp \
+    modules/models/hotkey_model/hotkey_model_item.cpp \
+    globalshortcut/qxtglobalshortcut.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
@@ -66,11 +80,59 @@ HEADERS  += playo.h \
     modules/controls/hoverable_label.h \
     misc/screen.h \
     modules/controls/window.h \
-    modules/controls/window_title.h
+    modules/controls/window_title.h \
+    dialogs/settings_dialog.h \
+    dialogs/tabdialog.h \
+    misc/settings.h \
+    misc/hotkey_manager.h \
+    misc/hotkey_types.h \
+    misc/tab_settings.h \
+    media/audio_player.h \
+    media/player.h \
+    media/duration.h \
+    media/format.h \
+    media/notify_timer.h \
+    modules/models/hotkey_model/hotkey_delegate.h \
+    modules/models/hotkey_model/hotkey_editor.h \
+    modules/models/hotkey_model/hotkey_model.h \
+    modules/models/hotkey_model/hotkey_model_item.h \
+    globalshortcut/qxtglobal.h \
+    globalshortcut/qxtglobalshortcut.h \
+    globalshortcut/qxtglobalshortcut_p.h \
+    modules/controls/popa.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
-    dialogs/toolbardialog.ui
+    dialogs/toolbardialog.ui \
+    dialogs/settings_dialog.ui \
+    dialogs/tabdialog.ui
 
 RESOURCES += \
     resources.qrc
+
+unix:!mac {
+        QT += gui-private
+        CONFIG += link_pkgconfig
+        PKGCONFIG += x11
+        LDFLAGS =- lX11
+        DEFINES += HAVE_X11
+        SOURCES += globalshortcut/qxtglobalshortcut_x11.cpp
+}
+win32: { SOURCES += globalshortcut/qxtglobalshortcut_win.cpp }
+mac: {   SOURCES += globalshortcut/qxtglobalshortcut_mac.cpp }
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
+#else:unix:!macx: LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
+
+LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
+INCLUDEPATH += $$PWD/libs/taglib/include
+DEPENDPATH += $$PWD/libs/taglib
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
+#else:unix:!macx: LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
+
+LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
+INCLUDEPATH += $$PWD/libs/bass/include
+DEPENDPATH += $$PWD/libs/bass
