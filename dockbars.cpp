@@ -106,7 +106,7 @@ DockBar * Dockbars::addDocBar(QString name, QWidget * content, Qt::DockWidgetAre
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
 //    active = dock;
 
-    dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
+//    dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
 //    dock -> showFullScreen();
     dock -> setWidget(content);
     content -> setParent(dock); // ?

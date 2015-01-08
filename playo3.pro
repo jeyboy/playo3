@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     globalshortcut/qxtglobalshortcut.cpp \
     modules/controls/slider.cpp \
     modules/controls/spectrum.cpp \
-    modules/controls/dockbar.cpp
+    modules/controls/dockbar.cpp \
+    modules/controls/window_title.cpp
 
 HEADERS  += playo.h \
     dockbars.h \

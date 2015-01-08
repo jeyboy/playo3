@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
 
-    initTitle();
+    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
 }
 
 MainWindow::~MainWindow() {
@@ -182,48 +182,4 @@ bool MainWindow::isResizeable() {
 
         return resizeFlagX || resizeFlagY;
     }
-}
-
-void MainWindow::initTitle() {
-    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
-    connect(titleWidget, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
-    QGridLayout * l = (QGridLayout *)titleWidget -> layout();
-
-    l -> addWidget(
-                new HoverableLabel(
-                    QPixmap(":mini_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":mini_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    titleWidget,
-                    0,
-                    this,
-                    SLOT(showMinimized())
-                ),
-                0, 1, Qt::AlignRight | Qt::AlignVCenter);
-    l -> addWidget(
-                new HoverableLabel(
-                    QPixmap(":maxi_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":maxi_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    titleWidget,
-                    0,
-                    this,
-                    SLOT(invertWindowState())
-                ),
-                0, 2, Qt::AlignRight | Qt::AlignVCenter);
-    l -> addWidget(
-                new HoverableLabel(
-                    QPixmap(":close_button").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    QPixmap(":close_button_hover").scaled(titleHeight, titleHeight - borderWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    titleWidget,
-                    0,
-                    this,
-                    SLOT(close())
-                ),
-                0, 3, Qt::AlignRight | Qt::AlignVCenter);
-
-    l -> setColumnStretch(0, 10);
-    l -> setColumnStretch(1, 0);
-    l -> setColumnStretch(2, 0);
-    l -> setColumnStretch(3, 0);
-
-//    setMenuWidget(menuWidget);
 }

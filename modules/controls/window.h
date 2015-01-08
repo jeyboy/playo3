@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <qpainter.h>
-#include "modules/controls/hoverable_label.h"
 #include "modules/controls/window_title.h"
 #include "misc/screen.h"
 
@@ -18,11 +17,6 @@ namespace Playo3 {
 
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
-        inline void invertWindowState() {
-            if (isMaximized())
-                showNormal();
-            else showMaximized();
-        }
 
     protected:
         void resizeEvent(QResizeEvent *);
@@ -63,7 +57,6 @@ namespace Playo3 {
     private:
         QRect & stickCorrection(QRect & r);
         bool isResizeable();
-        void initTitle();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
         uint titleHeight, stickDist;

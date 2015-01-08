@@ -15,73 +15,76 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     connect(menu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
 
-    menu -> insertSeparator(menu -> actions().first());
-
     lastClickPoint = QCursor::pos();
     QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint));
-    QString widgetClassName = QString(widget -> metaObject() -> className());
 
-    if (widgetClassName == "Playo3::ToolbarButton") {
-        underMouseButton = ((ToolbarButton*)widget);
-        underMouseBar = ((ToolBar *)underMouseButton -> parentWidget());
-    } else if (widgetClassName == "QLabel") {
-        underMouseBar = (ToolBar *)widget -> parentWidget();
-    } else {
-        underMouseBar = ((ToolBar *)widget);
+    if (widget) {
+        menu -> insertSeparator(menu -> actions().first());
+
+        QString widgetClassName = QString(widget -> metaObject() -> className());
+
+        if (widgetClassName == "Playo3::ToolbarButton") {
+            underMouseButton = ((ToolbarButton*)widget);
+            underMouseBar = ((ToolBar *)underMouseButton -> parentWidget());
+        } else if (widgetClassName == "QLabel") {
+            underMouseBar = (ToolBar *)widget -> parentWidget();
+        } else {
+            underMouseBar = ((ToolBar *)widget);
+        }
+
+        QAction * removeButtonAct = new QAction(QIcon(":drop_remove"), "Remove drop point", menu);
+        removeButtonAct -> setEnabled(widgetClassName == "Playo3::ToolbarButton");
+        menu -> insertAction(menu->actions().first(), removeButtonAct);
+        connect(removeButtonAct, SIGNAL(triggered(bool)), this, SLOT(removePanelButtonTriggered()));
+
+
+        QAction * addButtonAct = new QAction(QIcon(":drop_add"), "Add drop point", menu);
+        addButtonAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
+        menu -> insertAction(menu->actions().first(), addButtonAct);
+        connect(addButtonAct, SIGNAL(triggered(bool)), this, SLOT(addPanelButtonTriggered()));
+
+    //    menu -> insertSection(menu->actions().first(), QIcon(":drops"),  "Drop points");
+        menu -> insertSeparator(menu->actions().first());
+
+        QAction * removePanelAct = new QAction(QIcon(":panel_remove"), "Remove panel", menu);
+        removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar" || widgetClassName == "QLabel");
+        connect(removePanelAct, SIGNAL(triggered(bool)), this, SLOT(removePanelTriggered()));
+        menu -> insertAction(menu->actions().first(), removePanelAct);
+
+        QAction * addPanelAct = new QAction(QIcon(":panel_add"), "Add panel", menu);
+        connect(addPanelAct, SIGNAL(triggered(bool)), this, SLOT(addPanelTriggered()));
+        menu -> insertAction(menu->actions().first(), addPanelAct);
+
+    //    menu -> insertSection(menu->actions().first(), QIcon(":panels"), "Panel");
+        menu -> insertSeparator(menu->actions().first());
+
+        //    activeBar
+
+        ////////////////////////// for bar movable fixing ////////////////////////////////
+        if (widgetClassName == "QToolBar" || widgetClassName == "Playo3::ToolBar" || widgetClassName == "Playo3::Spectrum") {
+            activeBar = ((QToolBar*)widget);
+        } else {
+            activeBar = ((QToolBar*)widget -> parentWidget());
+        }
+
+        QAction * fixToolbarAct, * fixToolbarsAct;
+
+        if (activeBar -> isMovable()) {
+            fixToolbarAct = new QAction(QIcon(":locked"), "Static bar", menu);
+            fixToolbarsAct = new QAction(QIcon(":locked"), "All bars to Static", menu);
+        } else {
+            fixToolbarAct = new QAction(QIcon(":unlocked"), "Movable bar", menu);
+            fixToolbarsAct = new QAction(QIcon(":unlocked"), "All bars to Movable", menu);
+        }
+
+        menu -> insertAction(menu -> actions().first(), fixToolbarsAct);
+        connect(fixToolbarsAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarsMovable()));
+
+        menu -> insertAction(menu -> actions().first(), fixToolbarAct);
+        connect(fixToolbarAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarMovable()));
+
+        //////////////////////////////////////////////////////////////////////////////////
     }
-
-    QAction * removeButtonAct = new QAction(QIcon(":drop_remove"), "Remove drop point", menu);
-    removeButtonAct -> setEnabled(widgetClassName == "Playo3::ToolbarButton");
-    menu -> insertAction(menu->actions().first(), removeButtonAct);
-    connect(removeButtonAct, SIGNAL(triggered(bool)), this, SLOT(removePanelButtonTriggered()));
-
-
-    QAction * addButtonAct = new QAction(QIcon(":drop_add"), "Add drop point", menu);
-    addButtonAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
-    menu -> insertAction(menu->actions().first(), addButtonAct);
-    connect(addButtonAct, SIGNAL(triggered(bool)), this, SLOT(addPanelButtonTriggered()));
-
-//    menu -> insertSection(menu->actions().first(), QIcon(":drops"),  "Drop points");
-    menu -> insertSeparator(menu->actions().first());
-
-    QAction * removePanelAct = new QAction(QIcon(":panel_remove"), "Remove panel", menu);
-    removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar" || widgetClassName == "QLabel");
-    connect(removePanelAct, SIGNAL(triggered(bool)), this, SLOT(removePanelTriggered()));
-    menu -> insertAction(menu->actions().first(), removePanelAct);
-
-    QAction * addPanelAct = new QAction(QIcon(":panel_add"), "Add panel", menu);
-    connect(addPanelAct, SIGNAL(triggered(bool)), this, SLOT(addPanelTriggered()));
-    menu -> insertAction(menu->actions().first(), addPanelAct);
-
-//    menu -> insertSection(menu->actions().first(), QIcon(":panels"), "Panel");
-    menu -> insertSeparator(menu->actions().first());
-
-    //    activeBar
-
-    ////////////////////////// for bar movable fixing ////////////////////////////////
-    if (widgetClassName == "QToolBar" || widgetClassName == "Playo3::ToolBar" || widgetClassName == "Playo3::Spectrum") {
-        activeBar = ((QToolBar*)widget);
-    } else {
-        activeBar = ((QToolBar*)widget -> parentWidget());
-    }
-
-    QAction * fixToolbarAct, * fixToolbarsAct;
-
-    if (activeBar -> isMovable()) {
-        fixToolbarAct = new QAction(QIcon(":locked"), "Static bar", menu);
-        fixToolbarsAct = new QAction(QIcon(":locked"), "All bars to Static", menu);
-    } else {
-        fixToolbarAct = new QAction(QIcon(":unlocked"), "Movable bar", menu);
-        fixToolbarsAct = new QAction(QIcon(":unlocked"), "All bars to Movable", menu);
-    }
-
-    menu -> insertAction(menu -> actions().first(), fixToolbarsAct);
-    connect(fixToolbarsAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarsMovable()));
-
-    menu -> insertAction(menu -> actions().first(), fixToolbarAct);
-    connect(fixToolbarAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarMovable()));
-
-    //////////////////////////////////////////////////////////////////////////////////
 
     return menu;
 }

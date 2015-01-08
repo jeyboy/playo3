@@ -13,6 +13,8 @@ namespace Playo3 {
     signals:
         void activating();
         void closing();
+    public slots:
+        inline void toggleFloating() { setFloating(!isFloating()); }
 
     protected:
         inline void closeEvent(QCloseEvent * e) {
