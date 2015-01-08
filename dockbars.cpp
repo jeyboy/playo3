@@ -100,12 +100,18 @@ void Dockbars::save(QMainWindow * window, DataStore * settings) {
 //    }
 }
 
-DockBar * Dockbars::createDocBar(QString name, QWidget * content, Qt::DockWidgetArea place) {
+DockBar * Dockbars::addDocBar(QString name, QWidget * content, Qt::DockWidgetArea place) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
+    connect(dock, SIGNAL(activating()), this, SLOT(activeChanged()));
+    connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
+//    active = dock;
+
     dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
 //    dock -> showFullScreen();
     dock -> setWidget(content);
+    content -> setParent(dock); // ?
     dock -> layout() -> setAlignment(content, Qt::AlignCenter);
+
     ((QMainWindow *)parent()) -> addDockWidget(place, dock);
     //    viewMenu->addAction(dock->toggleViewAction());
     return dock;
@@ -140,6 +146,10 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content, Qt::DockWidget
 //}
 
 void Dockbars::activeChanged() {
-
+    active = (DockBar *)sender();
 }
 
+void Dockbars::barClosed() {
+    if (active == (DockBar *)sender())
+        active = 0;
+}

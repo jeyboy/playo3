@@ -17,7 +17,7 @@ namespace Playo3 {
         void locationCorrection();
 
     public slots:
-        inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle);}
+        inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
         inline void invertWindowState() {
             if (isMaximized())
                 showNormal();

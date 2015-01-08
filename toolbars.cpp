@@ -3,9 +3,9 @@
 
 using namespace Playo3;
 
-ToolBars *ToolBars::self = 0;
+ToolBars * ToolBars::self = 0;
 
-ToolBars *ToolBars::instance(QObject * parent) {
+ToolBars * ToolBars::instance(QObject * parent) {
     if(!self)
         self = new ToolBars(parent);
     return self;

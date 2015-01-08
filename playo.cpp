@@ -70,8 +70,11 @@ void Playo::closeEvent(QCloseEvent * e) {
 void Playo::init() {
     new Tray(this);
 
-    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
-    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pipido", this));
+    Dockbars::instance(this) -> addDocBar("PU", new QWidget(), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QWidget(), Qt::TopDockWidgetArea);
+
+//    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
+//    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pipido", this));
 
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");

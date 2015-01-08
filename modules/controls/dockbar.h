@@ -9,15 +9,25 @@ namespace Playo3 {
         Q_OBJECT
     public:
         DockBar(const QString &title, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+        inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
     signals:
-        void activated();
+        void activating();
+        void closing();
 
     protected:
+        inline void closeEvent(QCloseEvent * e) {
+            emit closing();
+            QDockWidget::closeEvent(e);
+        }
+
         inline void focusInEvent(QFocusEvent * e) {
-            emit activated();
+            emit activating();
             QDockWidget::focusInEvent(e);
         }
 //        void focusOutEvent(QFocusEvent *);
+
+    private:
+        WindowTitle * titleWidget;
     };
 }
 
