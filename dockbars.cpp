@@ -1,4 +1,5 @@
 #include "dockbars.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -114,6 +115,8 @@ DockBar * Dockbars::addDocBar(QString name, QWidget * content, Qt::DockWidgetAre
 
     ((QMainWindow *)parent()) -> addDockWidget(place, dock);
     //    viewMenu->addAction(dock->toggleViewAction());
+
+    qDebug() << dock -> windowFlags();
     return dock;
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
 }

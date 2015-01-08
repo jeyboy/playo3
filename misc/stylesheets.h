@@ -1,7 +1,7 @@
 #ifndef STYLESHEETS_H
 #define STYLESHEETS_H
 
-#include <QString>
+#include <QColor>
 
 //    setStyleSheet(QString(
 //                      "QTreeView {"
@@ -11,6 +11,15 @@
 
 class Stylesheets {
 public:
+    static inline QColor color1() { return QColor::fromRgb(181, 189, 200, 212); }
+    static inline QString color1Str() { return "rgba(181, 189, 200, 212)"; }
+
+    static inline QColor color2() { return QColor::fromRgb(130, 140, 149, 212); }
+    static inline QString color2Str() { return "rgba(130, 140, 149, 212)"; }
+
+    static inline QColor color3() { return QColor::fromRgb(40, 52, 59, 212); }
+    static inline QString color3Str() { return "rgba(40, 52, 59, 212)"; }
+
     static QString appStyles() {
         return QString(
                     "QCheckBox::indicator {"
@@ -89,7 +98,7 @@ public:
                     "}"
 
                     "QSlider::sub-page:horizontal {"
-                      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
+//                      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
                       "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
                       "border: 1px solid #777;"
                       "border-radius: 2px;"
@@ -108,7 +117,7 @@ public:
                     "}"
 
                     "QSlider::add-page:vertical {"
-                        "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
+//                        "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
                         "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
                         "border: 1px solid #777;"
                         "border-radius: 2px;"
@@ -282,13 +291,13 @@ public:
 //                    "    border-width: 2px;"
 //                    "}"
 
-                    "QTabBar QToolButton::right-arrow {" /* the arrow mark in the tool buttons */
-                    "    image: url(rightarrow.png);"
-                    "}"
+//                    "QTabBar QToolButton::right-arrow {" /* the arrow mark in the tool buttons */
+//                    "    image: url(rightarrow.png);"
+//                    "}"
 
-                    "QTabBar QToolButton::left-arrow {"
-                    "    image: url(leftarrow.png);"
-                    "}"
+//                    "QTabBar QToolButton::left-arrow {"
+//                    "    image: url(leftarrow.png);"
+//                    "}"
         );
     }
 };

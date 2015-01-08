@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setMouseTracking(true);
 
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_PaintOnScreen);
@@ -61,9 +62,9 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
 
     delete brush;
     brush = new QLinearGradient(0, 0, rect().width(), rect().height());
-    brush -> setColorAt(0, QColor::fromRgb(181, 189, 200, 212));
-    brush -> setColorAt(.36, QColor::fromRgb(130, 140, 149, 212));
-    brush -> setColorAt(1, QColor::fromRgb(40, 52, 59, 212));
+    brush -> setColorAt(0, Stylesheets::color1());
+    brush -> setColorAt(.36, Stylesheets::color2());
+    brush -> setColorAt(1, Stylesheets::color3());
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
@@ -146,8 +147,9 @@ void MainWindow::paintEvent(QPaintEvent * event) {
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.restore();
+    event -> accept();
 
-    QMainWindow::paintEvent(event);
+//    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
