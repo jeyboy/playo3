@@ -3,6 +3,7 @@
 
 //#include "modules/controls/button.h"
 #include <QDesktopServices>
+#include "misc/stylesheets.h"
 
 using namespace Playo3;
 
@@ -68,6 +69,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 }
 
 void Playo::init() {
+    Stylesheets::initPens(getBorderWidth() / 2);
     new Tray(this);
 
     Dockbars::instance(this) -> addDocBar("PU", new QWidget(), Qt::TopDockWidgetArea);

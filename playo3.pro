@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     modules/controls/spectrum.cpp \
     modules/controls/dockbar.cpp \
     modules/controls/window_title.cpp \
-    modules/controls/window.cpp
+    modules/controls/window.cpp \
+    misc/stylesheets.cpp
 
 HEADERS  += playo.h \
     dockbars.h \

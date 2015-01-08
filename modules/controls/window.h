@@ -14,6 +14,7 @@ namespace Playo3 {
         ~MainWindow();
 
         void locationCorrection();
+        inline int getBorderWidth() const { return borderWidth; }
 
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
@@ -67,7 +68,6 @@ namespace Playo3 {
         QPoint dragPos;
         QRect geom;
 
-        QPen pen, bevelPen;
         QLinearGradient * brush;
         QRect backRect, borderRect, screenRect;
     };

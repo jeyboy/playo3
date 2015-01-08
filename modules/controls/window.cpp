@@ -19,22 +19,6 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setAttribute(Qt::WA_PaintOnScreen);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
-
-    QVector<qreal> penPattern;
-    penPattern.append(1); penPattern.append(halfBorderWidth);
-
-    pen.setColor(QColor::fromRgb(255, 255, 255));
-    pen.setWidth(halfBorderWidth);
-    pen.setCosmetic(true);
-    pen.setJoinStyle(Qt::RoundJoin);
-
-    bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(halfBorderWidth);
-    bevelPen.setCosmetic(true);
-    bevelPen.setStyle(Qt::DashLine);
-    bevelPen.setJoinStyle(Qt::RoundJoin);
-    bevelPen.setDashPattern(penPattern);
-
     titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
 }
 
@@ -140,10 +124,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
     painter.save();
-    painter.setPen(pen);
+    painter.setPen(Stylesheets::pen);
     painter.setBrush(*brush);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
-    painter.setPen(bevelPen);
+    painter.setPen(Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
     painter.restore();
