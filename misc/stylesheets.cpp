@@ -2,6 +2,9 @@
 
 QPen Stylesheets::pen = QPen();
 QPen Stylesheets::bevelPen = QPen();
+int Stylesheets::borderWidth = 6;
+int Stylesheets::borderRadius = 12;
+int Stylesheets::stickDistance = 12;
 
 QString Stylesheets::appStyles() {
     return QString(
@@ -284,19 +287,34 @@ QString Stylesheets::mainWindowTabsStyle() {
     );
 }
 
-void Stylesheets::initPens(int borderWidth) {
+void Stylesheets::initBrush(QLinearGradient & brush) {
+    brush.setColorAt(0,     color1());
+    brush.setColorAt(.36,   color2());
+    brush.setColorAt(1,     color3());
+}
+
+void Stylesheets::initPens() {
     QVector<qreal> penPattern;
-    penPattern.append(1); penPattern.append(borderWidth);
+    penPattern.append(1); penPattern.append(borderWidth / 2);
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
-    pen.setWidth(borderWidth);
+    pen.setWidth(borderWidth / 2);
     pen.setCosmetic(true);
     pen.setJoinStyle(Qt::RoundJoin);
 
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(borderWidth);
+    bevelPen.setWidth(borderWidth / 2);
     bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
+}
+
+void Stylesheets::calcBorderRect(QRect origin, QRect & res) {
+    res.setRect(
+                origin.x() + borderWidth / 4,
+                origin.y() + borderWidth / 4,
+                origin.width() - borderWidth / 2,
+                origin.height() - borderWidth / 2
+    );
 }

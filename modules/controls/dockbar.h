@@ -24,6 +24,7 @@ namespace Playo3 {
         }
 
     protected:
+        void resizeEvent(QResizeEvent *);
         inline void closeEvent(QCloseEvent * e) {
             emit closing();
             QDockWidget::closeEvent(e);
@@ -38,6 +39,8 @@ namespace Playo3 {
 
     private:
         WindowTitle * titleWidget;
+        QRect borderRect;
+        QLinearGradient brush;
     };
 }
 

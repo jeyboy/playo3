@@ -4,10 +4,10 @@
 using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    titleHeight(30), stickDist(12), borderWidth(6),
-    doubleBorderWidth(borderWidth * 2), halfBorderWidth(borderWidth / 2),
-    radius(12), background(new QPixmap(":main")), resizeFlagX(false),
-    resizeFlagY(false), moveFlag(false), inAction(false), brush(0) {
+    titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),
+    halfBorderWidth(Stylesheets::borderWidth / 2),
+    background(new QPixmap(":main")), resizeFlagX(false),
+    resizeFlagY(false), moveFlag(false), inAction(false) {
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
@@ -19,11 +19,12 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setAttribute(Qt::WA_PaintOnScreen);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
-    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), borderWidth);
+    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), Stylesheets::borderWidth);
+
+    Stylesheets::initBrush(brush);
 }
 
 MainWindow::~MainWindow() {
-    delete brush;
     delete background;
 }
 
@@ -44,22 +45,13 @@ void MainWindow::locationCorrection() {
 void MainWindow::resizeEvent(QResizeEvent * event) {
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
-    delete brush;
-    brush = new QLinearGradient(0, 0, rect().width(), rect().height());
-    brush -> setColorAt(0, Stylesheets::color1());
-    brush -> setColorAt(.36, Stylesheets::color2());
-    brush -> setColorAt(1, Stylesheets::color3());
+    brush.setStart(rect().topLeft());
+    brush.setFinalStop(rect().bottomRight());
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
-    borderRect.setRect(
-                rect().x() + halfBorderWidth,
-                rect().y() + halfBorderWidth,
-                rect().width() - borderWidth,
-                rect().height() - borderWidth
-    );
-
+    Stylesheets::calcBorderRect(rect(), borderRect);
     QMainWindow::resizeEvent(event);
 }
 
@@ -123,30 +115,30 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 
 void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
-    painter.save();
+//    painter.save();
+    painter.setBrush(brush);
     painter.setPen(Stylesheets::pen);
-    painter.setBrush(*brush);
-    painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
+    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
     painter.setPen(Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
-    painter.drawRoundedRect(borderRect, radius, radius, Qt::AbsoluteSize);
-    painter.restore();
+    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+//    painter.restore();
     event -> accept();
 
 //    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
-    if (qAbs(screenRect.right() - rect.right()) < (int)stickDist)
+    if (qAbs(screenRect.right() - rect.right()) < Stylesheets::stickDistance)
         rect.moveRight(screenRect.right());
 
-    if (qAbs(screenRect.bottom() - rect.bottom()) < (int)stickDist)
+    if (qAbs(screenRect.bottom() - rect.bottom()) < Stylesheets::stickDistance)
         rect.moveBottom(screenRect.bottom());
 
-    if (qAbs(screenRect.left() - rect.left()) < (int)stickDist)
+    if (qAbs(screenRect.left() - rect.left()) < Stylesheets::stickDistance)
         rect.moveLeft(screenRect.left());
 
-    if (qAbs(screenRect.top() - rect.top()) < (int)stickDist)
+    if (qAbs(screenRect.top() - rect.top()) < Stylesheets::stickDistance)
         rect.moveTop(screenRect.top());
 
     return rect;

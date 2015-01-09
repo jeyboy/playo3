@@ -28,10 +28,17 @@ public:
 
     static QString mainWindowTabsStyle();
 
-    static void initPens(int borderWidth);
+    static void initBrush(QLinearGradient & brush);
+
+    static void initPens();
+
+    static void calcBorderRect(QRect origin, QRect & res);
 
     static QPen pen;
     static QPen bevelPen;
+    static int borderWidth;
+    static int borderRadius;
+    static int stickDistance;
 };
 
 #endif // STYLESHEETS_H

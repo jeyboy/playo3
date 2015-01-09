@@ -14,7 +14,6 @@ namespace Playo3 {
         ~MainWindow();
 
         void locationCorrection();
-        inline int getBorderWidth() const { return borderWidth; }
 
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
@@ -60,15 +59,15 @@ namespace Playo3 {
         bool isResizeable();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }
 
-        uint titleHeight, stickDist;
-        int borderWidth, doubleBorderWidth, halfBorderWidth, radius;
+        uint titleHeight;
+        int doubleBorderWidth, halfBorderWidth;
         QPixmap * background;
         bool resizeFlagX, resizeFlagY, moveFlag, inAction, recursion;
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
         QRect geom;
 
-        QLinearGradient * brush;
+        QLinearGradient brush;
         QRect backRect, borderRect, screenRect;
     };
 }

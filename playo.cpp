@@ -69,7 +69,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 }
 
 void Playo::init() {
-    Stylesheets::initPens(getBorderWidth() / 2);
+    Stylesheets::initPens();
     new Tray(this);
 
     Dockbars::instance(this) -> addDocBar("PU", new QWidget(), Qt::TopDockWidgetArea);
