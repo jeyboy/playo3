@@ -6,12 +6,11 @@ using namespace Playo3;
 DockBar::DockBar(const QString &title, QWidget *parent, Qt::WindowFlags flags) : QDockWidget(title, parent, flags) {
     setAttribute(Qt::WA_DeleteOnClose);
     setObjectName("tool_" + title);
-    setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 10, 10, 0), 0, false, false, false)));
+    setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 10, 10, 0), 4, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
-////    setAttribute(Qt::WA_OpaquePaintEvent, false);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
@@ -30,17 +29,21 @@ void DockBar::resizeEvent(QResizeEvent * event) {
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {
+    QPainter painter(this);
+    painter.save();
+
     if (isFloating()) {
-        QPainter painter(this);
-        painter.save();
         painter.setBrush(brush);
         painter.setPen(Stylesheets::pen);
         painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
         painter.setPen(Stylesheets::bevelPen);
         painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-        painter.restore();
-
-        event -> accept();
     }
-    else QDockWidget::paintEvent(event);
+    else { //QDockWidget::paintEvent(event);
+        painter.setPen(QPen(Qt::white));
+        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+    }
+
+    painter.restore();
+    event -> accept();
 }
