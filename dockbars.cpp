@@ -116,7 +116,7 @@ DockBar * Dockbars::addDocBar(QString name, QWidget * content, Qt::DockWidgetAre
     ((QMainWindow *)parent()) -> addDockWidget(place, dock);
     //    viewMenu->addAction(dock->toggleViewAction());
 
-    dock -> setWindowTitle("11111111111111111111111111111111");
+    dock -> setWindowTitle("1111111111111111 1111111111111111");
     return dock;
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
 }

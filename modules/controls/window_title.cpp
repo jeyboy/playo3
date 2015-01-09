@@ -13,7 +13,7 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
     TitleLayout * l = new TitleLayout(this);
 
     titleLabel = new QLabel("", this);
-    titleLabel -> setWordWrap(true);
+    titleLabel -> setWordWrap(false);
     titleLabel -> setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     QFont font = titleLabel -> font();
