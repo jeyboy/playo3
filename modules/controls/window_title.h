@@ -5,7 +5,6 @@
 #include <QWidget>
 #include <QStyleOption>
 #include <QPainter>
-#include <QLabel>
 #include <qevent.h>
 #include "modules/controls/hoverable_label.h"
 #include <qdebug.h>
@@ -23,8 +22,8 @@ namespace Playo3 {
 
         inline void setText(const QString & text) {
             fullTitle = text;
-            qDebug() << width() << titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width(), Qt::TextWrapAnywhere);
-            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width(), Qt::TextWrapAnywhere));
+            int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
+            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset, Qt::TextWrapAnywhere));
         }
     public slots:
         inline void invertWindowState() {

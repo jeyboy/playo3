@@ -33,6 +33,8 @@ void ClickableLabel::mousePressEvent(QMouseEvent *ev) {
 }
 
 bool ClickableLabel::event(QEvent * e) {
+    if (e -> type() == QEvent::Resize)
+        emit resized();
     if (e -> type() == QEvent::Enter)
         emit hoverIn();
     else if (e -> type() == QEvent::Leave)

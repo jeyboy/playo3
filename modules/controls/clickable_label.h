@@ -22,6 +22,7 @@ namespace Playo3 {
         void clicked();
         void hoverIn();
         void hoverOut();
+        void resized();
     };
 }
 
