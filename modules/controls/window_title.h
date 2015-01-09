@@ -1,13 +1,12 @@
 #ifndef WINDOW_TITLE
 #define WINDOW_TITLE
 
-#include <QGridLayout>
 #include <QWidget>
 #include <QStyleOption>
 #include <QPainter>
 #include <qevent.h>
 #include "modules/controls/hoverable_label.h"
-#include <qdebug.h>
+#include "modules/controls/title_layout.h"
 
 namespace Playo3 {
     class WindowTitle : public QWidget {

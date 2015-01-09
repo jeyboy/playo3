@@ -10,9 +10,7 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
     setFixedHeight(height);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QGridLayout * l = new QGridLayout(this);
-    l -> setSizeConstraint(QLayout::SetNoConstraint);
-    l -> setContentsMargins(0, 0, 0, 0);
+    TitleLayout * l = new TitleLayout(this);
 
     titleLabel = new QLabel("", this);
     titleLabel -> setWordWrap(true);

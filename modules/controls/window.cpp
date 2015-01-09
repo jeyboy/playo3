@@ -16,12 +16,15 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_OpaquePaintEvent, true);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
-//    setAttribute(Qt::WA_PaintOnScreen);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
     titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), Stylesheets::borderWidth);
 
     Stylesheets::initBrush(brush);
+
+//    setTabPosition(Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition);
+    setDockNestingEnabled(true);
+    setDockOptions(AnimatedDocks | AllowNestedDocks | VerticalTabs);
 }
 
 MainWindow::~MainWindow() {

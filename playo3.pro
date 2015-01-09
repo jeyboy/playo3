@@ -108,7 +108,8 @@ HEADERS  += playo.h \
     modules/controls/slider.h \
     modules/controls/slider_style.h \
     modules/controls/spectrum.h \
-    modules/controls/dockbar.h
+    modules/controls/dockbar.h \
+    modules/controls/title_layout.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
