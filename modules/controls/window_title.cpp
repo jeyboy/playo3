@@ -8,7 +8,10 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
     setContentsMargins(margins);
     setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px 0 " + QString::number(sidePadding) + "px; }");
     setFixedHeight(height);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     QGridLayout * l = new QGridLayout(this);
+    l -> setSizeConstraint(QLayout::SetNoConstraint);
     l -> setContentsMargins(0, 0, 0, 0);
 
     titleLabel = new QLabel("", this);
@@ -24,51 +27,12 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
 
     if (showMini)
         addMiniButton();
-//    {
-//        l -> addWidget(
-//                    new HoverableLabel(
-//                        QPixmap(":mini_button").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        QPixmap(":mini_button_hover").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        this,
-//                        0,
-//                        window,
-//                        SLOT(showMinimized())
-//                    ),
-//                    0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
-//        l -> setColumnStretch(l -> columnCount() - 1, 0);
-//    }
 
     if (showMaxi)
         addMaxiButton();
-//    {
-//        l -> addWidget(
-//                    new HoverableLabel(
-//                        QPixmap(":maxi_button").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        QPixmap(":maxi_button_hover").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        this,
-//                        0,
-//                        this,
-//                        SLOT(invertWindowState())
-//                    ),
-//                    0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
-//        l -> setColumnStretch(l -> columnCount() - 1, 0);
-//    }
 
     if (showClose)
         addCloseButton();
-//    {
-//        l -> addWidget(
-//                    new HoverableLabel(
-//                        QPixmap(":close_button").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        QPixmap(":close_button_hover").scaled(height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-//                        this,
-//                        0,
-//                        window,
-//                        SLOT(close())
-//                    ),
-//                    0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
-//        l -> setColumnStretch(l -> columnCount() - 1, 0);
-//    }
 }
 
 void WindowTitle::addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon, const QObject * receiver, const char * slot) {

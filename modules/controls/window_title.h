@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <qevent.h>
 #include "modules/controls/hoverable_label.h"
+#include <qdebug.h>
 
 namespace Playo3 {
     class WindowTitle : public QWidget {
@@ -20,7 +21,11 @@ namespace Playo3 {
         void addMaxiButton(const QObject * receiver = 0, const char * slot = 0);
         void addCloseButton(const QObject * receiver = 0, const char * slot = 0);
 
-        inline void setText(const QString & text) { titleLabel -> setText(text); }
+        inline void setText(const QString & text) {
+            fullTitle = text;
+            qDebug() << width() << titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width(), Qt::TextWrapAnywhere);
+            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width(), Qt::TextWrapAnywhere));
+        }
     public slots:
         inline void invertWindowState() {
             if (parentWidget() -> isMaximized())
@@ -31,12 +36,17 @@ namespace Playo3 {
     signals:
         void doubleClicked();
     protected:
+        inline void resizeEvent(QResizeEvent * event) {
+            setText(fullTitle);
+            QWidget::resizeEvent(event);
+        }
         inline void mouseDoubleClickEvent(QMouseEvent *) { emit doubleClicked(); }
         void paintEvent(QPaintEvent *);
 
     private:
         int button_height;
         QLabel * titleLabel;
+        QString fullTitle;
     };
 }
 

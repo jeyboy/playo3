@@ -72,8 +72,8 @@ void Playo::init() {
     Stylesheets::initPens();
     new Tray(this);
 
-    Dockbars::instance(this) -> addDocBar("PU", new QWidget(), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QWidget(), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU", new QLabel("sdfsfsdf"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
 
 //    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pido", this));
 //    addDockWidget(Qt::TopDockWidgetArea, new QDockWidget("pipido", this));

@@ -12,11 +12,11 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
 
-    setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
     setAttribute(Qt::WA_OpaquePaintEvent, true);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
-//    setAttribute(Qt::WA_PaintOnScreen);
+    setAttribute(Qt::WA_PaintOnScreen);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
     titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), Stylesheets::borderWidth);
@@ -115,17 +115,17 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 
 void MainWindow::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
-//    painter.save();
+    painter.save();
     painter.setBrush(brush);
     painter.setPen(Stylesheets::pen);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
     painter.setPen(Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-//    painter.restore();
-    event -> accept();
+    painter.restore();
+//    event -> accept();
 
-//    QMainWindow::paintEvent(event);
+    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {

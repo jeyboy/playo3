@@ -198,6 +198,14 @@ QString Stylesheets::toolbarButtonStyle() {
 
 QString Stylesheets::mainWindowTabsStyle() {
     return QString(
+                "QMainWindow::separator {"
+                "   background: red;"
+                "}"
+
+                "QMainWindow::separator:hover {"
+                "    background: #fff;"
+                "}"
+
                 "QTabBar::tab {"
                 "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
                 "                               stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
