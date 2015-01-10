@@ -23,7 +23,7 @@ namespace Playo3 {
         inline void setText(const QString & text) {
             fullTitle = text;
             int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
-            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset, Qt::TextWrapAnywhere));
+            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset));
         }
 
     public slots:
