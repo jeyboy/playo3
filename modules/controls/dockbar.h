@@ -2,7 +2,7 @@
 #define DOCKBAR
 
 #include <QDockWidget>
-#include "modules/controls/window_title.h"
+#include "modules/controls/window.h"
 #include "misc/stylesheets.h"
 #include <qdebug.h>
 
@@ -25,19 +25,13 @@ namespace Playo3 {
             setAttribute(Qt::WA_NoSystemBackground, floating);
             setAttribute(Qt::WA_TranslucentBackground, floating);
         }
-    protected slots:
-        inline void titleReleased() {
-            qDebug() << "sdf" << sticked;
-            if (sticked)
-                installEventFilter(parent());
-            else removeEventFilter(parent());
-        }
 
     protected:
         void resizeEvent(QResizeEvent *);
         void moveEvent(QMoveEvent *);
         inline void closeEvent(QCloseEvent * e) {
             emit closing();
+            ((MainWindow *)parentWidget()) -> removeOuterChild(this);
             QDockWidget::closeEvent(e);
         }
 

@@ -47,20 +47,6 @@ void MainWindow::locationCorrection() {
     move(left, top);
 }
 
-bool MainWindow::eventFilter(QObject * target, QEvent * event) {
-    if (event -> type() == QEvent::Move) {
-        DockBar * bar = (DockBar *)target;
-
-        if (bar) {
-            QMoveEvent * e = (QMoveEvent *) event;
-            qDebug() << "KL " << (e -> oldPos() - e -> pos());
-            bar -> move(bar -> geometry().topLeft() + (e -> oldPos() - e -> pos()));
-        }
-    }
-
-    return QMainWindow::eventFilter(target, event);
-}
-
 void MainWindow::resizeEvent(QResizeEvent * event) {
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
@@ -119,12 +105,23 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
                 else
                     nr.moveBottomLeft(geom.bottomLeft());
             }
-            setGeometry(stickCorrection(nr));
+
+            stickCorrection(nr);
+
+            foreach(QWidget * w, outerChilds)
+                w -> move(w -> geometry().topLeft() - (geometry().topLeft() - nr.topLeft()));
+
+            setGeometry(nr);
             event -> accept();
         }
         else if(moveFlag) {
             QRect newRect(geom); newRect.moveTopLeft(event -> globalPos() - (dragPos - geom.topLeft()));
-            move(stickCorrection(newRect).topLeft());
+            stickCorrection(newRect);
+
+            foreach(QWidget * w, outerChilds)
+                w -> move(w -> geometry().topLeft() - (geometry().topLeft() - newRect.topLeft()));
+
+            move(newRect.topLeft());
             event -> accept();
         } else
             QMainWindow::mouseMoveEvent(event);

@@ -12,8 +12,6 @@ DockBar::DockBar(const QString &title, QWidget *parent, Qt::WindowFlags flags)
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
-    connect(titleWidget, SIGNAL(released()), this, SLOT(titleReleased()));
-
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
@@ -49,8 +47,14 @@ void DockBar::moveEvent(QMoveEvent * e) {
         if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Stylesheets::stickDistance))
             currRect.moveBottom(parentRect.top());
 
-        if ((sticked = change))
+        if (change) {
             setGeometry(currRect);
+            ((MainWindow *)parentWidget()) -> addOuterChild(this);
+        }
+        else if (sticked != change)
+            ((MainWindow *)parentWidget()) -> removeOuterChild(this);
+
+        sticked = change;
     }
 
     QDockWidget::moveEvent(e);

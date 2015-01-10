@@ -15,12 +15,18 @@ namespace Playo3 {
 
         void locationCorrection();
 
+        inline void addOuterChild(QWidget * w) {
+            if (!outerChilds.contains(w))
+                outerChilds.append(w);
+        }
+        inline void removeOuterChild(QWidget * w) {
+            outerChilds.removeOne(w);
+        }
+
     public slots:
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
 
     protected:
-        bool eventFilter(QObject *target, QEvent *event);
-
         void resizeEvent(QResizeEvent *);
         void mousePressEvent(QMouseEvent *);
         inline void mouseReleaseEvent(QMouseEvent * event) {
@@ -57,6 +63,8 @@ namespace Playo3 {
         WindowTitle * titleWidget;
 
     private:
+        QList<QWidget *> outerChilds;
+
         QRect & stickCorrection(QRect & r);
         bool isResizeable();
         inline void dropFlags() { resizeFlagX = resizeFlagY = moveFlag = false; }

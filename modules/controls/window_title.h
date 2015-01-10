@@ -36,7 +36,7 @@ namespace Playo3 {
 
     signals:
         void pressed();
-        void released();
+//        void released();
         void doubleClicked();
     protected:
         inline void resizeEvent(QResizeEvent * event) {
@@ -49,13 +49,13 @@ namespace Playo3 {
                 emit pressed();
             QWidget::mousePressEvent(e);
         }
-        inline void mouseReleaseEvent(QMouseEvent * e) {
-            qDebug() << "RE " << in_action;
-            if (in_action)
-                emit released();
-            in_action = false;
-            QWidget::mouseReleaseEvent(e);
-        }
+//        inline void mouseReleaseEvent(QMouseEvent * e) {
+//            qDebug() << "RE " << in_action;
+//            if (in_action)
+//                emit released();
+//            in_action = false;
+//            QWidget::mouseReleaseEvent(e);
+//        }
         void paintEvent(QPaintEvent *);
 
     private:
