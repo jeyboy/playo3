@@ -25,7 +25,6 @@ namespace Playo3 {
             int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
             titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset, Qt::TextWrapAnywhere));
         }
-        inline bool inAction() const { return in_action; }
 
     public slots:
         inline void invertWindowState() {
@@ -35,31 +34,16 @@ namespace Playo3 {
         }
 
     signals:
-        void pressed();
-//        void released();
         void doubleClicked();
     protected:
         inline void resizeEvent(QResizeEvent * event) {
-            setText(fullTitle);
             QWidget::resizeEvent(event);
+            setText(fullTitle);
         }
         inline void mouseDoubleClickEvent(QMouseEvent *) { emit doubleClicked(); }
-        inline void mousePressEvent(QMouseEvent * e) {
-            if ((in_action = e -> button() == Qt::LeftButton))
-                emit pressed();
-            QWidget::mousePressEvent(e);
-        }
-//        inline void mouseReleaseEvent(QMouseEvent * e) {
-//            qDebug() << "RE " << in_action;
-//            if (in_action)
-//                emit released();
-//            in_action = false;
-//            QWidget::mouseReleaseEvent(e);
-//        }
         void paintEvent(QPaintEvent *);
 
     private:
-        bool in_action;
         int button_height;
         QLabel * titleLabel;
         QString fullTitle;

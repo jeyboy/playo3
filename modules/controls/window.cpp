@@ -123,6 +123,7 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
                 removeOuterChild(bar);
             break;}
 
+//        case QEvent::Resize:
         case QEvent::Move: {
             if (childInAction && !skipChildAction) {
                 DockBar * bar = (DockBar *) o;

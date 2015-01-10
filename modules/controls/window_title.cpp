@@ -3,11 +3,11 @@
 using namespace Playo3;
 
 WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sidePadding, bool showMini, bool showMaxi, bool showClose)
-    : QWidget(window), in_action(false) {
+    : QWidget(window) {
     button_height = height - margins.top();
     setObjectName("WindowTitle");
     setContentsMargins(margins);
-    setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px 0 " + QString::number(sidePadding) + "px; }");
+    setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px; }");
     setFixedHeight(height);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -23,7 +23,7 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
     titleLabel -> setFont(font);
 
     l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
-    l -> setColumnStretch(0, 10);
+    l -> setColumnStretch(0, 1);
 
     connect(this, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
 
