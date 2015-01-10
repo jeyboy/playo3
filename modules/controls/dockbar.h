@@ -25,9 +25,17 @@ namespace Playo3 {
             setAttribute(Qt::WA_NoSystemBackground, floating);
             setAttribute(Qt::WA_TranslucentBackground, floating);
         }
+    protected slots:
+        inline void titleReleased() {
+            qDebug() << "sdf" << sticked;
+            if (sticked)
+                installEventFilter(parent());
+            else removeEventFilter(parent());
+        }
 
     protected:
         void resizeEvent(QResizeEvent *);
+        void moveEvent(QMoveEvent *);
         inline void closeEvent(QCloseEvent * e) {
             emit closing();
             QDockWidget::closeEvent(e);
@@ -41,6 +49,7 @@ namespace Playo3 {
         void paintEvent(QPaintEvent *);
 
     private:
+        bool sticked;
         WindowTitle * titleWidget;
         QRect borderRect;
         QLinearGradient brush;

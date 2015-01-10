@@ -2,7 +2,8 @@
 
 using namespace Playo3;
 
-WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sidePadding, bool showMini, bool showMaxi, bool showClose) : QWidget(window) {
+WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sidePadding, bool showMini, bool showMaxi, bool showClose)
+    : QWidget(window), in_action(false) {
     button_height = height - margins.top();
     setObjectName("WindowTitle");
     setContentsMargins(margins);

@@ -3,13 +3,16 @@
 
 using namespace Playo3;
 
-DockBar::DockBar(const QString &title, QWidget *parent, Qt::WindowFlags flags) : QDockWidget(title, parent, flags) {
+DockBar::DockBar(const QString &title, QWidget *parent, Qt::WindowFlags flags)
+    : QDockWidget(title, parent, flags), sticked(false) {
     setAttribute(Qt::WA_DeleteOnClose);
     setObjectName("tool_" + title);
     setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 10, 10, 0), 4, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
+
+    connect(titleWidget, SIGNAL(released()), this, SLOT(titleReleased()));
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -26,6 +29,31 @@ void DockBar::resizeEvent(QResizeEvent * event) {
     Stylesheets::calcBorderRect(rect(), borderRect);
 
     QDockWidget::resizeEvent(event);
+}
+
+void DockBar::moveEvent(QMoveEvent * e) {
+    if (titleWidget -> inAction()) {
+        QRect parentRect = parentWidget() -> geometry();
+        QRect currRect = geometry();
+        bool change = false;
+
+        if (change |= qAbs(parentRect.right() - currRect.left()) < Stylesheets::stickDistance)
+            currRect.moveLeft(parentRect.right());
+
+        if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Stylesheets::stickDistance))
+            currRect.moveTop(parentRect.bottom());
+
+        if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Stylesheets::stickDistance))
+            currRect.moveRight(parentRect.left());
+
+        if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Stylesheets::stickDistance))
+            currRect.moveBottom(parentRect.top());
+
+        if ((sticked = change))
+            setGeometry(currRect);
+    }
+
+    QDockWidget::moveEvent(e);
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {

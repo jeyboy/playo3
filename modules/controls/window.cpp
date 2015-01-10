@@ -1,5 +1,6 @@
 #include "window.h"
 #include "misc/stylesheets.h"
+#include "modules/controls/dockbar.h"
 
 using namespace Playo3;
 
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setTabPosition(Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition);
     setDockNestingEnabled(true);
     setDockOptions(AnimatedDocks | AllowNestedDocks | VerticalTabs);
+    setDocumentMode(true);
 }
 
 MainWindow::~MainWindow() {
@@ -43,6 +45,20 @@ void MainWindow::locationCorrection() {
         top = height - 50;
 
     move(left, top);
+}
+
+bool MainWindow::eventFilter(QObject * target, QEvent * event) {
+    if (event -> type() == QEvent::Move) {
+        DockBar * bar = (DockBar *)target;
+
+        if (bar) {
+            QMoveEvent * e = (QMoveEvent *) event;
+            qDebug() << "KL " << (e -> oldPos() - e -> pos());
+            bar -> move(bar -> geometry().topLeft() + (e -> oldPos() - e -> pos()));
+        }
+    }
+
+    return QMainWindow::eventFilter(target, event);
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {

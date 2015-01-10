@@ -19,6 +19,8 @@ namespace Playo3 {
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
 
     protected:
+        bool eventFilter(QObject *target, QEvent *event);
+
         void resizeEvent(QResizeEvent *);
         void mousePressEvent(QMouseEvent *);
         inline void mouseReleaseEvent(QMouseEvent * event) {
