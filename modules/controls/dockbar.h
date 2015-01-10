@@ -4,17 +4,19 @@
 #include <QDockWidget>
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
-#include <qdebug.h>
 
 namespace Playo3 {
     class DockBar : public QDockWidget {
         Q_OBJECT
     public:
-        DockBar(const QString &title, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+        DockBar(const QString &title, QWidget * parent = 0, Qt::WindowFlags flags = 0);
         inline void setWindowTitle(const QString & newTitle) {
             titleWidget -> setText(newTitle);
             QDockWidget::setWindowTitle(newTitle);
         }
+        inline bool isSticked() const { return sticked; }
+        inline void setSticked(const bool stick) { sticked = stick; }
+
     signals:
         void activating();
         void closing();
@@ -28,7 +30,6 @@ namespace Playo3 {
 
     protected:
         void resizeEvent(QResizeEvent *);
-        void moveEvent(QMoveEvent *);
         inline void closeEvent(QCloseEvent * e) {
             emit closing();
             ((MainWindow *)parentWidget()) -> removeOuterChild(this);

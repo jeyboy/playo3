@@ -6,9 +6,9 @@ using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),
-    halfBorderWidth(Stylesheets::borderWidth / 2),
-    background(new QPixmap(":main")), resizeFlagX(false),
-    resizeFlagY(false), moveFlag(false), inAction(false) {
+    halfBorderWidth(Stylesheets::borderWidth / 2), background(new QPixmap(":main")),
+     resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
+     childInAction(false), skipChildAction(false) {
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
@@ -76,6 +76,88 @@ void MainWindow::mousePressEvent(QMouseEvent * event) {
     QMainWindow::mousePressEvent(event);
 }
 
+void MainWindow::mouseReleaseEvent(QMouseEvent * event) {
+    if (event -> button() == Qt::LeftButton) {
+        dropFlags();
+        inAction = false;
+    }
+    QMainWindow::mouseReleaseEvent(event);
+}
+
+//TODO: move all events funcs to this
+bool MainWindow::event(QEvent * event) {
+    if (event -> type() == QEvent::HoverMove) {
+        if (!inAction) {
+            if (isResizeable()) {
+                if (atBottom || atTop) {
+                    if (atLeft)
+                        setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
+                    else if (atRight)
+                        setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
+                    else
+                        setCursor(Qt::SizeVerCursor);
+                } else setCursor(Qt::SizeHorCursor);
+
+                dropFlags();
+            } else
+                setCursor(Qt::ArrowCursor);
+        }
+    }
+
+    return QMainWindow::event(event);
+}
+
+bool MainWindow::eventFilter(QObject * o, QEvent * e) {
+    switch(e -> type()) {
+        case QEvent::MouseButtonPress: {
+            childInAction = true;
+            break;}
+
+        case QEvent::MouseButtonRelease: {
+            childInAction = false;
+            DockBar * bar = (DockBar *) o;
+
+            if (bar -> isSticked())
+                addOuterChild(bar);
+            else
+                removeOuterChild(bar);
+            break;}
+
+        case QEvent::Move: {
+            if (childInAction && !skipChildAction) {
+                DockBar * bar = (DockBar *) o;
+
+                QRect parentRect = geometry();
+                QRect currRect = bar -> geometry();
+                bool change = false;
+
+                if (change |= qAbs(parentRect.right() - currRect.left()) < Stylesheets::stickDistance)
+                    currRect.moveLeft(parentRect.right());
+
+                if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Stylesheets::stickDistance))
+                    currRect.moveTop(parentRect.bottom());
+
+                if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Stylesheets::stickDistance))
+                    currRect.moveRight(parentRect.left());
+
+                if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Stylesheets::stickDistance))
+                    currRect.moveBottom(parentRect.top());
+
+                bar -> setSticked(change);
+
+                if (change) {
+                    skipChildAction = true;
+                    bar -> setGeometry(currRect);
+                    skipChildAction = false;
+                }
+            }
+            break;}
+        default: {}
+    }
+
+    return QMainWindow::eventFilter(o, e);
+}
+
 void MainWindow::mouseMoveEvent(QMouseEvent * event) {
     if (event -> buttons() & Qt::LeftButton) {
         if (resizeFlagX || resizeFlagY) {
@@ -108,8 +190,15 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 
             stickCorrection(nr);
 
+            ///////////////////// sticked child moving /////////////////////////////
+            skipChildAction = true;
+            QPoint parentOffset = (geometry().topLeft() - nr.topLeft());
+
             foreach(QWidget * w, outerChilds)
-                w -> move(w -> geometry().topLeft() - (geometry().topLeft() - nr.topLeft()));
+                w -> move(w -> geometry().topLeft() - parentOffset);
+
+            skipChildAction = false;
+            //////////////////////////////////////////////////
 
             setGeometry(nr);
             event -> accept();
@@ -118,8 +207,15 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             QRect newRect(geom); newRect.moveTopLeft(event -> globalPos() - (dragPos - geom.topLeft()));
             stickCorrection(newRect);
 
+            ///////////////////// sticked child moving /////////////////////////////
+            skipChildAction = true;
+            QPoint parentOffset = (geometry().topLeft() - newRect.topLeft());
+
             foreach(QWidget * w, outerChilds)
-                w -> move(w -> geometry().topLeft() - (geometry().topLeft() - newRect.topLeft()));
+                w -> move(w -> geometry().topLeft() - parentOffset);
+
+            skipChildAction = false;
+            //////////////////////////////////////////////////
 
             move(newRect.topLeft());
             event -> accept();

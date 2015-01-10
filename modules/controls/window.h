@@ -27,36 +27,12 @@ namespace Playo3 {
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
 
     protected:
+        bool event(QEvent * event);
+        bool eventFilter(QObject *, QEvent *);
+
         void resizeEvent(QResizeEvent *);
         void mousePressEvent(QMouseEvent *);
-        inline void mouseReleaseEvent(QMouseEvent * event) {
-            if (event -> button() == Qt::LeftButton) {
-                dropFlags();
-                inAction = false;
-            }
-            QMainWindow::mouseReleaseEvent(event);
-        }
-        inline bool event(QEvent * event) {
-            if (event -> type() == QEvent::HoverMove) {
-                if (!inAction) {
-                    if (isResizeable()) {
-                        if (atBottom || atTop) {
-                            if (atLeft)
-                                setCursor(atBottom ? Qt::SizeBDiagCursor : Qt::SizeFDiagCursor);
-                            else if (atRight)
-                                setCursor(atBottom ? Qt::SizeFDiagCursor : Qt::SizeBDiagCursor);
-                            else
-                                setCursor(Qt::SizeVerCursor);
-                        } else setCursor(Qt::SizeHorCursor);
-
-                        dropFlags();
-                    } else
-                        setCursor(Qt::ArrowCursor);
-                }
-            }
-
-            return QMainWindow::event(event);
-        }
+        void mouseReleaseEvent(QMouseEvent * event);
         void mouseMoveEvent(QMouseEvent *);
         void paintEvent(QPaintEvent *);
     protected:
@@ -72,7 +48,8 @@ namespace Playo3 {
         uint titleHeight;
         int doubleBorderWidth, halfBorderWidth;
         QPixmap * background;
-        bool resizeFlagX, resizeFlagY, moveFlag, inAction, recursion;
+        bool resizeFlagX, resizeFlagY, moveFlag, inAction;
+        bool childInAction, skipChildAction;
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
         QRect geom;

@@ -4,7 +4,7 @@ QPen Stylesheets::pen = QPen();
 QPen Stylesheets::bevelPen = QPen();
 int Stylesheets::borderWidth = 6;
 int Stylesheets::borderRadius = 12;
-int Stylesheets::stickDistance = 12;
+int Stylesheets::stickDistance = 20;
 
 QString Stylesheets::appStyles() {
     return QString(
