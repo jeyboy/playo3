@@ -4,6 +4,7 @@
 #include <QDockWidget>
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
+#include <qdebug.h>
 
 namespace Playo3 {
     class DockBar : public QDockWidget {
@@ -23,9 +24,12 @@ namespace Playo3 {
     public slots:
         inline void toggleFloating() { setFloating(!isFloating()); }
         inline void floatingChanged(bool floating) {
-            setAttribute(Qt::WA_OpaquePaintEvent, floating);
-            setAttribute(Qt::WA_NoSystemBackground, floating);
-            setAttribute(Qt::WA_TranslucentBackground, floating);
+            if (floating)
+                setTabBarSettings();
+        }
+        inline void onDockLocationChanged(Qt::DockWidgetArea area) {
+            if (area != Qt::NoDockWidgetArea)
+                setTabBarSettings();
         }
 
     protected:
@@ -44,6 +48,14 @@ namespace Playo3 {
         void paintEvent(QPaintEvent *);
 
     private:
+        inline void setTabBarSettings() {
+            QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+            foreach(QTabBar * tab, tabbars) {
+               tab -> setElideMode(Qt::ElideRight);
+               tab -> setContentsMargins(3, 3, 3, 3);
+            }
+        }
+
         bool sticked;
         WindowTitle * titleWidget;
         QRect borderRect;

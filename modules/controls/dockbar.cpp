@@ -18,17 +18,19 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     Stylesheets::initBrush(brush);
+
+    connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
+    connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
 }
 
 void DockBar::resizeEvent(QResizeEvent * event) {
-    titleWidget -> resize(event -> size().width(), titleWidget -> height());
-
     brush.setStart(rect().topLeft());
     brush.setFinalStop(rect().bottomRight());
 
     Stylesheets::calcBorderRect(rect(), borderRect);
 
     QDockWidget::resizeEvent(event);
+    titleWidget -> resize(width(), titleWidget -> height());
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {

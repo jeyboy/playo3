@@ -74,6 +74,18 @@ void Playo::init() {
 
     Dockbars::instance(this) -> addDocBar("PU", new QLabel("sdfsfsdf"), Qt::TopDockWidgetArea);
     Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
 
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");

@@ -202,9 +202,9 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                "   background: red;"
 //                "}"
 
-//                "QMainWindow::separator:hover {"
-//                "    background: #fff;"
-//                "}"
+                "QMainWindow::separator:hover {"
+                "    background: #ff0000;"
+                "}"
 
                 "QTabBar::tab {"
                 "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
@@ -212,31 +212,30 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "                               stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
                 "   border: 2px solid #C4C4C3;"
                 "   border-bottom-color: #C2C7CB;"
-                "   min-width: 8ex;"
                 "}"
 
                 "QTabBar::tab:top {"
                 "   border-top-left-radius: 4px;"
                 "   border-top-right-radius: 4px;"
-                "   padding: 0 6px;"
+                "   min-width: 60px;"
                 "}"
 
                 "QTabBar::tab:bottom {"
                 "   border-bottom-left-radius: 4px;"
                 "   border-bottom-right-radius: 4px;"
-                "   padding: 0 6px;"
+                "   min-width: 60px;"
                 "}"
 
                 "QTabBar::tab:left {"
                 "   border-top-left-radius: 4px;"
                 "   border-bottom-left-radius: 4px;"
-                "   padding: 6px 0;"
+                "   min-height: 60px;"
                 "}"
 
                 "QTabBar::tab:right {"
                 "   border-top-right-radius: 4px;"
                 "   border-bottom-right-radius: 4px;"
-                "   padding: 6px 0;"
+                "   min-height: 60px;"
                 "}"
 
                 "QTabBar::tab:selected, QTabBar::tab:hover {"
