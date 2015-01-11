@@ -85,7 +85,7 @@ namespace Playo3 {
         inline void updateToolbarMovable(QToolBar * bar, bool movable) {
             bar -> setMovable(movable);
 
-            if (!movable && QString(bar -> metaObject() -> className()) == "QToolBar")
+            if (!movable && QString(bar -> metaObject() -> className()) != "Playo3::ToolBar")
                 bar -> setStyleSheet(Stylesheets::toolbarStyle());
             else bar -> setStyleSheet("");
         }

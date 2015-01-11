@@ -195,7 +195,7 @@ QString Stylesheets::mainWindowTabsStyle() {
 
                 "QToolBar {"
                 "    border-radius: 8px;"
-                "    border: 3px ridge #888;"
+                "    border: 1px ridge #888;"
                 "}"
 
 //                "QToolBar::handle {"
