@@ -77,24 +77,25 @@ QString Stylesheets::sliderStyles() {
 
                 "QSlider::add-page, QSlider::sub-page {"
                     "margin: 4px;"
+                    "background: #fff;"
                 "}"
 
                 "QSlider::groove {"
-                  "border: 1px solid #bbb;"
+                    "border: 1px solid #bbb;"
                 "}"
 
                 "QSlider::groove:horizontal {"
-                  "height: 20px;"
+                    "height: 20px;"
                 "}"
 
                 "QSlider::groove:vertical {"
-                  "width: 20px;"
+                    "width: 20px;"
                 "}"
 
 
-                "QSlider::add-page:horizontal, QSlider::sub-page:vertical {"
-                  "background: #fff;"
-                "}"
+//                "QSlider::add-page:horizontal, QSlider::sub-page:vertical {"
+//                    "background: #fff;"
+//                "}"
 
                 "QSlider::add-page:vertical {"
 //                        "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
@@ -116,20 +117,11 @@ QString Stylesheets::sliderStyles() {
                     "border-color: #999;"
                 "}"
 
-                "QSlider::handle {"
+                "QSlider::handle {" // QSlider::handle:horizontal // QSlider::handle:vertical
                     "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #eee, stop:1 #ccc);"
-//                    "margin: 0 -1px;"
                     "width: 18px;"
                     "height: 18px;"
                 "}"
-
-//                "QSlider::handle:horizontal {"
-//                  "width: 18px;"
-//                "}"
-
-//                "QSlider::handle:vertical {"
-//                  "height: 18px;"
-//                "}"
 
                 "QSlider::handle:hover {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #fff, stop:1 #ddd);"
