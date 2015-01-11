@@ -26,6 +26,8 @@ void Dockbars::load(QJsonArray & bars) {
             barName = obj.value("title").toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
+            curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
+
             if (obj.value("stick").toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
 
@@ -59,6 +61,7 @@ void Dockbars::save(DataStore * settings) {
         foreach(DockBar * bar, bars) {
             curr_bar = QJsonObject();
             curr_bar.insert("title", bar -> windowTitle());
+            curr_bar.insert("name", bar -> objectName());
             curr_bar.insert("stick", bar -> isSticked());
 
             // save tab content

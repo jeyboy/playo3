@@ -1,4 +1,5 @@
 #include "toolbars.h"
+#include <qdatetime.h>
 
 using namespace Playo3;
 
@@ -105,6 +106,7 @@ void ToolBars::load(QJsonArray & bars) {
             barName = obj.value("title").toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
+            curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
             updateToolbarMovable(curr_bar, obj.value("movable").toBool());
 
             window -> addToolBar(Qt::BottomToolBarArea, curr_bar);
@@ -140,6 +142,7 @@ void ToolBars::save(DataStore * settings) {
 
 //            curr_tab.insert("area", window -> toolBarArea(bar));
             curr_tab.insert("title", bar -> windowTitle());
+            curr_tab.insert("name", bar -> objectName());
             curr_tab.insert("movable", bar -> isMovable());
 
             if (bar -> windowTitle() != "Media"
@@ -389,15 +392,6 @@ void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
     connect(button, SIGNAL(clicked()), parent(), SLOT(openFolderTriggered()));
 }
 
-bool ToolBars::isToolbarNameUniq(QString name) {
-    foreach(QToolBar * bar, toolbars()) {
-        if (bar -> windowTitle() == name)
-            return false;
-    }
-
-    return true;
-}
-
 /////////////////////////////////////////////////////////////////////////////////////
 ///SLOTS
 /////////////////////////////////////////////////////////////////////////////////////
@@ -424,11 +418,10 @@ void ToolBars::removePanelHighlight() {
 void ToolBars::addPanelTriggered() {
     ToolbarDialog dialog((QWidget *)parent());
 
-    while (dialog.exec() == QDialog::Accepted) {
-        if (isToolbarNameUniq(dialog.getName())) {
-            ((QMainWindow *)parent()) -> addToolBar(Qt::BottomToolBarArea, createToolBar(dialog.getName()));
-            return;
-        }
+    if (dialog.exec() == QDialog::Accepted) {
+        QToolBar * bar = createToolBar(dialog.getName());
+        bar -> setObjectName(dialog.getName() + QString::number(QDateTime::currentMSecsSinceEpoch()));
+        ((QMainWindow *)parent()) -> addToolBar(Qt::BottomToolBarArea, bar);
     }
 }
 

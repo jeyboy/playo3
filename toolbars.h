@@ -82,7 +82,6 @@ namespace Playo3 {
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();
 
-        bool isToolbarNameUniq(QString name);
         inline void updateToolbarMovable(QToolBar * bar, bool movable) {
             bar -> setMovable(movable);
 

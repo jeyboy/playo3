@@ -1,4 +1,5 @@
 #include "dockbar.h"
+#include <qdatetime.h>
 
 using namespace Playo3;
 
@@ -8,7 +9,7 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
     installEventFilter(parent);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    setObjectName("tool_" + title);
+    setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
     setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 10, 10, 0), 4, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
@@ -47,6 +48,7 @@ void DockBar::paintEvent(QPaintEvent * event) {
     else {
         QPen pen(Qt::white);
         pen.setCosmetic(true);
+        pen.setWidth(2);
         painter.setPen(pen);
         painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
     }
