@@ -35,6 +35,10 @@ namespace Playo3 {
             bar -> raise();
             active = bar;
         }
+    public slots:
+        void hideAll();
+        void showAll();
+
     private slots:
         void activeChanged();
         void barClosed();

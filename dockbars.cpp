@@ -115,6 +115,15 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
 //}
 //}
 
+void Dockbars::hideAll() {
+    foreach(DockBar * bar, dockbars())
+        bar -> setHidden(true);
+}
+void Dockbars::showAll() {
+    foreach(DockBar * bar, dockbars())
+        bar -> setHidden(false);
+}
+
 void Dockbars::activeChanged() {
     active = (DockBar *)sender();
 }

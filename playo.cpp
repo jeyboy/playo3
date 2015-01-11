@@ -44,7 +44,7 @@ Playo::~Playo() {
 }
 
 QMenu * Playo::createPopupMenu() {
-    return ToolBars::instance(this) -> improvePopupMenu(this, QMainWindow::createPopupMenu());
+    return ToolBars::instance(this) -> createPopupMenu(this);
 }
 
 void Playo::closeEvent(QCloseEvent * e) {

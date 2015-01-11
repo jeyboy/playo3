@@ -38,13 +38,11 @@ namespace Playo3 {
         }
 
         static ToolBars * instance(QObject * parent);
-        static void close() {
-            delete self;
-        }
+        static void close() { delete self; }
 
         static inline QString settingsName() { return "bars"; }
 
-        QMenu * improvePopupMenu(QMainWindow * window, QMenu * menu);
+        QMenu * createPopupMenu(QMainWindow * window);
 
         void load(QJsonArray & bars);
         void save(DataStore * settings);
@@ -55,10 +53,10 @@ namespace Playo3 {
         Spectrum * getSpectrum();
 
     public slots:
-        void onFolderDrop(QString name, QString path);
+        void hideAll();
+        void showAll();
         void changeToolbarMovable();
         void changeToolbarsMovable();
-        void toolbarVisibilityChanged(bool visible);
         void toolbarOrientationChanged(Qt::Orientation);
 
         void removePanelHighlight();
@@ -69,6 +67,8 @@ namespace Playo3 {
         void removePanelButtonTriggered();
 
     protected slots:
+        void onFolderDrop(QString name, QString path);
+
         inline void onMovableChanged(bool /*movable*/) {
             updateBarStyle((QToolBar *)sender());
         }
@@ -87,6 +87,8 @@ namespace Playo3 {
                 bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
         }
 
+        QToolBar * deiterateToToolBar(QWidget * obj);
+
         QToolBar * linkNameToToolbars(QString barName);
 
         QToolBar * createToolBar(QString name);
@@ -103,7 +105,7 @@ namespace Playo3 {
 
         ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),
-            underMouseBar(0), activeBar(0), underMouseButton(0) {
+            underMouseBar(0), underMouseButton(0) {
 
         }
 
@@ -113,7 +115,7 @@ namespace Playo3 {
         QToolBar * highlighted;
 
         Spectrum * spectrum;
-        QToolBar * underMouseBar, * activeBar;
+        QToolBar * underMouseBar;
         ToolbarButton * underMouseButton;
 
         QPoint lastClickPoint;

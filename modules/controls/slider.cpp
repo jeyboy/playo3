@@ -4,22 +4,24 @@
 #include "misc/stylesheets.h"
 #include "modules/controls/slider_style.h"
 
-Slider::Slider(QWidget * parent, bool isPositionSlider) : QSlider(parent) {
-    setStyle(new SliderStyle());
-    setMouseTracking(isPositionSlider);
-    position_slider = isPositionSlider;
-    fillColor = QColor::fromRgb(0,0,0);
-//    setToolTipDuration(1000);
+// add mouse tracking block if min == max
+// draw points
 
+Slider::Slider(QWidget * parent, bool show_metric, bool isPositionSlider) : QSlider(parent)
+  , position_slider(isPositionSlider)
+  , merticable(show_metric)
+  , fillColor(QColor::fromRgb(0,0,0))
+  , margin(4) {
+    setStyle(new SliderStyle());
+    setMouseTracking(position_slider);
     setStyleSheet(Stylesheets::sliderStyles());
-    margin = 4;
 }
 
 //TODO: draw text by QStaticText
 void Slider::paintEvent(QPaintEvent * event) {
     QSlider::paintEvent(event);
 
-    if (!Settings::instance() -> isMetricShow())
+    if (!merticable || !Settings::instance() -> isMetricShow())
         return;
 
     QPainter p(this);

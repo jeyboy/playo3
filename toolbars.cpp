@@ -1,4 +1,5 @@
 #include "toolbars.h"
+#include "dockbars.h"
 #include <qdatetime.h>
 
 using namespace Playo3;
@@ -11,84 +12,63 @@ ToolBars * ToolBars::instance(QObject * parent) {
     return self;
 }
 
-//TODO: rewrite this
-QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
-    connect(menu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
-    connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
+QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
+    QMenu * menu = new QMenu(window);
 
     lastClickPoint = QCursor::pos();
-    QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint)); // Click on main window return 0
+    QWidget * currentHover = window -> childAt(window -> mapFromGlobal(lastClickPoint));
+    underMouseBar = deiterateToToolBar(currentHover);
+    underMouseButton = qobject_cast<ToolbarButton *>(currentHover);
+    bool isStatic = !qobject_cast<ToolBar *>(underMouseBar);
 
-    if (widget) {
-        menu -> insertSeparator(menu -> actions().first());
+    menu -> addAction(QIcon(":panel_add"), "Add panel", this, SLOT(addPanelTriggered()), QKeySequence("Ctrl+P"));
+    menu -> addAction(QIcon(":panel_remove"), "Remove panel", this, SLOT(removePanelTriggered()), QKeySequence("Ctrl+Shift+P")) -> setEnabled(!isStatic);
+    menu -> addSeparator();
 
-        QString widgetClassName = QString(widget -> metaObject() -> className());
+    if (underMouseBar) {
 
-        if (widgetClassName == "Playo3::ToolbarButton") {
-            underMouseButton = ((ToolbarButton*)widget);
-            underMouseBar = ((ToolBar *)underMouseButton -> parentWidget());
-        } else if (widgetClassName == "QLabel") {
-            underMouseBar = (ToolBar *)widget -> parentWidget();
+        if (underMouseBar -> isMovable()) {
+            menu -> addAction(QIcon(":locked"), "Lock bar", this, SLOT(changeToolbarMovable()), QKeySequence("Ctrl+L"));
+            menu -> addAction(QIcon(":locked"), "Lock all bars", this, SLOT(changeToolbarsMovable()), QKeySequence("Ctrl+O"));
         } else {
-            underMouseBar = ((ToolBar *)widget);
+            menu -> addAction(QIcon(":unlocked"), "Unlock bar", this, SLOT(changeToolbarMovable()), QKeySequence("Ctrl+L"));
+            menu -> addAction(QIcon(":unlocked"), "Unlock all bars", this, SLOT(changeToolbarsMovable()), QKeySequence("Ctrl+L"));
         }
 
-        QAction * removeButtonAct = new QAction(QIcon(":drop_remove"), "Remove drop point", menu);
-        removeButtonAct -> setEnabled(widgetClassName == "Playo3::ToolbarButton");
-        menu -> insertAction(menu -> actions().first(), removeButtonAct);
-        connect(removeButtonAct, SIGNAL(triggered(bool)), this, SLOT(removePanelButtonTriggered()));
+        menu -> addSeparator();
+    }
 
+    menu -> addAction(QIcon(":drop_add"), "Add drop point", this, SLOT(addPanelButtonTriggered()), QKeySequence("Ctrl+F")) -> setEnabled(!isStatic && underMouseBar);
+    menu -> addAction(QIcon(":drop_remove"), "Remove drop point", this, SLOT(removePanelButtonTriggered()), QKeySequence("Ctrl+Shift+F")) -> setEnabled(underMouseButton);
 
-        QAction * addButtonAct = new QAction(QIcon(":drop_add"), "Add drop point", menu);
-        addButtonAct -> setEnabled(widgetClassName == "Playo3::ToolBar");
-        menu -> insertAction(menu -> actions().first(), addButtonAct);
-        connect(addButtonAct, SIGNAL(triggered(bool)), this, SLOT(addPanelButtonTriggered()));
+    QList<QToolBar *> bars = toolbars();
+    QList<DockBar *> docs = Dockbars::instance(window) -> dockbars();
+    bool hasBars = bars.count() > 0, hasDocs = docs.count() > 0;
 
-    //    menu -> insertSection(menu -> actions().first(), QIcon(":drops"),  "Drop points");
-        menu -> insertSeparator(menu -> actions().first());
+    if (hasBars || hasDocs)
+        menu -> addSeparator();
 
-        QAction * removePanelAct = new QAction(QIcon(":panel_remove"), "Remove panel", menu);
-        removePanelAct -> setEnabled(widgetClassName == "Playo3::ToolBar" || widgetClassName == "QLabel");
-        connect(removePanelAct, SIGNAL(triggered(bool)), this, SLOT(removePanelTriggered()));
-        menu -> insertAction(menu->actions().first(), removePanelAct);
+    if (hasBars) {
+        QMenu * barsMenu = menu -> addMenu("Tool bars");
 
-        QAction * addPanelAct = new QAction(QIcon(":panel_add"), "Add panel", menu);
-        connect(addPanelAct, SIGNAL(triggered(bool)), this, SLOT(addPanelTriggered()));
-        menu -> insertAction(menu->actions().first(), addPanelAct);
+        barsMenu -> addAction("Show all", this, SLOT(showAll()));
+        barsMenu -> addAction("Hide all", this, SLOT(hideAll()));
 
-    //    menu -> insertSection(menu->actions().first(), QIcon(":panels"), "Panel");
-        menu -> insertSeparator(menu->actions().first());
+        foreach(QToolBar * bar, bars)
+            barsMenu -> addAction(bar -> toggleViewAction());
 
-        //    activeBar
+        connect(barsMenu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
+        connect(barsMenu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
+    }
 
-        ////////////////////////// for bar movable fixing ////////////////////////////////
-        if (widgetClassName != "QDockWidget" && widgetClassName != "Playo3::DockBar") {
-            if (widgetClassName == "QToolBar" || widgetClassName == "Playo3::ToolBar" || widgetClassName == "Playo3::Spectrum")
-                activeBar = qobject_cast<QToolBar *>(widget);
-            else
-                activeBar = qobject_cast<QToolBar *>(widget -> parentWidget());
+    if (hasDocs) {
+        QMenu * docsMenu = menu -> addMenu("Dock bars");
 
-            if (activeBar) {
-                QAction * fixToolbarAct, * fixToolbarsAct;
+        docsMenu -> addAction("Show all", Dockbars::instance(window), SLOT(showAll()));
+        docsMenu -> addAction("Hide all", Dockbars::instance(window), SLOT(hideAll()));
 
-                if (activeBar -> isMovable()) {
-                    fixToolbarAct = new QAction(QIcon(":locked"), "Static bar", menu);
-                    fixToolbarsAct = new QAction(QIcon(":locked"), "All bars to Static", menu);
-                } else {
-                    fixToolbarAct = new QAction(QIcon(":unlocked"), "Movable bar", menu);
-                    fixToolbarsAct = new QAction(QIcon(":unlocked"), "All bars to Movable", menu);
-                }
-
-                menu -> insertAction(menu -> actions().first(), fixToolbarsAct);
-                connect(fixToolbarsAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarsMovable()));
-
-                menu -> insertAction(menu -> actions().first(), fixToolbarAct);
-                connect(fixToolbarAct, SIGNAL(triggered(bool)), this, SLOT(changeToolbarMovable()));
-            }
-        }
-        else activeBar = 0;
-
-        //////////////////////////////////////////////////////////////////////////////////
+        foreach(DockBar * doc, docs)
+            docsMenu -> addAction(doc -> toggleViewAction());
     }
 
     return menu;
@@ -199,6 +179,17 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
 }
 
+QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
+    QToolBar * ret;
+    while(obj) {
+        if ((ret = qobject_cast<QToolBar *>(obj)))
+            return ret;
+        else obj = obj -> parentWidget();
+    }
+
+    return 0;
+}
+
 QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     if (barName == "Media") {
         return createMediaBar();
@@ -257,7 +248,6 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 
 QToolBar * ToolBars::createMediaBar() {
     QToolBar* ptb = precreateToolBar("Media");
-    connect(ptb, SIGNAL(visibilityChanged(bool)), this, SLOT(toolbarVisibilityChanged(bool)));
 
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
     Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
@@ -282,7 +272,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 QToolBar * ToolBars::createPositionMediaBar() {
     QToolBar* ptb = precreateToolBar("Media+Position", true);
 
-    Slider * slider = new Slider(ptb, true);
+    Slider * slider = new Slider(ptb, true, true);
     slider -> setTickInterval(60000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
@@ -298,7 +288,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar* ptb = precreateToolBar("Media+Time");
 
-    ClickableLabel * timeLabel = new ClickableLabel("00:00");
+    ClickableLabel * timeLabel = new ClickableLabel("00:00", ptb);
     timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
     ptb -> addWidget(timeLabel);
     Player::instance() -> setTimePanel(timeLabel);
@@ -319,7 +309,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     Player::instance() -> setMuteButton(act);
 
-    Slider * slider = new Slider();
+    Slider * slider = new Slider(ptb, false);
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
@@ -441,7 +431,7 @@ void ToolBars::addPanelTriggered() {
         QToolBar * bar = createToolBar(dialog.getName());
         bar -> setObjectName(dialog.getName() + QString::number(QDateTime::currentMSecsSinceEpoch()));
         QMainWindow * window = (QMainWindow *)parent();
-        Qt::ToolBarArea area = activeBar ? window -> toolBarArea(activeBar) : Qt::BottomToolBarArea;
+        Qt::ToolBarArea area = underMouseBar ? window -> toolBarArea(underMouseBar) : Qt::BottomToolBarArea;
         window -> addToolBar(area, bar);
     }
 }
@@ -464,11 +454,6 @@ void ToolBars::removePanelButtonTriggered() {
     bar -> removeAction(bar -> actionAt(bar -> mapFromGlobal(lastClickPoint)));
 }
 
-void ToolBars::toolbarVisibilityChanged(bool visible) { // remove control panel from menu and remove this func
-  if (visible == false)
-    ((QToolBar*)QObject::sender()) -> setVisible(true);
-}
-
 void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
     QToolBar * bar = (QToolBar *)QObject::sender();
 
@@ -480,14 +465,23 @@ void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
     }
 }
 
+void ToolBars::hideAll() {
+    foreach(QToolBar * bar, toolbars())
+        bar -> setHidden(true);
+}
+void ToolBars::showAll() {
+    foreach(QToolBar * bar, toolbars())
+        bar -> setHidden(false);
+}
+
 void ToolBars::changeToolbarMovable() {
-    if (!activeBar) return;
-    activeBar -> setMovable(!activeBar -> isMovable());
+    if (!underMouseBar) return;
+    underMouseBar -> setMovable(!underMouseBar -> isMovable());
 }
 
 void ToolBars::changeToolbarsMovable() {
-    if (!activeBar) return;
-    bool movable = !activeBar -> isMovable();
+    if (!underMouseBar) return;
+    bool movable = !underMouseBar -> isMovable();
     foreach(QToolBar * bar, toolbars())
         if (movable || (!movable && !bar -> isFloating()))
             bar -> setMovable(movable);
