@@ -482,7 +482,8 @@ void ToolBars::changeToolbarMovable() {
 void ToolBars::changeToolbarsMovable() {
     bool movable = !activeBar -> isMovable();
     foreach(QToolBar * bar, toolbars())
-        bar -> setMovable(movable);
+        if (movable || (!movable && !bar -> isFloating()))
+            bar -> setMovable(movable);
 }
 
 void ToolBars::folderDropped(QString name, QString path) {
