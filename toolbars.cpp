@@ -218,6 +218,7 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
 QToolBar * ToolBars::createToolBar(QString name) {
     ToolBar * ptb = new ToolBar(name, (QWidget *)parent());
 
+    ptb -> setFloatable(false);
     ptb -> setStyleSheet(Stylesheets::toolbarMovableStyle());
 
     ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
@@ -238,6 +239,7 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 
     ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
     ptb -> setAttribute(Qt::WA_TranslucentBackground, true);
+    ptb -> setFloatable(false);
 
     if (oriented)
         connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
