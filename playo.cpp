@@ -72,17 +72,16 @@ void Playo::init() {
     new Tray(this);
 
 //    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU", new QLabel("sdfsfsdf")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU1", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU2", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU3", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU4", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU5", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU6", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU7", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU8", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU9", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU10", new QLabel("dfgdfgdfg")));
 
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");
