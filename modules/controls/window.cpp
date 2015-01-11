@@ -193,7 +193,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 
             ///////////////////// sticked child moving /////////////////////////////
             skipChildAction = true;
-            QPoint parentOffset = (geometry().topLeft() - nr.topLeft());
+            QPoint parentOffset = (geometry().topLeft() - nr.topLeft()) + (geometry().bottomRight() - nr.bottomRight());
 
             foreach(QWidget * w, outerChilds)
                 w -> move(w -> geometry().topLeft() - parentOffset);
