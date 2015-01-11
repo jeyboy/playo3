@@ -417,7 +417,7 @@ void ToolBars::panelHighlight(QAction *action) {
     if (highlighted != 0)
         emit removePanelHighlight();
 
-    if (widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
+    if (widgetClassName == "Playo3::Spectrum" ||widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
         highlighted = (QToolBar *)action -> parentWidget();
         highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
     }

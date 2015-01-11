@@ -45,7 +45,7 @@ void Spectrum::dataUpdated(QList<QVector<int> > bars) {
         repaint();
 }
 
-void Spectrum::paintEvent(QPaintEvent *event) {
+void Spectrum::paintEvent(QPaintEvent * event) {
     QToolBar::paintEvent(event);
 
     if (Settings::instance() -> getSpectrumCombo()) {
