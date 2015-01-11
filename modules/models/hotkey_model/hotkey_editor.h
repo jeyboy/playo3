@@ -19,7 +19,6 @@ protected:
     void keyReleaseEvent(QKeyEvent *);
 
 private:
-
     int keyType;
 };
 

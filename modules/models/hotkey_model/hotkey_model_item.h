@@ -7,10 +7,10 @@
 
 class HotkeyModelItem {
 public:
-    HotkeyModelItem(const QVector<QVariant> &data, HotkeyModelItem *parent = 0);
+    HotkeyModelItem(const QVector<QVariant> & data, HotkeyModelItem * parent = 0);
     ~HotkeyModelItem();
 
-    HotkeyModelItem *child(int number);
+    HotkeyModelItem * child(int number);
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;
@@ -19,16 +19,16 @@ public:
     bool removeChildren(int position, int count);
     bool removeColumns(int position, int columns);
     int childNumber() const;
-    bool setData(int column, const QVariant &value);
+    bool setData(int column, const QVariant & value);
     void appendChilds(QList<HotkeyModelItem *> *);
 
-    HotkeyModelItem *parent();
+    HotkeyModelItem * parent();
     QList<HotkeyModelItem *> childList();
 
 private:
     QList<HotkeyModelItem *> childItems;
     QVector<QVariant> itemData;
-    HotkeyModelItem *parentItem;
+    HotkeyModelItem * parentItem;
 };
 
 #endif //HOTKEY_MODEL_ITEM_H

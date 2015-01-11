@@ -1,6 +1,6 @@
 #include "hotkey_model_item.h"
 
-HotkeyModelItem::HotkeyModelItem(const QVector<QVariant> &data, HotkeyModelItem *parent) {
+HotkeyModelItem::HotkeyModelItem(const QVector<QVariant> & data, HotkeyModelItem * parent) {
      parentItem = parent;
      itemData = data;
 }
@@ -9,7 +9,7 @@ HotkeyModelItem::~HotkeyModelItem() {
     qDeleteAll(childItems);
 }
 
-HotkeyModelItem *HotkeyModelItem::child(int number) {
+HotkeyModelItem * HotkeyModelItem::child(int number) {
     return childItems.value(number);
 }
 
@@ -19,7 +19,7 @@ int HotkeyModelItem::childCount() const {
 
 int HotkeyModelItem::childNumber() const {
     if (parentItem)
-        return parentItem->childItems.indexOf(const_cast<HotkeyModelItem*>(this));
+        return parentItem -> childItems.indexOf(const_cast<HotkeyModelItem *>(this));
 
     return 0;
 }
@@ -38,7 +38,7 @@ bool HotkeyModelItem::insertChildren(int position, int count, int columns) {
 
     for (int row = 0; row < count; ++row) {
         QVector<QVariant> data(columns);
-        HotkeyModelItem *item = new HotkeyModelItem(data, this);
+        HotkeyModelItem * item = new HotkeyModelItem(data, this);
         childItems.insert(position, item);
     }
 
@@ -52,13 +52,13 @@ bool HotkeyModelItem::insertColumns(int position, int columns) {
     for (int column = 0; column < columns; ++column)
         itemData.insert(position, QVariant());
 
-    foreach (HotkeyModelItem *child, childItems)
-        child->insertColumns(position, columns);
+    foreach (HotkeyModelItem * child, childItems)
+        child -> insertColumns(position, columns);
 
     return true;
 }
 
-HotkeyModelItem *HotkeyModelItem::parent() {
+HotkeyModelItem * HotkeyModelItem::parent() {
     return parentItem;
 }
 
@@ -83,13 +83,13 @@ bool HotkeyModelItem::removeColumns(int position, int columns) {
     for (int column = 0; column < columns; ++column)
         itemData.remove(position);
 
-    foreach (HotkeyModelItem *child, childItems)
-        child->removeColumns(position, columns);
+    foreach (HotkeyModelItem * child, childItems)
+        child -> removeColumns(position, columns);
 
     return true;
 }
 
-bool HotkeyModelItem::setData(int column, const QVariant &value) {
+bool HotkeyModelItem::setData(int column, const QVariant & value) {
     if (column < 0 || column >= itemData.size())
         return false;
 

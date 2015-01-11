@@ -2,7 +2,6 @@
 #define HOTKEY_MODEL_H
 
 #include <QAbstractItemModel>
-
 #include "hotkey_model_item.h"
 
 class HotkeyModel : public QAbstractItemModel {

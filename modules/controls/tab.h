@@ -9,14 +9,6 @@
 //#include "tab_settings.h"
 //#include "../models/model_interface.h"
 
-//#ifndef CBHASH
-//#define CBHASH
-
-//  #include <QHash>
-//  typedef QHash <QString, int> CBHash;
-//  Q_DECLARE_METATYPE(CBHash);
-//#endif // CBHASH
-
     class Tab : public QWidget {
         Q_OBJECT
     //public:
