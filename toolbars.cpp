@@ -21,25 +21,24 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
     underMouseButton = qobject_cast<ToolbarButton *>(currentHover);
     bool isStatic = !qobject_cast<ToolBar *>(underMouseBar);
 
-    menu -> addAction(QIcon(":panel_add"), "Add panel", this, SLOT(addPanelTriggered()), QKeySequence("Ctrl+P"));
-    menu -> addAction(QIcon(":panel_remove"), "Remove panel", this, SLOT(removePanelTriggered()), QKeySequence("Ctrl+Shift+P")) -> setEnabled(!isStatic);
+    menu -> addAction(QIcon(":panel_add"), "Add panel", this, SLOT(addPanelTriggered())/*, QKeySequence("Ctrl+P")*/);
+    menu -> addAction(QIcon(":panel_remove"), "Remove panel", this, SLOT(removePanelTriggered())/*, QKeySequence("Ctrl+Shift+P")*/) -> setEnabled(!isStatic);
     menu -> addSeparator();
 
     if (underMouseBar) {
-
         if (underMouseBar -> isMovable()) {
-            menu -> addAction(QIcon(":locked"), "Lock bar", this, SLOT(changeToolbarMovable()), QKeySequence("Ctrl+L"));
-            menu -> addAction(QIcon(":locked"), "Lock all bars", this, SLOT(changeToolbarsMovable()), QKeySequence("Ctrl+O"));
+            menu -> addAction(QIcon(":locked"), "Lock bar", this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
+            menu -> addAction(QIcon(":locked"), "Lock all bars", this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+O")*/);
         } else {
-            menu -> addAction(QIcon(":unlocked"), "Unlock bar", this, SLOT(changeToolbarMovable()), QKeySequence("Ctrl+L"));
-            menu -> addAction(QIcon(":unlocked"), "Unlock all bars", this, SLOT(changeToolbarsMovable()), QKeySequence("Ctrl+L"));
+            menu -> addAction(QIcon(":unlocked"), "Unlock bar", this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
+            menu -> addAction(QIcon(":unlocked"), "Unlock all bars", this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+L")*/);
         }
 
         menu -> addSeparator();
     }
 
-    menu -> addAction(QIcon(":drop_add"), "Add drop point", this, SLOT(addPanelButtonTriggered()), QKeySequence("Ctrl+F")) -> setEnabled(!isStatic && underMouseBar);
-    menu -> addAction(QIcon(":drop_remove"), "Remove drop point", this, SLOT(removePanelButtonTriggered()), QKeySequence("Ctrl+Shift+F")) -> setEnabled(underMouseButton);
+    menu -> addAction(QIcon(":drop_add"), "Add drop point", this, SLOT(addPanelButtonTriggered())/*, QKeySequence("Ctrl+F")*/) -> setEnabled(!isStatic && underMouseBar);
+    menu -> addAction(QIcon(":drop_remove"), "Remove drop point", this, SLOT(removePanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
 
     QList<QToolBar *> bars = toolbars();
     QList<DockBar *> docs = Dockbars::instance(window) -> dockbars();
@@ -272,7 +271,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 QToolBar * ToolBars::createPositionMediaBar() {
     QToolBar* ptb = precreateToolBar("Media+Position", true);
 
-    Slider * slider = new Slider(ptb, true, true);
+    MetricSlider * slider = new MetricSlider(ptb);
     slider -> setTickInterval(60000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
@@ -309,7 +308,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     Player::instance() -> setMuteButton(act);
 
-    Slider * slider = new Slider(ptb, false);
+    ClickableSlider * slider = new ClickableSlider(ptb);
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);

@@ -1,7 +1,7 @@
-#ifndef SLIDER_H
-#define SLIDER_H
+#ifndef METRIC_SLIDER_H
+#define METRIC_SLIDER_H
 
-#include <QSlider>
+#include "clickable_slider.h"
 #include <QPaintEvent>
 #include <QPainter>
 #include <QStylePainter>
@@ -10,18 +10,19 @@
 
 #include "misc/settings.h"
 
-class Slider : public QSlider {
+class MetricSlider : public ClickableSlider {
     Q_OBJECT
 public:
-    Slider(QWidget * parent = 0, bool show_metric = true, bool isPositionSlider = false);
+    MetricSlider(QWidget * parent = 0, bool showPosition = true);
 
 protected:
     void paintEvent(QPaintEvent *);
     void mouseMoveEvent(QMouseEvent *);
 private:
-    bool position_slider, merticable;
+    QPen pen;
+    bool show_position;
     QColor fillColor;
-    int margin;
+    int margin, spacing, padding;
 };
 
-#endif // SLIDER_H
+#endif // METRIC_SLIDER_H

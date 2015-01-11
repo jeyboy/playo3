@@ -3,7 +3,6 @@
 
 #include <QToolBar>
 #include <QMainWindow>
-#include <QSlider>
 #include <qmenu.h>
 
 #include "media/player.h"
@@ -12,7 +11,7 @@
 //#include "web/socials/vk_api.h"
 //#include "web/socials/soundcloud_api.h"
 
-#include "modules/controls/slider.h"
+#include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
 #include "modules/controls/spectrum.h"

@@ -45,12 +45,13 @@ SOURCES += main.cpp\
     modules/models/hotkey_model/hotkey_model.cpp \
     modules/models/hotkey_model/hotkey_model_item.cpp \
     globalshortcut/qxtglobalshortcut.cpp \
-    modules/controls/slider.cpp \
     modules/controls/spectrum.cpp \
     modules/controls/dockbar.cpp \
     modules/controls/window_title.cpp \
     modules/controls/window.cpp \
-    misc/stylesheets.cpp
+    misc/stylesheets.cpp \
+    modules/controls/clickable_slider.cpp \
+    modules/controls/metric_slider.cpp
 
 HEADERS  += playo.h \
     dockbars.h \
@@ -102,11 +103,12 @@ HEADERS  += playo.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
     modules/controls/popa.h \
-    modules/controls/slider.h \
     modules/controls/slider_style.h \
     modules/controls/spectrum.h \
     modules/controls/dockbar.h \
-    modules/controls/title_layout.h
+    modules/controls/title_layout.h \
+    modules/controls/clickable_slider.h \
+    modules/controls/metric_slider.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
