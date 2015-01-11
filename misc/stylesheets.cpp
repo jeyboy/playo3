@@ -45,18 +45,18 @@ QString Stylesheets::appStyles() { // NOT USED
                 " image: url(:/elems/check_fill);"
                 "}"
 
-                "QTabBar QToolButton::right-arrow { /* the arrow mark in the tool buttons */"
-                " image: url(:/elems/next);"
-                "}"
+//                "QTabBar QToolButton::right-arrow { /* the arrow mark in the tool buttons */"
+//                " image: url(:/elems/next);"
+//                "}"
 
-                "QTabBar QToolButton::left-arrow { /* the arrow mark in the tool buttons */"
-                " image: url(:/elems/prev);"
-                "}"
+//                "QTabBar QToolButton::left-arrow { /* the arrow mark in the tool buttons */"
+//                " image: url(:/elems/prev);"
+//                "}"
 
 
-                "QTabBar::scroller {"
-                " height: 24px;"
-                "}"
+//                "QTabBar::scroller {"
+//                " height: 24px;"
+//                "}"
             );
 }
 
@@ -160,8 +160,31 @@ QString Stylesheets::treeViewStyles() { // NOT USED
               );
 }
 
-QString Stylesheets::toolbarStyle() {
+QString Stylesheets::toolbarHighLightStyle() {
+    return QString("QToolBar { border: 2px dotted #00FFFF; }");
+}
+
+QString Stylesheets::toolbarFixedStyle() {
     return QString("QToolBar { border: none; }");
+}
+
+QString Stylesheets::toolbarFloatStyle() {
+    return QString(
+                "QToolBar {"
+                "   background-color: rgba(0, 0, 0, 48);"
+                "   border-radius: 8px;"
+                "   border: 1px ridge #888;"
+                "}"
+    );
+}
+
+QString Stylesheets::toolbarMovableStyle() {
+    return QString(
+                "QToolBar {"
+                "   border-radius: 8px;"
+                "   border: 1px ridge #888;"
+                "}"
+    );
 }
 
 QString Stylesheets::toolbarButtonStyle() {
@@ -192,11 +215,6 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                "QMainWindow::separator {"
 //                "   background: red;"
 //                "}"
-
-                "QToolBar {"
-                "    border-radius: 8px;"
-                "    border: 1px ridge #888;"
-                "}"
 
 //                "QToolBar::handle {"
 //                "    margin-top: 20px;"

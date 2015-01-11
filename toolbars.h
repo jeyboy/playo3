@@ -67,6 +67,33 @@ namespace Playo3 {
         void removePanelTriggered();
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
+
+    protected slots:
+        inline void onMovableChanged(bool movable) {
+            QToolBar * bar = (QToolBar *)sender();
+
+            if (movable) {
+                bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+            } else {
+                if (QString(bar -> metaObject() -> className()) != "Playo3::ToolBar") {
+                    bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+                } else bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+            }
+        }
+
+        inline void onTopLevelChanged(bool /*topLevel*/) {
+            QToolBar * bar = (QToolBar *)sender();
+            bar -> setStyleSheet(Stylesheets::toolbarFloatStyle());
+
+//            if (topLevel)
+//                bar -> setStyleSheet(Stylesheets::toolbarFloatStyle());
+//            else {
+//                if (QString(bar -> metaObject() -> className()) != "Playo3::ToolBar")
+//                    bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+//                else bar -> setStyleSheet("");
+//            }
+        }
+
     private:
         QToolBar * linkNameToToolbars(QString barName);
 
@@ -81,14 +108,6 @@ namespace Playo3 {
 
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();
-
-        inline void updateToolbarMovable(QToolBar * bar, bool movable) {
-            bar -> setMovable(movable);
-
-            if (!movable && QString(bar -> metaObject() -> className()) != "Playo3::ToolBar")
-                bar -> setStyleSheet(Stylesheets::toolbarStyle());
-            else bar -> setStyleSheet("");
-        }
 
         ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),

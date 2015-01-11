@@ -9,6 +9,9 @@ Spectrum::Spectrum(QWidget *parent) : QToolBar("Spectrum", parent), isWave(false
     setObjectName("tool_Spectrum");
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
+    setAttribute(Qt::WA_NoSystemBackground, true);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
     bandCountChanged(Settings::instance() -> getSpectrumBarsCount());
     heightChanged(Settings::instance() -> getSpectrumHeight());

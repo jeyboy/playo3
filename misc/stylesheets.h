@@ -23,7 +23,10 @@ public:
 
     static QString treeViewStyles();
 
-    static QString toolbarStyle();
+    static QString toolbarHighLightStyle();
+    static QString toolbarFixedStyle();
+    static QString toolbarFloatStyle();
+    static QString toolbarMovableStyle();
 
     static QString toolbarButtonStyle();
 

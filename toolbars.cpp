@@ -107,7 +107,7 @@ void ToolBars::load(QJsonArray & bars) {
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
             curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
-            updateToolbarMovable(curr_bar, obj.value("movable").toBool());
+            curr_bar -> setMovable(obj.value("movable").toBool());
 
             window -> addToolBar(Qt::BottomToolBarArea, curr_bar);
 
@@ -217,9 +217,17 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
 
 QToolBar * ToolBars::createToolBar(QString name) {
     ToolBar * ptb = new ToolBar(name, (QWidget *)parent());
+
+    ptb -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+
+    ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
+    ptb -> setAttribute(Qt::WA_TranslucentBackground, true);
+
     ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
     connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(folderDropped(QString, QString)));
+    connect(ptb, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
+    connect(ptb, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     return ptb;
 }
 
@@ -228,8 +236,14 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
     ptb -> setObjectName("_" + name);
     ptb -> setMinimumSize(30, 30);
 
+    ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
+    ptb -> setAttribute(Qt::WA_TranslucentBackground, true);
+
     if (oriented)
         connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
+    connect(ptb, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
+    connect(ptb, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
+
     return ptb;
 }
 
@@ -325,8 +339,9 @@ QToolBar * ToolBars::createControlToolBar() {
 Spectrum * ToolBars::getSpectrum() {
     if (spectrum == 0) {
         spectrum = new Spectrum((QWidget *)parent());
-//        spectrum -> setAutoFillBackground(true);
-//        spectrum -> setPalette(pal);
+
+        connect(spectrum, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
+        connect(spectrum, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     }
 
     return spectrum;
@@ -404,13 +419,13 @@ void ToolBars::panelHighlight(QAction *action) {
 
     if (widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
         highlighted = (QToolBar *)action -> parentWidget();
-        highlighted -> setStyleSheet("QToolBar { border: 2px dashed #00FFFF; }" );
+        highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
     }
 }
 
 void ToolBars::removePanelHighlight() {
     if (highlighted != 0) {
-        updateToolbarMovable(highlighted, highlighted -> isMovable());
+        highlighted -> setStyleSheet(Stylesheets::toolbarFixedStyle());
         highlighted = 0;
     }
 }
@@ -461,13 +476,13 @@ void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
 }
 
 void ToolBars::changeToolbarMovable() {
-    updateToolbarMovable(activeBar, !activeBar -> isMovable());
+    activeBar -> setMovable(!activeBar -> isMovable());
 }
 
 void ToolBars::changeToolbarsMovable() {
     bool movable = !activeBar -> isMovable();
     foreach(QToolBar * bar, toolbars())
-        updateToolbarMovable(bar, movable);
+        bar -> setMovable(movable);
 }
 
 void ToolBars::folderDropped(QString name, QString path) {

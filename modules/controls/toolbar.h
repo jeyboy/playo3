@@ -5,6 +5,7 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QFileInfo>
+#include <qdebug.h>
 
 namespace Playo3 {
     class ToolBar : public QToolBar {
@@ -21,7 +22,6 @@ namespace Playo3 {
             emit(eventTriggered(ev));
             return QToolBar::event(ev);
         }
-
     signals:
         void eventTriggered(QEvent * ev);
         void folderDropped(QString name, QString path);
