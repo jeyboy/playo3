@@ -2,7 +2,7 @@
 #define TABDIALOG_H
 
 #include <QDialog>
-#include "misc/tab_settings.h"
+#include "modules/controls/tab_settings.h"
 
 namespace Ui {
   class TabDialog;

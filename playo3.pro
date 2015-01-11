@@ -91,7 +91,6 @@ HEADERS  += playo.h \
     misc/settings.h \
     misc/hotkey_manager.h \
     misc/hotkey_types.h \
-    misc/tab_settings.h \
     media/audio_player.h \
     media/player.h \
     media/duration.h \

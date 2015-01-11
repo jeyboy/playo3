@@ -1,8 +1,16 @@
-#ifndef TAB_SETTINGS_H
-#define TAB_SETTINGS_H
+#ifndef TAB_SETTINGS
+#define TAB_SETTINGS
 
-struct TabSettings {
+#include "views/view_types.h"
 
-};
+namespace Playo3 {
+    struct TabSettings {
+        bool deleteFile;
+        bool playlist;
+        bool interactive;
 
-#endif // TAB_SETTINGS_H
+        ViewType type;
+    };
+}
+
+#endif // TAB_SETTINGS
