@@ -423,15 +423,13 @@ void ToolBars::panelHighlight(QAction *action) {
     if (highlighted != 0)
         emit removePanelHighlight();
 
-    highlighted = qobject_cast<QToolBar *>(action -> parentWidget());
-
-    if (highlighted)
+    if ((highlighted = qobject_cast<QToolBar *>(action -> parentWidget())))
         highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
 }
 
 void ToolBars::removePanelHighlight() {
     if (highlighted != 0) {
-        highlighted -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+        updateBarStyle(highlighted);
         highlighted = 0;
     }
 }
@@ -450,16 +448,15 @@ void ToolBars::addPanelTriggered() {
 
 void ToolBars::removePanelTriggered() {
     ((QMainWindow *)parent()) -> removeToolBar(underMouseBar);
-    delete underMouseBar;
+    delete underMouseBar; //TODO: maybe use deleteLater() ?
     underMouseBar = 0;
 }
 
 void ToolBars::addPanelButtonTriggered() {
     ToolbarButtonDialog dialog((QWidget *)parent());
 
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted)
         addPanelButton(dialog.getName(), dialog.getPath(), underMouseBar);
-    }
 }
 
 void ToolBars::removePanelButtonTriggered() {
@@ -467,13 +464,13 @@ void ToolBars::removePanelButtonTriggered() {
     bar -> removeAction(bar -> actionAt(bar -> mapFromGlobal(lastClickPoint)));
 }
 
-void ToolBars::toolbarVisibilityChanged(bool visible) {
+void ToolBars::toolbarVisibilityChanged(bool visible) { // remove control panel from menu and remove this func
   if (visible == false)
     ((QToolBar*)QObject::sender()) -> setVisible(true);
 }
 
 void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
-    QToolBar * bar = (QToolBar*)QObject::sender();
+    QToolBar * bar = (QToolBar *)QObject::sender();
 
     QList<QSlider *> orientables = bar -> findChildren<QSlider *>();
 
@@ -484,8 +481,8 @@ void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
 }
 
 void ToolBars::changeToolbarMovable() {
-    if (activeBar)
-        activeBar -> setMovable(!activeBar -> isMovable());
+    if (!activeBar) return;
+    activeBar -> setMovable(!activeBar -> isMovable());
 }
 
 void ToolBars::changeToolbarsMovable() {
@@ -497,5 +494,5 @@ void ToolBars::changeToolbarsMovable() {
 }
 
 void ToolBars::onFolderDrop(QString name, QString path) {
-    addPanelButton(name, path, (QToolBar* )QObject::sender());
+    addPanelButton(name, path, (QToolBar *)QObject::sender());
 }

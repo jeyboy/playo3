@@ -69,16 +69,8 @@ namespace Playo3 {
         void removePanelButtonTriggered();
 
     protected slots:
-        inline void onMovableChanged(bool movable) {
-            QToolBar * bar = (QToolBar *)sender();
-
-            if (movable) {
-                bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
-            } else {
-                if (QString(bar -> metaObject() -> className()) != "Playo3::ToolBar") {
-                    bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
-                } else bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
-            }
+        inline void onMovableChanged(bool /*movable*/) {
+            updateBarStyle((QToolBar *)sender());
         }
 
         inline void onTopLevelChanged(bool /*topLevel*/) {
@@ -91,6 +83,14 @@ namespace Playo3 {
         }
 
     private:
+        inline void updateBarStyle(QToolBar * bar) {
+            if (!bar) return;
+            if (bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0)
+                bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+            else
+                bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+        }
+
         QToolBar * linkNameToToolbars(QString barName);
 
         QToolBar * createToolBar(QString name);
