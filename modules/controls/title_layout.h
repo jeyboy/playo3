@@ -11,7 +11,7 @@ public :
     }
 
     inline QSize minimumSize() const {
-        return QSize(1, QGridLayout::minimumSize().height()); // this is fix for dock widget correct dragging
+        return QSize(54, QGridLayout::minimumSize().height()); // this is fix for dock widget correct dragging
 //        return QGridLayout::minimumSize();
     }
 };
