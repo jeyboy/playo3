@@ -23,13 +23,14 @@ namespace Playo3 {
 
         static inline QString settingsName() { return "docks"; }
 
-        void load(QMainWindow * window, QJsonArray & bars);
-        void save(QMainWindow * window, DataStore * settings);
+        void load(QJsonArray & bars);
+        void save(DataStore * settings);
+        QDockWidget * linkNameToToolbars(QString barName);
 
-        inline QList<QDockWidget *> dockbars() { return parent() -> findChildren<QDockWidget *>(); }
+        inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
         inline DockBar * current() const { return active; }
 
-        DockBar * addDocBar(QString name, QWidget * content, Qt::DockWidgetArea place = Qt::RightDockWidgetArea);
+        DockBar * createDocBar(QString name, QWidget * content);
         inline void activate(DockBar * bar) {
             bar -> raise();
             active = bar;

@@ -46,8 +46,8 @@ namespace Playo3 {
 
         QMenu * improvePopupMenu(QMainWindow * window, QMenu * menu);
 
-        void load(QMainWindow * window, QJsonArray & bars);
-        void save(QMainWindow * window, DataStore * settings);
+        void load(QJsonArray & bars);
+        void save(DataStore * settings);
         void createToolbars(QMainWindow * window);
         void addPanelButton(QString name, QString path, QToolBar * bar);
 
@@ -70,13 +70,14 @@ namespace Playo3 {
     private:
         QToolBar * linkNameToToolbars(QString barName);
 
-        QToolBar* createToolBar(QString name);
-        QToolBar* createMediaBar();
-        QToolBar* createAdditionalMediaBar();
-        QToolBar* createPositionMediaBar();
-        QToolBar* createTimeMediaBar();
-        QToolBar* createVolumeMediaBar();
-        QToolBar* createControlToolBar();
+        QToolBar * createToolBar(QString name);
+        QToolBar * precreateToolBar(QString name, bool oriented = false);
+        QToolBar * createMediaBar();
+        QToolBar * createAdditionalMediaBar();
+        QToolBar * createPositionMediaBar();
+        QToolBar * createTimeMediaBar();
+        QToolBar * createVolumeMediaBar();
+        QToolBar * createControlToolBar();
 
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();

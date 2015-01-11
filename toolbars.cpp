@@ -1,5 +1,4 @@
 #include "toolbars.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -89,7 +88,9 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     return menu;
 }
 
-void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
+void ToolBars::load(QJsonArray & bars) {
+    QMainWindow * window = (QMainWindow *)parent();
+
     if (bars.count() > 0) {
         QList<QString> barsList;
         barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
@@ -106,7 +107,7 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
             curr_bar = linkNameToToolbars(barName);
             updateToolbarMovable(curr_bar, obj.value("movable").toBool());
 
-            window -> addToolBar((Qt::ToolBarArea)obj.value("area").toInt(), curr_bar);
+            window -> addToolBar(Qt::BottomToolBarArea, curr_bar);
 
             if (obj.contains("actions")) {
                 QJsonArray actions = obj.value("actions").toArray();
@@ -125,7 +126,7 @@ void ToolBars::load(QMainWindow * window, QJsonArray & bars) {
     }
 }
 
-void ToolBars::save(QMainWindow * window, DataStore * settings) {
+void ToolBars::save(DataStore * settings) {
     QList<QToolBar *> bars = toolbars();
 
     if (bars.length() > 0) {
@@ -137,7 +138,7 @@ void ToolBars::save(QMainWindow * window, DataStore * settings) {
         foreach(QToolBar * bar, bars) {
             curr_tab = QJsonObject();
 
-            curr_tab.insert("area", window -> toolBarArea(bar));
+//            curr_tab.insert("area", window -> toolBarArea(bar));
             curr_tab.insert("title", bar -> windowTitle());
             curr_tab.insert("movable", bar -> isMovable());
 
@@ -219,11 +220,18 @@ QToolBar * ToolBars::createToolBar(QString name) {
     return ptb;
 }
 
-QToolBar* ToolBars::createMediaBar() {
-    QToolBar* ptb = new QToolBar("Media");
-    ptb -> setObjectName("_Media");
+QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
+    QToolBar * ptb = new QToolBar(name);
+    ptb -> setObjectName("_" + name);
     ptb -> setMinimumSize(30, 30);
 
+    if (oriented)
+        connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
+    return ptb;
+}
+
+QToolBar * ToolBars::createMediaBar() {
+    QToolBar* ptb = precreateToolBar("Media");
     connect(ptb, SIGNAL(visibilityChanged(bool)), this, SLOT(toolbarVisibilityChanged(bool)));
 
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
@@ -235,10 +243,8 @@ QToolBar* ToolBars::createMediaBar() {
     return ptb;
 }
 
-QToolBar* ToolBars::createAdditionalMediaBar() {
-    QToolBar* ptb = new QToolBar("Media+");
-    ptb -> setObjectName("_Media+");
-    ptb -> setMinimumSize(30, 30);
+QToolBar * ToolBars::createAdditionalMediaBar() {
+    QToolBar* ptb = precreateToolBar("Media+");
 
     ptb -> addAction(QIcon(":/prev"), "Prev track", parent(), SLOT(prevItemTriggered()));
     Player::instance() -> setLikeButton(ptb -> addAction(QIcon(":/like"), "Liked"));
@@ -248,12 +254,8 @@ QToolBar* ToolBars::createAdditionalMediaBar() {
     return ptb;
 }
 
-QToolBar* ToolBars::createPositionMediaBar() {
-    QToolBar* ptb = new QToolBar("Media+Position");
-    ptb -> setObjectName("_Media+Position");
-    ptb -> setMinimumSize(30, 30);
-
-    connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
+QToolBar * ToolBars::createPositionMediaBar() {
+    QToolBar* ptb = precreateToolBar("Media+Position", true);
 
     Slider * slider = new Slider(ptb, true);
     slider -> setTickInterval(60000);
@@ -268,10 +270,8 @@ QToolBar* ToolBars::createPositionMediaBar() {
     return ptb;
 }
 
-QToolBar* ToolBars::createTimeMediaBar() {
-    QToolBar* ptb = new QToolBar("Media+Time");
-    ptb -> setObjectName("_Media+Time");
-    ptb -> setMinimumSize(30, 30);
+QToolBar * ToolBars::createTimeMediaBar() {
+    QToolBar* ptb = precreateToolBar("Media+Time");
 
     ClickableLabel * timeLabel = new ClickableLabel("00:00");
     timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
@@ -282,12 +282,8 @@ QToolBar* ToolBars::createTimeMediaBar() {
     return ptb;
 }
 
-QToolBar* ToolBars::createVolumeMediaBar() {
-    QToolBar* ptb = new QToolBar("Media+Volume");
-    ptb -> setObjectName("_Media+Volume");
-    ptb -> setMinimumSize(30, 30);
-
-    connect(ptb, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(toolbarOrientationChanged(Qt::Orientation)));
+QToolBar * ToolBars::createVolumeMediaBar() {
+    QToolBar * ptb = precreateToolBar("Media+Volume", true);
 
     QIcon ico;
     ico.addPixmap(QPixmap(":/mute"), QIcon::Normal);
@@ -310,10 +306,8 @@ QToolBar* ToolBars::createVolumeMediaBar() {
     return ptb;
 }
 
-QToolBar* ToolBars::createControlToolBar() {
-    QToolBar* ptb = new QToolBar("Controls");
-    ptb -> setObjectName("_Controls");
-    ptb -> setMinimumSize(30, 30);
+QToolBar * ToolBars::createControlToolBar() {
+    QToolBar * ptb = precreateToolBar("Controls");
 
     ptb -> addAction(QIcon(":/add"), "Add new local tab", parent(), SLOT(showAttTabDialog()));
     ptb -> addWidget(initiateVkButton());
@@ -484,5 +478,5 @@ void ToolBars::changeToolbarsMovable() {
 }
 
 void ToolBars::folderDropped(QString name, QString path) {
-    addPanelButton(name, path, (QToolBar*)QObject::sender());
+    addPanelButton(name, path, (QToolBar* )QObject::sender());
 }

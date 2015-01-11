@@ -17,6 +17,10 @@ namespace Playo3 {
         }
         inline bool isSticked() const { return sticked; }
         inline void setSticked(const bool stick) { sticked = stick; }
+        inline void markAsSticked() {
+            if (parent())
+                ((MainWindow *)parentWidget()) -> addOuterChild(this);
+        }
 
     signals:
         void activating();

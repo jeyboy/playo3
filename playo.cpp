@@ -53,8 +53,8 @@ void Playo::closeEvent(QCloseEvent * e) {
 //    settings -> write("vk", VkApi::instance() -> toJson());
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
-    ToolBars::instance(this) -> save(this, settings);
-    Dockbars::instance(this) -> save(this, settings);
+    ToolBars::instance(this) -> save(settings);
+    Dockbars::instance(this) -> save(settings);
 
     settings -> write("settings", Settings::instance() -> toJson());
     settings -> save();
@@ -64,7 +64,6 @@ void Playo::closeEvent(QCloseEvent * e) {
     stateSettings.setValue("windowState", saveState());
     stateSettings.sync();
 
-//    ui -> tabber -> save();
     MainWindow::closeEvent(e);
 }
 
@@ -72,20 +71,18 @@ void Playo::init() {
     Stylesheets::initPens();
     new Tray(this);
 
-    Dockbars::instance(this) -> addDocBar("PU", new QLabel("sdfsfsdf"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
-    Dockbars::instance(this) -> addDocBar("PU22", new QLabel("dfgdfgdfg"), Qt::TopDockWidgetArea);
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU", new QLabel("sdfsfsdf")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
+//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU22", new QLabel("dfgdfgdfg")));
 
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");
@@ -111,10 +108,10 @@ void Playo::init() {
     /// toolbars
     ///////////////////////////////////////////////////////////
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
-    ToolBars::instance(this) -> load(this, bars);
+    ToolBars::instance(this) -> load(bars);
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
-    Dockbars::instance(this) -> load(this, docks);
+    Dockbars::instance(this) -> load(docks);
 
     QVariant objState = stateSettings.value("windowState");
     if (objState.isValid())

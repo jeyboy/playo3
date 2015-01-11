@@ -125,7 +125,7 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
 
 //        case QEvent::Resize:
         case QEvent::Move: {
-            if (childInAction && !skipChildAction) {
+            if (/*e -> type() == QEvent::Resize || */(childInAction && !skipChildAction)) {
                 DockBar * bar = (DockBar *) o;
 
                 QRect parentRect = geometry();
