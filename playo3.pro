@@ -29,7 +29,6 @@ SOURCES += main.cpp\
     dialogs/toolbarbuttondialog.cpp \
     dialogs/toolbardialog.cpp \
     single_application.cpp \
-    modules/controls/button.cpp \
     modules/controls/clickable_label.cpp \
     modules/controls/hoverable_label.cpp \
     dialogs/settings_dialog.cpp \
@@ -80,7 +79,6 @@ HEADERS  += playo.h \
     dialogs/toolbarbuttondialog.h \
     dialogs/toolbardialog.h \
     single_application.h \
-    modules/controls/button.h \
     modules/controls/clickable_label.h \
     modules/controls/hoverable_label.h \
     misc/screen.h \
