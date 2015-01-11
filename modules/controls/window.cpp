@@ -162,16 +162,21 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
 void MainWindow::mouseMoveEvent(QMouseEvent * event) {
     if (event -> buttons() & Qt::LeftButton) {
         if (resizeFlagX || resizeFlagY) {
-            QSize ns;
-            if (atBottom)
-                ns.rheight() = geom.height() + (event -> globalPos().y() - dragPos.y());
-            else
-                ns.rheight() = geom.height() - (event -> globalPos().y() - dragPos.y());
+            QSize ns(geom.width(), geom.height());
 
-            if (atLeft)
-                ns.rwidth() = geom.width() - (event -> globalPos().x() - dragPos.x());
-            else
-                ns.rwidth() = geom.width() + (event -> globalPos().x() - dragPos.x());
+            if (resizeFlagY) {
+                if (atBottom)
+                    ns.rheight() = geom.height() + (event -> globalPos().y() - dragPos.y());
+                else
+                    ns.rheight() = geom.height() - (event -> globalPos().y() - dragPos.y());
+            }
+
+            if (resizeFlagX) {
+                if (atLeft)
+                    ns.rwidth() = geom.width() - (event -> globalPos().x() - dragPos.x());
+                else
+                    ns.rwidth() = geom.width() + (event -> globalPos().x() - dragPos.x());
+            }
 
             ns = QLayout::closestAcceptableSize(this, ns);
 
