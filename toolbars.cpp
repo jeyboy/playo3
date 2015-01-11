@@ -17,7 +17,7 @@ QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
 
     lastClickPoint = QCursor::pos();
-    QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint));
+    QWidget * widget = window -> childAt(window -> mapFromGlobal(lastClickPoint)); // Click on main window return 0
 
     if (widget) {
         menu -> insertSeparator(menu -> actions().first());
@@ -128,9 +128,8 @@ void ToolBars::load(QJsonArray & bars) {
 
         while(barsList.length() > 0)
             window -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbars(barsList.takeFirst()));
-    } else {
-        createToolbars(window);
     }
+    else createToolbars(window);
 }
 
 void ToolBars::save(DataStore * settings) {
@@ -197,7 +196,7 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
   window -> addToolBar(Qt::BottomToolBarArea, createToolBar("Folder linker 1"));
-//  window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
+  window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
 }
 
 QToolBar * ToolBars::linkNameToToolbars(QString barName) {
@@ -231,9 +230,11 @@ QToolBar * ToolBars::createToolBar(QString name) {
 
     ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
-    connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(folderDropped(QString, QString)));
+
+    connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(onFolderDrop(QString, QString)));
     connect(ptb, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
     connect(ptb, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
+
     return ptb;
 }
 
@@ -410,8 +411,8 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
 
 void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
     ToolbarButton * button = new ToolbarButton(name, path);
-    bar -> addWidget(button);
     connect(button, SIGNAL(clicked()), parent(), SLOT(openFolderTriggered()));
+    bar -> addWidget(button);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -419,15 +420,13 @@ void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 void ToolBars::panelHighlight(QAction *action) {
-    QString widgetClassName = QString(action -> parentWidget() -> metaObject() -> className());
-
     if (highlighted != 0)
         emit removePanelHighlight();
 
-    if (widgetClassName == "Playo3::Spectrum" ||widgetClassName == "Playo3::ToolBar" || widgetClassName == "QToolBar") {
-        highlighted = (QToolBar *)action -> parentWidget();
+    highlighted = qobject_cast<QToolBar *>(action -> parentWidget());
+
+    if (highlighted)
         highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
-    }
 }
 
 void ToolBars::removePanelHighlight() {
@@ -497,6 +496,6 @@ void ToolBars::changeToolbarsMovable() {
             bar -> setMovable(movable);
 }
 
-void ToolBars::folderDropped(QString name, QString path) {
+void ToolBars::onFolderDrop(QString name, QString path) {
     addPanelButton(name, path, (QToolBar* )QObject::sender());
 }

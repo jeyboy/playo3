@@ -55,7 +55,7 @@ namespace Playo3 {
         Spectrum * getSpectrum();
 
     public slots:
-        void folderDropped(QString name, QString path);
+        void onFolderDrop(QString name, QString path);
         void changeToolbarMovable();
         void changeToolbarsMovable();
         void toolbarVisibilityChanged(bool visible);
