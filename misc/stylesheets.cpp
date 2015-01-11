@@ -66,25 +66,30 @@ QString Stylesheets::sliderStyles() {
 
                 "QSlider:vertical { margin: 4px 0; }"
 
+                "QSlider::add-page, QSlider::sub-page, QSlider::handle, QSlider::groove {"
+                    "border: 1px solid #777;"
+                    "border-radius: 8px;"
+                "}"
+
+                "QSlider::add-page, QSlider::sub-page {"
+                    "border-radius: 4px;"
+                "}"
+
+                "QSlider::add-page, QSlider::sub-page {"
+                    "margin: 4px;"
+                "}"
+
                 "QSlider::groove {"
                   "border: 1px solid #bbb;"
-                  "border-radius: 2px;"
                 "}"
 
                 "QSlider::groove:horizontal {"
-                  "height: 18px;"
+                  "height: 20px;"
                 "}"
 
                 "QSlider::groove:vertical {"
-                  "width: 18px;"
+                  "width: 20px;"
                 "}"
-
-                "QSlider::add-page, QSlider::sub-page, QSlider::handle {"
-                  "border: 1px solid #777;"
-                  "border-radius: 2px;"
-                "}"
-
-
 
 
                 "QSlider::add-page:horizontal, QSlider::sub-page:vertical {"
@@ -112,17 +117,19 @@ QString Stylesheets::sliderStyles() {
                 "}"
 
                 "QSlider::handle {"
-                  "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #eee, stop:1 #ccc);"
-                  "margin: 0 -1px;"
+                    "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #eee, stop:1 #ccc);"
+//                    "margin: 0 -1px;"
+                    "width: 18px;"
+                    "height: 18px;"
                 "}"
 
-                "QSlider::handle:horizontal {"
-                  "width: 12px;"
-                "}"
+//                "QSlider::handle:horizontal {"
+//                  "width: 18px;"
+//                "}"
 
-                "QSlider::handle:vertical {"
-                  "height: 12px;"
-                "}"
+//                "QSlider::handle:vertical {"
+//                  "height: 18px;"
+//                "}"
 
                 "QSlider::handle:hover {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #fff, stop:1 #ddd);"
