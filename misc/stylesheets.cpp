@@ -170,9 +170,11 @@ QString Stylesheets::toolbarFixedStyle() {
 
 QString Stylesheets::toolbarFloatStyle() {
     return QString(
+                "QToolBar {"
                 "   background-color: rgba(0, 0, 0, 48);"
                 "   border-radius: 8px;"
                 "   border: 1px ridge #888;"
+                "}"
     );
 }
 

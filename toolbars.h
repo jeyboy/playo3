@@ -75,11 +75,7 @@ namespace Playo3 {
 
         inline void onTopLevelChanged(bool /*topLevel*/) {
             QToolBar * bar = (QToolBar *)sender();
-            bar -> setStyleSheet(
-                        "#" + bar -> objectName() + " {" +
-                            Stylesheets::toolbarFloatStyle() +
-                        " }"
-                        );
+            bar -> setStyleSheet(Stylesheets::toolbarFloatStyle());
         }
 
     private:
