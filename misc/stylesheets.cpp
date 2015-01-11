@@ -62,13 +62,9 @@ QString Stylesheets::appStyles() {
 
 QString Stylesheets::sliderStyles() {
     return QString(
-                "QSlider:horizontal {"
-                  "margin: 0 4px;"
-                "}"
+                "QSlider:horizontal { margin: 0 4px; }"
 
-                "QSlider:vertical {"
-                  "margin: 4px 0;"
-                "}"
+                "QSlider:vertical { margin: 4px 0; }"
 
                 "QSlider::groove {"
                   "border: 1px solid #bbb;"
@@ -83,37 +79,41 @@ QString Stylesheets::sliderStyles() {
                   "width: 18px;"
                 "}"
 
-                "QSlider::sub-page:horizontal {"
-//                      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
-                  "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
+                "QSlider::add-page, QSlider::sub-page, QSlider::handle {"
                   "border: 1px solid #777;"
                   "border-radius: 2px;"
                 "}"
 
-                "QSlider::add-page:horizontal {"
+
+
+
+                "QSlider::add-page:horizontal, QSlider::sub-page:vertical {"
                   "background: #fff;"
-                  "border: 1px solid #777;"
-                  "border-radius: 2px;"
-                "}"
-
-                "QSlider::sub-page:vertical {"
-                    "background: #fff;"
-                    "border: 1px solid #777;"
-                    "border-radius: 2px;"
                 "}"
 
                 "QSlider::add-page:vertical {"
 //                        "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
                     "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
-                    "border: 1px solid #777;"
-                    "border-radius: 2px;"
+                "}"
+
+                "QSlider::add-page:disabled {"
+                   "background: #eee;"
+                   "border-color: #999;"
+                "}"
+
+                "QSlider::sub-page:horizontal {"
+//                      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
+                  "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
+                "}"
+
+                "QSlider::sub-page:disabled {"
+                    "background: #bbb;"
+                    "border-color: #999;"
                 "}"
 
                 "QSlider::handle {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #eee, stop:1 #ccc);"
-                  "border: 1px solid #777;"
                   "margin: 0 -1px;"
-                  "border-radius: 2px;"
                 "}"
 
                 "QSlider::handle:horizontal {"
@@ -127,23 +127,11 @@ QString Stylesheets::sliderStyles() {
                 "QSlider::handle:hover {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #fff, stop:1 #ddd);"
                   "border: 1px solid #444;"
-                  "border-radius: 2px;"
-                "}"
-
-                "QSlider::sub-page:disabled {"
-                  "background: #bbb;"
-                  "border-color: #999;"
-                "}"
-
-                "QSlider::add-page:disabled {"
-                  "background: #eee;"
-                  "border-color: #999;"
                 "}"
 
                 "QSlider::handle:disabled {"
                   "background: #eee;"
                   "border: 1px solid #aaa;"
-                  "border-radius: 2px;"
                 "}"
     );
 }
