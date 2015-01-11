@@ -3,6 +3,8 @@
 
 #include <QtCore>
 
+//NOT USED
+
 QString timeToStr(qint64 time) {
     return QString("%1:%2").arg(time / 60).arg(time % 60, 2, 10, QChar('0'));
 }

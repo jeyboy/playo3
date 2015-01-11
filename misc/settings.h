@@ -1,14 +1,11 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <QObject>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QList>
-#include <QLinearGradient>
-#include <QBrush>
 #include <QApplication>
 #include <QFont>
+#include <QLinearGradient>
 
 #include "modules/models/hotkey_model/hotkey_model_item.h"
 #include "misc/hotkey_types.h"

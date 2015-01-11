@@ -1,7 +1,7 @@
 #ifndef FILENAME_CONVERSIONS_H
 #define FILENAME_CONVERSIONS_H
 
-//need limit relative to the current system
+//TODO: need limit relative to the current system
 #define PATH_MAX_LEN 200
 
 #include <QObject>
