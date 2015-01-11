@@ -11,6 +11,7 @@ ToolBars * ToolBars::instance(QObject * parent) {
     return self;
 }
 
+//TODO: rewrite this
 QMenu * ToolBars::improvePopupMenu(QMainWindow * window, QMenu * menu) {
     connect(menu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
     connect(menu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
