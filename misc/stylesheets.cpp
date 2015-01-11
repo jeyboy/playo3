@@ -6,7 +6,7 @@ int Stylesheets::borderWidth = 6;
 int Stylesheets::borderRadius = 12;
 int Stylesheets::stickDistance = 20;
 
-QString Stylesheets::appStyles() {
+QString Stylesheets::appStyles() { // NOT USED
     return QString(
                 "QCheckBox::indicator {"
                 " width: 16px;"
@@ -135,7 +135,7 @@ QString Stylesheets::sliderStyles() {
     );
 }
 
-QString Stylesheets::treeViewStyles() {
+QString Stylesheets::treeViewStyles() { // NOT USED
     return QString(
                 "background-color: black;"
                 "QTreeView::indicator {"
