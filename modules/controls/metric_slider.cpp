@@ -3,96 +3,58 @@
 #include "media/duration.h"
 #include <qdebug.h>
 
+//TODO: recalc did not called on changeTicks
+
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
-  , show_position(showPosition)
-  , fillColor(QColor::fromRgb(0,0,0))
-  , margin(16), spacing(30)
-  , padding(7) {
+  , show_position(showPosition), show_mini_progress(false)
+  , margin(16), spacing(30), padding(7), point_radius(2) {
+
     setMouseTracking(show_position);
 
-    pen.setCosmetic(true);
-    pen.setWidth(6);
+    brush.setColorAt(0, QColor::fromRgb(0,0,0));
+    brush.setColorAt(1, QColor::fromRgb(0,0,0));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
-    rRect = rect();
-
-    if (orientation() == Qt::Vertical) {
+    if (orientation() == Qt::Vertical)
         hVal = height() - margin;
-        rRect.moveTop(rRect.top() + margin + 2); // +2 border
-        rRect.setHeight(rRect.height() - margin * 2 - 4); // -4 border
-    } else {
+    else
         hVal = width() - margin;
-        rRect.moveLeft(rRect.left() + margin + 2); // +2 border
-        rRect.setWidth(rRect.width() - margin * 2 - 4); // -4 border
-    }
 
     fVal = (float)(hVal - margin);
+
+    calcGrid();
 }
 
-//TODO: draw text by QStaticText
 void MetricSlider::paintEvent(QPaintEvent * event) {
     QSlider::paintEvent(event);
 
     if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
 
     QPainter p(this);
-    p.save();
-    p.setPen(pen);
-
-    QString strNum;
-
-    int multiplyer = 0;
-    float temp = 0, step = ((float)maximum()) / tickInterval();
 
     if (orientation() == Qt::Horizontal) {
-        while(temp < spacing)
-            temp = ((float)(rRect.width())) / (step / ++multiplyer);
+        p.drawPath(path);
 
-        step = temp;
-
-        int bottom = rRect.bottom() - 6, h = pen.width() / 2;
-
-        for(double pos = step + rRect.left(), val = multiplyer; pos <= rRect.right() + 0.5; pos += step, val += multiplyer) {
-            p.drawPoint(pos + h, bottom);
-            if (show_position) {
-                strNum = QString::number(val);
-                p.drawText(pos - (padding * strNum.length()) , bottom - h * 2, strNum);
-            }
-        }
-
-        if (show_position) {
+        if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
             if (Player::instance() -> getSize() > 0 && pos < 1) {
+                brush.setFinalStop(rRect.height(), (rRect.width() - 1) * pos);
+                p.setBrush(brush);
                 p.drawRect(rRect.left(), rRect.y(), rRect.width() - 1, 3);
-                p.fillRect(rRect.left(), rRect.y(), (rRect.width() - 1) * pos, 3, fillColor);
+//                p.fillRect(rRect.left(), rRect.y(), (rRect.width() - 1) * pos, 3, fillColor);
             }
         }
     } else {
-        while(temp < spacing)
-            temp = ((float)(rRect.height())) / (step / ++multiplyer);
+        p.drawPath(path);
 
-        step = temp;
-
-        int temp, left = rRect.left() + pen.width() + 2, w = pen.width() / 2;
-
-        for(double pos = step, val = multiplyer; ; pos += step, val += multiplyer) {
-            temp = rRect.bottom() - pos;
-            if (temp < rRect.top() - 0.5)
-                break;
-
-            p.drawPoint(left, temp);
-            if (show_position) {
-                strNum = QString::number(val);
-                p.drawText(left + w, temp, strNum);
-            }
-        }
-
-        if (show_position) {
+        if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
             if (Player::instance() -> getSize() > 0 && pos < 1) {
+                brush.setFinalStop(rRect.width(), -((rRect.height() - 1) * pos)); //?
+                p.setBrush(brush);
                 p.drawRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1));
-                p.fillRect(rRect.x(), rRect.bottom(), 3, -((rRect.height() - 1) * pos), fillColor);
+//                p.fillRect(rRect.x(), rRect.bottom(), 3, -((rRect.height() - 1) * pos), fillColor);
             }
         }
     }
@@ -120,7 +82,61 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
         if (show)
             QToolTip::showText(ev -> globalPos(), Duration::fromMillis(max * dur));
 
+//        QTime(0, 0, 0).addMSecs(mpPlayer->duration()).toString("HH:mm:ss")
+
     }
 
     QSlider::mouseMoveEvent(ev);
+}
+
+void MetricSlider::calcGrid() {
+    path = QPainterPath();
+
+    QString strNum;
+
+    int multiplyer = 0;
+    float temp = 0, step = ((float)maximum()) / tickInterval();
+    rRect = rect();
+
+    if (orientation() == Qt::Horizontal) {
+        rRect.moveLeft(rRect.left() + margin + 2); // +2 border
+        rRect.setWidth(rRect.width() - margin * 2 - 4); // -4 border
+
+        while(temp < spacing)
+            temp = ((float)(rRect.width())) / (step / ++multiplyer);
+
+        step = temp;
+
+        int bottom = rRect.bottom() - 6;
+
+        for(double pos = step + rRect.left(), val = multiplyer; pos <= rRect.right() + 0.5; pos += step, val += multiplyer) {
+            path.addEllipse(QPoint(pos + point_radius, bottom), point_radius, point_radius);
+
+            strNum = QString::number(val);
+            path.addText(pos - (padding * strNum.length()) , bottom - point_radius * 2, font(), strNum);
+        }
+    } else {
+        rRect.moveTop(rRect.top() + margin + 2); // +2 border
+        rRect.setHeight(rRect.height() - margin * 2 - 4); // -4 border
+
+        while(temp < spacing)
+            temp = ((float)(rRect.height())) / (step / ++multiplyer);
+
+        step = temp;
+
+        int left = rRect.left() + point_radius;
+
+        for(double pos = step, val = multiplyer; ; pos += step, val += multiplyer) {
+            temp = rRect.bottom() - pos;
+            if (temp < rRect.top() - 0.5)
+                break;
+
+            path.addEllipse(QPoint(left + point_radius, temp), point_radius, point_radius);
+            strNum = QString::number(val);
+            path.addText(left + point_radius, temp, font(), strNum);
+        }
+    }
+
+    brush.setStart(rRect.topLeft());
+    brush.setFinalStop(rRect.topLeft());
 }
