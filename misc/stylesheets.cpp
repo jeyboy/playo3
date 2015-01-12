@@ -6,56 +6,53 @@ int Stylesheets::borderWidth = 6;
 int Stylesheets::borderRadius = 12;
 int Stylesheets::stickDistance = 20;
 
-QString Stylesheets::appStyles() { // NOT USED
+QString Stylesheets::appStyles() {
     return QString(
-                "QCheckBox::indicator {"
-                " width: 16px;"
-                " height: 16px;"
+                "QToolTip {"
+                "   border: none;"
+                "   background-color: #444;"
+                "   color: #ddd; "
+//                "   border: 2px ridge darkkhaki;"
+//                "   padding: 1px;"
+//                "   border-radius: 8px;"
+//                "   opacity: 300; "
                 "}"
 
-                "QCheckBox::indicator:unchecked {"
-                " image: url(:/elems/check_blank);"
-                "}"
-
-                "QCheckBox::indicator:unchecked:hover {"
-                " image: url(:/elems/check_blank);"
-                "}"
-
-                "QCheckBox::indicator:unchecked:disabled {"
-                " image: url(:/elems/check_blank_disabled);"
-                "}"
-
-                "QCheckBox::indicator:unchecked:pressed {"
-                " image: url(:/elems/check_blank);"
-                "}"
-
-                "QCheckBox::indicator:checked {"
-                " image: url(:/elems/check_fill);"
-                "}"
-
-                "QCheckBox::indicator:checked:hover {"
-                " image: url(:/elems/check_trist);"
-                "}"
-
-                "QCheckBox::indicator:checked:disabled {"
-                " image: url(:/elems/check_fill_disabled);"
-                "}"
-
-                "QCheckBox::indicator:checked:pressed {"
-                " image: url(:/elems/check_fill);"
-                "}"
-
-//                "QTabBar QToolButton::right-arrow { /* the arrow mark in the tool buttons */"
-//                " image: url(:/elems/next);"
+//                "QCheckBox::indicator {"
+//                " width: 16px;"
+//                " height: 16px;"
 //                "}"
 
-//                "QTabBar QToolButton::left-arrow { /* the arrow mark in the tool buttons */"
-//                " image: url(:/elems/prev);"
+//                "QCheckBox::indicator:unchecked {"
+//                " image: url(:/elems/check_blank);"
 //                "}"
 
+//                "QCheckBox::indicator:unchecked:hover {"
+//                " image: url(:/elems/check_blank);"
+//                "}"
 
-//                "QTabBar::scroller {"
-//                " height: 24px;"
+//                "QCheckBox::indicator:unchecked:disabled {"
+//                " image: url(:/elems/check_blank_disabled);"
+//                "}"
+
+//                "QCheckBox::indicator:unchecked:pressed {"
+//                " image: url(:/elems/check_blank);"
+//                "}"
+
+//                "QCheckBox::indicator:checked {"
+//                " image: url(:/elems/check_fill);"
+//                "}"
+
+//                "QCheckBox::indicator:checked:hover {"
+//                " image: url(:/elems/check_trist);"
+//                "}"
+
+//                "QCheckBox::indicator:checked:disabled {"
+//                " image: url(:/elems/check_fill_disabled);"
+//                "}"
+
+//                "QCheckBox::indicator:checked:pressed {"
+//                " image: url(:/elems/check_fill);"
 //                "}"
             );
 }
