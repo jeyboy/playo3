@@ -2,9 +2,7 @@
 #define METRIC_SLIDER_H
 
 #include "clickable_slider.h"
-//#include <QPaintEvent>
 #include <QPainter>
-//#include <QStylePainter>
 #include <QToolTip>
 
 #include "misc/settings.h"
@@ -24,6 +22,7 @@ private:
     QColor fillColor;
     int margin, spacing, padding;
     float hVal, fVal;
+    QRect rRect;
 };
 
 #endif // METRIC_SLIDER_H

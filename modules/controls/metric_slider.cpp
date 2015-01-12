@@ -11,15 +11,21 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
     setMouseTracking(show_position);
 
     pen.setCosmetic(true);
-    pen.setCapStyle(Qt::RoundCap);
-    pen.setWidth(4);
+    pen.setWidth(6);
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
-    if (orientation() == Qt::Vertical)
+    rRect = rect();
+
+    if (orientation() == Qt::Vertical) {
         hVal = height() - margin;
-    else
+        rRect.moveTop(rRect.top() + margin + 2); // +2 border
+        rRect.setHeight(rRect.height() - margin * 2 - 4); // -4 border
+    } else {
         hVal = width() - margin;
+        rRect.moveLeft(rRect.left() + margin + 2); // +2 border
+        rRect.setWidth(rRect.width() - margin * 2 - 4); // -4 border
+    }
 
     fVal = (float)(hVal - margin);
 }
@@ -30,91 +36,85 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
     if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
 
-//    QPainter p(this);
-//    p.save();
+    QPainter p(this);
+    p.save();
+    p.setPen(pen);
 
-//    p.setPen(QColor::fromRgb(0, 0, 0));
-//    QRect rect = this -> rect();
+    QString strNum;
 
-//    QString strNum;
+    int multiplyer = 0;
+    float temp = 0, step = ((float)maximum()) / tickInterval();
 
-//    double temp = 0, step = ((double)maximum()) / tickInterval();
-//    int multiplyer = 0;
+    if (orientation() == Qt::Horizontal) {
+        while(temp < spacing)
+            temp = ((float)(rRect.width())) / (step / ++multiplyer);
 
+        step = temp;
 
+        int bottom = rRect.bottom() - 6, h = pen.width() / 2;
 
-//    if (orientation() == Qt::Horizontal) {
-//        rect.moveLeft(rect.left() + margin + 1); // +1 border
-//        rect.setWidth(rect.width() - margin * 2 - 2); // -2 border
+        for(double pos = step + rRect.left(), val = multiplyer; pos <= rRect.right() + 0.5; pos += step, val += multiplyer) {
+            p.drawPoint(pos + h, bottom);
+            if (show_position) {
+                strNum = QString::number(val);
+                p.drawText(pos - (padding * strNum.length()) , bottom - h * 2, strNum);
+            }
+        }
 
-//        while(temp < spacing)
-//            temp = ((float)(rect.width())) / (step / ++multiplyer);
+        if (show_position) {
+            float pos = Player::instance() -> getRemoteFileDownloadPosition();
+            if (Player::instance() -> getSize() > 0 && pos < 1) {
+                p.drawRect(rRect.left(), rRect.y(), rRect.width() - 1, 3);
+                p.fillRect(rRect.left(), rRect.y(), (rRect.width() - 1) * pos, 3, fillColor);
+            }
+        }
+    } else {
+        while(temp < spacing)
+            temp = ((float)(rRect.height())) / (step / ++multiplyer);
 
-//        step = temp;
-//        int bottom = rect.bottom() - 6, h = (rect.height() / 3) - 3;
-//        double val = multiplyer;
+        step = temp;
 
-//        for(double pos = step + rect.left(); pos <= rect.right() + 0.5; pos += step, val += multiplyer) {
-//            strNum = QString::number(val);
-//            p.drawLine(QLineF(pos, bottom - h, pos, bottom));
-//            if (position_slider)
-//                p.drawText(pos - padding * strNum.length() , bottom, strNum);
-//        }
+        int temp, left = rRect.left() + pen.width() + 2, w = pen.width() / 2;
 
-//        if (position_slider) {
-//            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-//            if (Player::instance() -> getSize() > 0 && pos < 1) {
-//                p.drawRect(rect.left(), rect.y(), rect.width() - 1, 3);
-//                p.fillRect(rect.left(), rect.y(), (rect.width() - 1) * pos, 3, fillColor);
-//            }
-//        }
-//    } else {
-//        rect.moveTop(rect.top() + margin + 1); // +1 border
-//        rect.setHeight(rect.height() - margin * 2 - 2); // -2 border
+        for(double pos = step, val = multiplyer; ; pos += step, val += multiplyer) {
+            temp = rRect.bottom() - pos;
+            if (temp < rRect.top() - 0.5)
+                break;
 
-//        while(temp < spacing)
-//            temp = ((float)(rect.height())) / (step / ++multiplyer);
+            p.drawPoint(left, temp);
+            if (show_position) {
+                strNum = QString::number(val);
+                p.drawText(left + w, temp, strNum);
+            }
+        }
 
-//        step = temp;
-//        int temp, left = rect.left() + 6, w = (rect.width() / 3) - 3;
-//        double val = multiplyer;
+        if (show_position) {
+            float pos = Player::instance() -> getRemoteFileDownloadPosition();
+            if (Player::instance() -> getSize() > 0 && pos < 1) {
+                p.drawRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1));
+                p.fillRect(rRect.x(), rRect.bottom(), 3, -((rRect.height() - 1) * pos), fillColor);
+            }
+        }
+    }
 
-//        for(double pos = step; ; pos += step, val += multiplyer) {
-//            strNum = QString::number(val);
-//            temp = rect.bottom() - pos;
-//            if (temp < rect.top() - 0.5)
-//                break;
-
-//            p.drawLine(QLineF(left, temp, left + w, temp));
-//            if (position_slider)
-//                p.drawText(left, temp + 10, strNum);
-//        }
-
-//        if (position_slider) {
-//            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-//            if (Player::instance() -> getSize() > 0 && pos < 1) {
-//                p.drawRect(rect.x(), rect.bottom(), 3, -(rect.height() - 1));
-//                p.fillRect(rect.x(), rect.bottom(), 3, -((rect.height() - 1) * pos), fillColor);
-//            }
-//        }
-//    }
-
-//    p.restore();
+    p.restore();
 }
 
 void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
     int max = maximum();
     if (hasMouseTracking() && minimum() != max) {
-        QPointF p = ev -> localPos();
         bool show = false;
+        int pos;
 
         float dur;
         if (orientation() == Qt::Vertical) {
-            if ((show = (p.y() > margin && p.y() < hVal)))
-                dur = (hVal - p.y()) / fVal;
+            pos = ev -> localPos().y();
+            if ((show = (pos > margin && pos < hVal)))
+                dur = (hVal - pos) / fVal;
         } else {
-            if ((show = (p.x() > margin && p.x() < hVal)))
-                dur = (p.x() - margin) / fVal;
+            pos = ev -> localPos().x();
+            if ((show = (pos > margin && pos < hVal)))
+                dur = (pos - margin) / fVal;
         }
 
         if (show)

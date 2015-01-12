@@ -12,8 +12,6 @@ QString Stylesheets::appStyles() {
                 "   border: none;"
                 "   background-color: #444;"
                 "   color: #ddd; "
-//                "   border: 2px ridge darkkhaki;"
-//                "   padding: 1px;"
 //                "   border-radius: 8px;"
 //                "   opacity: 300; "
                 "}"
