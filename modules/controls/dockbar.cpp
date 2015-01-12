@@ -25,10 +25,11 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
 }
 
 void DockBar::resizeEvent(QResizeEvent * event) {
+    QDockWidget::resizeEvent(event);
+
     brush.setStart(rect().topLeft());
     brush.setFinalStop(rect().bottomRight());
 
-    QDockWidget::resizeEvent(event);
     Stylesheets::calcBorderRect(rect(), borderRect);
     titleWidget -> resize(width(), titleWidget -> height());
 }

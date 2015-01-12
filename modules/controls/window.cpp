@@ -48,6 +48,7 @@ void MainWindow::locationCorrection() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
+    QMainWindow::resizeEvent(event);
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
     brush.setStart(rect().topLeft());
@@ -57,8 +58,7 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
     Stylesheets::calcBorderRect(rect(), borderRect);
-
-    QMainWindow::resizeEvent(event);
+    qDebug() << "!! " << event -> size();
 }
 
 void MainWindow::mousePressEvent(QMouseEvent * event) {
