@@ -32,6 +32,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
     if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
 
     QPainter p(this);
+    p.save();
 
     if (orientation() == Qt::Horizontal) {
         p.drawPath(path);

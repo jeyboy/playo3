@@ -209,7 +209,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             setGeometry(nr);
             event -> accept();
         }
-        else if(moveFlag) {
+        else if (moveFlag) {
             QRect newRect(geom); newRect.moveTopLeft(event -> globalPos() - (dragPos - geom.topLeft()));
             stickCorrection(newRect);
 
