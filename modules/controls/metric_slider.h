@@ -2,10 +2,9 @@
 #define METRIC_SLIDER_H
 
 #include "clickable_slider.h"
-#include <QPaintEvent>
+//#include <QPaintEvent>
 #include <QPainter>
-#include <QStylePainter>
-#include <QStyleOptionSlider>
+//#include <QStylePainter>
 #include <QToolTip>
 
 #include "misc/settings.h"
@@ -16,6 +15,7 @@ public:
     MetricSlider(QWidget * parent = 0, bool showPosition = true);
 
 protected:
+    void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
     void mouseMoveEvent(QMouseEvent *);
 private:
@@ -23,6 +23,7 @@ private:
     bool show_position;
     QColor fillColor;
     int margin, spacing, padding;
+    float hVal, fVal;
 };
 
 #endif // METRIC_SLIDER_H

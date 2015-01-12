@@ -275,8 +275,9 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setTickInterval(60000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
+    slider -> setMaximum(200000);
 
-    Player::instance() -> setTrackBar(slider);
+//    Player::instance() -> setTrackBar(slider);
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();

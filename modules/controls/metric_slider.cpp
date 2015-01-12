@@ -1,17 +1,27 @@
 #include "metric_slider.h"
 #include "media/player.h"
 #include "media/duration.h"
+#include <qdebug.h>
 
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
   , show_position(showPosition)
   , fillColor(QColor::fromRgb(0,0,0))
-  , margin(4), spacing(30)
+  , margin(16), spacing(30)
   , padding(7) {
     setMouseTracking(show_position);
 
     pen.setCosmetic(true);
     pen.setCapStyle(Qt::RoundCap);
     pen.setWidth(4);
+}
+
+void MetricSlider::resizeEvent(QResizeEvent *) {
+    if (orientation() == Qt::Vertical)
+        hVal = height() - margin;
+    else
+        hVal = width() - margin;
+
+    fVal = (float)(hVal - margin);
 }
 
 //TODO: draw text by QStaticText
@@ -93,21 +103,22 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 }
 
 void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
-    if (hasMouseTracking() && minimum() != maximum()) {
+    int max = maximum();
+    if (hasMouseTracking() && minimum() != max) {
         QPointF p = ev -> localPos();
         bool show = false;
 
-        int dur;
+        float dur;
         if (orientation() == Qt::Vertical) {
-            if ((show = (p.y() > margin && p.y() < height() - margin)))
-                dur = maximum() *((height() - margin - p.y()) / (height() - 2 * margin));
+            if ((show = (p.y() > margin && p.y() < hVal)))
+                dur = (hVal - p.y()) / fVal;
         } else {
-            if ((show = (p.x() > margin && p.x() < width() - margin)))
-                dur = maximum() * ((p.x() - margin) / (width() - 2 * margin));
+            if ((show = (p.x() > margin && p.x() < hVal)))
+                dur = (p.x() - margin) / fVal;
         }
 
         if (show)
-            QToolTip::showText(ev -> globalPos(), Duration::fromMillis(dur));
+            QToolTip::showText(ev -> globalPos(), Duration::fromMillis(max * dur));
 
     }
 
