@@ -28,9 +28,8 @@ void DockBar::resizeEvent(QResizeEvent * event) {
     brush.setStart(rect().topLeft());
     brush.setFinalStop(rect().bottomRight());
 
-    Stylesheets::calcBorderRect(rect(), borderRect);
-
     QDockWidget::resizeEvent(event);
+    Stylesheets::calcBorderRect(rect(), borderRect);
     titleWidget -> resize(width(), titleWidget -> height());
 }
 

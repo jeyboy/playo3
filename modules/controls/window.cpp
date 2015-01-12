@@ -57,6 +57,7 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
     Stylesheets::calcBorderRect(rect(), borderRect);
+
     QMainWindow::resizeEvent(event);
 }
 
@@ -232,18 +233,18 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
+    QMainWindow::paintEvent(event);
+
     QPainter painter(this);
-    painter.save();
+//    painter.save();
     painter.setBrush(brush);
     painter.setPen(Stylesheets::pen);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
     painter.setPen(Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    painter.restore();
+//    painter.restore();
 //    event -> accept();
-
-    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {

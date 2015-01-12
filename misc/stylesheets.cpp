@@ -314,15 +314,13 @@ void Stylesheets::initPens() {
     penPattern.append(1); penPattern.append(borderWidth / 2);
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
-    pen.setWidth(borderWidth / 2);
-    pen.setCosmetic(true);
-    pen.setJoinStyle(Qt::RoundJoin);
+    pen.setWidth(borderWidth / 2.5);
+//    pen.setCosmetic(true);
 
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(borderWidth / 2);
-    bevelPen.setCosmetic(true);
+    bevelPen.setWidth(borderWidth / 2.5);
+//    bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
-    bevelPen.setJoinStyle(Qt::RoundJoin);
     bevelPen.setDashPattern(penPattern);
 }
 
