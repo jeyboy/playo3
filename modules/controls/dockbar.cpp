@@ -46,7 +46,7 @@ void DockBar::paintEvent(QPaintEvent * event) {
         painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
     }
     else {
-        QPen pen(Qt::white);
+        QPen pen(Qt::gray);
         pen.setCosmetic(true);
         pen.setWidth(2);
         painter.setPen(pen);

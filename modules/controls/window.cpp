@@ -58,7 +58,6 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
 
     Stylesheets::calcBorderRect(rect(), borderRect);
-    qDebug() << "!! " << event -> size();
 }
 
 void MainWindow::mousePressEvent(QMouseEvent * event) {
@@ -81,6 +80,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent * event) {
     if (event -> button() == Qt::LeftButton) {
         dropFlags();
         inAction = false;
+        repaint(); // refresh border
     }
     QMainWindow::mouseReleaseEvent(event);
 }
@@ -235,16 +235,18 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 void MainWindow::paintEvent(QPaintEvent * event) {
     QMainWindow::paintEvent(event);
 
+    bool isResizing = (resizeFlagX || resizeFlagY);
     QPainter painter(this);
-//    painter.save();
     painter.setBrush(brush);
-    painter.setPen(Stylesheets::pen);
-    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    painter.setPen(Stylesheets::bevelPen);
+    if (!isResizing) {
+        painter.setPen(Stylesheets::pen);
+        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+    }
+
+    painter.setPen(isResizing ? Stylesheets::resizePen : Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-//    painter.restore();
-//    event -> accept();
+    event -> accept();
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {

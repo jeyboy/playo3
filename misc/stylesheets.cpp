@@ -1,5 +1,6 @@
 #include "stylesheets.h"
 
+QPen Stylesheets::resizePen = QPen();
 QPen Stylesheets::pen = QPen();
 QPen Stylesheets::bevelPen = QPen();
 int Stylesheets::borderWidth = 6;
@@ -314,14 +315,17 @@ void Stylesheets::initPens() {
     penPattern.append(1); penPattern.append(borderWidth / 2);
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
-    pen.setWidth(borderWidth / 2.5);
+    pen.setWidth(borderWidth / 2);
 //    pen.setCosmetic(true);
 
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(borderWidth / 2.5);
+    bevelPen.setWidth(borderWidth / 2);
 //    bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setDashPattern(penPattern);
+
+    resizePen.setWidth(2);
+    resizePen.setColor(colorResize());
 }
 
 void Stylesheets::calcBorderRect(QRect origin, QRect & res) {
