@@ -103,6 +103,8 @@ void MetricSlider::calcGrid() {
         rRect.moveLeft(rRect.left() + margin + 2); // +2 border
         rRect.setWidth(rRect.width() - margin * 2 - 4); // -4 border
 
+        if (rRect.width() < spacing) return;
+
         while(temp < spacing)
             temp = ((float)(rRect.width())) / (step / ++multiplyer);
 
@@ -119,6 +121,8 @@ void MetricSlider::calcGrid() {
     } else {
         rRect.moveTop(rRect.top() + margin + 2); // +2 border
         rRect.setHeight(rRect.height() - margin * 2 - 4); // -4 border
+
+        if (rRect.height() < spacing) return;
 
         while(temp < spacing)
             temp = ((float)(rRect.height())) / (step / ++multiplyer);
