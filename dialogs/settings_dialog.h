@@ -8,9 +8,9 @@
 #include "misc/settings.h"
 #include "misc/hotkey_manager.h"
 
-#include "modules/models/hotkey_model/hotkey_model.h"
-#include "modules/models/hotkey_model/hotkey_model_item.h"
-#include "modules/models/hotkey_model/hotkey_delegate.h"
+#include "modules/data_struct/hotkeys/hotkey_model.h"
+#include "modules/data_struct/hotkeys/hotkey_model_item.h"
+#include "modules/data_struct/hotkeys/hotkey_delegate.h"
 
 namespace Ui {
     class SettingsDialog;

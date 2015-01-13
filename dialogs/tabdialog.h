@@ -2,7 +2,7 @@
 #define TABDIALOG_H
 
 #include <QDialog>
-#include "modules/controls/tab_settings.h"
+#include "modules/data_struct/view_settings.h"
 
 namespace Ui {
   class TabDialog;
@@ -20,8 +20,8 @@ public:
   QString getName();
   void setName(QString name);
 
-  Playo3::TabSettings getSettings();
-  void setSettings(Playo3::TabSettings hash);
+  Playo3::ViewSettings getSettings();
+  void setSettings(Playo3::ViewSettings hash);
 
 private:
   Ui::TabDialog *ui;

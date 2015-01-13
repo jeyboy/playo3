@@ -46,8 +46,8 @@ void TabDialog::setName(QString name) {
   ui -> tabName -> setText(name);
 }
 
-TabSettings TabDialog::getSettings() {
-    TabSettings settings;
+ViewSettings TabDialog::getSettings() {
+    ViewSettings settings;
 
     settings.deleteFile = ui -> deleteFile -> checkState() == Qt::Checked;
     settings.interactive = ui -> interactive -> checkState() == Qt::Checked;
@@ -67,7 +67,7 @@ TabSettings TabDialog::getSettings() {
     return settings;
 }
 
-void TabDialog::setSettings(Playo3::TabSettings settings) {
+void TabDialog::setSettings(ViewSettings settings) {
   ui -> deleteFile -> setChecked(settings.deleteFile);
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);

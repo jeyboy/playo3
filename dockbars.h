@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QBoxLayout>
 
-#include "modules/json/data_store.h"
+#include "misc/data_store.h"
 #include "modules/controls/dockbar.h"
 
 namespace Playo3 {

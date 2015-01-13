@@ -3,13 +3,15 @@
 
 #include <qabstractitemmodel.h>
 #include <qvariant.h>
-#include "modules/model_items/items/item_interface.h"
+#include "item_interface.h"
+#include <QFileInfo>
 
 namespace Playo3 {
     class ModelInterface : public QAbstractItemModel {
         Q_OBJECT
     public:
-        ModelInterface(const QStringList &headers, const QString &data, QObject *parent = 0);
+        ModelInterface(const QStringList &headers, const QString &data, QObject * parent);
+        ModelInterface(QJsonObject * hash, QObject * parent);
         ~ModelInterface();
 
         QVariant data(const QModelIndex &index, int role) const;

@@ -5,8 +5,8 @@
 #include <qvariant.h>
 #include <qvector.h>
 
-#include "../item_types.h"
-#include "../item_fields.h"
+#include "model_item_parts/item_types.h"
+#include "model_item_parts/item_fields.h"
 
 namespace Playo3 {
     class ItemInterface : public ItemFields {

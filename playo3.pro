@@ -13,22 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        playo.cpp \
-    modules/json/data_store.cpp \
+    single_application.cpp \
+    playo.cpp \
+    dockbars.cpp \
+    toolbars.cpp \
     modules/controls/tabber.cpp \
     modules/controls/tab.cpp \
-    dockbars.cpp \
-    modules/models/_base_model.cpp \
-    modules/model_items/items/_base_item.cpp \
-    modules/model_items/items/item_interface.cpp \
-    modules/models/model_interface.cpp \
-    modules/model_items/item_state.cpp \
-    toolbars.cpp \
     modules/controls/toolbar.cpp \
     modules/controls/toolbarbutton.cpp \
     dialogs/toolbarbuttondialog.cpp \
     dialogs/toolbardialog.cpp \
-    single_application.cpp \
     modules/controls/clickable_label.cpp \
     modules/controls/hoverable_label.cpp \
     dialogs/settings_dialog.cpp \
@@ -40,10 +34,6 @@ SOURCES += main.cpp\
     media/duration.cpp \
     media/format.cpp \
     media/notify_timer.cpp \
-    modules/models/hotkey_model/hotkey_delegate.cpp \
-    modules/models/hotkey_model/hotkey_editor.cpp \
-    modules/models/hotkey_model/hotkey_model.cpp \
-    modules/models/hotkey_model/hotkey_model_item.cpp \
     globalshortcut/qxtglobalshortcut.cpp \
     modules/controls/spectrum.cpp \
     modules/controls/dockbar.cpp \
@@ -51,35 +41,56 @@ SOURCES += main.cpp\
     modules/controls/window.cpp \
     misc/stylesheets.cpp \
     modules/controls/clickable_slider.cpp \
-    modules/controls/metric_slider.cpp
+    modules/controls/metric_slider.cpp \
+    modules/data_struct/hotkeys/hotkey_delegate.cpp \
+    modules/data_struct/hotkeys/hotkey_editor.cpp \
+    modules/data_struct/hotkeys/hotkey_model.cpp \
+    modules/data_struct/hotkeys/hotkey_model_item.cpp \
+    modules/data_struct/level_tree/level_tree_model.cpp \
+    modules/data_struct/level_tree/level_tree_view.cpp \
+    modules/data_struct/list/list_model.cpp \
+    modules/data_struct/list/list_view.cpp \
+    modules/data_struct/tree/tree_model.cpp \
+    modules/data_struct/tree/tree_view.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_file.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_model.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_playlist.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_view.cpp \
+    modules/data_struct/web/vk/vk_file.cpp \
+    modules/data_struct/web/vk/vk_folder.cpp \
+    modules/data_struct/web/vk/vk_model.cpp \
+    modules/data_struct/web/vk/vk_view.cpp \
+    modules/data_struct/web/deleted_list.cpp \
+    modules/data_struct/web/web_model.cpp \
+    modules/data_struct/_base_model.cpp \
+    modules/data_struct/model_interface.cpp \
+    modules/data_struct/view_interface.cpp \
+    modules/data_struct/model_item_parts/item_state.cpp \
+    modules/data_struct/_base_item.cpp \
+    modules/data_struct/item_interface.cpp \
+    misc/extensions.cpp \
+    misc/icon_provider.cpp \
+    misc/data_store.cpp \
+    modules/data_struct/file_item.cpp \
+    modules/data_struct/folder_item.cpp
 
 HEADERS  += playo.h \
+    single_application.h \
+    toolbars.h \
     dockbars.h \
     misc/conversions.h \
     misc/stylesheets.h \
     misc/filename_conversions.h \
-    modules/json/data_store.h \
     modules/controls/tray.h \
     modules/controls/tabber.h \
     modules/controls/tab.h \
-    modules/controls/tab_settings.h \
     modules/controls/views/index.h \
     modules/controls/views/view_types.h \
-    modules/model_items/json_fields.h \
     modules/controls/json_fields.h \
-    modules/models/_base_model.h \
-    modules/model_items/items/_base_item.h \
-    modules/model_items/items/item_interface.h \
-    modules/models/model_interface.h \
-    modules/model_items/item_state.h \
-    modules/model_items/item_fields.h \
-    modules/model_items/item_types.h \
-    toolbars.h \
     modules/controls/toolbar.h \
     modules/controls/toolbarbutton.h \
     dialogs/toolbarbuttondialog.h \
     dialogs/toolbardialog.h \
-    single_application.h \
     modules/controls/clickable_label.h \
     modules/controls/hoverable_label.h \
     misc/screen.h \
@@ -95,10 +106,6 @@ HEADERS  += playo.h \
     media/duration.h \
     media/format.h \
     media/notify_timer.h \
-    modules/models/hotkey_model/hotkey_delegate.h \
-    modules/models/hotkey_model/hotkey_editor.h \
-    modules/models/hotkey_model/hotkey_model.h \
-    modules/models/hotkey_model/hotkey_model_item.h \
     globalshortcut/qxtglobal.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
@@ -108,7 +115,46 @@ HEADERS  += playo.h \
     modules/controls/dockbar.h \
     modules/controls/title_layout.h \
     modules/controls/clickable_slider.h \
-    modules/controls/metric_slider.h
+    modules/controls/metric_slider.h \
+    modules/data_struct/hotkeys/hotkey_delegate.h \
+    modules/data_struct/hotkeys/hotkey_editor.h \
+    modules/data_struct/hotkeys/hotkey_model.h \
+    modules/data_struct/hotkeys/hotkey_model_item.h \
+    modules/data_struct/level_tree/level_tree_model.h \
+    modules/data_struct/level_tree/level_tree_view.h \
+    modules/data_struct/list/list_model.h \
+    modules/data_struct/list/list_view.h \
+    modules/data_struct/tree/tree_model.h \
+    modules/data_struct/tree/tree_view.h \
+    modules/data_struct/web/soundcloud/soundcloud_file.h \
+    modules/data_struct/web/soundcloud/soundcloud_model.h \
+    modules/data_struct/web/soundcloud/soundcloud_playlist.h \
+    modules/data_struct/web/soundcloud/soundcloud_view.h \
+    modules/data_struct/web/vk/vk_file.h \
+    modules/data_struct/web/vk/vk_folder.h \
+    modules/data_struct/web/vk/vk_model.h \
+    modules/data_struct/web/vk/vk_view.h \
+    modules/data_struct/web/deleted_list.h \
+    modules/data_struct/web/web_model.h \
+    modules/data_struct/_base_model.h \
+    modules/data_struct/model_interface.h \
+    modules/data_struct/view_interface.h \
+    modules/data_struct/view_types.h \
+    modules/data_struct/model_item_parts/item_fields.h \
+    modules/data_struct/model_item_parts/item_state.h \
+    modules/data_struct/model_item_parts/item_types.h \
+    modules/data_struct/model_item_parts/json_fields.h \
+    modules/data_struct/_base_item.h \
+    modules/data_struct/item_interface.h \
+    modules/data_struct/tree_view_style.h \
+    misc/extensions.h \
+    misc/icon_provider.h \
+    misc/data_store.h \
+    modules/data_struct/view_settings.h \
+    modules/data_struct/file_item.h \
+    modules/data_struct/folder_item.h \
+    modules/data_struct/view_index.h \
+    modules/data_struct/item_index.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

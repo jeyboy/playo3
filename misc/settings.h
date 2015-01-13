@@ -7,7 +7,7 @@
 #include <QFont>
 #include <QLinearGradient>
 
-#include "modules/models/hotkey_model/hotkey_model_item.h"
+#include "modules/data_struct/hotkeys/hotkey_model_item.h"
 #include "misc/hotkey_types.h"
 
 class Settings {

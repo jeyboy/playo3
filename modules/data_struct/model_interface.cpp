@@ -12,6 +12,16 @@ ModelInterface::ModelInterface(const QStringList &headers, const QString &data, 
     setupModelData(data.split(QString("\n")), rootItem);
 }
 
+ModelInterface::ModelInterface(QJsonObject * hash, QObject *parent) : QAbstractItemModel(parent) {
+    if (hash != 0) {
+        rootItem = new FolderItem(hash);
+        count = hash -> value("l").toInt();
+    } else {
+        rootItem = new FolderItem();
+        count = 0;
+    }
+}
+
 ModelInterface::~ModelInterface() {
     delete rootItem;
 }
@@ -29,7 +39,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
 
     ItemInterface *item = getItem(index);
 
-    return item->data(index.column());
+    return item -> data(index.column());
 }
 
 Qt::ItemFlags ModelInterface::flags(const QModelIndex &index) const {
@@ -50,7 +60,7 @@ ItemInterface * ModelInterface::getItem(const QModelIndex &index) const {
 
 QVariant ModelInterface::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return rootItem->data(section);
+        return rootItem -> data(section);
 
     return QVariant();
 }

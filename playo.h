@@ -9,7 +9,7 @@
 
 #include <QSettings>
 
-#include "modules/json/data_store.h"
+#include "misc/data_store.h"
 
 #include "dialogs/tabdialog.h"
 //#include "dialogs/web_dialog.h"
