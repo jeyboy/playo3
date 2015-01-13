@@ -7,7 +7,7 @@
 
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
   , show_position(showPosition), show_mini_progress(false)
-  , margin(16), spacing(30), padding(7), point_radius(2) {
+  , margin(16), spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
 
@@ -33,6 +33,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
     QPainter p(this);
     p.save();
+    p.setBrush(QBrush(Qt::black)); // temp
 
     if (orientation() == Qt::Horizontal) {
         p.drawPath(path);
@@ -41,8 +42,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
             if (Player::instance() -> getSize() > 0 && pos < 1) {
                 brush.setFinalStop(rRect.height(), (rRect.width() - 1) * pos);
-                p.setBrush(brush);
-                p.drawRect(rRect.left(), rRect.y(), rRect.width() - 1, 3);
+                p.drawRoundedRect(rRect.left(), rRect.y(), rRect.width() - 1, 3, 1, 1);
 //                p.fillRect(rRect.left(), rRect.y(), (rRect.width() - 1) * pos, 3, fillColor);
             }
         }
@@ -53,8 +53,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
             if (Player::instance() -> getSize() > 0 && pos < 1) {
                 brush.setFinalStop(rRect.width(), -((rRect.height() - 1) * pos)); //?
-                p.setBrush(brush);
-                p.drawRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1));
+                p.drawRoundedRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1), 1, 1);
 //                p.fillRect(rRect.x(), rRect.bottom(), 3, -((rRect.height() - 1) * pos), fillColor);
             }
         }
@@ -93,11 +92,14 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
 void MetricSlider::calcGrid() {
     path = QPainterPath();
 
-    QString strNum;
+//    QString strNum;
 
     int multiplyer = 0;
     float temp = 0, step = ((float)maximum()) / tickInterval();
     rRect = rect();
+//    QFont strFont = font();
+//    strFont.setPixelSize(10);
+//    QFontMetrics metrics(strFont);
 
     if (orientation() == Qt::Horizontal) {
         rRect.moveLeft(rRect.left() + margin + 2); // +2 border
@@ -110,13 +112,14 @@ void MetricSlider::calcGrid() {
 
         step = temp;
 
-        int bottom = rRect.bottom() - 6;
+        int bottom = ((rRect.bottom() - rRect.top()) / 2) + point_radius/*, top = rRect.top() + 5 + point_radius*/;
 
         for(double pos = step + rRect.left(), val = multiplyer; pos <= rRect.right() + 0.5; pos += step, val += multiplyer) {
+//            path.addEllipse(QPoint(pos + point_radius, top), point_radius, point_radius);
             path.addEllipse(QPoint(pos + point_radius, bottom), point_radius, point_radius);
 
-            strNum = QString::number(val);
-            path.addText(pos - (padding * strNum.length()) , bottom - point_radius * 2, font(), strNum);
+//            strNum = QString::number(val);
+//            path.addText(pos - metrics.width(strNum) / 2 , bottom - point_radius * 2, strFont, strNum);
         }
     } else {
         rRect.moveTop(rRect.top() + margin + 2); // +2 border
@@ -129,16 +132,18 @@ void MetricSlider::calcGrid() {
 
         step = temp;
 
-        int left = rRect.left() + point_radius;
+        int left = ((rRect.right() - rRect.left()) / 2) + point_radius - 1/*, right = rRect.right() - 4 - point_radius*/;
 
         for(double pos = step, val = multiplyer; ; pos += step, val += multiplyer) {
             temp = rRect.bottom() - pos;
             if (temp < rRect.top() - 0.5)
                 break;
 
-            path.addEllipse(QPoint(left + point_radius, temp), point_radius, point_radius);
-            strNum = QString::number(val);
-            path.addText(left + point_radius, temp, font(), strNum);
+            path.addEllipse(QPoint(left, temp), point_radius, point_radius);
+//            path.addEllipse(QPoint(right, temp), point_radius, point_radius);
+
+//            strNum = QString::number(val);
+//            path.addText(left + point_radius + 2, temp + metrics.height() / 3, strFont, strNum);
         }
     }
 

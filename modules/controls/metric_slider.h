@@ -30,7 +30,7 @@ protected:
     void calcGrid();
 private:
     bool show_position, show_mini_progress;
-    int margin, spacing, padding, point_radius;
+    int margin, spacing, point_radius;
     float hVal, fVal;
     QRect rRect;
     QPainterPath path;
