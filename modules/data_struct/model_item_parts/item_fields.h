@@ -5,6 +5,7 @@
 
 #include "item_state.h"
 #include "json_fields.h"
+#include "misc/settings.h"
 
 namespace Playo3 {
     #define TITLEID Qt::UserRole - 1
@@ -22,24 +23,74 @@ namespace Playo3 {
         ItemFields() {}
 
         ItemFields(QJsonObject * hash) : ItemState(hash -> value(JSON_TYPE_STATE).toInt()) {
-            path = hash -> value(JSON_TYPE_PATH).toString();
-            title = hash -> value(JSON_TYPE_TITLE).toString();
-            extension = hash -> value(JSON_TYPE_EXTENSION).toString();
-            genreID = hash -> value(JSON_TYPE_GENRE_ID).toInt(-1);
-            duration = hash -> value(JSON_TYPE_DURATION).toString("");
+            _path = hash -> value(JSON_TYPE_PATH).toString();
+            _title = hash -> value(JSON_TYPE_TITLE).toString();
+            _extension = hash -> value(JSON_TYPE_EXTENSION).toString();
+            _genreID = hash -> value(JSON_TYPE_GENRE_ID).toInt(-1);
+            _duration = hash -> value(JSON_TYPE_DURATION).toString("");
 
-            size = hash -> value(JSON_TYPE_BYTES_SIZE).toInt(-1);
-            info = hash -> value(JSON_TYPE_INFO).toString("");
-            bpm = hash -> value(JSON_TYPE_BPM).toInt(0);
+            _size = hash -> value(JSON_TYPE_BYTES_SIZE).toInt(-1);
+            _info = hash -> value(JSON_TYPE_INFO).toString("");
+            _bpm = hash -> value(JSON_TYPE_BPM).toInt(0);
         }
 
-        QJsonObject * toJson() {
-            return 0;
+        ItemFields(QString path, QString title, QString extension, int size) : ItemState() {
+            _path = path;
+            _title = title;
+            _extension = extension;
+            _genreID = -1;
+            _duration = "";
+
+            _size = size;
+            _info = "";
+            _bpm = 0;
         }
+
+        inline QString title() const { return _title; }
+
+//            inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !info.isEmpty());}
+        inline void setInfo(QString newInfo) { _info = newInfo; }
+        QStringList getInfo() const;
+
+        inline void setBpm(int newBeat) { _bpm = newBeat; }
+        inline void setDuration(QString newDuration) { _duration = newDuration;}
+        inline void setGenre(int newGenreID) { _genreID = newGenreID;}
+        inline void setPath(QString newPath) { _path = newPath;}
+
+        inline virtual QString toUID() { return ""; }
+        virtual QJsonObject * toJson() {
+            QJsonObject root = QJsonObject();
+
+            root[JSON_TYPE_TITLE] = title;
+            root[JSON_TYPE_STATE] = saveStateVal();
+            root[JSON_TYPE_PATH] = path;
+
+            if (!info.isEmpty())
+                root[JSON_TYPE_INFO] = info;
+
+            if (bpm != 0)
+                root[JSON_TYPE_BPM] = bpm;
+
+            if (size != -1)
+                root[JSON_TYPE_BYTES_SIZE] = size;
+
+            if (genreID != -1)
+                root[JSON_TYPE_GENRE_ID] = genreID;
+
+            if (!duration.isEmpty())
+                root[JSON_TYPE_DURATION] = duration;
+
+            if (!extension.isNull())
+                root[JSON_TYPE_EXTENSION] = extension;
+
+            return root;
+        }
+
+        virtual QUrl toUrl();
 
     protected:
-        QString path, title, extension, duration, info;
-        int genreID, size, bpm;
+        QString _path, _title, _extension, _duration, _info;
+        int _genreID, _size, _bpm;
     };
 }
 

@@ -8,7 +8,7 @@ ModelInterface::ModelInterface(const QStringList &headers, const QString &data, 
     foreach (QString header, headers)
         rootData << header;
 
-    itemsCount = 0;
+//    items_count = 0;
     rootItem = new ItemInterface(rootData);
     setupModelData(data.split(QString("\n")), rootItem);
 }
@@ -16,10 +16,10 @@ ModelInterface::ModelInterface(const QStringList &headers, const QString &data, 
 ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) {
     if (hash != 0) {
         rootItem = new FolderItem(hash);
-        itemsCount = hash -> value("l").toInt();
+//        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
     } else {
         rootItem = new FolderItem();
-        itemsCount = 0;
+//        items_count = 0;
     }
 }
 
@@ -110,7 +110,7 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex &index) const {
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 
-ItemInterface * ModelInterface::getItem(const QModelIndex &index) const {
+ItemInterface * ModelInterface::getItem(const QModelIndex & index) const {
     if (index.isValid()) {
         ItemInterface * item = static_cast<ItemInterface *>(index.internalPointer());
         if (item)
@@ -126,9 +126,9 @@ QVariant ModelInterface::headerData(int section, Qt::Orientation orientation, in
     return QVariant();
 }
 
-//    QModelIndex Model::index(ModelItem * item) const {
-//       return createIndex(item -> row(), item -> column(), item);
-//    }
+QModelIndex ModelInterface::index(ItemInterface * item) const {
+   return createIndex(item -> row(), item -> column(), item);
+}
 
 QModelIndex ModelInterface::index(int row, int column, const QModelIndex &parent) const {
     if (parent.isValid() && parent.column() != 0) // !hasIndex(row, column, parent)
@@ -153,7 +153,18 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
     return success;
 }
 
-bool ModelInterface::insertRows(int position, int rows, const QModelIndex &parent) {
+//void ModelInterface::appendRow(ItemInterface * item) {
+////    int position = parentItem -> childCount();
+////    beginInsertRows(index(parentItem), position, position);
+//    if (!item -> isFolder()) {
+//        emit itemsCountChanged(++count);
+//    }
+////    endInsertRows();
+
+////    emit dataChanged(parent, parent);
+//}
+
+bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
     ItemInterface * parentItem = getItem(parent);
     bool success;
 
@@ -164,7 +175,7 @@ bool ModelInterface::insertRows(int position, int rows, const QModelIndex &paren
     return success;
 }
 
-QModelIndex ModelInterface::parent(const QModelIndex &index) const {
+QModelIndex ModelInterface::parent(const QModelIndex & index) const {
     if (!index.isValid())
         return QModelIndex();
 
@@ -314,16 +325,7 @@ void ModelInterface::setupModelData(const QStringList &lines, ItemInterface * pa
     }
 }
 
-//    void Model::appendRow(ModelItem * item) {
-//    //    int position = parentItem -> childCount();
-//    //    beginInsertRows(index(parentItem), position, position);
-//        if (!item -> isFolder()) {
-//            emit itemsCountChanged(++count);
-//        }
-//    //    endInsertRows();
 
-//    //    emit dataChanged(parent, parent);
-//    }
 
 //    bool Model::removeRow(int row, const QModelIndex &parentIndex) {
 //        int removeCount = 1;
@@ -411,26 +413,6 @@ void ModelInterface::setupModelData(const QStringList &lines, ItemInterface * pa
 //    void Model::removeFolderPrebuild(ModelItem * temp) {
 //        temp -> parent() -> removeFolder(temp -> data(TITLEID).toString());
 //        temp -> parent() -> removeChildren(temp -> row(), 1);
-//    }
-
-//    /////////////////////////////////////////////////////////
-
-//    ModelItem * Model::getItem(const QModelIndex &index) const {
-//        if (index.isValid()) {
-//            return static_cast<ModelItem *>(index.internalPointer());
-//        }
-//        return rootItem;
-//    }
-
-//    //template<class T> T * Model::getItem(const QModelIndex &index) const {
-//    //    if (index.isValid()) {
-//    //        return dynamic_cast<T *>(index.internalPointer());
-//    //    }
-//    //    return dynamic_cast<T *>(rootItem);
-//    //}
-
-//    ModelItem * Model::root() const {
-//        return rootItem;
 //    }
 
 //    /////////////////////////////////////////////////////////

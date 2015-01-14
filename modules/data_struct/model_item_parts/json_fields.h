@@ -1,5 +1,5 @@
-#ifndef MODEL_ITEM_JSON_FIELDS_H
-#define MODEL_ITEM_JSON_FIELDS_H
+#ifndef JSON_FIELDS_H
+#define JSON_FIELDS_H
 
 namespace Playo3 {
     #define JSON_TYPE_INFO "a"
@@ -16,6 +16,10 @@ namespace Playo3 {
     #define JSON_TYPE_OWNER_ID "o"
     #define JSON_TYPE_TITLE "t"
     #define JSON_TYPE_UID "u"
+
+    #define JSON_TYPE_TAB_ITEMS_COUNT "l"
+    #define JSON_TYPE_TAB_NAME "n"
+    #define JSON_TYPE_TAB_SETTINGS "set"
 }
 
 /// a - item info
@@ -38,4 +42,4 @@ namespace Playo3 {
 ///
 
 
-#endif // MODEL_ITEM_JSON_FIELDS_H
+#endif // JSON_FIELDS_H

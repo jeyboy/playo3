@@ -39,9 +39,9 @@ namespace Playo3 {
 
             void setStates(int flags);
 
-            inline int value() const { return item_state; }
-            inline int saveValue() { return item_state & ((0 << 5) - 1) << 3; }
-            inline int stateValue() { return is(played) ? played : item_state & ((0 << 3) - 1) << 5; }
+            inline int stateVal() const { return item_state; }
+            inline int saveStateVal() { return item_state & ((0 << 5) - 1) << 3; }
+            inline int itemStateVal() { return is(played) ? played : item_state & ((0 << 3) - 1) << 5; }
 
         protected:
             bool reset();

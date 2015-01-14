@@ -4,7 +4,7 @@
 #include <qabstractitemmodel.h>
 #include <qvariant.h>
 #include "item_interface.h"
-#include <QFileInfo>
+#include "misc/file_utils/extensions.h"
 
 namespace Playo3 {
     class ModelInterface : public QAbstractItemModel {
@@ -17,12 +17,12 @@ namespace Playo3 {
         QVariant data(const QModelIndex & index, int role) const;
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+        QModelIndex index(ItemInterface * item) const;
         QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
         QModelIndex parent(const QModelIndex & index) const;
 
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        inline int columnCount(const QModelIndex & parent = QModelIndex()) const { return rootItem -> columnCount(); }
-        inline int itemsCount() const { return itemsCount; }
+        inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return rootItem -> columnCount(); }
 
         Qt::ItemFlags flags(const QModelIndex & index) const;
         bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
@@ -33,24 +33,20 @@ namespace Playo3 {
         bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
-    private:
+    signals:
+        itemsCountChanged(int change);
+    protected:
         void setupModelData(const QStringList & lines, ItemInterface * parent);
         ItemInterface * getItem(const QModelIndex & index) const;
+        //template<class T> T * getItem(const QModelIndex & index) const {
+        //    if (index.isValid()) {
+        //        return dynamic_cast<T *>(index.internalPointer());
+        //    }
+        //    return dynamic_cast<T *>(rootItem);
+        //}
 
         ItemInterface * rootItem;
-
-        int itemsCount;
     };
-
-    ////        void appendRow(ModelItems::ModelItem * item);
-    //        bool removeRow(int row, const QModelIndex &parent = QModelIndex());
-    //        bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex());
-
-    //        void clearAll(bool emitChanges = false);
-
-    //        ModelItems::ModelItem *getItem(const QModelIndex &index) const;
-    //    //    template<class T> T *getItem(const QModelIndex &index) const;
-    //        ModelItems::ModelItem * root() const;
 
     //        ModelItems::ModelItem * buildPath(QString path);
     //        bool isFolderExist(QString folderName, ModelItems::ModelItem * parent);

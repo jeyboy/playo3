@@ -19,7 +19,7 @@ QModelIndex LevelTreeModel::dropProcession(const QList<QUrl> & list) {
     else
         fName = folderName(file);
 
-    ItemInterface * newIndex = addFolder("", fName, root());
+    ItemInterface * newIndex = addFolder("", fName, rootItem);
 
     filesRoutine(newIndex, list);
     if (newIndex -> childCount() == 0) {
@@ -35,8 +35,8 @@ void LevelTreeModel::filesRoutine(ItemInterface * index, QFileInfo currFile) {
     bool already_exist;
 
     foreach(QFileInfo file, folderList) {
-        already_exist = isFolderExist(file.fileName(), root());
-        newFolder = addFolder("", file.fileName(), root());
+        already_exist = isFolderExist(file.fileName(), rootItem);
+        newFolder = addFolder("", file.fileName(), rootItem);
         filesRoutine(newFolder, file);
         if (!already_exist && newFolder -> childCount() == 0)
             removeFolderPrebuild(newFolder);
@@ -57,8 +57,8 @@ void LevelTreeModel::filesRoutine(ItemInterface * index, QList<QUrl> list) {
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir()) {
-            already_exist = isFolderExist(file.fileName(), root());
-            newFolder = addFolder("", file.fileName(), root());
+            already_exist = isFolderExist(file.fileName(), rootItem);
+            newFolder = addFolder("", file.fileName(), rootItem);
             filesRoutine(newFolder, file);
             if (!already_exist && newFolder -> childCount() == 0)
                 removeFolderPrebuild(newFolder);

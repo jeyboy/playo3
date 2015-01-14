@@ -66,11 +66,11 @@ SOURCES += main.cpp\
     modules/data_struct/view_interface.cpp \
     modules/data_struct/model_item_parts/item_state.cpp \
     modules/data_struct/item_interface.cpp \
-    misc/extensions.cpp \
-    misc/icon_provider.cpp \
-    misc/data_store.cpp \
+    misc/file_utils/data_store.cpp \
     modules/data_struct/file_item.cpp \
-    modules/data_struct/folder_item.cpp
+    modules/data_struct/folder_item.cpp \
+    misc/file_utils/extensions.cpp \
+    misc/file_utils/icon_provider.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -78,7 +78,6 @@ HEADERS  += playo.h \
     dockbars.h \
     misc/conversions.h \
     misc/stylesheets.h \
-    misc/filename_conversions.h \
     modules/controls/tray.h \
     modules/controls/tabber.h \
     modules/controls/tab.h \
@@ -143,14 +142,15 @@ HEADERS  += playo.h \
     modules/data_struct/model_item_parts/json_fields.h \
     modules/data_struct/item_interface.h \
     modules/data_struct/tree_view_style.h \
-    misc/extensions.h \
-    misc/icon_provider.h \
-    misc/data_store.h \
+    misc/file_utils/data_store.h \
     modules/data_struct/view_settings.h \
     modules/data_struct/file_item.h \
     modules/data_struct/folder_item.h \
     modules/data_struct/view_index.h \
-    modules/data_struct/item_index.h
+    modules/data_struct/item_index.h \
+    misc/file_utils/extensions.h \
+    misc/file_utils/filename_conversions.h \
+    misc/file_utils/icon_provider.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
