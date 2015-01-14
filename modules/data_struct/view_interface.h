@@ -19,24 +19,28 @@
 #include "view_settings.h"
 #include "misc/settings.h"
 
+#include "tree_view_style.h"
+
 //#include "model_item_delegate.h"
 
 //#include "model_item.h"
+
+//#include "media/library.h"
+//#include "web/download.h"
 
 namespace Playo3 {
     class ViewInterface : public QTreeView {
       Q_OBJECT
     public:
-        ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings settins);
+        ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings settins);
         ~ViewInterface();
 
         virtual QJsonObject toJSON();
 
         void scrollToActive();
 
-        void proceedPrev();
-        void proceedNext();
-        void deleteCurrentProceedNext();
+        void activatePrev();
+        void activateNext();
 
         inline bool isRemoveFileWithItem() const { return sttgs.deleteFile; }
         inline bool isPlaylist() const { return sttgs.playlist; }
@@ -46,31 +50,27 @@ namespace Playo3 {
 
         ModelInterface * fromPath(QString path);
 
-    //    template<class T> T * getModel() const;
+        //template<class T> T * View::getModel() const {
+        //    return dynamic_cast<T *>(model);
+        //}
+
         inline ModelInterface * model() const { return mdl; }
 
         inline ViewSettings getSettings() const { return sttgs; }
         inline void setSettings(ViewSettings newSettings) { sttgs = newSettings; }
 
-        QModelIndexList selectedItems() const;
+        inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
         bool execItem(ModelItem * item, bool paused = false);
         virtual void removeItem(ModelItem * item);
 
-        int itemsCount() const;
+        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void downloadSelected(QString savePath, bool markAsLiked = false);
-        void copyItemsFrom(View * otherView);
-
-    signals:
-        void showSpinner();
-        void hideSpinner();
-
+        void copyItemsFrom(ViewInterface * otherView);
     public slots:
         void shuffle();
         void updateSelection(QModelIndex candidate);
-        void startRoutine();
-        void stopRoutine();
         void setHeaderText(QString);
         void showMessage(QString);
 
@@ -85,7 +85,7 @@ namespace Playo3 {
 
     protected:
         ModelItem * removeCandidate(ModelItem * item);
-        void drawRow(QPainter *painter, const QStyleOptionViewItem &options, const QModelIndex &index) const;
+        void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex &index) const;
         void resizeEvent(QResizeEvent *);
         bool prepareDownloading(QString path);
 
@@ -93,22 +93,21 @@ namespace Playo3 {
         void downloadBranch(ModelItem * rootNode, QString savePath);
 
 
-        ModelItem * activeItem(bool next = true);
-    //    ModelItem * nextItem(QModelIndex currIndex);
-        ModelItem * nextItem(ModelItem * curr);
-        ModelItem * prevItem(ModelItem * curr);
+        QModelIndex * activeItem(bool next = true);
+        QModelIndex * nextItem(QModelIndex * curr);
+        QModelIndex * prevItem(QModelIndex * curr);
 
-        void dragEnterEvent(QDragEnterEvent *event);
-        void dragMoveEvent(QDragMoveEvent *event);
-        virtual void dropEvent(QDropEvent *event);
+        void dragEnterEvent(QDragEnterEvent * event);
+        void dragMoveEvent(QDragMoveEvent * event);
+        virtual void dropEvent(QDropEvent  *event);
 
-        void keyPressEvent(QKeyEvent *event);
-        void mousePressEvent(QMouseEvent *event);
+        void keyPressEvent(QKeyEvent * event);
+        void mousePressEvent(QMouseEvent * event);
         void mouseMoveEvent(QMouseEvent * event);
 
         ModelInterface * mdl;
         ViewSettings sttgs;
-        QPoint dragStartPoint;
+        QPoint dragPoint;
     };
 }
 

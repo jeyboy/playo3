@@ -1,5 +1,4 @@
 #include "item_interface.h"
-//#include <qstringlist.h>
 
 using namespace Playo3;
 

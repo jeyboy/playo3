@@ -62,11 +62,9 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_view.cpp \
     modules/data_struct/web/deleted_list.cpp \
     modules/data_struct/web/web_model.cpp \
-    modules/data_struct/_base_model.cpp \
     modules/data_struct/model_interface.cpp \
     modules/data_struct/view_interface.cpp \
     modules/data_struct/model_item_parts/item_state.cpp \
-    modules/data_struct/_base_item.cpp \
     modules/data_struct/item_interface.cpp \
     misc/extensions.cpp \
     misc/icon_provider.cpp \
@@ -136,7 +134,6 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_view.h \
     modules/data_struct/web/deleted_list.h \
     modules/data_struct/web/web_model.h \
-    modules/data_struct/_base_model.h \
     modules/data_struct/model_interface.h \
     modules/data_struct/view_interface.h \
     modules/data_struct/view_types.h \
@@ -144,7 +141,6 @@ HEADERS  += playo.h \
     modules/data_struct/model_item_parts/item_state.h \
     modules/data_struct/model_item_parts/item_types.h \
     modules/data_struct/model_item_parts/json_fields.h \
-    modules/data_struct/_base_item.h \
     modules/data_struct/item_interface.h \
     modules/data_struct/tree_view_style.h \
     misc/extensions.h \
