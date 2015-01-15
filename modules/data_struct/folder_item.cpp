@@ -1,82 +1,72 @@
-#include "folder_item.h"
-#include "web/vk/vk_folder.h"
-#include "web/vk/vk_file.h"
-#include "web/soundcloud/soundcloud_file.h"
-#include "web/soundcloud/soundcloud_playlist.h"
-#include <QDebug>
+//#include "folder_item.h"
+#include "item_index.h"
+
+using namespace Playo3;
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : ModelItem(initState) {
-    folders = new QHash<QString, ModelItem *>();
+FolderItem::FolderItem(int initState) : ItemInterface(initState) {
+
 }
 
-FolderItem::FolderItem(QJsonObject * hash, ModelItem *parent) : ModelItem(hash, parent) {
-    folders = new QHash<QString, ModelItem *>();
+FolderItem::FolderItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(parent, hash), inBranchCount(hash -> value(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+    if (parent != 0)
+        ((FolderItem)parent) -> declareFolder(title, this);
 
-    if (parent != 0) {
-        parent -> foldersList() -> insert(title, this -> toModelItem());
-    }
-
-    if (hash -> contains("c")) {
-        QJsonArray ar = hash -> value("c").toArray();
+    if (hash -> contains(JSON_TYPE_CHILDS)) {
+        QJsonArray ar = hash -> value(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
 
         foreach(QJsonValue obj, ar) {
             iterObj = obj.toObject();
-            switch(iterObj.value("i").toInt()) {
+            switch(iterObj.value(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case FILE_ITEM: {
-                    new FileItem(&iterObj, this -> toModelItem());
+                    inBranchCount++;
+                    new FileItem(&iterObj, this);
                 break;}
                 case FOLDER_ITEM: {
-                    new FolderItem(&iterObj, this -> toModelItem());
+                    inBranchCount += (new FolderItem(&iterObj, this)) -> inBranchCount;
                 break;}               
                 // case CUE_ITEM: {
-                // new CueItem(&iter_obj, this -> toModelItem());
+                // new CueItem(&iter_obj, this); // ?
                 // break;}
-                case VK_FOLDER: {
-                    new VkFolder(&iterObj, this -> toModelItem());
-                break;}
-                case VK_FILE: {
-                    new VkFile(&iterObj, this -> toModelItem());
-                break;}
+//                case VK_FOLDER: {
+//                    inBranchCount += (new VkFolder(&iterObj, this)) -> inBranchCount;
+//                break;}
+//                case VK_FILE: {
+//                    inBranchCount++;
+//                    new VkFile(&iterObj, this);
+//                break;}
 
-                case SOUNDCLOUD_FILE: {
-                    new SoundcloudFile(&iterObj, this -> toModelItem());
-                break;}
-                case SOUNDCLOUD_PLAYLIST: {
-                    new SoundcloudPlaylist(&iterObj, this -> toModelItem());
-                break;}
+//                case SOUNDCLOUD_FILE: {
+//                    inBranchCount++;
+//                    new SoundcloudFile(&iterObj, this);
+//                break;}
+//                case SOUNDCLOUD_PLAYLIST: {
+//                    inBranchCount += (new SoundcloudPlaylist(&iterObj, this)) -> inBranchCount;
+//                break;}
             }
         }
     }
 }
 
-FolderItem::FolderItem(const QString folderPath, QString folderTitle, ModelItem *parent, int initState)
-    : ModelItem(folderPath, folderTitle, parent, -1, "", -1, "", initState) {
-    folders = new QHash<QString, ModelItem *>();
+FolderItem::FolderItem(const QString folderPath, QString folderTitle, ItemInterface * parent, int initState)
+    : ItemInterface(parent, folderPath, folderTitle, "", -1, initState) {
 
-    if (title.isEmpty())
-        title = folderPath;
+    if (_title.isEmpty())
+        _title = folderPath;
 
-    if (parent != 0) {
-        parent -> foldersList() -> insert(title, this -> toModelItem());
-    }
+    if (parent != 0)
+        ((FolderItem)parent) -> declareFolder(_title, this);
 }
 
 FolderItem::~FolderItem() {
     qDeleteAll(childItems);
-
-    delete folders;
-}
-
-void FolderItem::openLocation() {
-    QDesktopServices::openUrl(toUrl());
 }
 
 bool FolderItem::removePhysicalObject() {
     bool res = true;
 
-    foreach(ModelItem * item, *childItemsList()) {
+    foreach(ItemInterface * item, * childItems) {
         res &= item -> removePhysicalObject();
     }
 
@@ -94,64 +84,55 @@ bool FolderItem::isExist() const {
     return QDir(fullPath()).exists();
 }
 
-bool FolderItem::isFolder() const {
-    return true;
-}
-
 QJsonObject FolderItem::toJSON() {
-    QJsonObject root = ModelItem::toJSON();
+    QJsonObject root = ItemInterface::toJSON();
 
-    root["i"] = FOLDER_ITEM;
+    root[JSON_TYPE_ITEM_TYPE] = FOLDER_ITEM;
 
     if (childItems.length() > 0) {
-        QJsonArray ar = QJsonArray();
+        root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
+
+        QJsonArray ar = QJsonArray(); // TODO: rewrite on iteration through ++
         for(int i = 0; i < childItems.length(); i++)
             ar.append(childItems.at(i) -> toJSON());
 
-        root["c"] = ar;
+        root[JSON_TYPE_CHILDS] = ar;
     }
 
     return root;
 }
 
 
-QList<ModelItem *> * FolderItem::childItemsList() {
-    return &childItems;
-}
-
-ModelItem *FolderItem::child(int row) {
-    return childItems.value(row);
-}
-
-int FolderItem::childTreeCount() const {
-    int ret = childItems.count() - foldersList() -> count();
-    foreach(ModelItem * folder, foldersList() -> values()) {
-        ret += folder -> childTreeCount();
-    }
-
-
-//    int ret = 0;
-//    foreach(ModelItem * childItem, childItems) {
-//        if (childItem -> folders == 0) // not is unprocessed
-//            ret += 1;
-//        else
-//            ret += childItem -> childTreeCount();
+//int FolderItem::childTreeCount() const {
+//    int ret = childItems.count() - foldersList() -> count();
+//    foreach(ItemInterface * folder, foldersList() -> values()) {
+//        ret += folder -> childTreeCount();
 //    }
 
-    return ret;
-}
 
-int FolderItem::childCount() const {
-    return childItems.count();
-}
+////    int ret = 0;
+////    foreach(ItemInterface * childItem, childItems) {
+////        if (childItem -> folders == 0) // not is unprocessed
+////            ret += 1;
+////        else
+////            ret += childItem -> childTreeCount();
+////    }
 
-void FolderItem::insertChild(int pos, ModelItem *item) {
-    childItems.insert(pos, item);
-}
+//    return ret;
+//}
 
-void FolderItem::appendChild(ModelItem *item) {
-    childItems.append(item);
-}
+//bool ItemInterface::insertChildren(int position, int count, int columns) {
+//    if (position < 0 || position > childItems.size())
+//        return false;
+
+//    for (int row = 0; row < count; ++row) {
+//        QVector<QVariant> data(columns);
+//        ItemInterface * item = new ItemInterface(data, this);
+//        childItems.insert(position, item);
+//    }
+
+//    return true;
+//}
 
 bool FolderItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > childItems.size())
@@ -164,23 +145,24 @@ bool FolderItem::removeChildren(int position, int count) {
 }
 
 void FolderItem::dropExpandProceedFlags() {
-    getState() -> unsetProceed();
-    foreach(ModelItem *item, folders -> values()) {
+    unset(proceeded);
+    foreach(ItemInterface * item, folders -> values())
         item -> dropExpandProceedFlags();
-    }
 }
 
-void FolderItem::changeCheckedState(bool checked) {
-    ModelItem::changeCheckedState(checked);
+void FolderItem::updateCheckedState(bool checked) {
+    ItemInterface::updateCheckedState(checked);
 
-    foreach(ModelItem * item, childItems)
-        item -> changeCheckedState(checked);
+    foreach(ItemInterface * item, childItems)
+        item -> updateCheckedState(checked);
 }
 
+void FolderItem::shuffle() { //TODO: test needed
+    qsrand((uint)QTime::currentTime().msec());
+    int n = childItems -> count() - 1;
+    for (int i = 0; i < n; ++i)
+        childItems.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
 
-QHash<QString, ModelItem *> * FolderItem::foldersList() const {
-    return folders;
-}
-int FolderItem::removeFolder(QString name) {
-    return folders -> remove(name);
+    foreach(FolderItem * item, folders.values())
+        item -> shuffle();
 }

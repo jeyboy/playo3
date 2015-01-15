@@ -48,7 +48,7 @@ namespace Playo3 {
 
         inline QString title() const { return _title; }
 
-//            inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !info.isEmpty());}
+        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !info.isEmpty());}
         inline void setInfo(QString newInfo) { _info = newInfo; }
         QStringList getInfo() const;
 

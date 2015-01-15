@@ -2,15 +2,15 @@
 
 using namespace Playo3;
 
-FileItem::FileItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(hash, parent) {
+FileItem::FileItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(parent, hash) {
 }
 
 FileItem::FileItem(QString filePath, ItemInterface * parent)
-    : ItemInterface(filePath, filePath.section('/', -1, -1), parent) {
-    extension = title.section('.', -1, -1);
-    if (extension != title)
-        title = title.section('.', 0, -2);
-    else extension = QString();
+    : ItemInterface(parent, filePath, filePath.section('/', -1, -1)) {
+    _extension = _title.section('.', -1, -1);
+    if (_extension != _title)
+        _title = _title.section('.', 0, -2);
+    else _extension = QString();
 }
 
 FileItem::~FileItem() {
@@ -26,9 +26,9 @@ bool FileItem::isExist() const {
 }
 
 QJsonObject FileItem::toJSON() {
-    QJsonObject root = ModelItem::toJSON();
+    QJsonObject root = ItemInterface::toJSON();
 
-    root["i"] = FILE_ITEM;
+    root[JSON_TYPE_ITEM_TYPE] = FILE_ITEM;
 
     return root;
 }

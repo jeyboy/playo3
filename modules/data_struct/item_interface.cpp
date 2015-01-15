@@ -33,19 +33,6 @@ int ItemInterface::column() const { // ?
     return 0;
 }
 
-bool ItemInterface::insertChildren(int position, int count, int columns) {
-    if (position < 0 || position > childItems.size())
-        return false;
-
-    for (int row = 0; row < count; ++row) {
-        QVector<QVariant> data(columns);
-        ItemInterface * item = new ItemInterface(data, this);
-        childItems.insert(position, item);
-    }
-
-    return true;
-}
-
 bool ItemInterface::insertColumns(int position, int columns) {
     if (position < 0 || position > itemData.size())
         return false;
@@ -55,16 +42,6 @@ bool ItemInterface::insertColumns(int position, int columns) {
 
     foreach (ItemInterface * child, childItems)
         child -> insertColumns(position, columns);
-
-    return true;
-}
-
-bool ItemInterface::removeChildren(int position, int count) {
-    if (position < 0 || position + count > childItems.size())
-        return false;
-
-    for (int row = 0; row < count; ++row)
-        delete childItems.takeAt(position);
 
     return true;
 }
@@ -282,19 +259,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //    }
 
 
-//    void ModelItem::dropExpandProceedFlags() {}
-
-
-//    QHash<QString, ModelItem *> *ModelItem::foldersList() const { return 0; }
-//    int ModelItem::removeFolder(QString) { return -1; }
-
-//    void ModelItem::changeCheckedState(bool checked) {
-//        if (checked)
-//            getState() -> setChecked();
-//        else
-//            getState() -> unsetChecked();
-//    }
-
 //    bool ModelItem::cacheIsPrepared() const {
 //        return titlesCache != 0;
 //    }
@@ -312,14 +276,5 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //    }
 
 //    QList<ModelItem *> * ModelItem::childItemsList() { return 0;}
-
-//    void ModelItem::shuffle() {
-////        if (isFolder()) {
-////            Rand::shuffle(childItemsList());
-
-////            foreach(ModelItem * item, *childItemsList())
-////                item -> shuffle();
-////        }
-//    }
 
 //}
