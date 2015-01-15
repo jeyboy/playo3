@@ -48,7 +48,7 @@ namespace Playo3 {
 
         inline QString title() const { return _title; }
 
-        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !info.isEmpty());}
+        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !_info.isEmpty());}
         inline void setInfo(QString newInfo) { _info = newInfo; }
         QStringList getInfo() const;
 
@@ -61,27 +61,27 @@ namespace Playo3 {
         virtual QJsonObject * toJson() {
             QJsonObject root = QJsonObject();
 
-            root[JSON_TYPE_TITLE] = title;
+            root[JSON_TYPE_TITLE] = _title;
             root[JSON_TYPE_STATE] = saveStateVal();
-            root[JSON_TYPE_PATH] = path;
+            root[JSON_TYPE_PATH] = _path;
 
-            if (!info.isEmpty())
-                root[JSON_TYPE_INFO] = info;
+            if (!_info.isEmpty())
+                root[JSON_TYPE_INFO] = _info;
 
-            if (bpm != 0)
-                root[JSON_TYPE_BPM] = bpm;
+            if (_bpm != 0)
+                root[JSON_TYPE_BPM] = _bpm;
 
-            if (size != -1)
-                root[JSON_TYPE_BYTES_SIZE] = size;
+            if (_size != -1)
+                root[JSON_TYPE_BYTES_SIZE] = _size;
 
-            if (genreID != -1)
-                root[JSON_TYPE_GENRE_ID] = genreID;
+            if (_genreID != -1)
+                root[JSON_TYPE_GENRE_ID] = _genreID;
 
-            if (!duration.isEmpty())
-                root[JSON_TYPE_DURATION] = duration;
+            if (!_duration.isEmpty())
+                root[JSON_TYPE_DURATION] = _duration;
 
-            if (!extension.isNull())
-                root[JSON_TYPE_EXTENSION] = extension;
+            if (!_extension.isNull())
+                root[JSON_TYPE_EXTENSION] = _extension;
 
             return root;
         }

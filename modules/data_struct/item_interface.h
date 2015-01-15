@@ -64,7 +64,7 @@ namespace Playo3 {
         bool removeColumns(int position, int columns);
 
         inline virtual void updateCheckedState(bool setChecked) {
-            setChecked ? set(checked) : unset(checked);
+            if (setChecked) set(checked); else unset(checked);
         }
     private:
         QVector<QVariant> itemData;
