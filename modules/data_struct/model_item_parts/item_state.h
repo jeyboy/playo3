@@ -3,6 +3,7 @@
 
 namespace Playo3 {
     #define DEFAULT_MODEL_ITEM_STATE (ItemState::checked | ItemState::new_item | ItemState::unprocessed)
+    #define DEFAULT_MODEL_CONTAINER_STATE (ItemState::checked | ItemState::expanded)
 
 //    #define STATE_UNPROCESSED 256
 //    #define STATE_DEFAULT 128

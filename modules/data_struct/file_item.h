@@ -1,26 +1,27 @@
 #ifndef FILE_ITEM_H
 #define FILE_ITEM_H
 
-#include <QFile>
-#include <QJsonObject>
+//#include <QFile>
+//#include <QJsonObject>
 
-#include "model_item.h"
+#include "item_interface.h"
 
-class FileItem : public ModelItem {
-public:
-    FileItem(QJsonObject *hash, ModelItem *parent = 0);
-    FileItem(const QString filepath, ModelItem *parent = 0, int genre_id = -1, QString itemDuration = "", int itemSize = -1, QString itemInfo = "", int init_state = STATE_DEFAULT | STATE_CHECKED);
-    ~FileItem();
+namespace Playo3 {
+    class FileItem : public ItemInterface {
+    public:
+        FileItem(QJsonObject * hash, ModelItem * parent = 0);
+        FileItem(const QString filepath, ModelItem * parent = 0);
+        ~FileItem();
 
-    bool removePhysicalObject();
+        bool removePhysicalObject();
 
-    bool isExist() const;
+        bool isExist() const;
 
-    QJsonObject toJSON();
-protected:
-    QString fileExtension(QString filePath);
-    QString fileTitle(QString filePath);
-};
-
+        QJsonObject toJSON();
+    protected:
+        QString fileExtension(QString filePath);
+        QString fileTitle(QString filePath);
+    };
+}
 
 #endif // FILE_ITEM_H

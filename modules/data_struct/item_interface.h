@@ -28,10 +28,11 @@ namespace Playo3 {
         explicit ItemInterface(const QVector<QVariant> &data, ItemInterface * parent = 0);
         ItemInterface(ItemInterface * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemInterface(ItemInterface * parent, QJsonObject * hash);
-        ItemInterface(ItemInterface * parent, QString path, QString title, QString extension, int size);
-//        ItemInterface(const ItemFields * settings, ItemInterface * parent = 0); // ?
+        ItemInterface(ItemInterface * parent, QString path, QString title = "", QString extension = "", int size = -1);
 
         virtual ~ItemInterface();
+
+        virtual bool removePhysicalObject() = 0;
 
         int column() const;
         int row() const;
@@ -60,7 +61,7 @@ namespace Playo3 {
         bool removeColumns(int position, int columns);
 
         inline ItemInterface * child(int number) { return childItems.value(number); }
-        inline int childCount() const { return childItems.count(); }
+        virtual inline int childCount() const { return childItems.count(); }
         bool insertChildren(int position, int count, int columns);
         bool removeChildren(int position, int count);
     private:
@@ -90,10 +91,6 @@ namespace Playo3 {
     ////            virtual void appendChild(BaseItem *child);  // stub
     ////            virtual bool removeChildren(int position, int count);  // stub
 
-    //            int column() const;
-    //            int row() const;
-
-    //            State *getState() const;
     //            void setState(int new_state, bool append_to_library = true);
 
     ////            virtual void dropExpandProceedFlags();  // stub
