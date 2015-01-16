@@ -2,6 +2,7 @@
 #define TREE_VIEW_STYLE_H
 
 #include <QProxyStyle>
+#include <QPainter>
 
 class TreeViewStyle : public QProxyStyle {
 public:

@@ -2,13 +2,12 @@
 
 using namespace Playo3;
 
-ModelInterface::ModelInterface(const QStringList &headers, const QString &data, QObject *parent)
+ModelInterface::ModelInterface(const QStringList & headers, const QString &data, QObject * parent)
     : QAbstractItemModel(parent) {
     QVector<QVariant> rootData;
     foreach (QString header, headers)
         rootData << header;
 
-//    items_count = 0;
     rootItem = new ItemInterface(rootData);
     setupModelData(data.split(QString("\n")), rootItem);
 }
@@ -513,11 +512,4 @@ void ModelInterface::setupModelData(const QStringList &lines, ItemInterface * pa
 
 //    ModelItem * Model::createItem(QString path, ModelItem * parent) {
 //       return (new FileItem(path, parent)) -> toModelItem();
-//    }
-
-//    QString Model::folderName(QFileInfo & info) {
-//        QString name = info.dir().dirName();
-//        if (name.isEmpty())
-//            name = info.dir().path().split('/').first();
-//        return name;
 //    }

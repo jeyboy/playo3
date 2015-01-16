@@ -1,5 +1,6 @@
 #include "deleted_list.h"
-#include <QDebug>
+
+using namespace Playo3;
 
 DeletedList::DeletedList() {
 
@@ -19,12 +20,9 @@ bool DeletedList::containsUID(QVariant uid) {
 }
 
 QJsonArray DeletedList::deletedToJson() {
-    qDebug() << "SAVE " << list;
     return QJsonArray::fromVariantList(list);
 }
 void DeletedList::deletedFromJson(QJsonArray array) {
-    foreach(QJsonValue value, array) {
+    foreach(QJsonValue value, array)
         list.append(value.toVariant());
-    }
-    qDebug() << "LOAD " << list;
 }

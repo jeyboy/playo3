@@ -1,8 +1,9 @@
 #include "list_view.h"
-#include <QDebug>
 
-ListView::ListView(QWidget *parent, CBHash settingsSet, QJsonObject *hash)
-    : View(dynamic_cast<Model *>(new ListModel(hash)), parent, settingsSet) {
+using namespace Playo3;
+
+ListView::ListView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
+    : ViewInterface(dynamic_cast<ModelInterface *>(new ListModel(hash)), parent, settings) {
 }
 
 ListView::~ListView() {

@@ -1,30 +1,30 @@
-#ifndef SOUNDCLOUD_MODEL_H
-#define SOUNDCLOUD_MODEL_H
+//#ifndef SOUNDCLOUD_MODEL_H
+//#define SOUNDCLOUD_MODEL_H
 
-#include "web/socials/soundcloud_api.h"
-#include "model/web/web_model.h"
-#include "media/media_player/utils/duration.h"
+//#include "web/socials/soundcloud_api.h"
+//#include "model/web/web_model.h"
+//#include "media/media_player/utils/duration.h"
 
-class SoundcloudModel : public WebModel {
-    Q_OBJECT
+//class SoundcloudModel : public WebModel {
+//    Q_OBJECT
 
-public:
-    SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject *parent = 0);
-    ~SoundcloudModel();
+//public:
+//    SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject *parent = 0);
+//    ~SoundcloudModel();
 
-    WebApi * getApi() { return SoundcloudApi::instance(); }
-public slots:
-    void refresh();
+//    WebApi * getApi() { return SoundcloudApi::instance(); }
+//public slots:
+//    void refresh();
 
-protected slots:
-    void proceedResponse(QJsonObject &);
-    void proceedResponse(QJsonArray &, ModelItem *, QHash<ModelItem*, QString> &);
+//protected slots:
+//    void proceedResponse(QJsonObject &);
+//    void proceedResponse(QJsonArray &, ModelItem *, QHash<ModelItem*, QString> &);
 
-protected:
-    QModelIndex dropProcession(const QList<QUrl> & list);
+//protected:
+//    QModelIndex dropProcession(const QList<QUrl> & list);
 
-    void filesRoutine(ModelItem * index, QFileInfo currFile);
-    void filesRoutine(ModelItem * index, QList<QUrl> list);
-};
+//    void filesRoutine(ModelItem * index, QFileInfo currFile);
+//    void filesRoutine(ModelItem * index, QList<QUrl> list);
+//};
 
-#endif // SOUNDCLOUD_MODEL_H
+//#endif // SOUNDCLOUD_MODEL_H

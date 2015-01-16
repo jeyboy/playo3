@@ -61,10 +61,10 @@ namespace Playo3 {
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
-        bool execItem(ModelItem * item, bool paused = false);
-        virtual void removeItem(ModelItem * item);
+        bool execItem(ItemInterface * item, bool paused = false);
+        virtual void removeItem(ItemInterface * item);
 
-        inline int itemsCount() const { return mdl -> itemsCount(); }
+//        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void downloadSelected(QString savePath, bool markAsLiked = false);
         void copyItemsFrom(ViewInterface * otherView);
@@ -84,13 +84,13 @@ namespace Playo3 {
         void modelUpdate();
 
     protected:
-        ModelItem * removeCandidate(ModelItem * item);
+        ItemInterface * removeCandidate(ItemInterface * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex &index) const;
         void resizeEvent(QResizeEvent *);
         bool prepareDownloading(QString path);
 
-        void downloadItem(ModelItem * item, QString savePath);
-        void downloadBranch(ModelItem * rootNode, QString savePath);
+        void downloadItem(ItemInterface * item, QString savePath);
+        void downloadBranch(ItemInterface * rootNode, QString savePath);
 
 
         QModelIndex * activeItem(bool next = true);

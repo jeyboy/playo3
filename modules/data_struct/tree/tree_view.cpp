@@ -1,11 +1,12 @@
 #include "tree_view.h"
-#include <QDebug>
 
-TreeView::TreeView(QWidget *parent, CBHash settingsSet, QJsonObject *hash)
-    : View(dynamic_cast<Model *>(new TreeModel(hash)), parent, settingsSet) {
+using namespace Playo3;
+
+TreeView::TreeView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
+    : ViewInterface(dynamic_cast<ModelInterface *>(new TreeModel(hash)), parent, settings) {
 }
 
-TreeView::TreeView(Model * newModel, QWidget *parent, CBHash settingsSet) : View(newModel, parent, settingsSet) {
+TreeView::TreeView(ModelInterface * newModel, QWidget * parent, ViewSettings settings) : ViewInterface(newModel, parent, settings) {
 
 }
 

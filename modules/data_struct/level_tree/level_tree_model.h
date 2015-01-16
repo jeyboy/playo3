@@ -8,7 +8,7 @@ namespace Playo3 {
         Q_OBJECT
 
     public:
-        LevelTreeModel(QJsonObject * hash = 0, QObject *parent = 0);
+        LevelTreeModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~LevelTreeModel();
 
     protected:

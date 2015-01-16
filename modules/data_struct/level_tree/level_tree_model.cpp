@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-LevelTreeModel::LevelTreeModel(QJsonObject * hash, QObject *parent) : ModelInterface(hash, parent) {
+LevelTreeModel::LevelTreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash, parent) {
 
 }
 
@@ -11,60 +11,60 @@ LevelTreeModel::~LevelTreeModel() {
 }
 
 QModelIndex LevelTreeModel::dropProcession(const QList<QUrl> & list) {
-    QFileInfo file = QFileInfo(list.first().toLocalFile());
-    QString fName;
+//    QFileInfo file = QFileInfo(list.first().toLocalFile());
+//    QString fName;
 
-    if (file.isDir())
-        fName = file.fileName();
-    else
-        fName = folderName(file);
+//    if (file.isDir())
+//        fName = file.fileName();
+//    else
+//        fName = Extensions::folderName(file);
 
-    ItemInterface * newIndex = addFolder("", fName, rootItem);
+//    ItemInterface * newIndex = addFolder("", fName, rootItem);
 
-    filesRoutine(newIndex, list);
-    if (newIndex -> childCount() == 0) {
-        removeFolderPrebuild(newIndex);
-        return QModelIndex();
-    }
-    else return index(newIndex);
+//    filesRoutine(newIndex, list);
+//    if (newIndex -> childCount() == 0) {
+//        removeFolderPrebuild(newIndex);
+//        return QModelIndex();
+//    }
+//    else return index(newIndex);
 }
 
 void LevelTreeModel::filesRoutine(ItemInterface * index, QFileInfo currFile) {
-    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
-    ItemInterface * newFolder;
-    bool already_exist;
+//    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+//    ItemInterface * newFolder;
+//    bool already_exist;
 
-    foreach(QFileInfo file, folderList) {
-        already_exist = isFolderExist(file.fileName(), rootItem);
-        newFolder = addFolder("", file.fileName(), rootItem);
-        filesRoutine(newFolder, file);
-        if (!already_exist && newFolder -> childCount() == 0)
-            removeFolderPrebuild(newFolder);
-    }
+//    foreach(QFileInfo file, folderList) {
+//        already_exist = isFolderExist(file.fileName(), rootItem);
+//        newFolder = addFolder("", file.fileName(), rootItem);
+//        filesRoutine(newFolder, file);
+//        if (!already_exist && newFolder -> childCount() == 0)
+//            removeFolderPrebuild(newFolder);
+//    }
 
 
-    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+//    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
-    foreach(QFileInfo file, fileList) {
-        appendRow(createItem(file.filePath(), index));
-    }
+//    foreach(QFileInfo file, fileList) {
+//        appendRow(createItem(file.filePath(), index));
+//    }
 }
 
 void LevelTreeModel::filesRoutine(ItemInterface * index, QList<QUrl> list) {
-    ItemInterface * newFolder;
-    bool already_exist;
+//    ItemInterface * newFolder;
+//    bool already_exist;
 
-    foreach(QUrl url, list) {
-        QFileInfo file = QFileInfo(url.toLocalFile());
-        if (file.isDir()) {
-            already_exist = isFolderExist(file.fileName(), rootItem);
-            newFolder = addFolder("", file.fileName(), rootItem);
-            filesRoutine(newFolder, file);
-            if (!already_exist && newFolder -> childCount() == 0)
-                removeFolderPrebuild(newFolder);
-        } else {
-            if (Extensions::instance() -> respondToExtension(file.suffix()))
-                appendRow(createItem(file.filePath(), index));
-        }
-    }
+//    foreach(QUrl url, list) {
+//        QFileInfo file = QFileInfo(url.toLocalFile());
+//        if (file.isDir()) {
+//            already_exist = isFolderExist(file.fileName(), rootItem);
+//            newFolder = addFolder("", file.fileName(), rootItem);
+//            filesRoutine(newFolder, file);
+//            if (!already_exist && newFolder -> childCount() == 0)
+//                removeFolderPrebuild(newFolder);
+//        } else {
+//            if (Extensions::instance() -> respondToExtension(file.suffix()))
+//                appendRow(createItem(file.filePath(), index));
+//        }
+//    }
 }

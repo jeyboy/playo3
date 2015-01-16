@@ -1,5 +1,7 @@
 #include "extensions.h"
 
+using namespace Playo3;
+
 Extensions *Extensions::self = 0;
 
 Extensions *Extensions::instance() {

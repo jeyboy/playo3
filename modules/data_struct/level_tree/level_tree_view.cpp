@@ -1,7 +1,9 @@
 #include "level_tree_view.h"
 
-LevelTreeView::LevelTreeView(QWidget * parent, CBHash settingsSet, QJsonObject * hash)
-    : View(dynamic_cast<ModelInterface *>(new LevelTreeModel(hash)), parent, settingsSet) {
+using namespace Playo3;
+
+LevelTreeView::LevelTreeView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
+    : ViewInterface(dynamic_cast<ModelInterface *>(new LevelTreeModel(hash)), parent, settings) {
 }
 
 LevelTreeView::~LevelTreeView() {

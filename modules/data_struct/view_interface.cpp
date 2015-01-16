@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-ViewInterface::ViewInterface(Model * newModel, QWidget *parent, ViewSettings settingsSet)
+ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings settingsSet)
     : QTreeView(parent), settings(settingsSet), mdl(newModel)  {
 
     setIndentation(12);

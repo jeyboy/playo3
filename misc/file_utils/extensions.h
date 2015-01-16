@@ -8,6 +8,13 @@
 namespace Playo3 {
     class Extensions {
     public:
+        static inline QString folderName(QFileInfo & info) {
+            QString name = info.dir().dirName();
+            if (name.isEmpty())
+                name = info.dir().path().split('/').first();
+            return name;
+        }
+
         ~Extensions() {
             ext -> clear();
             ext -> write("active", activeFilterName());
