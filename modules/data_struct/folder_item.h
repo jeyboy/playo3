@@ -25,7 +25,7 @@ namespace Playo3 {
         virtual inline int childCount() const { return childItems.count(); }
         inline void appendChild(ItemInterface * child) { childItems.append(child); }
         inline bool insertChildren(int pos, ItemInterface * item) { childItems.insert(pos, item); }
-//        inline bool insertChildren(int position, int count, int columns) { childItems.insert(pos, item); }
+        inline bool insertChildren(int position, int count, int columns);
         bool removeChildren(int position, int count);
 
         void shuffle();
@@ -36,7 +36,7 @@ namespace Playo3 {
         void updateCheckedState(bool checked);
 
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }
-        inline int undeclareFolder(QString name) { return folders -> remove(name); }
+        inline int undeclareFolder(QString name) { return folders.remove(name); }
     protected:
         QHash<QString, FolderItem *> folders;
         QList<ItemInterface *> childItems;

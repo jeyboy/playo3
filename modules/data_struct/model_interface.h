@@ -3,14 +3,13 @@
 
 #include <qabstractitemmodel.h>
 #include <qvariant.h>
-#include "item_interface.h"
 #include "misc/file_utils/extensions.h"
+#include "item_index.h"
 
 namespace Playo3 {
     class ModelInterface : public QAbstractItemModel {
         Q_OBJECT
     public:
-        ModelInterface(const QStringList & headers, const QString & data, QObject * parent);
         ModelInterface(QJsonObject * hash, QObject * parent);
         ~ModelInterface();
 
@@ -36,14 +35,10 @@ namespace Playo3 {
     signals:
         itemsCountChanged(int change);
     protected:
-        void setupModelData(const QStringList & lines, ItemInterface * parent);
         ItemInterface * getItem(const QModelIndex & index) const;
-        //template<class T> T * getItem(const QModelIndex & index) const {
-        //    if (index.isValid()) {
-        //        return dynamic_cast<T *>(index.internalPointer());
-        //    }
-        //    return dynamic_cast<T *>(rootItem);
-        //}
+        template<class T> T * getItem(const QModelIndex & index) const {
+            return dynamic_cast<T *>(getItem(index));
+        }
 
         ItemInterface * rootItem;
     };

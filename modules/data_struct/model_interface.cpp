@@ -2,16 +2,6 @@
 
 using namespace Playo3;
 
-ModelInterface::ModelInterface(const QStringList & headers, const QString &data, QObject * parent)
-    : QAbstractItemModel(parent) {
-    QVector<QVariant> rootData;
-    foreach (QString header, headers)
-        rootData << header;
-
-    rootItem = new ItemInterface(rootData);
-    setupModelData(data.split(QString("\n")), rootItem);
-}
-
 ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) {
     if (hash != 0) {
         rootItem = new FolderItem(hash);
@@ -30,7 +20,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-//    ItemInterface * item;
+    ItemInterface * item;
 
     switch(role) {
         case Qt::DisplayRole: {
@@ -133,7 +123,7 @@ QModelIndex ModelInterface::index(int row, int column, const QModelIndex &parent
     if (parent.isValid() && parent.column() != 0) // !hasIndex(row, column, parent)
         return QModelIndex();
 
-    ItemInterface * parentItem = getItem(parent);
+    FolderItem * parentItem = getItem<FolderItem>(parent);
     ItemInterface * childItem = parentItem -> child(row);
 
     if (childItem)
@@ -164,12 +154,14 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
 //}
 
 bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
-    ItemInterface * parentItem = getItem(parent);
-    bool success;
+    FolderItem * parentItem = getItem<FolderItem>(parent);
+    bool success = parentItem != 0;
 
-    beginInsertRows(parent, position, position + rows - 1);
-    success = parentItem -> insertChildren(position, rows, rootItem -> columnCount());
-    endInsertRows();
+    if (success) {
+        beginInsertRows(parent, position, position + rows - 1);
+        success = parentItem -> insertChildren(position, rows, rootItem -> columnCount());
+        endInsertRows();
+    }
 
     return success;
 }
@@ -184,7 +176,7 @@ QModelIndex ModelInterface::parent(const QModelIndex & index) const {
     if (parentItem == rootItem)
         return QModelIndex();
 
-    return createIndex(parentItem -> childNumber() /*row*/, 0, parentItem);
+    return createIndex(parentItem -> row(), 0, parentItem);
 }
 
 bool ModelInterface::removeColumns(int position, int columns, const QModelIndex &parent) {
@@ -201,12 +193,14 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
 }
 
 bool ModelInterface::removeRows(int position, int rows, const QModelIndex &parent) {
-    ItemInterface * parentItem = getItem(parent);
-    bool success = true;
+    FolderItem * parentItem = getItem<FolderItem>(parent);
+    bool success = parentItem != 0;
 
-    beginRemoveRows(parent, position, position + rows - 1);
-    success = parentItem -> removeChildren(position, rows);
-    endRemoveRows();
+    if (success) {
+        beginRemoveRows(parent, position, position + rows - 1);
+        success = parentItem -> removeChildren(position, rows);
+        endRemoveRows();
+    }
 
     return success;
 }
@@ -215,9 +209,8 @@ int ModelInterface::rowCount(const QModelIndex &parent) const {
     //        if (parent.column() > 0)
     //            return 0;
 
-    ItemInterface * parentItem = getItem(parent);
-
-    return parentItem -> childCount();
+    FolderItem * parentItem = getItem<FolderItem>(parent);
+    return parentItem ? parentItem -> childCount() : 0;
 }
 
 bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, int role) {
@@ -272,59 +265,6 @@ bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, con
 
     return result;
 }
-
-void ModelInterface::setupModelData(const QStringList &lines, ItemInterface * parent) {
-    QList<ItemInterface *> parents;
-    QList<int> indentations;
-    parents << parent;
-    indentations << 0;
-
-    int number = 0;
-
-    while (number < lines.count()) {
-        int position = 0;
-        while (position < lines[number].length()) {
-            if (lines[number].mid(position, 1) != " ")
-                break;
-            ++position;
-        }
-
-        QString lineData = lines[number].mid(position).trimmed();
-
-        if (!lineData.isEmpty()) {
-            // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
-            QVector<QVariant> columnData;
-            for (int column = 0; column < columnStrings.count(); ++column)
-                columnData << columnStrings[column];
-
-            if (position > indentations.last()) {
-                // The last child of the current parent is now the new parent
-                // unless the current parent has no children.
-
-                if (parents.last()->childCount() > 0) {
-                    parents << parents.last()->child(parents.last()->childCount()-1);
-                    indentations << position;
-                }
-            } else {
-                while (position < indentations.last() && parents.count() > 0) {
-                    parents.pop_back();
-                    indentations.pop_back();
-                }
-            }
-
-            // Append a new item to the current parent's list of children.
-            ItemInterface *parent = parents.last();
-            parent->insertChildren(parent->childCount(), 1, rootItem->columnCount());
-            for (int column = 0; column < columnData.size(); ++column)
-                parent->child(parent->childCount() - 1)->setData(column, columnData[column]);
-        }
-
-        ++number;
-    }
-}
-
-
 
 //    bool Model::removeRow(int row, const QModelIndex &parentIndex) {
 //        int removeCount = 1;

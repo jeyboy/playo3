@@ -5,11 +5,11 @@
 #include <qvariant.h>
 #include <qvector.h>
 #include <qurl>
+#include <qdesktopservices.h>
 
 //#include <qjsonobject.h>
 //#include <qfile>
 //#include <qdir>
-//#include <qdesktopservices.h>
 
 //#include "misc/filename_conversions.h"
 
