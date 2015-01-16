@@ -35,17 +35,17 @@ namespace Playo3 {
         ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings settins);
         ~ViewInterface();
 
-        virtual QJsonObject toJSON();
+        virtual QJsonObject toJson();
 
         void scrollToActive();
 
         void activatePrev();
         void activateNext();
 
-        inline bool isRemoveFileWithItem() const { return sttgs.deleteFile; }
-        inline bool isPlaylist() const { return sttgs.playlist; }
-        inline bool isCommon() const { return sttgs.common; }
-        inline bool isEditable() const { return sttgs.type < 4 && !isCommon(); }
+        inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
+        inline bool isPlaylist() const { return sttngs.playlist; }
+        inline bool isCommon() const { return sttngs.common; }
+        inline bool isEditable() const { return sttngs.type < 4 && !isCommon(); }
 
 
         ModelInterface * fromPath(QString path);
@@ -56,8 +56,8 @@ namespace Playo3 {
 
         inline ModelInterface * model() const { return mdl; }
 
-        inline ViewSettings getSettings() const { return sttgs; }
-        inline void setSettings(ViewSettings newSettings) { sttgs = newSettings; }
+        inline ViewSettings getSettings() const { return sttngs; }
+        inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
@@ -106,7 +106,7 @@ namespace Playo3 {
         void mouseMoveEvent(QMouseEvent * event);
 
         ModelInterface * mdl;
-        ViewSettings sttgs;
+        ViewSettings sttngs;
         QPoint dragPoint;
     };
 }

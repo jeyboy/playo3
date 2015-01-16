@@ -32,6 +32,7 @@ namespace Playo3 {
         bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
+        inline QJsonObject toJson() { return rootItem -> toJson(); }
     signals:
         itemsCountChanged(int change);
     protected:

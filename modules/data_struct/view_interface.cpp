@@ -3,7 +3,7 @@
 using namespace Playo3;
 
 ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings settings)
-    : QTreeView(parent), sttgs(settings), mdl(newModel)  {
+    : QTreeView(parent), sttngs(settings), mdl(newModel)  {
 
     setIndentation(12);
     setStyle(new TreeViewStyle);
@@ -65,20 +65,18 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 }
 
 ViewInterface::~ViewInterface() {
-    delete model;
+    delete mdl;
 }
 
-QJsonObject ViewInterface::toJSON() {
-    QJsonObject res = mdl -> getItem(rootIndex()) -> toJSON();
+QJsonObject ViewInterface::toJson() {
+    QJsonObject res = mdl -> toJson();
 
     QJsonObject set = QJsonObject();
-    foreach(QString c, settings.keys()) {
-        set[c] = settings.value(c);
-    }
+    sttngs.toJson(set);
 
     res["p"] = QString();
     res["set"] = set;
-    res["l"] = model -> itemsCount();
+//    res["l"] = mdl -> itemsCount();
     return res;
 }
 

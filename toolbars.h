@@ -6,7 +6,7 @@
 #include <qmenu.h>
 
 #include "media/player.h"
-#include "misc/data_store.h"
+#include "misc/file_utils/data_store.h"
 
 //#include "web/socials/vk_api.h"
 //#include "web/socials/soundcloud_api.h"

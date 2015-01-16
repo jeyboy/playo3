@@ -58,32 +58,32 @@ namespace Playo3 {
         inline void setPath(QString newPath) { _path = newPath;}
 
         inline virtual QString toUID() { return ""; }
-        virtual QJsonObject * toJson() { //TODO: add clearing aftre save
-//            QJsonObject * root = new QJsonObject();
+        virtual QJsonObject toJson() {
+            QJsonObject root = QJsonObject();
 
-//            root[JSON_TYPE_TITLE] = _title;
-//            root[JSON_TYPE_STATE] = saveStateVal();
-//            root[JSON_TYPE_PATH] = _path;
+            root[JSON_TYPE_TITLE] = _title;
+            root[JSON_TYPE_STATE] = saveStateVal();
+            root[JSON_TYPE_PATH] = _path;
 
-//            if (!_info.isEmpty())
-//                root[JSON_TYPE_INFO] = _info;
+            if (!_info.isEmpty())
+                root[JSON_TYPE_INFO] = _info;
 
-//            if (_bpm != 0)
-//                root[JSON_TYPE_BPM] = _bpm;
+            if (_bpm != 0)
+                root[JSON_TYPE_BPM] = _bpm;
 
-//            if (_size != -1)
-//                root[JSON_TYPE_BYTES_SIZE] = _size;
+            if (_size != -1)
+                root[JSON_TYPE_BYTES_SIZE] = _size;
 
-//            if (_genreID != -1)
-//                root[JSON_TYPE_GENRE_ID] = _genreID;
+            if (_genreID != -1)
+                root[JSON_TYPE_GENRE_ID] = _genreID;
 
-//            if (!_duration.isEmpty())
-//                root[JSON_TYPE_DURATION] = _duration;
+            if (!_duration.isEmpty())
+                root[JSON_TYPE_DURATION] = _duration;
 
-//            if (!_extension.isNull())
-//                root[JSON_TYPE_EXTENSION] = _extension;
+            if (!_extension.isNull())
+                root[JSON_TYPE_EXTENSION] = _extension;
 
-//            return root;
+            return root;
         }
 
         virtual QUrl toUrl();
