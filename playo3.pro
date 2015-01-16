@@ -81,8 +81,6 @@ HEADERS  += playo.h \
     modules/controls/tray.h \
     modules/controls/tabber.h \
     modules/controls/tab.h \
-    modules/controls/views/index.h \
-    modules/controls/views/view_types.h \
     modules/controls/json_fields.h \
     modules/controls/toolbar.h \
     modules/controls/toolbarbutton.h \
@@ -106,7 +104,6 @@ HEADERS  += playo.h \
     globalshortcut/qxtglobal.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
-    modules/controls/popa.h \
     modules/controls/slider_style.h \
     modules/controls/spectrum.h \
     modules/controls/dockbar.h \
