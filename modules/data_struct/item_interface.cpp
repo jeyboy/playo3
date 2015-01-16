@@ -23,6 +23,22 @@ ItemInterface::~ItemInterface() {
 
 }
 
+QString ItemInterface::fullPath() const {
+    ItemInterface * curr = parentItem;
+    QString path_buff = _path;
+
+    while(curr != 0 && !curr -> _path.isEmpty()) {
+        path_buff = curr -> _path + '/' + path_buff;
+        curr = curr -> parentItem;
+    }
+
+#ifdef Q_OS_LINUX
+    path_buff = '/' + path_buff;
+#endif
+
+    return path_buff;
+}
+
 int ItemInterface::row() const {
     if (parentItem)
         return ((FolderItem *)parentItem) -> childRow(const_cast<ItemInterface *>(this));

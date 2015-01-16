@@ -73,8 +73,8 @@ namespace Playo3 {
     public slots:
         void shuffle();
         void updateSelection(QModelIndex & candidate);
-        void setHeaderText(QString);
-        void showMessage(QString);
+//        void setHeaderText(QString);
+//        void showMessage(QString);
 
     protected slots:
         inline void onDoubleClick(const QModelIndex & index) { execIndex(index); }
@@ -83,7 +83,7 @@ namespace Playo3 {
 
         void download();
         void downloadAll();
-        void modelUpdate();
+//        void modelUpdate();
 
     protected:
 //        ItemInterface * removeCandidate(ItemInterface * item);

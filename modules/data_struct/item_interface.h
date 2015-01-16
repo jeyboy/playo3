@@ -31,6 +31,8 @@ namespace Playo3 {
 
         virtual ~ItemInterface();
 
+        QString fullPath() const;
+
         void openLocation();
         virtual bool removePhysicalObject() = 0;
 
@@ -46,9 +48,6 @@ namespace Playo3 {
             bool showBatch = Settings::instance() -> isCheckboxShow();
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
-
-        QString downloadTitle() const;
-        QString fullPath() const;
 
         //            BaseItem * toBaseItem();
         inline QString toPath() const { return parentItem ? parentItem -> toPath() + " " + QString::number(row()) : ""; }

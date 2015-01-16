@@ -5,8 +5,8 @@
 #include <QHash>
 #include <QPixmapCache>
 #include <QFileIconProvider>
-//#include <QStyle>
-//#include <QApplication>
+#include <QStyle>
+#include <QApplication>
 
 namespace Playo3 {
     class IconProvider {

@@ -6,6 +6,7 @@
 #include "item_state.h"
 #include "json_fields.h"
 #include "misc/settings.h"
+#include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
     #define TITLEID Qt::UserRole - 1
@@ -99,6 +100,17 @@ namespace Playo3 {
         }
 
         virtual QUrl toUrl();
+
+        QString downloadTitle() const {
+            QString ret = filenameFilter(_title);
+
+            if (!_extension.isEmpty())
+                ret = ret + '.' + _extension;
+
+            return ret;
+        }
+
+        //TODO: add prepare titles method
 
     protected:
         QString _path, _title, _extension, _duration, _info;

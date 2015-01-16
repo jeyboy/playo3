@@ -154,18 +154,18 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
 ////    emit dataChanged(parent, parent);
 //}
 
-bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
-    FolderItem * parentItem = getItem<FolderItem>(parent);
-    bool success = parentItem != 0;
+//bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
+//    FolderItem * parentItem = getItem<FolderItem>(parent);
+//    bool success = parentItem != 0;
 
-    if (success) {
-        beginInsertRows(parent, position, position + rows - 1);
-        success = parentItem -> insertChildren(position, rows, rootItem -> columnCount());
-        endInsertRows();
-    }
+//    if (success) {
+//        beginInsertRows(parent, position, position + rows - 1);
+//        success = parentItem -> insertChildren(position, rows, rootItem -> columnCount());
+//        endInsertRows();
+//    }
 
-    return success;
-}
+//    return success;
+//}
 
 QModelIndex ModelInterface::parent(const QModelIndex & index) const {
     if (!index.isValid())

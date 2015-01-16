@@ -121,18 +121,18 @@ QJsonObject FolderItem::toJSON() {
 //    return ret;
 //}
 
-bool FolderItem::insertChildren(int position, int count, int columns) {
-    if (position < 0 || position > childItems.size())
-        return false;
+//bool FolderItem::insertChildren(int position, int count, int columns) {
+//    if (position < 0 || position > childItems.size())
+//        return false;
 
-    for (int row = 0; row < count; ++row) {
-        QVector<QVariant> data(columns);
-        ItemInterface * item = new ItemInterface(data, this);
-        childItems.insert(position, item);
-    }
+//    for (int row = 0; row < count; ++row) {
+//        QVector<QVariant> data(columns);
+//        ItemInterface * item = new ItemInterface(data, this);
+//        childItems.insert(position, item);
+//    }
 
-    return true;
-}
+//    return true;
+//}
 
 bool FolderItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > childItems.size())
