@@ -32,16 +32,18 @@ namespace Playo3 {
         bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
+        ItemInterface * getItem(const QModelIndex & index) const;
+
+        void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
     signals:
         itemsCountChanged(int change);
     protected:
-        ItemInterface * getItem(const QModelIndex & index) const;
         template<class T> T * getItem(const QModelIndex & index) const {
             return dynamic_cast<T *>(getItem(index));
         }
 
-        ItemInterface * rootItem;
+        FolderItem * rootItem;
     };
 
     //        ModelItems::ModelItem * buildPath(QString path);

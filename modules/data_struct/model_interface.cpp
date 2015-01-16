@@ -266,6 +266,12 @@ bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, con
     return result;
 }
 
+void ModelInterface::shuffle() {
+    beginResetModel();
+    rootItem -> shuffle();
+    endResetModel();
+}
+
 //    bool Model::removeRow(int row, const QModelIndex &parentIndex) {
 //        int removeCount = 1;
 //        ModelItem * parentItem = getItem(parentIndex);

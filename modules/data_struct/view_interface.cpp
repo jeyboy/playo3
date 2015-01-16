@@ -2,8 +2,8 @@
 
 using namespace Playo3;
 
-ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings settings)
-    : QTreeView(parent), sttngs(settings), mdl(newModel)  {
+ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
+    : QTreeView(parent), mdl(newModel), sttngs(settings)  {
 
     setIndentation(12);
     setStyle(new TreeViewStyle);
@@ -86,7 +86,7 @@ void ViewInterface::scrollToActive() {
 //    }
 }
 
-void ViewInterface::proceedPrev() {
+void ViewInterface::prevItem() {
 //    ModelItem * item = activeItem(false);
 //    if (item == 0) return;
 
@@ -94,7 +94,7 @@ void ViewInterface::proceedPrev() {
 //    execItem(item);
 }
 
-void ViewInterface::proceedNext() {
+void ViewInterface::nextItem() {
 //    ModelItem * item = activeItem();
 //    if (item == 0) return;
 
@@ -134,7 +134,11 @@ QModelIndex ViewInterface::fromPath(QString path) { //TODO: rewrite
 //    }
 //}
 
-bool ViewInterface::execItem(QModelIndex * item) { //TODO: rewrite
+bool ViewInterface::execIndex(const QModelIndex & item) { //TODO: rewrite
+//    ItemInterface * item = mdl -> getItem(index);
+
+//    if (!item -> isContainer())
+
 //    if (item) {
 //        if (Settings::instance() -> isSpoilOnActivation())
 //            scrollTo(model -> index(item));
@@ -150,7 +154,7 @@ bool ViewInterface::execItem(QModelIndex * item) { //TODO: rewrite
 //    return false;
 }
 
-QModelIndex ViewInterface::removeCandidate(QModelIndex item) {
+//QModelIndex ViewInterface::removeCandidate(QModelIndex item) {
 //    ModelItem * parent = item -> parent();
 
 //    while(parent -> childCount() == 1 && parent -> parent() != 0) {
@@ -159,9 +163,9 @@ QModelIndex ViewInterface::removeCandidate(QModelIndex item) {
 //    }
 
 //    return item;
-}
+//}
 
-void ViewInterface::removeItem(QModelIndex item) { //TODO: rewrite
+void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
 //    Library::instance() -> removeRemoteItem(item);
 //    item = removeCandidate(item);
 //    QModelIndex modelIndex = model -> index(item);
@@ -226,8 +230,7 @@ void ViewInterface::removeItem(QModelIndex item) { //TODO: rewrite
 //}
 
 void ViewInterface::shuffle() {
-    getModel() -> root() -> shuffle();
-    getModel() -> refresh();
+    mdl -> shuffle();
 }
 
 void ViewInterface::updateSelection(QModelIndex & candidate) { //TODO: rewrite
@@ -244,13 +247,6 @@ void ViewInterface::updateSelection(QModelIndex & candidate) { //TODO: rewrite
 //            scrollTo(newIndex);
 //        }
     }
-}
-
-void ViewInterface::onDoubleClick(const QModelIndex & index) {
-    ItemInterface * item = mdl -> getItem(index);
-
-    if (!item -> isFolder())
-        execItem(item);
 }
 
 void ViewInterface::showContextMenu(const QPoint & pnt) { // TODO: rewrite
@@ -393,7 +389,7 @@ bool ViewInterface::prepareDownloading(QString path) { //TODO: move to separate 
 //    return true;
 }
 
-void ViewInterface::downloadItem(ModelItem * item, QString savePath) { //TODO: rewrite
+void ViewInterface::downloadItem(const QModelIndex & node, QString savePath) { //TODO: rewrite
 //    QString prepared_path = savePath + item -> getDownloadTitle();
 //    if (QFile::exists(prepared_path)) {
 //        QFile::remove(prepared_path);
@@ -413,7 +409,7 @@ void ViewInterface::downloadItem(ModelItem * item, QString savePath) { //TODO: r
 //    }
 }
 
-void ViewInterface::downloadBranch(QModelIndex * rootNode, QString savePath) { //TODO: rewrite
+void ViewInterface::downloadBranch(const QModelIndex & node, QString savePath) { //TODO: rewrite
 //    prepareDownloading(savePath);
 //    QList<ModelItem *> * children = rootNode -> childItemsList();
 //    ModelItem * item;
@@ -478,7 +474,7 @@ void ViewInterface::copyItemsFrom(ViewInterface * /*otherView*/) {
 /// PROTECTED
 //////////////////////////////////////////////////////
 
-QModelIndex * ViewInterface::activeItem(bool next) { //TODO: rewrite
+QModelIndex ViewInterface::activeItem(bool next) { //TODO: rewrite
 //    ModelItem * item = 0;
 
 //    if (Player::instance() -> currentPlaylist() == this) {
@@ -513,7 +509,19 @@ QModelIndex * ViewInterface::activeItem(bool next) { //TODO: rewrite
 //    return item;
 }
 
-QModelIndex ViewInterface::nextItem(QModelIndex curr) { //TODO: rewrite
+void ViewInterface::toNextItem(QModelIndex & curr) { //TODO: rewrite
+//    QModelIndex index = view->selectionModel()->currentIndex();
+//    QAbstractItemModel *model = view->model();
+//    if (model -> hasChildren(index))
+//        view->expand(index);
+
+//    index = view -> indexBelow(index);
+//    if (index.isValid()) {
+//        view -> setCurrentIndex(index);
+//    } else
+//        statusBar()->showMessage(tr("Next not found"));
+
+
 //    ModelItem * item = curr;
 //    bool first_elem = curr -> parent() == 0 || curr -> isFolder();
 
@@ -541,7 +549,19 @@ QModelIndex ViewInterface::nextItem(QModelIndex curr) { //TODO: rewrite
 //        }
 //    }
 }
-QModelIndex ViewInterface::prevItem(QModelIndex curr) { //TODO: rewrite
+void ViewInterface::toPrevItem(QModelIndex & curr) { //TODO: rewrite
+//    QModelIndex index = view->selectionModel()->currentIndex();
+//    QAbstractItemModel *model = view->model();
+//    if (model -> hasChildren(index))
+//        view->expand(index);
+
+//    index = view -> indexAbove(index);
+//    if (index.isValid()) {
+//        view -> setCurrentIndex(index);
+//    } else
+//        statusBar()->showMessage(tr("Prev not found"));
+
+
 //    ModelItem * item = curr;
 //    bool last_elem = false;
 
@@ -624,10 +644,10 @@ void ViewInterface::mousePressEvent(QMouseEvent * event) {
 }
 
 void ViewInterface::mouseMoveEvent(QMouseEvent * event) {
-    if ((event -> buttons() == Qt::LeftButton) && (dragStartPoint - event -> pos()).manhattanLength() >= 5){
+    if ((event -> buttons() == Qt::LeftButton) && (dragPoint - event -> pos()).manhattanLength() >= 10){
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);
-            QMimeData * mimeData = model -> mimeData(selectedIndexes());
+            QMimeData * mimeData = mdl -> mimeData(selectedIndexes());
             drag -> setPixmap(QPixmap(":drag"));
             drag -> setMimeData(mimeData);
             drag -> exec(Qt::CopyAction, Qt::CopyAction);

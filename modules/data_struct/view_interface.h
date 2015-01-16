@@ -32,7 +32,7 @@ namespace Playo3 {
     class ViewInterface : public QTreeView {
       Q_OBJECT
     public:
-        ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings settins);
+        ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings & settins);
         ~ViewInterface();
 
         virtual QJsonObject toJson();
@@ -45,10 +45,10 @@ namespace Playo3 {
         inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
         inline bool isPlaylist() const { return sttngs.playlist; }
         inline bool isCommon() const { return sttngs.common; }
-        inline bool isEditable() const { return sttngs.type < 4 && !isCommon(); }
+        inline bool isEditable() const { return sttngs.type < vk && !isCommon(); }
 
 
-        ModelInterface * fromPath(QString path);
+        QModelIndex fromPath(QString path);
 
         //template<class T> T * View::getModel() const {
         //    return dynamic_cast<T *>(model);
@@ -61,8 +61,10 @@ namespace Playo3 {
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
-        bool execItem(ItemInterface * item, bool paused = false);
-        virtual void removeItem(ItemInterface * item);
+        void nextItem();
+        void prevItem();
+        bool execIndex(const QModelIndex & index);
+        virtual void removeItem(QModelIndex & index);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
@@ -70,12 +72,12 @@ namespace Playo3 {
         void copyItemsFrom(ViewInterface * otherView);
     public slots:
         void shuffle();
-        void updateSelection(QModelIndex candidate);
+        void updateSelection(QModelIndex & candidate);
         void setHeaderText(QString);
         void showMessage(QString);
 
     protected slots:
-        void onDoubleClick(const QModelIndex &index);
+        inline void onDoubleClick(const QModelIndex & index) { execIndex(index); }
         void showContextMenu(const QPoint &);
         void openLocation();
 
@@ -84,22 +86,22 @@ namespace Playo3 {
         void modelUpdate();
 
     protected:
-        ItemInterface * removeCandidate(ItemInterface * item);
-        void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex &index) const;
+//        ItemInterface * removeCandidate(ItemInterface * item);
+        void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const;
         void resizeEvent(QResizeEvent *);
         bool prepareDownloading(QString path);
 
-        void downloadItem(ItemInterface * item, QString savePath);
-        void downloadBranch(ItemInterface * rootNode, QString savePath);
+        void downloadItem(const QModelIndex & item, QString savePath);
+        void downloadBranch(const QModelIndex & node, QString savePath);
 
 
-        QModelIndex * activeItem(bool next = true);
-        QModelIndex * nextItem(QModelIndex * curr);
-        QModelIndex * prevItem(QModelIndex * curr);
+        QModelIndex activeItem(bool next = true);
+        void toNextItem(QModelIndex & curr);
+        void toPrevItem(QModelIndex & curr);
 
         void dragEnterEvent(QDragEnterEvent * event);
         void dragMoveEvent(QDragMoveEvent * event);
-        virtual void dropEvent(QDropEvent  *event);
+        virtual void dropEvent(QDropEvent  * event);
 
         void keyPressEvent(QKeyEvent * event);
         void mousePressEvent(QMouseEvent * event);
