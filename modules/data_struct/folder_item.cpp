@@ -4,13 +4,13 @@
 using namespace Playo3;
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : ItemInterface(initState) {
+FolderItem::FolderItem(int initState) : ItemInterface(0, initState) {
 
 }
 
 FolderItem::FolderItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(parent, hash), inBranchCount(hash -> value(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
     if (parent != 0)
-        ((FolderItem)parent) -> declareFolder(title, this);
+        ((FolderItem *)parent) -> declareFolder(_title, this);
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> value(JSON_TYPE_CHILDS).toArray();
@@ -56,7 +56,7 @@ FolderItem::FolderItem(const QString folderPath, QString folderTitle, ItemInterf
         _title = folderPath;
 
     if (parent != 0)
-        ((FolderItem)parent) -> declareFolder(_title, this);
+        ((FolderItem *)parent) -> declareFolder(_title, this);
 }
 
 FolderItem::~FolderItem() {
@@ -66,7 +66,7 @@ FolderItem::~FolderItem() {
 bool FolderItem::removePhysicalObject() {
     bool res = true;
 
-    foreach(ItemInterface * item, * childItems) {
+    foreach(ItemInterface * item, childItems) {
         res &= item -> removePhysicalObject();
     }
 
@@ -85,7 +85,7 @@ bool FolderItem::isExist() const {
 }
 
 QJsonObject FolderItem::toJSON() {
-    QJsonObject root = ItemInterface::toJSON();
+    QJsonObject root = ItemInterface::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = FOLDER_ITEM;
 
@@ -94,7 +94,7 @@ QJsonObject FolderItem::toJSON() {
 
         QJsonArray ar = QJsonArray(); // TODO: rewrite on iteration through ++
         for(int i = 0; i < childItems.length(); i++)
-            ar.append(childItems.at(i) -> toJSON());
+            ar.append(childItems.at(i) -> toJson());
 
         root[JSON_TYPE_CHILDS] = ar;
     }
@@ -146,7 +146,7 @@ bool FolderItem::removeChildren(int position, int count) {
 
 void FolderItem::dropExpandProceedFlags() {
     unset(proceeded);
-    foreach(ItemInterface * item, folders -> values())
+    foreach(FolderItem * item, folders.values())
         item -> dropExpandProceedFlags();
 }
 
@@ -159,7 +159,8 @@ void FolderItem::updateCheckedState(bool checked) {
 
 void FolderItem::shuffle() { //TODO: test needed
     qsrand((uint)QTime::currentTime().msec());
-    int n = childItems -> count() - 1;
+    int n = childItems.count() - 1;
+
     for (int i = 0; i < n; ++i)
         childItems.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
 

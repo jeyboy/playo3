@@ -9,7 +9,6 @@
 
 //#include <qjsonobject.h>
 //#include <qfile>
-//#include <qdir>
 
 //#include "misc/filename_conversions.h"
 
@@ -28,7 +27,7 @@ namespace Playo3 {
         explicit ItemInterface(const QVector<QVariant> &data, ItemInterface * parent = 0);
         ItemInterface(ItemInterface * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemInterface(ItemInterface * parent, QJsonObject * hash);
-        ItemInterface(ItemInterface * parent, QString path, QString title = "", QString extension = "", int size = -1);
+        ItemInterface(ItemInterface * parent, QString path, QString title = "", QString extension = "", int size = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         virtual ~ItemInterface();
 
@@ -55,13 +54,13 @@ namespace Playo3 {
         inline QString toPath() const { return parentItem ? parentItem -> toPath() + " " + QString::number(row()) : ""; }
 
         inline QVariant data(int column) const { return itemData.value(column); }
-        bool setData(int column, const QVariant &value);
+        bool setData(int column, const QVariant & value);
 
         inline ItemInterface * parent() { return parentItem; }
 
         inline int columnCount() const { return itemData.count(); }
-        bool insertColumns(int position, int columns);
-        bool removeColumns(int position, int columns);
+//        bool insertColumns(int position, int columns);
+//        bool removeColumns(int position, int columns);
 
         inline virtual void updateCheckedState(bool setChecked) {
             if (setChecked) set(checked); else unset(checked);

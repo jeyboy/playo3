@@ -119,7 +119,7 @@ QModelIndex ModelInterface::index(ItemInterface * item) const {
    return createIndex(item -> row(), item -> column(), item);
 }
 
-QModelIndex ModelInterface::index(int row, int column, const QModelIndex &parent) const {
+QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent) const {
     if (parent.isValid() && parent.column() != 0) // !hasIndex(row, column, parent)
         return QModelIndex();
 
@@ -132,11 +132,12 @@ QModelIndex ModelInterface::index(int row, int column, const QModelIndex &parent
         return QModelIndex();
 }
 
-bool ModelInterface::insertColumns(int position, int columns, const QModelIndex &parent) {
+bool ModelInterface::insertColumns(int position, int columns, const QModelIndex & parent) {
     bool success;
 
     beginInsertColumns(parent, position, position + columns - 1);
-    success = rootItem->insertColumns(position, columns);
+//    success = rootItem -> insertColumns(position, columns);
+    success = true;
     endInsertColumns();
 
     return success;
@@ -183,7 +184,8 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
     bool success;
 
     beginRemoveColumns(parent, position, position + columns - 1);
-    success = rootItem -> removeColumns(position, columns);
+//    success = rootItem -> removeColumns(position, columns);
+    success = true;
     endRemoveColumns();
 
     if (rootItem -> columnCount() == 0)

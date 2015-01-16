@@ -1,4 +1,5 @@
 #include "item_interface.h"
+#include "folder_item.h"
 
 using namespace Playo3;
 
@@ -8,23 +9,23 @@ ItemInterface::ItemInterface(const QVector<QVariant> & data, ItemInterface * par
     itemData = data;
 }
 
-ItemInterface::ItemInterface(ItemInterface * parent, int initState = DEFAULT_MODEL_ITEM_STATE)
+ItemInterface::ItemInterface(ItemInterface * parent, int initState)
     : ItemFields(initState), parentItem(parent) {
 }
 ItemInterface::ItemInterface(ItemInterface * parent, QJsonObject * hash)
     : ItemFields(hash), parentItem(parent) {
 }
-ItemInterface::ItemInterface(ItemInterface * parent, QString path, QString title, QString extension, int size)
-    : ItemFields(path, title, extension, size), parentItem(parent) {
+ItemInterface::ItemInterface(ItemInterface * parent, QString path, QString title, QString extension, int size, int initState)
+    : ItemFields(path, title, extension, size, initState), parentItem(parent) {
 }
 
 ItemInterface::~ItemInterface() {
-    qDeleteAll(childItems);
+
 }
 
 int ItemInterface::row() const {
     if (parentItem)
-        return parentItem -> childItems.indexOf(const_cast<ItemInterface *>(this));
+        return ((FolderItem *)parentItem) -> childRow(const_cast<ItemInterface *>(this));
 
     return 0;
 }
@@ -33,31 +34,31 @@ int ItemInterface::column() const { // ?
     return 0;
 }
 
-bool ItemInterface::insertColumns(int position, int columns) {
-    if (position < 0 || position > itemData.size())
-        return false;
+//bool ItemInterface::insertColumns(int position, int columns) {
+//    if (position < 0 || position > itemData.size())
+//        return false;
 
-    for (int column = 0; column < columns; ++column)
-        itemData.insert(position, QVariant());
+//    for (int column = 0; column < columns; ++column)
+//        itemData.insert(position, QVariant());
 
-    foreach (ItemInterface * child, childItems)
-        child -> insertColumns(position, columns);
+//    foreach (ItemInterface * child, childItems)
+//        child -> insertColumns(position, columns);
 
-    return true;
-}
+//    return true;
+//}
 
-bool ItemInterface::removeColumns(int position, int columns) {
-    if (position < 0 || position + columns > itemData.size())
-        return false;
+//bool ItemInterface::removeColumns(int position, int columns) {
+//    if (position < 0 || position + columns > itemData.size())
+//        return false;
 
-    for (int column = 0; column < columns; ++column)
-        itemData.remove(position);
+//    for (int column = 0; column < columns; ++column)
+//        itemData.remove(position);
 
-    foreach (ItemInterface * child, childItems)
-        child -> removeColumns(position, columns);
+//    foreach (ItemInterface * child, childItems)
+//        child -> removeColumns(position, columns);
 
-    return true;
-}
+//    return true;
+//}
 
 bool ItemInterface::setData(int column, const QVariant &value) {
     if (column < 0 || column >= itemData.size())

@@ -26,7 +26,7 @@ bool FileItem::isExist() const {
 }
 
 QJsonObject FileItem::toJSON() {
-    QJsonObject root = ItemInterface::toJSON();
+    QJsonObject root = ItemInterface::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = FILE_ITEM;
 

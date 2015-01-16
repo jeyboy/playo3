@@ -34,7 +34,7 @@ namespace Playo3 {
             _bpm = hash -> value(JSON_TYPE_BPM).toInt(0);
         }
 
-        ItemFields(QString path, QString title = "", QString extension = "", int size = 0) : ItemState() {
+        ItemFields(QString path, QString title = "", QString extension = "", int size = 0, int initState = DEFAULT_MODEL_ITEM_STATE) : ItemState(initState) {
             _path = path;
             _title = title;
             _extension = extension;
@@ -42,6 +42,18 @@ namespace Playo3 {
             _duration = "";
 
             _size = size;
+            _info = "";
+            _bpm = 0;
+        }
+
+        ItemFields(int state) : ItemState(state) {
+            _path = "";
+            _title = "";
+            _extension = "";
+            _genreID = -1;
+            _duration = "";
+
+            _size = -1;
             _info = "";
             _bpm = 0;
         }

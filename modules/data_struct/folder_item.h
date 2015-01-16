@@ -2,6 +2,8 @@
 #define FOLDER_ITEM_H
 
 #include "item_interface.h"
+#include <qdir>
+#include <qdatetime.h>
 
 namespace Playo3 {
     class FolderItem : public ItemInterface {
@@ -21,10 +23,11 @@ namespace Playo3 {
 
         QJsonObject toJSON();
 
+        inline int childRow(ItemInterface * child) { return childItems.indexOf(child); }
         inline ItemInterface * child(int row) { return childItems.value(row); }
         virtual inline int childCount() const { return childItems.count(); }
         inline void appendChild(ItemInterface * child) { childItems.append(child); }
-        inline bool insertChildren(int pos, ItemInterface * item) { childItems.insert(pos, item); }
+        inline void insertChildren(int pos, ItemInterface * item) { childItems.insert(pos, item); }
         inline bool insertChildren(int position, int count, int columns);
         bool removeChildren(int position, int count);
 
