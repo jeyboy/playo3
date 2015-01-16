@@ -39,6 +39,15 @@ QString ItemInterface::fullPath() const {
     return path_buff;
 }
 
+void ItemInterface::openLocation() {
+    if (!parentItem -> fullPath().isEmpty())
+        QDesktopServices::openUrl(parentItem -> toUrl());
+    else {
+        QFileInfo info(fullPath());
+        QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
+    }
+}
+
 int ItemInterface::row() const {
     if (parentItem)
         return ((FolderItem *)parentItem) -> childRow(const_cast<ItemInterface *>(this));
@@ -142,50 +151,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //    ModelItem::~ModelItem() {
 //        delete state;
 //        delete titlesCache;
-//    }
-
-//    QString ModelItem::fullPath() const {
-//    //    if (parentItem != 0) {
-//    //        return parentItem -> fullPath() + '/' + path;
-//    //    }
-
-//    //    return "file://";
-
-
-//        ModelItem * curr = parentItem;
-//        QString path_buff = path;
-
-//        while(curr != 0 && !curr -> path.isEmpty()) {
-//            path_buff = curr -> path + '/' + path_buff;
-//            curr = curr -> parentItem;
-//        }
-
-//    #ifdef Q_OS_LINUX
-//        path_buff = '/' + path_buff;
-//    //#elif defined(Q_OS_WINDOWS)
-
-//    #endif
-
-//        return path_buff;
-//    //    return path_buff.mid(1);
-//    }
-
-//    QString ModelItem::getDownloadTitle() const {
-//        QString ret = filenameFilter(getTitle());
-
-//        if (!extension.isEmpty())
-//            ret = ret + '.' + extension;
-
-//        return ret;
-//    }
-
-//    void ModelItem::openLocation() {
-//        if (!parent() -> fullPath().isEmpty())
-//            QDesktopServices::openUrl(parent() -> toUrl());
-//        else {
-//            QFileInfo info(fullPath());
-//            QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-//        }
 //    }
 
 //    QStringList ModelItem::getInfo() const {

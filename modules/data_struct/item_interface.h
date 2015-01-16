@@ -4,8 +4,8 @@
 #include <qlist.h>
 #include <qvariant.h>
 #include <qvector.h>
-#include <qurl>
 #include <qdesktopservices.h>
+#include <qurl>
 
 //#include <qjsonobject.h>
 //#include <qfile>
@@ -50,6 +50,7 @@ namespace Playo3 {
         }
 
         //            BaseItem * toBaseItem();
+        inline virtual QUrl toUrl() { return QUrl::fromLocalFile(fullPath()); }
         inline QString toPath() const { return parentItem ? parentItem -> toPath() + " " + QString::number(row()) : ""; }
 
         inline QVariant data(int column) const { return itemData.value(column); }

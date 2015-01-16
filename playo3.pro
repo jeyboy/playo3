@@ -70,7 +70,8 @@ SOURCES += main.cpp\
     modules/data_struct/file_item.cpp \
     modules/data_struct/folder_item.cpp \
     misc/file_utils/extensions.cpp \
-    misc/file_utils/icon_provider.cpp
+    misc/file_utils/icon_provider.cpp \
+    modules/data_struct/model_item_parts/item_fields.cpp
 
 HEADERS  += playo.h \
     single_application.h \
