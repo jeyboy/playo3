@@ -14,7 +14,7 @@ public:
 //  static Playo3::TabSettings VKSettings(int uid = 0);
 //  static Playo3::TabSettings soundcloudSettings(int uid = 0);
 
-  explicit TabDialog(QWidget *parent = 0);
+  explicit TabDialog(QWidget * parent = 0);
   ~TabDialog();
 
   QString getName();
@@ -24,7 +24,7 @@ public:
   void setSettings(Playo3::ViewSettings hash);
 
 private:
-  Ui::TabDialog *ui;
+  Ui::TabDialog * ui;
 };
 
 #endif // TABDIALOG_H

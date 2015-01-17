@@ -48,7 +48,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
 //    connect(Download::instance(), SIGNAL(slotChanged(QString)), this, SLOT(setHeaderText(QString)));
 
-    header() -> setSectionResizeMode(0, QHeaderView::Interactive);
+//    header() -> setSectionResizeMode(0, QHeaderView::Interactive);
 //    header()->setStretchLastSection(false);
 
 

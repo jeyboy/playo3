@@ -289,13 +289,13 @@ void Playo::showAttTabDialog(DockBar * bar) {
 
             switch(settings.type) {
                 case list: {
-
+                    view = new ListView(0, settings);
                 break;}
                 case level_tree: {
-
+                    view = new LevelTreeView(0, settings);
                 break;}
                 case tree: {
-
+                    view = new TreeView(0, settings);
                 break;}
                 default: view = 0;
             }

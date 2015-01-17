@@ -89,9 +89,11 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
 
 //    dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
 //    dock -> showFullScreen();
-    dock -> setWidget(content);
-    dock -> layout() -> setAlignment(content, Qt::AlignCenter);
-    //    viewMenu->addAction(dock->toggleViewAction());
+    if (content) {
+        content -> setParent(dock);
+        dock -> setWidget(content);
+        dock -> layout() -> setAlignment(content, Qt::AlignCenter);
+    }
 
     return dock;
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
