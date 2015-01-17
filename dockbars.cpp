@@ -83,16 +83,18 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName) {
 
 DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
+    dock -> setContentsMargins(4, 0, 4, 4);
+
     connect(dock, SIGNAL(activating()), this, SLOT(activeChanged()));
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
 //    active = dock;
 
 //    dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
 //    dock -> showFullScreen();
+
     if (content) {
         content -> setParent(dock);
         dock -> setWidget(content);
-        dock -> layout() -> setAlignment(content, Qt::AlignCenter);
     }
 
     return dock;
