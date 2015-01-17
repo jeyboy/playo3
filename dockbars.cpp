@@ -3,9 +3,9 @@
 
 using namespace Playo3;
 
-Dockbars *Dockbars::self = 0;
+Dockbars * Dockbars::self = 0;
 
-Dockbars *Dockbars::instance(QWidget * parent) {
+Dockbars * Dockbars::instance(QWidget * parent) {
     if(!self)
         self = new Dockbars(parent);
     return self;
@@ -81,6 +81,24 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName) {
     }
 }
 
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings) {
+    ViewInterface * view;
+
+    switch(settings.type) {
+        case list: {
+            view = new ListView(0, settings);
+        break;}
+        case level_tree: {
+            view = new LevelTreeView(0, settings);
+        break;}
+        case tree: {
+            view = new TreeView(0, settings);
+        break;}
+        default: view = 0;
+    }
+    return createDocBar(name, view);
+}
+
 DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
     dock -> setContentsMargins(3, 0, 4, 4);
@@ -88,8 +106,6 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
     connect(dock, SIGNAL(activating()), this, SLOT(activeChanged()));
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
 //    active = dock;
-
-//    dock -> setLayout(new QBoxLayout(QBoxLayout::TopToBottom, ((QWidget *)parent())));
 //    dock -> showFullScreen();
 
     if (content) {
@@ -99,6 +115,33 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
 
     return dock;
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
+}
+
+void Dockbars::showViewSettingsDialog(DockBar * bar) {
+    TabDialog dialog(parentWidget());
+    if(bar) {
+        ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
+
+        if (!view -> isEditable()) {
+            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
+            return;
+        }
+
+        dialog.setSettings(view -> settings());
+        dialog.setName(bar -> windowTitle());
+
+        if (dialog.exec() == QDialog::Accepted) {
+            bar -> setWindowTitle(dialog.getName());
+            view -> setSettings(dialog.getSettings());
+        }
+    } else {
+        if (dialog.exec() == QDialog::Accepted) {
+            ((QMainWindow *)parentWidget()) -> addDockWidget(
+                Qt::LeftDockWidgetArea,
+                createDocBar(dialog.getName(), dialog.getSettings())
+            );
+        }
+    }
 }
 
 //A tabified dockwidget can be set as the selected tab like this:
@@ -126,6 +169,23 @@ void Dockbars::hideAll() {
 void Dockbars::showAll() {
     foreach(DockBar * bar, dockbars())
         bar -> setHidden(false);
+}
+
+void Dockbars::nextExecTriggering() {
+    ViewInterface * v = view(active);
+    if (v) v -> nextItem();
+}
+void Dockbars::nextExecWithDelTriggering() {
+    ViewInterface * v = view(active);
+    if (v) v -> nextItem(true);
+}
+void Dockbars::prevExecWithDelTriggering() {
+    ViewInterface * v = view(active);
+    if (v) v -> prevItem(true);
+}
+void Dockbars::prevExecTriggering() {
+    ViewInterface * v = view(active);
+    if (v) v -> prevItem();
 }
 
 void Dockbars::activeChanged() {

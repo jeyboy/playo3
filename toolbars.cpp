@@ -260,9 +260,10 @@ QToolBar * ToolBars::createMediaBar() {
 QToolBar * ToolBars::createAdditionalMediaBar() {
     QToolBar* ptb = precreateToolBar("Media+");
 
-    ptb -> addAction(QIcon(":/prev"), "Prev track", parent(), SLOT(prevItemTriggered()));
+    //TODO: add del versions od buttons
+    ptb -> addAction(QIcon(":/prev"), "Prev track", Dockbars::instance(), SLOT(prevExecTriggering()));
     Player::instance() -> setLikeButton(ptb -> addAction(QIcon(":/like"), "Liked"));
-    ptb -> addAction(QIcon(":/next"), "Next track", parent(), SLOT(nextItemTriggered()));
+    ptb -> addAction(QIcon(":/next"), "Next track", Dockbars::instance(), SLOT(nextExecTriggering()));
     ptb -> adjustSize();
 
     return ptb;
@@ -323,7 +324,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar("Controls");
 
-    ptb -> addAction(QIcon(":/add"), "Add new local tab", parent(), SLOT(showAttTabDialog()));
+    ptb -> addAction(QIcon(":/add"), "Add new local tab", Dockbars::instance(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addSeparator();

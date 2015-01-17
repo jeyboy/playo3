@@ -23,17 +23,17 @@ public:
         qDeleteAll(shortcuts.values());
     }
 
-    static HotkeyManager * instance();
+    static HotkeyManager * instance(QObject * parent = 0);
 
     static void close() {
         delete self;
     }
 
-    bool registerSequence(int hotkeyType, QString sequence, QObject * receiver = 0, const char* slot = 0);
+    bool registerSequence(int hotkeyType, QString sequence, QObject * receiver = 0, const char * slot = 0);
     void clear();
 
 private:
-    HotkeyManager() { }
+    inline HotkeyManager(QObject * parent) : QObject(parent) { }
 
     QxtGlobalShortcut * registerSequence(const HotkeySlot & hotSlot);
     bool updateSequence(QxtGlobalShortcut * shortcut, QKeySequence sequence);

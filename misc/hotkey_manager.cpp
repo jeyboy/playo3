@@ -1,11 +1,10 @@
 #include "hotkey_manager.h"
-#include <QDebug>
 
-HotkeyManager *HotkeyManager::self = 0;
+HotkeyManager  *HotkeyManager::self = 0;
 
-HotkeyManager *HotkeyManager::instance() {
+HotkeyManager * HotkeyManager::instance(QObject * parent) {
     if(!self)
-        self = new HotkeyManager();
+        self = new HotkeyManager(parent);
     return self;
 }
 

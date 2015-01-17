@@ -111,13 +111,13 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
     foreach(HotkeyModelItem * key, list) {
         switch(key -> data(2).toInt()) {
             case HOTKEY_NEXT: {
-                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextItemTriggered()));
+                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextExecTriggering()));
             break;}
             case HOTKEY_NEXT_AND_DELETE: {
-                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextItemWithDelTriggered()));
+                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextExecWithDelTriggering()));
             break;}
             case HOTKEY_PREV: {
-                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(prevItemTriggered()));
+                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(prevExecTriggering()));
             break;}
             case HOTKEY_PLAY: {
                 HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), Player::instance(), SLOT(playPause()));
@@ -126,7 +126,7 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
                 HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), Player::instance(), SLOT(stop()));
             break;}
             case HOTKEY_SETTINGS: {
-                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(showAttCurrTabDialog()));
+                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(editActiveBar()));
             break;}
 
 

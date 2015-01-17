@@ -17,7 +17,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //    setAttribute(Qt::WA_DeleteOnClose);
 
-    init();
+    activation();
+    initialization();
 }
 
 Playo::~Playo() {
@@ -29,60 +30,28 @@ Playo::~Playo() {
 //        Extensions::close();
 //        IconProvider::close();
 //        Library::close();
-        Player::close();
 
         Settings::close();
-        HotkeyManager::close();
 //        Genre::close();
 
 //        VkApi::close();
 //        SoundcloudApi::close();
-////        ToolBars::close();
     ///////////////////////////////////////////////
 
     delete settings;
 }
 
-QMenu * Playo::createPopupMenu() {
-    return ToolBars::instance(this) -> createPopupMenu(this);
-}
-
-void Playo::closeEvent(QCloseEvent * e) {
-    settings -> clear();
-
-//    settings -> write("vk", VkApi::instance() -> toJson());
-//    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
-
-    ToolBars::instance(this) -> save(settings);
-    Dockbars::instance(this) -> save(settings);
-
-    settings -> write("settings", Settings::instance() -> toJson());
-    settings -> save();
-
-    QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
-    stateSettings.setValue("geometry", saveGeometry());
-    stateSettings.setValue("windowState", saveState());
-    stateSettings.sync();
-
-    MainWindow::closeEvent(e);
-}
-
-void Playo::init() {
+void Playo::activation() {
     Stylesheets::initPens();
     new Tray(this);
 
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU", new QLabel("sdfsfsdf")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU1", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU2", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU3", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU4", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU5", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU6", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU7", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU8", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU9", new QLabel("dfgdfgdfg")));
-//    addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance(this) -> createDocBar("PU10", new QLabel("dfgdfgdfg")));
+    Player::instance(this);
+    ToolBars::instance(this);
+    Dockbars::instance(this);
+    HotkeyManager::instance(this);
+}
 
+void Playo::initialization() {
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");
 
@@ -93,7 +62,7 @@ void Playo::init() {
 //    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
 
     Settings::instance() -> fromJson(settings -> read("settings").toObject());
-    SettingsDialog::registerHotkeys(this);
+    SettingsDialog::registerHotkeys(Dockbars::instance());
 
     QVariant geometryState = stateSettings.value("geometry");
     if (geometryState.isValid())
@@ -107,18 +76,40 @@ void Playo::init() {
     /// toolbars
     ///////////////////////////////////////////////////////////
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
-    ToolBars::instance(this) -> load(bars);
+    ToolBars::instance() -> load(bars);
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
-    Dockbars::instance(this) -> load(docks);
+    Dockbars::instance() -> load(docks);
 
     QVariant objState = stateSettings.value("windowState");
     if (objState.isValid())
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
-//    ui -> tabber -> load();
-
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
+}
+
+QMenu * Playo::createPopupMenu() {
+    return ToolBars::instance() -> createPopupMenu(this);
+}
+
+void Playo::closeEvent(QCloseEvent * e) {
+    settings -> clear();
+
+//    settings -> write("vk", VkApi::instance() -> toJson());
+//    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
+
+    ToolBars::instance() -> save(settings);
+    Dockbars::instance() -> save(settings);
+
+    settings -> write("settings", Settings::instance() -> toJson());
+    settings -> save();
+
+    QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
+    stateSettings.setValue("geometry", saveGeometry());
+    stateSettings.setValue("windowState", saveState());
+    stateSettings.sync();
+
+    MainWindow::closeEvent(e);
 }
 
 
@@ -165,31 +156,9 @@ void Playo::receiveMessage(QString message) {
 //    putToCommonTab(urls);
 }
 
-void Playo::showAttCurrTabDialog() {
-////    emit showAttTabDialog(tabber -> currentTab());
-
-//    if (ui -> tabber -> currentTab() -> isEditable())
-//        emit showAttTabDialog(ui -> tabber -> currentTab());
-//    else
-//        QMessageBox::warning(this, "Settings", "This tab type did not have any settings...");
-}
-
 //void MainWindow::showError(QString message) {
 //    qDebug() << message;
 //}
-
-void Playo::nextItemTriggered() {
-//    if (ui -> tabber -> currentTab())
-//        ui -> tabber -> currentTab() -> getView() -> proceedNext();
-}
-void Playo::nextItemWithDelTriggered() {
-//    if (ui -> tabber -> currentTab())
-//        ui -> tabber -> currentTab() -> getView() -> deleteCurrentProceedNext();
-}
-void Playo::prevItemTriggered() {
-//    if (ui -> tabber -> currentTab())
-//        ui -> tabber -> currentTab() -> getView() -> proceedPrev();
-}
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
@@ -210,8 +179,8 @@ void Playo::showSettingsDialog() {
 
 //        ui -> tabber -> setTabPosition((QTabWidget::TabPosition)Settings::instance() -> getTabPosition());
 //        ui -> tabber -> setUsesScrollButtons(Settings::instance() -> getScrollButtonUsage());
-        ToolBars::instance(this) -> getSpectrum() -> bandCountChanged(Settings::instance() -> getSpectrumBarsCount());
-        ToolBars::instance(this) -> getSpectrum() -> heightChanged(Settings::instance() -> getSpectrumHeight());
+        ToolBars::instance() -> getSpectrum() -> bandCountChanged(Settings::instance() -> getSpectrumBarsCount());
+        ToolBars::instance() -> getSpectrum() -> heightChanged(Settings::instance() -> getSpectrumHeight());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> getSpectrumFreqRate());
     }
 }
@@ -238,7 +207,7 @@ void Playo::showSettingsDialog() {
 //    WebDialog dialog(this, VkApi::instance(), "VK auth");
 //    if (dialog.exec() == QDialog::Accepted) {
 //        ui -> tabber -> addTab("VK [YOU]", TabDialog::VKSettings());
-//        ToolBars::instance(this) -> initiateVkButton();
+//        ToolBars::instance() -> initiateVkButton();
 //    } else {
 //        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 //    }
@@ -254,7 +223,7 @@ void Playo::showSettingsDialog() {
 //    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
 //    if (dialog.exec() == QDialog::Accepted) {
 //        ui -> tabber -> addTab("SC [YOU]", TabDialog::soundcloudSettings());
-//        ToolBars::instance(this) -> initiateSoundcloudButton();
+//        ToolBars::instance() -> initiateSoundcloudButton();
 //    } else {
 //        QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 //    }
@@ -270,39 +239,3 @@ void Playo::showSettingsDialog() {
 //    if (to && !this -> isActiveWindow())
 //        m_tray.showMessage("(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ") Now played:", to -> data(TITLEID).toString(), QSystemTrayIcon::Information, 20000);
 //}
-
-void Playo::showAttTabDialog(DockBar * bar) {
-    TabDialog dialog(this);
-    if(bar) {
-        ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
-        dialog.setSettings(view -> settings());
-        dialog.setName(bar -> windowTitle());
-
-        if (dialog.exec() == QDialog::Accepted) {
-            bar -> setWindowTitle(dialog.getName());
-            view -> setSettings(dialog.getSettings());
-        }
-    } else {
-        if (dialog.exec() == QDialog::Accepted) {
-            ViewInterface * view;
-            ViewSettings settings = dialog.getSettings();
-
-            switch(settings.type) {
-                case list: {
-                    view = new ListView(0, settings);
-                break;}
-                case level_tree: {
-                    view = new LevelTreeView(0, settings);
-                break;}
-                case tree: {
-                    view = new TreeView(0, settings);
-                break;}
-                default: view = 0;
-            }
-            addDockWidget(
-                Qt::LeftDockWidgetArea,
-                Dockbars::instance(this) -> createDocBar(dialog.getName(), view)
-            );
-        }
-    }
-}

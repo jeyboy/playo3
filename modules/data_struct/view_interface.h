@@ -62,8 +62,8 @@ namespace Playo3 {
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
-        void nextItem();
-        void prevItem();
+        void nextItem(bool deleteCurrent = false);
+        void prevItem(bool deleteCurrent = false);
         bool execIndex(const QModelIndex & index);
         virtual void removeItem(QModelIndex & index);
 

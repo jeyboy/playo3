@@ -36,7 +36,7 @@ namespace Playo3 {
     //        delete spectrum;
         }
 
-        static ToolBars * instance(QObject * parent);
+        static ToolBars * instance(QObject * parent = 0);
         static void close() { delete self; }
 
         static inline QString settingsName() { return "bars"; }

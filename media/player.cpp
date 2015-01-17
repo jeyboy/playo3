@@ -1,11 +1,10 @@
 #include "player.h"
-#include <QDebug>
 
 Player * Player::self = 0;
 
-Player * Player::instance() {
+Player * Player::instance(QObject * parent) {
     if(!self)
-        self = new Player();
+        self = new Player(parent);
     return self;
 }
 
@@ -279,16 +278,13 @@ void Player::onStateChanged(MediaState newState) {
 void Player::onMediaStatusChanged(MediaStatus status) {
     switch (status) {
         case UnknownMediaStatus: {
-        qDebug() << "unk";
         break; }
 
         case StalledMedia: {
-        qDebug() << "sta";
         break; }
 
         case EndOfMedia:
         case InvalidMedia: {
-            qDebug() << "Piza time";
 //            if (playlist) {
 //                if (playlist -> isPlaylist()) {
 //                    playlist -> proceedNext();
@@ -296,6 +292,6 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 //            }
             break;
         }
-        default: { qDebug() << "Party def"; }
+        default: {  }
     }
 }

@@ -19,8 +19,7 @@ using namespace Playo3;
 class Player : public AudioPlayer {
     Q_OBJECT
 public:
-
-    static Player * instance();
+    static Player * instance(QObject * parent = 0);
     void playItem(QUrl url, bool paused = false);
     void setStartPosition(int position);
 
@@ -64,7 +63,7 @@ private:
 
     void setTimePanelVal(int millis);
 
-    Player() : AudioPlayer() {
+    Player(QObject * parent) : AudioPlayer(parent) {
         time_forward = true;
         extended_format = true;
         prevVolumeVal = 0;

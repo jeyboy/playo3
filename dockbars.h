@@ -7,6 +7,9 @@
 
 #include "misc/file_utils/data_store.h"
 #include "modules/controls/dockbar.h"
+#include "modules/data_struct/view_index.h"
+
+#include "dialogs/tabdialog.h"
 
 namespace Playo3 {
     class Dockbars : public QWidget {
@@ -16,7 +19,7 @@ namespace Playo3 {
 
         }
 
-        static Dockbars * instance(QWidget * parent);
+        static Dockbars * instance(QWidget * parent = 0);
         static void close() {
             delete self;
         }
@@ -30,14 +33,27 @@ namespace Playo3 {
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
         inline DockBar * current() const { return active; }
 
+        DockBar * createDocBar(QString name, ViewSettings settings);
         DockBar * createDocBar(QString name, QWidget * content);
         inline void activate(DockBar * bar) {
-            bar -> raise();
-            active = bar;
+            if ((active = bar))
+                bar -> raise();
         }
     public slots:
         void hideAll();
         void showAll();
+
+        inline void createNewBar() { showViewSettingsDialog(); }
+        void editActiveBar() { showViewSettingsDialog(active); }
+
+        void nextExecTriggering();
+        void nextExecWithDelTriggering();
+        void prevExecWithDelTriggering();
+        void prevExecTriggering();
+
+    protected:
+        inline ViewInterface * view(DockBar * bar) { return bar ? dynamic_cast<ViewInterface *>(bar -> widget()) : 0; }
+        void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
         void activeChanged();

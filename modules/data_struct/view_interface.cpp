@@ -87,7 +87,7 @@ void ViewInterface::scrollToActive() {
 //    }
 }
 
-void ViewInterface::prevItem() {
+void ViewInterface::prevItem(bool deleteCurrent) {
 //    ModelItem * item = activeItem(false);
 //    if (item == 0) return;
 
@@ -95,7 +95,7 @@ void ViewInterface::prevItem() {
 //    execItem(item);
 }
 
-void ViewInterface::nextItem() {
+void ViewInterface::nextItem(bool deleteCurrent) {
 //    ModelItem * item = activeItem();
 //    if (item == 0) return;
 

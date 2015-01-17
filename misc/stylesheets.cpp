@@ -134,7 +134,7 @@ QString Stylesheets::sliderStyles() {
 QString Stylesheets::treeViewStyles() {
     return QString(
                 "QTreeView {"
-                "   background-color: " + color1().name(QColor::HexArgb) + ";"
+                "   background-color: " + color2().name(QColor::HexArgb) + ";"
                 "   border-bottom-left-radius: 8px;"
                 "   border-bottom-right-radius: 8px;"
                 "}"
