@@ -32,6 +32,7 @@ TabDialog::TabDialog(QWidget * parent) :
   setWindowTitle("Tab settings");
   ui -> interactive -> setEnabled(false);
   ui -> isVkRadio -> setEnabled(false);
+  ui -> isSoundcloudRadio -> setEnabled(false);
 }
 
 TabDialog::~TabDialog() {

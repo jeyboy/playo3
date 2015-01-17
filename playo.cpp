@@ -271,30 +271,38 @@ void Playo::showSettingsDialog() {
 //        m_tray.showMessage("(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ") Now played:", to -> data(TITLEID).toString(), QSystemTrayIcon::Information, 20000);
 //}
 
-//void MainWindow::showAttTabDialog(Tab * tab) {
-//  TabDialog dialog(this);
-//  if(tab) {
-//      qDebug() << tab -> getName();
-//      dialog.setSettings(tab -> getView() -> getSettings());
-//      dialog.setName(tab -> getName());
+void Playo::showAttTabDialog(DockBar * bar) {
+    TabDialog dialog(this);
+    if(bar) {
+        ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
+        dialog.setSettings(view -> settings());
+        dialog.setName(bar -> windowTitle());
 
-//      while(true) {
-//          if (dialog.exec() == QDialog::Accepted) {
-//              if (ToolBars::instance(this) -> isToolbarNameUniq(this, dialog.getName())) {
-//                  tab -> setName(dialog.getName());
-//                  tab -> getView() -> setSettings(dialog.getSettings());
-//                  return;
-//              }
-//          } else return;
-//      }
-//  } else {
-//      while(true) {
-//          if (dialog.exec() == QDialog::Accepted) {
-//              if (ToolBars::instance(this) -> isToolbarNameUniq(this, dialog.getName())) {
-//                  ui -> tabber -> addTab(dialog.getName(), dialog.getSettings());
-//                  return;
-//              }
-//          } else return;
-//      }
-//  }
-//}
+        if (dialog.exec() == QDialog::Accepted) {
+            bar -> setWindowTitle(dialog.getName());
+            view -> setSettings(dialog.getSettings());
+        }
+    } else {
+        if (dialog.exec() == QDialog::Accepted) {
+            ViewInterface * view;
+            ViewSettings settings = dialog.getSettings();
+
+            switch(settings.type) {
+                case list: {
+
+                break;}
+                case level_tree: {
+
+                break;}
+                case tree: {
+
+                break;}
+                default: view = 0;
+            }
+            addDockWidget(
+                Qt::LeftDockWidgetArea,
+                Dockbars::instance(this) -> createDocBar(dialog.getName(), view)
+            );
+        }
+    }
+}

@@ -3,9 +3,10 @@
 
 #include "view_types.h"
 
-//#include "model/list/list_view.h"
-//#include "model/tree/tree_view.h"
-//#include "model/level_tree/level_tree_view.h"
+#include "list/list_view.h"
+#include "tree/tree_view.h"
+#include "level_tree/level_tree_view.h"
+
 //#include "model/web/vk/vk_view.h"
 //#include "model/web/soundcloud/soundcloud_view.h"
 

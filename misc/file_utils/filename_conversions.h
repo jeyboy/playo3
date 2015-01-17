@@ -4,7 +4,7 @@
 //TODO: need limit relative to the current system
 #define PATH_MAX_LEN 200
 
-#include <QObject>
+#include <QRegExp>
 
 static inline QString sitesFilter(QString title)				{ return title.remove(QRegExp("((http:\\/\\/)?(www\\.)?[\\w-]+\\.(\\w+)(\\.(\\w+))*)")); }
 static inline QString forwardNumberPreFilter(QString title)     { return title.remove(QRegExp("\\A\\d{1,}.|\\(\\w*\\d{1,}\\w*\\)")); }

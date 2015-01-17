@@ -4,6 +4,8 @@
 #include <qdebug.h>
 #include "modules/controls/window.h"
 #include "modules/controls/tray.h"
+#include "modules/data_struct/view_index.h"
+
 #include "toolbars.h"
 #include "dockbars.h"
 
@@ -48,7 +50,7 @@ private slots:
 //    void openSoundcloudTabDialog();
 //    void showSoundcloudTabDialog();
 
-//    void showAttTabDialog(Tab * tab = 0);
+    void showAttTabDialog(DockBar * bar = 0);
     void openFolderTriggered();
 
     void nextItemTriggered();

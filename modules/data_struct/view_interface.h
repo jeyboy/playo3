@@ -56,7 +56,7 @@ namespace Playo3 {
 
         inline ModelInterface * model() const { return mdl; }
 
-        inline ViewSettings getSettings() const { return sttngs; }
+        inline ViewSettings settings() const { return sttngs; }
         inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
