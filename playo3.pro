@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webkitwidgets network opengl
+#QT       += multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -71,7 +72,12 @@ SOURCES += main.cpp\
     modules/data_struct/folder_item.cpp \
     misc/file_utils/extensions.cpp \
     misc/file_utils/icon_provider.cpp \
-    modules/data_struct/model_item_parts/item_fields.cpp
+    modules/data_struct/model_item_parts/item_fields.cpp \
+    dialogs/captchadialog.cpp \
+    dialogs/extension_dialog.cpp \
+    dialogs/relationdialog.cpp \
+    dialogs/web_dialog.cpp \
+    modules/controls/simple_list_view.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -148,13 +154,22 @@ HEADERS  += playo.h \
     modules/data_struct/item_index.h \
     misc/file_utils/extensions.h \
     misc/file_utils/filename_conversions.h \
-    misc/file_utils/icon_provider.h
+    misc/file_utils/icon_provider.h \
+    dialogs/captchadialog.h \
+    dialogs/extension_dialog.h \
+    dialogs/relationdialog.h \
+    dialogs/web_dialog.h \
+    modules/controls/simple_list_view.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
     dialogs/toolbardialog.ui \
     dialogs/settings_dialog.ui \
-    dialogs/tabdialog.ui
+    dialogs/tabdialog.ui \
+    dialogs/captchadialog.ui \
+    dialogs/extension_dialog.ui \
+    dialogs/relationdialog.ui \
+    dialogs/web_dialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -11,7 +11,7 @@ TreeModel::~TreeModel() {
 
 }
 
-QModelIndex TreeModel::dropProcession(const QList<QUrl> & list) {
+int TreeModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
 //    ModelItem * newIndex = buildPath(QFileInfo(list.first().toLocalFile()).path());
 //    filesRoutine(newIndex, list);
 //    return index(newIndex);

@@ -1,6 +1,7 @@
 #ifndef MODEL_INTERFACE
 #define MODEL_INTERFACE
 
+#include <qmimedata.h>
 #include <qabstractitemmodel.h>
 #include <qvariant.h>
 #include "misc/file_utils/extensions.h"
@@ -36,9 +37,16 @@ namespace Playo3 {
 
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
+
+        Qt::DropActions supportedDropActions() const;
+        QStringList mimeTypes() const;
+        QMimeData * mimeData(const QModelIndexList & indexes) const;
+        bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
     signals:
         itemsCountChanged(int change);
     protected:
+        virtual int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
+
         template<class T> T * getItem(const QModelIndex & index) const {
             return dynamic_cast<T *>(getItem(index));
         }
@@ -50,12 +58,6 @@ namespace Playo3 {
     //        bool isFolderExist(QString folderName, ModelItems::ModelItem * parent);
     //        ModelItems::ModelItem * addFolder(QString folderPath, QString folderName, ModelItems::ModelItem * parent, QString remoteID = "");
     //        ModelItems::ModelItem * addFolder(QString folder_name, ModelItems::ModelItem * parent, QString remoteID = "");
-
-    //        Qt::DropActions supportedDropActions() const;
-    //        QStringList mimeTypes() const;
-    //        QMimeData * mimeData(const QModelIndexList &indexes) const;
-    //        bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
-    //        virtual QModelIndex dropProcession(const QList<QUrl> & list) = 0;
 
     ////        void refreshItem(ModelItems::ModelItem * item);
     ////        void removeFolderPrebuild(ModelItems::ModelItem * temp);

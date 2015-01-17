@@ -11,7 +11,7 @@ namespace Playo3 {
         ListModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~ListModel();
     protected:
-        QModelIndex dropProcession(const QList<QUrl> & list);
+        int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
         void filesRoutine(ItemInterface * index, QFileInfo currFile);
         void filesRoutine(ItemInterface * index, QList<QUrl> list);
     };

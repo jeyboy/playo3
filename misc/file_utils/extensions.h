@@ -1,9 +1,9 @@
 #ifndef EXTENSIONS_H
 #define EXTENSIONS_H
 
-//#include <QHash>
 #include <QDir>
 #include "data_store.h"
+#include "dialogs/extension_dialog.h"
 
 namespace Playo3 {
     class Extensions {

@@ -414,49 +414,51 @@ void ModelInterface::shuffle() {
 
 //    /////////////////////////////////////////////////////////
 
-//    Qt::DropActions Model::supportedDropActions() const {
-//        return Qt::CopyAction | Qt::MoveAction;
+Qt::DropActions ModelInterface::supportedDropActions() const {
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
+QStringList ModelInterface::mimeTypes() const {
+    QStringList types;
+    types << "text/uri-list";
+    return types;
+}
+
+QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
+    QMimeData * mimeData = new QMimeData();
+    QList<QUrl> list;
+    ItemInterface * temp;
+
+    foreach (const QModelIndex & index, indexes) {
+        if (index.isValid()) {
+            temp = getItem(index);
+            list.append(temp -> toUrl());
+        }
+    }
+
+    mimeData -> setUrls(list);
+    return mimeData;
+}
+
+bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction /*action*/, int row, int /*column*/, const QModelIndex & parentIndex) {
+//    if (action == Qt::CopyAction) {
+
+//    } else {
+
 //    }
 
-//    QStringList Model::mimeTypes() const {
-//        QStringList types;
-//        types << "text/uri-list";
-//        return types;
-//    }
+    if (data -> hasUrls()) {
+        ExtensionDialog(QApplication::activeWindow()).exec();
+        beginInsertRows(parentIndex, row, row + data -> urls().length() - 1);
+        dropProcession(parentIndex, row, data -> urls());
+        endInsertRows();
 
-//    QMimeData * Model::mimeData(const QModelIndexList &indexes) const {
-//        QMimeData *mimeData = new QMimeData();
-//        QList<QUrl> list;
-//        ModelItem * temp;
+//        emit spoilNeeded(modelIndex);
+        return true;
+    }
 
-//        foreach (const QModelIndex &index, indexes) {
-//            if (index.isValid()) {
-//                temp = getItem(index);
-//                list.append(temp -> toUrl());
-//            }
-//        }
-
-//        mimeData -> setUrls(list);
-//        return mimeData;
-//    }
-
-//    bool Model::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parentIndex) {
-//    //    if (action == Qt::CopyAction) {
-
-//    //    } else {
-
-//    //    }
-
-//        if (data -> hasUrls()) {
-//            ExtensionDialog(QApplication::activeWindow()).exec();
-//            //TODO: add parentIndex to the dropProcession
-//            QModelIndex modelIndex = dropProcession(data -> urls());
-//            refresh();
-//            emit spoilNeeded(modelIndex);
-//        }
-
-//        return true;
-//    }
+    return false;
+}
 
 //    ModelItem * Model::createItem(QString path, ModelItem * parent) {
 //       return (new FileItem(path, parent)) -> toModelItem();
