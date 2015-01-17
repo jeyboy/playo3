@@ -14,7 +14,7 @@ namespace Playo3 {
         Q_OBJECT
 
     public:
-        explicit ExtensionDialog(QWidget *parent = 0);
+        explicit ExtensionDialog(QWidget * parent = 0);
         ~ExtensionDialog();
 
     protected:

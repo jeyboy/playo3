@@ -448,7 +448,9 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction /*actio
 //    }
 
     if (data -> hasUrls()) {
-        ExtensionDialog(QApplication::activeWindow()).exec();
+        if (dropKeyModifiers & Qt::ControlModifier)
+            ExtensionDialog(QApplication::activeWindow()).exec();
+
         beginInsertRows(parentIndex, row, row + data -> urls().length() - 1);
         dropProcession(parentIndex, row, data -> urls());
         endInsertRows();

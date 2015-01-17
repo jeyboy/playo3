@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-ExtensionDialog::ExtensionDialog(QWidget *parent) :
+ExtensionDialog::ExtensionDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::ExtensionDialog) {
     ui -> setupUi(this);
 

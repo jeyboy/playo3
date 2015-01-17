@@ -595,16 +595,17 @@ void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
         event -> source() == this ? Qt::MoveAction : Qt::CopyAction
     );
 
-    if (event -> mimeData() -> hasFormat("text/uri-list"))
+    if (event -> mimeData() -> hasFormat("text/uri-list")) {
         event -> accept();
-    else event -> ignore();
+    } else event -> ignore();
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
     QTreeView::dragMoveEvent(event);
-    if (event -> mimeData() -> hasFormat("text/uri-list"))
+    if (event -> mimeData() -> hasFormat("text/uri-list")) {
         event -> accept();
-    else
+        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
+    } else
         event -> ignore();
 }
 

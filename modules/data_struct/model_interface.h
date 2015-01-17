@@ -38,6 +38,7 @@ namespace Playo3 {
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
 
+        inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
         QMimeData * mimeData(const QModelIndexList & indexes) const;
@@ -51,6 +52,7 @@ namespace Playo3 {
             return dynamic_cast<T *>(getItem(index));
         }
 
+        Qt::KeyboardModifiers dropKeyModifiers;
         FolderItem * rootItem;
     };
 

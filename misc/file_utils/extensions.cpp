@@ -24,14 +24,14 @@ bool Extensions::respondToExtension(QString ext) const {
 }
 
 QStringList Extensions::activeFilterList() const {
-    if (filters.isEmpty())
-        return QStringList();
-    else
-        return filters.value(activeFilter, filters.values().first());
+    return filterList(activeFilter);
 }
 
 QStringList Extensions::filterList(const QString & name) const {
-    return filters.value(name, filters.values().first());
+    if (filters.isEmpty())
+        return QStringList();
+    else
+        return filters.value(name, filters.values().first());
 }
 
 void Extensions::filterListUpdate(const QString & name, QStringList & newList) {
