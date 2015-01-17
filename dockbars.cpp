@@ -83,7 +83,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName) {
 
 DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
-    dock -> setContentsMargins(4, 0, 4, 4);
+    dock -> setContentsMargins(3, 0, 4, 4);
 
     connect(dock, SIGNAL(activating()), this, SLOT(activeChanged()));
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));

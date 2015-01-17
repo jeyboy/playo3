@@ -4,12 +4,6 @@
 #include <QColor>
 #include <QPen>
 
-//    setStyleSheet(QString(
-//                      "QTreeView {"
-//                          "background-color: black;"
-//                      "}"
-//                      ));
-
 class Stylesheets {
 public:
     // background colors

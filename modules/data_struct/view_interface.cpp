@@ -7,6 +7,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
     setIndentation(12);
     setStyle(new TreeViewStyle);
+    setStyleSheet(Stylesheets::treeViewStyles());
 
     setModel(mdl);
 

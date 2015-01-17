@@ -131,28 +131,32 @@ QString Stylesheets::sliderStyles() {
     );
 }
 
-QString Stylesheets::treeViewStyles() { // NOT USED
+QString Stylesheets::treeViewStyles() {
     return QString(
-                "background-color: black;"
-                "QTreeView::indicator {"
-                "   width: 18px;"
-                "   height: 18px;"
+                "QTreeView {"
+                "   background-color: " + color1().name(QColor::HexArgb) + ";"
+                "   border-bottom-left-radius: 8px;"
+                "   border-bottom-right-radius: 8px;"
                 "}"
-                "QTreeView::indicator:unchecked {"
-                "   image: url(:/elems/check_blank);"
-                "}"
-                "QTreeView::indicator:checked {"
-                "   image: url(:/elems/check_fill);"
-                "}"
-                "QTreeView::indicator:checked:hover {"
-                "   image: url(:/elems/check_trist);"
-                "}"
-                "QTreeView::indicator:indeterminate:hover {"
-                "   image: url(:/elems/check_trist);"
-                "}"
-                "QTreeView::indicator:indeterminate {"
-                "   image: url(:/elems/check_fill);"
-                "}"
+//                "QTreeView::indicator {"
+//                "   width: 18px;"
+//                "   height: 18px;"
+//                "}"
+//                "QTreeView::indicator:unchecked {"
+//                "   image: url(:/elems/check_blank);"
+//                "}"
+//                "QTreeView::indicator:checked {"
+//                "   image: url(:/elems/check_fill);"
+//                "}"
+//                "QTreeView::indicator:checked:hover {"
+//                "   image: url(:/elems/check_trist);"
+//                "}"
+//                "QTreeView::indicator:indeterminate:hover {"
+//                "   image: url(:/elems/check_trist);"
+//                "}"
+//                "QTreeView::indicator:indeterminate {"
+//                "   image: url(:/elems/check_fill);"
+//                "}"
               );
 }
 

@@ -18,6 +18,7 @@
 
 #include "view_settings.h"
 #include "misc/settings.h"
+#include "misc/stylesheets.h"
 
 #include "tree_view_style.h"
 

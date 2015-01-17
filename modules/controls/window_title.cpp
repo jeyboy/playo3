@@ -9,7 +9,7 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
     setContentsMargins(margins);
     setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px; }");
     setFixedHeight(height);
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     TitleLayout * l = new TitleLayout(this);
 
