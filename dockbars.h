@@ -28,12 +28,12 @@ namespace Playo3 {
 
         void load(QJsonArray & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(QString barName);
+        QDockWidget * linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs);
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
         inline DockBar * current() const { return active; }
 
-        DockBar * createDocBar(QString name, ViewSettings settings);
+        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0);
         DockBar * createDocBar(QString name, QWidget * content);
         inline void activate(DockBar * bar) {
             if ((active = bar))

@@ -71,12 +71,7 @@ ViewInterface::~ViewInterface() {
 
 QJsonObject ViewInterface::toJson() {
     QJsonObject res = mdl -> toJson();
-
-    QJsonObject set = QJsonObject();
-    sttngs.toJson(set);
-
-    res["p"] = QString();
-    res["set"] = set;
+//    res["p"] = QString();
 //    res["l"] = mdl -> itemsCount();
     return res;
 }

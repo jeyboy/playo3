@@ -21,7 +21,7 @@ namespace Playo3 { //TODO: maybe change on bitset ?
             type = tree;
         }
 
-        ViewSettings(QJsonObject & obj) {
+        ViewSettings(QJsonObject obj) {
             deleteFile = obj["del"].toBool();
             playlist = obj["play"].toBool();
             interactive = obj["int"].toBool();
@@ -29,12 +29,16 @@ namespace Playo3 { //TODO: maybe change on bitset ?
             type = (ViewType)obj["type"].toInt();
         }
 
-        void toJson(QJsonObject & obj) {
+        QJsonObject toJson() {
+            QJsonObject obj;
+
             obj["del"] = deleteFile;
             obj["play"] = playlist;
             obj["int"] = interactive;
             obj["common"] = common;
             obj["type"] = type;
+
+            return obj;
         }
     };
 }

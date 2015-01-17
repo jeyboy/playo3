@@ -123,7 +123,6 @@ void ToolBars::save(DataStore * settings) {
         foreach(QToolBar * bar, bars) {
             curr_tab = QJsonObject();
 
-//            curr_tab.insert("area", window -> toolBarArea(bar));
             curr_tab.insert("title", bar -> windowTitle());
             curr_tab.insert("name", bar -> objectName());
             curr_tab.insert("movable", bar -> isMovable());

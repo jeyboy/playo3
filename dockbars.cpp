@@ -25,30 +25,22 @@ void Dockbars::load(QJsonArray & bars) {
             obj = bar.toObject();
             barName = obj.value("title").toString();
             barsList.removeOne(barName);
-            curr_bar = linkNameToToolbars(barName);
+            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value("set").toObject()), obj.value("cont").toObject());
             curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
 
             if (obj.value("stick").toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
 
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
-//            window -> addToolBar((Qt::ToolBarArea)obj.value("area").toInt(), curr_bar);
-
-//            if (obj.contains("actions")) {
-//                QJsonArray actions = obj.value("actions").toArray();
-
-//                foreach(QJsonValue act, actions) {
-//                    actionObj = act.toObject();
-//                    addPanelButton(actionObj.value("name").toString(), actionObj.value("path").toString(), curr_bar);
-//                }
-//            }
         }
     } else {
         // Do something if we did not have any bars
     }
 
+    QJsonObject def;
+    ViewSettings defSettings;
     while(barsList.length() > 0)
-        window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst()));
+        window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst(), defSettings, def));
 }
 
 void Dockbars::save(DataStore * settings) {
@@ -64,7 +56,10 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("name", bar -> objectName());
             curr_bar.insert("stick", bar -> isSticked());
 
-            // save tab content
+            ViewInterface * v = view(bar);
+
+            curr_bar.insert("set", v -> settings().toJson());
+            curr_bar.insert("cont", v -> toJson());
 
             bar_array.append(curr_bar);
         }
@@ -73,26 +68,25 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(QString barName) {
+QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
     if (barName == "Screen") {
         return 0; // stub
-    } else {
-        return createDocBar(barName, 0);
     }
+    else return createDocBar(barName, settings, &attrs);
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings) {
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs) {
     ViewInterface * view;
 
     switch(settings.type) {
         case list: {
-            view = new ListView(0, settings);
+            view = new ListView(0, settings, attrs);
         break;}
         case level_tree: {
-            view = new LevelTreeView(0, settings);
+            view = new LevelTreeView(0, settings, attrs);
         break;}
         case tree: {
-            view = new TreeView(0, settings);
+            view = new TreeView(0, settings, attrs);
         break;}
         default: view = 0;
     }
