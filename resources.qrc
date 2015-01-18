@@ -38,5 +38,7 @@
         <file alias="stop">images/elements/stop.png</file>
         <file alias="unlocked">images/elements/unlocked.png</file>
         <file alias="volume">images/elements/volume2.png</file>
+        <file alias="sqroll_bottom">images/sqroll_bottom.png</file>
+        <file alias="sqroll_top">images/sqroll_top.png</file>
     </qresource>
 </RCC>
