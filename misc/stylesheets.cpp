@@ -139,7 +139,7 @@ QString Stylesheets::scrollStyles() {
         "}"
 
         "QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
-        "    background: #0073A5;" //#3CC1E9;"
+        "    background: #3BC0E8;" //#3CC1E9;"
         "}"
 
         "QScrollBar:horizontal  {"

@@ -585,7 +585,7 @@ void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
         event -> accept();
     } else event -> ignore();
 
-    QTreeView::dragEnterEvent(event);
+//    QTreeView::dragEnterEvent(event);
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
@@ -595,7 +595,7 @@ void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
     } else
         event -> ignore();
 
-    QTreeView::dragMoveEvent(event);
+//    QTreeView::dragMoveEvent(event);
 }
 
 void ViewInterface::dropEvent(QDropEvent *event) {
