@@ -8,9 +8,9 @@ FolderItem::FolderItem(int initState) : ItemInterface(0, initState) {
 
 }
 
-FolderItem::FolderItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(parent, hash), inBranchCount(hash -> value(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash), inBranchCount(hash -> value(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
     if (parent != 0)
-        ((FolderItem *)parent) -> declareFolder(_title, this);
+        parent -> declareFolder(_title, this);
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> value(JSON_TYPE_CHILDS).toArray();
@@ -49,14 +49,14 @@ FolderItem::FolderItem(QJsonObject * hash, ItemInterface * parent) : ItemInterfa
     }
 }
 
-FolderItem::FolderItem(const QString folderPath, QString folderTitle, ItemInterface * parent, int initState)
+FolderItem::FolderItem(const QString folderPath, QString folderTitle, FolderItem * parent, int initState)
     : ItemInterface(parent, folderPath, folderTitle, "", -1, initState) {
 
     if (_title.isEmpty())
         _title = folderPath;
 
     if (parent != 0)
-        ((FolderItem *)parent) -> declareFolder(_title, this);
+        parent -> declareFolder(_title, this);
 }
 
 FolderItem::~FolderItem() {
@@ -113,7 +113,7 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list) {
     FolderItem * curr = folders.value(name, 0);
 
     if (!curr)
-        curr = new FolderItem(name, name, curr);
+        curr = new FolderItem(name, name, this);
 
     if (list && !list -> isEmpty())
         return curr -> createFolder(list -> takeFirst(), list);
