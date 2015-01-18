@@ -131,6 +131,87 @@ QString Stylesheets::sliderStyles() {
     );
 }
 
+QString Stylesheets::scrollStyles() {
+    return QString(
+        "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
+        "    border: 1px solid grey;"
+        "    background: #333;"
+        "}"
+
+        "QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
+        "    background: #3CC1E9;"
+        "}"
+
+        "QScrollBar:horizontal  {"
+        "    height: 15px;"
+        "    margin: 0px 20px 0 20px;"
+        "}"
+        "QScrollBar::handle:horizontal  {"
+        "    background: white;"
+        "    min-width: 16px;"
+        "}"
+        "QScrollBar::add-line:horizontal  {"
+        "    width: 20px;"
+        "    subcontrol-position: right;"
+        "    subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar::sub-line:horizontal  {"
+        "    width: 20px;"
+        "    subcontrol-position: left;"
+        "    subcontrol-origin: margin;"
+        "}"
+
+        "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal  {"
+        "    border: 1px solid grey;"
+        "    width: 3px;"
+        "    height: 3px;"
+        "    background: white;"
+        "}"
+
+        "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
+        "    background: none;"
+        "}"
+
+//// vertical
+
+        "QScrollBar:vertical  {"
+        "    width: 15px;"
+        "    margin: 20px 0 20px 0;"
+        "}"
+        "QScrollBar::handle:vertical  {"
+        "    background: white;"
+        "    min-height: 16px;"
+        "    border-radius: 4px;"
+        "}"
+
+        "QScrollBar::add-line:vertical  {"
+        "    height: 20px;"
+        "    subcontrol-position: bottom;"
+        "    subcontrol-origin: margin;"
+        "    border-bottom-right-radius: 7px;"
+        "}"
+
+        "QScrollBar::sub-line:vertical  {"
+        "    height: 20px;"
+        "    subcontrol-position: top;"
+        "    subcontrol-origin: margin;"
+        "    border-top-left-radius: 7px;"
+        "}"
+
+        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical  {"
+        "    border: 1px solid grey;"
+        "    width: 3px;"
+        "    height: 3px;"
+        "    background: white;"
+        "}"
+
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
+        "    background: none;"
+        "}"
+    );
+}
+
 QString Stylesheets::treeViewStyles() {
     return QString(
                 "QTreeView {"
@@ -138,6 +219,8 @@ QString Stylesheets::treeViewStyles() {
                 "   border-bottom-left-radius: 8px;"
                 "   border-bottom-right-radius: 8px;"
                 "}"
+
+
 //                "QTreeView::indicator {"
 //                "   width: 18px;"
 //                "   height: 18px;"
@@ -157,7 +240,7 @@ QString Stylesheets::treeViewStyles() {
 //                "QTreeView::indicator:indeterminate {"
 //                "   image: url(:/elems/check_fill);"
 //                "}"
-              );
+              ) + scrollStyles();
 }
 
 QString Stylesheets::toolbarHighLightStyle() {

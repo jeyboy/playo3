@@ -77,9 +77,6 @@ namespace Playo3 {
     ////        void hideSpinner();
 
     //        void updated();
-
-    //    protected:
-    //        virtual ModelItems::ModelItem * createItem(QString path, ModelItems::ModelItem * parent);
 }
 
 #endif // MODEL_INTERFACE

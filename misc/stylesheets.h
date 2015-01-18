@@ -19,6 +19,8 @@ public:
 
     static QString treeViewStyles();
 
+    static QString scrollStyles();
+
     static QString toolbarHighLightStyle();
     static QString toolbarFixedStyle();
     static QString toolbarFloatStyle();
