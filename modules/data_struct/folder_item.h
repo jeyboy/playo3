@@ -21,14 +21,14 @@ namespace Playo3 {
         bool isExist() const;
         inline bool isContainer() const { return true; }
 
-        QJsonObject toJSON();
+        QJsonObject toJson();
 
         inline int childRow(ItemInterface * child) { return childItems.indexOf(child); }
         inline ItemInterface * child(int row) { return childItems.value(row); }
         virtual inline int childCount() const { return childItems.count(); }
-        inline void appendChild(ItemInterface * child) { childItems.append(child); }
-        inline void appendChildren(int pos, QList<ItemInterface *> & items) { childItems.append(items); }
-        inline void insertChild(int pos, ItemInterface * item) { childItems.insert(pos, item); }
+        inline void declareChild(ItemInterface * child) { childItems.append(child); } // parent not setted here
+        inline void declareChildren(QList<ItemInterface *> & items) { childItems.append(items); }
+        inline void declareChild(int pos, ItemInterface * item) { childItems.insert(pos, item); }
 //        inline bool insertChildren(int position, int count, int columns);
         bool removeChildren(int position, int count);
 
@@ -39,8 +39,12 @@ namespace Playo3 {
         void dropExpandProceedFlags();
         void updateCheckedState(bool checked);
 
+        FolderItem * createFolderPath(QString path);
+        FolderItem * createFolder(QString name, QStringList * list = 0);
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }
         inline int undeclareFolder(QString name) { return folders.remove(name); }
+//        inline bool isContainsFolder(QString name) { return folders.contains(name); }
+//        inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
         QHash<QString, FolderItem *> folders;
         QList<ItemInterface *> childItems;

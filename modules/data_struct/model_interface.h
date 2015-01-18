@@ -31,9 +31,10 @@ namespace Playo3 {
         bool insertColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
         bool removeColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
 //        bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
+        bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
-        ItemInterface * getItem(const QModelIndex & index) const;
+        ItemInterface * item(const QModelIndex & index) const;
 
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
@@ -44,29 +45,23 @@ namespace Playo3 {
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
     signals:
-        itemsCountChanged(int change);
+        void itemsCountChanged(int change);
     protected:
         virtual int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
-        template<class T> T * getItem(const QModelIndex & index) const {
-            return dynamic_cast<T *>(getItem(index));
+        template<class T> T * item(const QModelIndex & index) const {
+            return dynamic_cast<T *>(item(index));
         }
 
         Qt::KeyboardModifiers dropKeyModifiers;
         FolderItem * rootItem;
     };
 
-    //        ModelItems::ModelItem * buildPath(QString path);
-    //        bool isFolderExist(QString folderName, ModelItems::ModelItem * parent);
-    //        ModelItems::ModelItem * addFolder(QString folderPath, QString folderName, ModelItems::ModelItem * parent, QString remoteID = "");
-    //        ModelItems::ModelItem * addFolder(QString folder_name, ModelItems::ModelItem * parent, QString remoteID = "");
-
     ////        void refreshItem(ModelItems::ModelItem * item);
     ////        void removeFolderPrebuild(ModelItems::ModelItem * temp);
 
     ////        virtual WebApi * getApi() { return 0; } //stub
     //    signals:
-    //        void itemsCountChanged(int newCount);
     //        void expandNeeded(const QModelIndex &index) const;
     //        void spoilNeeded(const QModelIndex &index) const;
     ////        void showMessage(QString);
@@ -84,7 +79,6 @@ namespace Playo3 {
 
     //    protected:
     //        virtual ModelItems::ModelItem * createItem(QString path, ModelItems::ModelItem * parent);
-    //        QString folderName(QFileInfo & info);
 }
 
 #endif // MODEL_INTERFACE

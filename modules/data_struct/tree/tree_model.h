@@ -12,8 +12,8 @@ namespace Playo3 {
         ~TreeModel();
     protected:
         int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
-        void filesRoutine(ItemInterface * index, QFileInfo currFile);
-        void filesRoutine(ItemInterface * index, QList<QUrl> list);
+        int filesRoutine(FolderItem * index, QFileInfo currFile);
+        int filesRoutine(FolderItem * index, QList<QUrl> list);
     };
 }
 

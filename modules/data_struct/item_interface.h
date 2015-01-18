@@ -7,16 +7,8 @@
 #include <qdesktopservices.h>
 #include <qurl>
 
-//#include <qjsonobject.h>
-//#include <qfile>
-
-//#include "misc/filename_conversions.h"
-
-////    #include "model_item.h"
 ////    #include "media/library.h"
 ////    #include "media/player.h"
-////    #include "misc/rand.h"
-////    #include <algorithm>
 
 #include "model_item_parts/item_types.h"
 #include "model_item_parts/item_fields.h"
@@ -24,7 +16,6 @@
 namespace Playo3 {
     class ItemInterface : public ItemFields {
     public:
-        explicit ItemInterface(const QVector<QVariant> &data, ItemInterface * parent = 0);
         ItemInterface(ItemInterface * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemInterface(ItemInterface * parent, QJsonObject * hash);
         ItemInterface(ItemInterface * parent, QString path, QString title = "", QString extension = "", int size = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
@@ -49,9 +40,8 @@ namespace Playo3 {
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 
-        //            BaseItem * toBaseItem();
         inline virtual QUrl toUrl() { return QUrl::fromLocalFile(fullPath()); }
-        inline QString toPath() const { return parentItem ? parentItem -> toPath() + " " + QString::number(row()) : ""; }
+        inline QString buildTreePath() const { return parentItem ? parentItem -> buildTreePath() + " " + QString::number(row()) : ""; }
 
         inline QVariant data(int column) const { return itemData.value(column); }
         bool setData(int column, const QVariant & value);

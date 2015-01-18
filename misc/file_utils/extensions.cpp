@@ -10,6 +10,8 @@ Extensions *Extensions::instance() {
     return self;
 }
 
+//TODO: try to find join file with folder search pattern
+
 QFileInfoList Extensions::folderFiles(QFileInfo file) {
     return QDir(file.filePath()).entryInfoList(activeFilterList(), QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 }

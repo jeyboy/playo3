@@ -3,12 +3,6 @@
 
 using namespace Playo3;
 
-ItemInterface::ItemInterface(const QVector<QVariant> & data, ItemInterface * parent)
-    : ItemFields(), parentItem(parent) {
-
-    itemData = data;
-}
-
 ItemInterface::ItemInterface(ItemInterface * parent, int initState)
     : ItemFields(initState), parentItem(parent) {
 }
@@ -39,7 +33,7 @@ QString ItemInterface::fullPath() const {
     return path_buff;
 }
 
-void ItemInterface::openLocation() {
+void ItemInterface::openLocation() {// TODO: improve
     if (!parentItem -> fullPath().isEmpty())
         QDesktopServices::openUrl(parentItem -> toUrl());
     else {

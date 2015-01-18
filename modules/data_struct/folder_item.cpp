@@ -84,7 +84,7 @@ bool FolderItem::isExist() const {
     return QDir(fullPath()).exists();
 }
 
-QJsonObject FolderItem::toJSON() {
+QJsonObject FolderItem::toJson() {
     QJsonObject root = ItemInterface::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = FOLDER_ITEM;
@@ -100,6 +100,25 @@ QJsonObject FolderItem::toJSON() {
     }
 
     return root;
+}
+
+FolderItem * FolderItem::createFolderPath(QString path) {
+    QStringList list = path.split('/', QString::SkipEmptyParts);
+    if (list.isEmpty())
+        return this;
+    return createFolder(list.takeFirst(), &list);
+}
+
+FolderItem * FolderItem::createFolder(QString name, QStringList * list) {
+    FolderItem * curr = folders.value(name, 0);
+
+    if (!curr)
+        curr = new FolderItem(name, name, curr);
+
+    if (list && !list -> isEmpty())
+        return curr -> createFolder(list -> takeFirst(), list);
+    else
+        return curr;
 }
 
 

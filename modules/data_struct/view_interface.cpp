@@ -340,7 +340,7 @@ void ViewInterface::showContextMenu(const QPoint & pnt) { // TODO: rewrite
 }
 
 void ViewInterface::openLocation() {
-    ItemInterface * item = mdl -> getItem(currentIndex());
+    ItemInterface * item = mdl -> item(currentIndex());
     item -> openLocation();
 }
 

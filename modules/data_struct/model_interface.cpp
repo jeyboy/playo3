@@ -1,4 +1,5 @@
 #include "model_interface.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -20,12 +21,12 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-    ItemInterface * item;
+    ItemInterface * node;
 
     switch(role) {
         case Qt::DisplayRole: {
-           item = getItem(index);
-           return item -> data(/*TITLEID*/index.column());
+           node = item(index);
+           return node -> data(/*TITLEID*/index.column());
         }
 //        case Qt::DecorationRole: {
 //        //QPixmap pixmap(26, 26);
@@ -33,7 +34,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
 //        //QIcon icon(pixmap);
 
 
-//           item = getItem(index);
+//           item = item(index);
 
 //           if (item -> getState() -> isNotExist()) {
 //               return IconProvider::missedIcon();
@@ -46,41 +47,41 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
 //        }
 //        case Qt::CheckStateRole: {
 //            if (Settings::instance() -> isCheckboxShow()) {
-//                item = getItem(index);
+//                item = item(index);
 //                return item -> getState() -> isChecked();
 //            } else return QVariant();
 //        }
 
 //        case Qt::ToolTipRole:
-//            item = getItem(index);
+//            item = item(index);
 //            return item -> data(TITLEID).toString();
 //        case Qt::SizeHintRole:
-//            item = getItem(index);
+//            item = item(index);
 //            if (item -> isFolder())
-//                return QSize(0, Settings::instance() -> getItemHeight());
+//                return QSize(0, Settings::instance() -> itemHeight());
 //            else
 //                return QSize(0, Settings::instance() -> getTotalItemHeight());
 //        case Qt::TextAlignmentRole:
-//            item = getItem(index);
+//            item = item(index);
 //            if (item -> isFolder() || !Settings::instance() -> isShowInfo())
 //                return Qt::AlignVCenter;
 //            else
 //                return Qt::AlignLeft;
 //        case Qt::FontRole:
-//            return Settings::instance() -> getItemFont();
+//            return Settings::instance() -> itemFont();
 //        case EXTENSIONID:
-//            item = getItem(index);
+//            item = item(index);
 //            return item -> data(EXTENSIONID);
 //        case ADDFONTID:
-//            return Settings::instance() -> getItemInfoFont();
+//            return Settings::instance() -> itemInfoFont();
 //        case Qt::UserRole:
-//            item = getItem(index);
+//            item = item(index);
 //            return item -> getState() -> currStateValue();
 //        case PROGRESSID:
-//            item = getItem(index);
+//            item = item(index);
 //            return Download::instance() -> getProgress(item);
 //        case INFOID:
-//            item = getItem(index);
+//            item = item(index);
 //            return QVariant(item -> getInfo());
 
         default: return QVariant();
@@ -99,7 +100,7 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex &index) const {
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 
-ItemInterface * ModelInterface::getItem(const QModelIndex & index) const {
+ItemInterface * ModelInterface::item(const QModelIndex & index) const {
     if (index.isValid()) {
         ItemInterface * item = static_cast<ItemInterface *>(index.internalPointer());
         if (item)
@@ -123,7 +124,7 @@ QModelIndex ModelInterface::index(int row, int column, const QModelIndex & paren
     if (parent.isValid() && parent.column() != 0) // !hasIndex(row, column, parent)
         return QModelIndex();
 
-    FolderItem * parentItem = getItem<FolderItem>(parent);
+    FolderItem * parentItem = item<FolderItem>(parent);
     ItemInterface * childItem = parentItem -> child(row);
 
     if (childItem)
@@ -155,7 +156,7 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
 //}
 
 //bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
-//    FolderItem * parentItem = getItem<FolderItem>(parent);
+//    FolderItem * parentItem = item<FolderItem>(parent);
 //    bool success = parentItem != 0;
 
 //    if (success) {
@@ -171,7 +172,7 @@ QModelIndex ModelInterface::parent(const QModelIndex & index) const {
     if (!index.isValid())
         return QModelIndex();
 
-    ItemInterface * childItem = getItem(index);
+    ItemInterface * childItem = item(index);
     ItemInterface * parentItem = childItem -> parent();
 
     if (parentItem == rootItem)
@@ -194,8 +195,17 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
     return success;
 }
 
+bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+    if (list.isEmpty()) return false;
+    beginInsertRows(parent, pos, pos + list.length() - 1);
+    dropProcession(parent, pos, list);
+    endInsertRows();
+    //        emit spoilNeeded(modelIndex);
+    return true;
+}
+
 bool ModelInterface::removeRows(int position, int rows, const QModelIndex &parent) {
-    FolderItem * parentItem = getItem<FolderItem>(parent);
+    FolderItem * parentItem = item<FolderItem>(parent);
     bool success = parentItem != 0;
 
     if (success) {
@@ -207,11 +217,11 @@ bool ModelInterface::removeRows(int position, int rows, const QModelIndex &paren
     return success;
 }
 
-int ModelInterface::rowCount(const QModelIndex &parent) const {
+int ModelInterface::rowCount(const QModelIndex  &parent) const {
     //        if (parent.column() > 0)
     //            return 0;
 
-    FolderItem * parentItem = getItem<FolderItem>(parent);
+    FolderItem * parentItem = item<FolderItem>(parent);
     return parentItem ? parentItem -> childCount() : 0;
 }
 
@@ -219,7 +229,7 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
     //        ModelItem * item;
 
     //        if (role == Qt::CheckStateRole) {
-    //            item = getItem(index);
+    //            item = item(index);
 
     //            item -> changeCheckedState(!item -> getState() -> isChecked());
 
@@ -234,7 +244,7 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
     //        if (role != Qt::EditRole)
     //            return false;
 
-    //        item = getItem(index);
+    //        item = item(index);
     //        bool result = item -> setData(index.column(), value);
 
     //        if (result)
@@ -247,8 +257,8 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
     if (role != Qt::EditRole)
         return false;
 
-    ItemInterface * item = getItem(index);
-    bool result = item -> setData(index.column(), value);
+    ItemInterface * node = item(index);
+    bool result = node -> setData(index.column(), value);
 
     if (result)
         emit dataChanged(index, index);
@@ -276,7 +286,7 @@ void ModelInterface::shuffle() {
 
 //    bool Model::removeRow(int row, const QModelIndex &parentIndex) {
 //        int removeCount = 1;
-//        ModelItem * parentItem = getItem(parentIndex);
+//        ModelItem * parentItem = item(parentIndex);
 //        ModelItem * item = parentItem -> child(row);
 //        QString folderName;
 //        bool isUnprocessed = item -> isFolder();
@@ -305,7 +315,7 @@ void ModelInterface::shuffle() {
 //    }
 
 //    bool Model::removeRows(int position, int rows, const QModelIndex &parent) {
-//        ModelItem *parentItem = getItem(parent);
+//        ModelItem *parentItem = item(parent);
 //        bool success = true;
 
 //        beginRemoveRows(parent, position, position + rows - 1);
@@ -362,53 +372,14 @@ void ModelInterface::shuffle() {
 //        temp -> parent() -> removeChildren(temp -> row(), 1);
 //    }
 
-//    /////////////////////////////////////////////////////////
-
-//    ModelItem * Model::buildPath(QString path) {
-//        QStringList list = path.split('/', QString::SkipEmptyParts);
-//        ModelItem * curr = rootItem;
-
-//        foreach(QString piece, list) {
-//            curr = addFolder(piece, curr);
-//        }
-
-//        return curr;
-//    }
-
-//    bool Model::isFolderExist(QString folderName, ModelItem * parent) {
-//        return parent -> foldersList() -> contains(folderName);
-//    }
-
-//    //TODO: improve model insertion (add emit of rows insertion)
-
-
-//    ModelItem * Model::addFolder(QString folderPath, QString folderName, ModelItem * parent, QString remoteID) {
-//        ModelItem * curr = parent;
-
-//        if (isFolderExist(folderName, curr)) {
-//            curr = curr -> foldersList() -> value(folderName);
-//        } else {
-//            if (!remoteID.isEmpty())
-//                curr = new VkFolder(folderPath, remoteID, folderName, curr);
-//            else
-//                curr = new FolderItem(folderPath, folderName, curr);
-//        }
-
-//        return curr;
-//    }
-
-//    ModelItem * Model::addFolder(QString folderPath, ModelItem * parent, QString remoteID) {
-//        return addFolder(folderPath, folderPath, parent, remoteID);
-//    }
-
 //    //////////////////////// slots //////////////////////////
 
 //    void Model::expanded(const QModelIndex &index) {
-//        ModelItem * item = getItem(index);
+//        ModelItem * item = item(index);
 //        item -> getState() -> setExpanded();
 //    }
 //    void Model::collapsed(const QModelIndex &index) {
-//        ModelItem * item = getItem(index);
+//        ModelItem * item = item(index);
 //        item -> getState() -> unsetExpanded();
 //    }
 
@@ -425,13 +396,27 @@ QStringList ModelInterface::mimeTypes() const {
 }
 
 QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
+//    if (indexes.count() <= 0)
+//   return 0;
+//   QStringList types = mimeTypes();
+//   if (types.isEmpty())
+//   return 0;
+//   QMimeData *data = new QMimeData();
+//   QString format = types.at(0);
+//   QByteArray encoded;
+//   QDataStream stream(&encoded, QIODevice::WriteOnly);
+//   encodeData(indexes, stream);
+//   data->setData(format, encoded);
+//   return data;
+
+
     QMimeData * mimeData = new QMimeData();
     QList<QUrl> list;
     ItemInterface * temp;
 
     foreach (const QModelIndex & index, indexes) {
         if (index.isValid()) {
-            temp = getItem(index);
+            temp = item(index);
             list.append(temp -> toUrl());
         }
     }
@@ -440,23 +425,43 @@ QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
     return mimeData;
 }
 
-bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction /*action*/, int row, int /*column*/, const QModelIndex & parentIndex) {
-//    if (action == Qt::CopyAction) {
+bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int /*column*/, const QModelIndex & parentIndex) {
+    if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
+        return false;
 
-//    } else {
 
-//    }
 
-    if (data -> hasUrls()) {
-        if (dropKeyModifiers & Qt::ControlModifier)
-            ExtensionDialog(QApplication::activeWindow()).exec();
+//   // check if the format is supported
+//   QStringList types = mimeTypes();
+//   if (types.isEmpty())
+//   return false;
+//   QString format = types.at(0);
+//   if (!data->hasFormat(format))
+//   return false;
+//    int row_count = rowCount(parent);
+//    if (row > row_count || row == -1)
+//        row = row_count;
 
-        beginInsertRows(parentIndex, row, row + data -> urls().length() - 1);
-        dropProcession(parentIndex, row, data -> urls());
-        endInsertRows();
+//    if (column == -1)
+//        column = 0;
 
-//        emit spoilNeeded(modelIndex);
-        return true;
+//   QByteArray encoded = data -> data(format);
+//   QDataStream stream(&encoded, QIODevice::ReadOnly);
+//   return decodeData(row, column, parent, stream);
+
+
+
+    if (action == Qt::CopyAction) {
+        if (data -> hasUrls()) {
+            if (dropKeyModifiers & Qt::ControlModifier)
+                ExtensionDialog(QApplication::activeWindow()).exec();
+
+            if (row < 0) row = rowCount(parentIndex);
+            return insertRows(data -> urls(), row, parentIndex);
+        }
+    } else {
+//        bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
+//        void endMoveRows();
     }
 
     return false;
