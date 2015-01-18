@@ -25,7 +25,7 @@ int TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
     foreach(QFileInfo file, fileList)
-        index -> declareChild(new FileItem(file.fileName(), index));
+        new FileItem(file.fileName(), index);
 }
 
 int TreeModel::filesRoutine(FolderItem * index, QList<QUrl> list){
@@ -35,7 +35,7 @@ int TreeModel::filesRoutine(FolderItem * index, QList<QUrl> list){
             filesRoutine(index -> createFolder(file.fileName()), file);
         } else {
             if (Extensions::instance() -> respondToExtension(file.suffix()))
-                index -> declareChild(new FileItem(file.fileName(), index));
+                new FileItem(file.fileName(), index);
         }
     }
 }

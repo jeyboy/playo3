@@ -2,8 +2,6 @@
 #define ITEM_INTERFACE
 
 #include <qlist.h>
-#include <qvariant.h>
-#include <qvector.h>
 #include <qdesktopservices.h>
 #include <qurl>
 
@@ -45,12 +43,12 @@ namespace Playo3 {
         inline virtual QUrl toUrl() { return QUrl::fromLocalFile(fullPath()); }
         QString buildTreePath() const;
 
-        inline QVariant data(int column) const { return itemData.value(column); }
+        QVariant data(int column) const;
         bool setData(int column, const QVariant & value);
 
         inline FolderItem * parent() { return parentItem; }
 
-        inline int columnCount() const { return itemData.count(); }
+        inline virtual int columnCount() const { return 1; }
 //        bool insertColumns(int position, int columns);
 //        bool removeColumns(int position, int columns);
 
@@ -58,7 +56,6 @@ namespace Playo3 {
             if (setChecked) set(checked); else unset(checked);
         }
     private:
-        QVector<QVariant> itemData;
         FolderItem * parentItem;
     };
 

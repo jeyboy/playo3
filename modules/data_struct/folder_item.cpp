@@ -99,6 +99,8 @@ QJsonObject FolderItem::toJson() {
         root[JSON_TYPE_CHILDS] = ar;
     }
 
+    qDebug() << "IN FOLDER JSON " << root;
+
     return root;
 }
 

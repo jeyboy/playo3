@@ -26,7 +26,7 @@ namespace Playo3 {
         inline int childRow(ItemInterface * child) { return childItems.indexOf(child); }
         inline ItemInterface * child(int row) { return childItems.value(row); }
         virtual inline int childCount() const { return childItems.count(); }
-        inline void declareChild(ItemInterface * child) { childItems.append(child); } // parent not setted here
+        inline void declareChild(ItemInterface * child) { childItems.append(child); }
         inline void declareChildren(QList<ItemInterface *> & items) { childItems.append(items); }
         inline void declareChild(int pos, ItemInterface * item) { childItems.insert(pos, item); }
 //        inline bool insertChildren(int position, int count, int columns);

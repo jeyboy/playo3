@@ -14,9 +14,10 @@ namespace Playo3 {
     #define PATHID Qt::UserRole - 3
     #define FOLDERID Qt::UserRole - 4
     #define STATEID Qt::UserRole - 5
-    #define TITLESCACHEID Qt::UserRole - 6
-    #define PROGRESSID Qt::UserRole - 7
-    #define INFOID Qt::UserRole - 8
+    #define INFOID Qt::UserRole - 6
+
+    #define TITLESCACHEID Qt::UserRole - 7
+    #define PROGRESSID Qt::UserRole - 8
     #define ADDFONTID Qt::UserRole - 9
 
     class ItemFields : public ItemState {

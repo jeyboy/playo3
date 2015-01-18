@@ -5,12 +5,21 @@ using namespace Playo3;
 
 ItemInterface::ItemInterface(FolderItem * parent, int initState)
     : ItemFields(initState), parentItem(parent) {
+
+    if (parentItem)
+        parentItem -> declareChild(this);
 }
 ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
     : ItemFields(hash), parentItem(parent) {
+
+    if (parentItem)
+        parentItem -> declareChild(this);
 }
 ItemInterface::ItemInterface(FolderItem * parent, QString path, QString title, QString extension, int size, int initState)
     : ItemFields(path, title, extension, size, initState), parentItem(parent) {
+
+    if (parentItem)
+        parentItem -> declareChild(this);
 }
 
 ItemInterface::~ItemInterface() {
@@ -83,49 +92,31 @@ QString ItemInterface::buildTreePath() const {
     return parentItem ? parentItem -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
-bool ItemInterface::setData(int column, const QVariant &value) {
-    if (column < 0 || column >= itemData.size())
-        return false;
+QVariant ItemInterface::data(int column) const {
+    switch(column) {
+        case TITLEID:           return _title;
+        case EXTENSIONID:       return _extension;
+        case PATHID:            return _path;
+        case FOLDERID:          return isContainer();
+//        case TITLESCACHEID:     return QVariant(*getTitlesCache());
+//        case STATEID:           return itemStateVal();
+        default:                return QVariant();
+    }
+}
 
-    itemData[column] = value;
+bool ItemInterface::setData(int column, const QVariant &value) {
+    switch(column) {
+        case TITLEID:       { _title = value.toString(); break; }
+        case EXTENSIONID:   { _extension = value.toString(); break; }
+        case PATHID:        { _path = value.toString(); break; }
+        case STATEID:       { /*setState(value.toInt(), false);*/ break;}
+        default:            { return false; }
+    }
+
     return true;
 }
 
-
 ///////////////////////////////////////////////////////////
-
-//    ModelItem::ModelItem(int initState) {
-//        parentItem = 0;
-//        titlesCache = 0;
-//        state = new ModelItemState(initState);
-//        path = QString();
-//        title = QString("--(O_o)--");
-//        extension = QString();
-//        genreID = -1;
-//        duration = -1;
-//        size = -1;
-//        info = -1;
-//        bpm = 0;
-//    }
-
-//    ModelItem::ModelItem(QJsonObject * hash, ModelItem * parent) {
-//        parentItem = parent;
-//        titlesCache = 0;
-//        state = new ModelItemState(hash -> value("s").toInt());
-//        path = hash -> value("p").toString();
-//        title = hash -> value("t").toString();
-//        extension = hash -> value("e").toString();
-//        genreID = hash -> value("g").toInt(-1);
-//        duration = hash -> value("d").toString("");
-
-//        size = hash -> value("b").toInt(-1);
-//        info = hash -> value("a").toString("");
-//        bpm = hash -> value("m").toInt(0);
-
-//        if (parent != 0) {
-//           parent -> appendChild(this);
-//        }
-//    }
 
 //    ModelItem::ModelItem(const QString filePath, QString fileName, ModelItem * parent, int genre_id, QString itemDuration, int itemSize, QString itemInfo, int initState) {
 //        parentItem = parent;
@@ -174,61 +165,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //        }
 //    }
 
-//    QUrl ModelItem::toUrl() {
-//        return QUrl::fromLocalFile(fullPath());
-//    }
-
-//    ModelItem * ModelItem::toModelItem() {
-//        return dynamic_cast<ModelItem *>(this);
-//    }
-
-
-//    ModelItem * ModelItem::parent() {
-//        return parentItem;
-//    }
-
-//    ModelItem *ModelItem::child(int) { return 0; }
-
-//    int ModelItem::childTreeCount() const { return 0; }
-
-//    int ModelItem::childCount() const { return 0; }
-
-//    void ModelItem::insertChild(int, ModelItem *) { }
-
-//    void ModelItem::appendChild(ModelItem *) {}
-
-//    bool ModelItem::removeChildren(int, int) { return false; }
-
-
-//    QVariant ModelItem::data(int column) const {
-//        switch(column) {
-//            case TITLEID: return getTitle();
-//            case EXTENSIONID: return extension;
-//            case PATHID: return path;
-//            case FOLDERID: return isFolder();
-//            case TITLESCACHEID: return QVariant(*getTitlesCache());
-//            case STATEID: return getState() -> currStateValue();
-//            default: return QVariant();
-//        }
-//    }
-
-//    bool ModelItem::setData(int column, const QVariant &value) {
-//        if (column < 0 || column >= 2)
-//    //    if (column < 0 || column >= itemData.size())
-//            return false;
-
-//    //    itemData[column] = value;
-
-//        switch(column) {
-//            case TITLEID: { title = value.toString(); break; }
-//            case EXTENSIONID: { extension = value.toString(); break; }
-//            case PATHID: { path = value.toString(); break; }
-//            case STATEID: { setState(value.toInt(), false); break;}
-//        }
-
-//        return true;
-//    }
-
 //    void ModelItem::setState(int new_state, bool append_to_library) {
 ////        if (state -> setBit(new_state) && append_to_library) {
 ////            if (state -> isListened())
@@ -254,7 +190,3 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //    QList<QString> *ModelItem::getTitlesCache() const {
 //        return titlesCache;
 //    }
-
-//    QList<ModelItem *> * ModelItem::childItemsList() { return 0;}
-
-//}
