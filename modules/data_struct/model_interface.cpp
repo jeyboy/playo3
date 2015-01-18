@@ -372,18 +372,18 @@ void ModelInterface::shuffle() {
 //        temp -> parent() -> removeChildren(temp -> row(), 1);
 //    }
 
-//    //////////////////////// slots //////////////////////////
+//////////////////////// slots //////////////////////////
 
-//    void Model::expanded(const QModelIndex &index) {
-//        ModelItem * item = item(index);
-//        item -> getState() -> setExpanded();
-//    }
-//    void Model::collapsed(const QModelIndex &index) {
-//        ModelItem * item = item(index);
-//        item -> getState() -> unsetExpanded();
-//    }
+void ModelInterface::expanded(const QModelIndex & index) {
+    ItemInterface * node = item(index);
+    node -> set(ItemState::expanded);
+}
+void ModelInterface::collapsed(const QModelIndex & index) {
+    ItemInterface * node = item(index);
+    node -> unset(ItemInterface::expanded);
+}
 
-//    /////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 
 Qt::DropActions ModelInterface::supportedDropActions() const {
     return Qt::CopyAction | Qt::MoveAction;
@@ -391,11 +391,12 @@ Qt::DropActions ModelInterface::supportedDropActions() const {
 
 QStringList ModelInterface::mimeTypes() const {
     QStringList types;
-    types << "text/uri-list";
+    types << QLatin1String("text/uri-list");
+    types << QLatin1String("application/x-qabstractitemmodeldatalist"); // inner format for items moving
     return types;
 }
 
-QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
+QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const { //TODO: need to additionaly add inner format
 //    if (indexes.count() <= 0)
 //   return 0;
 //   QStringList types = mimeTypes();
@@ -429,28 +430,6 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
-
-
-//   // check if the format is supported
-//   QStringList types = mimeTypes();
-//   if (types.isEmpty())
-//   return false;
-//   QString format = types.at(0);
-//   if (!data->hasFormat(format))
-//   return false;
-//    int row_count = rowCount(parent);
-//    if (row > row_count || row == -1)
-//        row = row_count;
-
-//    if (column == -1)
-//        column = 0;
-
-//   QByteArray encoded = data -> data(format);
-//   QDataStream stream(&encoded, QIODevice::ReadOnly);
-//   return decodeData(row, column, parent, stream);
-
-
-
     if (action == Qt::CopyAction) {
         if (data -> hasUrls()) {
             if (dropKeyModifiers & Qt::ControlModifier)
@@ -460,13 +439,26 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {
+        //   QStringList types = mimeTypes();
+        //   QString format = types.at(0);
+        //   if (!data->hasFormat(format))
+        //   return false;
+        //    int row_count = rowCount(parent);
+        //    if (row > row_count || row == -1)
+        //        row = row_count;
+
+        //    if (column == -1)
+        //        column = 0;
+
+        //   QByteArray encoded = data -> data(format);
+        //   QDataStream stream(&encoded, QIODevice::ReadOnly);
+        //   return decodeData(row, column, parent, stream);
+
+
+
 //        bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
 //        void endMoveRows();
     }
 
     return false;
 }
-
-//    ModelItem * Model::createItem(QString path, ModelItem * parent) {
-//       return (new FileItem(path, parent)) -> toModelItem();
-//    }

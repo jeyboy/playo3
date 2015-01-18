@@ -5,8 +5,6 @@ using namespace Playo3;
 ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings)  {
 
-    header() -> hide();
-
     setIndentation(12);
     setStyle(new TreeViewStyle);
     setStyleSheet(Stylesheets::treeViewStyles());
@@ -31,16 +29,16 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
 //    setItemDelegate(new ItemDelegate(this));
 
-//    setContextMenuPolicy(Qt::CustomContextMenu);
-//    int iconDimension = Settings::instance() -> getIconHeight();
-//    setIconSize(QSize(iconDimension, iconDimension));
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    int iconDimension = Settings::instance() -> getIconHeight();
+    setIconSize(QSize(iconDimension, iconDimension));
 
 //    connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &))); // move logic to the void mouseDoubleClickEvent(QMouseEvent *)
 //    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &))); // move logic to the contextMenuEvent(QContextMenuEvent *)
-//    connect(this, SIGNAL(expanded(const QModelIndex &)), model, SLOT(expanded(const QModelIndex &)));
-//    connect(this, SIGNAL(collapsed(const QModelIndex &)), model, SLOT(collapsed(const QModelIndex &)));
+    connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
+    connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
 
-//    connect(model, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
+    connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
 //    connect(model, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(updateSelection(QModelIndex)));
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
@@ -49,16 +47,12 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 //    connect(model, SIGNAL(updated()), this, SLOT(modelUpdate()));
 //    connect(model, SIGNAL(showMessage(QString)), this, SLOT(showMessage(QString)));
 
-//    connect(Download::instance(), SIGNAL(slotChanged(QString)), this, SLOT(setHeaderText(QString)));
-
+    header() -> hide();
 //    header() -> setSectionResizeMode(0, QHeaderView::Interactive);
 //    header()->setStretchLastSection(false);
 
 
-    ////  setDragDropOverwriteMode(true);
-    ////  setMovement(QTreeView::Snap);
-
-    ////  setFlow(QListView::TopToBottom);
+    setDragDropOverwriteMode(true); // TODO: need modifications in ModelInterface::dropMimeData
 
     ////    setTreePosition(2);
     ////    setRootIndex();
@@ -351,18 +345,17 @@ void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & opt
 
 
     // TODO: add initiated items to hash for update later on the same name state change
-//    ModelItem * item = model -> getItem(index);
+    ItemInterface * node = mdl -> item(index);
 
-//    if (!item -> getState() -> isProceed()) {
-//        item -> getState() -> setProceed();
-//        if (!item -> isFolder()) {
+    if (!node -> is(ItemState::proceeded)) {
+        node -> set(ItemState::proceeded);
+//        if (!node -> isContainer()) {
 //            Library::instance() -> initItem(item, model, SLOT(libraryResponse()));
 //        }
 
-//        if (item -> getState() -> isExpanded()) {
-//            emit model -> expandNeeded(index);
-//        }
-//    }
+        if (node -> is(ItemState::expanded))
+            emit mdl -> expandNeeded(index);
+    }
 
     QTreeView::drawRow(painter, options, index);
 }

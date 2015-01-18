@@ -44,7 +44,15 @@ namespace Playo3 {
         QStringList mimeTypes() const;
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
+
+    public slots:
+//        void libraryResponse();
+//        virtual void refresh();
+        void expanded(const QModelIndex & index);
+        void collapsed(const QModelIndex & index);
+
     signals:
+        void expandNeeded(const QModelIndex &index) const;
         void itemsCountChanged(int change);
     protected:
         virtual int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
@@ -62,7 +70,6 @@ namespace Playo3 {
 
     ////        virtual WebApi * getApi() { return 0; } //stub
     //    signals:
-    //        void expandNeeded(const QModelIndex &index) const;
     //        void spoilNeeded(const QModelIndex &index) const;
     ////        void showMessage(QString);
 
@@ -70,12 +77,6 @@ namespace Playo3 {
     ////        void hideSpinner();
 
     //        void updated();
-
-    //    public slots:
-    ////        void libraryResponse();
-    ////        virtual void refresh();
-    //        void expanded(const QModelIndex &index);
-    //        void collapsed(const QModelIndex &index);
 
     //    protected:
     //        virtual ModelItems::ModelItem * createItem(QString path, ModelItems::ModelItem * parent);
