@@ -5,6 +5,8 @@ using namespace Playo3;
 ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings)  {
 
+    header() -> hide();
+
     setIndentation(12);
     setStyle(new TreeViewStyle);
     setStyleSheet(Stylesheets::treeViewStyles());

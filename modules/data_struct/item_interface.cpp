@@ -117,26 +117,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 }
 
 ///////////////////////////////////////////////////////////
-
-//    ModelItem::ModelItem(const QString filePath, QString fileName, ModelItem * parent, int genre_id, QString itemDuration, int itemSize, QString itemInfo, int initState) {
-//        parentItem = parent;
-//        titlesCache = 0;
-//        size = itemSize;
-//        info = itemInfo;
-//        state = new ModelItemState(initState);
-
-//        title = fileName.replace("\n", " ");
-//        path = filePath;
-//        genreID = genre_id;
-//        bpm = 0;
-//        duration = itemDuration;
-//    //    extension = fileExtension;
-
-//        if (parent != 0) {
-//           parent -> appendChild(this);
-//        }
-//    }
-
 //    ModelItem::~ModelItem() {
 //        delete state;
 //        delete titlesCache;
