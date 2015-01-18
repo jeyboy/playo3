@@ -1,26 +1,25 @@
 #ifndef FILE_ITEM_H
 #define FILE_ITEM_H
 
-//#include <QJsonObject>
-
 #include <QFile>
 #include "item_interface.h"
+#include "folder_item.h"
 
 namespace Playo3 {
     class FileItem : public ItemInterface {
     public:
-        FileItem(QJsonObject * hash, ItemInterface * parent = 0);
-        FileItem(const QString filepath, ItemInterface * parent = 0);
+        FileItem(QJsonObject * hash, FolderItem * parent = 0);
+        FileItem(const QString filepath, FolderItem * parent = 0);
         ~FileItem();
 
         bool removePhysicalObject();
 
         bool isExist() const;
 
-        QJsonObject toJSON();
-    protected:
-        QString fileExtension(QString filePath);
-        QString fileTitle(QString filePath);
+        QJsonObject toJson();
+//    protected:
+//        QString fileExtension(QString filePath);
+//        QString fileTitle(QString filePath);
     };
 }
 

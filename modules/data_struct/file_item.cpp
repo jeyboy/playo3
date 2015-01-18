@@ -2,10 +2,10 @@
 
 using namespace Playo3;
 
-FileItem::FileItem(QJsonObject * hash, ItemInterface * parent) : ItemInterface(parent, hash) {
+FileItem::FileItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash) {
 }
 
-FileItem::FileItem(QString filePath, ItemInterface * parent)
+FileItem::FileItem(QString filePath, FolderItem * parent)
     : ItemInterface(parent, filePath, filePath.section('/', -1, -1)) {
     _extension = _title.section('.', -1, -1);
     if (_extension != _title)
@@ -25,7 +25,7 @@ bool FileItem::isExist() const {
     return QFile::exists(fullPath());
 }
 
-QJsonObject FileItem::toJSON() {
+QJsonObject FileItem::toJson() {
     QJsonObject root = ItemInterface::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = FILE_ITEM;

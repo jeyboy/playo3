@@ -186,7 +186,7 @@
   <customwidget>
    <class>SimpleListView</class>
    <extends>QListView</extends>
-   <header>override/simple_list_view.h</header>
+   <header>modules/controls/simple_list_view.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
