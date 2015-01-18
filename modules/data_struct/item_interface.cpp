@@ -3,13 +3,13 @@
 
 using namespace Playo3;
 
-ItemInterface::ItemInterface(ItemInterface * parent, int initState)
+ItemInterface::ItemInterface(FolderItem * parent, int initState)
     : ItemFields(initState), parentItem(parent) {
 }
-ItemInterface::ItemInterface(ItemInterface * parent, QJsonObject * hash)
+ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
     : ItemFields(hash), parentItem(parent) {
 }
-ItemInterface::ItemInterface(ItemInterface * parent, QString path, QString title, QString extension, int size, int initState)
+ItemInterface::ItemInterface(FolderItem * parent, QString path, QString title, QString extension, int size, int initState)
     : ItemFields(path, title, extension, size, initState), parentItem(parent) {
 }
 
@@ -44,7 +44,7 @@ void ItemInterface::openLocation() {// TODO: improve
 
 int ItemInterface::row() const {
     if (parentItem)
-        return ((FolderItem *)parentItem) -> childRow(const_cast<ItemInterface *>(this));
+        return parentItem -> childRow(const_cast<ItemInterface *>(this));
 
     return 0;
 }
@@ -78,6 +78,10 @@ int ItemInterface::column() const { // ?
 
 //    return true;
 //}
+
+QString ItemInterface::buildTreePath() const {
+    return parentItem ? parentItem -> buildTreePath() + " " + QString::number(row()) : "";
+}
 
 bool ItemInterface::setData(int column, const QVariant &value) {
     if (column < 0 || column >= itemData.size())

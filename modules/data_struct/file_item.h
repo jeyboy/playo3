@@ -17,9 +17,6 @@ namespace Playo3 {
         bool isExist() const;
 
         QJsonObject toJson();
-//    protected:
-//        QString fileExtension(QString filePath);
-//        QString fileTitle(QString filePath);
     };
 }
 

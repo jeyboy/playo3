@@ -14,11 +14,13 @@
 #include "model_item_parts/item_fields.h"
 
 namespace Playo3 {
+    class FolderItem;
+
     class ItemInterface : public ItemFields {
     public:
-        ItemInterface(ItemInterface * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
-        ItemInterface(ItemInterface * parent, QJsonObject * hash);
-        ItemInterface(ItemInterface * parent, QString path, QString title = "", QString extension = "", int size = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemInterface(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemInterface(FolderItem * parent, QJsonObject * hash);
+        ItemInterface(FolderItem * parent, QString path, QString title = "", QString extension = "", int size = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         virtual ~ItemInterface();
 
@@ -41,12 +43,12 @@ namespace Playo3 {
         }
 
         inline virtual QUrl toUrl() { return QUrl::fromLocalFile(fullPath()); }
-        inline QString buildTreePath() const { return parentItem ? parentItem -> buildTreePath() + " " + QString::number(row()) : ""; }
+        QString buildTreePath() const;
 
         inline QVariant data(int column) const { return itemData.value(column); }
         bool setData(int column, const QVariant & value);
 
-        inline ItemInterface * parent() { return parentItem; }
+        inline FolderItem * parent() { return parentItem; }
 
         inline int columnCount() const { return itemData.count(); }
 //        bool insertColumns(int position, int columns);
@@ -57,7 +59,7 @@ namespace Playo3 {
         }
     private:
         QVector<QVariant> itemData;
-        ItemInterface * parentItem;
+        FolderItem * parentItem;
     };
 
     //            inline static QString buildUid(QString owner, QString id) { return owner + "_" + id;}
