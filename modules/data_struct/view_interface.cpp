@@ -23,7 +23,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     setExpandsOnDoubleClick(true);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::ContiguousSelection); // ExtendedSelection
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
@@ -83,7 +83,7 @@ void ViewInterface::prevItem(bool deleteCurrent) {
 //    if (item == 0) return;
 
 //    item = prevItem(item);
-//    execItem(item);
+//    execIndex(item);
 }
 
 void ViewInterface::nextItem(bool deleteCurrent) {
@@ -97,7 +97,7 @@ void ViewInterface::nextItem(bool deleteCurrent) {
     //            removeItem(Player::instance() -> playedItem());
     //        }
     //    }
-//    execItem(item);
+//    execIndex(item);
 }
 
 QModelIndex ViewInterface::fromPath(QString path) { //TODO: rewrite
@@ -157,7 +157,7 @@ bool ViewInterface::execIndex(const QModelIndex & item) { //TODO: rewrite
 //    return item;
 //}
 
-void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
+//void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
 //    Library::instance() -> removeRemoteItem(item);
 //    item = removeCandidate(item);
 //    QModelIndex modelIndex = model -> index(item);
@@ -211,7 +211,7 @@ void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
 //            }
 //        }
 //    }
-}
+//}
 
 //////////////////////////////////////////////////////
 /// SLOTS
@@ -221,25 +221,21 @@ void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
 //    QMessageBox::warning(this, "Bla bla bla", text);
 //}
 
-void ViewInterface::shuffle() {
-    mdl -> shuffle();
-}
+//void ViewInterface::updateSelection(QModelIndex & candidate) { //TODO: rewrite
+//    if (candidate.isValid()) {
+////        ModelItem * item = getModel() -> getItem(candidate);
 
-void ViewInterface::updateSelection(QModelIndex & candidate) { //TODO: rewrite
-    if (candidate.isValid()) {
-//        ModelItem * item = getModel() -> getItem(candidate);
+////        if (item -> isFolder())
+////            item = nextItem(item);
 
-//        if (item -> isFolder())
-//            item = nextItem(item);
-
-//        if (item) {
-//            QModelIndex newIndex = getModel() -> index(item);
-//            setCurrentIndex(newIndex);
-//            expand(newIndex);
-//            scrollTo(newIndex);
-//        }
-    }
-}
+////        if (item) {
+////            QModelIndex newIndex = getModel() -> index(item);
+////            setCurrentIndex(newIndex);
+////            expand(newIndex);
+////            scrollTo(newIndex);
+////        }
+//    }
+//}
 
 void ViewInterface::showContextMenu(const QPoint & pnt) { // TODO: rewrite
 //    QList<QAction *> actions;
@@ -585,44 +581,45 @@ void ViewInterface::toPrevItem(QModelIndex & curr) { //TODO: rewrite
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
-    QTreeView::dragEnterEvent(event);
-    event -> setDropAction(
-        event -> source() == this ? Qt::MoveAction : Qt::CopyAction
-    );
-
-    if (event -> mimeData() -> hasFormat("text/uri-list")) {
+    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
         event -> accept();
     } else event -> ignore();
+
+    QTreeView::dragEnterEvent(event);
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
-    QTreeView::dragMoveEvent(event);
-    if (event -> mimeData() -> hasFormat("text/uri-list")) {
+    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
         event -> accept();
         mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
     } else
         event -> ignore();
+
+    QTreeView::dragMoveEvent(event);
 }
 
 void ViewInterface::dropEvent(QDropEvent *event) {
+    event -> setDropAction(
+        event -> source() == this ? Qt::MoveAction : Qt::CopyAction
+    );
+
     QTreeView::dropEvent(event);
 }
 
-void ViewInterface::keyPressEvent(QKeyEvent * event) { //TODO: rewrite
+void ViewInterface::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
-        if (list.count() > 0) {
-//            ModelItem * item = model -> getItem(list.first());
-//            execItem(item);
-        }
+        if (list.count() > 0)
+            execIndex(list.first());
+
     } else if (event -> key() == Qt::Key_Delete) {
         QModelIndexList list = selectedIndexes();
         QModelIndex modelIndex;
 
         for(int i = list.count() - 1; i >= 0; i--) {
-//            modelIndex = list.at(i);
-//            removeItem(model -> getItem(modelIndex));
+            modelIndex = list.at(i);
+            mdl -> removeRow(modelIndex.row(), modelIndex.parent());
         }
     }
     else QTreeView::keyPressEvent(event);

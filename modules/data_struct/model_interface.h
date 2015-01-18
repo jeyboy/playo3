@@ -8,6 +8,9 @@
 #include "item_index.h"
 
 namespace Playo3 {
+    #define DROP_OUTER_FORMAT QLatin1String("text/uri-list")
+    #define DROP_INNER_FORMAT QLatin1String("application/x-qabstractitemmodeldatalist")
+
     class ModelInterface : public QAbstractItemModel {
         Q_OBJECT
     public:

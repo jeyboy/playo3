@@ -65,15 +65,15 @@ namespace Playo3 {
         void nextItem(bool deleteCurrent = false);
         void prevItem(bool deleteCurrent = false);
         bool execIndex(const QModelIndex & index);
-        virtual void removeItem(QModelIndex & index);
+//        virtual void removeItem(QModelIndex & index);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void downloadSelected(QString savePath, bool markAsLiked = false);
         void copyItemsFrom(ViewInterface * otherView);
     public slots:
-        void shuffle();
-        void updateSelection(QModelIndex & candidate);
+        inline void shuffle() { mdl -> shuffle(); }
+//        void updateSelection(QModelIndex & candidate);
 //        void setHeaderText(QString);
 //        void showMessage(QString);
 

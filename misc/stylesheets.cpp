@@ -139,12 +139,12 @@ QString Stylesheets::scrollStyles() {
         "}"
 
         "QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
-        "    background: #3CC1E9;"
+        "    background: #0073A5;" //#3CC1E9;"
         "}"
 
         "QScrollBar:horizontal  {"
-        "    height: 15px;"
-        "    margin: 0px 20px 0 20px;"
+        "    height: 16px;"
+        "    margin: 0px 20px;"
         "}"
         "QScrollBar::handle:horizontal  {"
         "    background: white;"
@@ -162,11 +162,12 @@ QString Stylesheets::scrollStyles() {
         "    subcontrol-origin: margin;"
         "}"
 
-        "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal  {"
-        "    border: 1px solid grey;"
-        "    width: 3px;"
-        "    height: 3px;"
-        "    background: white;"
+        "QScrollBar:left-arrow:horizontal  {"
+        "    background: url(:scroll_left) no-repeat center center;"
+        "}"
+
+        "QScrollBar::right-arrow:horizontal  {"
+        "    background: url(:scroll_right) no-repeat center center;"
         "}"
 
         "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
@@ -176,8 +177,8 @@ QString Stylesheets::scrollStyles() {
 //// vertical
 
         "QScrollBar:vertical  {"
-        "    width: 15px;"
-        "    margin: 20px 0 20px 0;"
+        "    width: 16px;"
+        "    margin: 20px 0;"
         "}"
         "QScrollBar::handle:vertical  {"
         "    background: white;"
@@ -190,6 +191,7 @@ QString Stylesheets::scrollStyles() {
         "    subcontrol-position: bottom;"
         "    subcontrol-origin: margin;"
         "    border-bottom-right-radius: 8px;"
+        "    border-top: none;"
         "}"
 
         "QScrollBar::sub-line:vertical  {"
@@ -197,14 +199,15 @@ QString Stylesheets::scrollStyles() {
         "    subcontrol-position: top;"
         "    subcontrol-origin: margin;"
         "    border-top-left-radius: 8px;"
+        "    border-bottom: none;"
         "}"
 
         "QScrollBar::up-arrow:vertical  {"
-        "    background: url(:sqroll_top) no-repeat center center;"
+        "    background: url(:scroll_top) no-repeat center center;"
         "}"
 
         "QScrollBar::down-arrow:vertical  {"
-        "    background: url(:sqroll_bottom) no-repeat center center;"
+        "    background: url(:scroll_bottom) no-repeat center center;"
         "}"
 
         "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"

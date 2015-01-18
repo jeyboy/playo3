@@ -391,8 +391,8 @@ Qt::DropActions ModelInterface::supportedDropActions() const {
 
 QStringList ModelInterface::mimeTypes() const {
     QStringList types;
-    types << QLatin1String("text/uri-list");
-    types << QLatin1String("application/x-qabstractitemmodeldatalist"); // inner format for items moving
+    types << DROP_INNER_FORMAT;
+    types << DROP_OUTER_FORMAT;
     return types;
 }
 
@@ -423,10 +423,16 @@ QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const { //
     }
 
     mimeData -> setUrls(list);
+
+    QByteArray encoded;
+    QDataStream stream(&encoded, QIODevice::WriteOnly);
+    encodeData(indexes, stream);
+    mimeData -> setData(DROP_INNER_FORMAT, encoded);
+
     return mimeData;
 }
 
-bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int /*column*/, const QModelIndex & parentIndex) {
+bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
@@ -439,23 +445,19 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {
-        //   QStringList types = mimeTypes();
-        //   QString format = types.at(0);
-        //   if (!data->hasFormat(format))
-        //   return false;
-        //    int row_count = rowCount(parent);
-        //    if (row > row_count || row == -1)
-        //        row = row_count;
+        if (!data -> hasFormat(DROP_INNER_FORMAT))
+            return false;
 
-        //    if (column == -1)
-        //        column = 0;
+        int row_count = rowCount(parentIndex);
+        if (row > row_count || row == -1)
+            row = row_count;
 
-        //   QByteArray encoded = data -> data(format);
-        //   QDataStream stream(&encoded, QIODevice::ReadOnly);
-        //   return decodeData(row, column, parent, stream);
+        if (column == -1)
+            column = 0;
 
-
-
+        QByteArray encoded = data -> data(DROP_INNER_FORMAT);
+        QDataStream stream(&encoded, QIODevice::ReadOnly);
+        return decodeData(row, column, parentIndex, stream);
 //        bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
 //        void endMoveRows();
     }
