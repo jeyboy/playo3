@@ -101,7 +101,7 @@ QVariant ItemInterface::data(int column) const {
         case FOLDERID:          return isContainer();
         case REMOTEID:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
-//        case STATEID:           return itemStateVal();
+        case STATEID:           return itemStateVal();
         default:                return QVariant();
     }
 }
