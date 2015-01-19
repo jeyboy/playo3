@@ -97,7 +97,9 @@ QVariant ItemInterface::data(int column) const {
         case Qt::DisplayRole:   return _title;
         case EXTENSIONID:       return _extension;
         case PATHID:            return _path;
+        case FULLPATHID:        return fullPath();
         case FOLDERID:          return isContainer();
+        case REMOTEID:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
 //        case STATEID:           return itemStateVal();
         default:                return QVariant();

@@ -22,6 +22,8 @@
 
 #include "tree_view_style.h"
 
+#include "media/player.h"
+
 //#include "model_item_delegate.h"
 
 //#include "model_item.h"
@@ -79,7 +81,6 @@ namespace Playo3 {
 
     protected slots:
         inline void onDoubleClick(const QModelIndex & index) { execIndex(index); }
-        void showContextMenu(const QPoint &);
         void openLocation();
 
         void download();
@@ -90,6 +91,7 @@ namespace Playo3 {
 //        ItemInterface * removeCandidate(ItemInterface * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const;
         void resizeEvent(QResizeEvent *);
+        void contextMenuEvent(QContextMenuEvent *);
         bool prepareDownloading(QString path);
 
         void downloadItem(const QModelIndex & item, QString savePath);

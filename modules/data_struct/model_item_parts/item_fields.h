@@ -19,6 +19,8 @@ namespace Playo3 {
     #define TITLESCACHEID INFOID - 1
     #define PROGRESSID TITLESCACHEID - 1
     #define ADDFONTID PROGRESSID - 1
+    #define REMOTEID ADDFONTID - 1
+    #define FULLPATHID REMOTEID - 1
 
     class ItemFields : public ItemState {
     public:

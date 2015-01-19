@@ -24,6 +24,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
     switch(role) {
         case Qt::DisplayRole:
         case FOLDERID:
+        case REMOTEID:
             return item(index) -> data(role);
 
 //        case Qt::DecorationRole: {
@@ -216,7 +217,7 @@ bool ModelInterface::removeRows(int position, int rows, const QModelIndex &paren
     return success;
 }
 
-int ModelInterface::rowCount(const QModelIndex  &parent) const {
+int ModelInterface::rowCount(const QModelIndex & parent) const {
     //        if (parent.column() > 0)
     //            return 0;
 

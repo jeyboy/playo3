@@ -1,4 +1,5 @@
 #include "view_interface.h"
+#include "dockbars.h"
 
 using namespace Playo3;
 
@@ -29,12 +30,11 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
 //    setItemDelegate(new ItemDelegate(this));
 
-    setContextMenuPolicy(Qt::CustomContextMenu);
+    setContextMenuPolicy(Qt::DefaultContextMenu);
     int iconDimension = Settings::instance() -> getIconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
 //    connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &))); // move logic to the void mouseDoubleClickEvent(QMouseEvent *)
-//    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &))); // move logic to the contextMenuEvent(QContextMenuEvent *)
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
 
@@ -233,100 +233,6 @@ void ViewInterface::updateSelection(QModelIndex & candidate) {
     }
 }
 
-void ViewInterface::showContextMenu(const QPoint & pnt) { // TODO: rewrite
-//    QList<QAction *> actions;
-//    QModelIndex ind = indexAt(pnt);
-//    ModelItem * item = model -> getItem(ind);
-//    QAction * openAct;
-//    QAction * sepAct;
-
-//    if (Player::instance() -> playedItem()) {
-//        openAct = new QAction(QIcon(":/active_tab"), "Show active elem", this);
-//        connect(openAct, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showActiveElem()));
-//        actions.append(openAct);
-
-//        sepAct = new QAction(this);
-//        sepAct -> setSeparator(true);
-//        actions.append(sepAct);
-//    }
-
-//    if (isEditable()) {
-//        openAct = new QAction(QIcon(":/settings"), "Tab settings", this);
-//        connect(openAct, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showAttCurrTabDialog()));
-//        actions.append(openAct);
-
-//        sepAct = new QAction(this);
-//        sepAct -> setSeparator(true);
-//        actions.append(sepAct);
-//    }
-
-//    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
-//    connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refresh()));
-//    actions.append(openAct);
-
-//    if (QString(metaObject() -> className()) == QString("VkView")) {
-//        openAct = new QAction(QIcon(":/refresh"), "Parse/Refresh Wall", this);
-//        connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refreshWall()));
-//        actions.append(openAct);
-//    }
-
-//    openAct = new QAction(QIcon(":/shuffle"), "Shuffle", this);
-//    connect(openAct, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
-//    actions.append(openAct);
-
-//    sepAct = new QAction(this);
-//    sepAct -> setSeparator(true);
-//    actions.append(sepAct);
-
-//    if (ind.isValid()) {
-//        if (!item -> fullPath().isEmpty()) {
-//            openAct = new QAction(QIcon(":/open"), "Open location", this);
-//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(openLocation()));
-//            actions.append(openAct);
-//        }
-
-//        if (item -> isRemote()) {
-//            sepAct = new QAction(this);
-//            sepAct -> setSeparator(true);
-//            actions.append(sepAct);
-
-//            openAct = new QAction(QIcon(":/download"), "Download", this);
-//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(download()));
-//            actions.append(openAct);
-//            openAct = new QAction(QIcon(":/download"), "Download All", this);
-//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
-//            actions.append(openAct);
-//        }
-//    }
-
-//    sepAct = new QAction(this);
-//    sepAct -> setSeparator(true);
-//    actions.append(sepAct);
-
-//    if (model -> getApi() != 0) {
-//        openAct = new QAction(QIcon(":/refresh"), "Friends (groups) audio", this);
-//        connect(openAct, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showVKRelTabDialog()));
-//        actions.append(openAct);
-//    }
-
-//    sepAct = new QAction(this);
-//    sepAct -> setSeparator(true);
-//    actions.append(sepAct);
-
-//    if (model -> rowCount() > 0) {
-//        openAct = new QAction(QIcon(":/collapse"), "Collapse all", this);
-//        connect(openAct, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
-//        actions.append(openAct);
-
-//        openAct = new QAction(QIcon(":/expand"), "Expand all", this);
-//        connect(openAct, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
-//        actions.append(openAct);
-//    }
-
-//    if (actions.count() > 0)
-//        QMenu::exec(actions, mapToGlobal(pnt));
-}
-
 void ViewInterface::openLocation() {
     ItemInterface * item = mdl -> item(currentIndex());
     item -> openLocation();
@@ -361,6 +267,92 @@ void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite
 //    }
 
     QTreeView::resizeEvent(event);
+}
+
+void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
+    event -> accept();
+
+    QList<QAction *> actions;
+    QAction * act;
+
+    if (isEditable()) {
+        actions.append((act = new QAction(QIcon(":/settings"), "View settings", this)));
+        connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(editActiveBar()));
+    }
+
+    act = new QAction(this);
+    act -> setSeparator(true);
+    actions.append(act);
+
+//    if (Player::instance() -> playedItem()) {
+//        act = new QAction(QIcon(":/active_tab"), "Show active elem", this);
+//        connect(act, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showActiveElem()));
+//        actions.append(act);
+
+//        act = new QAction(this);
+//        act -> setSeparator(true);
+//        actions.append(act);
+//    }
+
+    QModelIndex ind = indexAt(event -> pos());
+
+    if (ind.isValid()) {
+        if (!ind.data(FULLPATHID).toString().isEmpty()) {
+            act = new QAction(QIcon(":/open"), "Open location", this);
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(openLocation()));
+            actions.append(act);
+        }
+
+        if (ind.data(REMOTEID).toBool()) {
+            //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
+            //    connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refresh()));
+            //    actions.append(openAct);
+
+            //    if (model -> getApi() != 0) {
+            //        openAct = new QAction(QIcon(":/refresh"), "Friends (groups) audio", this);
+            //        connect(openAct, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showVKRelTabDialog()));
+            //        actions.append(openAct);
+            //    }
+
+            //    if (QString(metaObject() -> className()) == QString("VkView")) {
+            //        openAct = new QAction(QIcon(":/refresh"), "Parse/Refresh Wall", this);
+            //        connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refreshWall()));
+            //        actions.append(openAct);
+            //    }
+
+//            sepAct = new QAction(this);
+//            sepAct -> setSeparator(true);
+//            actions.append(sepAct);
+
+//            openAct = new QAction(QIcon(":/download"), "Download", this);
+//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(download()));
+//            actions.append(openAct);
+//            openAct = new QAction(QIcon(":/download"), "Download All", this);
+//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
+//            actions.append(openAct);
+        }
+    }
+
+    act = new QAction(QIcon(":/shuffle"), "Shuffle", this);
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
+    actions.append(act);
+
+    act = new QAction(this);
+    act -> setSeparator(true);
+    actions.append(act);
+
+    if (mdl -> rowCount() > 0) {
+        act = new QAction(QIcon(":/collapse"), "Collapse all", this);
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
+        actions.append(act);
+
+        act = new QAction(QIcon(":/expand"), "Expand all", this);
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
+        actions.append(act);
+    }
+
+    if (actions.count() > 0)
+        QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
 bool ViewInterface::prepareDownloading(QString path) { //TODO: move to separate class
