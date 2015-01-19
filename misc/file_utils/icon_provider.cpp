@@ -2,9 +2,9 @@
 
 using namespace Playo3;
 
-IconProvider *IconProvider::self = 0;
+IconProvider * IconProvider::self = 0;
 
-IconProvider *IconProvider::instance() {
+IconProvider * IconProvider::instance() {
     if(!self)
         self = new IconProvider();
     return self;
@@ -17,14 +17,14 @@ QIcon IconProvider::fileIcon(const QString filename, QString extension) {
     if (extension.length() == 0 && filename.length() == 0) {
         return QApplication::style() -> standardIcon(QStyle::SP_DirIcon);
     } else {
-        if (instance() -> icons -> contains(extension)) {
-            return instance() -> icons -> value(extension);
+        if (instance() -> icons.contains(extension)) {
+            return instance() -> icons.value(extension);
         } else {
             QFileInfo fileInfo(filename);
             if (fileInfo.isFile()) {
                 if (fileInfo.exists()) {
                     QIcon res = instance() -> iconProvider.icon(fileInfo);
-                    instance() -> icons -> insert(extension, res);
+                    instance() -> icons.insert(extension, res);
                     return res;
                 }
                 else return missedIcon();

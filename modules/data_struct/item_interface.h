@@ -8,6 +8,7 @@
 ////    #include "media/library.h"
 ////    #include "media/player.h"
 
+#include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"
 #include "model_item_parts/item_fields.h"
 
