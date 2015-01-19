@@ -21,73 +21,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-    switch(role) {
-        case Qt::DisplayRole:
-        case FOLDERID:
-        case REMOTEID:
-        case FULLPATHID:
-        case STATEID:
-            return item(index) -> data(role);
-
-//        case Qt::DecorationRole: {
-//        //QPixmap pixmap(26, 26);
-//        //pixmap.fill(color);
-//        //QIcon icon(pixmap);
-
-
-//        ItemInterface * item;
-//           item = item(index);
-
-//           if (item -> getState() -> isNotExist()) {
-//               return IconProvider::missedIcon();
-//           }
-//           else if (item -> isFolder())
-//               return QVariant();
-//    //               return IconProvider::fileIcon("", "");
-//           else
-//               return IconProvider::fileIcon(item -> fullPath(), (item -> data(EXTENSIONID).toString()));
-//        }
-//        case Qt::CheckStateRole: {
-//            if (Settings::instance() -> isCheckboxShow()) {
-//                item = item(index);
-//                return item -> getState() -> isChecked();
-//            } else return QVariant();
-//        }
-
-//        case Qt::ToolTipRole:
-//            item = item(index);
-//            return item -> data(TITLEID).toString();
-//        case Qt::SizeHintRole:
-//            item = item(index);
-//            if (item -> isFolder())
-//                return QSize(0, Settings::instance() -> itemHeight());
-//            else
-//                return QSize(0, Settings::instance() -> getTotalItemHeight());
-//        case Qt::TextAlignmentRole:
-//            item = item(index);
-//            if (item -> isFolder() || !Settings::instance() -> isShowInfo())
-//                return Qt::AlignVCenter;
-//            else
-//                return Qt::AlignLeft;
-//        case Qt::FontRole:
-//            return Settings::instance() -> itemFont();
-//        case EXTENSIONID:
-//            item = item(index);
-//            return item -> data(EXTENSIONID);
-//        case ADDFONTID:
-//            return Settings::instance() -> itemInfoFont();
-//        case Qt::UserRole:
-//            item = item(index);
-//            return item -> getState() -> currStateValue();
-//        case PROGRESSID:
-//            item = item(index);
-//            return Download::instance() -> getProgress(item);
-//        case INFOID:
-//            item = item(index);
-//            return QVariant(item -> getInfo());
-
-        default: return QVariant();
-    }
+    return item(index) -> data(role);
 }
 
 Qt::ItemFlags ModelInterface::flags(const QModelIndex &index) const {

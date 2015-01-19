@@ -95,6 +95,39 @@ QString ItemInterface::buildTreePath() const {
 QVariant ItemInterface::data(int column) const {
     switch(column) {
         case Qt::DisplayRole:   return _title;
+        case Qt::DecorationRole: {
+           if (is(not_exist))
+               return IconProvider::missedIcon();
+
+           if (isContainer())
+               return QVariant(); // IconProvider::fileIcon("", "");
+           else
+               return IconProvider::fileIcon(fullPath(), _extension);
+        }
+
+        case Qt::FontRole:      return Settings::instance() -> getItemFont();
+        case ADDFONTID:         return Settings::instance() -> getItemInfoFont();
+
+        case Qt::SizeHintRole:
+            if (isContainer())
+                return QSize(0, Settings::instance() -> getItemHeight());
+            else
+                return QSize(0, Settings::instance() -> getTotalItemHeight());
+        case Qt::TextAlignmentRole:
+            if (isContainer() || !Settings::instance() -> isShowInfo())
+                return Qt::AlignVCenter;
+            else
+                return Qt::AlignLeft;
+
+        case INFOID:            return _info;
+        case Qt::CheckStateRole: {
+            if (Settings::instance() -> isCheckboxShow()) {
+                return is(checked);
+            } else return QVariant();
+        }
+
+        case Qt::ToolTipRole:   return _title + "(" + _extension + ")" + "\n" + _path;
+
         case EXTENSIONID:       return _extension;
         case PATHID:            return _path;
         case FULLPATHID:        return fullPath();
@@ -102,6 +135,8 @@ QVariant ItemInterface::data(int column) const {
         case REMOTEID:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
         case STATEID:           return itemStateVal();
+        case PROGRESSID:        return 0;//Download::instance() -> getProgress(item);
+
         default:                return QVariant();
     }
 }

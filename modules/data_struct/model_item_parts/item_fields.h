@@ -36,7 +36,6 @@ namespace Playo3 {
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !_info.isEmpty());}
         inline void setInfo(QString newInfo) { _info = newInfo; }
-//        QStringList getInfo() const;
 
         inline void setBpm(int newBeat) { _bpm = newBeat; }
         inline void setDuration(QString newDuration) { _duration = newDuration;}

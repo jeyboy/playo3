@@ -12,7 +12,6 @@ namespace Playo3 {
     class IconProvider {
     public:
         ~IconProvider() {
-            delete icons;
         }
 
         static IconProvider * instance();
@@ -26,12 +25,11 @@ namespace Playo3 {
 
     private:
         IconProvider() {
-            icons = new QHash<QString, QIcon>();
         }
 
-        static IconProvider *self;
+        static IconProvider * self;
 
-        QHash<QString, QIcon> * icons;
+        QHash<QString, QIcon> icons;
         QFileIconProvider iconProvider;
     };
 }
