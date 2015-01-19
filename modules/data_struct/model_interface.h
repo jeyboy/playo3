@@ -55,10 +55,11 @@ namespace Playo3 {
         void collapsed(const QModelIndex & index);
 
     signals:
+        void spoilNeeded(QModelIndex &index) const;
         void expandNeeded(const QModelIndex &index) const;
         void itemsCountChanged(int change);
     protected:
-        virtual int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
+        virtual QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         template<class T> T * item(const QModelIndex & index) const {
             return dynamic_cast<T *>(item(index));
@@ -73,7 +74,6 @@ namespace Playo3 {
 
     ////        virtual WebApi * getApi() { return 0; } //stub
     //    signals:
-    //        void spoilNeeded(const QModelIndex &index) const;
     ////        void showMessage(QString);
 
     ////        void showSpinner();

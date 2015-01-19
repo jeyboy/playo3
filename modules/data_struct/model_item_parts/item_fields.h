@@ -9,16 +9,16 @@
 #include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
-    #define TITLEID Qt::UserRole - 1
-    #define EXTENSIONID Qt::UserRole - 2
-    #define PATHID Qt::UserRole - 3
-    #define FOLDERID Qt::UserRole - 4
-    #define STATEID Qt::UserRole - 5
-    #define INFOID Qt::UserRole - 6
+    #define TITLEID Qt::DisplayRole
+    #define EXTENSIONID Qt::UserRole - 1
+    #define PATHID EXTENSIONID - 1
+    #define FOLDERID PATHID - 1
+    #define STATEID FOLDERID - 1
+    #define INFOID STATEID - 1
 
-    #define TITLESCACHEID Qt::UserRole - 7
-    #define PROGRESSID Qt::UserRole - 8
-    #define ADDFONTID Qt::UserRole - 9
+    #define TITLESCACHEID INFOID - 1
+    #define PROGRESSID TITLESCACHEID - 1
+    #define ADDFONTID PROGRESSID - 1
 
     class ItemFields : public ItemState {
     public:

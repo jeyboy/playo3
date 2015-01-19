@@ -12,7 +12,7 @@ namespace Playo3 {
         ~LevelTreeModel();
 
     protected:
-        int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
+        QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
         void filesRoutine(ItemInterface * index, QFileInfo currFile);
         void filesRoutine(ItemInterface * index, QList<QUrl> list);
     };

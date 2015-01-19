@@ -9,14 +9,15 @@ TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash
 TreeModel::~TreeModel() {
 }
 
-int TreeModel::dropProcession(const QModelIndex & /*parent*/, int /*row*/, const QList<QUrl> & list) {
-    if (list.isEmpty()) return 0;
+QModelIndex TreeModel::dropProcession(const QModelIndex & /*parent*/, int /*row*/, const QList<QUrl> & list) {
+    if (list.isEmpty()) return QModelIndex();
 //    FolderItem * currRoot = item<FolderItem>(parent);
     FolderItem * newIndex = rootItem -> createFolderPath(QFileInfo(list.first().toLocalFile()).path());
-    return filesRoutine(newIndex, list);
+    filesRoutine(newIndex, list);
+    return index(newIndex);
 }
 
-int TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
+void TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
     foreach(QFileInfo file, folderList)
@@ -28,7 +29,7 @@ int TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
         new FileItem(file.fileName(), index);
 }
 
-int TreeModel::filesRoutine(FolderItem * index, QList<QUrl> list){
+void TreeModel::filesRoutine(FolderItem * index, QList<QUrl> list){
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir()) {

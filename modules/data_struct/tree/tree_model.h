@@ -11,9 +11,9 @@ namespace Playo3 {
         TreeModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~TreeModel();
     protected:
-        int dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
-        int filesRoutine(FolderItem * index, QFileInfo currFile);
-        int filesRoutine(FolderItem * index, QList<QUrl> list);
+        QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
+        void filesRoutine(FolderItem * index, QFileInfo currFile);
+        void filesRoutine(FolderItem * index, QList<QUrl> list);
     };
 }
 

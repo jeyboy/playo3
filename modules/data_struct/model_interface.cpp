@@ -21,19 +21,18 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-    ItemInterface * node;
-
     switch(role) {
-        case Qt::DisplayRole: {
-           node = item(index);
-           return node -> data(TITLEID /*index.column()*/);
-        }
+        case Qt::DisplayRole:
+        case FOLDERID:
+            return item(index) -> data(role);
+
 //        case Qt::DecorationRole: {
 //        //QPixmap pixmap(26, 26);
 //        //pixmap.fill(color);
 //        //QIcon icon(pixmap);
 
 
+//        ItemInterface * item;
 //           item = item(index);
 
 //           if (item -> getState() -> isNotExist()) {
@@ -198,9 +197,9 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
 bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
     beginInsertRows(parent, pos, pos + list.length() - 1);
-    dropProcession(parent, pos, list);
+    QModelIndex node = dropProcession(parent, pos, list);
     endInsertRows();
-    //        emit spoilNeeded(modelIndex);
+    emit spoilNeeded(node);
     return true;
 }
 

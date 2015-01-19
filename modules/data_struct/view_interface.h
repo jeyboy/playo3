@@ -73,7 +73,7 @@ namespace Playo3 {
         void copyItemsFrom(ViewInterface * otherView);
     public slots:
         inline void shuffle() { mdl -> shuffle(); }
-//        void updateSelection(QModelIndex & candidate);
+        void updateSelection(QModelIndex & candidate);
 //        void setHeaderText(QString);
 //        void showMessage(QString);
 

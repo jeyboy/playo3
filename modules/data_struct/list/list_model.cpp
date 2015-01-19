@@ -10,7 +10,7 @@ ListModel::~ListModel() {
 
 }
 
-int ListModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
+QModelIndex ListModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
 //    ItemInterface * newIndex = root();
 //    filesRoutine(newIndex, list);
 //    return index(newIndex);

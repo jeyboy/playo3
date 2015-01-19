@@ -10,7 +10,7 @@ LevelTreeModel::~LevelTreeModel() {
 
 }
 
-int LevelTreeModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
+QModelIndex LevelTreeModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
 //    QFileInfo file = QFileInfo(list.first().toLocalFile());
 //    QString fName;
 

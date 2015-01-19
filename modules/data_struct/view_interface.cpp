@@ -6,7 +6,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     : QTreeView(parent), mdl(newModel), sttngs(settings)  {
 
     setIndentation(12);
-    setStyle(new TreeViewStyle);
+//    setStyle(new TreeViewStyle);
     setStyleSheet(Stylesheets::treeViewStyles());
 
     setModel(mdl);
@@ -39,7 +39,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
 
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
-//    connect(model, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(updateSelection(QModelIndex)));
+    connect(mdl, SIGNAL(spoilNeeded(QModelIndex &)), this, SLOT(updateSelection(QModelIndex &)));
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showSpinner()), this, SLOT(startRoutine()));
@@ -221,21 +221,17 @@ bool ViewInterface::execIndex(const QModelIndex & item) { //TODO: rewrite
 //    QMessageBox::warning(this, "Bla bla bla", text);
 //}
 
-//void ViewInterface::updateSelection(QModelIndex & candidate) { //TODO: rewrite
-//    if (candidate.isValid()) {
-////        ModelItem * item = getModel() -> getItem(candidate);
+void ViewInterface::updateSelection(QModelIndex & candidate) {
+    if (candidate.isValid()) {
+        if (candidate.data(FOLDERID).toBool())
+            toNextItem(candidate);
 
-////        if (item -> isFolder())
-////            item = nextItem(item);
-
-////        if (item) {
-////            QModelIndex newIndex = getModel() -> index(item);
-////            setCurrentIndex(newIndex);
-////            expand(newIndex);
-////            scrollTo(newIndex);
-////        }
-//    }
-//}
+        if (candidate.isValid()) {
+            setCurrentIndex(candidate);
+            scrollTo(candidate);
+        }
+    }
+}
 
 void ViewInterface::showContextMenu(const QPoint & pnt) { // TODO: rewrite
 //    QList<QAction *> actions;

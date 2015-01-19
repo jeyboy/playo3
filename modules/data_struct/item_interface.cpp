@@ -94,7 +94,7 @@ QString ItemInterface::buildTreePath() const {
 
 QVariant ItemInterface::data(int column) const {
     switch(column) {
-        case TITLEID:           return _title;
+        case Qt::DisplayRole:   return _title;
         case EXTENSIONID:       return _extension;
         case PATHID:            return _path;
         case FOLDERID:          return isContainer();
