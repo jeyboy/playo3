@@ -297,6 +297,7 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
+        qDebug() << ind.data(FULLPATHID).toString();
         if (!ind.data(FULLPATHID).toString().isEmpty()) {
             act = new QAction(QIcon(":/open"), "Open location", this);
             connect(act, SIGNAL(triggered(bool)), this, SLOT(openLocation()));

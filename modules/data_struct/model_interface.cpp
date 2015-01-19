@@ -25,6 +25,7 @@ QVariant ModelInterface::data(const QModelIndex &index, int role) const {
         case Qt::DisplayRole:
         case FOLDERID:
         case REMOTEID:
+        case FULLPATHID:
             return item(index) -> data(role);
 
 //        case Qt::DecorationRole: {

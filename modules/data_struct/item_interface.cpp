@@ -27,7 +27,7 @@ ItemInterface::~ItemInterface() {
 }
 
 QString ItemInterface::fullPath() const {
-    ItemInterface * curr = parentItem;
+    FolderItem * curr = parentItem;
     QString path_buff = _path;
 
     while(curr != 0 && !curr -> _path.isEmpty()) {
