@@ -47,7 +47,7 @@ namespace Playo3 {
         QVariant data(int column) const;
         bool setData(int column, const QVariant & value);
 
-        inline FolderItem * parent() { return parentItem; }
+        inline FolderItem * parent() { return _parent; }
 
         inline virtual int columnCount() const { return 1; }
 
@@ -55,7 +55,7 @@ namespace Playo3 {
             if (setChecked) set(checked); else unset(checked);
         }
     protected:
-        FolderItem * parentItem;
+        FolderItem * _parent;
     };
 
     //            inline static QString buildUid(QString owner, QString id) { return owner + "_" + id;}

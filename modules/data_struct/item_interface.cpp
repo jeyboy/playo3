@@ -4,22 +4,22 @@
 using namespace Playo3;
 
 ItemInterface::ItemInterface(FolderItem * parent, int initState)
-    : ItemFields(initState), parentItem(parent) {
+    : ItemFields(initState), _parent(parent) {
 
-    if (parentItem)
-        parentItem -> declareChild(this);
+    if (_parent)
+        _parent -> declareChild(this);
 }
 ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
-    : ItemFields(hash), parentItem(parent) {
+    : ItemFields(hash), _parent(parent) {
 
-    if (parentItem)
-        parentItem -> declareChild(this);
+    if (_parent)
+        _parent -> declareChild(this);
 }
 ItemInterface::ItemInterface(FolderItem * parent, QString path, QString title, QString extension, int size, int initState)
-    : ItemFields(path, title, extension, size, initState), parentItem(parent) {
+    : ItemFields(path, title, extension, size, initState), _parent(parent) {
 
-    if (parentItem)
-        parentItem -> declareChild(this);
+    if (_parent)
+        _parent -> declareChild(this);
 }
 
 ItemInterface::~ItemInterface() {
@@ -27,12 +27,12 @@ ItemInterface::~ItemInterface() {
 }
 
 QString ItemInterface::fullPath() const {
-    FolderItem * curr = parentItem;
+    FolderItem * curr = _parent;
     QString path_buff = _path;
 
     while(curr != 0 && !curr -> _path.isEmpty()) {
         path_buff = curr -> _path + '/' + path_buff;
-        curr = curr -> parentItem;
+        curr = curr -> _parent;
     }
 
 #ifdef Q_OS_LINUX
@@ -55,8 +55,8 @@ void ItemInterface::openLocation() {// TODO: test needed
 }
 
 int ItemInterface::row() const {
-    if (parentItem)
-        return parentItem -> childRow(const_cast<ItemInterface *>(this));
+    if (_parent)
+        return _parent -> childRow(const_cast<ItemInterface *>(this));
 
     return 0;
 }
@@ -92,7 +92,7 @@ int ItemInterface::column() const { // ?
 //}
 
 QString ItemInterface::buildTreePath() const {
-    return parentItem ? parentItem -> buildTreePath() + " " + QString::number(row()) : "";
+    return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
 QVariant ItemInterface::data(int column) const {
