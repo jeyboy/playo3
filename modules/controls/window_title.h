@@ -7,9 +7,8 @@
 #include <qevent.h>
 #include "modules/controls/hoverable_label.h"
 #include "modules/controls/title_layout.h"
-#include <qdebug.h>
 
-namespace Playo3 {
+namespace Playo3 { // TODO: add margins param for buttons
     class WindowTitle : public QWidget {
         Q_OBJECT
     public:
