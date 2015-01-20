@@ -75,11 +75,15 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     /// toolbars
     ///////////////////////////////////////////////////////////
+    qint64 v = QDateTime::currentMSecsSinceEpoch();
+
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
+
+    qDebug() << "LULU " << QDateTime::currentMSecsSinceEpoch() - v;
 
     QVariant objState = stateSettings.value("windowState");
     if (objState.isValid())
@@ -98,8 +102,10 @@ void Playo::closeEvent(QCloseEvent * e) {
 //    settings -> write("vk", VkApi::instance() -> toJson());
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
+    qint64 v = QDateTime::currentMSecsSinceEpoch();
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
+    qDebug() << "LALA " << QDateTime::currentMSecsSinceEpoch() - v;
 
     settings -> write("settings", Settings::instance() -> toJson());
     settings -> save();

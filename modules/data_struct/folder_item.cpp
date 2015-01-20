@@ -60,6 +60,9 @@ FolderItem::FolderItem(const QString folderPath, QString folderTitle, FolderItem
 }
 
 FolderItem::~FolderItem() {
+    if (parentItem)
+        parentItem -> undeclareFolder(_title);
+
     qDeleteAll(childItems);
 }
 

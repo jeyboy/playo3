@@ -50,13 +50,11 @@ namespace Playo3 {
         inline FolderItem * parent() { return parentItem; }
 
         inline virtual int columnCount() const { return 1; }
-//        bool insertColumns(int position, int columns);
-//        bool removeColumns(int position, int columns);
 
         inline virtual void updateCheckedState(bool setChecked) {
             if (setChecked) set(checked); else unset(checked);
         }
-    private:
+    protected:
         FolderItem * parentItem;
     };
 
