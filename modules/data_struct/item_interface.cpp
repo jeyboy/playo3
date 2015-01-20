@@ -42,13 +42,16 @@ QString ItemInterface::fullPath() const {
     return path_buff;
 }
 
-void ItemInterface::openLocation() {// TODO: improve
-    if (!parentItem -> fullPath().isEmpty())
-        QDesktopServices::openUrl(parentItem -> toUrl());
-    else {
-        QFileInfo info(fullPath());
-        QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-    }
+void ItemInterface::openLocation() {// TODO: test needed
+    QFileInfo info(fullPath());
+    QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
+
+//    if (!parentItem -> fullPath().isEmpty())
+//        QDesktopServices::openUrl(parentItem -> toUrl());
+//    else {
+//        QFileInfo info(fullPath());
+//        QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
+//    }
 }
 
 int ItemInterface::row() const {

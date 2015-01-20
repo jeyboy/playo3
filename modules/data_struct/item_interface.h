@@ -31,10 +31,10 @@ namespace Playo3 {
         int column() const;
         int row() const;
 
-        inline int itemsCountInBranch() const { return 0; }
-
+        inline virtual bool isStructural() const { return false; }
         inline virtual bool isRemote() const { return false; }
         inline virtual bool isContainer() const { return false; }
+
         virtual bool isExist() const = 0;
         inline bool isPlayable() {
             bool showBatch = Settings::instance() -> isCheckboxShow();

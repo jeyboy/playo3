@@ -32,7 +32,7 @@ namespace Playo3 {
 
         ItemFields(int state);
 
-        inline QString title() const { return _title; }
+//        inline QString title() const { return _title; }
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !_info.isEmpty());}
         inline void setInfo(QString newInfo) { _info = newInfo; }
