@@ -2,18 +2,22 @@
 
 using namespace Playo3;
 
-WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sidePadding, bool showMini, bool showMaxi, bool showClose)
+WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int sidePadding, bool showMini, bool showMaxi, bool showClose)
     : QWidget(window) {
-    button_height = height - margins.top();
+    button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
+    buttonMargins = buttonsMargins;
     setObjectName("WindowTitle");
     setContentsMargins(margins);
+    setMinimumHeight(height);
     setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px; }");
-    setFixedHeight(height);
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     TitleLayout * l = new TitleLayout(this);
 
     titleLabel = new QLabel("", this);
+
+    if (buttonsMargins.top() != 0 || buttonsMargins.bottom() != 0)
+        titleLabel -> setMinimumHeight(height);
 
     QFont font = titleLabel -> font();
     font.setPointSize(12);
@@ -37,15 +41,21 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, int sid
 
 void WindowTitle::addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon, const QObject * receiver, const char * slot) {
     QGridLayout * l = (QGridLayout *)layout();
+
+    HoverableLabel * button =
+            new HoverableLabel(
+                icon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                hoverIcon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+                this,
+                0,
+                receiver ? receiver : parent(),
+                slot ? slot : SLOT(showMinimized())
+            );
+
+    button -> setContentsMargins(buttonMargins);
+
     l -> addWidget(
-                new HoverableLabel(
-                    icon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    hoverIcon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-                    this,
-                    0,
-                    receiver ? receiver : parent(),
-                    slot ? slot : SLOT(showMinimized())
-                ),
+                button,
                 0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
     l -> setColumnStretch(l -> columnCount() - 1, 0);
 }
