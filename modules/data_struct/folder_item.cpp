@@ -63,13 +63,13 @@ FolderItem::~FolderItem() {
     if (_parent)
         _parent -> undeclareFolder(_title);
 
-    qDeleteAll(childItems);
+    qDeleteAll(children);
 }
 
 bool FolderItem::removePhysicalObject() {
     bool res = true;
 
-    foreach(ItemInterface * item, childItems) {
+    foreach(ItemInterface * item, children) {
         res &= item -> removePhysicalObject();
     }
 
@@ -92,12 +92,12 @@ QJsonObject FolderItem::toJson() {
 
     root[JSON_TYPE_ITEM_TYPE] = FOLDER_ITEM;
 
-    if (childItems.length() > 0) {
+    if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
 
         QJsonArray ar = QJsonArray(); // TODO: rewrite on iteration through ++
-        for(int i = 0; i < childItems.length(); i++)
-            ar.append(childItems.at(i) -> toJson());
+        for(int i = 0; i < children.length(); i++)
+            ar.append(children.at(i) -> toJson());
 
         root[JSON_TYPE_CHILDS] = ar;
     }
@@ -157,11 +157,11 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list) {
 //}
 
 bool FolderItem::removeChildren(int position, int count) {
-    if (position < 0 || position + count > childItems.size())
+    if (position < 0 || position + count > children.size())
         return false;
 
     for (int row = 0; row < count; ++row)
-        delete childItems.takeAt(position);
+        delete children.takeAt(position);
 
     return true;
 }
@@ -175,16 +175,16 @@ void FolderItem::dropExpandProceedFlags() {
 void FolderItem::updateCheckedState(bool checked) {
     ItemInterface::updateCheckedState(checked);
 
-    foreach(ItemInterface * item, childItems)
+    foreach(ItemInterface * item, children)
         item -> updateCheckedState(checked);
 }
 
 void FolderItem::shuffle() { //TODO: test needed
     qsrand((uint)QTime::currentTime().msec());
-    int n = childItems.count() - 1;
+    int n = children.count() - 1;
 
     for (int i = 0; i < n; ++i)
-        childItems.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
+        children.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
 
     foreach(FolderItem * item, folders.values())
         item -> shuffle();

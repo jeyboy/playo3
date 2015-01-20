@@ -23,13 +23,12 @@ namespace Playo3 {
 
         QJsonObject toJson();
 
-        inline int childRow(ItemInterface * child) { return childItems.indexOf(child); }
-        inline ItemInterface * child(int row) { return childItems.value(row); }
-        virtual inline int childCount() const { return childItems.count(); }
-        inline void declareChild(ItemInterface * child) { childItems.append(child); }
-        inline void declareChildren(QList<ItemInterface *> & items) { childItems.append(items); }
-        inline void declareChild(int pos, ItemInterface * item) { childItems.insert(pos, item); }
-//        inline bool insertChildren(int position, int count, int columns);
+        inline int childRow(ItemInterface * child) { return children.indexOf(child); }
+        inline ItemInterface * child(int row) { return children.value(row); }
+        virtual inline int childCount() const { return children.count(); }
+        inline void declareChild(ItemInterface * child) { children.append(child); }
+        inline void declareChildren(QList<ItemInterface *> & items) { children.append(items); }
+        inline void declareChild(int pos, ItemInterface * item) { children.insert(pos, item); }
         bool removeChildren(int position, int count);
 
         void shuffle();
@@ -47,7 +46,7 @@ namespace Playo3 {
 //        inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
         QHash<QString, FolderItem *> folders;
-        QList<ItemInterface *> childItems;
+        QList<ItemInterface *> children;
         int inBranchCount; // executable items count
     };
 }
