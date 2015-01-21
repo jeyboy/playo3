@@ -46,6 +46,9 @@ QString ItemInterface::fullPath() const {
     path_buff = '/' + path_buff;
 #endif
 
+    if (extension().isValid())
+        path_buff += '.' + extension().toString();
+
     return path_buff;
 }
 
