@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
-    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), QMargins(0, 0, 0, 0), Stylesheets::borderWidth);
+    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), QMargins(0, 0, 0, 0), Stylesheets::borderWidth, Stylesheets::borderWidth);
 
     Stylesheets::initBrush(brush);
 

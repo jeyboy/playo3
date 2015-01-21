@@ -2,14 +2,14 @@
 
 using namespace Playo3;
 
-WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int sidePadding, bool showMini, bool showMaxi, bool showClose)
+WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int leftPadding, int rightPadding, bool showMini, bool showMaxi, bool showClose)
     : QWidget(window) {
     button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
     buttonMargins = buttonsMargins;
     setObjectName("WindowTitle");
     setContentsMargins(margins);
     setMinimumHeight(height);
-    setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(sidePadding) + "px; }");
+    setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     TitleLayout * l = new TitleLayout(this);

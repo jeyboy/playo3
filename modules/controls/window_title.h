@@ -12,7 +12,9 @@ namespace Playo3 { // TODO: add margins param for buttons
     class WindowTitle : public QWidget {
         Q_OBJECT
     public:
-        WindowTitle(QWidget * window, int height = 30, QMargins margins = QMargins(), QMargins buttonsMargins = QMargins(), int sidePadding = 0, bool showMini = true, bool showMaxi = true, bool showClose = true);
+        WindowTitle(QWidget * window, int height = 30, QMargins margins = QMargins(),
+                    QMargins buttonsMargins = QMargins(), int leftPadding = 0, int rightPadding = 0,
+                    bool showMini = true, bool showMaxi = true, bool showClose = true);
 
         void addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon, const QObject * receiver = 0, const char * slot = 0);
         void addMiniButton(const QObject * receiver = 0, const char * slot = 0);
