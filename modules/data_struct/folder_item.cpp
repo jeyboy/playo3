@@ -18,7 +18,7 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
 
         foreach(QJsonValue obj, ar) {
             iterObj = obj.toObject();
-            switch(iterObj.value(JSON_TYPE_ITEM_TYPE).toInt()) {
+            switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case FILE_ITEM: {
                     inBranchCount++;
                     new FileItem(&iterObj, this);
