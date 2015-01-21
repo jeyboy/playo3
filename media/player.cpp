@@ -78,7 +78,7 @@ void Player::playItem(QModelIndex item, bool paused) {
     }
 
     currentItem = item;
-    setMedia(url);
+    setMedia(item.data(URLID).toUrl());
     play();
 
     if (paused)

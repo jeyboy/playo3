@@ -21,13 +21,7 @@ QVariant ModelInterface::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-    if (role == UPDATEID) {
-        if (index.isValid())
-            emit dataChanged(index, index);
-
-        return QVariant();
-    }
-    else return item(index) -> data(role);
+    return item(index) -> data(role);
 }
 
 Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
@@ -167,7 +161,7 @@ int ModelInterface::rowCount(const QModelIndex & parent) const {
     return parentItem ? parentItem -> childCount() : 0;
 }
 
-bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, int role) {
+bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &value, int role) {
     //        ModelItem * item;
 
     //        if (role == Qt::CheckStateRole) {
@@ -196,7 +190,7 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
 
     bool result = false;
 
-    ItemInterface * node = item(index);
+    ItemInterface * node = item(model_index);
 
     if (role == Qt::CheckStateRole) {
         node -> updateCheckedState(!node -> is(ItemState::checked));
@@ -204,7 +198,7 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
         if (node -> isContainer()) {
             FolderItem * it = dynamic_cast<FolderItem *>(node);
             if (it -> childCount() > 0) {
-                emit dataChanged(index, index(it -> child(it -> childCount() - 1)));
+                emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
                 return true;
             }
         }
@@ -215,10 +209,10 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)
-        result = node -> setData(index.column(), value);
+        result = node -> setData(model_index.column(), value);
 
     if (result)
-        emit dataChanged(index, index);
+        emit dataChanged(model_index, model_index);
 
     return result;
 }

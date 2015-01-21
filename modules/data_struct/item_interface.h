@@ -40,7 +40,7 @@ namespace Playo3 {
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 
-        inline virtual QUrl toUrl() { return QUrl::fromLocalFile(fullPath()); }
+        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
         QString buildTreePath() const;
 
         QVariant data(int column) const;

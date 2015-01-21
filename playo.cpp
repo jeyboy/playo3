@@ -97,7 +97,7 @@ QMenu * Playo::createPopupMenu() {
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
-    hide(); // hiding window while savings going
+//    hide(); // hiding window while savings going
 
     settings -> clear();
 

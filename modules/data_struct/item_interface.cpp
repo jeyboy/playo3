@@ -111,6 +111,8 @@ QVariant ItemInterface::data(int column) const {
                return IconProvider::fileIcon(fullPath(), extension().toString());
         }
 
+        case STATE_EXIST_ID:    return !is(ItemState::not_exist);
+        case URLID:             return toUrl();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
         case ADDFONTID:         return Settings::instance() -> getItemInfoFont();
 

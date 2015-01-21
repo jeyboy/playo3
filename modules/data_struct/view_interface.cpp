@@ -34,7 +34,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     int iconDimension = Settings::instance() -> getIconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
-//    connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &))); // move logic to the void mouseDoubleClickEvent(QMouseEvent *)
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
 
@@ -76,6 +76,8 @@ void ViewInterface::scrollToActive() {
 //    if (Player::instance() -> playedItem()) {
 //        scrollTo(model -> index(Player::instance() -> playedItem()));
 //    }
+
+    scrollTo(Player::instance() -> playedItem());
 }
 
 void ViewInterface::prevItem(bool deleteCurrent) {
@@ -126,7 +128,20 @@ QModelIndex ViewInterface::fromPath(QString path) { //TODO: rewrite
 //    }
 //}
 
-bool ViewInterface::execIndex(const QModelIndex & item) { //TODO: rewrite
+bool ViewInterface::execIndex(const QModelIndex & node) {
+    if (node.isValid()) {
+        if (Settings::instance() -> isSpoilOnActivation())
+            scrollTo(node);
+
+        if (node.data(STATE_EXIST_ID).toBool()) {
+            Player::instance() -> playItem(node, false);
+            return true;
+        }
+        else mdl -> setData(node, ItemState::not_exist, STATEID);
+    }
+
+    return false;
+
 //    ItemInterface * item = mdl -> getItem(index);
 
 //    if (!item -> isContainer())

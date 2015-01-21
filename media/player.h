@@ -32,6 +32,8 @@ public:
     void setTrackBar(QSlider * trackBar);
     void setTimePanel(ClickableLabel * timePanel);
 
+    inline QModelIndex playedItem() { return currentItem; }
+
     static void close() {
         delete self;
     }
