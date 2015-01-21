@@ -30,8 +30,6 @@ void DockBar::resizeEvent(QResizeEvent * event) {
 
     brush.setStart(rect().topLeft());
     brush.setFinalStop(rect().bottomRight());
-
-//    titleWidget -> resize(width(), titleWidget -> height());
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {
