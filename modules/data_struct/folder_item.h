@@ -10,7 +10,8 @@ namespace Playo3 {
     public:
         FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
-        FolderItem(const QString folderPath, QString folderTitle = "", FolderItem * parent = 0, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(QString folderTitle, FolderItem * parent = 0, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
         inline int itemsCountInBranch() const { return inBranchCount; }

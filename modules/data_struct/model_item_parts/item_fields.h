@@ -28,19 +28,30 @@ namespace Playo3 {
 
         ItemFields(QJsonObject * hash);
 
-        ItemFields(QString path, QString title = "", QString extension = "", int size = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemFields(QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
 
-        ItemFields(int state);
+        ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
-//        inline QString title() const { return _title; }
+        inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
+        inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
+        inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
+        inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }
+        inline QVariant info() const        { return attrs.value(JSON_TYPE_INFO); }
 
-        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && !_info.isEmpty());}
-        inline void setInfo(QString newInfo) { _info = newInfo; }
+        inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
+        inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
+        inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
 
-        inline void setBpm(int newBeat) { _bpm = newBeat; }
-        inline void setDuration(QString newDuration) { _duration = newDuration;}
-        inline void setGenre(int newGenreID) { _genreID = newGenreID;}
-        inline void setPath(QString newPath) { _path = newPath;}
+        inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
+        inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
+        inline void setGenre(QVariant newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }
+        inline void setSize(QVariant newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
+        inline void setPath(QVariant newPath)           { attrs[JSON_TYPE_PATH] = newPath; }
+        inline void setTitle(QVariant newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
+        inline void setExtension(QVariant newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
+        inline void setInfo(QVariant newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
+
+        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && info().isValid());}
 
         inline virtual QString toUID() { return ""; }
         virtual QJsonObject toJson();
@@ -50,8 +61,7 @@ namespace Playo3 {
         //TODO: add prepare titles method
 
     protected:
-        QString _path, _title, _extension, _duration, _info;
-        int _genreID, _size, _bpm;
+        QVariantMap attrs;
     };
 }
 

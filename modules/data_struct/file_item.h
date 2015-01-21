@@ -9,7 +9,9 @@ namespace Playo3 {
     class FileItem : public ItemInterface {
     public:
         FileItem(QJsonObject * hash, FolderItem * parent = 0);
-        FileItem(const QString filepath, FolderItem * parent = 0);
+        FileItem(QString fileName, FolderItem * parent = 0);
+        FileItem(QString filePath, QString fileName, FolderItem * parent = 0);
+
         ~FileItem();
 
         bool removePhysicalObject();
@@ -17,6 +19,8 @@ namespace Playo3 {
         bool isExist() const;
 
         QJsonObject toJson();
+    protected:
+        void proceedTitle(QString title);
     };
 }
 

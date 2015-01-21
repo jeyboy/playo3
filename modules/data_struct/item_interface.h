@@ -19,7 +19,7 @@ namespace Playo3 {
     public:
         ItemInterface(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemInterface(FolderItem * parent, QJsonObject * hash);
-        ItemInterface(FolderItem * parent, QString path, QString title = "", QString extension = "", int size = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemInterface(FolderItem * parent, QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         virtual ~ItemInterface();
 
@@ -31,7 +31,6 @@ namespace Playo3 {
         int column() const;
         int row() const;
 
-        inline virtual bool isStructural() const { return false; }
         inline virtual bool isRemote() const { return false; }
         inline virtual bool isContainer() const { return false; }
 

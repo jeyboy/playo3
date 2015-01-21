@@ -15,8 +15,8 @@ ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
     if (_parent)
         _parent -> declareChild(this);
 }
-ItemInterface::ItemInterface(FolderItem * parent, QString path, QString title, QString extension, int size, int initState)
-    : ItemFields(path, title, extension, size, initState), _parent(parent) {
+ItemInterface::ItemInterface(FolderItem * parent, QString title, int initState)
+    : ItemFields(title, initState), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
@@ -28,11 +28,18 @@ ItemInterface::~ItemInterface() {
 
 QString ItemInterface::fullPath() const {
     FolderItem * curr = _parent;
-    QString path_buff = _path;
 
-    while(curr != 0 && !curr -> _path.isEmpty()) {
-        path_buff = curr -> _path + '/' + path_buff;
-        curr = curr -> _parent;
+    QString path_buff;
+
+    if (path().isValid()) {
+        path_buff = path().toString() + '/' + title().toString();
+    } else {
+        path_buff = title().toString();
+
+        while(curr != 0 && curr -> title().isValid()) {
+            path_buff = curr -> title().toString() + '/' + path_buff;
+            curr = curr -> _parent;
+        }
     }
 
 #ifdef Q_OS_LINUX
@@ -42,16 +49,9 @@ QString ItemInterface::fullPath() const {
     return path_buff;
 }
 
-void ItemInterface::openLocation() {// TODO: test needed
+void ItemInterface::openLocation() {
     QFileInfo info(fullPath());
     QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-
-//    if (!parentItem -> fullPath().isEmpty())
-//        QDesktopServices::openUrl(parentItem -> toUrl());
-//    else {
-//        QFileInfo info(fullPath());
-//        QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-//    }
 }
 
 int ItemInterface::row() const {
@@ -97,7 +97,7 @@ QString ItemInterface::buildTreePath() const {
 
 QVariant ItemInterface::data(int column) const {
     switch(column) {
-        case Qt::DisplayRole:   return _title;
+        case Qt::DisplayRole:   return title();
         case Qt::DecorationRole: {
            if (is(not_exist))
                return IconProvider::missedIcon();
@@ -105,7 +105,7 @@ QVariant ItemInterface::data(int column) const {
            if (isContainer())
                return QVariant(); // IconProvider::fileIcon("", "");
            else
-               return IconProvider::fileIcon(fullPath(), _extension);
+               return IconProvider::fileIcon(fullPath(), extension().toString());
         }
 
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
@@ -122,17 +122,19 @@ QVariant ItemInterface::data(int column) const {
             else
                 return Qt::AlignLeft;
 
-        case INFOID:            return _info;
+        case INFOID:            return info();
         case Qt::CheckStateRole: {
             if (Settings::instance() -> isCheckboxShow()) {
                 return is(checked);
             } else return QVariant();
         }
 
-        case Qt::ToolTipRole:   return _title + "(" + _extension + ")" + "\n" + _path;
+        case Qt::ToolTipRole:
+            qDebug() << attrs;
+            return title()/* + "(" + _extension + ")" + "\n" + _path*/;
 
-        case EXTENSIONID:       return _extension;
-        case PATHID:            return _path;
+        case EXTENSIONID:       return extension();
+        case PATHID:            return path();
         case FULLPATHID:        return fullPath();
         case FOLDERID:          return isContainer();
         case REMOTEID:          return isRemote();
@@ -146,9 +148,9 @@ QVariant ItemInterface::data(int column) const {
 
 bool ItemInterface::setData(int column, const QVariant &value) {
     switch(column) {
-        case TITLEID:       { _title = value.toString(); break; }
-        case EXTENSIONID:   { _extension = value.toString(); break; }
-        case PATHID:        { _path = value.toString(); break; }
+        case TITLEID:       { setTitle(value); break; }
+        case EXTENSIONID:   { setExtension(value); break; }
+        case PATHID:        { setPath(value); break; }
         case STATEID:       { /*setState(value.toInt(), false);*/ break;}
         default:            { return false; }
     }

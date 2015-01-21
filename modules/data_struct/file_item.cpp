@@ -5,12 +5,15 @@ using namespace Playo3;
 FileItem::FileItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash) {
 }
 
-FileItem::FileItem(QString filePath, FolderItem * parent)
-    : ItemInterface(parent, filePath, filePath.section('/', -1, -1)) {
-    _extension = _title.section('.', -1, -1);
-    if (_extension != _title)
-        _title = _title.section('.', 0, -2);
-    else _extension = QString();
+FileItem::FileItem(QString fileName, FolderItem * parent) : ItemInterface(parent) {
+    proceedTitle(fileName);
+}
+
+FileItem::FileItem(QString filePath, QString fileName, FolderItem * parent)
+    : ItemInterface(parent/*, filePath.section('/', -1, -1)*/) {
+
+    proceedTitle(fileName);
+    setPath(filePath);
 }
 
 FileItem::~FileItem() {
@@ -31,4 +34,14 @@ QJsonObject FileItem::toJson() {
     root[JSON_TYPE_ITEM_TYPE] = FILE_ITEM;
 
     return root;
+}
+
+void FileItem::proceedTitle(QString fileName) {
+    QString sExt = fileName.section('.', -1, -1);
+    if (sExt != fileName) {
+        fileName = fileName.section('.', 0, -2);
+        setExtension(sExt);
+    }
+
+    setTitle(fileName);
 }

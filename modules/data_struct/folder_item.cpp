@@ -8,12 +8,12 @@ FolderItem::FolderItem(int initState) : ItemInterface(0, initState) {
 
 }
 
-FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash), inBranchCount(hash -> value(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash -> take(JSON_TYPE_STATE).toInt()), inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
     if (parent != 0)
-        parent -> declareFolder(_title, this);
+        parent -> declareFolder(title().toString(), this);
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
-        QJsonArray ar = hash -> value(JSON_TYPE_CHILDS).toArray();
+        QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
 
         foreach(QJsonValue obj, ar) {
@@ -47,21 +47,29 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
             }
         }
     }
+
+    attrs = hash -> toVariantMap();
 }
 
-FolderItem::FolderItem(const QString folderPath, QString folderTitle, FolderItem * parent, int initState)
-    : ItemInterface(parent, folderPath, folderTitle, "", -1, initState) {
+FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int initState)
+    : ItemInterface(parent, folderTitle, initState) {
 
-    if (_title.isEmpty())
-        _title = folderPath;
+    setPath(folderPath);
 
     if (parent != 0)
-        parent -> declareFolder(_title, this);
+        parent -> declareFolder(folderTitle, this);
+}
+
+FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int initState)
+    : ItemInterface(parent, folderTitle, initState) {
+
+    if (parent != 0)
+        parent -> declareFolder(folderTitle, this);
 }
 
 FolderItem::~FolderItem() {
     if (_parent)
-        _parent -> undeclareFolder(_title);
+        _parent -> undeclareFolder(title().toString());
 
     qDeleteAll(children);
 }
@@ -105,6 +113,7 @@ QJsonObject FolderItem::toJson() {
     return root;
 }
 
+//usable only for tree
 FolderItem * FolderItem::createFolderPath(QString path) {
     QStringList list = path.split('/', QString::SkipEmptyParts);
     if (list.isEmpty())
@@ -116,7 +125,7 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list) {
     FolderItem * curr = folders.value(name, 0);
 
     if (!curr)
-        curr = new FolderItem(name, name, this);
+        curr = new FolderItem(name, this);
 
     if (list && !list -> isEmpty())
         return curr -> createFolder(list -> takeFirst(), list);
