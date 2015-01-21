@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) {
+ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) { //TODO: rewrite
     if (hash != 0) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
@@ -17,14 +17,20 @@ ModelInterface::~ModelInterface() {
     delete rootItem;
 }
 
-QVariant ModelInterface::data(const QModelIndex &index, int role) const {
+QVariant ModelInterface::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
         return QVariant();
 
-    return item(index) -> data(role);
+    if (role == UPDATEID) {
+        if (index.isValid())
+            emit dataChanged(index, index);
+
+        return QVariant();
+    }
+    else return item(index) -> data(role);
 }
 
-Qt::ItemFlags ModelInterface::flags(const QModelIndex &index) const {
+Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return 0;
 
@@ -188,13 +194,28 @@ bool ModelInterface::setData(const QModelIndex &index, const QVariant &value, in
 
     //        return result;
 
-
-
-    if (role != Qt::EditRole)
-        return false;
+    bool result = false;
 
     ItemInterface * node = item(index);
-    bool result = node -> setData(index.column(), value);
+
+    if (role == Qt::CheckStateRole) {
+        node -> updateCheckedState(!node -> is(ItemState::checked));
+
+        if (node -> isContainer()) {
+            FolderItem * it = dynamic_cast<FolderItem *>(node);
+            if (it -> childCount() > 0) {
+                emit dataChanged(index, index(it -> child(it -> childCount() - 1)));
+                return true;
+            }
+        }
+
+        result = true;
+    }
+    else if (role == STATEID) {
+        node -> setStates(value.toInt());
+        result = true;
+    } else if (role == Qt::EditRole)
+        result = node -> setData(index.column(), value);
 
     if (result)
         emit dataChanged(index, index);

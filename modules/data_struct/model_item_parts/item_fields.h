@@ -9,6 +9,8 @@
 #include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
+    #define UPDATEID Qt::DisplayRole + 1
+
     #define TITLEID Qt::DisplayRole
     #define EXTENSIONID Qt::UserRole - 1
     #define PATHID EXTENSIONID - 1

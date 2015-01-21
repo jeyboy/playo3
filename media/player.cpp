@@ -51,48 +51,22 @@ void Player::setMuteButton(QAction * muteAction) {
     connect((QObject *)muteButton, SIGNAL(triggered(bool)), this, SLOT(mute()));
 }
 
-//void Player::setPlaylist(View * newPlaylist) {
-//   stop();
-//   updatePlaylist(newPlaylist);
-//   updateItem(0);
-//}
+void Player::updateItemState(bool isPlayed) {
+    if (currentItem.isValid()) {
+        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentItem.model());
 
-//void Player::removePlaylist() {
-//    switch(state()) {
-//        case PausedState:
-//        case PlayingState: {
-//            stop();
-//            break;
-//        }
-//        default: {}
-//    }
-
-//    updatePlaylist(0);
-//    updateItem(0);
-//}
-
-//void Player::updateItem(ModelItem * newItem) {
-//    emit itemChanged(played, newItem);
-//    played = newItem;
-//}
-//void Player::updatePlaylist(View * newPlaylist) {
-//    emit playlistChanged(playlist, newPlaylist);
-//    playlist = newPlaylist;
-//}
-
-//void Player::updateItemState(bool isPlayed) {
-//    if (played) {
-//        if (isPlayed) {
+        if (isPlayed) {
+            mdl -> setData(currentItem, ItemState::listened | ItemState::played, STATEID);
 //            played -> setState(STATE_LISTENED | STATE_PLAYED);
-//        } else {
+        } else {
+            mdl -> setData(currentItem, -ItemState::played, STATEID);
 //            played -> setState(-STATE_PLAYED, false);
-//        }
+        }
+//        currentItem.data(UPDATEID);
+    }
+}
 
-//        playlist -> getModel() -> refreshItem(played);
-//    }
-//}
-
-void Player::playItem(QUrl url, bool paused) {
+void Player::playItem(QModelIndex item, bool paused) {
     switch(state()) {
         case StoppedState: { break; }
 
@@ -103,6 +77,7 @@ void Player::playItem(QUrl url, bool paused) {
         }
     }
 
+    currentItem = item;
     setMedia(url);
     play();
 

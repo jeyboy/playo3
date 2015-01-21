@@ -5,14 +5,13 @@
 
 #include <QSlider>
 #include <QAction>
-#include <QIcon>
 
-#include <QtCore/qmath.h>
-
-//#include "model/model.h"
-//#include "model/view.h"
+//#include <QtCore/qmath.h>
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
+
+#include "modules/data_struct/model_item_parts/item_fields.h"
+#include <QModelIndex>
 
 using namespace Playo3;
 
@@ -20,10 +19,9 @@ class Player : public AudioPlayer {
     Q_OBJECT
 public:
     static Player * instance(QObject * parent = 0);
-    void playItem(QUrl url, bool paused = false);
+    void playItem(QModelIndex item, bool paused = false);
     void setStartPosition(int position);
 
-//    void setActivePlaylist(View * itemPlaylist);
     void setPlayButton(QAction * playAction);
     void setPauseButton(QAction * pauseAction);
     void setStopButton(QAction * stopAction);
@@ -59,6 +57,7 @@ private slots:
     void onMediaStatusChanged(MediaStatus status);
 
 private:
+    void updateItemState(bool isPlayed);
     void updateControls(bool played, bool paused, bool stopped);
 
     void setTimePanelVal(int millis);
@@ -99,6 +98,8 @@ private:
     int prevVolumeVal;
     bool time_forward;
     bool extended_format;
+
+    QModelIndex currentItem;
 };
 
 #endif // PLAYER_H
