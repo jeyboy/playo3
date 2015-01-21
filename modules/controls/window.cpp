@@ -116,7 +116,7 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
 
         case QEvent::MouseButtonRelease: {
             childInAction = false;
-            DockBar * bar = (DockBar *) o;
+            DockBar * bar = qobject_cast<DockBar *>(o);
 
             if (bar -> isSticked())
                 addOuterChild(bar);
@@ -127,7 +127,7 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
 //        case QEvent::Resize:
         case QEvent::Move: {
             if (/*e -> type() == QEvent::Resize || */(childInAction && !skipChildAction)) {
-                DockBar * bar = (DockBar *) o;
+                DockBar * bar = qobject_cast<DockBar *>(o);
 
                 QRect parentRect = geometry();
                 QRect currRect = bar -> geometry();
