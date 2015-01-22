@@ -33,7 +33,7 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     //         else
     //            return Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable | QAbstractItemModel::flags(index);
 
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    return Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 
 ItemInterface * ModelInterface::item(const QModelIndex & index) const {
