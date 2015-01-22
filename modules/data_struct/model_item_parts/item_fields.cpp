@@ -13,6 +13,19 @@ ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
 ItemFields::ItemFields(int state) : ItemState(state) {
 }
 
+QStringList ItemFields::info() const {
+    QStringList list;
+    QVariant i = _info();
+
+    if (i.isValid())
+        list.append("Processing ...");
+    else
+        list.append(i.toString());
+    list.append(duration().toString());
+
+    return list;
+}
+
 QJsonObject ItemFields::toJson() {
     QJsonObject root = QJsonObject::fromVariantMap(attrs);
     root[JSON_TYPE_STATE] = saveStateVal();

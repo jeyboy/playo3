@@ -39,7 +39,7 @@ public:
                const QModelIndex &index) const;
 
 private:
-    void drawCheckbox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index);
+    void drawCheckbox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     QCheckBox templateCheckbox;
     QColor hoverColor;
 

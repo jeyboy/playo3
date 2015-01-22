@@ -324,7 +324,7 @@ void ModelItemDelegate::usuall(QPainter* painter, const QStyleOptionViewItem& op
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
 
-    int background_state = index.data(Qt::UserRole).toInt();
+    int background_state = index.data(STATEID).toInt();
     QVariant checkable = index.data(Qt::CheckStateRole);
 
     bool elem_state = option2.state & (QStyle::State_Selected);
@@ -377,7 +377,7 @@ void ModelItemDelegate::usuall(QPainter* painter, const QStyleOptionViewItem& op
 
     if (checkable.isValid()) {
         left_offset += 14;
-        const_cast<ModelItemDelegate *>(this) -> drawCheckbox(painter, option2, index);
+        drawCheckbox(painter, option2, index);
     }
 
     if(elem_state) {
@@ -485,7 +485,7 @@ void ModelItemDelegate::usuall(QPainter* painter, const QStyleOptionViewItem& op
     painter -> restore();
 }
 
-void ModelItemDelegate::drawCheckbox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) {
+void ModelItemDelegate::drawCheckbox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
     QStyleOptionButton checkboxstyle;
     bool checked = index.data(Qt::CheckStateRole).toBool();
     QRect rect = option.rect;

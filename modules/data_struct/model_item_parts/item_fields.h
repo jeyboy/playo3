@@ -40,7 +40,8 @@ namespace Playo3 {
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }
-        inline QVariant info() const        { return attrs.value(JSON_TYPE_INFO); }
+        inline QVariant _info() const        { return attrs.value(JSON_TYPE_INFO); }
+        QStringList info() const;
 
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
@@ -55,7 +56,7 @@ namespace Playo3 {
         inline void setExtension(QVariant newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
         inline void setInfo(QVariant newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
 
-        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && info().isValid());}
+        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
         inline virtual QString toUID() { return ""; }
         virtual QJsonObject toJson();
