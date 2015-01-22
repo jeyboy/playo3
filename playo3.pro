@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     dialogs/extension_dialog.cpp \
     dialogs/relationdialog.cpp \
     dialogs/web_dialog.cpp \
-    modules/controls/simple_list_view.cpp
+    modules/controls/simple_list_view.cpp \
+    modules/data_struct/model_item_delegate.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -159,7 +160,8 @@ HEADERS  += playo.h \
     dialogs/extension_dialog.h \
     dialogs/relationdialog.h \
     dialogs/web_dialog.h \
-    modules/controls/simple_list_view.h
+    modules/controls/simple_list_view.h \
+    modules/data_struct/model_item_delegate.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

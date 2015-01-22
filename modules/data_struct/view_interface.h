@@ -24,7 +24,7 @@
 
 #include "media/player.h"
 
-//#include "model_item_delegate.h"
+#include "model_item_delegate.h"
 
 //#include "model_item.h"
 

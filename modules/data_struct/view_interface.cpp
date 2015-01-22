@@ -28,7 +28,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-//    setItemDelegate(new ItemDelegate(this));
+    setItemDelegate(new ModelItemDelegate(this));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
     int iconDimension = Settings::instance() -> getIconHeight();
