@@ -3,12 +3,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QSlider>
 #include <QAction>
 
 //#include <QtCore/qmath.h>
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
+#include "modules/controls/metric_slider.h"
 
 #include "modules/data_struct/model_item_parts/item_fields.h"
 #include <QModelIndex>
@@ -87,7 +87,7 @@ private:
     }
 
     static Player * self;
-    QSlider * slider;
+    Playo3::MetricSlider * slider;
     QSlider * volumeSlider;
     ClickableLabel * timePanel;
 

@@ -91,7 +91,7 @@ void Player::setStartPosition(int position) {
 }
 
 void Player::setTrackBar(QSlider * trackBar) {
-    slider = trackBar;
+    slider = qobject_cast<Playo3::MetricSlider *>(trackBar);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 

@@ -5,6 +5,8 @@
 
 //TODO: recalc did not called on changeTicks
 
+using namespace Playo3;
+
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
   , show_position(showPosition), show_mini_progress(false)
   , margin(16), spacing(30), point_radius(2) {
@@ -33,7 +35,10 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
     QPainter p(this);
     p.save();
-    p.setBrush(QBrush(Qt::black)); // temp
+    QColor c = QColor::fromRgb(0, 0, 0, 92);
+
+    p.setPen(c);
+    p.setBrush(QBrush(c)); // temp
 
     if (orientation() == Qt::Horizontal) {
         p.drawPath(path);

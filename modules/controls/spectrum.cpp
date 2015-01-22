@@ -82,10 +82,11 @@ void Spectrum::paintCombo() {
     g.setColorAt(0.6, c2);
     g.setColorAt(1, c1);
 
+    painter.setBrush(g);
+
     for(int loop1 = 0; loop1 < peaks[0].length(); loop1++) {
         peak = peaks[0][loop1];
         rect.setCoords(accumulate, height() - 6 - peak, (accumulate + bar_width), height() - 6);
-        painter.fillRect(rect, g);
         painter.drawRect(rect);
         accumulate += bar_width + padd;
     }
@@ -184,6 +185,8 @@ void Spectrum::paintDuo() {
         g.setColorAt(0.6, c2);
         g.setColorAt(1, c1);
 
+        painter.setRenderHint(QPainter::Antialiasing, false);
+
         for(int pair = 0; pair < peaks.length(); pair += 2) {
             if (peaks.length() > pair + 1) {
                 for(int loop1 = 0; loop1 < peaks[pair].length(); loop1++) {
@@ -191,17 +194,13 @@ void Spectrum::paintDuo() {
 
                     peak = peaks[pair][loop1];
                     rect.setCoords(accumulate, first_bar_place - peak, temp_acc, first_bar_place);
-                    painter.setRenderHint(QPainter::Antialiasing, true);
-                    painter.fillRect(rect, g);
-                    painter.setRenderHint(QPainter::Antialiasing, false);
+                    painter.setBrush(g);
                     painter.drawRect(rect);
 
 
                     peak2 = peaks[pair + 1][loop1];
                     rect.setCoords(accumulate, sec_bar_place, temp_acc, sec_bar_place + peak2);
-                    painter.setRenderHint(QPainter::Antialiasing, true);
-                    painter.fillRect(rect, gg);
-                    painter.setRenderHint(QPainter::Antialiasing, false);
+                    painter.setBrush(gg);
                     painter.drawRect(rect);
 
                     accumulate = temp_acc + padd;
@@ -212,9 +211,7 @@ void Spectrum::paintDuo() {
 
                     peak = peaks[pair][loop1];
                     rect.setCoords(accumulate, first_bar_place - peak, temp_acc, first_bar_place);
-                    painter.setRenderHint(QPainter::Antialiasing, true);
-                    painter.fillRect(rect, g);
-                    painter.setRenderHint(QPainter::Antialiasing, false);
+                    painter.setBrush(g);
                     painter.drawRect(rect);
 
                     accumulate = temp_acc + padd;
