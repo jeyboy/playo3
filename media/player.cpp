@@ -8,61 +8,43 @@ Player * Player::instance(QObject * parent) {
     return self;
 }
 
-//ModelItem * Player::playedItem() const {
-//    return played;
-//}
-//View * Player::currentPlaylist() const {
-//    return playlist;
-//}
-//View * Player::currentActivePlaylist() const {
-//    return playlist;
-//}
-
-
-//void Player::setActivePlaylist(View * newActivePlaylist) {
-//    activePlaylist = newActivePlaylist;
-//}
-
 void Player::setPlayButton(QAction * playAction) {
     playButton = playAction;
     playButton -> setVisible(true);
 //    connect((QObject *)playAction, SIGNAL(triggered(bool)), instance(), SLOT(play()));
-    connect((QObject *)playAction, SIGNAL(triggered(bool)), this, SLOT(start()));
+    connect(playAction, SIGNAL(triggered(bool)), this, SLOT(start()));
 }
 void Player::setPauseButton(QAction * pauseAction) {
     pauseButton = pauseAction;
     pauseButton -> setVisible(false);
-    connect((QObject *)pauseAction, SIGNAL(triggered(bool)), this, SLOT(pause()));
+    connect(pauseAction, SIGNAL(triggered(bool)), this, SLOT(pause()));
 }
 void Player::setStopButton(QAction * stopAction) {
     stopButton = stopAction;
     stopButton -> setVisible(false);
-    connect((QObject *)stopAction, SIGNAL(triggered(bool)), this, SLOT(stop()));
+    connect(stopAction, SIGNAL(triggered(bool)), this, SLOT(stop()));
 }
 
 void Player::setLikeButton(QAction * likeAction) {
     likeButton = likeAction;
     likeButton -> setVisible(false);
-    connect((QObject *)likeAction, SIGNAL(triggered(bool)), this, SLOT(like()));
+    connect(likeAction, SIGNAL(triggered(bool)), this, SLOT(like()));
 }
 
 void Player::setMuteButton(QAction * muteAction) {
     muteButton = muteAction;
-    connect((QObject *)muteButton, SIGNAL(triggered(bool)), this, SLOT(mute()));
+    connect(muteButton, SIGNAL(triggered(bool)), this, SLOT(mute()));
 }
 
 void Player::updateItemState(bool isPlayed) {
     if (currentItem.isValid()) {
         QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentItem.model());
 
-        if (isPlayed) {
-            mdl -> setData(currentItem, ItemState::listened | ItemState::played, STATEID);
-//            played -> setState(STATE_LISTENED | STATE_PLAYED);
-        } else {
-            mdl -> setData(currentItem, -ItemState::played, STATEID);
-//            played -> setState(-STATE_PLAYED, false);
-        }
-//        currentItem.data(UPDATEID);
+        mdl -> setData(
+                    currentItem,
+                    isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played,
+                    STATEID
+        );
     }
 }
 
@@ -73,6 +55,7 @@ void Player::playItem(QModelIndex item, bool paused) {
         case PausedState:
         case PlayingState: {
             stop();
+            updateItemState(false);
             break;
         }
     }
@@ -134,23 +117,6 @@ void Player::setTimePanelVal(int millis) {
     }
 }
 
-//void Player::initFormat(int millis) {
-//    int h = millis == 0 ? 0 : abs(millis / 3600000) % 24;
-//    extended_format = h > 0;
-//}
-
-//QString Player::intToStr(int millis) {
-//    int m = millis == 0 ? 0 : abs(millis / 60000) % 60;
-//    int s = millis == 0 ? 0 : abs(millis / 1000) % 60;
-
-//    if (extended_format) {
-//        int h = millis == 0 ? 0 : abs(millis / 3600000) % 24;
-//        return QString().sprintf("%02d:%02d:%02d", h, m, s);
-//    } else {
-//        return QString().sprintf("%02d:%02d", m, s);
-//    }
-//}
-
 void Player::updateControls(bool played, bool paused, bool stopped) {
     playButton -> setVisible(played);
     pauseButton -> setVisible(paused);
@@ -202,7 +168,15 @@ void Player::start() {
 }
 
 void Player::like() {
-//    played -> setState(STATE_LIKED);
+    if (currentItem.isValid()) {
+        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentItem.model());
+
+        mdl -> setData(
+                    currentItem,
+                    ItemState::liked,
+                    STATEID
+        );
+    }
 }
 
 void Player::mute() {
@@ -229,7 +203,6 @@ void Player::onStateChanged(MediaState newState) {
             slider -> setMaximum(0);
             setTimePanelVal(0);
             slider -> blockSignals(false);
-
             updateControls(true, false, false);
             break;
         }
@@ -238,7 +211,7 @@ void Player::onStateChanged(MediaState newState) {
             if (getDuration() != -1)
                 slider -> setMaximum(getDuration());
 
-//            updateItemState(true);
+            updateItemState(true);
             updateControls(false, true, true);
             break;
         }
@@ -260,13 +233,8 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case EndOfMedia:
         case InvalidMedia: {
-//            if (playlist) {
-//                if (playlist -> isPlaylist()) {
-//                    playlist -> proceedNext();
-//                }
-//            }
-            break;
-        }
+            emit nextItemNeeded();
+        break;}
         default: {  }
     }
 }

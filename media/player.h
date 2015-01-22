@@ -38,6 +38,9 @@ public:
         delete self;
     }
 
+signals:
+    void nextItemNeeded();
+
 public slots:
     void playPause();
 

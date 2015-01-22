@@ -160,32 +160,6 @@ int ModelInterface::rowCount(const QModelIndex & parent) const {
 }
 
 bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &value, int role) {
-    //        ModelItem * item;
-
-    //        if (role == Qt::CheckStateRole) {
-    //            item = item(index);
-
-    //            item -> changeCheckedState(!item -> getState() -> isChecked());
-
-    //            if (item -> isFolder() && item -> childCount() > 0) {
-    //                emit dataChanged(index, this -> index(item -> child(item -> childCount() - 1)));
-    //            } else {
-    //                emit dataChanged(index, index);
-    //            }
-    //            return true;
-    //        }
-
-    //        if (role != Qt::EditRole)
-    //            return false;
-
-    //        item = item(index);
-    //        bool result = item -> setData(index.column(), value);
-
-    //        if (result)
-    //            emit dataChanged(index, index);
-
-    //        return result;
-
     bool result = false;
 
     ItemInterface * node = item(model_index);
@@ -204,6 +178,7 @@ bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &va
         result = true;
     }
     else if (role == STATEID) {
+        qDebug() << value;
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)
