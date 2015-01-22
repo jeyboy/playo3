@@ -8,13 +8,10 @@
 using namespace Playo3;
 
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
-  , show_position(showPosition), show_mini_progress(false)
+  , show_position(showPosition), show_mini_progress(true)
   , margin(16), spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
-
-    brush.setColorAt(0, QColor::fromRgb(0,0,0));
-    brush.setColorAt(1, QColor::fromRgb(0,0,0));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
@@ -45,11 +42,8 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
         if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < 1) {
-                brush.setFinalStop(rRect.height(), (rRect.width() - 1) * pos);
-                p.drawRoundedRect(rRect.left(), rRect.y(), rRect.width() - 1, 3, 1, 1);
-//                p.fillRect(rRect.left(), rRect.y(), (rRect.width() - 1) * pos, 3, fillColor);
-            }
+            if (Player::instance() -> getSize() > 0 && pos < 1)
+                p.drawRoundedRect(rect().left() + 6, rRect.y(), (rect().width() - 8) * pos, 3, 1, 1);
         }
     } else {
         p.drawPath(path);
@@ -57,8 +51,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
         if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
             if (Player::instance() -> getSize() > 0 && pos < 1) {
-                brush.setFinalStop(rRect.width(), -((rRect.height() - 1) * pos)); //?
-                p.drawRoundedRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1), 1, 1);
+                p.drawRoundedRect(rRect.x(), rRect.bottom(), 3, -(rRect.height() - 1) * pos, 1, 1);
 //                p.fillRect(rRect.x(), rRect.bottom(), 3, -((rRect.height() - 1) * pos), fillColor);
             }
         }
@@ -151,7 +144,4 @@ void MetricSlider::calcGrid() {
 //            path.addText(left + point_radius + 2, temp + metrics.height() / 3, strFont, strNum);
         }
     }
-
-    brush.setStart(rRect.topLeft());
-    brush.setFinalStop(rRect.topLeft());
 }

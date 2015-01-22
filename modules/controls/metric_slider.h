@@ -36,7 +36,6 @@ namespace Playo3 {
         float hVal, fVal;
         QRect rRect;
         QPainterPath path;
-        QLinearGradient brush;
     };
 }
 
