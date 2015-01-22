@@ -28,12 +28,10 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return 0;
 
-    //         if (Settings::instance() -> isCheckboxShow())
-    //            return Qt::ItemIsUserCheckable | Qt::ItemIsEditable | Qt::ItemIsSelectable | QAbstractItemModel::flags(index);
-    //         else
-    //            return Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable | QAbstractItemModel::flags(index);
-
-    return Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    if (Settings::instance() -> isCheckboxShow())
+        return Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    else
+        return Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 
 ItemInterface * ModelInterface::item(const QModelIndex & index) const {
