@@ -28,20 +28,20 @@ void ItemState::setStates(int flags) {
 }
 
 bool ItemState::reset() {
-    item_state = new_item;
+    item_state = DEFAULT_MODEL_ITEM_STATE;
     return true;
 }
 
 bool ItemState::setListened() {
     if (!is(liked) && !is(unprocessed)) {
-        setBit(item_state & 31, listened); // get five first bits
+        setBit(clearState(), listened);
         return true;
     }
     return false;
 }
 bool ItemState::setLiked() {
     if (is(unprocessed)) return false;
-    setBit(item_state & 31, liked); // get five first bits
+    setBit(clearState(), liked);
     return true;
 }
 

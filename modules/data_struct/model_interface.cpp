@@ -178,7 +178,6 @@ bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &va
         result = true;
     }
     else if (role == STATEID) {
-        qDebug() << value;
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)

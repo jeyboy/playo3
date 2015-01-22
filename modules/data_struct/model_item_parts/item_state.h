@@ -5,22 +5,10 @@ namespace Playo3 {
     #define DEFAULT_MODEL_ITEM_STATE (ItemState::checked | ItemState::new_item | ItemState::unprocessed)
     #define DEFAULT_MODEL_CONTAINER_STATE (ItemState::checked | ItemState::expanded)
 
-//    #define STATE_UNPROCESSED 256
-//    #define STATE_DEFAULT 128
-//    #define STATE_LISTENED 64
-//    #define STATE_LIKED 32
-
-//    #define STATE_CHECKED 16
-
-//    #define STATE_EXPANDED 8
-//    #define STATE_PLAYED 4
-
-//    #define STATE_NOT_EXIST 2
-//    #define STATE_LIST_PROCEED 1
-
     class ItemState {
         public:
             enum ItemStateFlag {
+                unprocessed = 256,
                 new_item = 128,
                 listened = 64,
                 liked = 32,
@@ -28,8 +16,7 @@ namespace Playo3 {
                 expanded = 8,
                 played = 4,
                 not_exist = 2,
-                proceeded = 1,
-                unprocessed = 0
+                proceeded = 1
             };
 
             inline ItemState(int state = DEFAULT_MODEL_ITEM_STATE) { item_state = state; }
@@ -45,6 +32,8 @@ namespace Playo3 {
             inline int itemStateVal() const { return is(played) ? played : item_state & ((0 << 3) - 1) << 5; }
 
         protected:
+            inline int clearState() const { return item_state & 31; }  // get five first bits
+
             bool reset();
             bool setListened();
             bool setLiked();

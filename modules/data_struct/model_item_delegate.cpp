@@ -1,14 +1,14 @@
 #include "model_item_delegate.h"
 #include <QDebug>
 
-ModelItemDelegate::ModelItemDelegate(QObject* parent)
+ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent) {
 
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
 }
 
-QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
+QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
     size.setHeight(size.height() + 6);
     return size;
@@ -310,7 +310,7 @@ QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
 //    QStyledItemDelegate::paint(painter, option2, index);
 //}
 
-void ModelItemDelegate::usuall(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     QColor textColor;
     QStyleOptionViewItem option2 = option;
     option2.rect.setTop(option.rect.top() + 2);
@@ -331,6 +331,7 @@ void ModelItemDelegate::usuall(QPainter* painter, const QStyleOptionViewItem& op
     bool is_folder = false;
 
     QBrush fill_color;
+    qDebug() << background_state;
 
     switch (background_state) {
         case Playo3::ItemState::new_item:
