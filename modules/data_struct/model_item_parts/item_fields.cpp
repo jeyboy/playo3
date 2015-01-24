@@ -28,7 +28,7 @@ QStringList ItemFields::info() const {
 
 QJsonObject ItemFields::toJson() {
     QJsonObject root = QJsonObject::fromVariantMap(attrs);
-    root[JSON_TYPE_STATE] = saveStateVal();
+    root[JSON_TYPE_STATE] = saveStates();
     return root;
 }
 

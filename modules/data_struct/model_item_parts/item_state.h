@@ -2,21 +2,22 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Playo3 {
-    #define DEFAULT_MODEL_ITEM_STATE (ItemState::checked | ItemState::new_item | ItemState::unprocessed)
+    #define DEFAULT_MODEL_ITEM_STATE (ItemState::checked | ItemState::new_item)
     #define DEFAULT_MODEL_CONTAINER_STATE (ItemState::checked | ItemState::expanded)
 
     class ItemState {
         public:
             enum ItemStateFlag {
-                unprocessed = 256,
-                new_item = 128,
-                listened = 64,
-                liked = 32,
-                checked = 16,
-                expanded = 8,
-                played = 4,
-                not_exist = 2,
-                proceeded = 1
+                played = 512,
+                proceeded = 256, // list proceeding
+                checked = 128,
+                expanded = 64,
+                not_exist = 32,
+                info_required = 16,
+//                 = 8,
+                new_item = 4,
+                listened = 2,
+                liked = 1
             };
 
             inline ItemState(int state = DEFAULT_MODEL_ITEM_STATE) { item_state = state; }
@@ -27,19 +28,17 @@ namespace Playo3 {
 
             void setStates(int flags);
 
-            inline int stateVal() const { return item_state; }
-            inline int saveStateVal() { return item_state & ((0 << 5) - 1) << 3; }
-            inline int itemStateVal() const { return is(played) ? played : item_state & ((0 << 3) - 1) << 5; }
+            inline int states() const { return item_state; }
+            inline int saveStates() const { return (unsigned char)item_state; }
+//            inline int innerStates() { return item_state & ((0 << 6) - 1) << 3; }
+            inline int visualStates() const { return is(played) ? played : visualStateOffset(); }
 
         protected:
-            inline int clearState() const { return item_state & 31; }  // get five first bits
+            inline int visualStateOffset() const { return item_state & 7; }  // get six first bits
 
             bool reset();
             bool setListened();
             bool setLiked();
-            bool setExpanded();
-            bool setPlayed();
-            bool setNotExist();
 
             inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
             inline int setBit(int val, int pos) { return (item_state = val | pos) & pos; }

@@ -144,7 +144,7 @@ QVariant ItemInterface::data(int column) const {
         case FOLDERID:          return isContainer();
         case REMOTEID:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
-        case STATEID:           return itemStateVal();
+        case STATEID:           return visualStates();
         case PROGRESSID:        return -1;//Download::instance() -> getProgress(item);
 
         default:                return QVariant();
