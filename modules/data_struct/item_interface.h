@@ -35,7 +35,7 @@ namespace Playo3 {
         inline virtual bool isContainer() const { return false; }
 
         virtual bool isExist() const = 0;
-        inline bool isPlayable() {
+        inline bool isPlayable() const {
             bool showBatch = Settings::instance() -> isCheckboxShow();
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }

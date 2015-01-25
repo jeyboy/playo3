@@ -37,11 +37,11 @@ void Player::setMuteButton(QAction * muteAction) {
 }
 
 void Player::setItemState(int state) {
-    if (currentItem.isValid()) {
-        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentItem.model());
+    if (currentIndex.isValid()) {
+        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentIndex.model());
 
         mdl -> setData(
-                    currentItem,
+                    currentIndex,
                     state,
                     STATEID
         );
@@ -52,7 +52,7 @@ void Player::updateItemState(bool isPlayed) {
     setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
 }
 
-void Player::playItem(QModelIndex item, bool paused) {
+void Player::playIndex(QModelIndex item, bool paused) {
     switch(state()) {
         case StoppedState: { break; }
 
@@ -64,7 +64,7 @@ void Player::playItem(QModelIndex item, bool paused) {
         }
     }
 
-    currentItem = item;
+    currentIndex = item;
     setMedia(item.data(URLID).toUrl());
     play();
 
@@ -225,7 +225,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break; }
 
         case StalledMedia: {
-            emit itemExecError(currentItem);
+            emit itemExecError(currentIndex);
         break; }
 
         case EndOfMedia: {
@@ -233,7 +233,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
             break;
         }
         case InvalidMedia: {
-            emit itemNotSupported(currentItem);
+            emit itemNotSupported(currentIndex);
             emit nextItemNeeded();
         break;}
         default: {  }

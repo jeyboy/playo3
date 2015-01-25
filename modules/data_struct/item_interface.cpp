@@ -111,6 +111,7 @@ QVariant ItemInterface::data(int column) const {
                return IconProvider::fileIcon(fullPath(), extension().toString());
         }
 
+        case PLAYABLEID:        return isPlayable();
         case STATE_EXIST_ID:    return !is(ItemState::not_exist);
         case URLID:             return toUrl();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
@@ -168,17 +169,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //        delete titlesCache;
 //    }
 
-//    QStringList ModelItem::getInfo() const {
-//        QStringList list;
-//        if (info.isEmpty())
-//            list.append("Processing ...");
-//        else
-//            list.append(info);
-//        list.append(duration);
-
-//        return list;
-//    }
-
 //    void ModelItem::accumulateUids(QHash<ModelItem*, QString> & store) {
 //        if (isFolder()) {
 //            foreach(ModelItem * item, *childItemsList())
@@ -189,15 +179,6 @@ bool ItemInterface::setData(int column, const QVariant &value) {
 //                store.insert(this, currUid);
 //            }
 //        }
-//    }
-
-//    void ModelItem::setState(int new_state, bool append_to_library) {
-////        if (state -> setBit(new_state) && append_to_library) {
-////            if (state -> isListened())
-////                Library::instance() -> addItem(this, STATE_LISTENED);
-////            else if (state -> isLiked())
-////                Library::instance() -> addItem(this, STATE_LIKED);
-////        }
 //    }
 
 

@@ -13,6 +13,7 @@ namespace Playo3 {
     #define PROGRESSID URLID + 1
     #define FULLPATHID PROGRESSID + 1
     #define STATE_EXIST_ID FULLPATHID + 1
+    #define PLAYABLEID STATE_EXIST_ID + 1
 
 
     #define TITLEID Qt::DisplayRole

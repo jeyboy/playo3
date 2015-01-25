@@ -1,17 +1,13 @@
-//TODO: improve singleton and add destructor
-
 #ifndef PLAYER_H
 #define PLAYER_H
 
 #include <QAction>
+#include <QModelIndex>
 
-//#include <QtCore/qmath.h>
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
 #include "modules/controls/metric_slider.h"
-
 #include "modules/data_struct/model_item_parts/item_fields.h"
-#include <QModelIndex>
 
 using namespace Playo3;
 
@@ -19,7 +15,7 @@ class Player : public AudioPlayer {
     Q_OBJECT
 public:
     static Player * instance(QObject * parent = 0);
-    void playItem(QModelIndex item, bool paused = false);
+    void playIndex(QModelIndex item, bool paused = false);
     void setStartPosition(int position);
 
     void setPlayButton(QAction * playAction);
@@ -32,7 +28,7 @@ public:
     void setTrackBar(QSlider * trackBar);
     void setTimePanel(ClickableLabel * timePanel);
 
-    inline QModelIndex playedItem() { return currentItem; }
+    inline QModelIndex playedIndex() { return currentIndex; }
 
     static void close() {
         delete self;
@@ -107,7 +103,7 @@ private:
     bool time_forward;
     bool extended_format;
 
-    QModelIndex currentItem;
+    QModelIndex currentIndex;
 };
 
 #endif // PLAYER_H

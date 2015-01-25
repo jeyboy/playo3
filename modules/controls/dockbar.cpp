@@ -10,7 +10,7 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
 
     setAttribute(Qt::WA_DeleteOnClose);
     setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
-    setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 0, 10, 0), QMargins(0, 10, 0, 0), 5, 0, false, false, false)));
+    setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);

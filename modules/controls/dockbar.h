@@ -45,6 +45,7 @@ namespace Playo3 {
         }
 
         inline void focusInEvent(QFocusEvent * e) {
+            qDebug() << "FOCUSED";
             emit activating();
             QDockWidget::focusInEvent(e);
         }

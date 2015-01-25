@@ -76,11 +76,11 @@ QJsonObject ViewInterface::toJson() {
 }
 
 void ViewInterface::scrollToActive() {
-    if (Player::instance() -> playedItem().isValid())
-        scrollTo(Player::instance() -> playedItem());
+    if (Player::instance() -> playedIndex().isValid())
+        scrollTo(Player::instance() -> playedIndex());
 }
 
-void ViewInterface::prevIndex(bool deleteCurrent) {
+void ViewInterface::execPrevIndex(bool deleteCurrent) {
 //    ModelItem * item = activeItem(false);
 //    if (item == 0) return;
 
@@ -88,7 +88,7 @@ void ViewInterface::prevIndex(bool deleteCurrent) {
 //    execIndex(item);
 }
 
-void ViewInterface::nextIndex(bool deleteCurrent) {
+void ViewInterface::execNextIndex(bool deleteCurrent) {
 //    ModelItem * item = activeItem();
 //    if (item == 0) return;
 
@@ -134,7 +134,7 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
             scrollTo(node);
 
         if (node.data(STATE_EXIST_ID).toBool()) {
-            Player::instance() -> playItem(node, false);
+            Player::instance() -> playIndex(node, false);
             return true;
         }
         else mdl -> setData(node, ItemState::not_exist, STATEID);
@@ -447,20 +447,22 @@ void ViewInterface::copyItemsFrom(ViewInterface * /*otherView*/) {
 /// PROTECTED
 //////////////////////////////////////////////////////
 
-QModelIndex ViewInterface::activeItem(bool next) { //TODO: rewrite
-//    ModelItem * item = 0;
+QModelIndex ViewInterface::activeItem(bool next) { //TODO: test
+    QModelIndex ind = Player::instance() -> playedIndex();
 
-//    if (Player::instance() -> currentPlaylist() == this) {
-//        if (Player::instance() -> playedItem()) {
-//            item = Player::instance() -> playedItem();
-//        }
-//    }
+    if (dynamic_cast<ViewInterface *>(const_cast<QAbstractItemModel *>(ind.model())) != this)
+        ind = QModelIndex();
 
-//    if (item == 0) {
-//        QModelIndexList list = selectedIndexes();
+    if (!ind.isValid()) {
+        ind = selectionModel() -> currentIndex();
 
-//        if (list.count() > 0) {
-//            item = model -> getItem(list.first());
+        if (ind.isValid()) {
+            if (ind.data(FOLDERID).toBool()) {
+                if (next)
+                    toNextItem(ind);
+                else
+                    toPrevItem(ind);
+            }
 
 //            if (!item -> isFolder()) {
 //                QModelIndex m;
@@ -474,25 +476,22 @@ QModelIndex ViewInterface::activeItem(bool next) { //TODO: rewrite
 //                   item = model -> getItem(list.first().parent());
 //                }
 //            }
-//        } else {
-//            item = model -> getItem(this -> rootIndex());
-//        }
-//    }
+        }
+    }
+    else ind = this -> rootIndex();
 
-//    return item;
+    return ind;
 }
 
-void ViewInterface::toNextItem(QModelIndex & curr) { //TODO: rewrite
-//    QModelIndex index = view->selectionModel()->currentIndex();
-//    QAbstractItemModel *model = view->model();
-//    if (model -> hasChildren(index))
-//        view->expand(index);
+void ViewInterface::toNextItem(QModelIndex & curr) { //TODO: test
+    while(true) {
+        if (mdl -> hasChildren(curr))
+            expand(curr);
 
-//    index = view -> indexBelow(index);
-//    if (index.isValid()) {
-//        view -> setCurrentIndex(index);
-//    } else
-//        statusBar()->showMessage(tr("Next not found"));
+        curr = indexBelow(curr);
+        if (!curr.isValid() || curr.data(PLAYABLEID).toBool())
+            return;
+    }
 
 
 //    ModelItem * item = curr;
@@ -522,18 +521,15 @@ void ViewInterface::toNextItem(QModelIndex & curr) { //TODO: rewrite
 //        }
 //    }
 }
-void ViewInterface::toPrevItem(QModelIndex & curr) { //TODO: rewrite
-//    QModelIndex index = view->selectionModel()->currentIndex();
-//    QAbstractItemModel *model = view->model();
-//    if (model -> hasChildren(index))
-//        view->expand(index);
+void ViewInterface::toPrevItem(QModelIndex & curr) { //TODO: test
+    while(true) {
+        if (mdl -> hasChildren(curr))
+            expand(curr);
 
-//    index = view -> indexAbove(index);
-//    if (index.isValid()) {
-//        view -> setCurrentIndex(index);
-//    } else
-//        statusBar()->showMessage(tr("Prev not found"));
-
+        curr = indexAbove(curr);
+        if (!curr.isValid() || curr.data(PLAYABLEID).toBool())
+            return;
+    }
 
 //    ModelItem * item = curr;
 //    bool last_elem = false;
@@ -584,7 +580,7 @@ void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
 //    QTreeView::dragMoveEvent(event);
 }
 
-void ViewInterface::dropEvent(QDropEvent *event) {
+void ViewInterface::dropEvent(QDropEvent * event) {
     event -> setDropAction(
         event -> source() == this ? Qt::MoveAction : Qt::CopyAction
     );
