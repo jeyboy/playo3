@@ -26,8 +26,6 @@
 
 #include "model_item_delegate.h"
 
-//#include "model_item.h"
-
 //#include "media/library.h"
 //#include "web/download.h"
 
@@ -64,8 +62,8 @@ namespace Playo3 {
 
         inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
-        void nextItem(bool deleteCurrent = false);
-        void prevItem(bool deleteCurrent = false);
+        void nextIndex(bool deleteCurrent = false);
+        void prevIndex(bool deleteCurrent = false);
         bool execIndex(const QModelIndex & index);
 //        virtual void removeItem(QModelIndex & index);
 
@@ -80,6 +78,8 @@ namespace Playo3 {
 //        void showMessage(QString);
 
     protected slots:
+        inline void itemNotSupported(QModelIndex & index) { mdl -> setData(index, ItemState::not_supported);}
+        inline void itemError(QModelIndex & index) { /*TODO: reaction needed*/ }
         inline void onDoubleClick(const QModelIndex & index) { execIndex(index); }
         void openLocation();
 

@@ -331,7 +331,6 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     bool is_folder = false;
 
     QBrush fill_color;
-    qDebug() << background_state;
 
     switch (background_state) {
         case Playo3::ItemState::new_item:

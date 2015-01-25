@@ -12,9 +12,9 @@ namespace Playo3 {
                 proceeded = 256, // list proceeding
                 checked = 128,
                 expanded = 64,
-                not_exist = 32,
-                info_required = 16,
-//                 = 8,
+                info_required = 32,
+                not_exist = 16,
+                not_supported = 8,
                 new_item = 4,
                 listened = 2,
                 liked = 1

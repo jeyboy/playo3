@@ -41,6 +41,9 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(QModelIndex &)), this, SLOT(updateSelection(QModelIndex &)));
 
+    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex&)), this, SLOT(itemError(QModelIndex&)));
+    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex&)), this, SLOT(itemNotSupported(QModelIndex&)));
+
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showSpinner()), this, SLOT(startRoutine()));
 //    connect(model, SIGNAL(hideSpinner()), this, SLOT(stopRoutine()));
@@ -73,14 +76,11 @@ QJsonObject ViewInterface::toJson() {
 }
 
 void ViewInterface::scrollToActive() {
-//    if (Player::instance() -> playedItem()) {
-//        scrollTo(model -> index(Player::instance() -> playedItem()));
-//    }
-
-    scrollTo(Player::instance() -> playedItem());
+    if (Player::instance() -> playedItem().isValid())
+        scrollTo(Player::instance() -> playedItem());
 }
 
-void ViewInterface::prevItem(bool deleteCurrent) {
+void ViewInterface::prevIndex(bool deleteCurrent) {
 //    ModelItem * item = activeItem(false);
 //    if (item == 0) return;
 
@@ -88,7 +88,7 @@ void ViewInterface::prevItem(bool deleteCurrent) {
 //    execIndex(item);
 }
 
-void ViewInterface::nextItem(bool deleteCurrent) {
+void ViewInterface::nextIndex(bool deleteCurrent) {
 //    ModelItem * item = activeItem();
 //    if (item == 0) return;
 
@@ -141,24 +141,6 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
     }
 
     return false;
-
-//    ItemInterface * item = mdl -> getItem(index);
-
-//    if (!item -> isContainer())
-
-//    if (item) {
-//        if (Settings::instance() -> isSpoilOnActivation())
-//            scrollTo(model -> index(item));
-//        if (item -> isExist()) {
-//            Player::instance() -> playItem(this, item, paused);
-//            return true;
-//        } else {
-//            item -> getState() -> setNotExist();
-//            model -> refreshItem(item);
-//        }
-//    } else return true;
-
-//    return false;
 }
 
 //QModelIndex ViewInterface::removeCandidate(QModelIndex item) {

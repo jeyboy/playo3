@@ -167,19 +167,19 @@ void Dockbars::showAll() {
 
 void Dockbars::nextExecTriggering() {
     ViewInterface * v = view(active);
-    if (v) v -> nextItem();
+    if (v) v -> nextIndex();
 }
 void Dockbars::nextExecWithDelTriggering() {
     ViewInterface * v = view(active);
-    if (v) v -> nextItem(true);
+    if (v) v -> nextIndex(true);
 }
 void Dockbars::prevExecWithDelTriggering() {
     ViewInterface * v = view(active);
-    if (v) v -> prevItem(true);
+    if (v) v -> prevIndex(true);
 }
 void Dockbars::prevExecTriggering() {
     ViewInterface * v = view(active);
-    if (v) v -> prevItem();
+    if (v) v -> prevIndex();
 }
 
 void Dockbars::activeChanged() {

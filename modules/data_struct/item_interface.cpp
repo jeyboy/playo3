@@ -135,7 +135,6 @@ QVariant ItemInterface::data(int column) const {
         }
 
         case Qt::ToolTipRole:
-            qDebug() << attrs;
             return title()/* + "(" + _extension + ")" + "\n" + _path*/;
 
         case EXTENSIONID:       return extension();

@@ -503,7 +503,10 @@ void AudioPlayer::play() {
                 syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
                 syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
             } else {
-                qDebug() << "Can't play file";
+                if (chan == 41)
+                    emit mediaStatusChanged(InvalidMedia);
+                else
+                    emit mediaStatusChanged(StalledMedia);
             }
         }
     }

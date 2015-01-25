@@ -40,6 +40,8 @@ public:
 
 signals:
     void nextItemNeeded();
+    void itemNotSupported(QModelIndex &);
+    void itemExecError(QModelIndex &);
 
 public slots:
     void playPause();
@@ -62,6 +64,7 @@ private slots:
     void onMediaStatusChanged(MediaStatus status);
 
 private:
+    void setItemState(int state);
     void updateItemState(bool isPlayed);
     void updateControls(bool played, bool paused, bool stopped);
 
