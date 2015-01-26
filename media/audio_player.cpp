@@ -180,7 +180,7 @@ int AudioPlayer::openRemoteChannel(QString path) {
 
 int AudioPlayer::openChannel(QString path) {
     BASS_ChannelStop(chan);
-    if (!(chan = BASS_StreamCreateFile(false, path.toUtf8().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
+    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
 //    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
 //        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
         qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();

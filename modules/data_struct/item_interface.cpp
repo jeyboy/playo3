@@ -64,10 +64,6 @@ int ItemInterface::row() const {
     return 0;
 }
 
-int ItemInterface::column() const { // ?
-    return 0;
-}
-
 //bool ItemInterface::insertColumns(int position, int columns) {
 //    if (position < 0 || position > itemData.size())
 //        return false;
@@ -94,7 +90,7 @@ int ItemInterface::column() const { // ?
 //    return true;
 //}
 
-QString ItemInterface::buildTreePath() const {
+QString ItemInterface::buildTreePath() const { //TODO: remove later
     return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 

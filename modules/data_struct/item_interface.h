@@ -28,7 +28,7 @@ namespace Playo3 {
         void openLocation();
         virtual bool removePhysicalObject() = 0;
 
-        int column() const;
+        inline int column() const { return 0; }
         int row() const;
 
         inline virtual bool isRemote() const { return false; }
@@ -40,7 +40,7 @@ namespace Playo3 {
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 
-        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
+        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath().toHtmlEscaped()); }
         QString buildTreePath() const;
 
         QVariant data(int column) const;
