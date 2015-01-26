@@ -49,6 +49,7 @@ void MainWindow::locationCorrection() {
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
     QMainWindow::resizeEvent(event);
+    Stylesheets::calcBorderRect(rect(), borderRect);
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
     brush.setStart(rect().topLeft());
@@ -56,8 +57,6 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
-
-    Stylesheets::calcBorderRect(rect(), borderRect);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent * event) {
@@ -233,8 +232,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-    QMainWindow::paintEvent(event);
-
+//    QMainWindow::paintEvent(event);
     bool isResizing = (resizeFlagX || resizeFlagY);
     QPainter painter(this);
     painter.setBrush(brush);

@@ -24,6 +24,18 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
 }
 
+//bool DockBar::event(QEvent * event) {
+//    qDebug() << event -> type();
+
+//    switch(event -> type()) {
+//        case QEvent::WindowActivate:
+//        case QEvent::WindowDeactivate:
+//            ;
+//    }
+
+//    return QDockWidget::event(event);
+//}
+
 void DockBar::resizeEvent(QResizeEvent * event) {
     Stylesheets::calcBorderRect(rect(), borderRect);
     QDockWidget::resizeEvent(event);

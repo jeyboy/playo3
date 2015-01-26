@@ -1,17 +1,17 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <QMimeData>
 #include <QTreeView>
-#include <QMouseEvent>
-#include <QPixmap>
-#include <QFileInfo>
-#include <QJsonObject>
-#include <QDrag>
 #include <QHeaderView>
 #include <QMenu>
-#include <QMessageBox>
-#include <QList>
+#include <QDrag>
+
+//#include <QPixmap>
+//#include <QFileInfo>
+//#include <QJsonObject>
+//#include <QList>
+
+#include <qevent.h>
 
 #include "model_interface.h"
 #include "dialogs/tabdialog.h"
@@ -30,13 +30,15 @@
 //#include "web/download.h"
 
 namespace Playo3 {
+    class Dockbars;
+
     class ViewInterface : public QTreeView {
       Q_OBJECT
     public:
         ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings & settins);
         ~ViewInterface();
 
-        virtual QJsonObject toJson();
+        inline virtual QJsonObject toJson() { return mdl -> toJson(); }
 
         void scrollToActive();
 
@@ -48,14 +50,7 @@ namespace Playo3 {
         inline bool isCommon() const { return sttngs.common; }
         inline bool isEditable() const { return sttngs.type < vk && !isCommon(); }
 
-
-        QModelIndex fromPath(QString path);
-
-        //template<class T> T * View::getModel() const {
-        //    return dynamic_cast<T *>(model);
-        //}
-
-        inline ModelInterface * model() const { return mdl; }
+//        inline ModelInterface * model() const { return mdl; }
 
         inline ViewSettings settings() const { return sttngs; }
         inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
@@ -64,23 +59,23 @@ namespace Playo3 {
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
-        bool execIndex(const QModelIndex & index);
-//        virtual void removeItem(QModelIndex & index);
+        bool execIndex(const QModelIndex & node);
+//        virtual void removeItem(QModelIndex & node);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void downloadSelected(QString savePath, bool markAsLiked = false);
-        void copyItemsFrom(ViewInterface * otherView);
     public slots:
         inline void shuffle() { mdl -> shuffle(); }
-        void updateSelection(QModelIndex & candidate);
+        void updateSelection(QModelIndex &);
 //        void setHeaderText(QString);
 //        void showMessage(QString);
 
     protected slots:
-        inline void itemNotSupported(QModelIndex & index) { mdl -> setData(index, ItemState::not_supported);}
-        inline void itemError(QModelIndex & index) { /*TODO: reaction needed*/ }
-        inline void onDoubleClick(const QModelIndex & index) { execIndex(index); }
+        inline void itemNotExist(QModelIndex & node) { mdl -> setData(node, ItemState::not_exist);}
+        inline void itemNotSupported(QModelIndex & node) { mdl -> setData(node, ItemState::not_supported);}
+        inline void itemError(QModelIndex & /*node*/) { /*TODO: reaction needed*/ }
+        inline void onDoubleClick(const QModelIndex & node) { execIndex(node); }
         void openLocation();
 
         void download();
@@ -88,31 +83,34 @@ namespace Playo3 {
 //        void modelUpdate();
 
     protected:
-//        ItemInterface * removeCandidate(ItemInterface * item);
-        void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const;
-        void resizeEvent(QResizeEvent *);
-        void contextMenuEvent(QContextMenuEvent *);
+        void findAndExecIndex(bool deleteCurrent);
+        bool removeRow(QModelIndex & node);
+
         bool prepareDownloading(QString path);
 
-        void downloadItem(const QModelIndex & item, QString savePath);
+        void downloadItem(const QModelIndex & node, QString savePath);
         void downloadBranch(const QModelIndex & node, QString savePath);
 
+        QModelIndex activeIndex();
+        void findExecutable(QModelIndex &);
 
-        QModelIndex activeItem(bool next = true);
-        void toNextItem(QModelIndex & curr);
-        void toPrevItem(QModelIndex & curr);
+//        ItemInterface * removeCandidate(ItemInterface * item);
+        void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & node) const;
+        void resizeEvent(QResizeEvent *);
+        void contextMenuEvent(QContextMenuEvent *);
 
-        void dragEnterEvent(QDragEnterEvent * event);
-        void dragMoveEvent(QDragMoveEvent * event);
-        virtual void dropEvent(QDropEvent  * event);
+        void dragEnterEvent(QDragEnterEvent *);
+        void dragMoveEvent(QDragMoveEvent *);
+        virtual void dropEvent(QDropEvent  *);
 
-        void keyPressEvent(QKeyEvent * event);
-        void mousePressEvent(QMouseEvent * event);
-        void mouseMoveEvent(QMouseEvent * event);
+        void keyPressEvent(QKeyEvent *);
+        void mousePressEvent(QMouseEvent *);
+        void mouseMoveEvent(QMouseEvent *);
 
         ModelInterface * mdl;
         ViewSettings sttngs;
         QPoint dragPoint;
+        bool forwardOrder;
     };
 }
 

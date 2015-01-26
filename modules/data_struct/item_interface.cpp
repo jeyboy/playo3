@@ -100,6 +100,13 @@ QString ItemInterface::buildTreePath() const {
 
 QVariant ItemInterface::data(int column) const {
     switch(column) {
+        case IATTRS: {
+            QVariantMap params;
+            params.insert("info", info());
+            params.insert("ext", extension());
+            params.insert("state", visualStates());
+            return params;
+        }
         case Qt::DisplayRole:   return title();
         case Qt::DecorationRole: {
            if (is(not_exist))
@@ -111,11 +118,10 @@ QVariant ItemInterface::data(int column) const {
                return IconProvider::fileIcon(fullPath(), extension().toString());
         }
 
-        case PLAYABLEID:        return isPlayable();
-        case STATE_EXIST_ID:    return !is(ItemState::not_exist);
-        case URLID:             return toUrl();
+        case IPLAYABLE:        return isPlayable();
+        case IURL:             return toUrl();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
-        case ADDFONTID:         return Settings::instance() -> getItemInfoFont();
+//        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole:
             if (isContainer())
@@ -128,7 +134,7 @@ QVariant ItemInterface::data(int column) const {
             else
                 return Qt::AlignLeft;
 
-        case INFOID:            return info();
+        case IINFO:            return info();
         case Qt::CheckStateRole: {
             if (Settings::instance() -> isCheckboxShow()) {
                 return is(checked);
@@ -138,14 +144,14 @@ QVariant ItemInterface::data(int column) const {
         case Qt::ToolTipRole:
             return title()/* + "(" + _extension + ")" + "\n" + _path*/;
 
-        case EXTENSIONID:       return extension();
-        case PATHID:            return path();
-        case FULLPATHID:        return fullPath();
-        case FOLDERID:          return isContainer();
-        case REMOTEID:          return isRemote();
+//        case EXTENSIONID:       return extension();
+//        case PATHID:            return path();
+//        case FOLDERID:          return isContainer();
+        case IREMOTE:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
-        case STATEID:           return visualStates();
-        case PROGRESSID:        return -1;//Download::instance() -> getProgress(item);
+        case ISTATE:           return visualStates();
+        case IPROGRESS:        return -1;//Download::instance() -> getProgress(item);
+        case IFULLPATH:        return fullPath();
 
         default:                return QVariant();
     }
@@ -153,11 +159,11 @@ QVariant ItemInterface::data(int column) const {
 
 bool ItemInterface::setData(int column, const QVariant &value) {
     switch(column) {
-        case TITLEID:       { setTitle(value); break; }
-        case EXTENSIONID:   { setExtension(value); break; }
-        case PATHID:        { setPath(value); break; }
-        case STATEID:       { /*setState(value.toInt(), false);*/ break;}
-        default:            { return false; }
+        case ITITLE:       { setTitle(value); break; }
+        case IEXTENSION:   { setExtension(value); break; }
+        case IPATH:        { setPath(value); break; }
+        case ISTATE:       { setStates(value.toInt()); break;}
+        default:           { return false; }
     }
 
     return true;

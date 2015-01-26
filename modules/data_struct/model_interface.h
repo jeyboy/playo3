@@ -59,6 +59,7 @@ namespace Playo3 {
         void expandNeeded(const QModelIndex &index) const;
         void itemsCountChanged(int change);
     protected:
+        QModelIndex fromPath(QString path);
         virtual QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         template<class T> T * item(const QModelIndex & index) const {

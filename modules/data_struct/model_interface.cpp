@@ -177,7 +177,7 @@ bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &va
 
         result = true;
     }
-    else if (role == STATEID) {
+    else if (role == ISTATE) {
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)
@@ -307,6 +307,19 @@ void ModelInterface::collapsed(const QModelIndex & index) {
 }
 
 /////////////////////////////////////////////////////////
+
+QModelIndex ModelInterface::fromPath(QString path) { //TODO: rewrite
+//    QStringList parts = path.split(' ', QString::SkipEmptyParts);
+//    ModelItem * curr = getModel() -> root();
+//    int level;
+
+//    while(parts.length() > 0) {
+//        level = parts.takeFirst().toInt();
+//        curr = curr -> child(level);
+//    }
+
+//    return curr;
+}
 
 Qt::DropActions ModelInterface::supportedDropActions() const {
     return Qt::CopyAction | Qt::MoveAction;

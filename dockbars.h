@@ -32,19 +32,24 @@ namespace Playo3 {
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
         inline DockBar * current() const { return active; }
-
-        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0);
-        DockBar * createDocBar(QString name, QWidget * content);
+        inline void setCurrent(DockBar * bar) { active = bar; }
         inline void activate(DockBar * bar) {
             if ((active = bar))
                 bar -> raise();
         }
+
+        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0);
+        DockBar * createDocBar(QString name, QWidget * content);
     public slots:
         void hideAll();
         void showAll();
 
         inline void createNewBar() { showViewSettingsDialog(); }
         void editActiveBar() { showViewSettingsDialog(active); }
+        inline void scrollToActive() {
+            ViewInterface * v = view(active);
+            if (v) v -> scrollToActive();
+        }
 
         void nextExecTriggering();
         void nextExecWithDelTriggering();
@@ -56,7 +61,6 @@ namespace Playo3 {
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
-        void activeChanged();
         void barClosed();
     private:
         DockBar * active;

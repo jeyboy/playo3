@@ -21,9 +21,7 @@ namespace Playo3 {
             if (parent())
                 ((MainWindow *)parentWidget()) -> addOuterChild(this);
         }
-
     signals:
-        void activating();
         void closing();
     public slots:
         inline void toggleFloating() { setFloating(!isFloating()); }
@@ -37,19 +35,13 @@ namespace Playo3 {
         }
 
     protected:
+//        bool event(QEvent *event);
         void resizeEvent(QResizeEvent *);
         inline void closeEvent(QCloseEvent * e) {
             emit closing();
             ((MainWindow *)parentWidget()) -> removeOuterChild(this);
             QDockWidget::closeEvent(e);
         }
-
-        inline void focusInEvent(QFocusEvent * e) {
-            qDebug() << "FOCUSED";
-            emit activating();
-            QDockWidget::focusInEvent(e);
-        }
-//        void focusOutEvent(QFocusEvent *);
         void paintEvent(QPaintEvent *);
 
     private:

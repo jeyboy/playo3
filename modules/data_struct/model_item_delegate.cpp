@@ -316,7 +316,9 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     option2.rect.setTop(option.rect.top() + 2);
     option2.rect.setHeight(option.rect.height() - 4);
 
-    QString ext = index.data(EXTENSIONID).toString();
+    QVariantMap attrs = index.data(IATTRS).toMap();
+
+    QString ext = attrs.value("ext").toString();//index.data(IEXTENSION).toString();
     int x, y, width, height, icon_size = 1, ico_mini = 30, ico_offset = 0, right_offset = option2.rect.right() - 12, top = option.rect.bottom(), left_offset = option2.rect.left() + 10;
     option2.rect.getRect(&x, &y, &width, &height);
 
@@ -324,7 +326,7 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
 
-    int background_state = index.data(STATEID).toInt();
+    int background_state = attrs.value("state").toInt();//index.data(ISTATE).toInt();
     QVariant checkable = index.data(Qt::CheckStateRole);
 
     bool elem_state = option2.state & (QStyle::State_Selected);
@@ -355,6 +357,7 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
         painter -> setPen(Settings::instance() -> getSelectedItemTextColor());
     else
         painter -> setPen(option2.palette.color(QPalette::Dark));
+
     painter -> setBrush(fill_color);
     int angle = option2.rect.height() / 2.2;
     QRect bodyRect = option2.rect;
@@ -442,8 +445,8 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     }
 
     if (Settings::instance() -> isShowInfo() && !is_folder) {
-        QFont vfont = index.data(ADDFONTID).value<QFont>();
-        QStringList infos = index.model() -> data(index, INFOID).toStringList();
+        QFont vfont = Settings::instance() -> getItemFont(); //index.data(IADDFONT).value<QFont>();
+        QStringList infos = attrs.value("info").toStringList();//index.model() -> data(index, IINFO).toStringList();
 
         painter -> setFont(vfont);
         QFontMetrics fmf(vfont);
@@ -497,7 +500,7 @@ void ModelItemDelegate::drawCheckbox(QPainter* painter, const QStyleOptionViewIt
     QApplication::style() -> drawControl(QStyle::CE_CheckBox, &checkboxstyle, painter, &templateCheckbox);
 }
 
-void ModelItemDelegate::progress(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index, int progressPercentage) const {
+void ModelItemDelegate::progress(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex& index, int progressPercentage) const {
     painter -> save();
     QStyleOptionProgressBarV2 progressBarOption;
     progressBarOption.rect = QRect(option.rect.x() + 10, option.rect.y() + 2 , option.rect.width() - 16, option.rect.height() - 4);
@@ -521,7 +524,7 @@ void ModelItemDelegate::progress(QPainter* painter, const QStyleOptionViewItem& 
 
 
 void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-    int progressPercentage = index.data(PROGRESSID).toInt();
+    int progressPercentage = index.data(IPROGRESS).toInt();
 
     if (progressPercentage != -1) {
         progress(painter, option, index, progressPercentage);

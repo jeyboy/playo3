@@ -97,7 +97,6 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
     dock -> setContentsMargins(3, 0, 3, 4);
 
-    connect(dock, SIGNAL(activating()), this, SLOT(activeChanged()));
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
 //    active = dock;
 //    dock -> showFullScreen();
@@ -117,7 +116,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
 
         if (!view -> isEditable()) {
-            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
+//            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
             return;
         }
 
@@ -180,11 +179,6 @@ void Dockbars::prevExecWithDelTriggering() {
 void Dockbars::prevExecTriggering() {
     ViewInterface * v = view(active);
     if (v) v -> execPrevIndex();
-}
-
-void Dockbars::activeChanged() {
-    active = (DockBar *)sender();
-    qDebug() << "ACT " << active;
 }
 
 void Dockbars::barClosed() {

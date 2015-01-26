@@ -11,7 +11,6 @@ Player * Player::instance(QObject * parent) {
 void Player::setPlayButton(QAction * playAction) {
     playButton = playAction;
     playButton -> setVisible(true);
-//    connect((QObject *)playAction, SIGNAL(triggered(bool)), instance(), SLOT(play()));
     connect(playAction, SIGNAL(triggered(bool)), this, SLOT(start()));
 }
 void Player::setPauseButton(QAction * pauseAction) {
@@ -43,7 +42,7 @@ void Player::setItemState(int state) {
         mdl -> setData(
                     currentIndex,
                     state,
-                    STATEID
+                    ISTATE
         );
     }
 }
@@ -59,13 +58,14 @@ void Player::playIndex(QModelIndex item, bool paused) {
         case PausedState:
         case PlayingState: {
             stop();
-            updateItemState(false);
             break;
         }
     }
 
+    updateItemState(false);
     currentIndex = item;
-    setMedia(item.data(URLID).toUrl());
+    setMedia(item.data(IURL).toUrl());
+    updateItemState(true);
     play();
 
     if (paused)
@@ -207,7 +207,6 @@ void Player::onStateChanged(MediaState newState) {
             if (getDuration() != -1)
                 slider -> setMaximum(getDuration());
 
-            updateItemState(true);
             updateControls(false, true, true);
             break;
         }

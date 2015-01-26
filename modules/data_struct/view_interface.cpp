@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings)  {
+    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true)  {
 
     setIndentation(12);
 //    setStyle(new TreeViewStyle);
@@ -68,51 +68,19 @@ ViewInterface::~ViewInterface() {
     delete mdl;
 }
 
-QJsonObject ViewInterface::toJson() {
-    QJsonObject res = mdl -> toJson();
-//    res["p"] = QString();
-//    res["l"] = mdl -> itemsCount();
-    return res;
-}
-
 void ViewInterface::scrollToActive() {
     if (Player::instance() -> playedIndex().isValid())
         scrollTo(Player::instance() -> playedIndex());
 }
 
 void ViewInterface::execPrevIndex(bool deleteCurrent) {
-//    ModelItem * item = activeItem(false);
-//    if (item == 0) return;
-
-//    item = prevItem(item);
-//    execIndex(item);
+    forwardOrder = false;
+    findAndExecIndex(deleteCurrent);
 }
 
 void ViewInterface::execNextIndex(bool deleteCurrent) {
-//    ModelItem * item = activeItem();
-//    if (item == 0) return;
-
-    //    item = nextItem(item);
-
-    //    if (Player::instance() -> currentPlaylist() == this) {
-    //        if (Player::instance() -> playedItem()) {
-    //            removeItem(Player::instance() -> playedItem());
-    //        }
-    //    }
-//    execIndex(item);
-}
-
-QModelIndex ViewInterface::fromPath(QString path) { //TODO: rewrite
-//    QStringList parts = path.split(' ', QString::SkipEmptyParts);
-//    ModelItem * curr = getModel() -> root();
-//    int level;
-
-//    while(parts.length() > 0) {
-//        level = parts.takeFirst().toInt();
-//        curr = curr -> child(level);
-//    }
-
-//    return curr;
+    forwardOrder = true;
+    findAndExecIndex(deleteCurrent);
 }
 
 //void View::markSelectedAsLiked() {
@@ -129,15 +97,14 @@ QModelIndex ViewInterface::fromPath(QString path) { //TODO: rewrite
 //}
 
 bool ViewInterface::execIndex(const QModelIndex & node) {
+    Dockbars::instance() -> setCurrent((DockBar *)parent());
+
     if (node.isValid()) {
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
-        if (node.data(STATE_EXIST_ID).toBool()) {
-            Player::instance() -> playIndex(node, false);
-            return true;
-        }
-        else mdl -> setData(node, ItemState::not_exist, STATEID);
+        Player::instance() -> playIndex(node, false);
+        return true;
     }
 
     return false;
@@ -214,18 +181,14 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
 /// SLOTS
 //////////////////////////////////////////////////////
 
-//void View::showMessage(QString text) {
-//    QMessageBox::warning(this, "Bla bla bla", text);
-//}
+void ViewInterface::updateSelection(QModelIndex & node) {
+    if (node.isValid()) {
+        if (!node.data(IPLAYABLE).toBool())
+            findExecutable(node);
 
-void ViewInterface::updateSelection(QModelIndex & candidate) {
-    if (candidate.isValid()) {
-        if (candidate.data(FOLDERID).toBool())
-            toNextItem(candidate);
-
-        if (candidate.isValid()) {
-            setCurrentIndex(candidate);
-            scrollTo(candidate);
+        if (node.isValid()) {
+            setCurrentIndex(node);
+            scrollTo(node);
         }
     }
 }
@@ -255,7 +218,7 @@ void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & opt
     QTreeView::drawRow(painter, options, index);
 }
 
-void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite
+void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need separate item initializator for each view
 //    if (event -> oldSize().height() != size().height()) {
 //        if (event -> size().height() > 0) {
 //            int count = (event -> size().height() / Settings::instance() -> getTotalItemHeight()) + 2;
@@ -275,33 +238,28 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
     if (isEditable()) {
         actions.append((act = new QAction(QIcon(":/settings"), "View settings", this)));
         connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(editActiveBar()));
+
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
     }
 
-    act = new QAction(this);
-    act -> setSeparator(true);
-    actions.append(act);
+    if (Player::instance() -> playedIndex().isValid()) {
+        actions.append((act = new QAction(QIcon(":/active_tab"), "Show active elem", this)));
+        connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(scrollToActive()));
 
-//    if (Player::instance() -> playedItem()) {
-//        act = new QAction(QIcon(":/active_tab"), "Show active elem", this);
-//        connect(act, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showActiveElem()));
-//        actions.append(act);
-
-//        act = new QAction(this);
-//        act -> setSeparator(true);
-//        actions.append(act);
-//    }
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
+    }
 
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
-        qDebug() << ind.data(FULLPATHID).toString();
-        if (!ind.data(FULLPATHID).toString().isEmpty()) {
-            act = new QAction(QIcon(":/open"), "Open location", this);
+        if (!ind.data(IFULLPATH).toString().isEmpty()) {
+            actions.append((act = new QAction(QIcon(":/open"), "Open location", this)));
             connect(act, SIGNAL(triggered(bool)), this, SLOT(openLocation()));
-            actions.append(act);
         }
 
-        if (ind.data(REMOTEID).toBool()) {
+        if (ind.data(IREMOTE).toBool()) {
             //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
             //    connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refresh()));
             //    actions.append(openAct);
@@ -322,35 +280,48 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
 //            sepAct -> setSeparator(true);
 //            actions.append(sepAct);
 
-//            openAct = new QAction(QIcon(":/download"), "Download", this);
-//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(download()));
-//            actions.append(openAct);
-//            openAct = new QAction(QIcon(":/download"), "Download All", this);
-//            connect(openAct, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
-//            actions.append(openAct);
+            actions.append((act = new QAction(QIcon(":/download"), "Download", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(download()));
+
+            actions.append((act = new QAction(QIcon(":/download"), "Download All", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
         }
     }
 
-    act = new QAction(QIcon(":/shuffle"), "Shuffle", this);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
-    actions.append(act);
-
-    act = new QAction(this);
-    act -> setSeparator(true);
-    actions.append(act);
-
     if (mdl -> rowCount() > 0) {
-        act = new QAction(QIcon(":/collapse"), "Collapse all", this);
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
-        actions.append(act);
+        actions.append((act = new QAction(QIcon(":/shuffle"), "Shuffle", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
-        act = new QAction(QIcon(":/expand"), "Expand all", this);
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
+
+        actions.append((act = new QAction(QIcon(":/collapse"), "Collapse all", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
+
+        actions.append((act = new QAction(QIcon(":/expand"), "Expand all", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
-        actions.append(act);
     }
 
     if (actions.count() > 0)
         QMenu::exec(actions, event -> globalPos(), 0, this);
+}
+
+void ViewInterface::findAndExecIndex(bool deleteCurrent) {
+    QModelIndex node = activeIndex();
+    if (!node.isValid()) return;
+
+    if (deleteCurrent) {
+        QModelIndex removeNode = node;
+        findExecutable(node);
+        removeRow(removeNode);
+    }
+    else findExecutable(node);
+
+    execIndex(node);
+}
+
+bool ViewInterface::removeRow(QModelIndex & node) {
+    return mdl -> removeRow(node.row(), node.parent());
 }
 
 bool ViewInterface::prepareDownloading(QString path) { //TODO: move to separate class
@@ -416,7 +387,7 @@ void ViewInterface::downloadAll() { //TODO: rewrite
 //    }
 //}
 
-void ViewInterface::downloadSelected(QString savePath, bool markAsLiked) { //TODO: rewrite
+void ViewInterface::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/) { //TODO: rewrite
 //    if (!prepareDownloading(savePath)) return;
 
 //    ModelItem * item;
@@ -434,132 +405,44 @@ void ViewInterface::downloadSelected(QString savePath, bool markAsLiked) { //TOD
 //    }
 }
 
-//TODO: add copy func
-void ViewInterface::copyItemsFrom(ViewInterface * /*otherView*/) {
-//    QModelIndexList indexes = otherView -> selectedItems();
-
-//    foreach(QModelIndex index, indexes) {
-//        //TODO: copy logic
-//    }
-}
-
 //////////////////////////////////////////////////////
 /// PROTECTED
 //////////////////////////////////////////////////////
 
-QModelIndex ViewInterface::activeItem(bool next) { //TODO: test
+QModelIndex ViewInterface::activeIndex() { //TODO: test
     QModelIndex ind = Player::instance() -> playedIndex();
 
-    if (dynamic_cast<ViewInterface *>(const_cast<QAbstractItemModel *>(ind.model())) != this)
+    if (ind.model() != mdl)
         ind = QModelIndex();
 
     if (!ind.isValid()) {
         ind = selectionModel() -> currentIndex();
 
-        if (ind.isValid()) {
-            if (ind.data(FOLDERID).toBool()) {
-                if (next)
-                    toNextItem(ind);
-                else
-                    toPrevItem(ind);
-            }
-
-//            if (!item -> isFolder()) {
-//                QModelIndex m;
-//                if (next) {
-//                    m = this -> indexAbove(list.first());
-//                } else { m = this -> indexBelow(list.first()); }
-
-//                if (m.isValid()) {
-//                   item = model -> getItem(m);
-//                } else {
-//                   item = model -> getItem(list.first().parent());
-//                }
-//            }
-        }
+        if (!ind.isValid())
+            ind = this -> rootIndex();
     }
-    else ind = this -> rootIndex();
 
     return ind;
 }
 
-void ViewInterface::toNextItem(QModelIndex & curr) { //TODO: test
+void ViewInterface::findExecutable(QModelIndex & curr) {
+    qDebug() << "-------------";
+    qDebug() << curr.data();
+
     while(true) {
         if (mdl -> hasChildren(curr))
             expand(curr);
 
-        curr = indexBelow(curr);
-        if (!curr.isValid() || curr.data(PLAYABLEID).toBool())
+        if (forwardOrder)
+            curr = indexBelow(curr);
+        else
+            curr = indexAbove(curr);
+
+        qDebug() << curr.data();
+
+        if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
             return;
     }
-
-
-//    ModelItem * item = curr;
-//    bool first_elem = curr -> parent() == 0 || curr -> isFolder();
-
-//    while(true) {
-//        if (first_elem) {
-//            first_elem = false;
-//        } else {
-//            item = item -> parent() -> child(item -> row() + 1);
-//        }
-
-//        if (item != 0) {
-//            if (item -> isPlayable()) {
-//                return item;
-//            } else {
-//                curr = item;
-//                item = curr -> child(0);
-//                first_elem = true;
-//            }
-//        } else {
-//            if (curr -> parent() == 0)
-//                return 0;
-
-//            item = curr;
-//            curr = curr -> parent();
-//        }
-//    }
-}
-void ViewInterface::toPrevItem(QModelIndex & curr) { //TODO: test
-    while(true) {
-        if (mdl -> hasChildren(curr))
-            expand(curr);
-
-        curr = indexAbove(curr);
-        if (!curr.isValid() || curr.data(PLAYABLEID).toBool())
-            return;
-    }
-
-//    ModelItem * item = curr;
-//    bool last_elem = false;
-
-//    if (curr -> parent() == 0)
-//        return 0;
-
-//    while(true) {
-//        if (last_elem) {
-//            last_elem = false;
-//        } else {
-//            item = item -> parent() -> child(item -> row() - 1);
-//        }
-
-//        if (item != 0) {
-//            if (item -> isPlayable()) {
-//                return item;
-//            } else {
-//                curr = item;
-//                item = curr -> child(item -> childCount() - 1);
-//                last_elem = true;
-//            }
-//        } else {
-//            if (curr -> parent() == 0)
-//                return 0;
-
-//            item = curr;
-//            curr = curr -> parent();
-//        }
-//    }
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
@@ -599,10 +482,8 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
         QModelIndexList list = selectedIndexes();
         QModelIndex modelIndex;
 
-        for(int i = list.count() - 1; i >= 0; i--) {
-            modelIndex = list.at(i);
-            mdl -> removeRow(modelIndex.row(), modelIndex.parent());
-        }
+        for(int i = list.count() - 1; i >= 0; i--)
+            removeRow((modelIndex = list.at(i)));
     }
     else QTreeView::keyPressEvent(event);
 }
