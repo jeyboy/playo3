@@ -4,8 +4,6 @@
 #include <QDesktopServices>
 #include "misc/stylesheets.h"
 
-#include "modules/data_struct/model_item_parts/item_state.h"
-
 using namespace Playo3;
 
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
@@ -17,12 +15,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     setAcceptDrops(true);
 
     //    setAttribute(Qt::WA_DeleteOnClose);
-
-    ItemState * s = new ItemState(ItemState::new_item | ItemState::listened | ItemState::liked /*| ItemState::played*/ | ItemState::checked
-                                  | ItemState::expanded | ItemState::not_exist | ItemState::proceeded | ItemState::info_required);
-
-    qDebug() << s -> states();
-    qDebug() << s -> saveStates() << " " << s -> visualStates();
 
     activation();
     initialization();

@@ -65,8 +65,12 @@ void Player::playIndex(QModelIndex item, bool paused) {
     updateItemState(false);
     currentIndex = item;
     setMedia(item.data(IURL).toUrl());
-    updateItemState(true);
     play();
+
+    if (isPlayed())
+        updateItemState(true);
+    else
+        setItemState(ItemState::played);
 
     if (paused)
         pause();

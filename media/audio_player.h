@@ -42,7 +42,8 @@ public:
     enum MediaStateFlags {
         StoppedState,
         PlayingState,
-        PausedState
+        PausedState,
+        UnknowState
     };
     typedef QFlags<MediaStateFlags> MediaState;
 
