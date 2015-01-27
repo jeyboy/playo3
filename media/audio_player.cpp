@@ -101,7 +101,7 @@ QList<QVector<int> > & AudioPlayer::getDefaultSpectrum() {
 }
 
 int AudioPlayer::getCalcSpectrumBandsCount() const {
-    return spectrumBandsCount / (channelsCount / 2);
+    return _spectrumBandsCount / (channelsCount / 2);
 }
 
 int AudioPlayer::getPosition() const {
@@ -126,10 +126,10 @@ void AudioPlayer::setMedia(QUrl mediaPath) {
 }
 
 void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
-    spectrumBandsCount = bandsCount;
+    _spectrumBandsCount = bandsCount;
     defaultSpectrum.clear();
     QVector<int> l;
-    l.fill(defaultSpectrumLevel, spectrumBandsCount);
+    l.fill(defaultSpectrumLevel, _spectrumBandsCount);
 
     defaultSpectrum.append(l);
     defaultSpectrum.append(l);
@@ -405,9 +405,9 @@ QVector<int> AudioPlayer::getSpectrum() {
 
     int b0 = 0, x, y;
 
-    for (x = 0; x < spectrumBandsCount; x++) {
+    for (x = 0; x < _spectrumBandsCount; x++) {
         float peak = 0;
-        int b1 = pow(2, x * 10.0 / (spectrumBandsCount - 1));
+        int b1 = pow(2, x * 10.0 / (_spectrumBandsCount - 1));
         if (b1 > 1023) b1 = 1023;
         if (b1 <= b0) b1 = b0 + 1; // make sure it uses at least 1 FFT bin
         for (; b0 < b1; b0++)

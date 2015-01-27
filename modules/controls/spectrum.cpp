@@ -5,7 +5,7 @@
 
 using namespace Playo3;
 
-Spectrum::Spectrum(QWidget *parent) : QToolBar("Spectrum", parent), isWave(false) {
+Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), isWave(false) {
     setObjectName("tool_Spectrum");
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
@@ -13,12 +13,21 @@ Spectrum::Spectrum(QWidget *parent) : QToolBar("Spectrum", parent), isWave(false
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
+    connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
+    connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(onVisibilityChanged(bool)));
+    //void topLevelChanged(bool topLevel);
+
     bandCountChanged(Settings::instance() -> getSpectrumBarsCount());
     heightChanged(Settings::instance() -> getSpectrumHeight());
 }
 
 Spectrum::~Spectrum() {
 
+}
+
+void Spectrum::resizeEvent(QResizeEvent * e) {
+    QToolBar::resizeEvent(e);
 }
 
 int Spectrum::workHeight() {
@@ -29,7 +38,7 @@ int Spectrum::workHeight() {
 }
 
 void Spectrum::bandCountChanged(int newCount) {
-    Player::instance() -> setSpectrumBandsCount((bars_count = newCount));
+    Player::instance() -> setSpectrumBandsCount(newCount);
     peaks = Player::instance() -> getDefaultSpectrum();
 }
 
@@ -45,14 +54,24 @@ void Spectrum::dataUpdated(QList<QVector<int> > bars) {
         repaint();
 }
 
+void Spectrum::onMovableChanged(bool movable) {
+
+}
+void Spectrum::onOrientationChanged(Qt::Orientation orientation) {
+
+}
+//void Spectrum::onTopLevelChanged(bool topLevel);
+void Spectrum::onVisibilityChanged(bool visible) {
+
+}
+
 void Spectrum::paintEvent(QPaintEvent * event) {
     QToolBar::paintEvent(event);
 
-    if (Settings::instance() -> getSpectrumCombo()) {
+    if (Settings::instance() -> getSpectrumCombo())
         paintCombo();
-    } else {
+    else
         paintDuo();
-    }
 }
 
 void Spectrum::paintCombo() {
@@ -61,13 +80,13 @@ void Spectrum::paintCombo() {
 
     int offset = isMovable() ? 10 : 0, padd = paddWidth();
     double peak, accumulate = padd + offset;
-    float bar_width = ((float)width() - offset - (bars_count + 1) * padd) / bars_count;
+    float bar_width = ((float)width() - offset - (Player::instance() -> spectrumBandsCount() + 1) * padd) / Player::instance() -> spectrumBandsCount();
     QRectF rect;
 
     QLinearGradient g(bar_width / 2, verticalPadd(), bar_width / 2, workHeight());
 
     QColor c1, c2, c3;
-    if (Settings::instance() -> getMonocolorSpectrum()) {
+    if (Settings::instance() -> isCustomColorSpectrum()) {
         c3 = Settings::instance() -> getSpectrumColor3();
         c2 = Settings::instance() -> getSpectrumColor2();
         c1 = Settings::instance() -> getSpectrumColor();
@@ -165,7 +184,7 @@ void Spectrum::paintDuo() {
         QLinearGradient gg(bar_width / 2, sec_bar_place + bar_height, bar_width / 2, sec_bar_place);
 
         QColor c1, c2, c3;
-        if (Settings::instance() -> getMonocolorSpectrum()) {
+        if (Settings::instance() -> isCustomColorSpectrum()) {
             c3 = Settings::instance() -> getSpectrumColor3();
             c2 = Settings::instance() -> getSpectrumColor2();
             c1 = Settings::instance() -> getSpectrumColor();

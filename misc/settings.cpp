@@ -225,11 +225,11 @@ void Settings::setScrollButtonUsage(bool use) {
 }
 
 
-bool Settings::getMonocolorSpectrum() {
-    return monocolorSpectrum;
+bool Settings::isCustomColorSpectrum() {
+    return customcolorSpectrum;
 }
-void Settings::setMonocolorSpectrum(bool use) {
-    monocolorSpectrum = use;
+void Settings::setCustomColorSpectrum(bool use) {
+    customcolorSpectrum = use;
 }
 
 QColor Settings::getSpectrumColor() {
@@ -392,7 +392,7 @@ void Settings::fromJson(QJsonObject settingsObj) {
 
     useScrollButtons = settingsObj.value("use_scroll_buttons").toBool(true);
 
-    monocolorSpectrum = settingsObj.value("monocolor_spectrum").toBool(false);
+    customcolorSpectrum = settingsObj.value("customcolor_spectrum").toBool(false);
 
     QVariant specColorVar = settingsObj.value("spectrum_color").toVariant();
     spectrumColor = specColorVar.isValid() ? specColorVar.value<QColor>() : QColor(0, 0, 0);
@@ -446,7 +446,7 @@ QJsonObject Settings::toJson() {
 
     ret.insert("use_scroll_buttons", QJsonValue::fromVariant(useScrollButtons));
 
-    ret.insert("monocolor_spectrum", QJsonValue::fromVariant(monocolorSpectrum));
+    ret.insert("customcolor_spectrum", QJsonValue::fromVariant(customcolorSpectrum));
     ret.insert("spectrum_color", QJsonValue::fromVariant(spectrumColor));
     ret.insert("spectrum_color2", QJsonValue::fromVariant(spectrumColor2));
     ret.insert("spectrum_color3", QJsonValue::fromVariant(spectrumColor3));

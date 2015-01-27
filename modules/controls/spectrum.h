@@ -3,6 +3,7 @@
 
 #include <QToolBar>
 #include <QPainter>
+#include <qevent.h>
 
 namespace Playo3  {
     class Spectrum : public QToolBar {
@@ -12,26 +13,30 @@ namespace Playo3  {
         Spectrum(QWidget *parent = 0);
         ~Spectrum();
 
-        int workHeight();
-
     public slots:
         void bandCountChanged(int newCount);
         void heightChanged(int newHeight);
 
     protected slots:
         void dataUpdated(QList<QVector<int> >);
+        void onMovableChanged(bool movable);
+        void onOrientationChanged(Qt::Orientation orientation);
+        //void onTopLevelChanged(bool topLevel);
+        void onVisibilityChanged(bool visible);
 
     protected:
+        void resizeEvent(QResizeEvent *);
+        void paintEvent(QPaintEvent *event);
+
+        int workHeight();
         inline int verticalPadd() { return 5; }
         inline int paddWidth() { return 2; }
 
-        void paintEvent(QPaintEvent *event);
         void paintCombo();
         void paintDuo();
 
     private:
         QList<QVector<int> > peaks;
-        int bars_count;
         bool isWave;
     };
 }

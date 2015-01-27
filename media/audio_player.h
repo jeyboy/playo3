@@ -77,6 +77,7 @@ public:
 
     void setMedia(QUrl mediaPath);
     void setSpectrumBandsCount(int bandsCount);
+    inline int spectrumBandsCount() const { return _spectrumBandsCount; }
     void setSpectrumHeight(int newHeight);
     void setSpectrumFreq(int millis);
 
@@ -140,7 +141,7 @@ private:
     float size;
     float prevDownloadPos;
 
-    int spectrumBandsCount;
+    int _spectrumBandsCount;
     int spectrumHeight;
     int defaultSpectrumLevel;
     QList<QVector<int> > defaultSpectrum;

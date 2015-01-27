@@ -679,7 +679,7 @@ text color</string>
         <number>18</number>
        </property>
       </widget>
-      <widget class="QCheckBox" name="spectrumMonocolorUse">
+      <widget class="QCheckBox" name="spectrumCustomColorUse">
        <property name="geometry">
         <rect>
          <x>10</x>

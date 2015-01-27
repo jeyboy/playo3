@@ -98,8 +98,8 @@ public:
     bool getScrollButtonUsage();
     void setScrollButtonUsage(bool use);
 
-    bool getMonocolorSpectrum();
-    void setMonocolorSpectrum(bool use);
+    bool isCustomColorSpectrum();
+    void setCustomColorSpectrum(bool use);
 
     QColor getSpectrumColor();
     void setSpectrumColor(QColor newColor);
@@ -192,7 +192,7 @@ private:
     int spectrumFreqRate;
     int spectrumBarsCount;
     int spectrumHeight;
-    bool monocolorSpectrum;
+    bool customcolorSpectrum;
     bool comboSpectrum;
 };
 

@@ -90,7 +90,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
   spectrumColor3 = Settings::instance() -> getSpectrumColor3();
   ui -> spectrumColor3 -> setStyleSheet("background-color: " + spectrumColor3.name() + ";");
 
-  ui -> spectrumMonocolorUse -> setChecked(Settings::instance() -> getMonocolorSpectrum());
+  ui -> spectrumCustomColorUse -> setChecked(Settings::instance() -> isCustomColorSpectrum());
 
   ui -> spectrumBarsCount -> setValue(Settings::instance() -> getSpectrumBarsCount());
   ui -> spectrumUpdateFrequecy -> setValue(Settings::instance() -> getSpectrumFreqRate());
@@ -206,7 +206,7 @@ void SettingsDialog::on_acceptButton_clicked() {
     Settings::instance() -> setSpectrumColor(spectrumColor);
     Settings::instance() -> setSpectrumColor2(spectrumColor2);
     Settings::instance() -> setSpectrumColor3(spectrumColor3);
-    Settings::instance() -> setMonocolorSpectrum(ui -> spectrumMonocolorUse -> isChecked());
+    Settings::instance() -> setCustomColorSpectrum(ui -> spectrumCustomColorUse -> isChecked());
 
     Settings::instance() -> setSpectrumBarsCount(ui -> spectrumBarsCount -> value());
     Settings::instance() -> setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
