@@ -55,12 +55,19 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
 
         foreach(QToolBar * bar, bars) {
             if (bar == spectrum) {
+                QAction * act;
                 QMenu * spectrMenu = barsMenu -> addMenu("Spectrum");
                 spectrMenu -> addAction(bar -> toggleViewAction());
                 spectrMenu -> addSeparator();
-                spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
-                spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
-                spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
+                act = spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
+                act -> setCheckable(true);
+                act -> setChecked(spectrum -> viewType() == Spectrum::bars);
+                act = spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
+                act -> setCheckable(true);
+                act -> setChecked(spectrum -> viewType() == Spectrum::split_bars);
+                act = spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
+                act -> setCheckable(true);
+                act -> setChecked(spectrum -> viewType() == Spectrum::waves);
             } else
                 barsMenu -> addAction(bar -> toggleViewAction());
         }

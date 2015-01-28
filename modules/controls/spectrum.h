@@ -19,6 +19,8 @@ namespace Playo3  {
         Spectrum(QWidget * parent = 0);
         ~Spectrum();
 
+        inline SpectrumType viewType() const { return type; }
+
     public slots:
         void updateColors();
         void changeType(SpectrumType);
