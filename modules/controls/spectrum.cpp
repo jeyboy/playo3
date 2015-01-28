@@ -63,8 +63,8 @@ void Spectrum::changeBandCount(int newCount) {
 void Spectrum::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(200);
-    Player::instance() -> setSpectrumHeight(peakDimension());
     recalcAttrs();
+    Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
 void Spectrum::dataUpdated(QList<QVector<int> > bars) {
@@ -76,7 +76,6 @@ void Spectrum::dataUpdated(QList<QVector<int> > bars) {
         last_pairs_count = pairs;
     }
 
-
     if (isVisible())
         repaint();
 }
@@ -86,8 +85,8 @@ void Spectrum::onMovableChanged(bool movable) {
      start_h_offset = paddWidth() + offset;
      recalcAttrs();
 }
-void Spectrum::onOrientationChanged(Qt::Orientation orientation) {
-
+void Spectrum::onOrientationChanged(Qt::Orientation /*orientation*/) {
+    //TODO: add calculation for vertical orientation
 }
 //void Spectrum::onTopLevelChanged(bool topLevel);
 //void Spectrum::onVisibilityChanged(bool visible) {
