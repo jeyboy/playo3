@@ -29,8 +29,6 @@ namespace Playo3  {
         void dataUpdated(QList<QVector<int> >);
         void onMovableChanged(bool movable);
         void onOrientationChanged(Qt::Orientation orientation);
-        //void onTopLevelChanged(bool topLevel);
-//        void onVisibilityChanged(bool visible);
 
     protected:
         void resizeEvent(QResizeEvent *);

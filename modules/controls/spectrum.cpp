@@ -14,8 +14,6 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
-//    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(onVisibilityChanged(bool)));
-    //void topLevelChanged(bool topLevel);
 
     updateColors();
     changeBandCount(Settings::instance() -> getSpectrumBarsCount());
@@ -56,8 +54,7 @@ void Spectrum::changeType(SpectrumType newType) {
 
 void Spectrum::changeBandCount(int newCount) {
     Player::instance() -> setSpectrumBandsCount(newCount);
-    peaks = Player::instance() -> getDefaultSpectrum();
-    recalcAttrs();
+    dataUpdated(Player::instance() -> getDefaultSpectrum());
 }
 
 void Spectrum::changeHeight(int newHeight) {
@@ -88,14 +85,10 @@ void Spectrum::onMovableChanged(bool movable) {
 void Spectrum::onOrientationChanged(Qt::Orientation /*orientation*/) {
     //TODO: add calculation for vertical orientation
 }
-//void Spectrum::onTopLevelChanged(bool topLevel);
-//void Spectrum::onVisibilityChanged(bool visible) {
-
-//}
 
 void Spectrum::resizeEvent(QResizeEvent * e) {
-    recalcAttrs();
     QToolBar::resizeEvent(e);
+    recalcAttrs();
 }
 
 void Spectrum::paintEvent(QPaintEvent * event) {
@@ -136,20 +129,15 @@ int Spectrum::peakDimension() {
             g.setFinalStop(halfBarWidth, start_v1_offset);
             return start_v1_offset - verticalPadd();
         default:
-//        float bar_height = workHeight() + 3, first_bar_place =  bar_height + verticalPadd() + 1, sec_bar_place = bar_height + verticalPadd() + 3; // 2px gap between vertical bars
-
             h = (height() - (verticalPadd() * 2 + 8)) / 2;
             start_v1_offset = h + verticalPadd() + 4; // +3
             start_v2_offset = start_v1_offset + 2; // 2px gap between bars
 
-            g.setStart(halfBarWidth, start_v1_offset - (h/* + 3*/));
+            g.setStart(halfBarWidth, start_v1_offset - h);
             g.setFinalStop(halfBarWidth, start_v1_offset);
 
-            gg.setStart(halfBarWidth, start_v2_offset + (h/* + 3*/));
+            gg.setStart(halfBarWidth, start_v2_offset + h);
             gg.setFinalStop(halfBarWidth, start_v2_offset);
-
-//            QLinearGradient g(bar_width / 2, first_bar_place - bar_height, bar_width / 2, first_bar_place);
-//            QLinearGradient gg(bar_width / 2, sec_bar_place + bar_height, bar_width / 2, sec_bar_place);
             return h;
     }
 }
