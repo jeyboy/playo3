@@ -213,14 +213,13 @@ void Spectrum::paintCombo() {
     QPainter painter(this);
     painter.save();
 
-    double peak, accumulate = start_h_offset;
+    double accumulate = start_h_offset;
     QRectF rect;
 
     painter.setBrush(g);
 
     for(int loop1 = 0; loop1 < peaks[0].length(); loop1++) {
-        peak = peaks[0][loop1];
-        rect.setCoords(accumulate, start_v1_offset - peak, (accumulate + bar_width), start_v1_offset);
+        rect.setCoords(accumulate, start_v1_offset - peaks[0][loop1], (accumulate + bar_width), start_v1_offset);
         painter.drawRect(rect);
         accumulate += bar_width + paddWidth();
     }
