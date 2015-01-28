@@ -66,6 +66,10 @@ namespace Playo3 {
         void removePanelButtonTriggered();
 
     protected slots:
+        void setBarsView();
+        void setSplitBarsView();
+        void setWavesView();
+
         void onFolderDrop(QString name, QString path);
 
         inline void onMovableChanged(bool /*movable*/) {

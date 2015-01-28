@@ -53,8 +53,17 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
         barsMenu -> addAction("Show all", this, SLOT(showAll()));
         barsMenu -> addAction("Hide all", this, SLOT(hideAll()));
 
-        foreach(QToolBar * bar, bars)
-            barsMenu -> addAction(bar -> toggleViewAction());
+        foreach(QToolBar * bar, bars) {
+            if (bar == spectrum) {
+                QMenu * spectrMenu = barsMenu -> addMenu("Spectrum");
+                spectrMenu -> addAction(bar -> toggleViewAction());
+                spectrMenu -> addSeparator();
+                spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
+                spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
+                spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
+            } else
+                barsMenu -> addAction(bar -> toggleViewAction());
+        }
 
         connect(barsMenu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
         connect(barsMenu, SIGNAL(aboutToHide()), this, SLOT(removePanelHighlight()));
@@ -408,11 +417,17 @@ void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
 ///SLOTS
 /////////////////////////////////////////////////////////////////////////////////////
 
-void ToolBars::panelHighlight(QAction *action) {
+void ToolBars::panelHighlight(QAction * action) {
     if (highlighted != 0)
         emit removePanelHighlight();
 
-    if ((highlighted = qobject_cast<QToolBar *>(action -> parentWidget())))
+    if (!(highlighted = qobject_cast<QToolBar *>(action -> parentWidget()))) {
+        QMenu * m = qobject_cast<QMenu *>(action -> parentWidget());
+        if (m)
+            highlighted = qobject_cast<QToolBar *>(m -> actions().first() -> parentWidget());
+    }
+
+    if (highlighted)
         highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
 }
 
@@ -485,6 +500,10 @@ void ToolBars::changeToolbarsMovable() {
         if (movable || (!movable && !bar -> isFloating()))
             bar -> setMovable(movable);
 }
+
+void ToolBars::setBarsView() { spectrum -> changeType(Spectrum::bars); }
+void ToolBars::setSplitBarsView() { spectrum -> changeType(Spectrum::split_bars); }
+void ToolBars::setWavesView() { spectrum -> changeType(Spectrum::waves); }
 
 void ToolBars::onFolderDrop(QString name, QString path) {
     addPanelButton(name, path, (QToolBar *)QObject::sender());
