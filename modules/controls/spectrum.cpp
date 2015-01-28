@@ -163,23 +163,25 @@ void Spectrum::paintWaves() {
                 rpath.moveTo(accumulate, start_v2_offset + peaks[pair + 1][0]);
 
                 for(int loop1 = 0; loop1 < peaks[pair].length() - 2; loop1++) {
-                    temp_acc = (accumulate + bar_width);
+                    temp_acc = accumulate + bar_width + paddWidth();
 
                     lpath.quadTo(
                                 accumulate, start_v1_offset - peaks[pair][loop1],
-                                accumulate + paddWidth() + bar_width, start_v1_offset - peaks[pair][loop1 + 1]
+                                temp_acc, start_v1_offset - peaks[pair][loop1 + 1]
 //                                    accumulate + (paddWidth() + bar_width) * 2, first_bar_place - peaks[pair][loop1 + 2]
                                 );
                     rpath.quadTo(
                                 accumulate, start_v2_offset + peaks[pair + 1][loop1],
-                                accumulate + paddWidth() + bar_width, start_v2_offset + peaks[pair + 1][loop1 + 1]
+                                temp_acc, start_v2_offset + peaks[pair + 1][loop1 + 1]
 //                                    accumulate + (paddWidth() + bar_width) * 2, sec_bar_place + peaks[pair + 1][loop1 + 2]
                                 );
 
-                    accumulate = temp_acc + paddWidth();
+                    accumulate = temp_acc;
                 }
 
+                painter.setBrush(g);
                 painter.drawPath(lpath);
+                painter.setBrush(gg);
                 painter.drawPath(rpath);
             }
         } else {
@@ -188,15 +190,16 @@ void Spectrum::paintWaves() {
                 lpath.moveTo(accumulate, start_v1_offset - peaks[pair][0]);
 
                 for(int loop1 = 1; loop1 < peaks[pair].length() - 2; loop1++) {
-                    temp_acc = (accumulate + bar_width);
+                    temp_acc = accumulate + bar_width + paddWidth();
                     lpath.quadTo(
                                 accumulate, start_v1_offset - peaks[pair][loop1],
-                                accumulate + paddWidth() + bar_width, start_v1_offset - peaks[pair][loop1 + 1]
+                                temp_acc, start_v1_offset - peaks[pair][loop1 + 1]
 //                                    accumulate + (paddWidth() + bar_width) * 2, start_v1_offset - peaks[pair][loop1 + 2]
                                 );
-                    accumulate = temp_acc + paddWidth();
+                    accumulate = temp_acc;
                 }
 
+                painter.setBrush(g);
                 painter.drawPath(lpath);
             }
         }
