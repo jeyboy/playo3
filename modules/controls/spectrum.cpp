@@ -108,9 +108,9 @@ void Spectrum::paintEvent(QPaintEvent * event) {
 void Spectrum::recalcAttrs() {
     switch(type) {
         case bars:
-        case waves:
             bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();
             break;
+//case waves:
         default:
             bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();
             break;
@@ -123,11 +123,12 @@ int Spectrum::peakDimension() {
 
     switch(type) {
         case bars:
-        case waves:
             start_v1_offset = height() - verticalPadd();
             g.setStart(halfBarWidth, verticalPadd());
             g.setFinalStop(halfBarWidth, start_v1_offset);
             return start_v1_offset - verticalPadd();
+//        case waves:
+
         default:
             h = (height() - (verticalPadd() * 2 + 8)) / 2;
             start_v1_offset = h + verticalPadd() + 4; // +3
