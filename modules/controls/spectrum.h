@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QLinearGradient>
 #include <qevent.h>
+#include <qmenu.h>
 
 namespace Playo3  {
     class Spectrum : public QToolBar {
@@ -20,8 +21,13 @@ namespace Playo3  {
         ~Spectrum();
 
         inline SpectrumType viewType() const { return type; }
+        void generateContextMenu(QMenu * parent);
 
     public slots:
+        void setBarsView()      { changeType(Spectrum::bars); }
+        void setSplitBarsView() { changeType(Spectrum::split_bars); }
+        void setWavesView()     { changeType(Spectrum::waves); }
+
         void updateColors();
         void changeType(SpectrumType);
         void changeBandCount(int newCount);

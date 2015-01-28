@@ -52,22 +52,11 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
 
         barsMenu -> addAction("Show all", this, SLOT(showAll()));
         barsMenu -> addAction("Hide all", this, SLOT(hideAll()));
+        barsMenu -> addSeparator();
 
         foreach(QToolBar * bar, bars) {
             if (bar == spectrum) {
-                QAction * act;
-                QMenu * spectrMenu = barsMenu -> addMenu("Spectrum");
-                spectrMenu -> addAction(bar -> toggleViewAction());
-                spectrMenu -> addSeparator();
-                act = spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
-                act -> setCheckable(true);
-                act -> setChecked(spectrum -> viewType() == Spectrum::bars);
-                act = spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
-                act -> setCheckable(true);
-                act -> setChecked(spectrum -> viewType() == Spectrum::split_bars);
-                act = spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
-                act -> setCheckable(true);
-                act -> setChecked(spectrum -> viewType() == Spectrum::waves);
+                spectrum -> generateContextMenu(barsMenu);
             } else
                 barsMenu -> addAction(bar -> toggleViewAction());
         }
@@ -81,6 +70,7 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
 
         docsMenu -> addAction("Show all", Dockbars::instance(window), SLOT(showAll()));
         docsMenu -> addAction("Hide all", Dockbars::instance(window), SLOT(hideAll()));
+        docsMenu -> addSeparator();
 
         foreach(DockBar * doc, docs)
             docsMenu -> addAction(doc -> toggleViewAction());
@@ -507,10 +497,6 @@ void ToolBars::changeToolbarsMovable() {
         if (movable || (!movable && !bar -> isFloating()))
             bar -> setMovable(movable);
 }
-
-void ToolBars::setBarsView() { spectrum -> changeType(Spectrum::bars); }
-void ToolBars::setSplitBarsView() { spectrum -> changeType(Spectrum::split_bars); }
-void ToolBars::setWavesView() { spectrum -> changeType(Spectrum::waves); }
 
 void ToolBars::onFolderDrop(QString name, QString path) {
     addPanelButton(name, path, (QToolBar *)QObject::sender());

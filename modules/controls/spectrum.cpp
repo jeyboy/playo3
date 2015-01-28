@@ -24,6 +24,25 @@ Spectrum::~Spectrum() {
 
 }
 
+void Spectrum::generateContextMenu(QMenu * parent) {
+    QAction * act;
+    QMenu * spectrMenu = parent -> addMenu("Spectrum");
+    spectrMenu -> addAction(toggleViewAction());
+    spectrMenu -> addSeparator();
+
+    act = spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
+    act -> setCheckable(true);
+    act -> setChecked(type == Spectrum::bars);
+
+    act = spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
+    act -> setCheckable(true);
+    act -> setChecked(type == Spectrum::split_bars);
+
+    act = spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
+    act -> setCheckable(true);
+    act -> setChecked(type == Spectrum::waves);
+}
+
 void Spectrum::updateColors() {
     QColor c1, c2, c3;
     if (Settings::instance() -> isCustomColorSpectrum()) {

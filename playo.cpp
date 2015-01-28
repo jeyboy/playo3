@@ -155,7 +155,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 ///SLOTS
 /////////////////////////////////////////////////////////////////////////////////////
 
-void Playo::receiveMessage(QString message) {
+void Playo::receiveMessage(QString /*message*/) {
 //    QStringList list = message.split('|', QString::SkipEmptyParts);
 //    QList<QUrl> urls;
 
