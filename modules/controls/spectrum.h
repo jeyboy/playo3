@@ -3,41 +3,60 @@
 
 #include <QToolBar>
 #include <QPainter>
+#include <QLinearGradient>
 #include <qevent.h>
 
 namespace Playo3  {
     class Spectrum : public QToolBar {
         Q_OBJECT
-
     public:
-        Spectrum(QWidget *parent = 0);
+        enum SpectrumType {
+            bars,
+            split_bars,
+            waves
+        };
+
+        Spectrum(QWidget * parent = 0);
         ~Spectrum();
 
     public slots:
-        void bandCountChanged(int newCount);
-        void heightChanged(int newHeight);
+        void updateColors();
+        void changeType(SpectrumType);
+        void changeBandCount(int newCount);
+        void changeHeight(int newHeight);
 
     protected slots:
         void dataUpdated(QList<QVector<int> >);
         void onMovableChanged(bool movable);
         void onOrientationChanged(Qt::Orientation orientation);
         //void onTopLevelChanged(bool topLevel);
-        void onVisibilityChanged(bool visible);
+//        void onVisibilityChanged(bool visible);
 
     protected:
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *event);
 
-        int workHeight();
+        void recalcAttrs();
+
+        int peakDimension();
         inline int verticalPadd() { return 5; }
         inline int paddWidth() { return 2; }
+        inline int beetweenSpace() { return 6; }
 
         void paintCombo();
         void paintDuo();
+        void paintWaves();
 
     private:
         QList<QVector<int> > peaks;
-        bool isWave;
+
+        int offset, last_pairs_count, pairs;
+        double start_h_offset, start_v1_offset, start_v2_offset;
+        float bar_width;
+
+        SpectrumType type;
+
+        QLinearGradient g, gg;
     };
 }
 

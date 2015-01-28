@@ -188,8 +188,8 @@ void Playo::showSettingsDialog() {
 
 //        ui -> tabber -> setTabPosition((QTabWidget::TabPosition)Settings::instance() -> getTabPosition());
 //        ui -> tabber -> setUsesScrollButtons(Settings::instance() -> getScrollButtonUsage());
-        ToolBars::instance() -> getSpectrum() -> bandCountChanged(Settings::instance() -> getSpectrumBarsCount());
-        ToolBars::instance() -> getSpectrum() -> heightChanged(Settings::instance() -> getSpectrumHeight());
+        ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> getSpectrumBarsCount());
+        ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> getSpectrumHeight());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> getSpectrumFreqRate());
     }
 }
