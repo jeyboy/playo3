@@ -324,7 +324,7 @@ bool ViewInterface::removeRow(QModelIndex & node) {
     return mdl -> removeRow(node.row(), node.parent());
 }
 
-bool ViewInterface::prepareDownloading(QString path) { //TODO: move to separate class
+bool ViewInterface::prepareDownloading(QString /*path*/) { //TODO: move to separate class
 //    QDir dir(path);
 //    if (!dir.exists()) {
 //        dir.mkpath(".");
@@ -333,7 +333,7 @@ bool ViewInterface::prepareDownloading(QString path) { //TODO: move to separate 
 //    return true;
 }
 
-void ViewInterface::downloadItem(const QModelIndex & node, QString savePath) { //TODO: rewrite
+void ViewInterface::downloadItem(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
 //    QString prepared_path = savePath + item -> getDownloadTitle();
 //    if (QFile::exists(prepared_path)) {
 //        QFile::remove(prepared_path);
@@ -353,7 +353,7 @@ void ViewInterface::downloadItem(const QModelIndex & node, QString savePath) { /
 //    }
 }
 
-void ViewInterface::downloadBranch(const QModelIndex & node, QString savePath) { //TODO: rewrite
+void ViewInterface::downloadBranch(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
 //    prepareDownloading(savePath);
 //    QList<ModelItem *> * children = rootNode -> childItemsList();
 //    ModelItem * item;

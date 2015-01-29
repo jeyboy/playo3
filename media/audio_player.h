@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QUrl>
 #include <QDir>
+#include <QVector>
 
 #include "bass.h"
 #include "bass_fx.h"
@@ -126,6 +127,11 @@ public slots:
 
 private:
     float calcBpm(int channel_id);
+    float fastSqrt(float x);
+
+
+    QVector<int> spectrumPoints;
+    QVector<int> spectrumComplexPoints;
 
     QVector<int> getSpectrum();
     QList<QVector<int> > getComplexSpectrum();
