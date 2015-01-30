@@ -119,11 +119,12 @@ QVariant ItemInterface::data(int column) const {
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
-        case Qt::SizeHintRole:
-            if (isContainer())
-                return QSize(0, Settings::instance() -> getItemHeight());
-            else
-                return QSize(0, Settings::instance() -> getTotalItemHeight());
+        case Qt::SizeHintRole: {
+                if (isContainer())
+                    return QSize(0, Settings::instance() -> getItemHeight());
+                else
+                    return QSize(0, Settings::instance() -> getTotalItemHeight());
+        }
         case Qt::TextAlignmentRole:
             if (isContainer() || !Settings::instance() -> isShowInfo())
                 return Qt::AlignVCenter;

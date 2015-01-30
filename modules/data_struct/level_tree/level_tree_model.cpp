@@ -10,7 +10,7 @@ LevelTreeModel::~LevelTreeModel() {
 
 }
 
-QModelIndex LevelTreeModel::dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) {
+QModelIndex LevelTreeModel::dropProcession(const QModelIndex & /*parent*/, int /*row*/, const QList<QUrl> & /*list*/) {
 //    QFileInfo file = QFileInfo(list.first().toLocalFile());
 //    QString fName;
 
@@ -29,7 +29,7 @@ QModelIndex LevelTreeModel::dropProcession(const QModelIndex & parent, int row, 
 //    else return index(newIndex);
 }
 
-void LevelTreeModel::filesRoutine(ItemInterface * index, QFileInfo currFile) {
+void LevelTreeModel::filesRoutine(ItemInterface * /*index*/, QFileInfo /*currFile*/) {
 //    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 //    ItemInterface * newFolder;
 //    bool already_exist;
@@ -50,7 +50,7 @@ void LevelTreeModel::filesRoutine(ItemInterface * index, QFileInfo currFile) {
 //    }
 }
 
-void LevelTreeModel::filesRoutine(ItemInterface * index, QList<QUrl> list) {
+void LevelTreeModel::filesRoutine(ItemInterface * /*index*/, QList<QUrl> /*list*/) {
 //    ItemInterface * newFolder;
 //    bool already_exist;
 

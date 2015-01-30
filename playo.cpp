@@ -191,6 +191,7 @@ void Playo::showSettingsDialog() {
         ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> getSpectrumBarsCount());
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> getSpectrumHeight());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> getSpectrumFreqRate());
+        Dockbars::instance() -> updateAllViews();
     }
 }
 

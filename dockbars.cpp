@@ -155,6 +155,14 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 //}
 
+void Dockbars::updateAllViews() { // update for item height
+    QList<ViewInterface *> views = parent() -> findChildren<ViewInterface *>();
+    int iconDimension = Settings::instance() -> getIconHeight();
+
+    foreach(ViewInterface * v, views)
+        v -> setIconSize(QSize(iconDimension, iconDimension));
+}
+
 void Dockbars::hideAll() {
     foreach(DockBar * bar, dockbars())
         bar -> setHidden(true);

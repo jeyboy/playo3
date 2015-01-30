@@ -41,6 +41,7 @@ namespace Playo3 {
         DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0);
         DockBar * createDocBar(QString name, QWidget * content);
     public slots:
+        void updateAllViews();
         void hideAll();
         void showAll();
 

@@ -28,6 +28,8 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return 0;
 
+//    Qt::ItemNeverHasChildren
+
     if (Settings::instance() -> isCheckboxShow())
         return Qt::ItemIsDropEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
     else
