@@ -1,6 +1,5 @@
 #include "model_item_delegate.h"
 #include <QDebug>
-#include <QElapsedTimer>
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
@@ -78,9 +77,6 @@ void ModelItemDelegate::progress(QPainter * painter, const QStyleOptionViewItem 
 }
 
 void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-    QElapsedTimer t;
-    t.start();
-
     painter -> save();
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
@@ -182,30 +178,30 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
                         bodyRect.height()
                     );
 
-                    QFont font;
-                    font.setFamily("Arial Black");
+            QFont font;
+            font.setFamily("Arial Black");
 
-                    if (icon_size < ico_mini) {
-                        painter -> drawLine(pseudoIcoRect.topRight(), pseudoIcoRect.bottomRight());
-                    } else {
-                        if(!is_selected)
-                            painter -> setPen(option.palette.color(QPalette::Dark));
-                        painter -> drawEllipse(pseudoIcoRect);
-                        painter -> setPen(textColor);
+            if (icon_size < ico_mini) {
+                painter -> drawLine(pseudoIcoRect.topRight(), pseudoIcoRect.bottomRight());
+            } else {
+                if(!is_selected)
+                    painter -> setPen(option.palette.color(QPalette::Dark));
+                painter -> drawEllipse(pseudoIcoRect);
+                painter -> setPen(textColor);
 
-                        if (ext.length() > 3) {
-                            ext.insert(3, '\n');
-                          if (ext.length() > 6)
-                            font.setPixelSize(icon_size / (ext.length() / 2));
-                        }
-                        painter -> setFont(font);
-                    }
+                if (ext.length() > 3) {
+                    ext.insert(3, '\n');
+                  if (ext.length() > 6)
+                    font.setPixelSize(icon_size / (ext.length() / 2));
+                }
+                painter -> setFont(font);
+            }
 
-                    painter -> drawText(
-                                pseudoIcoRect,
-                                Qt::AlignHCenter | Qt::AlignVCenter,
-                                ext
-                            );
+            painter -> drawText(
+                        pseudoIcoRect,
+                        Qt::AlignHCenter | Qt::AlignVCenter,
+                        ext
+                    );
         }
     }
 
@@ -250,7 +246,6 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     }
 
     painter -> restore();
-    qDebug() << t.nsecsElapsed();
 }
 
 

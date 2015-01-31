@@ -310,7 +310,7 @@ void ModelInterface::collapsed(const QModelIndex & index) {
 
 /////////////////////////////////////////////////////////
 
-QModelIndex ModelInterface::fromPath(QString path) { //TODO: rewrite
+QModelIndex ModelInterface::fromPath(QString /*path*/) { //TODO: rewrite
 //    QStringList parts = path.split(' ', QString::SkipEmptyParts);
 //    ModelItem * curr = getModel() -> root();
 //    int level;
