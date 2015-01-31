@@ -98,6 +98,7 @@ QVariant ItemInterface::data(int column) const {
     switch(column) {
         case IATTRS: {
             QVariantMap params;
+            params.insert("name", title());
             params.insert("info", info());
             params.insert("ext", extension());
             params.insert("state", visualStates());

@@ -65,6 +65,8 @@ namespace Playo3 {
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void downloadSelected(QString savePath, bool markAsLiked = false);
+
+        void setIconSize(const QSize & size);
     public slots:
         inline void shuffle() { mdl -> shuffle(); }
         void updateSelection(QModelIndex &);
@@ -111,6 +113,9 @@ namespace Playo3 {
         ViewSettings sttngs;
         QPoint dragPoint;
         bool forwardOrder;
+    private:
+        ModelItemDelegate * item_delegate;
+
     };
 }
 

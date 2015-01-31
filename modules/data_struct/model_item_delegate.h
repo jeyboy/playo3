@@ -13,6 +13,10 @@ class ModelItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
 public:
     explicit ModelItemDelegate(QObject * parent = 0);
+    inline ~ModelItemDelegate() {
+        delete fmf;
+        delete fmfInfo;
+    }
 
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
@@ -38,10 +42,17 @@ public:
     void paint(QPainter * painter, const QStyleOptionViewItem & option,
                const QModelIndex & index) const;
 
+public slots:
+    void recalcAttrs(int item_icon_size);
+
 private:
     void drawCheckbox(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     QCheckBox templateCheckbox;
     QColor hoverColor;
+
+    QFont itemFont, itemInfoFont;
+    QFontMetrics * fmf, * fmfInfo;
+    int icon_size, ico_mini;
 
 //    static QPainterPath backroundRectPath(const QRect & rect, int offset);
 //    static QPainterPath roundRectPath(const QRect & rect, int offset);

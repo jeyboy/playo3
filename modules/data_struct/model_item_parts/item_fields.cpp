@@ -17,7 +17,7 @@ QStringList ItemFields::info() const {
     QStringList list;
     QVariant i = _info();
 
-    if (i.isValid())
+    if (!i.isValid())
         list.append("Processing ...");
     else
         list.append(i.toString());

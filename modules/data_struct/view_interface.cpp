@@ -28,7 +28,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    setItemDelegate(new ModelItemDelegate(this));
+    setItemDelegate((item_delegate = new ModelItemDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
     int iconDimension = Settings::instance() -> getIconHeight();
@@ -403,6 +403,11 @@ void ViewInterface::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/)
 //                item -> getState() -> setLiked();
 //        }
 //    }
+}
+
+void ViewInterface::setIconSize(const QSize & size) {
+    QTreeView::setIconSize(size);
+    item_delegate -> recalcAttrs(size.width());
 }
 
 //////////////////////////////////////////////////////
