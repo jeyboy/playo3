@@ -144,7 +144,7 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
                 if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Stylesheets::stickDistance))
                     currRect.moveBottom(parentRect.top());
 
-                bar -> setSticked(change);
+                bar -> setStickedFlag(change);
 
                 if (change) {
                     skipChildAction = true;

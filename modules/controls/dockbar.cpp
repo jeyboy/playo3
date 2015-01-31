@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
-    : QDockWidget(title, parent, flags) {
+    : QDockWidget(title, parent, flags), sticked(false) {
 
     installEventFilter(parent);
 

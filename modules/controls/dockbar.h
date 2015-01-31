@@ -10,17 +10,24 @@ namespace Playo3 {
     class DockBar : public QDockWidget {
         Q_OBJECT
     public:
-        DockBar(const QString &title, QWidget * parent = 0, Qt::WindowFlags flags = 0);
+        DockBar(const QString & title, QWidget * parent = 0, Qt::WindowFlags flags = 0);
         inline void setWindowTitle(const QString & newTitle) {
             titleWidget -> setText(newTitle);
             QDockWidget::setWindowTitle(newTitle);
         }
         inline bool isSticked() const { return sticked; }
-        inline void setSticked(const bool stick) { sticked = stick; }
+        inline void setStickedFlag(bool stick) { sticked = stick; }
         inline void markAsSticked() {
+            sticked = true;
             if (parent())
                 ((MainWindow *)parentWidget()) -> addOuterChild(this);
         }
+//        inline void markAsUnsticked() {
+//            sticked = false;
+//            if (parent())
+//                ((MainWindow *)parentWidget()) -> removeOuterChild(this);
+//        }
+
     signals:
         void closing();
     public slots:
