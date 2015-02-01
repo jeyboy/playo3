@@ -372,7 +372,7 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
     if (action == Qt::CopyAction) {
         if (data -> hasUrls()) {
             if (row > row_count) row = -1;
-            recalcParentIndex(parentIndex, row, data -> urls().first());
+            recalcParentIndex(const_cast<QModelIndex&>(parentIndex), row, data -> urls().first());
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {

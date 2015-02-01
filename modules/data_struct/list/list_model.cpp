@@ -10,13 +10,13 @@ ListModel::~ListModel() {
 
 }
 
-QModelIndex ListModel::dropProcession(const QModelIndex & /*parent*/, int /*row*/, const QList<QUrl> & /*list*/) {
+QModelIndex ListModel::dropProcession(const QModelIndex & /*ind*/, int /*row*/, const QList<QUrl> & /*list*/) {
 //    ItemInterface * newIndex = root();
 //    filesRoutine(newIndex, list);
 //    return index(newIndex);
 }
 
-void ListModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*node*/, int /*pos*/) {
+void ListModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*node*/) {
 //    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
 //    foreach(QFileInfo file, folderList) {
@@ -30,7 +30,7 @@ void ListModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*node*/, in
 //    }
 }
 
-void ListModel::filesRoutine(QList<QUrl> & /*list*/, FolderItem * /*node*/){
+void ListModel::filesRoutine(const QList<QUrl> & /*list*/, FolderItem * /*node*/, int /*pos*/){
 //    foreach(QUrl url, list) {
 //        QFileInfo file = QFileInfo(url.toLocalFile());
 //        if (file.isDir()) {

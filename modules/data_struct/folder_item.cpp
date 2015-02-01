@@ -128,7 +128,7 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos)
         curr = new FolderItem(name, this);
 
     if (list && !list -> isEmpty())
-        return curr -> createFolder(list -> takeFirst(), list);
+        return curr -> createFolder(list -> takeFirst(), list, pos);
     else
         return curr;
 }
