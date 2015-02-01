@@ -9,8 +9,8 @@ namespace Playo3 {
     class FileItem : public ItemInterface {
     public:
         FileItem(QJsonObject * hash, FolderItem * parent = 0);
-        FileItem(QString fileName, FolderItem * parent = 0);
-        FileItem(QString filePath, QString fileName, FolderItem * parent = 0);
+        FileItem(QString fileName, FolderItem * parent = 0, int pos = -1);
+        FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
 
         ~FileItem();
 
@@ -20,7 +20,7 @@ namespace Playo3 {
 
         QJsonObject toJson();
     protected:
-        void proceedTitle(QString title);
+        QString proceedTitle(QString & title);
     };
 }
 

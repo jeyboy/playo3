@@ -24,6 +24,55 @@ QVariant ModelInterface::data(const QModelIndex & index, int role) const {
     return item(index) -> data(role);
 }
 
+bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &value, int role) {
+    bool result = false;
+
+    ItemInterface * node = item(model_index);
+
+    if (role == Qt::CheckStateRole) {
+        node -> updateCheckedState(!node -> is(ItemState::checked));
+
+        if (node -> isContainer()) {
+            FolderItem * it = dynamic_cast<FolderItem *>(node);
+            if (it -> childCount() > 0) {
+                emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
+                return true;
+            }
+        }
+
+        result = true;
+    }
+    else if (role == ISTATE) {
+        node -> setStates(value.toInt());
+        result = true;
+    } else if (role == Qt::EditRole)
+        result = node -> setData(model_index.column(), value);
+
+    if (result)
+        emit dataChanged(model_index, model_index);
+
+    return result;
+}
+
+QVariant ModelInterface::headerData(int section, Qt::Orientation orientation, int role) const {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return rootItem -> data(section);
+
+    return QVariant();
+}
+
+bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role) {
+    if (role != Qt::EditRole || orientation != Qt::Horizontal)
+        return false;
+
+    bool result = rootItem -> setData(section, value);
+
+    if (result)
+        emit headerDataChanged(orientation, section, section);
+
+    return result;
+}
+
 Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return 0;
@@ -43,13 +92,6 @@ ItemInterface * ModelInterface::item(const QModelIndex & index) const {
             return item;
     }
     return rootItem;
-}
-
-QVariant ModelInterface::headerData(int section, Qt::Orientation orientation, int role) const {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return rootItem -> data(section);
-
-    return QVariant();
 }
 
 QModelIndex ModelInterface::index(ItemInterface * item) const {
@@ -159,48 +201,6 @@ int ModelInterface::rowCount(const QModelIndex & parent) const {
 
     FolderItem * parentItem = item<FolderItem>(parent);
     return parentItem ? parentItem -> childCount() : 0;
-}
-
-bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &value, int role) {
-    bool result = false;
-
-    ItemInterface * node = item(model_index);
-
-    if (role == Qt::CheckStateRole) {
-        node -> updateCheckedState(!node -> is(ItemState::checked));
-
-        if (node -> isContainer()) {
-            FolderItem * it = dynamic_cast<FolderItem *>(node);
-            if (it -> childCount() > 0) {
-                emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
-                return true;
-            }
-        }
-
-        result = true;
-    }
-    else if (role == ISTATE) {
-        node -> setStates(value.toInt());
-        result = true;
-    } else if (role == Qt::EditRole)
-        result = node -> setData(model_index.column(), value);
-
-    if (result)
-        emit dataChanged(model_index, model_index);
-
-    return result;
-}
-
-bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role) {
-    if (role != Qt::EditRole || orientation != Qt::Horizontal)
-        return false;
-
-    bool result = rootItem -> setData(section, value);
-
-    if (result)
-        emit headerDataChanged(orientation, section, section);
-
-    return result;
 }
 
 void ModelInterface::shuffle() {
@@ -334,25 +334,15 @@ QStringList ModelInterface::mimeTypes() const {
     return types;
 }
 
-QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const { //TODO: need to additionaly add inner format
-//    if (indexes.count() <= 0)
-//   return 0;
-//   QStringList types = mimeTypes();
-//   if (types.isEmpty())
-//   return 0;
-//   QMimeData *data = new QMimeData();
-//   QString format = types.at(0);
-//   QByteArray encoded;
-//   QDataStream stream(&encoded, QIODevice::WriteOnly);
-//   encodeData(indexes, stream);
-//   data->setData(format, encoded);
-//   return data;
-
+QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
+    if (indexes.count() <= 0)
+        return 0;
 
     QMimeData * mimeData = new QMimeData();
     QList<QUrl> list;
     ItemInterface * temp;
 
+     //TODO: folders not proceed correctly
     foreach (const QModelIndex & index, indexes) {
         if (index.isValid()) {
             temp = item(index);
@@ -374,19 +364,21 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
+    int row_count = rowCount(parentIndex);
+
+    if (dropKeyModifiers & Qt::ControlModifier)
+        ExtensionDialog(QApplication::activeWindow()).exec();
+
     if (action == Qt::CopyAction) {
         if (data -> hasUrls()) {
-            if (dropKeyModifiers & Qt::ControlModifier)
-                ExtensionDialog(QApplication::activeWindow()).exec();
-
-            if (row < 0) row = rowCount(parentIndex);
+            if (row > row_count) row = -1;
+            recalcParentIndex(parentIndex, row, data -> urls().first());
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {
         if (!data -> hasFormat(DROP_INNER_FORMAT))
             return false;
 
-        int row_count = rowCount(parentIndex);
         if (row > row_count || row == -1)
             row = row_count;
 

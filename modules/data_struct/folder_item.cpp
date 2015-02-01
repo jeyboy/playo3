@@ -51,8 +51,8 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
     attrs = hash -> toVariantMap();
 }
 
-FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int initState)
-    : ItemInterface(parent, folderTitle, initState) {
+FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
+    : ItemInterface(parent, folderTitle, pos, initState) {
 
     setPath(folderPath);
 
@@ -60,8 +60,8 @@ FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * par
         parent -> declareFolder(folderTitle, this);
 }
 
-FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int initState)
-    : ItemInterface(parent, folderTitle, initState) {
+FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
+    : ItemInterface(parent, folderTitle, pos, initState) {
 
     if (parent != 0)
         parent -> declareFolder(folderTitle, this);
@@ -121,7 +121,7 @@ FolderItem * FolderItem::createFolderPath(QString path) {
     return createFolder(list.takeFirst(), &list);
 }
 
-FolderItem * FolderItem::createFolder(QString name, QStringList * list) {
+FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos) {
     FolderItem * curr = folders.value(name, 0);
 
     if (!curr)

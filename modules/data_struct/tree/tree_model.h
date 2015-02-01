@@ -10,10 +10,12 @@ namespace Playo3 {
     public:
         TreeModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~TreeModel();
+
     protected:
+        void recalcParentIndex(QModelIndex & index, int & row, QUrl & url);
         QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
-        void filesRoutine(FolderItem * index, QFileInfo currFile);
-        void filesRoutine(FolderItem * index, QList<QUrl> list);
+        void filesRoutine(QFileInfo & currFile, FolderItem * index, int pos = -1);
+        void filesRoutine(QList<QUrl> & list, FolderItem * index);
     };
 }
 

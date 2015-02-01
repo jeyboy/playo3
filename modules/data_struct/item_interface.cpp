@@ -15,11 +15,15 @@ ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
     if (_parent)
         _parent -> declareChild(this);
 }
-ItemInterface::ItemInterface(FolderItem * parent, QString title, int initState)
+ItemInterface::ItemInterface(FolderItem * parent, QString title, int pos, int initState)
     : ItemFields(title, initState), _parent(parent) {
 
-    if (_parent)
-        _parent -> declareChild(this);
+    if (_parent) {
+        if (pos < 0)
+            _parent -> declareChild(this);
+        else
+            _parent -> declareChild(pos, this);
+    }
 }
 
 ItemInterface::~ItemInterface() {

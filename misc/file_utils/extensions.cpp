@@ -2,12 +2,19 @@
 
 using namespace Playo3;
 
-Extensions *Extensions::self = 0;
+Extensions * Extensions::self = 0;
 
-Extensions *Extensions::instance() {
+Extensions * Extensions::instance() {
     if(!self)
         self = new Extensions();
     return self;
+}
+
+QString Extensions::folderName(QFileInfo & info) {
+    QString name = info.dir().dirName();
+    if (name.isEmpty())
+        name = info.dir().path().split('/').first();
+    return name;
 }
 
 //TODO: try to find join file with folder search pattern

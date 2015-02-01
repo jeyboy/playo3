@@ -13,8 +13,8 @@ namespace Playo3 {
 
     protected:
         QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list);
-        void filesRoutine(ItemInterface * index, QFileInfo currFile);
-        void filesRoutine(ItemInterface * index, QList<QUrl> list);
+        void filesRoutine(QFileInfo & currFile, FolderItem * index, int pos = -1);
+        void filesRoutine(QList<QUrl> & list, FolderItem * index);
     };
 }
 

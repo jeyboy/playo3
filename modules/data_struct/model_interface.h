@@ -3,7 +3,7 @@
 
 #include <qmimedata.h>
 #include <qabstractitemmodel.h>
-#include <qvariant.h>
+//#include <qvariant.h>
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
 
@@ -18,7 +18,10 @@ namespace Playo3 {
         ~ModelInterface();
 
         QVariant data(const QModelIndex & index, int role) const;
+        bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
+
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
 
         QModelIndex index(ItemInterface * item) const;
         QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
@@ -28,13 +31,11 @@ namespace Playo3 {
         inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return rootItem -> columnCount(); }
 
         Qt::ItemFlags flags(const QModelIndex & index) const;
-        bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
-        bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
 
         bool insertColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
         bool removeColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
 //        bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
-        bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
+        virtual bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         ItemInterface * item(const QModelIndex & index) const;
@@ -59,6 +60,7 @@ namespace Playo3 {
         void expandNeeded(const QModelIndex &index) const;
         void itemsCountChanged(int change);
     protected:
+        inline virtual void recalcParentIndex(QModelIndex & /*index*/, int & /*row*/, QUrl & /*url*/) { } // this is default behavior // not recalc parent by default
         QModelIndex fromPath(QString path);
         virtual QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 

@@ -9,19 +9,32 @@ TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash
 TreeModel::~TreeModel() {
 }
 
-QModelIndex TreeModel::dropProcession(const QModelIndex & /*parent*/, int /*row*/, const QList<QUrl> & list) {
-    if (list.isEmpty()) return QModelIndex();
-//    FolderItem * currRoot = item<FolderItem>(parent);
-    FolderItem * newIndex = rootItem -> createFolderPath(QFileInfo(list.first().toLocalFile()).path());
-    filesRoutine(newIndex, list);
-    return index(newIndex);
+void TreeModel::recalcParentIndex(QModelIndex & index, int & row, QUrl & url) {
+    QString path;
+
+    QFileInfo file = QFileInfo(url.toLocalFile());
+    path =  file.isDir() ? Extensions::folderName(file) : file.path();
+
+    FolderItem * node = rootItem -> createFolderPath(path);
+
+    QModelIndex newParent = index(node);
+    if (newParent != parent)
+        row = -1;
 }
 
-void TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
+QModelIndex TreeModel::dropProcession(const QModelIndex & parent, int /*row*/, const QList<QUrl> & list) {
+    if (list.isEmpty()) return QModelIndex();
+//    FolderItem * currRoot = item<FolderItem>(parent);
+    FolderItem * node = item(parent);//rootItem -> createFolderPath(QFileInfo(list.first().toLocalFile()).path());
+    filesRoutine(list, node);
+    return index(node);
+}
+
+void TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * index, int pos) {
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
     foreach(QFileInfo file, folderList)
-        filesRoutine(index -> createFolder(file.fileName()), file);
+        filesRoutine(file, index -> createFolder(file.fileName()));
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
@@ -29,11 +42,11 @@ void TreeModel::filesRoutine(FolderItem * index, QFileInfo currFile){
         new FileItem(file.fileName(), index);
 }
 
-void TreeModel::filesRoutine(FolderItem * index, QList<QUrl> list){
+void TreeModel::filesRoutine(QList<QUrl> & list, FolderItem * index) {
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir()) {
-            filesRoutine(index -> createFolder(file.fileName()), file);
+            filesRoutine(file, index -> createFolder(file.fileName()));
         } else {
             if (Extensions::instance() -> respondToExtension(file.suffix()))
                 new FileItem(file.fileName(), index);

@@ -5,7 +5,6 @@
 #include <qpainter.h>
 #include "modules/controls/window_title.h"
 #include "misc/screen.h"
-#include <qdebug.h>
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {
@@ -17,12 +16,10 @@ namespace Playo3 {
         void locationCorrection();
 
         inline void addOuterChild(QWidget * w) {
-            qDebug() << w;
             if (!outerChilds.contains(w))
                 outerChilds.append(w);
         }
         inline void removeOuterChild(QWidget * w) {
-            qDebug() << w;
             outerChilds.removeOne(w);
         }
 

@@ -29,7 +29,7 @@ QModelIndex LevelTreeModel::dropProcession(const QModelIndex & /*parent*/, int /
 //    else return index(newIndex);
 }
 
-void LevelTreeModel::filesRoutine(ItemInterface * /*index*/, QFileInfo /*currFile*/) {
+void LevelTreeModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*index*/, int /*pos*/) {
 //    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 //    ItemInterface * newFolder;
 //    bool already_exist;
@@ -50,7 +50,7 @@ void LevelTreeModel::filesRoutine(ItemInterface * /*index*/, QFileInfo /*currFil
 //    }
 }
 
-void LevelTreeModel::filesRoutine(ItemInterface * /*index*/, QList<QUrl> /*list*/) {
+void LevelTreeModel::filesRoutine(QList<QUrl> & /*list*/, FolderItem * /*index*/) {
 //    ItemInterface * newFolder;
 //    bool already_exist;
 

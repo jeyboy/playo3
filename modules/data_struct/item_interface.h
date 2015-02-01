@@ -19,7 +19,7 @@ namespace Playo3 {
     public:
         ItemInterface(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemInterface(FolderItem * parent, QJsonObject * hash);
-        ItemInterface(FolderItem * parent, QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemInterface(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         virtual ~ItemInterface();
 
