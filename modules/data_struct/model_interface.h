@@ -64,7 +64,7 @@ namespace Playo3 {
             exIndex = dIndex;  exRow = dRow;
         } // this is default behavior // not recalc parent by default
         QModelIndex fromPath(QString path);
-        virtual QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
+        virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         template<class T> T * item(const QModelIndex & index) const {
             return dynamic_cast<T *>(item(index));

@@ -27,11 +27,10 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
         dRow = -1;
 }
 
-QModelIndex TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
+void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
     if (list.isEmpty()) return QModelIndex();
     FolderItem * node = item<FolderItem>(ind);
     filesRoutine(list, node, row);
-    return index(node);
 }
 
 void TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {

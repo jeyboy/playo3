@@ -45,7 +45,7 @@ namespace Playo3 {
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }
         inline int undeclareFolder(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
-//        inline FolderItem * folderItem(QString name) { return folders.value(name); }
+        inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
         QHash<QString, FolderItem *> folders;
         QList<ItemInterface *> children;

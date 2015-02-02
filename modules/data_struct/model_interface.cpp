@@ -189,10 +189,10 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
     recalcParentIndex(parent, pos, exIndex, exRow, list.first());
 
     beginInsertRows(exIndex, exRow, exRow + (parent == exIndex ? list.length() - 1 : 0));
-    QModelIndex node = dropProcession(parent, pos, list);
+    dropProcession(parent, pos, list);
     endInsertRows();
 
-    emit spoilNeeded(node);
+    emit spoilNeeded(parent);
     return true;
 }
 
