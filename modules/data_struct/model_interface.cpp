@@ -95,7 +95,10 @@ ItemInterface * ModelInterface::item(const QModelIndex & index) const {
 }
 
 QModelIndex ModelInterface::index(ItemInterface * item) const {
-   return createIndex(item -> row(), item -> column(), item);
+    if (item == rootItem)
+        return QModelIndex();
+    else
+        return createIndex(item -> row(), item -> column(), item);
 }
 
 QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent) const {
@@ -175,8 +178,11 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
 
 bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
-    beginInsertRows(parent, pos, pos + list.length() - 1);
-    QModelIndex node = dropProcession(parent, pos, list);
+    QModelIndex parentIndex = const_cast<QModelIndex&>(parent);
+    QModelIndex ind = recalcParentIndex(parentIndex, pos, list.first()); // ind - last exist node; parentIndex - root node for building
+
+    beginInsertRows(ind, pos, pos + (parentIndex == ind ? list.length() - 1 : 0));
+    QModelIndex node = dropProcession(parentIndex, pos, list);
     endInsertRows();
     emit spoilNeeded(node);
     return true;
@@ -372,7 +378,6 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
     if (action == Qt::CopyAction) {
         if (data -> hasUrls()) {
             if (row > row_count) row = -1;
-            recalcParentIndex(const_cast<QModelIndex&>(parentIndex), row, data -> urls().first());
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {

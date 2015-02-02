@@ -133,6 +133,14 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos)
         return curr;
 }
 
+FolderItem * FolderItem::findNearestFolder(QStringList * list) {
+    if (list -> isEmpty()) return this;
+    FolderItem * curr = folders.value(list -> at(0), 0);
+    if (!curr) return this;
+    list -> removeFirst();
+    return curr -> findNearestFolder(list);
+}
+
 
 //int FolderItem::childTreeCount() const {
 //    int ret = childItems.count() - foldersList() -> count();

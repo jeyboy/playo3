@@ -38,7 +38,7 @@ QString FileItem::proceedTitle(QString & fileName) {
     QString sExt = fileName.section('.', -1, -1);
     if (sExt != fileName) {
         fileName = fileName.section('.', 0, -2);
-        setExtension(sExt);
+//        setExtension(sExt);
     }
 
     return fileName;

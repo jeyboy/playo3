@@ -9,17 +9,21 @@ TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash
 TreeModel::~TreeModel() {
 }
 
-void TreeModel::recalcParentIndex(QModelIndex & ind, int & row, QUrl & url) {
+QModelIndex TreeModel::recalcParentIndex(QModelIndex & ind, int & row, QUrl url) {
     QString path;
 
     QFileInfo file = QFileInfo(url.toLocalFile());
-    path =  file.isDir() ? Extensions::folderName(file) : file.path();
+    path = file.isDir() ? Extensions::folderName(file) : file.path();
 
-    FolderItem * node = rootItem -> createFolderPath(path);
+    QStringList list = path.split('/', QString::SkipEmptyParts);
+    FolderItem * nearestNode = rootItem -> findNearestFolder(&list);
+    FolderItem * node = list.isEmpty() ? nearestNode : nearestNode -> createFolder(list.takeFirst(), &list);
+    QModelIndex existIndex = index(nearestNode);
 
-    QModelIndex newParent = index(node);
-    if (newParent != ind)
-        row = -1;
+    ind = index(node);
+    row = nearestNode -> row();
+
+    return existIndex;
 }
 
 QModelIndex TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {

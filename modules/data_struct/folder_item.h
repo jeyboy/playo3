@@ -41,6 +41,7 @@ namespace Playo3 {
 
         FolderItem * createFolderPath(QString path);
         FolderItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
+        FolderItem * findNearestFolder(QStringList * list);
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }
         inline int undeclareFolder(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }

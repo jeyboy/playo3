@@ -60,7 +60,7 @@ namespace Playo3 {
         void expandNeeded(const QModelIndex &index) const;
         void itemsCountChanged(int change);
     protected:
-        inline virtual void recalcParentIndex(QModelIndex & /*index*/, int & /*row*/, QUrl & /*url*/) { } // this is default behavior // not recalc parent by default
+        inline virtual QModelIndex recalcParentIndex(QModelIndex & ind, int & /*row*/, QUrl /*url*/) { return ind; } // this is default behavior // not recalc parent by default
         QModelIndex fromPath(QString path);
         virtual QModelIndex dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
