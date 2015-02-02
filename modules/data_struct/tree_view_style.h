@@ -29,7 +29,10 @@ public:
                 painter -> drawEllipse(option -> rect.topLeft(), 3, 3);
                 painter -> drawLine(QPoint(option -> rect.topLeft().x() + 3, option -> rect.topLeft().y()), option -> rect.topRight());
             }
-            else painter -> drawRoundedRect(option -> rect, 5, 5);
+            else {
+                int angle = option -> rect.height() / 2.2;
+                painter -> drawRoundedRect(option -> rect, angle, angle);
+            }
 
             painter -> restore();
         }

@@ -77,7 +77,7 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return 0;
 
-    Qt::ItemFlags fl = Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    Qt::ItemFlags fl = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 
 
     if (Settings::instance() -> isCheckboxShow())
@@ -187,7 +187,6 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
     int exRow;
 
     recalcParentIndex(parent, pos, exIndex, exRow, list.first());
-    qDebug() << pos << " " << exRow;
 
     beginInsertRows(exIndex, exRow, exRow + (parent == exIndex ? list.length() - 1 : 0));
     QModelIndex node = dropProcession(parent, pos, list);
@@ -376,11 +375,11 @@ QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
     return mimeData;
 }
 
+// row always equal to -1 // maybe need precalc on dnd drop in view
 bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
-    qDebug() << row;
     int row_count = rowCount(parentIndex);
 
     if (dropKeyModifiers & Qt::ControlModifier)
@@ -389,7 +388,6 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
     if (action == Qt::CopyAction) {
         if (data -> hasUrls()) {
             if (row > row_count) row = -1;
-            qDebug() << row;
             return insertRows(data -> urls(), row, parentIndex);
         }
     } else {

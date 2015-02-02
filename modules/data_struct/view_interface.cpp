@@ -474,6 +474,8 @@ void ViewInterface::dropEvent(QDropEvent * event) {
         event -> source() == this ? Qt::MoveAction : Qt::CopyAction
     );
 
+
+
     QTreeView::dropEvent(event);
 }
 
