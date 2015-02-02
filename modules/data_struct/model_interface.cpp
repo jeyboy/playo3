@@ -178,12 +178,16 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
 
 bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
-    QModelIndex parentIndex = const_cast<QModelIndex&>(parent);
-    QModelIndex ind = recalcParentIndex(parentIndex, pos, list.first()); // ind - last exist node; parentIndex - root node for building
 
-    beginInsertRows(ind, pos, pos + (parentIndex == ind ? list.length() - 1 : 0));
-    QModelIndex node = dropProcession(parentIndex, pos, list);
+    QModelIndex exIndex;
+    int exRow;
+
+    recalcParentIndex(parent, pos, exIndex, exRow, list.first());
+
+    beginInsertRows(exIndex, exRow, exRow + (parent == exIndex ? list.length() - 1 : 0));
+    QModelIndex node = dropProcession(parent, pos, list);
     endInsertRows();
+
     emit spoilNeeded(node);
     return true;
 }
@@ -327,6 +331,7 @@ QModelIndex ModelInterface::fromPath(QString /*path*/) { //TODO: rewrite
 //    }
 
 //    return curr;
+    return QModelIndex();
 }
 
 Qt::DropActions ModelInterface::supportedDropActions() const {

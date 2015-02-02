@@ -12,7 +12,7 @@ namespace Playo3 {
         ~TreeModel();
 
     protected:
-        QModelIndex recalcParentIndex(QModelIndex & ind, int & row, QUrl url);
+        void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         QModelIndex dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         void filesRoutine(QFileInfo & currFile, FolderItem * node);
         void filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);

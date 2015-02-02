@@ -113,8 +113,7 @@ QJsonObject FolderItem::toJson() {
     return root;
 }
 
-//usable only for tree
-FolderItem * FolderItem::createFolderPath(QString path) {
+FolderItem * FolderItem::createFolderPath(QString path) { // usable only for tree
     QStringList list = path.split('/', QString::SkipEmptyParts);
     if (list.isEmpty())
         return this;
@@ -133,7 +132,7 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos)
         return curr;
 }
 
-FolderItem * FolderItem::findNearestFolder(QStringList * list) {
+FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last exist folder in the path
     if (list -> isEmpty()) return this;
     FolderItem * curr = folders.value(list -> at(0), 0);
     if (!curr) return this;

@@ -99,7 +99,7 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 bool ViewInterface::execIndex(const QModelIndex & node) {
     Dockbars::instance() -> setCurrent((DockBar *)parent());
 
-    if (node.isValid()) {
+    if (node.isValid() && node.data(IPLAYABLE).toBool()) {
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
@@ -330,7 +330,7 @@ bool ViewInterface::prepareDownloading(QString /*path*/) { //TODO: move to separ
 //        dir.mkpath(".");
 //    }
 
-//    return true;
+    return true;
 }
 
 void ViewInterface::downloadItem(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
