@@ -5,6 +5,8 @@
 #include "item_interface.h"
 #include "folder_item.h"
 
+#define DEFAULT_TITLE QString()
+
 namespace Playo3 {
     class FileItem : public ItemInterface {
     public:
@@ -20,7 +22,7 @@ namespace Playo3 {
 
         QJsonObject toJson();
     protected:
-        QString proceedTitle(QString & title);
+        void proceedTitle(QString & title);
     };
 }
 

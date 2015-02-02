@@ -173,7 +173,7 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
         } else {
             QRect pseudoIcoRect = QRect(
                         bodyRect.left(),
-                        option.rect.top() + 2,
+                        option.rect.top() + 1,
                         icon_size + (ico_offset + 4),
                         bodyRect.height()
                     );

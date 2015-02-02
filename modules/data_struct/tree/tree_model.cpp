@@ -49,9 +49,9 @@ void TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 void TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
-        if (file.isDir()) {
+        if (file.isDir())
             filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
-        } else {
+        else {
             if (Extensions::instance() -> respondToExtension(file.suffix()))
                 new FileItem(file.fileName(), node, pos);
         }
