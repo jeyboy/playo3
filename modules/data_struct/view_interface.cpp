@@ -7,7 +7,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true)  {
 
     setIndentation(12);
-//    setStyle(new TreeViewStyle);
+    setStyle(new TreeViewStyle);
     setStyleSheet(Stylesheets::treeViewStyles());
 
     setModel(mdl);
@@ -451,21 +451,22 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-        event -> accept();
-    } else event -> ignore();
+//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+//        event -> accept();
+//    } else event -> ignore();
 
-//    QTreeView::dragEnterEvent(event);
+    QTreeView::dragEnterEvent(event);
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
-    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-        event -> accept();
-        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
-    } else
-        event -> ignore();
+    mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
 
-//    QTreeView::dragMoveEvent(event);
+//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+//        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
+//    } else
+//        event -> ignore();
+
+    QTreeView::dragMoveEvent(event);
 }
 
 void ViewInterface::dropEvent(QDropEvent * event) {

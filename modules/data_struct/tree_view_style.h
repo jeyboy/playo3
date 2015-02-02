@@ -14,7 +14,7 @@ public:
         pen.setColor(color);
         pen.setWidth(2);
 
-        brush.setColor(color);
+        brush = QBrush(color);
     }
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const {

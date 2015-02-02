@@ -121,6 +121,7 @@ QVariant ItemInterface::data(int column) const {
 
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
+        case IFOLDER:          return isContainer();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
@@ -148,7 +149,6 @@ QVariant ItemInterface::data(int column) const {
 
 //        case EXTENSIONID:       return extension();
 //        case PATHID:            return path();
-//        case FOLDERID:          return isContainer();
         case IREMOTE:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());
         case ISTATE:           return visualStates();
