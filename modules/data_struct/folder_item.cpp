@@ -9,9 +9,6 @@ FolderItem::FolderItem(int initState) : ItemInterface(0, initState) {
 }
 
 FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash -> take(JSON_TYPE_STATE).toInt()), inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
-    if (parent != 0)
-        parent -> declareFolder(title().toString(), this);
-
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
@@ -49,6 +46,8 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
     }
 
     attrs = hash -> toVariantMap();
+    if (parent != 0)
+        parent -> declareFolder(title().toString(), this);
 }
 
 FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)

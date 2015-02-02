@@ -11,10 +11,9 @@ TreeModel::~TreeModel() {
 
 
 void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
-    QString path;
-
     QFileInfo file = QFileInfo(url.toLocalFile());
-    path = /*file.isDir() ? Extensions::folderName(file) : */file.path();
+    QString path = file.path();
+    if (path.isEmpty()) path = Extensions::folderName(file);
 
     QStringList list = path.split('/', QString::SkipEmptyParts);
     FolderItem * nearestNode = rootItem -> findNearestFolder(&list);
