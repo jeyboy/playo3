@@ -56,7 +56,7 @@ namespace Playo3 {
         void collapsed(const QModelIndex & index);
 
     signals:
-        void spoilNeeded(QModelIndex  &index) const;
+        void spoilNeeded(const QModelIndex  &index) const;
         void expandNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
     protected:
