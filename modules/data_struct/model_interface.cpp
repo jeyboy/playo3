@@ -192,7 +192,7 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
     dropProcession(parent, pos, list);
     endInsertRows();
 
-    emit spoilNeeded(parent);
+    emit spoilNeeded(const_cast<QModelIndex &>(parent));
     return true;
 }
 

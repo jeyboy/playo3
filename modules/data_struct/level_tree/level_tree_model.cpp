@@ -37,52 +37,10 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
         dRow = -1;
 }
 
+void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
+    FolderItem * newIndex = item<FolderItem>(ind);
+    filesRoutine(list, newIndex, row);
 
-
-
-//void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-//    FolderItem * newIndex = item(ind);
-//    filesRoutine(list, newIndex, row);
-//}
-
-//void ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
-//    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
-
-//    foreach(QFileInfo file, folderList)
-//        filesRoutine(file, node);
-
-//    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
-
-//    foreach(QFileInfo file, fileList)
-//        new FileItem(file.filePath(), node);
-//}
-
-//void ListModel::filesRoutine(const QList<QUrl> & /*list*/, FolderItem * /*node*/, int /*pos*/){
-//    foreach(QUrl url, list) {
-//        QFileInfo file = QFileInfo(url.toLocalFile());
-//        if (file.isDir())
-//            filesRoutine(file, node);
-//        else {
-//            if (Extensions::instance() -> respondToExtension(file.suffix()))
-//                new FileItem(file.filePath(), node, pos);
-//        }
-//    }
-//}
-
-
-
-void LevelTreeModel::dropProcession(const QModelIndex & /*ind*/, int /*row*/, const QList<QUrl> & /*list*/) {
-//    QFileInfo file = QFileInfo(list.first().toLocalFile());
-//    QString fName;
-
-//    if (file.isDir())
-//        fName = file.fileName();
-//    else
-//        fName = Extensions::folderName(file);
-
-//    ItemInterface * newIndex = addFolder("", fName, rootItem);
-
-//    filesRoutine(newIndex, list);
 //    if (newIndex -> childCount() == 0) {
 //        removeFolderPrebuild(newIndex);
 //        return QModelIndex();
@@ -90,7 +48,20 @@ void LevelTreeModel::dropProcession(const QModelIndex & /*ind*/, int /*row*/, co
 //    else return index(newIndex);
 }
 
-void LevelTreeModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*node*/) {
+void LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+
+    foreach(QFileInfo file, folderList)
+        filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
+
+    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+
+    foreach(QFileInfo file, fileList)
+        new FileItem(file.filePath(), node);
+
+
+
+
 //    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 //    ItemInterface * newFolder;
 //    bool already_exist;
@@ -111,7 +82,20 @@ void LevelTreeModel::filesRoutine(QFileInfo & /*currFile*/, FolderItem * /*node*
 //    }
 }
 
-void LevelTreeModel::filesRoutine(const QList<QUrl> & /*list*/, FolderItem * /*node*/, int /*pos*/) {
+void LevelTreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+    foreach(QUrl url, list) {
+        QFileInfo file = QFileInfo(url.toLocalFile());
+        if (file.isDir()) {
+            filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
+        } else {
+            if (Extensions::instance() -> respondToExtension(file.suffix()))
+                new FileItem(file.filePath(), node, pos);
+        }
+    }
+
+
+
+
 //    ItemInterface * newFolder;
 //    bool already_exist;
 

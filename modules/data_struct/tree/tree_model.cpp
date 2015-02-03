@@ -28,7 +28,7 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
 }
 
 void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    if (list.isEmpty()) return QModelIndex();
+//    if (list.isEmpty()) return QModelIndex();
     FolderItem * node = item<FolderItem>(ind);
     filesRoutine(list, node, row);
 }

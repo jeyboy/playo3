@@ -11,7 +11,7 @@ ListModel::~ListModel() {
 }
 
 void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    FolderItem * newIndex = item(ind);
+    FolderItem * newIndex = item<FolderItem>(ind);
     filesRoutine(list, newIndex, row);
 }
 
@@ -27,7 +27,7 @@ void ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
         new FileItem(file.filePath(), node);
 }
 
-void ListModel::filesRoutine(const QList<QUrl> & /*list*/, FolderItem * /*node*/, int /*pos*/){
+void ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos){
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir())
