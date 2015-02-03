@@ -451,30 +451,27 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
-//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-//        event -> accept();
-//    } else event -> ignore();
+    QTreeView::dragEnterEvent(event);  // use this for highlighting
 
-    QTreeView::dragEnterEvent(event);
+    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+        event -> accept();
+    } else event -> ignore();
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
-    mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
+    QTreeView::dragMoveEvent(event); // use this for highlighting
 
-//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-//        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
-//    } else
-//        event -> ignore();
-
-    QTreeView::dragMoveEvent(event);
+    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+        event -> accept();
+        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
+    } else
+        event -> ignore();
 }
 
 void ViewInterface::dropEvent(QDropEvent * event) {
     event -> setDropAction(
         event -> source() == this ? Qt::MoveAction : Qt::CopyAction
     );
-
-
 
     QTreeView::dropEvent(event);
 }
