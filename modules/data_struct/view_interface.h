@@ -69,6 +69,7 @@ namespace Playo3 {
         void setIconSize(const QSize & size);
     public slots:
         inline void shuffle() { mdl -> shuffle(); }
+        void onSpoilNeeded(const QModelIndex &);
         void updateSelection(QModelIndex &);
 //        void setHeaderText(QString);
 //        void showMessage(QString);

@@ -39,7 +39,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
 
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
-    connect(mdl, SIGNAL(spoilNeeded(QModelIndex &)), this, SLOT(updateSelection(QModelIndex &)));
+    connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
     connect(Player::instance(), SIGNAL(itemExecError(QModelIndex&)), this, SLOT(itemError(QModelIndex&)));
     connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex&)), this, SLOT(itemNotSupported(QModelIndex&)));
@@ -181,15 +181,19 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
 /// SLOTS
 //////////////////////////////////////////////////////
 
+void ViewInterface::onSpoilNeeded(const QModelIndex & node) {
+    if (node.isValid()) {
+        setCurrentIndex(node);
+        scrollTo(node);
+    }
+}
+
 void ViewInterface::updateSelection(QModelIndex & node) {
     if (node.isValid()) {
         if (!node.data(IPLAYABLE).toBool())
             findExecutable(node);
 
-        if (node.isValid()) {
-            setCurrentIndex(node);
-            scrollTo(node);
-        }
+        onSpoilNeeded(node);
     }
 }
 
