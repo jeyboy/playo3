@@ -24,7 +24,7 @@ void ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
     foreach(QFileInfo file, fileList)
-        new FileItem(file.filePath(), node);
+        new FileItem(file.path(), file.fileName(), node);
 }
 
 void ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos){
@@ -34,7 +34,7 @@ void ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int po
             filesRoutine(file, node);
         else {
             if (Extensions::instance() -> respondToExtension(file.suffix()))
-                new FileItem(file.filePath(), node, pos);
+                new FileItem(file.path(), file.fileName(), node, pos);
         }
     }
 }
