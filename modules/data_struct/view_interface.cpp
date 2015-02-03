@@ -41,8 +41,8 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
-    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex&)), this, SLOT(itemError(QModelIndex&)));
-    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex&)), this, SLOT(itemNotSupported(QModelIndex&)));
+    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex &)), this, SLOT(itemError(QModelIndex &)));
+    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex &)), this, SLOT(itemNotSupported(QModelIndex &)));
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showSpinner()), this, SLOT(startRoutine()));

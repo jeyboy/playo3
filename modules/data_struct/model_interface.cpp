@@ -324,6 +324,11 @@ void ModelInterface::collapsed(const QModelIndex & index) {
 
 /////////////////////////////////////////////////////////
 
+void ModelInterface::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
+    exIndex = dIndex;
+    exRow = dRow < 0 ? 0 : dRow;
+}
+
 QModelIndex ModelInterface::fromPath(QString /*path*/) { //TODO: rewrite
 //    QStringList parts = path.split(' ', QString::SkipEmptyParts);
 //    ModelItem * curr = getModel() -> root();
