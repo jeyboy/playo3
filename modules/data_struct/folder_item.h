@@ -16,6 +16,8 @@ namespace Playo3 {
 
         inline int itemsCountInBranch() const { return inBranchCount; }
 
+        QVariant data(int column) const;
+
         inline void openLocation() { QDesktopServices::openUrl(toUrl()); }
         bool removePhysicalObject();
 

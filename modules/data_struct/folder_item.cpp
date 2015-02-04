@@ -73,6 +73,13 @@ FolderItem::~FolderItem() {
     qDeleteAll(children);
 }
 
+QVariant FolderItem::data(int column) const {
+    switch(column) {
+        case IEXECCOUNTS:      return inBranchCount;
+        default:               return ItemInterface::data(column);
+    }
+}
+
 bool FolderItem::removePhysicalObject() {
     bool res = true;
 

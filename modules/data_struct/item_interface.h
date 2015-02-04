@@ -43,7 +43,7 @@ namespace Playo3 {
         inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath().toHtmlEscaped()); }
         QString buildTreePath() const;
 
-        QVariant data(int column) const;
+        virtual QVariant data(int column) const;
         bool setData(int column, const QVariant & value);
 
         inline FolderItem * parent() { return _parent; }

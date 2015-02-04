@@ -348,17 +348,16 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 }
 
 bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection) {
-
-
-    //    if (isFolder && item -> childTreeCount() > 1) {
-    //        if (QMessageBox::warning(
-    //                    parentWidget(),
-    //                    "Folder deletion",
-    //                    "Are you shure what you want remove the not empty folder ?",
-    //                    QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
-    //            return;
-    //    }
-
+    if (Settings::instance() -> isAlertOnFolderDeletion()) { // not tested yet
+        if (node.data(IEXECCOUNTS) > 1) {
+            if (QMessageBox::warning(
+                        parentWidget(),
+                        "Folder deletion",
+                        "Are you shure what you want to remove the not empty folder ?",
+                        QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel) // YesToAll , NoToAll
+                return false;
+        }
+    }
 
     if (updateSelection) {
         QModelIndex parentNode = node.parent();
