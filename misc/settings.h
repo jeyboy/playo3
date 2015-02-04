@@ -8,9 +8,10 @@
 #include <QLinearGradient>
 
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
-#include "misc/hotkey_types.h"
+#include "hotkey_types.h"
+#include "spectrum_types.h"
 
-class Settings {
+class Settings { //TODO: rewrite on qvariant map
 public:
     ~Settings() {
 
@@ -55,6 +56,9 @@ public:
     bool isSpoilOnActivation() const;
     void setSpoilOnActivation(bool show);
 
+    inline bool isAlertOnFolderDeletion() const { return alertOnFolderDeletion; }
+    inline void setAlertOnFolderDeletion(bool alert) { alertOnFolderDeletion = alert; }
+
     bool isMetricShow() const;
     void setMetricShow(bool show);
 
@@ -63,7 +67,6 @@ public:
 
     QString getDownloadPath() const;
     void setDownloadPath(QString newPath);
-
 
     QString getItemFontName();
     void setItemFontName(QString newFontName);
@@ -119,11 +122,11 @@ public:
     int getSpectrumHeight();
     void setSpectrumHeight(int newHeight);
 
-    bool getSpectrumCombo();
-    void setSpectrumCombo(bool newState);
-
     int getSpectrumMultiplier();
     void setSpectrumMultiplier(int newMultiplier);
+
+    Playo3::SpectrumType getSpectrumType();
+    void setSpectrumType(Playo3::SpectrumType newSpectrumType);
 
     int getTotalItemHeight();
 
@@ -164,6 +167,7 @@ private:
     bool showCheckbox;
     bool showMetric;
     bool spoilOnActivation;
+    bool alertOnFolderDeletion;
     bool useGradient;
     bool useScrollButtons;
     QJsonObject hotkeys;
@@ -192,8 +196,8 @@ private:
     int spectrumFreqRate;
     int spectrumBarsCount;
     int spectrumHeight;
+    Playo3::SpectrumType spectrumType;
     bool customcolorSpectrum;
-    bool comboSpectrum;
 };
 
 #endif // SETTINGS_H

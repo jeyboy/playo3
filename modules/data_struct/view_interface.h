@@ -5,11 +5,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QDrag>
-
-//#include <QPixmap>
-//#include <QFileInfo>
-//#include <QJsonObject>
-//#include <QList>
+#include <QMessageBox>
 
 #include <qevent.h>
 

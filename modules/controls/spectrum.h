@@ -7,16 +7,12 @@
 #include <qevent.h>
 #include <qmenu.h>
 
+#include "misc/settings.h"
+
 namespace Playo3  {
     class Spectrum : public QToolBar {
         Q_OBJECT
     public:
-        enum SpectrumType {
-            bars,
-            split_bars,
-            waves
-        };
-
         Spectrum(QWidget * parent = 0);
         ~Spectrum();
 
@@ -24,9 +20,9 @@ namespace Playo3  {
         void generateContextMenu(QMenu * parent);
 
     public slots:
-        void setBarsView()      { changeType(Spectrum::bars); }
-        void setSplitBarsView() { changeType(Spectrum::split_bars); }
-        void setWavesView()     { changeType(Spectrum::waves); }
+        void setBarsView()      { changeType(Playo3::bars); }
+        void setSplitBarsView() { changeType(Playo3::split_bars); }
+        void setWavesView()     { changeType(Playo3::waves); }
 
         void updateColors();
         void changeType(SpectrumType);

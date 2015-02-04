@@ -1,6 +1,5 @@
 #include "spectrum.h"
 #include "media/player.h"
-#include "misc/settings.h"
 
 using namespace Playo3;
 
@@ -18,6 +17,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     updateColors();
     changeBandCount(Settings::instance() -> getSpectrumBarsCount());
     changeHeight(Settings::instance() -> getSpectrumHeight());
+    changeType(Settings::instance() -> getSpectrumType());
 }
 
 Spectrum::~Spectrum() {
@@ -32,15 +32,15 @@ void Spectrum::generateContextMenu(QMenu * parent) {
 
     act = spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
     act -> setCheckable(true);
-    act -> setChecked(type == Spectrum::bars);
+    act -> setChecked(type == Playo3::bars);
 
     act = spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
     act -> setCheckable(true);
-    act -> setChecked(type == Spectrum::split_bars);
+    act -> setChecked(type == Playo3::split_bars);
 
     act = spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
     act -> setCheckable(true);
-    act -> setChecked(type == Spectrum::waves);
+    act -> setChecked(type == Playo3::waves);
 }
 
 void Spectrum::updateColors() {
@@ -67,6 +67,7 @@ void Spectrum::updateColors() {
 }
 
 void Spectrum::changeType(SpectrumType newType) {
+    Settings::instance() -> setSpectrumType(newType);
     type = newType;
     Player::instance() -> setSpectrumHeight(peakDimension());
 }

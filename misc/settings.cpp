@@ -275,18 +275,16 @@ void Settings::setSpectrumHeight(int newHeight) {
     spectrumHeight = newHeight;
 }
 
-bool Settings::getSpectrumCombo() {
-    return comboSpectrum;
-}
-void Settings::setSpectrumCombo(bool newState) {
-    comboSpectrum = newState;
-}
-
 int Settings::getSpectrumMultiplier() {
     return spectrumMultiplier;
 }
 void Settings::setSpectrumMultiplier(int newMultiplier) {
     spectrumMultiplier = newMultiplier;
+}
+
+Playo3::SpectrumType Settings::getSpectrumType() { return spectrumType; }
+void Settings::setSpectrumType(Playo3::SpectrumType newSpectrumType) {
+    spectrumType = newSpectrumType;
 }
 
 int Settings::getTotalItemHeight() {
@@ -349,6 +347,8 @@ void Settings::fromJson(QJsonObject settingsObj) {
     showCheckbox = settingsObj.value("show_checkboxes").toBool(true);
     showMetric = settingsObj.value("show_metric").toBool(true);
     spoilOnActivation = settingsObj.value("spoil_on_activation").toBool(true);
+    alertOnFolderDeletion = settingsObj.value("alert_on_folder_deletion").toBool(true);
+
     showInfo = settingsObj.value("show_info").toBool(true);
     showSystemIcons = settingsObj.value("show_system_icons").toBool(false);
     useGradient = settingsObj.value("use_gradient").toBool(true);
@@ -408,7 +408,7 @@ void Settings::fromJson(QJsonObject settingsObj) {
     spectrumBarsCount = settingsObj.value("spectrum_bars_count").toInt(30);
 
     spectrumHeight = settingsObj.value("spectrum_height").toInt(60);
-    comboSpectrum = settingsObj.value("spectrum_combo").toBool(false);
+    spectrumType = (Playo3::SpectrumType)settingsObj.value("spectrum_type").toInt(1);
 
     spectrumMultiplier = settingsObj.value("spectrum_multiplier").toInt(3);
 }
@@ -421,6 +421,8 @@ QJsonObject Settings::toJson() {
     ret.insert("show_checkboxes", QJsonValue::fromVariant(showCheckbox));
     ret.insert("show_metric", QJsonValue::fromVariant(showMetric));
     ret.insert("spoil_on_activation", QJsonValue::fromVariant(spoilOnActivation));
+    ret.insert("alert_on_folder_deletion", QJsonValue::fromVariant(alertOnFolderDeletion));
+
     ret.insert("show_info", QJsonValue::fromVariant(showInfo));
     ret.insert("show_system_icons", QJsonValue::fromVariant(showSystemIcons));
 
@@ -454,7 +456,7 @@ QJsonObject Settings::toJson() {
     ret.insert("spectrum_rate", QJsonValue::fromVariant(spectrumFreqRate));
     ret.insert("spectrum_bars_count", QJsonValue::fromVariant(spectrumBarsCount));
     ret.insert("spectrum_height", QJsonValue::fromVariant(spectrumHeight));
-    ret.insert("spectrum_combo", QJsonValue::fromVariant(comboSpectrum));
+    ret.insert("spectrum_type", QJsonValue::fromVariant(spectrumType));
     ret.insert("spectrum_multiplier", QJsonValue::fromVariant(spectrumMultiplier));
 
     return ret;

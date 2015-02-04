@@ -1,7 +1,7 @@
 #include "audio_player.h"
 #include "misc/settings.h"
 #include "math.h"
-#include <QDebug>
+#include <qdebug.h>
 
 //Get the percentage downloaded of an internet file stream, or the buffer level when streaming in blocks.
 //QWORD len=BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END); // file/buffer length
@@ -247,7 +247,7 @@ void AudioPlayer::calcSpectrum() {
         if (currentState == StoppedState) {
             emit spectrumChanged(defaultSpectrum);
         } else {
-            if (Settings::instance() -> getSpectrumCombo()) {
+            if (Settings::instance() -> getSpectrumType() == Playo3::bars) {
                 QList<QVector<int> > res;
                 res.append(getSpectrum());
                 emit spectrumChanged(res);

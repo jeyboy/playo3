@@ -161,7 +161,8 @@ HEADERS  += playo.h \
     dialogs/relationdialog.h \
     dialogs/web_dialog.h \
     modules/controls/simple_list_view.h \
-    modules/data_struct/model_item_delegate.h
+    modules/data_struct/model_item_delegate.h \
+    misc/spectrum_types.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

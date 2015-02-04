@@ -97,7 +97,6 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
   ui -> spectrumHeight -> setValue(Settings::instance() -> getSpectrumHeight());
 
-  ui -> spectrumComboUse -> setChecked(Settings::instance() -> getSpectrumCombo());
   ui -> spectrumMultiplier -> setValue(Settings::instance() -> getSpectrumMultiplier());
 }
 
@@ -212,7 +211,6 @@ void SettingsDialog::on_acceptButton_clicked() {
     Settings::instance() -> setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
 
     Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
-    Settings::instance() -> setSpectrumCombo(ui -> spectrumComboUse -> isChecked());
     Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
 
     accept();
