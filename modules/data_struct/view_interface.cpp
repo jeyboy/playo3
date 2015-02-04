@@ -310,20 +310,18 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
         QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
-QModelIndex ViewInterface::candidateOnSelection(QModelIndex & node) {
-    QModelIndex curr = node;
-
+QModelIndex ViewInterface::candidateOnSelection(QModelIndex node) {
     while(true) {
-        if (mdl -> hasChildren(curr))
-            expand(curr);
+        if (!node.isValid() || !node.data(IFOLDER).toBool())
+            return node;
+
+        if (mdl -> hasChildren(node))
+            expand(node);
 
 //        if (forwardOrder)
-            curr = indexBelow(curr);
+            node = indexBelow(node);
 //        else
-//            curr = indexAbove(curr);
-
-        if (!curr.isValid() || !curr.data(IFOLDER).toBool())
-            return curr;
+//            node = indexAbove(node);
     }
 
 //    QModelIndex parentNode = node.parent();
@@ -349,24 +347,31 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(QModelIndex & node) {
-    QModelIndex parentNode = node.parent();
-    int row = node.row();
+bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection) {
+    if (updateSelection) {
+        QModelIndex parentNode = node.parent();
+        int row = node.row();
 
-    bool res = mdl -> removeRow(node.row(), node.parent());
-    setCurrentIndex(candidateOnSelection(parentNode.child(row, 0)));
+        bool res = mdl -> removeRow(node.row(), node.parent());
+        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
 
-    return res;
+        return res;
+    }
+    else return mdl -> removeRow(node.row(), node.parent());
 }
 
-bool ViewInterface::removeRows(QModelIndexList & nodes) {
+bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
     if (nodes.isEmpty())
         return false;
 
-    QModelIndex node = nodes.first();
+    QModelIndex node, parentNode;
+    int row;
 
-    QModelIndex parentNode = node.parent();
-    int row = node.row();
+    if (updateSelection) {
+        node = nodes.first();
+        parentNode = node.parent();
+        row = node.row();
+    }
 
     bool res = true;
 
@@ -374,7 +379,9 @@ bool ViewInterface::removeRows(QModelIndexList & nodes) {
         node = nodes.at(i);
         res |= mdl -> removeRow(node.row(), node.parent());
     }
-    setCurrentIndex(candidateOnSelection(parentNode.child(row, 0)));
+
+    if (updateSelection)
+        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
 
     return res;
 }
@@ -540,7 +547,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
 
     } else if (event -> key() == Qt::Key_Delete) {
         QModelIndexList list = selectedIndexes();
-        removeRows(list);
+        removeRows(list, true);
     }
     else QTreeView::keyPressEvent(event);
 }

@@ -195,7 +195,7 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-bool ModelInterface::removeRows(int position, int rows, const QModelIndex &parent) {
+bool ModelInterface::removeRows(int position, int rows, const QModelIndex & parent) {
     FolderItem * parentItem = item<FolderItem>(parent);
     bool success = parentItem != 0;
 
