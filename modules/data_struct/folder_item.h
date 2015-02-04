@@ -25,7 +25,10 @@ namespace Playo3 {
         QJsonObject toJson();
 
         inline int childRow(ItemInterface * child) { return children.indexOf(child); }
-        inline ItemInterface * child(int row) { return children.value(row); }
+        inline ItemInterface * child(int row) {
+            if (row >= children.size())  row = children.size() - 1; // return last item
+            return row != -1 ? children.value(row) : 0;
+        }
         virtual inline int childCount() const { return children.count(); }
         inline void declareChild(ItemInterface * child) { children.append(child); }
         inline void declareChildren(QList<ItemInterface *> & items) { children.append(items); }

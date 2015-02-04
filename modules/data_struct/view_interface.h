@@ -86,8 +86,10 @@ namespace Playo3 {
 //        void modelUpdate();
 
     protected:
+        QModelIndex candidateOnSelection(QModelIndex & node);
         void findAndExecIndex(bool deleteCurrent);
         bool removeRow(QModelIndex & node);
+        bool removeRows(QModelIndexList & nodes);
 
         bool prepareDownloading(QString path);
 

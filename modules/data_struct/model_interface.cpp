@@ -106,18 +106,17 @@ QModelIndex ModelInterface::index(ItemInterface * item) const {
 }
 
 QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent) const {
-    if (parent.isValid() && parent.column() != 0) // !hasIndex(row, column, parent)
+    if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
 
     FolderItem * parentItem = item<FolderItem>(parent);
     ItemInterface * childItem = parentItem -> child(row);
 
     if (childItem)
-        return createIndex(row, column, childItem);
+        return createIndex(row, column, childItem); // return item by row pos or last item
     else
         return QModelIndex();
 }
-
 bool ModelInterface::insertColumns(int position, int columns, const QModelIndex & parent) {
     bool success;
 
