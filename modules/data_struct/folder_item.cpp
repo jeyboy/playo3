@@ -73,10 +73,10 @@ FolderItem::~FolderItem() {
 }
 
 void FolderItem::backPropagateItemsCountInBranch(int offset) {
-    if (_parent) {
-        _parent -> inBranchCount += offset;
+    inBranchCount += offset;
+
+    if (_parent)
         _parent -> backPropagateItemsCountInBranch(offset);
-    }
 }
 
 QVariant FolderItem::data(int column) const {
@@ -198,7 +198,6 @@ int FolderItem::removeChildren(int position, int count) {
         delete it;
     }
 
-    inBranchCount += totalItems;
     backPropagateItemsCountInBranch(totalItems);
     return totalItems;
 }
