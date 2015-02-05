@@ -32,7 +32,6 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     int count = filesRoutine(list, node, row);
 
     node -> backPropagateItemsCountInBranch(count);
-
     if (count > 0) emit itemsCountChanged(count);
 }
 

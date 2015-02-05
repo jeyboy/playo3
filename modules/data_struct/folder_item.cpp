@@ -1,10 +1,9 @@
-//#include "folder_item.h"
 #include "item_index.h"
 
 using namespace Playo3;
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : ItemInterface(0, initState) {
+FolderItem::FolderItem(int initState) : ItemInterface(0, initState), inBranchCount(0) {
 
 }
 

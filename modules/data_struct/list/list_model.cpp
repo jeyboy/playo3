@@ -10,31 +10,45 @@ ListModel::~ListModel() {
 
 }
 
-void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    FolderItem * newIndex = item<FolderItem>(ind);
-    filesRoutine(list, newIndex, row);
+void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {   
+    FolderItem * node = item<FolderItem>(ind);
+    int count = filesRoutine(list, node, row);
+
+    node -> backPropagateItemsCountInBranch(count);
+    if (count > 0) emit itemsCountChanged(count);
 }
 
-void ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+int ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+    int res = 0;
+
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
     foreach(QFileInfo file, folderList)
-        filesRoutine(file, node);
+        res += filesRoutine(file, node);
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
+    res += fileList.size();
     foreach(QFileInfo file, fileList)
         new FileItem(file.path(), file.fileName(), node);
+
+    return res;
 }
 
-void ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos){
+int ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+    int res = 0;
+
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir())
-            filesRoutine(file, node);
+            res += filesRoutine(file, node);
         else {
-            if (Extensions::instance() -> respondToExtension(file.suffix()))
+            if (Extensions::instance() -> respondToExtension(file.suffix())) {
+                res++;
                 new FileItem(file.path(), file.fileName(), node, pos);
+            }
         }
     }
+
+    return res;
 }

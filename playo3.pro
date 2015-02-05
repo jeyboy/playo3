@@ -12,6 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = playo3
 TEMPLATE = app
 
+#QMAKE_CXXFLAGS+= -fopenmp
+#QMAKE_LFLAGS +=  -fopenmp
 
 SOURCES += main.cpp\
     single_application.cpp \

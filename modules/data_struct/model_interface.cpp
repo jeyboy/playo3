@@ -11,6 +11,8 @@ ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstract
         rootItem = new FolderItem();
 //        items_count = 0;
     }
+
+    qDebug() << this << " " << rootItem -> itemsCountInBranch();
 }
 
 ModelInterface::~ModelInterface() {

@@ -12,8 +12,8 @@ namespace Playo3 {
         ~ListModel();
     protected:
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
-        void filesRoutine(QFileInfo & currFile, FolderItem * node);
-        void filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
+        int filesRoutine(QFileInfo & currFile, FolderItem * node);
+        int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
     };
 }
 
