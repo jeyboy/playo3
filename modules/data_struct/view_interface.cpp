@@ -376,7 +376,7 @@ bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
         return false;
 
     QModelIndex node, parentNode;
-    int row;
+    int row = 0;
 
     if (updateSelection) {
         node = nodes.first();

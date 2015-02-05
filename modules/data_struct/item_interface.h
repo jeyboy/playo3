@@ -31,6 +31,8 @@ namespace Playo3 {
         inline int column() const { return 0; }
         int row() const;
 
+        virtual inline int itemsCountInBranch() const { return 1; }
+
         inline virtual bool isRemote() const { return false; }
         inline virtual bool isContainer() const { return false; }
 

@@ -15,6 +15,8 @@ namespace Playo3 {
         ~FolderItem();
 
         inline int itemsCountInBranch() const { return inBranchCount; }
+        inline void updateItemsCountInBranch(int offset) { inBranchCount += offset; }
+        void backPropagateItemsCountInBranch(int offset);
 
         QVariant data(int column) const;
 
@@ -35,14 +37,12 @@ namespace Playo3 {
         inline void declareChild(ItemInterface * child) { children.append(child); }
         inline void declareChildren(QList<ItemInterface *> & items) { children.append(items); }
         inline void declareChild(int pos, ItemInterface * item) { children.insert(pos, item); }
-        bool removeChildren(int position, int count);
+        int removeChildren(int position, int count);
 
         void shuffle();
 
-//        int childTreeCount() const;
-
-        void dropExpandProceedFlags();
-        void updateCheckedState(bool checked);
+        void propagateDropExpandProceedFlags();
+        void propagateCheckedState(bool checked);
 
         FolderItem * createFolderPath(QString path);
         FolderItem * createFolder(QString name, QStringList * list = 0, int pos = -1);

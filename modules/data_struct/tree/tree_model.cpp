@@ -1,4 +1,5 @@
 #include "tree_model.h"
+#include <qelapsedtimer.h>
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
@@ -28,24 +29,38 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
 }
 
 void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-//    if (list.isEmpty()) return QModelIndex();
+    QElapsedTimer t;
+    t.start();
+
     FolderItem * node = item<FolderItem>(ind);
-    filesRoutine(list, node, row);
+    int count = filesRoutine(list, node, row);
+
+    node -> backPropagateItemsCountInBranch(count);
+
+    qDebug() << count << t.nsecsElapsed();
 }
 
-void TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+    int res = 0;
+
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
     foreach(QFileInfo file, folderList)
-        filesRoutine(file, node -> createFolder(file.fileName()));
+        res += filesRoutine(file, node -> createFolder(file.fileName()));
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
+    res += fileList.size();
     foreach(QFileInfo file, fileList)
         new FileItem(file.fileName(), node);
+
+    node -> updateItemsCountInBranch(res);
+    return res;
 }
 
-void TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+    int res = 0;
+
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir())

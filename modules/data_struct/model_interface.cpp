@@ -198,11 +198,17 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
 bool ModelInterface::removeRows(int position, int rows, const QModelIndex & parent) {
     FolderItem * parentItem = item<FolderItem>(parent);
     bool success = parentItem != 0;
+    int deleted;
 
     if (success) {
         beginRemoveRows(parent, position, position + rows - 1);
-        success = parentItem -> removeChildren(position, rows);
+        deleted = parentItem -> removeChildren(position, rows);
         endRemoveRows();
+
+        success = deleted != -1;
+
+        if (deleted > 0)
+            emit itemsCountChanged(deleted);
     }
 
     return success;

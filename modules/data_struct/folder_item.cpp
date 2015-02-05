@@ -17,11 +17,10 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
             iterObj = obj.toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case FILE_ITEM: {
-                    inBranchCount++;
                     new FileItem(&iterObj, this);
                 break;}
                 case FOLDER_ITEM: {
-                    inBranchCount += (new FolderItem(&iterObj, this)) -> inBranchCount;
+                    new FolderItem(&iterObj, this);
                 break;}               
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
@@ -71,6 +70,13 @@ FolderItem::~FolderItem() {
         _parent -> undeclareFolder(title().toString());
 
     qDeleteAll(children);
+}
+
+void FolderItem::backPropagateItemsCountInBranch(int offset) {
+    if (_parent) {
+        _parent -> inBranchCount += offset;
+        _parent -> backPropagateItemsCountInBranch(offset);
+    }
 }
 
 QVariant FolderItem::data(int column) const {
@@ -178,23 +184,31 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 //    return true;
 //}
 
-bool FolderItem::removeChildren(int position, int count) {
+int FolderItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > children.size())
-        return false;
+        return -1;
 
-    for (int row = 0; row < count; ++row)
-        delete children.takeAt(position);
+    ItemInterface * it;
+    int totalItems = 0;
 
-    return true;
+    for (int row = 0; row < count; ++row) {
+        it = children.takeAt(position);
+        totalItems -= it -> itemsCountInBranch();
+        delete it;
+    }
+
+    inBranchCount += totalItems;
+    backPropagateItemsCountInBranch(totalItems);
+    return totalItems;
 }
 
-void FolderItem::dropExpandProceedFlags() {
+void FolderItem::propagateDropExpandProceedFlags() {
     unset(proceeded);
     foreach(FolderItem * item, folders.values())
-        item -> dropExpandProceedFlags();
+        item -> propagateDropExpandProceedFlags();
 }
 
-void FolderItem::updateCheckedState(bool checked) {
+void FolderItem::propagateCheckedState(bool checked) {
     ItemInterface::updateCheckedState(checked);
 
     foreach(ItemInterface * item, children)
