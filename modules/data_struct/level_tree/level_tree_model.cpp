@@ -10,7 +10,7 @@ LevelTreeModel::~LevelTreeModel() {
 
 }
 
-void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) { //TODO: test needed
+void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
     QFileInfo file = QFileInfo(url.toLocalFile());
     QString fName;
 
@@ -38,78 +38,45 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
 }
 
 void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    FolderItem * newIndex = item<FolderItem>(ind);
-    filesRoutine(list, newIndex, row);
+    FolderItem * node = item<FolderItem>(ind);
+    int count = filesRoutine(list, node, row);
 
-//    if (newIndex -> childCount() == 0) {
-//        removeFolderPrebuild(newIndex);
-//        return QModelIndex();
-//    }
-//    else return index(newIndex);
+    node -> backPropagateItemsCountInBranch(count);
+    if (count > 0) emit itemsCountChanged(count);
 }
 
-void LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+    int res = 0;
+
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
     foreach(QFileInfo file, folderList)
-        filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
+        res += filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
+    res += fileList.size();
     foreach(QFileInfo file, fileList)
-        new FileItem(file.filePath(), node);
+        new FileItem(file.path(), file.fileName(), node);
 
-
-
-
-//    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
-//    ItemInterface * newFolder;
-//    bool already_exist;
-
-//    foreach(QFileInfo file, folderList) {
-//        already_exist = isFolderExist(file.fileName(), rootItem);
-//        newFolder = addFolder("", file.fileName(), rootItem);
-//        filesRoutine(newFolder, file);
-//        if (!already_exist && newFolder -> childCount() == 0)
-//            removeFolderPrebuild(newFolder);
-//    }
-
-
-//    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
-
-//    foreach(QFileInfo file, fileList) {
-//        appendRow(createItem(file.filePath(), index));
-//    }
+    node -> updateItemsCountInBranch(res);
+    return res;
 }
 
-void LevelTreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+int LevelTreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+    int res = 0;
+
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
-        if (file.isDir()) {
-            filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
-        } else {
-            if (Extensions::instance() -> respondToExtension(file.suffix()))
-                new FileItem(file.filePath(), node, pos);
+        if (file.isDir())
+            res += filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
+        else {
+            if (Extensions::instance() -> respondToExtension(file.suffix())) {
+                res++;
+                new FileItem(file.path(), file.fileName(), node, pos);
+            }
         }
     }
 
-
-
-
-//    ItemInterface * newFolder;
-//    bool already_exist;
-
-//    foreach(QUrl url, list) {
-//        QFileInfo file = QFileInfo(url.toLocalFile());
-//        if (file.isDir()) {
-//            already_exist = isFolderExist(file.fileName(), rootItem);
-//            newFolder = addFolder("", file.fileName(), rootItem);
-//            filesRoutine(newFolder, file);
-//            if (!already_exist && newFolder -> childCount() == 0)
-//                removeFolderPrebuild(newFolder);
-//        } else {
-//            if (Extensions::instance() -> respondToExtension(file.suffix()))
-//                appendRow(createItem(file.filePath(), index));
-//        }
-//    }
+    return res;
 }
