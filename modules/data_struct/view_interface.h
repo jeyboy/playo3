@@ -98,6 +98,7 @@ namespace Playo3 {
 //        ItemInterface * removeCandidate(ItemInterface * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & node) const;
         void resizeEvent(QResizeEvent *);
+        void focusInEvent(QFocusEvent *);
         void contextMenuEvent(QContextMenuEvent *);
 
         void dragEnterEvent(QDragEnterEvent *);

@@ -32,7 +32,8 @@ namespace Playo3 {
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
         inline DockBar * current() const { return active; }
-        inline void setCurrent(DockBar * bar) { active = bar; }
+        inline void setActive(DockBar * bar) { active = bar; }
+        inline void setPlayed(DockBar * bar) { played = bar; }
         inline void activate(DockBar * bar) {
             if ((active = bar))
                 bar -> raise();
@@ -64,13 +65,13 @@ namespace Playo3 {
     private slots:
         void barClosed();
     private:
-        DockBar * active;
+        DockBar * active, * played;
 
         Dockbars(QWidget * parent) : QWidget(parent), active(0) {
 
         }
 
-        static Dockbars *self;
+        static Dockbars * self;
     };
 }
 

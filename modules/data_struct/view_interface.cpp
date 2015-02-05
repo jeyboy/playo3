@@ -97,7 +97,7 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //}
 
 bool ViewInterface::execIndex(const QModelIndex & node) {
-    Dockbars::instance() -> setCurrent((DockBar *)parent());
+    Dockbars::instance() -> setPlayed((DockBar *)parent());
 
     if (node.isValid() && node.data(IPLAYABLE).toBool()) {
         if (Settings::instance() -> isSpoilOnActivation())
@@ -231,6 +231,10 @@ void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need
 //    }
 
     QTreeView::resizeEvent(event);
+}
+
+void ViewInterface::focusInEvent(QFocusEvent *) {
+    Dockbars::instance() -> setActive((DockBar *)parent());
 }
 
 void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {

@@ -1,5 +1,4 @@
 #include "tree_model.h"
-#include <qelapsedtimer.h>
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
@@ -29,17 +28,12 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
 }
 
 void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    QElapsedTimer t;
-    t.start();
-
     FolderItem * node = item<FolderItem>(ind);
     int count = filesRoutine(list, node, row);
 
     node -> backPropagateItemsCountInBranch(count);
 
     if (count > 0) emit itemsCountChanged(count);
-
-    qDebug() << rootItem -> itemsCountInBranch() << count << t.nsecsElapsed();
 }
 
 int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {

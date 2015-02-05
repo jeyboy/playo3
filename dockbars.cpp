@@ -112,7 +112,7 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
 
 void Dockbars::showViewSettingsDialog(DockBar * bar) {
     TabDialog dialog(parentWidget());
-    if(bar) {
+    if (bar) {
         ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
 
         if (!view -> isEditable()) {
