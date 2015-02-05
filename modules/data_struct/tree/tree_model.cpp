@@ -37,7 +37,9 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
     node -> backPropagateItemsCountInBranch(count);
 
-    qDebug() << count << t.nsecsElapsed();
+    if (count > 0) emit itemsCountChanged(count);
+
+    qDebug() << rootItem -> itemsCountInBranch() << count << t.nsecsElapsed();
 }
 
 int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
@@ -64,10 +66,14 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos
     foreach(QUrl url, list) {
         QFileInfo file = QFileInfo(url.toLocalFile());
         if (file.isDir())
-            filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
+            res += filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
         else {
-            if (Extensions::instance() -> respondToExtension(file.suffix()))
+            if (Extensions::instance() -> respondToExtension(file.suffix())) {
+                res++;
                 new FileItem(file.fileName(), node, pos);
+            }
         }
     }
+
+    return res;
 }

@@ -205,9 +205,9 @@ bool ModelInterface::removeRows(int position, int rows, const QModelIndex & pare
         deleted = parentItem -> removeChildren(position, rows);
         endRemoveRows();
 
-        success = deleted != -1;
+        success = deleted != 1;
 
-        if (deleted > 0)
+        if (deleted < 0)
             emit itemsCountChanged(deleted);
     }
 

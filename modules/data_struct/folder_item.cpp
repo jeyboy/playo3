@@ -50,7 +50,7 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
 }
 
 FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
-    : ItemInterface(parent, folderTitle, pos, initState) {
+    : ItemInterface(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setPath(folderPath);
 
@@ -59,7 +59,7 @@ FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * par
 }
 
 FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
-    : ItemInterface(parent, folderTitle, pos, initState) {
+    : ItemInterface(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     if (parent != 0)
         parent -> declareFolder(folderTitle, this);
@@ -186,7 +186,7 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 
 int FolderItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > children.size())
-        return -1;
+        return 1;
 
     ItemInterface * it;
     int totalItems = 0;
