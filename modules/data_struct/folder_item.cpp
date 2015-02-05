@@ -153,14 +153,6 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
     return curr -> findNearestFolder(list);
 }
 
-
-//int FolderItem::childTreeCount() const {
-//    int ret = childItems.count() - foldersList() -> count();
-//    foreach(ItemInterface * folder, foldersList() -> values()) {
-//        ret += folder -> childTreeCount();
-//    }
-
-
 ////    int ret = 0;
 ////    foreach(ItemInterface * childItem, childItems) {
 ////        if (childItem -> folders == 0) // not is unprocessed

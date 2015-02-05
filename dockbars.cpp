@@ -130,7 +130,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
     } else {
         if (dialog.exec() == QDialog::Accepted) {
             ((QMainWindow *)parentWidget()) -> addDockWidget(
-                Qt::LeftDockWidgetArea,
+                Qt::TopDockWidgetArea,
                 createDocBar(dialog.getName(), dialog.getSettings())
             );
         }
