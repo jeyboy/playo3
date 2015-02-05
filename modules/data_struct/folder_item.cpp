@@ -81,6 +81,7 @@ void FolderItem::backPropagateItemsCountInBranch(int offset) {
 
 QVariant FolderItem::data(int column) const {
     switch(column) {
+        case Qt::ToolTipRole:  return title().toString() + "(" + QString::number(inBranchCount) + " items)";
         case IEXECCOUNTS:      return inBranchCount;
         default:               return ItemInterface::data(column);
     }

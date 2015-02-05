@@ -4,7 +4,6 @@
 #include <QDockWidget>
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
-#include <qdebug.h>
 
 namespace Playo3 {
     class DockBar : public QDockWidget {
