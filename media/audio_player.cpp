@@ -62,7 +62,7 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
     ///////////////////////////////////////////////
     /// load plugins
     ///////////////////////////////////////////////
-    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() + "/libs/bass/plugins").entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() + "/bass_plugins").entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 
     foreach(QFileInfo file, list) {
         /*int res = */BASS_PluginLoad(file.filePath().toLatin1(), 0);
