@@ -360,15 +360,25 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection) {
-    if (Settings::instance() -> isAlertOnFolderDeletion()) { // not tested yet
+bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
+    if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if (node.data(IEXECCOUNTS) > 1) {
-            if (QMessageBox::warning(
-                        parentWidget(),
-                        "Folder deletion",
-                        "Are you shure what you want to remove the not empty folder ?",
-                        QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel) // YesToAll , NoToAll
+            if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
                 return false;
+
+            if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
+                int dialogRes = QMessageBox::warning(
+                                    parentWidget(),
+                                    "Folder deletion",
+                                    "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
+                                    QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
+                                );
+
+                Settings::instance() -> setfolderDeletionAnswer(dialogRes);
+
+                if (dialogRes == QMessageBox::No || dialogRes == QMessageBox::NoToAll)
+                    return false;
+            }
         }
     }
 
@@ -398,10 +408,11 @@ bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
     }
 
     bool res = true;
+    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
     for(int i = nodes.count() - 1; i >= 0; i--) {
         node = nodes.at(i);
-        res |= removeRow(node);
+        res |= removeRow(node, false, true);
     }
 
     if (updateSelection)

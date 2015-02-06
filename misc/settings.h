@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QFont>
 #include <QLinearGradient>
+#include <QMessageBox>
 
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
 #include "hotkey_types.h"
@@ -58,6 +59,9 @@ public:
 
     inline bool isAlertOnFolderDeletion() const { return alertOnFolderDeletion; }
     inline void setAlertOnFolderDeletion(bool alert) { alertOnFolderDeletion = alert; }
+
+    inline int folderDeletionAnswer() const { return deleteFolderAnswer; }
+    inline void setfolderDeletionAnswer(int ans) { deleteFolderAnswer = ans; }
 
     bool isMetricShow() const;
     void setMetricShow(bool show);
@@ -198,6 +202,10 @@ private:
     int spectrumHeight;
     Playo3::SpectrumType spectrumType;
     bool customcolorSpectrum;
+
+
+    ///////// session settings ///////////
+    int deleteFolderAnswer;
 };
 
 #endif // SETTINGS_H

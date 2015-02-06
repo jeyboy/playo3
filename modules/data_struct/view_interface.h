@@ -5,7 +5,6 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QDrag>
-#include <QMessageBox>
 
 #include <qevent.h>
 
@@ -86,7 +85,7 @@ namespace Playo3 {
     protected:
         QModelIndex candidateOnSelection(QModelIndex node);
         void findAndExecIndex(bool deleteCurrent);
-        bool removeRow(QModelIndex & node, bool updateSelection = false);
+        bool removeRow(QModelIndex & node, bool updateSelection = false, bool usePrevAction = false);
         bool removeRows(QModelIndexList & nodes, bool updateSelection = false);
 
         bool prepareDownloading(QString path);
