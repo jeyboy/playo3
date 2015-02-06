@@ -144,7 +144,7 @@ QString Stylesheets::scrollStyles() {
 
         "QScrollBar:horizontal  {"
         "    height: 16px;"
-        "    margin: 0px 20px;"
+        "    margin: 0px 22px;"
         "}"
         "QScrollBar::handle:horizontal  {"
         "    background: white;"
@@ -155,12 +155,14 @@ QString Stylesheets::scrollStyles() {
         "    width: 20px;"
         "    subcontrol-position: right;"
         "    subcontrol-origin: margin;"
+        "    border-bottom-right-radius: 8px;"
         "}"
 
         "QScrollBar::sub-line:horizontal  {"
         "    width: 20px;"
         "    subcontrol-position: left;"
         "    subcontrol-origin: margin;"
+        "    border-bottom-left-radius: 8px;"
         "}"
 
         "QScrollBar:left-arrow:horizontal  {"
@@ -179,7 +181,7 @@ QString Stylesheets::scrollStyles() {
 
         "QScrollBar:vertical  {"
         "    width: 16px;"
-        "    margin: 20px 0;"
+        "    margin: 22px 0;"
         "}"
         "QScrollBar::handle:vertical  {"
         "    background: white;"
