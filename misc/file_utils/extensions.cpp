@@ -1,4 +1,5 @@
 #include "extensions.h"
+#include <QDebug>
 
 using namespace Playo3;
 
@@ -11,9 +12,12 @@ Extensions * Extensions::instance() {
 }
 
 QString Extensions::folderName(QFileInfo & info) {
-    QString name = info.dir().dirName();
-    if (name.isEmpty())
-        name = info.dir().path().split('/').first();
+    QString name;
+    if (info.isDir())
+        name = info.filePath().split('/').last();
+    else
+        name = info.dir().path().split('/').last();
+    qDebug() << info.filePath() << " " << name;
     return name;
 }
 

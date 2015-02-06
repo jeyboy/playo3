@@ -41,7 +41,7 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     FolderItem * node = item<FolderItem>(ind);
     int count = filesRoutine(list, node, row);
 
-    node -> backPropagateItemsCountInBranch(count);
+    rootItem -> updateItemsCountInBranch(count);
     if (count > 0) emit itemsCountChanged(count);
 }
 
@@ -59,7 +59,7 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     foreach(QFileInfo file, fileList)
         new FileItem(file.path(), file.fileName(), node);
 
-    node -> updateItemsCountInBranch(res);
+    node -> updateItemsCountInBranch(fileList.size());
     return res;
 }
 
