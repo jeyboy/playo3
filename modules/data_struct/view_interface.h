@@ -64,6 +64,8 @@ namespace Playo3 {
 
         void setIconSize(const QSize & size);
     public slots:
+        void expandeAll();
+        void collapseAll();
         inline void shuffle() { mdl -> shuffle(); }
         void onSpoilNeeded(const QModelIndex &);
         void updateSelection(QModelIndex &);

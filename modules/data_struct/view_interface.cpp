@@ -181,6 +181,15 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
 /// SLOTS
 //////////////////////////////////////////////////////
 
+void ViewInterface::expandeAll() {
+    mdl -> expandeAll();
+    QTreeView::expandAll();
+}
+void ViewInterface::collapseAll() {
+    mdl -> collapseAll();
+    QTreeView::collapseAll();
+}
+
 void ViewInterface::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
         setCurrentIndex(node);

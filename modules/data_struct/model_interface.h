@@ -53,7 +53,9 @@ namespace Playo3 {
 //        void libraryResponse();
 //        virtual void refresh();
         void expanded(const QModelIndex & index);
+        void expandeAll();
         void collapsed(const QModelIndex & index);
+        void collapseAll();
 
     signals:
         void spoilNeeded(const QModelIndex & index) const;

@@ -320,10 +320,19 @@ void ModelInterface::shuffle() {
 
 //////////////////////// slots //////////////////////////
 
+void ModelInterface::expandeAll() {
+    rootItem -> propagateFolderSetFlag(ItemState::expanded);
+}
+
 void ModelInterface::expanded(const QModelIndex & index) {
     ItemInterface * node = item(index);
     node -> set(ItemState::expanded);
 }
+
+void ModelInterface::collapseAll() {
+    rootItem -> propagateFolderUnsetFlag(ItemState::expanded);
+}
+
 void ModelInterface::collapsed(const QModelIndex & index) {
     ItemInterface * node = item(index);
     node -> unset(ItemInterface::expanded);

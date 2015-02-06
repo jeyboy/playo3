@@ -193,10 +193,15 @@ int FolderItem::removeChildren(int position, int count) {
     return totalItems;
 }
 
-void FolderItem::propagateDropExpandProceedFlags() {
-    unset(proceeded);
+void FolderItem::propagateFolderSetFlag(ItemStateFlag flag) {
+    set(flag);
     foreach(FolderItem * item, folders.values())
-        item -> propagateDropExpandProceedFlags();
+        item -> propagateFolderSetFlag(flag);
+}
+void FolderItem::propagateFolderUnsetFlag(ItemStateFlag flag) {
+    unset(flag);
+    foreach(FolderItem * item, folders.values())
+        item -> propagateFolderUnsetFlag(flag);
 }
 
 void FolderItem::propagateCheckedState(bool checked) {

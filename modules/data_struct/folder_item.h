@@ -41,7 +41,8 @@ namespace Playo3 {
 
         void shuffle();
 
-        void propagateDropExpandProceedFlags();
+        void propagateFolderSetFlag(ItemStateFlag flag);
+        void propagateFolderUnsetFlag(ItemStateFlag flag);
         void propagateCheckedState(bool checked);
 
         FolderItem * createFolderPath(QString path);
