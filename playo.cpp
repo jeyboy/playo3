@@ -26,8 +26,8 @@ Playo::~Playo() {
     ///////////////////////////////////////////////
     /// close singletons
     ///////////////////////////////////////////////
-//        Extensions::close();
-//        IconProvider::close();
+        Extensions::close();
+        IconProvider::close();
 //        Library::close();
 
         Settings::close();

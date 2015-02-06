@@ -361,8 +361,9 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 }
 
 bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
+    qDebug() << "REM " << node.data();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
-        if (node.data(IEXECCOUNTS) > 1) {
+        if (node.data(IEXECCOUNTS) > 0) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
                 return false;
 
@@ -394,32 +395,30 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
     else return mdl -> removeRow(node.row(), node.parent());
 }
 
-bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
-    if (nodes.isEmpty())
-        return false;
+//bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
+//    if (nodes.isEmpty())
+//        return false;
 
-    QModelIndex node, parentNode;
-    int row = 0;
+//    QModelIndex node, parentNode;
+//    int row = 0;
 
-    if (updateSelection) {
-        node = nodes.first();
-        parentNode = node.parent();
-        row = node.row();
-    }
+//    if (updateSelection) {
+//        node = nodes.first();
+//        parentNode = node.parent();
+//        row = node.row();
+//    }
 
-    bool res = true;
-    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
+//    bool res = true;
+//    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
-    for(int i = nodes.count() - 1; i >= 0; i--) {
-        node = nodes.at(i);
-        res |= removeRow(node, false, true);
-    }
+//    foreach(QModelIndex node, nodes)
+//        res |= removeRow(node, false, true);
 
-    if (updateSelection)
-        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
+//    if (updateSelection)
+//        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
 
-    return res;
-}
+//    return res;
+//}
 
 bool ViewInterface::prepareDownloading(QString /*path*/) { //TODO: move to separate class
 //    QDir dir(path);
@@ -577,12 +576,17 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
-        if (list.count() > 0)
+        if (!list.isEmpty())
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        QModelIndexList list = selectedIndexes();
-        removeRows(list, true);
+        Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
+        bool loopReason = true;
+
+        while(!selectedIndexes().isEmpty() && loopReason) {
+            loopReason = !(selectedIndexes().size() == 1);
+            removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
+        }
     }
     else QTreeView::keyPressEvent(event);
 }

@@ -14,10 +14,10 @@ Extensions * Extensions::instance() {
 QString Extensions::folderName(QFileInfo & info) {
     QString name;
     if (info.isDir())
-        name = info.filePath().split('/').last();
+        name = info.filePath();
     else
-        name = info.dir().path().split('/').last();
-    return name;
+        name = info.dir().path();
+    return name.split('/').last();
 }
 
 //TODO: try to find join file with folder search pattern
