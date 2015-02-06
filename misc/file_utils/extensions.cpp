@@ -17,7 +17,6 @@ QString Extensions::folderName(QFileInfo & info) {
         name = info.filePath().split('/').last();
     else
         name = info.dir().path().split('/').last();
-    qDebug() << info.filePath() << " " << name;
     return name;
 }
 
