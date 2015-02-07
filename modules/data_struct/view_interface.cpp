@@ -24,7 +24,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     setExpandsOnDoubleClick(true);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::ContiguousSelection); // ExtendedSelection
+    setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 

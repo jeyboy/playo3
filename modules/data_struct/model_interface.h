@@ -46,6 +46,8 @@ namespace Playo3 {
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
+//        void encodeInnerData(const QModelIndexList & indexes, QDataStream & stream) const;
+//        bool decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream);
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
 

@@ -370,28 +370,46 @@ QStringList ModelInterface::mimeTypes() const {
     return types;
 }
 
+//void ModelInterface::encodeInnerData(const QModelIndexList & indexes, QDataStream & stream) const {
+//    QModelIndexList::ConstIterator it = indexes.begin();
+//    for (; it != indexes.end(); ++it)
+//        stream << (*it).row() << (*it).column() << (*it).data(IJSON);
+//}
+
+//bool ModelInterface::decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream) {
+
+//}
+
 QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
     if (indexes.count() <= 0)
         return 0;
 
     QMimeData * mimeData = new QMimeData();
     QList<QUrl> list;
-    ItemInterface * temp;
 
-     //TODO: folders not proceed correctly
-    foreach (const QModelIndex & index, indexes) {
-        if (index.isValid()) {
-            temp = item(index);
-            list.append(temp -> toUrl());
-        }
-    }
+    QModelIndexList::ConstIterator it = indexes.begin();
+    for (; it != indexes.end(); ++it)
+        list.append((*it).data(IURL).toUrl());
 
     mimeData -> setUrls(list);
+    qDebug() << "MIME " << list;
 
-    QByteArray encoded;
-    QDataStream stream(&encoded, QIODevice::WriteOnly);
-    encodeData(indexes, stream);
-    mimeData -> setData(DROP_INNER_FORMAT, encoded);
+//    ItemInterface * temp;
+
+//     //TODO: folders not proceed correctly
+//    foreach (const QModelIndex & index, indexes) {
+//        if (index.isValid()) {
+//            temp = item(index);
+//            list.append(temp -> toUrl());
+//        }
+//    }
+
+//    mimeData -> setUrls(list);
+
+//    QByteArray encoded;
+//    QDataStream stream(&encoded, QIODevice::WriteOnly);
+//    encodeData(indexes, stream);
+//    mimeData -> setData(DROP_INNER_FORMAT, encoded);
 
     return mimeData;
 }

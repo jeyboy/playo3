@@ -9,6 +9,9 @@
 #include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
+//    #define IJSON 999
+
+
     #define IURL Qt::UserRole + 1
     #define IPROGRESS IURL + 1
     #define IFULLPATH IPROGRESS + 1

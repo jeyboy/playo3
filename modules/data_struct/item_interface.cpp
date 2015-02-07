@@ -154,6 +154,7 @@ QVariant ItemInterface::data(int column) const {
         case ISTATE:           return visualStates();
         case IPROGRESS:        return -1;//Download::instance() -> getProgress(item);
         case IFULLPATH:        return fullPath();
+//        case IJSON:            return toJson();
 
         default:                return QVariant();
     }
