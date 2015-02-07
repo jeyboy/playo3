@@ -550,6 +550,7 @@ void AudioPlayer::play() {
 
 void AudioPlayer::pause() {
     notifyTimer -> stop();
+    spectrumTimer -> stop();
     BASS_ChannelPause(chan);
     emit stateChanged(PausedState);
     currentState = PausedState;
@@ -561,6 +562,7 @@ void AudioPlayer::resume() {
         qDebug() << "Error resuming";
     } else {
         notifyTimer -> start(notifyInterval);
+        spectrumTimer -> start(Settings::instance() -> getSpectrumFreqRate()); // 25 //40 Hz
     }
 }
 
