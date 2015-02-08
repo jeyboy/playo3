@@ -555,20 +555,17 @@ void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
+    mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
     QTreeView::dragMoveEvent(event); // use this for highlighting
 
-    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-        event -> accept();
-        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
-    } else
-        event -> ignore();
+//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+//        event -> accept();
+//        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
+//    } else
+//        event -> ignore();
 }
 
 void ViewInterface::dropEvent(QDropEvent * event) {
-//    event -> setDropAction(
-//        event -> source() == this ? Qt::MoveAction : Qt::CopyAction
-//    );
-
     QTreeView::dropEvent(event);
 }
 

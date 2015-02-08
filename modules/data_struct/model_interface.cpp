@@ -77,7 +77,7 @@ bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, con
 
 Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     if (!index.isValid())
-        return 0;
+        return Qt::ItemIsDropEnabled;
 
     Qt::ItemFlags fl = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 

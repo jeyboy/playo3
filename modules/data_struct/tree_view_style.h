@@ -18,7 +18,7 @@ public:
     }
 
     void drawPrimitive(PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const {
-        if (element == QStyle::PE_IndicatorItemViewItemDrop) {
+        if (element == QStyle::PE_IndicatorItemViewItemDrop && !option -> rect.isNull()) {
             painter -> save();
             painter -> setRenderHint(QPainter::Antialiasing, true);
 
