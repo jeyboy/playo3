@@ -389,6 +389,7 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
         dParent = item<FolderItem>(dIndex);
         l = dataList.value(dParent);
         l.append(data);
+        dataList.insert(dParent, l);
     }
 
     int totalAdded = 0;
