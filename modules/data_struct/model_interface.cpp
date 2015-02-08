@@ -370,15 +370,55 @@ QStringList ModelInterface::mimeTypes() const {
     return types;
 }
 
-//void ModelInterface::encodeInnerData(const QModelIndexList & indexes, QDataStream & stream) const {
-//    QModelIndexList::ConstIterator it = indexes.begin();
-//    for (; it != indexes.end(); ++it)
-//        stream << (*it).row() << (*it).column() << (*it).data(IJSON);
-//}
+bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) { // maybe writed a little shity
+    QModelIndex dIndex;
+    InnerData * data;
 
-//bool ModelInterface::decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream) {
+    FolderItem * dParent;
+    QHash<FolderItem *, QList<InnerData *> > dataList;
+    QList<InnerData *> l;
 
-//}
+    while (!stream.atEnd()) {
+        data = new InnerData();
+        stream >> data -> url >> data -> attrs;
+
+        data -> dRow = row;
+        dIndex = parent;
+
+        recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
+        dParent = item<FolderItem>(dIndex);
+        l = dataList.value(dParent);
+        l.append(data);
+    }
+
+    int totalAdded = 0;
+    foreach(FolderItem * node, dataList.keys()) {
+        int added = 0;
+        foreach(InnerData * data, dataList.value(node)) {
+            beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
+            switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
+                case FILE_ITEM: {
+                    added++;
+                    new FileItem(data -> attrs, node, data -> dRow);
+                    break;
+                }
+                default: {
+                    qDebug() << "ITEM TYPE NOT SUPPORTED YET";
+                }
+            }
+            endInsertRows();
+            delete data;
+        }
+
+        totalAdded += added;
+        node -> backPropagateItemsCountInBranch(added);
+    }
+
+    if (totalAdded > 0) emit itemsCountChanged(totalAdded);
+
+    emit spoilNeeded(parent);
+    return true;
+}
 
 QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
     if (indexes.count() <= 0)
@@ -386,30 +426,22 @@ QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
 
     QMimeData * mimeData = new QMimeData();
     QList<QUrl> list;
+    QUrl lastUrl;
+
+    QByteArray encoded;
+    QDataStream stream(&encoded, QIODevice::WriteOnly);
 
     QModelIndexList::ConstIterator it = indexes.begin();
-    for (; it != indexes.end(); ++it)
-        list.append((*it).data(IURL).toUrl());
+    for (; it != indexes.end(); ++it) {
+        lastUrl = (*it).data(IURL).toUrl();
+        list.append(lastUrl);
+        stream << lastUrl << (*it).data(IINNERCOPY).toMap(); // encodeInnerData // /*(*it).row() << (*it).column() <<*/
+        qDebug() << (*it).data(IINNERCOPY);
+    }
 
+    mimeData -> setData(DROP_INNER_FORMAT, encoded);
     mimeData -> setUrls(list);
     qDebug() << "MIME " << list;
-
-//    ItemInterface * temp;
-
-//     //TODO: folders not proceed correctly
-//    foreach (const QModelIndex & index, indexes) {
-//        if (index.isValid()) {
-//            temp = item(index);
-//            list.append(temp -> toUrl());
-//        }
-//    }
-
-//    mimeData -> setUrls(list);
-
-//    QByteArray encoded;
-//    QDataStream stream(&encoded, QIODevice::WriteOnly);
-//    encodeData(indexes, stream);
-//    mimeData -> setData(DROP_INNER_FORMAT, encoded);
 
     return mimeData;
 }
@@ -420,30 +452,20 @@ bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action,
         return false;
 
     int row_count = rowCount(parentIndex);
+    if (row > row_count) row = -1;
 
     if (dropKeyModifiers & Qt::ControlModifier)
         ExtensionDialog(QApplication::activeWindow()).exec();
 
-    if (action == Qt::CopyAction) {
-        if (data -> hasUrls()) {
-            if (row > row_count) row = -1;
-            return insertRows(data -> urls(), row, parentIndex);
-        }
-    } else {
-        if (!data -> hasFormat(DROP_INNER_FORMAT))
-            return false;
-
-        if (row > row_count || row == -1)
-            row = row_count;
-
-        if (column == -1)
-            column = 0;
+    if (data -> hasFormat(DROP_INNER_FORMAT)) {
+        //        if (column == -1)
+        //            column = 0;
 
         QByteArray encoded = data -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
-        return decodeData(row, column, parentIndex, stream);
-//        bool beginMoveRows(const QModelIndex &sourceParent, int sourceFirst, int sourceLast, const QModelIndex &destinationParent, int destinationRow);
-//        void endMoveRows();
+        return decodeInnerData(row, column, parentIndex, stream);
+    } else if (data -> hasUrls()) {
+        return insertRows(data -> urls(), row, parentIndex);
     }
 
     return false;

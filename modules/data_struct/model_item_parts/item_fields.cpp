@@ -2,6 +2,10 @@
 
 using namespace Playo3;
 
+ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
+    attrs = QVariantMap(hash);
+}
+
 ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_STATE).toInt()) {
     attrs = hash -> toVariantMap();
 }
@@ -32,12 +36,19 @@ QJsonObject ItemFields::toJson() {
     return root;
 }
 
+QVariantMap ItemFields::toInnerAttrs(int itemType) const {
+    QVariantMap a(attrs);
+    a.insert(JSON_TYPE_STATE, saveStates());
+    a.insert(JSON_TYPE_ITEM_TYPE, itemType);
+    return a;
+}
+
 QString ItemFields::downloadTitle() const {
     QString ret = filenameFilter(title().toString());
 
     if (extension().isValid())
         ret = ret + '.' + extension().toString();
 
-    ret.replace(QRegExp("\\s+"), " ");
+    ret.replace(QRegExp("\\s+"), " "); // TODO: remove empty brackets
     return ret;
 }

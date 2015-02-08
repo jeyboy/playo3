@@ -10,12 +10,14 @@
 namespace Playo3 {
     class FileItem : public ItemInterface {
     public:
+        FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
         FileItem(QJsonObject * hash, FolderItem * parent = 0);
         FileItem(QString fileName, FolderItem * parent = 0, int pos = -1);
         FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
 
         ~FileItem();
 
+        inline int itemType() const { return FILE_ITEM; }
         bool removePhysicalObject();
 
         bool isExist() const;

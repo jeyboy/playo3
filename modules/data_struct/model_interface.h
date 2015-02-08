@@ -8,6 +8,15 @@
 #include "item_index.h"
 
 namespace Playo3 {
+    struct InnerData {
+        InnerData() {}
+
+        QUrl url;
+        QVariantMap attrs;
+        QModelIndex eIndex;
+        int eRow, dRow;
+    };
+
     #define DROP_OUTER_FORMAT "text/uri-list"
     #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 
@@ -46,8 +55,7 @@ namespace Playo3 {
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
-//        void encodeInnerData(const QModelIndexList & indexes, QDataStream & stream) const;
-//        bool decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream);
+        bool decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream);
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
 

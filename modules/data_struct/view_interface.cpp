@@ -55,7 +55,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 //    header()->setStretchLastSection(false);
 
 
-    setDragDropOverwriteMode(true); // TODO: need modifications in ModelInterface::dropMimeData
+//    setDragDropOverwriteMode(true); // TODO: need modifications in ModelInterface::dropMimeData
 
     ////    setTreePosition(2);
     ////    setRootIndex();
@@ -565,9 +565,9 @@ void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void ViewInterface::dropEvent(QDropEvent * event) {
-    event -> setDropAction(
-        event -> source() == this ? Qt::MoveAction : Qt::CopyAction
-    );
+//    event -> setDropAction(
+//        event -> source() == this ? Qt::MoveAction : Qt::CopyAction
+//    );
 
     QTreeView::dropEvent(event);
 }

@@ -110,7 +110,7 @@ bool FolderItem::isExist() const {
 QJsonObject FolderItem::toJson() {
     QJsonObject root = ItemInterface::toJson();
 
-    root[JSON_TYPE_ITEM_TYPE] = FOLDER_ITEM;
+    root[JSON_TYPE_ITEM_TYPE] = itemType();
 
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;

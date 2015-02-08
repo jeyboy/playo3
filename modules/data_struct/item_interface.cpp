@@ -9,6 +9,16 @@ ItemInterface::ItemInterface(FolderItem * parent, int initState)
     if (_parent)
         _parent -> declareChild(this);
 }
+ItemInterface::ItemInterface(FolderItem * parent, QVariantMap & hash, int pos)
+    : ItemFields(hash), _parent(parent) {
+
+    if (_parent) {
+        if (pos < 0)
+            _parent -> declareChild(this);
+        else
+            _parent -> declareChild(pos, this);
+    }
+}
 ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
     : ItemFields(hash), _parent(parent) {
 
@@ -154,7 +164,7 @@ QVariant ItemInterface::data(int column) const {
         case ISTATE:           return visualStates();
         case IPROGRESS:        return -1;//Download::instance() -> getProgress(item);
         case IFULLPATH:        return fullPath();
-//        case IJSON:            return toJson();
+        case IINNERCOPY:        return toInnerAttrs(itemType());
 
         default:                return QVariant();
     }

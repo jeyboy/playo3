@@ -18,6 +18,7 @@ namespace Playo3 {
     class ItemInterface : public ItemFields {
     public:
         ItemInterface(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemInterface(FolderItem * parent, QVariantMap & hash, int pos = -1);
         ItemInterface(FolderItem * parent, QJsonObject * hash);
         ItemInterface(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
@@ -27,6 +28,7 @@ namespace Playo3 {
 
         void openLocation();
         virtual bool removePhysicalObject() = 0;
+        virtual int itemType() const = 0;
 
         inline int column() const { return 0; }
         int row() const;

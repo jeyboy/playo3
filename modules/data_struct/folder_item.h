@@ -21,6 +21,7 @@ namespace Playo3 {
         QVariant data(int column) const;
 
         inline void openLocation() { QDesktopServices::openUrl(toUrl()); }
+        inline int itemType() const { return FOLDER_ITEM; }
         bool removePhysicalObject();
 
         bool isExist() const;

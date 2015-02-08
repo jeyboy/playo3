@@ -9,7 +9,7 @@
 #include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
-//    #define IJSON 999
+    #define IINNERCOPY 999
 
 
     #define IURL Qt::UserRole + 1
@@ -35,10 +35,9 @@ namespace Playo3 {
     public:
         inline ItemFields() {}
 
+        ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
-
         ItemFields(QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
-
         ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
@@ -65,6 +64,7 @@ namespace Playo3 {
 
         inline virtual QString toUID() { return ""; }
         virtual QJsonObject toJson();
+        QVariantMap toInnerAttrs(int itemType) const;
 
         QString downloadTitle() const;
 
