@@ -1,5 +1,5 @@
-#ifndef VIEW_TYPES_H
-#define VIEW_TYPES_H
+#ifndef VIEW_TYPES
+#define VIEW_TYPES
 
 namespace Playo3 {
     enum ViewType {
@@ -11,4 +11,4 @@ namespace Playo3 {
     };
 }
 
-#endif // VIEW_TYPES_H
+#endif // VIEW_TYPES
