@@ -27,7 +27,7 @@ namespace Playo3 {
         ModelInterface(QJsonObject * hash, QObject * parent);
         ~ModelInterface();
 
-        inline virtual ContainerType containerType() const = 0;
+        virtual ContainerType containerType() const = 0;
 
         QVariant data(const QModelIndex & index, int role) const;
         bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
@@ -36,7 +36,8 @@ namespace Playo3 {
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
 
         QModelIndex index(ItemInterface * item) const;
-        QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+        inline QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const { return index(row, column, parent, false); }
+        QModelIndex index(int row, int column, const QModelIndex & parent, bool orLastChild) const;
         QModelIndex parent(const QModelIndex & index) const;
 
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -75,6 +76,7 @@ namespace Playo3 {
         void expandNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
     protected:
+        void proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const;
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
         QModelIndex fromPath(QString path);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;

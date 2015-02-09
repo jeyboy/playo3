@@ -361,7 +361,6 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 }
 
 bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
-    qDebug() << "REM " << node.data();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if (node.data(IEXECCOUNTS) > 0) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
@@ -388,7 +387,7 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
         int row = node.row();
 
         bool res = mdl -> removeRow(node.row(), node.parent());
-        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
+        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode, true)));
 
         return res;
     }

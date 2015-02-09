@@ -107,15 +107,17 @@ QModelIndex ModelInterface::index(ItemInterface * item) const {
         return createIndex(item -> row(), item -> column(), item);
 }
 
-QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent) const {
+QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent, bool orLastChild) const {
     if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
 
     FolderItem * parentItem = item<FolderItem>(parent);
     ItemInterface * childItem = parentItem -> child(row);
+    if (orLastChild && !childItem)
+        childItem = parentItem -> child(parentItem -> childCount() - 1);
 
     if (childItem)
-        return createIndex(row, column, childItem); // return item by row pos or last item
+        return createIndex(row, column, childItem);
     else
         return QModelIndex();
 }
@@ -412,7 +414,6 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
             switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case FILE_ITEM: {
                     added++;
-                    qDebug() << "! " << data -> attrs;
                     new FileItem(data -> attrs, node, data -> dRow);
                     break;
                 }
@@ -434,28 +435,57 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
     return true;
 }
 
+void ModelInterface::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const {
+    QUrl lastUrl;
+
+    QModelIndex it;
+
+    if (ind.data(IFOLDER).toBool()) {
+        for(int row = 0; ; row++) {
+            it = ind.child(row, 0);
+            if (it.isValid()) {
+                proceedMimeDataIndex(it, urls, stream);
+            } else return;
+        }
+    } else {
+        lastUrl = ind.data(IURL).toUrl();
+        urls.append(lastUrl);
+        stream << lastUrl << ind.data(IINNERCOPY).toMap(); // encodeInnerData
+    }
+}
+
 QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
     if (indexes.count() <= 0)
         return 0;
 
     QMimeData * mimeData = new QMimeData();
     QList<QUrl> list;
-    QUrl lastUrl;
 
     QByteArray encoded;
     QDataStream stream(&encoded, QIODevice::WriteOnly);
 
     QModelIndexList::ConstIterator it = indexes.begin();
-    for (; it != indexes.end(); ++it) {
-        lastUrl = (*it).data(IURL).toUrl();
-        list.append(lastUrl);
-        stream << lastUrl << (*it).data(IINNERCOPY).toMap(); // encodeInnerData // /*(*it).row() << (*it).column() <<*/
-        qDebug() << (*it).data(IINNERCOPY);
-    }
+    for (; it != indexes.end(); ++it)
+        proceedMimeDataIndex((*it), list, stream);
+
+//        if ((*it).data(IFOLDER).toBool()) {
+//            for(int row = 0; ; row++) {
+//                ind = (*it).child(row, 0);
+//                if (ind.isValid()) {
+//                    lastUrl = ind.data(IURL).toUrl();
+//                    list.append(lastUrl);
+//                    stream << lastUrl << ind.data(IINNERCOPY).toMap(); // encodeInnerData
+//                } else break;
+//            }
+//        } else {
+//            lastUrl = (*it).data(IURL).toUrl();
+//            list.append(lastUrl);
+//            stream << lastUrl << (*it).data(IINNERCOPY).toMap(); // encodeInnerData
+//        }
+//    }
 
     mimeData -> setData(DROP_INNER_FORMAT, encoded);
     mimeData -> setUrls(list);
-    qDebug() << "MIME " << list;
 
     return mimeData;
 }
