@@ -10,6 +10,8 @@ namespace Playo3 {
     public:
         ListModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~ListModel();
+
+        inline ContainerType containerType() const { return list; }
     protected:
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         int filesRoutine(QFileInfo & currFile, FolderItem * node);

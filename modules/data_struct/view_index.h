@@ -1,7 +1,7 @@
 #ifndef VIEWS_INDEX_H
 #define VIEWS_INDEX_H
 
-#include "view_types.h"
+#include "container_types.h"
 
 #include "list/list_view.h"
 #include "tree/tree_view.h"

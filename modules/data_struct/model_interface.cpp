@@ -377,16 +377,28 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
     FolderItem * dParent;
     QHash<FolderItem *, QList<InnerData *> > dataList;
     QList<InnerData *> l;
+    bool containPath, requirePath = containerType() != tree;
 
     while (!stream.atEnd()) {
         data = new InnerData();
         stream >> data -> url >> data -> attrs;
+
+        containPath = data -> attrs.contains(JSON_TYPE_PATH);
+
+        if (requirePath) {
+            if (!containPath)
+                data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
+        } else {
+            if (containPath)
+                data -> attrs.remove(JSON_TYPE_PATH);
+        }
 
         data -> dRow = row;
         dIndex = parent;
 
         recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
         dParent = item<FolderItem>(dIndex);
+
         l = dataList.value(dParent);
         l.append(data);
         dataList.insert(dParent, l);
@@ -400,6 +412,7 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
             switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case FILE_ITEM: {
                     added++;
+                    qDebug() << "! " << data -> attrs;
                     new FileItem(data -> attrs, node, data -> dRow);
                     break;
                 }

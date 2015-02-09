@@ -142,7 +142,6 @@ HEADERS  += playo.h \
     modules/data_struct/web/web_model.h \
     modules/data_struct/model_interface.h \
     modules/data_struct/view_interface.h \
-    modules/data_struct/view_types.h \
     modules/data_struct/model_item_parts/item_fields.h \
     modules/data_struct/model_item_parts/item_state.h \
     modules/data_struct/model_item_parts/item_types.h \
@@ -164,7 +163,8 @@ HEADERS  += playo.h \
     dialogs/web_dialog.h \
     modules/controls/simple_list_view.h \
     modules/data_struct/model_item_delegate.h \
-    misc/spectrum_types.h
+    misc/spectrum_types.h \
+    modules/data_struct/container_types.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

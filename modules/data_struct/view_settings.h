@@ -1,7 +1,7 @@
 #ifndef VIEW_SETTINGS
 #define VIEW_SETTINGS
 
-#include "modules/data_struct/view_types.h"
+#include "modules/data_struct/container_types.h"
 #include <qjsonobject.h>
 
 namespace Playo3 { //TODO: maybe change on bitset ?
@@ -11,7 +11,7 @@ namespace Playo3 { //TODO: maybe change on bitset ?
         bool interactive;
         bool common;
 
-        ViewType type;
+        ContainerType type;
 
         ViewSettings() {
             deleteFile = false;
@@ -26,7 +26,7 @@ namespace Playo3 { //TODO: maybe change on bitset ?
             playlist = obj["play"].toBool();
             interactive = obj["int"].toBool();
             common = obj["common"].toBool();
-            type = (ViewType)obj["type"].toInt();
+            type = (ContainerType)obj["type"].toInt();
         }
 
         QJsonObject toJson() {

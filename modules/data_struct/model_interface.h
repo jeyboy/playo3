@@ -6,6 +6,7 @@
 //#include <qvariant.h>
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
+#include "container_types.h"
 
 namespace Playo3 {
     struct InnerData {
@@ -25,6 +26,8 @@ namespace Playo3 {
     public:
         ModelInterface(QJsonObject * hash, QObject * parent);
         ~ModelInterface();
+
+        inline virtual ContainerType containerType() const = 0;
 
         QVariant data(const QModelIndex & index, int role) const;
         bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);

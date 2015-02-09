@@ -1,8 +1,8 @@
-#ifndef VIEW_TYPES
-#define VIEW_TYPES
+#ifndef CONTAINER_TYPES
+#define CONTAINER_TYPES
 
 namespace Playo3 {
-    enum ViewType {
+    enum ContainerType {
         list = 1,
         level_tree = 2,
         tree = 3,
@@ -11,4 +11,4 @@ namespace Playo3 {
     };
 }
 
-#endif // VIEW_TYPES
+#endif // CONTAINER_TYPES
