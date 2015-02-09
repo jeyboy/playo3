@@ -547,26 +547,17 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
-    QTreeView::dragEnterEvent(event);  // use this for highlighting
-
-    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-        event -> accept();
-    } else event -> ignore();
+    QTreeView::dragEnterEvent(event);
 }
 
 void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
     mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
-    QTreeView::dragMoveEvent(event); // use this for highlighting
-
-//    if (event -> mimeData() -> hasFormat(DROP_OUTER_FORMAT) || event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-//        event -> accept();
-//        mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
-//    } else
-//        event -> ignore();
+    QTreeView::dragMoveEvent(event);
 }
 
 void ViewInterface::dropEvent(QDropEvent * event) {
     QTreeView::dropEvent(event);
+    event -> accept();
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
@@ -605,6 +596,6 @@ void ViewInterface::mouseMoveEvent(QMouseEvent * event) {
             drag -> exec(Qt::CopyAction, Qt::CopyAction);
         }
     }
-
-    QTreeView::mouseMoveEvent(event);
+    else
+        QTreeView::mouseMoveEvent(event); // if we add this to common loop - after dnd we lost focus on widget
 }
