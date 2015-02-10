@@ -78,13 +78,7 @@ namespace Playo3 {
         }
 
     private:
-        inline void updateBarStyle(QToolBar * bar) {
-            if (!bar) return;
-            if (bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0)
-                bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
-            else
-                bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
-        }
+        void updateBarStyle(QToolBar * bar);
 
         QToolBar * deiterateToToolBar(QWidget * obj);
 

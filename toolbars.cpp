@@ -183,6 +183,14 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
 }
 
+void ToolBars::updateBarStyle(QToolBar * bar) {
+    if (!bar) return;
+    if (bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0)
+        bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+    else
+        bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+}
+
 QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
     QToolBar * ret;
     while(obj) {
