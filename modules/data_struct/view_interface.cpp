@@ -569,12 +569,33 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
 
     } else if (event -> key() == Qt::Key_Delete) {
         Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-        bool loopReason = true;
+//        bool loopReason = true;
+        QModelIndex ind;
+        QModelIndexList l = selectedIndexes();
 
-        while(!selectedIndexes().isEmpty() && loopReason) {
-            loopReason = !(selectedIndexes().size() == 1);
-            removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
+
+        mdl -> blockSignals(true);
+        blockSignals(true);
+
+        while(l.size() > 1) {
+            ind = l.takeLast(); // list order is very important // parent is always placed behind the children
+            removeRow(ind, false, true);
         }
+
+        blockSignals(false);
+        mdl -> blockSignals(false);
+
+        if(l.size() > 0) {
+            ind = l.takeLast();
+            removeRow(ind, true, true);
+        }
+
+        reset();
+
+//        while(!selectedIndexes().isEmpty() && loopReason) {
+//            loopReason = !(selectedIndexes().size() == 1);
+//            removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
+//        }
     }
     else QTreeView::keyPressEvent(event);
 }

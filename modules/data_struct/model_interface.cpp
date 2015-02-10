@@ -206,7 +206,10 @@ bool ModelInterface::removeRows(int position, int rows, const QModelIndex & pare
 
     if (success) {
         beginRemoveRows(parent, position, position + rows - 1);
+        bool blockSignal = signalsBlocked();
+        blockSignals(true);
         deleted = parentItem -> removeChildren(position, rows);
+        blockSignals(blockSignal);
         endRemoveRows();
 
         success = deleted != 1;
