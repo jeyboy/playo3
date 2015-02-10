@@ -55,7 +55,6 @@ namespace Playo3 {
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
         bool execIndex(const QModelIndex & node);
-//        virtual void removeItem(QModelIndex & node);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 

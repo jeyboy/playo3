@@ -9,7 +9,7 @@ namespace Playo3 {
         public:
             enum ItemStateFlag {
                 played = 512,
-                proceeded = 256, // list proceeding
+                proceeded = 256, // once list proceeding
                 checked = 128,
                 expanded = 64,
                 info_required = 32,

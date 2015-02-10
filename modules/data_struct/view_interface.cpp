@@ -211,10 +211,7 @@ void ViewInterface::openLocation() {
     item -> openLocation();
 }
 
-void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const { // TODO: rewrite
-    //TODO: maybe use options for some manipulations with row
-
-
+void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
     // TODO: add initiated items to hash for update later on the same name state change
     ItemInterface * node = mdl -> item(index);
 
@@ -223,10 +220,10 @@ void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & opt
 //        if (!node -> isContainer()) {
 //            Library::instance() -> initItem(item, model, SLOT(libraryResponse()));
 //        }
-
-        if (node -> is(ItemState::expanded))
-            emit mdl -> expandNeeded(index);
     }
+
+    if (node -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
+        emit mdl -> expandNeeded(index);
 
     QTreeView::drawRow(painter, options, index);
 }
@@ -569,33 +566,36 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
 
     } else if (event -> key() == Qt::Key_Delete) {
         Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-//        bool loopReason = true;
-        QModelIndex ind;
-        QModelIndexList l = selectedIndexes();
 
+        if (selectedIndexes().size() < 25) { // this version is very slow but is more canonical
+            bool loopReason = true;
 
-        mdl -> blockSignals(true);
-        blockSignals(true);
+            while(!selectedIndexes().isEmpty() && loopReason) {
+                loopReason = !(selectedIndexes().size() == 1);
+                removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
+            }
+        } else {
+            QModelIndex ind;
+            QModelIndexList l = selectedIndexes();
 
-        while(l.size() > 1) {
-            ind = l.takeLast(); // list order is very important // parent is always placed behind the children
-            removeRow(ind, false, true);
+            mdl -> blockSignals(true);
+            blockSignals(true);
+
+            while(l.size() > 1) {
+                ind = l.takeLast(); // list order is very important // parent is always placed behind the children
+                removeRow(ind, false, true);
+            }
+
+            blockSignals(false);
+            mdl -> blockSignals(false);
+
+            if(l.size() > 0) {
+                ind = l.takeLast();
+                removeRow(ind, true, true);
+            }
+
+            reset();
         }
-
-        blockSignals(false);
-        mdl -> blockSignals(false);
-
-        if(l.size() > 0) {
-            ind = l.takeLast();
-            removeRow(ind, true, true);
-        }
-
-        reset();
-
-//        while(!selectedIndexes().isEmpty() && loopReason) {
-//            loopReason = !(selectedIndexes().size() == 1);
-//            removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
-//        }
     }
     else QTreeView::keyPressEvent(event);
 }
