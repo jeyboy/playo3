@@ -361,6 +361,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 }
 
 bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
+    qDebug() << "REM: " << node.data();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if (node.data(IEXECCOUNTS) > 0) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
