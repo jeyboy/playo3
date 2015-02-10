@@ -569,7 +569,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
     } else if (event -> key() == Qt::Key_Delete) {
         Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
-        if (mdl -> containerType() != list) { // this version is very slow but is more canonical
+        if (selectedIndexes().size() < 25 || mdl -> containerType() != list) { // this version is very slow but is more canonical
             bool loopReason = true;
 
             while(!selectedIndexes().isEmpty() && loopReason) {
