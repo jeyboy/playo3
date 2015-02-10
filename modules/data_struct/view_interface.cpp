@@ -357,7 +357,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
+bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction, bool needReset) {
     qDebug() << "REM: " << node.data();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if (node.data(IEXECCOUNTS) > 0) {
@@ -385,6 +385,8 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
         int row = node.row();
 
         bool res = mdl -> removeRow(node.row(), node.parent());
+        if (needReset)
+            reset();
         setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode, true)));
 
         return res;
@@ -567,22 +569,24 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
     } else if (event -> key() == Qt::Key_Delete) {
         Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
-        if (selectedIndexes().size() < 25) { // this version is very slow but is more canonical
+        if (mdl -> containerType() != list) { // this version is very slow but is more canonical
             bool loopReason = true;
 
             while(!selectedIndexes().isEmpty() && loopReason) {
                 loopReason = !(selectedIndexes().size() == 1);
-                removeRow(selectedIndexes().last(), !loopReason, true); // list order is very important // parent is always placed behind the children
+                removeRow(selectedIndexes().last(), !loopReason, true);
             }
         } else {
             QModelIndex ind;
             QModelIndexList l = selectedIndexes();
 
+            qSort(l.begin(), l.end());
+
             mdl -> blockSignals(true);
             blockSignals(true);
 
             while(l.size() > 1) {
-                ind = l.takeLast(); // list order is very important // parent is always placed behind the children
+                ind = l.takeLast();
                 removeRow(ind, false, true);
             }
 
@@ -591,10 +595,8 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
 
             if(l.size() > 0) {
                 ind = l.takeLast();
-                removeRow(ind, true, true);
+                removeRow(ind, true, true, true);
             }
-
-            reset();
         }
     }
     else QTreeView::keyPressEvent(event);
