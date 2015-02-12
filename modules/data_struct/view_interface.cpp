@@ -321,26 +321,25 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
 }
 
 QModelIndex ViewInterface::candidateOnSelection(QModelIndex node) {
+    bool backwardOrder = false;
+    QModelIndex newIndex = node;
+
     while(true) {
-        if (!node.isValid() || !node.data(IFOLDER).toBool())
-            return node;
+        if ((backwardOrder && !newIndex.isValid()) || (newIndex.isValid() && newIndex.data(IPLAYABLE).toBool())) {
+            return newIndex;
+        } else if (!backwardOrder && !newIndex.isValid()) {
+            backwardOrder = true;
+            newIndex = node;
+        }
 
-        if (mdl -> hasChildren(node))
-            expand(node);
+        if (mdl -> hasChildren(newIndex))
+            expand(newIndex);
 
-//        if (forwardOrder)
-            node = indexBelow(node);
-//        else
-//            node = indexAbove(node);
+        if (!backwardOrder)
+            newIndex = indexBelow(newIndex);
+        else
+            newIndex = indexAbove(newIndex);
     }
-
-//    QModelIndex parentNode = node.parent();
-//    if (!parentNode.isValid())
-//        parentNode = rootIndex();
-//    int row = node.row();
-
-////    if (forwardOrder) // maybe use order
-//    QModelIndex selCandidate = parentIndex.child(row + 1, 0);
 }
 
 void ViewInterface::findAndExecIndex(bool deleteCurrent) {
@@ -390,10 +389,14 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
         QModelIndex parentNode = node.parent();
         int row = node.row();
 
-        bool res = mdl -> removeRow(node.row(), node.parent());
+        bool res = mdl -> removeRow(row, parentNode);
         if (needReset)
             reset();
-        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode, true)));
+
+        node = mdl -> index(row, 0, parentNode, true);
+        if (!node.isValid()) node = parentNode;
+        node = candidateOnSelection(node);
+        setCurrentIndex(node);
 
         return res;
     }
@@ -605,7 +608,8 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             }
         }
     }
-    else QTreeView::keyPressEvent(event);
+
+    QTreeView::keyPressEvent(event);
 }
 
 void ViewInterface::mousePressEvent(QMouseEvent * event) {
