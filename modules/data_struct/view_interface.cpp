@@ -320,25 +320,15 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
         QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
-QModelIndex ViewInterface::candidateOnSelection(QModelIndex node) {
-    bool backwardOrder = false;
-    QModelIndex newIndex = node;
-
+QModelIndex ViewInterface::candidateOnSelection(QModelIndex node, bool reverseOrder) {
     while(true) {
-        if ((backwardOrder && !newIndex.isValid()) || (newIndex.isValid() && newIndex.data(IPLAYABLE).toBool())) {
-            return newIndex;
-        } else if (!backwardOrder && !newIndex.isValid()) {
-            backwardOrder = true;
-            newIndex = node;
-        }
+        if (model() -> hasChildren(node))
+            expand(node);
 
-        if (mdl -> hasChildren(newIndex))
-            expand(newIndex);
+        node = (!reverseOrder) ? indexBelow(node) : indexAbove(node);
 
-        if (!backwardOrder)
-            newIndex = indexBelow(newIndex);
-        else
-            newIndex = indexAbove(newIndex);
+        if (!node.isValid() || !node.data(IFOLDER).toBool())
+            return node;
     }
 }
 
@@ -356,7 +346,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction, bool needReset) {
+bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
     bool isFolder = false;
 
     qDebug() << "REM: " << node.data();
@@ -386,19 +376,28 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
 
 
     if (updateSelection) {
-        QModelIndex parentNode = node.parent();
-        int row = node.row();
+        QModelIndex newSel = candidateOnSelection(node);
+        if (!newSel.isValid())
+            newSel = candidateOnSelection(node, true);
 
-        bool res = mdl -> removeRow(row, parentNode);
-        if (needReset)
-            reset();
+        setCurrentIndex(newSel);
 
-        node = mdl -> index(row, 0, parentNode, true);
-        if (!node.isValid()) node = parentNode;
-        node = candidateOnSelection(node);
-        setCurrentIndex(node);
+        return mdl -> removeRow(node.row(), node.parent());
 
-        return res;
+
+
+//        QModelIndex parentNode = node.parent();
+//        int row = node.row();
+
+//        bool res = mdl -> removeRow(row, parentNode);
+//        if (needReset)
+//            reset();
+
+//        node = mdl -> index(row, 0, parentNode, true);
+//        if (!node.isValid()) node = parentNode;
+//        qDebug() << "!!v " << node.data();
+//        node = candidateOnSelection(node);
+//        setCurrentIndex(node);
     }
     else return mdl -> removeRow(node.row(), node.parent());
 }
@@ -525,10 +524,10 @@ QModelIndex ViewInterface::activeIndex() { //TODO: test
         ind = QModelIndex();
 
     if (!ind.isValid()) {
-        ind = selectionModel() -> currentIndex();
+        ind = currentIndex();
 
         if (!ind.isValid())
-            ind = this -> rootIndex();
+            ind = rootIndex();
     }
 
     return ind;
@@ -578,10 +577,10 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
     } else if (event -> key() == Qt::Key_Delete) {
         Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
-        if (selectedIndexes().size() < 25 || mdl -> containerType() != list) { // this version is very slow but is more canonical
+        if (selectedIndexes().size() < 50 || mdl -> containerType() != list) { // this version is very slow but is more canonical
             bool loopReason = true;
 
-            while(!selectedIndexes().isEmpty() && loopReason) {
+            while(loopReason && !selectedIndexes().isEmpty()) {
                 loopReason = !(selectedIndexes().size() == 1);
                 removeRow(selectedIndexes().last(), !loopReason, true);
             }
@@ -602,9 +601,11 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             blockSignals(false);
             mdl -> blockSignals(false);
 
+            reset();
+
             if(l.size() > 0) {
                 ind = l.takeLast();
-                removeRow(ind, true, true, true);
+                removeRow(ind, true, true);
             }
         }
     }
