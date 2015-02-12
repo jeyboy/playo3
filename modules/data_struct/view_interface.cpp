@@ -382,7 +382,7 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
 
         setCurrentIndex(newSel);
 
-        return mdl -> removeRow(node.row(), node.parent());
+        return model() -> removeRow(node.row(), node.parent());
 
 
 
@@ -399,7 +399,7 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
 //        node = candidateOnSelection(node);
 //        setCurrentIndex(node);
     }
-    else return mdl -> removeRow(node.row(), node.parent());
+    else return model() -> removeRow(node.row(), node.parent());
 }
 
 //bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
