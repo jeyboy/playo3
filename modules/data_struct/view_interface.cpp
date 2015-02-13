@@ -97,6 +97,7 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //}
 
 bool ViewInterface::execIndex(const QModelIndex & node) {
+    qDebug() << node.data();
     Dockbars::instance() -> setPlayed((DockBar *)parent());
 
     if (node.isValid() && node.data(IPLAYABLE).toBool()) {
@@ -334,9 +335,8 @@ QModelIndex ViewInterface::candidateOnSelection(QModelIndex node, bool reverseOr
 
 void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     QModelIndex node = activeIndex();
-    if (!node.isValid()) return;
 
-    if (deleteCurrent) {
+    if (deleteCurrent && node.isValid()) {
         QModelIndex removeNode = node;
         findExecutable(node);
         removeRow(removeNode);
@@ -534,10 +534,12 @@ QModelIndex ViewInterface::activeIndex() { //TODO: test
 }
 
 void ViewInterface::findExecutable(QModelIndex & curr) {
-    qDebug() << "-------------";
-    qDebug() << curr.data();
-
     QModelIndex temp = curr;
+    if (!temp.isValid()) {
+        curr = temp = mdl -> index(0, 0);
+        if (temp.data(IPLAYABLE).toBool())
+            return;
+    }
 
     while(true) {
         if (model() -> hasChildren(temp)) {
@@ -551,10 +553,10 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
         else
             temp = indexAbove(temp);
 
-        qDebug() << curr.data();
-
-        if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
+        if (!temp.isValid() || temp.data(IPLAYABLE).toBool()) {
+            curr = temp;
             return;
+        }
     }
 }
 
