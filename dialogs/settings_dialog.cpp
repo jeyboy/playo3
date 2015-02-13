@@ -113,7 +113,7 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
                 HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextExecTriggering()));
             break;}
             case HOTKEY_NEXT_AND_DELETE: {
-                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextExecWithDelTriggering()));
+                HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(nextExecWithDelTriggering())); /*onNextItemRequiring*/
             break;}
             case HOTKEY_PREV: {
                 HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString(), receiver, SLOT(prevExecTriggering()));

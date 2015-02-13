@@ -546,7 +546,6 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
         looping = false;
 
     while(looping) {
-        qDebug() << "!! " << temp.data();
         if (model() -> hasChildren(temp)) {
             expand(temp);
             temp = curr;
@@ -555,12 +554,10 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
 
         temp = forwardOrder ? indexBelow(temp) : indexAbove(temp);
 
-        qDebug() << "!! " << temp.data();
         if (!temp.isValid() || temp.data(IPLAYABLE).toBool())
             break;
     }
 
-    qDebug() << "!!! " << temp.data();
     curr = temp;
 }
 

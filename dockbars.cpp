@@ -110,6 +110,20 @@ DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
 }
 
+void Dockbars::initPlayed() {
+    if (!played) {
+        played = active;
+
+        if (!played) {
+            QList<DockBar *> bars = dockbars();
+
+            //TODO: maybe has possibility to take hidden tab ?
+            if (bars.count() > 0) // TODO: maybe use some creteria for playing tab getting
+                activate(played = bars.first());
+        }
+    }
+}
+
 void Dockbars::showViewSettingsDialog(DockBar * bar) {
     TabDialog dialog(parentWidget());
     if (bar) {
@@ -172,35 +186,23 @@ void Dockbars::showAll() {
         bar -> setHidden(false);
 }
 
-void Dockbars::onNextItemRequiring() {
-    if (!played) {
-        played = active;
-
-        if (!played) {
-            QList<DockBar *> bars = dockbars();
-
-            //TODO: maybe has possibility to take hidden tab ?
-            if (bars.count() > 0) // TODO: maybe use some creteria for playing tab getting
-                activate(played = bars.first());
-        }
-    }
-
-    nextExecTriggering();
-}
-
 void Dockbars::nextExecTriggering() {
+    initPlayed();
     ViewInterface * v = view(played);
     if (v) v -> execNextIndex();
 }
 void Dockbars::nextExecWithDelTriggering() {
+    initPlayed();
     ViewInterface * v = view(played);
     if (v) v -> execNextIndex(true);
 }
 void Dockbars::prevExecWithDelTriggering() {
+    initPlayed();
     ViewInterface * v = view(played);
     if (v) v -> execPrevIndex(true);
 }
 void Dockbars::prevExecTriggering() {
+    initPlayed();
     ViewInterface * v = view(played);
     if (v) v -> execPrevIndex();
 }
