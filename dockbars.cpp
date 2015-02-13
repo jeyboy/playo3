@@ -174,11 +174,15 @@ void Dockbars::showAll() {
 
 void Dockbars::onNextItemRequiring() {
     if (!played) {
-        QList<DockBar *> bars = dockbars();
+        played = active;
 
-        //TODO: maybe has possibility to take hidden tab ?
-        if (bars.count() > 0) // TODO: maybe use some creteria for playing tab getting
-            activate(played = bars.first());
+        if (!played) {
+            QList<DockBar *> bars = dockbars();
+
+            //TODO: maybe has possibility to take hidden tab ?
+            if (bars.count() > 0) // TODO: maybe use some creteria for playing tab getting
+                activate(played = bars.first());
+        }
     }
 
     nextExecTriggering();

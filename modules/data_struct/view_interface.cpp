@@ -97,7 +97,7 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //}
 
 bool ViewInterface::execIndex(const QModelIndex & node) {
-    qDebug() << node.data();
+    qDebug() << "PLAYED " << node.data();
     Dockbars::instance() -> setPlayed((DockBar *)parent());
 
     if (node.isValid() && node.data(IPLAYABLE).toBool()) {
@@ -535,29 +535,33 @@ QModelIndex ViewInterface::activeIndex() { //TODO: test
 
 void ViewInterface::findExecutable(QModelIndex & curr) {
     QModelIndex temp = curr;
+    bool looping = true;
+
     if (!temp.isValid()) {
         curr = temp = mdl -> index(0, 0);
-        if (temp.data(IPLAYABLE).toBool())
-            return;
+        looping = !temp.data(IPLAYABLE).toBool();
     }
 
-    while(true) {
+    if (looping && Player::instance() -> playedIndex() != temp && temp.data(IPLAYABLE).toBool())
+        looping = false;
+
+    while(looping) {
+        qDebug() << "!! " << temp.data();
         if (model() -> hasChildren(temp)) {
             expand(temp);
             temp = curr;
         }
         else curr = temp;
 
-        if (forwardOrder)
-            temp = indexBelow(temp);
-        else
-            temp = indexAbove(temp);
+        temp = forwardOrder ? indexBelow(temp) : indexAbove(temp);
 
-        if (!temp.isValid() || temp.data(IPLAYABLE).toBool()) {
-            curr = temp;
-            return;
-        }
+        qDebug() << "!! " << temp.data();
+        if (!temp.isValid() || temp.data(IPLAYABLE).toBool())
+            break;
     }
+
+    qDebug() << "!!! " << temp.data();
+    curr = temp;
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
