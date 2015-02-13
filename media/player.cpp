@@ -168,11 +168,9 @@ void Player::playPause() {
 }
 
 void Player::start() {
-    play();
-
-//    if ((played == 0 || playlist != activePlaylist) && activePlaylist != 0) {
-//        activePlaylist -> proceedNext();
-//    } else play();
+    if (!currentIndex.isValid())
+        emit nextItemNeeded();
+    else play();
 }
 
 void Player::like() {

@@ -53,6 +53,8 @@ namespace Playo3 {
             if (v) v -> scrollToActive();
         }
 
+        void onNextItemRequiring();
+
         void nextExecTriggering();
         void nextExecWithDelTriggering();
         void prevExecWithDelTriggering();
@@ -67,8 +69,8 @@ namespace Playo3 {
     private:
         DockBar * active, * played;
 
-        Dockbars(QWidget * parent) : QWidget(parent), active(0) {
-
+        Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0) {
+            connect(Player::instance(), SIGNAL(nextItemNeeded()), this, SLOT(onNextItemRequiring()));
         }
 
         static Dockbars * self;

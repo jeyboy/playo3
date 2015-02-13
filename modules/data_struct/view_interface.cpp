@@ -520,7 +520,7 @@ void ViewInterface::setIconSize(const QSize & size) {
 QModelIndex ViewInterface::activeIndex() { //TODO: test
     QModelIndex ind = Player::instance() -> playedIndex();
 
-    if (ind.model() != mdl)
+    if (ind.model() != model())
         ind = QModelIndex();
 
     if (!ind.isValid()) {
@@ -537,14 +537,19 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
     qDebug() << "-------------";
     qDebug() << curr.data();
 
+    QModelIndex temp = curr;
+
     while(true) {
-        if (mdl -> hasChildren(curr))
-            expand(curr);
+        if (model() -> hasChildren(temp)) {
+            expand(temp);
+            temp = curr;
+        }
+        else curr = temp;
 
         if (forwardOrder)
-            curr = indexBelow(curr);
+            temp = indexBelow(temp);
         else
-            curr = indexAbove(curr);
+            temp = indexAbove(temp);
 
         qDebug() << curr.data();
 
@@ -590,7 +595,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
 
             qSort(l.begin(), l.end());
 
-            mdl -> blockSignals(true);
+            model() -> blockSignals(true);
             blockSignals(true);
 
             while(l.size() > 1) {
@@ -599,7 +604,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             }
 
             blockSignals(false);
-            mdl -> blockSignals(false);
+            model() -> blockSignals(false);
 
             reset();
 
@@ -624,7 +629,7 @@ void ViewInterface::mouseMoveEvent(QMouseEvent * event) {
     if ((event -> buttons() == Qt::LeftButton) && (dragPoint - event -> pos()).manhattanLength() >= 10){
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);
-            QMimeData * mimeData = mdl -> mimeData(selectedIndexes());
+            QMimeData * mimeData = model() -> mimeData(selectedIndexes());
             drag -> setPixmap(QPixmap(":drag"));
             drag -> setMimeData(mimeData);
             drag -> exec(Qt::CopyAction, Qt::CopyAction);

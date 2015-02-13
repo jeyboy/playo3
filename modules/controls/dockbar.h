@@ -56,7 +56,7 @@ namespace Playo3 {
             foreach(QTabBar * tab, tabbars) {
                tab -> setElideMode(Qt::ElideRight);
                tab -> setContentsMargins(3, 3, 3, 3);
-               tab -> setMovable(true);
+//               tab -> setMovable(true);
             }
         }
 

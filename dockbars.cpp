@@ -172,20 +172,35 @@ void Dockbars::showAll() {
         bar -> setHidden(false);
 }
 
+void Dockbars::onNextItemRequiring() {
+    if (!played) {
+        QList<DockBar *> bars = dockbars();
+
+        if (bars.count() > 0)
+            played = bars.first();
+
+//        foreach(DockBar * bar, bars) {
+
+//        }
+    }
+
+    nextExecTriggering();
+}
+
 void Dockbars::nextExecTriggering() {
-    ViewInterface * v = view(active);
+    ViewInterface * v = view(played);
     if (v) v -> execNextIndex();
 }
 void Dockbars::nextExecWithDelTriggering() {
-    ViewInterface * v = view(active);
+    ViewInterface * v = view(played);
     if (v) v -> execNextIndex(true);
 }
 void Dockbars::prevExecWithDelTriggering() {
-    ViewInterface * v = view(active);
+    ViewInterface * v = view(played);
     if (v) v -> execPrevIndex(true);
 }
 void Dockbars::prevExecTriggering() {
-    ViewInterface * v = view(active);
+    ViewInterface * v = view(played);
     if (v) v -> execPrevIndex();
 }
 
