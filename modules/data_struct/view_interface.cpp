@@ -534,34 +534,41 @@ QModelIndex ViewInterface::activeIndex() { //TODO: test
 }
 
 void ViewInterface::findExecutable(QModelIndex & curr) {
-    QModelIndex temp = curr;
-    bool looping = true;
-
-    if (!temp.isValid()) {
-        curr = temp = mdl -> index(0, 0);
-        looping = !temp.data(IPLAYABLE).toBool();
+    if (!curr.isValid()) {
+        curr = mdl -> index(0, 0);
+        if (curr.data(IPLAYABLE).toBool())
+            return;
     }
 
-    if (looping && Player::instance() -> playedIndex() != temp && temp.data(IPLAYABLE).toBool())
-        looping = false;
+    if (Player::instance() -> playedIndex() != curr && curr.data(IPLAYABLE).toBool())
+        return;
 
-    while(looping) {
-        if (model() -> hasChildren(temp) && curr.parent() != temp) {
-            expand(temp);
-            if (!forwardOrder)
-                temp = curr;
-            else
-                curr = temp;
+    if (forwardOrder) {
+        while(true) {
+            if (model() -> hasChildren(curr)) // maybe try to expand all items
+                expand(curr);
+
+            curr = indexBelow(curr);
+
+            if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
+                return;
         }
-        else curr = temp;
+    } else {
+        QModelIndex temp = curr;
 
-        temp = forwardOrder ? indexBelow(temp) : indexAbove(temp);
+        while(true) {
+            if (model() -> hasChildren(curr) && temp.parent() != curr) {
+                expand(curr);
+                curr = temp;
+            }
+            else temp = curr;
 
-        if (!temp.isValid() || temp.data(IPLAYABLE).toBool())
-            break;
+            curr = indexAbove(curr);
+
+            if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
+                return;
+        }
     }
-
-    curr = temp;
 }
 
 void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
