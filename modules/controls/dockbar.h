@@ -4,6 +4,7 @@
 #include <QDockWidget>
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
+#include "modules/controls/spinner.h"
 
 namespace Playo3 {
     class DockBar : public QDockWidget {
@@ -27,9 +28,17 @@ namespace Playo3 {
 //                ((MainWindow *)parentWidget()) -> removeOuterChild(this);
 //        }
 
+        inline QWidget * mainWidget() {
+            return inProcess ? mWidget : widget();
+        }
+
     signals:
         void closing();
     public slots:
+        void moveInProcess();
+        void moveOutProcess();
+        void setProgress(int percent);
+
         inline void toggleFloating() { setFloating(!isFloating()); }
         inline void floatingChanged(bool floating) {
             if (floating)
@@ -60,10 +69,12 @@ namespace Playo3 {
             }
         }
 
-        bool sticked;
+        bool sticked, inProcess;
         WindowTitle * titleWidget;
         QRect borderRect;
         QLinearGradient brush;
+        QWidget * mWidget;
+        Spinner * spinner;
     };
 }
 

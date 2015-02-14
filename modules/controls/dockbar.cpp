@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
-    : QDockWidget(title, parent, flags), sticked(false) {
+    : QDockWidget(title, parent, flags), sticked(false), inProcess(false), mWidget(0), spinner(0) {
 
     installEventFilter(parent);
 
@@ -35,6 +35,26 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
 
 //    return QDockWidget::event(event);
 //}
+
+void DockBar::moveInProcess() {
+    if (spinner == 0)
+        spinner = new Spinner("In process", 80, 80, this);
+
+    mWidget = widget();
+    setWidget(spinner);
+    spinner -> show();
+    mWidget -> hide();
+}
+void DockBar::moveOutProcess() {
+    setWidget(mWidget);
+    spinner -> hide();
+    mWidget -> show();
+}
+
+void DockBar::setProgress(int percent) {
+    if (spinner)
+        spinner -> setValue(percent);
+}
 
 void DockBar::resizeEvent(QResizeEvent * event) {
     Stylesheets::calcBorderRect(rect(), borderRect);

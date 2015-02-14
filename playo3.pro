@@ -80,7 +80,8 @@ SOURCES += main.cpp\
     dialogs/relationdialog.cpp \
     dialogs/web_dialog.cpp \
     modules/controls/simple_list_view.cpp \
-    modules/data_struct/model_item_delegate.cpp
+    modules/data_struct/model_item_delegate.cpp \
+    modules/controls/spinner.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -164,7 +165,8 @@ HEADERS  += playo.h \
     modules/controls/simple_list_view.h \
     modules/data_struct/model_item_delegate.h \
     misc/spectrum_types.h \
-    modules/data_struct/container_types.h
+    modules/data_struct/container_types.h \
+    modules/controls/spinner.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
