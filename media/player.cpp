@@ -169,7 +169,7 @@ void Player::playPause() {
 
 void Player::start() {
     if (!currentIndex.isValid())
-        emit nextItemNeeded();
+        emit nextItemNeeded(init);
     else play();
 }
 
@@ -227,15 +227,16 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case StalledMedia: {
             emit itemExecError(currentIndex);
+            emit nextItemNeeded(error);
         break; }
 
         case EndOfMedia: {
-            emit nextItemNeeded();
+            emit nextItemNeeded(endMedia);
             break;
         }
         case InvalidMedia: {
             emit itemNotSupported(currentIndex);
-            emit nextItemNeeded();
+            emit nextItemNeeded(error);
         break;}
         default: {  }
     }

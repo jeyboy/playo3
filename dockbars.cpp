@@ -186,6 +186,14 @@ void Dockbars::showAll() {
         bar -> setHidden(false);
 }
 
+void Dockbars::onNextItemNeeded(Player::Reason reason) {
+    initPlayed();
+    ViewInterface * v = view(played);
+
+    if (v && (reason == Player::init || v -> isPlaylist()))
+        v -> execNextIndex();
+}
+
 void Dockbars::nextExecTriggering() {
     initPlayed();
     ViewInterface * v = view(played);

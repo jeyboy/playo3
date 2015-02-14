@@ -14,6 +14,12 @@ using namespace Playo3;
 class Player : public AudioPlayer {
     Q_OBJECT
 public:
+    enum Reason {
+        init,
+        endMedia,
+        error
+    };
+
     static Player * instance(QObject * parent = 0);
     void playIndex(QModelIndex item, bool paused = false);
     void setStartPosition(int position);
@@ -35,7 +41,7 @@ public:
     }
 
 signals:
-    void nextItemNeeded();
+    void nextItemNeeded(Player::Reason);
     void itemNotSupported(QModelIndex &);
     void itemExecError(QModelIndex &);
 

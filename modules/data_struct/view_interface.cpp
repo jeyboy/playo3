@@ -546,14 +546,11 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
         looping = false;
 
     while(looping) {
-        qDebug() << temp.data();
         if (model() -> hasChildren(temp) && curr.parent() != temp) {
-            qDebug() << "! " << temp.data();
             expand(temp);
             temp = curr;
         }
         else curr = temp;
-        qDebug() << temp.data();
 
         temp = forwardOrder ? indexBelow(temp) : indexAbove(temp);
 
