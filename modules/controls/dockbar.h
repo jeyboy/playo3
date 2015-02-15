@@ -35,9 +35,9 @@ namespace Playo3 {
     signals:
         void closing();
     public slots:
-        void moveInProcess();
-        void moveOutProcess();
-        void setProgress(int percent);
+        void onMoveInProcess();
+        void onMoveOutProcess();
+        void onSetProgress(int percent);
 
         inline void toggleFloating() { setFloating(!isFloating()); }
         inline void floatingChanged(bool floating) {

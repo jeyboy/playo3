@@ -77,20 +77,24 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 
 DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs) {
     ViewInterface * view;
+    DockBar * bar = createDocBar(name);
 
     switch(settings.type) {
         case list: {
-            view = new ListView(0, settings, attrs);
+            view = new ListView(bar, settings, attrs);
         break;}
         case level_tree: {
-            view = new LevelTreeView(0, settings, attrs);
+            view = new LevelTreeView(bar, settings, attrs);
         break;}
         case tree: {
-            view = new TreeView(0, settings, attrs);
+            view = new TreeView(bar, settings, attrs);
         break;}
         default: view = 0;
     }
-    return createDocBar(name, view);
+    bar -> setWidget(view);
+
+    return bar;
+//    return createDocBar(name, view);
 }
 
 DockBar * Dockbars::createDocBar(QString name, QWidget * content) {

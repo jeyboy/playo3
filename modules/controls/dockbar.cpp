@@ -36,7 +36,8 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
 //    return QDockWidget::event(event);
 //}
 
-void DockBar::moveInProcess() {
+void DockBar::onMoveInProcess() {
+    inProcess = true;
     if (spinner == 0)
         spinner = new Spinner("In process", 80, 80, this);
 
@@ -45,13 +46,14 @@ void DockBar::moveInProcess() {
     spinner -> show();
     mWidget -> hide();
 }
-void DockBar::moveOutProcess() {
+void DockBar::onMoveOutProcess() {
+    inProcess = false;
     setWidget(mWidget);
     spinner -> hide();
     mWidget -> show();
 }
 
-void DockBar::setProgress(int percent) {
+void DockBar::onSetProgress(int percent) {
     if (spinner)
         spinner -> setValue(percent);
 }

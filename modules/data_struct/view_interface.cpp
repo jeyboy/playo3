@@ -41,6 +41,10 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
+    connect(mdl, SIGNAL(moveInProcess()), parent, SLOT(onMoveInProcess()));
+    connect(mdl, SIGNAL(moveOutProcess()), parent, SLOT(onMoveOutProcess()));
+    connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
+
     connect(Player::instance(), SIGNAL(itemExecError(QModelIndex &)), this, SLOT(itemError(QModelIndex &)));
     connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex &)), this, SLOT(itemNotSupported(QModelIndex &)));
 
@@ -586,6 +590,11 @@ void ViewInterface::dropEvent(QDropEvent * event) {
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
+    if (event -> key() == Qt::Key_F1) {
+        emit mdl -> moveInProcess();
+    }
+
+
     if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
