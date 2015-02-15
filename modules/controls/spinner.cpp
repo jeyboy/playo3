@@ -1,6 +1,6 @@
 #include "spinner.h"
 
-Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QLabel(parent),
+Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent),
         spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), clearPen(0), spinePen(0), continious(false) {
     img_text = new QStaticText(text);
     QTextOption options(Qt::AlignCenter);
@@ -47,9 +47,6 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QLabel(parent),
     spinePen -> setWidth(spineWidth - spinePad * 2);
     spinePen -> setCosmetic(true);
     spinePen -> setCapStyle(Qt::RoundCap);
-
-    setAlignment(Qt::AlignCenter);
-    setPixmap(*img);
 }
 
 Spinner::~Spinner() {
@@ -66,7 +63,7 @@ void Spinner::setValue(int percent) {
 
         if (continious) {
             continiousPos = 1440;
-            timer.singleShot(28, this, SLOT(continiousProgression()));
+            timer.singleShot(60, this, SLOT(continiousProgression()));
         }
     }
     else if (lastVal != percent)
@@ -75,11 +72,18 @@ void Spinner::setValue(int percent) {
     lastVal = percent;
 }
 
+void Spinner::paintEvent(QPaintEvent * e) {
+    QPainter p(this);
+
+    p.drawPixmap(width() / 2 - img -> width() / 2, height() / 2 - img -> height() / 2, *img);
+    e -> accept();
+}
+
 void Spinner::continiousProgression() {
-    drawSpine(continiousPos--, 15);
+    drawSpine(continiousPos -= 64, 15);
 
     if (continious)
-        timer.singleShot(28, this, SLOT(continiousProgression()));
+        timer.singleShot(60, this, SLOT(continiousProgression()));
 }
 
 void Spinner::drawSpine(int start, int percent) {
@@ -87,7 +91,7 @@ void Spinner::drawSpine(int start, int percent) {
     img_painter -> setPen(*spinePen);
 
     img_painter -> drawArc(spine, start, (percent / 100.0) * -5760);
-    setPixmap(*img);
+    repaint();
 }
 
 void Spinner::clearSpine() {

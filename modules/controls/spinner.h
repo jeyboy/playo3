@@ -1,12 +1,13 @@
 #ifndef SPINNER
 #define SPINNER
 
-#include <qlabel.h>
+#include <qwidget.h>
+#include <qevent.h>
 #include <qstatictext.h>
 #include <qpainter.h>
 #include <qtimer.h>
 
-class Spinner : public QLabel {
+class Spinner : public QWidget {
     Q_OBJECT
 public:
     Spinner(QString text, int w, int h, QWidget * parent = 0);
@@ -15,6 +16,8 @@ public slots:
     void setValue(int percent);
 protected slots:
     void continiousProgression();
+protected:
+    void paintEvent(QPaintEvent *);
 private:
     void drawSpine(int start, int percent);
     void clearSpine();
