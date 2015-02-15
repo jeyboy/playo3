@@ -1,8 +1,9 @@
 #include "spinner.h"
 #include <qdebug.h>
 
-Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent),
-        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), continiousLen((15 / 100.0) * -5760), clearPen(0), spinePen(0), continious(false) {
+Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
+        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), continiousLen((15 / 100.0) * -5760),
+        w(spinner_width), h(spinner_height), clearPen(0), spinePen(0), continious(false) {
 
     setAutoFillBackground(false);
 
@@ -11,23 +12,6 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent)
     options.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     img_text -> setTextOption(options);
     img_text -> setTextWidth(w);
-
-    outter = QRect(2, 2, w - 4, h - 4);
-    spine = QRect(
-                outter.left() + spineWidth / 2 + borderWidth / 2,
-                outter.top() + spineWidth / 2 + borderWidth / 2,
-                outter.width() - spineWidth - borderWidth,
-                outter.height() - spineWidth - borderWidth
-                );
-
-    inner = QRect(
-                spine.left() + spineWidth / 2 + borderWidth / 2,
-                spine.top() + spineWidth / 2 + borderWidth / 2,
-                spine.width() - spineWidth - borderWidth,
-                spine.height() - spineWidth - borderWidth
-                );
-
-    textPoint = outter.bottomLeft() + QPoint(0, 2);
 
     borderPen = new QPen(QColor::fromRgb(32, 32, 32, 224));
     borderPen -> setWidth(borderWidth);
@@ -92,12 +76,20 @@ void Spinner::paintEvent(QPaintEvent * e) {
 }
 
 void Spinner::resizeEvent(QResizeEvent * e) {
-    int xoffset = (e -> size().width() - e -> oldSize().width()) / 2;
-    int yoffset = (e -> size().height() - e -> oldSize().height()) / 2;
+    outter = QRect(width() / 2 - w / 2, height() / 2 - h / 2, w, h);
+    spine = QRect(
+                outter.left() + spineWidth / 2 + borderWidth / 2,
+                outter.top() + spineWidth / 2 + borderWidth / 2,
+                outter.width() - spineWidth - borderWidth,
+                outter.height() - spineWidth - borderWidth
+                );
 
-    outter.moveTopLeft(QPoint(outter.left() + xoffset, outter.top() + yoffset));
-    spine.moveTopLeft(QPoint(spine.left() + xoffset, spine.top() + yoffset));
-    inner.moveTopLeft(QPoint(inner.left() + xoffset, inner.top() + yoffset));
+    inner = QRect(
+                spine.left() + spineWidth / 2 + borderWidth / 2,
+                spine.top() + spineWidth / 2 + borderWidth / 2,
+                spine.width() - spineWidth - borderWidth,
+                spine.height() - spineWidth - borderWidth
+                );
 
     textPoint = outter.bottomLeft() + QPoint(0, 2);
 

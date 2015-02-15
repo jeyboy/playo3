@@ -10,7 +10,7 @@
 class Spinner : public QWidget {
     Q_OBJECT
 public:
-    Spinner(QString text, int w, int h, QWidget * parent = 0);
+    Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent = 0);
     ~Spinner();
 public slots:
     void setValue(int percent);
@@ -25,7 +25,7 @@ private:
 
     QStaticText * img_text;
     QRect spine, outter, inner;
-    int spineWidth, spinePad, borderWidth, lastVal, continiousPos, continiousLen;
+    int spineWidth, spinePad, borderWidth, lastVal, continiousPos, continiousLen, w, h;
     QPoint textPoint;
     QPen * clearPen, * spinePen, * borderPen;
 
