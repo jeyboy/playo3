@@ -24,6 +24,8 @@
 //#include "media/library.h"
 //#include "web/download.h"
 
+#include <qtimer.h>
+
 namespace Playo3 {
     class Dockbars;
 
@@ -81,6 +83,8 @@ namespace Playo3 {
         void downloadAll();
 //        void modelUpdate();
 
+        void iterateSpinner();
+
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
@@ -115,6 +119,10 @@ namespace Playo3 {
     private:
         ModelItemDelegate * item_delegate;
 
+
+
+        int p = 0;
+        QTimer timer;
     };
 }
 

@@ -38,7 +38,7 @@ DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
 
 void DockBar::onMoveInProcess() {
     inProcess = true;
-    if (spinner == 0)
+    if (!spinner)
         spinner = new Spinner("In process", 80, 80, this);
 
     mWidget = widget();

@@ -589,11 +589,17 @@ void ViewInterface::dropEvent(QDropEvent * event) {
     event -> accept();
 }
 
+void ViewInterface::iterateSpinner() {
+    emit mdl -> setProgress(++p);
+    if (p < 100)
+        timer.singleShot(500, this, SLOT(iterateSpinner()));
+}
+
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_F1) {
         emit mdl -> moveInProcess();
+        timer.singleShot(500, this, SLOT(iterateSpinner()));
     }
-
 
     if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
