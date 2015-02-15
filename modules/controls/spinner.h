@@ -23,7 +23,7 @@ private:
     QPixmap * img;
     QStaticText * img_text;
     QRect spine;
-    int spineWidth, spinePadd, borderWidth, lastVal, continiousPos;
+    int spineWidth, spinePad, borderWidth, lastVal, continiousPos;
     QPen * clearPen, * spinePen;
 
     QTimer timer;

@@ -1,7 +1,7 @@
 #include "spinner.h"
 
 Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QLabel(parent),
-        spineWidth(8), spinePadd(2), borderWidth(2), lastVal(0), clearPen(0), spinePen(0), continious(false) {
+        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), clearPen(0), spinePen(0), continious(false) {
     img_text = new QStaticText(text);
     QTextOption options(Qt::AlignCenter);
     options.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
@@ -10,17 +10,17 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QLabel(parent),
 
     QRect outter = QRect(2, 2, w - 4, h - 4);
     spine = QRect(
-                outter.left() + spinePadd + spineWidth / 4 + borderWidth / 2,
-                outter.top() + spinePadd + spineWidth / 4 + borderWidth / 2,
-                outter.width() - spinePadd - spineWidth / 2 - borderWidth * 2,
-                outter.height() - spinePadd - spineWidth / 2 - borderWidth * 2
+                outter.left() + spineWidth / 2 + borderWidth / 2,
+                outter.top() + spineWidth / 2 + borderWidth / 2,
+                outter.width() - spineWidth - borderWidth,
+                outter.height() - spineWidth - borderWidth
                 );
 
     QRect inner = QRect(
-                spine.left() + spinePadd + borderWidth * 1.5,
-                spine.top() + spinePadd + borderWidth * 1.5,
-                spine.width() - spinePadd - borderWidth * 4,
-                spine.height() - spinePadd - borderWidth * 4
+                spine.left() + spineWidth / 2 + borderWidth / 2,
+                spine.top() + spineWidth / 2 + borderWidth / 2,
+                spine.width() - spineWidth - borderWidth,
+                spine.height() - spineWidth - borderWidth
                 );
 
     img = new QPixmap(w, h + 20);
@@ -40,11 +40,11 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QLabel(parent),
 
     clearPen = new QPen(QColor::fromRgb(255, 255, 255, 128));
     clearPen -> setCosmetic(true);
-    clearPen -> setWidth(spineWidth - 2);
+    clearPen -> setWidth(spineWidth - 1);
     clearSpine();
 
     spinePen = new QPen(QColor::fromRgb(0, 0, 255, 224));
-    spinePen -> setWidth(spineWidth - 5);
+    spinePen -> setWidth(spineWidth - spinePad * 2);
     spinePen -> setCosmetic(true);
     spinePen -> setCapStyle(Qt::RoundCap);
 
