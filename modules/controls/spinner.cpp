@@ -1,14 +1,18 @@
 #include "spinner.h"
+#include <qdebug.h>
 
 Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent),
-        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), clearPen(0), spinePen(0), continious(false) {
+        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), continiousLen((15 / 100.0) * -5760), clearPen(0), spinePen(0), continious(false) {
+
+    setAutoFillBackground(false);
+
     img_text = new QStaticText(text);
     QTextOption options(Qt::AlignCenter);
     options.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     img_text -> setTextOption(options);
     img_text -> setTextWidth(w);
 
-    QRect outter = QRect(2, 2, w - 4, h - 4);
+    outter = QRect(2, 2, w - 4, h - 4);
     spine = QRect(
                 outter.left() + spineWidth / 2 + borderWidth / 2,
                 outter.top() + spineWidth / 2 + borderWidth / 2,
@@ -16,32 +20,22 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent)
                 outter.height() - spineWidth - borderWidth
                 );
 
-    QRect inner = QRect(
+    inner = QRect(
                 spine.left() + spineWidth / 2 + borderWidth / 2,
                 spine.top() + spineWidth / 2 + borderWidth / 2,
                 spine.width() - spineWidth - borderWidth,
                 spine.height() - spineWidth - borderWidth
                 );
 
-    img = new QPixmap(w, h + 20);
-    img -> fill(QColor::fromRgb(255, 255, 255, 0));
-    img_painter = new QPainter(img);
+    textPoint = outter.bottomLeft() + QPoint(0, 2);
 
-    img_painter -> drawStaticText(0, img -> height() - 18, *img_text);
-
-    QPen pp(QColor::fromRgb(32, 32, 32, 224));
-    pp.setWidth(borderWidth);
-    pp.setCosmetic(true);
-    img_painter -> setPen(pp);
-    img_painter -> setRenderHint(QPainter::HighQualityAntialiasing, true);
-
-    img_painter -> drawEllipse(outter);
-    img_painter -> drawEllipse(inner);
+    borderPen = new QPen(QColor::fromRgb(32, 32, 32, 224));
+    borderPen -> setWidth(borderWidth);
+    borderPen -> setCosmetic(true);
 
     clearPen = new QPen(QColor::fromRgb(255, 255, 255, 128));
     clearPen -> setCosmetic(true);
     clearPen -> setWidth(spineWidth - 1);
-    clearSpine();
 
     spinePen = new QPen(QColor::fromRgb(0, 0, 255, 224));
     spinePen -> setWidth(spineWidth - spinePad * 2);
@@ -52,49 +46,68 @@ Spinner::Spinner(QString text, int w, int h, QWidget * parent) : QWidget(parent)
 Spinner::~Spinner() {
     delete clearPen;
     delete spinePen;
+    delete borderPen;
+
     delete img_text;
-    delete img_painter;
-    delete img;
 }
 
 void Spinner::setValue(int percent) {
-    if (percent < 0) {
+    if (lastVal != percent) {
         continious = !(lastVal < 0);
 
         if (continious) {
             continiousPos = 1440;
-            timer.singleShot(60, this, SLOT(continiousProgression()));
+            timer.singleShot(20, this, SLOT(continiousProgression()));
         }
-    }
-    else if (lastVal != percent)
-        drawSpine(1440, percent);
 
-    lastVal = percent;
+        lastVal = percent;
+        update();
+    }
 }
 
 void Spinner::paintEvent(QPaintEvent * e) {
     QPainter p(this);
+    p.save();
+    p.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
-    p.drawPixmap(width() / 2 - img -> width() / 2, height() / 2 - img -> height() / 2, *img);
+    p.drawStaticText(textPoint, *img_text);
+
+    p.setPen(*borderPen);
+
+    p.drawEllipse(outter);
+    p.drawEllipse(inner);
+
+    p.setPen(*clearPen);
+    p.drawEllipse(spine);
+
+    p.setPen(*spinePen);
+
+    if (continious)
+        p.drawArc(spine, continiousPos, continiousLen);
+    else
+        p.drawArc(spine, 1440, (lastVal / 100.0) * -5760);
+
+    p.restore();
     e -> accept();
 }
 
+void Spinner::resizeEvent(QResizeEvent * e) {
+    int xoffset = (e -> size().width() - e -> oldSize().width()) / 2;
+    int yoffset = (e -> size().height() - e -> oldSize().height()) / 2;
+
+    outter.moveTopLeft(QPoint(outter.left() + xoffset, outter.top() + yoffset));
+    spine.moveTopLeft(QPoint(spine.left() + xoffset, spine.top() + yoffset));
+    inner.moveTopLeft(QPoint(inner.left() + xoffset, inner.top() + yoffset));
+
+    textPoint = outter.bottomLeft() + QPoint(0, 2);
+
+    QWidget::resizeEvent(e)
+;}
+
 void Spinner::continiousProgression() {
-    drawSpine(continiousPos -= 64, 15);
+    continiousPos -= 64;
+    update();
 
     if (continious)
-        timer.singleShot(60, this, SLOT(continiousProgression()));
-}
-
-void Spinner::drawSpine(int start, int percent) {
-    clearSpine();
-    img_painter -> setPen(*spinePen);
-
-    img_painter -> drawArc(spine, start, (percent / 100.0) * -5760);
-    repaint();
-}
-
-void Spinner::clearSpine() {
-    img_painter -> setPen(*clearPen);
-    img_painter -> drawArc(spine, 0, 5760);
+        timer.singleShot(20, this, SLOT(continiousProgression()));
 }

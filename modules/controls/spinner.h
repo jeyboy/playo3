@@ -18,16 +18,16 @@ protected slots:
     void continiousProgression();
 protected:
     void paintEvent(QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
 private:
     void drawSpine(int start, int percent);
     void clearSpine();
 
-    QPainter * img_painter;
-    QPixmap * img;
     QStaticText * img_text;
-    QRect spine;
-    int spineWidth, spinePad, borderWidth, lastVal, continiousPos;
-    QPen * clearPen, * spinePen;
+    QRect spine, outter, inner;
+    int spineWidth, spinePad, borderWidth, lastVal, continiousPos, continiousLen;
+    QPoint textPoint;
+    QPen * clearPen, * spinePen, * borderPen;
 
     QTimer timer;
     bool continious;
