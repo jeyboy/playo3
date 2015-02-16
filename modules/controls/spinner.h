@@ -26,9 +26,6 @@ protected:
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
 private:
-    void drawSpine(int start, int percent);
-    void clearSpine();
-
     QStaticText * img_text;
     QRect spine, inner_spine, outter, inner, ininner;
     int spineWidth, spinePad, borderWidth, continiousLen, w, h;

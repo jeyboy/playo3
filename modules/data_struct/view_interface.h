@@ -83,8 +83,6 @@ namespace Playo3 {
         void downloadAll();
 //        void modelUpdate();
 
-        void iterateSpinner();
-
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
@@ -118,11 +116,6 @@ namespace Playo3 {
         bool forwardOrder;
     private:
         ModelItemDelegate * item_delegate;
-
-
-
-        int p = 200, p2 = 200;
-        QTimer timer;
     };
 }
 

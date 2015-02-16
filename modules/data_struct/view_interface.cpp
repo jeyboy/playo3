@@ -590,36 +590,7 @@ void ViewInterface::dropEvent(QDropEvent * event) {
     event -> accept();
 }
 
-void ViewInterface::iterateSpinner() {
-    qDebug() << p;
-
-    if (p2 == 200)
-        p2 = -50;
-
-    if (p == 200)
-        p = -100;
-
-    if (p == -100 || p >= 0)
-        emit mdl -> setProgress(p == -100 ? SPINNER_IS_CONTINIOUS : p);
-
-    if (p2 == -50 || p2 >= 0)
-        emit mdl -> setProgress2(p2 == -50 ? SPINNER_IS_CONTINIOUS : p2);
-
-    if (p < 100) {
-        p++; p2++;
-        timer.singleShot(100, this, SLOT(iterateSpinner()));
-    } else {
-        emit mdl -> moveOutProcess();
-        p2 = p = 200;
-    }
-}
-
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_F1) {
-        emit mdl -> moveInProcess();
-        timer.singleShot(500, this, SLOT(iterateSpinner()));
-    }
-
     if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
