@@ -47,11 +47,13 @@ void DockBar::onMoveInProcess() {
     mWidget -> hide();
 }
 void DockBar::onMoveOutProcess() {
-    inProcess = false;
-    setWidget(mWidget);
-    spinner -> hide();
-    spinner -> clear();
-    mWidget -> show();
+    if (inProcess) {
+        inProcess = false;
+        setWidget(mWidget);
+        spinner -> hide();
+        spinner -> clear();
+        mWidget -> show();
+    }
 }
 
 void DockBar::onSetProgress(int percent) {

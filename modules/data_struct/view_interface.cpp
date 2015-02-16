@@ -407,6 +407,58 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
     else return model() -> removeRow(node.row(), node.parent());
 }
 
+void ViewInterface::removeProccessing(bool inProcess) {
+    int total = selectedIndexes().size(), temp;
+
+    if (inProcess)
+        emit mdl -> moveInProcess();
+
+    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
+
+    if (total < 200 || mdl -> containerType() != list) { // this version is very slow but is more canonical
+        bool loopReason = true;
+
+        while(loopReason && !selectedIndexes().isEmpty()) { // this did not work in not main thread :(
+            temp = selectedIndexes().size();
+            loopReason = !(temp == 1);
+            removeRow(selectedIndexes().last(), !loopReason, true);
+            if (inProcess)
+                emit mdl -> setProgress(temp * 100.0 / total);
+        }
+    } else {
+        QModelIndex ind;
+        QModelIndexList l = selectedIndexes();
+
+        qSort(l.begin(), l.end());
+
+        model() -> blockSignals(true);
+        blockSignals(true);
+
+        while((temp = l.size()) > 1) {
+            ind = l.takeLast();
+            removeRow(ind, false, true);
+            if (inProcess) {
+                model() -> blockSignals(false);
+                emit mdl -> setProgress(temp * 100.0 / total);
+                model() -> blockSignals(true);
+            }
+        }
+
+        blockSignals(false);
+        model() -> blockSignals(false);
+
+        reset();
+
+        if(l.size() > 0) {
+            ind = l.takeLast();
+            removeRow(ind, true, true);
+        }
+    }
+
+    if (inProcess)
+        emit mdl -> moveOutProcess();
+}
+
 //bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
 //    if (nodes.isEmpty())
 //        return false;
@@ -598,39 +650,11 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-
-        if (selectedIndexes().size() < 50 || mdl -> containerType() != list) { // this version is very slow but is more canonical
-            bool loopReason = true;
-
-            while(loopReason && !selectedIndexes().isEmpty()) {
-                loopReason = !(selectedIndexes().size() == 1);
-                removeRow(selectedIndexes().last(), !loopReason, true);
-            }
-        } else {
-            QModelIndex ind;
-            QModelIndexList l = selectedIndexes();
-
-            qSort(l.begin(), l.end());
-
-            model() -> blockSignals(true);
-            blockSignals(true);
-
-            while(l.size() > 1) {
-                ind = l.takeLast();
-                removeRow(ind, false, true);
-            }
-
-            blockSignals(false);
-            model() -> blockSignals(false);
-
-            reset();
-
-            if(l.size() > 0) {
-                ind = l.takeLast();
-                removeRow(ind, true, true);
-            }
-        }
+        //TODO: removing did nor work correctly in separate thread :(
+//        if (selectedIndexes().size() > 10000 && mdl -> containerType() == list)
+//            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
+//        else
+            removeProccessing();
     }
 
     QTreeView::keyPressEvent(event);

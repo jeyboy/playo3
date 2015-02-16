@@ -6,6 +6,8 @@
 #include <QMenu>
 #include <QDrag>
 
+#include <QtConcurrent/QtConcurrent>
+
 #include <qevent.h>
 
 #include "model_interface.h"
@@ -87,6 +89,7 @@ namespace Playo3 {
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
         bool removeRow(QModelIndex & node, bool updateSelection = false, bool usePrevAction = false);
+        void removeProccessing(bool inProcess = false);
 
         bool prepareDownloading(QString path);
 

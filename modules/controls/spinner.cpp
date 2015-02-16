@@ -43,7 +43,7 @@ void Spinner::setValue(int percent) {
         lastVal = percent;
         if (continious) {
             continiousPos = 1440;
-            continiousProgression();
+            timer.singleShot(20, this, SLOT(continiousProgression()));
         }
         else update(outter);
     }
@@ -56,7 +56,7 @@ void Spinner::setValue2(int percent) {
         lastVal2 = percent;
         if (continious2) {
             continiousPos2 = 1440;
-            continiousProgression2();
+            timer.singleShot(20, this, SLOT(continiousProgression2()));
         }
         else update(inner);
     }
