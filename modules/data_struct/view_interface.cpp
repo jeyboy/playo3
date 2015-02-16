@@ -592,16 +592,18 @@ void ViewInterface::dropEvent(QDropEvent * event) {
 void ViewInterface::iterateSpinner() {
     qDebug() << p;
 
-    if (p == 0)
+    if (p == 200)
         p = -100;
 
     if (p == -100 || p >= 0)
-        emit mdl -> setProgress(++p);
+        emit mdl -> setProgress(p);
 
     if (p < 100)
-        timer.singleShot(500, this, SLOT(iterateSpinner()));
+        timer.singleShot(100, this, SLOT(iterateSpinner()));
     else
         emit mdl -> moveOutProcess();
+
+    p++;
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {

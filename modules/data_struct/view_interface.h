@@ -121,7 +121,7 @@ namespace Playo3 {
 
 
 
-        int p = 0;
+        int p = 200;
         QTimer timer;
     };
 }
