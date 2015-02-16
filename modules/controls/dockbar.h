@@ -38,6 +38,7 @@ namespace Playo3 {
         void onMoveInProcess();
         void onMoveOutProcess();
         void onSetProgress(int percent);
+        void onSetProgress2(int percent);
 
         inline void toggleFloating() { setFloating(!isFloating()); }
         inline void floatingChanged(bool floating) {

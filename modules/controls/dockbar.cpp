@@ -50,12 +50,18 @@ void DockBar::onMoveOutProcess() {
     inProcess = false;
     setWidget(mWidget);
     spinner -> hide();
+    spinner -> clear();
     mWidget -> show();
 }
 
 void DockBar::onSetProgress(int percent) {
     if (spinner)
         spinner -> setValue(percent);
+}
+
+void DockBar::onSetProgress2(int percent) {
+    if (spinner)
+        spinner -> setValue2(percent);
 }
 
 void DockBar::resizeEvent(QResizeEvent * event) {

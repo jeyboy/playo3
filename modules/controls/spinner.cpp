@@ -1,10 +1,12 @@
 #include "spinner.h"
+#include <qdebug.h>
 
 Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
-        spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), continiousLen((15 / 100.0) * -5760),
-        w(spinner_width), h(spinner_height), clearPen(0), spinePen(0), continious(false) {
+        spineWidth(10), spinePad(2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
+        w(spinner_width), h(spinner_height), clearPen(0), spinePen(0) {
 
     setAutoFillBackground(false);
+    clear();
 
     img_text = new QStaticText(text);
     QTextOption options(Qt::AlignCenter);
@@ -36,20 +38,39 @@ Spinner::~Spinner() {
 
 void Spinner::setValue(int percent) {
     if (lastVal != percent) {
-        continious = (percent < 0 && lastVal >= 0);
-
-        if (continious) {
-            continiousPos = 1440;
-//            timer.singleShot(1, this, SLOT(continiousProgression()));
-            continiousProgression();
-        }
+        continious = (percent == SPINNER_IS_CONTINIOUS);
 
         lastVal = percent;
-        update(outter);
+        if (continious) {
+            continiousPos = 1440;
+            continiousProgression();
+        }
+        else update(outter);
     }
 }
 
+void Spinner::setValue2(int percent) {
+    if (lastVal2 != percent) {
+        continious2 = (percent == SPINNER_IS_CONTINIOUS);
+
+        lastVal2 = percent;
+        if (continious2) {
+            continiousPos2 = 1440;
+            continiousProgression2();
+        }
+        else update(inner);
+    }
+}
+
+void Spinner::clear() {
+    continious = continious2 = false;
+    lastVal = 0;
+    lastVal2 = SPINNER_NOT_SHOW_SECOND;
+}
+
 void Spinner::paintEvent(QPaintEvent * e) {
+    bool drawSecond = (lastVal2 > SPINNER_NOT_SHOW_SECOND);
+
     QPainter p(this);
     p.save();
     p.setRenderHint(QPainter::HighQualityAntialiasing, true);
@@ -61,8 +82,14 @@ void Spinner::paintEvent(QPaintEvent * e) {
     p.drawEllipse(outter);
     p.drawEllipse(inner);
 
+    if (drawSecond)
+        p.drawEllipse(ininner);
+
     p.setPen(*clearPen);
     p.drawEllipse(spine);
+
+    if (drawSecond)
+        p.drawEllipse(inner_spine);
 
     p.setPen(*spinePen);
 
@@ -71,29 +98,45 @@ void Spinner::paintEvent(QPaintEvent * e) {
     else
         p.drawArc(spine, 1440, (lastVal / 100.0) * -5760);
 
+    if (drawSecond) {
+        if (continious2)
+            p.drawArc(inner_spine, continiousPos2, continiousLen);
+        else
+            p.drawArc(inner_spine, 1440, (lastVal2 / 100.0) * -5760);
+    }
+
     p.restore();
     e -> accept();
 }
 
-void Spinner::resizeEvent(QResizeEvent * e) {
+void Spinner::resizeEvent(QResizeEvent * event) {
+    int b = spineWidth / 2 + borderWidth / 2;
+    int e = spineWidth + borderWidth;
+
     outter = QRect(width() / 2 - w / 2, height() / 2 - h / 2, w, h);
     spine = QRect(
-                outter.left() + spineWidth / 2 + borderWidth / 2,
-                outter.top() + spineWidth / 2 + borderWidth / 2,
-                outter.width() - spineWidth - borderWidth,
-                outter.height() - spineWidth - borderWidth
+                    outter.left() + b, outter.top() + b,
+                    outter.width() - e, outter.height() - e
                 );
 
     inner = QRect(
-                spine.left() + spineWidth / 2 + borderWidth / 2,
-                spine.top() + spineWidth / 2 + borderWidth / 2,
-                spine.width() - spineWidth - borderWidth,
-                spine.height() - spineWidth - borderWidth
+                    spine.left() + b, spine.top() + b,
+                    spine.width() - e, spine.height() - e
+                );
+
+    inner_spine = QRect(
+                    inner.left() + b, inner.top() + b,
+                    inner.width() - e, inner.height() - e
+                );
+
+    ininner = QRect(
+                    inner_spine.left() + b, inner_spine.top() + b,
+                    inner_spine.width() - e, inner_spine.height() - e
                 );
 
     textPoint = outter.bottomLeft() + QPoint(0, 2);
 
-    QWidget::resizeEvent(e)
+    QWidget::resizeEvent(event)
 ;}
 
 void Spinner::continiousProgression() {
@@ -102,4 +145,12 @@ void Spinner::continiousProgression() {
 
     if (continious)
         timer.singleShot(20, this, SLOT(continiousProgression()));
+}
+
+void Spinner::continiousProgression2() {
+    update(inner);
+    continiousPos2 -= 80;
+
+    if (continious2)
+        timer2.singleShot(20, this, SLOT(continiousProgression2()));
 }

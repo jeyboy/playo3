@@ -79,6 +79,7 @@ namespace Playo3 {
         void moveInProcess();
         void moveOutProcess();
         void setProgress(int percent);
+        void setProgress2(int percent);
     protected:
         void proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const;
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);

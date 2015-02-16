@@ -44,6 +44,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     connect(mdl, SIGNAL(moveInProcess()), parent, SLOT(onMoveInProcess()));
     connect(mdl, SIGNAL(moveOutProcess()), parent, SLOT(onMoveOutProcess()));
     connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
+    connect(mdl, SIGNAL(setProgress2(int)), parent, SLOT(onSetProgress2(int)));
 
     connect(Player::instance(), SIGNAL(itemExecError(QModelIndex &)), this, SLOT(itemError(QModelIndex &)));
     connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex &)), this, SLOT(itemNotSupported(QModelIndex &)));
@@ -592,18 +593,25 @@ void ViewInterface::dropEvent(QDropEvent * event) {
 void ViewInterface::iterateSpinner() {
     qDebug() << p;
 
+    if (p2 == 200)
+        p2 = -50;
+
     if (p == 200)
         p = -100;
 
     if (p == -100 || p >= 0)
-        emit mdl -> setProgress(p);
+        emit mdl -> setProgress(p == -100 ? SPINNER_IS_CONTINIOUS : p);
 
-    if (p < 100)
+    if (p2 == -50 || p2 >= 0)
+        emit mdl -> setProgress2(p2 == -50 ? SPINNER_IS_CONTINIOUS : p2);
+
+    if (p < 100) {
+        p++; p2++;
         timer.singleShot(100, this, SLOT(iterateSpinner()));
-    else
+    } else {
         emit mdl -> moveOutProcess();
-
-    p++;
+        p2 = p = 200;
+    }
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
