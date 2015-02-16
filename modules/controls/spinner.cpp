@@ -45,7 +45,7 @@ void Spinner::setValue(int percent) {
         }
 
         lastVal = percent;
-        update();
+        update(outter);
     }
 }
 
@@ -97,7 +97,7 @@ void Spinner::resizeEvent(QResizeEvent * e) {
 ;}
 
 void Spinner::continiousProgression() {
-    update();
+    update(outter);
     continiousPos -= 80;
 
     if (continious)
