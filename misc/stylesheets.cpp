@@ -393,7 +393,7 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                    "QTabBar QToolButton::left-arrow {"
 //                    "    image: url(leftarrow.png);"
 //                    "}"
-    );
+    ) + treeViewStyles();
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {

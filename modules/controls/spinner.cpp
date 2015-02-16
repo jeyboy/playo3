@@ -97,7 +97,6 @@ void Spinner::resizeEvent(QResizeEvent * e) {
 ;}
 
 void Spinner::continiousProgression() {
-    qDebug() << "CONT ";
     continiousPos -= 80;
     update();
 
