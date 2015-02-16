@@ -1,5 +1,4 @@
 #include "spinner.h"
-#include <qdebug.h>
 
 Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
         spineWidth(10), spinePad(2), borderWidth(2), lastVal(0), continiousLen((15 / 100.0) * -5760),
@@ -41,7 +40,8 @@ void Spinner::setValue(int percent) {
 
         if (continious) {
             continiousPos = 1440;
-            timer.singleShot(20, this, SLOT(continiousProgression()));
+//            timer.singleShot(1, this, SLOT(continiousProgression()));
+            continiousProgression();
         }
 
         lastVal = percent;
@@ -97,8 +97,8 @@ void Spinner::resizeEvent(QResizeEvent * e) {
 ;}
 
 void Spinner::continiousProgression() {
-    continiousPos -= 80;
     update();
+    continiousPos -= 80;
 
     if (continious)
         timer.singleShot(20, this, SLOT(continiousProgression()));
