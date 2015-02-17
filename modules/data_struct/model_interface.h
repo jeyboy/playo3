@@ -56,6 +56,8 @@ namespace Playo3 {
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
 
+        QModelIndex fromPath(QString path);
+
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
@@ -83,7 +85,6 @@ namespace Playo3 {
     protected:
         void proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const;
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
-        QModelIndex fromPath(QString path);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         template<class T> T * item(const QModelIndex & index) const {
@@ -94,7 +95,6 @@ namespace Playo3 {
         FolderItem * rootItem;
     };
 
-    ////        void refreshItem(ModelItems::ModelItem * item);
     ////        void removeFolderPrebuild(ModelItems::ModelItem * temp);
 
     ////        virtual WebApi * getApi() { return 0; } //stub

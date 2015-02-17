@@ -20,8 +20,6 @@ SOURCES += main.cpp\
     playo.cpp \
     dockbars.cpp \
     toolbars.cpp \
-    modules/controls/tabber.cpp \
-    modules/controls/tab.cpp \
     modules/controls/toolbar.cpp \
     modules/controls/toolbarbutton.cpp \
     dialogs/toolbarbuttondialog.cpp \
@@ -90,8 +88,6 @@ HEADERS  += playo.h \
     misc/conversions.h \
     misc/stylesheets.h \
     modules/controls/tray.h \
-    modules/controls/tabber.h \
-    modules/controls/tab.h \
     modules/controls/json_fields.h \
     modules/controls/toolbar.h \
     modules/controls/toolbarbutton.h \

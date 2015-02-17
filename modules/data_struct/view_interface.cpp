@@ -101,7 +101,11 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //    }
 //}
 
-bool ViewInterface::execIndex(const QModelIndex & node) {
+bool ViewInterface::execPath(const QString path, bool paused, uint start) {
+    return execIndex(mdl -> fromPath(path), paused, start);
+}
+
+bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start) {
     qDebug() << "PLAYED " << node.data();
     Dockbars::instance() -> setPlayed((DockBar *)parent());
 
@@ -109,7 +113,7 @@ bool ViewInterface::execIndex(const QModelIndex & node) {
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
-        Player::instance() -> playIndex(node, false);
+        Player::instance() -> playIndex(node, paused, start);
         return true;
     }
 

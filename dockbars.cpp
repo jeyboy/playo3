@@ -32,6 +32,12 @@ void Dockbars::load(QJsonArray & bars) {
                 ((DockBar *)curr_bar) -> markAsSticked();
 
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
+
+            if (obj.value("played").toBool()) {
+                ViewInterface * v = view(qobject_cast<DockBar *>(curr_bar));
+                if (v)
+                    v -> execPath(obj.value("played_item").toString(), true, obj.value("played_time").toInt());
+            }
         }
     } else {
         // Do something if we did not have any bars
@@ -55,6 +61,13 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("title", bar -> windowTitle());
             curr_bar.insert("name", bar -> objectName());
             curr_bar.insert("stick", bar -> isSticked());
+            if (bar == played) {
+                curr_bar.insert("played", true);
+                if (Player::instance() -> playedIndex().isValid()) {
+                    curr_bar.insert("played_item", Player::instance() -> playedIndex().data(ITREEPATH).toString());
+                    curr_bar.insert("played_time", Player::instance() -> getPosition());
+                }
+            }
 
             ViewInterface * v = view(bar);
 

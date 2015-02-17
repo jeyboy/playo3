@@ -21,7 +21,7 @@ public:
     };
 
     static Player * instance(QObject * parent = 0);
-    void playIndex(QModelIndex item, bool paused = false);
+    void playIndex(QModelIndex item, bool paused = false, uint start = 0);
     void setStartPosition(int position);
 
     void setPlayButton(QAction * playAction);

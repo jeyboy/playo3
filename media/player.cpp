@@ -51,7 +51,7 @@ void Player::updateItemState(bool isPlayed) {
     setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
 }
 
-void Player::playIndex(QModelIndex item, bool paused) {
+void Player::playIndex(QModelIndex item, bool paused, uint start) {
     switch(state()) {
         case StoppedState: { break; }
 
@@ -66,6 +66,9 @@ void Player::playIndex(QModelIndex item, bool paused) {
     currentIndex = item;
     setMedia(item.data(IURL).toUrl());
     play();
+
+    if (start > 0)
+        setStartPosition(start);
 
     if (isPlayed())
         updateItemState(true);
