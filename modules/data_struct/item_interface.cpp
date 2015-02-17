@@ -104,7 +104,7 @@ int ItemInterface::row() const {
 //    return true;
 //}
 
-QString ItemInterface::buildTreePath() const { //TODO: remove later
+QString ItemInterface::buildTreePath() const {
     return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
@@ -133,6 +133,7 @@ QVariant ItemInterface::data(int column) const {
         case IURL:             return toUrl();
         case IFOLDER:          return isContainer();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
+        case ITREEPATH:        return buildTreePath();
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole: {

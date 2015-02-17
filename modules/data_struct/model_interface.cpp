@@ -350,18 +350,14 @@ void ModelInterface::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
     exRow = dRow < 0 ? 0 : dRow;
 }
 
-QModelIndex ModelInterface::fromPath(QString /*path*/) { //TODO: rewrite
-//    QStringList parts = path.split(' ', QString::SkipEmptyParts);
-//    ModelItem * curr = getModel() -> root();
-//    int level;
+QModelIndex ModelInterface::fromPath(QString path) {
+    QStringList parts = path.split(' ', QString::SkipEmptyParts);
+    FolderItem * curr = rootItem;
 
-//    while(parts.length() > 0) {
-//        level = parts.takeFirst().toInt();
-//        curr = curr -> child(level);
-//    }
+    while(parts.length() > 1)
+        curr = dynamic_cast<FolderItem *>(curr -> child(parts.takeFirst().toInt()));
 
-//    return curr;
-    return QModelIndex();
+    return index(curr -> child(parts.takeFirst().toInt()));
 }
 
 Qt::DropActions ModelInterface::supportedDropActions() const {
