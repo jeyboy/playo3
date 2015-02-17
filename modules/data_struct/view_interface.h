@@ -29,6 +29,10 @@
 #include <qtimer.h>
 
 namespace Playo3 {
+    bool modelIndexComparator(const QModelIndex & a, const QModelIndex & b) const {
+        return a < b;
+    }
+
     class Dockbars;
 
     class ViewInterface : public QTreeView {

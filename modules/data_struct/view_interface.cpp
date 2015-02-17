@@ -415,45 +415,69 @@ void ViewInterface::removeProccessing(bool inProcess) {
 
     Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
-    if (total < 200 || mdl -> containerType() != list) { // this version is very slow but is more canonical
-        bool loopReason = true;
+    if (inProcess)
+        emit mdl -> setProgress(SPINNER_IS_CONTINIOUS);
 
-        while(loopReason && !selectedIndexes().isEmpty()) { // this did not work in not main thread :(
-            temp = selectedIndexes().size();
-            loopReason = !(temp == 1);
-            removeRow(selectedIndexes().last(), !loopReason, true);
-            if (inProcess)
-                emit mdl -> setProgress(temp * 100.0 / total);
-        }
-    } else {
-        QModelIndex ind;
-        QModelIndexList l = selectedIndexes();
+    QModelIndexList l = selectedIndexes();
+    qSort(l.begin(), l.end(), modelIndexComparator);
 
-        qSort(l.begin(), l.end());
 
-        model() -> blockSignals(true);
-        blockSignals(true);
 
-        while((temp = l.size()) > 1) {
-            ind = l.takeLast();
-            removeRow(ind, false, true);
-            if (inProcess) {
-                model() -> blockSignals(false);
-                emit mdl -> setProgress(temp * 100.0 / total);
-                model() -> blockSignals(true);
-            }
-        }
 
-        blockSignals(false);
-        model() -> blockSignals(false);
 
-        reset();
 
-        if(l.size() > 0) {
-            ind = l.takeLast();
-            removeRow(ind, true, true);
-        }
-    }
+
+
+
+//    if (total < 200 || mdl -> containerType() != list) { // this version is very slow but is more canonical
+//        bool loopReason = true;
+
+//        while(loopReason && !selectedIndexes().isEmpty()) { // this did not work in not main thread :(
+//            temp = selectedIndexes().size();
+//            loopReason = !(temp == 1);
+//            removeRow(selectedIndexes().last(), !loopReason, true);
+//            if (inProcess)
+//                emit mdl -> setProgress(temp * 100.0 / total);
+//        }
+//    } else {
+////        use
+////        protected Q_SLOTS:
+////            void rowsRemoved(const QModelIndex &parent, int first, int last);
+
+////        for type list
+
+
+
+
+
+//        QModelIndex ind;
+//        QModelIndexList l = selectedIndexes();
+
+//        qSort(l.begin(), l.end());
+
+//        model() -> blockSignals(true);
+//        blockSignals(true);
+
+//        while((temp = l.size()) > 1) {
+//            ind = l.takeLast();
+//            removeRow(ind, false, true);
+//            if (inProcess) {
+//                model() -> blockSignals(false);
+//                emit mdl -> setProgress(temp * 100.0 / total);
+//                model() -> blockSignals(true);
+//            }
+//        }
+
+//        blockSignals(false);
+//        model() -> blockSignals(false);
+
+//        reset();
+
+//        if(l.size() > 0) {
+//            ind = l.takeLast();
+//            removeRow(ind, true, true);
+//        }
+//    }
 
     if (inProcess)
         emit mdl -> moveOutProcess();

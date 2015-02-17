@@ -3,7 +3,6 @@
 
 #include <qmimedata.h>
 #include <qabstractitemmodel.h>
-//#include <qvariant.h>
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
 #include "container_types.h"
