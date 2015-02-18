@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     dialogs/web_dialog.cpp \
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
-    modules/controls/spinner.cpp
+    modules/controls/spinner.cpp \
+    modules/controls/user_dialog_box.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -162,7 +163,8 @@ HEADERS  += playo.h \
     modules/data_struct/model_item_delegate.h \
     misc/spectrum_types.h \
     modules/data_struct/container_types.h \
-    modules/controls/spinner.h
+    modules/controls/spinner.h \
+    modules/controls/user_dialog_box.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

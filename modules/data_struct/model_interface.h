@@ -17,6 +17,12 @@ namespace Playo3 {
         int eRow, dRow;
     };
 
+    struct modelIndexComparator {
+        bool operator()(const QModelIndex & a, const QModelIndex & b) const {
+            return a.data(ITREEPATH).toString() < b.data(ITREEPATH).toString();
+        }
+    };
+
     #define DROP_OUTER_FORMAT "text/uri-list"
     #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 

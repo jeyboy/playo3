@@ -34,6 +34,11 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     int iconDimension = Settings::instance() -> getIconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
+    connect(
+                this, SIGNAL(showAlert(const QString &, const QString &, QMessageBox::StandardButtons)),
+                UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
+                Qt::BlockingQueuedConnection
+           );
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
@@ -355,6 +360,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
+//TODO: new selection move to the slot
 bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
     bool isFolder = false;
 
@@ -365,13 +371,13 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
                 return false;
 
             if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
-                int dialogRes = QMessageBox::warning(
-                                    parentWidget(),
-                                    "Folder deletion",
-                                    "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
-                                    QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
-                                );
+                emit showAlert(
+                    "Folder deletion",
+                    "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
+                    QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
+                );
 
+                int dialogRes = UserDialogBox::instance() -> lastAnswer();
                 Settings::instance() -> setfolderDeletionAnswer(dialogRes);
 
                 if (dialogRes == QMessageBox::No || dialogRes == QMessageBox::NoToAll)
@@ -384,31 +390,33 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
         Player::instance() -> playIndex(QModelIndex());
 
 
-    if (updateSelection) {
-        QModelIndex newSel = candidateOnSelection(node);
-        if (!newSel.isValid())
-            newSel = candidateOnSelection(node, true);
+//    if (updateSelection) {
+//        QModelIndex newSel = candidateOnSelection(node);
+//        if (!newSel.isValid())
+//            newSel = candidateOnSelection(node, true);
 
-        setCurrentIndex(newSel);
+//        setCurrentIndex(newSel);
 
+//        rowsRemoved(node.parent(), node.row(), node.row());
+//        return model() -> removeRow(node.row(), node.parent());
+
+
+
+////        QModelIndex parentNode = node.parent();
+////        int row = node.row();
+
+////        bool res = mdl -> removeRow(row, parentNode);
+////        if (needReset)
+////            reset();
+
+////        node = mdl -> index(row, 0, parentNode, true);
+////        if (!node.isValid()) node = parentNode;
+////        qDebug() << "!!v " << node.data();
+////        node = candidateOnSelection(node);
+////        setCurrentIndex(node);
+//    }
+//    else
         return model() -> removeRow(node.row(), node.parent());
-
-
-
-//        QModelIndex parentNode = node.parent();
-//        int row = node.row();
-
-//        bool res = mdl -> removeRow(row, parentNode);
-//        if (needReset)
-//            reset();
-
-//        node = mdl -> index(row, 0, parentNode, true);
-//        if (!node.isValid()) node = parentNode;
-//        qDebug() << "!!v " << node.data();
-//        node = candidateOnSelection(node);
-//        setCurrentIndex(node);
-    }
-    else return model() -> removeRow(node.row(), node.parent());
 }
 
 void ViewInterface::removeProccessing(bool inProcess) {
@@ -418,14 +426,24 @@ void ViewInterface::removeProccessing(bool inProcess) {
         emit mdl -> moveInProcess();
 
     Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-
-    if (inProcess)
-        emit mdl -> setProgress(SPINNER_IS_CONTINIOUS);
-
     QModelIndexList l = selectedIndexes();
-    qSort(l.begin(), l.end(), modelIndexComparator);
 
+    if (mdl -> containerType() == list) {
+        qSort(l.begin(), l.end());
+        temp = l.size();
+    } else {
+        qSort(l.begin(), l.end(), modelIndexComparator());
+        temp = l.size();
+    }
 
+    QModelIndexList::Iterator eit = --l.end();
+    for (; eit != l.begin(); --eit) {
+        removeRow((*eit), false, true);
+        if (inProcess)
+            emit mdl -> setProgress(--temp * 100.0 / total);
+    }
+
+    removeRow((*eit), true, true);
 
 
 
@@ -678,11 +696,13 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        //TODO: removing did nor work correctly in separate thread :(
-//        if (selectedIndexes().size() > 10000 && mdl -> containerType() == list)
-//            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
-//        else
-            removeProccessing();
+        QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
+
+//        //TODO: removing did nor work correctly in separate thread :(
+////        if (selectedIndexes().size() > 10000 && mdl -> containerType() == list)
+////            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
+////        else
+//            removeProccessing();
     }
 
     QTreeView::keyPressEvent(event);

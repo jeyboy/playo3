@@ -44,6 +44,8 @@ void Playo::activation() {
     Stylesheets::initPens();
     new Tray(this);
 
+    UserDialogBox::instance(this);
+
     Player::instance(this);
     ToolBars::instance(this);
     Dockbars::instance(this);

@@ -26,6 +26,8 @@ Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * 
     spinePen -> setWidth(spineWidth - spinePad * 2);
     spinePen -> setCosmetic(true);
     spinePen -> setCapStyle(Qt::RoundCap);
+
+    setValue(SPINNER_IS_CONTINIOUS); // start from continious state
 }
 
 Spinner::~Spinner() {
@@ -42,7 +44,7 @@ void Spinner::setValue(int percent) {
 
         lastVal = percent;
         if (continious) {
-            continiousPos = 1440;
+            continiousPos = 1440; // 12 hours pos
             timer.singleShot(20, this, SLOT(continiousProgression()));
         }
         else update(outter);
@@ -55,7 +57,7 @@ void Spinner::setValue2(int percent) {
 
         lastVal2 = percent;
         if (continious2) {
-            continiousPos2 = 1440;
+            continiousPos2 = 1440; // 12 hours pos
             timer.singleShot(20, this, SLOT(continiousProgression2()));
         }
         else update(inner);

@@ -20,6 +20,7 @@
 #include "tree_view_style.h"
 
 #include "media/player.h"
+#include "modules/controls/user_dialog_box.h"
 
 #include "model_item_delegate.h"
 
@@ -29,10 +30,6 @@
 #include <qtimer.h>
 
 namespace Playo3 {
-    bool modelIndexComparator(const QModelIndex & a, const QModelIndex & b) const {
-        return a < b;
-    }
-
     class Dockbars;
 
     class ViewInterface : public QTreeView {
@@ -70,6 +67,9 @@ namespace Playo3 {
         void downloadSelected(QString savePath, bool markAsLiked = false);
 
         void setIconSize(const QSize & size);
+
+    signals:
+        showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
     public slots:
         void expandeAll();
         void collapseAll();

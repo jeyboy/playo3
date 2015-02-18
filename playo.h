@@ -4,6 +4,7 @@
 #include <qdebug.h>
 #include "modules/controls/window.h"
 #include "modules/controls/tray.h"
+#include "modules/controls/user_dialog_box.h"
 
 #include "toolbars.h"
 #include "dockbars.h"
