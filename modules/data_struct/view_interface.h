@@ -55,7 +55,7 @@ namespace Playo3 {
         inline ViewSettings settings() const { return sttngs; }
         inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
 
-        inline QModelIndexList selectedItems() const { return selectedIndexes(); }
+//        inline QModelIndexList selectedItems() const { return selectedIndexes(); }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);

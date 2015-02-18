@@ -390,33 +390,15 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
         Player::instance() -> playIndex(QModelIndex());
 
 
-//    if (updateSelection) {
-//        QModelIndex newSel = candidateOnSelection(node);
-//        if (!newSel.isValid())
-//            newSel = candidateOnSelection(node, true);
+    if (updateSelection) {
+        QModelIndex newSel = candidateOnSelection(node);
+        if (!newSel.isValid())
+            newSel = candidateOnSelection(node, true);
 
-//        setCurrentIndex(newSel);
+        setCurrentIndex(newSel);
+    }
 
-//        rowsRemoved(node.parent(), node.row(), node.row());
-//        return model() -> removeRow(node.row(), node.parent());
-
-
-
-////        QModelIndex parentNode = node.parent();
-////        int row = node.row();
-
-////        bool res = mdl -> removeRow(row, parentNode);
-////        if (needReset)
-////            reset();
-
-////        node = mdl -> index(row, 0, parentNode, true);
-////        if (!node.isValid()) node = parentNode;
-////        qDebug() << "!!v " << node.data();
-////        node = candidateOnSelection(node);
-////        setCurrentIndex(node);
-//    }
-//    else
-        return model() -> removeRow(node.row(), node.parent());
+    return model() -> removeRow(node.row(), node.parent());
 }
 
 void ViewInterface::removeProccessing(bool inProcess) {
@@ -433,6 +415,7 @@ void ViewInterface::removeProccessing(bool inProcess) {
         temp = l.size();
     } else {
         qSort(l.begin(), l.end(), modelIndexComparator());
+        //TODO: optimization needed - exclude of items if parent in deletion list
         temp = l.size();
     }
 
@@ -443,63 +426,7 @@ void ViewInterface::removeProccessing(bool inProcess) {
             emit mdl -> setProgress(--temp * 100.0 / total);
     }
 
-    removeRow((*eit), true, true);
-
-
-
-
-
-
-
-//    if (total < 200 || mdl -> containerType() != list) { // this version is very slow but is more canonical
-//        bool loopReason = true;
-
-//        while(loopReason && !selectedIndexes().isEmpty()) { // this did not work in not main thread :(
-//            temp = selectedIndexes().size();
-//            loopReason = !(temp == 1);
-//            removeRow(selectedIndexes().last(), !loopReason, true);
-//            if (inProcess)
-//                emit mdl -> setProgress(temp * 100.0 / total);
-//        }
-//    } else {
-////        use
-////        protected Q_SLOTS:
-////            void rowsRemoved(const QModelIndex &parent, int first, int last);
-
-////        for type list
-
-
-
-
-
-//        QModelIndex ind;
-//        QModelIndexList l = selectedIndexes();
-
-//        qSort(l.begin(), l.end());
-
-//        model() -> blockSignals(true);
-//        blockSignals(true);
-
-//        while((temp = l.size()) > 1) {
-//            ind = l.takeLast();
-//            removeRow(ind, false, true);
-//            if (inProcess) {
-//                model() -> blockSignals(false);
-//                emit mdl -> setProgress(temp * 100.0 / total);
-//                model() -> blockSignals(true);
-//            }
-//        }
-
-//        blockSignals(false);
-//        model() -> blockSignals(false);
-
-//        reset();
-
-//        if(l.size() > 0) {
-//            ind = l.takeLast();
-//            removeRow(ind, true, true);
-//        }
-//    }
+    removeRow((*eit), !inProcess, true);
 
     if (inProcess)
         emit mdl -> moveOutProcess();
@@ -620,7 +547,7 @@ void ViewInterface::setIconSize(const QSize & size) {
 /// PROTECTED
 //////////////////////////////////////////////////////
 
-QModelIndex ViewInterface::activeIndex() { //TODO: test
+QModelIndex ViewInterface::activeIndex() {
     QModelIndex ind = Player::instance() -> playedIndex();
 
     if (ind.model() != model())
@@ -696,13 +623,14 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
-
-//        //TODO: removing did nor work correctly in separate thread :(
-////        if (selectedIndexes().size() > 10000 && mdl -> containerType() == list)
-////            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
-////        else
-//            removeProccessing();
+        if (selectedIndexes().size() > 100)
+            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
+        else if (selectedIndexes().size() > 1)
+            removeProccessing();
+        else {
+            QModelIndex ind = selectedIndexes().takeLast();
+            removeRow(ind, true, false);
+        }
     }
 
     QTreeView::keyPressEvent(event);
