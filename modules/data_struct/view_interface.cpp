@@ -434,7 +434,6 @@ void ViewInterface::removeProccessing(bool inProcess) {
     }
 
     if (inProcess) {
-        qDebug() << "BUBU";
         emit threadedRowRemoving((*eit), true, true);
     } else
         removeRow((*eit), true, true);
@@ -639,8 +638,9 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
         else if (selectedIndexes().size() > 1)
             removeProccessing();
         else {
-            QModelIndex ind = selectedIndexes().takeLast();
-            removeRow(ind, true, false);
+            QModelIndex ind = currentIndex();
+            if (currentIndex().isValid())
+                removeRow(ind, true, false);
         }
     }
 
