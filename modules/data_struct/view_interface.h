@@ -70,6 +70,8 @@ namespace Playo3 {
 
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
+        void threadedRowRemoving(QModelIndex node, bool updateSelection, bool usePrevAction);
+
     public slots:
         void expandeAll();
         void collapseAll();
@@ -85,6 +87,7 @@ namespace Playo3 {
         inline void itemError(QModelIndex & /*node*/) { /*TODO: reaction needed*/ }
         inline void onDoubleClick(const QModelIndex & node) { execIndex(node); }
         void openLocation();
+        bool removeRow(const QModelIndex & node, bool updateSelection = false, bool usePrevAction = false);
 
         void download();
         void downloadAll();
@@ -93,7 +96,6 @@ namespace Playo3 {
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
-        bool removeRow(QModelIndex & node, bool updateSelection = false, bool usePrevAction = false);
         void removeProccessing(bool inProcess = false);
 
         bool prepareDownloading(QString path);

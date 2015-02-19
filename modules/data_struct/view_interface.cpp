@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true)  {
+    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true) {
 
     setIndentation(12);
     setStyle(new TreeViewStyle);
@@ -39,6 +39,8 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
                 UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
                 Qt::BlockingQueuedConnection
            );
+    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)));
+
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
     connect(this, SIGNAL(collapsed(const QModelIndex &)), mdl, SLOT(collapsed(const QModelIndex &)));
@@ -361,7 +363,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 }
 
 //TODO: new selection move to the slot
-bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool usePrevAction) {
+bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bool usePrevAction) {
     bool isFolder = false;
 
     qDebug() << "REM: " << node.data();
@@ -391,7 +393,12 @@ bool ViewInterface::removeRow(QModelIndex & node, bool updateSelection, bool use
 
 
     if (updateSelection) {
-        QModelIndex newSel = candidateOnSelection(node);
+        QModelIndex newSel = node;
+        if (isFolder) {
+            collapse(newSel);
+            newSel = indexBelow(newSel);
+        }
+        newSel = candidateOnSelection(node);
         if (!newSel.isValid())
             newSel = candidateOnSelection(node, true);
 
@@ -426,7 +433,11 @@ void ViewInterface::removeProccessing(bool inProcess) {
             emit mdl -> setProgress(--temp * 100.0 / total);
     }
 
-    removeRow((*eit), !inProcess, true);
+    if (inProcess) {
+        qDebug() << "BUBU";
+        emit threadedRowRemoving((*eit), true, true);
+    } else
+        removeRow((*eit), true, true);
 
     if (inProcess)
         emit mdl -> moveOutProcess();
@@ -623,7 +634,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        if (selectedIndexes().size() > 100)
+        if (selectedIndexes().size() > 5)
             QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
         else if (selectedIndexes().size() > 1)
             removeProccessing();
