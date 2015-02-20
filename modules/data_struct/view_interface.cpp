@@ -373,7 +373,7 @@ bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bo
 
             if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
                 //TODO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
-                if (QThread::currentThreadId() == QApplication::instance() -> thread() -> currentThreadId()) {
+                if (QThread::currentThread() == QApplication::instance() -> thread()) {
                     UserDialogBox::instance() -> alert(
                         "Folder deletion",
                         "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
