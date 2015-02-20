@@ -2,6 +2,10 @@
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
+//    QCoreApplication::setOrganizationName("BigBug");
+//    QCoreApplication::setOrganizationDomain("bigbug.sos");
+//    QCoreApplication::setApplicationName("Playo3");
+
     QApplication a(argc, argv);
     a.setStyleSheet(Stylesheets::appStyles());
 

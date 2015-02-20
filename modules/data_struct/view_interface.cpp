@@ -434,6 +434,8 @@ void ViewInterface::removeProccessing(bool inProcess) {
         temp = l.size();
     }
 
+    qDebug() << "# " << temp;
+
     QModelIndexList::Iterator eit = --l.end();
     for (; eit != l.begin(); --eit) {
         if (inProcess) {
