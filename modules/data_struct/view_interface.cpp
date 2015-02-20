@@ -39,7 +39,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
                 UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
                 Qt::BlockingQueuedConnection
            );
-    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)), Qt::QueuedConnection);
+    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)), Qt::BlockingQueuedConnection);
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
@@ -431,36 +431,16 @@ void ViewInterface::removeProccessing(bool inProcess) {
     } else {
         qSort(l.begin(), l.end(), modelIndexComparator());
         //TODO: optimization needed - exclude items if parent in deletion list
-
-//        QHash<QString, QList<QModelIndex> > nods;
-//        temp = l.size();
-
-//        QModelIndexList::Iterator bit = l.begin();
-//        QString path, last;
-//        for (; bit != l.end(); ++bit) {
-//            path = (*bit).data(ITREEPATH).toString();
-
-//            if ((*bit).data(IFOLDER).toBool()) {
-//                if (!last.isNull())
-
-//            } else {
-
-//            }
-
-//            if (inProcess)
-//                emit mdl -> setProgress2(--temp * 100.0 / total);
-//        }
-
-//        if (inProcess)
-//            emit mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
         temp = l.size();
     }
 
     QModelIndexList::Iterator eit = --l.end();
     for (; eit != l.begin(); --eit) {
-        removeRow((*eit), false, true);
-        if (inProcess)
+        if (inProcess) {
+            emit threadedRowRemoving((*eit), true, true);
             emit mdl -> setProgress(--temp * 100.0 / total);
+        }
+        else removeRow((*eit), false, true);
     }
 
     removeRow((*eit), !inProcess, true); // select new item only if we not in thread
