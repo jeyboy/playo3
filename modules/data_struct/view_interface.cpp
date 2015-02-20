@@ -437,7 +437,10 @@ void ViewInterface::removeProccessing(bool inProcess) {
     QModelIndexList::Iterator eit = --l.end();
     for (; eit != l.begin(); --eit) {
         if (inProcess) {
-            emit threadedRowRemoving((*eit), true, true);
+            if (mdl -> containerType() == list)
+                removeRow((*eit), false, true); // in thread exist possibility remove parent earlier then child :(
+            else
+                emit threadedRowRemoving((*eit), true, true);
             emit mdl -> setProgress(--temp * 100.0 / total);
         }
         else removeRow((*eit), false, true);
@@ -450,6 +453,7 @@ void ViewInterface::removeProccessing(bool inProcess) {
 //    } else
 //        removeRow((*eit), true, true);
 
+    l.clear();
     if (inProcess)
         emit mdl -> moveOutProcess();
 }
