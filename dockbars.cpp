@@ -24,7 +24,7 @@ void Dockbars::load(QJsonArray & bars) {
         foreach(QJsonValue bar, bars) {
             obj = bar.toObject();
             barName = obj.value("title").toString();
-            barsList.removeOne(barName);
+//            barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value("set").toObject()), obj.value("cont").toObject());
             curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
 
@@ -35,8 +35,11 @@ void Dockbars::load(QJsonArray & bars) {
 
             if (obj.value("played").toBool()) {
                 ViewInterface * v = view(qobject_cast<DockBar *>(curr_bar));
-                if (v)
-                    v -> execPath(obj.value("played_item").toString(), true, obj.value("played_time").toInt());
+                if (v) {
+                    QString path = obj.value("played_item").toString();
+                    if (!path.isEmpty())
+                        v -> execPath(path, true, obj.value("played_time").toInt());
+                }
             }
         }
     } else {

@@ -352,10 +352,16 @@ void ModelInterface::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
 
 QModelIndex ModelInterface::fromPath(QString path) {
     QStringList parts = path.split(' ', QString::SkipEmptyParts);
+
+    if (parts.isEmpty())
+        return QModelIndex();
+
     FolderItem * curr = rootItem;
 
-    while(parts.length() > 1)
+    while(parts.length() > 1) {
         curr = dynamic_cast<FolderItem *>(curr -> child(parts.takeFirst().toInt()));
+        if (curr == 0) return QModelIndex(); // while not fixed correct played item removing
+    }
 
     return index(curr -> child(parts.takeFirst().toInt()));
 }

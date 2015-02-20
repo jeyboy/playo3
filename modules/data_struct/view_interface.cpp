@@ -109,7 +109,11 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //}
 
 bool ViewInterface::execPath(const QString path, bool paused, uint start) {
-    return execIndex(mdl -> fromPath(path), paused, start);
+    QModelIndex ind = mdl -> fromPath(path);
+    if (ind.isValid())
+        return execIndex(ind, paused, start);
+    else
+        return false;
 }
 
 bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start) {
