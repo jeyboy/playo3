@@ -39,7 +39,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
                 UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
                 Qt::BlockingQueuedConnection
            );
-    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)));
+    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)), Qt::QueuedConnection);
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
@@ -362,7 +362,6 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-//TODO: new selection move to the slot
 bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bool usePrevAction) {
     bool isFolder = false;
 
@@ -373,11 +372,20 @@ bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bo
                 return false;
 
             if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
-                emit showAlert(
-                    "Folder deletion",
-                    "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
-                    QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
-                );
+                //TODO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
+                if (QThread::currentThreadId() == QApplication::instance() -> thread() -> currentThreadId()) {
+                    UserDialogBox::instance() -> alert(
+                        "Folder deletion",
+                        "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
+                        QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
+                    );
+                } else {
+                    emit showAlert(
+                        "Folder deletion",
+                        "Are you sure what you want to remove the not empty folder '" + node.data().toString() + "' ?",
+                        QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
+                    );
+                }
 
                 int dialogRes = UserDialogBox::instance() -> lastAnswer();
                 Settings::instance() -> setfolderDeletionAnswer(dialogRes);
@@ -433,10 +441,12 @@ void ViewInterface::removeProccessing(bool inProcess) {
             emit mdl -> setProgress(--temp * 100.0 / total);
     }
 
-    if (inProcess) {
-        emit threadedRowRemoving((*eit), true, true);
-    } else
-        removeRow((*eit), true, true);
+    removeRow((*eit), !inProcess, true); // select new item only if we not in thread
+
+//    if (inProcess) {
+//        emit threadedRowRemoving((*eit), true, true); // select elem, but currentIndex is eq to nil
+//    } else
+//        removeRow((*eit), true, true);
 
     if (inProcess)
         emit mdl -> moveOutProcess();
@@ -633,7 +643,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        if (selectedIndexes().size() > 5)
+        if (selectedIndexes().size() > 2)
             QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
         else if (selectedIndexes().size() > 1)
             removeProccessing();
