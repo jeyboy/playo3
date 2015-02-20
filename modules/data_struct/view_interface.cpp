@@ -365,14 +365,14 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
 bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bool usePrevAction) {
     bool isFolder = false;
 
-    qDebug() << "REM: " << node.data();
+    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
                 return false;
 
             if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
-                //TODO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
+                //INFO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
                 if (QThread::currentThread() == QApplication::instance() -> thread()) {
                     UserDialogBox::instance() -> alert(
                         "Folder deletion",
@@ -430,7 +430,29 @@ void ViewInterface::removeProccessing(bool inProcess) {
         temp = l.size();
     } else {
         qSort(l.begin(), l.end(), modelIndexComparator());
-        //TODO: optimization needed - exclude of items if parent in deletion list
+        //TODO: optimization needed - exclude items if parent in deletion list
+
+//        QHash<QString, QList<QModelIndex> > nods;
+//        temp = l.size();
+
+//        QModelIndexList::Iterator bit = l.begin();
+//        QString path, last;
+//        for (; bit != l.end(); ++bit) {
+//            path = (*bit).data(ITREEPATH).toString();
+
+//            if ((*bit).data(IFOLDER).toBool()) {
+//                if (!last.isNull())
+
+//            } else {
+
+//            }
+
+//            if (inProcess)
+//                emit mdl -> setProgress2(--temp * 100.0 / total);
+//        }
+
+//        if (inProcess)
+//            emit mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
         temp = l.size();
     }
 
@@ -643,7 +665,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        if (selectedIndexes().size() > 2)
+        if (selectedIndexes().size() > 100)
             QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
         else if (selectedIndexes().size() > 1)
             removeProccessing();

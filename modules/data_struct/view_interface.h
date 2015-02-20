@@ -27,8 +27,6 @@
 //#include "media/library.h"
 //#include "web/download.h"
 
-#include <qtimer.h>
-
 namespace Playo3 {
     class Dockbars;
 
