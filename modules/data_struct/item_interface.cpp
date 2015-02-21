@@ -108,6 +108,17 @@ QString ItemInterface::buildTreePath() const {
     return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
+QString ItemInterface::buildTreeStr() const { // used for tree sorting on removing
+    return _parent ? _parent -> buildTreeStr() + row() : "";
+}
+
+void ItemInterface::buildTreeVector(QVector<int> & accum_vector) const {
+    if (_parent)
+        _parent -> buildTreeVector(accum_vector);
+
+    accum_vector << row();
+}
+
 QVariant ItemInterface::data(int column) const {
     switch(column) {
         case IATTRS: {
@@ -134,6 +145,8 @@ QVariant ItemInterface::data(int column) const {
         case IFOLDER:          return isContainer();
         case Qt::FontRole:      return Settings::instance() -> getItemFont();
         case ITREEPATH:        return buildTreePath();
+        case ITREESTR:        return buildTreeStr();
+
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole: {

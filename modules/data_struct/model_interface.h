@@ -17,15 +17,6 @@ namespace Playo3 {
         int eRow, dRow;
     };
 
-    struct modelIndexComparator {
-        bool operator()(const QModelIndex & a, const QModelIndex & b) const {
-            QString aPath = a.data(ITREEPATH).toString();
-            QString bPath = b.data(ITREEPATH).toString();
-
-            return aPath.length() < bPath.length() || aPath < bPath;
-        }
-    };
-
     #define DROP_OUTER_FORMAT "text/uri-list"
     #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 
@@ -101,6 +92,30 @@ namespace Playo3 {
 
         Qt::KeyboardModifiers dropKeyModifiers;
         FolderItem * rootItem;
+    };
+
+    struct modelIndexComparator {
+        bool operator()(const QModelIndex & a, const QModelIndex & b) const {
+//            const ModelInterface * m = qobject_cast<const ModelInterface *>(a.model());
+
+//            QVector<int> res, res2;
+//            m -> item(a) -> buildTreeVector(res);
+//            m -> item(b) -> buildTreeVector(res2);
+
+//            int limit = qMin(res.length(), res2.length());
+//            for(int loop1 = 0; loop1 < limit; loop1++)
+//                if (res[loop1] < res2[loop1])
+//                    return true;
+//                else if (res[loop1] > res2[loop1])
+//                    return false;
+
+//            return res.length() < res2.length();
+
+            QString aPath = a.data(ITREESTR).toString();
+            QString bPath = b.data(ITREESTR).toString();
+
+            return aPath < bPath/* && aPath.length() < bPath.length()*/;
+        }
     };
 
     ////        void removeFolderPrebuild(ModelItems::ModelItem * temp);

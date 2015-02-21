@@ -19,6 +19,7 @@ namespace Playo3 {
     #define IATTRS IPLAYABLE + 1
     #define IEXECCOUNTS IATTRS + 1
     #define ITREEPATH IEXECCOUNTS + 1
+    #define ITREESTR ITREEPATH + 1
 
 
     #define ITITLE Qt::DisplayRole
