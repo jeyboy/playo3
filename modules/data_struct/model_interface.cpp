@@ -363,7 +363,8 @@ QModelIndex ModelInterface::fromPath(QString path) {
         if (curr == 0) return QModelIndex(); // while not fixed correct played item removing
     }
 
-    return index(curr -> child(parts.takeFirst().toInt()));
+    ItemInterface * res = curr -> child(parts.takeFirst().toInt());
+    return res ? index(res) : QModelIndex();
 }
 
 Qt::DropActions ModelInterface::supportedDropActions() const {

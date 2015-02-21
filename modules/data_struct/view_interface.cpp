@@ -40,6 +40,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
                 Qt::BlockingQueuedConnection
            );
     connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(threadedCollapsing(const QModelIndex &)), this, SLOT(collapse(QModelIndex)));
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
@@ -421,21 +422,36 @@ bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bo
 }
 
 void ViewInterface::removeProccessing(bool inProcess) {
-    int total = selectedIndexes().size(), temp;
+    int total, temp;
+    QModelIndexList l;
 
     if (inProcess)
         emit mdl -> moveInProcess();
 
     Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-    QModelIndexList l = selectedIndexes();
 
     if (mdl -> containerType() == list) {
+        l = selectedIndexes();
+        temp = total = l.size();
+
         qSort(l.begin(), l.end());
         temp = l.size();
     } else {
+        l = selectedIndexes();
+        QModelIndexList::Iterator bit = l.begin();
+        for (; bit != l.end(); ++bit) {
+            if ((*bit).data(IFOLDER).toBool())
+                emit threadedCollapsing((*bit));
+        }
+
+        l = selectedIndexes();
+        temp = total = l.size();
+
         qSort(l.begin(), l.end(), modelIndexComparator());
+
+        foreach(QModelIndex ind, l)
+            qDebug() << ind.data() << ind.data(ITREEPATH);
         //TODO: optimization needed - exclude items if parent in deletion list
-        temp = l.size();
     }
 
     qDebug() << "# " << temp;
@@ -648,7 +664,22 @@ void ViewInterface::dropEvent(QDropEvent * event) {
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
+    if (event -> key() == Qt::Key_A && event -> modifiers() & Qt::ControlModifier) {
+        if (mdl -> containerType() == list)
+            selectAll();
+        else {
+            QModelIndex ind;
+            selectionModel() -> clear();
+
+            for(int row = 0; row < mdl -> rowCount(); row++) {
+                ind = mdl -> index(row, 0);
+
+                if (row == 0)
+                    setCurrentIndex(ind);
+                else selectionModel() -> select(ind, selectionCommand(ind));
+            }
+        }
+    } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
         if (!list.isEmpty())
@@ -661,12 +692,12 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             removeProccessing();
         else {
             QModelIndex ind = currentIndex();
+            qDebug() << ind.data();
             if (currentIndex().isValid())
                 removeRow(ind, true, false);
         }
     }
-
-    QTreeView::keyPressEvent(event);
+    else QTreeView::keyPressEvent(event);
 }
 
 void ViewInterface::mousePressEvent(QMouseEvent * event) {

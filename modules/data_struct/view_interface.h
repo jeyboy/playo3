@@ -69,6 +69,7 @@ namespace Playo3 {
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(QModelIndex node, bool updateSelection, bool usePrevAction);
+        void threadedCollapsing(QModelIndex node);
 
     public slots:
         void expandeAll();

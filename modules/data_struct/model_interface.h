@@ -19,7 +19,10 @@ namespace Playo3 {
 
     struct modelIndexComparator {
         bool operator()(const QModelIndex & a, const QModelIndex & b) const {
-            return a.data(ITREEPATH).toString() < b.data(ITREEPATH).toString();
+            QString aPath = a.data(ITREEPATH).toString();
+            QString bPath = b.data(ITREEPATH).toString();
+
+            return aPath.length() < bPath.length() || aPath < bPath;
         }
     };
 
