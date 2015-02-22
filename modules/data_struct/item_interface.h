@@ -15,14 +15,14 @@
 namespace Playo3 {
     class FolderItem;
 
-    class ItemInterface : public ItemFields {
+    class IItem : public ItemFields {
     public:
-        ItemInterface(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
-        ItemInterface(FolderItem * parent, QVariantMap & hash, int pos = -1);
-        ItemInterface(FolderItem * parent, QJsonObject * hash);
-        ItemInterface(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(FolderItem * parent, QVariantMap & hash, int pos = -1);
+        IItem(FolderItem * parent, QJsonObject * hash);
+        IItem(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
-        virtual ~ItemInterface();
+        virtual ~IItem();
 
         QString fullPath() const;
 

@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-LevelTreeModel::LevelTreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash, parent) {
+LevelTreeModel::LevelTreeModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {
 
 }
 

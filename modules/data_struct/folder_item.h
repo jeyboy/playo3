@@ -6,7 +6,7 @@
 #include <qdatetime.h>
 
 namespace Playo3 {
-    class FolderItem : public ItemInterface {
+    class FolderItem : public IItem {
     public:
         FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
@@ -29,12 +29,12 @@ namespace Playo3 {
 
         QJsonObject toJson();
 
-        inline int childRow(ItemInterface * child) { return children.indexOf(child); }
-        inline ItemInterface * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
+        inline int childRow(IItem * child) { return children.indexOf(child); }
+        inline IItem * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
         virtual inline int childCount() const { return children.count(); }
-        inline void declareChild(ItemInterface * child) { children.append(child); }
-        inline void declareChildren(QList<ItemInterface *> & items) { children.append(items); }
-        inline void declareChild(int pos, ItemInterface * item) { children.insert(pos, item); }
+        inline void declareChild(IItem * child) { children.append(child); }
+        inline void declareChildren(QList<IItem *> & items) { children.append(items); }
+        inline void declareChild(int pos, IItem * item) { children.insert(pos, item); }
         int removeChildren(int position, int count);
 
         void shuffle();
@@ -52,7 +52,7 @@ namespace Playo3 {
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
         QHash<QString, FolderItem *> folders;
-        QList<ItemInterface *> children;
+        QList<IItem *> children;
         int inBranchCount; // executable items count
     };
 }

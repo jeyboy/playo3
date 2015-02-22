@@ -3,11 +3,11 @@
 using namespace Playo3;
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : ItemInterface(0, initState), inBranchCount(0) {
+FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {
 
 }
 
-FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash -> take(JSON_TYPE_STATE).toInt()), inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()), inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
@@ -49,7 +49,7 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(
 }
 
 FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
-    : ItemInterface(parent, folderTitle, pos, initState), inBranchCount(0) {
+    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setPath(folderPath);
 
@@ -58,7 +58,7 @@ FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * par
 }
 
 FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
-    : ItemInterface(parent, folderTitle, pos, initState), inBranchCount(0) {
+    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     if (parent != 0)
         parent -> declareFolder(folderTitle, this);
@@ -82,14 +82,14 @@ QVariant FolderItem::data(int column) const {
     switch(column) {
         case Qt::ToolTipRole:  return title().toString() + "(" + QString::number(inBranchCount) + " items)";
         case IEXECCOUNTS:      return inBranchCount;
-        default:               return ItemInterface::data(column);
+        default:               return IItem::data(column);
     }
 }
 
 bool FolderItem::removePhysicalObject() {
     bool res = true;
 
-    foreach(ItemInterface * item, children) {
+    foreach(IItem * item, children) {
         res &= item -> removePhysicalObject();
     }
 
@@ -108,7 +108,7 @@ bool FolderItem::isExist() const {
 }
 
 QJsonObject FolderItem::toJson() {
-    QJsonObject root = ItemInterface::toJson();
+    QJsonObject root = IItem::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = itemType();
 
@@ -153,7 +153,7 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 }
 
 ////    int ret = 0;
-////    foreach(ItemInterface * childItem, childItems) {
+////    foreach(IItem * childItem, childItems) {
 ////        if (childItem -> folders == 0) // not is unprocessed
 ////            ret += 1;
 ////        else
@@ -169,7 +169,7 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 
 //    for (int row = 0; row < count; ++row) {
 //        QVector<QVariant> data(columns);
-//        ItemInterface * item = new ItemInterface(data, this);
+//        IItem * item = new IItem(data, this);
 //        childItems.insert(position, item);
 //    }
 
@@ -180,7 +180,7 @@ int FolderItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > children.size())
         return 1;
 
-    ItemInterface * it;
+    IItem * it;
     int totalItems = 0;
 
     for (int row = 0; row < count; ++row) {
@@ -205,9 +205,9 @@ void FolderItem::propagateFolderUnsetFlag(ItemStateFlag flag) {
 }
 
 void FolderItem::propagateCheckedState(bool checked) {
-    ItemInterface::updateCheckedState(checked);
+    IItem::updateCheckedState(checked);
 
-    foreach(ItemInterface * item, children)
+    foreach(IItem * item, children)
         item -> updateCheckedState(checked);
 }
 

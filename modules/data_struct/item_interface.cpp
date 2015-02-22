@@ -3,13 +3,13 @@
 
 using namespace Playo3;
 
-ItemInterface::ItemInterface(FolderItem * parent, int initState)
+IItem::IItem(FolderItem * parent, int initState)
     : ItemFields(initState), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
-ItemInterface::ItemInterface(FolderItem * parent, QVariantMap & hash, int pos)
+IItem::IItem(FolderItem * parent, QVariantMap & hash, int pos)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent) {
@@ -19,13 +19,13 @@ ItemInterface::ItemInterface(FolderItem * parent, QVariantMap & hash, int pos)
             _parent -> declareChild(pos, this);
     }
 }
-ItemInterface::ItemInterface(FolderItem * parent, QJsonObject * hash)
+IItem::IItem(FolderItem * parent, QJsonObject * hash)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
-ItemInterface::ItemInterface(FolderItem * parent, QString title, int pos, int initState)
+IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
     : ItemFields(title, initState), _parent(parent) {
 
     if (_parent) {
@@ -36,11 +36,11 @@ ItemInterface::ItemInterface(FolderItem * parent, QString title, int pos, int in
     }
 }
 
-ItemInterface::~ItemInterface() {
+IItem::~IItem() {
 
 }
 
-QString ItemInterface::fullPath() const {
+QString IItem::fullPath() const {
     FolderItem * curr = _parent;
 
     QString path_buff;
@@ -66,54 +66,54 @@ QString ItemInterface::fullPath() const {
     return path_buff;
 }
 
-void ItemInterface::openLocation() {
+void IItem::openLocation() {
     QFileInfo info(fullPath());
     QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
 }
 
-int ItemInterface::row() const {
+int IItem::row() const {
     if (_parent)
-        return _parent -> childRow(const_cast<ItemInterface *>(this));
+        return _parent -> childRow(const_cast<IItem *>(this));
 
     return 0;
 }
 
-//bool ItemInterface::insertColumns(int position, int columns) {
+//bool IItem::insertColumns(int position, int columns) {
 //    if (position < 0 || position > itemData.size())
 //        return false;
 
 //    for (int column = 0; column < columns; ++column)
 //        itemData.insert(position, QVariant());
 
-//    foreach (ItemInterface * child, childItems)
+//    foreach (IItem * child, childItems)
 //        child -> insertColumns(position, columns);
 
 //    return true;
 //}
 
-//bool ItemInterface::removeColumns(int position, int columns) {
+//bool IItem::removeColumns(int position, int columns) {
 //    if (position < 0 || position + columns > itemData.size())
 //        return false;
 
 //    for (int column = 0; column < columns; ++column)
 //        itemData.remove(position);
 
-//    foreach (ItemInterface * child, childItems)
+//    foreach (IItem * child, childItems)
 //        child -> removeColumns(position, columns);
 
 //    return true;
 //}
 
-QString ItemInterface::buildTreePath() const {
+QString IItem::buildTreePath() const {
     return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
-QString ItemInterface::buildTreeStr() const {
+QString IItem::buildTreeStr() const {
     int rNum = row();
     return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : "";
 }
 
-QVariant ItemInterface::data(int column) const {
+QVariant IItem::data(int column) const {
     switch(column) {
         case IATTRS: {
             QVariantMap params;
@@ -178,7 +178,7 @@ QVariant ItemInterface::data(int column) const {
     }
 }
 
-bool ItemInterface::setData(int column, const QVariant &value) {
+bool IItem::setData(int column, const QVariant &value) {
     switch(column) {
         case ITITLE:       { setTitle(value); break; }
         case IEXTENSION:   { setExtension(value); break; }

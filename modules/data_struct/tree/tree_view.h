@@ -5,11 +5,11 @@
 #include "tree_model.h"
 
 namespace Playo3 {
-    class TreeView : public ViewInterface {
+    class TreeView : public IView {
       Q_OBJECT
     public:
         TreeView(QWidget * parent, ViewSettings settins, QJsonObject * hash = 0);
-        TreeView(ModelInterface * newModel, QWidget * parent, ViewSettings settings);
+        TreeView(IModel * newModel, QWidget * parent, ViewSettings settings);
         ~TreeView();
     };
 }

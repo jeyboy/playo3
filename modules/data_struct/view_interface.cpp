@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSettings & settings)
+IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true) {
 
     setIndentation(12);
@@ -67,7 +67,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
 //    header()->setStretchLastSection(false);
 
 
-//    setDragDropOverwriteMode(true); // TODO: need modifications in ModelInterface::dropMimeData
+//    setDragDropOverwriteMode(true); // TODO: need modifications in IModel::dropMimeData
 
     ////    setTreePosition(2);
     ////    setRootIndex();
@@ -76,21 +76,21 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
     ////    expandAll();
 }
 
-ViewInterface::~ViewInterface() {
+IView::~IView() {
     delete mdl;
 }
 
-void ViewInterface::scrollToActive() {
+void IView::scrollToActive() {
     if (Player::instance() -> playedIndex().isValid())
         scrollTo(Player::instance() -> playedIndex());
 }
 
-void ViewInterface::execPrevIndex(bool deleteCurrent) {
+void IView::execPrevIndex(bool deleteCurrent) {
     forwardOrder = false;
     findAndExecIndex(deleteCurrent);
 }
 
-void ViewInterface::execNextIndex(bool deleteCurrent) {
+void IView::execNextIndex(bool deleteCurrent) {
     forwardOrder = true;
     findAndExecIndex(deleteCurrent);
 }
@@ -108,7 +108,7 @@ void ViewInterface::execNextIndex(bool deleteCurrent) {
 //    }
 //}
 
-bool ViewInterface::execPath(const QString path, bool paused, uint start) {
+bool IView::execPath(const QString path, bool paused, uint start) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid())
         return execIndex(ind, paused, start);
@@ -116,7 +116,7 @@ bool ViewInterface::execPath(const QString path, bool paused, uint start) {
         return false;
 }
 
-bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start) {
+bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
     qDebug() << "PLAYED " << node.data();
     Dockbars::instance() -> setPlayed((DockBar *)parent());
 
@@ -131,7 +131,7 @@ bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start)
     return false;
 }
 
-//QModelIndex ViewInterface::removeCandidate(QModelIndex item) {
+//QModelIndex IView::removeCandidate(QModelIndex item) {
 //    ModelItem * parent = item -> parent();
 
 //    while(parent -> childCount() == 1 && parent -> parent() != 0) {
@@ -142,7 +142,7 @@ bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start)
 //    return item;
 //}
 
-//void ViewInterface::removeItem(QModelIndex & item) { //TODO: rewrite
+//void IView::removeItem(QModelIndex & item) { //TODO: rewrite
 //    Library::instance() -> removeRemoteItem(item);
 //    item = removeCandidate(item);
 //    QModelIndex modelIndex = model -> index(item);
@@ -202,23 +202,23 @@ bool ViewInterface::execIndex(const QModelIndex & node, bool paused, uint start)
 /// SLOTS
 //////////////////////////////////////////////////////
 
-void ViewInterface::expandeAll() {
+void IView::expandeAll() {
     mdl -> expandeAll();
     QTreeView::expandAll();
 }
-void ViewInterface::collapseAll() {
+void IView::collapseAll() {
     mdl -> collapseAll();
     QTreeView::collapseAll();
 }
 
-void ViewInterface::onSpoilNeeded(const QModelIndex & node) {
+void IView::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
         setCurrentIndex(node);
         scrollTo(node);
     }
 }
 
-void ViewInterface::updateSelection(QModelIndex & node) {
+void IView::updateSelection(QModelIndex & node) {
     if (node.isValid()) {
         if (!node.data(IPLAYABLE).toBool())
             findExecutable(node);
@@ -227,14 +227,14 @@ void ViewInterface::updateSelection(QModelIndex & node) {
     }
 }
 
-void ViewInterface::openLocation() {
-    ItemInterface * item = mdl -> item(currentIndex());
+void IView::openLocation() {
+    IItem * item = mdl -> item(currentIndex());
     item -> openLocation();
 }
 
-void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
+void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
     // TODO: add initiated items to hash for update later on the same name state change
-    ItemInterface * node = mdl -> item(index);
+    IItem * node = mdl -> item(index);
 
     if (!node -> is(ItemState::proceeded)) {
         node -> set(ItemState::proceeded);
@@ -249,7 +249,7 @@ void ViewInterface::drawRow(QPainter * painter, const QStyleOptionViewItem & opt
     QTreeView::drawRow(painter, options, index);
 }
 
-void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need separate item initializator for each view
+void IView::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need separate item initializator for each view
 //    if (event -> oldSize().height() != size().height()) {
 //        if (event -> size().height() > 0) {
 //            int count = (event -> size().height() / Settings::instance() -> getTotalItemHeight()) + 2;
@@ -260,11 +260,11 @@ void ViewInterface::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need
     QTreeView::resizeEvent(event);
 }
 
-void ViewInterface::focusInEvent(QFocusEvent *) {
+void IView::focusInEvent(QFocusEvent *) {
     Dockbars::instance() -> setActive((DockBar *)parent());
 }
 
-void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
+void IView::contextMenuEvent(QContextMenuEvent * event) {
     event -> accept();
 
     QList<QAction *> actions;
@@ -341,7 +341,7 @@ void ViewInterface::contextMenuEvent(QContextMenuEvent * event) {
         QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
-QModelIndex ViewInterface::candidateOnSelection(QModelIndex node, bool reverseOrder) {
+QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
     while(true) {
         if (model() -> hasChildren(node))
             expand(node);
@@ -353,7 +353,7 @@ QModelIndex ViewInterface::candidateOnSelection(QModelIndex node, bool reverseOr
     }
 }
 
-void ViewInterface::findAndExecIndex(bool deleteCurrent) {
+void IView::findAndExecIndex(bool deleteCurrent) {
     QModelIndex node = activeIndex();
 
     if (deleteCurrent && node.isValid()) {
@@ -366,7 +366,7 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
+bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
 //    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
@@ -424,7 +424,7 @@ bool ViewInterface::removeRow(const QModelIndex & node, int selectionUpdate, boo
     return model() -> removeRow(node.row(), node.parent());
 }
 
-void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProcess) {
+void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
     int total = index_list.size(), temp = total;
 
     if (inProcess)
@@ -488,7 +488,7 @@ void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProce
         emit mdl -> moveOutProcess();
 }
 
-//bool ViewInterface::removeRows(QModelIndexList & nodes, bool updateSelection) {
+//bool IView::removeRows(QModelIndexList & nodes, bool updateSelection) {
 //    if (nodes.isEmpty())
 //        return false;
 
@@ -513,7 +513,7 @@ void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProce
 //    return res;
 //}
 
-bool ViewInterface::prepareDownloading(QString /*path*/) { //TODO: move to separate class
+bool IView::prepareDownloading(QString /*path*/) { //TODO: move to separate class
 //    QDir dir(path);
 //    if (!dir.exists()) {
 //        dir.mkpath(".");
@@ -522,7 +522,7 @@ bool ViewInterface::prepareDownloading(QString /*path*/) { //TODO: move to separ
     return true;
 }
 
-void ViewInterface::downloadItem(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
+void IView::downloadItem(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
 //    QString prepared_path = savePath + item -> getDownloadTitle();
 //    if (QFile::exists(prepared_path)) {
 //        QFile::remove(prepared_path);
@@ -542,7 +542,7 @@ void ViewInterface::downloadItem(const QModelIndex & /*node*/, QString /*savePat
 //    }
 }
 
-void ViewInterface::downloadBranch(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
+void IView::downloadBranch(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
 //    prepareDownloading(savePath);
 //    QList<ModelItem *> * children = rootNode -> childItemsList();
 //    ModelItem * item;
@@ -558,17 +558,17 @@ void ViewInterface::downloadBranch(const QModelIndex & /*node*/, QString /*saveP
 //    }
 }
 
-void ViewInterface::download() { //TODO: rewrite
+void IView::download() { //TODO: rewrite
 //    downloadSelected(Settings::instance() -> getDownloadPath());
 }
 
-void ViewInterface::downloadAll() { //TODO: rewrite
+void IView::downloadAll() { //TODO: rewrite
 //    QString savePath = Settings::instance() -> getDownloadPath();
 //    if (!prepareDownloading(savePath)) return;
 //    downloadBranch(model -> root(), savePath);
 }
 
-//void ViewInterface::modelUpdate() {
+//void IView::modelUpdate() {
 //    if (Player::instance() -> currentPlaylist() == this) {
 //        if (Player::instance() -> playedItem())
 //            Player::instance() -> playedItem() -> getState() -> unsetPlayed();
@@ -576,7 +576,7 @@ void ViewInterface::downloadAll() { //TODO: rewrite
 //    }
 //}
 
-void ViewInterface::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/) { //TODO: rewrite
+void IView::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/) { //TODO: rewrite
 //    if (!prepareDownloading(savePath)) return;
 
 //    ModelItem * item;
@@ -594,7 +594,7 @@ void ViewInterface::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/)
 //    }
 }
 
-void ViewInterface::setIconSize(const QSize & size) {
+void IView::setIconSize(const QSize & size) {
     QTreeView::setIconSize(size);
     item_delegate -> recalcAttrs(size.width());
 }
@@ -603,7 +603,7 @@ void ViewInterface::setIconSize(const QSize & size) {
 /// PROTECTED
 //////////////////////////////////////////////////////
 
-QModelIndex ViewInterface::activeIndex() {
+QModelIndex IView::activeIndex() {
     QModelIndex ind = Player::instance() -> playedIndex();
 
     if (ind.model() != model())
@@ -619,7 +619,7 @@ QModelIndex ViewInterface::activeIndex() {
     return ind;
 }
 
-void ViewInterface::findExecutable(QModelIndex & curr) {
+void IView::findExecutable(QModelIndex & curr) {
     if (!curr.isValid()) {
         curr = mdl -> index(0, 0);
         if (curr.data(IPLAYABLE).toBool())
@@ -657,21 +657,21 @@ void ViewInterface::findExecutable(QModelIndex & curr) {
     }
 }
 
-void ViewInterface::dragEnterEvent(QDragEnterEvent * event) {
+void IView::dragEnterEvent(QDragEnterEvent * event) {
     QTreeView::dragEnterEvent(event);
 }
 
-void ViewInterface::dragMoveEvent(QDragMoveEvent * event) {
+void IView::dragMoveEvent(QDragMoveEvent * event) {
     mdl -> setDropKeyboardModifiers(event -> keyboardModifiers());
     QTreeView::dragMoveEvent(event);
 }
 
-void ViewInterface::dropEvent(QDropEvent * event) {
+void IView::dropEvent(QDropEvent * event) {
     QTreeView::dropEvent(event);
     event -> accept();
 }
 
-void ViewInterface::keyPressEvent(QKeyEvent * event) {
+void IView::keyPressEvent(QKeyEvent * event) {
 //    if (event -> key() == Qt::Key_A && event -> modifiers() & Qt::ControlModifier) {
 //        if (mdl -> containerType() == list)
 //            selectAll();
@@ -696,7 +696,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
         selectionModel() -> clearSelection();
 
         if (list.size() > 200)
-            QtConcurrent::run(this, &ViewInterface::removeProccessing, list, true);
+            QtConcurrent::run(this, &IView::removeProccessing, list, true);
         else if (list.size() > 1)
             removeProccessing(list);
         else {
@@ -708,14 +708,14 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
     else QTreeView::keyPressEvent(event);
 }
 
-void ViewInterface::mousePressEvent(QMouseEvent * event) {
+void IView::mousePressEvent(QMouseEvent * event) {
     if (event -> button() == Qt::LeftButton)
         dragPoint = event -> pos();
 
     QTreeView::mousePressEvent(event);
 }
 
-void ViewInterface::mouseMoveEvent(QMouseEvent * event) {
+void IView::mouseMoveEvent(QMouseEvent * event) {
     if ((event -> buttons() == Qt::LeftButton) && (dragPoint - event -> pos()).manhattanLength() >= 10){
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);

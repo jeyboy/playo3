@@ -3,7 +3,7 @@
 using namespace Playo3;
 
 ListView::ListView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
-    : ViewInterface(dynamic_cast<ModelInterface *>(new ListModel(hash)), parent, settings) {
+    : IView(dynamic_cast<IModel *>(new ListModel(hash)), parent, settings) {
     setIndentation(-2);
 }
 

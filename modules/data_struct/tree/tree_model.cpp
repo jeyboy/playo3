@@ -3,7 +3,7 @@
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
-TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash, parent) {
+TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {
 }
 
 TreeModel::~TreeModel() {

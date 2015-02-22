@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) { //TODO: rewrite
+IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) { //TODO: rewrite
     if (hash != 0) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
@@ -15,21 +15,21 @@ ModelInterface::ModelInterface(QJsonObject * hash, QObject * parent) : QAbstract
     qDebug() << this << " " << rootItem -> itemsCountInBranch();
 }
 
-ModelInterface::~ModelInterface() {
+IModel::~IModel() {
     delete rootItem;
 }
 
-QVariant ModelInterface::data(const QModelIndex & index, int role) const {
+QVariant IModel::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
         return QVariant();
 
     return item(index) -> data(role);
 }
 
-bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &value, int role) {
+bool IModel::setData(const QModelIndex & model_index, const QVariant &value, int role) {
     bool result = false;
 
-    ItemInterface * node = item(model_index);
+    IItem * node = item(model_index);
 
     if (role == Qt::CheckStateRole) {
         node -> updateCheckedState(!node -> is(ItemState::checked));
@@ -56,14 +56,14 @@ bool ModelInterface::setData(const QModelIndex & model_index, const QVariant &va
     return result;
 }
 
-QVariant ModelInterface::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant IModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return rootItem -> data(section);
 
     return QVariant();
 }
 
-bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role) {
+bool IModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role) {
     if (role != Qt::EditRole || orientation != Qt::Horizontal)
         return false;
 
@@ -75,7 +75,7 @@ bool ModelInterface::setHeaderData(int section, Qt::Orientation orientation, con
     return result;
 }
 
-Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
+Qt::ItemFlags IModel::flags(const QModelIndex & index) const {
     if (!index.isValid())
         return Qt::ItemIsDropEnabled;
 
@@ -91,28 +91,28 @@ Qt::ItemFlags ModelInterface::flags(const QModelIndex & index) const {
     return fl;
 }
 
-ItemInterface * ModelInterface::item(const QModelIndex & index) const {
+IItem * IModel::item(const QModelIndex & index) const {
     if (index.isValid()) {
-        ItemInterface * item = static_cast<ItemInterface *>(index.internalPointer());
+        IItem * item = static_cast<IItem *>(index.internalPointer());
         if (item)
             return item;
     }
     return rootItem;
 }
 
-QModelIndex ModelInterface::index(ItemInterface * item) const {
+QModelIndex IModel::index(IItem * item) const {
     if (item == rootItem)
         return QModelIndex();
     else
         return createIndex(item -> row(), item -> column(), item);
 }
 
-QModelIndex ModelInterface::index(int row, int column, const QModelIndex & parent, bool orLastChild) const {
+QModelIndex IModel::index(int row, int column, const QModelIndex & parent, bool orLastChild) const {
     if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
 
     FolderItem * parentItem = item<FolderItem>(parent);
-    ItemInterface * childItem = parentItem -> child(row);
+    IItem * childItem = parentItem -> child(row);
     if (orLastChild && !childItem)
         childItem = parentItem -> child(parentItem -> childCount() - 1);
 
@@ -121,7 +121,7 @@ QModelIndex ModelInterface::index(int row, int column, const QModelIndex & paren
     else
         return QModelIndex();
 }
-bool ModelInterface::insertColumns(int position, int columns, const QModelIndex & parent) {
+bool IModel::insertColumns(int position, int columns, const QModelIndex & parent) {
     bool success;
 
     beginInsertColumns(parent, position, position + columns - 1);
@@ -132,7 +132,7 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
     return success;
 }
 
-//void ModelInterface::appendRow(ItemInterface * item) {
+//void IModel::appendRow(IItem * item) {
 ////    int position = parentItem -> childCount();
 ////    beginInsertRows(index(parentItem), position, position);
 //    if (!item -> isFolder()) {
@@ -143,7 +143,7 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
 ////    emit dataChanged(parent, parent);
 //}
 
-//bool ModelInterface::insertRows(int position, int rows, const QModelIndex & parent) {
+//bool IModel::insertRows(int position, int rows, const QModelIndex & parent) {
 //    FolderItem * parentItem = item<FolderItem>(parent);
 //    bool success = parentItem != 0;
 
@@ -156,12 +156,12 @@ bool ModelInterface::insertColumns(int position, int columns, const QModelIndex 
 //    return success;
 //}
 
-QModelIndex ModelInterface::parent(const QModelIndex & index) const {
+QModelIndex IModel::parent(const QModelIndex & index) const {
     if (!index.isValid())
         return QModelIndex();
 
-    ItemInterface * childItem = item(index);
-    ItemInterface * parentItem = childItem -> parent();
+    IItem * childItem = item(index);
+    IItem * parentItem = childItem -> parent();
 
     if (parentItem == rootItem)
         return QModelIndex();
@@ -169,7 +169,7 @@ QModelIndex ModelInterface::parent(const QModelIndex & index) const {
     return createIndex(parentItem -> row(), 0, parentItem);
 }
 
-bool ModelInterface::removeColumns(int position, int columns, const QModelIndex &parent) {
+bool IModel::removeColumns(int position, int columns, const QModelIndex &parent) {
     bool success;
 
     beginRemoveColumns(parent, position, position + columns - 1);
@@ -183,7 +183,7 @@ bool ModelInterface::removeColumns(int position, int columns, const QModelIndex 
     return success;
 }
 
-bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
 
     QModelIndex exIndex;
@@ -197,7 +197,7 @@ bool ModelInterface::insertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-bool ModelInterface::removeRows(int position, int rows, const QModelIndex & parent) {
+bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
     FolderItem * parentItem = item<FolderItem>(parent);
     bool success = parentItem != 0;
     int deleted;
@@ -219,7 +219,7 @@ bool ModelInterface::removeRows(int position, int rows, const QModelIndex & pare
     return success;
 }
 
-int ModelInterface::rowCount(const QModelIndex & parent) const {
+int IModel::rowCount(const QModelIndex & parent) const {
     //        if (parent.column() > 0)
     //            return 0;
 
@@ -227,7 +227,7 @@ int ModelInterface::rowCount(const QModelIndex & parent) const {
     return parentItem ? parentItem -> childCount() : 0;
 }
 
-void ModelInterface::shuffle() {
+void IModel::shuffle() {
     beginResetModel();
     rootItem -> shuffle();
     endResetModel();
@@ -323,32 +323,32 @@ void ModelInterface::shuffle() {
 
 //////////////////////// slots //////////////////////////
 
-void ModelInterface::expandeAll() {
+void IModel::expandeAll() {
     rootItem -> propagateFolderSetFlag(ItemState::expanded);
 }
 
-void ModelInterface::expanded(const QModelIndex & index) {
-    ItemInterface * node = item(index);
+void IModel::expanded(const QModelIndex & index) {
+    IItem * node = item(index);
     node -> set(ItemState::expanded);
 }
 
-void ModelInterface::collapseAll() {
+void IModel::collapseAll() {
     rootItem -> propagateFolderUnsetFlag(ItemState::expanded);
 }
 
-void ModelInterface::collapsed(const QModelIndex & index) {
-    ItemInterface * node = item(index);
-    node -> unset(ItemInterface::expanded);
+void IModel::collapsed(const QModelIndex & index) {
+    IItem * node = item(index);
+    node -> unset(IItem::expanded);
 }
 
 /////////////////////////////////////////////////////////
 
-void ModelInterface::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
+void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
     exIndex = dIndex;
     exRow = dRow < 0 ? 0 : dRow;
 }
 
-QModelIndex ModelInterface::fromPath(QString path) {
+QModelIndex IModel::fromPath(QString path) {
     QStringList parts = path.split(' ', QString::SkipEmptyParts);
 
     if (parts.isEmpty())
@@ -361,22 +361,22 @@ QModelIndex ModelInterface::fromPath(QString path) {
         if (curr == 0) return QModelIndex(); // while not fixed correct played item removing
     }
 
-    ItemInterface * res = curr -> child(parts.takeFirst().toInt());
+    IItem * res = curr -> child(parts.takeFirst().toInt());
     return res ? index(res) : QModelIndex();
 }
 
-Qt::DropActions ModelInterface::supportedDropActions() const {
+Qt::DropActions IModel::supportedDropActions() const {
     return Qt::CopyAction | Qt::MoveAction;
 }
 
-QStringList ModelInterface::mimeTypes() const {
+QStringList IModel::mimeTypes() const {
     QStringList types;
     types << DROP_INNER_FORMAT;
     types << DROP_OUTER_FORMAT;
     return types;
 }
 
-bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) { // maybe writed a little shity
+bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) { // maybe writed a little shity
     QModelIndex dIndex;
     InnerData * data;
 
@@ -439,7 +439,7 @@ bool ModelInterface::decodeInnerData(int row, int /*column*/, const QModelIndex 
     return true;
 }
 
-void ModelInterface::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const {
+void IModel::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const {
     QUrl lastUrl;
 
     QModelIndex it;
@@ -458,7 +458,7 @@ void ModelInterface::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & u
     }
 }
 
-QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
+QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
     if (indexes.count() <= 0)
         return 0;
 
@@ -495,7 +495,7 @@ QMimeData * ModelInterface::mimeData(const QModelIndexList & indexes) const {
 }
 
 // row always equal to -1 // maybe need precalc on dnd drop in view
-bool ModelInterface::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
+bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 

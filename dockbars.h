@@ -49,7 +49,7 @@ namespace Playo3 {
         inline void createNewBar() { showViewSettingsDialog(); }
         void editActiveBar() { showViewSettingsDialog(active); }
         inline void scrollToActive() {
-            ViewInterface * v = view(active);
+            IView * v = view(active);
             if (v) v -> scrollToActive();
         }
 
@@ -62,7 +62,7 @@ namespace Playo3 {
 
     protected:
         void initPlayed();
-        inline ViewInterface * view(DockBar * bar) { return bar ? dynamic_cast<ViewInterface *>(bar -> mainWidget()) : 0; }
+        inline IView * view(DockBar * bar) { return bar ? dynamic_cast<IView *>(bar -> mainWidget()) : 0; }
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:

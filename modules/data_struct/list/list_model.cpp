@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-ListModel::ListModel(QJsonObject * hash, QObject * parent) : ModelInterface(hash, parent) {
+ListModel::ListModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {
 
 }
 

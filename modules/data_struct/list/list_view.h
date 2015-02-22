@@ -5,7 +5,7 @@
 #include "list_model.h"
 
 namespace Playo3 {
-    class ListView : public ViewInterface {
+    class ListView : public IView {
       Q_OBJECT
     public:
         ListView(QWidget * parent, ViewSettings settins, QJsonObject * attrs = 0);

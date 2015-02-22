@@ -30,7 +30,7 @@
 namespace Playo3 {
     class Dockbars;
 
-    class ViewInterface : public QTreeView {
+    class IView : public QTreeView {
       Q_OBJECT
     public:
         enum SearchDirection {
@@ -39,8 +39,8 @@ namespace Playo3 {
             backward = 2
         };
 
-        ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings & settins);
-        ~ViewInterface();
+        IView(IModel * model, QWidget * parent, ViewSettings & settins);
+        ~IView();
 
         inline virtual QJsonObject toJson() { return mdl -> toJson(); }
 
@@ -54,7 +54,7 @@ namespace Playo3 {
         inline bool isCommon() const { return sttngs.common; }
         inline bool isEditable() const { return sttngs.type < vk && !isCommon(); }
 
-//        inline ModelInterface * model() const { return mdl; }
+//        inline IModel * model() const { return mdl; }
 
         inline ViewSettings settings() const { return sttngs; }
         inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
@@ -110,7 +110,7 @@ namespace Playo3 {
         QModelIndex activeIndex();
         void findExecutable(QModelIndex &);
 
-//        ItemInterface * removeCandidate(ItemInterface * item);
+//        IItem * removeCandidate(IItem * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & node) const;
         void resizeEvent(QResizeEvent *);
         void focusInEvent(QFocusEvent *);
@@ -124,7 +124,7 @@ namespace Playo3 {
         void mousePressEvent(QMouseEvent *);
         void mouseMoveEvent(QMouseEvent *);
 
-        ModelInterface * mdl;
+        IModel * mdl;
         ViewSettings sttngs;
         QPoint dragPoint;
         bool forwardOrder;

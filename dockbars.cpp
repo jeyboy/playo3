@@ -34,7 +34,7 @@ void Dockbars::load(QJsonArray & bars) {
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
             if (obj.value("played").toBool()) {
-                ViewInterface * v = view(qobject_cast<DockBar *>(curr_bar));
+                IView * v = view(qobject_cast<DockBar *>(curr_bar));
                 if (v) {
                     QString path = obj.value("played_item").toString();
                     if (!path.isEmpty())
@@ -72,7 +72,7 @@ void Dockbars::save(DataStore * settings) {
                 }
             }
 
-            ViewInterface * v = view(bar);
+            IView * v = view(bar);
 
             curr_bar.insert("set", v -> settings().toJson());
             curr_bar.insert("cont", v -> toJson());
@@ -92,7 +92,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 }
 
 DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs) {
-    ViewInterface * view;
+    IView * view;
     DockBar * bar = createDocBar(name);
 
     switch(settings.type) {
@@ -147,7 +147,7 @@ void Dockbars::initPlayed() {
 void Dockbars::showViewSettingsDialog(DockBar * bar) {
     TabDialog dialog(parentWidget());
     if (bar) {
-        ViewInterface * view = dynamic_cast<ViewInterface *>(bar -> widget());
+        IView * view = dynamic_cast<IView *>(bar -> widget());
 
         if (!view -> isEditable()) {
 //            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
@@ -190,10 +190,10 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 
 void Dockbars::updateAllViews() { // update for item height
-    QList<ViewInterface *> views = parent() -> findChildren<ViewInterface *>();
+    QList<IView *> views = parent() -> findChildren<IView *>();
     int iconDimension = Settings::instance() -> getIconHeight();
 
-    foreach(ViewInterface * v, views)
+    foreach(IView * v, views)
         v -> setIconSize(QSize(iconDimension, iconDimension));
 }
 
@@ -208,7 +208,7 @@ void Dockbars::showAll() {
 
 void Dockbars::onNextItemNeeded(Player::Reason reason) {
     initPlayed();
-    ViewInterface * v = view(played);
+    IView * v = view(played);
 
     if (v && (reason == Player::init || v -> isPlaylist()))
         v -> execNextIndex();
@@ -216,22 +216,22 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
 
 void Dockbars::nextExecTriggering() {
     initPlayed();
-    ViewInterface * v = view(played);
+    IView * v = view(played);
     if (v) v -> execNextIndex();
 }
 void Dockbars::nextExecWithDelTriggering() {
     initPlayed();
-    ViewInterface * v = view(played);
+    IView * v = view(played);
     if (v) v -> execNextIndex(true);
 }
 void Dockbars::prevExecWithDelTriggering() {
     initPlayed();
-    ViewInterface * v = view(played);
+    IView * v = view(played);
     if (v) v -> execPrevIndex(true);
 }
 void Dockbars::prevExecTriggering() {
     initPlayed();
-    ViewInterface * v = view(played);
+    IView * v = view(played);
     if (v) v -> execPrevIndex();
 }
 

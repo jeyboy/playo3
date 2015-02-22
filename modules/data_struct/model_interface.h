@@ -20,11 +20,11 @@ namespace Playo3 {
     #define DROP_OUTER_FORMAT "text/uri-list"
     #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 
-    class ModelInterface : public QAbstractItemModel {
+    class IModel : public QAbstractItemModel {
         Q_OBJECT
     public:
-        ModelInterface(QJsonObject * hash, QObject * parent);
-        ~ModelInterface();
+        IModel(QJsonObject * hash, QObject * parent);
+        ~IModel();
 
         virtual ContainerType containerType() const = 0;
 
@@ -34,7 +34,7 @@ namespace Playo3 {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
 
-        QModelIndex index(ItemInterface * item) const;
+        QModelIndex index(IItem * item) const;
         inline QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const { return index(row, column, parent, false); }
         QModelIndex index(int row, int column, const QModelIndex & parent, bool orLastChild) const;
         QModelIndex parent(const QModelIndex & index) const;
@@ -50,7 +50,7 @@ namespace Playo3 {
         virtual bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
-        ItemInterface * item(const QModelIndex & index) const;
+        IItem * item(const QModelIndex & index) const;
 
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }

@@ -4,7 +4,7 @@
 #include "../model_interface.h"
 
 namespace Playo3 {
-    class TreeModel : public ModelInterface {
+    class TreeModel : public IModel {
         Q_OBJECT
 
     public:

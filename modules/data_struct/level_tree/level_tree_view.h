@@ -5,7 +5,7 @@
 #include "level_tree_model.h"
 
 namespace Playo3 {
-    class LevelTreeView : public ViewInterface {
+    class LevelTreeView : public IView {
       Q_OBJECT
     public:
         LevelTreeView(QWidget * parent, ViewSettings settins, QJsonObject * attrs = 0);

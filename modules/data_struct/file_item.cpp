@@ -2,18 +2,18 @@
 
 using namespace Playo3;
 
-FileItem::FileItem(QVariantMap & hash, FolderItem * parent, int pos) : ItemInterface(parent, hash, pos) {
+FileItem::FileItem(QVariantMap & hash, FolderItem * parent, int pos) : IItem(parent, hash, pos) {
 }
 
-FileItem::FileItem(QJsonObject * hash, FolderItem * parent) : ItemInterface(parent, hash) {
+FileItem::FileItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, hash) {
 }
 
-FileItem::FileItem(QString fileName, FolderItem * parent, int pos) : ItemInterface(parent, DEFAULT_TITLE, pos) {
+FileItem::FileItem(QString fileName, FolderItem * parent, int pos) : IItem(parent, DEFAULT_TITLE, pos) {
     proceedTitle(fileName);
 }
 
 FileItem::FileItem(QString filePath, QString fileName, FolderItem * parent, int pos)
-    : ItemInterface(parent, DEFAULT_TITLE, pos) {
+    : IItem(parent, DEFAULT_TITLE, pos) {
     proceedTitle(fileName);
     setPath(filePath);
 }
@@ -31,7 +31,7 @@ bool FileItem::isExist() const {
 }
 
 QJsonObject FileItem::toJson() {
-    QJsonObject root = ItemInterface::toJson();
+    QJsonObject root = IItem::toJson();
 
     root[JSON_TYPE_ITEM_TYPE] = itemType();
 
