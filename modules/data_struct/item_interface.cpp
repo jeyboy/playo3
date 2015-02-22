@@ -108,15 +108,9 @@ QString ItemInterface::buildTreePath() const {
     return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
 }
 
-QString ItemInterface::buildTreeStr() const { // used for tree sorting on removing
-    return _parent ? _parent -> buildTreeStr() + row() : "";
-}
-
-void ItemInterface::buildTreeVector(QVector<int> & accum_vector) const {
-    if (_parent)
-        _parent -> buildTreeVector(accum_vector);
-
-    accum_vector << row();
+QString ItemInterface::buildTreeStr() const {
+    int rNum = row();
+    return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : "";
 }
 
 QVariant ItemInterface::data(int column) const {
@@ -143,9 +137,9 @@ QVariant ItemInterface::data(int column) const {
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
         case IFOLDER:          return isContainer();
-        case Qt::FontRole:      return Settings::instance() -> getItemFont();
+        case Qt::FontRole:     return Settings::instance() -> getItemFont();
         case ITREEPATH:        return buildTreePath();
-        case ITREESTR:        return buildTreeStr();
+        case ITREESTR:         return buildTreeStr();
 
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 

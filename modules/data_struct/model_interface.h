@@ -96,25 +96,7 @@ namespace Playo3 {
 
     struct modelIndexComparator {
         bool operator()(const QModelIndex & a, const QModelIndex & b) const {
-//            const ModelInterface * m = qobject_cast<const ModelInterface *>(a.model());
-
-//            QVector<int> res, res2;
-//            m -> item(a) -> buildTreeVector(res);
-//            m -> item(b) -> buildTreeVector(res2);
-
-//            int limit = qMin(res.length(), res2.length());
-//            for(int loop1 = 0; loop1 < limit; loop1++)
-//                if (res[loop1] < res2[loop1])
-//                    return true;
-//                else if (res[loop1] > res2[loop1])
-//                    return false;
-
-//            return res.length() < res2.length();
-
-            QString aPath = a.data(ITREESTR).toString();
-            QString bPath = b.data(ITREESTR).toString();
-
-            return aPath < bPath/* && aPath.length() < bPath.length()*/;
+            return a.data(ITREESTR).toString() < b.data(ITREESTR).toString();
         }
     };
 

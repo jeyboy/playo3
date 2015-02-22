@@ -46,8 +46,7 @@ namespace Playo3 {
 
         inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath().toHtmlEscaped()); }
         QString buildTreePath() const;
-        QString buildTreeStr() const;
-        void buildTreeVector(QVector<int> & accum_vector) const;
+        QString buildTreeStr() const; // used for tree sorting on removing
 
         virtual QVariant data(int column) const;
         bool setData(int column, const QVariant & value);

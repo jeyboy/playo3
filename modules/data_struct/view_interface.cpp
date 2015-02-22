@@ -435,6 +435,11 @@ void ViewInterface::removeProccessing(bool inProcess) {
     } else {
         qSort(l.begin(), l.end(), modelIndexComparator());
 
+        qDebug() << "-----------1--------------";
+        foreach(QModelIndex ind, l)
+            qDebug() << ind.data(ITREEPATH);
+
+
         //INFO - remove dependent items
         mdl -> setProgress2(SPINNER_IS_CONTINIOUS);
         QModelIndexList nl = QModelIndexList();
@@ -453,27 +458,29 @@ void ViewInterface::removeProccessing(bool inProcess) {
         mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
         temp = total = nl.size();
         l = nl;
+        //////
+
+        qDebug() << "-----------2--------------";
+        foreach(QModelIndex ind, l)
+            qDebug() << ind.data(ITREEPATH);
     }
 
     QModelIndexList::Iterator eit = --l.end();
 
-    if (mdl -> containerType() == list) {
+    if (mdl -> containerType() == list || !inProcess) {
         for (; eit != l.begin(); --eit) {
-            else removeRow((*eit), false, true);
+            removeRow((*eit), false, true);
 
             if (inProcess)
                 emit mdl -> setProgress(--temp * 100.0 / total);
         }
     } else {
         for (; eit != l.begin(); --eit) {
-            if (inProcess) {
-                if ((*eit).data(IFOLDER).toBool())
-                    emit threadedRowRemoving((*eit), false, true);
-                else
-                    removeRow((*eit), false, true);
-                emit mdl -> setProgress(--temp * 100.0 / total);
-            }
-            else removeRow((*eit), false, true);
+            if ((*eit).data(IFOLDER).toBool())
+                emit threadedRowRemoving((*eit), false, true);
+            else
+                removeRow((*eit), false, true);
+            emit mdl -> setProgress(--temp * 100.0 / total);
         }
     }
 
