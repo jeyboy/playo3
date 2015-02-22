@@ -33,6 +33,12 @@ namespace Playo3 {
     class ViewInterface : public QTreeView {
       Q_OBJECT
     public:
+        enum SearchDirection {
+            none = 0,
+            forward = 1,
+            backward = 2
+        };
+
         ViewInterface(ModelInterface * model, QWidget * parent, ViewSettings & settins);
         ~ViewInterface();
 
@@ -68,7 +74,7 @@ namespace Playo3 {
 
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
-        void threadedRowRemoving(QModelIndex node, bool updateSelection, bool usePrevAction);
+        void threadedRowRemoving(QModelIndex node, int selectionUpdate, bool usePrevAction);
 
     public slots:
         void expandeAll();
@@ -85,7 +91,7 @@ namespace Playo3 {
         inline void itemError(QModelIndex & /*node*/) { /*TODO: reaction needed*/ }
         inline void onDoubleClick(const QModelIndex & node) { execIndex(node); }
         void openLocation();
-        bool removeRow(const QModelIndex & node, bool updateSelection = false, bool usePrevAction = false);
+        bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
 
         void download();
         void downloadAll();

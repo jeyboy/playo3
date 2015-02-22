@@ -39,7 +39,7 @@ ViewInterface::ViewInterface(ModelInterface * newModel, QWidget * parent, ViewSe
                 UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
                 Qt::BlockingQueuedConnection
            );
-    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, bool)), this, SLOT(removeRow(const QModelIndex &, bool, bool)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, int, bool)), this, SLOT(removeRow(const QModelIndex &, int, bool)), Qt::BlockingQueuedConnection);
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
@@ -366,10 +366,10 @@ void ViewInterface::findAndExecIndex(bool deleteCurrent) {
     execIndex(node);
 }
 
-bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bool usePrevAction) {
+bool ViewInterface::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
+//    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
@@ -404,15 +404,19 @@ bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bo
         Player::instance() -> playIndex(QModelIndex());
 
 
-    if (updateSelection) {
-        QModelIndex newSel = node;
-        if (isFolder) {
-            collapse(newSel);
-            newSel = indexBelow(newSel);
-        }
-        newSel = candidateOnSelection(node);
-        if (!newSel.isValid())
+    if (selectionUpdate != none) {
+        QModelIndex newSel = QModelIndex();
+
+        if (selectionUpdate & backward)
             newSel = candidateOnSelection(node, true);
+
+        if (selectionUpdate & forward && !newSel.isValid()) { // this not worked for threaded deletion, because tree is not updated in process and contain a broken keys as result
+            if (isFolder) {
+                collapse(newSel);
+                newSel = indexBelow(newSel);
+            }
+            newSel = candidateOnSelection(node);
+        }
 
         setCurrentIndex(newSel);
     }
@@ -450,7 +454,6 @@ void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProce
         }
 
         mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
-        qDebug() << ": " << total << index_list.size();
         temp = total = index_list.size();
         //////
     }
@@ -459,7 +462,7 @@ void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProce
 
     if (mdl -> containerType() == list || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
-            removeRow((*eit), false, true);
+            removeRow((*eit), none, true);
 
             if (inProcess)
                 emit mdl -> setProgress(--temp * 100.0 / total);
@@ -467,14 +470,18 @@ void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProce
     } else {
         for (; eit != index_list.begin(); --eit) {
             if ((*eit).data(IFOLDER).toBool())
-                emit threadedRowRemoving((*eit), false, true);
+                emit threadedRowRemoving((*eit), none, true);
             else
-                removeRow((*eit), false, true);
+                removeRow((*eit), none, true);
             emit mdl -> setProgress(--temp * 100.0 / total);
         }
     }
 
-    emit threadedRowRemoving((*eit), !inProcess, true); // if last elem is folder - throwned error if we in thread // select new item only if we not in thread
+    if (inProcess)
+        // in thread item selected in view, but not added to selected model :(
+        emit threadedRowRemoving((*eit), none, true); // if last elem is folder - throwned error if we in thread
+    else
+        removeRow((*eit), backward | forward, true);
 
     index_list.clear();
     if (inProcess)
@@ -665,21 +672,20 @@ void ViewInterface::dropEvent(QDropEvent * event) {
 }
 
 void ViewInterface::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_A && event -> modifiers() & Qt::ControlModifier) {
-        if (mdl -> containerType() == list)
-            selectAll();
-        else { // for tree types select only top level for optimization
-            QModelIndex ind;
-            selectionModel() -> clear();
-            int limit = mdl -> rowCount();
+//    if (event -> key() == Qt::Key_A && event -> modifiers() & Qt::ControlModifier) {
+//        if (mdl -> containerType() == list)
+//            selectAll();
+//        else { // for tree types select only top level for optimization
+//            selectionModel() -> clear();
+//            int limit = mdl -> rowCount();
 
-            if (limit > 0)
-                setCurrentIndex(mdl -> index(0, 0));
+//            if (limit > 0)
+//                setCurrentIndex(mdl -> index(0, 0));
 
-            for(int row = 1; row < limit; row++)
-                selectionModel() -> select(mdl -> index(row, 0), QItemSelectionModel::Toggle | QItemSelectionModel::Rows/*selectionCommand(ind)*/);
-        }
-    } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
+//            for(int row = 1; row < limit; row++)
+//                selectionModel() -> select(mdl -> index(row, 0), QItemSelectionModel::Toggle | QItemSelectionModel::Rows/*selectionCommand(ind)*/);
+//        }
+    /*} else*/ if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
         if (!list.isEmpty())
@@ -689,7 +695,7 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 
-        if (list.size() > 100)
+        if (list.size() > 200)
             QtConcurrent::run(this, &ViewInterface::removeProccessing, list, true);
         else if (list.size() > 1)
             removeProccessing(list);
