@@ -420,10 +420,8 @@ bool ViewInterface::removeRow(const QModelIndex & node, bool updateSelection, bo
     return model() -> removeRow(node.row(), node.parent());
 }
 
-void ViewInterface::removeProccessing(bool inProcess) {
-    QModelIndexList l = selectedIndexes();
-    int total = l.size(), temp = total;
-    qDebug() << "# " << temp;
+void ViewInterface::removeProccessing(QModelIndexList & index_list, bool inProcess) {
+    int total = index_list.size(), temp = total;
 
     if (inProcess)
         emit mdl -> moveInProcess();
@@ -431,51 +429,43 @@ void ViewInterface::removeProccessing(bool inProcess) {
     Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
 
     if (mdl -> containerType() == list) {
-        qSort(l.begin(), l.end());
+        qSort(index_list.begin(), index_list.end());
     } else {
-        qSort(l.begin(), l.end(), modelIndexComparator());
-
-        qDebug() << "-----------1--------------";
-        foreach(QModelIndex ind, l)
-            qDebug() << ind.data(ITREEPATH);
-
+        qSort(index_list.begin(), index_list.end(), modelIndexComparator());
 
         //INFO - remove dependent items
         mdl -> setProgress2(SPINNER_IS_CONTINIOUS);
-        QModelIndexList nl = QModelIndexList();
-
-        QModelIndexList::Iterator bit = l.begin();
+        QMutableListIterator<QModelIndex> i(index_list);
         QString path = "--", elem_path;
-        for (; bit != l.end(); ++bit) {
-            elem_path = (*bit).data(ITREEPATH).toString();
+        QModelIndex ind;
+
+        while(i.hasNext()) {
+            ind = i.next();
+            elem_path = ind.data(ITREEPATH).toString();
             if (!elem_path.startsWith(path)) {
-                nl << (*bit);
-                if ((*bit).data(IFOLDER).toBool())
+                if (ind.data(IFOLDER).toBool())
                     path = elem_path;
             }
+            else i.remove();
         }
 
         mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
-        temp = total = nl.size();
-        l = nl;
+        qDebug() << ": " << total << index_list.size();
+        temp = total = index_list.size();
         //////
-
-        qDebug() << "-----------2--------------";
-        foreach(QModelIndex ind, l)
-            qDebug() << ind.data(ITREEPATH);
     }
 
-    QModelIndexList::Iterator eit = --l.end();
+    QModelIndexList::Iterator eit = --index_list.end();
 
     if (mdl -> containerType() == list || !inProcess) {
-        for (; eit != l.begin(); --eit) {
+        for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), false, true);
 
             if (inProcess)
                 emit mdl -> setProgress(--temp * 100.0 / total);
         }
     } else {
-        for (; eit != l.begin(); --eit) {
+        for (; eit != index_list.begin(); --eit) {
             if ((*eit).data(IFOLDER).toBool())
                 emit threadedRowRemoving((*eit), false, true);
             else
@@ -486,7 +476,7 @@ void ViewInterface::removeProccessing(bool inProcess) {
 
     emit threadedRowRemoving((*eit), !inProcess, true); // if last elem is folder - throwned error if we in thread // select new item only if we not in thread
 
-    l.clear();
+    index_list.clear();
     if (inProcess)
         emit mdl -> moveOutProcess();
 }
@@ -696,10 +686,13 @@ void ViewInterface::keyPressEvent(QKeyEvent * event) {
             execIndex(list.first());
 
     } else if (event -> key() == Qt::Key_Delete) {
-        if (selectedIndexes().size() > 100)
-            QtConcurrent::run(this, &ViewInterface::removeProccessing, true);
-        else if (selectedIndexes().size() > 1)
-            removeProccessing();
+        QModelIndexList list = selectedIndexes();
+        selectionModel() -> clearSelection();
+
+        if (list.size() > 100)
+            QtConcurrent::run(this, &ViewInterface::removeProccessing, list, true);
+        else if (list.size() > 1)
+            removeProccessing(list);
         else {
             QModelIndex ind = currentIndex();
             if (currentIndex().isValid())

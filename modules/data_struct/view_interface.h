@@ -94,7 +94,7 @@ namespace Playo3 {
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
-        void removeProccessing(bool inProcess = false);
+        void removeProccessing(QModelIndexList & index_list, bool inProcess = false);
 
         bool prepareDownloading(QString path);
 
