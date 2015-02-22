@@ -31,7 +31,7 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
         exRow = nearestNode -> row();
     }
 
-    (const_cast<QModelIndex&>(dIndex)) = index(node);
+    (const_cast<QModelIndex &>(dIndex)) = index(node);
 
     if (dIndex != exIndex)
         dRow = -1;

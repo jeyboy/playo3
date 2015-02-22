@@ -13,6 +13,7 @@ namespace Playo3 {
 
         inline ContainerType containerType() const { return list; }
     protected:
+        void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         int filesRoutine(QFileInfo & currFile, FolderItem * node);
         int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);

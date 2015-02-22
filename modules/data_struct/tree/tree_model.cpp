@@ -20,7 +20,7 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
     FolderItem * node = list.isEmpty() ? nearestNode : nearestNode -> createFolder(list.takeFirst(), &list);
     exIndex = index(nearestNode);
 
-    (const_cast<QModelIndex&>(dIndex)) = index(node);
+    (const_cast<QModelIndex &>(dIndex)) = index(node);
     exRow = nearestNode -> row();
 
     if (dIndex != exIndex)
