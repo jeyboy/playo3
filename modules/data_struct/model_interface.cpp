@@ -459,7 +459,7 @@ void IModel::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDa
 }
 
 QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
-    if (indexes.count() <= 0)
+    if (indexes.isEmpty())
         return 0;
 
     QMimeData * mimeData = new QMimeData();
@@ -471,22 +471,6 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
     QModelIndexList::ConstIterator it = indexes.begin();
     for (; it != indexes.end(); ++it)
         proceedMimeDataIndex((*it), list, stream);
-
-//        if ((*it).data(IFOLDER).toBool()) {
-//            for(int row = 0; ; row++) {
-//                ind = (*it).child(row, 0);
-//                if (ind.isValid()) {
-//                    lastUrl = ind.data(IURL).toUrl();
-//                    list.append(lastUrl);
-//                    stream << lastUrl << ind.data(IINNERCOPY).toMap(); // encodeInnerData
-//                } else break;
-//            }
-//        } else {
-//            lastUrl = (*it).data(IURL).toUrl();
-//            list.append(lastUrl);
-//            stream << lastUrl << (*it).data(IINNERCOPY).toMap(); // encodeInnerData
-//        }
-//    }
 
     mimeData -> setData(DROP_INNER_FORMAT, encoded);
     mimeData -> setUrls(list);
@@ -512,9 +496,8 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
         QByteArray encoded = data -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
         return decodeInnerData(row, column, parentIndex, stream);
-    } else if (data -> hasUrls()) {
+    } else if (data -> hasUrls())
         return insertRows(data -> urls(), row, parentIndex);
-    }
 
     return false;
 }

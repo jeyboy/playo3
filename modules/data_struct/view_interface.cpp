@@ -679,20 +679,7 @@ void IView::dropEvent(QDropEvent * event) {
 }
 
 void IView::keyPressEvent(QKeyEvent * event) {
-//    if (event -> key() == Qt::Key_A && event -> modifiers() & Qt::ControlModifier) {
-//        if (mdl -> containerType() == list)
-//            selectAll();
-//        else { // for tree types select only top level for optimization
-//            selectionModel() -> clear();
-//            int limit = mdl -> rowCount();
-
-//            if (limit > 0)
-//                setCurrentIndex(mdl -> index(0, 0));
-
-//            for(int row = 1; row < limit; row++)
-//                selectionModel() -> select(mdl -> index(row, 0), QItemSelectionModel::Toggle | QItemSelectionModel::Rows/*selectionCommand(ind)*/);
-//        }
-    /*} else*/ if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
+    if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
         if (!list.isEmpty())
