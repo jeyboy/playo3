@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true) {
+    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true), blockRepaint(false) {
 
     setIndentation(12);
     setStyle(new TreeViewStyle);
@@ -249,6 +249,11 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
     QTreeView::drawRow(painter, options, index);
 }
 
+void IView::paintEvent(QPaintEvent * event) {
+    if (!blockRepaint)
+        QTreeView::paintEvent(event);
+}
+
 void IView::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need separate item initializator for each view
 //    if (event -> oldSize().height() != size().height()) {
 //        if (event -> size().height() > 0) {
@@ -369,7 +374,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-//    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
+    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
@@ -458,6 +463,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
         //////
     }
 
+    blockRepaint = true; // list type sometimes trying redraw yourself in process :(
     QModelIndexList::Iterator eit = --index_list.end();
 
     if (mdl -> containerType() == list || !inProcess) {
@@ -476,6 +482,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
             emit mdl -> setProgress(--temp * 100.0 / total);
         }
     }
+    blockRepaint = false;
 
     if (inProcess)
         // in thread item selected in view, but not added to selected model :(

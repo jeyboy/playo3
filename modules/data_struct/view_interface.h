@@ -27,6 +27,9 @@
 //#include "media/library.h"
 //#include "web/download.h"
 
+//qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
+//qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
+
 namespace Playo3 {
     class Dockbars;
 
@@ -112,6 +115,7 @@ namespace Playo3 {
 
 //        IItem * removeCandidate(IItem * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & node) const;
+        void paintEvent(QPaintEvent * event);
         void resizeEvent(QResizeEvent *);
         void focusInEvent(QFocusEvent *);
         void contextMenuEvent(QContextMenuEvent *);
@@ -130,6 +134,7 @@ namespace Playo3 {
         bool forwardOrder;
     private:
         ModelItemDelegate * item_delegate;
+        bool blockRepaint;
     };
 }
 
