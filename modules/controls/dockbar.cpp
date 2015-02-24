@@ -40,6 +40,8 @@ void DockBar::onMoveInProcess() {
     inProcess = true;
     if (!spinner)
         spinner = new Spinner("In process", 80, 80, this);
+    else
+        spinner -> setValue(SPINNER_IS_CONTINIOUS);
 
     mWidget = widget();
     setWidget(spinner);
