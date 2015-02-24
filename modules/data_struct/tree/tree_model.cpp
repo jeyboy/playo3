@@ -35,6 +35,7 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     if (count > 0) emit itemsCountChanged(count);
 }
 
+//TODO: did not use foreach
 int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
@@ -53,6 +54,7 @@ int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     return res;
 }
 
+//TODO: did not use foreach
 int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
 

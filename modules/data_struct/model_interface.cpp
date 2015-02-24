@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) { //TODO: rewrite
+IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     if (hash != 0) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
@@ -17,6 +17,7 @@ IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent
 
 IModel::~IModel() {
     delete rootItem;
+    delete addWatcher;
 }
 
 QVariant IModel::data(const QModelIndex & index, int role) const {
@@ -183,6 +184,25 @@ bool IModel::removeColumns(int position, int columns, const QModelIndex &parent)
     return success;
 }
 
+DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+    if (list.isEmpty()) return 0;
+
+    emit moveInProcess();
+
+    DropData * res = new DropData();
+    recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, list.first());
+    res -> limitRow = res -> eRow + (parent == res -> eIndex ? list.length() - 1 : 0);
+    dropProcession(parent, pos, list);
+    return res;
+}
+
+bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+    addWatcher = new QFutureWatcher<DropData *>();
+    connect(addWatcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
+    addWatcher -> setFuture(QtConcurrent::run(this, &IModel::threadlyProcessingRowsInsertion, list, pos, parent));
+    return true;
+}
+
 bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
 
@@ -341,6 +361,20 @@ void IModel::collapsed(const QModelIndex & index) {
     node -> unset(IItem::expanded);
 }
 
+void IModel::finishingItemsAdding() {
+    DropData * res = addWatcher -> result();
+    delete addWatcher;
+    addWatcher = 0;
+    if (!res) return;
+
+
+    beginInsertRows(res -> eIndex, res -> eRow, res -> limitRow);
+    endInsertRows();
+
+    emit moveOutProcess();
+    emit spoilNeeded(res -> eIndex);
+}
+
 /////////////////////////////////////////////////////////
 
 void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
@@ -497,7 +531,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
         QDataStream stream(&encoded, QIODevice::ReadOnly);
         return decodeInnerData(row, column, parentIndex, stream);
     } else if (data -> hasUrls())
-        return insertRows(data -> urls(), row, parentIndex);
+        return /*insertRows*/threadlyInsertRows(data -> urls(), row, parentIndex);
 
     return false;
 }

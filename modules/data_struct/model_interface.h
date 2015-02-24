@@ -3,6 +3,9 @@
 
 #include <qmimedata.h>
 #include <qabstractitemmodel.h>
+#include <QtConcurrent/QtConcurrent>
+#include <QFutureWatcher>
+
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
 #include "container_types.h"
@@ -15,6 +18,13 @@ namespace Playo3 {
         QVariantMap attrs;
         QModelIndex eIndex;
         int eRow, dRow;
+    };
+
+    struct DropData {
+        DropData() {}
+
+        QModelIndex eIndex;
+        int eRow, limitRow;
     };
 
     #define DROP_OUTER_FORMAT "text/uri-list"
@@ -47,7 +57,11 @@ namespace Playo3 {
         bool insertColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
         bool removeColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
 //        bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
-        virtual bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
+
+        DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
+        bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent);
+
+        bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         IItem * item(const QModelIndex & index) const;
@@ -72,6 +86,9 @@ namespace Playo3 {
         void collapsed(const QModelIndex & index);
         void collapseAll();
 
+    protected slots:
+        void finishingItemsAdding();
+
     signals:
         void spoilNeeded(const QModelIndex & index) const;
         void expandNeeded(const QModelIndex & index) const;
@@ -92,6 +109,9 @@ namespace Playo3 {
 
         Qt::KeyboardModifiers dropKeyModifiers;
         FolderItem * rootItem;
+    private:
+        QFutureWatcher<DropData *> * addWatcher;
+
     };
 
     struct modelIndexComparator {
