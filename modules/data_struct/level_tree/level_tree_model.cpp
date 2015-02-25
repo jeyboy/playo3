@@ -49,15 +49,19 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+    {
+        QFileInfoList::Iterator it = folderList.begin();
 
-    foreach(QFileInfo file, folderList)
-        res += filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
+        for(; it != folderList.end(); it++)
+            res += filesRoutine((*it), rootItem -> createFolder(Extensions::folderName((*it))));
+    }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+    QFileInfoList::Iterator it = fileList.begin();
 
     res += fileList.size();
-    foreach(QFileInfo file, fileList)
-        new FileItem(file.path(), file.fileName(), node);
+    for(; it != fileList.end(); it++)
+        new FileItem((*it).path(), (*it).fileName(), node);
 
     node -> updateItemsCountInBranch(fileList.size());
     return res;
@@ -65,9 +69,10 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 
 int LevelTreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
+    QList<QUrl>::ConstIterator it = list.begin();
 
-    foreach(QUrl url, list) {
-        QFileInfo file = QFileInfo(url.toLocalFile());
+    for(; it != list.end(); it++) {
+        QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, rootItem -> createFolder(Extensions::folderName(file)));
         else {

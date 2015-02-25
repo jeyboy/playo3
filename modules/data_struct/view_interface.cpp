@@ -332,14 +332,16 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         actions.append((act = new QAction(QIcon(":/shuffle"), "Shuffle", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
+        if (mdl -> containerType() != list) {
+            actions.append((act = new QAction(this)));
+            act -> setSeparator(true);
 
-        actions.append((act = new QAction(QIcon(":/collapse"), "Collapse all", this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
+            actions.append((act = new QAction(QIcon(":/collapse"), "Collapse all", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
 
-        actions.append((act = new QAction(QIcon(":/expand"), "Expand all", this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
+            actions.append((act = new QAction(QIcon(":/expand"), "Expand all", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
+        }
     }
 
     if (actions.count() > 0)
