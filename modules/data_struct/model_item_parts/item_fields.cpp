@@ -49,6 +49,6 @@ QString ItemFields::downloadTitle() const {
     if (extension().isValid())
         ret = ret + '.' + extension().toString();
 
-    ret.replace(QRegExp("\\s+"), " "); // TODO: remove empty brackets
+    ret.replace(QRegExp("\\s+"), " ").trimmed(); // TODO: remove empty brackets
     return ret;
 }
