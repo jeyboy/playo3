@@ -99,6 +99,9 @@ public:
     int getTabPosition();
     void setTabPosition(int newPositionsType);
 
+    inline int getTreeIndentation() { return treeIndentation; }
+    inline void setTreeIndentation(int newIndentation) { treeIndentation = newIndentation; }
+
     int getItemHeight();
     void setItemHeight(int newHeight);
 
@@ -173,14 +176,13 @@ private:
     bool spoilOnActivation;
     bool alertOnFolderDeletion;
     bool useGradient;
-    bool useScrollButtons;
     QJsonObject hotkeys;
     QHash<int, QString> humanizeHotkeyText;
 
     QColor defaultColor1, listenedColor1, likedColor1, playedColor1, folderColor1;
 
     int tabPosition;
-
+    int treeIndentation;
     int itemHeight;
 
     QString itemFontName;

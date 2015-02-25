@@ -40,7 +40,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -385,7 +385,7 @@ text color</string>
         <rect>
          <x>80</x>
          <y>10</y>
-         <width>91</width>
+         <width>71</width>
          <height>21</height>
         </rect>
        </property>
@@ -409,19 +409,6 @@ text color</string>
         <string>Item height</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="scrollButtonsCheck">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>10</y>
-         <width>151</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Use scroll buttons on tabs</string>
-       </property>
-      </widget>
       <widget class="QCheckBox" name="useSystemIconsCheck">
        <property name="geometry">
         <rect>
@@ -433,6 +420,35 @@ text color</string>
        </property>
        <property name="text">
         <string>Use system icons for elems</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>10</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Indentation step</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="indentationStep">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>10</y>
+         <width>71</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>18</number>
        </property>
       </widget>
      </widget>

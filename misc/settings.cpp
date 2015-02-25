@@ -217,14 +217,6 @@ void Settings::setItemHeight(int newHeight) {
     itemHeight = newHeight;
 }
 
-bool Settings::getScrollButtonUsage() {
-    return useScrollButtons;
-}
-void Settings::setScrollButtonUsage(bool use) {
-    useScrollButtons = use;
-}
-
-
 bool Settings::isCustomColorSpectrum() {
     return customcolorSpectrum;
 }
@@ -389,8 +381,7 @@ void Settings::fromJson(QJsonObject settingsObj) {
     tabPosition = settingsObj.value("tab_position").toInt(0);
 
     itemHeight = settingsObj.value("item_height").toInt(18);
-
-    useScrollButtons = settingsObj.value("use_scroll_buttons").toBool(true);
+    treeIndentation = settingsObj.value("tree_indentation").toInt(12);
 
     customcolorSpectrum = settingsObj.value("customcolor_spectrum").toBool(false);
 
@@ -445,8 +436,7 @@ QJsonObject Settings::toJson() {
 
     ret.insert("tab_position", QJsonValue::fromVariant(tabPosition));
     ret.insert("item_height", QJsonValue::fromVariant(itemHeight));
-
-    ret.insert("use_scroll_buttons", QJsonValue::fromVariant(useScrollButtons));
+    ret.insert("tree_indentation", QJsonValue::fromVariant(treeIndentation));
 
     ret.insert("customcolor_spectrum", QJsonValue::fromVariant(customcolorSpectrum));
     ret.insert("spectrum_color", QJsonValue::fromVariant(spectrumColor));

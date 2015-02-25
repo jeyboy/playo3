@@ -77,9 +77,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
   ui -> selectedItemInfoTextColorButton -> setStyleSheet("background-color: " + selectedItemInfoTextColor.name() + ";");
 
   ui -> itemHeightSize -> setValue(Settings::instance() -> getItemHeight());
-
-  ui -> scrollButtonsCheck -> setChecked(Settings::instance() -> getScrollButtonUsage());
-  ui -> scrollButtonsCheck -> setDisabled(true);
+  ui -> indentationStep -> setValue(Settings::instance() -> getTreeIndentation());
 
   spectrumColor = Settings::instance() -> getSpectrumColor();
   ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
@@ -198,9 +196,7 @@ void SettingsDialog::on_acceptButton_clicked() {
     Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
 
     Settings::instance() -> setItemHeight(ui -> itemHeightSize -> value());
-
-    Settings::instance() -> setScrollButtonUsage(ui -> scrollButtonsCheck -> isChecked());
-
+    Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
 
     Settings::instance() -> setSpectrumColor(spectrumColor);
     Settings::instance() -> setSpectrumColor2(spectrumColor2);
