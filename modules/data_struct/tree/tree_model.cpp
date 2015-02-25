@@ -35,31 +35,34 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     if (count > 0) emit itemsCountChanged(count);
 }
 
-//TODO: did not use foreach
 int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+    {
+        QFileInfoList::Iterator it = folderList.begin();
 
-    foreach(QFileInfo file, folderList)
-        res += filesRoutine(file, node -> createFolder(file.fileName()));
+        for(; it != folderList.end(); it++)
+            res += filesRoutine((*it), node -> createFolder((*it).fileName()));
+    }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+    QFileInfoList::Iterator it = fileList.begin();
 
     res += fileList.size();
-    foreach(QFileInfo file, fileList)
-        new FileItem(file.fileName(), node);
+    for(; it != fileList.end(); it++)
+        new FileItem((*it).fileName(), node);
 
     node -> updateItemsCountInBranch(res);
     return res;
 }
 
-//TODO: did not use foreach
 int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
+    QList<QUrl>::ConstIterator it = list.begin();
 
-    foreach(QUrl url, list) {
-        QFileInfo file = QFileInfo(url.toLocalFile());
+    for(; it != list.end(); it++) {
+        QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
         else {

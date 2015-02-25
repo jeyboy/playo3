@@ -28,27 +28,29 @@ int ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+    {
+        QFileInfoList::Iterator it = folderList.begin();
 
-    for(int loop1 = 0; loop1 < folderList.size(); loop1++)
-        res += filesRoutine(folderList[loop1], node);
+        for(; it != folderList.end(); it++)
+            res += filesRoutine((*it), node);
+    }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+    QFileInfoList::Iterator it = fileList.begin();
 
     res += fileList.size();
-    QFileInfo file;
-    for(int loop1 = 0; loop1 < fileList.size(); loop1++) {
-        file = fileList[loop1];
-        new FileItem(file.path(), file.fileName(), node);
-    }
+    for(; it != fileList.end(); it++)
+        new FileItem((*it).path(), (*it).fileName(), node);
 
     return res;
 }
 
 int ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
+    QList<QUrl>::ConstIterator it = list.begin();
 
-    for(int loop1 = 0; loop1 < list.size(); loop1++) {
-        QFileInfo file = QFileInfo(list[loop1].toLocalFile());
+    for(; it != list.end(); it++) {
+        QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, node);
         else {
