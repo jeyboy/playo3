@@ -29,14 +29,17 @@ int ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
 
-    foreach(QFileInfo file, folderList)
-        res += filesRoutine(file, node);
+    for(int loop1 = 0; loop1 < folderList.size(); loop1++)
+        res += filesRoutine(folderList[loop1], node);
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
 
     res += fileList.size();
-    foreach(QFileInfo file, fileList)
+    QFileInfo file;
+    for(int loop1 = 0; loop1 < fileList.size(); loop1++) {
+        file = fileList[loop1];
         new FileItem(file.path(), file.fileName(), node);
+    }
 
     return res;
 }
@@ -44,8 +47,8 @@ int ListModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 int ListModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
 
-    foreach(QUrl url, list) {
-        QFileInfo file = QFileInfo(url.toLocalFile());
+    for(int loop1 = 0; loop1 < list.size(); loop1++) {
+        QFileInfo file = QFileInfo(list[loop1].toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, node);
         else {
