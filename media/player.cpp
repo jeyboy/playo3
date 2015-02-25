@@ -64,19 +64,21 @@ void Player::playIndex(QModelIndex item, bool paused, uint start) {
 
     updateItemState(false);
     currentIndex = item;
-    setMedia(item.data(IURL).toUrl());
-    play();
+    if (item.isValid()) {
+        setMedia(item.data(IURL).toUrl());
+        play();
 
-    if (start > 0)
-        setStartPosition(start);
+        if (start > 0)
+            setStartPosition(start);
 
-    if (isPlayed())
-        updateItemState(true);
-    else
-        setItemState(ItemState::played);
+        if (isPlayed())
+            updateItemState(true);
+        else
+            setItemState(ItemState::played);
 
-    if (paused)
-        pause();
+        if (paused)
+            pause();
+    }
 }
 
 void Player::setStartPosition(int position) {

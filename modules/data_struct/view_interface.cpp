@@ -407,8 +407,12 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
         }
     }
 
-    if (!isFolder && node.data(ISTATE).toInt() & ItemState::played)
-        Player::instance() -> playIndex(QModelIndex());
+    if (Player::instance() -> playedIndex().isValid()) {
+        if (Player::instance() -> playedIndex().data(ITREESTR).toString().startsWith(
+            node.data(ITREESTR).toString()
+        ))
+            Player::instance() -> playIndex(QModelIndex());
+    }
 
     if (selectionUpdate != none) {
         QModelIndex newSel = QModelIndex();
