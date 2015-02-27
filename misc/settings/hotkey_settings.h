@@ -9,7 +9,7 @@
 
 class HotkeySettings {
 public:
-    HotkeySettings(QJsonObject & settings);
+    HotkeySettings();
 
     void fromJson(QJsonObject & settings);
     void toJson(QJsonObject & settings);

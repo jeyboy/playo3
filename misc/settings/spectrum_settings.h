@@ -6,7 +6,8 @@
 
 class SpectrumSettings {
 public:
-    SpectrumSettings(QJsonObject & settings);
+    void fromJson(QJsonObject & settings);
+    void toJson(QJsonObject & settings);
 
     inline bool isCustomColorSpectrum() { return _customColorSpectrum; }
     inline void setCustomColorSpectrum(bool use) { _customColorSpectrum = use; }

@@ -1,6 +1,6 @@
 #include "hotkey_settings.h"
 
-HotkeySettings::HotkeySettings(QJsonObject & settings) {
+HotkeySettings::HotkeySettings() {
     _humanizeHotkeyText.insert(HOTKEY_NEXT, "Activate next item");
     _humanizeHotkeyText.insert(HOTKEY_NEXT_AND_DELETE, "Remove current and activate next");
     _humanizeHotkeyText.insert(HOTKEY_PREV, "Activate prev item");

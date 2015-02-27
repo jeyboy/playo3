@@ -1,11 +1,12 @@
-#ifndef VIEW_SETTINGS
-#define VIEW_SETTINGS
+#ifndef TAB_SETTINGS
+#define TAB_SETTINGS
 
 #include <qjsonobject.h>
 
-class ViewSettings {
+class TabSettings {
 public:
-    ViewSettings::ViewSettings(QJsonObject & settings);
+    void fromJson(QJsonObject & settings);
+    void toJson(QJsonObject & settings);
 
     inline bool isShowSystemIcons() const { return _showSystemIcons; }
     inline void setShowSystemIcons(bool show) { _showSystemIcons = show; }
@@ -41,4 +42,4 @@ protected:
     int _deleteFolderAnswer;
 };
 
-#endif // VIEW_SETTINGS
+#endif // TAB_SETTINGS

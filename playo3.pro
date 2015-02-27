@@ -87,7 +87,7 @@ SOURCES += main.cpp\
     misc/settings/item_settings.cpp \
     misc/settings/global_settings.cpp \
     misc/settings/spectrum_settings.cpp \
-    misc/settings/view_settings.cpp
+    misc/settings/tab_settings.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -176,7 +176,7 @@ HEADERS  += playo.h \
     misc/settings/hotkey_settings.h \
     misc/settings/item_settings.h \
     misc/settings/spectrum_settings.h \
-    misc/settings/view_settings.h
+    misc/settings/tab_settings.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

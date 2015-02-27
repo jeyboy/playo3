@@ -10,9 +10,10 @@
 #include "settings/hotkey_settings.h"
 #include "settings/item_settings.h"
 #include "settings/spectrum_settings.h"
-#include "settings/view_settings.h"
+#include "settings/tab_settings.h"
 
-class Settings : public GlobalSettings, public HotkeySettings, public ItemSettings, public SpectrumSettings, public ViewSettings {
+class Settings : public GlobalSettings, public HotkeySettings,
+        public ItemSettings, public SpectrumSettings, public TabSettings {
 public:
     ~Settings() { }
 
@@ -28,7 +29,8 @@ public:
     inline int iconHeight() { return totalItemHeight() - 1; }
 
 private:
-    Settings() {
+    Settings() : GlobalSettings(), HotkeySettings(),
+        ItemSettings(), SpectrumSettings(), TabSettings() {
     }
 
     static Settings * self;

@@ -1,5 +1,5 @@
-#ifndef DATA_STORE_H
-#define DATA_STORE_H
+#ifndef ITEM_SETTINGS
+#define ITEM_SETTINGS
 
 #include <QFont>
 #include <QLinearGradient>
@@ -18,10 +18,10 @@ public:
 
     QBrush buildGradient(QRect rect, QColor color, bool dark);
 
-    inline QBrush defaultState(QRect rect, bool dark) { return buildGradient(rect, defaultColor1, dark); }
-    inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, listenedColor1, dark); }
-    inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, likedColor1, dark); }
-    inline QBrush playedState(QRect rect, bool dark) { return buildGradient(rect, playedColor1, dark); }
+    inline QBrush defaultState(QRect rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
+    inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
+    inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
+    inline QBrush playedState(QRect rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
 
     QBrush unprocessedState(QRect rect, bool dark);
 
@@ -54,7 +54,7 @@ public:
     inline void setItemFontSize(int newFontSize) { __title.fontSize = newFontSize; }
 
     inline QColor itemTextColor() { return __title.textColor; }
-    inline void Settings::setItemTextColor(QColor newColor) { __title.textColor = newColor; }
+    inline void setItemTextColor(QColor newColor) { __title.textColor = newColor; }
 
     inline QColor selectedItemTextColor() { return __title.selectedTextColor; }
     inline void setSelectedItemTextColor(QColor newColor) { __title.selectedTextColor = newColor; }
@@ -67,7 +67,7 @@ public:
     inline void setItemInfoFontSize(int newFontSize) { __info.fontSize = newFontSize; }
 
     inline QColor itemInfoTextColor() { return __info.textColor; }
-    inline void Settings::setItemInfoTextColor(QColor newColor) { __info.textColor = newColor; }
+    inline void setItemInfoTextColor(QColor newColor) { __info.textColor = newColor; }
 
     inline QColor selectedItemInfoTextColor() { return __info.selectedTextColor; }
     inline void setSelectedItemInfoTextColor(QColor newColor) { __info.selectedTextColor = newColor; }
@@ -81,4 +81,4 @@ protected:
     ItemTextAttrs __title, __info;
 };
 
-#endif // DATA_STORE_H
+#endif // ITEM_SETTINGS
