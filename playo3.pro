@@ -82,7 +82,12 @@ SOURCES += main.cpp\
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
     modules/controls/spinner.cpp \
-    modules/controls/user_dialog_box.cpp
+    modules/controls/user_dialog_box.cpp \
+    misc/settings/hotkey_settings.cpp \
+    misc/settings/item_settings.cpp \
+    misc/settings/global_settings.cpp \
+    misc/settings/spectrum_settings.cpp \
+    misc/settings/view_settings.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -166,7 +171,12 @@ HEADERS  += playo.h \
     misc/spectrum_types.h \
     modules/data_struct/container_types.h \
     modules/controls/spinner.h \
-    modules/controls/user_dialog_box.h
+    modules/controls/user_dialog_box.h \
+    misc/settings/global_settings.h \
+    misc/settings/hotkey_settings.h \
+    misc/settings/item_settings.h \
+    misc/settings/spectrum_settings.h \
+    misc/settings/view_settings.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

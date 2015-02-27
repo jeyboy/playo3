@@ -1,7 +1,6 @@
 #ifndef HOTKEY_MANAGER_H
 #define HOTKEY_MANAGER_H
 
-#include <QObject>
 #include <QHash>
 #include "globalshortcut/qxtglobalshortcut.h"
 #include "misc/hotkey_types.h"
