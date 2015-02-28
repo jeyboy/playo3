@@ -5,6 +5,7 @@
 #include <qpainter.h>
 #include "modules/controls/window_title.h"
 #include "misc/screen.h"
+#include <qdebug.h>
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {
@@ -21,6 +22,10 @@ namespace Playo3 {
         }
         inline void removeOuterChild(QWidget * w) {
             outerChilds.removeOne(w);
+        }
+
+        inline void setTabPosition(QTabWidget::TabPosition tabPosition) {
+            QMainWindow::setTabPosition(Qt::AllDockWidgetAreas, tabPosition);
         }
 
     public slots:

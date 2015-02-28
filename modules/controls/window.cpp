@@ -23,10 +23,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
     Stylesheets::initBrush(brush);
 
-//    setTabPosition(Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition);
-////    setDockNestingEnabled(true);
-    setDockOptions(AnimatedDocks | AllowNestedDocks | VerticalTabs);
-    setDocumentMode(true);
+//    setDocumentMode(true);
 }
 
 MainWindow::~MainWindow() {

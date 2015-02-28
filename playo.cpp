@@ -65,6 +65,8 @@ void Playo::initialization() {
     Settings::instance() -> fromJson(settings -> read("settings").toObject());
     SettingsDialog::registerHotkeys(Dockbars::instance());
 
+    setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
+
     QVariant geometryState = stateSettings.value("geometry");
     if (geometryState.isValid())
         restoreGeometry(geometryState.toByteArray());
@@ -194,6 +196,7 @@ void Playo::showSettingsDialog() {
         ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> spectrumBarsCount());
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> spectrumFreqRate());
+        setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
         Dockbars::instance() -> updateAllViews();
     }
 }
