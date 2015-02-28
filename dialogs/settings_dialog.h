@@ -58,6 +58,19 @@ private slots:
 
     void on_spectrumColor3_clicked();
 
+protected:
+    void initGlobalSettings();
+    void initItemsSettings();
+    void initViewSettings();
+    void initHotkeysSettings();
+    void initSpectrunSettings();
+
+    void saveGlobalSettings();
+    void saveItemsSettings();
+    void saveViewSettings();
+    void saveHotkeysSettings();
+    void saveSpectrunSettings();
+
 private:
     bool execColorDialog(QColor & color);
 

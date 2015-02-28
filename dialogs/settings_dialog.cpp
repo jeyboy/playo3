@@ -8,94 +8,15 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
   ui -> setupUi(this);
 
   setWindowTitle("Playo settings");
-  setFixedWidth(356);
-  setFixedHeight(305);
+  setFixedWidth(359);
+  setFixedHeight(312);
   setSizeGripEnabled(false);
 
-  ui -> treeView -> setEditTriggers(QTreeView::AllEditTriggers);
-  ui -> treeView -> setItemDelegate(new HotkeyDelegate(ui -> treeView));
-  ui -> treeView -> setModel(new HotkeyModel(Settings::instance() -> hotKeys(), this));
-  ui -> treeView -> hideColumn(2);
-  ui -> treeView -> setColumnWidth(0, 230);
-
-  ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());
-
-  ui -> showCheckboxes -> setChecked(Settings::instance() -> isCheckboxShow());
-  ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
-  ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
-  ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
-
-  ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
-
-  ui -> useGradientCheck -> setChecked(Settings::instance() -> isUseGradient());
-
-  ui -> itemFontSize -> setValue(Settings::instance() -> itemFontSize());
-  ui -> itemInfoFontSize -> setValue(Settings::instance() -> itemInfoFontSize());
-
-  QStringList positions;
-  positions.append("Above");
-  positions.append("Below");
-  positions.append("Left");
-  positions.append("Right");
-
-  ui -> tabPositionSelect -> insertItems(0, positions);
-  ui -> tabPositionSelect -> setCurrentIndex(Settings::instance() -> tabPosition());
-
-  QFontDatabase fontDatabase;
-
-  ui -> itemFontSelect -> insertItems(0, fontDatabase.families());
-  ui -> itemFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemFontName())));
-  ui -> itemInfoFontSelect -> insertItems(0, fontDatabase.families());
-  ui -> itemInfoFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemInfoFontName())));
-
-  defaultColor = Settings::instance() -> defaultItemColor();
-  ui -> defaultColorButton -> setStyleSheet("background-color: " + defaultColor.name() + ";");
-
-  listenedColor = Settings::instance() -> listenedItemColor();
-  ui -> listenedColorButton -> setStyleSheet("background-color: " + listenedColor.name() + ";");
-
-  likedColor = Settings::instance() -> likedItemColor();
-  ui -> likedColorButton -> setStyleSheet("background-color: " + likedColor.name() + ";");
-
-  playedColor = Settings::instance() -> playedItemColor();
-  ui -> playedColorButton -> setStyleSheet("background-color: " + playedColor.name() + ";");
-
-  folderColor = Settings::instance() -> folderItemColor();
-  ui -> folderColorButton -> setStyleSheet("background-color: " + folderColor.name() + ";");
-  
-  
-  itemTextColor = Settings::instance() -> itemTextColor();
-  ui -> defaultItemTextColorButton -> setStyleSheet("background-color: " + itemTextColor.name() + ";");
-
-  selectedItemTextColor = Settings::instance() -> selectedItemTextColor();
-  ui -> selectedItemTextColorButton -> setStyleSheet("background-color: " + selectedItemTextColor.name() + ";");
-
-  itemInfoTextColor = Settings::instance() -> itemInfoTextColor();
-  ui -> defaultItemInfoTextColorButton -> setStyleSheet("background-color: " + itemInfoTextColor.name() + ";");
-
-  selectedItemInfoTextColor = Settings::instance() -> selectedItemInfoTextColor();
-  ui -> selectedItemInfoTextColorButton -> setStyleSheet("background-color: " + selectedItemInfoTextColor.name() + ";");
-
-  ui -> itemHeightSize -> setValue(Settings::instance() -> itemHeight());
-  ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
-
-  spectrumColor = Settings::instance() -> spectrumColor();
-  ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
-
-  spectrumColor2 = Settings::instance() -> spectrumColor2();
-  ui -> spectrumColor2 -> setStyleSheet("background-color: " + spectrumColor2.name() + ";");
-
-  spectrumColor3 = Settings::instance() -> spectrumColor3();
-  ui -> spectrumColor3 -> setStyleSheet("background-color: " + spectrumColor3.name() + ";");
-
-  ui -> spectrumCustomColorUse -> setChecked(Settings::instance() -> isCustomColorSpectrum());
-
-  ui -> spectrumBarsCount -> setValue(Settings::instance() -> spectrumBarsCount());
-  ui -> spectrumUpdateFrequecy -> setValue(Settings::instance() -> spectrumFreqRate());
-
-  ui -> spectrumHeight -> setValue(Settings::instance() -> spectrumHeight());
-
-  ui -> spectrumMultiplier -> setValue(Settings::instance() -> spectrumMultiplier());
+  initGlobalSettings();
+  initItemsSettings();
+  initViewSettings();
+  initHotkeysSettings();
+  initSpectrunSettings();
 }
 
 SettingsDialog::~SettingsDialog() {
@@ -151,69 +72,17 @@ void SettingsDialog::on_cancelButton_clicked() {
 }
 
 void SettingsDialog::on_acceptButton_clicked() {
-    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> treeView -> model());
-    QList<HotkeyModelItem *> list = model -> toplevelItems();
-    Settings::instance() -> setHotKeys(list);
-
-    HotkeyManager::instance() -> clear();
-
-    foreach(HotkeyModelItem * key, list) {
-        HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString());
-    }
-
-    Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
-    Settings::instance() -> setCheckboxShow(ui -> showCheckboxes -> isChecked());
-    Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
-
-    Settings::instance() -> setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
-
-    iconSizeChanged = Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked()
-            || Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
-    Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
-
-    Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
-
-    Settings::instance() -> setUseGradient(ui -> useGradientCheck -> isChecked());
-
-    Settings::instance() -> setDefaultItemColor(defaultColor);
-    Settings::instance() -> setListenedItemColor(listenedColor);
-    Settings::instance() -> setLikedItemColor(likedColor);
-    Settings::instance() -> setPlayedItemColor(playedColor);
-    Settings::instance() -> setFolderItemColor(folderColor);
-
-    Settings::instance() -> setItemFontName(ui -> itemFontSelect -> currentText());
-    Settings::instance() -> setItemFontSize(ui -> itemFontSize -> value());
-
-    Settings::instance() -> setItemInfoFontName(ui -> itemInfoFontSelect -> currentText());
-    Settings::instance() -> setItemInfoFontSize(ui -> itemInfoFontSize -> value());
-
-    Settings::instance() -> setItemTextColor(itemTextColor);
-    Settings::instance() -> setItemInfoTextColor(itemInfoTextColor);
-
-    Settings::instance() -> setSelectedItemTextColor(selectedItemTextColor);
-    Settings::instance() -> setSelectedItemInfoTextColor(selectedItemInfoTextColor);
-
-    Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
-
-    Settings::instance() -> setItemHeight(ui -> itemHeightSize -> value());
-    Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
-
-    Settings::instance() -> setSpectrumColor(spectrumColor);
-    Settings::instance() -> setSpectrumColor2(spectrumColor2);
-    Settings::instance() -> setSpectrumColor3(spectrumColor3);
-    Settings::instance() -> setCustomColorSpectrum(ui -> spectrumCustomColorUse -> isChecked());
-
-    Settings::instance() -> setSpectrumBarsCount(ui -> spectrumBarsCount -> value());
-    Settings::instance() -> setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
-
-    Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
-    Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
+    saveGlobalSettings();
+    saveItemsSettings();
+    saveViewSettings();
+    saveHotkeysSettings();
+    saveSpectrunSettings();
 
     accept();
 }
 
 void SettingsDialog::on_browseButton_clicked() {
-    QString path = QFileDialog::getExistingDirectory(this, "Please choose new download path");
+    QString path = QFileDialog::getExistingDirectory(this, "Please choose new default download path");
     if (!path.isEmpty()) {
         if (!path.endsWith('/'))
             path += "/";
@@ -283,6 +152,169 @@ void SettingsDialog::on_spectrumColor2_clicked() {
 void SettingsDialog::on_spectrumColor3_clicked() {
     if (execColorDialog(spectrumColor3))
         ui -> spectrumColor3 -> setStyleSheet("background-color: " + spectrumColor3.name() + ";");
+}
+
+
+
+void SettingsDialog::initGlobalSettings() {
+    ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
+    ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());
+
+    QStringList positions;
+    positions.append("Above");
+    positions.append("Below");
+    positions.append("Left");
+    positions.append("Right");
+
+    ui -> tabPositionSelect -> insertItems(0, positions);
+    ui -> tabPositionSelect -> setCurrentIndex(Settings::instance() -> tabPosition());
+}
+
+void SettingsDialog::initItemsSettings() {
+    ui -> useGradientCheck -> setChecked(Settings::instance() -> isUseGradient());
+
+    ui -> itemFontSize -> setValue(Settings::instance() -> itemFontSize());
+    ui -> itemInfoFontSize -> setValue(Settings::instance() -> itemInfoFontSize());
+
+    QFontDatabase fontDatabase;
+
+    ui -> itemFontSelect -> insertItems(0, fontDatabase.families());
+    ui -> itemFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemFontName())));
+    ui -> itemInfoFontSelect -> insertItems(0, fontDatabase.families());
+    ui -> itemInfoFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemInfoFontName())));
+
+    defaultColor = Settings::instance() -> defaultItemColor();
+    ui -> defaultColorButton -> setStyleSheet("background-color: " + defaultColor.name() + ";");
+
+    listenedColor = Settings::instance() -> listenedItemColor();
+    ui -> listenedColorButton -> setStyleSheet("background-color: " + listenedColor.name() + ";");
+
+    likedColor = Settings::instance() -> likedItemColor();
+    ui -> likedColorButton -> setStyleSheet("background-color: " + likedColor.name() + ";");
+
+    playedColor = Settings::instance() -> playedItemColor();
+    ui -> playedColorButton -> setStyleSheet("background-color: " + playedColor.name() + ";");
+
+    folderColor = Settings::instance() -> folderItemColor();
+    ui -> folderColorButton -> setStyleSheet("background-color: " + folderColor.name() + ";");
+
+
+    itemTextColor = Settings::instance() -> itemTextColor();
+    ui -> defaultItemTextColorButton -> setStyleSheet("background-color: " + itemTextColor.name() + ";");
+
+    selectedItemTextColor = Settings::instance() -> selectedItemTextColor();
+    ui -> selectedItemTextColorButton -> setStyleSheet("background-color: " + selectedItemTextColor.name() + ";");
+
+    itemInfoTextColor = Settings::instance() -> itemInfoTextColor();
+    ui -> defaultItemInfoTextColorButton -> setStyleSheet("background-color: " + itemInfoTextColor.name() + ";");
+
+    selectedItemInfoTextColor = Settings::instance() -> selectedItemInfoTextColor();
+    ui -> selectedItemInfoTextColorButton -> setStyleSheet("background-color: " + selectedItemInfoTextColor.name() + ";");
+
+    ui -> itemHeightSize -> setValue(Settings::instance() -> itemHeight());
+}
+void SettingsDialog::initViewSettings() {
+    ui -> showCheckboxes -> setChecked(Settings::instance() -> isCheckboxShow());
+
+    ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
+    ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
+
+    ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
+    ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
+}
+void SettingsDialog::initHotkeysSettings() {
+    ui -> treeView -> setEditTriggers(QTreeView::AllEditTriggers);
+    ui -> treeView -> setItemDelegate(new HotkeyDelegate(ui -> treeView));
+    ui -> treeView -> setModel(new HotkeyModel(Settings::instance() -> hotKeys(), this));
+    ui -> treeView -> hideColumn(2);
+    ui -> treeView -> setColumnWidth(0, 230);
+}
+void SettingsDialog::initSpectrunSettings() {
+    spectrumColor = Settings::instance() -> spectrumColor();
+    ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
+
+    spectrumColor2 = Settings::instance() -> spectrumColor2();
+    ui -> spectrumColor2 -> setStyleSheet("background-color: " + spectrumColor2.name() + ";");
+
+    spectrumColor3 = Settings::instance() -> spectrumColor3();
+    ui -> spectrumColor3 -> setStyleSheet("background-color: " + spectrumColor3.name() + ";");
+
+    ui -> spectrumCustomColorUse -> setChecked(Settings::instance() -> isCustomColorSpectrum());
+
+    ui -> spectrumBarsCount -> setValue(Settings::instance() -> spectrumBarsCount());
+    ui -> spectrumUpdateFrequecy -> setValue(Settings::instance() -> spectrumFreqRate());
+
+    ui -> spectrumHeight -> setValue(Settings::instance() -> spectrumHeight());
+
+    ui -> spectrumMultiplier -> setValue(Settings::instance() -> spectrumMultiplier());
+}
+
+void SettingsDialog::saveGlobalSettings() {
+    Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
+    Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
+    Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
+}
+
+void SettingsDialog::saveItemsSettings() {
+    Settings::instance() -> setItemHeight(ui -> itemHeightSize -> value());
+
+    Settings::instance() -> setUseGradient(ui -> useGradientCheck -> isChecked());
+
+    Settings::instance() -> setDefaultItemColor(defaultColor);
+    Settings::instance() -> setListenedItemColor(listenedColor);
+    Settings::instance() -> setLikedItemColor(likedColor);
+    Settings::instance() -> setPlayedItemColor(playedColor);
+    Settings::instance() -> setFolderItemColor(folderColor);
+
+    Settings::instance() -> setItemFontName(ui -> itemFontSelect -> currentText());
+    Settings::instance() -> setItemFontSize(ui -> itemFontSize -> value());
+
+    Settings::instance() -> setItemInfoFontName(ui -> itemInfoFontSelect -> currentText());
+    Settings::instance() -> setItemInfoFontSize(ui -> itemInfoFontSize -> value());
+
+    Settings::instance() -> setItemTextColor(itemTextColor);
+    Settings::instance() -> setItemInfoTextColor(itemInfoTextColor);
+
+    Settings::instance() -> setSelectedItemTextColor(selectedItemTextColor);
+    Settings::instance() -> setSelectedItemInfoTextColor(selectedItemInfoTextColor);
+}
+
+void SettingsDialog::saveViewSettings() {
+    Settings::instance() -> setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
+    Settings::instance() -> setCheckboxShow(ui -> showCheckboxes -> isChecked());
+
+    iconSizeChanged = Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked()
+            || Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
+    Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
+
+    Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
+
+    Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
+}
+
+void SettingsDialog::saveHotkeysSettings() {
+    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> treeView -> model());
+    QList<HotkeyModelItem *> list = model -> toplevelItems();
+    Settings::instance() -> setHotKeys(list);
+
+    HotkeyManager::instance() -> clear();
+
+    foreach(HotkeyModelItem * key, list)
+        HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString());
+}
+
+void SettingsDialog::saveSpectrunSettings() {
+    Settings::instance() -> setSpectrumColor(spectrumColor);
+    Settings::instance() -> setSpectrumColor2(spectrumColor2);
+    Settings::instance() -> setSpectrumColor3(spectrumColor3);
+
+    Settings::instance() -> setCustomColorSpectrum(ui -> spectrumCustomColorUse -> isChecked());
+
+    Settings::instance() -> setSpectrumBarsCount(ui -> spectrumBarsCount -> value());
+    Settings::instance() -> setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
+
+    Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
+    Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
 }
 
 bool SettingsDialog::execColorDialog(QColor & color) {
