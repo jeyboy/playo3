@@ -15,9 +15,9 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
     updateColors();
-    changeBandCount(Settings::instance() -> getSpectrumBarsCount());
-    changeHeight(Settings::instance() -> getSpectrumHeight());
-    changeType(Settings::instance() -> getSpectrumType());
+    changeBandCount(Settings::instance() -> spectrumBarsCount());
+    changeHeight(Settings::instance() -> spectrumHeight());
+    changeType(Settings::instance() -> spectrumType());
 }
 
 Spectrum::~Spectrum() {
@@ -46,9 +46,9 @@ void Spectrum::generateContextMenu(QMenu * parent) {
 void Spectrum::updateColors() {
     QColor c1, c2, c3;
     if (Settings::instance() -> isCustomColorSpectrum()) {
-        c3 = Settings::instance() -> getSpectrumColor3();
-        c2 = Settings::instance() -> getSpectrumColor2();
-        c1 = Settings::instance() -> getSpectrumColor();
+        c3 = Settings::instance() -> spectrumColor3();
+        c2 = Settings::instance() -> spectrumColor2();
+        c1 = Settings::instance() -> spectrumColor();
     } else {
         c3 = QColor::fromRgb(0, 170, 255);
         c2 = QColor::fromRgb(0, 136, 199);

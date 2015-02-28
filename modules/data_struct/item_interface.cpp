@@ -137,7 +137,7 @@ QVariant IItem::data(int column) const {
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
         case IFOLDER:          return isContainer();
-        case Qt::FontRole:     return Settings::instance() -> getItemFont();
+        case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
         case ITREESTR:         return buildTreeStr();
 
@@ -145,9 +145,9 @@ QVariant IItem::data(int column) const {
 
         case Qt::SizeHintRole: {
                 if (isContainer())
-                    return QSize(0, Settings::instance() -> getItemHeight());
+                    return QSize(0, Settings::instance() -> itemHeight());
                 else
-                    return QSize(0, Settings::instance() -> getTotalItemHeight());
+                    return QSize(0, Settings::instance() -> totalItemHeight());
         }
         case Qt::TextAlignmentRole:
             if (isContainer() || !Settings::instance() -> isShowInfo())

@@ -191,7 +191,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 
 void Dockbars::updateAllViews() { // update for item height
     QList<IView *> views = parent() -> findChildren<IView *>();
-    int iconDimension = Settings::instance() -> getIconHeight();
+    int iconDimension = Settings::instance() -> iconHeight();
 
     foreach(IView * v, views)
         v -> setIconSize(QSize(iconDimension, iconDimension));

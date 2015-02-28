@@ -2,7 +2,7 @@
 
 void ItemSettings::fromJson(QJsonObject & settings) {
     _useGradient = settings.value("use_gradient").toBool(true);
-    _itemHeight = settingsObj.value("item_height").toInt(18);
+    _itemHeight = settings.value("item_height").toInt(18);
 
     QVariant colorVar = settings.value("default_color").toVariant();
     _defaultItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(98, 173, 248);
@@ -44,15 +44,15 @@ void ItemSettings::toJson(QJsonObject & settings) {
     settings.insert("played_color", QJsonValue::fromVariant(_playedItemColor));
     settings.insert("folder_color", QJsonValue::fromVariant(_folderItemColor));
 
-    ret.insert("item_font_name", QJsonValue::fromVariant(__title.fontName));
-    ret.insert("item_font_size", QJsonValue::fromVariant(__title.fontSize));
-    ret.insert("item_text_color", QJsonValue::fromVariant(__title.textColor));
-    ret.insert("selected_item_text_color", QJsonValue::fromVariant(__title.selectedTextColor));
+    settings.insert("item_font_name", QJsonValue::fromVariant(__title.fontName));
+    settings.insert("item_font_size", QJsonValue::fromVariant(__title.fontSize));
+    settings.insert("item_text_color", QJsonValue::fromVariant(__title.textColor));
+    settings.insert("selected_item_text_color", QJsonValue::fromVariant(__title.selectedTextColor));
 
-    ret.insert("item_info_font_name", QJsonValue::fromVariant(__info.fontName));
-    ret.insert("item_info_font_size", QJsonValue::fromVariant(__info.fontSize));
-    ret.insert("item_info_text_color", QJsonValue::fromVariant(__info.textColor));
-    ret.insert("selected_item_info_text_color", QJsonValue::fromVariant(__info.selectedTextColor));
+    settings.insert("item_info_font_name", QJsonValue::fromVariant(__info.fontName));
+    settings.insert("item_info_font_size", QJsonValue::fromVariant(__info.fontSize));
+    settings.insert("item_info_text_color", QJsonValue::fromVariant(__info.textColor));
+    settings.insert("selected_item_info_text_color", QJsonValue::fromVariant(__info.selectedTextColor));
 }
 
 QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {
@@ -61,7 +61,7 @@ QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {
     grad.setColorAt(0, color);
     if (dark)
         grad.setColorAt(1, QColor::fromRgba(qRgba(0, 0, 0, 192)));
-    else if (useGradient)
+    else if (_useGradient)
         grad.setColorAt(1, Qt::white);
 
     return grad;
@@ -78,5 +78,5 @@ QBrush ItemSettings::unprocessedState(QRect rect, bool dark) {
 
 //    return grad;
 
-    return buildGradient(rect, folderColor1, dark);
+    return buildGradient(rect, _folderItemColor, dark);
 }

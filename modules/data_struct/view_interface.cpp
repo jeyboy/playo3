@@ -6,7 +6,7 @@ using namespace Playo3;
 IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true), blockRepaint(false) {
 
-    setIndentation(Settings::instance() -> getTreeIndentation());
+    setIndentation(Settings::instance() -> treeIndentation());
     setStyle(new TreeViewStyle);
 //    setStyleSheet(Stylesheets::treeViewStyles());
 
@@ -31,7 +31,7 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     setItemDelegate((item_delegate = new ModelItemDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
-    int iconDimension = Settings::instance() -> getIconHeight();
+    int iconDimension = Settings::instance() -> iconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
     connect(
@@ -607,7 +607,7 @@ void IView::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/) { //TOD
 }
 
 void IView::setIconSize(const QSize & size) {
-    setIndentation(Settings::instance() -> getTreeIndentation());
+    setIndentation(Settings::instance() -> treeIndentation());
     QTreeView::setIconSize(size);
     item_delegate -> recalcAttrs(size.width());
 }

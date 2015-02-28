@@ -35,8 +35,8 @@ QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QMo
 //                          const QModelIndex &index) const;
 
 void ModelItemDelegate::recalcAttrs(int item_icon_size) {
-    itemFont = Settings::instance() -> getItemFont();
-    itemInfoFont = Settings::instance() -> getItemInfoFont();
+    itemFont = Settings::instance() -> itemFont();
+    itemInfoFont = Settings::instance() -> itemInfoFont();
     fmf = new QFontMetrics(itemFont);
     fmfInfo = new QFontMetrics(itemInfoFont);
     icon_size = item_icon_size - 2;
@@ -120,7 +120,7 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
 
     painter -> setPen(
                 is_selected ?
-                    Settings::instance() -> getSelectedItemTextColor()
+                    Settings::instance() -> selectedItemTextColor()
                   :
                     option.palette.color(QPalette::Dark)
                 );
@@ -150,9 +150,9 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     }
 
     textColor = is_selected ?
-            Settings::instance() -> getSelectedItemTextColor()
+            Settings::instance() -> selectedItemTextColor()
           :
-            Settings::instance() -> getItemTextColor();
+            Settings::instance() -> itemTextColor();
 
     painter -> setPen(textColor);
 

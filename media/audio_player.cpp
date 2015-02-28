@@ -247,7 +247,7 @@ void AudioPlayer::calcSpectrum() {
         if (currentState == StoppedState) {
             emit spectrumChanged(defaultSpectrum);
         } else {
-            if (Settings::instance() -> getSpectrumType() == Playo3::bars) {
+            if (Settings::instance() -> spectrumType() == Playo3::bars) {
                 QList<QVector<int> > res;
                 res.append(getSpectrum());
                 emit spectrumChanged(res);
@@ -440,7 +440,7 @@ QVector<int> AudioPlayer::getSpectrum() {
     float fft[1024];
     BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048);
     QVector<int> res;
-    int spectrumMultiplicity = Settings::instance() -> getSpectrumMultiplier() * spectrumHeight;
+    int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
 
     int b0 = 0, x, y;
 
@@ -463,7 +463,7 @@ QVector<int> AudioPlayer::getSpectrum() {
 
 QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
     int layerLimit = 1024, gLimit = layerLimit * channelsCount;
-    int spectrumMultiplicity = Settings::instance() -> getSpectrumMultiplier() * spectrumHeight;
+    int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
     float fft[gLimit];
     BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
@@ -532,7 +532,7 @@ void AudioPlayer::play() {
                     channelsCount = 2;
 
                 BASS_ChannelPlay(chan, true);
-                spectrumTimer -> start(Settings::instance() -> getSpectrumFreqRate()); // 25 //40 Hz
+                spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
                 notifyTimer -> start(notifyInterval);
 
                 syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
@@ -562,7 +562,7 @@ void AudioPlayer::resume() {
         qDebug() << "Error resuming";
     } else {
         notifyTimer -> start(notifyInterval);
-        spectrumTimer -> start(Settings::instance() -> getSpectrumFreqRate()); // 25 //40 Hz
+        spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
     }
 }
 

@@ -26,11 +26,11 @@ QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on 
     QList<HotkeyModelItem *> * ret = new QList<HotkeyModelItem *>();
     int iKey;
 
-    foreach(QString key, hotkeys.keys()) {
+    foreach(QString key, _hotkeys.keys()) {
         iKey = key.toInt();
         itemVals = QVector<QVariant>();
-        itemVals.append(humanizeHotkeyText.value(iKey));
-        itemVals.append(hotkeys.value(key));
+        itemVals.append(_humanizeHotkeyText.value(iKey));
+        itemVals.append(_hotkeys.value(key));
         itemVals.append(iKey);
         ret -> append(new HotkeyModelItem(itemVals));
     }

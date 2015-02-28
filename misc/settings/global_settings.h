@@ -14,9 +14,13 @@ public:
     inline bool isMetricShow() const { return _showMetric; }
     inline void setMetricShow(bool show) { _showMetric = show; }
 
+    inline int tabPosition() { return _tabPosition; }
+    inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
+
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
+    int _tabPosition;
 };
 
 #endif // GLOBAL_SETTINGS

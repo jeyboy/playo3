@@ -26,10 +26,9 @@ public:
     inline bool isCheckboxShow() const { return _showCheckbox; }
     inline void setCheckboxShow(bool show) { _showCheckbox = show; }
 
-    inline int tabPosition() { return _tabPosition; }
-    inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
+    inline int treeIndentation() const { return _treeIndentation; }
+    inline void setTreeIndentation(int newIndent) { _treeIndentation = newIndent; }
 protected:
-    int _tabPosition;
     int _treeIndentation;
 
     bool _showSystemIcons;

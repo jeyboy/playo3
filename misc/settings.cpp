@@ -17,7 +17,7 @@ void Settings::fromJson(QJsonObject settings) {
 }
 
 QJsonObject Settings::toJson() {
-    QJsonObject ret = QJsonObject();
+    QJsonObject settings = QJsonObject();
 
     GlobalSettings::toJson(settings);
     HotkeySettings::toJson(settings);
@@ -25,5 +25,5 @@ QJsonObject Settings::toJson() {
     SpectrumSettings::toJson(settings);
     TabSettings::toJson(settings);
 
-    return ret;
+    return settings;
 }
