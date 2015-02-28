@@ -20,9 +20,6 @@ public:
     inline bool isAlertOnFolderDeletion() const { return _alertOnFolderDeletion; }
     inline void setAlertOnFolderDeletion(bool alert) { _alertOnFolderDeletion = alert; }
 
-    inline int folderDeletionAnswer() const { return _deleteFolderAnswer; }
-    inline void setfolderDeletionAnswer(int ans) { _deleteFolderAnswer = ans; }
-
     inline bool isCheckboxShow() const { return _showCheckbox; }
     inline void setCheckboxShow(bool show) { _showCheckbox = show; }
 
@@ -36,9 +33,6 @@ protected:
     bool _showCheckbox;
     bool _spoilOnActivation;
     bool _alertOnFolderDeletion;
-
-    ///////// session settings ///////////
-    int _deleteFolderAnswer;
 };
 
 #endif // TAB_SETTINGS

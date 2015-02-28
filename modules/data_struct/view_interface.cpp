@@ -379,10 +379,10 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
 //    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
-            if (usePrevAction && Settings::instance() -> folderDeletionAnswer() == QMessageBox::NoToAll)
+            if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
                 return false;
 
-            if (!usePrevAction || (usePrevAction && Settings::instance() -> folderDeletionAnswer() != QMessageBox::YesToAll)) {
+            if (!usePrevAction || (usePrevAction && _deleteFolderAnswer != QMessageBox::YesToAll)) {
                 //INFO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
                 if (QThread::currentThread() == QApplication::instance() -> thread()) {
                     UserDialogBox::instance() -> alert(
@@ -398,10 +398,8 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
                     );
                 }
 
-                int dialogRes = UserDialogBox::instance() -> lastAnswer();
-                Settings::instance() -> setfolderDeletionAnswer(dialogRes);
-
-                if (dialogRes == QMessageBox::No || dialogRes == QMessageBox::NoToAll)
+                _deleteFolderAnswer = UserDialogBox::instance() -> lastAnswer();
+                if (_deleteFolderAnswer == QMessageBox::No || _deleteFolderAnswer == QMessageBox::NoToAll)
                     return false;
             }
         }
@@ -440,7 +438,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
     if (inProcess)
         emit mdl -> moveInProcess();
 
-    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
+    _deleteFolderAnswer = QMessageBox::No;
 
     if (mdl -> containerType() == list) {
         qSort(index_list.begin(), index_list.end());

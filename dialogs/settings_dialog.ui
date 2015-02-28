@@ -158,12 +158,6 @@
             <string>Tabs position</string>
            </property>
           </widget>
-          <zorder>groupBox</zorder>
-          <zorder>drawMetrics</zorder>
-          <zorder>tabPositionSelect</zorder>
-          <zorder>label_7</zorder>
-          <zorder>tabPositionSelect</zorder>
-          <zorder>label_7</zorder>
          </widget>
         </widget>
        </item>
@@ -316,7 +310,7 @@
             <string>Indentation step</string>
            </property>
           </widget>
-          <widget class="QCheckBox" name="AlertOnDeletion">
+          <widget class="QCheckBox" name="alertOnDeletion">
            <property name="geometry">
             <rect>
              <x>10</x>
@@ -1110,7 +1104,6 @@ text color</string>
   <zorder>acceptButton</zorder>
   <zorder>cancelButton</zorder>
   <zorder>settingsTabs</zorder>
-  <zorder>scrollArea</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -132,6 +132,7 @@ namespace Playo3 {
         ViewSettings sttngs;
         QPoint dragPoint;
         bool forwardOrder;
+        int _deleteFolderAnswer;
     private:
         ModelItemDelegate * item_delegate;
         bool blockRepaint;

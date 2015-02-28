@@ -216,6 +216,7 @@ void SettingsDialog::initItemsSettings() {
 void SettingsDialog::initViewSettings() {
     ui -> showCheckboxes -> setChecked(Settings::instance() -> isCheckboxShow());
 
+    ui -> alertOnDeletion -> setChecked(Settings::instance() -> isAlertOnFolderDeletion());
     ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
     ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
 
@@ -280,6 +281,7 @@ void SettingsDialog::saveItemsSettings() {
 }
 
 void SettingsDialog::saveViewSettings() {
+    Settings::instance() -> setAlertOnFolderDeletion(ui -> alertOnDeletion -> isChecked());
     Settings::instance() -> setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
     Settings::instance() -> setCheckboxShow(ui -> showCheckboxes -> isChecked());
 
