@@ -13,13 +13,13 @@ void TabSettings::fromJson(QJsonObject & settings) {
 }
 
 void TabSettings::toJson(QJsonObject & settings) {
-    settings.insert("show_checkboxes", QJsonValue::fromVariant(_showCheckbox));
+    settings.insert("show_checkboxes", QJsonValue(_showCheckbox));
 
-    settings.insert("spoil_on_activation", QJsonValue::fromVariant(_spoilOnActivation));
-    settings.insert("alert_on_folder_deletion", QJsonValue::fromVariant(_alertOnFolderDeletion));
+    settings.insert("spoil_on_activation", QJsonValue(_spoilOnActivation));
+    settings.insert("alert_on_folder_deletion", QJsonValue(_alertOnFolderDeletion));
 
-    settings.insert("show_info", QJsonValue::fromVariant(_showInfo));
-    settings.insert("show_system_icons", QJsonValue::fromVariant(_showSystemIcons));
+    settings.insert("show_info", QJsonValue(_showInfo));
+    settings.insert("show_system_icons", QJsonValue(_showSystemIcons));
 
-    settings.insert("tree_indentation", QJsonValue::fromVariant(_treeIndentation));
+    settings.insert("tree_indentation", QJsonValue(_treeIndentation));
 }

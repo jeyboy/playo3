@@ -1,7 +1,9 @@
 #ifndef SPECTRUM_SETTINGS
 #define SPECTRUM_SETTINGS
 
+#include <qvariant.h>
 #include <qcolor.h>
+#include <qjsonobject.h>
 #include "misc/spectrum_types.h"
 
 class SpectrumSettings {

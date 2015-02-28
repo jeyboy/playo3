@@ -2,7 +2,7 @@
 
 void GlobalSettings::fromJson(QJsonObject & settings) {
     _showMetric = settings.value("show_metric").toBool(true);
-    _defaultDownloadPath = settingsObj.value("download_path").toString(QCoreApplication::applicationDirPath() + "/downloads/");
+    _defaultDownloadPath = settings.value("download_path").toString(QCoreApplication::applicationDirPath() + "/downloads/");
     _tabPosition = settings.value("tab_position").toInt(0);
 }
 

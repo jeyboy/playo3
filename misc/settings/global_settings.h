@@ -2,6 +2,7 @@
 #define GLOBAL_SETTINGS
 
 #include <qapplication.h>
+#include <qjsonobject.h>
 
 class GlobalSettings {
 public:
