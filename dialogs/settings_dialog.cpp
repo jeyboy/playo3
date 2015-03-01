@@ -17,6 +17,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
   initViewSettings();
   initHotkeysSettings();
   initSpectrunSettings();
+  initExtensions();
 }
 
 SettingsDialog::~SettingsDialog() {
@@ -286,6 +287,12 @@ void SettingsDialog::initSpectrunSettings() {
 
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
     ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::instance() -> spectrumType());
+}
+
+void SettingsDialog::initExtensions() {
+    extDialog = new Playo3::ExtensionDialog(this);
+    extDialog -> setWindowFlags(Qt::Widget);
+    ui -> settingsTabs -> addTab(extDialog, "Extension filters");
 }
 
 void SettingsDialog::saveGlobalSettings() {

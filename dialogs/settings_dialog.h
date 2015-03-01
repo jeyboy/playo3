@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include <QColorDialog>
 
+#include "extension_dialog.h"
+
 #include "misc/settings.h"
 #include "misc/hotkey_manager.h"
 
@@ -66,6 +68,7 @@ protected:
     void initViewSettings();
     void initHotkeysSettings();
     void initSpectrunSettings();
+    void initExtensions();
 
     void saveGlobalSettings();
     void saveItemsSettings();
@@ -76,7 +79,9 @@ protected:
 private:
     bool execColorDialog(QColor & color);
 
-    Ui::SettingsDialog *ui;
+    Playo3::ExtensionDialog * extDialog;
+
+    Ui::SettingsDialog * ui;
     bool iconSizeChanged;
     QColor defaultColor, listenedColor, likedColor, playedColor, folderColor, spectrumColor, spectrumColor2, spectrumColor3;
     QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;
