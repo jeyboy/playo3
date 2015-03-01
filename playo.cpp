@@ -195,6 +195,7 @@ void Playo::showSettingsDialog() {
         ToolBars::instance() -> getSpectrum() -> updateColors();
         ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> spectrumBarsCount());
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
+        ToolBars::instance() -> getSpectrum() -> changeType(Settings::instance() -> spectrumType());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
         Dockbars::instance() -> updateAllViews();

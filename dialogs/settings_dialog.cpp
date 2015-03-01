@@ -248,6 +248,14 @@ void SettingsDialog::initSpectrunSettings() {
     ui -> spectrumHeight -> setValue(Settings::instance() -> spectrumHeight());
 
     ui -> spectrumMultiplier -> setValue(Settings::instance() -> spectrumMultiplier());
+
+    QStringList spectrumTypes;
+    spectrumTypes.append("Combined");
+    spectrumTypes.append("By Channels");
+    spectrumTypes.append("Curved");
+
+    ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
+    ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::instance() -> spectrumType());
 }
 
 void SettingsDialog::saveGlobalSettings() {
@@ -317,6 +325,7 @@ void SettingsDialog::saveSpectrunSettings() {
 
     Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
     Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
+    Settings::instance() -> setSpectrumType((Playo3::SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
 }
 
 bool SettingsDialog::execColorDialog(QColor & color) {
