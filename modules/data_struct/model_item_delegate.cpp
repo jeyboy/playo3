@@ -208,6 +208,13 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     painter -> setFont(itemInfoFont);
 
     if (!is_folder && Settings::instance() -> isShowInfo()) {
+        painter -> setPen(
+                    is_selected ?
+                        Settings::instance() -> selectedItemInfoTextColor()
+                      :
+                        Settings::instance() -> itemInfoTextColor()
+                    );
+
         QStringList infos = attrs.value("info").toStringList();//index.model() -> data(index, IINFO).toStringList();
 
         int timeWidth = fmfInfo -> width(infos.last());
@@ -231,6 +238,13 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     }
 
     painter -> setFont(itemFont);
+
+    painter -> setPen(
+                is_selected ?
+                    Settings::instance() -> selectedItemTextColor()
+                  :
+                    Settings::instance() -> itemTextColor()
+                );
 
     QPoint topMLeft(left_offset, bodyRect.top() + 2);
     QPoint bottomMRight(right_offset, top - 2);
