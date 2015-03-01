@@ -30,6 +30,8 @@ public:
 private slots:
     void on_cancelButton_clicked();
 
+    void on_resetButton_clicked();
+
     void on_acceptButton_clicked();
 
     void on_browseButton_clicked();

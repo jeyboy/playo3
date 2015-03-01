@@ -71,6 +71,36 @@ void SettingsDialog::on_cancelButton_clicked() {
     reject();
 }
 
+
+void SettingsDialog::on_resetButton_clicked() {
+    switch(ui -> settingsTabs -> currentIndex()) {
+        case 0: {
+            Settings::instance() -> resetGlobalSettings();
+            initGlobalSettings();
+        break;}
+
+        case 1: {
+            Settings::instance() -> resetTabSettings();
+            initViewSettings();
+        break;}
+
+        case 2: {
+            Settings::instance() -> resetHotkeySettings();
+            initHotkeysSettings();
+        break;}
+
+        case 3: {
+            Settings::instance() -> resetItemSettings();
+            initItemsSettings();
+        break;}
+
+        case 4: {
+            Settings::instance() -> resetSpectrumSettings();
+            initSpectrunSettings();
+        break;}
+    }
+}
+
 void SettingsDialog::on_acceptButton_clicked() {
     saveGlobalSettings();
     saveItemsSettings();
@@ -338,3 +368,5 @@ bool SettingsDialog::execColorDialog(QColor & color) {
 
     return false;
 }
+
+
