@@ -69,7 +69,7 @@ void ExtensionDialog::on_newPreset_clicked() {
 }
 
 void ExtensionDialog::on_removePreset_clicked() {
-    if (ui -> presets -> count() > 0) {
+    if (ui -> presets -> count() > 0 && ui -> presets -> currentText() != "all") {
         Extensions::instance() -> removePreset(ui -> presets -> currentText());
         updatePresets();
     }

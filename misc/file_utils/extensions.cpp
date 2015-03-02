@@ -56,4 +56,6 @@ void Extensions::addNewPreset(QString name) {
 
 void Extensions::removePreset(QString name) {
     filters.remove(name);
+    if (name == activeFilter)
+        activeFilter = filters.keys().first();
 }
