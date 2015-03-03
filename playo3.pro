@@ -87,7 +87,11 @@ SOURCES += main.cpp\
     misc/settings/item_settings.cpp \
     misc/settings/global_settings.cpp \
     misc/settings/spectrum_settings.cpp \
-    misc/settings/tab_settings.cpp
+    misc/settings/tab_settings.cpp \
+    modules/data_struct/downloads/download_delegate.cpp \
+    modules/data_struct/downloads/download_model.cpp \
+    modules/data_struct/downloads/download_model_item.cpp \
+    modules/data_struct/downloads/download_view.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -176,7 +180,11 @@ HEADERS  += playo.h \
     misc/settings/hotkey_settings.h \
     misc/settings/item_settings.h \
     misc/settings/spectrum_settings.h \
-    misc/settings/tab_settings.h
+    misc/settings/tab_settings.h \
+    modules/data_struct/downloads/download_delegate.h \
+    modules/data_struct/downloads/download_model.h \
+    modules/data_struct/downloads/download_model_item.h \
+    modules/data_struct/downloads/download_view.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
