@@ -15,6 +15,7 @@ void Dockbars::load(QJsonArray & bars) {
     QMainWindow * window = (QMainWindow *)parent();
     QList<QString> barsList;
 //    barsList.append("Screen");
+    barsList.append("Downloads");
 
     if (bars.count() > 0) {
         QJsonObject obj;
@@ -24,7 +25,7 @@ void Dockbars::load(QJsonArray & bars) {
         foreach(QJsonValue bar, bars) {
             obj = bar.toObject();
             barName = obj.value("title").toString();
-//            barsList.removeOne(barName);
+            barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value("set").toObject()), obj.value("cont").toObject());
             curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
 
@@ -87,8 +88,11 @@ void Dockbars::save(DataStore * settings) {
 QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
     if (barName == "Screen") {
         return 0; // stub
-    }
-    else return createDocBar(barName, settings, &attrs);
+    } else if (barName == "Downloads") {
+        DockBar * bar = createDocBar(barName);
+        bar -> setWidget(DownloadView::instance(parentWidget()));
+        return bar;
+    } else return createDocBar(barName, settings, &attrs);
 }
 
 DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs) {

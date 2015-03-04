@@ -1,72 +1,72 @@
 #include "download_model_item.h"
 
-HotkeyModelItem::HotkeyModelItem(const QVector<QVariant> & data, HotkeyModelItem * parent) {
+DownloadModelItem::DownloadModelItem(const QVector<QVariant> & data, DownloadModelItem * parent) {
      parentItem = parent;
      itemData = data;
 }
 
-HotkeyModelItem::~HotkeyModelItem() {
+DownloadModelItem::~DownloadModelItem() {
     qDeleteAll(childItems);
 }
 
-HotkeyModelItem * HotkeyModelItem::child(int number) {
+DownloadModelItem * DownloadModelItem::child(int number) {
     return childItems.value(number);
 }
 
-int HotkeyModelItem::childCount() const {
+int DownloadModelItem::childCount() const {
     return childItems.count();
 }
 
-int HotkeyModelItem::childNumber() const {
+int DownloadModelItem::childNumber() const {
     if (parentItem)
-        return parentItem -> childItems.indexOf(const_cast<HotkeyModelItem *>(this));
+        return parentItem -> childItems.indexOf(const_cast<DownloadModelItem *>(this));
 
     return 0;
 }
 
-int HotkeyModelItem::columnCount() const {
+int DownloadModelItem::columnCount() const {
     return itemData.count();
 }
 
-QVariant HotkeyModelItem::data(int column) const {
+QVariant DownloadModelItem::data(int column) const {
     return itemData.value(column);
 }
 
-bool HotkeyModelItem::insertChildren(int position, int count, int columns) {
+bool DownloadModelItem::insertChildren(int position, int count, int columns) {
     if (position < 0 || position > childItems.size())
         return false;
 
     for (int row = 0; row < count; ++row) {
         QVector<QVariant> data(columns);
-        HotkeyModelItem * item = new HotkeyModelItem(data, this);
+        DownloadModelItem * item = new DownloadModelItem(data, this);
         childItems.insert(position, item);
     }
 
     return true;
 }
 
-bool HotkeyModelItem::insertColumns(int position, int columns) {
-    if (position < 0 || position > itemData.size())
-        return false;
+//bool DownloadModelItem::insertColumns(int position, int columns) {
+//    if (position < 0 || position > itemData.size())
+//        return false;
 
-    for (int column = 0; column < columns; ++column)
-        itemData.insert(position, QVariant());
+//    for (int column = 0; column < columns; ++column)
+//        itemData.insert(position, QVariant());
 
-    foreach (HotkeyModelItem * child, childItems)
-        child -> insertColumns(position, columns);
+//    foreach (DownloadModelItem * child, childItems)
+//        child -> insertColumns(position, columns);
 
-    return true;
-}
+//    return true;
+//}
 
-HotkeyModelItem * HotkeyModelItem::parent() {
+DownloadModelItem * DownloadModelItem::parent() {
     return parentItem;
 }
 
-QList<HotkeyModelItem *> HotkeyModelItem::childList() {
+QList<DownloadModelItem *> DownloadModelItem::childList() {
     return childItems;
 }
 
-bool HotkeyModelItem::removeChildren(int position, int count) {
+bool DownloadModelItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > childItems.size())
         return false;
 
@@ -76,20 +76,20 @@ bool HotkeyModelItem::removeChildren(int position, int count) {
     return true;
 }
 
-bool HotkeyModelItem::removeColumns(int position, int columns) {
-    if (position < 0 || position + columns > itemData.size())
-        return false;
+//bool DownloadModelItem::removeColumns(int position, int columns) {
+//    if (position < 0 || position + columns > itemData.size())
+//        return false;
 
-    for (int column = 0; column < columns; ++column)
-        itemData.remove(position);
+//    for (int column = 0; column < columns; ++column)
+//        itemData.remove(position);
 
-    foreach (HotkeyModelItem * child, childItems)
-        child -> removeColumns(position, columns);
+//    foreach (DownloadModelItem * child, childItems)
+//        child -> removeColumns(position, columns);
 
-    return true;
-}
+//    return true;
+//}
 
-bool HotkeyModelItem::setData(int column, const QVariant & value) {
+bool DownloadModelItem::setData(int column, const QVariant & value) {
     if (column < 0 || column >= itemData.size())
         return false;
 
@@ -97,6 +97,6 @@ bool HotkeyModelItem::setData(int column, const QVariant & value) {
     return true;
 }
 
-void HotkeyModelItem::appendChilds(QList<HotkeyModelItem *> * newChilds) {
+void DownloadModelItem::appendChilds(QList<DownloadModelItem *> * newChilds) {
     childItems.append(*newChilds);
 }

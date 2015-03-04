@@ -2,6 +2,14 @@
 
 using namespace Playo3;
 
+DownloadView * DownloadView::self = 0;
+
+DownloadView * DownloadView::instance(QWidget * parent) {
+    if(!self)
+        self = new DownloadView(parent);
+    return self;
+}
+
 DownloadView::DownloadView(QWidget * parent)
     : QListView(parent), mdl(new DownloadModel(this)) {
 
@@ -21,7 +29,7 @@ DownloadView::DownloadView(QWidget * parent)
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    setItemDelegate((item_delegate = new DownloadDelegate(this)));
+//    setItemDelegate((item_delegate = new DownloadDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
 }
@@ -39,8 +47,8 @@ void DownloadView::scrollToActive() {
 //////////////////////////////////////////////////////
 
 void DownloadView::openLocation() {
-    IItem * item = mdl -> item(currentIndex());
-    item -> openLocation();
+    DownloadModelItem * item = mdl -> item(currentIndex());
+//    item -> openLocation();
 }
 
 void DownloadView::addRow(const QVector<QVariant> & data) {
@@ -133,8 +141,8 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
 void DownloadView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
     int total = index_list.size(), temp = total;
 
-    if (inProcess)
-        emit mdl -> moveInProcess();
+//    if (inProcess)
+//        emit mdl -> moveInProcess();
 
     qSort(index_list.begin(), index_list.end());
 
@@ -143,8 +151,8 @@ void DownloadView::removeProccessing(QModelIndexList & index_list, bool inProces
     for (; eit != index_list.begin(); --eit) {
         removeRow((*eit));
 
-        if (inProcess)
-            emit mdl -> setProgress(--temp * 100.0 / total);
+//        if (inProcess)
+//            emit mdl -> setProgress(--temp * 100.0 / total);
     }
 
 //    if (inProcess)
@@ -153,8 +161,8 @@ void DownloadView::removeProccessing(QModelIndexList & index_list, bool inProces
         removeRow((*eit));
 
     index_list.clear();
-    if (inProcess)
-        emit mdl -> moveOutProcess();
+//    if (inProcess)
+//        emit mdl -> moveOutProcess();
 }
 
 //////////////////////////////////////////////////////
@@ -179,9 +187,9 @@ void DownloadView::keyPressEvent(QKeyEvent * event) {
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 
-        if (list.size() > 200)
-            QtConcurrent::run(this, &DownloadView::removeProccessing, list, true);
-        else if (list.size() > 1)
+//        if (list.size() > 200)
+//            QtConcurrent::run(this, &DownloadView::removeProccessing, list, true);
+        if (list.size() > 1)
             removeProccessing(list);
         else {
             QModelIndex ind = currentIndex();

@@ -2,6 +2,10 @@
 #define DOWNLOAD_VIEW
 
 #include <qlistview.h>
+#include <qevent.h>
+#include <qmenu.h>
+#include <qdrag.h>
+
 #include "download_model.h"
 #include "download_delegate.h"
 
@@ -11,10 +15,11 @@ namespace Playo3 {
     class DownloadView : public QListView {
       Q_OBJECT
     public:
-        DownloadView(QWidget * parent);
+        static DownloadView * instance(QWidget * parent = 0);
+
         ~DownloadView();
 
-        inline virtual QJsonObject toJson() { return mdl -> toJson(); }
+//        inline virtual QJsonObject toJson() { return mdl -> toJson(); }
 
         void scrollToActive();
 
@@ -22,7 +27,7 @@ namespace Playo3 {
 
     public slots:
         void openLocation();
-        void addRow(QVector<QVariant> & data);
+        void addRow(const QVector<QVariant> & data);
         bool removeRow(const QModelIndex & node);
     protected:
         void contextMenuEvent(QContextMenuEvent *);
@@ -39,7 +44,11 @@ namespace Playo3 {
         DownloadModel * mdl;
         QPoint dragPoint;
     private:
-        DownloadDelegate * item_delegate;
+        DownloadView(QWidget * parent);
+
+        static DownloadView * self;
+
+//        DownloadDelegate * item_delegate;
     };
 }
 
