@@ -26,7 +26,7 @@ public:
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    void appendRow(DownloadModelItem * item);
+    void appendRow(const QVector<QVariant> & data);
 
     void refreshItem(DownloadModelItem * item);
 

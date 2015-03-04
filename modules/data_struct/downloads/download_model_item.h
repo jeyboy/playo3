@@ -13,11 +13,11 @@ public:
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;
-    bool insertChildren(int position, int count, int columns);
     bool removeChildren(int position, int count);
     int childNumber() const;
     bool setData(int column, const QVariant & value);
-    void appendChilds(QList<DownloadModelItem *> *);
+    inline void appendChildren(QList<DownloadModelItem *> * newChilds) { childItems.append(*newChilds); }
+    inline void appendChild(DownloadModelItem * newChild) { childItems.append(newChild); }
 
     DownloadModelItem * parent();
     QList<DownloadModelItem *> childList();

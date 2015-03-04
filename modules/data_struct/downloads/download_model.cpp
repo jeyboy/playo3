@@ -119,6 +119,12 @@ int DownloadModel::rowCount(const QModelIndex & parent) const {
     return parentItem -> childCount();
 }
 
+void DownloadModel::appendRow(const QVector<QVariant> & data) {
+    beginInsertRows(index(rootItem), rootItem -> childCount(), rootItem -> childCount());
+    new DownloadModelItem(data, rootItem);
+    endInsertRows();
+}
+
 bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, int role) {
     if (role != Qt::EditRole)
         return false;

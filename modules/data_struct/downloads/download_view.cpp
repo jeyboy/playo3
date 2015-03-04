@@ -52,7 +52,7 @@ void DownloadView::openLocation() {
 }
 
 void DownloadView::addRow(const QVector<QVariant> & data) {
-    mdl -> appendRow(new DownloadModelItem(data, mdl -> root()));
+    mdl -> appendRow(data);
 }
 
 bool DownloadView::removeRow(const QModelIndex & node) {
