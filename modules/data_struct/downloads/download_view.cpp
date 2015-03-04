@@ -21,7 +21,7 @@ DownloadView::DownloadView(QWidget * parent)
     setAcceptDrops(true);
     setDropIndicatorShown(true);
 
-    setDragDropMode(QAbstractItemView::InternalMove);
+    setDragDropMode(QAbstractItemView::DragDrop);
 //    setDefaultDropAction(Qt::CopyAction);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);

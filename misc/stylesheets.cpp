@@ -248,6 +248,16 @@ QString Stylesheets::treeViewStyles() {
               ) + scrollStyles();
 }
 
+QString Stylesheets::listViewStyles() {
+    return QString(
+                "QListView {"
+                "   background-color: " + color2().name(QColor::HexArgb) + ";"
+                "   border-bottom-left-radius: 8px;"
+                "   border-bottom-right-radius: 8px;"
+                "}"
+              );
+}
+
 QString Stylesheets::toolbarHighLightStyle() {
     return QString("QToolBar { border: 2px dotted #00FFFF; }");
 }
@@ -393,7 +403,7 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                    "QTabBar QToolButton::left-arrow {"
 //                    "    image: url(leftarrow.png);"
 //                    "}"
-    ) + treeViewStyles();
+    ) + treeViewStyles() + listViewStyles();
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {

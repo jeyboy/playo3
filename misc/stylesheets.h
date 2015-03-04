@@ -19,6 +19,7 @@ public:
     static QString sliderStyles();
 
     static QString treeViewStyles();
+    static QString listViewStyles();
 
     static QString scrollStyles();
 
