@@ -19,7 +19,6 @@ public:
     Qt::ItemFlags flags(const QModelIndex & index) const;
     QModelIndex parent(const QModelIndex & index) const;
     QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
-    QModelIndex index(DownloadModelItem * item) const;
 
     int itemsCount() const;
 

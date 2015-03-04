@@ -64,7 +64,7 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-QModelIndex DownloadModel::index(int row, int column, const QModelIndex &parent) const {
+QModelIndex DownloadModel::index(int row, int column, const QModelIndex & parent) const {
     if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
 
@@ -120,7 +120,7 @@ int DownloadModel::rowCount(const QModelIndex & parent) const {
 }
 
 void DownloadModel::appendRow(const QVector<QVariant> & data) {
-    beginInsertRows(index(rootItem), rootItem -> childCount(), rootItem -> childCount());
+    beginInsertRows(QModelIndex(), rootItem -> childCount(), rootItem -> childCount());
     new DownloadModelItem(data, rootItem);
     endInsertRows();
 }
