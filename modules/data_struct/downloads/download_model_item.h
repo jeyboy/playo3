@@ -2,6 +2,8 @@
 #define DOWNLOAD_MODEL_ITEM_H
 
 #include <qjsonobject.h>
+#include <qjsonarray.h>
+
 #include <QVariant>
 #include <QVector>
 
@@ -26,7 +28,7 @@ public:
     DownloadModelItem * parent();
     QList<DownloadModelItem *> childList();
 
-    QJsonObject toJson() { return QJsonObject::fromVariantMap(itemData); }
+    QJsonObject toJson();
 
 private:
     QList<DownloadModelItem *> childItems;

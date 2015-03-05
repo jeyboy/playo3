@@ -12,6 +12,20 @@ DownloadModelItem::~DownloadModelItem() {
     qDeleteAll(childItems);
 }
 
+QJsonObject DownloadModelItem::toJson() {
+    QJsonObject root = QJsonObject::fromVariantMap(itemData);
+
+    if (childItems.length() > 0) {
+        QJsonArray ar = QJsonArray();
+        for(int i = 0; i < childItems.length(); i++)
+            ar.append(childItems.at(i) -> toJson());
+
+        root["childs"] = ar;
+    }
+
+    return root;
+}
+
 DownloadModelItem * DownloadModelItem::child(int number) {
     return childItems.value(number);
 }
