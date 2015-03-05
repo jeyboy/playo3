@@ -1,11 +1,11 @@
 #include "download_model_item.h"
 
-DownloadModelItem::DownloadModelItem(const QVector<QVariant> & data, DownloadModelItem * parent) {
+DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent) {
      parentItem = parent;
      itemData = data;
 
      if (parent)
-         parent -> appendChild(parent);
+         parent -> childItems.append(parent);
 }
 
 DownloadModelItem::~DownloadModelItem() {
@@ -28,11 +28,11 @@ int DownloadModelItem::childNumber() const {
 }
 
 int DownloadModelItem::columnCount() const {
-    return itemData.count();
+    return 1;
 }
 
 QVariant DownloadModelItem::data(int column) const {
-    return itemData.value(column);
+    return itemData.value(QString::number(column));
 }
 
 DownloadModelItem * DownloadModelItem::parent() {
@@ -57,6 +57,6 @@ bool DownloadModelItem::setData(int column, const QVariant & value) {
     if (column < 0 || column >= itemData.size())
         return false;
 
-    itemData[column] = value;
+    itemData[QString::number(column)] = value;
     return true;
 }

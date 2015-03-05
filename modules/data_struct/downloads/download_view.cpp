@@ -51,7 +51,7 @@ void DownloadView::openLocation() {
 //    item -> openLocation();
 }
 
-void DownloadView::addRow(const QVector<QVariant> & data) {
+void DownloadView::addRow(const QVariantMap & data) {
     mdl -> appendRow(data);
 }
 

@@ -1,12 +1,18 @@
 #ifndef DOWNLOAD_MODEL_ITEM_H
 #define DOWNLOAD_MODEL_ITEM_H
 
+#include <qjsonobject.h>
 #include <QVariant>
 #include <QVector>
 
+#define DOWNLOAD_TITLE 0
+#define DOWNLOAD_FROM 1
+#define DOWNLOAD_TO 2
+#define DOWNLOAD_TYPE 3
+
 class DownloadModelItem {
 public:
-    DownloadModelItem(const QVector<QVariant> & data, DownloadModelItem * parent = 0);
+    DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent = 0);
     ~DownloadModelItem();
 
     DownloadModelItem * child(int number);
@@ -16,15 +22,15 @@ public:
     bool removeChildren(int position, int count);
     int childNumber() const;
     bool setData(int column, const QVariant & value);
-    inline void appendChildren(QList<DownloadModelItem *> * newChilds) { childItems.append(*newChilds); }
-    inline void appendChild(DownloadModelItem * newChild) { childItems.append(newChild); }
 
     DownloadModelItem * parent();
     QList<DownloadModelItem *> childList();
 
+    QJsonObject toJson() { return QJsonObject::fromVariantMap(itemData); }
+
 private:
     QList<DownloadModelItem *> childItems;
-    QVector<QVariant> itemData;
+    QVariantMap itemData;
     DownloadModelItem * parentItem;
 };
 

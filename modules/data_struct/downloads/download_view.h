@@ -19,7 +19,7 @@ namespace Playo3 {
 
         ~DownloadView();
 
-//        inline virtual QJsonObject toJson() { return mdl -> toJson(); }
+        inline QJsonObject toJson() { return mdl -> toJson(); }
 
         void scrollToActive();
 
@@ -27,7 +27,7 @@ namespace Playo3 {
 
     public slots:
         void openLocation();
-        void addRow(const QVector<QVariant> & data);
+        void addRow(const QVariantMap & data);
         bool removeRow(const QModelIndex & node);
     protected:
         void contextMenuEvent(QContextMenuEvent *);

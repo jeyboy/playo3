@@ -2,8 +2,7 @@
 #include <QDebug>
 
 DownloadModel::DownloadModel(QObject * parent) : QAbstractItemModel(parent) {
-    QVector<QVariant> rootData;
-    rootData << "" << "";
+    QVariantMap rootData;
     rootItem = new DownloadModelItem(rootData);
 }
 
@@ -119,7 +118,7 @@ int DownloadModel::rowCount(const QModelIndex & parent) const {
     return parentItem -> childCount();
 }
 
-void DownloadModel::appendRow(const QVector<QVariant> & data) {
+void DownloadModel::appendRow(const QVariantMap & data) {
     beginInsertRows(QModelIndex(), rootItem -> childCount(), rootItem -> childCount());
     new DownloadModelItem(data, rootItem);
     endInsertRows();
