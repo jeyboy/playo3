@@ -65,20 +65,26 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("title", bar -> windowTitle());
             curr_bar.insert("name", bar -> objectName());
             curr_bar.insert("stick", bar -> isSticked());
-            if (bar == played) {
-                curr_bar.insert("played", true);
-                if (Player::instance() -> playedIndex().isValid()) {
-                    curr_bar.insert("played_item", Player::instance() -> playedIndex().data(ITREEPATH).toString());
-                    curr_bar.insert("played_time", Player::instance() -> getPosition());
+
+            if (bar -> windowTitle() == "Downloads") {
+                curr_bar.insert("cont", ((DownloadView *)bar -> mainWidget()) -> toJson());
+            } else {
+                if (bar == played) {
+                    curr_bar.insert("played", true);
+                    if (Player::instance() -> playedIndex().isValid()) {
+                        curr_bar.insert("played_item", Player::instance() -> playedIndex().data(ITREEPATH).toString());
+                        curr_bar.insert("played_time", Player::instance() -> getPosition());
+                    }
                 }
+
+                IView * v = view(bar);
+
+                curr_bar.insert("set", v -> settings().toJson());
+                curr_bar.insert("cont", v -> toJson());
             }
 
-            IView * v = view(bar);
-
-            curr_bar.insert("set", v -> settings().toJson());
-            curr_bar.insert("cont", v -> toJson());
-
             bar_array.append(curr_bar);
+
         }
 
         settings -> write(Dockbars::settingsName(), bar_array);
@@ -90,7 +96,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
         return 0; // stub
     } else if (barName == "Downloads") {
         DockBar * bar = createDocBar(barName);
-        bar -> setWidget(DownloadView::instance(parentWidget()));
+        bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }

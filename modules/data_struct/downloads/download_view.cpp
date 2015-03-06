@@ -4,14 +4,14 @@ using namespace Playo3;
 
 DownloadView * DownloadView::self = 0;
 
-DownloadView * DownloadView::instance(QWidget * parent) {
+DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
     if(!self)
-        self = new DownloadView(parent);
+        self = new DownloadView(hash, parent);
     return self;
 }
 
-DownloadView::DownloadView(QWidget * parent)
-    : QListView(parent), mdl(new DownloadModel(this)) {
+DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
+    : QListView(parent), mdl(new DownloadModel(hash, this)) {
 
     setModel(mdl);
 

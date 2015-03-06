@@ -15,7 +15,7 @@ namespace Playo3 {
     class DownloadView : public QListView {
       Q_OBJECT
     public:
-        static DownloadView * instance(QWidget * parent = 0);
+        static DownloadView * instance(QJsonObject * hash = 0, QWidget * parent = 0);
 
         ~DownloadView();
 
@@ -44,7 +44,7 @@ namespace Playo3 {
         DownloadModel * mdl;
         QPoint dragPoint;
     private:
-        DownloadView(QWidget * parent);
+        DownloadView(QJsonObject * hash, QWidget * parent);
 
         static DownloadView * self;
 

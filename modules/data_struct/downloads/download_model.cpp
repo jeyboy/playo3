@@ -1,9 +1,8 @@
 #include "download_model.h"
 #include <QDebug>
 
-DownloadModel::DownloadModel(QObject * parent) : QAbstractItemModel(parent) {
-    QVariantMap rootData;
-    rootItem = new DownloadModelItem(rootData);
+DownloadModel::DownloadModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) {
+    rootItem = new DownloadModelItem(hash);
 }
 
 DownloadModel::~DownloadModel() {

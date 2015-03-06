@@ -1,11 +1,32 @@
 #include "download_model_item.h"
 
 DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent) {
+    parentItem = parent;
+    itemData = data;
+
+    if (parent)
+        parent -> childItems.append(this);
+}
+
+DownloadModelItem::DownloadModelItem(QJsonObject * data, DownloadModelItem * parent) {
      parentItem = parent;
-     itemData = data;
+
+     if (data) {
+         if (data -> contains("childs")) {
+             QJsonArray ar = data -> take("childs").toArray();
+             QJsonObject iterObj;
+
+             foreach(QJsonValue obj, ar) {
+                 iterObj = obj.toObject();
+                 new DownloadModelItem(&iterObj, this);
+             }
+         }
+
+         itemData = data -> toVariantMap();
+     }
 
      if (parent)
-         parent -> childItems.append(parent);
+         parent -> childItems.append(this);
 }
 
 DownloadModelItem::~DownloadModelItem() {
