@@ -86,9 +86,6 @@ bool DownloadView::removeRow(const QModelIndex & node) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind) {
     DownloadModelItem * itm = mdl -> item(ind);
-//    DownloadPosition * position = downloads -> value(reply);
-////    QObject::connect(this, SIGNAL(downloadFinished(ModelItem *, bool)), position -> model, SLOT(itemDownloadFinished(ModelItem *, bool)));
-////    QObject::connect(this, SIGNAL(downloadProgress(ModelItem *, int)), position -> model, SLOT(itemDownloadProgress(ModelItem *, int)));
 
 //    QFile file(position -> savePath.toLocalFile());
 
@@ -129,9 +126,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
 //        }
 //    }
 
-
-////    QObject::disconnect(this, SIGNAL(downloadFinished(ModelItem *, bool)), position -> model, SLOT(itemDownloadFinished(ModelItem *, bool)));
-////    QObject::disconnect(this, SIGNAL(downloadProgress(ModelItem *, int)), position -> model, SLOT(itemDownloadProgress(ModelItem *, int)));
 //    return reply;
 
 
