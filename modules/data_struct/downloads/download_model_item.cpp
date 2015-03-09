@@ -89,7 +89,7 @@ bool DownloadModelItem::removeChildren(int position, int count) {
 }
 
 bool DownloadModelItem::setData(int column, const QVariant & value) {
-    if (column < 0 || column >= itemData.size())
+    if (column < 0)
         return false;
 
     itemData[QString::number(column)] = value;

@@ -1,17 +1,20 @@
 #ifndef DOWNLOAD_DELEGATE_H
 #define DOWNLOAD_DELEGATE_H
 
-//#include <QStyledItemDelegate>
+#include <QStyledItemDelegate>
+#include <QPainter>
+#include <QStyleOption>
+
 //#include "download_editor.h"
 
-//class DownloadDelegate : public QStyledItemDelegate {
-//    Q_OBJECT
+class DownloadDelegate : public QStyledItemDelegate {
+    Q_OBJECT
 
-//public:
-//    DownloadDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+public:
+    DownloadDelegate(QWidget * parent = 0) : QStyledItemDelegate(parent) {}
 
-//    void paint(QPainter *painter, const QStyleOptionViewItem &option,
-//               const QModelIndex &index) const;
+    void paint(QPainter * painter, const QStyleOptionViewItem & option,
+               const QModelIndex & index) const;
 //    QSize sizeHint(const QStyleOptionViewItem &option,
 //                   const QModelIndex &index) const;
 //    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -22,6 +25,6 @@
 
 //private slots:
 //    void commitAndCloseEditor();
-//};
+};
 
 #endif // DOWNLOAD_DELEGATE_H

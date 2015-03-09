@@ -11,6 +11,7 @@
 #define DOWNLOAD_FROM 1
 #define DOWNLOAD_TO 2
 #define DOWNLOAD_TYPE 3
+#define DOWNLOAD_PROGRESS 999
 
 class DownloadModelItem {
 public:

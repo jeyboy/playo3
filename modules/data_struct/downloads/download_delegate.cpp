@@ -1,4 +1,26 @@
-//#include "download_delegate.h"
+#include "download_delegate.h"
+
+void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+    int progressPercentage = index.data();
+
+    QStyleOptionProgressBarV2 progressBarOption;
+    progressBarOption.rect = QRect(option.rect.x() + 10, option.rect.y() + 2 , option.rect.width() - 16, option.rect.height() - 4);
+    progressBarOption.text = index.model() -> data(index, Qt::DisplayRole).toString();
+    progressBarOption.textAlignment = Qt::AlignLeft | Qt::AlignHCenter | Qt::AlignJustify;
+    progressBarOption.textVisible = true;
+    progressBarOption.minimum = 0;
+    progressBarOption.maximum = 100;
+    progressBarOption.progress = progressPercentage;
+    QPalette pal = progressBarOption.palette;
+    pal.setColor(QPalette::HighlightedText, QColor::fromRgb(0, 0, 0));
+    progressBarOption.palette = pal;
+
+//    if(option.state & QStyle::State_Selected) {
+
+//    }
+
+    QApplication::style() -> drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+}
 
 //void HotkeyDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 //    QStyledItemDelegate::paint(painter, option, index);
