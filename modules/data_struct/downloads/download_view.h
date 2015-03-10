@@ -33,6 +33,7 @@ namespace Playo3 {
 
         void proceedDownload(QModelIndex & ind);
     signals:
+        void updateRequired(const QModelIndex & index);
 
     public slots:
         void downloadCompleted();

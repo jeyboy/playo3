@@ -32,6 +32,8 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
 //    setItemDelegate((item_delegate = new DownloadDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
+
+    connect(this, SIGNAL(updateRequired(QModelIndex)), this, SLOT(update(QModelIndex)));
 }
 
 DownloadView::~DownloadView() {
@@ -86,69 +88,69 @@ bool DownloadView::removeRow(const QModelIndex & node) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind) {
     DownloadModelItem * itm = mdl -> item(ind);
+    QString to = itm -> data(DOWNLOAD_TO).toUrl().toLocalFile();
 
-    QUrl from = itm -> data(DOWNLOAD_FROM);
-    QFile file(itm -> data(DOWNLOAD_TO));
+    if (QFile::exists(to))
+        QFile::remove(to);
 
-    if (itm -> data(DOWNLOAD_IS_REMOTE).toBool()) {
-        networkManager -> openUrl(from);
+    QFile toFile(to);
 
-        ////    QIODevice::Append | QIODevice::Unbuffered
+    ////    QIODevice::Append | QIODevice::Unbuffered
+    if (toFile.open(QIODevice::WriteOnly)) {
+        int bufferLength, readed;
+        double limit;
+        qint64 pos = 0;
+        QIODevice * source;
 
-        //    if (!file.open(QIODevice::WriteOnly)) {
-        ////        emit downloadError(position -> item, file.errorString());
-        ////        emit downloadFinished(position -> item, false);
-        //    } else {
-        //        if (!file.resize(reply -> bytesAvailable())) {
-        ////            emit downloadError(position -> item, file.errorString());
-        ////            emit downloadFinished(position -> item, false);
-        //        } else {
-        //            QByteArray buffer;
-        //            qint64 pos = 0;
-        //            double limit = reply -> bytesAvailable();
-        //            int bufferLength = 1024 * 1024 * 1; //1 mb
+        QUrl from = itm -> data(DOWNLOAD_FROM).toUrl();
 
-        //            while(!reply -> atEnd()) {
-        //                try {
-        //                    buffer = reply -> read(bufferLength);
-        //                    pos += buffer.length();
-        //                    file.write(buffer);
+        if (itm -> data(DOWNLOAD_IS_REMOTE).toBool()) {
+            bufferLength = 1024 * 1024 * 1; //1 mb
+            source = networkManager -> openUrl(from);
+        } else {
+            bufferLength = 1024 * 1024 * 10; //10 mb
+            source = new QFile(from.toLocalFile());
 
-        //                    progress = (pos/limit) * 100;
-        //                    emit downloadProgress(position -> item, progress);
-        //                }
+            if (!source -> open(QIODevice::ReadOnly)) {
+                itm -> setData(DOWNLOAD_ERROR, source -> errorString());
+                source -> close();
+                delete source;
+                toFile.close();
+                return ind;
+            }
+        }
 
-        //                catch(...) {
-        ////                    emit downloadError(position -> item, "Some error occured while download...");
-        ////                    emit downloadFinished(position -> item, false);
-        //                }
-        //            }
+        limit = source -> bytesAvailable() / 100;
 
-        //            file.close();
-        //            reply -> close();
-        //            emit downloadFinished(position -> item, true);
-        //        }
-        //    }
+        if (!toFile.resize(source -> bytesAvailable())) {
+            itm -> setData(DOWNLOAD_ERROR, source -> errorString());
+            source -> close();
+            delete source;
+            toFile.close();
+            return ind;
+        }
 
-        //    return reply;
+        char * buffer = new char[bufferLength];
+
+        while(!source -> atEnd()) {
+            try {
+                pos += (readed = source -> read(buffer, bufferLength));
+                toFile.write(buffer, readed);
+
+                itm -> setData(DOWNLOAD_PROGRESS, pos / limit);
+                emit updateRequired(ind);
+            }
+        }
+
+        itm -> setData(DOWNLOAD_PROGRESS, 100);
+        emit updateRequired(ind);
+
+        source -> close();
+        delete source;
+        toFile.close();
+        delete [] buffer;
     } else {
-//        QString prepared_path = savePath + item -> getDownloadTitle();
-//        if (QFile::exists(prepared_path)) {
-//            QFile::remove(prepared_path);
-//        }
-
-//        if (item -> isRemote()) {
-//            if (model -> getApi() == 0) {
-//                QMessageBox::warning(this, "Remote download", "Some shit happened :(");
-//                return;
-//            }
-
-//            Download::instance() -> start(model, item, QUrl::fromLocalFile(prepared_path));
-//        } else {
-//            QFile f(item -> fullPath());
-//            if (!f.copy(prepared_path))
-//                QMessageBox::warning(this, "Bla", f.errorString());
-//        }
+        itm -> setData(DOWNLOAD_ERROR, source -> errorString());
     }
 
     return ind;

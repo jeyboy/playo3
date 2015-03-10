@@ -3,6 +3,7 @@
 DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent) {
     parentItem = parent;
     itemData = data;
+    itemData.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
     if (parent)
         parent -> childItems.append(this);

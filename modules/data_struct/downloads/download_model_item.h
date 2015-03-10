@@ -11,10 +11,15 @@
 #define DOWNLOAD_FROM 1
 #define DOWNLOAD_TO 2
 #define DOWNLOAD_IS_REMOTE 3
+#define DOWNLOAD_ERROR 998
 #define DOWNLOAD_PROGRESS 999
 
 class DownloadModelItem {
 public:
+    enum DownloadItemError {
+
+    };
+
     DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent = 0);
     DownloadModelItem(QJsonObject * data = 0, DownloadModelItem * parent = 0);
     ~DownloadModelItem();
