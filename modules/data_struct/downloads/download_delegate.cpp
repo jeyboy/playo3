@@ -1,7 +1,7 @@
 #include "download_delegate.h"
 
 void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-    int progressPercentage = index.data();
+    int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
 
     QStyleOptionProgressBarV2 progressBarOption;
     progressBarOption.rect = QRect(option.rect.x() + 10, option.rect.y() + 2 , option.rect.width() - 16, option.rect.height() - 4);

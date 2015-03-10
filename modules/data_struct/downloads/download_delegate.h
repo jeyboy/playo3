@@ -3,7 +3,10 @@
 
 #include <QStyledItemDelegate>
 #include <QPainter>
+#include <QApplication>
 #include <QStyleOption>
+
+#include "download_model_item.h"
 
 //#include "download_editor.h"
 

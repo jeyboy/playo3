@@ -60,8 +60,8 @@ namespace Playo3 {
         QPoint dragPoint;
     private:
         DownloadView(QJsonObject * hash, QWidget * parent);
-        QList<QFutureWatcher<QModelIndex &> *> watchers;
-        QList<QFutureWatcher<QModelIndex &> *> bussyWatchers;
+        QList<QFutureWatcher<QModelIndex> *> watchers;
+        QList<QFutureWatcher<QModelIndex> *> bussyWatchers;
 
         static DownloadView * self;
 

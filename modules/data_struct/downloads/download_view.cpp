@@ -59,7 +59,7 @@ void DownloadView::proceedDownload(QModelIndex & ind) {
     }
     else newItem = watchers.takeLast();
 
-    newItem -> setFuture(QtConcurrent::run(&DownloadView::downloading, ind));
+    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
     bussyWatchers.append(newItem);
 }
 
@@ -67,7 +67,7 @@ void DownloadView::proceedDownload(QModelIndex & ind) {
 /// SLOTS
 //////////////////////////////////////////////////////
 void DownloadView::downloadCompleted() {
-    QFutureWatcher<QModelIndex &> * obj = (QFutureWatcher<QModelIndex &>)sender();
+    QFutureWatcher<QModelIndex> * obj = (QFutureWatcher<QModelIndex> *)sender();
     bussyWatchers.removeOne(obj);
     watchers.append(obj);
     removeRow(obj -> result());
@@ -133,13 +133,11 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         char * buffer = new char[bufferLength];
 
         while(!source -> atEnd()) {
-            try {
-                pos += (readed = source -> read(buffer, bufferLength));
-                toFile.write(buffer, readed);
+            pos += (readed = source -> read(buffer, bufferLength));
+            toFile.write(buffer, readed);
 
-                itm -> setData(DOWNLOAD_PROGRESS, pos / limit);
-                emit updateRequired(ind);
-            }
+            itm -> setData(DOWNLOAD_PROGRESS, pos / limit);
+            emit updateRequired(ind);
         }
 
         itm -> setData(DOWNLOAD_PROGRESS, 100);
@@ -149,9 +147,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         delete source;
         toFile.close();
         delete [] buffer;
-    } else {
-        itm -> setData(DOWNLOAD_ERROR, source -> errorString());
     }
+    else itm -> setData(DOWNLOAD_ERROR, toFile.errorString());
 
     return ind;
 }

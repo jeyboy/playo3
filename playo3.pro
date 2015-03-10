@@ -92,8 +92,7 @@ SOURCES += main.cpp\
     modules/data_struct/downloads/download_model.cpp \
     modules/data_struct/downloads/download_model_item.cpp \
     modules/data_struct/downloads/download_view.cpp \
-    misc/web_utils/custom_network_access_manager.cpp \
-    misc/data_object.cpp
+    misc/web_utils/custom_network_access_manager.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -187,8 +186,7 @@ HEADERS  += playo.h \
     modules/data_struct/downloads/download_model.h \
     modules/data_struct/downloads/download_model_item.h \
     modules/data_struct/downloads/download_view.h \
-    misc/web_utils/custom_network_access_manager.h \
-    misc/data_object.h
+    misc/web_utils/custom_network_access_manager.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
