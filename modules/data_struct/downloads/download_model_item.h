@@ -10,7 +10,7 @@
 #define DOWNLOAD_TITLE 0
 #define DOWNLOAD_FROM 1
 #define DOWNLOAD_TO 2
-#define DOWNLOAD_TYPE 3
+#define DOWNLOAD_IS_REMOTE 3
 #define DOWNLOAD_PROGRESS 999
 
 class DownloadModelItem {

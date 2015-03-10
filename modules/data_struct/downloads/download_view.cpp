@@ -11,7 +11,7 @@ DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
 }
 
 DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
-    : QListView(parent), mdl(new DownloadModel(hash, this)) {
+    : QListView(parent), mdl(new DownloadModel(hash, this)), networkManager(new CustomNetworkAccessManager()) {
 
     setModel(mdl);
 
@@ -87,53 +87,69 @@ bool DownloadView::removeRow(const QModelIndex & node) {
 QModelIndex DownloadView::downloading(QModelIndex & ind) {
     DownloadModelItem * itm = mdl -> item(ind);
 
-//    QFile file(position -> savePath.toLocalFile());
+    QUrl from = itm -> data(DOWNLOAD_FROM);
+    QFile file(itm -> data(DOWNLOAD_TO));
 
-////    QIODevice::Append | QIODevice::Unbuffered
+    if (itm -> data(DOWNLOAD_IS_REMOTE).toBool()) {
+        networkManager -> openUrl(from);
 
-//    if (!file.open(QIODevice::WriteOnly)) {
-////        emit downloadError(position -> item, file.errorString());
-////        emit downloadFinished(position -> item, false);
-//    } else {
-//        if (!file.resize(reply -> bytesAvailable())) {
-////            emit downloadError(position -> item, file.errorString());
-////            emit downloadFinished(position -> item, false);
-//        } else {
-//            QByteArray buffer;
-//            qint64 pos = 0;
-//            double limit = reply -> bytesAvailable();
-//            int bufferLength = 1024 * 1024 * 1; //1 mb
+        ////    QIODevice::Append | QIODevice::Unbuffered
 
-//            while(!reply -> atEnd()) {
-//                try {
-//                    buffer = reply -> read(bufferLength);
-//                    pos += buffer.length();
-//                    file.write(buffer);
+        //    if (!file.open(QIODevice::WriteOnly)) {
+        ////        emit downloadError(position -> item, file.errorString());
+        ////        emit downloadFinished(position -> item, false);
+        //    } else {
+        //        if (!file.resize(reply -> bytesAvailable())) {
+        ////            emit downloadError(position -> item, file.errorString());
+        ////            emit downloadFinished(position -> item, false);
+        //        } else {
+        //            QByteArray buffer;
+        //            qint64 pos = 0;
+        //            double limit = reply -> bytesAvailable();
+        //            int bufferLength = 1024 * 1024 * 1; //1 mb
 
-//                    progress = (pos/limit) * 100;
-//                    emit downloadProgress(position -> item, progress);
-//                }
+        //            while(!reply -> atEnd()) {
+        //                try {
+        //                    buffer = reply -> read(bufferLength);
+        //                    pos += buffer.length();
+        //                    file.write(buffer);
 
-//                catch(...) {
-////                    emit downloadError(position -> item, "Some error occured while download...");
-////                    emit downloadFinished(position -> item, false);
-//                }
+        //                    progress = (pos/limit) * 100;
+        //                    emit downloadProgress(position -> item, progress);
+        //                }
+
+        //                catch(...) {
+        ////                    emit downloadError(position -> item, "Some error occured while download...");
+        ////                    emit downloadFinished(position -> item, false);
+        //                }
+        //            }
+
+        //            file.close();
+        //            reply -> close();
+        //            emit downloadFinished(position -> item, true);
+        //        }
+        //    }
+
+        //    return reply;
+    } else {
+//        QString prepared_path = savePath + item -> getDownloadTitle();
+//        if (QFile::exists(prepared_path)) {
+//            QFile::remove(prepared_path);
+//        }
+
+//        if (item -> isRemote()) {
+//            if (model -> getApi() == 0) {
+//                QMessageBox::warning(this, "Remote download", "Some shit happened :(");
+//                return;
 //            }
 
-//            file.close();
-//            reply -> close();
-//            emit downloadFinished(position -> item, true);
+//            Download::instance() -> start(model, item, QUrl::fromLocalFile(prepared_path));
+//        } else {
+//            QFile f(item -> fullPath());
+//            if (!f.copy(prepared_path))
+//                QMessageBox::warning(this, "Bla", f.errorString());
 //        }
-//    }
-
-//    return reply;
-
-
-
-
-
-
-
+    }
 
     return ind;
 }

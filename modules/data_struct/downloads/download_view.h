@@ -13,6 +13,8 @@
 #include "download_model.h"
 #include "download_delegate.h"
 
+#include "misc/web_utils/custom_network_access_manager.h"
+
 //void update(const QModelIndex &index);
 
 namespace Playo3 {
@@ -62,7 +64,8 @@ namespace Playo3 {
 
         static DownloadView * self;
 
-//        DownloadDelegate * item_delegate;
+        DownloadDelegate * item_delegate;
+        CustomNetworkAccessManager * networkManager;
     };
 }
 

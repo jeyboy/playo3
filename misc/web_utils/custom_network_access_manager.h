@@ -6,7 +6,9 @@
 class CustomNetworkAccessManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
-    CustomNetworkAccessManager(QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
+    CustomNetworkAccessManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
+
+    QNetworkReply * openUrl(QUrl & url);
 protected:
     QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0);
 private:
