@@ -2,7 +2,6 @@
 #define MODEL_INTERFACE
 
 #include <qmimedata.h>
-#include <qabstractitemmodel.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
 
@@ -10,26 +9,9 @@
 #include "item_index.h"
 #include "container_types.h"
 
+#include "item_drop_formats.h"
+
 namespace Playo3 {
-    struct InnerData {
-        InnerData() {}
-
-        QUrl url;
-        QVariantMap attrs;
-        QModelIndex eIndex;
-        int eRow, dRow;
-    };
-
-    struct DropData {
-        DropData() {}
-
-        QModelIndex eIndex;
-        int eRow, limitRow;
-    };
-
-    #define DROP_OUTER_FORMAT "text/uri-list"
-    #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
-
     class IModel : public QAbstractItemModel {
         Q_OBJECT
     public:

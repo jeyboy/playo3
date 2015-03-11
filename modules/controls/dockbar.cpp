@@ -3,12 +3,12 @@
 
 using namespace Playo3;
 
-DockBar::DockBar(const QString &title, QWidget * parent, Qt::WindowFlags flags)
+DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::WindowFlags flags)
     : QDockWidget(title, parent, flags), sticked(false), inProcess(false), mWidget(0), spinner(0) {
 
     installEventFilter(parent);
 
-    setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_DeleteOnClose, closable);
     setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
     setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));

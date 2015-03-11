@@ -151,7 +151,7 @@ void ToolBars::save(DataStore * settings) {
                             curr_act = QJsonObject();
                             button = (ToolbarButton*) bar -> widgetForAction(act);
 
-                            curr_act.insert("path", button -> path);
+                            curr_act.insert("path", button -> mainPath());
                             curr_act.insert("name", button -> text());
                             action_array.append(curr_act);
                         }

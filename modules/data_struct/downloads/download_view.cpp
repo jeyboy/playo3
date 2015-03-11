@@ -78,7 +78,13 @@ void DownloadView::openLocation() {
 //    item -> openLocation();
 }
 
-void DownloadView::addRow(const QVariantMap & data) {
+void DownloadView::addRow(QUrl & from, QString & to, QString & name) {
+    QVariantMap data;
+    data.insert(DOWNLOAD_FROM, from);
+    data.insert(DOWNLOAD_TO, QUrl::fromLocalFile(to + '/' + name));
+    data.insert(DOWNLOAD_TITLE, name);
+    data.insert(DOWNLOAD_IS_REMOTE, !from.isLocalFile());
+
     mdl -> appendRow(data);
 }
 

@@ -95,7 +95,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
     if (barName == "Screen") {
         return 0; // stub
     } else if (barName == "Downloads") {
-        DockBar * bar = createDocBar(barName);
+        DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
         return bar;
     } else return createDocBar(barName, settings, &attrs);
@@ -123,8 +123,8 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
 //    return createDocBar(name, view);
 }
 
-DockBar * Dockbars::createDocBar(QString name, QWidget * content) {
-    DockBar * dock = new DockBar(name, (QWidget *)parent(), Qt::WindowMinMaxButtonsHint);
+DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {
+    DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
     dock -> setContentsMargins(3, 0, 3, 4);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));

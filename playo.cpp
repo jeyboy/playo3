@@ -175,7 +175,7 @@ void Playo::receiveMessage(QString /*message*/) {
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
-    QDesktopServices::openUrl(QUrl::fromLocalFile(button -> path));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
 void Playo::showActiveElem() {

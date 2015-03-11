@@ -186,7 +186,8 @@ HEADERS  += playo.h \
     modules/data_struct/downloads/download_model.h \
     modules/data_struct/downloads/download_model_item.h \
     modules/data_struct/downloads/download_view.h \
-    misc/web_utils/custom_network_access_manager.h
+    misc/web_utils/custom_network_access_manager.h \
+    modules/data_struct/item_drop_formats.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

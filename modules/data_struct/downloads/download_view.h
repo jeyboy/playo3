@@ -39,7 +39,7 @@ namespace Playo3 {
         void downloadCompleted();
 
         void openLocation();
-        void addRow(const QVariantMap & data);
+        void addRow(QUrl & from, QString & to, QString & name);
         bool removeRow(const QModelIndex & node);
 
     protected:
