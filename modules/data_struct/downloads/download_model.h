@@ -32,6 +32,8 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QModelIndex appendRow(const QVariantMap & data);
     bool removeRows(int position, int rows, const QModelIndex & parent);
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+                          const QModelIndex &destinationParent, int destinationChild);
 
     DownloadModelItem * item(const QModelIndex & index) const;
     DownloadModelItem * root() const;

@@ -33,7 +33,7 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
-    connect(this, SIGNAL(updateRequired(QModelIndex)), this, SLOT(update(QModelIndex)));
+    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), this, SLOT(onUpdateAttr(QModelIndex,int,QVariant)));
 }
 
 DownloadView::~DownloadView() {
@@ -59,18 +59,31 @@ void DownloadView::proceedDownload(QModelIndex & ind) {
     }
     else newItem = watchers.takeLast();
 
-    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
     bussyWatchers.append(newItem);
+    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
 }
 
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
+void DownloadView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
+    mdl -> setData(ind, val, attr);
+//    dataChanged(ind, ind);
+}
+
 void DownloadView::downloadCompleted() {
     QFutureWatcher<QModelIndex> * obj = (QFutureWatcher<QModelIndex> *)sender();
+    qDebug() << "COMPLETE " << obj -> result().data(DOWNLOAD_TITLE) << obj -> result().data(DOWNLOAD_ERROR) << " LLL " << obj -> result().data(DOWNLOAD_PROGRESS);
+
+    QModelIndex ind = obj -> result();
+
+    if (!ind.data(DOWNLOAD_ERROR).isValid())
+        removeRow(ind);
+    else
+        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount());
+
     bussyWatchers.removeOne(obj);
     watchers.append(obj);
-    removeRow(obj -> result());
 }
 
 void DownloadView::addRow(QUrl from, QString to, QString name) {
@@ -89,8 +102,9 @@ bool DownloadView::removeRow(const QModelIndex & node) {
     return mdl -> removeRow(node.row(), node.parent());
 }
 
-QModelIndex DownloadView::downloading(QModelIndex & ind) {
+QModelIndex DownloadView::downloading(QModelIndex & ind) {    
     DownloadModelItem * itm = mdl -> item(ind);
+
     QString to;
     QVariant toVar = itm -> data(DOWNLOAD_TO);
 
@@ -98,6 +112,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
 //        to = toVar.toUrl().toLocalFile();
 //    else
         to = toVar.toString() + '/' + itm -> data(DOWNLOAD_TITLE).toString();
+
+    qDebug() << "START " << " ||| " << to;
 
     if (QFile::exists(to))
         QFile::remove(to);
@@ -121,7 +137,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
             source = new QFile(from.toLocalFile());
 
             if (!source -> open(QIODevice::ReadOnly)) {
-                itm -> setData(DOWNLOAD_ERROR, source -> errorString());
+                emit updateAttr(ind, DOWNLOAD_ERROR, source -> errorString());
                 source -> close();
                 delete source;
                 toFile.close();
@@ -132,7 +148,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         limit = source -> bytesAvailable() / 100;
 
         if (!toFile.resize(source -> bytesAvailable())) {
-            itm -> setData(DOWNLOAD_ERROR, source -> errorString());
+            emit updateAttr(ind, DOWNLOAD_ERROR, source -> errorString());
             source -> close();
             delete source;
             toFile.close();
@@ -145,19 +161,19 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
             pos += (readed = source -> read(buffer, bufferLength));
             toFile.write(buffer, readed);
 
-            itm -> setData(DOWNLOAD_PROGRESS, pos / limit);
-            emit updateRequired(ind);
+            emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
         }
 
-        itm -> setData(DOWNLOAD_PROGRESS, 100);
-        emit updateRequired(ind);
+        emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
 
         source -> close();
         delete source;
         toFile.close();
         delete [] buffer;
     }
-    else itm -> setData(DOWNLOAD_ERROR, toFile.errorString());
+    else emit updateAttr(ind, DOWNLOAD_ERROR, toFile.errorString());
+
+    qDebug() << "FINISH " << " ||| " << to;
 
     return ind;
 }
@@ -272,7 +288,6 @@ void DownloadView::dropEvent(QDropEvent * event) {
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Delete) {
-        qDebug() << selectedIndexes();
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 

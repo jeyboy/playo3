@@ -88,6 +88,6 @@ bool DownloadModelItem::setData(int column, const QVariant & value) {
     if (column < 0)
         return false;
 
-    itemData[QString::number(column)] = value;
+    itemData.insert(QString::number(column), value);
     return true;
 }

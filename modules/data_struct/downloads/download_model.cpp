@@ -150,13 +150,25 @@ bool DownloadModel::removeRows(int position, int rows, const QModelIndex & paren
     return success;
 }
 
+bool DownloadModel::moveRows(const QModelIndex & sourceParent, int sourceRow, int count,
+                      const QModelIndex &destinationParent, int destinationChild) {
+    beginMoveRows(sourceParent, sourceRow, sourceRow + count, destinationParent, destinationChild);
+    for(int loop1 = 0; loop1 < count; loop1++)
+        rootItem -> childList().move(sourceRow, destinationChild);
+    endMoveRows();
+}
+
 bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, int role) {
-    if (role != Qt::EditRole)
-        return false;
-
     DownloadModelItem * node = item(index);
-    bool result = node -> setData(index.column(), value);
 
+    bool result;
+
+    if (role == Qt::EditRole)
+        result = node -> setData(index.column(), value);
+    else
+        result = node -> setData(role, value);
+
+    qDebug() << "SOSO " << index.data(role);
     if (result)
         emit dataChanged(index, index);
 

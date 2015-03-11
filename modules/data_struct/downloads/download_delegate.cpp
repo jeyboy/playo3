@@ -1,7 +1,11 @@
 #include "download_delegate.h"
+#include <qdebug.h>
+
 
 void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
+
+    qDebug() << "PIDO " << progressPercentage;
 
     if (progressPercentage >= 0) {
         QProgressBar renderer;

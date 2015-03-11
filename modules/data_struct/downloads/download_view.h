@@ -1,7 +1,8 @@
 #ifndef DOWNLOAD_VIEW
 #define DOWNLOAD_VIEW
 
-#include <qprogressbar.h>
+#include <qdebug.h>
+
 #include <qlistview.h>
 #include <qevent.h>
 #include <qmenu.h>
@@ -33,9 +34,11 @@ namespace Playo3 {
 
         void proceedDownload(QModelIndex & ind);
     signals:
-        void updateRequired(const QModelIndex & index);
+        void updateRequired(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
+        void updateAttr(const QModelIndex, int attr, QVariant val);
 
     public slots:
+        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
         void downloadCompleted();
 
         void addRow(QUrl from, QString to, QString name);
