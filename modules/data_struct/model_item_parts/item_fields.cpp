@@ -42,13 +42,3 @@ QVariantMap ItemFields::toInnerAttrs(int itemType) const {
     a.insert(JSON_TYPE_ITEM_TYPE, itemType);
     return a;
 }
-
-QString ItemFields::downloadTitle() const {
-    QString ret = filenameFilter(title().toString());
-
-    if (extension().isValid())
-        ret = ret + '.' + extension().toString();
-
-    ret.replace(QRegExp("\\s+"), " ").trimmed(); // TODO: remove empty brackets
-    return ret;
-}

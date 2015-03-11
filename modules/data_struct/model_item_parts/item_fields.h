@@ -68,8 +68,6 @@ namespace Playo3 {
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
 
-        QString downloadTitle() const;
-
         //TODO: add prepare titles method
 
     protected:

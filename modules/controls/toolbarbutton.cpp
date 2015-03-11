@@ -29,34 +29,22 @@ void ToolbarButton::dropEvent(QDropEvent * event) {
     if (event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
         event -> accept();
 
-        InnerData * data;
-        QList<InnerData *> l;
-
         QByteArray encoded = event -> mimeData() -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
 
         while (!stream.atEnd()) {
-            data = new InnerData();
-            stream >> data -> url >> data -> attrs;
+            InnerData data;
+            stream >> data.url >> data.attrs;
 
-            containPath = data -> attrs.contains(JSON_TYPE_PATH);
-
-            if (requirePath) {
-                if (!containPath)
-                    data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
-            } else {
-                if (containPath)
-                    data -> attrs.remove(JSON_TYPE_PATH);
-            }
+            dwn -> addRow(data.url, path, downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()));
         }
-    } else if (data -> hasUrls()) {
+    } else if (event -> mimeData() -> hasUrls()) {
         event -> accept();
         QList<QUrl>::Iterator it = event -> mimeData() -> urls().begin();
 
-        for(; it != folderList.end(); it++) {
+        for(; it != event -> mimeData() -> urls().end(); it++) {
             QFileInfo file = QFileInfo((*it).toLocalFile());
-
-
+            dwn -> addRow((*it), path, downloadTitle(file.baseName(), file.completeSuffix()));
         }
     }
     else event -> ignore();

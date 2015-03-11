@@ -38,8 +38,7 @@ namespace Playo3 {
     public slots:
         void downloadCompleted();
 
-        void openLocation();
-        void addRow(QUrl & from, QString & to, QString & name);
+        void addRow(QUrl from, QString to, QString name);
         bool removeRow(const QModelIndex & node);
 
     protected:

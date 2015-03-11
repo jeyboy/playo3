@@ -73,17 +73,12 @@ void DownloadView::downloadCompleted() {
     removeRow(obj -> result());
 }
 
-void DownloadView::openLocation() {
-    DownloadModelItem * item = mdl -> item(currentIndex());
-//    item -> openLocation();
-}
-
-void DownloadView::addRow(QUrl & from, QString & to, QString & name) {
+void DownloadView::addRow(QUrl from, QString to, QString name) {
     QVariantMap data;
-    data.insert(DOWNLOAD_FROM, from);
-    data.insert(DOWNLOAD_TO, QUrl::fromLocalFile(to + '/' + name));
-    data.insert(DOWNLOAD_TITLE, name);
-    data.insert(DOWNLOAD_IS_REMOTE, !from.isLocalFile());
+    data.insert(QString::number(DOWNLOAD_FROM), from);
+    data.insert(QString::number(DOWNLOAD_TO), QUrl::fromLocalFile(to + '/' + name));
+    data.insert(QString::number(DOWNLOAD_TITLE), name);
+    data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
 
     mdl -> appendRow(data);
 }

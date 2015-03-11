@@ -13,5 +13,14 @@ static inline QString forwardNumberFilter(QString title)		{ return title.remove(
 static inline QString filenameFilter(QString title)             { return
             forwardNumberPreFilter(sitesFilter(title)).remove(QRegExp("[^\\w-\\. ()]*")).mid(0, PATH_MAX_LEN);
 }
+static QString downloadTitle(QString title, QString extension) {
+  QString ret = filenameFilter(title);
+
+  if (!extension.isEmpty())
+      ret = ret + '.' + extension;
+
+  ret.replace(QRegExp("\\s+"), " ").trimmed(); // TODO: remove empty brackets
+  return ret;
+}
 
 #endif // FILENAME_CONVERSIONS_H
