@@ -19,7 +19,9 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const {
 
     DownloadModelItem * node;
 
-    if (role == Qt::UserRole) {
+    if (role == Qt::SizeHintRole) {
+        return QSize(0, 24);
+    } else if (role == Qt::UserRole) {
         node = item(index);
         return node -> data(2);
     } else if (role != Qt::DisplayRole && role != Qt::EditRole)
@@ -62,6 +64,13 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+QModelIndex DownloadModel::index(DownloadModelItem * node) const {
+    if (node == rootItem)
+        return QModelIndex();
+    else
+        return createIndex(node -> row(), node -> column(), node);
+}
+
 QModelIndex DownloadModel::index(int row, int column, const QModelIndex & parent) const {
     if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
@@ -85,7 +94,7 @@ QModelIndex DownloadModel::parent(const QModelIndex & index) const {
     if (parentItem == rootItem || parentItem == 0)
         return QModelIndex();
 
-    return createIndex(parentItem -> childNumber(), 0, parentItem);
+    return createIndex(parentItem -> row(), 0, parentItem);
 }
 
 //bool HotkeyModel::removeColumns(int position, int columns, const QModelIndex &parent) {
@@ -117,10 +126,28 @@ int DownloadModel::rowCount(const QModelIndex & parent) const {
     return parentItem -> childCount();
 }
 
-void DownloadModel::appendRow(const QVariantMap & data) {
+QModelIndex DownloadModel::appendRow(const QVariantMap & data) {
+    DownloadModelItem * newItem;
     beginInsertRows(QModelIndex(), rootItem -> childCount(), rootItem -> childCount());
-    new DownloadModelItem(data, rootItem);
+    newItem = new DownloadModelItem(data, rootItem);
     endInsertRows();
+    return index(newItem);
+}
+
+bool DownloadModel::removeRows(int position, int rows, const QModelIndex & parent) {
+    DownloadModelItem * parentItem = item(parent);
+    bool success = parentItem != 0;
+
+    if (success) {
+        beginRemoveRows(parent, position, position + rows - 1);
+        bool blockSignal = signalsBlocked();
+        blockSignals(true);
+        success = parentItem -> removeChildren(position, rows);
+        blockSignals(blockSignal);
+        endRemoveRows();
+    }
+
+    return success;
 }
 
 bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, int role) {

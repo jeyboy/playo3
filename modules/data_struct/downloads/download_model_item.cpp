@@ -3,7 +3,6 @@
 DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent) {
     parentItem = parent;
     itemData = data;
-    itemData.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
     if (parent)
         parent -> childItems.append(this);
@@ -56,15 +55,11 @@ int DownloadModelItem::childCount() const {
     return childItems.count();
 }
 
-int DownloadModelItem::childNumber() const {
+int DownloadModelItem::row() const {
     if (parentItem)
         return parentItem -> childItems.indexOf(const_cast<DownloadModelItem *>(this));
 
     return 0;
-}
-
-int DownloadModelItem::columnCount() const {
-    return 1;
 }
 
 QVariant DownloadModelItem::data(int column) const {

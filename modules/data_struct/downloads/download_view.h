@@ -45,7 +45,7 @@ namespace Playo3 {
         QModelIndex downloading(QModelIndex &);
 
         void contextMenuEvent(QContextMenuEvent *);
-        void removeProccessing(QModelIndexList & index_list, bool inProcess = false);
+        void removeProccessing(QModelIndexList & index_list);
 
         void dragEnterEvent(QDragEnterEvent *);
         void dragMoveEvent(QDragMoveEvent *);

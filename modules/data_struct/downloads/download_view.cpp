@@ -29,7 +29,7 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-//    setItemDelegate((item_delegate = new DownloadDelegate(this)));
+    setItemDelegate((item_delegate = new DownloadDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
@@ -76,11 +76,13 @@ void DownloadView::downloadCompleted() {
 void DownloadView::addRow(QUrl from, QString to, QString name) {
     QVariantMap data;
     data.insert(QString::number(DOWNLOAD_FROM), from);
-    data.insert(QString::number(DOWNLOAD_TO), QUrl::fromLocalFile(to + '/' + name));
+    data.insert(QString::number(DOWNLOAD_TO), to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
+    data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
-    mdl -> appendRow(data);
+    QModelIndex ind = mdl -> appendRow(data);
+    proceedDownload(ind);
 }
 
 bool DownloadView::removeRow(const QModelIndex & node) {
@@ -89,7 +91,13 @@ bool DownloadView::removeRow(const QModelIndex & node) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind) {
     DownloadModelItem * itm = mdl -> item(ind);
-    QString to = itm -> data(DOWNLOAD_TO).toUrl().toLocalFile();
+    QString to;
+    QVariant toVar = itm -> data(DOWNLOAD_TO);
+
+//    if (toVar.type() == typeof(QUrl))
+//        to = toVar.toUrl().toLocalFile();
+//    else
+        to = toVar.toString() + '/' + itm -> data(DOWNLOAD_TITLE).toString();
 
     if (QFile::exists(to))
         QFile::remove(to);
@@ -233,31 +241,16 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
         QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
-void DownloadView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
-    int total = index_list.size(), temp = total;
-
-//    if (inProcess)
-//        emit mdl -> moveInProcess();
-
+void DownloadView::removeProccessing(QModelIndexList & index_list) {
     qSort(index_list.begin(), index_list.end());
 
     QModelIndexList::Iterator eit = --index_list.end();
-
-    for (; eit != index_list.begin(); --eit) {
+    for (; eit != index_list.begin(); --eit)
         removeRow((*eit));
 
-//        if (inProcess)
-//            emit mdl -> setProgress(--temp * 100.0 / total);
-    }
-
-//    if (inProcess)
-//        emit threadedRowRemoving((*eit));
-//    else
-        removeRow((*eit));
+    removeRow((*eit));
 
     index_list.clear();
-//    if (inProcess)
-//        emit mdl -> moveOutProcess();
 }
 
 //////////////////////////////////////////////////////
@@ -279,11 +272,10 @@ void DownloadView::dropEvent(QDropEvent * event) {
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Delete) {
+        qDebug() << selectedIndexes();
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 
-//        if (list.size() > 200)
-//            QtConcurrent::run(this, &DownloadView::removeProccessing, list, true);
         if (list.size() > 1)
             removeProccessing(list);
         else {

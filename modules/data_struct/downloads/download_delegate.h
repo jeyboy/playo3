@@ -3,7 +3,8 @@
 
 #include <QStyledItemDelegate>
 #include <QPainter>
-#include <QApplication>
+//#include <QApplication>
+#include <qprogressbar.h>
 #include <QStyleOption>
 
 #include "download_model_item.h"

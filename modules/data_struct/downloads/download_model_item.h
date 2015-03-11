@@ -25,12 +25,15 @@ public:
     ~DownloadModelItem();
 
     DownloadModelItem * child(int number);
-    int childCount() const;
-    int columnCount() const;
-    QVariant data(int column) const;
     bool removeChildren(int position, int count);
-    int childNumber() const;
+    int childCount() const;
+
+    QVariant data(int column) const;
     bool setData(int column, const QVariant & value);
+
+    int row() const;
+    inline int column() const { return 0; }
+    inline int columnCount() const { return 1; }
 
     DownloadModelItem * parent();
     QList<DownloadModelItem *> childList();
