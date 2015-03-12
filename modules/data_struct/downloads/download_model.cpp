@@ -21,14 +21,14 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const {
 
     if (role == Qt::SizeHintRole) {
         return QSize(0, 24);
-    } else if (role == Qt::UserRole) {
+    } else {
         node = item(index);
-        return node -> data(2);
-    } else if (role != Qt::DisplayRole && role != Qt::EditRole)
-        return QVariant();
 
-    node = item(index);
-    return node -> data(index.column());
+        if (role == Qt::EditRole)
+            return node -> data(index.column());
+        else
+            return node -> data(role);
+    }
 }
 
 Qt::ItemFlags DownloadModel::flags(const QModelIndex &index) const {
@@ -160,7 +160,6 @@ bool DownloadModel::moveRows(const QModelIndex & sourceParent, int sourceRow, in
 
 bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, int role) {
     DownloadModelItem * node = item(index);
-
     bool result;
 
     if (role == Qt::EditRole)
@@ -168,7 +167,6 @@ bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, i
     else
         result = node -> setData(role, value);
 
-    qDebug() << "SOSO " << index.data(role);
     if (result)
         emit dataChanged(index, index);
 

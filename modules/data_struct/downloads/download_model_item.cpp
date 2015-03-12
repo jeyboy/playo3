@@ -1,4 +1,5 @@
 #include "download_model_item.h"
+#include <qdebug.h>
 
 DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent) {
     parentItem = parent;

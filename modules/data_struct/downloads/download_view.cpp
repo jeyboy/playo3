@@ -80,7 +80,7 @@ void DownloadView::downloadCompleted() {
     if (!ind.data(DOWNLOAD_ERROR).isValid())
         removeRow(ind);
     else
-        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount());
+        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
 
     bussyWatchers.removeOne(obj);
     watchers.append(obj);

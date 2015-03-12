@@ -16,10 +16,6 @@
 
 class DownloadModelItem {
 public:
-    enum DownloadItemError {
-
-    };
-
     DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent = 0);
     DownloadModelItem(QJsonObject * data = 0, DownloadModelItem * parent = 0);
     ~DownloadModelItem();
