@@ -84,7 +84,7 @@ void DownloadView::downloadCompleted() {
         setRowHidden(ind.row(), true);
     } else {
         qDebug() << "!ERR " << ind.data() << " " << ind.data(DOWNLOAD_ERROR);
-        mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
+        mdl -> setData(ind, -2, DOWNLOAD_PROGRESS);
 //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
     }
 

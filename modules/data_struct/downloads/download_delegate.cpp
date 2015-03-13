@@ -1,6 +1,16 @@
 #include "download_delegate.h"
-#include <qdebug.h>
 
+QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
+    int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
+
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
+
+    if (progressPercentage == -2) {
+        size.setHeight(size.height() * 2);
+        return size;
+    }
+    else return size;
+}
 
 void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
@@ -58,6 +68,33 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
 ////        }
 
 //        QApplication::style() -> drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+    } else if (progressPercentage == -2) {
+        QRect rect = option.rect;
+        rect.setTopLeft(rect.topLeft() + QPoint(4, 1));
+        rect.setBottomRight(rect.bottomRight() - QPoint(8, 2));
+
+        QRect textRect(rect);
+        textRect.setLeft(rect.left() + 4);
+        textRect.setRight(rect.right() - 8);
+
+        int height = textRect.height() / 2;
+
+        textRect.setBottom(textRect.bottom() - height - 4);
+        painter -> drawText(textRect, index.data().toString());
+
+        textRect.setBottom(textRect.bottom() + height);
+        textRect.setTop(textRect.top() + height);
+        painter -> drawText(textRect, index.data(DOWNLOAD_ERROR).toString());
+
+        painter -> save();
+
+        QPen p(QColor::fromRgb(255, 0, 0));
+        p.setWidth((option.state & QStyle::State_Selected) ? 3 : 1);
+        painter -> setPen(p);
+        painter -> drawRoundedRect(rect, 8, 8);
+        painter -> drawLine(rect.left(), textRect.top() - 2, rect.right(), textRect.top() - 2);
+
+        painter -> restore();
     } else {
         QStyledItemDelegate::paint(painter, option, index);
     }

@@ -156,6 +156,7 @@ bool DownloadModel::moveRows(const QModelIndex & sourceParent, int sourceRow, in
     for(int loop1 = 0; loop1 < count; loop1++)
         rootItem -> childList().move(sourceRow, destinationChild);
     endMoveRows();
+    return true;
 }
 
 bool DownloadModel::setData(const QModelIndex & index, const QVariant & value, int role) {
