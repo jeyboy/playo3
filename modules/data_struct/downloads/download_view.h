@@ -32,7 +32,7 @@ namespace Playo3 {
 
         void scrollToActive();
 
-        void proceedDownload(QModelIndex & ind);
+        bool proceedDownload(QModelIndex & ind);
     signals:
         void updateRequired(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
         void updateAttr(const QModelIndex, int attr, QVariant val);
@@ -45,6 +45,7 @@ namespace Playo3 {
         bool removeRow(const QModelIndex & node);
 
     protected:
+        void proceedDownload();
         QModelIndex downloading(QModelIndex &);
 
         void contextMenuEvent(QContextMenuEvent *);

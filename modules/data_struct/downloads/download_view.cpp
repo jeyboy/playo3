@@ -34,6 +34,7 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
     connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), this, SLOT(onUpdateAttr(QModelIndex,int,QVariant)));
+    proceedDownload();
 }
 
 DownloadView::~DownloadView() {
@@ -47,20 +48,22 @@ void DownloadView::scrollToActive() {
     scrollTo(currentIndex());
 }
 
-void DownloadView::proceedDownload(QModelIndex & ind) {
+bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {
-        if (watchers.size() + bussyWatchers.size() < 3) {
+        if (watchers.size() + bussyWatchers.size() < 1) {
             newItem = new QFutureWatcher<QModelIndex>();
             connect(newItem, SIGNAL(finished()), this, SLOT(downloadCompleted()));
         }
-        else return;
+        else return false;
     }
     else newItem = watchers.takeLast();
 
     bussyWatchers.append(newItem);
     newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
+    mdl -> setData(ind, 0, DOWNLOAD_PROGRESS);
+    return true;
 }
 
 //////////////////////////////////////////////////////
@@ -68,22 +71,23 @@ void DownloadView::proceedDownload(QModelIndex & ind) {
 //////////////////////////////////////////////////////
 void DownloadView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
     mdl -> setData(ind, val, attr);
-//    dataChanged(ind, ind);
 }
 
 void DownloadView::downloadCompleted() {
     QFutureWatcher<QModelIndex> * obj = (QFutureWatcher<QModelIndex> *)sender();
-    qDebug() << "COMPLETE " << obj -> result().data(DOWNLOAD_TITLE) << obj -> result().data(DOWNLOAD_ERROR) << " LLL " << obj -> result().data(DOWNLOAD_PROGRESS);
-
     QModelIndex ind = obj -> result();
 
-    if (!ind.data(DOWNLOAD_ERROR).isValid())
-        removeRow(ind);
-    else
-        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
+    if (!ind.data(DOWNLOAD_ERROR).isValid()) {
+        QVariant v = ind.data();
+        qDebug() << v << " : " << removeRow(ind);
+    } else {
+        mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
+//        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
+    }
 
     bussyWatchers.removeOne(obj);
     watchers.append(obj);
+    proceedDownload();
 }
 
 void DownloadView::addRow(QUrl from, QString to, QString name) {
@@ -100,6 +104,21 @@ void DownloadView::addRow(QUrl from, QString to, QString name) {
 
 bool DownloadView::removeRow(const QModelIndex & node) {
     return mdl -> removeRow(node.row(), node.parent());
+}
+
+void DownloadView::proceedDownload() {
+    QList<DownloadModelItem *> items =  mdl -> root() -> childList();
+    QModelIndex ind;
+
+    QList<DownloadModelItem *>::Iterator it = items.begin();
+
+    for(; it != items.end(); it++) {
+        if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() < 0) {
+            ind = mdl -> index((*it));
+            if (!proceedDownload(ind))
+                return;
+        }
+    }
 }
 
 QModelIndex DownloadView::downloading(QModelIndex & ind) {    
