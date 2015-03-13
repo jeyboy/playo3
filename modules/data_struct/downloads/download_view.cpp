@@ -52,7 +52,7 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {
-        if (watchers.size() + bussyWatchers.size() < 1) {
+        if (watchers.size() + bussyWatchers.size() < 3) {
             newItem = new QFutureWatcher<QModelIndex>();
             connect(newItem, SIGNAL(finished()), this, SLOT(downloadCompleted()));
         }
@@ -60,9 +60,9 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     }
     else newItem = watchers.takeLast();
 
+    mdl -> setData(ind, 0, DOWNLOAD_PROGRESS);
     bussyWatchers.append(newItem);
     newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
-    mdl -> setData(ind, 0, DOWNLOAD_PROGRESS);
     return true;
 }
 
@@ -78,9 +78,12 @@ void DownloadView::downloadCompleted() {
     QModelIndex ind = obj -> result();
 
     if (!ind.data(DOWNLOAD_ERROR).isValid()) {
-        QVariant v = ind.data();
-        qDebug() << v << " : " << removeRow(ind);
+//        QVariant v = ind.data();
+//        qDebug() << v << " : " << removeRow(ind);
+        mdl -> setData(ind, -100, DOWNLOAD_PROGRESS);
+        setRowHidden(ind.row(), true);
     } else {
+        qDebug() << "!ERR " << ind.data() << " " << ind.data(DOWNLOAD_ERROR);
         mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
 //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
     }
@@ -93,7 +96,7 @@ void DownloadView::downloadCompleted() {
 void DownloadView::addRow(QUrl from, QString to, QString name) {
     QVariantMap data;
     data.insert(QString::number(DOWNLOAD_FROM), from);
-    data.insert(QString::number(DOWNLOAD_TO), to);
+    data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
@@ -110,13 +113,20 @@ void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
     QModelIndex ind;
 
+    qDebug() << "COUNT " << items.size();
+
     QList<DownloadModelItem *>::Iterator it = items.begin();
 
-    for(; it != items.end(); it++) {
-        if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() < 0) {
-            ind = mdl -> index((*it));
-            if (!proceedDownload(ind))
-                return;
+    for(int i = 0; it != items.end(); it++, i++) {
+        if (isRowHidden(i)) {
+            if (bussyWatchers.isEmpty())
+                mdl -> removeRow(i--, QModelIndex());
+        } else {
+            if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -1) {
+                ind = mdl -> index((*it));
+                if (!proceedDownload(ind))
+                    return;
+            }
         }
     }
 }
@@ -131,8 +141,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
 //        to = toVar.toUrl().toLocalFile();
 //    else
         to = toVar.toString() + '/' + itm -> data(DOWNLOAD_TITLE).toString();
-
-    qDebug() << "START " << " ||| " << to;
 
     if (QFile::exists(to))
         QFile::remove(to);
@@ -183,7 +191,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
             emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
         }
 
-        emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
+        emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
 
         source -> close();
         delete source;
@@ -191,8 +199,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         delete [] buffer;
     }
     else emit updateAttr(ind, DOWNLOAD_ERROR, toFile.errorString());
-
-    qDebug() << "FINISH " << " ||| " << to;
 
     return ind;
 }
