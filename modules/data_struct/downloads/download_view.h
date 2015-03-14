@@ -44,8 +44,11 @@ namespace Playo3 {
         void addRow(QUrl from, QString to, QString name);
         bool removeRow(const QModelIndex & node);
 
-    protected:
+    protected slots:
+        void reproceedDownload();
         void proceedDownload();
+
+    protected:
         QModelIndex downloading(QModelIndex &);
 
         void contextMenuEvent(QContextMenuEvent *);

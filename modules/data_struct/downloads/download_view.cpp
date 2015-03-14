@@ -109,6 +109,19 @@ bool DownloadView::removeRow(const QModelIndex & node) {
     return mdl -> removeRow(node.row(), node.parent());
 }
 
+void DownloadView::reproceedDownload() {
+    QList<DownloadModelItem *> items =  mdl -> root() -> childList();
+    QList<DownloadModelItem *>::Iterator it = items.begin();
+
+    for(int i = 0; it != items.end(); it++, i++)
+        if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -2) {
+            (*it) -> setData(DOWNLOAD_PROGRESS, -1);
+            (*it) -> setData(DOWNLOAD_ERROR, QVariant());
+        }
+
+    proceedDownload();
+}
+
 void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
     QModelIndex ind;
@@ -207,6 +220,9 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
 
     QList<QAction *> actions;
     QAction * act;
+
+    actions.append((act = new QAction("Restart all blocked", this)));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(reproceedDownload()));
 
 //    if (isEditable()) {
 //        actions.append((act = new QAction(QIcon(":/settings"), "View settings", this)));
