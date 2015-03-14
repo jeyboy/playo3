@@ -44,7 +44,7 @@ namespace Playo3 {
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 
-        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath().toHtmlEscaped()); }
+        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
         QString buildTreePath() const;
         QString buildTreeStr() const; // used for tree sorting on removing
 
