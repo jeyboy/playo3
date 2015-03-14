@@ -52,7 +52,7 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {
-        if (watchers.size() + bussyWatchers.size() < 3) {
+        if (watchers.size() + bussyWatchers.size() < qMax(1,  QThread::idealThreadCount())) {
             newItem = new QFutureWatcher<QModelIndex>();
             connect(newItem, SIGNAL(finished()), this, SLOT(downloadCompleted()));
         }
@@ -113,8 +113,6 @@ void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
     QModelIndex ind;
 
-    qDebug() << "COUNT " << items.size();
-
     QList<DownloadModelItem *>::Iterator it = items.begin();
 
     for(int i = 0; it != items.end(); it++, i++) {
@@ -157,10 +155,9 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         QUrl from = itm -> data(DOWNLOAD_FROM).toUrl();
 
         if (itm -> data(DOWNLOAD_IS_REMOTE).toBool()) {
-            bufferLength = 1024 * 1024 * 1; //1 mb
             source = networkManager -> openUrl(from);
+            bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 1)); //1 mb
         } else {
-            bufferLength = 1024 * 1024 * 10; //10 mb
             source = new QFile(from.toLocalFile());
 
             if (!source -> open(QIODevice::ReadOnly)) {
@@ -170,6 +167,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
                 toFile.close();
                 return ind;
             }
+
+            bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 20)); //10 mb
         }
 
         limit = source -> bytesAvailable() / 100;
