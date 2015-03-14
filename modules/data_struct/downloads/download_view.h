@@ -49,6 +49,8 @@ namespace Playo3 {
         void proceedDownload();
 
     protected:
+        QString ioError(QFile * file);
+        QString ioError(QNetworkReply * file);
         QModelIndex downloading(QModelIndex &);
 
         void contextMenuEvent(QContextMenuEvent *);

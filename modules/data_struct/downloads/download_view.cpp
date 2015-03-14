@@ -78,8 +78,7 @@ void DownloadView::downloadCompleted() {
     QModelIndex ind = obj -> result();
 
     if (!ind.data(DOWNLOAD_ERROR).isValid()) {
-//        QVariant v = ind.data();
-//        qDebug() << v << " : " << removeRow(ind);
+//        removeRow(ind);
         mdl -> setData(ind, -100, DOWNLOAD_PROGRESS);
         setRowHidden(ind.row(), true);
     } else {
@@ -142,6 +141,65 @@ void DownloadView::proceedDownload() {
     }
 }
 
+QString DownloadView::ioError(QFile * file) {
+    switch(file -> error()) {
+        case QFile::NoError:            { return "All ok"; }
+        case QFile::ReadError:          { return "Read error"; }
+        case QFile::WriteError:         { return "Write error"; }
+        case QFile::FatalError:         { return "Fatal error"; }
+        case QFile::ResourceError:      { return "Out of resources (free space, etc)"; }
+        case QFile::OpenError:          { return "Open error"; }
+        case QFile::AbortError:         { return "Operation was aborted"; }
+        case QFile::TimeOutError:       { return "Timeout occurred"; }
+        case QFile::UnspecifiedError:   { return "Unspecified error occurred"; }
+        case QFile::RemoveError:        { return "Could not be removed"; }
+        case QFile::RenameError:        { return "Could not be renamed"; }
+        case QFile::PositionError:      { return "Position in the file could not be changed"; }
+        case QFile::ResizeError:        { return "Could not be resized"; }
+        case QFile::PermissionsError:   { return "Is not accessable"; }
+        case QFile::CopyError:          { return "Could not be copied"; }
+    }
+}
+QString DownloadView::ioError(QNetworkReply * reply) {
+    switch(reply -> error()) {
+        case QNetworkReply::NoError:                            { return "All ok"; }
+        case QNetworkReply::ConnectionRefusedError:             { return "Connection: refused"; }
+        case QNetworkReply::RemoteHostClosedError:              { return "Connection: host closed"; }
+        case QNetworkReply::HostNotFoundError:                  { return "Connection: host not found"; }
+        case QNetworkReply::TimeoutError:                       { return "Connection: timeout"; }
+        case QNetworkReply::OperationCanceledError:             { return "Connection: operation canceled"; }
+        case QNetworkReply::TemporaryNetworkFailureError:       { return "Connection: network is not accessible"; }
+        case QNetworkReply::NetworkSessionFailedError:          { return "Connection: network session is not accessible"; }
+        case QNetworkReply::BackgroundRequestNotAllowedError:   { return "Connection: background request not allowed"; }
+        case QNetworkReply::UnknownNetworkError:                { return "Unknow error"; }
+
+        case QNetworkReply::ProxyConnectionRefusedError:        { return "Proxy: connection refused"; }
+        case QNetworkReply::ProxyConnectionClosedError:         { return "Proxy: connection closed"; }
+        case QNetworkReply::ProxyNotFoundError:                 { return "Proxy: not found"; }
+        case QNetworkReply::ProxyTimeoutError:                  { return "Proxy: timeout"; }
+        case QNetworkReply::ProxyAuthenticationRequiredError:   { return "Proxy: authentication required"; }
+        case QNetworkReply::UnknownProxyError:                  { return "Proxy: unknow error"; }
+
+        case QNetworkReply::ContentAccessDenied:                { return "Content: access denied"; }
+        case QNetworkReply::ContentOperationNotPermittedError:  { return "Content: operation not permitted"; }
+        case QNetworkReply::ContentNotFoundError:               { return "Content: not found"; }
+        case QNetworkReply::AuthenticationRequiredError:        { return "Content: authentication required"; }
+        case QNetworkReply::ContentReSendError:                 { return "Content: resend required"; } //TODO: maybe auto resend ?
+        case QNetworkReply::ContentConflictError:               { return "Content: state conflict"; } //TODO: maybe auto resend ?
+        case QNetworkReply::ContentGoneError:                   { return "Content: is gone"; }
+        case QNetworkReply::UnknownContentError:                { return "Content: unknow error"; }
+
+        case QNetworkReply::ProtocolUnknownError:               { return "Protocol: unknow"; }
+        case QNetworkReply::ProtocolInvalidOperationError:      { return "Protocol: invalid operation"; }
+        case QNetworkReply::ProtocolFailure:                    { return "Protocol: failure"; }
+
+        case QNetworkReply::InternalServerError:                { return "Server: internal error"; }
+        case QNetworkReply::OperationNotImplementedError:       { return "Server: operation not implemented"; }
+        case QNetworkReply::ServiceUnavailableError:            { return "Server: service unavailable"; }
+        case QNetworkReply::UnknownServerError:                 { return "Server: unknow error"; }
+    }
+}
+
 QModelIndex DownloadView::downloading(QModelIndex & ind) {    
     DownloadModelItem * itm = mdl -> item(ind);
 
@@ -166,15 +224,16 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         QIODevice * source;
 
         QUrl from = itm -> data(DOWNLOAD_FROM).toUrl();
+        bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
 
-        if (itm -> data(DOWNLOAD_IS_REMOTE).toBool()) {
+        if (isRemote) {
             source = networkManager -> openUrl(from);
             bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 1)); //1 mb
         } else {
             source = new QFile(from.toLocalFile());
 
             if (!source -> open(QIODevice::ReadOnly)) {
-                emit updateAttr(ind, DOWNLOAD_ERROR, source -> errorString());
+                emit updateAttr(ind, DOWNLOAD_ERROR, ioError((QFile *)source));
                 source -> close();
                 delete source;
                 toFile.close();
@@ -187,7 +246,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         limit = source -> bytesAvailable() / 100;
 
         if (!toFile.resize(source -> bytesAvailable())) {
-            emit updateAttr(ind, DOWNLOAD_ERROR, source -> errorString());
+            emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
             source -> close();
             delete source;
             toFile.close();
@@ -210,7 +269,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
         toFile.close();
         delete [] buffer;
     }
-    else emit updateAttr(ind, DOWNLOAD_ERROR, toFile.errorString());
+    else emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
 
     return ind;
 }
