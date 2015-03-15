@@ -16,8 +16,6 @@
 
 #include "misc/web_utils/custom_network_access_manager.h"
 
-//void update(const QModelIndex &index);
-
 namespace Playo3 {
     class Dockbars;
 
@@ -28,18 +26,7 @@ namespace Playo3 {
 
         ~DownloadView();
 
-        inline QJsonObject toJson() {
-            paused = true;
-
-            foreach(QFutureWatcher<QModelIndex> * watcher, bussyWatchers.values()) {
-                disconnect(watcher, SIGNAL(finished()), this, SLOT(downloadCompleted()));
-                watcher -> cancel();
-            }
-
-            proceedDownload();
-
-            return mdl -> toJson();
-        }
+        QJsonObject toJson();
 
         void scrollToActive();
 

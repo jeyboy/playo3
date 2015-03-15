@@ -15,7 +15,14 @@ QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem & option, const QMod
 void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
 
-    if (progressPercentage >= 0) {
+    painter -> setRenderHint(QPainter::Antialiasing, true);
+    painter -> setRenderHint(QPainter::TextAntialiasing, true);
+
+    QRect rect = option.rect;
+    rect.setTopLeft(rect.topLeft() + QPoint(4, 1));
+    rect.setBottomRight(rect.bottomRight() - QPoint(8, 2));
+
+    if (progressPercentage >= 0) {       
         QProgressBar renderer;
 
         renderer.setAttribute(Qt::WA_OpaquePaintEvent, true);
@@ -23,56 +30,29 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         renderer.setAttribute(Qt::WA_TranslucentBackground, true);
 
         QString style;
-        QSize barSize = option.rect.size() - QSize(6, 4);
 
         if(option.state & QStyle::State_Selected) {
             style = "QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; background-color: #999999; }";
-            style += "QProgressBar::chunk { background-color: #87CEFA; /*width: " + QString::number(barSize.width() - 6) + "px;  margin: 0.5px; border-radius: 6px;*/ }";
+            style += "QProgressBar::chunk { background-color: #87CEFA; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }";
         } else {
             style = "QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; }";
-            style += "QProgressBar::chunk { background-color: #05B8CC; /*width: " + QString::number(barSize.width() - 6) + "px;  margin: 0.5px; border-radius: 6px;*/ }";
+            style += "QProgressBar::chunk { background-color: #05B8CC; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }";
         }
 
         renderer.setTextVisible(true);
-        renderer.setFormat(option.fontMetrics.elidedText(index.model() -> data(index, Qt::DisplayRole).toString(), Qt::ElideRight, option.rect.width() - 8));
+        renderer.setFormat(option.fontMetrics.elidedText(index.model() -> data(index, Qt::DisplayRole).toString(), Qt::ElideRight, rect.width() - 8));
 
-        renderer.resize(barSize);
+        renderer.resize(rect.size());
         renderer.setMinimum(0);
         renderer.setMaximum(100);
         renderer.setValue(progressPercentage);
 
         renderer.setStyleSheet(style);
         painter -> save();
-        painter -> translate(option.rect.topLeft() + QPoint(3, 2));
+        painter -> translate(rect.topLeft());
         renderer.render(painter);
         painter -> restore();
-
-
-
-//        QStyleOptionProgressBarV2 progressBarOption;
-//        progressBarOption.rect = QRect(option.rect.x() + 3, option.rect.y() + 2 , option.rect.width() - 6, option.rect.height() - 4);
-//        progressBarOption.text = progressBarOption.fontMetrics.elidedText(index.model() -> data(index, Qt::DisplayRole).toString(), Qt::ElideRight, progressBarOption.rect.width() - 8);
-//        progressBarOption.textAlignment = Qt::AlignCenter;
-//        progressBarOption.textVisible = true;
-//        progressBarOption.minimum = 0;
-//        progressBarOption.maximum = 100;
-//        progressBarOption.progress = progressPercentage;
-//        progressBarOption.state = option.state;
-
-//        QPalette pal = progressBarOption.palette;
-//        pal.setColor(QPalette::HighlightedText, QColor::fromRgb(0, 0, 0));
-//        progressBarOption.palette = pal;
-
-////        if(option.state & QStyle::State_Selected) {
-
-////        }
-
-//        QApplication::style() -> drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
     } else if (progressPercentage == -2) {
-        QRect rect = option.rect;
-        rect.setTopLeft(rect.topLeft() + QPoint(4, 1));
-        rect.setBottomRight(rect.bottomRight() - QPoint(8, 2));
-
         QRect textRect(rect);
         textRect.setLeft(rect.left() + 4);
         textRect.setRight(rect.right() - 8);
@@ -89,7 +69,7 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         painter -> save();
 
         QPen p(QColor::fromRgb(255, 0, 0));
-        p.setWidth((option.state & QStyle::State_Selected) ? 3 : 1);
+        p.setWidth((option.state & QStyle::State_Selected) ? 2 : 1);
         painter -> setPen(p);
         painter -> drawRoundedRect(rect, 8, 8);
         painter -> drawLine(rect.left(), textRect.top() - 2, rect.right(), textRect.top() - 2);

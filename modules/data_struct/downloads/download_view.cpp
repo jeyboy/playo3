@@ -46,6 +46,25 @@ DownloadView::~DownloadView() {
     delete mdl;
 }
 
+QJsonObject DownloadView::toJson() {
+    paused = true;
+    QFutureWatcher<QModelIndex> * watcher;
+
+    foreach(QModelIndex ind, bussyWatchers.keys()) {
+        watcher = bussyWatchers.take(ind);
+        disconnect(watcher, SIGNAL(finished()), this, SLOT(downloadCompleted()));
+        watcher -> cancel();
+        watcher -> waitForFinished();
+
+        watchers.append(watcher);
+        mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
+    }
+
+    proceedDownload();
+
+    return mdl -> toJson();
+}
+
 void DownloadView::scrollToActive() {
     scrollTo(currentIndex());
 }
@@ -54,7 +73,7 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {
-        if (watchers.size() + bussyWatchers.size() < qMax(1,  QThread::idealThreadCount())) {
+        if (watchers.size() + bussyWatchers.size() < qMax(1,  3/*QThread::idealThreadCount()*/)) {
             newItem = new QFutureWatcher<QModelIndex>();
             connect(newItem, SIGNAL(finished()), this, SLOT(downloadCompleted()));
         }
@@ -161,7 +180,7 @@ QString DownloadView::ioError(QFile * file) {
         case QFile::RemoveError:        { return "Could not be removed"; }
         case QFile::RenameError:        { return "Could not be renamed"; }
         case QFile::PositionError:      { return "Position in the file could not be changed"; }
-        case QFile::ResizeError:        { return "Could not be resized"; }
+        case QFile::ResizeError:        { return "Free space of memory is not enough"; }
         case QFile::PermissionsError:   { return "Is not accessable"; }
         case QFile::CopyError:          { return "Could not be copied"; }
         default: return "Unknow error";
@@ -277,7 +296,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             if (isRemote) QThread::msleep(10);
         }
 
-        emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
+        if (!watcher -> isCanceled())
+            emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
 
         source -> close();
         delete source;
