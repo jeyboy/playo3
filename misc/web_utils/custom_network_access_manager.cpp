@@ -6,7 +6,7 @@ CustomNetworkAccessManager::CustomNetworkAccessManager(QObject * parent, QSsl::S
     this -> mode = mode;
 }
 
-QNetworkReply * CustomNetworkAccessManager::openUrl(QUrl & url) {
+QNetworkReply * CustomNetworkAccessManager::openUrl(QUrl & url) { // TODO: need to prevent from url cicling
     QNetworkReply * m_http = get(QNetworkRequest(url));
     QEventLoop loop;
     connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));

@@ -28,7 +28,18 @@ namespace Playo3 {
 
         ~DownloadView();
 
-        inline QJsonObject toJson() { return mdl -> toJson(); }
+        inline QJsonObject toJson() {
+            paused = true;
+
+            foreach(QFutureWatcher<QModelIndex> * watcher, bussyWatchers.values()) {
+                disconnect(watcher, SIGNAL(finished()), this, SLOT(downloadCompleted()));
+                watcher -> cancel();
+            }
+
+            proceedDownload();
+
+            return mdl -> toJson();
+        }
 
         void scrollToActive();
 
@@ -51,7 +62,7 @@ namespace Playo3 {
     protected:
         QString ioError(QFile * file);
         QString ioError(QNetworkReply * file);
-        QModelIndex downloading(QModelIndex &);
+        QModelIndex downloading(QModelIndex &, QFutureWatcher<QModelIndex> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);
         void removeProccessing(QModelIndexList & index_list);
@@ -67,9 +78,11 @@ namespace Playo3 {
         DownloadModel * mdl;
         QPoint dragPoint;
     private:
+        bool paused;
+
         DownloadView(QJsonObject * hash, QWidget * parent);
         QList<QFutureWatcher<QModelIndex> *> watchers;
-        QList<QFutureWatcher<QModelIndex> *> bussyWatchers;
+        QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
 
         static DownloadView * self;
 

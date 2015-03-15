@@ -10,8 +10,8 @@ DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
     return self;
 }
 
-DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
-    : QListView(parent), mdl(new DownloadModel(hash, this)), networkManager(new CustomNetworkAccessManager()) {
+DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
+    paused(false), mdl(new DownloadModel(hash, this)), networkManager(new CustomNetworkAccessManager()) {
 
     setModel(mdl);
 
@@ -38,8 +38,10 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent)
 }
 
 DownloadView::~DownloadView() {
-    qDeleteAll(watchers);
-    qDeleteAll(bussyWatchers);
+    qDeleteAll(watchers);   
+    watchers.clear();
+    qDeleteAll(bussyWatchers.values());
+    bussyWatchers.clear();
 
     delete mdl;
 }
@@ -61,8 +63,8 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     else newItem = watchers.takeLast();
 
     mdl -> setData(ind, 0, DOWNLOAD_PROGRESS);
-    bussyWatchers.append(newItem);
-    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind));
+    bussyWatchers.insert(ind, newItem);
+    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind, newItem));
     return true;
 }
 
@@ -75,19 +77,17 @@ void DownloadView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
 
 void DownloadView::downloadCompleted() {
     QFutureWatcher<QModelIndex> * obj = (QFutureWatcher<QModelIndex> *)sender();
-    QModelIndex ind = obj -> result();
+    QModelIndex ind = bussyWatchers.key(obj);//obj -> result();
 
     if (!ind.data(DOWNLOAD_ERROR).isValid()) {
-//        removeRow(ind);
         mdl -> setData(ind, -100, DOWNLOAD_PROGRESS);
         setRowHidden(ind.row(), true);
     } else {
-        qDebug() << "!ERR " << ind.data() << " " << ind.data(DOWNLOAD_ERROR);
         mdl -> setData(ind, -2, DOWNLOAD_PROGRESS);
 //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
     }
 
-    bussyWatchers.removeOne(obj);
+    bussyWatchers.remove(ind);
     watchers.append(obj);
     proceedDownload();
 }
@@ -105,7 +105,13 @@ void DownloadView::addRow(QUrl from, QString to, QString name) {
 }
 
 bool DownloadView::removeRow(const QModelIndex & node) {
-    return mdl -> removeRow(node.row(), node.parent());
+    setRowHidden(node.row(), true);
+
+    if (bussyWatchers.contains(node))
+        bussyWatchers.value(node) -> cancel();
+
+    return true;
+//    return mdl -> removeRow(node.row(), node.parent());
 }
 
 void DownloadView::reproceedDownload() {
@@ -132,7 +138,7 @@ void DownloadView::proceedDownload() {
             if (bussyWatchers.isEmpty())
                 mdl -> removeRow(i--, QModelIndex());
         } else {
-            if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -1) {
+            if (!paused && (*it) -> data(DOWNLOAD_PROGRESS).toInt() == -1) {
                 ind = mdl -> index((*it));
                 if (!proceedDownload(ind))
                     return;
@@ -158,6 +164,7 @@ QString DownloadView::ioError(QFile * file) {
         case QFile::ResizeError:        { return "Could not be resized"; }
         case QFile::PermissionsError:   { return "Is not accessable"; }
         case QFile::CopyError:          { return "Could not be copied"; }
+        default: return "Unknow error";
     }
 }
 QString DownloadView::ioError(QNetworkReply * reply) {
@@ -171,7 +178,7 @@ QString DownloadView::ioError(QNetworkReply * reply) {
         case QNetworkReply::TemporaryNetworkFailureError:       { return "Connection: network is not accessible"; }
         case QNetworkReply::NetworkSessionFailedError:          { return "Connection: network session is not accessible"; }
         case QNetworkReply::BackgroundRequestNotAllowedError:   { return "Connection: background request not allowed"; }
-        case QNetworkReply::UnknownNetworkError:                { return "Unknow error"; }
+        case QNetworkReply::UnknownNetworkError:                { return "Connection: unknow error"; }
 
         case QNetworkReply::ProxyConnectionRefusedError:        { return "Proxy: connection refused"; }
         case QNetworkReply::ProxyConnectionClosedError:         { return "Proxy: connection closed"; }
@@ -197,10 +204,11 @@ QString DownloadView::ioError(QNetworkReply * reply) {
         case QNetworkReply::OperationNotImplementedError:       { return "Server: operation not implemented"; }
         case QNetworkReply::ServiceUnavailableError:            { return "Server: service unavailable"; }
         case QNetworkReply::UnknownServerError:                 { return "Server: unknow error"; }
+        default: return "Unknow error";
     }
 }
 
-QModelIndex DownloadView::downloading(QModelIndex & ind) {    
+QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIndex> * watcher) {
     DownloadModelItem * itm = mdl -> item(ind);
 
     QString to;
@@ -260,13 +268,23 @@ QModelIndex DownloadView::downloading(QModelIndex & ind) {
             toFile.write(buffer, readed);
 
             emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
+
+            if (watcher -> isCanceled()) {
+                qDebug() << "CANCELED -------------------------------------------";
+                break;
+            }
+
+            if (isRemote) QThread::msleep(10);
         }
 
         emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
 
         source -> close();
         delete source;
-        toFile.close();
+        if (watcher -> isCanceled())
+            toFile.remove();
+        else
+            toFile.close();
         delete [] buffer;
     }
     else emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
