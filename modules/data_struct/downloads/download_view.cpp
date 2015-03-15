@@ -73,7 +73,7 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {
-        if (watchers.size() + bussyWatchers.size() < qMax(1,  3/*QThread::idealThreadCount()*/)) {
+        if (watchers.size() + bussyWatchers.size() < qMax(1,  2/*QThread::idealThreadCount()*/)) {
             newItem = new QFutureWatcher<QModelIndex>();
             connect(newItem, SIGNAL(finished()), this, SLOT(downloadCompleted()));
         }
@@ -248,6 +248,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         int bufferLength;
         double limit;
         qint64 pos = 0;
+        double readTime = 15.0;
         QIODevice * source;
 
         QUrl from = itm -> data(DOWNLOAD_FROM).toUrl();
@@ -267,7 +268,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 return ind;
             }
 
-            bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 20)); //10 mb
+            bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 2)); //2 mb
         }
 
         limit = source -> bytesAvailable() / 100;
@@ -287,7 +288,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 v = QDateTime::currentMSecsSinceEpoch() - v;
                 pos += toFile.write(buffer);
 
-                if (v < 50) bufferLength *= (1 + (1.0 - v / 50.0));
+                if (v < readTime) bufferLength *= (1 + (1.0 - v / readTime));
                 else bufferLength /= 2;
             }
 
