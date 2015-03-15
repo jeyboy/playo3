@@ -245,7 +245,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
     ////    QIODevice::Append | QIODevice::Unbuffered
     if (toFile.open(QIODevice::WriteOnly)) {
-        int bufferLength, readed;
+        int bufferLength;
         double limit;
         qint64 pos = 0;
         QIODevice * source;
@@ -280,18 +280,21 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             return ind;
         }
 
-        char * buffer = new char[bufferLength];
-
         while(!source -> atEnd()) {
-            pos += (readed = source -> read(buffer, bufferLength));
-            toFile.write(buffer, readed);
+            {
+                qint64 v = QDateTime::currentMSecsSinceEpoch();
+                QByteArray buffer = source -> read(bufferLength);
+                v = QDateTime::currentMSecsSinceEpoch() - v;
+                pos += toFile.write(buffer);
+
+                if (v < 50) bufferLength *= (1 + (1.0 - v / 50.0));
+                else bufferLength /= 2;
+            }
 
             emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
 
-            if (watcher -> isCanceled()) {
-                qDebug() << "CANCELED -------------------------------------------";
+            if (watcher -> isCanceled())
                 break;
-            }
 
             if (isRemote) QThread::msleep(10);
         }
@@ -305,7 +308,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             toFile.remove();
         else
             toFile.close();
-        delete [] buffer;
     }
     else emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
 
