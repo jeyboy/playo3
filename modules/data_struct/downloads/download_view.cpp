@@ -87,6 +87,31 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     return true;
 }
 
+void DownloadView::proceedDrop(QDropEvent * event, QString path) {
+    if (event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
+        event -> accept();
+
+        QByteArray encoded = event -> mimeData() -> data(DROP_INNER_FORMAT);
+        QDataStream stream(&encoded, QIODevice::ReadOnly);
+
+        while (!stream.atEnd()) {
+            InnerData data;
+            stream >> data.url >> data.attrs;
+
+            addRow(data.url, path, downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()));
+        }
+    } else if (event -> mimeData() -> hasUrls()) {
+        event -> accept();
+        QList<QUrl>::Iterator it = event -> mimeData() -> urls().begin();
+
+        for(; it != event -> mimeData() -> urls().end(); it++) {
+            QFileInfo file = QFileInfo((*it).toLocalFile());
+            addRow((*it), path, downloadTitle(file.baseName(), file.completeSuffix()));
+        }
+    }
+    else event -> ignore();
+}
+
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
@@ -414,16 +439,24 @@ void DownloadView::removeProccessing(QModelIndexList & index_list) {
 //////////////////////////////////////////////////////
 
 void DownloadView::dragEnterEvent(QDragEnterEvent * event) {
-    QListView::dragEnterEvent(event);
+    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
+        event -> accept();
+    else
+        event -> ignore();
+
+//    QListView::dragEnterEvent(event);
 }
 
 void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
-    QListView::dragMoveEvent(event);
+    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
+        event -> accept();
+    else
+        event -> ignore();
+//    QListView::dragMoveEvent(event);
 }
 
 void DownloadView::dropEvent(QDropEvent * event) {
-    QListView::dropEvent(event);
-    event -> accept();
+    proceedDrop(event, Settings::instance() -> defaultDownloadPath());
 }
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {

@@ -8,9 +8,6 @@
 #include <QMessageBox>
 #include <qfileinfo.h>
 
-#include "misc/file_utils/filename_conversions.h"
-
-#include "modules/data_struct/item_drop_formats.h"
 #include "modules/data_struct/downloads/download_view.h"
 
 //#include "model/view.h"
