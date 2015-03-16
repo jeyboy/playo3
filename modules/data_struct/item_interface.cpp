@@ -165,7 +165,7 @@ QVariant IItem::data(int column) const {
         case Qt::ToolTipRole:
             return title()/* + "(" + _extension + ")" + "\n" + _path*/;
 
-//        case EXTENSIONID:       return extension();
+        case IEXTENSION:       return extension();
 //        case PATHID:            return path();
         case IREMOTE:          return isRemote();
 //        case TITLESCACHEID:     return QVariant(*getTitlesCache());

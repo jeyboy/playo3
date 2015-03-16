@@ -17,6 +17,8 @@
 #include "misc/settings.h"
 #include "misc/stylesheets.h"
 
+#include "downloads/download_view.h"
+
 #include "tree_view_style.h"
 
 #include "media/player.h"
@@ -25,7 +27,6 @@
 #include "model_item_delegate.h"
 
 //#include "media/library.h"
-//#include "web/download.h"
 
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
@@ -62,16 +63,12 @@ namespace Playo3 {
         inline ViewSettings settings() const { return sttngs; }
         inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
 
-//        inline QModelIndexList selectedItems() const { return selectedIndexes(); }
-
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
         bool execIndex(const QModelIndex & node, bool paused = false, uint start = 0);
         bool execPath(const QString path, bool paused = false, uint start = 0);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
-
-        void downloadSelected(QString savePath, bool markAsLiked = false);
 
         void setIconSize(const QSize & size);
 
@@ -96,16 +93,13 @@ namespace Playo3 {
         void openLocation();
         bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
 
-        void download();
+        void downloadSelected();
         void downloadAll();
-//        void modelUpdate();
 
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
         void removeProccessing(QModelIndexList & index_list, bool inProcess = false);
-
-        bool prepareDownloading(QString path);
 
         void downloadItem(const QModelIndex & node, QString savePath);
         void downloadBranch(const QModelIndex & node, QString savePath);

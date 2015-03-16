@@ -47,6 +47,9 @@ namespace Playo3 {
         bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         IItem * item(const QModelIndex & index) const;
+        template<class T> T * item(const QModelIndex & index) const {
+            return dynamic_cast<T *>(item(index));
+        }
 
         void shuffle();
         inline QJsonObject toJson() { return rootItem -> toJson(); }
@@ -84,10 +87,6 @@ namespace Playo3 {
         void proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const;
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
-
-        template<class T> T * item(const QModelIndex & index) const {
-            return dynamic_cast<T *>(item(index));
-        }
 
         Qt::KeyboardModifiers dropKeyModifiers;
         FolderItem * rootItem;

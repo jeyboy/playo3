@@ -319,16 +319,22 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 //            sepAct = new QAction(this);
 //            sepAct -> setSeparator(true);
 //            actions.append(sepAct);
-
-            actions.append((act = new QAction(QIcon(":/download"), "Download", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(download()));
-
-            actions.append((act = new QAction(QIcon(":/download"), "Download All", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
         }
+
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
     }
 
     if (mdl -> rowCount() > 0) {
+        actions.append((act = new QAction(QIcon(":/download"), "Download", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadSelected()));
+
+        actions.append((act = new QAction(QIcon(":/download"), "Download All", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
+
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
+
         actions.append((act = new QAction(QIcon(":/shuffle"), "Shuffle", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
@@ -498,110 +504,41 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
         emit mdl -> moveOutProcess();
 }
 
-//bool IView::removeRows(QModelIndexList & nodes, bool updateSelection) {
-//    if (nodes.isEmpty())
-//        return false;
-
-//    QModelIndex node, parentNode;
-//    int row = 0;
-
-//    if (updateSelection) {
-//        node = nodes.first();
-//        parentNode = node.parent();
-//        row = node.row();
-//    }
-
-//    bool res = true;
-//    Settings::instance() -> setfolderDeletionAnswer(QMessageBox::No);
-
-//    foreach(QModelIndex node, nodes)
-//        res |= removeRow(node, false, true);
-
-//    if (updateSelection)
-//        setCurrentIndex(candidateOnSelection(mdl -> index(row, 0, parentNode)));
-
-//    return res;
-//}
-
-bool IView::prepareDownloading(QString /*path*/) { //TODO: move to separate class
-//    QDir dir(path);
-//    if (!dir.exists()) {
-//        dir.mkpath(".");
-//    }
-
-    return true;
+void IView::downloadItem(const QModelIndex & node, QString savePath) {
+    DownloadView::instance() -> addRow(
+        node.data(IURL).toUrl(),
+        savePath,
+        downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
+    );
 }
 
-void IView::downloadItem(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
-//    QString prepared_path = savePath + item -> getDownloadTitle();
-//    if (QFile::exists(prepared_path)) {
-//        QFile::remove(prepared_path);
-//    }
+void IView::downloadBranch(const QModelIndex & node, QString savePath) {
+    FolderItem * curr = mdl -> item<FolderItem>(node);
+    IItem * item;
 
-//    if (item -> isRemote()) {
-//        if (model -> getApi() == 0) {
-//            QMessageBox::warning(this, "Remote download", "Some shit happened :(");
-//            return;
-//        }
+    for(int i = 0; i < curr -> childCount(); i++) {
+        item = curr -> child(i);
 
-//        Download::instance() -> start(model, item, QUrl::fromLocalFile(prepared_path));
-//    } else {
-//        QFile f(item -> fullPath());
-//        if (!f.copy(prepared_path))
-//            QMessageBox::warning(this, "Bla", f.errorString());
-//    }
+        if (item -> isContainer())
+            downloadBranch(mdl -> index(item), savePath);
+        else
+            downloadItem(mdl -> index(item), savePath);
+    }
 }
 
-void IView::downloadBranch(const QModelIndex & /*node*/, QString /*savePath*/) { //TODO: rewrite
-//    prepareDownloading(savePath);
-//    QList<ModelItem *> * children = rootNode -> childItemsList();
-//    ModelItem * item;
-
-//    for(int i = 0; i < children -> length(); i++) {
-//        item = children -> at(i);
-
-//        if (item -> isFolder()) {
-//            downloadBranch(item, savePath + item -> getDownloadTitle() + "/");
-//        } else {
-//            downloadItem(item, savePath);
-//        }
-//    }
+void IView::downloadAll() {
+    downloadBranch(QModelIndex(), Settings::instance() -> defaultDownloadPath());
 }
 
-void IView::download() { //TODO: rewrite
-//    downloadSelected(Settings::instance() -> getDownloadPath());
-}
+void IView::downloadSelected() {
+    QString path = Settings::instance() -> defaultDownloadPath();
 
-void IView::downloadAll() { //TODO: rewrite
-//    QString savePath = Settings::instance() -> getDownloadPath();
-//    if (!prepareDownloading(savePath)) return;
-//    downloadBranch(model -> root(), savePath);
-}
-
-//void IView::modelUpdate() {
-//    if (Player::instance() -> currentPlaylist() == this) {
-//        if (Player::instance() -> playedItem())
-//            Player::instance() -> playedItem() -> getState() -> unsetPlayed();
-//        Player::instance() -> removePlaylist();
-//    }
-//}
-
-void IView::downloadSelected(QString /*savePath*/, bool /*markAsLiked*/) { //TODO: rewrite
-//    if (!prepareDownloading(savePath)) return;
-
-//    ModelItem * item;
-
-//    foreach(QModelIndex index, selectedIndexes()) {
-//        item = model -> getItem(index);
-
-//        if (item -> isFolder()) {
-//            downloadBranch(item, savePath);
-//        } else {
-//            downloadItem(item, savePath);
-//            if (markAsLiked)
-//                item -> getState() -> setLiked();
-//        }
-//    }
+    foreach(QModelIndex index, selectedIndexes()) {
+        if (index.data(IFOLDER).toBool())
+            downloadBranch(index, path);
+        else
+            downloadItem(index, path);
+    }
 }
 
 void IView::setIconSize(const QSize & size) {
