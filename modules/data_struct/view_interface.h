@@ -77,6 +77,8 @@ namespace Playo3 {
         void threadedRowRemoving(QModelIndex node, int selectionUpdate, bool usePrevAction);
 
     public slots:
+        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
+
         void expandeAll();
         void collapseAll();
         inline void shuffle() { mdl -> shuffle(); }

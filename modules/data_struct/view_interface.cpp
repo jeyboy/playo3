@@ -201,6 +201,9 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
+void IView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
+    mdl -> setData(ind, val, attr);
+}
 
 void IView::expandeAll() {
     mdl -> expandeAll();
