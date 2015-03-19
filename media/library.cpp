@@ -8,6 +8,52 @@ Library * Library::instance(QObject * parent) {
     return self;
 }
 
+Library::Library(QObject * parent) : QObject(parent), waitListLimit(10) {
+    catsSaveResult = QFuture<void>();
+
+    saveTimer = new QTimer();
+    QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(saveCatalogs()));
+    saveTimer -> start(10000);
+
+//    QObject::connect(&remoteTimer, SIGNAL(timeout()), this, SLOT(startRemoteInfoProc()));
+//    remoteTimer.start(2000);
+
+    QDir dir(libraryPath());
+    if (!dir.exists())
+        dir.mkpath(".");
+}
+
+Library::~Library() {
+    waitOnProc.clear();
+
+    saveTimer -> stop();
+    save();
+
+    delete saveTimer;
+}
+
+void Library::restoreItemState(QModelIndex & ind) {
+    waitOnProc.append(ind);
+    while(waitOnProc.size() > waitListLimit)
+        waitOnProc.removeFirst();
+    initStateRestoring();
+}
+
+void Library::declineItemState(QModelIndex & ind) {
+    waitOnProc.removeAll(ind);
+}
+
+void Library::initStateRestoring() {
+    if (!waitOnProc.isEmpty()) {
+        QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
+        connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring());
+        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, waitOnProc.takeLast()));
+    }
+}
+
+void Library::stateRestoring(QModelIndex node) {
+
+}
 
 //void Library::clearRemote() {
 //    currRemote = 0;
@@ -48,10 +94,6 @@ Library * Library::instance(QObject * parent) {
 //    else state = 0;
 
 //    return proceedItemNames(item -> getTitlesCache(), state);
-//}
-
-//QString Library::filenameFilter(QString title) {
-//    return forwardNumberPreFilter(sitesFilter(title)).remove(QRegExp("[^\\w-\\. ()]*")).mid(0, 200);
 //}
 
 //void Library::setRemoteItemMax(int newMax) {
@@ -121,11 +163,11 @@ Library * Library::instance(QObject * parent) {
 //    return item;
 //}
 
-//void Library::saveCatalogs() {
-//    if (!catsSaveResult.isRunning()) {
-//        catsSaveResult = QtConcurrent::run(this, &Library::save);
-//    }
-//}
+void Library::saveCatalogs() {
+    if (!catsSaveResult.isRunning()) {
+        catsSaveResult = QtConcurrent::run(this, &Library::save);
+    }
+}
 
 //ModelItem * Library::itemsInit(ModelItem * item) {
 //    if (item -> isExist()) {
@@ -142,15 +184,6 @@ Library * Library::instance(QObject * parent) {
 //    return item;
 //}
 
-//QString Library::sitesFilter(QString title)				{ return title.remove(QRegExp("((http:\\/\\/)?(www\\.)?[\\w-]+\\.(\\w+)(\\.(\\w+))*)")); }
-//QString Library::forwardNumberPreFilter(QString title)	{ return title.remove(QRegExp("\\A\\d{1,}.|\\(\\w*\\d{1,}\\w*\\)")); }
-//QString Library::spacesFilter(QString title) 			{ return title.remove(QRegExp("(\\W|[_])")); }
-//QString Library::forwardNumberFilter(QString title)		{ return title.remove(QRegExp("\\A\\d{1,}")); }
-
-//QString Library::libraryPath() {
-//    return QCoreApplication::applicationDirPath() + "/library/";
-//}
-
 //QString Library::prepareName(QString gipoTitle, bool additional) {
 //    if (additional)
 //        return forwardNumberFilter(gipoTitle);
@@ -160,75 +193,70 @@ Library * Library::instance(QObject * parent) {
 //    }
 //}
 
-//bool Library::proceedItemNames(QList<QString> * names, int state) {
-//    QHash<QString, int> * cat;
-//    QChar letter;
-//    bool catState = false, catalog_has_item, catalog_state_has_item;
-//    QString name;
-//    QList<QString> * saveList;
-//    QList<QString>::iterator i;
+bool Library::proceedItemNames(QList<QString> * names, int state) {
+    QHash<QString, int> * cat;
+    QChar letter;
+    bool catState = false, catalog_has_item, catalog_state_has_item;
+    QList<QString> * saveList;
+    QList<QString>::iterator i;
 
-//    for (i = names -> begin(); i != names -> end(); ++i) {
-//        saveList = 0;
-//        name = (*i);
-//        letter = getCatalogChar(name);
-//        cat = getCatalog(letter);
+    for (i = names -> begin(); i != names -> end(); ++i) {
+        saveList = 0;
+        letter = getCatalogChar((*i));
+        cat = getCatalog(letter);
 
-//        catalog_has_item = cat -> contains(name);
+        catalog_has_item = cat -> contains((*i));
 
-//        if (!catalog_has_item || (catalog_has_item && cat -> value(name) < state)) {
-//            qDebug() << "********************************** insert Name " << name;
-//            cat -> insert(name, state);
+        if (!catalog_has_item || (catalog_has_item && cat -> value((*i)) < state)) {
+            cat -> insert((*i), state);
 
-//            catalog_state_has_item = catalogs_state.contains(letter);
-//            if (catalog_state_has_item) {
-//                saveList = catalogs_state.value(letter);
-//                if (saveList != 0)
-//                    qDebug() << "LLL: " << letter << " Libb: " << (*saveList);
-//            }
+            catalog_state_has_item = catalogs_state.contains(letter);
+            if (catalog_state_has_item) {
+                saveList = catalogs_state.value(letter);
+                if (saveList != 0)
+                    qDebug() << "LLL: " << letter << " Libb: " << (*saveList);
+            }
 
-//            if (catalog_has_item) {
-//                if (saveList) {
-//                    delete saveList;
-//                }
-//                catalogs_state.insert(letter, 0);
-//            } else {
-//                if (!catalog_state_has_item) {
-//                    if (saveList == 0) {
-//                        saveList = new QList<QString>();
-//                    }
-//                }
+            if (catalog_has_item) {
+                if (saveList)
+                    delete saveList;
+                catalogs_state.insert(letter, 0);
+            } else {
+                if (!catalog_state_has_item) {
+                    if (saveList == 0)
+                        saveList = new QList<QString>();
+                }
 
-//                saveList -> append(name);
-//                catalogs_state.insert(letter, saveList);
-//            }
-//        }
-//    }
+                saveList -> append((*i));
+                catalogs_state.insert(letter, saveList);
+            }
+        }
+    }
 
-//    return catState;
-//}
+    return catState;
+}
 
-//QChar Library::getCatalogChar(QString name) {
-//    if (name.length() == 0) return '_';
-//    return name.at(0);
-//}
+QChar Library::getCatalogChar(QString name) {
+    if (name.length() == 0) return '_';
+    return name.at(0);
+}
 
-//QHash<QString, int> * Library::getCatalog(QChar letter) {
-//    if (catalogs -> contains(letter)) {
-//        return catalogs -> value(letter);
-//    } else {
-//        QHash<QString, int> * res = load(letter);
-//        catalogs -> insert(letter, res);
-//        return res;
-//    }
-//}
+QHash<QString, int> * Library::getCatalog(QChar letter) {
+    if (catalogs -> contains(letter)) {
+        return catalogs -> value(letter);
+    } else {
+        QHash<QString, int> * res = load(letter);
+        catalogs -> insert(letter, res);
+        return res;
+    }
+}
 
-//QHash<QString, int> * Library::getCatalog(QString name) {
-//    if (name.length() == 0) return new QHash<QString, int>();
+QHash<QString, int> * Library::getCatalog(QString name) {
+    if (name.length() == 0) return new QHash<QString, int>();
 
-//    QChar c = getCatalogChar(name);
-//    return getCatalog(c);
-//}
+    QChar c = getCatalogChar(name);
+    return getCatalog(c);
+}
 
 ////QList<QString> * Library::getNamesForObject(QString path, QString name) {
 ////    QList<QString> * res = new QList<QString>();
@@ -311,88 +339,78 @@ Library * Library::instance(QObject * parent) {
 //    }
 //}
 
-//QHash<QString, int> * Library::load(const QChar letter) {
-//    QHash<QString, int> * res = new QHash<QString, int>();
+QHash<QString, int> * Library::load(const QChar letter) {
+    QHash<QString, int> * res = new QHash<QString, int>();
 
-//    QString path = libraryPath() + "cat_" + letter;
+    QFile f(libraryPath() + "cat_" + letter);
+    if (f.open(QIODevice::ReadOnly)) {
+        QByteArray ar;
+        QString name;
+        int state;
 
-//    QFile f(path);
-//    if (f.open(QIODevice::ReadOnly)) {
-//        QByteArray ar;
-//        QString name;
-//        int state;
+        while(!f.atEnd()) {
+            ar = f.readLine();
+            state = ar.mid(0, 1).toInt();
+            name = QString::fromUtf8(ar.mid(1, ar.length() - 3));
+            res -> insert(name, state);
+        }
 
-//        while(!f.atEnd()) {
-//            ar = f.readLine();
-//            state = ar.mid(0, 1).toInt();
-//            name = QString::fromUtf8(ar.mid(1, ar.length() - 3));
-//            res -> insert(name, state);
-//        }
+        f.close();
+    }
 
-//        f.close();
-//    }
+    return res;
+}
 
-//    return res;
-//}
+void Library::save() {
+    if (saveBlock.tryLock(-1)) {
+        QHash<QString, int> * res;
+        QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 
-//void Library::save() {
-//    if (saveBlock.tryLock(-1)) {
-//        QHash<QString, int> * res;
-//        QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
+        bool result;
 
-//        bool result;
+        while(i != catalogs_state.end()) {
+            res = catalogs -> value(i.key());
 
-//        while(i != catalogs_state.end()) {
-//            qDebug() << i.key();
-//            res = catalogs -> value(i.key());
+            if (i.value()) {
+                result = fileDump(i.key(), *i.value(), QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 
-//            if (i.value()) {
-//                result = fileDump(i.key(), *i.value(), QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
+                if(result) {
+                    delete catalogs_state.value(i.key());
+                    catalogs_state.insert(i.key(), 0);
+                }
+            } else {
+                QList<QString> keys = res -> keys();
+                result = fileDump(i.key(), keys, QIODevice::WriteOnly | QIODevice::Text);
+            }
 
-//                if(result) {
-//                    delete catalogs_state.value(i.key());
-//                    catalogs_state.insert(i.key(), 0);
-//                }
-//            } else {
-//                QList<QString> keys = res -> keys();
-//                result = fileDump(i.key(), keys, QIODevice::WriteOnly | QIODevice::Text);
-//            }
+            if (result)
+                i = catalogs_state.erase(i);
+            else
+                i++;
+        }
 
-//            if (result) {
-//                i = catalogs_state.erase(i);
-//            } else {
-//                i++;
-//            }
-//        }
+        saveBlock.unlock();
+    }
+}
 
-//        saveBlock.unlock();
-//    }
-//}
+bool Library::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
+    QList<QString>::const_iterator cat_i = keysList.cbegin();
+    QHash<QString, int> * res = catalogs -> value(key);
 
-//bool Library::fileDump(QChar key, QList<QString> &keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
-//    QString path, val;
-//    QList<QString>::const_iterator cat_i = keysList.cbegin();
-//    QHash<QString, int> * res = catalogs -> value(key);
+    QFile f(libraryPath() + "cat_" + key);
+    if (f.open(openFlags)) {
+        QTextStream out(&f);
+        out.setCodec("UTF-8");
 
-//    path = libraryPath() + "cat_" + key;
-//    qDebug() << "SSave list "<< keysList;
+        while(cat_i != keysList.cend()) {
+            out << QString::number(res -> value(*cat_i)) << (*cat_i).toUtf8() << "\n";
+            cat_i++;
+        }
 
-//    QFile f(path);
-//    if (f.open(openFlags)) {
-//        QTextStream out(&f);
-//        out.setCodec("UTF-8");
+        f.close();
 
-//        while(cat_i != keysList.cend()) {
-//            val = *cat_i;
-//            qDebug() << "Curr val " << val;
-//            out << QString::number(res -> value(val)) << val.toUtf8() << "\n";
-//            cat_i++;
-//        }
+        return true;
+    }
 
-//        f.close();
-
-//        return true;
-//    }
-
-//    return false;
-//}
+    return false;
+}
