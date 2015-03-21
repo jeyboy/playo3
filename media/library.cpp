@@ -1,5 +1,7 @@
 #include "library.h"
 
+using namespace Playo3;
+
 Library * Library::self = 0;
 
 Library * Library::instance(QObject * parent) {
@@ -40,19 +42,48 @@ void Library::restoreItemState(QModelIndex & ind) {
 }
 
 void Library::declineItemState(QModelIndex & ind) {
-    waitOnProc.removeAll(ind);
+    if (inProc.contains(ind))
+        inProc.value(ind) -> cancel();
+    else waitOnProc.removeAll(ind);
 }
 
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
-        connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring());
+        connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, waitOnProc.takeLast()));
     }
 }
 
-void Library::stateRestoring(QModelIndex node) {
+void Library::finishStateRestoring() {
 
+}
+
+void Library::stateRestoring(QModelIndex node) {
+    //    QHash<QString, int> * cat;
+    //    bool isListened = false;
+    //    int temp;
+    //    QString name;
+    //    QList<QString>::iterator i;
+
+    //    for (i = item -> getTitlesCache() -> begin(); i != item -> getTitlesCache() -> end(); ++i) {
+    //        name = (*i);
+    //        cat = getCatalog(name);
+
+    //        if (cat -> contains(name)) {
+    //            temp = cat -> value(name);
+
+    //            if (temp == 1) {
+    //                item -> getState() -> setLiked();
+    //                return;
+    //            }
+
+    //            isListened = isListened || (temp == 0);
+    //        }
+    //    }
+
+    //    if (isListened)
+    //        item -> getState() -> setListened();
 }
 
 //void Library::clearRemote() {
@@ -100,33 +131,6 @@ void Library::stateRestoring(QModelIndex node) {
 //    remote_items_max = newMax;
 //}
 
-//void Library::restoreItemState(ModelItem * item) {
-//    QHash<QString, int> * cat;
-//    bool isListened = false;
-//    int temp;
-//    QString name;
-//    QList<QString>::iterator i;
-
-//    for (i = item -> getTitlesCache() -> begin(); i != item -> getTitlesCache() -> end(); ++i) {
-//        name = (*i);
-//        cat = getCatalog(name);
-
-//        if (cat -> contains(name)) {
-//            temp = cat -> value(name);
-
-//            if (temp == 1) {
-//                item -> getState() -> setLiked();
-//                return;
-//            }
-
-//            isListened = isListened || (temp == 0);
-//        }
-//    }
-
-//    if (isListened)
-//        item -> getState() -> setListened();
-//}
-
 ////void Library::setItemState(const QString filename, int state) {
 ////    QHash<QString, int> cat = getCatalog(filename);
 ////    cat.insert(filename, state);
@@ -164,9 +168,8 @@ void Library::stateRestoring(QModelIndex node) {
 //}
 
 void Library::saveCatalogs() {
-    if (!catsSaveResult.isRunning()) {
+    if (!catsSaveResult.isRunning())
         catsSaveResult = QtConcurrent::run(this, &Library::save);
-    }
 }
 
 //ModelItem * Library::itemsInit(ModelItem * item) {
@@ -202,7 +205,7 @@ bool Library::proceedItemNames(QList<QString> * names, int state) {
 
     for (i = names -> begin(); i != names -> end(); ++i) {
         saveList = 0;
-        letter = getCatalogChar((*i));
+        letter = getCatalogName((*i));
         cat = getCatalog(letter);
 
         catalog_has_item = cat -> contains((*i));
@@ -236,17 +239,17 @@ bool Library::proceedItemNames(QList<QString> * names, int state) {
     return catState;
 }
 
-QChar Library::getCatalogChar(QString name) {
+QChar Library::getCatalogName(QString name) {
     if (name.length() == 0) return '_';
     return name.at(0);
 }
 
 QHash<QString, int> * Library::getCatalog(QChar letter) {
-    if (catalogs -> contains(letter)) {
-        return catalogs -> value(letter);
+    if (catalogs.contains(letter)) {
+        return catalogs.value(letter);
     } else {
         QHash<QString, int> * res = load(letter);
-        catalogs -> insert(letter, res);
+        catalogs.insert(letter, res);
         return res;
     }
 }
@@ -254,7 +257,7 @@ QHash<QString, int> * Library::getCatalog(QChar letter) {
 QHash<QString, int> * Library::getCatalog(QString name) {
     if (name.length() == 0) return new QHash<QString, int>();
 
-    QChar c = getCatalogChar(name);
+    QChar c = getCatalogName(name);
     return getCatalog(c);
 }
 
@@ -275,7 +278,11 @@ QHash<QString, int> * Library::getCatalog(QString name) {
 ////    return res;
 ////}
 
-//void Library::initItemInfo(ModelItem * item) {
+void Library::initItemInfo(QModelIndex & ind) {
+    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+
+    QStringList list;
+
 //    QList<QString> * res;
 
 //    if (!item -> cacheIsPrepared() || !item -> hasInfo()) {
@@ -337,7 +344,7 @@ QHash<QString, int> * Library::getCatalog(QString name) {
 //            }
 //        }
 //    }
-//}
+}
 
 QHash<QString, int> * Library::load(const QChar letter) {
     QHash<QString, int> * res = new QHash<QString, int>();
@@ -369,7 +376,7 @@ void Library::save() {
         bool result;
 
         while(i != catalogs_state.end()) {
-            res = catalogs -> value(i.key());
+            res = catalogs.value(i.key());
 
             if (i.value()) {
                 result = fileDump(i.key(), *i.value(), QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
@@ -395,7 +402,7 @@ void Library::save() {
 
 bool Library::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
     QList<QString>::const_iterator cat_i = keysList.cbegin();
-    QHash<QString, int> * res = catalogs -> value(key);
+    QHash<QString, int> * res = catalogs.value(key);
 
     QFile f(libraryPath() + "cat_" + key);
     if (f.open(openFlags)) {

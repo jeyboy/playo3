@@ -20,72 +20,74 @@
 //#include "misc/func_container.h"
 #include "modules/data_struct/model_interface.h"
 
+namespace Playo3 {
+    class Library : public QObject {
+        Q_OBJECT
+    public:
+        static Library * instance(QObject * parent = 0);
 
-class Library : public QObject {
-    Q_OBJECT
-public:
-    static Library * instance(QObject parent = 0);
+        void restoreItemState(QModelIndex & ind);
+        void declineItemState(QModelIndex & ind);
 
-    void restoreItemState(QModelIndex & ind);
-    void declineItemState(QModelIndex & ind);
+    //    void clearRemote();
+    //    void removeRemoteItem(ModelItem * item);
+    //    void initItem(ModelItem * item, const QObject * caller, const char * slot);
+    //    bool addItem(ModelItem * item, int state);
+    //    void restoreItemState(ModelItem * item);
 
-//    void clearRemote();
-//    void removeRemoteItem(ModelItem * item);
-//    void initItem(ModelItem * item, const QObject * caller, const char * slot);
-//    bool addItem(ModelItem * item, int state);
-//    void restoreItemState(ModelItem * item);
+    //    void setRemoteItemMax(int newMax);
 
-//    void setRemoteItemMax(int newMax);
+        inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
+    private slots:
+        void initStateRestoring();
+        void finishStateRestoring();
+        void saveCatalogs();
+    //    void startRemoteInfoProc();
 
-    inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
-private slots:
-    void initStateRestoring();
-    void finishStateRestoring();
-    void saveCatalogs();
-//    void startRemoteInfoProc();
+    private:
+        static Library * self;
 
-private:
-    static Library * self;
+        Library(QObject * parent);
 
-    Library(QObject * parent);
+        ~Library();
 
-    ~Library();
+    //    ModelItem * procRemoteInfo(ModelItem * item);
+    //    ModelItem * itemsInit(ModelItem * item);
 
-//    ModelItem * procRemoteInfo(ModelItem * item);
-//    ModelItem * itemsInit(ModelItem * item);
+        inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
 
-    inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
+        bool proceedItemNames(QList<QString> * names, int state);
+        QChar getCatalogName(QString name);
 
-    bool proceedItemNames(QList<QString> * names, int state);
-    QChar getCatalogName(QString name);
+        QHash<QString, int> * getCatalog(QChar letter);
+        QHash<QString, int> * getCatalog(QString name);
 
-    QHash<QString, int> * getCatalog(QChar letter);
-    QHash<QString, int> * getCatalog(QString name);
+        void stateRestoring(QModelIndex node);
+        void initItemInfo(QModelIndex & ind);
 
-//    void initItemInfo(ModelItem * item);
+        QHash<QString, int> * load(const QChar letter);
+        void save();
+        bool fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags);
 
-    QHash<QString, int> * load(const QChar letter);
-    void save();
-    bool fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags);
+        QHash<QChar, QHash<QString, int>* > catalogs;
+        QHash<QChar, QList<QString> *> catalogs_state;
 
-    QHash<QChar, QHash<QString, int>* > catalogs;
-    QHash<QChar, QList<QString> *> catalogs_state;
+        QList<QModelIndex> waitOnProc;
+        QHash<QModelIndex, QFutureWatcher<void> * > inProc;
 
-    QList<QModelIndex> waitOnProc;
-    QHash<QModelIndex, QFutureWatcher<void> * > inProc;
+    //    QHash<ModelItem *, FuncContainer> remote_collations;
+    //    QList<ModelItem *> remote_items;
+    //    int remote_items_max;
 
-//    QHash<ModelItem *, FuncContainer> remote_collations;
-//    QList<ModelItem *> remote_items;
-//    int remote_items_max;
+    //    ModelItem * currRemote;
+        QTimer * saveTimer;
+    //    QTimer remoteTimer;
+        QMutex saveBlock;
 
-//    ModelItem * currRemote;
-    QTimer * saveTimer;
-//    QTimer remoteTimer;
-    QMutex saveBlock;
+        QFuture<void> catsSaveResult;
 
-    QFuture<void> catsSaveResult;
-
-    int waitListLimit;
-};
+        int waitListLimit;
+    };
+}
 
 #endif // LIBRARY_H
