@@ -63,7 +63,7 @@ namespace Playo3 {
         QHash<QString, int> * getCatalog(QString name);
 
         void stateRestoring(QModelIndex node);
-        void initItemInfo(QModelIndex & ind);
+        void initItemInfo(IItem * itm);
 
         QHash<QString, int> * load(const QChar letter);
         void save();

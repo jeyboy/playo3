@@ -56,10 +56,20 @@ void Library::initStateRestoring() {
 }
 
 void Library::finishStateRestoring() {
+    QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
+    QModelIndex ind = inProc.key(initiator);
+    inProc.remove(ind);
 
+    initStateRestoring();
 }
 
 void Library::stateRestoring(QModelIndex node) {
+    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+
+    if (!itm -> titlesCache().isValid()) {
+
+    }
+
     //    QHash<QString, int> * cat;
     //    bool isListened = false;
     //    int temp;
@@ -278,10 +288,24 @@ QHash<QString, int> * Library::getCatalog(QString name) {
 ////    return res;
 ////}
 
-void Library::initItemInfo(QModelIndex & ind) {
+void Library::initItemInfo(IItem * itm) {
     IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
 
     QStringList list;
+    QString title = cacheTitleFilter(itm -> title().toString());
+    list.append(title);
+
+    QString temp = forwardNumberFilter(title);
+    if (temp != title)
+        list.append(temp);
+
+    if (itm -> isRemote()) {
+
+    } else {
+
+    }
+
+    itm -> setTitlesCache(list);
 
 //    QList<QString> * res;
 

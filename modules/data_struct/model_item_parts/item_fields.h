@@ -46,12 +46,13 @@ namespace Playo3 {
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }
-        inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
         QStringList info() const;
 
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
+
+        inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
@@ -61,6 +62,7 @@ namespace Playo3 {
         inline void setTitle(QVariant newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
         inline void setExtension(QVariant newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
         inline void setInfo(QVariant newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
+        inline void setTitlesCache(QVariant newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
@@ -71,6 +73,8 @@ namespace Playo3 {
         //TODO: add prepare titles method
 
     protected:
+        inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
+
         QVariantMap attrs;
     };
 }
