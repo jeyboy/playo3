@@ -64,6 +64,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
 
     public slots:
+        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
 //        void libraryResponse();
 //        virtual void refresh();
         void expanded(const QModelIndex & index);

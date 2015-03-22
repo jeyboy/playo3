@@ -38,6 +38,9 @@ namespace Playo3 {
     //    void setRemoteItemMax(int newMax);
 
         inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
+    signals:
+        void updateAttr(const QModelIndex, int attr, QVariant val);
+
     private slots:
         void initStateRestoring();
         void finishStateRestoring();
@@ -56,13 +59,13 @@ namespace Playo3 {
 
         inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
 
-        bool proceedItemNames(QList<QString> * names, int state);
+        bool proceedItemNames(QStringList & names, int state);
         QChar getCatalogName(QString name);
 
-        QHash<QString, int> * getCatalog(QChar letter);
-        QHash<QString, int> * getCatalog(QString name);
+        QHash<QString, int> * getCatalog(QChar & letter);
+        QHash<QString, int> * getCatalog(QString & name);
 
-        void stateRestoring(QModelIndex node);
+        void stateRestoring(QModelIndex ind);
         void initItemInfo(IItem * itm);
 
         QHash<QString, int> * load(const QChar letter);

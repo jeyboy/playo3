@@ -63,37 +63,39 @@ void Library::finishStateRestoring() {
     initStateRestoring();
 }
 
-void Library::stateRestoring(QModelIndex node) {
+void Library::stateRestoring(QModelIndex ind) {
     IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
 
-    if (!itm -> titlesCache().isValid()) {
+    initItemInfo(itm);
 
+    QHash<QString, int> * cat;
+    bool isListened = false;
+    int state;
+    QList<QString>::iterator i;
+
+    for (i = item -> getTitlesCache() -> begin(); i != item -> getTitlesCache() -> end(); ++i) {
+        if (!(cat = getCatalog((*i)))) continue;
+
+        state = cat -> value((*i), -1);
+
+        if (state != -1) {
+            if (state == 1) {
+//                item -> getState() -> setLiked();
+                connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+                emit updateAttr(ind, ISTATE, ItemState::liked);
+                disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+                return;
+            }
+
+            isListened |= (state == 0);
+        }
     }
 
-    //    QHash<QString, int> * cat;
-    //    bool isListened = false;
-    //    int temp;
-    //    QString name;
-    //    QList<QString>::iterator i;
-
-    //    for (i = item -> getTitlesCache() -> begin(); i != item -> getTitlesCache() -> end(); ++i) {
-    //        name = (*i);
-    //        cat = getCatalog(name);
-
-    //        if (cat -> contains(name)) {
-    //            temp = cat -> value(name);
-
-    //            if (temp == 1) {
-    //                item -> getState() -> setLiked();
-    //                return;
-    //            }
-
-    //            isListened = isListened || (temp == 0);
-    //        }
-    //    }
-
-    //    if (isListened)
-    //        item -> getState() -> setListened();
+    if (isListened) {
+        connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+        emit updateAttr(ind, ISTATE, ItemState::listened);
+        disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+    }
 }
 
 //void Library::clearRemote() {
@@ -206,7 +208,7 @@ void Library::saveCatalogs() {
 //    }
 //}
 
-bool Library::proceedItemNames(QList<QString> * names, int state) {
+bool Library::proceedItemNames(QStringList & names, int state) {
     QHash<QString, int> * cat;
     QChar letter;
     bool catState = false, catalog_has_item, catalog_state_has_item;
@@ -254,7 +256,7 @@ QChar Library::getCatalogName(QString name) {
     return name.at(0);
 }
 
-QHash<QString, int> * Library::getCatalog(QChar letter) {
+QHash<QString, int> * Library::getCatalog(QChar & letter) {
     if (catalogs.contains(letter)) {
         return catalogs.value(letter);
     } else {
@@ -264,8 +266,8 @@ QHash<QString, int> * Library::getCatalog(QChar letter) {
     }
 }
 
-QHash<QString, int> * Library::getCatalog(QString name) {
-    if (name.length() == 0) return new QHash<QString, int>();
+QHash<QString, int> * Library::getCatalog(QString & name) {
+    if (name.length() == 0) return 0;
 
     QChar c = getCatalogName(name);
     return getCatalog(c);
@@ -289,23 +291,25 @@ QHash<QString, int> * Library::getCatalog(QString name) {
 ////}
 
 void Library::initItemInfo(IItem * itm) {
-    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+    if (itm -> titlesCache().isValid()) {
+        QStringList list;
+        QString title = cacheTitleFilter(itm -> title().toString());
+        list.append(title);
 
-    QStringList list;
-    QString title = cacheTitleFilter(itm -> title().toString());
-    list.append(title);
+        QString temp = forwardNumberFilter(title);
+        if (temp != title)
+            list.append(temp);
 
-    QString temp = forwardNumberFilter(title);
-    if (temp != title)
-        list.append(temp);
-
-    if (itm -> isRemote()) {
-
-    } else {
-
+        itm -> setTitlesCache(list);
     }
 
-    itm -> setTitlesCache(list);
+    if (!itm -> hasInfo()) {
+        if (itm -> isRemote()) {
+
+        } else {
+
+        }
+    }
 
 //    QList<QString> * res;
 

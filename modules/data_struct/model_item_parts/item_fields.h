@@ -47,6 +47,7 @@ namespace Playo3 {
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }
         QStringList info() const;
+        inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
 
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
@@ -73,8 +74,6 @@ namespace Playo3 {
         //TODO: add prepare titles method
 
     protected:
-        inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
-
         QVariantMap attrs;
     };
 }

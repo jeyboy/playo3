@@ -343,6 +343,10 @@ void IModel::shuffle() {
 
 //////////////////////// slots //////////////////////////
 
+void IModel::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
+    setData(ind, val, attr);
+}
+
 void IModel::expandeAll() {
     rootItem -> propagateFolderSetFlag(ItemState::expanded);
 }
