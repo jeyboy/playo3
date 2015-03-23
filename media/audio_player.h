@@ -14,6 +14,7 @@
 #include "media/notify_timer.h"
 #include "media/format.h"
 #include "media/duration.h"
+#include "media/mediainfo.h"
 
 #ifdef Q_OS_WIN
     void __stdcall endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
@@ -71,7 +72,7 @@ public:
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
 
-    QHash<QString, QString> getFileInfo(QUrl uri, bool only_bitrate = false);
+    void getFileInfo(QUrl uri, MediaInfo * info);
 
     int getNotifyInterval();
     void setNotifyInterval(signed int milis);

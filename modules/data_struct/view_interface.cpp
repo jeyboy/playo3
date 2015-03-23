@@ -241,9 +241,8 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
 
     if (!node -> is(ItemState::proceeded)) {
         node -> set(ItemState::proceeded);
-//        if (!node -> isContainer()) {
-//            Library::instance() -> initItem(item, model, SLOT(libraryResponse()));
-//        }
+        if (!node -> isContainer())
+            Library::instance() -> restoreItemState(index);
     }
 
     if (node -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction

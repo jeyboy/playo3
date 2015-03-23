@@ -11,6 +11,7 @@
 
 #include <QSettings>
 
+#include "media/library.h"
 #include "misc/file_utils/data_store.h"
 
 //#include "dialogs/web_dialog.h"

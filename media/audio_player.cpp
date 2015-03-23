@@ -320,23 +320,22 @@ float AudioPlayer::getRemoteFileDownloadPosition() {
     return prevDownloadPos;
 }
 
-QHash<QString, QString> AudioPlayer::getFileInfo(QUrl uri, bool only_bitrate) {
-    QHash<QString, QString> ret;
-
+void AudioPlayer::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
-    if (uri.isLocalFile()) {
+    if (uri.isLocalFile())
         chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
-    } else {
+    else
         chUID = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, 0, NULL, 0);
-    }
 
-    if (!chUID) {
-        return ret;
-    }
+    if (!chUID) return;
 
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
     DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
+
+
+
+
     int bitrate = (len / (125 * time) + 0.5); // average bitrate (Kbps)
 
     if (only_bitrate) {

@@ -5,28 +5,34 @@
 #include "tag.h"
 #include "fileref.h"
 
+#include "media/player.h"
+
 #include <QString>
+
+class Player;
 
 class MediaInfo {
 public:
-    MediaInfo(QString filepath, bool onlyTags = true);
+    MediaInfo(QUrl uri, bool onlyTags = true);
     void initInfo();
 
-    bool initiated() const;
+    inline bool initiated() const { return readed; }
 
-    QString getArtist() const;
-    QString getTitle() const;
-    QString getAlbum() const;
-    QString getGenre() const;
+    inline QString getArtist() const { return artist; }
+    inline QString getTitle() const { return title; }
+    inline QString getAlbum() const { return album; }
+    inline QString getGenre() const { return genre; }
 
-    long getSize() const;
-    int getYear() const;
-    int getTrack() const;
-    int getChannels() const;
-    int getBitrate() const;
-    int getDuration() const;
-    int getSampleRate() const;
+    inline qint64 getSize() const { return size; }
+    inline int getYear() const { return year; }
+    inline int getTrack() const { return track; }
+    inline int getChannels() const { return channels; }
+    inline int getBitrate() const { return bitrate; }
+    inline int getDuration() const { return duration; }
+    inline int getSampleRate() const { return sampleRate; }
 private:
+    friend class Player;
+
     void readInfo(TagLib::FileRef f);
 
     std::string fileName;
@@ -43,7 +49,7 @@ private:
     int bitrate;
     int duration;
     int sampleRate;
-    long size;
+    qint64 size;
 
     bool readed;
 };

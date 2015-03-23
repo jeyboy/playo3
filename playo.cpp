@@ -46,6 +46,7 @@ void Playo::activation() {
 
     UserDialogBox::instance(this);
 
+    Library::instance(this);
     Player::instance(this);
     ToolBars::instance(this);
     Dockbars::instance(this);

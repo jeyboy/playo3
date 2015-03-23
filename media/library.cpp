@@ -80,7 +80,6 @@ void Library::stateRestoring(QModelIndex ind) {
 
         if (state != -1) {
             if (state == 1) {
-//                item -> getState() -> setLiked();
                 connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
                 emit updateAttr(ind, ISTATE, ItemState::liked);
                 disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
@@ -290,8 +289,8 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
 ////    return res;
 ////}
 
-void Library::initItemInfo(IItem * itm) {
-    if (itm -> titlesCache().isValid()) {
+void Library::initItemInfo(IItem * itm) {   
+    if (!itm -> hasInfo()) {
         QStringList list;
         QString title = cacheTitleFilter(itm -> title().toString());
         list.append(title);
@@ -300,78 +299,36 @@ void Library::initItemInfo(IItem * itm) {
         if (temp != title)
             list.append(temp);
 
+        if (itm -> isRemote()) {
+            //////                QHash<QString, QString> info = Player::instance() -> getRemoteFileInfo(item -> fullPath());
+
+            //////                item -> setDuration(info.value("duration"));
+            //////                item -> setInfo(info.value("info"));
+
+            ////                //TODO: get genre
+            //////                item -> setGenre();
+        } else {
+            MediaInfo m(item -> fullPath(), item -> hasInfo());
+
+            QString tagTitle = prepareName(m.getArtist() + m.getTitle());
+            if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
+                list.append(tagTitle);
+
+
+            int bitrate = m.getBitrate();
+
+            if (bitrate == 0) {
+                QHash<QString, QString> info = Player::instance() -> getFileInfo(item -> toUrl(), true);
+                bitrate = info.value("bitrate").toInt();
+            }
+
+            item -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), bitrate, m.getSampleRate(), m.getChannels()));
+            item -> setDuration(Duration::fromSeconds(m.getDuration()));
+            item -> setGenre(Genre::instance() -> toInt(m.getGenre()));
+        }
+
         itm -> setTitlesCache(list);
     }
-
-    if (!itm -> hasInfo()) {
-        if (itm -> isRemote()) {
-
-        } else {
-
-        }
-    }
-
-//    QList<QString> * res;
-
-//    if (!item -> cacheIsPrepared() || !item -> hasInfo()) {
-//        QString name = prepareName(item -> data(TITLEID).toString());
-
-//        if (item -> isRemote()) {
-//            if (!item -> cacheIsPrepared()) {
-//                res = new QList<QString>();
-
-//                res -> append(name);
-//                QString temp = prepareName(name, true);
-//                if (temp != name)
-//                    res -> append(temp);
-
-//                item -> setCache(res);
-//            }
-
-////            if (!item -> hasInfo()) {
-////                //TODO: decrease requests rate
-//////                QHash<QString, QString> info = Player::instance() -> getRemoteFileInfo(item -> fullPath());
-
-//////                item -> setDuration(info.value("duration"));
-//////                item -> setInfo(info.value("info"));
-
-////                //TODO: get genre
-//////                item -> setGenre();
-////            }
-
-//        } else {
-//            MediaInfo m(item -> fullPath(), item -> hasInfo());
-
-//            if (!item -> cacheIsPrepared()) {
-//                res = new QList<QString>();
-
-//                res -> append(name);
-//                QString temp = prepareName(name, true);
-//                if (temp != name)
-//                    res -> append(temp);
-
-
-//                QString temp2 = prepareName(m.getArtist() + m.getTitle());
-//                if (!temp2.isEmpty() && temp2 != name && temp2 != temp)
-//                    res -> append(temp2);
-
-//                item -> setCache(res);
-//            }
-
-//            if (!item -> hasInfo() && m.initiated()) {
-//                int bitrate = m.getBitrate();
-
-//                if (bitrate == 0) {
-//                    QHash<QString, QString> info = Player::instance() -> getFileInfo(item -> toUrl(), true);
-//                    bitrate = info.value("bitrate").toInt();
-//                }
-
-//                item -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), bitrate, m.getSampleRate(), m.getChannels()));
-//                item -> setDuration(Duration::fromSeconds(m.getDuration()));
-//                item -> setGenre(Genre::instance() -> toInt(m.getGenre()));
-//            }
-//        }
-//    }
 }
 
 QHash<QString, int> * Library::load(const QChar letter) {
