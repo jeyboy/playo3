@@ -12,7 +12,7 @@
 static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp("(\\W|[_])")); }
 static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp("\\A(\\[|\\()+\\d{1,}(\\]|\\))")); }
 static QString downloadTitle(QString title, QString extension) {
-  QString ret = filenameFilter(title);
+  QString ret = title.replace(QRegExp("[^()\\w\\-&.]|_"), " ");
 
   if (!extension.isEmpty())
       ret = ret + '.' + extension;

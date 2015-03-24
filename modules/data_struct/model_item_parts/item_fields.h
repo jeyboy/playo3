@@ -53,7 +53,7 @@ namespace Playo3 {
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
 
-        inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
+        inline QStringList titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES).toStringList(); }
 
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }

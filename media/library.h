@@ -26,8 +26,8 @@ namespace Playo3 {
     public:
         static Library * instance(QObject * parent = 0);
 
-        void restoreItemState(QModelIndex & ind);
-        void declineItemState(QModelIndex & ind);
+        void restoreItemState(const QModelIndex & ind);
+        void declineItemState(const QModelIndex & ind);
 
     //    void clearRemote();
     //    void removeRemoteItem(ModelItem * item);

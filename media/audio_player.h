@@ -30,6 +30,7 @@
 //else
 //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,proxy); // enable proxy
 
+class MediaInfo;
 
 class AudioPlayer : public QObject {
     Q_OBJECT

@@ -333,26 +333,32 @@ void AudioPlayer::getFileInfo(QUrl uri, MediaInfo * info) {
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
     DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
 
+    info -> duration = time;
+    info -> bitrate = (len / (125 * time) + 0.5);
 
-
-
-    int bitrate = (len / (125 * time) + 0.5); // average bitrate (Kbps)
-
-    if (only_bitrate) {
-        ret.insert("bitrate", QString::number(bitrate));
-    } else {
-        ret.insert("duration", Duration::fromSeconds(time));
-
-        BASS_CHANNELINFO info;
-        if (BASS_ChannelGetInfo(chUID, &info)) {
-            int size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
-            ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
-        }
+    BASS_CHANNELINFO media_info;
+    if (BASS_ChannelGetInfo(chUID, &media_info)) {
+        info -> size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
+//        ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
+        info -> sampleRate = media_info.freq;
+        info -> channels = media_info.chans;
     }
 
-    BASS_StreamFree(chUID);
+//    int bitrate = (len / (125 * time) + 0.5); // average bitrate (Kbps)
 
-    return ret;
+//    if (only_bitrate) {
+//        ret.insert("bitrate", QString::number(bitrate));
+//    } else {
+//        ret.insert("duration", Duration::fromSeconds(time));
+
+//        BASS_CHANNELINFO info;
+//        if (BASS_ChannelGetInfo(chUID, &info)) {
+//            int size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
+//            ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
+//        }
+//    }
+
+    BASS_StreamFree(chUID);
 }
 
 float AudioPlayer::getBpmValue(QUrl /*uri*/) {

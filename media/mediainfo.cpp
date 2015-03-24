@@ -35,5 +35,5 @@ void MediaInfo::readInfo(TagLib::FileRef f) {
 
     bitrate = f.audioProperties() -> bitrate();
     if (bitrate == 0)
-        bitrate = (size / (125 * duration) + 0.5);  // average bitrate (Kbps)
+        bitrate = calcAverageBitrate();
 }

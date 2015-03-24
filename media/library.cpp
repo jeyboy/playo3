@@ -34,14 +34,14 @@ Library::~Library() {
     delete saveTimer;
 }
 
-void Library::restoreItemState(QModelIndex & ind) {
+void Library::restoreItemState(const QModelIndex & ind) {
     waitOnProc.append(ind);
     while(waitOnProc.size() > waitListLimit)
         waitOnProc.removeFirst();
     initStateRestoring();
 }
 
-void Library::declineItemState(QModelIndex & ind) {
+void Library::declineItemState(const QModelIndex & ind) {
     if (inProc.contains(ind))
         inProc.value(ind) -> cancel();
     else waitOnProc.removeAll(ind);
@@ -72,8 +72,9 @@ void Library::stateRestoring(QModelIndex ind) {
     bool isListened = false;
     int state;
     QList<QString>::iterator i;
+    QStringList titles = itm -> titlesCache();
 
-    for (i = item -> getTitlesCache() -> begin(); i != item -> getTitlesCache() -> end(); ++i) {
+    for (i = titles.begin(); i != titles.end(); ++i) {
         if (!(cat = getCatalog((*i)))) continue;
 
         state = cat -> value((*i), -1);
@@ -214,7 +215,7 @@ bool Library::proceedItemNames(QStringList & names, int state) {
     QList<QString> * saveList;
     QList<QString>::iterator i;
 
-    for (i = names -> begin(); i != names -> end(); ++i) {
+    for (i = names.begin(); i != names.end(); ++i) {
         saveList = 0;
         letter = getCatalogName((*i));
         cat = getCatalog(letter);
@@ -299,33 +300,15 @@ void Library::initItemInfo(IItem * itm) {
         if (temp != title)
             list.append(temp);
 
-        if (itm -> isRemote()) {
-            //////                QHash<QString, QString> info = Player::instance() -> getRemoteFileInfo(item -> fullPath());
+        MediaInfo m(itm -> fullPath(), itm -> hasInfo());
 
-            //////                item -> setDuration(info.value("duration"));
-            //////                item -> setInfo(info.value("info"));
+        QString tagTitle = cacheTitleFilter(m.getArtist() + m.getTitle());
+        if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
+            list.append(tagTitle);
 
-            ////                //TODO: get genre
-            //////                item -> setGenre();
-        } else {
-            MediaInfo m(item -> fullPath(), item -> hasInfo());
-
-            QString tagTitle = prepareName(m.getArtist() + m.getTitle());
-            if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
-                list.append(tagTitle);
-
-
-            int bitrate = m.getBitrate();
-
-            if (bitrate == 0) {
-                QHash<QString, QString> info = Player::instance() -> getFileInfo(item -> toUrl(), true);
-                bitrate = info.value("bitrate").toInt();
-            }
-
-            item -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), bitrate, m.getSampleRate(), m.getChannels()));
-            item -> setDuration(Duration::fromSeconds(m.getDuration()));
-            item -> setGenre(Genre::instance() -> toInt(m.getGenre()));
-        }
+        itm -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), m.getBitrate(), m.getSampleRate(), m.getChannels()));
+        itm -> setDuration(Duration::fromSeconds(m.getDuration()));
+        itm -> setGenre(Genre::instance() -> toInt(m.getGenre()));
 
         itm -> setTitlesCache(list);
     }

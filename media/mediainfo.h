@@ -5,11 +5,11 @@
 #include "tag.h"
 #include "fileref.h"
 
-#include "media/player.h"
+#include "media/audio_player.h"
 
 #include <QString>
 
-class Player;
+class AudioPlayer;
 
 class MediaInfo {
 public:
@@ -31,9 +31,10 @@ public:
     inline int getDuration() const { return duration; }
     inline int getSampleRate() const { return sampleRate; }
 private:
-    friend class Player;
+    friend class AudioPlayer;
 
     void readInfo(TagLib::FileRef f);
+    inline int calcAverageBitrate() { (size / (125 * duration) + 0.5);  /*average bitrate (Kbps)*/ }
 
     std::string fileName;
 
