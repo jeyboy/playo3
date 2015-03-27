@@ -94,7 +94,10 @@ SOURCES += main.cpp\
     modules/data_struct/downloads/download_view.cpp \
     misc/web_utils/custom_network_access_manager.cpp \
     media/library.cpp \
-    media/mediainfo.cpp
+    media/mediainfo.cpp \
+    media/genres/genres_interface.cpp \
+    media/genres/music_genres.cpp \
+    media/genres/web/vk_genres.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -191,7 +194,10 @@ HEADERS  += playo.h \
     misc/web_utils/custom_network_access_manager.h \
     modules/data_struct/item_drop_formats.h \
     media/library.h \
-    media/mediainfo.h
+    media/mediainfo.h \
+    media/genres/web/vk_genres.h \
+    media/genres/genres_interface.h \
+    media/genres/music_genres.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
