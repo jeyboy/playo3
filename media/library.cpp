@@ -1,4 +1,5 @@
 #include "library.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -14,11 +15,8 @@ Library::Library(QObject * parent) : QObject(parent), waitListLimit(10) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
-    QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(saveCatalogs()));
-    saveTimer -> start(10000);
-
-//    QObject::connect(&remoteTimer, SIGNAL(timeout()), this, SLOT(startRemoteInfoProc()));
-//    remoteTimer.start(2000);
+    QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(clockTick()));
+    saveTimer -> start(2000);
 
     QDir dir(libraryPath());
     if (!dir.exists())
@@ -27,6 +25,15 @@ Library::Library(QObject * parent) : QObject(parent), waitListLimit(10) {
 
 Library::~Library() {
     waitOnProc.clear();
+    waitRemoteOnProc.clear();
+
+    foreach(QFutureWatcher<void> * feature, inProc.values())
+        if (feature -> isRunning())
+            feature -> cancel();
+
+    foreach(QFutureWatcher<void> * feature, inRemoteProc.values())
+        if (feature -> isRunning())
+            feature -> cancel();
 
     saveTimer -> stop();
     save();
@@ -38,6 +45,13 @@ void Library::restoreItemState(const QModelIndex & ind) {
     waitOnProc.append(ind);
     while(waitOnProc.size() > waitListLimit)
         waitOnProc.removeFirst();
+
+    if (ind.data(IREMOTE).toBool()) {
+        waitRemoteOnProc.append(ind);
+        while(waitRemoteOnProc.size() > waitListLimit)
+            waitRemoteOnProc.removeFirst();
+    }
+
     initStateRestoring();
 }
 
@@ -45,6 +59,22 @@ void Library::declineItemState(const QModelIndex & ind) {
     if (inProc.contains(ind))
         inProc.value(ind) -> cancel();
     else waitOnProc.removeAll(ind);
+}
+
+void Library::initRemoteItemInfo() {
+    if (!waitRemoteOnProc.isEmpty()) {
+        QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
+        connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, waitRemoteOnProc.takeLast()));
+    }
+}
+
+void Library::finishRemoteItemInfoInit() {
+    QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
+    QModelIndex ind = inRemoteProc.key(initiator);
+    inRemoteProc.remove(ind);
+
+    initRemoteItemInfo();
 }
 
 void Library::initStateRestoring() {
@@ -64,15 +94,18 @@ void Library::finishStateRestoring() {
 }
 
 void Library::stateRestoring(QModelIndex ind) {
+    qDebug() << "LIB ------------------";
     IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+    qDebug() << itm -> title();
 
-    initItemInfo(itm);
+    initItemData(itm);
 
     QHash<QString, int> * cat;
     bool isListened = false;
     int state;
     QList<QString>::iterator i;
-    QStringList titles = itm -> titlesCache();
+    QStringList titles = itm -> titlesCache().toStringList();
+    qDebug() << "TITLES: " << titles;
 
     for (i = titles.begin(); i != titles.end(); ++i) {
         if (!(cat = getCatalog((*i)))) continue;
@@ -83,6 +116,7 @@ void Library::stateRestoring(QModelIndex ind) {
             if (state == 1) {
                 connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
                 emit updateAttr(ind, ISTATE, ItemState::liked);
+                qDebug() << "liked";
                 disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
                 return;
             }
@@ -94,8 +128,21 @@ void Library::stateRestoring(QModelIndex ind) {
     if (isListened) {
         connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
         emit updateAttr(ind, ISTATE, ItemState::listened);
+        qDebug() << "listened";
         disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
     }
+}
+
+void Library::remoteInfoRestoring(QModelIndex ind) {
+    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+
+    bool has_info = itm -> hasInfo();
+
+    if (has_info) return;
+
+    MediaInfo m(itm -> fullPath(), has_info);
+
+    initItemInfo(m, itm);
 }
 
 //void Library::clearRemote() {
@@ -178,6 +225,17 @@ void Library::stateRestoring(QModelIndex ind) {
 ////    item -> setGenre();
 //    return item;
 //}
+
+void Library::clockTick() {
+    ticksAmount++;
+
+    if (ticksAmount == 5) {
+        ticksAmount = 0;
+        saveCatalogs();
+    }
+
+
+}
 
 void Library::saveCatalogs() {
     if (!catsSaveResult.isRunning())
@@ -290,28 +348,41 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
 ////    return res;
 ////}
 
-void Library::initItemInfo(IItem * itm) {   
-    if (!itm -> hasInfo()) {
-        QStringList list;
-        QString title = cacheTitleFilter(itm -> title().toString());
-        list.append(title);
+void Library::initItemData(IItem * itm) {
+    bool has_titles = itm -> titlesCache().isValid();
+    bool has_info = itm -> hasInfo();
 
-        QString temp = forwardNumberFilter(title);
-        if (temp != title)
-            list.append(temp);
+    if (has_titles && has_info) return;
 
-        MediaInfo m(itm -> fullPath(), itm -> hasInfo());
+    MediaInfo m(itm -> fullPath(), has_info);
 
-        QString tagTitle = cacheTitleFilter(m.getArtist() + m.getTitle());
-        if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
-            list.append(tagTitle);
+    if (!has_titles) initItemTitles(m, itm);
+    if (!has_info) initItemInfo(m, itm);
+}
 
-        itm -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), m.getBitrate(), m.getSampleRate(), m.getChannels()));
-        itm -> setDuration(Duration::fromSeconds(m.getDuration()));
-        itm -> setGenre(MusicGenres::instance() -> toInt(m.getGenre()));
+void Library::initItemInfo(MediaInfo & info, IItem * itm) {
+    itm -> setSize(info.getSize());
+    itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
+    itm -> setDuration(Duration::fromSeconds(info.getDuration()));
+    itm -> setGenre(MusicGenres::instance() -> toInt(info.getGenre()));
 
-        itm -> setTitlesCache(list);
-    }
+    itm -> setTitlesCache(list);
+}
+
+void Library::initItemTitles(MediaInfo & info, IItem * itm) {
+    QStringList list;
+    QString title = cacheTitleFilter(itm -> title().toString());
+    list.append(title);
+
+    QString temp = forwardNumberFilter(title);
+    if (temp != title)
+        list.append(temp);
+
+    QString tagTitle = cacheTitleFilter(info.getArtist() + info.getTitle());
+    if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
+        list.append(tagTitle);
+
+    itm -> setTitlesCache(list);
 }
 
 QHash<QString, int> * Library::load(const QChar letter) {
@@ -337,7 +408,9 @@ QHash<QString, int> * Library::load(const QChar letter) {
 }
 
 void Library::save() {
+    qDebug() << "SAVING";
     if (saveBlock.tryLock(-1)) {
+        qDebug() << "SAVING PROC";
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 

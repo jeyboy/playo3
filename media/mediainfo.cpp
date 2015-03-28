@@ -1,8 +1,7 @@
 #include "mediainfo.h"
 
-MediaInfo::MediaInfo(QUrl uri, bool onlyTags) {
-    readed = false;
-    if (uri.isLocalFile()) {
+MediaInfo::MediaInfo(QUrl uri, bool onlyTags) : readed(false), remote(!uri.isLocalFile()) {
+    if (!remote) {
         fileName = uri.toLocalFile().toStdString();
         TagLib::FileRef f(fileName.c_str(), !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
 
@@ -20,7 +19,8 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) {
                 readInfo(f);
         }
     }
-    else Player::instance() -> getFileInfo(uri, this);
+    else if (!onlyTags)
+        Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
 }
 
 void MediaInfo::initInfo() {

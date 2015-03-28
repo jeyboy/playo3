@@ -16,7 +16,8 @@ public:
     MediaInfo(QUrl uri, bool onlyTags = true);
     void initInfo();
 
-    inline bool initiated() const { return readed; }
+    inline bool isReaded() const { return readed; }
+    inline bool isRemote() const { return remote; }
 
     inline QString getArtist() const { return artist; }
     inline QString getTitle() const { return title; }
@@ -64,6 +65,7 @@ private:
     qint64 size;
 
     bool readed;
+    bool remote;
 };
 
 #endif // MEDIAINFO_H

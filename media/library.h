@@ -30,33 +30,23 @@ namespace Playo3 {
         void restoreItemState(const QModelIndex & ind);
         void declineItemState(const QModelIndex & ind);
 
-    //    void clearRemote();
-    //    void removeRemoteItem(ModelItem * item);
-    //    void initItem(ModelItem * item, const QObject * caller, const char * slot);
-    //    bool addItem(ModelItem * item, int state);
-    //    void restoreItemState(ModelItem * item);
-
-    //    void setRemoteItemMax(int newMax);
-
         inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
     signals:
         void updateAttr(const QModelIndex, int attr, QVariant val);
-
     private slots:
         void initStateRestoring();
         void finishStateRestoring();
-        void saveCatalogs();
-    //    void startRemoteInfoProc();
+        void initRemoteItemInfo();
+        void finishRemoteItemInfoInit();
 
+        void clockTick();
+        void saveCatalogs();
     private:
         static Library * self;
 
         Library(QObject * parent);
 
         ~Library();
-
-    //    ModelItem * procRemoteInfo(ModelItem * item);
-    //    ModelItem * itemsInit(ModelItem * item);
 
         inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
 
@@ -67,7 +57,11 @@ namespace Playo3 {
         QHash<QString, int> * getCatalog(QString & name);
 
         void stateRestoring(QModelIndex ind);
-        void initItemInfo(IItem * itm);
+        void remoteInfoRestoring(QModelIndex ind);
+
+        void initItemData(IItem * itm);
+        void initItemInfo(MediaInfo & info, IItem * itm);
+        void initItemTitles(MediaInfo & info, IItem * itm);
 
         QHash<QString, int> * load(const QChar letter);
         void save();
@@ -79,18 +73,16 @@ namespace Playo3 {
         QList<QModelIndex> waitOnProc;
         QHash<QModelIndex, QFutureWatcher<void> * > inProc;
 
-    //    QHash<ModelItem *, FuncContainer> remote_collations;
-    //    QList<ModelItem *> remote_items;
-    //    int remote_items_max;
+        QList<QModelIndex> waitRemoteOnProc;
+        QHash<QModelIndex, QFutureWatcher<void> * > inRemoteProc;
 
-    //    ModelItem * currRemote;
         QTimer * saveTimer;
-    //    QTimer remoteTimer;
-        QMutex saveBlock;
+        QMutex saveBlock, itmAttrsBlock;
 
         QFuture<void> catsSaveResult;
 
         int waitListLimit;
+        int ticksAmount;
     };
 }
 
