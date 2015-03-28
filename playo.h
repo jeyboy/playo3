@@ -12,6 +12,7 @@
 #include <QSettings>
 
 #include "media/library.h"
+#include "media/genres/music_genres.h"
 #include "misc/file_utils/data_store.h"
 
 //#include "dialogs/web_dialog.h"

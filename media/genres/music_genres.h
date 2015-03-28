@@ -4,17 +4,20 @@
 #include "genres_interface.h"
 
 class MusicGenres : public IGenres {
+public:
     static MusicGenres * instance();
     static void close() {
         delete self;
     }
-private:
+protected:
     inline int defaultInt() const { return 12; }
     void initDefault();
+private:
+    inline MusicGenres() : IGenres() {
+        initDefault();
+    }
 
-    inline MusicGenres() : IGenres() {}
-
-    MusicGenres * self;
+    static MusicGenres * self;
 };
 
 #endif // MUSIC_GENRES

@@ -16,7 +16,8 @@
 //#include "media/media_player/utils/genre.h"
 #include "mediainfo.h"
 #include "misc/file_utils/filename_conversions.h"
-//#include "media/media_player/utils/duration.h"
+#include "media/format.h"
+#include "media/duration.h"
 //#include "misc/func_container.h"
 #include "modules/data_struct/model_interface.h"
 

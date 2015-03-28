@@ -6,13 +6,15 @@
 
 class IGenres {
 public:
-    inline IGenres() : initDefault() {}
+    inline IGenres() {
+    }
+
+    inline virtual ~IGenres() {}
 
     int toInt(QString name) const;
 
-private:
+protected:
     virtual int defaultInt() const = 0;
-    virtual void initDefault() = 0;
 
     QHash<int, QString> genres;
 };

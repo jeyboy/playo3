@@ -9,13 +9,16 @@ public:
     static void close() {
         delete self;
     }
-private:
+protected:
     inline int defaultInt() const { return 18; }
     void initDefault();
 
-    inline VkGenres() : IGenres() {}
+private:
+    inline VkGenres() : IGenres() {
+        initDefault();
+    }
 
-    VkGenres * self;
+    static VkGenres * self;
 };
 
 #endif // VK_GENRES

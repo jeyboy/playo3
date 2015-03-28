@@ -320,47 +320,6 @@ float AudioPlayer::getRemoteFileDownloadPosition() {
     return prevDownloadPos;
 }
 
-void AudioPlayer::getFileInfo(QUrl uri, MediaInfo * info) {
-    int chUID;
-
-    if (uri.isLocalFile())
-        chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
-    else
-        chUID = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, 0, NULL, 0);
-
-    if (!chUID) return;
-
-    float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
-    DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
-
-    info -> duration = time;
-    info -> bitrate = (len / (125 * time) + 0.5);
-
-    BASS_CHANNELINFO media_info;
-    if (BASS_ChannelGetInfo(chUID, &media_info)) {
-        info -> size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
-//        ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
-        info -> sampleRate = media_info.freq;
-        info -> channels = media_info.chans;
-    }
-
-//    int bitrate = (len / (125 * time) + 0.5); // average bitrate (Kbps)
-
-//    if (only_bitrate) {
-//        ret.insert("bitrate", QString::number(bitrate));
-//    } else {
-//        ret.insert("duration", Duration::fromSeconds(time));
-
-//        BASS_CHANNELINFO info;
-//        if (BASS_ChannelGetInfo(chUID, &info)) {
-//            int size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
-//            ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
-//        }
-//    }
-
-    BASS_StreamFree(chUID);
-}
-
 float AudioPlayer::getBpmValue(QUrl /*uri*/) {
     return 0;
 //    int cochan;

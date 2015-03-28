@@ -308,7 +308,7 @@ void Library::initItemInfo(IItem * itm) {
 
         itm -> setInfo(Format::toInfo(Format::toUnits(m.getSize()), m.getBitrate(), m.getSampleRate(), m.getChannels()));
         itm -> setDuration(Duration::fromSeconds(m.getDuration()));
-        itm -> setGenre(Genre::instance() -> toInt(m.getGenre()));
+        itm -> setGenre(MusicGenres::instance() -> toInt(m.getGenre()));
 
         itm -> setTitlesCache(list);
     }

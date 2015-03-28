@@ -4,12 +4,15 @@
 #include <QAction>
 #include <QModelIndex>
 
+#include "mediainfo.h"
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
 #include "modules/controls/metric_slider.h"
 #include "modules/data_struct/model_item_parts/item_fields.h"
 
 using namespace Playo3;
+
+class MediaInfo;
 
 class Player : public AudioPlayer {
     Q_OBJECT
@@ -39,6 +42,8 @@ public:
     static void close() {
         delete self;
     }
+
+    void getFileInfo(QUrl uri, MediaInfo * info);
 
 signals:
     void nextItemNeeded(Player::Reason);

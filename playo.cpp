@@ -123,6 +123,8 @@ void Playo::closeEvent(QCloseEvent * e) {
     stateSettings.setValue("windowState", saveState());
     stateSettings.sync();
 
+    MusicGenres::instance() -> close();
+
     MainWindow::closeEvent(e);
 }
 

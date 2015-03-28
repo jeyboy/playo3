@@ -5,11 +5,11 @@
 #include "tag.h"
 #include "fileref.h"
 
-#include "media/audio_player.h"
+#include "media/genres/music_genres.h"
+#include "media/player.h"
 
+#include <qurl.h>
 #include <QString>
-
-class AudioPlayer;
 
 class MediaInfo {
 public:
@@ -23,6 +23,11 @@ public:
     inline QString getAlbum() const { return album; }
     inline QString getGenre() const { return genre; }
 
+    inline void setArtist(QString newArtist) { artist = newArtist; }
+    inline void setTitle(QString newTitle) { title = newTitle; }
+    inline void setAlbum(QString newAlbum) { album = newAlbum; }
+    inline void setGenre(QString newGenre) { genre = newGenre; }
+
     inline qint64 getSize() const { return size; }
     inline int getYear() const { return year; }
     inline int getTrack() const { return track; }
@@ -30,11 +35,17 @@ public:
     inline int getBitrate() const { return bitrate; }
     inline int getDuration() const { return duration; }
     inline int getSampleRate() const { return sampleRate; }
-private:
-    friend class AudioPlayer;
 
+    inline void setSize(qint64 newSize) { size = newSize; }
+    inline void setYear(int newYear) { year = newYear; }
+    inline void setTrack(int newTrack) { track = newTrack; }
+    inline void setChannels(int newChannels) { channels = newChannels; }
+    inline void setBitrate(int newBitrate) { bitrate = newBitrate; }
+    inline void setDuration(int newDuration) { duration = newDuration; }
+    inline void setSampleRate(int newSampleRate) { sampleRate = newSampleRate; }
+private:
     void readInfo(TagLib::FileRef f);
-    inline int calcAverageBitrate() { (size / (125 * duration) + 0.5);  /*average bitrate (Kbps)*/ }
+    inline int calcAverageBitrate() { return (size / (125 * duration) + 0.5);  /*average bitrate (Kbps)*/ }
 
     std::string fileName;
 

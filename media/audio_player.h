@@ -14,7 +14,6 @@
 #include "media/notify_timer.h"
 #include "media/format.h"
 #include "media/duration.h"
-#include "media/mediainfo.h"
 
 #ifdef Q_OS_WIN
     void __stdcall endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
@@ -29,8 +28,6 @@
 //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,NULL); // disable proxy
 //else
 //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,proxy); // enable proxy
-
-class MediaInfo;
 
 class AudioPlayer : public QObject {
     Q_OBJECT
@@ -72,8 +69,6 @@ public:
     float getSize() const;
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
-
-    void getFileInfo(QUrl uri, MediaInfo * info);
 
     int getNotifyInterval();
     void setNotifyInterval(signed int milis);
