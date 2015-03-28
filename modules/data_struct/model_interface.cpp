@@ -44,8 +44,10 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant &value, int
         }
 
         result = true;
-    }
-    else if (role == ISTATE) {
+    } else if (role == ISTATERESTORE) {
+        node -> setStates(value.toInt());
+        result = true;
+    } else if (role == ISTATE) {
         Library::instance() -> setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
         result = true;

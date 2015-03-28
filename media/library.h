@@ -8,17 +8,10 @@
 #include <qfuturewatcher.h>
 #include <QtConcurrent/QtConcurrent>
 
-//#include <QHash>
-//#include <QThread>
-//#include <QApplication>
-//#include <QVector>
-
-//#include "media/media_player/utils/genre.h"
 #include "mediainfo.h"
 #include "misc/file_utils/filename_conversions.h"
 #include "media/format.h"
 #include "media/duration.h"
-//#include "misc/func_container.h"
 #include "modules/data_struct/model_interface.h"
 
 namespace Playo3 {
@@ -44,6 +37,8 @@ namespace Playo3 {
         void clockTick();
         void saveCatalogs();
     private:
+        IItem * indToItm(const QModelIndex & ind);
+        void emitItemAttrChanging(QModelIndex & ind, int state);
         static Library * self;
 
         Library(QObject * parent);

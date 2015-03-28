@@ -11,7 +11,7 @@ Library * Library::instance(QObject * parent) {
     return self;
 }
 
-Library::Library(QObject * parent) : QObject(parent), waitListLimit(10) {
+Library::Library(QObject * parent) : QObject(parent), waitListLimit(10), ticksAmount(0) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
@@ -42,9 +42,7 @@ Library::~Library() {
 }
 
 void Library::setItemState(const QModelIndex & ind, int state) {
-    qDebug() << "ITM ------------------";
-    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
-    qDebug() << itm -> title();
+    IItem * itm = indToItm(ind);
 
     initItemData(itm);
 
@@ -87,8 +85,7 @@ void Library::finishRemoteItemInfoInit() {
     QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
     QModelIndex ind = inRemoteProc.key(initiator);
     inRemoteProc.remove(ind);
-
-    initRemoteItemInfo();
+    delete initiator;
 }
 
 void Library::initStateRestoring() {
@@ -103,15 +100,14 @@ void Library::finishStateRestoring() {
     QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
     QModelIndex ind = inProc.key(initiator);
     inProc.remove(ind);
+    delete initiator;
 
     initStateRestoring();
 }
 
 void Library::stateRestoring(QModelIndex ind) {
-    qDebug() << "LIB ------------------";
-    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
-    qDebug() << itm -> title();
-
+    IItem * itm = indToItm(ind);
+    qDebug() << "RESTORING " << itm -> title();
     initItemData(itm);
 
     QHash<QString, int> * cat;
@@ -119,7 +115,6 @@ void Library::stateRestoring(QModelIndex ind) {
     int state;
     QList<QString>::iterator i;
     QStringList titles = itm -> titlesCache().toStringList();
-    qDebug() << "TITLES: " << titles;
 
     for (i = titles.begin(); i != titles.end(); ++i) {
         if (!(cat = getCatalog((*i)))) continue;
@@ -128,10 +123,7 @@ void Library::stateRestoring(QModelIndex ind) {
 
         if (state != -1) {
             if (state == 1) {
-                connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
-                emit updateAttr(ind, ISTATE, ItemState::liked);
-                qDebug() << "liked";
-                disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+                emitItemAttrChanging(ind, ItemState::liked);
                 return;
             }
 
@@ -139,17 +131,23 @@ void Library::stateRestoring(QModelIndex ind) {
         }
     }
 
-    if (isListened) {
-        connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
-        emit updateAttr(ind, ISTATE, ItemState::listened);
-        qDebug() << "listened";
-        disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
-    }
+    if (isListened)
+        emitItemAttrChanging(ind, ItemState::listened);
+}
+
+IItem * Library::indToItm(const QModelIndex & ind) {
+    return (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+}
+
+void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
+    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+    emit updateAttr(ind, ISTATERESTORE, state);
+    disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
 
 void Library::remoteInfoRestoring(QModelIndex ind) {
-    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
-
+    IItem * itm = indToItm(ind);
+    qDebug() << "REMOTE RESTORING " << itm -> title();
     bool has_info = itm -> hasInfo();
 
     if (has_info) return;
@@ -214,71 +212,20 @@ void Library::remoteInfoRestoring(QModelIndex ind) {
 ////////////////////////////////////////////////////////////////////////
 ///// privates
 ////////////////////////////////////////////////////////////////////////
-
-//void Library::startRemoteInfoProc() {
-//    if (!remote_items.isEmpty()) {
-//        currRemote = remote_items.takeLast();
-//        FuncContainer func = remote_collations.take(currRemote);
-//        if (!currRemote -> hasInfo()) {
-//            QFutureWatcher<ModelItem *> * initiator = new QFutureWatcher<ModelItem *>();
-//            connect(initiator, SIGNAL(finished()), func.obj, func.slot);
-//            initiator -> setFuture(QtConcurrent::run(this, &Library::procRemoteInfo, currRemote));
-//        }
-//    }
-//}
-
-//ModelItem * Library::procRemoteInfo(ModelItem * item) {
-//    if (currRemote == 0) return 0;
-//    QHash<QString, QString> info = Player::instance() -> getFileInfo(item -> toUrl());
-//    if (currRemote == 0) return 0;
-//    item -> setDuration(info.value("duration"));
-//    if (currRemote == 0) return 0;
-//    item -> setInfo(info.value("info"));
-
-////    TODO: get genre
-////    item -> setGenre();
-//    return item;
-//}
-
 void Library::clockTick() {
-    ticksAmount++;
-
-    if (ticksAmount == 5) {
+    if (++ticksAmount == 5) {
         ticksAmount = 0;
         saveCatalogs();
     }
 
-
+    initRemoteItemInfo();
 }
 
 void Library::saveCatalogs() {
+    qDebug() << "TRY TO SAVE";
     if (!catsSaveResult.isRunning())
         catsSaveResult = QtConcurrent::run(this, &Library::save);
 }
-
-//ModelItem * Library::itemsInit(ModelItem * item) {
-//    if (item -> isExist()) {
-//        if (saveBlock.tryLock(-1)) {
-//            initItemInfo(item);
-
-//            restoreItemState(item);
-//            saveBlock.unlock();
-//        }
-//    } else {
-//        item -> getState() -> setNotExist();
-//    }
-
-//    return item;
-//}
-
-//QString Library::prepareName(QString gipoTitle, bool additional) {
-//    if (additional)
-//        return forwardNumberFilter(gipoTitle);
-//    else {
-//        QString temp = sitesFilter(gipoTitle.toLower().replace('_', ' '));
-//        return spacesFilter(forwardNumberPreFilter(temp));
-//    }
-//}
 
 bool Library::proceedItemNames(QStringList names, int state) {
     QHash<QString, int> * cat;
@@ -422,9 +369,7 @@ QHash<QString, int> * Library::load(const QChar letter) {
 }
 
 void Library::save() {
-    qDebug() << "SAVING";
     if (saveBlock.tryLock(-1)) {
-        qDebug() << "SAVING PROC";
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 
