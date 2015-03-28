@@ -10,6 +10,7 @@
 #include "container_types.h"
 
 #include "item_drop_formats.h"
+#include "media/library.h"
 
 namespace Playo3 {
     class IModel : public QAbstractItemModel {

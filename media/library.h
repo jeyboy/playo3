@@ -27,8 +27,10 @@ namespace Playo3 {
     public:
         static Library * instance(QObject * parent = 0);
 
+        void setItemState(const QModelIndex & ind, int state);
+
         void restoreItemState(const QModelIndex & ind);
-        void declineItemState(const QModelIndex & ind);
+        void declineItemStateRestoring(const QModelIndex & ind);
 
         inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
     signals:
@@ -50,7 +52,7 @@ namespace Playo3 {
 
         inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
 
-        bool proceedItemNames(QStringList & names, int state);
+        bool proceedItemNames(QStringList names, int state);
         QChar getCatalogName(QString name);
 
         QHash<QString, int> * getCatalog(QChar & letter);

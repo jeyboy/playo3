@@ -41,6 +41,20 @@ Library::~Library() {
     delete saveTimer;
 }
 
+void Library::setItemState(const QModelIndex & ind, int state) {
+    qDebug() << "ITM ------------------";
+    IItem * itm = (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+    qDebug() << itm -> title();
+
+    initItemData(itm);
+
+    if (state == ItemFields::liked)
+        state = 1;
+    else state = 0;
+
+    proceedItemNames(itm -> titlesCache().toStringList(), state);
+}
+
 void Library::restoreItemState(const QModelIndex & ind) {
     waitOnProc.append(ind);
     while(waitOnProc.size() > waitListLimit)
@@ -55,7 +69,7 @@ void Library::restoreItemState(const QModelIndex & ind) {
     initStateRestoring();
 }
 
-void Library::declineItemState(const QModelIndex & ind) {
+void Library::declineItemStateRestoring(const QModelIndex & ind) {
     if (inProc.contains(ind))
         inProc.value(ind) -> cancel();
     else waitOnProc.removeAll(ind);
@@ -266,7 +280,7 @@ void Library::saveCatalogs() {
 //    }
 //}
 
-bool Library::proceedItemNames(QStringList & names, int state) {
+bool Library::proceedItemNames(QStringList names, int state) {
     QHash<QString, int> * cat;
     QChar letter;
     bool catState = false, catalog_has_item, catalog_state_has_item;
