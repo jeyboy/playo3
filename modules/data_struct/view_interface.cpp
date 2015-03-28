@@ -256,13 +256,13 @@ void IView::paintEvent(QPaintEvent * event) {
         QTreeView::paintEvent(event);
 }
 
-void IView::resizeEvent(QResizeEvent * event) { // TODO: rewrite // need separate item initializator for each view
-//    if (event -> oldSize().height() != size().height()) {
-//        if (event -> size().height() > 0) {
-//            int count = (event -> size().height() / Settings::instance() -> getTotalItemHeight()) + 2;
-//            Library::instance() -> setRemoteItemMax(count);
-//        }
-//    }
+void IView::resizeEvent(QResizeEvent * event) {
+    if (event -> oldSize().height() != size().height()) {
+        if (event -> size().height() > 0) {
+            int count = (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2;
+            Library::instance() -> setWaitListLimit(count);
+        }
+    }
 
     QTreeView::resizeEvent(event);
 }

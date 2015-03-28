@@ -1,9 +1,9 @@
 #include "playo.h"
 #include <QApplication>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char * argv[]) {
 
-//    qRegisterMetaType<QVector <int> >("QVector<int>");
+    qRegisterMetaType<QVector <int> >("QVector<int>");
 
 //    QCoreApplication::setOrganizationName("BigBug");
 //    QCoreApplication::setOrganizationDomain("bigbug.sos");

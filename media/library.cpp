@@ -42,13 +42,14 @@ Library::~Library() {
 }
 
 void Library::setItemState(const QModelIndex & ind, int state) {
-    IItem * itm = indToItm(ind);
-
-    initItemData(itm);
-
-    if (state == ItemFields::liked)
+    if (state & ItemFields::liked)
         state = 1;
-    else state = 0;
+    else if (state & ItemFields::listened)
+        state = 0;
+    else return;
+
+    IItem * itm = indToItm(ind);
+    initItemData(itm);
 
     proceedItemNames(itm -> titlesCache().toStringList(), state);
 }
@@ -222,7 +223,6 @@ void Library::clockTick() {
 }
 
 void Library::saveCatalogs() {
-    qDebug() << "TRY TO SAVE";
     if (!catsSaveResult.isRunning())
         catsSaveResult = QtConcurrent::run(this, &Library::save);
 }
