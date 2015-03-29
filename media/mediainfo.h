@@ -14,6 +14,7 @@
 class MediaInfo {
 public:
     MediaInfo(QUrl uri, bool onlyTags = true);
+    inline ~MediaInfo() {delete [] fileName; }
     void initInfo();
 
     inline bool isReaded() const { return readed; }
@@ -48,7 +49,7 @@ private:
     void readInfo(TagLib::FileRef f);
     inline int calcAverageBitrate() { return (size / (125 * duration) + 0.5);  /*average bitrate (Kbps)*/ }
 
-    std::string fileName;
+    const wchar_t * fileName;
 
     QString artist;
     QString title;
