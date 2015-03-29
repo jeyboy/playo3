@@ -236,17 +236,19 @@ void IView::openLocation() {
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    // TODO: add initiated items to hash for update later on the same name state change
     IItem * node = mdl -> item(index);
 
     bool is_interactive = Settings::instance() -> isInteractiveProc();
+    bool is_proceeded = node -> is(ItemState::proceeded);
 
-    if (is_interactive || !node -> is(ItemState::proceeded)) {
-        if (!is_interactive)
-            node -> set(ItemState::proceeded);
+    if (!is_proceeded) {
+        node -> set(ItemState::proceeded);
         if (!node -> isContainer())
             Library::instance() -> restoreItemState(index);
     }
+
+    if (is_interactive && is_proceeded)
+        node -> unset(ItemState::proceeded);
 
     if (node -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
