@@ -251,8 +251,8 @@ bool Library::proceedItemNames(QStringList names, int state) {
             catalog_state_has_item = catalogs_state.contains(letter);
             if (catalog_state_has_item) {
                 saveList = catalogs_state.value(letter);
-                if (saveList != 0)
-                    qDebug() << "LLL: " << letter << " Libb: " << (*saveList);
+//                if (saveList != 0)
+//                    qDebug() << "LLL: " << letter << " Libb: " << (*saveList);
             }
 
             if (catalog_has_item) {
@@ -319,7 +319,7 @@ void Library::initItemData(IItem * itm) {
 
     if (has_titles && has_info) return;
 
-    MediaInfo m(itm -> fullPath(), has_info);
+    MediaInfo m(itm -> toUrl(), has_info);
 
     if (!has_titles) initItemTitles(m, itm);
     if (!has_info) initItemInfo(m, itm);
@@ -327,11 +327,10 @@ void Library::initItemData(IItem * itm) {
 
 void Library::initItemInfo(MediaInfo & info, IItem * itm) {
     itm -> setSize(info.getSize());
+    qDebug() << itm -> title() << " ||| " << info.getSize() << " : " << info.getBitrate() << " : " << info.getSampleRate() << " : " << info.getChannels();
     itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
     itm -> setDuration(Duration::fromSeconds(info.getDuration()));
     itm -> setGenre(MusicGenres::instance() -> toInt(info.getGenre()));
-
-    itm -> setTitlesCache(list);
 }
 
 void Library::initItemTitles(MediaInfo & info, IItem * itm) {

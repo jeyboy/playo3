@@ -1,4 +1,5 @@
 #include "player.h"
+#include <qdebug.h>
 
 Player * Player::self = 0;
 
@@ -161,20 +162,6 @@ void Player::getFileInfo(QUrl uri, MediaInfo * info) {
         info -> setChannels(media_info.chans);
     }
 
-//    int bitrate = (len / (125 * time) + 0.5); // average bitrate (Kbps)
-
-//    if (only_bitrate) {
-//        ret.insert("bitrate", QString::number(bitrate));
-//    } else {
-//        ret.insert("duration", Duration::fromSeconds(time));
-
-//        BASS_CHANNELINFO info;
-//        if (BASS_ChannelGetInfo(chUID, &info)) {
-//            int size = len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START);
-//            ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
-//        }
-//    }
-
     BASS_StreamFree(chUID);
 }
 
@@ -231,8 +218,9 @@ void Player::mute() {
     prevVolumeVal = curr;
 }
 
-void Player::unmuteCheck(int) {
-//    muteButton -> setChecked(false);
+void Player::unmuteCheck(int val) {
+    if (val != 0)
+        muteButton -> setChecked(false);
     prevVolumeVal = 0;
 }
 

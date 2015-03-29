@@ -190,7 +190,7 @@ bool AudioPlayer::isStoped() const {
 
 int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
-    chan = BASS_StreamCreateURL(path.toStdString().c_str(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
+    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
 
 //    BASS_Encode_Start(channel, "output.wav", BASS_ENCODE_PCM, NULL, 0);
 
