@@ -128,7 +128,6 @@ void Spectrum::paintEvent(QPaintEvent * event) {
 }
 
 void Spectrum::recalcAttrs() {
-    qDebug() << "RECALC";
     switch(type) {
         case bars:
             bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();

@@ -417,7 +417,6 @@ QVector<int> AudioPlayer::getSpectrum() {
 
         y = fastSqrt(peak) * spectrumMultiplicity + defaultSpectrumLevel; // 4 // scale it (sqrt to make low values more visible)
         if (y > spectrumHeight) y = spectrumHeight; // cap it
-//        if (y < defaultSpectrumLevel) y = defaultSpectrumLevel; // cap it
 
         res.append(y);
     }
@@ -440,7 +439,6 @@ QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
         res.append(QVector<int>());
 
     for (x = 0; x < workSpectrumBandsCount; x++) {
-//        peaks.clear();
         peaks.fill(0, channelsCount);
 
         int b1 = spectrumComplexPoints[x];
@@ -454,7 +452,6 @@ QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
         for (z = 0; z < channelsCount; z++) {
             y = fastSqrt(peaks[z]) * spectrumMultiplicity + defaultSpectrumLevel; // 4 // scale it (sqrt to make low values more visible)
             if (y > spectrumHeight) y = spectrumHeight; // cap it
-//            if (y < defaultSpectrumLevel) y = defaultSpectrumLevel; // cap it
 
             res[z].append(y);
         }
