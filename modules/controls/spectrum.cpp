@@ -96,7 +96,7 @@ void Spectrum::dataUpdated(QList<QVector<int> > bars) {
     }
 
     if (isVisible())
-        repaint();
+        update(update_rect);
 }
 
 void Spectrum::onMovableChanged(bool movable) {
@@ -128,6 +128,7 @@ void Spectrum::paintEvent(QPaintEvent * event) {
 }
 
 void Spectrum::recalcAttrs() {
+    qDebug() << "RECALC";
     switch(type) {
         case bars:
             bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();
@@ -137,6 +138,8 @@ void Spectrum::recalcAttrs() {
             bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();
             break;
     }
+
+    update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - (verticalPadd() * 2));
 }
 
 int Spectrum::peakDimension() {
@@ -239,12 +242,15 @@ void Spectrum::paintCombo() {
     QRectF rect;
 
     painter.setBrush(g);
+    QVector<QRectF> gRects;
 
     for(int loop1 = 0; loop1 < peaks[0].length(); loop1++) {
         rect.setCoords(accumulate, start_v1_offset - peaks[0][loop1], (accumulate + bar_width), start_v1_offset);
-        painter.drawRect(rect);
+        gRects.append(rect);
         accumulate += bar_width + paddWidth();
     }
+
+    painter.drawRects(gRects);
     painter.restore();
 }
 
@@ -256,9 +262,6 @@ void Spectrum::paintDuo() {
     QRectF rect;
 
     painter.setRenderHint(QPainter::Antialiasing, false);
-
-    QElapsedTimer t;
-    t.start();
 
     QVector<QRectF> gRects;
     QVector<QRectF> ggRects;
@@ -298,8 +301,6 @@ void Spectrum::paintDuo() {
 
     painter.setBrush(gg);
     painter.drawRects(ggRects);
-
-    qDebug() << "SPECTRUM " << t.nsecsElapsed();
 
     painter.restore();
 }

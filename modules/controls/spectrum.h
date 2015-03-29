@@ -55,6 +55,7 @@ namespace Playo3  {
         int offset, last_pairs_count, pairs;
         double start_h_offset, start_v1_offset, start_v2_offset;
         float bar_width;
+        QRect update_rect;
 
         SpectrumType type;
 
