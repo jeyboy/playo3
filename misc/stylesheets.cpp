@@ -329,25 +329,25 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "QTabBar::tab:top {"
                 "   border-top-left-radius: 4px;"
                 "   border-top-right-radius: 4px;"
-                "   min-width: 60px;"
+                "   min-width: 50px;"
                 "}"
 
                 "QTabBar::tab:bottom {"
                 "   border-bottom-left-radius: 4px;"
                 "   border-bottom-right-radius: 4px;"
-                "   min-width: 60px;"
+                "   min-width: 50px;"
                 "}"
 
                 "QTabBar::tab:left {"
                 "   border-top-right-radius: 4px;"
                 "   border-bottom-right-radius: 4px;"
-                "   min-height: 60px;"
+                "   min-height: 50px;"
                 "}"
 
                 "QTabBar::tab:right {"
                 "   border-top-left-radius: 4px;"
                 "   border-bottom-left-radius: 4px;"
-                "   min-height: 60px;"
+                "   min-height: 50px;"
                 "}"
 
                 "QTabBar::tab:selected, QTabBar::tab:hover {"
@@ -379,13 +379,23 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "   margin-right: 0;"
                 "}"
 
+//                "QTabBar::tab:top, QTabBar::tab:bottom {"
+//                "   padding-left: 10px;"
+//                "   padding-right: 10px;"
+//                "}"
+
+//                "QTabBar::tab:left, QTabBar::tab:right {"
+//                "   top: 10px;"
+//                "   bottom: 10px;"
+//                "}"
+
                 "QTabBar::tab:only-one {"
                 "   margin: 0;"
                 "}"
 
-//                    QTabBar::tear {
-//                        image: url(tear_indicator.png);
-//                    }
+//                "QTabBar::tear {"
+//                "    image: none;"
+//                "}"
 
                 "QTabBar::scroller {" /* the width of the scroll buttons */
                 "    width: 20px;"
@@ -403,6 +413,11 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                    "QTabBar QToolButton::left-arrow {"
 //                    "    image: url(leftarrow.png);"
 //                    "}"
+
+
+                "QTabBar {"
+                "   alignment: center;"
+                "}"
     ) + treeViewStyles() + listViewStyles();
 }
 
