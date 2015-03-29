@@ -1,45 +1,28 @@
-#include "web/web_api.h"
+#include "web_api.h"
 
-WebApi::WebApi() {
+WebApi::WebApi(QObject * parent) : QObject(parent) {
     netManager = createManager();
+    captchaDialog = new CaptchaDialog(parent);
 }
 
 WebApi::~WebApi() {
     delete netManager;
+    delete captchaDialog;
 }
 
-QPixmap WebApi::openRemoteImage(QString url) {
-    CustomNetworkAccessManager * currManager = createManager();
-    QNetworkReply * reply;
-    QVariant possibleRedirectUrl;
+QPixmap WebApi::openRemoteImage(QString url) { // error proc needed
+    QUrl uri(url);
     QByteArray ar;
 
-    while(true) {
-        reply = currManager -> get(QNetworkRequest(QUrl(url)));
-        reply = syncRequest(reply);
-        possibleRedirectUrl = reply -> attribute(QNetworkRequest::RedirectionTargetAttribute);
-        if (possibleRedirectUrl.isValid()) {
-            url = possibleRedirectUrl.toUrl().toString();
-            reply -> close();
-            delete reply;
-        } else {
-            ar = reply -> readAll();
-            reply -> close();
-            currManager;
-            break;
-        }
-    }
+    QNetworkReply * reply = netManager -> openUrl(uri);
+    netManager -> synchronizeRequest(reply);
+    ar = reply -> readAll();
+    reply -> close();
+    reply -> deleteLater();
 
     QImage image;
     image.loadFromData(ar);
     return QPixmap::fromImage(image);
-}
-
-QNetworkReply * WebApi::syncRequest(QNetworkReply * m_http) {
-    QEventLoop loop;
-    connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-    return m_http;
 }
 
 void WebApi::clearData() {
@@ -48,27 +31,26 @@ void WebApi::clearData() {
 }
 
 void WebApi::fromJson(QJsonObject & hash) {
-    QJsonObject ar = hash.value("friends").toObject();
+    QJsonObject::iterator it = hash.find("friends");
 
-    foreach(QString key, ar.keys())
-        addFriend(key, ar.value(key).toString());
+    while(it != hash.end())
+        addFriend(it.key(), it++.value().toString());
 
-    ar = hash.value("groups").toObject();
+    it = hash.find("groups");
 
-    foreach(QString key, ar.keys())
-        addGroup(key, ar.value(key).toString());
+    while(it != hash.end())
+        addGroup(it.key(), it++.value().toString());
 }
+
 QJsonObject & WebApi::toJson(QJsonObject & root) {
     QJsonObject friendsJson;
-    foreach(QString key, friends.keys()) {
-        friendsJson.insert(key, QJsonValue(friends.value(key)));
-    }
+    for(QHash<QString, QString>::iterator i = friends.begin(); i != friends.end(); ++i)
+        friendsJson.insert(i.key(), QJsonValue(i.value());
     root.insert("friends", friendsJson);
 
     QJsonObject groupsJson;
-    foreach(QString key, groups.keys()) {
-        groupsJson.insert(key, QJsonValue(groups.value(key)));
-    }
+    for(QHash<QString, QString>::iterator i = groups.begin(); i != groups.end(); ++i)
+        friendsJson.insert(i.key(), QJsonValue(i.value());
     root.insert("groups", groupsJson);
 
     return root;
@@ -78,22 +60,8 @@ QJsonObject WebApi::responseToJson(QByteArray data) {
     QJsonDocument doc = QJsonDocument::fromJson(data);
     return doc.object();
 }
-//QDomDocument WebApi::toXml(QByteArray data) {
-//    QDomDocument dom;
-//    dom.setContent(data);
-//    return dom;
 
-////    QDomElement  root         = dom.firstChildElement(); // <response> root element
-////    QDomNode  audioElement = root.firstChildElement(); // <audio>
-
-////    while(!audioElement.isNull()){
-////         QString url =  audioElement
-////                            .toElement()
-////                            .elementsByTagName("url")
-////                            .item(0)
-////                            .toElement()  //<url>
-////                            .text();
-////         list.append(url);
-////         audioElement = audioElement.nextSibling(); //next element
-////    }
-//}
+void WebApi::showCaptcha() {
+    captchaDialog -> clearText();
+    captchaDialog -> exec();
+}

@@ -4,7 +4,7 @@ using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
 WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
-    TreeModel(hash, parent), DeletedList(), tabUid(uid) {
+    IModel(hash, parent), DeletedList(), tabUid(uid) {
     if (hash)
         deletedFromJson(hash -> take("deleted").toArray());
 }
@@ -94,7 +94,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos)
 //    }
 //}
 
-void WebModel::errorReceived(int, QString msg) {
-    emit showMessage("!!!!!!!!!!! Some shit happened :( " + msg);
+void WebModel::errorReceived(int /*code*/, QString msg) {
+//    emit showMessage("!!!!!!!!!!! Some shit happened :( " + msg);
 //    emit hideSpinner();
 }

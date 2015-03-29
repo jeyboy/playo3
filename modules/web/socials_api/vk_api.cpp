@@ -1,8 +1,8 @@
 #include "vk_api.h"
 
-VkApi *VkApi::self = 0;
+VkApi * VkApi::self = 0;
 
-VkApi *VkApi::instance() {
+VkApi * VkApi::instance() {
     if(!self)
         self = new VkApi();
     return self;

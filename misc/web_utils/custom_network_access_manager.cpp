@@ -21,6 +21,12 @@ QNetworkReply * CustomNetworkAccessManager::openUrl(QUrl & url) { // TODO: need 
     else return m_http;
 }
 
+void CustomNetworkAccessManager::synchronizeRequest(QNetworkReply * m_http) {
+    QEventLoop loop;
+    connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+}
+
 QNetworkReply * CustomNetworkAccessManager::createRequest(Operation op, const QNetworkRequest &req, QIODevice * outgoingData) {
     QSslConfiguration config = req.sslConfiguration();
     config.setPeerVerifyMode(mode);

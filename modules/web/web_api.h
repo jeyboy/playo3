@@ -1,19 +1,39 @@
 #ifndef WEB_API_H
 #define WEB_API_H
 
-#include <QObject>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+
 #include <QUrl>
 #include <QPixmap>
 
+#include <QtConcurrent/QtConcurrent>
+#include <QFutureWatcher>
+
+#include "dialogs/captchadialog.h"
+
 #include "misc/web_utils/custom_network_access_manager.h"
+
+struct ApiFuncContainer {
+    ApiFuncContainer() { }
+    ApiFuncContainer(const QObject * receiver,const char * respSlot , QString & user_id) {
+        obj = receiver;
+        slot = respSlot;
+        uid = user_id;
+    }
+    ~ApiFuncContainer() {}
+
+    QString uid;
+    const QObject * obj;
+    const char * slot;
+    QJsonObject result;
+};
 
 class WebApi : public QObject {
     Q_OBJECT
 public:
-    WebApi();
+    WebApi(QObject * parent = 0);
     ~WebApi();
 
     inline QString getError() { return error; }
@@ -28,7 +48,6 @@ public:
     inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
 
     QPixmap openRemoteImage(QString url);
-    QNetworkReply * syncRequest(QNetworkReply * m_http);
 
     void clearData();
 
@@ -40,8 +59,11 @@ public:
 
     void fromJson(QJsonObject & hash);
     QJsonObject & toJson(QJsonObject & root);
+public slots:
+    void showCaptcha();
 
 protected:
+    CaptchaDialog * captchaDialog;
     QJsonObject responseToJson(QByteArray data);
 
     CustomNetworkAccessManager * netManager;

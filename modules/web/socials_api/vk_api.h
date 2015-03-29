@@ -3,7 +3,6 @@
 
 #include "../web_api.h"
 #include "../func_container.h"
-//#include "model/model_item.h"
 #include "../auth_chemas/teu_auth.h"
 #include "vk_api_private.h"
 #include "../api_process.h"
@@ -24,7 +23,6 @@ public:
 
     ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
     void audioList(FuncContainer responseSlot, QString uid);
-
 
     void refreshAudioList(FuncContainer slot, QHash<ModelItem *, QString> uids);
 
@@ -53,52 +51,17 @@ protected:
     bool errorSend(QJsonObject & doc, FuncContainer func, QUrl url);
     bool captchaProcessing(QJsonObject & error, FuncContainer func, QUrl url);
 
-//    QUrl getAudioListUrl() const;
-//    QUrl getAudioCountUrl() const;
-//    QUrl getAudioSearchUrl() const;
-//    QUrl getAudioCopyUrl() const;
-//    QUrl getAudioRemoveUrl() const;
-
-//    QUrl getAudioAlbumsListUrl() const;
-//    QUrl getAudioAlbumAddUrl() const;
-//    QUrl getAudioAlbumEditUrl() const;
-//    QUrl getAudioAlbumRemoveUrl() const;
-//    QUrl getAudioAlbumMoveToUrl() const;
-
-//    QUrl getAudioSaveServerUrl() const;
-//    QUrl getAudioSaveUrl() const;
-
-protected slots:
-//    void audioListResponse();
-
-//    void audioCountRequest();
-//    void audioSearchRequest();
-//    void audioCopyRequest();
-//    void audioRemoveRequest();
-
-//    void audioSaveServerRequest();
-//    void audioSave();
-
-//    void audioAlbumsRequest();
-//    void audioAlbumAddRequest();
-//    void audioAlbumEditRequest();
-//    void audioAlbumRemoveRequest();
-//    void audioAlbumMoveToRequest();
-
 private:   
     VkApi(QJsonObject hash) : WebApi(), TeuAuth() {
         fromJson(hash);
         connect(this, SIGNAL(showCaptcha()), ApiProcess::instance(), SLOT(showCaptcha()), Qt::BlockingQueuedConnection);
     }
 
-    VkApi() : WebApi(), TeuAuth() {
+    VkApi() : WebApi(), TeuAuth() {}
 
-    }
-
-    static VkApi *self;
+    static VkApi * self;
 
 //    QHash<QNetworkReply *, FuncContainer> responses;
-//    QHash<QNetworkReply *, QHash<ModelItem *, QString> > collations;
 };
 
 #endif // VK_API_H
