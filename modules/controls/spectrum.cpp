@@ -1,5 +1,7 @@
 #include "spectrum.h"
 #include "media/player.h"
+#include <qelapsedtimer.h>
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -255,6 +257,12 @@ void Spectrum::paintDuo() {
 
     painter.setRenderHint(QPainter::Antialiasing, false);
 
+    QElapsedTimer t;
+    t.start();
+
+    QVector<QRectF> gRects;
+    QVector<QRectF> ggRects;
+
     for(int pair = 0; pair < peaks.length(); pair += 2) {
         if (peaks.length() > pair + 1) {
             for(int loop1 = 0; loop1 < peaks[pair].length(); loop1++) {
@@ -262,14 +270,12 @@ void Spectrum::paintDuo() {
 
                 peak = peaks[pair][loop1];
                 rect.setCoords(accumulate, start_v1_offset - peak, temp_acc, start_v1_offset);
-                painter.setBrush(g);
-                painter.drawRect(rect);
+                gRects.append(rect);
 
 
                 peak2 = peaks[pair + 1][loop1];
                 rect.setCoords(accumulate, start_v2_offset, temp_acc, start_v2_offset + peak2);
-                painter.setBrush(gg);
-                painter.drawRect(rect);
+                ggRects.append(rect);
 
                 accumulate = temp_acc + paddWidth();
             }
@@ -279,14 +285,21 @@ void Spectrum::paintDuo() {
 
                 peak = peaks[pair][loop1];
                 rect.setCoords(accumulate, start_v1_offset - peak, temp_acc, start_v1_offset);
-                painter.setBrush(g);
-                painter.drawRect(rect);
+                gRects.append(rect);
 
                 accumulate = temp_acc + paddWidth();
             }
         }
         accumulate += beetweenSpace();
     }
+
+    painter.setBrush(g);
+    painter.drawRects(gRects);
+
+    painter.setBrush(gg);
+    painter.drawRects(ggRects);
+
+    qDebug() << "SPECTRUM " << t.nsecsElapsed();
 
     painter.restore();
 }
