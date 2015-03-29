@@ -239,8 +239,11 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
     // TODO: add initiated items to hash for update later on the same name state change
     IItem * node = mdl -> item(index);
 
-    if (!node -> is(ItemState::proceeded)) {
-        node -> set(ItemState::proceeded);
+    bool is_interactive = Settings::instance() -> isInteractiveProc();
+
+    if (is_interactive || !node -> is(ItemState::proceeded)) {
+        if (!is_interactive)
+            node -> set(ItemState::proceeded);
         if (!node -> isContainer())
             Library::instance() -> restoreItemState(index);
     }

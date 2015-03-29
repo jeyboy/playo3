@@ -16,7 +16,7 @@ Library::Library(QObject * parent) : QObject(parent), waitListLimit(10), ticksAm
 
     saveTimer = new QTimer();
     QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(clockTick()));
-    saveTimer -> start(2000);
+    saveTimer -> start(1000);
 
     QDir dir(libraryPath());
     if (!dir.exists())
@@ -214,12 +214,16 @@ void Library::remoteInfoRestoring(QModelIndex ind) {
 ///// privates
 ////////////////////////////////////////////////////////////////////////
 void Library::clockTick() {
-    if (++ticksAmount == 5) {
-        ticksAmount = 0;
-        saveCatalogs();
-    }
+    if (++ticksAmount > 999999999) ticksAmount = 0;
 
-    initRemoteItemInfo();
+    int saveLibDelay = Settings::instance() -> saveLibDelay();
+
+    if (saveLibDelay != 0 && ticksAmount % saveLibDelay == 0)
+        saveCatalogs();
+
+
+    if (ticksAmount % Settings::instance() -> remoteItemsProcDelay() == 0)
+        initRemoteItemInfo();
 }
 
 void Library::saveCatalogs() {

@@ -14,6 +14,7 @@ void Settings::fromJson(QJsonObject settings) {
     ItemSettings::fromJson(settings);
     SpectrumSettings::fromJson(settings);
     TabSettings::fromJson(settings);
+    LibrarySettings::fromJson(settings);
 }
 
 QJsonObject Settings::toJson() {
@@ -24,6 +25,7 @@ QJsonObject Settings::toJson() {
     ItemSettings::toJson(settings);
     SpectrumSettings::toJson(settings);
     TabSettings::toJson(settings);
+    LibrarySettings::toJson(settings);
 
     return settings;
 }

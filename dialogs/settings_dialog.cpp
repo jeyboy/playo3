@@ -16,7 +16,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
   initItemsSettings();
   initViewSettings();
   initHotkeysSettings();
-  initSpectrunSettings();
+  initSpectrumSettings();
+  initLibrarySettings();
   initExtensions();
 }
 
@@ -97,7 +98,7 @@ void SettingsDialog::on_resetButton_clicked() {
 
         case 4: {
             Settings::instance() -> resetSpectrumSettings();
-            initSpectrunSettings();
+            initSpectrumSettings();
         break;}
     }
 }
@@ -107,7 +108,8 @@ void SettingsDialog::on_acceptButton_clicked() {
     saveItemsSettings();
     saveViewSettings();
     saveHotkeysSettings();
-    saveSpectrunSettings();
+    saveSpectrumSettings();
+    saveLibrarySettings();
 
     accept();
 }
@@ -261,7 +263,7 @@ void SettingsDialog::initHotkeysSettings() {
     ui -> treeView -> hideColumn(2);
     ui -> treeView -> setColumnWidth(0, 230);
 }
-void SettingsDialog::initSpectrunSettings() {
+void SettingsDialog::initSpectrumSettings() {
     spectrumColor = Settings::instance() -> spectrumColor();
     ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
 
@@ -287,6 +289,12 @@ void SettingsDialog::initSpectrunSettings() {
 
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
     ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::instance() -> spectrumType());
+}
+
+void SettingsDialog::initLibrarySettings() {
+    ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay());
+    ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay());
+    ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());
 }
 
 void SettingsDialog::initExtensions() {
@@ -350,7 +358,7 @@ void SettingsDialog::saveHotkeysSettings() {
         HotkeyManager::instance() -> registerSequence(key -> data(2).toInt(), key -> data(1).toString());
 }
 
-void SettingsDialog::saveSpectrunSettings() {
+void SettingsDialog::saveSpectrumSettings() {
     Settings::instance() -> setSpectrumColor(spectrumColor);
     Settings::instance() -> setSpectrumColor2(spectrumColor2);
     Settings::instance() -> setSpectrumColor3(spectrumColor3);
@@ -363,6 +371,12 @@ void SettingsDialog::saveSpectrunSettings() {
     Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
     Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
     Settings::instance() -> setSpectrumType((Playo3::SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
+}
+
+void SettingsDialog::saveLibrarySettings() {
+    Settings::instance() -> setSaveLibDelay(ui -> libSaveFreq -> value());
+    Settings::instance() -> setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value());
+    Settings::instance() -> setInteractiveProc(ui -> interactiveStats -> isChecked());
 }
 
 bool SettingsDialog::execColorDialog(QColor & color) {

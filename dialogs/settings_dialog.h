@@ -67,14 +67,16 @@ protected:
     void initItemsSettings();
     void initViewSettings();
     void initHotkeysSettings();
-    void initSpectrunSettings();
+    void initSpectrumSettings();
+    void initLibrarySettings();
     void initExtensions();
 
     void saveGlobalSettings();
     void saveItemsSettings();
     void saveViewSettings();
     void saveHotkeysSettings();
-    void saveSpectrunSettings();
+    void saveSpectrumSettings();
+    void saveLibrarySettings();
 
 private:
     bool execColorDialog(QColor & color);

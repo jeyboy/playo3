@@ -97,7 +97,8 @@ SOURCES += main.cpp\
     media/mediainfo.cpp \
     media/genres/genres_interface.cpp \
     media/genres/music_genres.cpp \
-    media/genres/web/vk_genres.cpp
+    media/genres/web/vk_genres.cpp \
+    misc/settings/library_settings.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -197,7 +198,8 @@ HEADERS  += playo.h \
     media/mediainfo.h \
     media/genres/web/vk_genres.h \
     media/genres/genres_interface.h \
-    media/genres/music_genres.h
+    media/genres/music_genres.h \
+    misc/settings/library_settings.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

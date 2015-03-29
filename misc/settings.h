@@ -11,9 +11,11 @@
 #include "settings/item_settings.h"
 #include "settings/spectrum_settings.h"
 #include "settings/tab_settings.h"
+#include "settings/library_settings.h"
 
 class Settings : public GlobalSettings, public HotkeySettings,
-        public ItemSettings, public SpectrumSettings, public TabSettings {
+        public ItemSettings, public SpectrumSettings,
+        public TabSettings, public LibrarySettings {
 public:
     ~Settings() { }
 
@@ -33,10 +35,12 @@ public:
     inline void resetItemSettings()     { QJsonObject obj; ItemSettings::fromJson(obj); }
     inline void resetSpectrumSettings() { QJsonObject obj; SpectrumSettings::fromJson(obj); }
     inline void resetTabSettings()      { QJsonObject obj; TabSettings::fromJson(obj); }
+    inline void resetLibrarySettings()  { QJsonObject obj; LibrarySettings::fromJson(obj); }
 
 private:
     Settings() : GlobalSettings(), HotkeySettings(),
-        ItemSettings(), SpectrumSettings(), TabSettings() {
+        ItemSettings(), SpectrumSettings(),
+        TabSettings(), LibrarySettings() {
     }
 
     static Settings * self;
