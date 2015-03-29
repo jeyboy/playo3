@@ -2,6 +2,7 @@
 #include "ui_settings_dialog.h"
 #include <QFontDatabase>
 #include "media/player.h"
+#include <qdebug.h>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
   QDialog(parent), ui(new Ui::SettingsDialog) {
@@ -99,6 +100,11 @@ void SettingsDialog::on_resetButton_clicked() {
         case 4: {
             Settings::instance() -> resetSpectrumSettings();
             initSpectrumSettings();
+        break;}
+
+        case 5: {
+            Settings::instance() -> resetLibrarySettings();
+            initLibrarySettings();
         break;}
     }
 }
@@ -292,6 +298,7 @@ void SettingsDialog::initSpectrumSettings() {
 }
 
 void SettingsDialog::initLibrarySettings() {
+    qDebug() << Settings::instance() -> saveLibDelay() << " : " << Settings::instance() -> remoteItemsProcDelay();
     ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay());
     ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay());
     ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());

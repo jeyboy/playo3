@@ -5,7 +5,7 @@ void LibrarySettings::fromJson(QJsonObject & settings) {
 
     _saveLibDelay = settings.value("save_lib_delay").toInt(10);
 
-    _interactiveProc = settings.value("interactive_lib_proc").toBool(true);
+    _interactiveProc = settings.value("interactive_lib_proc").toBool(false);
 }
 
 void LibrarySettings::toJson(QJsonObject & settings) {
