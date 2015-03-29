@@ -12,6 +12,7 @@
 //    SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject *parent = 0);
 //    ~SoundcloudModel();
 
+//inline ContainerType containerType() const { return list; }
 //    WebApi * getApi() { return SoundcloudApi::instance(); }
 //public slots:
 //    void refresh();

@@ -2,12 +2,9 @@
 
 using namespace Playo3;
 
-DeletedList::DeletedList() {
+DeletedList::DeletedList() {}
 
-}
-DeletedList::~DeletedList() {
-
-}
+DeletedList::~DeletedList() {}
 
 void DeletedList::addRemovedUID(QVariant uid) {
     list.append(uid);
@@ -23,6 +20,5 @@ QJsonArray DeletedList::deletedToJson() {
     return QJsonArray::fromVariantList(list);
 }
 void DeletedList::deletedFromJson(QJsonArray array) {
-    foreach(QJsonValue value, array)
-        list.append(value.toVariant());
+    list = array.toVariantList();
 }
