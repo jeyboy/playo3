@@ -98,7 +98,14 @@ SOURCES += main.cpp\
     media/genres/genres_interface.cpp \
     media/genres/music_genres.cpp \
     media/genres/web/vk_genres.cpp \
-    misc/settings/library_settings.cpp
+    misc/settings/library_settings.cpp \
+    modules/web/auth_chemas/teu_auth.cpp \
+    modules/web/socials_api/soundcloud_api.cpp \
+    modules/web/socials_api/vk_api.cpp \
+    modules/web/socials_api/vk_api_private.cpp \
+    modules/web/api_process.cpp \
+    modules/web/ip_checker.cpp \
+    modules/web/web_api.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -199,7 +206,15 @@ HEADERS  += playo.h \
     media/genres/web/vk_genres.h \
     media/genres/genres_interface.h \
     media/genres/music_genres.h \
-    misc/settings/library_settings.h
+    misc/settings/library_settings.h \
+    modules/web/auth_chemas/teu_auth.h \
+    modules/web/socials_api/soundcloud_api.h \
+    modules/web/socials_api/vk_api.h \
+    modules/web/socials_api/vk_api_private.h \
+    modules/web/api_process.h \
+    modules/web/func_container.h \
+    modules/web/ip_checker.h \
+    modules/web/web_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

@@ -12,10 +12,16 @@ public:
     ~WebModel();
 
     QString getTabUid() const;
+protected:
+    void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
+    void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
+    int filesRoutine(QFileInfo & currFile, FolderItem * node);
+    int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
+
 protected slots:
     void errorReceived(int, QString);
 protected:
-    void deleteRemoved(QHash<ModelItem*, QString> & store);
+//    void deleteRemoved(QHash<ModelItem*, QString> & store);
     QString tabUid;
 };
 
