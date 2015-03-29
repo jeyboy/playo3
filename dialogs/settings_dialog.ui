@@ -1211,7 +1211,7 @@ text color</string>
         </rect>
        </property>
        <property name="text">
-        <string>Check stats on every item showing</string>
+        <string>Check stats on every item redrawing</string>
        </property>
       </widget>
      </widget>

@@ -2,7 +2,6 @@
 #include "ui_settings_dialog.h"
 #include <QFontDatabase>
 #include "media/player.h"
-#include <qdebug.h>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
   QDialog(parent), ui(new Ui::SettingsDialog) {
@@ -298,7 +297,6 @@ void SettingsDialog::initSpectrumSettings() {
 }
 
 void SettingsDialog::initLibrarySettings() {
-    qDebug() << Settings::instance() -> saveLibDelay() << " : " << Settings::instance() -> remoteItemsProcDelay();
     ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay());
     ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay());
     ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());

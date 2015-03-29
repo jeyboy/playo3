@@ -12,10 +12,10 @@ public:
     inline void setInteractiveProc(bool is_interactive) { _interactiveProc = is_interactive; }
 
     inline int remoteItemsProcDelay() const { return _remoteItemsProcDelay; }
-    inline void setRemoteItemsProcDelay(bool new_delay) { _remoteItemsProcDelay = new_delay; }
+    inline void setRemoteItemsProcDelay(int new_delay) { _remoteItemsProcDelay = new_delay; }
 
     inline int saveLibDelay() const { return _saveLibDelay; }
-    inline void setSaveLibDelay(bool new_delay) { _saveLibDelay = new_delay; }
+    inline void setSaveLibDelay(int new_delay) { _saveLibDelay = new_delay; }
 protected:
     int _remoteItemsProcDelay;
     int _saveLibDelay;
