@@ -42,6 +42,6 @@ void MediaInfo::readInfo(TagLib::FileRef f) {
     sampleRate = f.audioProperties() -> sampleRate();
 
     bitrate = f.audioProperties() -> bitrate();
-    if (bitrate == 0)
+    if (bitrate == 0 && duration > 0)
         bitrate = calcAverageBitrate();
 }
