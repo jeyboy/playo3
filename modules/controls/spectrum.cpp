@@ -20,6 +20,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     changeBandCount(Settings::instance() -> spectrumBarsCount());
     changeHeight(Settings::instance() -> spectrumHeight());
     changeType(Settings::instance() -> spectrumType());
+    onMovableChanged(isMovable());
 }
 
 Spectrum::~Spectrum() {
