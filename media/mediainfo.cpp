@@ -6,8 +6,8 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
     sampleRate(-1), size(0), readed(false), remote(!uri.isLocalFile()) {
 
     if (!remote) {
-        fileName = uri.toLocalFile().toStdWString().data();
-        TagLib::FileRef f(fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
+        fileName = new TagLib::FileName(uri.toLocalFile().toStdWString().data());
+        TagLib::FileRef f(*fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
 
         if (!f.isNull()) {
             size = f.file() -> length();
@@ -32,7 +32,7 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
 }
 
 void MediaInfo::initInfo() {
-    TagLib::FileRef f(fileName, true, TagLib::AudioProperties::Accurate);
+    TagLib::FileRef f(*fileName, true, TagLib::AudioProperties::Accurate);
     readInfo(f);
 }
 

@@ -50,8 +50,10 @@ int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     QFileInfoList::Iterator it = fileList.begin();
 
     res += fileList.size();
-    for(; it != fileList.end(); it++)
+    for(; it != fileList.end(); it++) {
+        qDebug() << "F PARSE " << (*it).fileName();
         new FileItem((*it).fileName(), node);
+    }
 
     node -> updateItemsCountInBranch(res);
     return res;
