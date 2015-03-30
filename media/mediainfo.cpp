@@ -21,6 +21,10 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
 
             if (!onlyTags)
                 readInfo(f);
+        } else {
+            QFile f(uri.toLocalFile());
+            size = f.size();
+            f.close();
         }
     }
     else if (!onlyTags)

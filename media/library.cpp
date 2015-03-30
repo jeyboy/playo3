@@ -65,7 +65,8 @@ void Library::restoreItemState(const QModelIndex & ind) {
             waitRemoteOnProc.removeFirst();
     }
 
-    initStateRestoring();
+    if (inProc.size() < INPROC_LIMIT)
+        initStateRestoring();
 }
 
 void Library::declineItemStateRestoring(const QModelIndex & ind) {
@@ -92,8 +93,10 @@ void Library::finishRemoteItemInfoInit() {
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
+        QModelIndex ind = waitOnProc.takeLast();
+        inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, waitOnProc.takeLast()));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, ind));
     }
 }
 
@@ -103,7 +106,8 @@ void Library::finishStateRestoring() {
     inProc.remove(ind);
     delete initiator;
 
-    initStateRestoring();
+    if (inProc.size() < INPROC_LIMIT)
+        initStateRestoring();
 }
 
 void Library::stateRestoring(QModelIndex ind) {

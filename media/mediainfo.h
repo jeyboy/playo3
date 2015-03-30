@@ -8,8 +8,9 @@
 #include "media/genres/music_genres.h"
 #include "media/player.h"
 
-#include <qurl.h>
-#include <QString>
+//#include <qfile.h>
+//#include <qurl.h>
+//#include <QString>
 
 class MediaInfo {
 public:
