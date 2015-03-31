@@ -101,7 +101,7 @@ void Spectrum::dataUpdated(QList<QVector<int> > bars) {
 }
 
 void Spectrum::onMovableChanged(bool movable) {
-     offset = movable ? 10 : 0;
+     offset = movable ? 10 : 2;
      start_h_offset = paddWidth() + offset;
      recalcAttrs();
 }
