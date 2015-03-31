@@ -79,6 +79,9 @@ void Player::playIndex(QModelIndex item, bool paused, uint start) {
 
         if (paused)
             pause();
+    } else {
+        duration = 0;
+        setTimePanelVal(0);
     }
 }
 

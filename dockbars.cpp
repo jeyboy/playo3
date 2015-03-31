@@ -246,6 +246,13 @@ void Dockbars::prevExecTriggering() {
 }
 
 void Dockbars::barClosed() {
-    if (active == (DockBar *)sender())
+    DockBar * bar = (DockBar *)sender();
+
+    if (active == bar)
         active = 0;
+
+    IView * v = view(bar);
+
+    if (v && Player::instance() -> playedIndex().model() == v -> model())
+        Player::instance() -> playIndex(QModelIndex());
 }

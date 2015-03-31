@@ -122,6 +122,9 @@ public slots:
     void setChannelVolume(int val);
     void setVolume(int val);
 
+protected:
+    int duration;
+
 private:
     float calcBpm(int channel_id);
     float fastSqrt(float x);
@@ -140,7 +143,6 @@ private:
 
     int channelsCount;
     int notifyInterval;
-    int duration;
     float size;
     float prevDownloadPos;
 

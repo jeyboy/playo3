@@ -62,7 +62,7 @@ namespace Playo3 {
 
     protected:
         void initPlayed();
-        inline IView * view(DockBar * bar) { return bar ? dynamic_cast<IView *>(bar -> mainWidget()) : 0; }
+        inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
