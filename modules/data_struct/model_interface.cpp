@@ -45,7 +45,6 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
 
         result = true;
     } else if (role == ISTATERESTORE) {
-        qDebug() << "STATE RESTORE";
         node -> setStates(value.toInt());
         result = true;
     } else if (role == ISTATE) {
