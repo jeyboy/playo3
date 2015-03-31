@@ -14,7 +14,7 @@
 #include "media/duration.h"
 #include "modules/data_struct/model_interface.h"
 
-#define INPROC_LIMIT 1
+#define INPROC_LIMIT 5
 
 namespace Playo3 {
     class Library : public QObject {

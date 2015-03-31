@@ -55,16 +55,21 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
-    waitOnProc.append(ind);
-    while(waitOnProc.size() > waitListLimit) {
-        QModelIndex ind = waitOnProc.takeFirst();
-        emitItemAttrChanging(ind, -ItemFields::proceeded);
-    }
+    if (!waitOnProc.contains(ind)) {
+        waitOnProc.append(ind);
+        while(waitOnProc.size() > waitListLimit) {
+            IItem * itm = indToItm(waitOnProc.takeFirst());
+            itm -> unset(ItemFields::proceeded);
 
-    if (ind.data(IREMOTE).toBool()) {
-        waitRemoteOnProc.append(ind);
-        while(waitRemoteOnProc.size() > waitListLimit)
-            waitRemoteOnProc.removeFirst();
+//            QModelIndex ind = waitOnProc.takeFirst();
+//            emitItemAttrChanging(ind, -ItemFields::proceeded);
+        }
+
+        if (ind.data(IREMOTE).toBool()) {
+            waitRemoteOnProc.append(ind);
+            while(waitRemoteOnProc.size() > waitListLimit)
+                waitRemoteOnProc.removeFirst();
+        }
     }
 
     if (inProc.size() < INPROC_LIMIT)
