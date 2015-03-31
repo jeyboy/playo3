@@ -54,29 +54,7 @@ void ModelItemDelegate::drawCheckbox(QPainter* painter, const QStyleOptionViewIt
     QApplication::style() -> drawControl(QStyle::CE_CheckBox, &checkboxstyle, painter, &templateCheckbox);
 }
 
-void ModelItemDelegate::progress(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex& index, int progressPercentage) const {
-    painter -> save();
-    QStyleOptionProgressBarV2 progressBarOption;
-    progressBarOption.rect = QRect(option.rect.x() + 10, option.rect.y() + 2 , option.rect.width() - 16, option.rect.height() - 4);
-    progressBarOption.text = index.model() -> data(index, Qt::DisplayRole).toString();
-    progressBarOption.textAlignment = Qt::AlignLeft | Qt::AlignHCenter | Qt::AlignJustify;
-    progressBarOption.textVisible = true;
-    progressBarOption.minimum = 0;
-    progressBarOption.maximum = 100;
-    progressBarOption.progress = progressPercentage;
-    QPalette pal = progressBarOption.palette;
-    pal.setColor(QPalette::HighlightedText, QColor::fromRgb(0, 0, 0));
-    progressBarOption.palette = pal;
-
-//    if(option.state & QStyle::State_Selected) {
-
-//    }
-
-    QApplication::style() -> drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
-    painter -> restore();
-}
-
-void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     painter -> save();
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
@@ -260,17 +238,6 @@ void ModelItemDelegate::usuall(QPainter * painter, const QStyleOptionViewItem & 
     }
 
     painter -> restore();
-}
-
-
-void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-    int progressPercentage = index.data(IPROGRESS).toInt();
-
-    if (progressPercentage != -1) {
-        progress(painter, option, index, progressPercentage);
-    } else {
-        usuall(painter, option, index);
-    }
 }
 
 //QPainterPath ModelItemDelegate::backroundRectPath(const QRect &rect, int offset) {

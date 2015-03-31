@@ -138,6 +138,8 @@ void Library::stateRestoring(QModelIndex ind) {
 
     if (isListened)
         emitItemAttrChanging(ind, ItemState::listened);
+    else
+        emitItemAttrChanging(ind, ItemState::new_item);
 }
 
 IItem * Library::indToItm(const QModelIndex & ind) {
