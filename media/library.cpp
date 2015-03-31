@@ -56,8 +56,10 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 
 void Library::restoreItemState(const QModelIndex & ind) {
     waitOnProc.append(ind);
-    while(waitOnProc.size() > waitListLimit)
-        waitOnProc.removeFirst();
+    while(waitOnProc.size() > waitListLimit) {
+        QModelIndex ind = waitOnProc.takeFirst();
+        emitItemAttrChanging(ind, -ItemFields::proceeded);
+    }
 
     if (ind.data(IREMOTE).toBool()) {
         waitRemoteOnProc.append(ind);
