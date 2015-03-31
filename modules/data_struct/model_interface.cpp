@@ -348,6 +348,7 @@ void IModel::shuffle() {
 //////////////////////// slots //////////////////////////
 
 void IModel::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
+    qDebug() << "IN ATTR EMIT " << ind.data();
     setData(ind, val, attr);
 }
 

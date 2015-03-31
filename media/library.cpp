@@ -60,9 +60,6 @@ void Library::restoreItemState(const QModelIndex & ind) {
         while(waitOnProc.size() > waitListLimit) {
             IItem * itm = indToItm(waitOnProc.takeFirst());
             itm -> unset(ItemFields::proceeded);
-
-//            QModelIndex ind = waitOnProc.takeFirst();
-//            emitItemAttrChanging(ind, -ItemFields::proceeded);
         }
 
         if (ind.data(IREMOTE).toBool()) {
@@ -154,7 +151,8 @@ IItem * Library::indToItm(const QModelIndex & ind) {
 }
 
 void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
-    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+    qDebug() << "ATTR EMIT " << state << " | " << ind.data();
+    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection));
     emit updateAttr(ind, ISTATERESTORE, state);
     disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
