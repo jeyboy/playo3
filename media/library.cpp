@@ -151,8 +151,10 @@ IItem * Library::indToItm(const QModelIndex & ind) {
 }
 
 void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
-    qDebug() << "ATTR EMIT " << state << " | " << ind.data();
-    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection));
+    connect(
+        this, SIGNAL(updateAttr(QModelIndex,int,QVariant)),
+        ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection)
+    );
     emit updateAttr(ind, ISTATERESTORE, state);
     disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
