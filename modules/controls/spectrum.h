@@ -33,12 +33,11 @@ namespace Playo3  {
         void dataUpdated(QList<QVector<int> >);
         void onMovableChanged(bool movable);
         void onOrientationChanged(Qt::Orientation orientation);
+        void recalcAttrs();
 
     protected:
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *event);
-
-        void recalcAttrs();
 
         int peakDimension();
         inline int verticalPadd() { return 5; }

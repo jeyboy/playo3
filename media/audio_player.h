@@ -62,7 +62,7 @@ public:
     ~AudioPlayer();
 
     QList<QVector<int> > & getDefaultSpectrum();
-    int getCalcSpectrumBandsCount() const;
+    int getCalcSpectrumBandsCount();
     int getPosition() const;
     int getDuration() const;
     int getVolume() const;
@@ -94,6 +94,7 @@ signals:
     void stateChanged(MediaState);
     void mediaStatusChanged(MediaStatus);
     void spectrumChanged(QList<QVector<int> >);
+    void channelsCountChanged();
 
     void positionChanged(int);
     void durationChanged(int);
@@ -141,7 +142,7 @@ private:
 
     float volumeVal;
 
-    int channelsCount;
+    int channelsCount, prevChannelsCount;
     int notifyInterval;
     float size;
     float prevDownloadPos;
