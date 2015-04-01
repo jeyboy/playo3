@@ -71,9 +71,6 @@ namespace Playo3 {
         inline virtual QString toUID() { return ""; }
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
-
-        //TODO: add prepare titles method
-
     protected:
         QVariantMap attrs;
     };

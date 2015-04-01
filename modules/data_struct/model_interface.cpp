@@ -27,7 +27,7 @@ QVariant IModel::data(const QModelIndex & index, int role) const {
     return item(index) -> data(role);
 }
 
-bool IModel::setData(const QModelIndex & model_index, const QVariant &value, int role) {
+bool IModel::setData(const QModelIndex & model_index, const QVariant & value, int role) {
     bool result = false;
 
     IItem * node = item(model_index);
@@ -45,8 +45,9 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant &value, int
 
         result = true;
     } else if (role == ISTATERESTORE) {
-        node -> setStates(value.toInt());
-        result = true;
+        int iState = value.toInt();
+        node -> setStates(iState);
+        result = iState != -ItemState::proceeded;
     } else if (role == ISTATE) {
         Library::instance() -> setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
@@ -345,10 +346,6 @@ void IModel::shuffle() {
 //    }
 
 //////////////////////// slots //////////////////////////
-
-void IModel::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
-    setData(ind, val, attr);
-}
 
 void IModel::expandeAll() {
     rootItem -> propagateFolderSetFlag(ItemState::expanded);

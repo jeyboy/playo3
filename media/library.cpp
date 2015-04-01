@@ -55,17 +55,22 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
-    waitOnProc.append(ind);
-    while(waitOnProc.size() > waitListLimit)
-        waitOnProc.removeFirst();
+    if (!waitOnProc.contains(ind)) {
+        waitOnProc.append(ind);
+        while(waitOnProc.size() > waitListLimit) {
+            IItem * itm = indToItm(waitOnProc.takeFirst());
+            itm -> unset(ItemFields::proceeded);
+        }
 
-    if (ind.data(IREMOTE).toBool()) {
-        waitRemoteOnProc.append(ind);
-        while(waitRemoteOnProc.size() > waitListLimit)
-            waitRemoteOnProc.removeFirst();
+        if (ind.data(IREMOTE).toBool()) {
+            waitRemoteOnProc.append(ind);
+            while(waitRemoteOnProc.size() > waitListLimit)
+                waitRemoteOnProc.removeFirst();
+        }
     }
 
-    initStateRestoring();
+    if (inProc.size() < INPROC_LIMIT)
+        initStateRestoring();
 }
 
 void Library::declineItemStateRestoring(const QModelIndex & ind) {
@@ -92,8 +97,10 @@ void Library::finishRemoteItemInfoInit() {
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
+        QModelIndex ind = waitOnProc.takeLast();
+        inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, waitOnProc.takeLast()));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, ind));
     }
 }
 
@@ -103,7 +110,8 @@ void Library::finishStateRestoring() {
     inProc.remove(ind);
     delete initiator;
 
-    initStateRestoring();
+    if (inProc.size() < INPROC_LIMIT)
+        initStateRestoring();
 }
 
 void Library::stateRestoring(QModelIndex ind) {
@@ -134,6 +142,8 @@ void Library::stateRestoring(QModelIndex ind) {
 
     if (isListened)
         emitItemAttrChanging(ind, ItemState::listened);
+    else
+        emitItemAttrChanging(ind, ItemState::new_item);
 }
 
 IItem * Library::indToItm(const QModelIndex & ind) {
@@ -141,7 +151,10 @@ IItem * Library::indToItm(const QModelIndex & ind) {
 }
 
 void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
-    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+    connect(
+        this, SIGNAL(updateAttr(QModelIndex,int,QVariant)),
+        ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection)
+    );
     emit updateAttr(ind, ISTATERESTORE, state);
     disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
@@ -327,9 +340,12 @@ void Library::initItemData(IItem * itm) {
 
 void Library::initItemInfo(MediaInfo & info, IItem * itm) {
     itm -> setSize(info.getSize());
-    qDebug() << itm -> title() << " ||| " << info.getSize() << " : " << info.getBitrate() << " : " << info.getSampleRate() << " : " << info.getChannels();
-    itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
-    itm -> setDuration(Duration::fromSeconds(info.getDuration()));
+    if (info.isReaded())
+        itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
+    else
+        itm -> setInfo(Format::toUnits(info.getSize()));
+    if (info.getDuration() > 0)
+        itm -> setDuration(Duration::fromSeconds(info.getDuration()));
     itm -> setGenre(MusicGenres::instance() -> toInt(info.getGenre()));
 }
 

@@ -33,13 +33,7 @@ public:
 //                              const QStyleOptionViewItem & option,
 //                              const QModelIndex & index) const;
 
-    void usuall(QPainter * painter, const QStyleOptionViewItem & option,
-               const QModelIndex& index) const;
-
-    void progress(QPainter * painter, const QStyleOptionViewItem & option,
-               const QModelIndex & index, int progressPercentage) const;
-
-    void paint(QPainter * painter, const QStyleOptionViewItem & option,
+   void paint(QPainter * painter, const QStyleOptionViewItem & option,
                const QModelIndex & index) const;
 
 public slots:

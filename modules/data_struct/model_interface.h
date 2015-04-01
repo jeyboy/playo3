@@ -65,9 +65,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
 
     public slots:
-        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
-//        void libraryResponse();
-//        virtual void refresh();
+        inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
         void expandeAll();
         void collapsed(const QModelIndex & index);
@@ -108,11 +106,6 @@ namespace Playo3 {
     ////        virtual WebApi * getApi() { return 0; } //stub
     //    signals:
     ////        void showMessage(QString);
-
-    ////        void showSpinner();
-    ////        void hideSpinner();
-
-    //        void updated();
 }
 
 #endif // MODEL_INTERFACE
