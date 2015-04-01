@@ -340,9 +340,12 @@ void Library::initItemData(IItem * itm) {
 
 void Library::initItemInfo(MediaInfo & info, IItem * itm) {
     itm -> setSize(info.getSize());
-    qDebug() << itm -> title() << " ||| " << info.getSize() << " : " << info.getBitrate() << " : " << info.getSampleRate() << " : " << info.getChannels();
-    itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
-    itm -> setDuration(Duration::fromSeconds(info.getDuration()));
+    if (info.isReaded())
+        itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
+    else
+        itm -> setInfo(Format::toUnits(info.getSize()));
+    if (info.getDuration() > 0)
+        itm -> setDuration(Duration::fromSeconds(info.getDuration()));
     itm -> setGenre(MusicGenres::instance() -> toInt(info.getGenre()));
 }
 

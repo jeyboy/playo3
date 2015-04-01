@@ -2,7 +2,7 @@
 #include <qdebug.h>
 
 MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
-    year(-1), track(-1), channels(-1), bitrate(-1), duration(-1),
+    year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
     sampleRate(-1), size(0), readed(false), remote(!uri.isLocalFile()) {
 
     if (!remote) {
@@ -10,8 +10,8 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
         TagLib::FileRef f(*fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
 
         if (!f.isNull()) {
-            size = f.file() -> length();
             readed = true;
+            size = f.file() -> length();
             artist = QString::fromStdWString(f.tag() -> artist().toWString());
             title = QString::fromStdWString(f.tag() -> title().toWString());
             album = QString::fromStdWString(f.tag() -> album().toWString());
@@ -27,8 +27,10 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
             f.close();
         }
     }
-    else if (!onlyTags)
+    else if (!onlyTags) {
+        readed = true;
         Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
+    }
 }
 
 void MediaInfo::initInfo() {
