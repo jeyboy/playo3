@@ -19,7 +19,8 @@ FileItem::FileItem(QString filePath, QString fileName, FolderItem * parent, int 
 }
 
 FileItem::~FileItem() {
-
+    if (is(mark_on_removing))
+        removePhysicalObject();
 }
 
 bool FileItem::removePhysicalObject() {

@@ -8,6 +8,7 @@ namespace Playo3 {
     class ItemState {
         public:
             enum ItemStateFlag {
+                mark_on_removing = 1024,
                 played = 512,
                 proceeded = 256, // once list proceeding
                 checked = 128,

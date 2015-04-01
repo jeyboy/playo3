@@ -47,7 +47,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
     } else if (role == ISTATERESTORE) {
         int iState = value.toInt();
         node -> setStates(iState);
-        result = iState != -ItemState::proceeded;
+        result = iState != -ItemState::proceeded && iState != -ItemState::mark_on_removing;
     } else if (role == ISTATE) {
         Library::instance() -> setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
