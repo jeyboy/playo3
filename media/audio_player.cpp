@@ -100,7 +100,12 @@ QList<QVector<int> > & AudioPlayer::getDefaultSpectrum() {
     return defaultSpectrum;
 }
 
-int AudioPlayer::getCalcSpectrumBandsCount() const {
+int AudioPlayer::getCalcSpectrumBandsCount() {
+    if (channelsCount != prevChannelsCount) {
+        prevChannelsCount = channelsCount;
+        emit channelsCountChanged();
+    }
+
     return _spectrumBandsCount / (channelsCount / 2);
 }
 
@@ -133,6 +138,8 @@ void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
 
     defaultSpectrum.append(l);
     defaultSpectrum.append(l);
+
+    prevChannelsCount = 2;
 
 //////////////////  calculate predefined points  ///////////////////////////
 

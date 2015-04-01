@@ -13,6 +13,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
+    connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
