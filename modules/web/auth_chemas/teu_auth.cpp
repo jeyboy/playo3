@@ -16,10 +16,8 @@ void TeuAuth::fromJson(QJsonObject & hash) {
     token = hash.value("_t_").toString();
     expires_in = hash.value("_e_").toString();
 }
-QJsonObject & TeuAuth::toJson(QJsonObject & root) {
-    root["_u_"] = getUserID();
-    root["_t_"] = getToken();
-    root["_e_"] = getExpire();
-
-    return root;
+void TeuAuth::toJson(QJsonObject & hash) {
+    hash["_u_"] = getUserID();
+    hash["_t_"] = getToken();
+    hash["_e_"] = getExpire();
 }

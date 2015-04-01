@@ -16,7 +16,7 @@ public:
     inline QString getUserID() { return user_id; }
 
     void fromJson(QJsonObject & hash);
-    QJsonObject & toJson(QJsonObject & root);
+    void toJson(QJsonObject & hash);
 
 private:
     QString token;

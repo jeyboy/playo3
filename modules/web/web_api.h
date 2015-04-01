@@ -17,12 +17,13 @@
 
 struct ApiFuncContainer {
     ApiFuncContainer() { }
-    ApiFuncContainer(const QObject * receiver,const char * respSlot , QString & user_id) {
+    ApiFuncContainer(const QObject * receiver, const char * respSlot, QString & user_id) {
         obj = receiver;
         slot = respSlot;
         uid = user_id;
     }
-    ~ApiFuncContainer() {}
+    ~ApiFuncContainer() {
+    }
 
     QString uid;
     const QObject * obj;
@@ -45,7 +46,6 @@ public:
     inline virtual bool isConnected() { return false; }
 
     inline CustomNetworkAccessManager * manager() const { return netManager; }
-    inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
 
     QPixmap openRemoteImage(QString url);
 
@@ -58,11 +58,13 @@ public:
     inline QHash<QString, QString> groupsList() const { return groups; }
 
     void fromJson(QJsonObject & hash);
-    QJsonObject & toJson(QJsonObject & root);
+    void toJson(QJsonObject & hash);
 public slots:
-    void showCaptcha();
+    void showingCaptcha();
 
 protected:
+    inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
+
     CaptchaDialog * captchaDialog;
     QJsonObject responseToJson(QByteArray data);
 

@@ -6,11 +6,14 @@ CustomNetworkAccessManager::CustomNetworkAccessManager(QObject * parent, QSsl::S
     this -> mode = mode;
 }
 
+QNetworkReply * CustomNetworkAccessManager::getSync(const QNetworkRequest & request) {
+    QNetworkReply * ret = CustomNetworkAccessManager::get(request);
+    synchronizeRequest(ret);
+    return ret;
+}
+
 QNetworkReply * CustomNetworkAccessManager::openUrl(QUrl & url) { // TODO: need to prevent from url cicling
-    QNetworkReply * m_http = get(QNetworkRequest(url));
-    QEventLoop loop;
-    connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
+    QNetworkReply * m_http = getSync(QNetworkRequest(url));
 
     QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (possibleRedirectUrl.isValid()) {

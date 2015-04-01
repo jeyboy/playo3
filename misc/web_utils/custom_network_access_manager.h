@@ -8,6 +8,8 @@ class CustomNetworkAccessManager : public QNetworkAccessManager {
 public:
     CustomNetworkAccessManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
+    QNetworkReply * getSync(const QNetworkRequest & request);
+
     QNetworkReply * openUrl(QUrl & url);
     void synchronizeRequest(QNetworkReply * m_http);
 protected:

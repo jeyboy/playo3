@@ -42,18 +42,16 @@ void WebApi::fromJson(QJsonObject & hash) {
         addGroup(it.key(), it++.value().toString());
 }
 
-QJsonObject & WebApi::toJson(QJsonObject & root) {
+void WebApi::toJson(QJsonObject & hash) {
     QJsonObject friendsJson;
     for(QHash<QString, QString>::iterator i = friends.begin(); i != friends.end(); ++i)
         friendsJson.insert(i.key(), QJsonValue(i.value());
-    root.insert("friends", friendsJson);
+    hash.insert("friends", friendsJson);
 
     QJsonObject groupsJson;
     for(QHash<QString, QString>::iterator i = groups.begin(); i != groups.end(); ++i)
         friendsJson.insert(i.key(), QJsonValue(i.value());
-    root.insert("groups", groupsJson);
-
-    return root;
+    hash.insert("groups", groupsJson);
 }
 
 QJsonObject WebApi::responseToJson(QByteArray data) {
@@ -61,7 +59,7 @@ QJsonObject WebApi::responseToJson(QByteArray data) {
     return doc.object();
 }
 
-void WebApi::showCaptcha() {
+void WebApi::showingCaptcha() {
     captchaDialog -> clearText();
     captchaDialog -> exec();
 }

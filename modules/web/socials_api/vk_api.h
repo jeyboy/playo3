@@ -2,10 +2,10 @@
 #define VK_API_H
 
 #include "../web_api.h"
-#include "../func_container.h"
+//#include "../func_container.h"
 #include "../auth_chemas/teu_auth.h"
 #include "vk_api_private.h"
-#include "../api_process.h"
+//#include "../api_process.h"
 
 class VkApi : public WebApi, public TeuAuth {
     Q_OBJECT
@@ -16,15 +16,15 @@ public:
     QString proceedAuthResponse(const QUrl & url);
 
     ApiFuncContainer * wallMediaRoutine(ApiFuncContainer * func, int offset, int count);
-    void wallMediaList(FuncContainer responseSlot, QString uid = "0", int offset = 0, int count = 0);
+    void wallMediaList(ApiFuncContainer responseSlot, QString uid = "0", int offset = 0, int count = 0);
 
     ApiFuncContainer * audioAlbumsRoutine(ApiFuncContainer * func, int offset = 0);
-    void audioAlbums(FuncContainer responseSlot, QString uid);
+    void audioAlbums(ApiFuncContainer responseSlot, QString uid);
 
     ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
     void audioList(FuncContainer responseSlot, QString uid);
 
-    void refreshAudioList(FuncContainer slot, QHash<ModelItem *, QString> uids);
+    void refreshAudioList(ApiFuncContainer slot, QList<QString> uids);
 
     ~VkApi() {
     }
@@ -42,19 +42,19 @@ public:
 
 signals:
     void audioListReceived(QJsonObject &);
-    void audioListUpdate(QJsonObject &, QHash<ModelItem *, QString> &);
+    void audioListUpdate(QJsonObject &, QList<QString> &);
     void errorReceived(int, QString);
     void showCaptcha();
 
 protected:
-    bool responseRoutine(QNetworkReply * reply, FuncContainer func, QJsonObject & doc);
-    bool errorSend(QJsonObject & doc, FuncContainer func, QUrl url);
-    bool captchaProcessing(QJsonObject & error, FuncContainer func, QUrl url);
+    bool responseRoutine(QNetworkReply * reply, ApiFuncContainer func, QJsonObject & doc);
+    bool errorSend(QJsonObject & doc, ApiFuncContainer func, QUrl url);
+    bool captchaProcessing(QJsonObject & error, ApiFuncContainer func, QUrl url);
 
 private:   
     VkApi(QJsonObject hash) : WebApi(), TeuAuth() {
         fromJson(hash);
-        connect(this, SIGNAL(showCaptcha()), ApiProcess::instance(), SLOT(showCaptcha()), Qt::BlockingQueuedConnection);
+        connect(this, SIGNAL(showCaptcha()), this, SLOT(showingCaptcha()), Qt::BlockingQueuedConnection);
     }
 
     VkApi() : WebApi(), TeuAuth() {}
