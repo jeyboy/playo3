@@ -14,6 +14,10 @@ void CaptchaDialog::setImage(WebApi * api, QString url) {
     ui -> captchaImg -> setPixmap(api -> openRemoteImage(url));
 }
 
+void CaptchaDialog::clearText() {
+    ui -> captchaText -> setText("");
+}
+
 QString CaptchaDialog::captchaText() const {
     return ui -> captchaText -> text();
 }

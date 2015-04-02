@@ -2,7 +2,7 @@
 
 WebApi::WebApi(QObject * parent) : QObject(parent) {
     netManager = createManager();
-    captchaDialog = new CaptchaDialog(parent);
+    captchaDialog = new CaptchaDialog((QWidget *)parent);
 }
 
 WebApi::~WebApi() {
@@ -45,12 +45,12 @@ void WebApi::fromJson(QJsonObject & hash) {
 void WebApi::toJson(QJsonObject & hash) {
     QJsonObject friendsJson;
     for(QHash<QString, QString>::iterator i = friends.begin(); i != friends.end(); ++i)
-        friendsJson.insert(i.key(), QJsonValue(i.value());
+        friendsJson.insert(i.key(), QJsonValue(i.value()));
     hash.insert("friends", friendsJson);
 
     QJsonObject groupsJson;
     for(QHash<QString, QString>::iterator i = groups.begin(); i != groups.end(); ++i)
-        friendsJson.insert(i.key(), QJsonValue(i.value());
+        friendsJson.insert(i.key(), QJsonValue(i.value()));
     hash.insert("groups", groupsJson);
 }
 

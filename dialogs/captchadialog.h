@@ -6,8 +6,10 @@
 #include "modules/web/web_api.h"
 
 namespace Ui {
-class CaptchaDialog;
+    class CaptchaDialog;
 }
+
+class WebApi;
 
 class CaptchaDialog : public QDialog {
     Q_OBJECT
@@ -16,7 +18,7 @@ public:
     explicit CaptchaDialog(QWidget * parent = 0);
     ~CaptchaDialog();
     void setImage(WebApi * api, QString url);
-    inline void clearText() { ui -> captchaText -> setText(""); }
+    void clearText();
     QString captchaText() const;
 
 private slots:

@@ -101,16 +101,13 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
     QJsonObject doc;
     QVariantList res, temp;
     res.append(func -> result.value("albums").toArray().toVariantList());
-    bool finished = false;
 
-    QUrl url;
     QNetworkReply * m_http;
-    CustomNetworkAccessManager * netManager = createManager();
 
-    while(!finished) {
-        url = VkApiPrivate::audioAlbumsUrl(func -> uid, getToken(), offset);
-        m_http = netManager -> get(QNetworkRequest(url));
-        syncRequest(m_http);
+    while(true) {
+        m_http = netManager -> getSync(QNetworkRequest(
+            VkApiPrivate::audioAlbumsUrl(func -> uid, getToken(), offset)
+        ));
 
         if (!responseRoutine(m_http, func, doc))
             break;
@@ -125,16 +122,13 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
         res = temp;
 //        res.append(doc.value("albums").toArray().toVariantList());
         offset = doc.value("offset").toInt();
-        finished = doc.value("finished").toBool();
-        if (finished)
+        if (doc.value("finished").toBool())
             break;
 
         QThread::sleep(1);
     }
 
     func -> result.insert("albums", QJsonArray::fromVariantList(res));
-    delete netManager;
-
     return func;
 }
 
@@ -148,33 +142,28 @@ void VkApi::audioAlbums(const QObject * receiver, const char * respSlot, QString
 
 ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
     QNetworkReply * m_http;
-    CustomNetworkAccessManager * netManager = createManager();
-
     QUrl url = VkApiPrivate::audioInfoUrl(func -> uid, getUserID(), getToken());
 
-    m_http = netManager -> get(QNetworkRequest(url));
-    syncRequest(m_http);
-    if (responseRoutine(m_http, func -> func, func -> result)) {
+    m_http = netManager -> getSync(QNetworkRequest(url));
+    if (responseRoutine(m_http, func, func -> result)) {
         func -> result = func -> result.value("response").toObject();
-        bool finished = func -> result.value("albums_finished").toBool();
 
-        if (!finished) {
+        if (!func -> result.value("albums_finished").toBool()) {
             int offset = func -> result.value("albums_offset").toInt();
             audioAlbumsRoutine(func, offset);
         }
     }
 
-    delete netManager;
     return func;
 }
 
 void VkApi::audioList(const QObject * receiver, const char * respSlot, QString uid) {
-    ApiProcess::instance() -> start(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
+    startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
 }
 
 //TODO: has some troubles with ids amount in request
-void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QHash<ModelItem *, QString> uids) {
-    QUrl url = VkApiPrivate::audioRefreshUrl(QStringList(uids.values()), getToken());
+void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids) {
+    QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
     QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
 //    responses.insert(m_http, responseSlot);
 //    collations.insert(m_http, uids);
@@ -192,48 +181,44 @@ void VkApi::startApiCall(QFuture<ApiFuncContainer *> feature) {
 }
 
 void VkApi::apiCallFinished() {
-    QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *) sender();
+    QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
     ApiFuncContainer * func = initiator -> result();
     connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
     emit routineFinished(func -> result);
     disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
 }
 
-bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer func, QJsonObject & doc) {
-    QByteArray ar = reply -> readAll();
+bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
+    doc = responseToJson(reply -> readAll());
 
     QUrl url = reply -> url();
     reply -> close();
     delete reply;
 
-    doc = responseToJson(ar);
-    bool result = true;
-
     if (doc.contains("error")) {
         doc = doc.value("error").toObject();
-        result = errorSend(doc, func, url);
+        return errorSend(doc, func, url);
     }
 
-    return result;
+    return true;
 }
 
-bool VkApi::errorSend(QJsonObject & error, ApiFuncContainer func, QUrl url) {
+bool VkApi::errorSend(QJsonObject & error, ApiFuncContainer * func, QUrl url) {
     int err_code = error.value("error_code").toInt();
     QString err_msg = error.value("error_msg").toString();
 
     qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR " << error;
 
     if (err_code != 14) {
-        connect(this, SIGNAL(errorReceived(int,QString)), func.obj, SLOT(errorReceived(int,QString)));
+        connect(this, SIGNAL(errorReceived(int,QString)), func -> obj, SLOT(errorReceived(int,QString)));
         emit errorReceived(err_code, err_msg);
-        disconnect(this, SIGNAL(errorReceived(int,QString)), func.obj, SLOT(errorReceived(int,QString)));
+        disconnect(this, SIGNAL(errorReceived(int,QString)), func -> obj, SLOT(errorReceived(int,QString)));
         return false;
-    } else {
-        return captchaProcessing(error, func, url);
     }
+    else return captchaProcessing(error, func, url);
 }
 
-bool VkApi::captchaProcessing(QJsonObject & error, ApiFuncContainer func, QUrl url) {
+bool VkApi::captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url) {
     captchaDialog -> setImage(this, error.value("captcha_img").toString());
     emit showCaptcha();
 

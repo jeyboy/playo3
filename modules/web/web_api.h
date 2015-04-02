@@ -17,7 +17,7 @@
 
 struct ApiFuncContainer {
     ApiFuncContainer() { }
-    ApiFuncContainer(const QObject * receiver, const char * respSlot, QString & user_id) {
+    ApiFuncContainer(const QObject * receiver, const char * respSlot, QString user_id) {
         obj = receiver;
         slot = respSlot;
         uid = user_id;
@@ -30,6 +30,8 @@ struct ApiFuncContainer {
     const char * slot;
     QJsonObject result;
 };
+
+class CaptchaDialog;
 
 class WebApi : public QObject {
     Q_OBJECT
