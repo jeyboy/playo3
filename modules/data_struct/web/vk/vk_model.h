@@ -1,7 +1,7 @@
 #ifndef VK_MODEL_H
 #define VK_MODEL_H
 
-//#include "web/socials/vk_api.h"
+#include "modules/web/socials_api/vk_api.h"
 #include "modules/data_struct/web/web_model.h"
 //#include "media/media_player/utils/duration.h"
 
@@ -13,22 +13,17 @@ public:
     ~VkModel();
 
     inline ContainerType containerType() const { return vk; }
-//    inline WebApi * getApi() { return VkApi::instance(); }
+    inline WebApi * getApi() { return VkApi::instance(); }
 public slots:
-//    void refresh();
-//    void refreshWall();
+    void refresh();
+    void refreshWall();
 
 protected slots:
-//    void proceedWallList(QJsonObject &);
+    void proceedWallList(QJsonObject &);
 
-//    void proceedAudioList(QJsonObject &);
+    void proceedAudioList(QJsonObject &);
 //    void proceedAudioList(QJsonArray &, ModelItem *, QHash<ModelItem*, QString> &);
 //    void proceedAudioListUpdate(QJsonObject &, QHash<ModelItem *, QString> &);
-protected:
-    QModelIndex dropProcession(const QList<QUrl> & list);
-
-    void filesRoutine(ModelItem * index, QFileInfo currFile);
-    void filesRoutine(ModelItem * index, QList<QUrl> list);
 };
 
 
