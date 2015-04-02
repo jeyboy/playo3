@@ -68,12 +68,17 @@ FolderItem::~FolderItem() {
     if (_parent)
         _parent -> undeclareFolder(title().toString());
 
+    bool remove_marked = is(mark_on_removing);
+
     QList<IItem *>::Iterator begin = children.begin(), end = children.end();
     while (begin != end) {
-        if (is(mark_on_removing)) (*begin) -> set(mark_on_removing);
+        if (remove_marked) (*begin) -> set(mark_on_removing);
         delete *begin;
         ++begin;
     }
+
+    if (remove_marked)
+        removePhysicalObject();
 }
 
 void FolderItem::backPropagateItemsCountInBranch(int offset) {
@@ -92,17 +97,10 @@ QVariant FolderItem::data(int column) const {
 }
 
 bool FolderItem::removePhysicalObject() {
-    bool res = true;
-
-//    foreach(IItem * item, children)
-//        res &= item -> removePhysicalObject();
-
-//    QDir delDir(fullPath());
-//    if (fullPath().split('/').length() >= 2) {
-//        return delDir.removeRecursively();
-//    }
-
-    return res;
+    QDir delDir(fullPath());
+    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
+        return delDir.removeRecursively();
+    return false;
 }
 
 bool FolderItem::isExist() const {
