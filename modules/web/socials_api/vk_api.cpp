@@ -91,7 +91,9 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
 
 void VkApi::wallMediaList(const QObject * receiver, const char * respSlot, QString uid, int offset, int count) {
     uid = uid == "0" ? getUserID() : uid;
-    ApiProcess::instance() -> start(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFuncContainer(receiver, respSlot, uid), offset, count));
+    QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
+    connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
+    initiator -> setFuture(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFuncContainer(receiver, respSlot, uid), offset, count));
 }
 
 ///////////////////////////////////////////////////////////
@@ -187,6 +189,14 @@ void VkApi::refreshAudioList(ApiFuncContainer responseSlot, QHash<ModelItem *, Q
 ///////////////////////////////////////////////////////////
 /// PROTECTED
 ///////////////////////////////////////////////////////////
+
+void VkApi::apiCallFinished() {
+    QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *) sender();
+    ApiFuncContainer * func = initiator -> result();
+    connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
+    emit routineFinished(func -> result);
+    disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
+}
 
 bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer func, QJsonObject & doc) {
     QByteArray ar = reply -> readAll();
