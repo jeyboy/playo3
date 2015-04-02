@@ -72,7 +72,7 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
             VkApiPrivate::wallUrl(func -> uid, getToken(), offset, count)
         ));
 
-        if (!responseRoutine(m_http, func -> func, doc))
+        if (!responseRoutine(m_http, func, doc))
             break;
 
         doc = doc.value("response").toObject();
@@ -90,10 +90,7 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
 }
 
 void VkApi::wallMediaList(const QObject * receiver, const char * respSlot, QString uid, int offset, int count) {
-    uid = uid == "0" ? getUserID() : uid;
-    QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
-    connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
-    initiator -> setFuture(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFuncContainer(receiver, respSlot, uid), offset, count));
+    startApiCall(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), offset, count));
 }
 
 ///////////////////////////////////////////////////////////
@@ -115,7 +112,7 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
         m_http = netManager -> get(QNetworkRequest(url));
         syncRequest(m_http);
 
-        if (!responseRoutine(m_http, func -> func, doc))
+        if (!responseRoutine(m_http, func, doc))
             break;
 
         doc = doc.value("response").toObject();
@@ -141,9 +138,8 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
     return func;
 }
 
-void VkApi::audioAlbums(ApiFuncContainer responseSlot, QString uid) {
-    uid = uid == "0" ? getUserID() : uid;
-    ApiProcess::instance() -> start(QtConcurrent::run(this, &VkApi::audioAlbumsRoutine, new ApiFuncContainer(responseSlot, uid), 0));
+void VkApi::audioAlbums(const QObject * receiver, const char * respSlot, QString uid) {
+    startApiCall(QtConcurrent::run(this, &VkApi::audioAlbumsRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), 0));
 }
 
 ///////////////////////////////////////////////////////////
@@ -172,13 +168,12 @@ ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
     return func;
 }
 
-void VkApi::audioList(ApiFuncContainer responseSlot, QString uid) {
-    uid = uid == "0" ? getUserID() : uid;
-    ApiProcess::instance() -> start(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(responseSlot, uid)));
+void VkApi::audioList(const QObject * receiver, const char * respSlot, QString uid) {
+    ApiProcess::instance() -> start(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
 }
 
 //TODO: has some troubles with ids amount in request
-void VkApi::refreshAudioList(ApiFuncContainer responseSlot, QHash<ModelItem *, QString> uids) {
+void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QHash<ModelItem *, QString> uids) {
     QUrl url = VkApiPrivate::audioRefreshUrl(QStringList(uids.values()), getToken());
     QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
 //    responses.insert(m_http, responseSlot);
@@ -189,6 +184,12 @@ void VkApi::refreshAudioList(ApiFuncContainer responseSlot, QHash<ModelItem *, Q
 ///////////////////////////////////////////////////////////
 /// PROTECTED
 ///////////////////////////////////////////////////////////
+
+void VkApi::startApiCall(QFuture<ApiFuncContainer *> feature) {
+    QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
+    connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
+    initiator -> setFuture(feature);
+}
 
 void VkApi::apiCallFinished() {
     QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *) sender();
@@ -233,10 +234,10 @@ bool VkApi::errorSend(QJsonObject & error, ApiFuncContainer func, QUrl url) {
 }
 
 bool VkApi::captchaProcessing(QJsonObject & error, ApiFuncContainer func, QUrl url) {
-    ApiProcess::instance() -> getCaptchaDialog() -> setImage(this, error.value("captcha_img").toString());
+    captchaDialog -> setImage(this, error.value("captcha_img").toString());
     emit showCaptcha();
 
-    QString captchaText = ApiProcess::instance() -> getCaptchaDialog() -> captchaText();
+    QString captchaText = captchaDialog -> captchaText();
     if (captchaText.isEmpty())
         return false;
 
@@ -249,10 +250,7 @@ bool VkApi::captchaProcessing(QJsonObject & error, ApiFuncContainer func, QUrl u
 
     url.setQuery(query);
 
-    CustomNetworkAccessManager * netManager = createManager();
-    QNetworkReply * m_http = netManager -> get(QNetworkRequest(url));
-    syncRequest(m_http);
-    netManager -> deleteLater();
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
     return responseRoutine(m_http, func, error);
 }
 

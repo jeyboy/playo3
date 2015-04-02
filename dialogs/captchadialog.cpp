@@ -10,18 +10,10 @@ CaptchaDialog::~CaptchaDialog() {
     delete ui;
 }
 
-//void CaptchaDialog::setImage(WebApi * api, QString url) {
-//    ui -> captchaImg -> setPixmap(api -> openRemoteImage(url));
-//}
-
-void CaptchaDialog::clearText() {
-    return ui -> captchaText -> setText("");
+void CaptchaDialog::setImage(WebApi * api, QString url) {
+    ui -> captchaImg -> setPixmap(api -> openRemoteImage(url));
 }
 
 QString CaptchaDialog::captchaText() const {
     return ui -> captchaText -> text();
-}
-
-void CaptchaDialog::on_buttonBox_rejected() {
-    ui -> captchaText -> setText("");
 }

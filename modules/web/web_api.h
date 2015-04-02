@@ -43,7 +43,7 @@ public:
     virtual QString authUrl() const = 0;
     virtual QString proceedAuthResponse(const QUrl & url) = 0;
 
-    inline virtual bool isConnected() { return false; }
+    virtual bool isConnected() = 0;
 
     inline CustomNetworkAccessManager * manager() const { return netManager; }
 

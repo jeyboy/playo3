@@ -16,15 +16,15 @@ public:
     QString proceedAuthResponse(const QUrl & url);
 
     ApiFuncContainer * wallMediaRoutine(ApiFuncContainer * func, int offset, int count);
-    void wallMediaList(ApiFuncContainer responseSlot, QString uid = "0", int offset = 0, int count = 0);
+    void wallMediaList(const QObject * receiver, const char * respSlot, QString uid = "0", int offset = 0, int count = 0);
 
     ApiFuncContainer * audioAlbumsRoutine(ApiFuncContainer * func, int offset = 0);
-    void audioAlbums(ApiFuncContainer responseSlot, QString uid);
+    void audioAlbums(const QObject * receiver, const char * respSlot, QString uid);
 
     ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
-    void audioList(FuncContainer responseSlot, QString uid);
+    void audioList(const QObject * receiver, const char * respSlot, QString uid);
 
-    void refreshAudioList(ApiFuncContainer slot, QList<QString> uids);
+    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 
     ~VkApi() {
     }
@@ -50,7 +50,9 @@ signals:
 protected slots:
     void apiCallFinished();
 
-protected:   
+protected:
+    inline QString & adapteUid(QString & uid) { return uid == "0" ? getUserID() : uid; }
+    void startApiCall(QFuture<ApiFuncContainer *>);
     bool responseRoutine(QNetworkReply * reply, ApiFuncContainer func, QJsonObject & doc);
     bool errorSend(QJsonObject & doc, ApiFuncContainer func, QUrl url);
     bool captchaProcessing(QJsonObject & error, ApiFuncContainer func, QUrl url);
