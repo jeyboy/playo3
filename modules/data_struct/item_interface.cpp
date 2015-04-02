@@ -37,7 +37,6 @@ IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
 }
 
 IItem::~IItem() {
-
 }
 
 QString IItem::fullPath() const {
@@ -168,7 +167,6 @@ QVariant IItem::data(int column) const {
         case IEXTENSION:       return extension();
 //        case PATHID:            return path();
         case IREMOTE:          return isRemote();
-//        case TITLESCACHEID:     return QVariant(*getTitlesCache());
         case ISTATE:           return visualStates();
         case IPROGRESS:        return -1;//Download::instance() -> getProgress(item);
         case IFULLPATH:        return fullPath();

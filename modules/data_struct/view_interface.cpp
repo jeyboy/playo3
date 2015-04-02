@@ -425,6 +425,9 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
             Player::instance() -> playIndex(QModelIndex());
     }
 
+    if (isRemoveFileWithItem())
+        mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
+
     if (selectionUpdate != none) {
         QModelIndex newSel = QModelIndex();
 
