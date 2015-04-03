@@ -105,7 +105,8 @@ SOURCES += main.cpp\
     modules/web/socials_api/vk_api_private.cpp \
     modules/web/api_process.cpp \
     modules/web/ip_checker.cpp \
-    modules/web/web_api.cpp
+    modules/web/web_api.cpp \
+    modules/data_struct/web/web_item.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -214,7 +215,8 @@ HEADERS  += playo.h \
     modules/web/api_process.h \
     modules/web/func_container.h \
     modules/web/ip_checker.h \
-    modules/web/web_api.h
+    modules/web/web_api.h \
+    modules/data_struct/web/web_item.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

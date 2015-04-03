@@ -16,21 +16,10 @@ QString WebModel::getTabUid() const {
     return tabUid;
 }
 
-void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
-    QFileInfo file = QFileInfo(url.toLocalFile());
-    QString path = file.path();
-    if (path.isEmpty()) path = Extensions::folderName(file);
-
-    QStringList list = path.split('/', QString::SkipEmptyParts);
-    FolderItem * nearestNode = rootItem -> findNearestFolder(&list);
-    FolderItem * node = list.isEmpty() ? nearestNode : nearestNode -> createFolder(list.takeFirst(), &list);
-    exIndex = index(nearestNode);
-
-    (const_cast<QModelIndex &>(dIndex)) = index(node);
-    exRow = nearestNode -> row();
-
-    if (dIndex != exIndex)
-        dRow = -1;
+void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
+    exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
+    exRow = rootItem -> childCount();
+    dRow = -1;
 }
 
 void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
