@@ -52,7 +52,7 @@ namespace Playo3 {
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
-        inline QString folderUid() const { return folderUid(title().toString(), id().toString()); }
+        inline QString folderUid() const { return folderUid(title().toString(), uid().toString()); }
         inline QString folderUid(QString name, QString uid) const { return name + "*" + uid; }
 
         QHash<QString, FolderItem *> folders;

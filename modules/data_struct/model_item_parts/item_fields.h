@@ -42,7 +42,7 @@ namespace Playo3 {
         ItemFields(QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
-        inline QVariant id() const          { return attrs.value(JSON_TYPE_UID); }
+        inline QVariant uid() const         { return attrs.value(JSON_TYPE_UID); }
         inline QVariant owner() const       { return attrs.value(JSON_TYPE_OWNER_ID); }
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
@@ -58,7 +58,7 @@ namespace Playo3 {
 
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
-        inline void setId(QVariant newId)               { attrs[JSON_TYPE_UID] = newId; }
+        inline void setUid(QVariant newId)              { attrs[JSON_TYPE_UID] = newId; }
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
         inline void setGenre(QVariant newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }

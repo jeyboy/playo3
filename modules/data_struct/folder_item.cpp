@@ -129,9 +129,12 @@ QJsonObject FolderItem::toJson() {
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
 
-        QJsonArray ar = QJsonArray(); // TODO: rewrite on iteration through ++
-        for(int i = 0; i < children.length(); i++)
-            ar.append(children.at(i) -> toJson());
+
+        QJsonArray ar = QJsonArray();
+        QList<IItem *>::Iterator it = children.begin();
+
+        for( ;it != children.end(); it++)
+            ar.append(it -> toJson());
 
         root[JSON_TYPE_CHILDS] = ar;
     }

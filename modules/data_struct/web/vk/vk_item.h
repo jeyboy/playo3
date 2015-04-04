@@ -12,7 +12,7 @@ namespace Playo3 {
 //        VkFile(const QString filepath, QString filename, QString ownerID, QString fileID, ModelItem *parent = 0, int genre_id = -1, QString itemDuration = "", int itemSize = -1, QString itemInfo = "", int init_state = STATE_DEFAULT | STATE_CHECKED);
         ~VkFile();
 
-        inline QVariant toUID() { return QVariant(owner().toString() + "_" + id().toString()); }
+        inline QVariant toUID() { return QVariant(owner().toString() + "_" + uid().toString()); }
         bool removePhysicalObject();
 
         bool isExist() const;
