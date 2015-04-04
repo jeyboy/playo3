@@ -74,7 +74,6 @@ SOURCES += main.cpp\
     modules/data_struct/model_item_parts/item_fields.cpp \
     dialogs/captchadialog.cpp \
     dialogs/extension_dialog.cpp \
-    dialogs/relationdialog.cpp \
     dialogs/web_dialog.cpp \
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
@@ -107,7 +106,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/web_folder_item.cpp \
     modules/data_struct/web/soundcloud/soundcloud_item.cpp \
     modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp \
-    modules/data_struct/web/vk/vk_item.cpp
+    modules/data_struct/web/vk/vk_item.cpp \
+    dialogs/relations_dialog.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -181,7 +181,6 @@ HEADERS  += playo.h \
     misc/file_utils/icon_provider.h \
     dialogs/captchadialog.h \
     dialogs/extension_dialog.h \
-    dialogs/relationdialog.h \
     dialogs/web_dialog.h \
     modules/controls/simple_list_view.h \
     modules/data_struct/model_item_delegate.h \
@@ -218,7 +217,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/web_folder_item.h \
     modules/data_struct/web/vk/vk_item.h \
     modules/data_struct/web/soundcloud/soundcloud_item.h \
-    modules/data_struct/web/soundcloud/soundcloud_folder_item.h
+    modules/data_struct/web/soundcloud/soundcloud_folder_item.h \
+    dialogs/relations_dialog.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
@@ -227,8 +227,8 @@ FORMS    += playo.ui \
     dialogs/tabdialog.ui \
     dialogs/captchadialog.ui \
     dialogs/extension_dialog.ui \
-    dialogs/relationdialog.ui \
-    dialogs/web_dialog.ui
+    dialogs/web_dialog.ui \
+    dialogs/relations_dialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -1,12 +1,12 @@
-#include "relationdialog.h"
-#include "ui_relationdialog.h"
+#include "relations_dialog.h"
+#include "ui_relations_dialog.h"
 
-RelationDialog::RelationDialog(WebApi * currApi, QWidget * parent)
-    : QDialog(parent), ui(new Ui::RelationDialog), api(currApi) {
+RelationsDialog::RelationsDialog(WebApi * currApi, QWidget * parent)
+    : QDialog(parent), ui(new Ui::RelationsDialog), api(currApi) {
 
     ui -> setupUi(this);
 
-    friendModel = new QStringListModel(/*api -> friendsList().values()*/);
+    friendModel = new QStringListModel(api -> friendsList().values());
     friendModel -> sort(0);
     ui -> friendsList -> setModel(friendModel);
     ui -> friendsList -> setEditTriggers(QListView::NoEditTriggers);
@@ -17,23 +17,23 @@ RelationDialog::RelationDialog(WebApi * currApi, QWidget * parent)
     ui -> groupsList -> setEditTriggers(QListView::NoEditTriggers);
 }
 
-RelationDialog::~RelationDialog() {
+RelationsDialog::~RelationsDialog() {
     delete ui;
     delete friendModel;
     delete groupModel;
 }
 
-void RelationDialog::on_cancelButton_clicked() {
+void RelationsDialog::on_cancelButton_clicked() {
     reject();
 }
 
-void RelationDialog::on_friendsList_activated(const QModelIndex & index) {
+void RelationsDialog::on_friendsList_activated(const QModelIndex & index) {
     name = index.data().toString();
     uid = api -> friendsList().key(name).toInt();
     accept();
 }
 
-void RelationDialog::on_groupsList_activated(const QModelIndex & index) {
+void RelationsDialog::on_groupsList_activated(const QModelIndex & index) {
     name = index.data().toString();
     uid = -api -> groupsList().key(name).toInt();
     accept();

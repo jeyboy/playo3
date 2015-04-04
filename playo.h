@@ -17,7 +17,7 @@
 
 #include "dialogs/settings_dialog.h"
 #include "dialogs/web_dialog.h"
-#include "dialogs/relationdialog.h"
+#include "dialogs/relations_dialog.h"
 
 using namespace Playo3;
 
