@@ -168,7 +168,6 @@ QVariant IItem::data(int column) const {
 //        case PATHID:            return path();
         case IREMOTE:          return isRemote();
         case ISTATE:           return visualStates();
-        case IPROGRESS:        return -1;//Download::instance() -> getProgress(item);
         case IFULLPATH:        return fullPath();
         case IINNERCOPY:        return toInnerAttrs(itemType());
 

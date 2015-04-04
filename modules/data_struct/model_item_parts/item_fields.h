@@ -13,14 +13,14 @@ namespace Playo3 {
 
 
     #define IURL Qt::UserRole + 1
-    #define IPROGRESS IURL + 1
-    #define IFULLPATH IPROGRESS + 1
+    #define IFULLPATH IURL + 1
     #define IPLAYABLE IFULLPATH + 1
     #define IATTRS IPLAYABLE + 1
     #define IEXECCOUNTS IATTRS + 1
     #define ITREEPATH IEXECCOUNTS + 1
     #define ITREESTR ITREEPATH + 1
     #define ISTATERESTORE ITREESTR + 1
+    #define IID ISTATERESTORE + 1
 
 
     #define ITITLE Qt::DisplayRole
@@ -43,6 +43,7 @@ namespace Playo3 {
         ItemFields(QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
+        inline QVariant id() const          { return attrs.value(JSON_TYPE_UID); }
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
@@ -56,6 +57,7 @@ namespace Playo3 {
 
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
+        inline void setId(QVariant newId)               { attrs[JSON_TYPE_UID] = newId; }
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
         inline void setGenre(QVariant newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }

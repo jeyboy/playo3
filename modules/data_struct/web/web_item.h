@@ -1,31 +1,21 @@
-#ifndef FILE_ITEM_H
-#define FILE_ITEM_H
+#ifndef WEB_ITEM_H
+#define WEB_ITEM_H
 
-#include <QFile>
-#include "item_interface.h"
-#include "folder_item.h"
-
-#define DEFAULT_TITLE QString()
+#include "../item_interface.h"
+#include "web_folder_item.h"
 
 namespace Playo3 {
-    class FileItem : public IItem {
+    class WebItem : public IItem {
     public:
-        FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
-        FileItem(QJsonObject * hash, FolderItem * parent = 0);
-        FileItem(QString fileName, FolderItem * parent = 0, int pos = -1);
-        FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
+        WebItem(QVariantMap & hash, WebFolderItem * parent = 0, int pos = -1);
+        WebItem(QJsonObject * hash, WebFolderItem * parent = 0);
+//        WebItem(QString fileName, FolderItem * parent = 0, int pos = -1);
+//        WebItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
 
-        ~FileItem();
+//        VkFile(const QString filepath, QString filename, QString ownerID, QString fileID, ModelItem *parent = 0, int genre_id = -1, QString itemDuration = "", int itemSize = -1, QString itemInfo = "", int init_state = STATE_DEFAULT | STATE_CHECKED);
 
-        inline int itemType() const { return FILE_ITEM; }
-        bool removePhysicalObject();
-
-        bool isExist() const;
-
-        QJsonObject toJson();
-    protected:
-        void proceedTitle(QString & title);
+        ~WebItem();
     };
 }
 
-#endif // FILE_ITEM_H
+#endif // WEB_ITEM_H
