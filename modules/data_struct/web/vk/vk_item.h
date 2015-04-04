@@ -1,7 +1,7 @@
 #ifndef VK_ITEM_H
 #define VK_ITEM_H
 
-#include "modules/data_struct/web/web_item.h"
+#include "../web_item.h"
 
 namespace Playo3 {
     class VkFile : public WebItem {

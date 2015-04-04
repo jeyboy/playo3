@@ -7,7 +7,10 @@ FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {
 
 }
 
-FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()), inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
+    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
+      inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
@@ -21,24 +24,16 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, 
                 case PLAYLIST: {
                     new FolderItem(&iterObj, this);
                 break;}
-                case VK_ITEM: {
-                    new VkFile(&iterObj, this);
-                break;}
-                case VK_PLAYLIST: {
-                    new VkFolder(&iterObj, this);
-                break;}
+//                case VK_ITEM: {
+//                    new VkFile(&iterObj, this);
+//                break;}
+//                case VK_PLAYLIST: {
+//                    new VkFolder(&iterObj, this);
+//                break;}
 
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
                 // break;}
-//                case VK_FOLDER: {
-//                    inBranchCount += (new VkFolder(&iterObj, this)) -> inBranchCount;
-//                break;}
-//                case VK_FILE: {
-//                    inBranchCount++;
-//                    new VkFile(&iterObj, this);
-//                break;}
-
 //                case SOUNDCLOUD_FILE: {
 //                    inBranchCount++;
 //                    new SoundcloudFile(&iterObj, this);
@@ -72,7 +67,7 @@ FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int in
 }
 
 FolderItem::FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), inBranchCount(0), setId(uid) {
+    : IItem(parent, folderTitle, pos, initState), inBranchCount(0), setUid(uid) {
 
     if (parent != 0)
         parent -> declareFolder(folderUid(), this);
