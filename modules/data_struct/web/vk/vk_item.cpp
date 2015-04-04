@@ -1,11 +1,10 @@
 #include "vk_item.h"
-//#include "web/socials/vk_api.h"
 
 using namespace Playo3;
 
-VkFile::VkFile(QJsonObject * hash, FolderItem * parent) : WebItem(hash, parent) {}
-VkFile::VkFile(QVariantMap & hash, FolderItem * parent, int pos) : WebItem(hash, parent, pos) {}
-VkFile::VkFile(QString filePath, QString fileName, FolderItem * parent, int pos) : WebItem(filePath, fileName, parent, pos) {
+VkItem::VkItem(QJsonObject * hash, FolderItem * parent) : WebItem(hash, parent) {}
+VkFile::VkItem(QVariantMap & hash, FolderItem * parent, int pos) : WebItem(hash, parent, pos) {}
+VkItem::VkItem(QString filePath, QString fileName, FolderItem * parent, int pos) : WebItem(filePath, fileName, parent, pos) {
     setExtension("mp3");
 }
 
@@ -17,14 +16,14 @@ VkFile::VkFile(QString filePath, QString fileName, FolderItem * parent, int pos)
 //    extension = "mp3";
 //}
 
-VkFile::~VkFile() {}
+VkItem::~VkItem() {}
 
-bool VkFile::removePhysicalObject() {
+bool VkItem::removePhysicalObject() {
     //TODO: realization require
     return false;
 }
 
-bool VkFile::isExist() const {
+bool VkItem::isExist() const {
     //TODO: realization require
     return true;
 }

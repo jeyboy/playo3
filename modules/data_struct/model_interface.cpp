@@ -454,11 +454,27 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         foreach(InnerData * data, dataList.value(node)) {
             beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
             switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case FILE_ITEM: {
+                case ITEM: {
                     added++;
                     new FileItem(data -> attrs, node, data -> dRow);
                     break;
                 }
+                case VK_ITEM: {
+                    added++;
+                    new VkItem(data -> attrs, node, data -> dRow);
+                    break;
+                }
+//                case SOUNDCLOUD_ITEM: {
+//                    added++;
+//                    new SoundcloudItem(data -> attrs, node, data -> dRow);
+//                    break;
+//                }
+//                case CUE_ITEM: {
+//                    added++;
+//                    new CueItem(data -> attrs, node, data -> dRow);
+//                    break;
+//                }
+
                 default: {
                     qDebug() << "ITEM TYPE NOT SUPPORTED YET";
                 }

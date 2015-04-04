@@ -12,6 +12,7 @@ namespace Playo3 {
 
         ~VkFolder();
 
+        inline int itemType() const { return VK_PLAYLIST; }
         bool removePhysicalObject();
 
         bool isExist() const;

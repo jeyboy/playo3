@@ -57,7 +57,6 @@ SOURCES += main.cpp\
     modules/data_struct/tree/tree_view.cpp \
     modules/data_struct/web/soundcloud/soundcloud_model.cpp \
     modules/data_struct/web/soundcloud/soundcloud_view.cpp \
-    modules/data_struct/web/vk/vk_file.cpp \
     modules/data_struct/web/vk/vk_folder.cpp \
     modules/data_struct/web/vk/vk_model.cpp \
     modules/data_struct/web/vk/vk_view.cpp \
@@ -107,7 +106,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/web_item.cpp \
     modules/data_struct/web/web_folder_item.cpp \
     modules/data_struct/web/soundcloud/soundcloud_item.cpp \
-    modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp
+    modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp \
+    modules/data_struct/web/vk/vk_item.cpp
 
 HEADERS  += playo.h \
     single_application.h \

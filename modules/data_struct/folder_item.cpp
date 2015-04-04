@@ -24,12 +24,12 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
                 case PLAYLIST: {
                     new FolderItem(&iterObj, this);
                 break;}
-//                case VK_ITEM: {
-//                    new VkFile(&iterObj, this);
-//                break;}
-//                case VK_PLAYLIST: {
-//                    new VkFolder(&iterObj, this);
-//                break;}
+                case VK_ITEM: {
+                    new VkItem(&iterObj, this);
+                break;}
+                case VK_PLAYLIST: {
+                    new VkFolder(&iterObj, this);
+                break;}
 
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
@@ -67,7 +67,9 @@ FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int in
 }
 
 FolderItem::FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), inBranchCount(0), setUid(uid) {
+    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
+
+    setUid(uid);
 
     if (parent != 0)
         parent -> declareFolder(folderUid(), this);
@@ -129,7 +131,7 @@ QJsonObject FolderItem::toJson() {
         QList<IItem *>::Iterator it = children.begin();
 
         for( ;it != children.end(); it++)
-            ar.append(it -> toJson());
+            ar.append((*it) -> toJson());
 
         root[JSON_TYPE_CHILDS] = ar;
     }

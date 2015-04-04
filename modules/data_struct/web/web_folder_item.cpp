@@ -16,8 +16,8 @@ WebFolderItem::WebFolderItem(QString uid, QString folderTitle, FolderItem * pare
 WebFolderItem::~WebFolderItem() {
 }
 
-WebFolderItem * WebFolderItem::createFolder(QString uid, QString name, int pos) {
-    WebFolderItem * curr = folders.value(folderUid(name, uid), 0);
+FolderItem * WebFolderItem::createFolder(QString uid, QString name, int pos) {
+    FolderItem * curr = folders.value(folderUid(name, uid), 0);
 
     if (!curr)
         curr = new WebFolderItem(uid, name, this, pos);
@@ -28,12 +28,14 @@ void WebFolderItem::accumulateUids(QHash<IItem *, QString> & store) {
     QList<IItem *>::Iterator it = children.begin();
 
     for( ;it != children.end(); it++) {
-        if (it -> isContainer())
-            it -> accumulateUids(store);
-        else if (isRemote()) {
-            QVariant item_uid = id();
-            if (item_uid.isValid())
-                store.insert(it, item_uid.toString());
+        if ((*it) -> isRemote()) {
+            if ((*it) -> isContainer())
+                (reinterpret_cast<WebFolderItem *>(*it)) -> accumulateUids(store);
+            else {
+                QVariant item_uid = (*it) -> uid();
+                if (item_uid.isValid())
+                    store.insert((*it), item_uid.toString());
+            }
         }
     }
 }
