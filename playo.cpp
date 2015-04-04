@@ -187,11 +187,6 @@ void Playo::showActiveElem() {
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-//        if (dialog.isIconSizeChanged())
-//            ui -> tabber -> updateIconSize();
-
-//        ui -> tabber -> setTabPosition((QTabWidget::TabPosition)Settings::instance() -> getTabPosition());
-//        ui -> tabber -> setUsesScrollButtons(Settings::instance() -> getScrollButtonUsage());
         ToolBars::instance() -> getSpectrum() -> updateColors();
         ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> spectrumBarsCount());
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
@@ -202,14 +197,17 @@ void Playo::showSettingsDialog() {
     }
 }
 
-//void MainWindow::showVKRelTabDialog() {
-//    RelationDialog dialog(VkApi::instance(), this);
-//    if (dialog.exec() == QDialog::Accepted) {
-//        ui -> tabber -> addTab("VK [" + dialog.getName() + "]", TabDialog::VKSettings(dialog.getId()));
-//    } else {
-////        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
-//    }
-//}
+void MainWindow::showVKRelTabDialog() {
+    RelationDialog dialog(VkApi::instance(), this);
+    if (dialog.exec() == QDialog::Accepted) {
+
+
+        Dockbars::instance() -> createDocBar();
+        ui -> tabber -> addTab("VK [" + dialog.getName() + "]", TabDialog::VKSettings(dialog.getId()));
+    } else {
+        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+    }
+}
 
 //void MainWindow::showSoundcloudRelTabDialog() {
 //    RelationDialog dialog(SoundcloudApi::instance(), this);

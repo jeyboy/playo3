@@ -41,7 +41,7 @@ private slots:
     void showActiveElem();
     void showSettingsDialog();
 
-//    void showVKRelTabDialog();
+    void showVKRelTabDialog();
 //    void showSoundcloudRelTabDialog();
 
 //    void openVKTabDialog();

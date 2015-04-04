@@ -3,28 +3,6 @@
 
 using namespace Playo3;
 
-//Playo3::TabSettings TabDialog::VKSettings(int uid) {
-//    CBHash res;
-//    res.insert("d", 0);
-//    res.insert("i", 0);
-//    res.insert("p", 1);
-//    res.insert("t", VIEW_VK);
-//    res.insert("uid", uid);
-
-//    return res;
-//}
-
-//Playo3::TabSettings TabDialog::soundcloudSettings(int uid) {
-//    CBHash res;
-//    res.insert("d", 0);
-//    res.insert("i", 0);
-//    res.insert("p", 1);
-//    res.insert("t", VIEW_SOUNDCLOUD);
-//    res.insert("uid", uid);
-
-//    return res;
-//}
-
 TabDialog::TabDialog(QWidget * parent) :
   QDialog(parent), ui(new Ui::TabDialog) {
   ui -> setupUi(this);

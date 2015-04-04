@@ -11,9 +11,6 @@ namespace Ui {
 class TabDialog : public QDialog {
   Q_OBJECT
 public:
-//  static Playo3::TabSettings VKSettings(int uid = 0);
-//  static Playo3::TabSettings soundcloudSettings(int uid = 0);
-
   explicit TabDialog(QWidget * parent = 0);
   ~TabDialog();
 
