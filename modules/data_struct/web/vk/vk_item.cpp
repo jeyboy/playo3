@@ -3,7 +3,7 @@
 using namespace Playo3;
 
 VkItem::VkItem(QJsonObject * hash, FolderItem * parent) : WebItem(hash, parent) {}
-VkFile::VkItem(QVariantMap & hash, FolderItem * parent, int pos) : WebItem(hash, parent, pos) {}
+VkItem::VkItem(QVariantMap & hash, FolderItem * parent, int pos) : WebItem(hash, parent, pos) {}
 VkItem::VkItem(QString filePath, QString fileName, FolderItem * parent, int pos) : WebItem(filePath, fileName, parent, pos) {
     setExtension("mp3");
 }
