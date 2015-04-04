@@ -17,7 +17,7 @@ namespace Playo3 {
 
         ~FileItem();
 
-        inline int itemType() const { return FILE_ITEM; }
+        inline int itemType() const { return ITEM; }
         bool removePhysicalObject();
 
         bool isExist() const;

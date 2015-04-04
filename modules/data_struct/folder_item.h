@@ -12,7 +12,7 @@ namespace Playo3 {
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
         FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        FolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
         inline int itemsCountInBranch() const { return inBranchCount; }
@@ -22,7 +22,7 @@ namespace Playo3 {
         QVariant data(int column) const;
 
         inline void openLocation() { QDesktopServices::openUrl(toUrl()); }
-        inline int itemType() const { return FOLDER_ITEM; }
+        inline int itemType() const { return PLAYLIST; }
         bool removePhysicalObject();
 
         bool isExist() const;
@@ -52,7 +52,9 @@ namespace Playo3 {
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
-        inline QStirng folderUid() const { return title().toString() + "*" + id().toString(); }
+        inline QString folderUid() const { return folderUid(title().toString(), id().toString()); }
+        inline QString folderUid(QString name, QString uid) const { return name + "*" + uid; }
+
         QHash<QString, FolderItem *> folders;
         QList<IItem *> children;
         int inBranchCount; // executable items count

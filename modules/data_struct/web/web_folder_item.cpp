@@ -17,7 +17,7 @@ WebFolderItem::~WebFolderItem() {
 }
 
 WebFolderItem * WebFolderItem::createFolder(QString uid, QString name, int pos) {
-    WebFolderItem * curr = folders.value(name, 0);
+    WebFolderItem * curr = folders.value(folderUid(name, uid), 0);
 
     if (!curr)
         curr = new WebFolderItem(uid, name, this, pos);

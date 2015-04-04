@@ -71,7 +71,7 @@ FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int in
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString uid, QString folderTitle, FolderItem * parent, int pos, int initState)
+FolderItem::FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0), setId(uid) {
 
     if (parent != 0)

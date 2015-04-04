@@ -11,7 +11,6 @@
 namespace Playo3 {
     #define IINNERCOPY 999
 
-
     #define IURL Qt::UserRole + 1
     #define IFULLPATH IURL + 1
     #define IPLAYABLE IFULLPATH + 1
