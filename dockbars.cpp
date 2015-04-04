@@ -14,8 +14,7 @@ Dockbars * Dockbars::instance(QWidget * parent) {
 void Dockbars::load(QJsonArray & bars) {
     QMainWindow * window = (QMainWindow *)parent();
     QList<QString> barsList;
-//    barsList.append("Screen");
-    barsList.append("Downloads");
+    barsList.append("Downloads"/*, "Screen"*/);
 
     if (bars.count() > 0) {
         QJsonObject obj;
@@ -43,9 +42,8 @@ void Dockbars::load(QJsonArray & bars) {
                 }
             }
         }
-    } else {
-        // Do something if we did not have any bars
     }
+    else window -> addDockWidget(Qt::TopDockWidgetArea, common);
 
     QJsonObject def;
     ViewSettings defSettings;
@@ -101,9 +99,19 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
     } else return createDocBar(barName, settings, &attrs);
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs) {
+DockBar * Dockbars::commonBar() {
+    if (!common) {
+        QJsonObject attrs;
+        ViewSettings defSettings(true);
+        common = createDocBar("Common", defSettings, &attrs);
+    }
+
+    return common;
+}
+
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable) {
     IView * view;
-    DockBar * bar = createDocBar(name);
+    DockBar * bar = createDocBar(name, closable);
 
     switch(settings.type) {
         case list: {
@@ -120,7 +128,6 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
     bar -> setWidget(view);
 
     return bar;
-//    return createDocBar(name, view);
 }
 
 DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {

@@ -28,12 +28,10 @@ Playo::~Playo() {
     ///////////////////////////////////////////////
         Extensions::close();
         IconProvider::close();
-//        Library::close();
-
         Settings::close();
 //        Genre::close();
 
-//        VkApi::close();
+        VkApi::close();
 //        SoundcloudApi::close();
     ///////////////////////////////////////////////
 
@@ -60,7 +58,7 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-//    VkApi::instance(settings -> read("vk").toObject());
+    VkApi::instance(settings -> read("vk").toObject());
 //    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
 
     Settings::instance() -> fromJson(settings -> read("settings").toObject());
@@ -101,13 +99,13 @@ QMenu * Playo::createPopupMenu() {
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
-//    hide(); // hiding window while savings going
+    setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
     Player::instance() -> pause();
 
     settings -> clear();
 
-//    settings -> write("vk", VkApi::instance() -> toJson());
+    settings -> write("vk", VkApi::instance() -> toJson());
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
     qint64 v = QDateTime::currentMSecsSinceEpoch();
@@ -127,7 +125,6 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     MainWindow::closeEvent(e);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

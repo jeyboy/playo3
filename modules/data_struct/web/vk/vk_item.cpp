@@ -8,14 +8,6 @@ VkItem::VkItem(QString filePath, QString fileName, FolderItem * parent, int pos)
     setExtension("mp3");
 }
 
-//VkFile::VkFile(QString filePath, QString fileName, QString ownerID, QString fileID, ModelItem *parent, int genre_id, QString itemDuration, int itemSize, QString itemInfo, int initState)
-//    : ModelItem(filePath, fileName, parent, genre_id, itemDuration, itemSize, itemInfo, initState) {
-
-//    uid = fileID;
-//    owner_uid = ownerID;
-//    extension = "mp3";
-//}
-
 VkItem::~VkItem() {}
 
 bool VkItem::removePhysicalObject() {

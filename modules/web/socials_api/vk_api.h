@@ -2,10 +2,8 @@
 #define VK_API_H
 
 #include "../web_api.h"
-//#include "../func_container.h"
 #include "../auth_chemas/teu_auth.h"
 #include "vk_api_private.h"
-//#include "../api_process.h"
 
 class VkApi : public WebApi, public TeuAuth {
     Q_OBJECT

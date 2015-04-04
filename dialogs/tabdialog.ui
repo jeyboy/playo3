@@ -182,7 +182,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>20</y>
       <width>121</width>
       <height>17</height>
      </rect>
@@ -211,13 +211,16 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>80</y>
       <width>121</width>
       <height>17</height>
      </rect>
     </property>
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this option when you remove item, you are initiate deletion  of object from your hard disk ( or account data storage)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: red</string>
     </property>
     <property name="text">
      <string>Delete file with item</string>

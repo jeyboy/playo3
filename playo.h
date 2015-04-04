@@ -15,10 +15,9 @@
 #include "media/genres/music_genres.h"
 #include "misc/file_utils/data_store.h"
 
-//#include "dialogs/web_dialog.h"
 #include "dialogs/settings_dialog.h"
-//#include "dialogs/relationdialog.h"
-
+#include "dialogs/web_dialog.h"
+#include "dialogs/relationdialog.h"
 
 using namespace Playo3;
 

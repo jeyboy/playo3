@@ -52,7 +52,8 @@ void Player::updateItemState(bool isPlayed) {
     setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
 }
 
-void Player::playIndex(QModelIndex item, bool paused, uint start) {
+bool Player::playIndex(QModelIndex item, bool paused, uint start) {
+    bool retVal = true;
     switch(state()) {
         case StoppedState: { break; }
 
@@ -75,6 +76,7 @@ void Player::playIndex(QModelIndex item, bool paused, uint start) {
         if (isPlayed())
             updateItemState(true);
         else
+            retVal = false;
             setItemState(ItemState::played);
 
         if (paused)
@@ -83,6 +85,8 @@ void Player::playIndex(QModelIndex item, bool paused, uint start) {
         duration = 0;
         setTimePanelVal(0);
     }
+
+    return retVal;
 }
 
 void Player::setStartPosition(int position) {

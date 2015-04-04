@@ -13,12 +13,9 @@ namespace Playo3 { //TODO: maybe change on bitset ?
 
         ContainerType type;
 
-        ViewSettings() {
-            deleteFile = false;
-            playlist = false;
-            interactive = false;
-            common = false;
-            type = tree;
+        ViewSettings(bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false)
+            : common(isCommon), deleteFile(delFile), interactive(isInteractive), playlist(isPlaylist), type(tree)  {
+
         }
 
         ViewSettings(QJsonObject obj) {

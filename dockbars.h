@@ -39,7 +39,8 @@ namespace Playo3 {
                 bar -> raise();
         }
 
-        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0);
+        DockBar * commonBar();
+        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0, bool closable = true);
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
     public slots:
         void updateAllViews();
@@ -68,9 +69,9 @@ namespace Playo3 {
     private slots:
         void barClosed();
     private:
-        DockBar * active, * played;
+        DockBar * active, * played, * common;
 
-        Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0) {
+        Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
             connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), this, SLOT(onNextItemNeeded(Player::Reason)));
         }
 

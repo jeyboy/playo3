@@ -1,43 +1,37 @@
-//#include "web_dialog.h"
-//#include "ui_web_dialog.h"
-//#include <QDebug>
+#include "web_dialog.h"
+#include "ui_web_dialog.h"
+#include <qdebug.h>
 
-//WebDialog::WebDialog(QWidget *parent, WebApi * apiClass, QString title) :
-//  QDialog(parent), ui(new Ui::WebDialog) {
-//  ui -> setupUi(this);
+WebDialog::WebDialog(QWidget * parent, WebApi * apiClass, QString title) :
+    QDialog(parent), ui(new Ui::WebDialog), api(apiClass) {
 
-//  setWindowTitle(title);
-//  api = apiClass;
+    ui -> setupUi(this);
 
-//  CustomNetworkAccessManager *networkAccessManager = new CustomNetworkAccessManager();
-//  QWebView* view = ui -> webView;
-//  view -> page() -> setNetworkAccessManager(networkAccessManager);
+    setWindowTitle(title);
 
-//  connect(view, SIGNAL(urlChanged(const QUrl&)), SLOT(urlChanged(const QUrl&)));
+    ui -> webView -> page() -> setNetworkAccessManager(api -> manager());
 
-//  qDebug() << "AUTH URL " << api -> authUrl();
-//  view -> load(QUrl(api -> authUrl()));
-//  view -> show();
-//}
+    connect(ui -> webView, SIGNAL(urlChanged(const QUrl &)), SLOT(urlChanged(const QUrl &)));
 
-//WebDialog::~WebDialog() {
-//  delete ui;
-//}
+    ui -> webView -> load(QUrl(api -> authUrl()));
+    ui -> webView -> show();
+}
 
-//////////////////////////////////////////////////////////////
-///// SLOTS
-//////////////////////////////////////////////////////////////
+WebDialog::~WebDialog() {
+    delete ui;
+}
 
-//void WebDialog::urlChanged(const QUrl& url) {
-//    qDebug() << "NEW URL " << url;
-//    QString res = api -> proceedAuthResponse(url);
-//    qDebug() << "Hula: " << res;
-//    if (res == "accept") {
-//        accept();
-//    } else if (res == "reject") {
-//        reject();
-//    } else if (res.length() > 0) {
-//        QWebView* view = ui -> webView;
-//        view -> load(QUrl(res));
-//    }
-//}
+////////////////////////////////////////////////////////////
+/// SLOTS
+////////////////////////////////////////////////////////////
+
+void WebDialog::urlChanged(const QUrl & url) {
+    QString res = api -> proceedAuthResponse(url);
+    qDebug() << "Hula: " << url << " | " << res;
+    if (res == "accept")
+        accept();
+    else if (res == "reject")
+        reject();
+    else if (res.length() > 0)
+        ui -> webView -> load(QUrl(res));
+}

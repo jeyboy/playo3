@@ -8,8 +8,8 @@
 #include "media/player.h"
 #include "misc/file_utils/data_store.h"
 
-//#include "web/socials/vk_api.h"
-//#include "web/socials/soundcloud_api.h"
+#include "modules/web/socials_api/vk_api.h"
+#include "modules/web/socials_api/soundcloud_api.h"
 
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
@@ -33,7 +33,7 @@ namespace Playo3 {
                 delete soundcloudToolButton -> menu();
             delete soundcloudToolButton;
 
-    //        delete spectrum;
+            delete spectrum;
         }
 
         static ToolBars * instance(QObject * parent = 0);

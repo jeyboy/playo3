@@ -35,10 +35,10 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     setIconSize(QSize(iconDimension, iconDimension));
 
     connect(
-                this, SIGNAL(showAlert(const QString &, const QString &, QMessageBox::StandardButtons)),
-                UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
-                Qt::BlockingQueuedConnection
-           );
+        this, SIGNAL(showAlert(const QString &, const QString &, QMessageBox::StandardButtons)),
+        UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
+        Qt::BlockingQueuedConnection
+    );
     connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, int, bool)), this, SLOT(removeRow(const QModelIndex &, int, bool)), Qt::BlockingQueuedConnection);
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
