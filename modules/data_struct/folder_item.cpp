@@ -15,12 +15,19 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, 
         foreach(QJsonValue obj, ar) {
             iterObj = obj.toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case FILE_ITEM: {
+                case ITEM: {
                     new FileItem(&iterObj, this);
                 break;}
-                case FOLDER_ITEM: {
+                case PLAYLIST: {
                     new FolderItem(&iterObj, this);
-                break;}               
+                break;}
+                case VK_ITEM: {
+                    new VkFile(&iterObj, this);
+                break;}
+                case VK_PLAYLIST: {
+                    new VkFolder(&iterObj, this);
+                break;}
+
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
                 // break;}
@@ -45,7 +52,7 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent) : IItem(parent, 
 
     attrs = hash -> toVariantMap();
     if (parent != 0)
-        parent -> declareFolder(title().toString(), this);
+        parent -> declareFolder(folderUid(), this);
 }
 
 FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
@@ -54,19 +61,26 @@ FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * par
     setPath(folderPath);
 
     if (parent != 0)
-        parent -> declareFolder(folderTitle, this);
+        parent -> declareFolder(folderUid(), this);
 }
 
 FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     if (parent != 0)
-        parent -> declareFolder(folderTitle, this);
+        parent -> declareFolder(folderUid(), this);
+}
+
+FolderItem::FolderItem(QString uid, QString folderTitle, FolderItem * parent, int pos, int initState)
+    : IItem(parent, folderTitle, pos, initState), inBranchCount(0), setId(uid) {
+
+    if (parent != 0)
+        parent -> declareFolder(folderUid(), this);
 }
 
 FolderItem::~FolderItem() {
     if (_parent)
-        _parent -> undeclareFolder(title().toString());
+        _parent -> undeclareFolder(folderUid());
 
     bool remove_marked = is(mark_on_removing);
 

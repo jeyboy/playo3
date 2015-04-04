@@ -55,9 +55,7 @@ SOURCES += main.cpp\
     modules/data_struct/list/list_view.cpp \
     modules/data_struct/tree/tree_model.cpp \
     modules/data_struct/tree/tree_view.cpp \
-    modules/data_struct/web/soundcloud/soundcloud_file.cpp \
     modules/data_struct/web/soundcloud/soundcloud_model.cpp \
-    modules/data_struct/web/soundcloud/soundcloud_playlist.cpp \
     modules/data_struct/web/soundcloud/soundcloud_view.cpp \
     modules/data_struct/web/vk/vk_file.cpp \
     modules/data_struct/web/vk/vk_folder.cpp \
@@ -107,7 +105,9 @@ SOURCES += main.cpp\
     modules/web/ip_checker.cpp \
     modules/web/web_api.cpp \
     modules/data_struct/web/web_item.cpp \
-    modules/data_struct/web/web_folder_item.cpp
+    modules/data_struct/web/web_folder_item.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_item.cpp \
+    modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -155,9 +155,7 @@ HEADERS  += playo.h \
     modules/data_struct/list/list_view.h \
     modules/data_struct/tree/tree_model.h \
     modules/data_struct/tree/tree_view.h \
-    modules/data_struct/web/soundcloud/soundcloud_file.h \
     modules/data_struct/web/soundcloud/soundcloud_model.h \
-    modules/data_struct/web/soundcloud/soundcloud_playlist.h \
     modules/data_struct/web/soundcloud/soundcloud_view.h \
     modules/data_struct/web/vk/vk_folder.h \
     modules/data_struct/web/vk/vk_model.h \
@@ -218,7 +216,9 @@ HEADERS  += playo.h \
     modules/web/web_api.h \
     modules/data_struct/web/web_item.h \
     modules/data_struct/web/web_folder_item.h \
-    modules/data_struct/web/vk/vk_item.h
+    modules/data_struct/web/vk/vk_item.h \
+    modules/data_struct/web/soundcloud/soundcloud_item.h \
+    modules/data_struct/web/soundcloud/soundcloud_folder_item.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

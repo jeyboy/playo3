@@ -11,7 +11,6 @@ namespace Playo3 {
         WebFolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~WebFolderItem();
 
-        QVariant data(int column) const;
         WebFolderItem * createFolder(QString name, QString uid, int pos = -1);
         void accumulateUids(QHash<IItem *, QString> & store);
     };

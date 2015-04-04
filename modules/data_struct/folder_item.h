@@ -12,6 +12,7 @@ namespace Playo3 {
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
         FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
         inline int itemsCountInBranch() const { return inBranchCount; }
@@ -51,6 +52,7 @@ namespace Playo3 {
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
     protected:
+        inline QStirng folderUid() const { return title().toString() + "*" + id().toString(); }
         QHash<QString, FolderItem *> folders;
         QList<IItem *> children;
         int inBranchCount; // executable items count

@@ -117,9 +117,11 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert("name", title());
-            params.insert("info", info());
-            params.insert("ext", extension());
-            params.insert("state", visualStates());
+            if (!isContainer()) {
+                params.insert("info", info());
+                params.insert("ext", extension());
+                params.insert("state", visualStates());
+            }
             return params;
         }
         case Qt::DisplayRole:   return title();
@@ -139,6 +141,7 @@ QVariant IItem::data(int column) const {
         case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
         case ITREESTR:         return buildTreeStr();
+        case IID:              return id();
 
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
@@ -154,7 +157,7 @@ QVariant IItem::data(int column) const {
             else
                 return Qt::AlignLeft;
 
-        case IINFO:            return info();
+//        case IINFO:            return info();
         case Qt::CheckStateRole: {
             if (Settings::instance() -> isCheckboxShow()) {
                 return is(checked);
@@ -186,38 +189,3 @@ bool IItem::setData(int column, const QVariant &value) {
 
     return true;
 }
-
-///////////////////////////////////////////////////////////
-//    ModelItem::~ModelItem() {
-//        delete state;
-//        delete titlesCache;
-//    }
-
-//    void ModelItem::accumulateUids(QHash<ModelItem*, QString> & store) {
-//        if (isFolder()) {
-//            foreach(ModelItem * item, *childItemsList())
-//                item -> accumulateUids(store);
-//        } else {
-//            QString currUid = toUID();
-//            if (!currUid.isEmpty()) {
-//                store.insert(this, currUid);
-//            }
-//        }
-//    }
-
-
-//    bool ModelItem::cacheIsPrepared() const {
-//        return titlesCache != 0;
-//    }
-
-//    void ModelItem::setCache(QList<QString> * newCache) {
-//        titlesCache = newCache;
-//    }
-
-//    void ModelItem::addToCache(QString title) {
-//        if (!titlesCache -> contains(title))
-//            titlesCache -> append(title);
-//    }
-//    QList<QString> *ModelItem::getTitlesCache() const {
-//        return titlesCache;
-//    }

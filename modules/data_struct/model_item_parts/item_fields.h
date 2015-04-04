@@ -44,6 +44,8 @@ namespace Playo3 {
         ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
         inline QVariant id() const          { return attrs.value(JSON_TYPE_UID); }
+        inline QVariant owner() const       { return attrs.value(JSON_TYPE_OWNER_ID); }
+
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
@@ -70,7 +72,11 @@ namespace Playo3 {
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
-        inline virtual QString toUID() { return ""; }
+        inline void setParams(QVariantMap map) {
+            attrs = attrs.unite(map);
+        }
+
+        inline virtual QVariant toUID() { return QVariant(); }
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
     protected:

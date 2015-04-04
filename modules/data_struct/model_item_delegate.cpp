@@ -193,7 +193,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
                         Settings::instance() -> itemInfoTextColor()
                     );
 
-        QStringList infos = attrs.value("info").toStringList();//index.model() -> data(index, IINFO).toStringList();
+        QStringList infos = attrs.value("info").toStringList();
 
         int timeWidth = fmfInfo -> width(infos.last());
         int right_offset_with_corner = right_offset - (angle / 3);
