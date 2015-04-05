@@ -47,6 +47,7 @@ namespace Playo3 {
         void propagateCheckedState(bool checked);
 
         FolderItem * createFolderPath(QString path);
+        FolderItem * createFolder(QString uid, QString name, int pos = -1);
         FolderItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
         FolderItem * findNearestFolder(QStringList * list);
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }

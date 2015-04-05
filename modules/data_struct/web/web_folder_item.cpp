@@ -15,11 +15,3 @@ WebFolderItem::WebFolderItem(QString uid, QString folderTitle, FolderItem * pare
 
 WebFolderItem::~WebFolderItem() {
 }
-
-FolderItem * WebFolderItem::createFolder(QString uid, QString name, int pos) {
-    FolderItem * curr = folders.value(folderUid(name, uid), 0);
-
-    if (!curr)
-        curr = new WebFolderItem(uid, name, this, pos);
-    return curr;
-}

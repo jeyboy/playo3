@@ -62,42 +62,16 @@ void VkModel::refreshWall() {
 //}
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QHash<IItem *, QString> store;
-    rootItem -> accumulateUids(store);
+//    QHash<ModelItem*, QString> store;
+//    rootItem -> accumulateUids(store);
 
-    QJsonArray albums = hash.value("albums").toArray();
-    QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
-
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good
-
-    if (albums.count() > 0) {
-        FolderItem * folder;
-
-        QJsonArray::Iterator it = albums.begin();
-
-        while(it != albums.end()) {
-            iterObj = (*it).toObject();
-
-            QJsonArray temp = iterObj.value("items").toArray();
-
-            if (filesAr.size() > 0) {
-
-
-                folder = addFolder(iterObj.value("title").toString(), rootItem, QString::number(iterObj.value("folder_id").toInt()));
-
-                proceedAudioList(temp, folder, store);
-            }
-        }
-    }
-
-
-
-
-//    QJsonArray filesAr;
+//    QJsonArray filesAr, ar = hash.value("albums").toArray();
 //    QJsonObject iterObj;
 
+////    qDebug() << ar;
+
 //    if (ar.count() > 0) {
-//        FolderItem * folder;
+//        ModelItem * folder;
 
 //        foreach(QJsonValue obj, ar) {
 //            iterObj = obj.toObject();
@@ -112,42 +86,118 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 //        }
 //    }
 
-/////////////////////////////////////////////////////////////////////
-    ar = hash.value("audio_list").toObject().value("items").toArray();
+///////////////////////////////////////////////////////////////////////
+//    ar = hash.value("audio_list").toObject().value("items").toArray();
 
-//    qDebug() << ar;
+////    qDebug() << ar;
 
-    if (ar.count() > 0) {
-        proceedAudioList(ar, root(), store);
+//    if (ar.count() > 0) {
+//        proceedAudioList(ar, root(), store);
+//    }
+///////////////////////////////////////////////////////////////////////
+//    ar = hash.value("groups").toArray();
+
+//    if (ar.count() > 0) {
+//        foreach(QJsonValue obj, ar) {
+//            iterObj = obj.toObject();
+//            VkApi::instance() -> addGroup(
+//                            QString::number(iterObj.value("id").toInt()),
+//                            iterObj.value("title").toString()
+//                        );
+//        }
+//    }
+///////////////////////////////////////////////////////////////////////
+//    ar = hash.value("friends").toArray();
+
+//    if (ar.count() > 0) {
+//        foreach(QJsonValue obj, ar) {
+//            iterObj = obj.toObject();
+//            VkApi::instance() -> addFriend(
+//                            QString::number(iterObj.value("id").toInt()),
+//                            iterObj.value("title").toString()
+//                        );
+//        }
+//    }
+
+//    deleteRemoved(store);
+
+//    TreeModel::refresh();
+//    emit hideSpinner();
+
+//    if (count == 0)
+//        emit showMessage(QString("This object did not have any items. Use wall parse from context menu"));
+
+
+
+
+    QHash<IItem *, QString> store;
+    rootItem -> accumulateUids(store);
+
+    QJsonArray albums = hash.value("albums").toArray();
+    QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
+
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
+    {
+        if (albums.count() > 0) {
+            FolderItem * folder;
+            QJsonObject album;
+
+            QJsonArray::Iterator it = albums.begin();
+
+            for(; it != albums.end(); it++) {
+                album = (*it).toObject();
+
+                QJsonArray albumItems = album.value("items").toArray();
+                if (albumItems.size() > 0) {
+                    folder = rootItem -> createFolder(
+                        album.value("folder_id").toString(),
+                        album.value("title").toString()
+                    );
+
+                    proceedAudioList(albumItems, folder, store);
+                }
+            }
+        }
+
+    /////////////////////////////////////////////////////////////////////
+
+        if (audios.count() > 0)
+            proceedAudioList(audios, rootItem, store);
+
     }
-
     endInsertRows();
-/////////////////////////////////////////////////////////////////////
-    ar = hash.value("groups").toArray();
+    /////////////////////////////////////////////////////////////////////
+    {
+        QJsonObject group;
+        QJsonArray groups = hash.value("groups").toArray();
+        QJsonArray::Iterator it = groups.begin();
 
-    if (ar.count() > 0) {
-        foreach(QJsonValue obj, ar) {
-            iterObj = obj.toObject();
+        for(; it != groups.end(); it++) {
+            group = (*it).toObject();
+
             VkApi::instance() -> addGroup(
-                            QString::number(iterObj.value("id").toInt()),
-                            iterObj.value("title").toString()
-                        );
+                group.value("id").toString(),
+                group.value("title").toString()
+            );
         }
     }
 /////////////////////////////////////////////////////////////////////
-    ar = hash.value("friends").toArray();
+    {
+        QJsonObject frend;
+        QJsonArray friends = hash.value("friends").toArray();
+        QJsonArray::Iterator it = friends.begin();
 
-    if (ar.count() > 0) {
-        foreach(QJsonValue obj, ar) {
-            iterObj = obj.toObject();
+        for(; it != friends.end(); it++) {
+            frend = (*it).toObject();
+
             VkApi::instance() -> addFriend(
-                            QString::number(iterObj.value("id").toInt()),
-                            iterObj.value("title").toString()
-                        );
+                group.value("id").toString(),
+                group.value("title").toString()
+            );
         }
     }
 
-    deleteRemoved(store);
+//    deleteRemoved(store);
     emit moveOutProcess();
 }
 

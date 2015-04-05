@@ -11,7 +11,8 @@ namespace Playo3 {
         WebFolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~WebFolderItem();
 
-        FolderItem * createFolder(QString name, QString uid, int pos = -1);
+        inline QUrl toUrl() { return QUrl(path().toString()); }
+        inline bool isRemote() const { return true; }
     };
 }
 
