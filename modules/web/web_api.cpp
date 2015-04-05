@@ -33,13 +33,13 @@ void WebApi::clearData() {
 void WebApi::fromJson(QJsonObject & hash) {
     QJsonObject::iterator it = hash.find("friends");
 
-    while(it != hash.end())
-        addFriend(it.key(), it++.value().toString());
+    for(;it != hash.end(); it++)
+        addFriend(it.key(), it.value().toString());
 
     it = hash.find("groups");
 
-    while(it != hash.end())
-        addGroup(it.key(), it++.value().toString());
+    for(;it != hash.end(); it++)
+        addGroup(it.key(), it.value().toString());
 }
 
 void WebApi::toJson(QJsonObject & hash) {

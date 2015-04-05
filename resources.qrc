@@ -10,10 +10,10 @@
         <file alias="mini_button">images/controls/mini_temp2.png</file>
         <file>images/elements/active_tab.png</file>
         <file alias="add">images/elements/add.png</file>
-        <file>images/elements/add_soundcloud.png</file>
-        <file>images/elements/add_soundcloud_on.png</file>
-        <file>images/elements/add_vk.png</file>
-        <file>images/elements/add_vk_on.png</file>
+        <file alias="add_soundcloud">images/elements/add_soundcloud.png</file>
+        <file alias="add_soundcloud_on">images/elements/add_soundcloud_on.png</file>
+        <file alias="add_vk">images/elements/add_vk.png</file>
+        <file alias="add_vk_on">images/elements/add_vk_on.png</file>
         <file>images/elements/collapse.png</file>
         <file>images/elements/download.png</file>
         <file alias="drop_add">images/elements/drop-add.png</file>

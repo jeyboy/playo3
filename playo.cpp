@@ -16,7 +16,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //    setAttribute(Qt::WA_DeleteOnClose);
 
-    activation();
     initialization();
 }
 
@@ -62,6 +61,9 @@ void Playo::initialization() {
 //    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
 
     Settings::instance() -> fromJson(settings -> read("settings").toObject());
+
+    activation();
+
     SettingsDialog::registerHotkeys(Dockbars::instance());
 
     setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
