@@ -12,6 +12,7 @@ Dockbars * Dockbars::instance(QWidget * parent) {
 }
 
 void Dockbars::load(QJsonArray & bars) {
+    int userTabsAmount = 0;
     QMainWindow * window = (QMainWindow *)parent();
     QList<QString> barsList;
     barsList.append("Downloads"/*, "Screen"*/);
@@ -21,10 +22,12 @@ void Dockbars::load(QJsonArray & bars) {
         QString barName;
         QDockWidget * curr_bar;
 
-        foreach(QJsonValue bar, bars) {
-            obj = bar.toObject();
+        QJsonArray::iterator it = bars.begin();
+
+        for(;it != bars.end(); it++) {
+            obj = (*it).toObject();
             barName = obj.value("title").toString();
-            barsList.removeOne(barName);
+            userTabsAmount += (!barsList.removeOne(barName));
             curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value("set").toObject()), obj.value("cont").toObject());
             curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
 
@@ -43,7 +46,9 @@ void Dockbars::load(QJsonArray & bars) {
             }
         }
     }
-    else window -> addDockWidget(Qt::TopDockWidgetArea, common);
+
+    if (userTabsAmount == 0)
+        window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
 
     QJsonObject def;
     ViewSettings defSettings;
@@ -58,16 +63,25 @@ void Dockbars::save(DataStore * settings) {
         QJsonArray bar_array = QJsonArray();
         QJsonObject curr_bar;
 
-        foreach(DockBar * bar, bars) {
-            curr_bar = QJsonObject();
-            curr_bar.insert("title", bar -> windowTitle());
-            curr_bar.insert("name", bar -> objectName());
-            curr_bar.insert("stick", bar -> isSticked());
+        QList<DockBar *>::Iterator it = bars.begin();
 
-            if (bar -> windowTitle() == "Downloads") {
-                curr_bar.insert("cont", ((DownloadView *)bar -> mainWidget()) -> toJson());
+        for(; it != bars.end(); it++) {
+            IView * v = view((*it));
+
+            if ((*it) -> windowTitle() == "Common") {
+                if (v && v -> isCommon())
+                    continue;
+            }
+
+            curr_bar = QJsonObject();
+            curr_bar.insert("title", (*it) -> windowTitle());
+            curr_bar.insert("name", (*it) -> objectName());
+            curr_bar.insert("stick", (*it) -> isSticked());
+
+            if ((*it) -> windowTitle() == "Downloads") {
+                curr_bar.insert("cont", ((DownloadView *)(*it) -> mainWidget()) -> toJson());
             } else {
-                if (bar == played) {
+                if ((*it) == played) {
                     curr_bar.insert("played", true);
                     if (Player::instance() -> playedIndex().isValid()) {
                         curr_bar.insert("played_item", Player::instance() -> playedIndex().data(ITREEPATH).toString());
@@ -75,14 +89,13 @@ void Dockbars::save(DataStore * settings) {
                     }
                 }
 
-                IView * v = view(bar);
-
-                curr_bar.insert("set", v -> settings().toJson());
-                curr_bar.insert("cont", v -> toJson());
+                if (v) {
+                    curr_bar.insert("set", v -> settings().toJson());
+                    curr_bar.insert("cont", v -> toJson());
+                }
             }
 
             bar_array.append(curr_bar);
-
         }
 
         settings -> write(Dockbars::settingsName(), bar_array);

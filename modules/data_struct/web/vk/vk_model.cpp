@@ -76,7 +76,7 @@
 //        QJsonArray::Iterator it = albums.begin();
 
 //        while(it != albums.end()) {
-//            iterObj = it.toObject();
+//            iterObj = (*it).toObject();
 
 //            QJsonArray temp = iterObj.value("items").toArray();
 
