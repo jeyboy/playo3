@@ -234,7 +234,6 @@ void Library::clockTick() {
     if (saveLibDelay != 0 && ticksAmount % saveLibDelay == 0)
         saveCatalogs();
 
-
     if (ticksAmount % Settings::instance() -> remoteItemsProcDelay() == 0)
         initRemoteItemInfo();
 }

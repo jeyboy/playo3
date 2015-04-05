@@ -58,7 +58,7 @@ public:
     };
     typedef QFlags<MediaStatusFlags> MediaStatus;
 
-    explicit AudioPlayer(QObject *parent = 0);
+    explicit AudioPlayer(QObject * parent = 0);
     ~AudioPlayer();
 
     QList<QVector<int> > & getDefaultSpectrum();

@@ -21,7 +21,8 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     emit player -> downloadEnded();
 }
 
-AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
+AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
+    channelsCount(2), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
     qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
 
@@ -29,15 +30,7 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
     connect(this, SIGNAL(playbackEnded()), this, SLOT(endOfPlayback()));
     connect(this, SIGNAL(downloadEnded()), this, SLOT(endOfDownloading()));
 
-    duration = -1;
-    notifyInterval = 100;
-    volumeVal = 1.0;
-    spectrumHeight = 0;
     setSpectrumBandsCount(28);
-    defaultSpectrumLevel = -2;
-    channelsCount = 2;
-
-    currentState = StoppedState;
 
     if (HIWORD(BASS_GetVersion()) != BASSVERSION) {
         throw "An incorrect version of BASS.DLL was loaded";
