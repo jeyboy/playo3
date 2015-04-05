@@ -122,12 +122,12 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         case tree: {
             view = new TreeView(bar, settings, attrs);
         break;}
-        case vk: {
-            view = new VkView(bar, settings, attrs);
-        break;}
-        case soundcloud: {
-            view = new SoundcloudView(bar, settings, attrs);
-        break;}
+//        case vk: {
+//            view = new VkView(bar, settings, attrs);
+//        break;}
+//        case soundcloud: {
+//            view = new SoundcloudView(bar, settings, attrs);
+//        break;}
 
         default: view = 0;
     }

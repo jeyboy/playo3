@@ -178,12 +178,6 @@ void Playo::openFolderTriggered() {
     QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
-void Playo::showActiveElem() {
-//    Tab * tab = ui -> tabber -> toActiveTab();
-//    if (tab)
-//        tab -> getView() -> scrollToActive();
-}
-
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
@@ -197,16 +191,31 @@ void Playo::showSettingsDialog() {
     }
 }
 
-void MainWindow::showVKRelTabDialog() {
-    RelationDialog dialog(VkApi::instance(), this);
+void Playo::openVKTabDialog() {
+    WebDialog dialog(this, VkApi::instance(), "VK auth");
     if (dialog.exec() == QDialog::Accepted) {
-
-
-        Dockbars::instance() -> createDocBar();
-        ui -> tabber -> addTab("VK [" + dialog.getName() + "]", TabDialog::VKSettings(dialog.getId()));
-    } else {
-        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+        ViewSettings settings(false, false, false, true, VkApi::instance() -> getUserID());
+        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
+        ToolBars::instance() -> initiateVkButton();
     }
+    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+}
+
+void Playo::showVKTabDialog() {
+    if (VkApi::instance() -> isConnected()) {
+        ViewSettings settings(false, false, false, true, VkApi::instance() -> getUserID());
+        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
+    }
+    else openVKTabDialog();
+}
+
+void Playo::showVKRelTabDialog() {
+    RelationsDialog dialog(VkApi::instance(), this);
+    if (dialog.exec() == QDialog::Accepted) {
+        ViewSettings settings(false, false, false, true, dialog.getId());
+        Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings);
+    }
+    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 //void MainWindow::showSoundcloudRelTabDialog() {
@@ -216,22 +225,6 @@ void MainWindow::showVKRelTabDialog() {
 //    } else {
 ////        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 //    }
-//}
-
-//void MainWindow::openVKTabDialog() {
-//    WebDialog dialog(this, VkApi::instance(), "VK auth");
-//    if (dialog.exec() == QDialog::Accepted) {
-//        ui -> tabber -> addTab("VK [YOU]", TabDialog::VKSettings());
-//        ToolBars::instance() -> initiateVkButton();
-//    } else {
-//        QMessageBox::information(this, "VK", VkApi::instance() -> getError());
-//    }
-//}
-
-//void MainWindow::showVKTabDialog() {
-//    if (VkApi::instance() -> isConnected()) {
-//        ui -> tabber -> addTab("VK [YOU]", TabDialog::VKSettings());
-//    } else openVKTabDialog();
 //}
 
 //void MainWindow::openSoundcloudTabDialog() {

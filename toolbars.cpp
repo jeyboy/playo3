@@ -360,36 +360,34 @@ Spectrum * ToolBars::getSpectrum() {
 
 // move to the vk class
 QToolButton * ToolBars::initiateVkButton() {
-    if (vkToolButton == 0) {
+    if (vkToolButton == 0)
         vkToolButton = new QToolButton();
-    }
     else
         disconnect(vkToolButton, SIGNAL(clicked()), parent(), SLOT(showVKTabDialog()));
 
-//    if (VkApi::instance() -> isConnected()) {
-//        vkToolButton -> setIcon(QIcon(":/add_vk_on"));
-//        vkToolButton -> setPopupMode(QToolButton::InstantPopup);
-//        vkToolButton -> setToolTip("VKontakte(vk.com)");
+    if (VkApi::instance() -> isConnected()) {
+        vkToolButton -> setIcon(QIcon(":/add_vk_on"));
+        vkToolButton -> setPopupMode(QToolButton::InstantPopup);
+        vkToolButton -> setToolTip("VKontakte(vk.com)");
 
-//        QMenu * vkMenu = new QMenu(vkToolButton);
-//        vkMenu -> addAction("Reconect", parent(), SLOT(openVKTabDialog()));
-//        vkMenu -> addAction("Open your tab", parent(), SLOT(showVKTabDialog()));
-//        vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showVKRelTabDialog()));
-//        vkToolButton -> setMenu(vkMenu);
-//    } else {
-//        vkToolButton -> setIcon(QIcon(":/add_vk"));
-//        vkToolButton -> setToolTip("Connect to VKontakte(vk.com)");
-//        connect(vkToolButton, SIGNAL(clicked()), parent(), SLOT(showVKTabDialog()));
-//    }
+        QMenu * vkMenu = new QMenu(vkToolButton);
+        vkMenu -> addAction("Reconect", parent(), SLOT(openVKTabDialog()));
+        vkMenu -> addAction("Open your tab", parent(), SLOT(showVKTabDialog()));
+        vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showVKRelTabDialog()));
+        vkToolButton -> setMenu(vkMenu);
+    } else {
+        vkToolButton -> setIcon(QIcon(":/add_vk"));
+        vkToolButton -> setToolTip("Connect to VKontakte(vk.com)");
+        connect(vkToolButton, SIGNAL(clicked()), parent(), SLOT(showVKTabDialog()));
+    }
 
     return vkToolButton;
 }
 
 // move to the cloudsound class
 QToolButton * ToolBars::initiateSoundcloudButton() {
-    if (soundcloudToolButton == 0) {
+    if (soundcloudToolButton == 0)
         soundcloudToolButton = new QToolButton();
-    }
     else
         disconnect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
 

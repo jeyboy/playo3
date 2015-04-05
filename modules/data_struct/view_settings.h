@@ -4,18 +4,10 @@
 #include "modules/data_struct/container_types.h"
 #include <qjsonobject.h>
 
-namespace Playo3 { //TODO: maybe change on bitset ?
+namespace Playo3 {
     struct ViewSettings {
-        bool deleteFile;
-        bool playlist;
-        bool interactive;
-        bool common;
-
-        ContainerType type;
-
-        ViewSettings(bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false)
-            : common(isCommon), deleteFile(delFile), interactive(isInteractive), playlist(isPlaylist), type(tree)  {
-
+        ViewSettings(bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false, QString uniq_id = QString())
+            : deleteFile(delFile), playlist(isPlaylist), interactive(isInteractive), common(isCommon), uid(uniq_id), type(tree)  {
         }
 
         ViewSettings(QJsonObject obj) {
@@ -24,6 +16,7 @@ namespace Playo3 { //TODO: maybe change on bitset ?
             interactive = obj["int"].toBool();
             common = obj["common"].toBool();
             type = (ContainerType)obj["type"].toInt();
+            uid = obj["uid"].toString();
         }
 
         QJsonObject toJson() {
@@ -34,9 +27,19 @@ namespace Playo3 { //TODO: maybe change on bitset ?
             obj["int"] = interactive;
             obj["common"] = common;
             obj["type"] = type;
+            if (!uid.isEmpty())
+                obj["uid"] = uid;
 
             return obj;
         }
+
+        bool deleteFile;
+        bool playlist;
+        bool interactive;
+        bool common;
+        QString uid;
+
+        ContainerType type;
     };
 }
 

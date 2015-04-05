@@ -38,14 +38,13 @@ public slots:
 private slots:
 //    void showError(QString);
 
-    void showActiveElem();
     void showSettingsDialog();
 
+    void openVKTabDialog();
+    void showVKTabDialog();
     void showVKRelTabDialog();
-//    void showSoundcloudRelTabDialog();
 
-//    void openVKTabDialog();
-//    void showVKTabDialog();
+//    void showSoundcloudRelTabDialog();
 //    void openSoundcloudTabDialog();
 //    void showSoundcloudTabDialog();
 

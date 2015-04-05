@@ -29,12 +29,12 @@ void RelationsDialog::on_cancelButton_clicked() {
 
 void RelationsDialog::on_friendsList_activated(const QModelIndex & index) {
     name = index.data().toString();
-    uid = api -> friendsList().key(name).toInt();
+    uid = api -> friendsList().key(name);
     accept();
 }
 
 void RelationsDialog::on_groupsList_activated(const QModelIndex & index) {
     name = index.data().toString();
-    uid = -api -> groupsList().key(name).toInt();
+    uid = "-" + api -> groupsList().key(name);
     accept();
 }

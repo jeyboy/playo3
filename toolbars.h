@@ -25,14 +25,8 @@ namespace Playo3 {
         Q_OBJECT
     public:
         ~ToolBars() {
-            if (vkToolButton)
-                delete vkToolButton -> menu();
             delete vkToolButton;
-
-            if (soundcloudToolButton)
-                delete soundcloudToolButton -> menu();
             delete soundcloudToolButton;
-
             delete spectrum;
         }
 
@@ -50,6 +44,9 @@ namespace Playo3 {
 
         inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
         Spectrum * getSpectrum();
+
+        QToolButton * initiateVkButton();
+        QToolButton * initiateSoundcloudButton();
 
     public slots:
         void hideAll();
@@ -92,9 +89,6 @@ namespace Playo3 {
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
-
-        QToolButton * initiateVkButton();
-        QToolButton * initiateSoundcloudButton();
 
         ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),

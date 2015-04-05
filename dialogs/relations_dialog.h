@@ -18,7 +18,7 @@ public:
     explicit RelationsDialog(WebApi * currApi, QWidget * parent = 0);
     ~RelationsDialog();
 
-    inline int getId() const { return uid; }
+    inline QString getId() const { return uid; }
     inline QString getName() { return name; }
 
 private slots:
@@ -28,8 +28,7 @@ private slots:
 
 private:
     Ui::RelationsDialog * ui;
-    int uid;
-    QString name;
+    QString uid, name;
     QStringListModel * friendModel, * groupModel;
     WebApi * api;
 };
