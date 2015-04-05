@@ -7,16 +7,18 @@
 namespace Playo3 {
     class DeletedList {
     public:
-        DeletedList();
+        DeletedList(QJsonObject * obj = 0);
         ~DeletedList();
 
         void addRemovedUID(QVariant uid);
         void removeUID(QVariant uid);
         bool containsUID(QVariant uid);
 
-        QJsonArray deletedToJson();
+        QJsonObject & deletedToJson(QJsonObject & obj);
         void deletedFromJson(QJsonArray);
     private:
+        inline QString jsonName() const { return "deleted"; }
+
         QVariantList list;
     };
 }

@@ -105,10 +105,10 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     settings -> clear();
 
+    qint64 v = QDateTime::currentMSecsSinceEpoch();
     settings -> write("vk", VkApi::instance() -> toJson());
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
-    qint64 v = QDateTime::currentMSecsSinceEpoch();
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
     qDebug() << "LALA " << QDateTime::currentMSecsSinceEpoch() - v;

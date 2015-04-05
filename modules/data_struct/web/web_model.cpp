@@ -4,16 +4,15 @@ using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
 WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
-    IModel(hash, parent), DeletedList(), tabUid(uid) {
-    if (hash)
-        deletedFromJson(hash -> take("deleted").toArray());
+    IModel(hash, parent), DeletedList(hash), tab_uid(uid) {
 }
 
 WebModel::~WebModel() {
 }
 
-QString WebModel::getTabUid() const {
-    return tabUid;
+QJsonObject WebModel::toJson() {
+    QJsonObject res = IModel::toJson();
+    return deletedToJson(res);
 }
 
 void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {

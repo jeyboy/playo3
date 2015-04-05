@@ -2,7 +2,10 @@
 
 using namespace Playo3;
 
-DeletedList::DeletedList() {}
+DeletedList::DeletedList(QJsonObject * obj) {
+    if (obj)
+        deletedFromJson(obj -> take(jsonName()).toArray());
+}
 
 DeletedList::~DeletedList() {}
 
@@ -16,8 +19,9 @@ bool DeletedList::containsUID(QVariant uid) {
     return list.contains(uid);
 }
 
-QJsonArray DeletedList::deletedToJson() {
-    return QJsonArray::fromVariantList(list);
+QJsonObject & DeletedList::deletedToJson(QJsonObject & obj) {
+    obj.insert(jsonName(), QJsonArray::fromVariantList(list));
+    return obj;
 }
 void DeletedList::deletedFromJson(QJsonArray array) {
     list = array.toVariantList();

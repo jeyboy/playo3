@@ -92,7 +92,6 @@ namespace Playo3 {
         FolderItem * rootItem;
     private:
         QFutureWatcher<DropData *> * addWatcher;
-
     };
 
     struct modelIndexComparator {

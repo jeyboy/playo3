@@ -12,7 +12,6 @@ namespace Playo3 {
         ~WebFolderItem();
 
         FolderItem * createFolder(QString name, QString uid, int pos = -1);
-        void accumulateUids(QHash<IItem *, QString> & store);
     };
 }
 

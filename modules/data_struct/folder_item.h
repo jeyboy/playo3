@@ -15,6 +15,8 @@ namespace Playo3 {
         FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
+        void accumulateUids(QHash<IItem *, QString> & store);
+
         inline int itemsCountInBranch() const { return inBranchCount; }
         inline void updateItemsCountInBranch(int offset) { inBranchCount += offset; }
         void backPropagateItemsCountInBranch(int offset);

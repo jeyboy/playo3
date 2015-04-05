@@ -92,6 +92,22 @@ FolderItem::~FolderItem() {
         removePhysicalObject();
 }
 
+void FolderItem::accumulateUids(QHash<IItem *, QString> & store) {
+    QList<IItem *>::Iterator it = children.begin();
+
+    for(; it != children.end(); it++) {
+        if ((*it) -> isRemote()) {
+            if ((*it) -> isContainer())
+                (reinterpret_cast<FolderItem *>(*it)) -> accumulateUids(store);
+            else {
+                QVariant item_uid = (*it) -> uid();
+                if (item_uid.isValid())
+                    store.insert((*it), item_uid.toString());
+            }
+        }
+    }
+}
+
 void FolderItem::backPropagateItemsCountInBranch(int offset) {
     inBranchCount += offset;
 

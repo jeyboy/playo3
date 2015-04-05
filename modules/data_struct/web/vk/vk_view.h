@@ -1,19 +1,15 @@
-//#ifndef VK_VIEW_H
-//#define VK_VIEW_H
+#ifndef VK_VIEW_H
+#define VK_VIEW_H
 
-//#include "model/view.h"
-//#include "model/tree/tree_view.h"
-//#include "model/web/vk/vk_model.h"
+#include "modules/data_struct/view_interface.h"
+#include "vk_model.h"
 
-//class VkView : public TreeView {
-//  Q_OBJECT
-//public:
-//    VkView(QWidget * parent, CBHash settinsSet, QJsonObject * hash = 0);
-//    ~VkView();
+class VkView : public IView {
+  Q_OBJECT
+public:
+    VkView(QWidget * parent, ViewSettings settins, QJsonObject * hash = 0);
+    VkView(WebModel * newModel, QWidget * parent, ViewSettings settings);
+    ~VkView();
+};
 
-//    void removeItem(ModelItem * item);
-
-//    QJsonObject toJSON();
-//};
-
-//#endif // VK_VIEW_H
+#endif // VK_VIEW_H

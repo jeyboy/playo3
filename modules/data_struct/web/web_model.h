@@ -11,7 +11,15 @@ public:
     WebModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0);
     ~WebModel();
 
-    QString getTabUid() const;
+    inline QString tabUid() const { return tab_uid; }
+//    void VkView::removeItem(ModelItem * item) {
+//        QString uid = item -> toUID();
+//        if (!uid.isEmpty())
+//            ((VkModel *)model) -> addRemovedUID(uid);
+
+//        View::removeItem(item);
+//    }
+    QJsonObject toJson();
 protected:
     void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
     void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
@@ -22,7 +30,7 @@ protected slots:
     void errorReceived(int, QString);
 protected:
 //    void deleteRemoved(QHash<ModelItem*, QString> & store);
-    QString tabUid;
+    QString tab_uid;
 };
 
 
