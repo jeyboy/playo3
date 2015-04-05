@@ -108,9 +108,9 @@ QVariant FolderItem::data(int column) const {
 }
 
 bool FolderItem::removePhysicalObject() {
-    QDir delDir(fullPath());
-    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
-        return delDir.removeRecursively();
+//    QDir delDir(fullPath());
+//    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
+//        return delDir.removeRecursively();
     return false;
 }
 
