@@ -108,6 +108,23 @@ void FolderItem::accumulateUids(QHash<IItem *, QString> & store) {
     }
 }
 
+QVariantList FolderItem::childrenUids(int position, int count) {
+    QVariantList uids;
+
+    if (position < 0 || position + count > children.size())
+        return uids;
+
+    IItem * it;
+
+    for (int row = 0; row < count; ++row) {
+        it = children.takeAt(position);
+        if (it -> isRemote())
+            uids << it -> uid();
+    }
+
+    return uids;
+}
+
 void FolderItem::backPropagateItemsCountInBranch(int offset) {
     inBranchCount += offset;
 

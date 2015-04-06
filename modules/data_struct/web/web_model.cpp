@@ -4,15 +4,27 @@ using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
 WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
-    IModel(hash, parent), DeletedList(hash), tab_uid(uid) {
+    IModel(hash, parent), IgnoreList(hash), tab_uid(uid) {
 }
 
 WebModel::~WebModel() {
 }
 
+bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
+    FolderItem * parentItem = item<FolderItem>(parent);
+    QVariantList uids = parentItem -> childrenUids(position, rows);
+
+    bool res = IModel::removeRows(position, rows, parent);
+
+    if (res)
+        ignoreListAddUid(uids);
+
+    return res;
+}
+
 QJsonObject WebModel::toJson() {
     QJsonObject res = IModel::toJson();
-    return deletedToJson(res);
+    return ignoreListToJson(res);
 }
 
 void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {

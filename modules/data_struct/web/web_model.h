@@ -2,9 +2,9 @@
 #define WEB_MODEL_H
 
 #include "modules/data_struct/model_interface.h"
-#include "deleted_list.h"
+#include "ignore_list.h"
 
-class WebModel : public IModel, public DeletedList {
+class WebModel : public IModel, public IgnoreList {
     Q_OBJECT
 
 public:
@@ -12,13 +12,7 @@ public:
     ~WebModel();
 
     inline QString tabUid() const { return tab_uid; }
-//    void VkView::removeItem(ModelItem * item) {
-//        QString uid = item -> toUID();
-//        if (!uid.isEmpty())
-//            ((VkModel *)model) -> addRemovedUID(uid);
-
-//        View::removeItem(item);
-//    }
+    bool removeRows(int position, int rows, const QModelIndex & parent);
     QJsonObject toJson();
 protected:
     void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);

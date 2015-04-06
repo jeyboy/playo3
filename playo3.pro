@@ -60,7 +60,6 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_folder.cpp \
     modules/data_struct/web/vk/vk_model.cpp \
     modules/data_struct/web/vk/vk_view.cpp \
-    modules/data_struct/web/deleted_list.cpp \
     modules/data_struct/web/web_model.cpp \
     modules/data_struct/model_interface.cpp \
     modules/data_struct/view_interface.cpp \
@@ -107,7 +106,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/soundcloud/soundcloud_item.cpp \
     modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp \
     modules/data_struct/web/vk/vk_item.cpp \
-    dialogs/relations_dialog.cpp
+    dialogs/relations_dialog.cpp \
+    modules/data_struct/web/ignore_list.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -160,7 +160,6 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_folder.h \
     modules/data_struct/web/vk/vk_model.h \
     modules/data_struct/web/vk/vk_view.h \
-    modules/data_struct/web/deleted_list.h \
     modules/data_struct/web/web_model.h \
     modules/data_struct/model_interface.h \
     modules/data_struct/view_interface.h \
@@ -218,7 +217,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_item.h \
     modules/data_struct/web/soundcloud/soundcloud_item.h \
     modules/data_struct/web/soundcloud/soundcloud_folder_item.h \
-    dialogs/relations_dialog.h
+    dialogs/relations_dialog.h \
+    modules/data_struct/web/ignore_list.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

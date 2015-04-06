@@ -45,7 +45,7 @@ namespace Playo3 {
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
-        bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
+        virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         IItem * item(const QModelIndex & index) const;
         template<class T> T * item(const QModelIndex & index) const {
