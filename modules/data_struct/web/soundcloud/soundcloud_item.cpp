@@ -33,7 +33,7 @@
 
 //bool SoundcloudFile::isRemote() const { return true; }
 
-//QString SoundcloudFile::toUID() {
+//QString SoundcloudFile::toUid() {
 //    return buildUid(owner_uid, uid);
 //}
 

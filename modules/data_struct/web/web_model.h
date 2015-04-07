@@ -4,6 +4,8 @@
 #include "modules/data_struct/model_interface.h"
 #include "ignore_list.h"
 
+class WebApi;
+
 class WebModel : public IModel, public IgnoreList {
     Q_OBJECT
 
@@ -11,7 +13,9 @@ public:
     WebModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0);
     ~WebModel();
 
+    virtual WebApi * api() = 0;
     inline QString tabUid() const { return tab_uid; }
+
     bool removeRows(int position, int rows, const QModelIndex & parent);
     QJsonObject toJson();
 protected:
@@ -23,9 +27,7 @@ protected:
 protected slots:
     void errorReceived(int, QString);
 protected:
-//    void deleteRemoved(QHash<ModelItem*, QString> & store);
     QString tab_uid;
 };
-
 
 #endif // WEB_MODEL_H

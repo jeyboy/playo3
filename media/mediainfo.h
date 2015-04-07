@@ -24,12 +24,13 @@ public:
     inline QString getArtist() const { return artist; }
     inline QString getTitle() const { return title; }
     inline QString getAlbum() const { return album; }
-    inline QString getGenre() const { return genre; }
+    inline int getGenre() const { return genre; }
 
     inline void setArtist(QString newArtist) { artist = newArtist; }
     inline void setTitle(QString newTitle) { title = newTitle; }
     inline void setAlbum(QString newAlbum) { album = newAlbum; }
-    inline void setGenre(QString newGenre) { genre = newGenre; }
+    inline void setGenre(QString newGenre) { genre = MusicGenres::instance() -> toInt(newGenre); }
+    inline void setGenre(int newGenre) { genre = newGenre; }
 
     inline qint64 getSize() const { return size; }
     inline int getYear() const { return year; }

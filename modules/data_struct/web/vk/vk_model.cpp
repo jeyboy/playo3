@@ -1,4 +1,5 @@
 #include "vk_model.h"
+
 //#include "media/library.h"
 //#include "media/player.h"
 //#include "misc/func_container.h"
@@ -30,26 +31,24 @@ void VkModel::refreshWall() {
 void VkModel::proceedWallList(QJsonObject & hash) {
     qDebug() << "DATE " << QDateTime::fromTime_t(hash.value("date").toInt());
 
+    QJsonArray posts = hash.value("posts").toArray();
 
-    QJsonArray posts = hash.value("posts").toArray(), audios;
-    QJsonObject post;
-
-
-    if (ar.count() > 0) {
-        beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
-        FolderItem * rootFolder = rootItem -> createFolder("!!!WALL!!!");
-
-        QHash<IItem *, QString> store;
-        rootFolder -> accumulateUids(store);
-
-
-        FolderItem * folder;
+    if (posts.count() > 0) {
+        QJsonArray audios;
+        QJsonObject post;
         QString title;
+        FolderItem * folder, * rootFolder = rootItem -> createFolder("!!!WALL!!!");
+        int index = rootItem -> childRow(rootFolder);
+
+        beginInsertRows(QModelIndex(), index, index);
+
+        QHash<QString, IItem *> store;
+        rootFolder -> accumulateUids(store);
 
         QJsonArray::Iterator it = posts.begin();
 
         for(; it != posts.end(); it++) {
-            post = obj.toObject();
+            post = (*it).toObject();
             audios = post.value("audios").toArray();
 
             title = post.value("title").toString();
@@ -68,7 +67,7 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QHash<IItem *, QString> store;
+    QHash<QString, IItem *> store;
     rootItem -> accumulateUids(store);
 
     QJsonArray albums = hash.value("albums").toArray();
@@ -77,7 +76,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
     {
         if (albums.count() > 0) {
-            FolderItem * folder;
+            VkFolder * folder;
             QJsonObject album;
 
             QJsonArray::Iterator it = albums.begin();
@@ -87,7 +86,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
                 QJsonArray albumItems = album.value("items").toArray();
                 if (albumItems.size() > 0) {
-                    folder = rootItem -> createFolder(
+                    folder = rootItem -> createFolder<VkFolder>(
                         album.value("folder_id").toString(),
                         album.value("title").toString()
                     );
@@ -138,42 +137,68 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     emit moveOutProcess();
 }
 
-void VkModel::proceedAudioList(QJsonArray & ar, FolderItem * parent, QHash<IItem *, QString> & store) {
-    QJsonObject fileIterObj;
+void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<IItem *, QString> & store) {
+    QJsonObject itm;
     VkItem * newItem;
-    QString id, owner, key;
-    QList<ModelItem *> items;
+    QString id, uri;
+    QList<IItem *> items;
 
-    foreach(QJsonValue obj, ar) {
-        fileIterObj = obj.toObject();
+    QJsonArray::Iterator it = collection.begin();
 
-        if (fileIterObj.isEmpty()) continue;
+    for(; it != collection.end(); it++) {
+        itm = (*it).toObject();
 
-        owner = QString::number(fileIterObj.value("owner_id").toInt());
-        id = QString::number(fileIterObj.value("id").toInt());
-        key = ModelItem::buildUid(owner, id);
-        items = store.keys(key);
-        if (items.isEmpty() && !containsUID(key)) {
-            newItem = new VkFile(
-                        fileIterObj.value("url").toString(),
-                        fileIterObj.value("artist").toString() + " - " + fileIterObj.value("title").toString(),
-                        owner,
-                        id,
-                        parent,
-                        fileIterObj.value("genre_id").toInt(-1),
-                        Duration::fromSeconds(fileIterObj.value("duration").toInt(0))
-                        );
+        if (itm.isEmpty()) continue;
 
-            appendRow(newItem -> toModelItem());
-//            qDebug() << "NEW ITEM " << newItem -> data(0);
+        id = itm.value("id").toString();
+        if (ignoreListContainUid(itm)) continue;
+
+        uri = itm.value("url").toString();
+        items = store.values(id);
+
+        if (items.isEmpty()) {
+            newItem = new VkItem(
+                id,
+                uri,
+                itm.value("artist").toString() + " - " + itm.value("title").toString(),
+                parent
+            );
+
+            newItem -> setOwner(itm.value("owner_id").toVariant());
+            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
+
+            api()
+            itm.value("genre_id").toInt()
+
+
+            newItem -> setGenre();
         } else {
-            foreach(ModelItem * item, items) {
-//                store.remove(item);
-                item -> setPath(fileIterObj.value("url").toString());
-                item -> setGenre(fileIterObj.value("genre_id").toInt(-1));
-            }
-            store.remove(items.first());
+
         }
+
+//        key = ModelItem::buildUid(owner, id);
+//        items = store.keys(key);
+//        if (items.isEmpty() && !containsUID(key)) {
+//            newItem = new VkFile(
+//                        itm.value("url").toString(),
+//                        itm.value("artist").toString() + " - " + itm.value("title").toString(),
+//                        owner,
+//                        id,
+//                        parent,
+//                        itm.value("genre_id").toInt(-1),
+//                        Duration::fromSeconds(itm.value("duration").toInt(0))
+//                        );
+
+//            appendRow(newItem -> toModelItem());
+////            qDebug() << "NEW ITEM " << newItem -> data(0);
+//        } else {
+//            foreach(ModelItem * item, items) {
+////                store.remove(item);
+//                item -> setPath(itm.value("url").toString());
+//                item -> setGenre(itm.value("genre_id").toInt(-1));
+//            }
+//            store.remove(items.first());
+//        }
     }
 }
 

@@ -17,7 +17,7 @@
 //    bool isExist() const;
 //    bool isRemote() const;
 
-//    QString toUID();
+//    QString toUid();
 //    QUrl toUrl();
 //    QJsonObject toJSON();
 //protected:

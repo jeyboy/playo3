@@ -15,7 +15,7 @@ namespace Playo3 {
         FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
-        void accumulateUids(QHash<IItem *, QString> & store);
+        void accumulateUids(QHash<QString, IItem *> & store);
         QVariantList childrenUids(int position, int count);
 
         inline int itemsCountInBranch() const { return inBranchCount; }
@@ -48,7 +48,7 @@ namespace Playo3 {
         void propagateCheckedState(bool checked);
 
         FolderItem * createFolderPath(QString path);
-        FolderItem * createFolder(QString uid, QString name, int pos = -1);
+        template<class T> T * createFolder(QString uid, QString name, int pos = -1);
         FolderItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
         FolderItem * findNearestFolder(QStringList * list);
         inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }

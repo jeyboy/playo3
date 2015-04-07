@@ -59,6 +59,7 @@ namespace Playo3 {
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
         inline void setUid(QVariant newId)              { attrs[JSON_TYPE_UID] = newId; }
+        inline void setOwner(QVariant newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setDuration(QVariant newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
         inline void setGenre(QVariant newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }
@@ -71,11 +72,11 @@ namespace Playo3 {
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
-        inline void setParams(QVariantMap map) {
-            attrs = attrs.unite(map);
-        }
+//        inline void setParams(QVariantMap map) {
+//            attrs = attrs.unite(map);
+//        }
 
-        inline virtual QVariant toUID() { return QVariant(); }
+        inline virtual QVariant toUid() { return QVariant(); }
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
     protected:

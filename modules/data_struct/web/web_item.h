@@ -6,9 +6,13 @@
 namespace Playo3 {
     class WebItem : public IItem {
     public:
+        static inline QVariant toUid(QVariant owner, QVariant id) {
+            return owner.isValid() && id.isValid() ? owner.toString() + "_" + id.toString() : QVariant();
+        }
+
         WebItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
         WebItem(QJsonObject * hash, FolderItem * parent = 0);
-        WebItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
+        WebItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
 
         ~WebItem();
 

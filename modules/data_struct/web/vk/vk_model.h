@@ -3,7 +3,7 @@
 
 #include "modules/web/socials_api/vk_api.h"
 #include "modules/data_struct/web/web_model.h"
-//#include "media/media_player/utils/duration.h"
+#include "media/duration.h"
 
 class VkModel : public WebModel {
     Q_OBJECT
@@ -13,7 +13,7 @@ public:
     ~VkModel();
 
     inline ContainerType containerType() const { return vk; }
-    inline WebApi * getApi() { return VkApi::instance(); }
+    inline WebApi * api() { return VkApi::instance(); }
 public slots:
     void refresh();
     void refreshWall();

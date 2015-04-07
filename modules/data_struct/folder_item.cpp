@@ -92,7 +92,7 @@ FolderItem::~FolderItem() {
         removePhysicalObject();
 }
 
-void FolderItem::accumulateUids(QHash<IItem *, QString> & store) {
+void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
     QList<IItem *>::Iterator it = children.begin();
 
     for(; it != children.end(); it++) {
@@ -100,9 +100,9 @@ void FolderItem::accumulateUids(QHash<IItem *, QString> & store) {
             if ((*it) -> isContainer())
                 (reinterpret_cast<FolderItem *>(*it)) -> accumulateUids(store);
             else {
-                QVariant item_uid = (*it) -> uid();
+                QVariant item_uid = (*it) -> toUid();
                 if (item_uid.isValid())
-                    store.insert((*it), item_uid.toString());
+                    store.insert(item_uid.toString(), (*it));
             }
         }
     }
@@ -191,11 +191,11 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos)
         return curr;
 }
 
-FolderItem * FolderItem::createFolder(QString uid, QString name, int pos) {
+template<class T> T * FolderItem::createFolder(QString uid, QString name, int pos) {
     FolderItem * curr = folders.value(folderUid(name, uid), 0);
 
     if (!curr)
-        curr = new WebFolderItem(uid, name, this, pos);
+        curr = new T(uid, name, this, pos);
     return curr;
 }
 

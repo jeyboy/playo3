@@ -15,5 +15,4 @@ public:
 //    static int parse(QString str);
 };
 
-
 #endif // DURATION_H

@@ -9,6 +9,8 @@ public:
     static void close() {
         delete self;
     }
+
+    int toStandartId(int vkGenreId);
 protected:
     inline int defaultInt() const { return 18; }
     void initDefault();
