@@ -4,6 +4,7 @@
 #include "../web_api.h"
 #include "../auth_chemas/teu_auth.h"
 #include "vk_api_private.h"
+#include "media/genres/web/vk_genres.h"
 
 class VkApi : public WebApi, public TeuAuth {
     Q_OBJECT

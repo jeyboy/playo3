@@ -42,7 +42,7 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 
         beginInsertRows(QModelIndex(), index, index);
 
-        QHash<QString, IItem *> store;
+        QHash<QVariant, IItem *> store;
         rootFolder -> accumulateUids(store);
 
         QJsonArray::Iterator it = posts.begin();
@@ -67,8 +67,10 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QHash<QString, IItem *> store;
-    rootItem -> accumulateUids(store);
+    QHash<QVariant, IItem *> store;
+
+    if (albums.count() > 0 || audios.count() > 0)
+        rootItem -> accumulateUids(store);
 
     QJsonArray albums = hash.value("albums").toArray();
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
@@ -140,7 +142,8 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<IItem *, QString> & store) {
     QJsonObject itm;
     VkItem * newItem;
-    QString id, uri;
+    QString uri;
+    QVariant id, owner;
     QList<IItem *> items;
 
     QJsonArray::Iterator it = collection.begin();
@@ -150,8 +153,9 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
 
         if (itm.isEmpty()) continue;
 
-        id = itm.value("id").toString();
-        if (ignoreListContainUid(itm)) continue;
+        id = itm.value("id").toVariant();
+        owner = itm.value("owner_id").toVariant();
+        if (ignoreListContainUid(WebItem::toUid(owner, id))) continue;
 
         uri = itm.value("url").toString();
         items = store.values(id);
@@ -164,14 +168,9 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
                 parent
             );
 
-            newItem -> setOwner(itm.value("owner_id").toVariant());
+            newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-
-            api()
-            itm.value("genre_id").toInt()
-
-
-            newItem -> setGenre();
+            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
         } else {
 
         }

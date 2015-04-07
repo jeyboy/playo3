@@ -92,7 +92,7 @@ FolderItem::~FolderItem() {
         removePhysicalObject();
 }
 
-void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
+void FolderItem::accumulateUids(QHash<QVariant, IItem *> & store) {
     QList<IItem *>::Iterator it = children.begin();
 
     for(; it != children.end(); it++) {
@@ -102,7 +102,7 @@ void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
             else {
                 QVariant item_uid = (*it) -> toUid();
                 if (item_uid.isValid())
-                    store.insert(item_uid.toString(), (*it));
+                    store.insert(item_uid, (*it));
             }
         }
     }
