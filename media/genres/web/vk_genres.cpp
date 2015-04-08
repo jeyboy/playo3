@@ -1,5 +1,5 @@
 #include "vk_genres.h"
-#include "../music_genres.h"
+//#include "../music_genres.h"
 
 VkGenres * VkGenres::self = 0;
 
@@ -9,8 +9,38 @@ VkGenres * VkGenres::instance() {
     return self;
 }
 
+int VkGenres::fromStandartId(int genreId) {//TODO: need to finish this
+    switch(genreId) {
+//        case 1: return 17;
+        default: return defaultInt();
+    }
+}
+
 int VkGenres::toStandartId(int vkGenreId) {
-    return MusicGenres::instance() -> toInt(genres.value(vkGenreId));
+    switch(vkGenreId) {
+        case 1: return 17;
+        case 2: return 13;
+        case 3: return 15;
+        case 4: return 98;
+        case 5: return 3;
+        case 6: return 33;
+        case 7: return 9;
+        case 8: return 189;
+        case 9: return 0;
+        case 10: return 127;
+        case 11: return 31;
+        case 12: return 102;
+        case 13: return 48;
+        case 14: return 99;
+        case 15: return 16;
+        case 16: return 32;
+        case 17: return 131;
+        case 18: return 12;
+        case 19: return 101;
+        case 21: return 20;
+        case 22: return 4;
+        default: return defaultInt();
+    }
 }
 
 void VkGenres::initDefault() {

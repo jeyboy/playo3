@@ -2,6 +2,7 @@
 #define IGNORE_LIST_H
 
 #include <QVariantList>
+#include <QJsonObject>
 #include <QJsonArray>
 
 namespace Playo3 {

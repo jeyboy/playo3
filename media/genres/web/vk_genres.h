@@ -10,6 +10,7 @@ public:
         delete self;
     }
 
+    int fromStandartId(int genreId);
     int toStandartId(int vkGenreId);
     inline int defaultInt() const { return 18; }
 protected:
