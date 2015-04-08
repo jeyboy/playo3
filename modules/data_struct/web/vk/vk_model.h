@@ -23,7 +23,7 @@ protected slots:
 
     void proceedAudioList(QJsonObject &);
     void proceedAudioList(QJsonArray &, FolderItem *, QHash<QString, IItem *> &);
-    void proceedAudioListUpdate(QJsonObject &, QHash<QString, IItem *> &);
+//    void proceedAudioListUpdate(QJsonObject &, QHash<QString, IItem *> &);
 };
 
 

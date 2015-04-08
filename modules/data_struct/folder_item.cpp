@@ -194,14 +194,6 @@ FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos)
         return curr;
 }
 
-template<class T> T * FolderItem::createFolder(QString uid, QString name, int pos) {
-    FolderItem * curr = folders.value(folderUid(name, uid), 0);
-
-    if (!curr)
-        curr = new T(uid, name, this, pos);
-    return curr;
-}
-
 FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last exist folder in the path
     if (list -> isEmpty()) return this;
     FolderItem * curr = folders.value(list -> at(0), 0);
