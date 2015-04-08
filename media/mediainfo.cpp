@@ -15,7 +15,7 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
             artist = QString::fromStdWString(f.tag() -> artist().toWString());
             title = QString::fromStdWString(f.tag() -> title().toWString());
             album = QString::fromStdWString(f.tag() -> album().toWString());
-            genre = QString::fromStdWString(f.tag() -> genre().toWString());
+            setGenre(QString::fromStdWString(f.tag() -> genre().toWString()));
             year = f.tag() -> year();
             track = f.tag() -> track();
 

@@ -11,8 +11,8 @@ public:
     }
 
     int toStandartId(int vkGenreId);
-protected:
     inline int defaultInt() const { return 18; }
+protected:
     void initDefault();
 
 private:

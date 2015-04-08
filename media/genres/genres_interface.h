@@ -11,12 +11,11 @@ public:
 
     inline virtual ~IGenres() {}
 
-    int toInt(QLatin1String name) const;
-
-protected:
+    int toInt(QString name) const;
     virtual int defaultInt() const = 0;
+protected:
 
-    QHash<QLatin1String, int> genres;
+    QHash<QString, int> genres;
 };
 
 #endif // GENRES_INTERFACE

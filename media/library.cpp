@@ -345,7 +345,7 @@ void Library::initItemInfo(MediaInfo & info, IItem * itm) {
         itm -> setInfo(Format::toUnits(info.getSize()));
     if (info.getDuration() > 0)
         itm -> setDuration(Duration::fromSeconds(info.getDuration()));
-    itm -> setGenre(MusicGenres::instance() -> toInt(info.getGenre()));
+    itm -> setGenre(info.getGenre());
 }
 
 void Library::initItemTitles(MediaInfo & info, IItem * itm) {

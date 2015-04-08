@@ -9,8 +9,8 @@ public:
     static void close() {
         delete self;
     }
-protected:
     inline int defaultInt() const { return 12; }
+protected:
     void initDefault();
 private:
     inline MusicGenres() : IGenres() {

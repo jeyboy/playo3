@@ -14,25 +14,25 @@ int VkGenres::toStandartId(int vkGenreId) {
 }
 
 void VkGenres::initDefault() {
-    genres.insert(1, "Rock");
-    genres.insert(2, "Pop");
-    genres.insert(3, "Rap & Hip-Hop");
-    genres.insert(4, "Easy Listening");
-    genres.insert(5, "Dance & House");
-    genres.insert(6, "Instrumental");
-    genres.insert(7, "Metal");
-    genres.insert(8, "Dubstep");
-    genres.insert(9, "Jazz & Blues");
-    genres.insert(10, "Drum & Bass");
-    genres.insert(11, "Trance");
-    genres.insert(12, "Chanson");
-    genres.insert(13, "Ethnic");
-    genres.insert(14, "Acoustic & Vocal");
-    genres.insert(15, "Reggae");
-    genres.insert(16, "Classical");
-    genres.insert(17, "Indie Pop");
-    genres.insert(18, "Other");
-    genres.insert(19, "Speech");
-    genres.insert(21, "Alternative");
-    genres.insert(22, "Electropop & Disco");
+    genres.insert("Rock", 1);
+    genres.insert("Pop", 2);
+    genres.insert("Rap & Hip-Hop", 3);
+    genres.insert("Easy Listening", 4);
+    genres.insert("Dance & House", 5);
+    genres.insert("Instrumental", 6);
+    genres.insert("Metal", 7);
+    genres.insert("Dubstep", 8);
+    genres.insert("Jazz & Blues", 9);
+    genres.insert("Drum & Bass", 10);
+    genres.insert("Trance", 11);
+    genres.insert("Chanson", 12);
+    genres.insert("Ethnic", 13);
+    genres.insert("Acoustic & Vocal", 14);
+    genres.insert("Reggae", 15);
+    genres.insert("Classical", 16);
+    genres.insert("Indie Pop", 17);
+    genres.insert("Other", 18);
+    genres.insert("Speech", 19);
+    genres.insert("Alternative", 21);
+    genres.insert("Electropop & Disco", 22);
 }

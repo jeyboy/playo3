@@ -42,7 +42,7 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 
         beginInsertRows(QModelIndex(), index, index);
 
-        QHash<QVariant, IItem *> store;
+        QHash<QString, IItem *> store;
         rootFolder -> accumulateUids(store);
 
         QJsonArray::Iterator it = posts.begin();
@@ -67,13 +67,13 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QHash<QVariant, IItem *> store;
-
-    if (albums.count() > 0 || audios.count() > 0)
-        rootItem -> accumulateUids(store);
+    QHash<QString, IItem *> store;
 
     QJsonArray albums = hash.value("albums").toArray();
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
+
+    if (albums.count() > 0 || audios.count() > 0)
+        rootItem -> accumulateUids(store);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
     {
@@ -139,11 +139,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     emit moveOutProcess();
 }
 
-void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<IItem *, QString> & store) {
+void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
     QJsonObject itm;
     VkItem * newItem;
     QString uri;
-    QVariant id, owner;
+    QVariant id, owner, uid;
     QList<IItem *> items;
 
     QJsonArray::Iterator it = collection.begin();
@@ -155,10 +155,11 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
 
         id = itm.value("id").toVariant();
         owner = itm.value("owner_id").toVariant();
-        if (ignoreListContainUid(WebItem::toUid(owner, id))) continue;
+        uid = WebItem::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
 
         uri = itm.value("url").toString();
-        items = store.values(id);
+        items = store.values(uid.toString());
 
         if (items.isEmpty()) {
             newItem = new VkItem(
@@ -170,9 +171,12 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
 
             newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt(VkGenres::instance() -> defaultInt())));
         } else {
+            QList<IItem *>::Iterator it_it = items.begin();
 
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
         }
 
 //        key = ModelItem::buildUid(owner, id);

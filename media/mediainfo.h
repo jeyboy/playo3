@@ -56,8 +56,8 @@ private:
     QString artist;
     QString title;
     QString album;
-    QString genre;
 
+    int genre;
     int year;
     int track;
 
