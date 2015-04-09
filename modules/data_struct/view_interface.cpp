@@ -124,8 +124,7 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
-        Player::instance() -> playIndex(node, paused, start);
-        return true;
+        return Player::instance() -> playIndex(node, paused, start);
     }
 
     return false;
@@ -376,12 +375,18 @@ QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
 void IView::findAndExecIndex(bool deleteCurrent) {
     QModelIndex node = activeIndex();
 
+    qDebug() << "ACTIVE " << node.data();
+
     if (deleteCurrent && node.isValid()) {
         QModelIndex removeNode = node;
         findExecutable(node);
+        Player::instance() -> eject();
+        qDebug() << "ON DEL " << removeNode.data() << " | " << node.data();
         removeRow(removeNode);
     }
     else findExecutable(node);
+
+    qDebug() << "ACTIVE " << node.data();
 
     execIndex(node);
 }
@@ -422,7 +427,7 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
         if (Player::instance() -> playedIndex().data(ITREESTR).toString().startsWith(
             node.data(ITREESTR).toString()
         ))
-            Player::instance() -> playIndex(QModelIndex());
+            Player::instance() -> eject();
     }
 
     if (isRemoveFileWithItem())

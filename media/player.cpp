@@ -64,7 +64,9 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
         }
     }
 
-    updateItemState(false);
+    if (currentIndex.isValid())
+        updateItemState(false);
+
     currentIndex = item;
     if (item.isValid()) {
         setMedia(item.data(IURL).toUrl());
@@ -75,9 +77,10 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
 
         if (isPlayed())
             updateItemState(true);
-        else
+        else {
             retVal = false;
             setItemState(ItemState::played);
+        }
 
         if (paused)
             pause();
