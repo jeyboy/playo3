@@ -174,8 +174,16 @@ void Dockbars::initPlayed() {
             QList<DockBar *> bars = dockbars();
 
             //TODO: maybe has possibility to take hidden tab ?
-            if (bars.count() > 0) // TODO: maybe use some creteria for playing tab getting
-                activate(played = bars.first());
+            if (bars.count() > 0) {
+                QList<DockBar *>::Iterator it = bars.begin();
+
+                for(; it != bars.end(); it++) {
+                    if (view(*it)) {
+                        activate(played = (*it));
+                        break;
+                    }
+                }
+            }
         }
     }
 }

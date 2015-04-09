@@ -41,9 +41,9 @@ void Player::setItemState(int state) {
         QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentIndex.model());
 
         mdl -> setData(
-                    currentIndex,
-                    state,
-                    ISTATE
+            currentIndex,
+            state,
+            ISTATE
         );
     }
 }
