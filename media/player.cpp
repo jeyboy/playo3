@@ -52,6 +52,11 @@ void Player::updateItemState(bool isPlayed) {
     setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
 }
 
+void Player::eject(bool updateState) {
+    if (!updateState) currentIndex = QModelIndex();
+    playIndex(QModelIndex());
+}
+
 bool Player::playIndex(QModelIndex item, bool paused, uint start) {
     bool retVal = true;
     switch(state()) {

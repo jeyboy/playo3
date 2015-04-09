@@ -375,17 +375,14 @@ QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
 void IView::findAndExecIndex(bool deleteCurrent) {
     QModelIndex node = activeIndex();
 
-    qDebug() << "ACTIVE " << node.data();
-
     if (deleteCurrent && node.isValid()) {
-        QModelIndex removeNode = node;
+        QString nodePath = node.data(ITREEPATH).toString();
+        Player::instance() -> eject(false);
+        removeRow(node);
+        node = mdl -> fromPath(nodePath);
         findExecutable(node);
-        Player::instance() -> eject();
-        removeRow(removeNode);
     }
     else findExecutable(node);
-
-    qDebug() << "ACTIVE " << node.data();
 
     execIndex(node);
 }

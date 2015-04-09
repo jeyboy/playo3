@@ -45,19 +45,15 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
 
         result = true;
     } else if (role == ISTATERESTORE) {
-        qDebug() << "STATE RESTORE";
         int iState = value.toInt();
         node -> setStates(iState);
         result = iState != -ItemState::proceeded && iState != -ItemState::mark_on_removing;
     } else if (role == ISTATE) {
-        qDebug() << "STATE";
         Library::instance() -> setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)
         result = node -> setData(model_index.column(), value);
-
-    qDebug() << "!!!!! " << node -> title().toString() << " | " << result << role << " " << value;
 
     if (result)
         emit dataChanged(model_index, model_index);

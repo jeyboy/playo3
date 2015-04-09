@@ -24,7 +24,7 @@ public:
     };
 
     static Player * instance(QObject * parent = 0);
-    inline void eject() { playIndex(QModelIndex()); }
+    void eject(bool updateState = true);
     bool playIndex(QModelIndex item, bool paused = false, uint start = 0);
     void setStartPosition(int position);
 
