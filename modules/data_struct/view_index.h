@@ -9,7 +9,7 @@
 #include "tree/tree_view.h"
 #include "level_tree/level_tree_view.h"
 
-//#include "model/web/vk/vk_view.h"
+#include "web/vk/vk_view.h"
 //#include "model/web/soundcloud/soundcloud_view.h"
 
 #endif // VIEWS_INDEX_H

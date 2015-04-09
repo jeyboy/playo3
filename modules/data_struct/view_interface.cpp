@@ -381,7 +381,6 @@ void IView::findAndExecIndex(bool deleteCurrent) {
         QModelIndex removeNode = node;
         findExecutable(node);
         Player::instance() -> eject();
-        qDebug() << "ON DEL " << removeNode.data() << " | " << node.data();
         removeRow(removeNode);
     }
     else findExecutable(node);
@@ -583,11 +582,8 @@ QModelIndex IView::activeIndex() {
 }
 
 void IView::findExecutable(QModelIndex & curr) {
-    if (!curr.isValid()) {
+    if (!curr.isValid())
         curr = mdl -> index(0, 0);
-        if (curr.data(IPLAYABLE).toBool())
-            return;
-    }
 
     if (Player::instance() -> playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;

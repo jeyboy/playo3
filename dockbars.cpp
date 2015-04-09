@@ -114,7 +114,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
-        ViewSettings defSettings(true);
+        ViewSettings defSettings(true, false, false, true);
         common = createDocBar("Common", defSettings, 0, false);
     }
 
@@ -135,9 +135,9 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         case tree: {
             view = new TreeView(bar, settings, attrs);
         break;}
-//        case vk: {
-//            view = new VkView(bar, settings, attrs);
-//        break;}
+        case vk: {
+            view = new VkView(bar, settings, attrs);
+        break;}
 //        case soundcloud: {
 //            view = new SoundcloudView(bar, settings, attrs);
 //        break;}
