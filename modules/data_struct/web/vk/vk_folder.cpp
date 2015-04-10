@@ -11,12 +11,10 @@ VkFolder::~VkFolder() {}
 
 bool VkFolder::removePhysicalObject() {
     //TODO: add realization
-
     return false;
 }
 
 bool VkFolder::isExist() const {
     //TODO: add realization
-
     return true;
 }

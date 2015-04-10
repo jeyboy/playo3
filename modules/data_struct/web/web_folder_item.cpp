@@ -10,7 +10,7 @@ WebFolderItem::WebFolderItem(QJsonObject * hash, FolderItem * parent) : FolderIt
 }
 
 WebFolderItem::WebFolderItem(QString uid, QString folderTitle, FolderItem * parent, int pos, int initState)
-    : FolderItem(uid, parent, folderTitle, pos, initState) {
+    : FolderItem(folderTitle, parent, uid, pos, initState) {
 }
 
 WebFolderItem::~WebFolderItem() {

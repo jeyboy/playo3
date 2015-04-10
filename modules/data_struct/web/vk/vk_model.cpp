@@ -21,7 +21,6 @@ void VkModel::refresh() {
     emit moveInProcess();
 //    QApplication::processEvents();
     VkApi::instance() -> audioList(this, SLOT(proceedAudioList(QJsonObject &)), tab_uid);
-//    emit moveOutProcess();
 }
 
 void VkModel::refreshWall() {

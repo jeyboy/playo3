@@ -53,7 +53,7 @@ namespace Playo3 {
         }
 
         void shuffle();
-        inline QJsonObject toJson() { return rootItem -> toJson(); }
+        virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
 
         QModelIndex fromPath(QString path);
 
