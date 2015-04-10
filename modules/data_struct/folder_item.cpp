@@ -11,6 +11,9 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
       inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
+    qDebug() << "--------------------------------------";
+    qDebug() << (*hash);
+
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
@@ -161,7 +164,6 @@ QJsonObject FolderItem::toJson() {
 
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
-
 
         QJsonArray ar = QJsonArray();
         QList<IItem *>::Iterator it = children.begin();

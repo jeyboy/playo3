@@ -24,7 +24,7 @@ namespace Playo3 {
 
         virtual ~IItem();
 
-        QString fullPath() const;
+        virtual QString fullPath() const;
 
         void openLocation();
         virtual bool removePhysicalObject() = 0;
@@ -44,7 +44,7 @@ namespace Playo3 {
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 
-        inline virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
+        virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
         QString buildTreePath() const;
         QString buildTreeStr() const; // used for tree sorting on removing
 
