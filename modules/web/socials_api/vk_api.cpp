@@ -65,6 +65,8 @@ QString VkApi::proceedAuthResponse(const QUrl & url) {
 ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, int count) {
     QJsonObject doc;
     QVariantList res;
+
+    CustomNetworkAccessManager * netManager = createManager();
     QNetworkReply * m_http;
 
     while(true) {
@@ -86,6 +88,7 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
     }
 
     func -> result.insert("posts", QJsonArray::fromVariantList(res));
+    delete netManager;
     return func;
 }
 
@@ -102,6 +105,7 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
     QVariantList res, temp;
     res.append(func -> result.value("albums").toArray().toVariantList());
 
+    CustomNetworkAccessManager * netManager = createManager();
     QNetworkReply * m_http;
 
     while(true) {
@@ -129,6 +133,8 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
     }
 
     func -> result.insert("albums", QJsonArray::fromVariantList(res));
+    delete netManager;
+
     return func;
 }
 
@@ -143,6 +149,7 @@ void VkApi::audioAlbums(const QObject * receiver, const char * respSlot, QString
 ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
     QNetworkReply * m_http;
     QUrl url = VkApiPrivate::audioInfoUrl(func -> uid, getUserID(), getToken());
+    CustomNetworkAccessManager * netManager = createManager();
 
     m_http = netManager -> getSync(QNetworkRequest(url));
     if (responseRoutine(m_http, func, func -> result)) {
@@ -154,6 +161,7 @@ ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
         }
     }
 
+    delete netManager;
     return func;
 }
 
@@ -162,7 +170,7 @@ void VkApi::audioList(const QObject * receiver, const char * respSlot, QString u
 }
 
 //TODO: has some troubles with ids amount in request
-void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids) {
+void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids) { // TODO: rewrite required
     QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
     QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
 //    responses.insert(m_http, responseSlot);

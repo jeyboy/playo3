@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file alias="main">images/main.png</file>
-        <file alias="ico">images/playo.ico</file>
+        <file alias="old_ico">images/playo.ico</file>
         <file alias="close_button_hover">images/controls/close_temp.png</file>
         <file alias="close_button">images/controls/close_temp2.png</file>
         <file alias="maxi_button_hover">images/controls/maxi_temp.png</file>
@@ -42,5 +42,7 @@
         <file alias="scroll_left">images/controls/scroll/scroll_left.png</file>
         <file alias="scroll_right">images/controls/scroll/scroll_right.png</file>
         <file alias="scroll_top">images/controls/scroll/scroll_top.png</file>
+        <file alias="refresh">images/elements/refresh.png</file>
+        <file alias="ico">images/main_alt.ico</file>
     </qresource>
 </RCC>

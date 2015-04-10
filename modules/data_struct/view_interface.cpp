@@ -289,6 +289,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         act -> setSeparator(true);
     }
 
+    actions.append((act = new QAction(QIcon(":/refresh"), "Refresh items", this)));
+    connect(act, SIGNAL(triggered(bool)), mdl, SLOT(refresh()));
+
+    actions.append((act = new QAction(this)));
+    act -> setSeparator(true);
+
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(":/active_tab"), "Show active elem", this)));
         connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(scrollToActive()));

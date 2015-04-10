@@ -10,6 +10,8 @@
 VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
 //    connect(IpChecker::instance(), SIGNAL(ipChanged()), this, SLOT(refresh()));
     connect(Player::instance(), SIGNAL(remoteUnprocessed()), this, SLOT(refresh()));
+
+    if (!hash) refresh();
 }
 
 VkModel::~VkModel() {
@@ -19,11 +21,11 @@ void VkModel::refresh() {
     emit moveInProcess();
 //    QApplication::processEvents();
     VkApi::instance() -> audioList(this, SLOT(proceedAudioList(QJsonObject &)), tab_uid);
+//    emit moveOutProcess();
 }
 
 void VkModel::refreshWall() {
     emit moveInProcess();
-    QApplication::processEvents();
     VkApi::instance() -> wallMediaList(this, SLOT(proceedWallList(QJsonObject &)), tab_uid);
 }
 

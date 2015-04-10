@@ -24,8 +24,11 @@ protected:
     int filesRoutine(QFileInfo & currFile, FolderItem * node);
     int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
 
+signals:
+    void refreshNeeded();
+
 protected slots:
-    void errorReceived(int, QString);
+        void errorReceived(int, QString);
 protected:
     QString tab_uid;
 };
