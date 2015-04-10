@@ -24,6 +24,8 @@ namespace Playo3 {
 
         virtual ~IItem();
 
+        virtual QJsonObject toJson();
+
         virtual QString fullPath() const;
 
         void openLocation();

@@ -21,8 +21,6 @@ namespace Playo3 {
         bool removePhysicalObject();
 
         bool isExist() const;
-
-        QJsonObject toJson();
     protected:
         void proceedTitle(QString & title);
     };

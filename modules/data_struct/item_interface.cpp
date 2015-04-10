@@ -39,6 +39,14 @@ IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
 IItem::~IItem() {
 }
 
+QJsonObject IItem::toJson() {
+    QJsonObject root = ItemFields::toJson();
+
+    root[JSON_TYPE_ITEM_TYPE] = itemType();
+
+    return root;
+}
+
 QString IItem::fullPath() const {
     FolderItem * curr = _parent;
 

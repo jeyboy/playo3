@@ -31,14 +31,6 @@ bool FileItem::isExist() const {
     return QFile::exists(fullPath());
 }
 
-QJsonObject FileItem::toJson() {
-    QJsonObject root = IItem::toJson();
-
-    root[JSON_TYPE_ITEM_TYPE] = itemType();
-
-    return root;
-}
-
 void FileItem::proceedTitle(QString & fileName) {
     QString sExt = fileName.section('.', -1, -1);
     if (sExt != fileName && sExt.indexOf(' ') == -1) {

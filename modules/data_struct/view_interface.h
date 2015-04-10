@@ -46,7 +46,7 @@ namespace Playo3 {
         IView(IModel * model, QWidget * parent, ViewSettings & settins);
         ~IView();
 
-        inline virtual QJsonObject toJson() { return mdl -> toJson(); }
+        inline QJsonObject toJson() { return mdl -> toJson(); }
 
         void scrollToActive();
 
