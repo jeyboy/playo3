@@ -28,9 +28,9 @@ void TabDialog::setName(QString name) {
 ViewSettings TabDialog::getSettings() {
     ViewSettings settings;
 
-    settings.deleteFile = ui -> deleteFile -> checkState() == Qt::Checked;
-    settings.interactive = ui -> interactive -> checkState() == Qt::Checked;
-    settings.playlist = ui -> playlist -> checkState() == Qt::Checked;
+    settings.deleteFile = ui -> deleteFile -> isChecked();
+    settings.interactive = ui -> interactive -> isChecked(); //checkState() == Qt::Checked
+    settings.playlist = ui -> playlist -> isChecked();
 
     if (ui -> isListRadio -> isChecked())
         settings.type = Playo3::list;
@@ -61,4 +61,5 @@ void TabDialog::setSettings(ViewSettings settings) {
   ui -> isTreeRadio -> setEnabled(false);
   ui -> isOneLevelTreeRadio -> setEnabled(false);
   ui -> isVkRadio -> setEnabled(false);
+  ui -> isSoundcloudRadio -> setEnabled(false);
 }

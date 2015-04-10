@@ -6,8 +6,8 @@
 
 namespace Playo3 {
     struct ViewSettings {
-        ViewSettings(bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false, QString uniq_id = QString())
-            : deleteFile(delFile), playlist(isPlaylist), interactive(isInteractive), common(isCommon), uid(uniq_id), type(tree)  {
+        ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false, QString uniq_id = QString())
+            : deleteFile(delFile), playlist(isPlaylist), interactive(isInteractive), common(isCommon), uid(uniq_id), type(cType)  {
         }
 
         ViewSettings(QJsonObject obj) {

@@ -1,6 +1,7 @@
 #ifndef DOCKBARS_H
 #define DOCKBARS_H
 
+#include <qmessagebox.h>
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QBoxLayout>

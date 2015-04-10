@@ -194,7 +194,7 @@ void Playo::showSettingsDialog() {
 void Playo::openVKTabDialog() {
     WebDialog dialog(this, VkApi::instance(), "VK auth");
     if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(false, false, false, true, VkApi::instance() -> getUserID());
+        ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
         ToolBars::instance() -> initiateVkButton();
     }
@@ -203,7 +203,7 @@ void Playo::openVKTabDialog() {
 
 void Playo::showVKTabDialog() {
     if (VkApi::instance() -> isConnected()) {
-        ViewSettings settings(false, false, false, true, VkApi::instance() -> getUserID());
+        ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
     }
     else openVKTabDialog();
@@ -212,7 +212,7 @@ void Playo::showVKTabDialog() {
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(VkApi::instance(), this);
     if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(false, false, false, true, dialog.getId());
+        ViewSettings settings(vk, false, false, false, true, dialog.getId());
         Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings);
     }
     else QMessageBox::information(this, "VK", VkApi::instance() -> getError());

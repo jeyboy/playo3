@@ -114,7 +114,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
-        ViewSettings defSettings(true, false, false, true);
+        ViewSettings defSettings(list, true, false, false, true);
         common = createDocBar("Common", defSettings, 0, false);
     }
 
@@ -194,7 +194,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
         if (!view -> isEditable()) {
-//            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
+            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
             return;
         }
 

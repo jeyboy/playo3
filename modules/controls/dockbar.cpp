@@ -1,5 +1,6 @@
 #include "dockbar.h"
 #include <qdatetime.h>
+#include <qdebug.h>
 
 using namespace Playo3;
 
