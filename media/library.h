@@ -57,7 +57,7 @@ namespace Playo3 {
         QHash<QString, int> * getCatalog(QString & name);
 
         void stateRestoring(QModelIndex ind);
-        void remoteInfoRestoring(QModelIndex ind);
+        bool remoteInfoRestoring(QModelIndex ind);
 
         void initItemData(IItem * itm);
         void initItemInfo(MediaInfo & info, IItem * itm);
@@ -74,13 +74,14 @@ namespace Playo3 {
         QHash<QModelIndex, QFutureWatcher<void> * > inProc;
 
         QList<QModelIndex> waitRemoteOnProc;
-        QHash<QModelIndex, QFutureWatcher<void> * > inRemoteProc;
+        QHash<QModelIndex, QFutureWatcher<bool> * > inRemoteProc;
 
         QTimer * saveTimer;
         QMutex saveBlock, itmAttrsBlock;
 
         QFuture<void> catsSaveResult;
 
+        int inProcLimit;
         int waitListLimit;
         int timeAmount;
     };

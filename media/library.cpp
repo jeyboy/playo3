@@ -31,7 +31,7 @@ Library::~Library() {
         if (feature -> isRunning())
             feature -> cancel();
 
-    foreach(QFutureWatcher<void> * feature, inRemoteProc.values())
+    foreach(QFutureWatcher<bool> * feature, inRemoteProc.values())
         if (feature -> isRunning())
             feature -> cancel();
 
@@ -57,8 +57,6 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 void Library::restoreItemState(const QModelIndex & ind) {
     if (!waitOnProc.contains(ind)) {
         waitOnProc.append(ind);
-        if (ind.data(IREMOTE).toBool() && Settings::instance() -> isUsedDelayForRemote())
-            waitRemoteOnProc.append(ind);
 
         while(waitOnProc.size() > waitListLimit) {
             QModelIndex i = waitOnProc.takeFirst();
@@ -67,6 +65,18 @@ void Library::restoreItemState(const QModelIndex & ind) {
             IItem * itm = indToItm(i);
             itm -> unset(ItemFields::proceeded);
         }
+
+        if (Settings::instance() -> isUsedDelayForRemote())
+            if (ind.data(IREMOTE).toBool()) {
+                waitRemoteOnProc.append(ind);
+
+                while(waitRemoteOnProc.size() > waitListLimit) {
+                    QModelIndex i = waitRemoteOnProc.takeFirst();
+                    // maybe next is not needed
+                    IItem * itm = indToItm(i);
+                    itm -> unset(ItemFields::proceeded);
+                }
+            }
     }
 
     if (inProc.size() < INPROC_LIMIT)
@@ -81,17 +91,21 @@ void Library::declineItemStateRestoring(const QModelIndex & ind) {
 
 void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
-        QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
+        QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, waitRemoteOnProc.takeLast()));
     }
 }
 
 void Library::finishRemoteItemInfoInit() {
-    QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
+    QFutureWatcher<bool> * initiator = (QFutureWatcher<bool> *)sender();
+    bool result = initiator -> isCanceled() || initiator -> result();
     QModelIndex ind = inRemoteProc.key(initiator);
     inRemoteProc.remove(ind);
     delete initiator;
+
+    if (!result) // call new item initiation if prev item initiation is finished without remote call for info
+        initRemoteItemInfo();
 }
 
 void Library::initStateRestoring() {
@@ -159,17 +173,18 @@ void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
     disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
 
-void Library::remoteInfoRestoring(QModelIndex ind) {
+bool Library::remoteInfoRestoring(QModelIndex ind) {
     IItem * itm = indToItm(ind);
     qDebug() << "REMOTE RESTORING " << itm -> title();
     bool has_info = itm -> hasInfo();
 
-    if (has_info) return;
+    if (has_info) return false;
 
     MediaInfo m(itm -> fullPath(), has_info);
 
     initItemInfo(m, itm);
     emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
+    return true;
 }
 
 //void Library::clearRemote() {
