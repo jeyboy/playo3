@@ -27,6 +27,7 @@ namespace Playo3 {
 
         void restoreItemState(const QModelIndex & ind);
         void declineItemStateRestoring(const QModelIndex & ind);
+        void declineAllItemsRestoration();
 
         inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
     signals:
@@ -40,6 +41,7 @@ namespace Playo3 {
         void clockTick();
         void saveCatalogs();
     private:
+        void cancelActiveRestorations();
         IItem * indToItm(const QModelIndex & ind);
         void emitItemAttrChanging(QModelIndex & ind, int state);
         static Library * self;
@@ -56,8 +58,8 @@ namespace Playo3 {
         QHash<QString, int> * getCatalog(QChar & letter);
         QHash<QString, int> * getCatalog(QString & name);
 
-        void stateRestoring(QModelIndex ind);
-        bool remoteInfoRestoring(QModelIndex ind);
+        void stateRestoring(QFutureWatcher<void> * initiator, QModelIndex ind);
+        bool remoteInfoRestoring(QFutureWatcher<bool> * initiator, QModelIndex ind);
 
         void initItemData(IItem * itm);
         void initItemInfo(MediaInfo & info, IItem * itm);

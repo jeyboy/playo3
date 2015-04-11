@@ -117,10 +117,10 @@ bool IView::execPath(const QString path, bool paused, uint start) {
 }
 
 bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
-    qDebug() << "PLAYED " << node.data();
-    Dockbars::instance() -> setPlayed((DockBar *)parent());
-
     if (node.isValid() && node.data(IPLAYABLE).toBool()) {
+        qDebug() << "PLAYED " << node.data();
+        Dockbars::instance() -> setPlayed((DockBar *)parent());
+
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
@@ -643,6 +643,10 @@ void IView::keyPressEvent(QKeyEvent * event) {
     } else if (event -> key() == Qt::Key_Delete) {
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
+
+        if (!list.isEmpty())
+            Library::instance() -> declineAllItemsRestoration();
+        else return;
 
         if (list.size() > 200)
             QtConcurrent::run(this, &IView::removeProccessing, list, true);

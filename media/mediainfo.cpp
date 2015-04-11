@@ -1,7 +1,7 @@
 #include "mediainfo.h"
 #include <qdebug.h>
 
-MediaInfo::MediaInfo(QUrl uri, bool onlyTags) :
+MediaInfo::MediaInfo(QUrl uri, bool onlyTags) : fileName(0),
     year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
     sampleRate(-1), size(0), readed(false), remote(!uri.isLocalFile()) {
 
