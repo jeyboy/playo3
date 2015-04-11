@@ -142,8 +142,8 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
     QJsonObject itm;
     VkItem * newItem;
-    QString uri;
-    QVariant id, owner, uid;
+    QString uri, id, owner;
+    QVariant uid;
     QList<IItem *> items;
 
     QJsonArray::Iterator it = collection.begin();
@@ -153,12 +153,14 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
 
         if (itm.isEmpty()) continue;
 
-        id = itm.value("id").toVariant();
-        owner = itm.value("owner_id").toVariant();
+        id = QString::number(itm.value("id").toInt());
+        owner = QString::number(itm.value("owner_id").toInt());
         uid = WebItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
         uri = itm.value("url").toString();
+        uri = uri.section('?', 0, 0); // remove extra info from url
+
         items = store.values(uid.toString());
 
         if (items.isEmpty()) {
@@ -171,37 +173,14 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
 
             newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt(VkGenres::instance() -> defaultInt())));
+            if (itm.contains("genre_id"))
+                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
         } else {
             QList<IItem *>::Iterator it_it = items.begin();
 
             for(; it_it != items.end(); it_it++)
                 (*it_it) -> setPath(uri);
         }
-
-//        key = ModelItem::buildUid(owner, id);
-//        items = store.keys(key);
-//        if (items.isEmpty() && !containsUID(key)) {
-//            newItem = new VkFile(
-//                        itm.value("url").toString(),
-//                        itm.value("artist").toString() + " - " + itm.value("title").toString(),
-//                        owner,
-//                        id,
-//                        parent,
-//                        itm.value("genre_id").toInt(-1),
-//                        Duration::fromSeconds(itm.value("duration").toInt(0))
-//                        );
-
-//            appendRow(newItem -> toModelItem());
-////            qDebug() << "NEW ITEM " << newItem -> data(0);
-//        } else {
-//            foreach(ModelItem * item, items) {
-////                store.remove(item);
-//                item -> setPath(itm.value("url").toString());
-//                item -> setGenre(itm.value("genre_id").toInt(-1));
-//            }
-//            store.remove(items.first());
-//        }
     }
 }
 

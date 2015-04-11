@@ -72,10 +72,6 @@ namespace Playo3 {
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
-//        inline void setParams(QVariantMap map) {
-//            attrs = attrs.unite(map);
-//        }
-
         inline virtual QVariant toUid() { return QVariant(); }
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
