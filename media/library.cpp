@@ -57,7 +57,7 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 void Library::restoreItemState(const QModelIndex & ind) {
     if (!waitOnProc.contains(ind)) {
         waitOnProc.append(ind);
-        if (ind.data(IREMOTE).toBool())
+        if (ind.data(IREMOTE).toBool() && Settings::instance() -> isUsedDelayForRemote())
             waitRemoteOnProc.append(ind);
 
         while(waitOnProc.size() > waitListLimit) {
@@ -308,7 +308,7 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
 
 void Library::initItemData(IItem * itm) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = itm -> isRemote() || itm -> hasInfo(); // itm -> isRemote - prevent from initiate info for remote items without delay - to many calls in one time to server is ban us
+    bool has_info = (itm -> isRemote() && Settings::instance() -> isUsedDelayForRemote()) || itm -> hasInfo(); // itm -> isRemote - prevent from initiate info for remote items without delay - to many calls in one time to server is ban us
 
     if (has_titles && has_info) return;
 

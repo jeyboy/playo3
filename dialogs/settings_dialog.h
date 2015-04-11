@@ -62,6 +62,8 @@ private slots:
 
     void on_spectrumColor3_clicked();
 
+    void on_usedDelayForRemote_toggled(bool checked);
+
 protected:
     void initGlobalSettings();
     void initItemsSettings();

@@ -216,45 +216,6 @@
             <string>Show checkboxes for batch operations</string>
            </property>
           </widget>
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>160</y>
-             <width>321</width>
-             <height>51</height>
-            </rect>
-           </property>
-           <property name="title">
-            <string>Item info (bitrate, duration, etc...)</string>
-           </property>
-           <widget class="QCheckBox" name="showInfo">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>20</y>
-              <width>311</width>
-              <height>17</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Show</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label">
-            <property name="geometry">
-             <rect>
-              <x>60</x>
-              <y>20</y>
-              <width>161</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Very slow for remote files. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </widget>
           <widget class="QCheckBox" name="useSystemIconsCheck">
            <property name="geometry">
             <rect>
@@ -1156,63 +1117,108 @@ text color</string>
         <string>secs</string>
        </property>
       </widget>
-      <widget class="QSpinBox" name="remoteItemProcDelay">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>40</y>
-         <width>61</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>60000</number>
-       </property>
-       <property name="value">
-        <number>18</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_27">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>191</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Delay of remote items info proccessing</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_28">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>40</y>
-         <width>41</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>secs</string>
-       </property>
-      </widget>
       <widget class="QCheckBox" name="interactiveStats">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>80</y>
+         <y>40</y>
          <width>291</width>
          <height>17</height>
         </rect>
        </property>
        <property name="text">
-        <string>Check stats on every item redrawing</string>
+        <string>Check stats on every item is redrawing</string>
        </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>321</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Initiate info for items (bitrate, duration, etc...)</string>
+       </property>
+       <widget class="QCheckBox" name="showInfo">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>311</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Show</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_remoteProcMetric">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>60</y>
+          <width>41</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>secs</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="usedDelayForRemote">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>291</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hase possibility to be baned by server&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: red;</string>
+        </property>
+        <property name="text">
+         <string>Use delay for remote items info getting</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="remoteItemProcDelay">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>60</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>60000</number>
+        </property>
+        <property name="value">
+         <number>18</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_remoteItemDelay">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>191</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Delay of remote items info proccessing</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>

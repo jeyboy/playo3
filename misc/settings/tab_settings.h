@@ -11,9 +11,6 @@ public:
     inline bool isShowSystemIcons() const { return _showSystemIcons; }
     inline void setShowSystemIcons(bool show) { _showSystemIcons = show; }
 
-    inline bool isShowInfo() const { return _showInfo; }
-    inline void setShowInfo(bool show) { _showInfo = show; }
-
     inline bool isSpoilOnActivation() const { return _spoilOnActivation; }
     inline void setSpoilOnActivation(bool show) { _spoilOnActivation = show; }
 
@@ -29,7 +26,6 @@ protected:
     int _treeIndentation;
 
     bool _showSystemIcons;
-    bool _showInfo;
     bool _showCheckbox;
     bool _spoilOnActivation;
     bool _alertOnFolderDeletion;

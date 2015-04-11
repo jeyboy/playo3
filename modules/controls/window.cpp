@@ -57,11 +57,9 @@ void MainWindow::locationCorrection() {
 }
 
 void MainWindow::toggleWindowMostTop() {
-    qDebug() << "TOP LEVEL";
     HoverableLabel * button = (HoverableLabel *)sender();
 
     if (windowFlags() & Qt::WindowStaysOnTopHint) {
-        qDebug() << "IS TOP LEVEL";
         Qt::WindowFlags flags = windowFlags();
         flags &= ~Qt::WindowStaysOnTopHint;
         setWindowFlags(flags);

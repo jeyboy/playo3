@@ -4,7 +4,7 @@
 #include "media/player.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
-  QDialog(parent), ui(new Ui::SettingsDialog) {
+  QDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {
   ui -> setupUi(this);
 
   setWindowTitle("Playo settings");
@@ -256,7 +256,6 @@ void SettingsDialog::initViewSettings() {
 
     ui -> alertOnDeletion -> setChecked(Settings::instance() -> isAlertOnFolderDeletion());
     ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
-    ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
 
     ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
     ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
@@ -300,6 +299,8 @@ void SettingsDialog::initLibrarySettings() {
     ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay());
     ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay());
     ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());
+    ui -> usedDelayForRemote -> setChecked(Settings::instance() -> isUsedDelayForRemote());
+    ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
 }
 
 void SettingsDialog::initExtensions() {
@@ -343,8 +344,7 @@ void SettingsDialog::saveViewSettings() {
     Settings::instance() -> setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
     Settings::instance() -> setCheckboxShow(ui -> showCheckboxes -> isChecked());
 
-    iconSizeChanged = Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked()
-            || Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
+    iconSizeChanged |= Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
     Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
 
     Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
@@ -382,6 +382,10 @@ void SettingsDialog::saveLibrarySettings() {
     Settings::instance() -> setSaveLibDelay(ui -> libSaveFreq -> value());
     Settings::instance() -> setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value());
     Settings::instance() -> setInteractiveProc(ui -> interactiveStats -> isChecked());
+    Settings::instance() -> setUsedDelayForRemote(ui -> usedDelayForRemote -> isChecked());
+
+    iconSizeChanged |= Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked();
+    Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
 }
 
 bool SettingsDialog::execColorDialog(QColor & color) {
@@ -395,4 +399,8 @@ bool SettingsDialog::execColorDialog(QColor & color) {
     return false;
 }
 
-
+void SettingsDialog::on_usedDelayForRemote_toggled(bool checked) {
+    ui -> remoteItemProcDelay -> setEnabled(checked);
+    ui -> label_remoteItemDelay -> setEnabled(checked);
+    ui -> label_remoteProcMetric -> setEnabled(checked);
+}
