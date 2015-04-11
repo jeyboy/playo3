@@ -175,11 +175,11 @@ QVariant IItem::data(int column) const {
         case Qt::ToolTipRole:
             return title()/* + "(" + _extension + ")" + "\n" + _path*/;
 
-        case IEXTENSION:       return extension();
+        case IEXTENSION:        return extension();
 //        case PATHID:            return path();
-        case IREMOTE:          return isRemote();
-        case ISTATE:           return visualStates();
-        case IFULLPATH:        return fullPath();
+        case IREMOTE:           return isRemote();
+        case ISTATE:            return visualStates();
+        case IFULLPATH:         return fullPath();
         case IINNERCOPY:        return toInnerAttrs(itemType());
 
         default:                return QVariant();

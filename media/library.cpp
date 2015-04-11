@@ -57,15 +57,15 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 void Library::restoreItemState(const QModelIndex & ind) {
     if (!waitOnProc.contains(ind)) {
         waitOnProc.append(ind);
-        while(waitOnProc.size() > waitListLimit) {
-            IItem * itm = indToItm(waitOnProc.takeFirst());
-            itm -> unset(ItemFields::proceeded);
-        }
-
-        if (ind.data(IREMOTE).toBool()) {
+        if (ind.data(IREMOTE).toBool())
             waitRemoteOnProc.append(ind);
-            while(waitRemoteOnProc.size() > waitListLimit)
-                waitRemoteOnProc.removeFirst();
+
+        while(waitOnProc.size() > waitListLimit) {
+            QModelIndex i = waitOnProc.takeFirst();
+            if (i.data(IREMOTE).toBool())
+                waitRemoteOnProc.removeOne(i);
+            IItem * itm = indToItm(i);
+            itm -> unset(ItemFields::proceeded);
         }
     }
 
@@ -169,6 +169,7 @@ void Library::remoteInfoRestoring(QModelIndex ind) {
     MediaInfo m(itm -> fullPath(), has_info);
 
     initItemInfo(m, itm);
+    emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
 }
 
 //void Library::clearRemote() {
@@ -261,11 +262,8 @@ bool Library::proceedItemNames(QStringList names, int state) {
             cat -> insert((*i), state);
 
             catalog_state_has_item = catalogs_state.contains(letter);
-            if (catalog_state_has_item) {
+            if (catalog_state_has_item)
                 saveList = catalogs_state.value(letter);
-//                if (saveList != 0)
-//                    qDebug() << "LLL: " << letter << " Libb: " << (*saveList);
-            }
 
             if (catalog_has_item) {
                 if (saveList)
@@ -308,26 +306,9 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
     return getCatalog(c);
 }
 
-////QList<QString> * Library::getNamesForObject(QString path, QString name) {
-////    QList<QString> * res = new QList<QString>();
-
-////    res -> append(name);
-////    QString temp = prepareName(name, true);
-////    if (temp != name)
-////        res -> append(temp);
-
-////    MediaInfo m(path);
-
-////    QString temp2 = prepareName(m.getArtist() + m.getTitle());
-////    if (!temp2.isEmpty() && temp2 != name && temp2 != temp)
-////        res -> append(temp2);
-
-////    return res;
-////}
-
 void Library::initItemData(IItem * itm) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = itm -> hasInfo();
+    bool has_info = itm -> isRemote() || itm -> hasInfo(); // itm -> isRemote - prevent from initiate info for remote items without delay - to many calls in one time to server is ban us
 
     if (has_titles && has_info) return;
 
