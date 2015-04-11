@@ -15,6 +15,7 @@
 #include "modules/data_struct/model_interface.h"
 
 #define INPROC_LIMIT 5
+#define TIMER_TICK 500
 
 namespace Playo3 {
     class Library : public QObject {
@@ -81,7 +82,7 @@ namespace Playo3 {
         QFuture<void> catsSaveResult;
 
         int waitListLimit;
-        int ticksAmount;
+        int timeAmount;
     };
 }
 

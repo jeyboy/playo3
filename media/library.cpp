@@ -11,12 +11,12 @@ Library * Library::instance(QObject * parent) {
     return self;
 }
 
-Library::Library(QObject * parent) : QObject(parent), waitListLimit(10), ticksAmount(0) {
+Library::Library(QObject * parent) : QObject(parent), waitListLimit(10), timeAmount(0) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
     QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(clockTick()));
-    saveTimer -> start(1000);
+    saveTimer -> start(TIMER_TICK);
 
     QDir dir(libraryPath());
     if (!dir.exists())
@@ -228,14 +228,15 @@ void Library::remoteInfoRestoring(QModelIndex ind) {
 ///// privates
 ////////////////////////////////////////////////////////////////////////
 void Library::clockTick() {
-    if (++ticksAmount > 999999999) ticksAmount = 0;
+    if ((timeAmount += TIMER_TICK) > 999999999) timeAmount = 0;
 
     int saveLibDelay = Settings::instance() -> saveLibDelay();
 
-    if (saveLibDelay != 0 && ticksAmount % saveLibDelay == 0)
+    if (saveLibDelay != 0 && timeAmount % saveLibDelay == 0)
         saveCatalogs();
 
-    if (ticksAmount % Settings::instance() -> remoteItemsProcDelay() == 0)
+    int procDelay = Settings::instance() -> remoteItemsProcDelay();
+    if (procDelay == 0 || timeAmount % procDelay == 0)
         initRemoteItemInfo();
 }
 
@@ -308,7 +309,7 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
 
 void Library::initItemData(IItem * itm) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = (itm -> isRemote() && Settings::instance() -> isUsedDelayForRemote()) || itm -> hasInfo(); // itm -> isRemote - prevent from initiate info for remote items without delay - to many calls in one time to server is ban us
+    bool has_info = (itm -> isRemote() && Settings::instance() -> isUsedDelayForRemote()) || itm -> hasInfo();
 
     if (has_titles && has_info) return;
 

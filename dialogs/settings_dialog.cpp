@@ -73,7 +73,6 @@ void SettingsDialog::on_cancelButton_clicked() {
     reject();
 }
 
-
 void SettingsDialog::on_resetButton_clicked() {
     switch(ui -> settingsTabs -> currentIndex()) {
         case 0: {
@@ -296,10 +295,9 @@ void SettingsDialog::initSpectrumSettings() {
 }
 
 void SettingsDialog::initLibrarySettings() {
-    ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay());
-    ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay());
+    ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay() / 1000.0);
+    ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay() / 1000.0);
     ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());
-    ui -> usedDelayForRemote -> setChecked(Settings::instance() -> isUsedDelayForRemote());
     ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
 }
 
@@ -379,10 +377,9 @@ void SettingsDialog::saveSpectrumSettings() {
 }
 
 void SettingsDialog::saveLibrarySettings() {
-    Settings::instance() -> setSaveLibDelay(ui -> libSaveFreq -> value());
-    Settings::instance() -> setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value());
+    Settings::instance() -> setSaveLibDelay(ui -> libSaveFreq -> value() * 1000);
+    Settings::instance() -> setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value() * 1000);
     Settings::instance() -> setInteractiveProc(ui -> interactiveStats -> isChecked());
-    Settings::instance() -> setUsedDelayForRemote(ui -> usedDelayForRemote -> isChecked());
 
     iconSizeChanged |= Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked();
     Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
@@ -397,10 +394,4 @@ bool SettingsDialog::execColorDialog(QColor & color) {
     }
 
     return false;
-}
-
-void SettingsDialog::on_usedDelayForRemote_toggled(bool checked) {
-    ui -> remoteItemProcDelay -> setEnabled(checked);
-    ui -> label_remoteItemDelay -> setEnabled(checked);
-    ui -> label_remoteProcMetric -> setEnabled(checked);
 }
