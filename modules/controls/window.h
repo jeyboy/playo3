@@ -29,6 +29,7 @@ namespace Playo3 {
         }
 
     public slots:
+        void toggleWindowMostTop();
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }
 
     protected:

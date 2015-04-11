@@ -19,7 +19,19 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
-    titleWidget = new WindowTitle(this, titleHeight + 6, QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0), QMargins(0, 0, 0, 0), Stylesheets::borderWidth, Stylesheets::borderWidth);
+    titleWidget = new WindowTitle(
+        this,
+        titleHeight + 6,
+        QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0),
+        QMargins(0, 0, 0, 0),
+        Stylesheets::borderWidth,
+        Stylesheets::borderWidth,
+        false, false, false
+    );
+    titleWidget -> addCustomButton(QPixmap(":top_off_button"), QPixmap(":top_on_button"), this, SLOT(toggleWindowMostTop()));
+    titleWidget -> addMiniButton();
+    titleWidget -> addMaxiButton();
+    titleWidget -> addCloseButton();
 
     Stylesheets::initBrush(brush);
 
@@ -42,6 +54,25 @@ void MainWindow::locationCorrection() {
         top = height - 50;
 
     move(left, top);
+}
+
+void MainWindow::toggleWindowMostTop() {
+    qDebug() << "TOP LEVEL";
+    HoverableLabel * button = (HoverableLabel *)sender();
+
+    if (windowFlags() & Qt::WindowStaysOnTopHint) {
+        qDebug() << "IS TOP LEVEL";
+        Qt::WindowFlags flags = windowFlags();
+        flags &= ~Qt::WindowStaysOnTopHint;
+        setWindowFlags(flags);
+        button -> setOff();
+    }
+    else {
+        button -> setOn();
+        setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+    }
+
+    show();
 }
 
 void MainWindow::resizeEvent(QResizeEvent * event) {

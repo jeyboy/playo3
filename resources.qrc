@@ -44,5 +44,7 @@
         <file alias="scroll_top">images/controls/scroll/scroll_top.png</file>
         <file alias="refresh">images/elements/refresh.png</file>
         <file alias="ico">images/main_alt.ico</file>
+        <file alias="top_off_button">images/controls/top.png</file>
+        <file alias="top_on_button">images/controls/top_on.png</file>
     </qresource>
 </RCC>
