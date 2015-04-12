@@ -55,7 +55,7 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    VkApi::instance(settings -> read("vk").toObject());
+    VkApi::instance(this, settings -> read("vk").toObject());
 //    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
 
     Settings::instance() -> fromJson(settings -> read("settings").toObject());

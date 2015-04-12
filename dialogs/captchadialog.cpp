@@ -3,7 +3,7 @@
 
 CaptchaDialog::CaptchaDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::CaptchaDialog) {
-    ui->setupUi(this);
+    ui -> setupUi(this);
 }
 
 CaptchaDialog::~CaptchaDialog() {

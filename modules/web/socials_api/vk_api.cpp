@@ -3,14 +3,12 @@
 VkApi * VkApi::self = 0;
 
 VkApi * VkApi::instance() {
-    if(!self)
-        self = new VkApi();
     return self;
 }
 
-VkApi * VkApi::instance(QJsonObject obj) {
+VkApi * VkApi::instance(QObject * parent, QJsonObject obj) {
     if(!self)
-        self = new VkApi(obj);
+        self = new VkApi(parent, obj);
     else
         VkApi::instance() -> fromJson(obj);
     return self;

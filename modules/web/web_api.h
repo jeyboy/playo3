@@ -37,7 +37,7 @@ class WebApi : public QObject {
     Q_OBJECT
 public:
     WebApi(QObject * parent = 0);
-    ~WebApi();
+    virtual ~WebApi();
 
     inline QString getError() { return error; }
 

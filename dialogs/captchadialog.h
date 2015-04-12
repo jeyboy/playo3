@@ -25,7 +25,7 @@ private slots:
     inline void on_buttonBox_rejected() { clearText(); }
 
 private:
-    Ui::CaptchaDialog *ui;
+    Ui::CaptchaDialog * ui;
 };
 
 #endif // CAPTCHADIALOG_H

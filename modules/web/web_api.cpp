@@ -14,11 +14,12 @@ QPixmap WebApi::openRemoteImage(QString url) { // error proc needed
     QUrl uri(url);
     QByteArray ar;
 
+    CustomNetworkAccessManager * netManager = createManager();
     QNetworkReply * reply = netManager -> openUrl(uri);
-    netManager -> synchronizeRequest(reply);
     ar = reply -> readAll();
     reply -> close();
     reply -> deleteLater();
+    delete netManager;
 
     QImage image;
     image.loadFromData(ar);

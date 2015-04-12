@@ -25,11 +25,10 @@ public:
 
     void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 
-    ~VkApi() {
-    }
+    inline ~VkApi() {}
 
     static VkApi * instance();
-    static VkApi * instance(QJsonObject obj);
+    static VkApi * instance(QObject * parent, QJsonObject obj);
     static void close() {
         delete self;
     }
@@ -57,7 +56,7 @@ protected:
     bool captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url);
 
 private:   
-    VkApi(QJsonObject hash) : WebApi(), TeuAuth() {
+    VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {
         fromJson(hash);
         connect(this, SIGNAL(showCaptcha()), this, SLOT(showingCaptcha()), Qt::BlockingQueuedConnection);
     }
