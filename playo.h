@@ -57,10 +57,10 @@ protected:
     void activation();
     void initialization();
 
-//    void putToCommonTab(QList<QUrl> urls);
-//    void dragEnterEvent(QDragEnterEvent *);
-//    void dragMoveEvent(QDragMoveEvent *);
-//    void dropEvent(QDropEvent *);
+    void putToCommonTab(QList<QUrl> urls);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragMoveEvent(QDragMoveEvent *);
+    void dropEvent(QDropEvent *);
     QMenu * createPopupMenu();
     void closeEvent(QCloseEvent *);
 private:

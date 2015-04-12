@@ -21,6 +21,7 @@ public:
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
+    bool _openDropPointInTab;
     int _tabPosition;
 };
 

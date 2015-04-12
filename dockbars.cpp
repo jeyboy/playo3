@@ -47,8 +47,9 @@ void Dockbars::load(QJsonArray & bars) {
         }
     }
 
-    if (userTabsAmount == 0)
-        window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
+    window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
+    if (userTabsAmount != 0)
+        commonBar() -> hide();
 
     QJsonObject def;
     ViewSettings defSettings;

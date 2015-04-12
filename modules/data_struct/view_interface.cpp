@@ -564,6 +564,10 @@ void IView::setIconSize(const QSize & size) {
     item_delegate -> recalcAttrs(size.width());
 }
 
+void IView::appendRows(QList<QUrl> & urls) {
+    mdl -> threadlyInsertRows(urls, -1);
+}
+
 //////////////////////////////////////////////////////
 /// PROTECTED
 //////////////////////////////////////////////////////

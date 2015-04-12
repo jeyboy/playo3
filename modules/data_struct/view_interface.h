@@ -71,6 +71,7 @@ namespace Playo3 {
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void setIconSize(const QSize & size);
+        void appendRows(QList<QUrl> & urls);
 
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);

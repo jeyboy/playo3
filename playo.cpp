@@ -128,32 +128,31 @@ void Playo::closeEvent(QCloseEvent * e) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-//void MainWindow::putToCommonTab(QList<QUrl> urls) {
-//    ui -> tabber -> commonTab() -> getView() -> getModel() -> dropProcession(urls);
-//    ui -> tabber -> commonTab() -> getView() -> getModel() -> refresh();
+void Playo::putToCommonTab(QList<QUrl> urls) {
+    DockBar * bar = Dockbars::instance() -> commonBar();
+    Dockbars::instance() -> view(bar) -> appendRows(urls);
 
-//    if (!Player::instance() -> isPlayed()) {
-//        ui -> tabber -> commonTab() -> getView() -> proceedNext();
-//    }
-//}
+//    if (!Player::instance() -> isPlayed())
 
-//void MainWindow::dragEnterEvent(QDragEnterEvent * event) {
-//    if (event -> mimeData() -> hasUrls()) {
-//        event -> accept();
-//    } else event -> ignore();
-//}
-//void MainWindow::dragMoveEvent(QDragMoveEvent * event) {
-//    if (event -> mimeData() -> hasUrls()) {
-//        event -> accept();
-//    } else event -> ignore();
-//}
+    bar -> show();
+}
 
-//void MainWindow::dropEvent(QDropEvent * event) {
-////    if (event -> source() != this && event -> mimeData() -> hasUrls()) {
-//    if (event -> mimeData() -> hasUrls()) {
-//        putToCommonTab(event -> mimeData() -> urls());
-//    } else event -> ignore();
-//}
+void Playo::dragEnterEvent(QDragEnterEvent * event) {
+    if (event -> mimeData() -> hasUrls())
+        event -> accept();
+    else event -> ignore();
+}
+void Playo::dragMoveEvent(QDragMoveEvent * event) {
+    if (event -> mimeData() -> hasUrls())
+        event -> accept();
+    else event -> ignore();
+}
+
+void Playo::dropEvent(QDropEvent * event) {
+    if (event -> mimeData() -> hasUrls())
+        putToCommonTab(event -> mimeData() -> urls());
+    else event -> ignore();
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 ///SLOTS

@@ -43,6 +43,8 @@ namespace Playo3 {
         DockBar * commonBar();
         DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0, bool closable = true);
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
+
+        inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
     public slots:
         void updateAllViews();
         void hideAll();
@@ -64,7 +66,6 @@ namespace Playo3 {
 
     protected:
         void initPlayed();
-        inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
