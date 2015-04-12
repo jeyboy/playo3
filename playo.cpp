@@ -158,14 +158,16 @@ void Playo::dropEvent(QDropEvent * event) {
 ///SLOTS
 /////////////////////////////////////////////////////////////////////////////////////
 
-void Playo::receiveMessage(QString /*message*/) {
-//    QStringList list = message.split('|', QString::SkipEmptyParts);
-//    QList<QUrl> urls;
+void Playo::receiveMessage(QString message) {
+    QStringList list = message.split('|', QString::SkipEmptyParts);
+    QList<QUrl> urls;
 
-//    foreach(QString path, list)
-//        urls.append(QUrl::fromLocalFile(path));
+    QStringList::iterator it = list.begin();
 
-//    putToCommonTab(urls);
+    for(; it != list.end(); it++)
+        urls.append(QUrl::fromLocalFile((*it)));
+
+    putToCommonTab(urls);
 }
 
 //void MainWindow::showError(QString message) {
