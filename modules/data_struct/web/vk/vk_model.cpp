@@ -10,8 +10,6 @@
 VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
 //    connect(IpChecker::instance(), SIGNAL(ipChanged()), this, SLOT(refresh()));
     connect(Player::instance(), SIGNAL(remoteUnprocessed()), this, SLOT(refresh()));
-
-    if (!hash) refresh();
 }
 
 VkModel::~VkModel() {

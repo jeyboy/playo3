@@ -70,7 +70,7 @@ namespace Playo3 {
         void expandeAll();
         void collapsed(const QModelIndex & index);
         void collapseAll();
-        inline void refresh() {} // for web models
+        virtual inline void refresh() {} // for web models
 
     protected slots:
         void finishingItemsAdding();

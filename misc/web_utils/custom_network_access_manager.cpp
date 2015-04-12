@@ -30,11 +30,15 @@ void CustomNetworkAccessManager::synchronizeRequest(QNetworkReply * m_http) {
     loop.exec();
 }
 
-QNetworkReply * CustomNetworkAccessManager::createRequest(Operation op, const QNetworkRequest &req, QIODevice * outgoingData) {
+QNetworkReply * CustomNetworkAccessManager::createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData) {
     QSslConfiguration config = req.sslConfiguration();
     config.setPeerVerifyMode(mode);
     config.setProtocol(protocol);
-    QNetworkRequest request(req);
-    request.setSslConfiguration(config);
-    return QNetworkAccessManager::createRequest(op, request, outgoingData);
+    (const_cast<QNetworkRequest &>(req)).setSslConfiguration(config);
+    return QNetworkAccessManager::createRequest(op, req, outgoingData);
+
+
+//    QNetworkRequest request(req);
+//    request.setSslConfiguration(config);
+//    return QNetworkAccessManager::createRequest(op, request, outgoingData);
 }

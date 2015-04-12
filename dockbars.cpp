@@ -145,6 +145,8 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         default: view = 0;
     }
     bar -> setWidget(view);
+    if (!attrs)
+        ((IModel *)view -> model()) -> refresh();
 
     return bar;
 }
