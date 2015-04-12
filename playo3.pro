@@ -233,6 +233,8 @@ FORMS    += playo.ui \
 RESOURCES += \
     resources.qrc
 
+RC_FILE = playo.rc
+
 unix:!mac {
         QT += gui-private
         CONFIG += link_pkgconfig
