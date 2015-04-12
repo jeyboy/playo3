@@ -53,8 +53,14 @@ public:
 
     void clearData();
 
-    inline void addFriend(QString uid, QString name) { friends.insert(uid, name); }
-    inline void addGroup(QString uid, QString name) { groups.insert(uid, name); }
+    inline void addFriend(QString uid, QString name) {
+        if (!uid.isEmpty() && !name.isEmpty())
+            friends.insert(uid, name);
+    }
+    inline void addGroup(QString uid, QString name) {
+        if (!uid.isEmpty() && !name.isEmpty())
+            groups.insert(uid, name);
+    }
 
     inline QHash<QString, QString> friendsList() const { return friends; }
     inline QHash<QString, QString> groupsList() const { return groups; }

@@ -65,8 +65,6 @@ private:
     VkApi() : WebApi(), TeuAuth() {}
 
     static VkApi * self;
-
-//    QHash<QNetworkReply *, FuncContainer> responses;
 };
 
 #endif // VK_API_H

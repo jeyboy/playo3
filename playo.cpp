@@ -213,7 +213,7 @@ void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(VkApi::instance(), this);
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(vk, false, false, false, true, dialog.getId());
-        Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings);
+         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings));
     }
     else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }

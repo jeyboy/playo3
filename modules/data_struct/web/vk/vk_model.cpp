@@ -114,7 +114,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             group = (*it).toObject();
 
             VkApi::instance() -> addGroup(
-                group.value("id").toString(),
+                QString::number(group.value("id").toInt()),
                 group.value("title").toString()
             );
         }
@@ -129,7 +129,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             frend = (*it).toObject();
 
             VkApi::instance() -> addFriend(
-                frend.value("id").toString(),
+                QString::number(frend.value("id").toInt()),
                 frend.value("title").toString()
             );
         }
