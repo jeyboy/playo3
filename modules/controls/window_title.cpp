@@ -39,11 +39,12 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargin
         addCloseButton();
 }
 
-void WindowTitle::addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon, const QObject * receiver, const char * slot) {
+void WindowTitle::addCustomButton(QString userText, const QPixmap & icon, const QPixmap & hoverIcon, const QObject * receiver, const char * slot) {
     QGridLayout * l = (QGridLayout *)layout();
 
     HoverableLabel * button =
             new HoverableLabel(
+                userText,
                 icon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                 hoverIcon.scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
                 this,
@@ -60,13 +61,13 @@ void WindowTitle::addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon,
     l -> setColumnStretch(l -> columnCount() - 1, 0);
 }
 void WindowTitle::addMiniButton(const QObject * receiver, const char * slot) {
-    addCustomButton(QPixmap(":mini_button"), QPixmap(":mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
+    addCustomButton("Minimize", QPixmap(":mini_button"), QPixmap(":mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
 }
 void WindowTitle::addMaxiButton(const QObject * receiver, const char * slot) {
-    addCustomButton(QPixmap(":maxi_button"), QPixmap(":maxi_button_hover"), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
+    addCustomButton("Maximize", QPixmap(":maxi_button"), QPixmap(":maxi_button_hover"), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
 }
 void WindowTitle::addCloseButton(const QObject * receiver, const char * slot) {
-    addCustomButton(QPixmap(":close_button"), QPixmap(":close_button_hover"), receiver, slot ? slot : SLOT(close()));
+    addCustomButton("Close", QPixmap(":close_button"), QPixmap(":close_button_hover"), receiver, slot ? slot : SLOT(close()));
 }
 
 void WindowTitle::paintEvent(QPaintEvent *) {

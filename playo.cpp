@@ -181,7 +181,7 @@ void Playo::openFolderTriggered() {
         DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings);
         addDockWidget(Qt::TopDockWidgetArea, bar);
         QList<QUrl> urls;
-        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));
+        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
         Dockbars::instance() -> view(bar) -> appendRows(urls);
     }
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));

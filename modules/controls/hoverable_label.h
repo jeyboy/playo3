@@ -7,7 +7,7 @@ namespace Playo3 {
     class HoverableLabel : public ClickableLabel {
       Q_OBJECT
     public:
-        explicit HoverableLabel(const QPixmap & icon, const QPixmap & hoverIcon, QWidget * parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char * slot = 0);
+        explicit HoverableLabel(QString user_text, const QPixmap & icon, const QPixmap & hoverIcon, QWidget * parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char * slot = 0);
         ~HoverableLabel();
 
         inline void setOn() { hoverIn(); blockEvent = true; }

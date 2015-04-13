@@ -301,7 +301,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar* ptb = precreateToolBar("Media+Time");
 
-    ClickableLabel * timeLabel = new ClickableLabel("00:00", ptb);
+    ClickableLabel * timeLabel = new ClickableLabel("After click invert showing time" ,"00:00", ptb);
     timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
     ptb -> addWidget(timeLabel);
     Player::instance() -> setTimePanel(timeLabel);

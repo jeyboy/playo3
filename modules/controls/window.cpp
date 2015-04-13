@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         Stylesheets::borderWidth,
         false, false, false
     );
-    titleWidget -> addCustomButton(QPixmap(":top_off_button"), QPixmap(":top_on_button"), this, SLOT(toggleWindowMostTop()));
+    titleWidget -> addCustomButton("Most top", QPixmap(":top_off_button"), QPixmap(":top_on_button"), this, SLOT(toggleWindowMostTop()));
     titleWidget -> addMiniButton();
     titleWidget -> addMaxiButton();
     titleWidget -> addCloseButton();

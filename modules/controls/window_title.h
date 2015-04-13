@@ -16,7 +16,7 @@ namespace Playo3 { // TODO: add margins param for buttons
                     QMargins buttonsMargins = QMargins(), int leftPadding = 0, int rightPadding = 0,
                     bool showMini = true, bool showMaxi = true, bool showClose = true);
 
-        void addCustomButton(const QPixmap &icon, const QPixmap &hoverIcon, const QObject * receiver = 0, const char * slot = 0);
+        void addCustomButton(QString userText, const QPixmap & icon, const QPixmap & hoverIcon, const QObject * receiver = 0, const char * slot = 0);
         void addMiniButton(const QObject * receiver = 0, const char * slot = 0);
         void addMaxiButton(const QObject * receiver = 0, const char * slot = 0);
         void addCloseButton(const QObject * receiver = 0, const char * slot = 0);
