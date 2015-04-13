@@ -13,8 +13,8 @@ namespace Playo3 {
         inline void setOn() { hoverIn(); blockEvent = true; }
         inline void setOff() { hoverOut(); blockEvent = false; }
     protected slots:
-        inline void hoverIn() { if (!blockEvent) setPixmap(hico); }
-        inline void hoverOut() { if (!blockEvent) setPixmap(ico); }
+        virtual inline void hoverIn() { if (!blockEvent) setPixmap(hico); }
+        virtual inline void hoverOut() { if (!blockEvent) setPixmap(ico); }
 
     private:
         bool blockEvent;

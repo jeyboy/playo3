@@ -2,15 +2,16 @@
 
 using namespace Playo3;
 
-WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int leftPadding, int rightPadding, bool showMini, bool showMaxi, bool showClose)
-    : QWidget(window) {
+WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int leftPadding, int rightPadding, bool showMini, bool showMaxi, bool showClose)
+    : QWidget(window), rightPadding(rightPadding), leftPadding(leftPadding), isCompact(compact) {
     button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
+
+    dropButton = isCompact ? new DropButton(button_height, this) : 0;
+
     buttonMargins = buttonsMargins;
     setObjectName("WindowTitle");
     setContentsMargins(margins);
     setMinimumHeight(height);
-    setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
-//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     TitleLayout * l = new TitleLayout(this);
 
@@ -27,6 +28,13 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargin
     l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
     l -> setColumnStretch(0, 1);
 
+    if (isCompact) {
+        dropButton -> setContentsMargins(buttonMargins);
+
+        l -> addWidget(dropButton, 0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
+        l -> setColumnStretch(l -> columnCount() - 1, 0);
+    }
+
     connect(this, SIGNAL(doubleClicked()), this, SLOT(invertWindowState()));
 
     if (showMini)
@@ -40,8 +48,6 @@ WindowTitle::WindowTitle(QWidget * window, int height, QMargins margins, QMargin
 }
 
 void WindowTitle::addCustomButton(QString userText, const QPixmap & icon, const QPixmap & hoverIcon, const QObject * receiver, const char * slot) {
-    QGridLayout * l = (QGridLayout *)layout();
-
     HoverableLabel * button =
             new HoverableLabel(
                 userText,
@@ -55,10 +61,15 @@ void WindowTitle::addCustomButton(QString userText, const QPixmap & icon, const 
 
     button -> setContentsMargins(buttonMargins);
 
-    l -> addWidget(
-                button,
-                0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
-    l -> setColumnStretch(l -> columnCount() - 1, 0);
+    if (isCompact)
+        dropButton -> registerAction(button);
+    else {
+        QGridLayout * l = (QGridLayout *)layout();
+        l -> addWidget(
+            button,
+            0, l -> columnCount(), Qt::AlignRight | Qt::AlignVCenter);
+        l -> setColumnStretch(l -> columnCount() - 1, 0);
+    }
 }
 void WindowTitle::addMiniButton(const QObject * receiver, const char * slot) {
     addCustomButton("Minimize", QPixmap(":mini_button"), QPixmap(":mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
@@ -70,9 +81,18 @@ void WindowTitle::addCloseButton(const QObject * receiver, const char * slot) {
     addCustomButton("Close", QPixmap(":close_button"), QPixmap(":close_button_hover"), receiver, slot ? slot : SLOT(close()));
 }
 
+void WindowTitle::setVertical(bool isVertical) {
+    if (isVertical) {
+        setStyleSheet("#WindowTitle { border-right: 2px solid white; margin: " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px 0; }");
+    } else {
+        setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
+    }
+}
+
 void WindowTitle::paintEvent(QPaintEvent *) {
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
+    p.rotate(-90);
     style() -> drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

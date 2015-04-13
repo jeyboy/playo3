@@ -5,7 +5,8 @@ using namespace Playo3;
 ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel(text, parent, f) {
     setContentsMargins(0,0,0,0);
-    setToolTip(user_text);
+    if (!user_text.isEmpty())
+        setToolTip(user_text);
     if (receiver && slot)
         connect(this, SIGNAL(clicked()), receiver, slot);
 }
@@ -13,7 +14,8 @@ ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget 
 ClickableLabel::ClickableLabel(QString user_text, const QPixmap & icon, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel("", parent, f) {
     setPixmap(icon);
-    setToolTip(user_text);
+    if (!user_text.isEmpty())
+        setToolTip(user_text);
     if (receiver && slot)
         connect(this, SIGNAL(clicked()), receiver, slot);
 }

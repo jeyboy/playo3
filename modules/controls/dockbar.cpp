@@ -11,7 +11,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     setAttribute(Qt::WA_DeleteOnClose, closable);
     setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
-    setTitleBarWidget((titleWidget = new WindowTitle(this, 30, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
+    setTitleBarWidget((titleWidget = new WindowTitle(true, this, 26, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
@@ -20,6 +20,8 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     Stylesheets::initBrush(brush);
+
+    setTitleAsVertical(true);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
@@ -36,6 +38,16 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
 //    return QDockWidget::event(event);
 //}
+
+void DockBar::setTitleAsVertical(bool vertical) {
+    if (vertical)
+        setFeatures(features() | QDockWidget::DockWidgetVerticalTitleBar);
+    else {
+        DockWidgetFeatures flags = features();
+        flags &= ~QDockWidget::DockWidgetVerticalTitleBar;
+        setFeatures(flags);
+    }
+}
 
 void DockBar::onMoveInProcess() {
     inProcess = true;

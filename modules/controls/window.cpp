@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
     titleWidget = new WindowTitle(
+        false,
         this,
         titleHeight + 6,
         QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0),

@@ -107,7 +107,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/soundcloud/soundcloud_folder_item.cpp \
     modules/data_struct/web/vk/vk_item.cpp \
     dialogs/relations_dialog.cpp \
-    modules/data_struct/web/ignore_list.cpp
+    modules/data_struct/web/ignore_list.cpp \
+    modules/controls/drop_button.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -218,7 +219,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/soundcloud/soundcloud_item.h \
     modules/data_struct/web/soundcloud/soundcloud_folder_item.h \
     dialogs/relations_dialog.h \
-    modules/data_struct/web/ignore_list.h
+    modules/data_struct/web/ignore_list.h \
+    modules/controls/drop_button.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

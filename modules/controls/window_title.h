@@ -5,14 +5,15 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <qevent.h>
-#include "modules/controls/hoverable_label.h"
-#include "modules/controls/title_layout.h"
+#include "hoverable_label.h"
+#include "drop_button.h"
+#include "title_layout.h"
 
-namespace Playo3 { // TODO: add margins param for buttons
+namespace Playo3 {
     class WindowTitle : public QWidget {
         Q_OBJECT
     public:
-        WindowTitle(QWidget * window, int height = 30, QMargins margins = QMargins(),
+        WindowTitle(bool compact, QWidget * window, int height = 30, QMargins margins = QMargins(),
                     QMargins buttonsMargins = QMargins(), int leftPadding = 0, int rightPadding = 0,
                     bool showMini = true, bool showMaxi = true, bool showClose = true);
 
@@ -26,6 +27,7 @@ namespace Playo3 { // TODO: add margins param for buttons
             int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
             titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset));
         }
+        void setVertical(bool isVertical);
 
     public slots:
         inline void invertWindowState() {
@@ -45,10 +47,12 @@ namespace Playo3 { // TODO: add margins param for buttons
         void paintEvent(QPaintEvent *);
 
     private:
-        int button_height;
+        int button_height, rightPadding, leftPadding;
         QMargins buttonMargins;
         QLabel * titleLabel;
+        DropButton * dropButton;
         QString fullTitle;
+        bool isCompact;
     };
 }
 

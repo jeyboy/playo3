@@ -28,9 +28,8 @@ namespace Playo3 {
 //                ((MainWindow *)parentWidget()) -> removeOuterChild(this);
 //        }
 
-        inline QWidget * mainWidget() {
-            return inProcess ? mWidget : widget();
-        }
+        inline QWidget * mainWidget() { return inProcess ? mWidget : widget(); }
+        void setTitleAsVertical(bool vertical);
 
     signals:
         void closing();
