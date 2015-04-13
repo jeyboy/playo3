@@ -10,9 +10,6 @@
 
 #include "modules/data_struct/downloads/download_view.h"
 
-//#include "model/view.h"
-//#include "web/socials/vk_api.h"
-
 namespace Playo3 {
     class ToolbarButton : public QToolButton {
         Q_OBJECT

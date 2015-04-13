@@ -47,9 +47,11 @@ void Dockbars::load(QJsonArray & bars) {
         }
     }
 
-    window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
-    if (userTabsAmount != 0)
-        commonBar() -> hide();
+    if (!Settings::instance() -> isSaveCommonTab()) {
+        window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
+        if (userTabsAmount != 0)
+            commonBar() -> hide();
+    }
 
     QJsonObject def;
     ViewSettings defSettings;
@@ -106,6 +108,8 @@ void Dockbars::save(DataStore * settings) {
 QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
     if (barName == "Screen") {
         return 0; // stub
+    } else if (barName == "Common") {
+        return createDocBar(barName, settings, &attrs, false);
     } else if (barName == "Downloads") {
         DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));

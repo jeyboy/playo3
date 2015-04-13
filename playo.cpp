@@ -176,7 +176,15 @@ void Playo::receiveMessage(QString message) {
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
-    QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
+    if (Settings::instance() -> isOpenDropPointInTab()) {
+        ViewSettings settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
+        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings);
+        addDockWidget(Qt::TopDockWidgetArea, bar);
+        QList<QUrl> urls;
+        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));
+        Dockbars::instance() -> view(bar) -> appendRows(urls);
+    }
+    else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
 void Playo::showSettingsDialog() {
