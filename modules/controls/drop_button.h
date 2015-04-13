@@ -2,6 +2,7 @@
 #define DROP_BUTTON
 
 #include "hoverable_label.h"
+#include "hoverable_menu.h"
 #include <qmenu.h>
 #include <QWidgetAction>
 
@@ -16,7 +17,7 @@ namespace Playo3 {
     public slots:
         void hoverIn();
     protected:
-        QMenu * menu;
+        HoverableMenu * menu;
     };
 }
 

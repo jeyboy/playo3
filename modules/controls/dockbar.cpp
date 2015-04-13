@@ -21,7 +21,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     Stylesheets::initBrush(brush);
 
-    setTitleAsVertical(true);
+//    setTitleAsVertical(true);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));

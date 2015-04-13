@@ -10,7 +10,7 @@ DropButton::DropButton(int button_height, QWidget * parent) :
         parent
     ) {
 
-    menu = new QMenu();
+    menu = new HoverableMenu();
 }
 DropButton::~DropButton() {
     delete menu;
@@ -24,5 +24,5 @@ void DropButton::registerAction(QWidget * action) {
 
 void DropButton::hoverIn() {
     HoverableLabel::hoverIn();
-    menu -> popup(mapToGlobal(mapFromParent(pos() + QPoint(0, height()))));
+    menu -> popup(mapToGlobal(mapFromParent(pos())));
 }
