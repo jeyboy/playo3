@@ -70,7 +70,7 @@ void Dockbars::save(DataStore * settings) {
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == "Common") {
-                if (v && v -> isCommon())
+                if (v && v -> isCommon() && !Settings::instance() -> isSaveCommonTab())
                     continue;
             }
 

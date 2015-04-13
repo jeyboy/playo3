@@ -158,6 +158,55 @@
             <string>Tabs position</string>
            </property>
           </widget>
+          <widget class="QCheckBox" name="saveCommonTab">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>140</y>
+             <width>311</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Save common tab</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="openDropPointInTab">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>170</y>
+             <width>311</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Open drop point in tab</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_dropPointTabType">
+           <property name="geometry">
+            <rect>
+             <x>13</x>
+             <y>200</y>
+             <width>101</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Drop point tab type</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="dropPointTabTypeSelect">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>200</y>
+             <width>211</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </widget>
        </item>
@@ -199,8 +248,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>335</width>
+            <height>245</height>
            </rect>
           </property>
           <widget class="QCheckBox" name="showCheckboxes">
@@ -804,8 +853,8 @@ text color</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>335</width>
+            <height>245</height>
            </rect>
           </property>
           <widget class="QPushButton" name="spectrumColor3">

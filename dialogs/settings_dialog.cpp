@@ -205,6 +205,20 @@ void SettingsDialog::initGlobalSettings() {
 
     ui -> tabPositionSelect -> insertItems(0, positions);
     ui -> tabPositionSelect -> setCurrentIndex(Settings::instance() -> tabPosition());
+
+
+    ui -> saveCommonTab -> setChecked(Settings::instance() -> isSaveCommonTab());
+    ui -> openDropPointInTab -> setChecked(Settings::instance() -> isOpenDropPointInTab());
+    if (!Settings::instance() -> isOpenDropPointInTab())
+        on_openDropPointInTab_toggled(false);
+
+    QStringList tab_types;
+    tab_types.append("List");
+    tab_types.append("Level Tree");
+    tab_types.append("Tree");
+
+    ui -> dropPointTabTypeSelect -> insertItems(0, tab_types);
+    ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::instance() -> openDropPointInTabType() - 1);
 }
 
 void SettingsDialog::initItemsSettings() {
@@ -311,6 +325,10 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
     Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
     Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
+
+    Settings::instance() -> setSaveCommonTab(ui -> saveCommonTab -> isChecked());
+    Settings::instance() -> setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
+    Settings::instance() -> setOpenDropPointInTabType((Playo3::ContainerType)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 }
 
 void SettingsDialog::saveItemsSettings() {
@@ -394,4 +412,9 @@ bool SettingsDialog::execColorDialog(QColor & color) {
     }
 
     return false;
+}
+
+void SettingsDialog::on_openDropPointInTab_toggled(bool checked) {
+    ui -> label_dropPointTabType -> setEnabled(checked);
+    ui -> dropPointTabTypeSelect -> setEnabled(checked);
 }
