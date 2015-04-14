@@ -8,6 +8,7 @@
 #include "hoverable_label.h"
 #include "drop_button.h"
 #include "title_layout.h"
+#include "rotate_label.h"
 
 namespace Playo3 {
     class WindowTitle : public QWidget {
@@ -49,7 +50,7 @@ namespace Playo3 {
     private:
         int button_height, rightPadding, leftPadding;
         QMargins buttonMargins;
-        QLabel * titleLabel;
+        RotateLabel * titleLabel;
         DropButton * dropButton;
         QString fullTitle;
         bool isCompact;

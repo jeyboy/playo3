@@ -21,7 +21,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     Stylesheets::initBrush(brush);
 
-//    setTitleAsVertical(true);
+    setTitleAsVertical(true);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
@@ -40,12 +40,14 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 //}
 
 void DockBar::setTitleAsVertical(bool vertical) {
-    if (vertical)
+    if (vertical) {
         setFeatures(features() | QDockWidget::DockWidgetVerticalTitleBar);
-    else {
+        titleWidget -> setVertical(true);
+    } else {
         DockWidgetFeatures flags = features();
         flags &= ~QDockWidget::DockWidgetVerticalTitleBar;
         setFeatures(flags);
+        titleWidget -> setVertical(false);
     }
 }
 

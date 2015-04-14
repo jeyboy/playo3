@@ -108,7 +108,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_item.cpp \
     dialogs/relations_dialog.cpp \
     modules/data_struct/web/ignore_list.cpp \
-    modules/controls/drop_button.cpp
+    modules/controls/drop_button.cpp \
+    modules/controls/rotate_label.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -221,7 +222,8 @@ HEADERS  += playo.h \
     dialogs/relations_dialog.h \
     modules/data_struct/web/ignore_list.h \
     modules/controls/drop_button.h \
-    modules/controls/hoverable_menu.h
+    modules/controls/hoverable_menu.h \
+    modules/controls/rotate_label.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
