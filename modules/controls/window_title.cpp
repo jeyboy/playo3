@@ -87,7 +87,7 @@ void WindowTitle::setVertical(bool isVertical) {
     ((TitleLayout *)layout()) -> setVertical(isVertical);
     titleLabel -> setVertical(isVertical);
     if (isVertical) {
-        setStyleSheet("#WindowTitle { border-right: 2px solid white; margin: " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px 0; }");
+        setStyleSheet("#WindowTitle { border-right: 2px solid white; margin: " + QString::number(leftPadding) + "px 0 " + QString::number(rightPadding - 1) + "px 0; }");
     } else {
         setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
     }
@@ -97,6 +97,5 @@ void WindowTitle::paintEvent(QPaintEvent *) {
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
-    p.rotate(-90);
     style() -> drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

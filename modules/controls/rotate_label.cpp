@@ -6,10 +6,10 @@ void RotateLabel::paintEvent(QPaintEvent * event) {
     if (isVertical) {
         QPainter painter(this);
         painter.save();
-        painter.setPen(Qt::black);
-        painter.setBrush(Qt::Dense1Pattern);
+//        painter.setPen(Qt::black);
+//        painter.setBrush(Qt::Dense1Pattern);
 
-        painter.rotate(-90);
+        painter.rotate(90);
         painter.drawText(0, 0, text());
         painter.restore();
     }

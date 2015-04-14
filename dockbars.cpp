@@ -13,7 +13,7 @@ Dockbars * Dockbars::instance(QWidget * parent) {
 
 void Dockbars::load(QJsonArray & bars) {
     int userTabsAmount = 0;
-    QMainWindow * window = (QMainWindow *)parent();
+    MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
     barsList.append("Downloads"/*, "Screen"*/);
 
@@ -57,6 +57,9 @@ void Dockbars::load(QJsonArray & bars) {
     ViewSettings defSettings;
     while(barsList.length() > 0)
         window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst(), defSettings, def));
+
+    Dockbars::instance() -> useVeticalTitles(true);
+//    Dockbars::instance() -> useVeticalTitles(false);
 }
 
 void Dockbars::save(DataStore * settings) {
@@ -158,7 +161,6 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
 
 DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
-    dock -> setContentsMargins(3, 0, 3, 4);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
 //    active = dock;
@@ -171,6 +173,14 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
 
     return dock;
 //    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
+}
+
+void Dockbars::useVeticalTitles(bool vertical) {
+    QList<DockBar *> bars = dockbars();
+    QList<DockBar *>::Iterator it = bars.begin();
+
+    for(; it != bars.end(); it++)
+        (*it) -> useVerticalTitles(vertical);
 }
 
 void Dockbars::initPlayed() {

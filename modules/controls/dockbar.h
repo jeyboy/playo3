@@ -17,11 +17,7 @@ namespace Playo3 {
         }
         inline bool isSticked() const { return sticked; }
         inline void setStickedFlag(bool stick) { sticked = stick; }
-        inline void markAsSticked() {
-            sticked = true;
-            if (parent())
-                ((MainWindow *)parentWidget()) -> addOuterChild(this);
-        }
+        void markAsSticked();
 //        inline void markAsUnsticked() {
 //            sticked = false;
 //            if (parent())
@@ -29,7 +25,7 @@ namespace Playo3 {
 //        }
 
         inline QWidget * mainWidget() { return inProcess ? mWidget : widget(); }
-        void setTitleAsVertical(bool vertical);
+        void useVerticalTitles(bool vertical);
 
     signals:
         void closing();
@@ -52,11 +48,7 @@ namespace Playo3 {
     protected:
 //        bool event(QEvent *event);
         void resizeEvent(QResizeEvent *);
-        inline void closeEvent(QCloseEvent * e) {
-            emit closing();
-            ((MainWindow *)parentWidget()) -> removeOuterChild(this);
-            QDockWidget::closeEvent(e);
-        }
+        void closeEvent(QCloseEvent * e);
         void paintEvent(QPaintEvent *);
 
     private:

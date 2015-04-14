@@ -200,7 +200,8 @@ QString Stylesheets::scrollStyles() {
         "    height: 20px;"
         "    subcontrol-position: top;"
         "    subcontrol-origin: margin;"
-        "    border-top-left-radius: 8px;"
+//        "    border-top-left-radius: 8px;"
+        "    border-top-right-radius: 8px;"
         "}"
 
         "QScrollBar::up-arrow:vertical  {"

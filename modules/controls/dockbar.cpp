@@ -21,8 +21,6 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     Stylesheets::initBrush(brush);
 
-    setTitleAsVertical(true);
-
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
 }
@@ -39,15 +37,23 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 //    return QDockWidget::event(event);
 //}
 
-void DockBar::setTitleAsVertical(bool vertical) {
+void DockBar::markAsSticked() {
+    sticked = true;
+    if (parent())
+        ((MainWindow *)parentWidget()) -> addOuterChild(this);
+}
+
+void DockBar::useVerticalTitles(bool vertical) {
     if (vertical) {
+        setContentsMargins(0, 4, 3, 4);
         setFeatures(features() | QDockWidget::DockWidgetVerticalTitleBar);
-        titleWidget -> setVertical(true);
+//        titleWidget -> setVertical(true);
     } else {
+        setContentsMargins(3, 0, 3, 4);
         DockWidgetFeatures flags = features();
         flags &= ~QDockWidget::DockWidgetVerticalTitleBar;
         setFeatures(flags);
-        titleWidget -> setVertical(false);
+//        titleWidget -> setVertical(false);
     }
 }
 
@@ -89,6 +95,12 @@ void DockBar::resizeEvent(QResizeEvent * event) {
 
     brush.setStart(rect().topLeft());
     brush.setFinalStop(rect().bottomRight());
+}
+
+void DockBar::closeEvent(QCloseEvent * e) {
+    emit closing();
+    ((MainWindow *)parentWidget()) -> removeOuterChild(this);
+    QDockWidget::closeEvent(e);
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {

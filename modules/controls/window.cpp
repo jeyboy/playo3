@@ -1,6 +1,6 @@
 #include "window.h"
 #include "misc/stylesheets.h"
-#include "modules/controls/dockbar.h"
+#include "dockbar.h"
 
 using namespace Playo3;
 
@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setStyleSheet(Stylesheets::mainWindowTabsStyle());
+
     titleWidget = new WindowTitle(
         false,
         this,

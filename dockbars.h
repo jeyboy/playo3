@@ -3,12 +3,12 @@
 
 #include <qmessagebox.h>
 #include <QDockWidget>
-#include <QMainWindow>
 #include <QBoxLayout>
 
 #include "misc/file_utils/data_store.h"
 #include "modules/controls/dockbar.h"
 #include "modules/data_struct/view_index.h"
+#include "modules/controls/window.h"
 
 #include "dialogs/tabdialog.h"
 
@@ -45,6 +45,7 @@ namespace Playo3 {
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
+        void useVeticalTitles(bool vertical);
     public slots:
         void updateAllViews();
         void hideAll();
