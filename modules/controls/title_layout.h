@@ -21,22 +21,27 @@ public :
             for (int loop1 = 0; loop1 < columnCount(); loop1++) {
                 QLayoutItem * it = itemAtPosition(0, loop1);
                 if (it) {
-                    int row = columnCount() - loop1;
-                    addWidget(it -> widget(), row, 0, it -> alignment());
-                    setRowStretch(row, columnStretch(loop1));
+                    int row = columnCount() - loop1 - 1;
+                    QWidget * w = it -> widget();
                     removeItem(it);
+                    addWidget(w, row, 0, Qt::AlignRight | (loop1 == columnCount() - 1 ? Qt::AlignTop : Qt::AlignBottom));
+//                    setRowStretch(row, columnStretch(loop1));
                 }
             }
         } else if (!vertical && !isHorizontal) {
             for (int loop1 = 0; loop1 < rowCount(); loop1++) {
                 QLayoutItem * it = itemAtPosition(loop1, 0);
                 if (it) {
-                    addWidget(it -> widget(), 0, rowCount() - loop1, it -> alignment());
-                    setColumnStretch(rowCount() - loop1, rowStretch(loop1));
+                    int column = rowCount() - loop1 - 1;
+                    QWidget * w = it -> widget();
                     removeItem(it);
+                    addWidget(w, 0, column, Qt::AlignBottom | Qt::AlignLeft);
+//                    setColumnStretch(rowCount() - loop1, rowStretch(loop1));
                 }
             }
         }
+
+        isHorizontal = !vertical;
     }
 
 private:

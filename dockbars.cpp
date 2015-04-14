@@ -59,7 +59,6 @@ void Dockbars::load(QJsonArray & bars) {
         window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst(), defSettings, def));
 
     Dockbars::instance() -> useVeticalTitles(true);
-//    Dockbars::instance() -> useVeticalTitles(false);
 }
 
 void Dockbars::save(DataStore * settings) {

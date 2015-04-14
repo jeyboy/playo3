@@ -47,13 +47,13 @@ void DockBar::useVerticalTitles(bool vertical) {
     if (vertical) {
         setContentsMargins(0, 4, 3, 4);
         setFeatures(features() | QDockWidget::DockWidgetVerticalTitleBar);
-//        titleWidget -> setVertical(true);
+        titleWidget -> setVertical(true);
     } else {
         setContentsMargins(3, 0, 3, 4);
         DockWidgetFeatures flags = features();
         flags &= ~QDockWidget::DockWidgetVerticalTitleBar;
         setFeatures(flags);
-//        titleWidget -> setVertical(false);
+        titleWidget -> setVertical(false);
     }
 }
 
