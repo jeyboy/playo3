@@ -25,8 +25,14 @@ namespace Playo3 {
 
         inline void setText(const QString & text) {
             fullTitle = text;
-            int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
-            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset));
+
+            if (titleLabel -> isVertical()) {
+                int offset = (((QGridLayout *)layout()) -> rowCount()) * (button_height + (((QGridLayout *)layout()) -> verticalSpacing())); // its little inacurrate
+                titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, height() - offset));
+            } else {
+                int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
+                titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, width() - offset));
+            }
         }
         void setVertical(bool isVertical);
 

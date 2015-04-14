@@ -8,14 +8,17 @@
 namespace Playo3 {
     class RotateLabel : public QLabel {
     public:
-        inline RotateLabel(QString text, QWidget * parent) : QLabel(text, parent), isVertical(false) {}
-        inline void setVertical(bool vertical) { isVertical = vertical; }
+        inline RotateLabel(QString text, QWidget * parent) : QLabel(text, parent), is_vertical(false) {
+            setContentsMargins(0,0,0,0);
+        }
+        inline void setVertical(bool vertical) { is_vertical = vertical; }
+        inline bool isVertical() { return is_vertical; }
     protected:
         void paintEvent(QPaintEvent *);
         QSize sizeHint() const ;
         QSize minimumSizeHint() const;
     private:
-        bool isVertical;
+        bool is_vertical;
     };
 }
 

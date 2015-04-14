@@ -1,15 +1,14 @@
 #include "rotate_label.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
 void RotateLabel::paintEvent(QPaintEvent * event) {
-    if (isVertical) {
+    if (is_vertical) {
         QPainter painter(this);
         painter.save();
-//        painter.setPen(Qt::black);
-//        painter.setBrush(Qt::Dense1Pattern);
-
-        painter.rotate(90);
+        painter.translate(sizeHint().width(), sizeHint().height() - 1);
+        painter.rotate(270);
         painter.drawText(0, 0, text());
         painter.restore();
     }
@@ -17,7 +16,7 @@ void RotateLabel::paintEvent(QPaintEvent * event) {
 }
 
 QSize RotateLabel::minimumSizeHint() const {
-    if (isVertical) {
+    if (is_vertical) {
         QSize s = QLabel::minimumSizeHint();
         return QSize(s.height(), s.width());
     }
@@ -25,7 +24,7 @@ QSize RotateLabel::minimumSizeHint() const {
 }
 
 QSize RotateLabel::sizeHint() const {
-    if (isVertical) {
+    if (is_vertical) {
         QSize s = QLabel::sizeHint();
         return QSize(s.height(), s.width());
     }
