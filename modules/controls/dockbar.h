@@ -30,6 +30,7 @@ namespace Playo3 {
     signals:
         void closing();
     public slots:
+        inline void rotate() { useVerticalTitles(!titleWidget -> isVertical()); }
         void onMoveInProcess();
         void onMoveOutProcess();
         void onSetProgress(int percent);

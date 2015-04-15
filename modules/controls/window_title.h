@@ -36,6 +36,7 @@ namespace Playo3 {
             }
         }
         void setVertical(bool isVertical);
+        inline bool isVertical() const { return titleLabel -> isVertical(); }
 
     public slots:
         inline void invertWindowState() {

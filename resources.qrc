@@ -48,5 +48,7 @@
         <file alias="top_on_button">images/controls/top_on.png</file>
         <file alias="drop_off">images/controls/drop_off.png</file>
         <file alias="drop_on">images/controls/drop_on.png</file>
+        <file alias="rotate_off">images/controls/rotate_off.png</file>
+        <file alias="rotate_on">images/controls/rotate_on.png</file>
     </qresource>
 </RCC>
