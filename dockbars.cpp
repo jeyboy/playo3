@@ -34,6 +34,8 @@ void Dockbars::load(QJsonArray & bars) {
             if (obj.value("stick").toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
 
+            ((DockBar *)curr_bar) -> useVerticalTitles(obj.value("vertical").toBool());
+
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
             if (obj.value("played").toBool()) {
@@ -57,8 +59,6 @@ void Dockbars::load(QJsonArray & bars) {
     ViewSettings defSettings;
     while(barsList.length() > 0)
         window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst(), defSettings, def));
-
-    Dockbars::instance() -> useVeticalTitles(true);
 }
 
 void Dockbars::save(DataStore * settings) {
@@ -82,6 +82,7 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("title", (*it) -> windowTitle());
             curr_bar.insert("name", (*it) -> objectName());
             curr_bar.insert("stick", (*it) -> isSticked());
+            curr_bar.insert("vertical", (*it) -> isUsedVerticalTitles());
 
             if ((*it) -> windowTitle() == "Downloads") {
                 curr_bar.insert("cont", ((DownloadView *)(*it) -> mainWidget()) -> toJson());

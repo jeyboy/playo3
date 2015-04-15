@@ -26,11 +26,12 @@ namespace Playo3 {
 
         inline QWidget * mainWidget() { return inProcess ? mWidget : widget(); }
         void useVerticalTitles(bool vertical);
+        inline bool isUsedVerticalTitles() const { return titleWidget -> isVertical(); }
 
     signals:
         void closing();
     public slots:
-        inline void rotate() { useVerticalTitles(!titleWidget -> isVertical()); }
+        inline void rotate() { useVerticalTitles(!isUsedVerticalTitles()); }
         void onMoveInProcess();
         void onMoveOutProcess();
         void onSetProgress(int percent);
