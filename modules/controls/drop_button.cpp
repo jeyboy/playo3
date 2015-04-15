@@ -10,11 +10,10 @@ DropButton::DropButton(int button_height, QWidget * parent) :
         parent
     ) {
 
-    menu = new HoverableMenu();
+    menu = new HoverableMenu(this);
+    menu -> setTearOffEnabled(false);
 }
-DropButton::~DropButton() {
-    delete menu;
-}
+DropButton::~DropButton() {}
 
 void DropButton::registerAction(QWidget * action) {
     QWidgetAction * wAction = new QWidgetAction(menu);

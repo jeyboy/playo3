@@ -222,11 +222,8 @@ QString Stylesheets::treeViewStyles() {
     return QString(
                 "QTreeView {"
                 "   background-color: " + color2().name(QColor::HexArgb) + ";"
-                  "   border-radius: 8px;"
-//                "   border-bottom-left-radius: 8px;"
-//                "   border-bottom-right-radius: 8px;"
+                "   border-radius: 8px;"
                 "}"
-
 
 //                "QTreeView::indicator {"
 //                "   width: 18px;"

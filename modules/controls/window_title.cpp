@@ -10,7 +10,7 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
 
     buttonMargins = buttonsMargins;
     setObjectName("WindowTitle" + QString::number(QDateTime::currentMSecsSinceEpoch()));
-    setContentsMargins(margins);
+    setContentsMargins(hMargins);
     setMinimumHeight(height);
 
     TitleLayout * l = new TitleLayout(this);
@@ -87,11 +87,11 @@ void WindowTitle::setVertical(bool isVertical) {
     ((TitleLayout *)layout()) -> setVertical(isVertical);
     titleLabel -> setVertical(isVertical);
     if (isVertical) {
-        setContentsMargins(5, 0, 0, 0);
         setStyleSheet("#" + objectName() + " { border-right: 2px solid white; margin: " + QString::number(leftPadding) + "px 0 " + QString::number(rightPadding - 1) + "px 0; }");
+        setContentsMargins(5, 0, 0, 0);
     } else {
-        setContentsMargins(hMargins);
         setStyleSheet("#" + objectName() + " { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
+        setContentsMargins(hMargins);
     }
 }
 

@@ -25,8 +25,8 @@ public :
                     int row = columnCount() - loop1 - 1;
                     QWidget * w = it -> widget();
                     removeItem(it);
-                    addWidget(w, row, 0, Qt::AlignRight | (loop1 == columnCount() - 1 ? Qt::AlignTop : Qt::AlignBottom));
-//                    setRowStretch(row, columnStretch(loop1));
+                    addWidget(w, row, 0, Qt::AlignRight | Qt::AlignBottom);
+                    setRowStretch(row, columnStretch(loop1));
                 }
             }
         } else if (!vertical && !isHorizontal) {
@@ -37,7 +37,7 @@ public :
                     QWidget * w = it -> widget();
                     removeItem(it);
                     addWidget(w, 0, column, Qt::AlignBottom | Qt::AlignLeft);
-//                    setColumnStretch(rowCount() - loop1, rowStretch(loop1));
+                    setColumnStretch(column, rowStretch(loop1));
                 }
             }
         }
