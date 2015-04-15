@@ -20,6 +20,7 @@ namespace Playo3 {
     #define ITREESTR ITREEPATH + 1
     #define ISTATERESTORE ITREESTR + 1
     #define IUID ISTATERESTORE + 1
+    #define IINNERCOPYURL IUID + 1
 
 
     #define ITITLE Qt::DisplayRole
@@ -31,7 +32,6 @@ namespace Playo3 {
     #define ITITLESCACHE IINFO - 1
     #define IADDFONT ITITLESCACHE - 1
     #define IREMOTE IADDFONT - 1
-
 
     class ItemFields : public ItemState {
     public:

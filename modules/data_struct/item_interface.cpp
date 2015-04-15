@@ -145,6 +145,7 @@ QVariant IItem::data(int column) const {
 
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
+        case IINNERCOPYURL:    return isRemote() ? QVariant() : toUrl();
         case IFOLDER:          return isContainer();
         case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();

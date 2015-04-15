@@ -386,6 +386,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
         Player::instance() -> eject(false);
         removeRow(node);
         node = mdl -> fromPath(nodePath);
+        qDebug() << nodePath << node.data();
         findExecutable(node);
     }
     else findExecutable(node);

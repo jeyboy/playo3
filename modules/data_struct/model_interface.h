@@ -12,6 +12,8 @@
 #include "item_drop_formats.h"
 #include "media/library.h"
 
+#define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
+
 namespace Playo3 {
     class IModel : public QAbstractItemModel {
         Q_OBJECT

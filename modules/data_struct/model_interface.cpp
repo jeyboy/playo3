@@ -421,20 +421,22 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     FolderItem * dParent;
     QHash<FolderItem *, QList<InnerData *> > dataList;
     QList<InnerData *> l;
-    bool containPath, requirePath = containerType() != tree;
+    bool containPath, isRemote, requirePath = containerType() != tree;
 
     while (!stream.atEnd()) {
         data = new InnerData();
-        stream >> data -> url >> data -> attrs;
+        stream >> data -> url >> isRemote >> data -> attrs;
 
-        containPath = data -> attrs.contains(JSON_TYPE_PATH);
+        if (!isRemote) {
+            containPath = data -> attrs.contains(JSON_TYPE_PATH);
 
-        if (requirePath) {
-            if (!containPath)
-                data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
-        } else {
-            if (containPath)
-                data -> attrs.remove(JSON_TYPE_PATH);
+            if (requirePath) {
+                if (!containPath)
+                    data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
+            } else {
+                if (containPath)
+                    data -> attrs.remove(JSON_TYPE_PATH);
+            }
         }
 
         data -> dRow = row;
@@ -495,20 +497,26 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 
 void IModel::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const {
     QUrl lastUrl;
+    QVariant temp;
 
     QModelIndex it;
 
     if (ind.data(IFOLDER).toBool()) {
         for(int row = 0; ; row++) {
             it = ind.child(row, 0);
-            if (it.isValid()) {
+            if (it.isValid())
                 proceedMimeDataIndex(it, urls, stream);
-            } else return;
+            else return;
         }
     } else {
-        lastUrl = ind.data(IURL).toUrl();
-        urls.append(lastUrl);
-        stream << lastUrl << ind.data(IINNERCOPY).toMap(); // encodeInnerData
+        temp = ind.data(IINNERCOPYURL);
+
+        if (temp.isValid()) {
+            lastUrl = temp.toUrl();
+            urls.append(lastUrl);
+            stream << lastUrl << false << ind.data(IINNERCOPY).toMap(); // encodeInnerData
+        }
+        else stream << REMOTE_DND_URL << true << ind.data(IINNERCOPY).toMap(); // encodeInnerData
     }
 }
 

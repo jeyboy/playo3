@@ -1,9 +1,5 @@
 #include "vk_model.h"
-
-//#include "media/library.h"
-//#include "media/player.h"
-//#include "misc/func_container.h"
-//#include <QDebug>
+#include <QDebug>
 
 /////////////////////////////////////////////////////////////
 
@@ -138,6 +134,8 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
+    qDebug() << collection;
+
     QJsonObject itm;
     VkItem * newItem;
     QString uri, id, owner;
