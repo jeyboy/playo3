@@ -56,6 +56,14 @@ QString Stylesheets::appStyles() {
             );
 }
 
+QString Stylesheets::menuStyles() {
+    return QString(
+//                "QMenu {"
+//                  "border-radius: 8px;"
+//                "}"
+    );
+}
+
 QString Stylesheets::sliderStyles() {
     return QString(
                 "QSlider:horizontal { margin: 0 4px; }"
@@ -417,7 +425,7 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "QTabBar {"
                 "   alignment: center;"
                 "}"
-    ) + treeViewStyles() + listViewStyles();
+    ) + treeViewStyles() + listViewStyles() + menuStyles();
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {

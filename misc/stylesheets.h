@@ -16,6 +16,8 @@ public:
 
     static QString appStyles();
 
+    static QString menuStyles();
+
     static QString sliderStyles();
 
     static QString treeViewStyles();
