@@ -5,6 +5,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <qevent.h>
+#include <qdatetime.h>
 #include "hoverable_label.h"
 #include "drop_button.h"
 #include "title_layout.h"
@@ -27,7 +28,7 @@ namespace Playo3 {
             fullTitle = text;
 
             if (titleLabel -> isVertical()) {
-                int offset = (((QGridLayout *)layout()) -> rowCount()) * (button_height + (((QGridLayout *)layout()) -> verticalSpacing())); // its little inacurrate
+                int offset = (((QGridLayout *)layout()) -> rowCount() - 1) * (button_height) + 15; // its little inacurrate
                 titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, height() - offset));
             } else {
                 int offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
@@ -60,6 +61,7 @@ namespace Playo3 {
         DropButton * dropButton;
         QString fullTitle;
         bool isCompact;
+        QMargins hMargins;
     };
 }
 

@@ -23,6 +23,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
+    useVerticalTitles(false);
 }
 
 //bool DockBar::event(QEvent * event) {
@@ -47,14 +48,14 @@ void DockBar::useVerticalTitles(bool vertical) {
     if (vertical) {
         setContentsMargins(0, 4, 3, 4);
         setFeatures(features() | QDockWidget::DockWidgetVerticalTitleBar);
-        titleWidget -> setVertical(true);
     } else {
         setContentsMargins(3, 0, 3, 4);
         DockWidgetFeatures flags = features();
         flags &= ~QDockWidget::DockWidgetVerticalTitleBar;
         setFeatures(flags);
-        titleWidget -> setVertical(false);
     }
+
+    titleWidget -> setVertical(vertical);
 }
 
 void DockBar::onMoveInProcess() {

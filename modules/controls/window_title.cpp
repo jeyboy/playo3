@@ -3,13 +3,13 @@
 using namespace Playo3;
 
 WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int left_padding, int right_padding, bool showMini, bool showMaxi, bool showClose)
-    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), isCompact(compact) {
+    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), isCompact(compact), hMargins(margins) {
     button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
 
     dropButton = isCompact ? new DropButton(button_height, this) : 0;
 
     buttonMargins = buttonsMargins;
-    setObjectName("WindowTitle");
+    setObjectName("WindowTitle" + QString::number(QDateTime::currentMSecsSinceEpoch()));
     setContentsMargins(margins);
     setMinimumHeight(height);
 
@@ -87,9 +87,11 @@ void WindowTitle::setVertical(bool isVertical) {
     ((TitleLayout *)layout()) -> setVertical(isVertical);
     titleLabel -> setVertical(isVertical);
     if (isVertical) {
-        setStyleSheet("#WindowTitle { border-right: 2px solid white; margin: " + QString::number(leftPadding) + "px 0 " + QString::number(rightPadding - 1) + "px 0; }");
+        setContentsMargins(5, 0, 0, 0);
+        setStyleSheet("#" + objectName() + " { border-right: 2px solid white; margin: " + QString::number(leftPadding) + "px 0 " + QString::number(rightPadding - 1) + "px 0; }");
     } else {
-        setStyleSheet("#WindowTitle { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
+        setContentsMargins(hMargins);
+        setStyleSheet("#" + objectName() + " { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
     }
 }
 
