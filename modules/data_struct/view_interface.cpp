@@ -383,8 +383,8 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 
     if (deleteCurrent && node.isValid()) {
         QString nodePath = node.data(ITREEPATH).toString();
-        Player::instance() -> eject(false);
-        removeRow(node);
+//        Player::instance() -> eject(false);
+        qDebug() << "rem state " << removeRow(node);
         node = mdl -> fromPath(nodePath);
         qDebug() << nodePath << node.data();
         findExecutable(node);
@@ -430,7 +430,7 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
         if (Player::instance() -> playedIndex().data(ITREESTR).toString().startsWith(
             node.data(ITREESTR).toString()
         ))
-            Player::instance() -> eject();
+            Player::instance() -> eject(false);
     }
 
     if (isRemoveFileWithItem())
