@@ -397,7 +397,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-//    qDebug() << "REM: " << node.data() << " ||| " << node.data(ITREEPATH).toString();
+//    qDebug() << "REM: " << node.data()/* << " ||| " << node.data(ITREEPATH).toString()*/;
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)

@@ -195,7 +195,7 @@ void Dockbars::initPlayed() {
                 QList<DockBar *>::Iterator it = bars.begin();
 
                 for(; it != bars.end(); it++) {
-                    if (view(*it)) {
+                    if ((*it) -> isVisible() && view(*it)) {
                         activate(played = (*it));
                         break;
                     }

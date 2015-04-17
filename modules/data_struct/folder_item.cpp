@@ -3,9 +3,7 @@
 using namespace Playo3;
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {
-
-}
+FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {}
 
 FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),

@@ -72,6 +72,7 @@ namespace Playo3 {
         QHash<QChar, QHash<QString, int>* > catalogs;
         QHash<QChar, QList<QString> *> catalogs_state;
 
+//        QHash<QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
         QList<QModelIndex> waitOnProc;
         QHash<QModelIndex, QFutureWatcher<void> * > inProc;
 
