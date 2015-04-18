@@ -44,6 +44,7 @@ public:
 
     QModelIndex playedIndex();
     inline IItem * playedItem() const { return current_item; }
+    inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
     static void close() {
         delete self;
