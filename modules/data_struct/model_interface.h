@@ -10,6 +10,8 @@
 #include "container_types.h"
 
 #include "item_drop_formats.h"
+#include "media/library.h"
+#include <qdebug.h>
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 

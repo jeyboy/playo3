@@ -26,7 +26,6 @@
 #include "model_item_delegate.h"
 
 #include "media/player.h"
-#include "media/library.h"
 
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
