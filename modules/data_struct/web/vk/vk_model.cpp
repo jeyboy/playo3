@@ -1,6 +1,8 @@
 #include "vk_model.h"
+#include "media/player.h"
 #include <QDebug>
 
+using namespace Playo3;
 /////////////////////////////////////////////////////////////
 
 VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
