@@ -216,7 +216,7 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
         itm -> unset(ItemState::proceeded);
         return true;
     }
-    initItemInfo(m, itm);
+    initItemInfo(&m, itm);
     if (watcher -> isCanceled()) {
         itm -> unset(ItemState::proceeded);
         return true;
@@ -368,22 +368,22 @@ void Library::initItemData(IItem * itm) {
 
     MediaInfo m(itm -> toUrl(), has_info);
 
-    if (!has_titles) initItemTitles(m, itm);
-    if (!has_info) initItemInfo(m, itm);
+    if (!has_titles) initItemTitles(&m, itm);
+    if (!has_info) initItemInfo(&m, itm);
 }
 
-void Library::initItemInfo(MediaInfo & info, IItem * itm) {
-    itm -> setSize(info.getSize());
-    if (info.isReaded())
-        itm -> setInfo(Format::toInfo(Format::toUnits(info.getSize()), info.getBitrate(), info.getSampleRate(), info.getChannels()));
+void Library::initItemInfo(MediaInfo * info, IItem * itm) {
+    itm -> setSize(info -> getSize());
+    if (info -> isReaded())
+        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
     else
-        itm -> setInfo(Format::toUnits(info.getSize()));
-    if (info.getDuration() > 0)
-        itm -> setDuration(Duration::fromSeconds(info.getDuration()));
-    itm -> setGenre(info.getGenre());
+        itm -> setInfo(Format::toUnits(info -> getSize()));
+    if (info -> getDuration() > 0)
+        itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
+    itm -> setGenre(info -> getGenre());
 }
 
-void Library::initItemTitles(MediaInfo & info, IItem * itm) {
+void Library::initItemTitles(MediaInfo * info, IItem * itm) {
     QStringList list;
     QString title = cacheTitleFilter(itm -> title().toString());
     list.append(title);
@@ -392,7 +392,7 @@ void Library::initItemTitles(MediaInfo & info, IItem * itm) {
     if (temp != title)
         list.append(temp);
 
-    QString tagTitle = cacheTitleFilter(info.getArtist() + info.getTitle());
+    QString tagTitle = cacheTitleFilter(info -> getArtist() + info -> getTitle());
     if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
         list.append(tagTitle);
 

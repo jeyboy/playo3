@@ -17,6 +17,8 @@
 #define INPROC_LIMIT 5
 #define TIMER_TICK 500
 
+class MediaInfo;
+
 namespace Playo3 {
     class Library : public QObject {
         Q_OBJECT
@@ -62,8 +64,8 @@ namespace Playo3 {
         bool remoteInfoRestoring(QFutureWatcher<bool> * initiator, QModelIndex ind);
 
         void initItemData(IItem * itm);
-        void initItemInfo(MediaInfo & info, IItem * itm);
-        void initItemTitles(MediaInfo & info, IItem * itm);
+        void initItemInfo(MediaInfo * info, IItem * itm);
+        void initItemTitles(MediaInfo * info, IItem * itm);
 
         QHash<QString, int> * load(const QChar letter);
         void save();
