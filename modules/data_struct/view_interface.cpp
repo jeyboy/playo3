@@ -53,8 +53,10 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
     connect(mdl, SIGNAL(setProgress2(int)), parent, SLOT(onSetProgress2(int)));
 
-    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex &)), this, SLOT(itemError(QModelIndex &)));
-    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex &)), this, SLOT(itemNotSupported(QModelIndex &)));
+    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex)), this, SLOT(itemError(QModelIndex)));
+    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex)), this, SLOT(itemNotSupported(QModelIndex)));
+    connect(Player::instance(), SIGNAL(itemNotAccessable(QModelIndex)), this, SLOT(itemNotExist(QModelIndex))); // TODO: maybe need some refresh actions for remote item
+    connect(Player::instance(), SIGNAL(itemNotExisted(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showSpinner()), this, SLOT(startRoutine()));

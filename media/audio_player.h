@@ -50,6 +50,7 @@ public:
     enum MediaStatusFlags {
         UnknownMediaStatus,
         NoMedia,
+        NoRemoteMedia,
         LoadingMedia,
         LoadedMedia,
         StalledMedia,

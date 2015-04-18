@@ -86,10 +86,10 @@ namespace Playo3 {
 //        void showMessage(QString);
 
     protected slots:
-        inline void itemNotExist(QModelIndex & node) { mdl -> setData(node, ItemState::not_exist);}
-        inline void itemNotSupported(QModelIndex & node) { mdl -> setData(node, ItemState::not_supported);}
-        inline void itemError(QModelIndex & /*node*/) { /*TODO: reaction needed*/ }
-        inline void onDoubleClick(const QModelIndex & node) { execIndex(node); }
+        inline void itemNotExist(QModelIndex node) { mdl -> setData(node, ItemState::not_exist); }
+        inline void itemNotSupported(QModelIndex node) { mdl -> setData(node, ItemState::not_supported); }
+        inline void itemError(QModelIndex node) { mdl -> setData(node, ItemState::not_supported); }
+        inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
         bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
 

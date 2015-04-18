@@ -502,8 +502,10 @@ void AudioPlayer::play() {
                 currentState = UnknowState;
                 if (chan == 41)
                     emit mediaStatusChanged(InvalidMedia);
-                else if (chan == -1)
+                else if (chan == 2)
                     emit mediaStatusChanged(NoMedia);
+                else if (chan == -1)
+                    emit mediaStatusChanged(NoRemoteMedia);
                 else
                     emit mediaStatusChanged(StalledMedia);
             }

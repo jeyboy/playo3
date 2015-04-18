@@ -308,6 +308,14 @@ void Player::onMediaStatusChanged(MediaStatus status) {
             emit itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
+        case NoMedia: {
+            emit itemNotExisted(playedIndex());
+            emit nextItemNeeded(error);
+        break;}
+        case NoRemoteMedia: {
+            emit itemNotAccessable(playedIndex());
+            emit nextItemNeeded(error);
+        break;}
         default: {  }
     }
 }
