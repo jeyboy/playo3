@@ -6,8 +6,6 @@
 #include <QMenu>
 #include <QDrag>
 
-#include <QtConcurrent/QtConcurrent>
-
 #include <qevent.h>
 
 #include "model_interface.h"
