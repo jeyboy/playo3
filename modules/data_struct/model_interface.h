@@ -11,6 +11,7 @@
 
 #include "item_drop_formats.h"
 #include "media/library.h"
+#include <qdebug.h>
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 
@@ -24,7 +25,7 @@ namespace Playo3 {
         virtual ContainerType containerType() const = 0;
 
         QVariant data(const QModelIndex & index, int role) const;
-        bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
+        bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
@@ -50,9 +51,7 @@ namespace Playo3 {
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         IItem * item(const QModelIndex & index) const;
-        template<class T> T * item(const QModelIndex & index) const {
-            return dynamic_cast<T *>(item(index));
-        }
+        template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(item(index)); }
 
         void shuffle();
         virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
@@ -104,8 +103,6 @@ namespace Playo3 {
     };
 
     ////        void removeFolderPrebuild(ModelItems::ModelItem * temp);
-
-    ////        virtual WebApi * getApi() { return 0; } //stub
     //    signals:
     ////        void showMessage(QString);
 }

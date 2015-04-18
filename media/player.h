@@ -8,11 +8,15 @@
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
 #include "modules/controls/metric_slider.h"
-#include "modules/data_struct/model_item_parts/item_fields.h"
+#include "modules/data_struct/model_interface.h"
 
 using namespace Playo3;
 
 class MediaInfo;
+
+namespace Playo3 {
+    class IModel;
+}
 
 class Player : public AudioPlayer {
     Q_OBJECT
@@ -38,7 +42,9 @@ public:
     void setTrackBar(QSlider * trackBar);
     void setTimePanel(ClickableLabel * timePanel);
 
-    inline QModelIndex playedIndex() { return currentIndex; }
+    QModelIndex playedIndex();
+    inline IItem * playedItem() const { return current_item; }
+    inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
     static void close() {
         delete self;
@@ -48,8 +54,8 @@ public:
 
 signals:
     void nextItemNeeded(Player::Reason);
-    void itemNotSupported(QModelIndex &);
-    void itemExecError(QModelIndex &);
+    void itemNotSupported(QModelIndex);
+    void itemExecError(QModelIndex);
 
 public slots:
     void playPause();
@@ -72,33 +78,13 @@ private slots:
     void onMediaStatusChanged(MediaStatus status);
 
 private:
+    Player(QObject * parent);
+
     void setItemState(int state);
     void updateItemState(bool isPlayed);
     void updateControls(bool played, bool paused, bool stopped);
 
     void setTimePanelVal(int millis);
-
-    Player(QObject * parent) : AudioPlayer(parent) {
-        time_forward = true;
-        extended_format = true;
-        prevVolumeVal = 0;
-
-        slider = 0;
-        volumeSlider = 0;
-        timePanel = 0;
-
-        muteButton = 0;
-        playButton = 0;
-        pauseButton = 0;
-        stopButton = 0;
-        likeButton = 0;
-
-
-        setNotifyInterval(500);
-        connect(this, SIGNAL(stateChanged(MediaState)), this, SLOT(onStateChanged(MediaState)));
-        connect(this, SIGNAL(mediaStatusChanged(MediaStatus)), this, SLOT(onMediaStatusChanged(MediaStatus)));
-        connect(this, SIGNAL(volumeChanged(int)), this, SLOT(unmuteCheck(int)));
-    }
 
     static Player * self;
     Playo3::MetricSlider * slider;
@@ -115,7 +101,8 @@ private:
     bool time_forward;
     bool extended_format;
 
-    QModelIndex currentIndex;
+    IModel * current_model;
+    IItem * current_item;
 };
 
 #endif // PLAYER_H

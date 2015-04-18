@@ -9,6 +9,15 @@ Player * Player::instance(QObject * parent) {
     return self;
 }
 
+Player::Player(QObject * parent) : AudioPlayer(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
+    stopButton(0), likeButton(0), muteButton(0), prevVolumeVal(0), time_forward(true), extended_format(true), current_model(0), current_item(0)
+{
+    setNotifyInterval(500);
+    connect(this, SIGNAL(stateChanged(MediaState)), this, SLOT(onStateChanged(MediaState)));
+    connect(this, SIGNAL(mediaStatusChanged(MediaStatus)), this, SLOT(onMediaStatusChanged(MediaStatus)));
+    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(unmuteCheck(int)));
+}
+
 void Player::setPlayButton(QAction * playAction) {
     playButton = playAction;
     playButton -> setVisible(true);
@@ -37,11 +46,12 @@ void Player::setMuteButton(QAction * muteAction) {
 }
 
 void Player::setItemState(int state) {
-    if (currentIndex.isValid()) {
-        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(currentIndex.model());
+    QModelIndex ind = playedIndex();
+    if (ind.isValid()) {
+        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(ind.model());
 
         mdl -> setData(
-            currentIndex,
+            ind,
             state,
             ISTATE
         );
@@ -53,7 +63,10 @@ void Player::updateItemState(bool isPlayed) {
 }
 
 void Player::eject(bool updateState) {
-    if (!updateState) currentIndex = QModelIndex();
+    if (!updateState) {
+        current_model = 0;
+        current_item = 0;
+    }
     playIndex(QModelIndex());
 }
 
@@ -69,12 +82,13 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
         }
     }
 
-    if (currentIndex.isValid())
-        updateItemState(false);
+    updateItemState(false);
 
-    currentIndex = item;
     if (item.isValid()) {
-        setMedia(item.data(IURL).toUrl());
+        current_model = (IModel *)item.model();
+        current_item = current_model -> item(item);
+
+        setMedia(current_item -> toUrl());
         play();
 
         if (start > 0)
@@ -90,6 +104,9 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
         if (paused)
             pause();
     } else {
+        current_model = 0;
+        current_item = 0;
+
         duration = 0;
         setTimePanelVal(0);
     }
@@ -125,6 +142,10 @@ void Player::setVolumeTrackBar(QSlider * trackBar) {
 void Player::setTimePanel(ClickableLabel * newTimePanel) {
     timePanel = newTimePanel;
     connect(timePanel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
+}
+
+QModelIndex Player::playedIndex() {
+    return current_model ? current_model -> index(current_item) : QModelIndex();
 }
 
 //void Player::setVideoOutput(QVideoWidget * container) {
@@ -216,7 +237,7 @@ void Player::playPause() {
 }
 
 void Player::start() {
-    if (!currentIndex.isValid())
+    if (!current_item)
         emit nextItemNeeded(init);
     else play();
 }
@@ -275,7 +296,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break; }
 
         case StalledMedia: {
-            emit itemExecError(currentIndex);
+            emit itemExecError(playedIndex());
             emit nextItemNeeded(error);
         break; }
 
@@ -284,7 +305,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
             break;
         }
         case InvalidMedia: {
-            emit itemNotSupported(currentIndex);
+            emit itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
         default: {  }

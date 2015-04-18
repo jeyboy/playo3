@@ -1,5 +1,4 @@
 #include "model_interface.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 
