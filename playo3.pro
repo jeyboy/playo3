@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-VERSION = 0.4.6.1
+VERSION = 0.4.7.0
 
 QT       += core gui webkitwidgets network opengl
 #QT       += multimedia multimediawidgets
