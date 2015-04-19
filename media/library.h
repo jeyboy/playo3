@@ -16,6 +16,7 @@
 
 #define INPROC_LIMIT 5
 #define TIMER_TICK 500
+#define WAIT_LIMIT 10
 
 class MediaInfo;
 
@@ -29,9 +30,9 @@ namespace Playo3 {
 
         void restoreItemState(const QModelIndex & ind);
         void declineItemStateRestoring(const QModelIndex & ind);
-        void declineAllItemsRestoration();
+        void declineAllItemsRestoration(const QAbstractItemModel * model);
 
-        inline void setWaitListLimit(int newLimit) { waitListLimit = newLimit; }
+        inline void setWaitListLimit(QAbstractItemModel * model, int newLimit) { waitListLimit[model] = newLimit; }
     signals:
         void updateAttr(const QModelIndex, int attr, QVariant val);
     private slots:
@@ -74,11 +75,12 @@ namespace Playo3 {
         QHash<QChar, QHash<QString, int>* > catalogs;
         QHash<QChar, QList<QString> *> catalogs_state;
 
-//        QHash<QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
-        QList<QModelIndex> waitOnProc;
+        QHash<const QAbstractItemModel *, int > waitListLimit;
+
+        QHash<const QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
         QHash<QModelIndex, QFutureWatcher<void> * > inProc;
 
-        QList<QModelIndex> waitRemoteOnProc;
+        QHash<const QAbstractItemModel *, QList<QModelIndex> > waitRemoteOnProc;
         QHash<QModelIndex, QFutureWatcher<bool> * > inRemoteProc;
 
         QTimer * saveTimer;
@@ -87,7 +89,6 @@ namespace Playo3 {
         QFuture<void> catsSaveResult;
 
         int inProcLimit;
-        int waitListLimit;
         int timeAmount;
     };
 }

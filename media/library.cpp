@@ -11,7 +11,7 @@ Library * Library::instance(QObject * parent) {
     return self;
 }
 
-Library::Library(QObject * parent) : QObject(parent), waitListLimit(10), timeAmount(0) {
+Library::Library(QObject * parent) : QObject(parent), timeAmount(0) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
@@ -49,24 +49,26 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
-    if (!waitOnProc.contains(ind)) {
-        waitOnProc.append(ind);
+    QList<QModelIndex> list = waitOnProc.value(ind.model());
 
-        while(waitOnProc.size() > waitListLimit) {
-            QModelIndex i = waitOnProc.takeFirst();
+    if (!list.contains(ind)) {
+        QList<QModelIndex> remote_list = waitRemoteOnProc.value(ind.model());
+        list.append(ind);
+
+        while(list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
+            QModelIndex i = list.takeFirst();
             if (i.data(IREMOTE).toBool())
-                waitRemoteOnProc.removeOne(i);
+                remote_list.removeOne(i);
             IItem * itm = indToItm(i);
             itm -> unset(ItemFields::proceeded);
         }
 
         if (Settings::instance() -> isUsedDelayForRemote())
             if (ind.data(IREMOTE).toBool()) {
-                waitRemoteOnProc.append(ind);
+                remote_list.append(ind);
 
-                while(waitRemoteOnProc.size() > waitListLimit) {
-                    QModelIndex i = waitRemoteOnProc.takeFirst();
-                    // maybe next is not needed
+                while(remote_list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
+                    QModelIndex i = remote_list.takeFirst();
                     IItem * itm = indToItm(i);
                     itm -> unset(ItemFields::proceeded);
                 }
@@ -80,20 +82,27 @@ void Library::restoreItemState(const QModelIndex & ind) {
 void Library::declineItemStateRestoring(const QModelIndex & ind) {
     if (inProc.contains(ind))
         inProc.value(ind) -> cancel();
-    else waitOnProc.removeAll(ind);
+    else {
+        QList<QModelIndex> list = waitOnProc.value(ind.model());
+        list.removeAll(ind);
+        waitOnProc[ind.model()] = list;
+    }
 }
 
-void Library::declineAllItemsRestoration() {
-    while(waitOnProc.size() > 0) {
-        QModelIndex i = waitOnProc.takeFirst();
+void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
+    QList<QModelIndex> items = waitOnProc.take(model);
+    QList<QModelIndex> remote_items = waitRemoteOnProc.take(model);
+
+    while(!items.isEmpty()) {
+        QModelIndex i = items.takeFirst();
         if (i.data(IREMOTE).toBool())
-            waitRemoteOnProc.removeOne(i);
+            remote_items.removeOne(i);
         IItem * itm = indToItm(i);
         itm -> unset(ItemFields::proceeded);
     }
 
-    while(waitRemoteOnProc.size() > waitListLimit) {
-        QModelIndex i = waitRemoteOnProc.takeFirst();
+    while(!remote_items.isEmpty()) {
+        QModelIndex i = remote_items.takeFirst();
         IItem * itm = indToItm(i);
         itm -> unset(ItemFields::proceeded);
     }
@@ -103,9 +112,15 @@ void Library::declineAllItemsRestoration() {
 
 void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
+        QList<QModelIndex> & list = waitRemoteOnProc.values().first();
+        QModelIndex ind = list.takeLast();
+
+        if (list.isEmpty()) waitRemoteOnProc.values().removeFirst();
+
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
+        inRemoteProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, waitRemoteOnProc.takeLast()));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, ind));
     }
 }
 
@@ -122,8 +137,12 @@ void Library::finishRemoteItemInfoInit() {
 
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
+        QList<QModelIndex> & list = waitOnProc.values().first();
+        QModelIndex ind = list.takeLast();
+
+        if (list.isEmpty()) waitOnProc.values().removeFirst();
+
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
-        QModelIndex ind = waitOnProc.takeLast();
         inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, initiator, ind));

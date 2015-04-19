@@ -266,7 +266,7 @@ void IView::resizeEvent(QResizeEvent * event) {
     if (event -> oldSize().height() != size().height()) {
         if (event -> size().height() > 0) {
             int count = (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2;
-            Library::instance() -> setWaitListLimit(count);
+            Library::instance() -> setWaitListLimit(mdl, count);
         }
     }
 
@@ -652,7 +652,7 @@ void IView::keyPressEvent(QKeyEvent * event) {
         selectionModel() -> clearSelection();
 
         if (!list.isEmpty())
-            Library::instance() -> declineAllItemsRestoration();
+            Library::instance() -> declineAllItemsRestoration(model());
         else return;
 
         if (list.size() > 200)
