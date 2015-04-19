@@ -93,10 +93,11 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
 
         QByteArray encoded = event -> mimeData() -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
+        bool isRemote;
 
         while (!stream.atEnd()) {
             InnerData data;
-            stream >> data.url >> data.attrs;
+            stream >> data.url >> isRemote >> data.attrs;
 
             addRow(data.url, path, downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()));
         }
