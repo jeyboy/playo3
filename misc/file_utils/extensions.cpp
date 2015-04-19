@@ -124,7 +124,7 @@ QString Extensions::folderName(QFileInfo & info) {
     return name.split('/').last();
 }
 
-bool Extensions::restoreExtension(QString & file_path) {
+bool Extensions::restoreExtension(QString & file_path, QString & restoredExt) {
     QFile f(file_path);
     bool finded = false;
 
@@ -137,7 +137,7 @@ bool Extensions::restoreExtension(QString & file_path) {
         for(; it != ext_signatures.end(); it++) {
             if (sH.mid(ext_signature_offset.value(it.key(), 0) * 2, it.key().size()) == it.key()) {
                 if ((finded = f.rename(file_path + "." + it.value())))
-                    file_path += "." + it.value();
+                    file_path += "." + (restoredExt = it.value());
                 break;
             }
         }

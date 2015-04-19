@@ -408,6 +408,9 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     if (info -> getDuration() > 0)
         itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
     itm -> setGenre(info -> getGenre());
+
+    if (!info -> getExtension().isEmpty())
+        itm -> setExtension(info -> getExtension());
 }
 
 void Library::initItemTitles(MediaInfo * info, IItem * itm) {

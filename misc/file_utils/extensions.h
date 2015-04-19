@@ -29,7 +29,7 @@ namespace Playo3 {
             delete self;
         }
 
-        bool restoreExtension(QString & file_path);
+        bool restoreExtension(QString & file_path, QString & restoredExt);
         QFileInfoList folderFiles(QFileInfo file);
         QFileInfoList folderDirectories(QFileInfo file);
 

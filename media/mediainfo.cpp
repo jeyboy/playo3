@@ -10,7 +10,7 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) : fileName(0),
 
         #ifdef Q_OS_WIN // taglib not worked with files without extensions :(
             if (!file_path.contains('.'))
-                Extensions::instance() -> restoreExtension(file_path);
+                Extensions::instance() -> restoreExtension(file_path, ext);
         #endif
 
         fileName = new TagLib::FileName(file_path.toStdWString().data());

@@ -25,6 +25,7 @@ public:
     inline QString getTitle() const { return title; }
     inline QString getAlbum() const { return album; }
     inline int getGenre() const { return genre; }
+    inline QString getExtension() const { return ext; }
 
     inline void setArtist(QString newArtist) { artist = newArtist; }
     inline void setTitle(QString newTitle) { title = newTitle; }
@@ -53,6 +54,7 @@ private:
 
     TagLib::FileName * fileName;
 
+    QString ext;
     QString artist;
     QString title;
     QString album;
