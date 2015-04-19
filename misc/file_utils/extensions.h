@@ -53,6 +53,7 @@ namespace Playo3 {
         QString activeFilter;
         QHash<QString, QStringList> filters;
         QHash<QString, QString> ext_signatures;
+        QHash<QString, int> ext_signature_offset;
         DataStore * ext;
     };
 }
