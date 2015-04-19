@@ -25,6 +25,5 @@ void ToolbarButton::dragEnterEvent(QDragEnterEvent * event) {
 
 void ToolbarButton::dropEvent(QDropEvent * event) {
     DownloadView * dwn = DownloadView::instance();
-
     dwn -> proceedDrop(event, path);
 }
