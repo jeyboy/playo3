@@ -50,7 +50,6 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 
 void Library::restoreItemState(const QModelIndex & ind) {
     QList<QModelIndex> & list = waitOnProc[ind.model()];
-    qDebug() << list;
 
     if (!list.contains(ind)) {
         QList<QModelIndex> & remote_list = waitRemoteOnProc[ind.model()];
@@ -69,8 +68,7 @@ void Library::restoreItemState(const QModelIndex & ind) {
                 remote_list.append(ind);
 
                 while(remote_list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
-                    QModelIndex i = remote_list.takeFirst();
-                    IItem * itm = indToItm(i);
+                    IItem * itm = indToItm(remote_list.takeFirst());
                     itm -> unset(ItemFields::proceeded);
                 }
             }
@@ -111,6 +109,12 @@ void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
         const QAbstractItemModel * key = waitRemoteOnProc.keys().first();
         QList<QModelIndex> & list = waitRemoteOnProc[key];
+
+        if (list.isEmpty()) {
+            waitOnProc.remove(key);
+            return;
+        }
+
         QModelIndex ind = list.takeLast();
         if (list.isEmpty()) waitRemoteOnProc.remove(key);
 
@@ -136,6 +140,12 @@ void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
         const QAbstractItemModel * key = waitOnProc.keys().first();
         QList<QModelIndex> & list = waitOnProc[key];
+
+        if (list.isEmpty()) {
+            waitOnProc.remove(key);
+            return;
+        }
+
         QModelIndex ind = list.takeLast();
 
         if (list.isEmpty()) waitOnProc.remove(key);
