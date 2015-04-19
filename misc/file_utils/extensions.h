@@ -29,6 +29,7 @@ namespace Playo3 {
             delete self;
         }
 
+        bool restoreExtension(QString & file_path);
         QFileInfoList folderFiles(QFileInfo file);
         QFileInfoList folderDirectories(QFileInfo file);
 
@@ -44,46 +45,14 @@ namespace Playo3 {
         inline QStringList presetsList() const { return QStringList(filters.keys()); }
 
     private:
-        Extensions() {
-            ext = new DataStore("extensions.json");
+        Extensions();
+        void initSignatures();
 
-            if (ext -> state) {
-                activeFilter = ext -> read("active").toString("all");
-                QJsonObject obj = ext -> read("filters").toObject();
-                foreach (QString key, obj.keys()) {
-                    filters.insert(key, obj.value(key).toVariant().value<QStringList>());
-                }
-            } else {
-                QStringList commonfiltersList;
-                commonfiltersList << "*.*";
-                filters.insert("all", commonfiltersList);
-
-    //            QStringList filtersList;
-    //            filtersList << "*.wav"
-    //                        << "*.aiff"
-    //                        << "*.aif"
-    //                        << "*.mp3"
-    //                        << "*.mp2"
-    //                        << "*.mp1"
-    //                        << "*.ogg"
-    //                        << "*.wma"
-    //                        << "*.mpc"
-    //                        << "*.aac"
-    //                        << "*.alac"
-    //                        << "*.ac3"
-    //                        << "*.wv"
-    //                        << "*.ape"
-    //                        << "*.flac";
-
-    //            filters.insert("audio", filtersList);
-                activeFilter = "all";
-            }
-        }
-
-        static Extensions *self;
+        static Extensions * self;
 
         QString activeFilter;
         QHash<QString, QStringList> filters;
+        QHash<QString, QString> ext_signatures;
         DataStore * ext;
     };
 }

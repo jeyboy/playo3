@@ -57,8 +57,8 @@ void ExtensionDialog::on_addExtension_clicked() {
 }
 
 void ExtensionDialog::proceedFilter(QString & filter, QStringList & preset) {
-    if (!filter.startsWith("*."))
-        filter = "*." + filter;
+//    if (!filter.startsWith("*."))
+//        filter = "*." + filter;
 
     if (!preset.contains(filter))
         preset.append(filter);

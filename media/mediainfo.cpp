@@ -6,7 +6,14 @@ MediaInfo::MediaInfo(QUrl uri, bool onlyTags) : fileName(0),
     sampleRate(-1), size(0), readed(false), remote(!uri.isLocalFile()) {
 
     if (!remote) {
-        fileName = new TagLib::FileName(uri.toLocalFile().toStdWString().data());
+        QString file_path = uri.toLocalFile();
+
+        #ifdef Q_OS_WIN // taglib not worked with files without extensions :(
+            if (!file_path.contains('.'))
+                Extensions::instance() -> restoreExtension(file_path);
+        #endif
+
+        fileName = new TagLib::FileName(file_path.toStdWString().data());
         TagLib::FileRef f(*fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
 
         if (!f.isNull()) {
