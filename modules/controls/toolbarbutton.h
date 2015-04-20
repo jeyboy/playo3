@@ -16,8 +16,8 @@ namespace Playo3 {
 
     public:
         ToolbarButton(QString text, QString folderPath, QWidget * parent = 0);
-        QString mainPath() const { return path; }
-
+        inline QString mainPath() const { return path; }
+        void checkState();
     protected:
         void dropEvent(QDropEvent * event);
         void dragEnterEvent(QDragEnterEvent * event);

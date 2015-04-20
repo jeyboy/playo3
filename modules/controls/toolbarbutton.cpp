@@ -17,6 +17,13 @@ ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent)
     /*setDefaultDropAction(Qt::MoveAction);*/
 }
 
+void ToolbarButton::checkState() {
+    setProperty("error", QFile::exists(path));
+    style() -> unpolish(this);
+    style() -> polish(this);
+    update();
+}
+
 void ToolbarButton::dragEnterEvent(QDragEnterEvent * event) {
     if (event -> mimeData() -> hasFormat("text/uri-list"))
         event -> accept();

@@ -308,6 +308,11 @@ QString Stylesheets::toolbarButtonStyle() {
                     "color: #FFF;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:0.8 #AAA, stop:1 #666);"
                 "}"
+
+                "QToolButton[error=\"true\"], QToolButton:hover[error=\"true\"] {"
+                    "color: #FFF;"
+                    "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:1 #FF0000);"
+                "}"
               );
 }
 
