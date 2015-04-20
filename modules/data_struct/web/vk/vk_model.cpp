@@ -6,7 +6,6 @@ using namespace Playo3;
 /////////////////////////////////////////////////////////////
 
 VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
-//    connect(IpChecker::instance(), SIGNAL(ipChanged()), this, SLOT(refresh()));
     connect(Player::instance(), SIGNAL(remoteUnprocessed()), this, SLOT(refresh()));
 }
 
@@ -15,12 +14,13 @@ VkModel::~VkModel() {
 
 void VkModel::refresh() {
     emit moveInProcess();
-//    QApplication::processEvents();
+    QApplication::processEvents();
     VkApi::instance() -> audioList(this, SLOT(proceedAudioList(QJsonObject &)), tab_uid);
 }
 
 void VkModel::refreshWall() {
     emit moveInProcess();
+    QApplication::processEvents();
     VkApi::instance() -> wallMediaList(this, SLOT(proceedWallList(QJsonObject &)), tab_uid);
 }
 
@@ -131,13 +131,13 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
         }
     }
 
-//    deleteRemoved(store);
     emit moveOutProcess();
 }
 
-void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
+int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
     qDebug() << collection;
 
+    int itemsAmount = 0;
     QJsonObject itm;
     VkItem * newItem;
     QString uri, id, owner;
@@ -162,6 +162,7 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
         items = store.values(uid.toString());
 
         if (items.isEmpty()) {
+            itemsAmount++;
             newItem = new VkItem(
                 id,
                 uri,
@@ -180,6 +181,8 @@ void VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHa
                 (*it_it) -> setPath(uri);
         }
     }
+
+    return itemsAmount;
 }
 
 //void VkModel::proceedAudioListUpdate(QJsonObject & obj, QHash<ModelItem *, QString> & collation) {
