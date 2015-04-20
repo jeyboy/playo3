@@ -2,8 +2,10 @@
 #define MODEL_INTERFACE
 
 #include <qmimedata.h>
+#include <qclipboard.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
+#include <qdebug.h>
 
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
@@ -11,7 +13,6 @@
 
 #include "item_drop_formats.h"
 #include "media/library.h"
-#include <qdebug.h>
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 
@@ -66,6 +67,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
 
     public slots:
+        void copyTitleToClipboard(const QModelIndex & index);
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
         void expandeAll();

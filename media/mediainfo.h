@@ -14,7 +14,7 @@
 
 class MediaInfo {
 public:
-    MediaInfo(QUrl uri, bool onlyTags = true);
+    MediaInfo(QUrl uri, bool hasExtension, bool onlyTags = true);
     inline ~MediaInfo() { delete fileName; }
     void initInfo();
 

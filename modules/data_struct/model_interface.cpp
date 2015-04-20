@@ -346,6 +346,11 @@ void IModel::shuffle() {
 
 //////////////////////// slots //////////////////////////
 
+void IModel::copyTitleToClipboard(const QModelIndex & index) {
+    if (index.isValid())
+        QApplication::clipboard() -> setText(index.data().toString());
+}
+
 void IModel::expandeAll() {
     rootItem -> propagateFolderSetFlag(ItemState::expanded);
 }

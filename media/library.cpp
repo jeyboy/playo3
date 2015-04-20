@@ -238,7 +238,7 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
 
     if (has_info) return false;
 
-    MediaInfo m(itm -> fullPath(), has_info);
+    MediaInfo m(itm -> fullPath(), itm -> extension().isValid(), has_info);
     if (watcher -> isCanceled()) {
         itm -> unset(ItemState::proceeded);
         return true;
@@ -393,7 +393,7 @@ void Library::initItemData(IItem * itm) {
 
     if (has_titles && has_info) return;
 
-    MediaInfo m(itm -> toUrl(), has_info);
+    MediaInfo m(itm -> toUrl(), itm -> extension().isValid(), has_info);
 
     if (!has_titles) initItemTitles(&m, itm);
     if (!has_info) initItemInfo(&m, itm);
