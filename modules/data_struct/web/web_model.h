@@ -31,6 +31,7 @@ namespace Playo3 {
             void errorReceived(int, QString);
     protected:
         QString tab_uid;
+        qint64 lastRefresh;
     };
 }
 

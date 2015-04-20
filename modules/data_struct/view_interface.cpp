@@ -304,6 +304,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(":/active_tab"), "Show active elem", this)));
+        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Show active elem")));
         connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(scrollToActive()));
 
         actions.append((act = new QAction(this)));

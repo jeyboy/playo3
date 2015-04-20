@@ -29,7 +29,7 @@ namespace Playo3 {
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-        bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole);
+        bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
         QModelIndex index(IItem * item) const;
         inline QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const { return index(row, column, parent, false); }
@@ -73,7 +73,7 @@ namespace Playo3 {
         void expandeAll();
         void collapsed(const QModelIndex & index);
         void collapseAll();
-        virtual inline void refresh() {} // for web models
+        virtual inline void refresh(bool retryPlaing = false) {} // for web models
 
     protected slots:
         void finishingItemsAdding();

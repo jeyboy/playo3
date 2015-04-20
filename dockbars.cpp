@@ -271,8 +271,15 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     initPlayed();
     IView * v = view(played);
 
-    if (v && (reason == Player::init || v -> isPlaylist()))
-        v -> execNextIndex();
+    if (v) {
+        if (reason == Player::noMedia && v -> isRequiredOnUpdate()) {
+            ((IModel *)v -> model()) -> refresh(true);
+            return;
+        }
+
+        if (reason == Player::init || v -> isPlaylist())
+            v -> execNextIndex();
+    }
 }
 
 void Dockbars::nextExecTriggering() {

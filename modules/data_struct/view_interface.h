@@ -54,6 +54,7 @@ namespace Playo3 {
         inline bool isPlaylist() const { return sttngs.playlist; }
         inline bool isCommon() const { return sttngs.common; }
         inline bool isEditable() const { return sttngs.type < vk && !isCommon(); }
+        inline bool isRequiredOnUpdate() const { return sttngs.type == vk; }
 
 //        inline IModel * model() const { return mdl; }
 

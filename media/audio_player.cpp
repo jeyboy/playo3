@@ -192,17 +192,12 @@ int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
     chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
 
-//    BASS_Encode_Start(channel, "output.wav", BASS_ENCODE_PCM, NULL, 0);
-
-//    BASS_Encode_StartCAFile(channel, 'mp4f', 'aac ', 0, 128000, "output.mp4"); // only macos
-//    BASS_Encode_StartCAFile(channel, 'm4af', 'alac', 0, 0, "output.m4a"); // only macos
-
-    if (!chan) {
-        int status = BASS_ErrorGetCode();
-        if (status == BASS_ERROR_FILEOPEN)// || status == BASS_ERROR_NONET)
-            emit remoteUnprocessed();
-        qDebug() << "Can't play stream" <<  BASS_ErrorGetCode() << path.toUtf8();
-    }
+//    if (!chan) {
+//        int status = BASS_ErrorGetCode();
+//        if (chan == -1 || status == BASS_ERROR_FILEOPEN)// || status == BASS_ERROR_NONET)
+//            emit remoteUnprocessed();
+//        qDebug() << "Can't play stream" <<  BASS_ErrorGetCode() << path.toUtf8();
+//    }
     return chan;
 }
 

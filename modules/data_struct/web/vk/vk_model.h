@@ -16,13 +16,14 @@ namespace Playo3 {
         inline ContainerType containerType() const { return vk; }
         inline WebApi * api() { return VkApi::instance(); }
     public slots:
-        void refresh();
+        void refresh(bool retryPlaing = false);
         void refreshWall();
 
     protected slots:
         void proceedWallList(QJsonObject &);
 
         void proceedAudioList(QJsonObject &);
+        void proceedAudioListAndRetry(QJsonObject &);
         int proceedAudioList(QJsonArray &, FolderItem *, QHash<QString, IItem *> &);
     //    void proceedAudioListUpdate(QJsonObject &, QHash<QString, IItem *> &);
     };

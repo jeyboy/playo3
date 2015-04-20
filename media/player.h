@@ -24,6 +24,7 @@ public:
     enum Reason {
         init,
         endMedia,
+        noMedia,
         error
     };
 

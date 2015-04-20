@@ -293,6 +293,7 @@ void Player::onStateChanged(MediaState newState) {
 void Player::onMediaStatusChanged(MediaStatus status) {
     switch (status) {
         case UnknownMediaStatus: {
+            emit nextItemNeeded(error);
         break; }
 
         case StalledMedia: {
@@ -302,20 +303,23 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case EndOfMedia: {
             emit nextItemNeeded(endMedia);
-            break;
-        }
+        break;}
+
         case InvalidMedia: {
             emit itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
+
         case NoMedia: {
             emit itemNotExisted(playedIndex());
-            emit nextItemNeeded(error);
+            emit nextItemNeeded(noMedia);
         break;}
+
         case NoRemoteMedia: {
             emit itemNotAccessable(playedIndex());
-            emit nextItemNeeded(error);
+            emit nextItemNeeded(noMedia);
         break;}
+
         default: {  }
     }
 }

@@ -6,16 +6,22 @@ using namespace Playo3;
 /////////////////////////////////////////////////////////////
 
 VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
-    connect(Player::instance(), SIGNAL(remoteUnprocessed()), this, SLOT(refresh()));
+    lastRefresh = QDateTime::currentMSecsSinceEpoch() - 300000;
 }
 
-VkModel::~VkModel() {
-}
+VkModel::~VkModel() {}
 
-void VkModel::refresh() {
+void VkModel::refresh(bool retryPlaing) {
+    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < 300000) return;
+
+    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    VkApi::instance() -> audioList(this, SLOT(proceedAudioList(QJsonObject &)), tab_uid);
+    VkApi::instance() -> audioList(
+        this,
+        retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)),
+        tab_uid
+    );
 }
 
 void VkModel::refreshWall() {
@@ -132,6 +138,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     }
 
     emit moveOutProcess();
+}
+
+void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
+    proceedAudioList(hash);
+    Player::instance() -> play();
 }
 
 int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
