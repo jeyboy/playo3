@@ -91,6 +91,7 @@ namespace Playo3 {
         inline void itemError(QModelIndex node) { mdl -> setData(node, ItemState::not_supported); }
         inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
+        void copyToClipboard();
         bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
 
         void downloadSelected();

@@ -236,6 +236,11 @@ void IView::openLocation() {
     item -> openLocation();
 }
 
+void IView::copyToClipboard() {
+    QModelIndex ind = currentIndex();
+    mdl -> copyTitleToClipboard(ind);
+}
+
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
     IItem * node = mdl -> item(index);
 
@@ -308,6 +313,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
+        actions.append((act = new QAction(QIcon(":/copy"), "Copy name to clipboard", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(copyToClipboard()));
+
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
+
         if (!ind.data(IFULLPATH).toString().isEmpty()) {
             actions.append((act = new QAction(QIcon(":/open"), "Open location", this)));
             connect(act, SIGNAL(triggered(bool)), this, SLOT(openLocation()));
