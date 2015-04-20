@@ -304,7 +304,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(":/active_tab"), "Show active elem", this)));
-        act -> setShortcut(QKeySequence(tr("Ctrl+C", "Copy")));
         connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(scrollToActive()));
 
         actions.append((act = new QAction(this)));
@@ -315,6 +314,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (ind.isValid()) {
         actions.append((act = new QAction(QIcon(":/copy"), "Copy name to clipboard", this)));
+        act -> setShortcut(QKeySequence(tr("Ctrl+C", "Copy")));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(copyToClipboard()));
 
         actions.append((act = new QAction(this)));

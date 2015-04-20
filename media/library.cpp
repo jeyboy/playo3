@@ -111,7 +111,7 @@ void Library::initRemoteItemInfo() {
         QList<QModelIndex> & list = waitRemoteOnProc[key];
 
         if (list.isEmpty()) {
-            waitOnProc.remove(key);
+            waitRemoteOnProc.remove(key);
             return;
         }
 
