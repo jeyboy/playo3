@@ -1,4 +1,5 @@
 #include "drop_button.h"
+#include <qapplication.h>
 
 using namespace Playo3;
 
@@ -6,7 +7,7 @@ DropButton::DropButton(int button_height, QWidget * parent) :
     HoverableLabel(
         "",
         QPixmap(":drop_off").scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-        QPixmap(":drop_on").scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+        QPixmap(":drop_off").scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
         parent
     ) {
 
@@ -24,4 +25,11 @@ void DropButton::registerAction(QWidget * action) {
 void DropButton::hoverIn() {
     HoverableLabel::hoverIn();
     menu -> popup(mapToGlobal(mapFromParent(pos())));
+
+    QApplication::processEvents();
+    QApplication::processEvents();
+    QApplication::processEvents();
+
+    if (!rect().contains(mapFromGlobal(QCursor::pos()), true))
+        menu -> hide();
 }
