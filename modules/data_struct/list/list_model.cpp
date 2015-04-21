@@ -12,8 +12,10 @@ ListModel::~ListModel() {
 
 void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
     exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
-    exRow = rootItem -> childCount();
-    dRow = -1;
+    if (dRow == -1)
+        exRow = rootItem -> childCount();
+    else
+        exRow = dRow;
 }
 
 void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {   
