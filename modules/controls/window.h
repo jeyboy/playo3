@@ -1,8 +1,9 @@
 #ifndef MAIN_WINDOW
 #define MAIN_WINDOW
 
-#include <QMainWindow>
+#include <qmainwindow.h>
 #include <qpainter.h>
+
 #include "modules/controls/window_title.h"
 #include "misc/screen.h"
 

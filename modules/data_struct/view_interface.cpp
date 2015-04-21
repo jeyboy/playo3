@@ -537,6 +537,25 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
         emit mdl -> moveOutProcess();
 }
 
+void IView::removeSelectedItems() {
+    QModelIndexList list = selectedIndexes();
+    selectionModel() -> clearSelection();
+
+    if (!list.isEmpty())
+        Library::instance() -> declineAllItemsRestoration(model());
+    else return;
+
+    if (list.size() > 200)
+        QtConcurrent::run(this, &IView::removeProccessing, list, true);
+    else if (list.size() > 1)
+        removeProccessing(list);
+    else {
+        QModelIndex ind = currentIndex();
+        if (currentIndex().isValid())
+            removeRow(ind, true, false);
+    }
+}
+
 void IView::downloadItem(const QModelIndex & node, QString savePath) {
     DownloadView::instance() -> addRow(
         node.data(IURL).toUrl(),
@@ -649,6 +668,9 @@ void IView::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void IView::dropEvent(QDropEvent * event) {
+    if (event -> source() == this)
+        removeSelectedItems();
+
     QTreeView::dropEvent(event);
     event -> accept();
 }
@@ -660,24 +682,8 @@ void IView::keyPressEvent(QKeyEvent * event) {
         if (!list.isEmpty())
             execIndex(list.first());
 
-    } else if (event -> key() == Qt::Key_Delete) {
-        QModelIndexList list = selectedIndexes();
-        selectionModel() -> clearSelection();
-
-        if (!list.isEmpty())
-            Library::instance() -> declineAllItemsRestoration(model());
-        else return;
-
-        if (list.size() > 200)
-            QtConcurrent::run(this, &IView::removeProccessing, list, true);
-        else if (list.size() > 1)
-            removeProccessing(list);
-        else {
-            QModelIndex ind = currentIndex();
-            if (currentIndex().isValid())
-                removeRow(ind, true, false);
-        }
-    }
+    } else if (event -> key() == Qt::Key_Delete)
+        removeSelectedItems();
     else QTreeView::keyPressEvent(event);
 }
 

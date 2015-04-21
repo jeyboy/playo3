@@ -555,7 +555,6 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     if (row == -1 && !parentIndex.data(IFOLDER).toBool()) {
         row = parentIndex.row();
         (const_cast<QModelIndex &>(parentIndex)) = parentIndex.parent();
-        qDebug() << row << parentIndex.data();
     }
 
     int row_count = rowCount(parentIndex);
