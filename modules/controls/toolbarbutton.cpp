@@ -14,11 +14,12 @@ ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent)
     setText(text);
     setStyleSheet(Stylesheets::toolbarButtonStyle());
     setAcceptDrops(true);
+    checkState();
     /*setDefaultDropAction(Qt::MoveAction);*/
 }
 
 void ToolbarButton::checkState() {
-    setProperty("error", QFile::exists(path));
+    setProperty("error", !QFile::exists(path));
     style() -> unpolish(this);
     style() -> polish(this);
     update();

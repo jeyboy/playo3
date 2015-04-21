@@ -3,9 +3,9 @@
 
 #include <QToolButton>
 #include <QMimeData>
-#include <QMouseEvent>
-#include <QFile>
-#include <QMessageBox>
+#include <qevent.h>
+//#include <QFile>
+//#include <QMessageBox>
 #include <qfileinfo.h>
 
 #include "modules/data_struct/downloads/download_view.h"
@@ -19,6 +19,7 @@ namespace Playo3 {
         inline QString mainPath() const { return path; }
         void checkState();
     protected:
+        inline void mousePressEvent(QMouseEvent *) { checkState(); }
         void dropEvent(QDropEvent * event);
         void dragEnterEvent(QDragEnterEvent * event);
 
