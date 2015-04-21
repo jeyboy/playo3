@@ -7,6 +7,4 @@ ListView::ListView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
     setIndentation(-2);
 }
 
-ListView::~ListView() {
-
-}
+ListView::~ListView() {}

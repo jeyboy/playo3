@@ -3,12 +3,9 @@
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
-TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {
-}
+TreeModel::TreeModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
 
-TreeModel::~TreeModel() {
-}
-
+TreeModel::~TreeModel() {}
 
 void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
     QFileInfo file = QFileInfo(url.toLocalFile());
