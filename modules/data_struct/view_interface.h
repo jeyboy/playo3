@@ -87,9 +87,9 @@ namespace Playo3 {
 //        void showMessage(QString);
 
     protected slots:
-        inline void itemNotExist(QModelIndex node) { mdl -> setData(node, ItemState::not_exist); }
-        inline void itemNotSupported(QModelIndex node) { mdl -> setData(node, ItemState::not_supported); }
-        inline void itemError(QModelIndex node) { mdl -> setData(node, ItemState::not_supported); }
+        inline void itemNotExist(QModelIndex node) { mdl -> setData(node, ItemState::not_exist, ISTATE); }
+        inline void itemNotSupported(QModelIndex node) { mdl -> setData(node, ItemState::not_supported, ISTATE); }
+        inline void itemError(QModelIndex node) { mdl -> setData(node, ItemState::not_supported, ISTATE); }
         inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
         void copyToClipboard();
