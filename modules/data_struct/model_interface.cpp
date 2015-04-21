@@ -544,10 +544,19 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
     return mimeData;
 }
 
-// row always equal to -1 // maybe need precalc on dnd drop in view
+//Если бросили точно на ноду - в row и column -1 а index - нода.
+//Если выше ноды - index - родитель ноды а row = нода.row.
+//Если ниже ноды - index - родитель ноды а row = нода.row + 1.
+//Ежели бросили мимо - index = root.
 bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
+
+    if (row == -1 && !parentIndex.data(IFOLDER).toBool()) {
+        row = parentIndex.row();
+        (const_cast<QModelIndex &>(parentIndex)) = parentIndex.parent();
+        qDebug() << row << parentIndex.data();
+    }
 
     int row_count = rowCount(parentIndex);
     if (row > row_count) row = -1;
