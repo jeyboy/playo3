@@ -197,6 +197,10 @@ void SettingsDialog::initGlobalSettings() {
     ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
     ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());
 
+    if (!QDir().mkdir(Settings::instance() -> defaultDownloadPath()))
+        ui -> downloadPath -> setStyleSheet("background-color: red; color: white;");
+
+
     QStringList positions;
     positions.append("Above");
     positions.append("Below");
