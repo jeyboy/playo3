@@ -221,6 +221,8 @@ bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & p
 }
 
 bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
+    qDebug() << "REMOVE ROWS";
+
     FolderItem * parentItem = item<FolderItem>(parent);
     bool success = parentItem != 0;
     int deleted;

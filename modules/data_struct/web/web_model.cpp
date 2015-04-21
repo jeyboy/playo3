@@ -1,16 +1,16 @@
 #include "web_model.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
 
 WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
-    IModel(hash, parent), IgnoreList(hash), tab_uid(uid) {
-}
+    IModel(hash, parent), IgnoreList(hash), tab_uid(uid) {}
 
-WebModel::~WebModel() {
-}
+WebModel::~WebModel() {}
 
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
+    qDebug() << "IGNORE ADDS";
     FolderItem * parentItem = item<FolderItem>(parent);
     QVariantList uids = parentItem -> childrenUids(position, rows);
 
@@ -29,8 +29,10 @@ QJsonObject WebModel::toJson() {
 
 void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
     exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
-    exRow = rootItem -> childCount();
-    dRow = -1;
+    if (dRow == -1)
+        exRow = rootItem -> childCount();
+    else
+        exRow = dRow;
 }
 
 void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
@@ -81,18 +83,6 @@ int WebModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos)
 
     return res;
 }
-
-//void WebModel::deleteRemoved(QHash<IItem *, QString> & store) {
-//    qDebug() << "STORE LENGTH: " << store.count();
-//    foreach(ModelItem * item, store.keys()) {
-//        if (Player::instance() -> playedItem() == item)
-//            Player::instance() -> setPlaylist(0);
-
-//        qDebug() << "DELETE : " << item -> fullPath();
-//        QModelIndex ind = index(item);
-//        removeRow(ind.row(), ind.parent());
-//    }
-//}
 
 void WebModel::errorReceived(int /*code*/, QString msg) {
 //    emit showMessage("!!!!!!!!!!! Some shit happened :( " + msg);
