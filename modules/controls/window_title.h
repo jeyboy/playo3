@@ -38,6 +38,7 @@ namespace Playo3 {
 
             titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, offset));
         }
+        inline void setTitleToolTip(QString str) { titleLabel -> setToolTip(str); }
         void setVertical(bool isVertical);
         inline bool isVertical() const { return titleLabel -> isVertical(); }
 

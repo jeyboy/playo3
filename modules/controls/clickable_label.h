@@ -14,8 +14,8 @@ namespace Playo3 {
         ~ClickableLabel();
 
     protected:
-        void mousePressEvent(QMouseEvent *ev);
-        bool event(QEvent *e);
+        void mousePressEvent(QMouseEvent * ev);
+        bool event(QEvent * e);
 
     signals:
         void clicked();

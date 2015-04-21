@@ -35,6 +35,17 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleWidget -> addMaxiButton();
     titleWidget -> addCloseButton();
 
+    if (parent == 0) {
+        QString tooltip(
+            "<p><b>" + QApplication::applicationName() + "<b></p>"
+            "<p><b>Version:<b> " + QApplication::applicationVersion() + "</p>"
+            "<p><b>Developer:<b> Jenua Boiko</p>"
+            "<p><b>Site:<b> https://github.com/jeyboy/playo3</p>"
+        );
+
+        titleWidget -> setTitleToolTip(tooltip);
+    }
+
     Stylesheets::initBrush(brush);
 
 //    setDocumentMode(true);

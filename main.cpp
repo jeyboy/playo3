@@ -1,6 +1,7 @@
 #include "playo.h"
 #include "single_application.h"
-#include <QApplication>
+
+#include <qapplication.h>
 
 int main(int argc, char * argv[]) {
     qRegisterMetaType<QVector <int> >("QVector<int>");
@@ -10,6 +11,7 @@ int main(int argc, char * argv[]) {
 //    QCoreApplication::setApplicationName("Playo3");
 
     SingleApplication a(argc, argv, "bigbugplayo");
+    a.setApplicationVersion(APP_VERSION);
     a.setStyleSheet(Stylesheets::appStyles());
 
     QString message;

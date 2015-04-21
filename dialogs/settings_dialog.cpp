@@ -192,7 +192,6 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 }
 
 
-
 void SettingsDialog::initGlobalSettings() {
     ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
     ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());

@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-VERSION = 0.4.8.0
+VERSION = 0.4.8.1
+
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT       += core gui webkitwidgets network opengl
 #QT       += multimedia multimediawidgets
