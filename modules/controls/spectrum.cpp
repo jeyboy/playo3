@@ -88,17 +88,21 @@ void Spectrum::changeHeight(int newHeight) {
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
-void Spectrum::dataUpdated(QList<QVector<int> > bars) {
-    peaks = bars;
-    pairs = (peaks.length() + 1) / 2;
+void Spectrum::dataUpdated(QList<QVector<int> > data) {
+    if (isVisible()) {
+        peaks = data;
+        if (peaks.size() == 1 && type != bars)
+            peaks << peaks[0];
 
-    if (pairs != last_pairs_count) {
-        recalcAttrs();
-        last_pairs_count = pairs;
-    }
+        pairs = (peaks.length() + 1) / 2;
 
-    if (isVisible())
+        if (pairs != last_pairs_count) {
+            recalcAttrs();
+            last_pairs_count = pairs;
+        }
+
         update(update_rect);
+    }
 }
 
 void Spectrum::onMovableChanged(bool movable) {
@@ -136,7 +140,7 @@ void Spectrum::recalcAttrs() {
             break;
 //case waves:
         default:
-            bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();
+            bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();             
             break;
     }
 
