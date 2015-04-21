@@ -22,7 +22,7 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
-    channelsCount(2), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
+    channelsCount(2), prevChannelsCount(2), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
     qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
 
@@ -99,7 +99,7 @@ int AudioPlayer::getCalcSpectrumBandsCount() {
         emit channelsCountChanged();
     }
 
-    return _spectrumBandsCount / (channelsCount / 2);
+    return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
 }
 
 int AudioPlayer::getPosition() const {
@@ -132,8 +132,6 @@ void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
     defaultSpectrum.append(l);
     defaultSpectrum.append(l);
 
-    prevChannelsCount = 2;
-
 //////////////////  calculate predefined points  ///////////////////////////
 
     spectrumPoints.clear();
@@ -146,7 +144,6 @@ void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
 
         b0 = b1;
     }
-
 
     int layerLimit = 1024, gLimit = layerLimit * channelsCount;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
@@ -420,13 +417,20 @@ QVector<int> AudioPlayer::getSpectrum() {
 }
 
 QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
+    QList<QVector<int> > res;
+
+    if (channelsCount == 1) {
+        res.append(getSpectrum());
+        return res;
+    }
+
     int layerLimit = 1024, gLimit = layerLimit * channelsCount;
     int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
     float fft[gLimit];
     BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
 
-    QList<QVector<int> > res;
+
     QVector<float> peaks;
     int b0 = 0, x, y, z, peakNum;
 

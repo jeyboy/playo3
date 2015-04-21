@@ -67,6 +67,7 @@ public:
     int getPosition() const;
     int getDuration() const;
     int getVolume() const;
+    inline int getChannelsCount() const { return channelsCount; }
     float getSize() const;
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
