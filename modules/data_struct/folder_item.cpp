@@ -115,7 +115,7 @@ QVariantList FolderItem::childrenUids(int position, int count) {
     IItem * it;
 
     for (int row = 0; row < count; ++row) {
-        it = children.takeAt(position);
+        it = children.at(position);
         if (it -> isRemote()) {
             QVariant item_uid = it -> toUid();
             if (item_uid.isValid())

@@ -55,13 +55,10 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
 
     connect(Player::instance(), SIGNAL(itemExecError(QModelIndex)), this, SLOT(itemError(QModelIndex)));
     connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex)), this, SLOT(itemNotSupported(QModelIndex)));
-    connect(Player::instance(), SIGNAL(itemNotAccessable(QModelIndex)), this, SLOT(itemNotExist(QModelIndex))); // TODO: maybe need some refresh actions for remote item
+    connect(Player::instance(), SIGNAL(itemNotAccessable(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
     connect(Player::instance(), SIGNAL(itemNotExisted(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
-//    connect(model, SIGNAL(showSpinner()), this, SLOT(startRoutine()));
-//    connect(model, SIGNAL(hideSpinner()), this, SLOT(stopRoutine()));
-//    connect(model, SIGNAL(updated()), this, SLOT(modelUpdate()));
 //    connect(model, SIGNAL(showMessage(QString)), this, SLOT(showMessage(QString)));
 
     header() -> hide();
@@ -141,62 +138,6 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
 //    }
 
 //    return item;
-//}
-
-//void IView::removeItem(QModelIndex & item) { //TODO: rewrite
-//    Library::instance() -> removeRemoteItem(item);
-//    item = removeCandidate(item);
-//    QModelIndex modelIndex = model -> index(item);
-//    QString delPath = item -> fullPath();
-//    bool isFolder = item -> isFolder();
-
-//    QModelIndex parentIndex = modelIndex.parent();
-//    if (!parentIndex.isValid())
-//        parentIndex = rootIndex();
-//    int row = modelIndex.row();
-//    QModelIndex selCandidate = parentIndex.child(row + 1, 0);
-
-//    if (isFolder && item -> childTreeCount() > 1) {
-//        if (QMessageBox::warning(
-//                    parentWidget(),
-//                    "Folder deletion",
-//                    "Are you shure what you want remove the not empty folder ?",
-//                    QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
-//            return;
-//    }
-
-//    clearSelection();
-
-//    if (Player::instance() -> playedItem()) {
-//        if (Player::instance() -> playedItem() -> fullPath().startsWith(delPath))
-//            Player::instance() -> removePlaylist();
-//    }
-
-//    if (isRemoveFileWithItem()) {
-//        item -> removePhysicalObject();
-
-////        if (isFolder) {
-//////                QDir delDir(delPath);
-//////                if (delPath.split('/').length() >= 2) {
-//////                    delDir.removeRecursively();
-//////                }
-
-
-////        } else {
-////            QFile::remove(delPath);
-////        }
-//    }
-
-//    if (model -> removeRow(row, parentIndex)) {
-//        if (isFolder) {
-//            updateSelection(selCandidate);
-//        } else {
-//            QModelIndex next = parentIndex.child(row, 0);
-//            if (!next.isValid() || (next.isValid() && !next.data(FOLDERID).toBool())) {
-//                updateSelection(selCandidate);
-//            }
-//        }
-//    }
 //}
 
 //////////////////////////////////////////////////////
@@ -398,10 +339,8 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 
     if (deleteCurrent && node.isValid()) {
         QString nodePath = node.data(ITREEPATH).toString();
-//        Player::instance() -> eject(false);
-        qDebug() << "rem state " << removeRow(node);
+        removeRow(node);
         node = mdl -> fromPath(nodePath);
-        qDebug() << nodePath << node.data();
         findExecutable(node);
     }
     else findExecutable(node);
@@ -412,7 +351,6 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-//    qDebug() << "REM: " << node.data()/* << " ||| " << node.data(ITREEPATH).toString()*/;
     if (Settings::instance() -> isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
@@ -551,7 +489,7 @@ void IView::removeSelectedItems() {
         removeProccessing(list);
     else {
         QModelIndex ind = currentIndex();
-        if (currentIndex().isValid())
+        if (ind.isValid())
             removeRow(ind, true, false);
     }
 }
@@ -668,8 +606,8 @@ void IView::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void IView::dropEvent(QDropEvent * event) {
-    if (event -> source() == this)
-        removeSelectedItems();
+//    if (event -> source() == this)
+//        removeSelectedItems();
 
     QTreeView::dropEvent(event);
     event -> accept();

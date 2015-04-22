@@ -43,7 +43,6 @@ namespace Playo3 {
 
         bool insertColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
         bool removeColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
-//        bool insertRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());

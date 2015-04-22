@@ -1,5 +1,4 @@
 #include "web_model.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
@@ -10,7 +9,6 @@ WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
 WebModel::~WebModel() {}
 
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
-    qDebug() << "IGNORE ADDS";
     FolderItem * parentItem = item<FolderItem>(parent);
     QVariantList uids = parentItem -> childrenUids(position, rows);
 
