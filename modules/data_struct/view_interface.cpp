@@ -606,8 +606,8 @@ void IView::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void IView::dropEvent(QDropEvent * event) {
-//    if (event -> source() == this)
-//        removeSelectedItems();
+    if (event -> source() == this)
+        removeSelectedItems();
 
     QTreeView::dropEvent(event);
     event -> accept();
