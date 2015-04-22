@@ -57,7 +57,7 @@ int WebModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 
     res += fileList.size();
     for(; it != fileList.end(); it++)
-        new FileItem((*it).fileName(), node);
+        new FileItem((*it).path(), (*it).fileName(), node);
 
     node -> updateItemsCountInBranch(res);
     return res;
@@ -74,7 +74,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos)
         else {
             if (Extensions::instance() -> respondToExtension(file.suffix())) {
                 res++;
-                new FileItem(file.fileName(), node, pos);
+                new FileItem(file.path(), file.fileName(), node, pos);
             }
         }
     }
