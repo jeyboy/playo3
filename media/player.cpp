@@ -293,29 +293,35 @@ void Player::onStateChanged(MediaState newState) {
 void Player::onMediaStatusChanged(MediaStatus status) {
     switch (status) {
         case UnknownMediaStatus: {
+            qDebug() << "PLAYER: " << "UNKNOWN";
             emit nextItemNeeded(error);
         break; }
 
         case StalledMedia: {
+            qDebug() << "PLAYER: " << "STALLED";
             emit itemExecError(playedIndex());
-            emit nextItemNeeded(error);
+            emit nextItemNeeded(stalled);
         break; }
 
         case EndOfMedia: {
+            qDebug() << "PLAYER: " << "END";
             emit nextItemNeeded(endMedia);
         break;}
 
         case InvalidMedia: {
+            qDebug() << "PLAYER: " << "INVALID";
             emit itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
 
         case NoMedia: {
+            qDebug() << "PLAYER: " << "NO MEDIA";
             emit itemNotExisted(playedIndex());
             emit nextItemNeeded(noMedia);
         break;}
 
         case NoRemoteMedia: {
+            qDebug() << "PLAYER: " << "NO REMOTE MEDIA";
             emit itemNotAccessable(playedIndex());
             emit nextItemNeeded(noMedia);
         break;}

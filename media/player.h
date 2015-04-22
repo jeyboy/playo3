@@ -25,6 +25,7 @@ public:
         init,
         endMedia,
         noMedia,
+        stalled,
         error
     };
 

@@ -272,7 +272,7 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     IView * v = view(played);
 
     if (v) {
-        if (reason == Player::noMedia && v -> isRequiredOnUpdate()) {
+        if ((reason == Player::noMedia || reason == Player::stalled) && v -> isRequiredOnUpdate()) {
             ((IModel *)v -> model()) -> refresh(true);
             return;
         }
