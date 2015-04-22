@@ -24,6 +24,7 @@ namespace Playo3 {
         ~IModel();
 
         virtual ContainerType containerType() const = 0;
+        virtual bool isRelative() const = 0;
 
         QVariant data(const QModelIndex & index, int role) const;
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);

@@ -13,6 +13,7 @@ namespace Playo3 {
         WebModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0);
         ~WebModel();
 
+        inline bool isRelative() const { return false; }
         virtual WebApi * api() = 0;
         inline QString tabUid() const { return tab_uid; }
 

@@ -425,7 +425,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     FolderItem * dParent;
     QHash<FolderItem *, QList<InnerData *> > dataList;
     QList<InnerData *> l;
-    bool containPath, isRemote, requirePath = containerType() != tree;
+    bool containPath, isRemote, requirePath = !isRelative();
 
     while (!stream.atEnd()) {
         data = new InnerData();

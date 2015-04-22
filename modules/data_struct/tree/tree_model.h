@@ -11,6 +11,7 @@ namespace Playo3 {
         TreeModel(QJsonObject * hash = 0, QObject * parent = 0);
         ~TreeModel();
 
+        inline bool isRelative() const { return true; }
         inline ContainerType containerType() const { return tree; }
 
     protected:

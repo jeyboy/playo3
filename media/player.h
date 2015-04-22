@@ -26,7 +26,8 @@ public:
         endMedia,
         noMedia,
         stalled,
-        error
+        error,
+        refreshNeed
     };
 
     static Player * instance(QObject * parent = 0);
