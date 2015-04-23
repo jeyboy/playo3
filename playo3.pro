@@ -8,8 +8,12 @@ VERSION = 0.4.9.0
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-QT       += core gui webkitwidgets network opengl
+QT  += core gui webkitwidgets network opengl
 #QT       += multimedia multimediawidgets
+
+win32: {
+    QT  += winextras
+}
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

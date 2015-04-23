@@ -1,8 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QAction>
+#include <qaction.h>
 #include <QModelIndex>
+
+#ifdef Q_OS_WIN
+    #include <QWinTaskbarButton>
+    #include <QWinTaskbarProgress>
+#endif
 
 #include "mediainfo.h"
 #include "audio_player.h"
@@ -30,7 +35,7 @@ public:
         refreshNeed
     };
 
-    static Player * instance(QObject * parent = 0);
+    static Player * instance(QWidget * parent = 0);
     void eject(bool updateState = true);
     bool playIndex(QModelIndex item, bool paused = false, uint start = 0);
     void setStartPosition(int position);
@@ -83,7 +88,7 @@ private slots:
     void onMediaStatusChanged(MediaStatus status);
 
 private:
-    Player(QObject * parent);
+    Player(QWidget * parent);
 
     void setItemState(int state);
     void updateItemState(bool isPlayed);
@@ -108,6 +113,11 @@ private:
 
     IModel * current_model;
     IItem * current_item;
+
+    #ifdef Q_OS_WIN
+        QWinTaskbarButton * stateButton;
+        QWinTaskbarProgress * stateProgress;
+    #endif
 };
 
 #endif // PLAYER_H

@@ -1,17 +1,26 @@
 #include "player.h"
 #include <qdebug.h>
+#include <qwindow.h>
 
 Player * Player::self = 0;
 
-Player * Player::instance(QObject * parent) {
+Player * Player::instance(QWidget * parent) {
     if(!self)
         self = new Player(parent);
     return self;
 }
 
-Player::Player(QObject * parent) : AudioPlayer(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
+Player::Player(QWidget * parent) : AudioPlayer(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
     stopButton(0), likeButton(0), muteButton(0), prevVolumeVal(0), time_forward(true), extended_format(true), current_model(0), current_item(0)
 {
+    #ifdef Q_OS_WIN
+        stateButton = new QWinTaskbarButton(parent);
+        parent -> winId(); // generate native object for windowHandle()
+        stateButton -> setWindow(parent -> windowHandle());
+        stateProgress = stateButton -> progress();
+        stateProgress -> setMinimum(0);
+    #endif
+
     setNotifyInterval(500);
     connect(this, SIGNAL(stateChanged(MediaState)), this, SLOT(onStateChanged(MediaState)));
     connect(this, SIGNAL(mediaStatusChanged(MediaStatus)), this, SLOT(onMediaStatusChanged(MediaStatus)));
@@ -168,6 +177,20 @@ void Player::setTimePanelVal(int millis) {
 }
 
 void Player::updateControls(bool played, bool paused, bool stopped) {
+    #ifdef Q_OS_WIN
+        stateProgress -> setVisible(stopped);
+        stateButton -> setOverlayIcon(QIcon(
+            !stopped ? ":stop" : !played ? ":play" : ":pause"
+        ));
+
+        if (!played)
+            stateProgress -> resume();
+
+        if (!paused)
+            stateProgress -> pause();
+    #endif
+
+
     playButton -> setVisible(played);
     pauseButton -> setVisible(paused);
     stopButton -> setVisible(stopped);
@@ -226,6 +249,11 @@ void Player::setTrackbarMax(int duration) {
         extended_format = Duration::hasHours(duration);
 //        slider -> setDisabled(!isSeekable());
         slider -> setMaximum(duration);
+
+        #ifdef Q_OS_WIN
+            stateProgress -> setVisible(true);
+            stateProgress -> setMaximum(duration);
+        #endif
     }
 }
 
@@ -261,10 +289,14 @@ void Player::unmuteCheck(int val) {
 }
 
 void Player::changeTrackbarValue(int pos) {
+    #ifdef Q_OS_WIN
+        stateProgress -> setValue(pos);
+    #endif
+
     emit setPosition(pos);
 }
 
-void Player::onStateChanged(MediaState newState) {
+void Player::onStateChanged(MediaState newState) {   
     switch(newState) {
         case StoppedState: {
             slider -> blockSignals(true);
