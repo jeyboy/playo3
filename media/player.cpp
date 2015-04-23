@@ -179,9 +179,13 @@ void Player::setTimePanelVal(int millis) {
 void Player::updateControls(bool played, bool paused, bool stopped) {
     #ifdef Q_OS_WIN
         stateProgress -> setVisible(stopped);
-        stateButton -> setOverlayIcon(QIcon(
-            !stopped ? ":stop" : !played ? ":play" : ":pause"
-        ));
+
+        if (!stopped)
+            stateButton -> setOverlayIcon(QIcon());
+        else
+            stateButton -> setOverlayIcon(QIcon(
+                !played ? ":task_play" : ":task_pause"
+            ));
 
         if (!played)
             stateProgress -> resume();
@@ -231,6 +235,10 @@ void Player::invertTimeCountdown() {
 }
 
 void Player::setTrackbarValue(int pos) {
+    #ifdef Q_OS_WIN
+        stateProgress -> setValue(pos);
+    #endif
+
     setTimePanelVal(pos);
 
     slider -> blockSignals(true);

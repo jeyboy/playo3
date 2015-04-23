@@ -50,5 +50,7 @@
         <file alias="drop_on">images/controls/drop_on.png</file>
         <file alias="rotate_off">images/controls/rotate_off.png</file>
         <file alias="rotate_on">images/controls/rotate_on.png</file>
+        <file alias="task_pause">images/elements/taskbar_pause.png</file>
+        <file alias="task_play">images/elements/taskbar_play.png</file>
     </qresource>
 </RCC>
