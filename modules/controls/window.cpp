@@ -8,7 +8,8 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),
     halfBorderWidth(Stylesheets::borderWidth / 2), background(new QPixmap(":main")),
      resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
-     childInAction(false), skipChildAction(false) {
+     childInAction(false), skipChildAction(false)
+{
 
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
@@ -88,6 +89,7 @@ void MainWindow::toggleWindowMostTop() {
 
 void MainWindow::resizeEvent(QResizeEvent * event) {
     QMainWindow::resizeEvent(event);
+
     Stylesheets::calcBorderRect(rect(), borderRect);
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
@@ -271,9 +273,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-//    QMainWindow::paintEvent(event);
     bool isResizing = (resizeFlagX || resizeFlagY);
     QPainter painter(this);
+
     painter.setBrush(brush);
     if (!isResizing) {
         painter.setPen(Stylesheets::pen);
@@ -283,7 +285,8 @@ void MainWindow::paintEvent(QPaintEvent * event) {
     painter.setPen(isResizing ? Stylesheets::resizePen : Stylesheets::bevelPen);
     painter.drawPixmap(backRect, *background);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    event -> accept();
+
+    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {

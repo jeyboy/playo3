@@ -83,6 +83,21 @@ void WindowTitle::addCloseButton(const QObject * receiver, const char * slot) {
     addCustomButton("Close", QPixmap(":close_button"), QPixmap(":close_button_hover"), receiver, slot ? slot : SLOT(close()));
 }
 
+void WindowTitle::setText(const QString & text) {
+    fullTitle = text;
+    int offset;
+
+    if (titleLabel -> isVertical()) {
+        offset = (((QGridLayout *)layout()) -> rowCount() - 1) * button_height + 15; // its little inacurrate
+        offset = height() - offset;
+    } else {
+        offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
+        offset = width() - offset;
+    }
+
+    titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, offset));
+}
+
 void WindowTitle::setVertical(bool isVertical) {
     ((TitleLayout *)layout()) -> setVertical(isVertical);
     titleLabel -> setVertical(isVertical);
@@ -93,6 +108,13 @@ void WindowTitle::setVertical(bool isVertical) {
         setStyleSheet("#" + objectName() + " { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
         setContentsMargins(hMargins);
     }
+}
+
+void WindowTitle::invertWindowState() {
+    if (parentWidget() -> isMaximized())
+        parentWidget() -> showNormal();
+    else
+        parentWidget() -> showMaximized();
 }
 
 void WindowTitle::paintEvent(QPaintEvent *) {

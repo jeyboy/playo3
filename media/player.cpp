@@ -1,6 +1,5 @@
 #include "player.h"
 #include <qdebug.h>
-#include <qwindow.h>
 
 Player * Player::self = 0;
 
@@ -105,9 +104,9 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
         if (start > 0)
             setStartPosition(start);
 
-        if (isPlayed())
+        if (isPlayed()) {
             updateItemState(true);
-        else {
+        } else {
             retVal = false;
             setItemState(ItemState::played);
         }

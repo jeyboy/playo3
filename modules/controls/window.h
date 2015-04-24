@@ -5,7 +5,6 @@
 #include <qpainter.h>
 
 #include "modules/controls/window_title.h"
-#include "misc/screen.h"
 
 namespace Playo3 {
     class MainWindow : public QMainWindow {

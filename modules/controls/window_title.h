@@ -1,15 +1,16 @@
 #ifndef WINDOW_TITLE
 #define WINDOW_TITLE
 
-#include <QWidget>
 #include <QStyleOption>
 #include <QPainter>
 #include <qevent.h>
 #include <qdatetime.h>
+
 #include "hoverable_label.h"
 #include "drop_button.h"
 #include "title_layout.h"
 #include "rotate_label.h"
+#include "misc/screen.h"
 
 namespace Playo3 {
     class WindowTitle : public QWidget {
@@ -24,31 +25,13 @@ namespace Playo3 {
         void addMaxiButton(const QObject * receiver = 0, const char * slot = 0);
         void addCloseButton(const QObject * receiver = 0, const char * slot = 0);
 
-        inline void setText(const QString & text) {
-            fullTitle = text;
-            int offset;
-
-            if (titleLabel -> isVertical()) {
-                offset = (((QGridLayout *)layout()) -> rowCount() - 1) * button_height + 15; // its little inacurrate
-                offset = height() - offset;
-            } else {
-                offset = (((QGridLayout *)layout()) -> columnCount()) * (button_height + (((QGridLayout *)layout()) -> horizontalSpacing())); // its little inacurrate
-                offset = width() - offset;
-            }
-
-            titleLabel -> setText(titleLabel -> fontMetrics().elidedText(text, Qt::ElideRight, offset));
-        }
+        void setText(const QString & text);
         inline void setTitleToolTip(QString str) { titleLabel -> setToolTip(str); }
         void setVertical(bool isVertical);
         inline bool isVertical() const { return titleLabel -> isVertical(); }
 
     public slots:
-        inline void invertWindowState() {
-            if (parentWidget() -> isMaximized())
-                parentWidget() -> showNormal();
-            else parentWidget() -> showMaximized();
-        }
-
+        void invertWindowState();
     signals:
         void doubleClicked();
     protected:

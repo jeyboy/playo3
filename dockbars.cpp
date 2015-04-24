@@ -277,7 +277,7 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             return;
         }
 
-        if (reason == Player::init || v -> isPlaylist())
+        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist()))
             v -> execNextIndex();
     }
 }

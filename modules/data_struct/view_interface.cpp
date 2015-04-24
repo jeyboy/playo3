@@ -345,7 +345,12 @@ void IView::findAndExecIndex(bool deleteCurrent) {
     }
     else findExecutable(node);
 
-    execIndex(node);
+    if (node.isValid()) {
+        if (!execIndex(node)) {
+            QApplication::processEvents();
+            findAndExecIndex(false);
+        }
+    }
 }
 
 bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePrevAction) {

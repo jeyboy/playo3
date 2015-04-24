@@ -90,7 +90,7 @@ namespace Playo3 {
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
 
-        ToolBars(QObject * parent) : QObject(parent),
+        inline ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
