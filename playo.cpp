@@ -176,7 +176,7 @@ void Playo::receiveMessage(QString message) {
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
-    if (Settings::instance() -> isOpenDropPointInTab()) {
+    if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::instance() -> isOpenDropPointInTab()) {
         ViewSettings settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
         DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings);
         addDockWidget(Qt::TopDockWidgetArea, bar);
