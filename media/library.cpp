@@ -38,7 +38,7 @@ Library::~Library() {
 void Library::setItemState(const QModelIndex & ind, int state) {
     if (state & ItemFields::liked)
         state = 1;
-    else if (state & ItemFields::listened)
+    else if (state & ItemFields::listened || state == -ItemFields::liked)
         state = 0;
     else return;
 

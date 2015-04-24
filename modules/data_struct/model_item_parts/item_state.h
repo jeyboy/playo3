@@ -40,10 +40,11 @@ namespace Playo3 {
             bool reset();
             bool setListened();
             bool setLiked();
+            bool unsetLiked();
 
             inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
             inline int setBit(int val, int pos) { return (item_state = val | pos) & pos; }
-            int unsetBit(int val, int pos) { return (item_state = val & (~(pos))); }
+            int unsetBit(int val, int pos) { return (item_state = val - pos); } //& (~(pos))); }
 
             int item_state;
     };

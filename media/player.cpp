@@ -97,6 +97,8 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
         current_model = (IModel *)item.model();
         current_item = current_model -> item(item);
 
+        likeButton -> setChecked(current_item -> is(ItemState::liked));
+
         setMedia(current_item -> toUrl());
         play();
 
@@ -279,7 +281,10 @@ void Player::start() {
 }
 
 void Player::like() {
-    setItemState(ItemState::liked);
+    if (current_item -> is(ItemState::liked))
+        setItemState(-ItemState::liked);
+    else
+        setItemState(ItemState::liked);
 }
 
 void Player::mute() {

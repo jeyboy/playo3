@@ -259,7 +259,7 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 }
 
 QToolBar * ToolBars::createMediaBar() {
-    QToolBar* ptb = precreateToolBar("Media");
+    QToolBar * ptb = precreateToolBar("Media");
 
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
     Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
@@ -271,11 +271,20 @@ QToolBar * ToolBars::createMediaBar() {
 }
 
 QToolBar * ToolBars::createAdditionalMediaBar() {
-    QToolBar* ptb = precreateToolBar("Media+");
+    QToolBar * ptb = precreateToolBar("Media+");
 
     //TODO: add del versions od buttons
     ptb -> addAction(QIcon(":/prev"), "Prev track", Dockbars::instance(), SLOT(prevExecTriggering()));
-    Player::instance() -> setLikeButton(ptb -> addAction(QIcon(":/like"), "Liked"));
+
+    QIcon ico;
+    ico.addPixmap(QPixmap(":/like"), QIcon::Normal);
+    ico.addPixmap(QPixmap(":/unlike"), QIcon::Normal, QIcon::On);
+
+    QAction * act = ptb -> addAction(ico, "Liked");
+    act -> setCheckable(true);
+
+    Player::instance() -> setLikeButton(act);
+
     ptb -> addAction(QIcon(":/next"), "Next track", Dockbars::instance(), SLOT(nextExecTriggering()));
     ptb -> adjustSize();
 
@@ -283,7 +292,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 }
 
 QToolBar * ToolBars::createPositionMediaBar() {
-    QToolBar* ptb = precreateToolBar("Media+Position", true);
+    QToolBar * ptb = precreateToolBar("Media+Position", true);
 
     MetricSlider * slider = new MetricSlider(ptb);
     slider -> setTickInterval(60000);
@@ -299,7 +308,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 }
 
 QToolBar * ToolBars::createTimeMediaBar() {
-    QToolBar* ptb = precreateToolBar("Media+Time");
+    QToolBar * ptb = precreateToolBar("Media+Time");
 
     ClickableLabel * timeLabel = new ClickableLabel("After click invert showing time" ,"00:00", ptb);
     timeLabel -> setStyleSheet("QLabel { font-weight: bold; font-size: 12px; }");
