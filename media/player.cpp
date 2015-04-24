@@ -189,8 +189,10 @@ void Player::updateControls(bool played, bool paused, bool stopped) {
                 !played ? ":task_play" : ":task_pause"
             ));
 
-        if (!played)
+        if (!played) {
             stateProgress -> resume();
+            stateButton -> setOverlayAccessibleDescription(current_item -> title().toString());
+        }
 
         if (!paused)
             stateProgress -> pause();
