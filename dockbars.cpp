@@ -259,7 +259,7 @@ void Dockbars::updateActiveTabIcon() {
 
     if (tabData.index != -1) {
         tabData.tabbar -> setTabIcon(tabData.index, QIcon(":played_tab"));
-        tabData.tabbar -> setIconSize(QSize(32,16));
+        tabData.tabbar -> setIconSize(QSize(14, 14));
 
         if (lastTabData.index != -1)
             lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
