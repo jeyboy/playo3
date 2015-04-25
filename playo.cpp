@@ -14,6 +14,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     setWindowTitle("Playo");
     setAcceptDrops(true);
 
+    setTabShape(QTabWidget::Rounded);
+
     //    setAttribute(Qt::WA_DeleteOnClose);
 
     initialization();

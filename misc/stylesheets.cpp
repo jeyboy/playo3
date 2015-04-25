@@ -322,92 +322,9 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "    background: #ff0000;"
                 "}"
 
-//                "QMainWindow::separator {"
-//                "   background: red;"
-//                "}"
-
-//                "QToolBar::handle {"
-//                "    margin-top: 20px;"
-//                "}"
-
-                "QTabBar::tab {"
-                "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                "                               stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
-                "                               stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
-                "   border: 2px solid #C4C4C3;"
-                "   border-bottom-color: #C2C7CB;"
-                "}"
-
-                "QTabBar::tab:top {"
-                "   border-top-left-radius: 4px;"
-                "   border-top-right-radius: 4px;"
-                "   min-width: 50px;"
-                "}"
-
-                "QTabBar::tab:bottom {"
-                "   border-bottom-left-radius: 4px;"
-                "   border-bottom-right-radius: 4px;"
-                "   min-width: 50px;"
-                "}"
-
-                "QTabBar::tab:left {"
-                "   border-top-right-radius: 4px;"
-                "   border-bottom-right-radius: 4px;"
-                "   min-height: 50px;"
-                "}"
-
-                "QTabBar::tab:right {"
-                "   border-top-left-radius: 4px;"
-                "   border-bottom-left-radius: 4px;"
-                "   min-height: 50px;"
-                "}"
-
-                "QTabBar::tab:selected, QTabBar::tab:hover {"
-                "   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                "                               stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
-                "                               stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
-                "}"
-
-                "QTabBar::tab:selected {"
-                "   border-color: #9B9B9B;"
-                "   border-bottom-color: #C2C7CB;" /* same as pane color */
-                "}"
-
-                "QTabBar::tab:!selected {"
-                "   margin-top: 2px;" /* make non-selected tabs look smaller */
-                "}"
-
-                /* make use of negative margins for overlapping tabs */
-                "QTabBar::tab:selected {"
-                "   margin-left: -4px;"
-                "   margin-right: -4px;"
-                "}"
-
-                "QTabBar::tab:first:selected {"
-                "   margin-left: 0;"
-                "}"
-
-                "QTabBar::tab:last:selected {"
-                "   margin-right: 0;"
-                "}"
-
-//                "QTabBar::tab:top, QTabBar::tab:bottom {"
-//                "   padding-left: 10px;"
-//                "   padding-right: 10px;"
-//                "}"
-
-//                "QTabBar::tab:left, QTabBar::tab:right {"
-//                "   top: 10px;"
-//                "   bottom: 10px;"
-//                "}"
-
-                "QTabBar::tab:only-one {"
-                "   margin: 0;"
-                "}"
-
-//                "QTabBar::tear {"
-//                "    image: none;"
-//                "}"
+////                "QMainWindow::separator {"
+////                "   background: red;"
+////                "}"
 
                 "QTabBar::scroller {" /* the width of the scroll buttons */
                 "    width: 20px;"
@@ -418,17 +335,24 @@ QString Stylesheets::mainWindowTabsStyle() {
 //                    "    border-width: 2px;"
 //                    "}"
 
-//                    "QTabBar QToolButton::right-arrow {" /* the arrow mark in the tool buttons */
-//                    "    image: url(rightarrow.png);"
-//                    "}"
+//                "QTabBar QToolButton::right-arrow {" /* the arrow mark in the tool buttons */
+//                "    image: url(rightarrow.png);"
+//                "}"
 
-//                    "QTabBar QToolButton::left-arrow {"
-//                    "    image: url(leftarrow.png);"
-//                    "}"
-
+//                "QTabBar QToolButton::left-arrow {"
+//                "    image: url(leftarrow.png);"
+//                "}"
 
                 "QTabBar {"
                 "   alignment: center;"
+                "}"
+
+                "QTabBar::tab:top, QTabBar::tab:bottom {"
+                "   height: 20px;"
+                "}"
+
+                "QTabBar::tab:left, QTabBar::tab:right {"
+                "   width: 20px;"
                 "}"
     ) + treeViewStyles() + listViewStyles() + menuStyles();
 }

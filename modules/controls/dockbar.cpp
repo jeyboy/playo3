@@ -135,6 +135,5 @@ void DockBar::setTabBarSettings() {
 
     for(; it != tabbars.end(); it++) {
         (*it) -> setElideMode(Qt::ElideRight);
-        (*it) -> setContentsMargins(3, 3, 3, 3);
     }
 }
