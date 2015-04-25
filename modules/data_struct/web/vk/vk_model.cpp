@@ -146,7 +146,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
 void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::instance() -> play();
+    Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }
 
 int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
