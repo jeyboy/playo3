@@ -137,3 +137,21 @@ void DockBar::setTabBarSettings() {
         (*it) -> setElideMode(Qt::ElideRight);
     }
 }
+
+TabifyParams DockBar::tabIndex() const {
+    QWidget * widget = parentWidget();
+
+    if (widget) {
+        QList<QTabBar *> tabbars = widget -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+        QList<QTabBar *>::Iterator it = tabbars.begin();
+
+        for(; it != tabbars.end(); it++) {
+            for(int index = 0; index < (*it) -> count(); index++) {
+                if (this == ((DockBar *)((*it) -> tabData(index).toInt())))
+                    return TabifyParams(*it, index);
+            }
+        }
+    }
+
+    return TabifyParams();
+}

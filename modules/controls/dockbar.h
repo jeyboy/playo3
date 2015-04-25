@@ -57,19 +57,7 @@ namespace Playo3 {
             if (area != Qt::NoDockWidgetArea)
                 setTabBarSettings();
         }
-        inline TabifyParams tabIndex() const {
-            QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
-            QList<QTabBar *>::Iterator it = tabbars.begin();
-
-            for(; it != tabbars.end(); it++) {
-                for(int index = 0; index < (*it) -> count(); index++) {
-                    if (this == ((DockBar *)((*it) -> tabData(index).toInt())))
-                        return TabifyParams(*it, index);
-                }
-            }
-
-            return TabifyParams();
-        }
+        TabifyParams tabIndex() const;
 
     protected:
 //        bool event(QEvent *event);

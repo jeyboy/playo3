@@ -233,24 +233,16 @@ QString Stylesheets::treeViewStyles() {
                 "   border-radius: 8px;"
                 "}"
 
-//                "QTreeView::indicator {"
-//                "   width: 18px;"
-//                "   height: 18px;"
+//                "QTreeView::branch:has-children:!has-siblings:closed,"
+//                "QTreeView::branch:closed:has-children:has-siblings {"
+//                "   border-image: none;"
+//                "   image: url(:tree_closed_branch);"
 //                "}"
-//                "QTreeView::indicator:unchecked {"
-//                "   image: url(:/elems/check_blank);"
-//                "}"
-//                "QTreeView::indicator:checked {"
-//                "   image: url(:/elems/check_fill);"
-//                "}"
-//                "QTreeView::indicator:checked:hover {"
-//                "   image: url(:/elems/check_trist);"
-//                "}"
-//                "QTreeView::indicator:indeterminate:hover {"
-//                "   image: url(:/elems/check_trist);"
-//                "}"
-//                "QTreeView::indicator:indeterminate {"
-//                "   image: url(:/elems/check_fill);"
+
+//                "QTreeView::branch:open:has-children:!has-siblings,"
+//                "QTreeView::branch:open:has-children:has-siblings  {"
+//                "   border-image: none;"
+//                "   image: url(:tree_opened_branch);"
 //                "}"
               ) + scrollStyles();
 }
@@ -311,7 +303,7 @@ QString Stylesheets::toolbarButtonStyle() {
 
                 "QToolButton[error=\"true\"], QToolButton:hover[error=\"true\"] {"
                     "color: #FFF;"
-                    "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:1 #FF0000);"
+                    "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:1 #AA0000);"
                 "}"
               );
 }

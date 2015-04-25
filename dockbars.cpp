@@ -251,6 +251,8 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 
 void Dockbars::updateActiveTabIcon() {
+    if (!played) return;
+
     TabifyParams tabData = played -> tabIndex();
 
     if (tabData == lastTabData) return;
