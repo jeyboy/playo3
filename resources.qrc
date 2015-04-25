@@ -57,7 +57,5 @@
         <file alias="check_fill">images/controls/check/check_fill.png</file>
         <file alias="check_fill_disabled">images/controls/check/check_fill_disabled.png</file>
         <file alias="check_tristate">images/controls/check/check_trist.png</file>
-        <file alias="tab_next">images/controls/check/next.png</file>
-        <file alias="tab_prev">images/controls/check/prev.png</file>
     </qresource>
 </RCC>
