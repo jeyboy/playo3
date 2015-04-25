@@ -54,8 +54,11 @@ namespace Playo3 {
         inline void createNewBar() { showViewSettingsDialog(); }
         void editActiveBar() { showViewSettingsDialog(active); }
         inline void scrollToActive() {
-            IView * v = view(active);
-            if (v) v -> scrollToActive();
+            if (played) {
+                IView * v = view(played);
+                activate(played);
+                if (v) v -> scrollToActive();
+            }
         }
 
         void onNextItemNeeded(Player::Reason);
