@@ -256,10 +256,14 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>40</y>
+             <y>140</y>
              <width>311</width>
              <height>17</height>
             </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: green;
+font-weight: bold;</string>
            </property>
            <property name="text">
             <string>Show checkboxes for batch operations</string>
@@ -269,7 +273,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>70</y>
+             <y>40</y>
              <width>151</width>
              <height>17</height>
             </rect>
@@ -282,7 +286,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>100</y>
+             <y>70</y>
              <width>311</width>
              <height>17</height>
             </rect>
@@ -324,7 +328,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>130</y>
+             <y>100</y>
              <width>311</width>
              <height>17</height>
             </rect>

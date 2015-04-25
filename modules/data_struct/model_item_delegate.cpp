@@ -122,10 +122,8 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
 //    painter -> setClipRect(bodyRect);
     painter -> drawRoundedRect(bodyRect, angle, angle);
 
-    if (checkable.isValid()) {
+    if (checkable.isValid())
         left_offset += 14;
-        drawCheckbox(painter, option, index);
-    }
 
     textColor = is_selected ?
             Settings::instance() -> selectedItemTextColor()
@@ -236,6 +234,9 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         painter -> setBrush(hoverColor);
         painter -> drawRoundedRect(bodyRect, angle, angle);
     }
+
+    if (checkable.isValid())
+        drawCheckbox(painter, option, index);
 
     painter -> restore();
 }
