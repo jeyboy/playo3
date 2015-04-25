@@ -233,17 +233,29 @@ QString Stylesheets::treeViewStyles() {
                 "   border-radius: 8px;"
                 "}"
 
-//                "QTreeView::branch:has-children:!has-siblings:closed,"
-//                "QTreeView::branch:closed:has-children:has-siblings {"
-//                "   border-image: none;"
-//                "   image: url(:tree_closed_branch);"
-//                "}"
+                "QTreeView::branch:has-children:!has-siblings:closed,"
+                "QTreeView::branch:closed:has-children:has-siblings {"
+                "   border-image: none;"
+                "   image: url(:tree_closed);"
+                "}"
 
-//                "QTreeView::branch:open:has-children:!has-siblings,"
-//                "QTreeView::branch:open:has-children:has-siblings  {"
-//                "   border-image: none;"
-//                "   image: url(:tree_opened_branch);"
-//                "}"
+                "QTreeView::branch:open:has-children:!has-siblings,"
+                "QTreeView::branch:open:has-children:has-siblings  {"
+                "   border-image: none;"
+                "   image: url(:tree_opened);"
+                "}"
+
+               "QTreeView::branch:has-children:!has-siblings:closed:hover,"
+               "QTreeView::branch:closed:has-children:has-siblings:hover {"
+               "   border-image: none;"
+               "   image: url(:tree_closed_hover);"
+               "}"
+
+               "QTreeView::branch:open:has-children:!has-siblings:hover,"
+               "QTreeView::branch:open:has-children:has-siblings:hover  {"
+               "   border-image: none;"
+               "   image: url(:tree_opened_hover);"
+               "}"
               ) + scrollStyles();
 }
 

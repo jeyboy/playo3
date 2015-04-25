@@ -57,5 +57,9 @@
         <file alias="check_fill">images/controls/check/check_fill.png</file>
         <file alias="check_fill_disabled">images/controls/check/check_fill_disabled.png</file>
         <file alias="check_tristate">images/controls/check/check_trist.png</file>
+        <file alias="tree_closed">images/controls/tree/tree_closed.png</file>
+        <file alias="tree_closed_hover">images/controls/tree/tree_closed_hover.png</file>
+        <file alias="tree_opened">images/controls/tree/tree_opened.png</file>
+        <file alias="tree_opened_hover">images/controls/tree/tree_opened_hover.png</file>
     </qresource>
 </RCC>
