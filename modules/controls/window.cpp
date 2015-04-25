@@ -273,6 +273,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
+//    setUpdatesEnabled(false)
+
     bool isResizing = (resizeFlagX || resizeFlagY);
     QPainter painter(this);
 

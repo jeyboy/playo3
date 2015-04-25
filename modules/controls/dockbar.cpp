@@ -1,4 +1,5 @@
 #include "dockbar.h"
+
 #include <qdatetime.h>
 #include <qdebug.h>
 
@@ -126,4 +127,14 @@ void DockBar::paintEvent(QPaintEvent * event) {
 
     painter.restore();
     event -> accept();
+}
+
+void DockBar::setTabBarSettings() {
+    QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+    QList<QTabBar *>::Iterator it = tabbars.begin();
+
+    for(; it != tabbars.end(); it++) {
+        (*it) -> setElideMode(Qt::ElideRight);
+        (*it) -> setContentsMargins(3, 3, 3, 3);
+    }
 }

@@ -32,9 +32,19 @@ namespace Playo3 {
         QDockWidget * linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs);
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
+
+        //        You can check if some part of dock widget is visible using the following code:
+        //        bool really_visible = !widget->visibleRegion().isEmpty();
+        //        I tested that result value depends on which dock widget tab is active.
         inline DockBar * current() const { return active; }
+
         inline void setActive(DockBar * bar) { active = bar; }
-        inline void setPlayed(DockBar * bar) { played = bar; }
+        inline void setPlayed(DockBar * bar) {
+            if (bar == played) return;
+
+            if ((played = bar))
+                updateActiveTabIcon();
+        }
         inline void activate(DockBar * bar) {
             if ((active = bar))
                 bar -> raise();
@@ -47,6 +57,7 @@ namespace Playo3 {
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);
     public slots:
+        void updateActiveTabIcon();
         void updateAllViews();
         void hideAll();
         void showAll();
@@ -75,6 +86,7 @@ namespace Playo3 {
     private slots:
         void barClosed();
     private:
+        TabifyParams lastTabData;
         DockBar * active, * played, * common;
 
         Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {

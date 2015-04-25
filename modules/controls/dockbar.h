@@ -1,12 +1,23 @@
 #ifndef DOCKBAR
 #define DOCKBAR
 
-#include <QDockWidget>
+#include <qdockwidget.h>
+
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
 #include "modules/controls/spinner.h"
 
 namespace Playo3 {
+    struct TabifyParams {
+        TabifyParams() : tabbar(0), index(-1) {}
+        TabifyParams(QTabBar * bar, int ind) : tabbar(bar), index(ind) {}
+
+        bool operator == (TabifyParams & oth) { return index == oth.index && tabbar == oth.tabbar; }
+
+        QTabBar * tabbar;
+        int index;
+    };
+
     class DockBar : public QDockWidget {
         Q_OBJECT
     public:
@@ -46,6 +57,19 @@ namespace Playo3 {
             if (area != Qt::NoDockWidgetArea)
                 setTabBarSettings();
         }
+        inline TabifyParams tabIndex() const {
+            QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+            QList<QTabBar *>::Iterator it = tabbars.begin();
+
+            for(; it != tabbars.end(); it++) {
+                for(int index = 0; index < (*it) -> count(); index++) {
+                    if (this == ((DockBar *)((*it) -> tabData(index).toInt())))
+                        return TabifyParams(*it, index);
+                }
+            }
+
+            return TabifyParams();
+        }
 
     protected:
 //        bool event(QEvent *event);
@@ -54,14 +78,7 @@ namespace Playo3 {
         void paintEvent(QPaintEvent *);
 
     private:
-        inline void setTabBarSettings() {
-            QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
-            foreach(QTabBar * tab, tabbars) {
-               tab -> setElideMode(Qt::ElideRight);
-               tab -> setContentsMargins(3, 3, 3, 3);
-//               tab -> setMovable(true);
-            }
-        }
+        void setTabBarSettings();
 
         bool sticked, inProcess;
         WindowTitle * titleWidget;

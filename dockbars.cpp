@@ -250,6 +250,21 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 //}
 
+void Dockbars::updateActiveTabIcon() {
+    TabifyParams tabData = played -> tabIndex();
+
+    if (tabData == lastTabData) return;
+
+    if (tabData.index != -1) {
+        tabData.tabbar -> setTabIcon(tabData.index, QIcon(":played_tab"));
+
+        if (lastTabData.index != -1)
+            lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
+
+        lastTabData = tabData;
+    }
+}
+
 void Dockbars::updateAllViews() { // update for item height
     QList<IView *> views = parent() -> findChildren<IView *>();
     int iconDimension = Settings::instance() -> iconHeight();

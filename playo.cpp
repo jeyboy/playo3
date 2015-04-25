@@ -92,6 +92,7 @@ void Playo::initialization() {
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
+    Dockbars::instance() -> updateActiveTabIcon();
 }
 
 QMenu * Playo::createPopupMenu() {
