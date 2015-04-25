@@ -37,15 +37,18 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     FolderItem * node = item<FolderItem>(ind);
     int count = filesRoutine(list, node, row);
 
-    rootItem -> updateItemsCountInBranch(count);
-    if (count > 0) emit itemsCountChanged(count);
+    if (count > 0) {
+        rootItem -> updateItemsCountInBranch(count);
+        emit itemsCountChanged(count);
+    }
+    else node -> removeYouself();
 }
 
 int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
-    {
+    if (!folderList.isEmpty()) {
         QFileInfoList::Iterator it = folderList.begin();
 
         for(; it != folderList.end(); it++)
@@ -53,13 +56,20 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
-    QFileInfoList::Iterator it = fileList.begin();
 
-    res += fileList.size();
-    for(; it != fileList.end(); it++)
-        new FileItem((*it).path(), (*it).fileName(), node);
+    if (!fileList.isEmpty()) {
+        QFileInfoList::Iterator it = fileList.begin();
 
-    node -> updateItemsCountInBranch(fileList.size());
+        res += fileList.size();
+        for(; it != fileList.end(); it++)
+            new FileItem((*it).path(), (*it).fileName(), node);
+
+        node -> updateItemsCountInBranch(fileList.size());
+    }
+
+    if (res == 0)
+        node -> removeYouself();
+
     return res;
 }
 
