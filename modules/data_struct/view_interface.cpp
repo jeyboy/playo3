@@ -415,7 +415,7 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
 }
 
 void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
-    int total = index_list.size(), temp = total;
+    float total = index_list.size(), temp = total;
 
     if (inProcess)
         emit mdl -> moveInProcess();
@@ -450,13 +450,14 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
 
     blockRepaint = true; // list type sometimes trying redraw yourself in process :(
     QModelIndexList::Iterator eit = --index_list.end();
+    total /= 100.0;
 
     if (mdl -> containerType() == list || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), none, true);
 
             if (inProcess)
-                emit mdl -> setProgress(--temp * 100.0 / total);
+                emit mdl -> setProgress(--temp / total);
         }
     } else {
         for (; eit != index_list.begin(); --eit) {
@@ -464,7 +465,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
                 emit threadedRowRemoving((*eit), none, true);
             else
                 removeRow((*eit), none, true);
-            emit mdl -> setProgress(--temp * 100.0 / total);
+            emit mdl -> setProgress(--temp / total);
         }
     }
     blockRepaint = false;

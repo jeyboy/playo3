@@ -28,15 +28,18 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     FolderItem * node = item<FolderItem>(ind);
     int count = filesRoutine(list, node, row);
 
-    node -> backPropagateItemsCountInBranch(count);
-    if (count > 0) emit itemsCountChanged(count);
+    if (count > 0) {
+        node -> backPropagateItemsCountInBranch(count);
+        emit itemsCountChanged(count);
+    }
+    else node -> removeYouself();
 }
 
 int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
-    {
+    if (!folderList.isEmpty()) {
         QFileInfoList::Iterator it = folderList.begin();
 
         for(; it != folderList.end(); it++)
@@ -44,13 +47,19 @@ int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
     }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
-    QFileInfoList::Iterator it = fileList.begin();
 
-    res += fileList.size();
-    for(; it != fileList.end(); it++)
-        new FileItem((*it).fileName(), node);
+    if (!fileList.isEmpty()) {
+        QFileInfoList::Iterator it = fileList.begin();
 
-    node -> updateItemsCountInBranch(res);
+        res += fileList.size();
+        for(; it != fileList.end(); it++)
+            new FileItem((*it).fileName(), node);
+    }
+
+    if (res > 0)
+        node -> updateItemsCountInBranch(res);
+    else
+        node -> removeYouself();
     return res;
 }
 
@@ -60,9 +69,9 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos
 
     for(; it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
-        if (file.isDir())
+        if (file.isDir()) {
             res += filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
-        else {
+        } else {
             if (Extensions::instance() -> respondToExtension(file.suffix())) {
                 res++;
                 new FileItem(file.fileName(), node, pos);
