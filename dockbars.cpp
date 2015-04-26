@@ -163,6 +163,7 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
     DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
+    connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon()));
 //    active = dock;
 //    dock -> showFullScreen();
 
@@ -255,11 +256,11 @@ void Dockbars::updateActiveTabIcon() {
 
     TabifyParams tabData = played -> tabIndex();
 
-    if (tabData == lastTabData) return;
-
     if (tabData.index != -1) {
         tabData.tabbar -> setTabIcon(tabData.index, QIcon(":played_tab"));
         tabData.tabbar -> setIconSize(QSize(14, 14));
+
+        if (tabData == lastTabData) return;
 
         if (lastTabData.index != -1)
             lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
