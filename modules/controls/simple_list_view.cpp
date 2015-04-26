@@ -3,15 +3,15 @@
 SimpleListView::SimpleListView(QWidget *parent) : QListView(parent) {}
 
 void SimpleListView::removeSelected() {
-    foreach(QModelIndex index, selectedIndexes()) {
-        model() -> removeRow(index.row(), index.parent());
-    }
+    QModelIndexList::Iterator it = selectedIndexes().begin();
+
+    for(; it != selectedIndexes().end(); it++)
+        model() -> removeRow((*it).row(), (*it).parent());
 }
 
 void SimpleListView::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_Delete) {
+    if (event -> key() == Qt::Key_Delete)
         removeSelected();
-    }
 
     QListView::keyPressEvent(event);
 }

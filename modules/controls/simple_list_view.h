@@ -1,8 +1,8 @@
 #ifndef SIMPLE_LIST_VIEW_H
 #define SIMPLE_LIST_VIEW_H
 
-#include <QListView>
-#include <QKeyEvent>
+#include <qlistview.h>
+#include <qevent.h>
 
 class SimpleListView : public QListView {
     Q_OBJECT

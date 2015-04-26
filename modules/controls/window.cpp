@@ -241,8 +241,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             skipChildAction = true;
             QPoint parentOffset = (geometry().topLeft() - nr.topLeft()) + (geometry().bottomRight() - nr.bottomRight());
 
-            foreach(QWidget * w, outerChilds)
-                w -> move(w -> geometry().topLeft() - parentOffset);
+            QList<QWidget *>::Iterator it = outerChilds.begin();
+
+            for(; it != outerChilds.end(); it++)
+                (*it) -> move((*it) -> geometry().topLeft() - parentOffset);
 
             skipChildAction = false;
             //////////////////////////////////////////////////
@@ -258,8 +260,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
             skipChildAction = true;
             QPoint parentOffset = (geometry().topLeft() - newRect.topLeft());
 
-            foreach(QWidget * w, outerChilds)
-                w -> move(w -> geometry().topLeft() - parentOffset);
+            QList<QWidget *>::Iterator it = outerChilds.begin();
+
+            for(; it != outerChilds.end(); it++)
+                (*it) -> move((*it) -> geometry().topLeft() - parentOffset);
 
             skipChildAction = false;
             //////////////////////////////////////////////////
