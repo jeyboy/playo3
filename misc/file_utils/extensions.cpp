@@ -17,9 +17,11 @@ Extensions::Extensions() {
     if (ext -> state) {
         activeFilter = ext -> read("active").toString("all");
         QJsonObject obj = ext -> read("filters").toObject();
+
         foreach (QString key, obj.keys()) {
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());
         }
+
     } else {
         QStringList commonfiltersList;
         commonfiltersList << "*";
