@@ -104,8 +104,6 @@ SOURCES += main.cpp\
     modules/web/socials_api/soundcloud_api.cpp \
     modules/web/socials_api/vk_api.cpp \
     modules/web/socials_api/vk_api_private.cpp \
-    modules/web/api_process.cpp \
-    modules/web/ip_checker.cpp \
     modules/web/web_api.cpp \
     modules/data_struct/web/web_item.cpp \
     modules/data_struct/web/web_folder_item.cpp \
@@ -216,9 +214,6 @@ HEADERS  += playo.h \
     modules/web/socials_api/soundcloud_api.h \
     modules/web/socials_api/vk_api.h \
     modules/web/socials_api/vk_api_private.h \
-    modules/web/api_process.h \
-    modules/web/func_container.h \
-    modules/web/ip_checker.h \
     modules/web/web_api.h \
     modules/data_struct/web/web_item.h \
     modules/data_struct/web/web_folder_item.h \
