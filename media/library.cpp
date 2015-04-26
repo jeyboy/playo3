@@ -209,13 +209,21 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
 }
 
 void Library::cancelActiveRestorations() {
-    foreach(QFutureWatcher<void> * feature, inProc.values())
-        if (feature -> isRunning())
-            feature -> cancel();
+    {
+        QList<QFutureWatcher<void> *> inProcList = inProc.values();
+        QList<QFutureWatcher<void> *>::Iterator it = inProcList.begin();
 
-    foreach(QFutureWatcher<bool> * feature, inRemoteProc.values())
-        if (feature -> isRunning())
-            feature -> cancel();
+        for(; it != inProcList.end(); it++)
+            if ((*it) -> isRunning())
+                (*it) -> cancel();
+    }
+
+    QList<QFutureWatcher<bool> *> inProcRemoteList = inRemoteProc.values();
+    QList<QFutureWatcher<bool> *>::Iterator it = inProcRemoteList.begin();
+
+    for(; it != inProcRemoteList.end(); it++)
+        if ((*it) -> isRunning())
+            (*it) -> cancel();
 }
 
 IItem * Library::indToItm(const QModelIndex & ind) {
