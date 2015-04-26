@@ -9,8 +9,6 @@
 #include "misc/file_utils/filename_conversions.h"
 
 namespace Playo3 {
-    #define IINNERCOPY 999
-
     #define IURL Qt::UserRole + 1
     #define IFULLPATH IURL + 1
     #define IPLAYABLE IFULLPATH + 1
@@ -20,7 +18,6 @@ namespace Playo3 {
     #define ITREESTR ITREEPATH + 1
     #define ISTATERESTORE ITREESTR + 1
     #define IUID ISTATERESTORE + 1
-    #define IINNERCOPYURL IUID + 1
 
 
     #define ITITLE Qt::DisplayRole

@@ -144,7 +144,7 @@ QVariant IItem::data(int column) const {
 
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
-        case IINNERCOPYURL:    return isRemote() ? QVariant() : toUrl();
+//        case IINNERCOPYURL:    return isRemote() ? QVariant() : toUrl();
         case IFOLDER:          return isContainer();
         case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
@@ -180,7 +180,7 @@ QVariant IItem::data(int column) const {
         case IREMOTE:           return isRemote();
         case ISTATE:            return visualStates();
         case IFULLPATH:         return fullPath();
-        case IINNERCOPY:        return toInnerAttrs(itemType());
+//        case IINNERCOPY:        return toInnerAttrs(itemType());
 
         default:                return QVariant();
     }
@@ -196,4 +196,13 @@ bool IItem::setData(int column, const QVariant &value) {
     }
 
     return true;
+}
+
+void IItem::packToStream(QList<QUrl> & urls, QDataStream & stream) {
+   if (!isRemote()) {
+       QUrl lastUrl = toUrl();
+       urls.append(lastUrl);
+       stream << lastUrl << false << toInnerAttrs(itemType());
+   }
+   else stream << REMOTE_DND_URL << true << toInnerAttrs(itemType());
 }

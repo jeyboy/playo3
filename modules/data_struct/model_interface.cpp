@@ -419,12 +419,11 @@ QStringList IModel::mimeTypes() const {
 }
 
 bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) { // maybe writed a little shity
+    int totalAdded = 0;
     QModelIndex dIndex;
     InnerData * data;
 
-    FolderItem * dParent;
     QHash<FolderItem *, QList<InnerData *> > dataList;
-    QList<InnerData *> l;
     bool containPath, isRemote, requirePath = !isRelative();
 
     while (!stream.atEnd()) {
@@ -447,37 +446,35 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         dIndex = parent;
 
         recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
-        dParent = item<FolderItem>(dIndex);
-
-        l = dataList.value(dParent);
-        l.append(data);
-        dataList.insert(dParent, l);
+        dataList[item<FolderItem>(dIndex)].append(data);
     }
 
-    int totalAdded = 0;
-    foreach(FolderItem * node, dataList.keys()) {
+    QList<FolderItem *> parents = dataList.keys();
+    QList<FolderItem *>::Iterator p_item = parents.begin();
+
+    for(; p_item != parents.end(); p_item++) {
         int added = 0;
-        foreach(InnerData * data, dataList.value(node)) {
+        foreach(InnerData * data, dataList.value(*p_item)) {
             beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
             switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case ITEM: {
                     added++;
-                    new FileItem(data -> attrs, node, data -> dRow);
+                    new FileItem(data -> attrs, *p_item, data -> dRow);
                     break;
                 }
                 case VK_ITEM: {
                     added++;
-                    new VkItem(data -> attrs, node, data -> dRow);
+                    new VkItem(data -> attrs, *p_item, data -> dRow);
                     break;
                 }
 //                case SOUNDCLOUD_ITEM: {
 //                    added++;
-//                    new SoundcloudItem(data -> attrs, node, data -> dRow);
+//                    new SoundcloudItem(data -> attrs, *p_item, data -> dRow);
 //                    break;
 //                }
 //                case CUE_ITEM: {
 //                    added++;
-//                    new CueItem(data -> attrs, node, data -> dRow);
+//                    new CueItem(data -> attrs, *p_item, data -> dRow);
 //                    break;
 //                }
 
@@ -490,38 +487,13 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         }
 
         totalAdded += added;
-        node -> backPropagateItemsCountInBranch(added);
+        (*p_item) -> backPropagateItemsCountInBranch(added);
     }
 
     if (totalAdded > 0) emit itemsCountChanged(totalAdded);
 
     emit spoilNeeded(parent);
     return true;
-}
-
-void IModel::proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const {
-    QUrl lastUrl;
-    QVariant temp;
-
-    QModelIndex it;
-
-    if (ind.data(IFOLDER).toBool()) {
-        for(int row = 0; ; row++) {
-            it = ind.child(row, 0);
-            if (it.isValid())
-                proceedMimeDataIndex(it, urls, stream);
-            else return;
-        }
-    } else {
-        temp = ind.data(IINNERCOPYURL);
-
-        if (temp.isValid()) {
-            lastUrl = temp.toUrl();
-            urls.append(lastUrl);
-            stream << lastUrl << false << ind.data(IINNERCOPY).toMap(); // encodeInnerData
-        }
-        else stream << REMOTE_DND_URL << true << ind.data(IINNERCOPY).toMap(); // encodeInnerData
-    }
 }
 
 QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
@@ -536,7 +508,7 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
 
     QModelIndexList::ConstIterator it = indexes.begin();
     for (; it != indexes.end(); ++it)
-        proceedMimeDataIndex((*it), list, stream);
+        item((*it)) -> packToStream(list, stream);
 
     mimeData -> setData(DROP_INNER_FORMAT, encoded);
     mimeData -> setUrls(list);

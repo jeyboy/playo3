@@ -12,6 +12,8 @@
 #include "model_item_parts/item_types.h"
 #include "model_item_parts/item_fields.h"
 
+#define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
+
 namespace Playo3 {
     class FolderItem;
 
@@ -60,6 +62,8 @@ namespace Playo3 {
         inline virtual void updateCheckedState(bool setChecked) {
             if (setChecked) set(checked); else unset(checked);
         }
+
+        virtual void packToStream(QList<QUrl> & urls, QDataStream & stream);
     protected:
         FolderItem * _parent;
     };

@@ -14,8 +14,6 @@
 #include "item_drop_formats.h"
 #include "media/library.h"
 
-#define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
-
 namespace Playo3 {
     class IModel : public QAbstractItemModel {
         Q_OBJECT
@@ -88,7 +86,6 @@ namespace Playo3 {
         void setProgress(int percent);
         void setProgress2(int percent);
     protected:
-        void proceedMimeDataIndex(const QModelIndex ind, QList<QUrl> & urls, QDataStream & stream) const;
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
