@@ -59,8 +59,8 @@ namespace Playo3 {
     public slots:
         void updateActiveTabIcon();
         void updateAllViews();
-        void hideAll();
-        void showAll();
+        inline void hideAll() { changeBarsVisibility(true); }
+        inline void showAll() { changeBarsVisibility(false); }
 
         inline void createNewBar() { showViewSettingsDialog(); }
         void editActiveBar() { showViewSettingsDialog(active); }
@@ -80,6 +80,7 @@ namespace Playo3 {
         void prevExecTriggering();
 
     protected:
+        void changeBarsVisibility(bool hide);
         void initPlayed();
         void showViewSettingsDialog(DockBar * bar = 0);
 

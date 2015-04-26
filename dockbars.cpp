@@ -184,6 +184,14 @@ void Dockbars::useVeticalTitles(bool vertical) {
         (*it) -> useVerticalTitles(vertical);
 }
 
+void Dockbars::changeBarsVisibility(bool hide) {
+    QList<DockBar *> bars = dockbars();
+    QList<DockBar *>::Iterator it = bars.begin();
+
+    for(; it != bars.end(); it++)
+        (*it) -> setHidden(hide);
+}
+
 void Dockbars::initPlayed() {
     if (!played) {
         played = active;
@@ -191,7 +199,6 @@ void Dockbars::initPlayed() {
         if (!played) {
             QList<DockBar *> bars = dockbars();
 
-            //TODO: maybe has possibility to take hidden tab ?
             if (bars.count() > 0) {
                 QList<DockBar *>::Iterator it = bars.begin();
 
@@ -273,17 +280,9 @@ void Dockbars::updateAllViews() { // update for item height
     QList<IView *> views = parent() -> findChildren<IView *>();
     int iconDimension = Settings::instance() -> iconHeight();
 
-    foreach(IView * v, views)
-        v -> setIconSize(QSize(iconDimension, iconDimension));
-}
-
-void Dockbars::hideAll() {
-    foreach(DockBar * bar, dockbars())
-        bar -> setHidden(true);
-}
-void Dockbars::showAll() {
-    foreach(DockBar * bar, dockbars())
-        bar -> setHidden(false);
+    QList<IView *>::Iterator it = views.begin();
+    for(; it != views.end(); it++)
+        (*it) -> setIconSize(QSize(iconDimension, iconDimension));
 }
 
 void Dockbars::onNextItemNeeded(Player::Reason reason) {
