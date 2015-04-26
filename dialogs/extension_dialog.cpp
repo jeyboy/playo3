@@ -44,12 +44,12 @@ void ExtensionDialog::on_addExtension_clicked() {
 
     if (newPreset.contains(',')) {
         QStringList newPresets = newPreset.split(',', QString::SkipEmptyParts);
-        foreach(QString name, newPresets) {
-            proceedFilter(name, list);
-        }
-    } else {
-        proceedFilter(newPreset, list);
+        QStringList::Iterator it = newPresets.begin();
+
+        for(; it != newPresets.end(); it++)
+            proceedFilter((*it), list);
     }
+    else proceedFilter(newPreset, list);
 
     ui -> extension -> setText("");
     Extensions::instance() -> filterListUpdate(ui -> presets -> currentText(), list);
