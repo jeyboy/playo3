@@ -422,8 +422,8 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     int totalAdded = 0;
     QModelIndex dIndex;
     InnerData * data;
-
-    QHash<FolderItem *, QList<InnerData *> > dataList;
+    FolderItem * parentFolder;
+    QHash<FolderItem *, int> counts;
     bool containPath, isRemote, requirePath = !isRelative();
 
     while (!stream.atEnd()) {
@@ -446,27 +446,21 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         dIndex = parent;
 
         recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
-        dataList[item<FolderItem>(dIndex)].append(data);
-    }
 
-    QList<FolderItem *> parents = dataList.keys();
-    QList<FolderItem *>::Iterator p_item = parents.begin();
+        parentFolder = item<FolderItem>(dIndex);
 
-    for(; p_item != parents.end(); p_item++) {
-        int added = 0;
-        foreach(InnerData * data, dataList.value(*p_item)) {
-            beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-            switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case ITEM: {
-                    added++;
-                    new FileItem(data -> attrs, *p_item, data -> dRow);
-                    break;
-                }
-                case VK_ITEM: {
-                    added++;
-                    new VkItem(data -> attrs, *p_item, data -> dRow);
-                    break;
-                }
+        beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
+        switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
+            case ITEM: {
+                counts[parentFolder]++;
+                new FileItem(data -> attrs, parentFolder, data -> dRow);
+                break;
+            }
+            case VK_ITEM: {
+                counts[parentFolder]++;
+                new VkItem(data -> attrs, parentFolder, data -> dRow);
+                break;
+            }
 //                case SOUNDCLOUD_ITEM: {
 //                    added++;
 //                    new SoundcloudItem(data -> attrs, *p_item, data -> dRow);
@@ -478,16 +472,19 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 //                    break;
 //                }
 
-                default: {
-                    qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-                }
+            default: {
+                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
             }
-            endInsertRows();
-            delete data;
         }
+        endInsertRows();
+        delete data;
+    }
 
-        totalAdded += added;
-        (*p_item) -> backPropagateItemsCountInBranch(added);
+    QHash<FolderItem *, int>::Iterator it = counts.begin();
+
+    for(; it != counts.end(); it++) {
+        it.key() -> backPropagateItemsCountInBranch(it.value());
+        totalAdded += it.value();
     }
 
     if (totalAdded > 0) emit itemsCountChanged(totalAdded);
