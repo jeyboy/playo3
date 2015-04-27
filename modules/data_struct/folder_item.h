@@ -63,6 +63,7 @@ namespace Playo3 {
         inline int undeclareFolder(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
+        inline foldersAmount() const { return folders.size(); }
 
         void packToStream(QList<QUrl> & urls, QDataStream & stream);
     protected:

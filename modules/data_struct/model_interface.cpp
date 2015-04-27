@@ -418,7 +418,7 @@ QStringList IModel::mimeTypes() const {
     return types;
 }
 
-bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) { // maybe writed a little shity
+bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) {
     int totalAdded = 0;
     QModelIndex dIndex;
     InnerData * data;
