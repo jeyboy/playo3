@@ -267,7 +267,7 @@ void FolderItem::shuffle() { //TODO: test needed
         item -> shuffle();
 }
 
-void FolderItem::packToStream(QList<QUrl> & urls, QDataStream & stream) {
+void FolderItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
     QList<IItem *>::Iterator child = children.begin();
 
     for(; child != children.end(); child++)

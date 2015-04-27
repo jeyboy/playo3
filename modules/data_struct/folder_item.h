@@ -65,7 +65,7 @@ namespace Playo3 {
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
         inline foldersAmount() const { return folders.size(); }
 
-        void packToStream(QList<QUrl> & urls, QDataStream & stream);
+        void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:
         inline QString folderUid() const { return folderUid(title().toString(), uid().toString()); }
         inline QString folderUid(QString name, QString uid) const { return name + (uid.isEmpty() ? "" : ("*" + uid)); }

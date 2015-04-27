@@ -498,17 +498,19 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
         return 0;
 
     QMimeData * mimeData = new QMimeData();
-    QList<QUrl> list;
+    QHash<QUrl, int> list;
 
     QByteArray encoded;
     QDataStream stream(&encoded, QIODevice::WriteOnly);
 
+    qint64 v = QDateTime::currentMSecsSinceEpoch();
     QModelIndexList::ConstIterator it = indexes.begin();
     for (; it != indexes.end(); ++it)
         item((*it)) -> packToStream(list, stream);
 
     mimeData -> setData(DROP_INNER_FORMAT, encoded);
-    mimeData -> setUrls(list);
+    mimeData -> setUrls(list.keys());
+    qDebug() << "LULU " << QDateTime::currentMSecsSinceEpoch() - v;
 
     return mimeData;
 }

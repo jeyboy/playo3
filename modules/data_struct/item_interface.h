@@ -63,7 +63,7 @@ namespace Playo3 {
             if (setChecked) set(checked); else unset(checked);
         }
 
-        virtual void packToStream(QList<QUrl> & urls, QDataStream & stream);
+        virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:
         FolderItem * _parent;
     };
