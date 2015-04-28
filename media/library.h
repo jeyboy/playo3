@@ -33,6 +33,9 @@ namespace Playo3 {
         void declineAllItemsRestoration(const QAbstractItemModel * model);
 
         inline void setWaitListLimit(QAbstractItemModel * model, int newLimit) { waitListLimit[model] = newLimit; }
+
+        inline void registerListSync(const QAbstractItemModel * model, QMutex * sync) { listSyncs[model] = sync; }
+        inline void unregisterListSync(const QAbstractItemModel * model) { listSyncs.remove(model); }
     signals:
         void updateAttr(const QModelIndex, int attr, QVariant val);
     private slots:
@@ -75,6 +78,8 @@ namespace Playo3 {
         QHash<QChar, QHash<QString, int>* > catalogs;
         QHash<QChar, QList<QString> *> catalogs_state;
 
+        QHash<const QAbstractItemModel *, QMutex *> listSyncs;
+
         QHash<const QAbstractItemModel *, int > waitListLimit;
 
         QHash<const QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
@@ -84,7 +89,7 @@ namespace Playo3 {
         QHash<QModelIndex, QFutureWatcher<bool> * > inRemoteProc;
 
         QTimer * saveTimer;
-        QMutex saveBlock, itmAttrsBlock;
+        QMutex saveBlock;
 
         QFuture<void> catsSaveResult;
 

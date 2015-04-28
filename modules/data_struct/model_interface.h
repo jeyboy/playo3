@@ -90,6 +90,7 @@ namespace Playo3 {
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         Qt::KeyboardModifiers dropKeyModifiers;
+        QMutex sync;
         FolderItem * rootItem;
     private:
         QFutureWatcher<DropData *> * addWatcher;
