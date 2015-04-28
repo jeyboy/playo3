@@ -226,6 +226,19 @@ bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
     int deleted;
 
     if (success) {
+        if (parentItem -> parent() && position == 0 && parentItem -> childCount() == rows) { // remove empty parents for current deletion
+            rows = 1;
+
+            while(true) {
+                position = parentItem -> parent() -> childRow(parentItem);
+                parentItem = parentItem -> parent();
+
+                if (!parentItem -> parent() || parentItem -> childCount() != 1) break;
+            }
+
+            (const_cast<QModelIndex &>(parent)) = index(parentItem);
+        }
+
         beginRemoveRows(parent, position, position + rows - 1);
         bool blockSignal = signalsBlocked();
         blockSignals(true);
@@ -503,14 +516,12 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
     QByteArray encoded;
     QDataStream stream(&encoded, QIODevice::WriteOnly);
 
-    qint64 v = QDateTime::currentMSecsSinceEpoch();
     QModelIndexList::ConstIterator it = indexes.begin();
     for (; it != indexes.end(); ++it)
         item((*it)) -> packToStream(list, stream);
 
     mimeData -> setData(DROP_INNER_FORMAT, encoded);
     mimeData -> setUrls(list.keys());
-    qDebug() << "LULU " << QDateTime::currentMSecsSinceEpoch() - v;
 
     return mimeData;
 }
