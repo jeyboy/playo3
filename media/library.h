@@ -35,7 +35,10 @@ namespace Playo3 {
         inline void setWaitListLimit(QAbstractItemModel * model, int newLimit) { waitListLimit[model] = newLimit; }
 
         inline void registerListSync(const QAbstractItemModel * model, QMutex * sync) { listSyncs[model] = sync; }
-        inline void unregisterListSync(const QAbstractItemModel * model) { listSyncs.remove(model); }
+        void unregisterListSync(const QAbstractItemModel * model) {
+            declineAllItemsRestoration(model);
+            listSyncs.remove(model);
+        }
     signals:
         void updateAttr(const QModelIndex, int attr, QVariant val);
     private slots:

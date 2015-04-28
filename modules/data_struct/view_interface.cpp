@@ -10,6 +10,8 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     setStyle(new TreeViewStyle);
 //    setStyleSheet(Stylesheets::treeViewStyles());
 
+    Library::instance() -> registerListSync(mdl, mdl -> syncMutex());
+
     setModel(mdl);
 
     setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -76,6 +78,10 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
 }
 
 IView::~IView() {
+    mdl -> syncMutex() -> lock();
+    Library::instance() -> unregisterListSync(model());
+    mdl -> syncMutex() -> unlock();
+
     delete mdl;
 }
 
@@ -479,15 +485,18 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
     index_list.clear();
     if (inProcess)
         emit mdl -> moveOutProcess();
+
+    mdl -> syncMutex() -> unlock();
 }
 
 void IView::removeSelectedItems() {
     QModelIndexList list = selectedIndexes();
     selectionModel() -> clearSelection();
 
-    if (!list.isEmpty())
+    if (!list.isEmpty()) {
+        mdl -> syncMutex() -> lock();
         Library::instance() -> declineAllItemsRestoration(model());
-    else return;
+    } else return;
 
     if (list.size() > 200)
         QtConcurrent::run(this, &IView::removeProccessing, list, true);
@@ -495,8 +504,10 @@ void IView::removeSelectedItems() {
         removeProccessing(list);
     else {
         QModelIndex ind = currentIndex();
-        if (ind.isValid())
+        if (ind.isValid()) {
             removeRow(ind, true, false);
+            mdl -> syncMutex() -> unlock();
+        }
     }
 }
 

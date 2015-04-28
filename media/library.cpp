@@ -138,7 +138,20 @@ void Library::finishRemoteItemInfoInit() {
 
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
-        const QAbstractItemModel * key = waitOnProc.keys().first();
+        const QAbstractItemModel * key = 0;
+
+        QList<const QAbstractItemModel *> keys = waitOnProc.keys();
+        QList<const QAbstractItemModel *>::Iterator it = keys.begin();
+
+        for(; it != keys.end(); it++) {
+            if (listSyncs[(*it)] -> tryLock(1)) {
+                key = (*it);
+                break;
+            }
+        }
+
+        if (!key) return;
+
         QList<QModelIndex> & list = waitOnProc[key];
 
         if (list.isEmpty()) {
@@ -171,7 +184,6 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
     IItem * itm = indToItm(ind);
     qDebug() << "RESTORING " << itm -> title();
     initItemData(itm);
-    if (watcher -> isCanceled()) return;
 
     QHash<QString, int> * cat;
     bool isListened = false;
@@ -206,6 +218,8 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
     } else
         if (!canceled)
             emitItemAttrChanging(ind, ItemState::new_item);
+
+    listSyncs[ind.model()] -> unlock();
 }
 
 void Library::cancelActiveRestorations() {
@@ -244,19 +258,18 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     qDebug() << "REMOTE RESTORING " << itm -> title();
     bool has_info = itm -> hasInfo();
 
-    if (has_info) return false;
+    if (has_info) {
+        listSyncs[ind.model()] -> unlock();
+        return false;
+    }
 
     MediaInfo m(itm -> fullPath(), itm -> extension().isValid(), has_info);
-    if (watcher -> isCanceled()) {
-        itm -> unset(ItemState::proceeded);
-        return true;
-    }
     initItemInfo(&m, itm);
-    if (watcher -> isCanceled()) {
-        itm -> unset(ItemState::proceeded);
-        return true;
-    }
-    emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
+
+    if (!watcher -> isCanceled())
+        emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
+
+    listSyncs[ind.model()] -> unlock();
     return true;
 }
 
