@@ -7,6 +7,7 @@
 #include <qtimer.h>
 #include <qfuturewatcher.h>
 #include <QtConcurrent/QtConcurrent>
+#include <qdebug.h>
 
 #include "mediainfo.h"
 #include "misc/file_utils/filename_conversions.h"
@@ -25,6 +26,7 @@ namespace Playo3 {
         Q_OBJECT
     public:
         static Library * instance(QObject * parent = 0);
+        inline static void close() { delete self; }
 
         void setItemState(const QModelIndex & ind, int state);
 

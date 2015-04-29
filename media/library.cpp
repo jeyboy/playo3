@@ -1,5 +1,4 @@
 #include "library.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 

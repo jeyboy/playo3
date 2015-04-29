@@ -6,9 +6,7 @@
 class MusicGenres : public IGenres {
 public:
     static MusicGenres * instance();
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
     inline int defaultInt() const { return 12; }
 protected:
     void initDefault();

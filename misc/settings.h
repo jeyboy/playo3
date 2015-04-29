@@ -1,11 +1,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-//#include <QJsonArray>
-//#include <QJsonObject>
-//#include <QApplication>
-//#include <QMessageBox>
-
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"
 #include "settings/item_settings.h"
@@ -20,9 +15,7 @@ public:
     ~Settings() { }
 
     static Settings * instance();
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
 
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();

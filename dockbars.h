@@ -16,14 +16,8 @@ namespace Playo3 {
     class Dockbars : public QWidget {
         Q_OBJECT
     public:
-        ~Dockbars() {
-
-        }
-
         static Dockbars * instance(QWidget * parent = 0);
-        static void close() {
-            delete self;
-        }
+        inline static void close() { delete self; }
 
         static inline QString settingsName() { return "docks"; }
 
@@ -90,9 +84,11 @@ namespace Playo3 {
         TabifyParams lastTabData;
         DockBar * active, * played, * common;
 
-        Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
+        inline Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
             connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), this, SLOT(onNextItemNeeded(Player::Reason)));
         }
+
+        inline ~Dockbars() {}
 
         static Dockbars * self;
     };

@@ -29,9 +29,7 @@ public:
 
     static VkApi * instance();
     static VkApi * instance(QObject * parent, QJsonObject obj);
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
 
     void fromJson(QJsonObject hash);
     QJsonObject toJson();

@@ -135,17 +135,6 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
     return false;
 }
 
-//QModelIndex IView::removeCandidate(QModelIndex item) {
-//    ModelItem * parent = item -> parent();
-
-//    while(parent -> childCount() == 1 && parent -> parent() != 0) {
-//        item = parent;
-//        parent = parent -> parent();
-//    }
-
-//    return item;
-//}
-
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////

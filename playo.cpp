@@ -40,10 +40,11 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
+    Library::instance(QApplication::instance());
+
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::instance(this);
-    Library::instance(this);
     Player::instance(this);
     ToolBars::instance(this);
     Dockbars::instance(this);
@@ -124,8 +125,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     stateSettings.setValue("windowState", saveState());
     stateSettings.sync();
 
-    MusicGenres::instance() -> close();
-
+    MusicGenres::close();
     MainWindow::closeEvent(e);
 }
 
