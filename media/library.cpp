@@ -107,7 +107,21 @@ void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
 
 void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
-        const QAbstractItemModel * key = waitRemoteOnProc.keys().first();
+
+        const QAbstractItemModel * key = 0;
+
+        QList<const QAbstractItemModel *> keys = waitRemoteOnProc.keys();
+        QList<const QAbstractItemModel *>::Iterator it = keys.begin();
+
+        for(; it != keys.end(); it++) {
+            if (listSyncs[(*it)] -> tryLock(1)) {
+                key = (*it);
+                break;
+            }
+        }
+
+        if (!key) return;
+
         QList<QModelIndex> & list = waitRemoteOnProc[key];
 
         if (list.isEmpty()) {
