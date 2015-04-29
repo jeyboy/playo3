@@ -110,7 +110,6 @@ namespace Playo3 {
         QModelIndex activeIndex();
         void findExecutable(QModelIndex &);
 
-//        IItem * removeCandidate(IItem * item);
         void drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & node) const;
         void paintEvent(QPaintEvent * event);
         void resizeEvent(QResizeEvent *);

@@ -49,6 +49,8 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
+//    if (!listSyncs.value(ind.model(), 0)) return;
+
     QList<QModelIndex> & list = waitOnProc[ind.model()];
 
     if (!list.contains(ind)) {
@@ -114,7 +116,7 @@ void Library::initRemoteItemInfo() {
         QList<const QAbstractItemModel *>::Iterator it = keys.begin();
 
         for(; it != keys.end(); it++) {
-            if (listSyncs[(*it)] -> tryLock(1)) {
+            if (listSyncs[(*it)] -> tryLock()) {
                 key = (*it);
                 break;
             }
@@ -158,7 +160,7 @@ void Library::initStateRestoring() {
         QList<const QAbstractItemModel *>::Iterator it = keys.begin();
 
         for(; it != keys.end(); it++) {
-            if (listSyncs[(*it)] -> tryLock(1)) {
+            if (listSyncs[(*it)] -> tryLock()) {
                 key = (*it);
                 break;
             }
