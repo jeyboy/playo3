@@ -78,15 +78,11 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
 }
 
 IView::~IView() {
-    qDebug() << "VIEW DEL START";
     mdl -> syncMutex() -> lock();
-    qDebug() << "M LOCK";
     Library::instance() -> unregisterListSync(model());
-    qDebug() << "M UNLOCK";
     mdl -> syncMutex() -> unlock();
 
     delete mdl;
-    qDebug() << "VIEW DEL END";
 }
 
 void IView::scrollToActive() {
@@ -479,7 +475,6 @@ void IView::removeProccessing(QModelIndexList & index_list, bool inProcess) {
     if (inProcess)
         emit mdl -> moveOutProcess();
 
-    qDebug() << "M UNLOCK";
     mdl -> syncMutex() -> unlock();
 }
 
@@ -488,7 +483,6 @@ void IView::removeSelectedItems() {
     selectionModel() -> clearSelection();
 
     if (!list.isEmpty()) {
-        qDebug() << "M LOCK";
         mdl -> syncMutex() -> lock();
         Library::instance() -> declineAllItemsRestoration(model());
     } else return;
@@ -501,7 +495,6 @@ void IView::removeSelectedItems() {
         QModelIndex ind = currentIndex();
         if (ind.isValid()) {
             removeRow(ind, true, false);
-            qDebug() << "M UNLOCK";
             mdl -> syncMutex() -> unlock();
         }
     }

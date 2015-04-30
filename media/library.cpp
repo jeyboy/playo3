@@ -119,7 +119,6 @@ void Library::initRemoteItemInfo() {
 
         for(; it != keys.end(); it++) {
             if (listSyncs[(*it)] -> tryLock()) {
-                qDebug() << "L LOCK";
                 key = (*it);
                 break;
             }
@@ -166,7 +165,6 @@ void Library::initStateRestoring() {
 
         for(; it != keys.end(); it++) {
             if (listSyncs[(*it)] -> tryLock()) {
-                qDebug() << "L LOCK";
                 key = (*it);
                 break;
             }
@@ -243,7 +241,6 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
         if (!canceled)
             emitItemAttrChanging(ind, ItemState::new_item);
 
-    qDebug() << "L UNLOCK";
     listSyncs[ind.model()] -> unlock();
 }
 
@@ -284,7 +281,6 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     bool has_info = itm -> hasInfo();
 
     if (has_info) {
-        qDebug() << "L UNLOCK";
         listSyncs[ind.model()] -> unlock();
         return false;
     }
@@ -295,7 +291,6 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     if (!watcher -> isCanceled())
         emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
 
-    qDebug() << "L UNLOCK";
     listSyncs[ind.model()] -> unlock();
     return true;
 }
