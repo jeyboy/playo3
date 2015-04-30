@@ -33,7 +33,6 @@ private:
     QString lastInitiator;
 
     qint64 mark;
-//    QHash<QString, qint64> marks;
 
     static Logger * self;
 
