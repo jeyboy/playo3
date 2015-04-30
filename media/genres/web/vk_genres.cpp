@@ -1,5 +1,4 @@
 #include "vk_genres.h"
-//#include "../music_genres.h"
 
 VkGenres * VkGenres::self = 0;
 

@@ -6,9 +6,7 @@
 class VkGenres : public IGenres {
 public:
     static VkGenres * instance();
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
 
     int fromStandartId(int genreId);
     int toStandartId(int vkGenreId);

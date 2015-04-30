@@ -162,6 +162,7 @@ void Playo::dropEvent(QDropEvent * event) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 void Playo::receiveMessage(QString message) {
+    Logger::instance() -> write("Main", "receiveMessage");
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
 

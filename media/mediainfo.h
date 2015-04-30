@@ -8,10 +8,6 @@
 #include "media/genres/music_genres.h"
 #include "media/player.h"
 
-//#include <qfile.h>
-//#include <qurl.h>
-//#include <QString>
-
 class MediaInfo {
 public:
     MediaInfo(QUrl uri, bool hasExtension, bool onlyTags = true);
