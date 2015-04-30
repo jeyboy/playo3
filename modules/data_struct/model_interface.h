@@ -63,7 +63,7 @@ namespace Playo3 {
         bool decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream);
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
-        inline QMutex * syncMutex() { return &sync; }
+        inline QMutex * syncMutex() { return sync; }
 
     public slots:
         void copyTitleToClipboard(const QModelIndex & index);
@@ -91,7 +91,7 @@ namespace Playo3 {
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
         Qt::KeyboardModifiers dropKeyModifiers;
-        QMutex sync;
+        QMutex * sync;
         FolderItem * rootItem;
     private:
         QFutureWatcher<DropData *> * addWatcher;

@@ -1,4 +1,5 @@
 #include "logger.h"
+#include <qdebug.h>
 
 Logger * Logger::self = 0;
 
@@ -46,7 +47,7 @@ void Logger::write(QString initiator, QString value) {
             text = "<hr><center><b>"+initiator+"</b></center>";
         }
 
-        text = QString("%1<p>%2&nbsp;&nbsp;%3</p>").arg(
+        text = QString("%1<br>%2&nbsp;&nbsp;%3").arg(
             text,
             (m_showDate ? "<b>" + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ") + "</b>" : ""),
             value
@@ -55,6 +56,15 @@ void Logger::write(QString initiator, QString value) {
         m_editor -> insertHtml(text);
     }
 
-    if (file)
+    if (file) {
         (*out) << initiator << " : " << value << "\n";
+        out -> flush();
+    }
+}
+
+void Logger::write(QString initiator, QString value, QString attr) {
+    write(
+        initiator,
+        QString("%1(%2)").arg(value, attr)
+    );
 }

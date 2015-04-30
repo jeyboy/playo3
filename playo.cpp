@@ -104,6 +104,7 @@ QMenu * Playo::createPopupMenu() {
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
+    Logger::instance() -> unregisterEditor();
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
     Logger::instance() -> startMark();

@@ -1,4 +1,5 @@
 #include "library.h"
+#include "misc/logger.h"
 
 using namespace Playo3;
 
@@ -22,7 +23,7 @@ Library::Library(QObject * parent) : QObject(parent), timeAmount(0) {
         dir.mkpath(".");
 }
 
-Library::~Library() {
+Library::~Library() {   
     waitOnProc.clear();
     waitRemoteOnProc.clear();
 
@@ -49,6 +50,7 @@ void Library::setItemState(const QModelIndex & ind, int state) {
 
 void Library::restoreItemState(const QModelIndex & ind) {
 //    if (!listSyncs.value(ind.model(), 0)) return;
+    Logger::instance() -> write("Library", "RestoreItem", ind.data().toString());
 
     QList<QModelIndex> & list = waitOnProc[ind.model()];
 
@@ -86,6 +88,7 @@ void Library::declineItemStateRestoring(const QModelIndex & ind) {
 }
 
 void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
+    Logger::instance() -> write("Library", "DeclineItemRestoration", model -> objectName());
     QList<QModelIndex> items = waitOnProc.take(model);
     QList<QModelIndex> remote_items = waitRemoteOnProc.take(model);
 
@@ -116,6 +119,7 @@ void Library::initRemoteItemInfo() {
 
         for(; it != keys.end(); it++) {
             if (listSyncs[(*it)] -> tryLock()) {
+                qDebug() << "L LOCK";
                 key = (*it);
                 break;
             }
@@ -127,10 +131,12 @@ void Library::initRemoteItemInfo() {
 
         if (list.isEmpty()) {
             waitRemoteOnProc.remove(key);
+            listSyncs[key] -> unlock();
             return;
         }
 
         QModelIndex ind = list.takeLast();
+        Logger::instance() -> write("Library", "InitRemoteInfo", ind.data().toString());
         if (list.isEmpty()) waitRemoteOnProc.remove(key);
 
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
@@ -160,6 +166,7 @@ void Library::initStateRestoring() {
 
         for(; it != keys.end(); it++) {
             if (listSyncs[(*it)] -> tryLock()) {
+                qDebug() << "L LOCK";
                 key = (*it);
                 break;
             }
@@ -171,10 +178,12 @@ void Library::initStateRestoring() {
 
         if (list.isEmpty()) {
             waitOnProc.remove(key);
+            listSyncs[key] -> unlock();
             return;
         }
 
         QModelIndex ind = list.takeLast();
+        Logger::instance() -> write("Library", "InitInfo", ind.data().toString());
 
         if (list.isEmpty()) waitOnProc.remove(key);
 
@@ -234,6 +243,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
         if (!canceled)
             emitItemAttrChanging(ind, ItemState::new_item);
 
+    qDebug() << "L UNLOCK";
     listSyncs[ind.model()] -> unlock();
 }
 
@@ -274,6 +284,7 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     bool has_info = itm -> hasInfo();
 
     if (has_info) {
+        qDebug() << "L UNLOCK";
         listSyncs[ind.model()] -> unlock();
         return false;
     }
@@ -284,6 +295,7 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     if (!watcher -> isCanceled())
         emitItemAttrChanging(ind, ind.data(ISTATE).toInt());
 
+    qDebug() << "L UNLOCK";
     listSyncs[ind.model()] -> unlock();
     return true;
 }
@@ -488,7 +500,7 @@ QHash<QString, int> * Library::load(const QChar letter) {
 }
 
 void Library::save() {
-    if (saveBlock.tryLock(-1)) {
+    if (saveBlock.tryLock()) {
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 
