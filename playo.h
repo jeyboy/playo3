@@ -1,7 +1,6 @@
 #ifndef PLAYO_H
 #define PLAYO_H
 
-#include <qdebug.h>
 #include "modules/controls/window.h"
 #include "modules/controls/tray.h"
 #include "modules/controls/user_dialog_box.h"

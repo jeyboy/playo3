@@ -1,5 +1,6 @@
 #include "playo.h"
 #include "single_application.h"
+#include "misc/logger.h"
 
 #include <qapplication.h>
 
@@ -26,6 +27,8 @@ int main(int argc, char * argv[]) {
             a.sendMessage(message);
 //        return 0; // uncomment later
     }
+
+    Logger::instance(&a) -> initiate("log.txt", new QTextEdit());
 
     Playo w;
 

@@ -5,12 +5,18 @@
 #include <QDockWidget>
 #include <QBoxLayout>
 
+#include "misc/logger.h"
 #include "misc/file_utils/data_store.h"
 #include "modules/controls/dockbar.h"
 #include "modules/data_struct/view_index.h"
 #include "modules/controls/window.h"
 
 #include "dialogs/tabdialog.h"
+
+#define SCREEN_TAB "Screen"
+#define COMMON_TAB "Common"
+#define DOWNLOADS_TAB "Downloads"
+#define LOGS_TAB "Logs"
 
 namespace Playo3 {
     class Dockbars : public QWidget {
