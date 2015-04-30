@@ -30,7 +30,7 @@ void Logger::initiate(QString fileName, QTextEdit * editor) {
     if (!fileName.isEmpty()) {
         file = new QFile;
         file -> setFileName(fileName);
-        file -> open(QIODevice::Append | QIODevice::Text);
+        file -> open(QIODevice::Truncate | QIODevice::Text);
 
         out = new QTextStream(file);
         out -> setCodec("UTF-8");
@@ -45,7 +45,7 @@ void Logger::write(QString initiator, QString value) {
         text = "<hr><center><b>"+initiator+"</b></center>";
     }
 
-    text = QString("%1<p>%2%3</p>").arg(
+    text = QString("%1<p>%2&nbsp;&nbsp;%3</p>").arg(
         text,
         (m_showDate ? "<b>" + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ") + "</b>" : ""),
         value
