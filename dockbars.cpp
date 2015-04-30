@@ -15,7 +15,9 @@ void Dockbars::load(QJsonArray & bars) {
     int userTabsAmount = 0;
     MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
-    barsList.append("Downloads"/*, "Screen"*/);
+//    barsList.append(SCREEN_TAB);
+    barsList.append(DOWNLOADS_TAB);
+    barsList.append(LOGS_TAB);
 
     if (bars.count() > 0) {
         QJsonObject obj;
@@ -73,7 +75,7 @@ void Dockbars::save(DataStore * settings) {
         for(; it != bars.end(); it++) {
             IView * v = view((*it));
 
-            if ((*it) -> windowTitle() == "Common") {
+            if ((*it) -> windowTitle() == COMMON_TAB) {
                 if (v && v -> isCommon() && !Settings::instance() -> isSaveCommonTab())
                     continue;
             }
@@ -84,7 +86,9 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("stick", (*it) -> isSticked());
             curr_bar.insert("vertical", (*it) -> isUsedVerticalTitles());
 
-            if ((*it) -> windowTitle() == "Downloads") {
+            if ((*it) -> windowTitle() == LOGS_TAB) {
+                //do nothing
+            } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
                 curr_bar.insert("cont", ((DownloadView *)(*it) -> mainWidget()) -> toJson());
             } else {
                 if ((*it) == played) {
@@ -109,13 +113,17 @@ void Dockbars::save(DataStore * settings) {
 }
 
 QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
-    if (barName == "Screen") {
+    if (barName == SCREEN_TAB) {
         return 0; // stub
-    } else if (barName == "Common") {
+    } else if (barName == COMMON_TAB) {
         return createDocBar(barName, settings, &attrs, false);
-    } else if (barName == "Downloads") {
+    } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
+        return bar;
+    } else if (barName == LOGS_TAB) {
+        DockBar * bar = createDocBar(barName, false);
+        bar -> setWidget(Logger::instance() -> getEditor());
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }
@@ -123,7 +131,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 DockBar * Dockbars::commonBar() {
     if (!common) {
         ViewSettings defSettings(list, true, false, false, true);
-        common = createDocBar("Common", defSettings, 0, false);
+        common = createDocBar(COMMON_TAB, defSettings, 0, false);
     }
 
     return common;

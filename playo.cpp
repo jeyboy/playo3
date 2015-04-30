@@ -52,6 +52,8 @@ void Playo::activation() {
 }
 
 void Playo::initialization() {
+    Logger::instance() -> startMark();
+
     QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
     settings = new DataStore("settings.json");
 
@@ -80,7 +82,6 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     /// toolbars
     ///////////////////////////////////////////////////////////
-    qint64 v = QDateTime::currentMSecsSinceEpoch();
 
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
@@ -88,14 +89,14 @@ void Playo::initialization() {
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
 
-    qDebug() << "LULU " << QDateTime::currentMSecsSinceEpoch() - v;
-
     QVariant objState = stateSettings.value("windowState");
     if (objState.isValid())
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
     Dockbars::instance() -> updateActiveTabIcon();
+
+    Logger::instance() -> endMark("Main", "Loading");
 }
 
 QMenu * Playo::createPopupMenu() {
@@ -105,17 +106,17 @@ QMenu * Playo::createPopupMenu() {
 void Playo::closeEvent(QCloseEvent * e) {
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
+    Logger::instance() -> startMark();
+
     Player::instance() -> pause();
 
     settings -> clear();
 
-    qint64 v = QDateTime::currentMSecsSinceEpoch();
     settings -> write("vk", VkApi::instance() -> toJson());
 //    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
-    qDebug() << "LALA " << QDateTime::currentMSecsSinceEpoch() - v;
 
     settings -> write("settings", Settings::instance() -> toJson());
     settings -> save();
@@ -124,6 +125,8 @@ void Playo::closeEvent(QCloseEvent * e) {
     stateSettings.setValue("geometry", saveGeometry());
     stateSettings.setValue("windowState", saveState());
     stateSettings.sync();
+
+    Logger::instance() -> endMark("Main", "Saving");
 
     MusicGenres::close();
     MainWindow::closeEvent(e);
