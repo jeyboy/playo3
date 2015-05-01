@@ -111,7 +111,6 @@ void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
 
 void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
-
         const QAbstractItemModel * key = 0;
 
         QList<const QAbstractItemModel *> keys = waitRemoteOnProc.keys();
@@ -204,7 +203,7 @@ void Library::finishStateRestoring() {
 
 void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
     IItem * itm = indToItm(ind);
-    qDebug() << "RESTORING " << itm -> title();
+    Logger::instance() -> write("Library", "StateRestoring", itm -> title().toString());
     initItemData(itm);
 
     QHash<QString, int> * cat;
@@ -224,6 +223,8 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
                     itm -> set(ItemState::liked);
                 else
                     emitItemAttrChanging(ind, ItemState::liked);
+
+                listSyncs[ind.model()] -> unlock();
                 return;
             }
 
@@ -245,6 +246,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
 }
 
 void Library::cancelActiveRestorations() {
+    Logger::instance() -> write("Library", "CancelActiveRestorations");
     {
         QList<QFutureWatcher<void> *> inProcList = inProc.values();
         QList<QFutureWatcher<void> *>::Iterator it = inProcList.begin();
@@ -277,7 +279,7 @@ void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
 
 bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex ind) {
     IItem * itm = indToItm(ind);
-    qDebug() << "REMOTE RESTORING " << itm -> title();
+    Logger::instance() -> write("Library", "RemoteInfoRestoring", itm -> title().toString());
     bool has_info = itm -> hasInfo();
 
     if (has_info) {
@@ -294,58 +296,6 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     listSyncs[ind.model()] -> unlock();
     return true;
 }
-
-//void Library::clearRemote() {
-//    currRemote = 0;
-//    remote_items.clear();
-//    remote_collations.clear();
-//}
-
-//void Library::removeRemoteItem(ModelItem * item) {
-//    if (item == currRemote) {
-//        currRemote = 0;
-//    } else {
-//        remote_items.removeAll(item);
-//        remote_collations.take(item);
-//    }
-//}
-
-//void Library::initItem(ModelItem * item, const QObject * caller, const char * slot) {
-//    QFutureWatcher<ModelItem *> * initiator = new QFutureWatcher<ModelItem *>();
-//    connect(initiator, SIGNAL(finished()), caller, slot);
-//    initiator -> setFuture(QtConcurrent::run(this, &Library::itemsInit, item));
-//    if (item -> isRemote() && !item -> hasInfo()) {
-//        remote_items.append(item);
-//        remote_collations.insert(item, FuncContainer(caller, slot));
-
-//        if (remote_items.count() > remote_items_max) {
-//            ModelItem * i = remote_items.takeFirst();
-//            remote_collations.take(i);
-//            i -> getState() -> unsetProceed();
-//        }
-//    }
-//}
-
-//bool Library::addItem(ModelItem * item, int state) {
-//    initItemInfo(item);
-
-//    if (state == STATE_LIKED)
-//        state = 1;
-//    else state = 0;
-
-//    return proceedItemNames(item -> getTitlesCache(), state);
-//}
-
-//void Library::setRemoteItemMax(int newMax) {
-//    remote_items_max = newMax;
-//}
-
-////void Library::setItemState(const QString filename, int state) {
-////    QHash<QString, int> cat = getCatalog(filename);
-////    cat.insert(filename, state);
-////    instance() -> catalogs_state.append(getCatalogName(filename.at(0)));
-////}
-
 
 ////////////////////////////////////////////////////////////////////////
 ///// privates
@@ -364,6 +314,7 @@ void Library::clockTick() {
 }
 
 void Library::saveCatalogs() {
+    Logger::instance() -> write("Library", "Trying to save new data");
     if (!catsSaveResult.isRunning())
         catsSaveResult = QtConcurrent::run(this, &Library::save);
 }
@@ -496,6 +447,8 @@ QHash<QString, int> * Library::load(const QChar letter) {
 
 void Library::save() {
     if (saveBlock.tryLock()) {
+        emit Logger::instance() -> write("Library", "--Save--");
+
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 

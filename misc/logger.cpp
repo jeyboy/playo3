@@ -10,7 +10,10 @@ Logger * Logger::instance(QObject * parent) {
 }
 
 
-Logger::Logger(QObject * parent) : QObject(parent), out(0), file(0), m_showDate(true)  {}
+Logger::Logger(QObject * parent) : QObject(parent), out(0), file(0), m_showDate(true)  {
+    connect(this, SIGNAL(write(QString,QString)), this, SLOT(writeToStream(QString,QString)));
+    connect(this, SIGNAL(write(QString,QString,QString)), this, SLOT(writeToStream(QString,QString,QString)));
+}
 
 Logger::~Logger() {
     if (file != 0) {
@@ -38,7 +41,7 @@ void Logger::initiate(QString fileName, QTextEdit * editor) {
     }
 }
 
-void Logger::write(QString initiator, QString value) {
+void Logger::writeToStream(QString initiator, QString value) {
     if (m_editor != 0) {
         QString text;
 
@@ -62,9 +65,9 @@ void Logger::write(QString initiator, QString value) {
     }
 }
 
-void Logger::write(QString initiator, QString value, QString attr) {
-    write(
+void Logger::writeToStream(QString initiator, QString value, QString attr) {
+    writeToStream(
         initiator,
-        QString("%1(%2)").arg(value, attr)
+        QString("<span style='color: blue'>%1</span>(<span style='color: green'>%2</span>)").arg(value, attr)
     );
 }

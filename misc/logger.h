@@ -21,7 +21,7 @@ public:
 
     inline void startMark() { mark = QDateTime::currentMSecsSinceEpoch(); }
     inline void endMark(QString initiator, QString value) {
-        write(initiator, QString("%1(%2 ms)").arg(value, QString::number(QDateTime::currentMSecsSinceEpoch() - mark)));
+        emit write(initiator, value, QString::number(QDateTime::currentMSecsSinceEpoch() - mark) + " ms");
     }
 
 private:
@@ -37,9 +37,13 @@ private:
 
     static Logger * self;
 
-public slots:
+signals:
     void write(QString initiator, QString value);
     void write(QString initiator, QString value, QString attr);
+
+public slots:
+    void writeToStream(QString initiator, QString value);
+    void writeToStream(QString initiator, QString value, QString attr);
 };
 
 #endif // LOGGER
