@@ -3,7 +3,7 @@
 using namespace Playo3;
 
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
-    sync = new QMutex(QMutex::Recursive);
+    sync = new QMutex(QMutex::NonRecursive);
     if (hash != 0) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
