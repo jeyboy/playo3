@@ -96,6 +96,10 @@ void Playo::initialization() {
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
     Dockbars::instance() -> updateActiveTabIcon();
 
+    if (stateSettings.value("maximized").toBool()) {
+        QApplication::processEvents();
+        showMaximized();
+    }
     Logger::instance() -> endMark("Main", "Loading");
 }
 
@@ -105,6 +109,15 @@ QMenu * Playo::createPopupMenu() {
 
 void Playo::closeEvent(QCloseEvent * e) {
     Logger::instance() -> unregisterEditor();
+    bool is_maximized = isMaximized();
+    showNormal();
+
+    QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
+    stateSettings.setValue("geometry", saveGeometry());
+    stateSettings.setValue("windowState", saveState());
+    stateSettings.setValue("maximized", is_maximized);
+    stateSettings.sync();
+
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
     Logger::instance() -> startMark();
@@ -121,11 +134,6 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     settings -> write("settings", Settings::instance() -> toJson());
     settings -> save();
-
-    QSettings stateSettings("settings.ini", QSettings::IniFormat, this);
-    stateSettings.setValue("geometry", saveGeometry());
-    stateSettings.setValue("windowState", saveState());
-    stateSettings.sync();
 
     Logger::instance() -> endMark("Main", "Saving");
 

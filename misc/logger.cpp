@@ -25,10 +25,9 @@ Logger::~Logger() {
     delete file;
 }
 
-void Logger::initiate(QString fileName, QTextEdit * editor) {
+void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
     if ((m_editor = editor)) {
         editor -> setReadOnly(true);
-        editor -> setAcceptRichText(true);
     }
 
     if (!fileName.isEmpty()) {
@@ -41,33 +40,44 @@ void Logger::initiate(QString fileName, QTextEdit * editor) {
     }
 }
 
-void Logger::writeToStream(QString initiator, QString value) {
-    if (m_editor != 0) {
-        QString text;
-
-        if (initiator != lastInitiator) {
-            lastInitiator = initiator;
-            text = "<hr><center><b>"+initiator+"</b></center>";
-        }
-
-        text = QString("%1<br>%2&nbsp;&nbsp;%3").arg(
-            text,
-            (m_showDate ? "<b>" + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ") + "</b>" : ""),
-            value
-        );
-
-        m_editor -> insertHtml(text);
-    }
-
+void Logger::toFile(QString initiator, QString value) {
     if (file) {
         (*out) << initiator << " : " << value << "\n";
         out -> flush();
     }
 }
+void Logger::toEditor(QString initiator, QString value) {
+    if (m_editor != 0) {
+        QString text;
+
+        if (initiator != lastInitiator) {
+            lastInitiator = initiator;
+            text = "<br>" + initiator + "<br>";
+        }
+
+        text = QString("%1%2 ::: %3").arg(
+            text,
+            (m_showDate ? "<b>" + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ") + "</b>" : ""),
+            value
+        );
+
+        bool atEnd = m_editor -> verticalScrollBar() -> maximum() - m_editor -> verticalScrollBar() -> value() < 10;
+        m_editor -> appendHtml(text);
+
+        if (atEnd) {
+            m_editor -> ensureCursorVisible();
+        }
+    }
+}
+
+void Logger::writeToStream(QString initiator, QString value) {
+    toEditor(initiator, value);
+    toFile(initiator, value);
+}
 
 void Logger::writeToStream(QString initiator, QString value, QString attr) {
-    writeToStream(
-        initiator,
-        QString("<span style='color: blue'>%1</span>(<span style='color: green'>%2</span>)").arg(value, attr)
+    toFile(initiator, QString("%1   :::   %2").arg(value, attr));
+    toEditor(initiator,
+        QString("<span style='color: green'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
     );
 }

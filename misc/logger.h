@@ -1,10 +1,11 @@
 #ifndef LOGGER
 #define LOGGER
 
-#include <QTextEdit>
-#include <QFile>
-#include <QTextStream>
-#include <QDateTime>
+#include <qplaintextedit.h>
+#include <qfile.h>
+#include <qtextstream.h>
+#include <qdatetime.h>
+#include <qscrollbar.h>
 
 class Logger : public QObject {
     Q_OBJECT
@@ -14,9 +15,9 @@ public:
 
     ~Logger();
 
-    void initiate(QString fileName = "", QTextEdit * editor = 0);
+    void initiate(QString fileName = "", QPlainTextEdit * editor = 0);
     inline void setShowDateTime(bool show) { m_showDate = show; }
-    inline QTextEdit * getEditor() { return m_editor; }
+    inline QPlainTextEdit * getEditor() { return m_editor; }
     inline void unregisterEditor() { m_editor = 0; }
 
     inline void startMark() { mark = QDateTime::currentMSecsSinceEpoch(); }
@@ -25,11 +26,14 @@ public:
     }
 
 private:
+    void toFile(QString initiator, QString value);
+    void toEditor(QString initiator, QString value);
+
     explicit Logger(QObject * parent);
 
     QTextStream * out;
     QFile * file;
-    QTextEdit * m_editor;
+    QPlainTextEdit * m_editor;
     bool m_showDate;
     QString lastInitiator;
 

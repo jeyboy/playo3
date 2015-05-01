@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
 //        return 0; // uncomment later
     }
 
-    Logger::instance(QApplication::instance()) -> initiate("log.txt", new QTextEdit());
+    Logger::instance(QApplication::instance()) -> initiate("log.txt", new QPlainTextEdit());
 
     Playo w;
 
