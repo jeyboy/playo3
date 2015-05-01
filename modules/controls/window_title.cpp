@@ -111,10 +111,15 @@ void WindowTitle::setVertical(bool isVertical) {
 }
 
 void WindowTitle::invertWindowState() {
-    if (parentWidget() -> isMaximized())
+    QLabel * button = qobject_cast<QLabel *>(sender());
+
+    if (parentWidget() -> isMaximized()) {
         parentWidget() -> showNormal();
-    else
+        button -> setToolTip("Maximize");
+    } else {
         parentWidget() -> showMaximized();
+        button -> setToolTip("Normalize");
+    }
 }
 
 void WindowTitle::paintEvent(QPaintEvent *) {
