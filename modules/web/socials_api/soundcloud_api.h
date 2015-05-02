@@ -33,10 +33,6 @@ public:
     QUrlQuery userMethodParams();
     QUrlQuery commonMethodParams();
 
-signals:
-    void audioListReceived(QJsonObject &);
-    void errorReceived(int, QString &);
-
 protected:
     ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);
     ApiFuncContainer * getUidInfoRoutine(ApiFuncContainer * func);

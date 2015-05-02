@@ -72,15 +72,16 @@ public:
 
 signals:
     void routineFinished(QJsonObject &);
+    void errorReceived(int, QString);
 
 public slots:
     void showingCaptcha();
 
-protected:
-    void startApiCall(QFuture<ApiFuncContainer *> feature);
-
 protected slots:
     void apiCallFinished();
+
+protected:
+    void startApiCall(QFuture<ApiFuncContainer *> feature);
 
     inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
 

@@ -37,9 +37,6 @@ public:
     bool isConnected();
 
 signals:
-    void audioListReceived(QJsonObject &);
-    void audioListUpdate(QJsonObject &, QList<QString> &);
-    void errorReceived(int, QString);
     void showCaptcha();
 
 protected:
@@ -49,12 +46,12 @@ protected:
     bool captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url);
 
 private:   
-    VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {
+    inline VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {
         fromJson(hash);
         connect(this, SIGNAL(showCaptcha()), this, SLOT(showingCaptcha()), Qt::BlockingQueuedConnection);
     }
 
-    VkApi() : WebApi(), TeuAuth() {}
+    inline VkApi() : WebApi(), TeuAuth() {}
 
     static VkApi * self;
 };
