@@ -12,6 +12,12 @@ QNetworkReply * CustomNetworkAccessManager::getSync(const QNetworkRequest & requ
     return ret;
 }
 
+QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) {
+    QNetworkReply * ret = CustomNetworkAccessManager::post(request, data);
+    synchronizeRequest(ret);
+    return ret;
+}
+
 QNetworkReply * CustomNetworkAccessManager::openUrl(QUrl & url) { // TODO: need to prevent from url cicling
     QNetworkReply * m_http = getSync(QNetworkRequest(url));
 

@@ -14,23 +14,21 @@ public:
     QByteArray authTokenUrlParams(QString code) const;
     QString proceedAuthResponse(const QUrl & url);
 
-    QString getClientId() const;
+    QString getClientId() const { return "8f84790a84f5a5acd1c92e850b5a91b7"; }
 
-    void getGroupInfo(FuncContainer func, QString uid);
-    void getUidInfo(FuncContainer responseSlot, QString uid = "0");
+    void getGroupInfo(ApiFuncContainer * func, QString uid);
+    void getUidInfo(ApiFuncContainer * func, QString uid = "0");
 
     ~SoundcloudApi() { }
 
     static SoundcloudApi * instance();
     static SoundcloudApi * instance(QJsonObject obj);
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
 
     void fromJson(QJsonObject hash);
     QJsonObject toJson();
 
-    bool isConnected();
+    inline bool isConnected() { return !getToken().isEmpty(); }
 
     QUrlQuery userMethodParams();
     QUrlQuery commonMethodParams();
@@ -40,7 +38,8 @@ signals:
     void errorReceived(int, QString &);
 
 protected:
-    QString getAPIUrl();
+    inline QString getAPIUrl() { return "https://api.soundcloud.com/"; }
+
     void errorSend(QJsonObject & doc, const QObject * obj);
 
 //protected slots:
@@ -52,7 +51,7 @@ private:
 
     SoundcloudApi() : WebApi(), TeuAuth() { }
 
-    static SoundcloudApi *self;
+    static SoundcloudApi * self;
 
     QHash<QNetworkReply *, FuncContainer> responses;
 };

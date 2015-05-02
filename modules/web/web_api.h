@@ -15,6 +15,8 @@
 
 #include "misc/web_utils/custom_network_access_manager.h"
 
+#define REQUEST_DELAY 250 // ms
+
 struct ApiFuncContainer {
     ApiFuncContainer() { }
     ApiFuncContainer(const QObject * receiver, const char * respSlot, QString user_id) {

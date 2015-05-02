@@ -1,8 +1,8 @@
 #include "soundcloud_api.h"
 
-SoundcloudApi *SoundcloudApi::self = 0;
+SoundcloudApi * SoundcloudApi::self = 0;
 
-SoundcloudApi *SoundcloudApi::instance() {
+SoundcloudApi * SoundcloudApi::instance() {
     if(!self)
         self = new SoundcloudApi();
     return self;
@@ -16,10 +16,6 @@ SoundcloudApi * SoundcloudApi::instance(QJsonObject obj) {
     return self;
 }
 
-QString SoundcloudApi::getClientId() const {
-    return "8f84790a84f5a5acd1c92e850b5a91b7";
-}
-
 void SoundcloudApi::fromJson(QJsonObject hash) {
     TeuAuth::fromJson(hash);
     WebApi::fromJson(hash);
@@ -27,14 +23,10 @@ void SoundcloudApi::fromJson(QJsonObject hash) {
 QJsonObject SoundcloudApi::toJson() {
     QJsonObject root;
 
-    root = TeuAuth::toJson(root);
-    root = WebApi::toJson(root);
+    TeuAuth::toJson(root);
+    WebApi::toJson(root);
 
     return root;
-}
-
-bool SoundcloudApi::isConnected() {
-    return !getToken().isEmpty();
 }
 
 ///////////////////////////////////////////////////////////
@@ -52,11 +44,6 @@ QString SoundcloudApi::authUrl() const {
 
     url.setQuery(queryParams);
     return url.toString();
-}
-
-QUrl SoundcloudApi::authTokenUrl() const {
-    QUrl url("https://api.soundcloud.com/oauth2/token");
-    return url;
 }
 
 QByteArray SoundcloudApi::authTokenUrlParams(QString code) const {
@@ -98,22 +85,21 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
     } else if (query.hasQueryItem("code")) {
         QNetworkRequest request(authTokenUrl());
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QNetworkReply * m_http = manager() -> post(request, authTokenUrlParams(query.queryItemValue("code")));
-        syncRequest(m_http);
+        QNetworkReply * m_http = manager() -> postSync(request, authTokenUrlParams(query.queryItemValue("code")));
 
         QJsonObject doc = responseToJson(m_http -> readAll());
+        delete m_http;
 
         if (doc.contains("access_token")) {
             QString newToken = doc.value("access_token").toString();
 
             QNetworkRequest request("https://api.soundcloud.com/me.json?oauth_token=" + newToken);
-            m_http = manager() -> get(request);
-            syncRequest(m_http);
+            m_http = manager() -> getSync(request);
 
             doc = responseToJson(m_http -> readAll());
+            delete m_http;
 
             setParams(newToken, QString::number(doc.value("id").toInt()), "");
-
             return "accept";
         }
 
@@ -128,7 +114,7 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 ///////////////////////////////////////////////////////////
 //INFO: all requests return max 50 items
 
-void SoundcloudApi::getGroupInfo(FuncContainer func, QString uid) {
+void SoundcloudApi::getGroupInfo(ApiFuncContainer * func, QString uid) {
 //    uid = "101";
     QJsonObject res;
 
@@ -138,8 +124,7 @@ void SoundcloudApi::getGroupInfo(FuncContainer func, QString uid) {
     QUrl url(getAPIUrl() + "groups/" + uid + "/tracks.json");
     url.setQuery(query);
 
-    QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
-    syncRequest(m_http);
+    QNetworkReply * m_http = manager() -> getSync(QNetworkRequest(url));
 
     QByteArray ar = m_http -> readAll();
     ar.prepend("{\"response\":"); ar.append("}");
@@ -152,8 +137,7 @@ void SoundcloudApi::getGroupInfo(FuncContainer func, QString uid) {
     query = commonMethodParams();
     url.setQuery(query);
 
-    m_http = manager() -> get(QNetworkRequest(url));
-    syncRequest(m_http);
+    m_http = manager() -> getSync(QNetworkRequest(url));
 
     ar = m_http -> readAll();
     ar.prepend("{\"response\":"); ar.append("}");
@@ -165,10 +149,9 @@ void SoundcloudApi::getGroupInfo(FuncContainer func, QString uid) {
     disconnect(this, SIGNAL(audioListReceived(QJsonObject &)), func.obj, func.slot);
 }
 
-void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
-    if (uid[0] == '-') {
+void SoundcloudApi::getUidInfo(ApiFuncContainer * func, QString uid) {
+    if (uid[0] == '-')
         return getGroupInfo(func, uid.mid(1));
-    }
 
     uid = uid == "0" ? getUserID() : uid; // 183
     QJsonObject res;
@@ -193,8 +176,7 @@ void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
     QUrl url(getAPIUrl() + "users/" + uid + "/tracks.json");
     url.setQuery(query);
 
-    QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
-    syncRequest(m_http);
+    QNetworkReply * m_http = manager() -> getSync(QNetworkRequest(url));
 
     QByteArray ar = m_http -> readAll();
     ar.prepend("{\"response\":"); ar.append("}");
@@ -207,8 +189,7 @@ void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
     query = commonMethodParams();
     url.setQuery(query);
 
-    m_http = manager() -> get(QNetworkRequest(url));
-    syncRequest(m_http);
+    m_http = manager() -> getSync(QNetworkRequest(url));
 
     ar = m_http -> readAll();
     ar.prepend("{\"response\":"); ar.append("}");
@@ -218,12 +199,11 @@ void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
     //////////////////////////////////////////////////////////////
 
     if (uid == getUserID()) {
-        QThread::sleep(1);
+        QThread::msleep(REQUEST_DELAY);
         //////////////////////////////////////////////////////////////
         url.setUrl(getAPIUrl() + "users/" + uid + "/followings.json");
         url.setQuery(query);
-        m_http = manager() -> get(QNetworkRequest(url));
-        syncRequest(m_http);
+        m_http = manager() -> getSync(QNetworkRequest(url));
 
         ar = m_http -> readAll();
         ar.prepend("{\"response\":"); ar.append("}");
@@ -234,8 +214,7 @@ void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
 
         url.setUrl(getAPIUrl() + "users/" + uid + "/followers.json");
         url.setQuery(query);
-        m_http = manager() -> get(QNetworkRequest(url));
-        syncRequest(m_http);
+        m_http = manager() -> getSync(QNetworkRequest(url));
 
         ar = m_http -> readAll();
         ar.prepend("{\"response\":"); ar.append("}");
@@ -248,8 +227,7 @@ void SoundcloudApi::getUidInfo(FuncContainer func, QString uid) {
 
         url.setUrl(getAPIUrl() + "users/" + uid + "/groups.json");
         url.setQuery(query);
-        m_http = manager() -> get(QNetworkRequest(url));
-        syncRequest(m_http);
+        m_http = manager() -> getSync(QNetworkRequest(url));
 
         ar = m_http -> readAll();
         ar.prepend("{\"response\":"); ar.append("}");
@@ -284,10 +262,6 @@ QUrlQuery SoundcloudApi::commonMethodParams() {
     query.addQueryItem("client_id", getClientId());
 
     return query;
-}
-
-QString SoundcloudApi::getAPIUrl() {
-    return "https://api.soundcloud.com/";
 }
 
 void SoundcloudApi::errorSend(QJsonObject & doc, const QObject * obj) {
