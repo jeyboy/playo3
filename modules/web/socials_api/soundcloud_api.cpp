@@ -222,7 +222,7 @@ void SoundcloudApi::getUidInfo(ApiFuncContainer * func, QString uid) {
         delete m_http;
 
         //////////////////////////////////////////////////////////////
-        QThread::sleep(1);
+        QThread::sleep(REQUEST_DELAY);
         //////////////////////////////////////////////////////////////
 
         url.setUrl(getAPIUrl() + "users/" + uid + "/groups.json");
