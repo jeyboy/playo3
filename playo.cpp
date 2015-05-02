@@ -40,7 +40,7 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Library::instance(QApplication::instance());
+    Library::instance(QApplication::allWindows().last());
 
     Stylesheets::initPens();
     new Tray(this);

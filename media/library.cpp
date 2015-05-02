@@ -88,7 +88,7 @@ void Library::declineItemStateRestoring(const QModelIndex & ind) {
 }
 
 void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
-    Logger::instance() -> write("Library", "DeclineItemRestoration", model -> objectName());
+    Logger::instance() -> write("Library", "DeclineItemRestoration");
     QList<QModelIndex> items = waitOnProc.take(model);
     QList<QModelIndex> remote_items = waitRemoteOnProc.take(model);
 

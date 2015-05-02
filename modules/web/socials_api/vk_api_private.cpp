@@ -15,7 +15,7 @@ QString VkApiPrivate::authUrl() {
 }
 
 QUrl VkApiPrivate::wallUrl(QString uid, QString token, int offset, int count) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
     QString head;
@@ -81,7 +81,7 @@ QUrl VkApiPrivate::wallUrl(QString uid, QString token, int offset, int count) {
     return url;
 }
 QUrl VkApiPrivate::audioRefreshUrl(QStringList uids, QString token) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
     query.addQueryItem("code",
@@ -96,7 +96,7 @@ QUrl VkApiPrivate::audioRefreshUrl(QStringList uids, QString token) {
 }
 
 QUrl VkApiPrivate::audioAlbumsUrl(QString uid, QString token, int offset) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
     QString limit = "5";
 
@@ -134,7 +134,7 @@ QUrl VkApiPrivate::audioAlbumsUrl(QString uid, QString token, int offset) {
 }
 
 QUrl VkApiPrivate::audioInfoUrl(QString uid, QString currUid, QString token) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
     if (uid == currUid) {
@@ -240,7 +240,7 @@ QUrl VkApiPrivate::audioInfoUrl(QString uid, QString currUid, QString token) {
 }
 
 QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, QString token) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
     query.addQueryItem("code",
@@ -263,7 +263,7 @@ QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
     //INFO: result through execute method limited by 200 items
 
 
-//    QUrl url(getAPIUrl() + "execute");
+//    QUrl url(getApiUrl() + "execute");
 //    QUrlQuery query = methodParams(token);
 
 //    query.addQueryItem("code",
@@ -277,7 +277,7 @@ QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
 //                       )
 //    );
 
-    QUrl url(getAPIUrl() + "audio.getPopular");
+    QUrl url(getApiUrl() + "audio.getPopular");
     QUrlQuery query = methodParams(token);
 
     query.addQueryItem("only_eng", boolToStr(onlyEng));
@@ -293,7 +293,7 @@ QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
 
 // sort  2 - by popularity, 1 - by duration, 0 - by creation date
 QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort, QString token) {
-    QUrl url(getAPIUrl() + "execute");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
     // count max eq 300 , limit is 1000
@@ -321,7 +321,7 @@ QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOn
 }
 
 QUrl VkApiPrivate::isAppUser(QString token, QString uid) {
-    QUrl url(getAPIUrl() + "users.isAppUser");
+    QUrl url(getApiUrl() + "users.isAppUser");
     QUrlQuery query = methodParams(token);
 
     query.addQueryItem("user_id", uid);
@@ -329,32 +329,24 @@ QUrl VkApiPrivate::isAppUser(QString token, QString uid) {
     return url;
 }
 
-//QUrl VkApi::getAudioListUrl() const { return QUrl(getAPIUrl() + "audio.get"); }
-//QUrl VkApi::getAudioCountUrl() const { return QUrl(getAPIUrl() + "audio.getCount"); }
-//QUrl VkApi::getAudioSearchUrl() const { return QUrl(getAPIUrl() + "audio.search"); }
-//QUrl VkApi::getAudioCopyUrl() const { return QUrl(getAPIUrl() + "audio.add"); }
-//QUrl VkApi::getAudioRemoveUrl() const { return QUrl(getAPIUrl() + "audio.delete"); }
+//QUrl VkApi::getAudioListUrl() const { return QUrl(getApiUrl() + "audio.get"); }
+//QUrl VkApi::getAudioCountUrl() const { return QUrl(getApiUrl() + "audio.getCount"); }
+//QUrl VkApi::getAudioSearchUrl() const { return QUrl(getApiUrl() + "audio.search"); }
+//QUrl VkApi::getAudioCopyUrl() const { return QUrl(getApiUrl() + "audio.add"); }
+//QUrl VkApi::getAudioRemoveUrl() const { return QUrl(getApiUrl() + "audio.delete"); }
 
-//QUrl VkApi::getAudioAlbumsListUrl() const { return QUrl(getAPIUrl() + "audio.getAlbums"); }
-//QUrl VkApi::getAudioAlbumAddUrl() const { return QUrl(getAPIUrl() + "audio.addAlbum"); }
-//QUrl VkApi::getAudioAlbumEditUrl() const { return QUrl(getAPIUrl() + "audio.editAlbum"); }
-//QUrl VkApi::getAudioAlbumRemoveUrl() const { return QUrl(getAPIUrl() + "audio.deleteAlbum"); }
-//QUrl VkApi::getAudioAlbumMoveToUrl() const { return QUrl(getAPIUrl() + "audio.moveToAlbum"); }
+//QUrl VkApi::getAudioAlbumsListUrl() const { return QUrl(getApiUrl() + "audio.getAlbums"); }
+//QUrl VkApi::getAudioAlbumAddUrl() const { return QUrl(getApiUrl() + "audio.addAlbum"); }
+//QUrl VkApi::getAudioAlbumEditUrl() const { return QUrl(getApiUrl() + "audio.editAlbum"); }
+//QUrl VkApi::getAudioAlbumRemoveUrl() const { return QUrl(getApiUrl() + "audio.deleteAlbum"); }
+//QUrl VkApi::getAudioAlbumMoveToUrl() const { return QUrl(getApiUrl() + "audio.moveToAlbum"); }
 
-//QUrl VkApi::getAudioSaveServerUrl() const { return QUrl(getAPIUrl() + "audio.getUploadServer"); }
-//QUrl VkApi::getAudioSaveUrl() const { return QUrl(getAPIUrl() + "audio.save"); }
+//QUrl VkApi::getAudioSaveServerUrl() const { return QUrl(getApiUrl() + "audio.getUploadServer"); }
+//QUrl VkApi::getAudioSaveUrl() const { return QUrl(getApiUrl() + "audio.save"); }
 
 ///////////////////////////////////////////////////////////
 /// PROTECTED
 ///////////////////////////////////////////////////////////
-
-QString VkApiPrivate::boolToStr(bool val) {
-    return val ? "1" : "0";
-}
-
-QString VkApiPrivate::apiVersion() {
-    return "5.21";
-}
 
 QUrlQuery VkApiPrivate::methodParams(QString & token) {
     QUrlQuery query = QUrlQuery();
@@ -363,12 +355,4 @@ QUrlQuery VkApiPrivate::methodParams(QString & token) {
     query.addQueryItem("access_token", token);
 
     return query;
-}
-
-QString VkApiPrivate::getAPIUrl() {
-    return "https://api.vk.com/method/";
-}
-
-QString VkApiPrivate::getObjLimit() {
-    return "20";
 }

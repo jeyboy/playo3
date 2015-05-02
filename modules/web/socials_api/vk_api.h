@@ -11,7 +11,8 @@ class VkApi : public WebApi, public TeuAuth {
 public:
     inline QString name() const { return "vk"; }
 
-    QString authUrl() const;
+    inline QString authUrl() const { return VkApiPrivate::authUrl(); }
+
     QString proceedAuthResponse(const QUrl & url);
 
     ApiFuncContainer * wallMediaRoutine(ApiFuncContainer * func, int offset, int count);

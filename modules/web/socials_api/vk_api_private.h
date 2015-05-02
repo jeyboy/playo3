@@ -1,11 +1,6 @@
 #ifndef VK_API_PRIVATE_H
 #define VK_API_PRIVATE_H
 
-//#include "web/web_api.h"
-//#include "misc/func_container.h"
-//#include "model/model_item.h"
-//#include "web/auth_chemas/teu_auth.h"
-
 #include <QUrl>
 #include <QUrlQuery>
 #include <QStringList>
@@ -23,12 +18,11 @@ public:
     static QUrl isAppUser(QString token, QString uid);
 
 protected:
-    static QString boolToStr(bool val);
-    static QString apiVersion();
+    inline static QString boolToStr(bool val) { return val ? "1" : "0"; }
+    inline static QString apiVersion() { return "5.21"; }
     static QUrlQuery methodParams(QString & token);
-    static QString getAPIUrl();
-    static QString getObjLimit();
-
+    inline static QString getApiUrl() { return "https://api.vk.com/method/"; }
+    inline static QString getObjLimit() { return "20"; }
 
 //    QUrl getAudioListUrl() const;
 //    QUrl getAudioCountUrl() const;

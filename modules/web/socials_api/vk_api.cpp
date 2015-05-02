@@ -34,10 +34,6 @@ bool VkApi::isConnected() {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-QString VkApi::authUrl() const {
-    return VkApiPrivate::authUrl();
-}
-
 QString VkApi::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.fragment());
 

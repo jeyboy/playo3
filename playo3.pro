@@ -116,7 +116,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/ignore_list.cpp \
     modules/controls/drop_button.cpp \
     modules/controls/rotate_label.cpp \
-    misc/logger.cpp
+    misc/logger.cpp \
+    modules/web/socials_api/soundcloud_api_private.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -228,7 +229,8 @@ HEADERS  += playo.h \
     modules/controls/drop_button.h \
     modules/controls/hoverable_menu.h \
     modules/controls/rotate_label.h \
-    misc/logger.h
+    misc/logger.h \
+    modules/web/socials_api/soundcloud_api_private.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
