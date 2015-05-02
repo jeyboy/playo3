@@ -69,10 +69,19 @@ public:
 
     void fromJson(QJsonObject & hash);
     void toJson(QJsonObject & hash);
+
+signals:
+    void routineFinished(QJsonObject &);
+
 public slots:
     void showingCaptcha();
 
 protected:
+    void startApiCall(QFuture<ApiFuncContainer *> feature);
+
+protected slots:
+    void apiCallFinished();
+
     inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
 
     CaptchaDialog * captchaDialog;

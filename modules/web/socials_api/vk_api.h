@@ -37,18 +37,13 @@ public:
     bool isConnected();
 
 signals:
-    void routineFinished(QJsonObject &);
     void audioListReceived(QJsonObject &);
     void audioListUpdate(QJsonObject &, QList<QString> &);
     void errorReceived(int, QString);
     void showCaptcha();
 
-protected slots:
-    void apiCallFinished();
-
 protected:
     inline QString adapteUid(QString & uid) { return uid == "0" ? getUserID() : uid; }
-    void startApiCall(QFuture<ApiFuncContainer *>);
     bool responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc);
     bool errorSend(QJsonObject & doc, ApiFuncContainer * func, QUrl url);
     bool captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url);

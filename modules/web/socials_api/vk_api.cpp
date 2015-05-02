@@ -127,7 +127,7 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
         if (doc.value("finished").toBool())
             break;
 
-        QThread::sleep(1);
+        QThread::msleep(REQUEST_DELAY);
     }
 
     func -> result.insert("albums", QJsonArray::fromVariantList(res));
@@ -179,20 +179,6 @@ void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QL
 ///////////////////////////////////////////////////////////
 /// PROTECTED
 ///////////////////////////////////////////////////////////
-
-void VkApi::startApiCall(QFuture<ApiFuncContainer *> feature) {
-    QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
-    connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
-    initiator -> setFuture(feature);
-}
-
-void VkApi::apiCallFinished() {
-    QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
-    ApiFuncContainer * func = initiator -> result();
-    connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-    emit routineFinished(func -> result);
-    disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-}
 
 bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
     doc = responseToJson(reply -> readAll());

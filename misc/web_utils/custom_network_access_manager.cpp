@@ -12,7 +12,7 @@ QNetworkReply * CustomNetworkAccessManager::getSync(const QNetworkRequest & requ
     return ret;
 }
 
-QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) {
+QNetworkReply * CustomNetworkAccessManager::postSync(const QNetworkRequest & request, const QByteArray & data) {
     QNetworkReply * ret = CustomNetworkAccessManager::post(request, data);
     synchronizeRequest(ret);
     return ret;

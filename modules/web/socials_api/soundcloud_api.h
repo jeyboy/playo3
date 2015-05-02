@@ -16,8 +16,8 @@ public:
 
     QString getClientId() const { return "8f84790a84f5a5acd1c92e850b5a91b7"; }
 
-    void getGroupInfo(ApiFuncContainer * func, QString uid);
-    void getUidInfo(ApiFuncContainer * func, QString uid = "0");
+    void getGroupInfo(const QObject * receiver, const char * respSlot, QString uid);
+    void getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0");
 
     ~SoundcloudApi() { }
 
@@ -38,22 +38,20 @@ signals:
     void errorReceived(int, QString &);
 
 protected:
+    ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);
+    ApiFuncContainer * getUidInfoRoutine(ApiFuncContainer * func);
+
     inline QString getAPIUrl() { return "https://api.soundcloud.com/"; }
 
     void errorSend(QJsonObject & doc, const QObject * obj);
-
-//protected slots:
-//    void audioListRequest();
 private:
-    SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() {
+    inline SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() {
         fromJson(hash);
     }
 
-    SoundcloudApi() : WebApi(), TeuAuth() { }
+    inline SoundcloudApi() : WebApi(), TeuAuth() { }
 
     static SoundcloudApi * self;
-
-    QHash<QNetworkReply *, FuncContainer> responses;
 };
 
 #endif // SOUNDCLOUD_API_H
