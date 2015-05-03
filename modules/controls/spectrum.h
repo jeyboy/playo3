@@ -1,9 +1,9 @@
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
 
-#include <QToolBar>
-#include <QPainter>
-#include <QLinearGradient>
+#include <qtoolbar.h>
+#include <qpainter.h>
+#include <qbrush.h>
 #include <qevent.h>
 #include <qmenu.h>
 
@@ -20,9 +20,9 @@ namespace Playo3  {
         void generateContextMenu(QMenu * parent);
 
     public slots:
-        void setBarsView()      { changeType(Playo3::bars); }
-        void setSplitBarsView() { changeType(Playo3::split_bars); }
-        void setWavesView()     { changeType(Playo3::waves); }
+        inline void setBarsView()      { changeType(Playo3::bars); }
+        inline void setSplitBarsView() { changeType(Playo3::split_bars); }
+        inline void setWavesView()     { changeType(Playo3::waves); }
 
         void updateColors();
         void changeType(SpectrumType);
