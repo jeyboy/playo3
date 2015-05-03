@@ -1,5 +1,6 @@
 #include "soundcloud_model.h"
 #include "media/player.h"
+#include <QDebug>
 
 using namespace Playo3;
 /////////////////////////////////////////////////////////////

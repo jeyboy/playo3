@@ -34,6 +34,7 @@ protected:
     ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);
     ApiFuncContainer * getUidInfoRoutine(ApiFuncContainer * func);
 
+    bool responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func);
     void errorSend(QJsonObject & doc, const QObject * obj);
 private:
     inline SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() {

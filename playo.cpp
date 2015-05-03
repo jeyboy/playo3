@@ -33,7 +33,7 @@ Playo::~Playo() {
 //        Genre::close();
 
         VkApi::close();
-//        SoundcloudApi::close();
+        SoundcloudApi::close();
     ///////////////////////////////////////////////
 
     delete settings;
@@ -61,7 +61,7 @@ void Playo::initialization() {
     ///services loading
     ///////////////////////////////////////////////////////////
     VkApi::instance(this, settings -> read("vk").toObject());
-//    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
+    SoundcloudApi::instance(settings -> read("soundcloud").toObject());
 
     Settings::instance() -> fromJson(settings -> read("settings").toObject());
 
@@ -127,7 +127,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> clear();
 
     settings -> write("vk", VkApi::instance() -> toJson());
-//    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
+    settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);

@@ -86,6 +86,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos)
 }
 
 void WebModel::errorReceived(int /*code*/, QString msg) {
+    qDebug() << "ERROR " << msg;
 //    emit showMessage("!!!!!!!!!!! Some shit happened :( " + msg);
-//    emit hideSpinner();
+    emit moveOutProcess();
 }

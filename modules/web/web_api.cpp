@@ -86,11 +86,6 @@ void WebApi::toJson(QJsonObject & root) {
     root.insert("groups", groupsJson);
 }
 
-QJsonObject WebApi::responseToJson(QByteArray data) {
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    return doc.object();
-}
-
 void WebApi::showingCaptcha() {
     captchaDialog -> clearText();
     captchaDialog -> exec();

@@ -80,22 +80,12 @@ ApiFuncContainer * SoundcloudApi::getGroupInfoRoutine(ApiFuncContainer * func) {
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupAudiosUrl(func -> uid)));
 
-    QByteArray ar = m_http -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-    func -> result.insert("audio_list", responseToJson(ar).value("response").toArray());
-    delete m_http;
-
-    //////////////////////////////////////////////////////////////
-
-    m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupPlaylistsUrl(func -> uid)));
-
-    ar = m_http -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-    func -> result.insert("playlists", responseToJson(ar).value("response").toArray());
-    delete m_http;
+    if (responseRoutine("audio_list", m_http, func)) {
+        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupPlaylistsUrl(func -> uid)));
+        responseRoutine("playlists", m_http, func);
+    }
 
     delete netManager;
-
     return func;
 }
 
@@ -115,57 +105,30 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userAudiosUrl(func -> uid)));
 
-    QByteArray ar = m_http -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-    func -> result.insert("audio_list", responseToJson(ar).value("response").toArray());
-    delete m_http;
+    if (responseRoutine("audio_list", m_http, func)) {
+        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userPlaylistsUrl(func -> uid)));
 
-    //////////////////////////////////////////////////////////////
+        if (responseRoutine("playlists", m_http, func)) {
+            if (func -> uid == getUserID()) {
+                QThread::msleep(REQUEST_DELAY);
+                //////////////////////////////////////////////////////////////
+                m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userFolowingsUrl(func -> uid)));
 
-    m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userPlaylistsUrl(func -> uid)));
+                if (responseRoutine("followings", m_http, func)) {
+                    m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userFolowersUrl(func -> uid)));
 
-    ar = m_http -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-    func -> result.insert("playlists", responseToJson(ar).value("response").toArray());
-    delete m_http;
+                    if (responseRoutine("followers", m_http, func)) {
+                        QThread::msleep(REQUEST_DELAY);
 
-    //////////////////////////////////////////////////////////////
-
-    if (func -> uid == getUserID()) {
-        QThread::msleep(REQUEST_DELAY);
-        //////////////////////////////////////////////////////////////
-        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userFolowingsUrl(func -> uid)));
-
-        ar = m_http -> readAll();
-        ar.prepend("{\"response\":"); ar.append("}");
-        func -> result.insert("followings", responseToJson(ar).value("response").toArray());
-        delete m_http;
-
-        //////////////////////////////////////////////////////////////
-
-        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userFolowersUrl(func -> uid)));
-
-        ar = m_http -> readAll();
-        ar.prepend("{\"response\":"); ar.append("}");
-        func -> result.insert("followers", responseToJson(ar).value("response").toArray());
-        delete m_http;
-
-        //////////////////////////////////////////////////////////////
-        QThread::sleep(REQUEST_DELAY);
-        //////////////////////////////////////////////////////////////
-
-        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userGroupsUrl(func -> uid)));
-
-        ar = m_http -> readAll();
-        ar.prepend("{\"response\":"); ar.append("}");
-        func -> result.insert("groups", responseToJson(ar).value("response").toArray());
-        delete m_http;
-
-        //////////////////////////////////////////////////////////////
+                        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userGroupsUrl(func -> uid)));
+                        responseRoutine("groups", m_http, func);
+                    }
+                }
+            }
+        }
     }
 
     delete netManager;
-
     return func;
 }
 
@@ -173,12 +136,32 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
 /// PROTECTED
 ///////////////////////////////////////////////////////////
 
-void SoundcloudApi::errorSend(QJsonObject & doc, const QObject * obj) {
-    QJsonObject error = doc.value("error").toObject();
-    int err_code = error.value("error_code").toInt();
-    QString err_msg = error.value("error_msg").toString();
+bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
+    QByteArray ar = reply -> readAll();
+    ar.prepend("{\"response\":"); ar.append("}");
+    QJsonObject obj = responseToJson(ar);
 
-    connect(this, SIGNAL(errorReceived(int,QString&)), obj, SLOT(errorReceived(int,QString&)));
+    reply -> close();
+    delete reply;
+
+    bool hasError = obj.value("response").toObject().contains("errors");
+
+    qDebug() << fieldName << hasError << obj;
+
+    if (hasError)
+        errorSend(obj, func -> obj);
+    else
+        func -> result.insert(fieldName, obj.value("response").toArray());
+
+    return !hasError;
+}
+
+void SoundcloudApi::errorSend(QJsonObject & doc, const QObject * obj) {
+    QJsonObject error = doc.value("response").toObject().value("errors").toArray().first().toObject();
+    int err_code = -1;//error.value("error_code").toInt();
+    QString err_msg = error.value("error_message").toString();
+
+    connect(this, SIGNAL(errorReceived(int,QString)), obj, SLOT(errorReceived(int,QString)));
     emit errorReceived(err_code, err_msg);
-    disconnect(this, SIGNAL(errorReceived(int,QString&)), obj, SLOT(errorReceived(int,QString&)));
+    disconnect(this, SIGNAL(errorReceived(int,QString)), obj, SLOT(errorReceived(int,QString)));
 }

@@ -86,7 +86,7 @@ protected:
     inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
 
     CaptchaDialog * captchaDialog;
-    QJsonObject responseToJson(QByteArray data);
+    inline QJsonObject responseToJson(QByteArray data) { return QJsonDocument::fromJson(data).object(); }
 
     CustomNetworkAccessManager * netManager;
 
