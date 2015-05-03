@@ -5,7 +5,7 @@
 #include "../auth_chemas/teu_auth.h"
 #include "soundcloud_api_private.h"
 
-class SoundcloudApi : public WebApi, TeuAuth {
+class SoundcloudApi : public WebApi, public TeuAuth {
     Q_OBJECT
 public:
     inline QString name() const { return "soundcloud"; }
