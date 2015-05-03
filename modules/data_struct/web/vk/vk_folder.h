@@ -19,5 +19,4 @@ namespace Playo3 {
     };
 }
 
-
 #endif // VK_FOLDER_H

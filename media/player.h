@@ -36,6 +36,8 @@ public:
     };
 
     static Player * instance(QWidget * parent = 0);
+    inline static void close() { delete self; }
+
     void eject(bool updateState = true);
     bool playIndex(QModelIndex item, bool paused = false, uint start = 0);
     void setStartPosition(int position);
@@ -51,12 +53,9 @@ public:
     void setTimePanel(ClickableLabel * timePanel);
 
     QModelIndex playedIndex();
+    inline IModel * currentPlaylist() const { return current_model; }
     inline IItem * playedItem() const { return current_item; }
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
-
-    static void close() {
-        delete self;
-    }
 
     void getFileInfo(QUrl uri, MediaInfo * info);
 

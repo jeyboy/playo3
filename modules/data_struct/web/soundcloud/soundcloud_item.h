@@ -1,29 +1,21 @@
-//#ifndef SOUNDCLOUD_FILE_H
-//#define SOUNDCLOUD_FILE_H
+#ifndef SOUNDCLOUD_ITEM_H
+#define SOUNDCLOUD_ITEM_H
 
-//#include <QFile>
-//#include <QJsonObject>
+#include "../web_item.h"
 
-//#include "model/model_item.h"
+namespace Playo3 {
+    class SoundcloudItem : public WebItem {
+    public:
+        SoundcloudItem(QJsonObject * hash, FolderItem * parent = 0);
+        SoundcloudItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
+        SoundcloudItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
+        ~SoundcloudItem();
 
-//class SoundcloudFile : public ModelItem {
-//public:
-//    SoundcloudFile(QJsonObject *hash, ModelItem *parent = 0);
-//    SoundcloudFile(QString filePath, QString fileName, QString fileExtension, QString ownerID, QString fileID, ModelItem *parent = 0, int genre_id = -1, QString itemDuration = "", int itemSize = -1, int itemBpm = 0, QString itemInfo = "", int init_state = STATE_DEFAULT | STATE_CHECKED);
-//    ~SoundcloudFile();
+        inline int itemType() const { return SOUNDCLOUD_ITEM; }
+        bool removePhysicalObject();
 
-//    bool removePhysicalObject();
+        bool isExist() const;
+    };
+}
 
-//    bool isExist() const;
-//    bool isRemote() const;
-
-//    QString toUid();
-//    QUrl toUrl();
-//    QJsonObject toJSON();
-//protected:
-//    QString uid;
-//    QString owner_uid;
-//};
-
-
-//#endif // SOUNDCLOUD_FILE_H
+#endif // SOUNDCLOUD_ITEM_H

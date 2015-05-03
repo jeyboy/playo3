@@ -380,7 +380,8 @@ bool IView::removeRow(const QModelIndex & node, int selectionUpdate, bool usePre
     }
 
     if (Player::instance() -> playedIndex().isValid()) {
-        if (Player::instance() -> playedItemTreePath().startsWith(
+        if (Player::instance() -> currentPlaylist() == mdl &&
+             Player::instance() -> playedItemTreePath().startsWith(
             node.data(ITREESTR).toString()
         ))
             Player::instance() -> eject(false);

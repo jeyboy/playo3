@@ -17,6 +17,8 @@ namespace Playo3 {
     #define JSON_TYPE_TITLE "t"
     #define JSON_TYPE_UID "u"
 
+    #define JSON_TYPE_VIDEO_PATH "v"
+
     #define JSON_TYPE_TITLE_CACHES "z"
 
     #define JSON_TYPE_CONTAINER_ITEMS_COUNT "l"

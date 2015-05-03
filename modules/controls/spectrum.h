@@ -9,6 +9,8 @@
 
 #include "misc/settings.h"
 
+//FIXME: on visibility changed need to stop/start spec calc in player
+
 namespace Playo3  {
     class Spectrum : public QToolBar {
         Q_OBJECT

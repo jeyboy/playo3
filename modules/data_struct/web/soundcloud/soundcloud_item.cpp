@@ -1,55 +1,22 @@
-//#include "soundcloud_file.h"
-//#include "web/socials/soundcloud_api.h"
-//#include <QDebug>
+#include "soundcloud_item.h"
 
+using namespace Playo3;
 
-//SoundcloudFile::SoundcloudFile(QJsonObject *hash, ModelItem *parent) : ModelItem(hash, parent) {
-//    uid = hash -> value("u").toString();
-//    owner_uid = hash -> value("o").toString();
-//}
+SoundcloudItem::SoundcloudItem(QJsonObject * hash, FolderItem * parent) : WebItem(hash, parent) {}
+SoundcloudItem::SoundcloudItem(QVariantMap & hash, FolderItem * parent, int pos) : WebItem(hash, parent, pos) {}
+SoundcloudItem::SoundcloudItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent, int pos) : WebItem(uid, filePath, fileName, parent, pos) {
+//    setExtension("mp3");
+//    setBpm(itemBpm);
+}
 
-//SoundcloudFile::SoundcloudFile(QString filePath, QString fileName, QString fileExtension, QString ownerID, QString fileID, ModelItem *parent, int genre_id, QString itemDuration, int itemSize, int itemBpm, QString itemInfo, int initState)
-//    : ModelItem(filePath, fileName, parent, genre_id, itemDuration, itemSize, itemInfo, initState) {
+SoundcloudItem::~SoundcloudItem() {}
 
-//    bpm = itemBpm;
-//    uid = fileID;
-//    owner_uid = ownerID;
-//    extension = fileExtension;
-//}
+bool SoundcloudItem::removePhysicalObject() {
+    //TODO: realization require
+    return false;
+}
 
-//SoundcloudFile::~SoundcloudFile() {}
-
-//bool SoundcloudFile::removePhysicalObject() {
-//    //TODO: realization require
-//    return false;
-////    return QFile::remove(fullPath());
-//}
-
-//bool SoundcloudFile::isExist() const {
-//    //TODO: realization require
-//    return true;
-////    return QFile::exists(fullPath());
-//}
-
-//bool SoundcloudFile::isRemote() const { return true; }
-
-//QString SoundcloudFile::toUid() {
-//    return buildUid(owner_uid, uid);
-//}
-
-//QUrl SoundcloudFile::toUrl() {
-//    QUrl url(path);
-//    url.setQuery(SoundcloudApi::instance() -> commonMethodParams());
-
-//    return url;
-//}
-
-//QJsonObject SoundcloudFile::toJSON() {
-//    QJsonObject root = ModelItem::toJSON();
-
-//    root["i"] = SOUNDCLOUD_FILE;
-//    root["u"] = uid;
-//    root["o"] = owner_uid;
-
-//    return root;
-//}
+bool SoundcloudItem::isExist() const {
+    //TODO: realization require
+    return true;
+}

@@ -1,17 +1,15 @@
-//#ifndef SOUNDCLOUD_VIEW_H
-//#define SOUNDCLOUD_VIEW_H
+#ifndef SOUNDCLOUD_VIEW_H
+#define SOUNDCLOUD_VIEW_H
 
-//#include "model/view.h"
-//#include "model/tree/tree_view.h"
-//#include "model/web/soundcloud/soundcloud_model.h"
+#include "modules/data_struct/view_interface.h"
+#include "soundcloud_model.h"
 
-//class SoundcloudView : public TreeView {
-//  Q_OBJECT
-//public:
-//    SoundcloudView(QWidget * parent, CBHash settinsSet, QJsonObject * hash = 0);
-//    ~SoundcloudView();
+class SoundcloudView : public IView {
+  Q_OBJECT
+public:
+    SoundcloudView(QWidget * parent, ViewSettings settins, QJsonObject * hash = 0);
+    SoundcloudView(WebModel * newModel, QWidget * parent, ViewSettings settings);
+    ~SoundcloudView();
+};
 
-//    QJsonObject toJSON();
-//};
-
-//#endif // SOUNDCLOUD_VIEW_H
+#endif // SOUNDCLOUD_VIEW_H

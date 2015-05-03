@@ -66,6 +66,7 @@ namespace Playo3 {
         inline void setExtension(QVariant newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
         inline void setInfo(QVariant newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
         inline void setTitlesCache(QVariant newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
+        inline void setVideoPath(QVariant videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 
