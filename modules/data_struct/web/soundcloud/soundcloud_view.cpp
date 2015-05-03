@@ -1,16 +1,10 @@
-//#include "soundcloud_view.h"
-//#include <QDebug>
+#include "soundcloud_view.h"
 
-//SoundcloudView::SoundcloudView(QWidget *parent, CBHash settingsSet, QJsonObject *hash)
-//    : TreeView(dynamic_cast<Model *>(new SoundcloudModel(QString::number(settingsSet.value("uid")), hash)), parent, settingsSet) {
-//}
+using namespace Playo3;
 
-//SoundcloudView::~SoundcloudView() {}
+SoundcloudView::SoundcloudView(QWidget * parent, ViewSettings settings, QJsonObject * hash)
+    : IView(dynamic_cast<IModel *>(new SoundcloudModel(settings.uid, hash)), parent, settings) {}
 
-//QJsonObject SoundcloudView::toJSON() {
-//    QJsonObject res = TreeView::toJSON();
+SoundcloudView::SoundcloudView(WebModel * newModel, QWidget * parent, ViewSettings settings) : IView(newModel, parent, settings) {}
 
-//    res.insert("uid", ((SoundcloudModel *)model) -> getTabUid());
-
-//    return res;
-//}
+SoundcloudView::~SoundcloudView() {}

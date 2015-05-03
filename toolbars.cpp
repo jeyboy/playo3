@@ -400,21 +400,21 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
     else
         disconnect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
 
-//    if (SoundcloudApi::instance() -> isConnected()) {
-//        soundcloudToolButton -> setIcon(QIcon(":/add_soundcloud_on"));
-//        soundcloudToolButton -> setToolTip("Soundcloud(soundcloud.com)");
-//        soundcloudToolButton -> setPopupMode(QToolButton::InstantPopup);
+    if (SoundcloudApi::instance() -> isConnected()) {
+        soundcloudToolButton -> setIcon(QIcon(":/add_soundcloud_on"));
+        soundcloudToolButton -> setToolTip("Soundcloud(soundcloud.com)");
+        soundcloudToolButton -> setPopupMode(QToolButton::InstantPopup);
 
-//        QMenu * vkMenu = new QMenu(soundcloudToolButton);
-//        vkMenu -> addAction("Reconect", parent(), SLOT(openSoundcloudTabDialog()));
-//        vkMenu -> addAction("Open your tab", parent(), SLOT(showSoundcloudTabDialog()));
-//        vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showSoundcloudRelTabDialog()));
-//        soundcloudToolButton -> setMenu(vkMenu);
-//    } else {
-//        soundcloudToolButton -> setIcon(QIcon(":/add_soundcloud"));
-//        soundcloudToolButton -> setToolTip("Connect to Soundcloud(soundcloud.com)");
-//        connect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
-//    }
+        QMenu * vkMenu = new QMenu(soundcloudToolButton);
+        vkMenu -> addAction("Reconect", parent(), SLOT(openSoundcloudTabDialog()));
+        vkMenu -> addAction("Open your tab", parent(), SLOT(showSoundcloudTabDialog()));
+        vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showSoundcloudRelTabDialog()));
+        soundcloudToolButton -> setMenu(vkMenu);
+    } else {
+        soundcloudToolButton -> setIcon(QIcon(":/add_soundcloud"));
+        soundcloudToolButton -> setToolTip("Connect to Soundcloud(soundcloud.com)");
+        connect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
+    }
 
     return soundcloudToolButton;
 }
