@@ -89,8 +89,9 @@ void Spectrum::changeHeight(int newHeight) {
 }
 
 void Spectrum::dataUpdated(QList<QVector<int> > data) {
+    peaks = data;
+
     if (isVisible()) {
-        peaks = data;
         if (peaks.size() == 1 && type != bars)
             peaks << peaks[0];
 

@@ -40,7 +40,7 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Library::instance(QApplication::allWindows().last());
+    Library::instance(QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
 
     Stylesheets::initPens();
     new Tray(this);
