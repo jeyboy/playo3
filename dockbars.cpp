@@ -154,9 +154,9 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         case vk: {
             view = new VkView(bar, settings, attrs);
         break;}
-//        case soundcloud: {
-//            view = new SoundcloudView(bar, settings, attrs);
-//        break;}
+        case soundcloud: {
+            view = new SoundcloudView(bar, settings, attrs);
+        break;}
 
         default: view = 0;
     }
