@@ -78,7 +78,9 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
 }
 
 IView::~IView() {
-    mdl -> syncMutex() -> lock();
+    while (!mdl -> syncMutex() -> tryLock())
+        QApplication::processEvents();
+
     Library::instance() -> unregisterListSync(model());
     mdl -> syncMutex() -> unlock();
 
@@ -484,7 +486,9 @@ void IView::removeSelectedItems() {
     selectionModel() -> clearSelection();
 
     if (!list.isEmpty()) {
-        mdl -> syncMutex() -> lock();
+        while (!mdl -> syncMutex() -> tryLock())
+            QApplication::processEvents();
+
         Library::instance() -> declineAllItemsRestoration(model());
     } else return;
 
