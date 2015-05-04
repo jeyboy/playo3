@@ -17,7 +17,7 @@ namespace Playo3 {
         ~WebItem();
 
         inline QString fullPath() const { return path().toString(); }
-        inline QUrl toUrl() const { return QUrl(fullPath()); }
+        virtual inline QUrl toUrl() const { return QUrl(fullPath()); }
         inline bool isRemote() const { return true; }
     };
 }

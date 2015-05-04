@@ -134,7 +134,7 @@ void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
 int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
     int itemsAmount = 0;
     QJsonObject itm;
-    VkItem * newItem;
+    SoundcloudItem * newItem;
     QString uri, id, owner;
     QVariant uid;
     QList<IItem *> items;
@@ -163,7 +163,7 @@ int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * pare
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new VkItem(
+            newItem = new SoundcloudItem(
                 id,
                 uri,
                 itm.value("title").toString(),

@@ -24,10 +24,11 @@ public:
     static QUrl userFolowingsUrl(QString uid);
     static QUrl userFolowersUrl(QString uid);
     static QUrl userGroupsUrl(QString uid);
+
+    static QUrlQuery commonMethodParams();
 protected:
     inline static QString getApiUrl() { return "https://api.soundcloud.com/"; }
     static QUrlQuery userMethodParams(QString token);
-    static QUrlQuery commonMethodParams();
 };
 #endif // SOUNDCLOUD_API_PRIVATE_H
 

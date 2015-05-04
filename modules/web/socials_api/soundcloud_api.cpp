@@ -101,7 +101,7 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
 
     CustomNetworkAccessManager * netManager = createManager();
 
-    func -> uid = func -> uid == "0" ? getUserID() : func -> uid; // 183
+    func -> uid = /*"183";*/ func -> uid == "0" ? getUserID() : func -> uid;
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userAudiosUrl(func -> uid)));
 
