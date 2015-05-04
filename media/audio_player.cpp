@@ -22,7 +22,7 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
-    channelsCount(2), prevChannelsCount(2), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
+    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
     qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
 

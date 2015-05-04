@@ -24,9 +24,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     onMovableChanged(isMovable());
 }
 
-Spectrum::~Spectrum() {
-
-}
+Spectrum::~Spectrum() {}
 
 void Spectrum::generateContextMenu(QMenu * parent) {
     QAction * act;
@@ -90,12 +88,11 @@ void Spectrum::changeHeight(int newHeight) {
 
 void Spectrum::dataUpdated(QList<QVector<int> > data) {
     peaks = data;
+    pairs = (peaks.length() + 1) / 2;
 
     if (isVisible()) {
         if (peaks.size() == 1 && type != bars)
             peaks << peaks[0];
-
-        pairs = (peaks.length() + 1) / 2;
 
         if (pairs != last_pairs_count) {
             recalcAttrs();
