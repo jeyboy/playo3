@@ -28,17 +28,15 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
                 case VK_PLAYLIST: {
                     new VkFolder(&iterObj, this);
                 break;}
-
+                case SOUNDCLOUD_ITEM: {
+                    new SoundcloudItem(&iterObj, this);
+                break;}
+                case SOUNDCLOUD_PLAYLIST: {
+                    new SoundcloudFolder(&iterObj, this);
+                break;}
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
                 // break;}
-//                case SOUNDCLOUD_FILE: {
-//                    inBranchCount++;
-//                    new SoundcloudFile(&iterObj, this);
-//                break;}
-//                case SOUNDCLOUD_PLAYLIST: {
-//                    inBranchCount += (new SoundcloudPlaylist(&iterObj, this)) -> inBranchCount;
-//                break;}
             }
         }
     }

@@ -210,7 +210,7 @@ void Player::getFileInfo(QUrl uri, MediaInfo * info) {
     if (uri.isLocalFile())
         chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
     else
-        chUID = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, 0, NULL, 0);
+        chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
 
     if (!chUID) return;
 
