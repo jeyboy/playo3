@@ -84,14 +84,15 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
             QJsonArray::Iterator it = albums.begin();
 
-            for(; it != albums.end(); it++) {
+            for(int pos = 0; it != albums.end(); it++, pos++) {
                 album = (*it).toObject();
 
                 QJsonArray albumItems = album.value("items").toArray();
                 if (albumItems.size() > 0) {
                     folder = rootItem -> createFolder<VkFolder>(
                         album.value("folder_id").toString(),
-                        album.value("title").toString()
+                        album.value("title").toString(),
+                        pos
                     );
 
                     int folderItemsAmount = proceedAudioList(albumItems, folder, store);
@@ -157,7 +158,7 @@ int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHas
 
     QJsonArray::Iterator it = collection.begin();
 
-    for(; it != collection.end(); it++) {
+    for(int pos = parent -> foldersAmount(); it != collection.end(); it++, pos++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -178,7 +179,8 @@ int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHas
                 id,
                 uri,
                 itm.value("artist").toString() + " - " + itm.value("title").toString(),
-                parent
+                parent,
+                pos
             );
 
             newItem -> setOwner(owner);
