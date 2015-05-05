@@ -5,14 +5,12 @@
 using namespace Playo3;
 /////////////////////////////////////////////////////////////
 
-SoundcloudModel::SoundcloudModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {
-//    SoundcloudApi::instance() -> getUidInfo(FuncContainer(this, SLOT(proceedResponse(QJsonObject &))), tabUid);
-}
+SoundcloudModel::SoundcloudModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {}
 
 SoundcloudModel::~SoundcloudModel() {}
 
 void SoundcloudModel::refresh(bool retryPlaing) {
-    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < 300000) return; // 30 min beetwen update interval
+    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 
     lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
@@ -25,14 +23,9 @@ void SoundcloudModel::refresh(bool retryPlaing) {
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
-    QHash<QString, IItem *> store;
-
     QJsonArray albums = hash.value("playlists").toArray();
     QJsonArray audios = hash.value("audio_list").toArray();
     int itemsAmount = 0;
-
-    if (albums.count() + audios.count() > 0)
-        rootItem -> accumulateUids(store);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
     {
@@ -52,7 +45,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                         album.value("title").toString()
                     );
 
-                    int folderItemsAmount = proceedAudioList(albumItems, folder, store);
+                    int folderItemsAmount = proceedAudioList(albumItems, folder);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -62,7 +55,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
 
         if (audios.count() > 0)
-            itemsAmount += proceedAudioList(audios, rootItem, store);
+            itemsAmount += proceedAudioList(audios, rootItem);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
@@ -131,7 +124,7 @@ void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }
 
-int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
+int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     SoundcloudItem * newItem;
@@ -139,6 +132,9 @@ int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * pare
     QVariant uid;
     QList<IItem *> items;
     bool original;
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
 
     QJsonArray::Iterator it = collection.begin();
 

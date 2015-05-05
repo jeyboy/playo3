@@ -21,7 +21,7 @@ namespace Playo3 {
     protected slots:
         void proceedAudioList(QJsonObject &);
         void proceedAudioListAndRetry(QJsonObject &);
-        int proceedAudioList(QJsonArray &, FolderItem *, QHash<QString, IItem *> &);
+        int proceedAudioList(QJsonArray &, FolderItem *);
     };
 }
 

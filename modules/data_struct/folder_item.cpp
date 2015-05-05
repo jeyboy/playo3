@@ -90,13 +90,12 @@ FolderItem::~FolderItem() {
 
 void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
     QList<IItem *>::Iterator it = children.begin();
+    QVariant item_uid;
 
     for(; it != children.end(); it++) {
         if ((*it) -> isRemote()) {
-            if ((*it) -> isContainer())
-                (reinterpret_cast<FolderItem *>(*it)) -> accumulateUids(store);
-            else {
-                QVariant item_uid = (*it) -> toUid();
+            if (!(*it) -> isContainer()) {
+                item_uid = (*it) -> toUid();
                 if (item_uid.isValid())
                     store.insert(item_uid.toString(), (*it));
             }

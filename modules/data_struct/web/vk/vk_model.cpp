@@ -42,9 +42,6 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 
         beginInsertRows(QModelIndex(), index, index);
 
-        QHash<QString, IItem *> store;
-        rootFolder -> accumulateUids(store);
-
         QJsonArray::Iterator it = posts.begin();
 
         for(; it != posts.end(); it++) {
@@ -55,7 +52,7 @@ void VkModel::proceedWallList(QJsonObject & hash) {
             title = QDateTime::fromTime_t(post.value("date").toInt()).toString() + (title.isEmpty() ? "" : " : ") + title;
 
             folder = rootFolder -> createFolder(title);
-            proceedAudioList(audios, folder, store);
+            proceedAudioList(audios, folder);
 //            if (folder -> childCount() == 0)
 //                removeFolderPrebuild(folder);
         }
@@ -67,16 +64,15 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
+
     QHash<QString, IItem *> store;
 
     QJsonArray albums = hash.value("albums").toArray();
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
     int itemsAmount = 0;
 
-    if (albums.count() + audios.count() > 0)
-        rootItem -> accumulateUids(store);
-
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
+//    beginResetModel();
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count());
     {
         if (albums.count() > 0) {
             VkFolder * folder;
@@ -95,7 +91,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
                         pos
                     );
 
-                    int folderItemsAmount = proceedAudioList(albumItems, folder, store);
+                    int folderItemsAmount = proceedAudioList(albumItems, folder);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -105,10 +101,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
 
         if (audios.count() > 0)
-            itemsAmount += proceedAudioList(audios, rootItem, store);
+            itemsAmount += proceedAudioList(audios, rootItem);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
+//    endResetModel();
     /////////////////////////////////////////////////////////////////////
     {
         QJsonObject group;
@@ -148,13 +145,16 @@ void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }
 
-int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHash<QString, IItem *> & store) {
+int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     VkItem * newItem;
     QString uri, id, owner;
     QVariant uid;
     QList<IItem *> items;
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
 
     QJsonArray::Iterator it = collection.begin();
 
