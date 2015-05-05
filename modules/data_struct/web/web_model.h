@@ -4,6 +4,8 @@
 #include "modules/data_struct/model_interface.h"
 #include "ignore_list.h"
 
+#define UPDATE_INTERVAL 10000
+
 class WebApi;
 namespace Playo3 {
     class WebModel : public IModel, public IgnoreList {

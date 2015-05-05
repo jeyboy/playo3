@@ -12,7 +12,6 @@ namespace Playo3 {
         ~VkItem();
 
         inline int itemType() const { return VK_ITEM; }
-//        inline QVariant toUid() { return WebItem::toUid(owner(), uid()); }
         bool removePhysicalObject();
 
         bool isExist() const;

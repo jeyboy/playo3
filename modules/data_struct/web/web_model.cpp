@@ -6,7 +6,7 @@ using namespace Playo3;
 WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
     IModel(hash, parent), IgnoreList(hash), tab_uid(uid)
 {
-    lastRefresh = QDateTime::currentMSecsSinceEpoch() - 300000;
+    lastRefresh = QDateTime::currentMSecsSinceEpoch() - UPDATE_INTERVAL;
 }
 
 WebModel::~WebModel() {}

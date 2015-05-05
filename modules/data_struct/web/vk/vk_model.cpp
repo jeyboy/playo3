@@ -10,7 +10,7 @@ VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(u
 VkModel::~VkModel() {}
 
 void VkModel::refresh(bool retryPlaing) {
-    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < 300000) return; // 30 min beetwen update interval
+    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 
     lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
@@ -73,7 +73,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
     int itemsAmount = 0;
 
-    if (albums.count() > 0 || audios.count() > 0)
+    if (albums.count() + audios.count() > 0)
         rootItem -> accumulateUids(store);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
@@ -158,7 +158,7 @@ int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHas
 
     QJsonArray::Iterator it = collection.begin();
 
-    for(int pos = parent -> foldersAmount(); it != collection.end(); it++, pos++) {
+    for(int pos = parent -> foldersAmount(); it != collection.end(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -193,6 +193,8 @@ int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent, QHas
             for(; it_it != items.end(); it_it++)
                 (*it_it) -> setPath(uri);
         }
+
+        pos++;
     }
 
     return itemsAmount;
