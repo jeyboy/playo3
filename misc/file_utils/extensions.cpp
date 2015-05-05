@@ -1,6 +1,10 @@
 #include "extensions.h"
 #include <qdebug.h>
 
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#endif
+
 using namespace Playo3;
 
 Extensions * Extensions::self = 0;
@@ -157,7 +161,33 @@ QFileInfoList Extensions::folderFiles(QFileInfo file) {
 }
 
 QFileInfoList Extensions::folderDirectories(QFileInfo file) {
-    return QDir(file.filePath()).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden);
+    #ifdef Q_OS_WIN
+        WIN32_FIND_DATA ffd;
+        LARGE_INTEGER filesize;
+        HANDLE hFind = INVALID_HANDLE_VALUE;
+
+        hFind = FindFirstFile((file.path() + "\\*").toStdWString().c_str(), &ffd);
+
+        if (INVALID_HANDLE_VALUE == hFind) {
+            qDebug() << "INVALID PATH";
+            return QFileInfoList();
+        }
+
+        do {
+            if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                qDebug() << "DIR" << QString::fromUtf16((ushort*)ffd.cFileName);
+            } else {
+                filesize.LowPart = ffd.nFileSizeLow;
+                filesize.HighPart = ffd.nFileSizeHigh;
+                qDebug() << "FILE" << QString::fromUtf16((ushort*)ffd.cFileName) << filesize.QuadPart;
+            }
+        }
+        while (FindNextFile(hFind, &ffd) != 0);
+
+        FindClose(hFind);
+    #else
+        return QDir(file.filePath()).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden);
+    #endif
 //    return QDir(file.filePath()).entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 }
 

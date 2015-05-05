@@ -1,4 +1,5 @@
 #include "tree_model.h"
+#include "misc/logger.h"
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
@@ -65,6 +66,9 @@ int TreeModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 
 int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
     int res = 0;
+
+    Logger::instance() -> startMark();
+
     QList<QUrl>::ConstIterator it = list.begin();
 
     for(; it != list.end(); it++) {
@@ -78,6 +82,8 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos
             }
         }
     }
+
+    Logger::instance() -> endMark("Tree", "AddItems");
 
     return res;
 }
