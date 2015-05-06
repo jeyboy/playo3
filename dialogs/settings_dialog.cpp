@@ -285,6 +285,8 @@ void SettingsDialog::initHotkeysSettings() {
     ui -> treeView -> setColumnWidth(0, 230);
 }
 void SettingsDialog::initSpectrumSettings() {
+    ui -> autoBarsAmount -> setChecked(Settings::instance() -> isAutoBarsAmount());
+
     spectrumColor = Settings::instance() -> spectrumColor();
     ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
 
@@ -385,6 +387,8 @@ void SettingsDialog::saveHotkeysSettings() {
 }
 
 void SettingsDialog::saveSpectrumSettings() {
+    Settings::instance() -> setAutoBarsAmount(ui -> autoBarsAmount -> isChecked());
+
     Settings::instance() -> setSpectrumColor(spectrumColor);
     Settings::instance() -> setSpectrumColor2(spectrumColor2);
     Settings::instance() -> setSpectrumColor3(spectrumColor3);

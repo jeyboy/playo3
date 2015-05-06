@@ -28,7 +28,7 @@ namespace Playo3  {
 
         void updateColors();
         void changeType(SpectrumType);
-        void changeBandCount(int newCount);
+        void changeBandCount();
         void changeHeight(int newHeight);
 
     protected slots:
@@ -41,6 +41,7 @@ namespace Playo3  {
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *event);
 
+        int calcBarCount();
         int peakDimension();
         inline int verticalPadd() { return 5; }
         inline int paddWidth() { return 2; }

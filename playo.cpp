@@ -206,7 +206,7 @@ void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         ToolBars::instance() -> getSpectrum() -> updateColors();
-        ToolBars::instance() -> getSpectrum() -> changeBandCount(Settings::instance() -> spectrumBarsCount());
+        ToolBars::instance() -> getSpectrum() -> changeBandCount();
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
         ToolBars::instance() -> getSpectrum() -> changeType(Settings::instance() -> spectrumType());
         Player::instance() -> setSpectrumFreq(Settings::instance() -> spectrumFreqRate());

@@ -18,7 +18,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
     updateColors();
-    changeBandCount(Settings::instance() -> spectrumBarsCount());
+    changeBandCount();
     changeHeight(Settings::instance() -> spectrumHeight());
     changeType(Settings::instance() -> spectrumType());
     onMovableChanged(isMovable());
@@ -74,8 +74,8 @@ void Spectrum::changeType(SpectrumType newType) {
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
-void Spectrum::changeBandCount(int newCount) {
-    Player::instance() -> setSpectrumBandsCount(newCount);
+void Spectrum::changeBandCount() {
+    Player::instance() -> setSpectrumBandsCount(calcBarCount());
     dataUpdated(Player::instance() -> getDefaultSpectrum());
 }
 
@@ -114,6 +114,7 @@ void Spectrum::onOrientationChanged(Qt::Orientation /*orientation*/) {
 
 void Spectrum::resizeEvent(QResizeEvent * e) {
     QToolBar::resizeEvent(e);
+    changeBandCount();
     recalcAttrs();
 }
 
@@ -143,6 +144,13 @@ void Spectrum::recalcAttrs() {
     }
 
     update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - (verticalPadd() * 2));
+}
+
+int Spectrum::calcBarCount() {
+    if (Settings::instance() -> isAutoBarsAmount())
+        return (width() - start_h_offset) / 10;
+    else
+        return Settings::instance() -> spectrumBarsCount();
 }
 
 int Spectrum::peakDimension() {

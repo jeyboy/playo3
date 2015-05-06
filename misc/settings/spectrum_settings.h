@@ -14,6 +14,9 @@ public:
     inline bool isCustomColorSpectrum() { return _customColorSpectrum; }
     inline void setCustomColorSpectrum(bool use) { _customColorSpectrum = use; }
 
+    inline bool isAutoBarsAmount() { return _autoBarsAmount; }
+    inline void setAutoBarsAmount(bool use) { _autoBarsAmount = use; }
+
     inline QColor spectrumColor() { return _spectrumColor; }
     inline void setSpectrumColor(QColor newColor) { _spectrumColor = newColor; }
 
@@ -48,7 +51,9 @@ protected:
     int _spectrumBarsCount;
     int _spectrumHeight;
     Playo3::SpectrumType _spectrumType;
+
     bool _customColorSpectrum;
+    bool _autoBarsAmount;
 };
 
 #endif // SPECTRUM_SETTINGS

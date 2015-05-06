@@ -3,6 +3,8 @@
 void SpectrumSettings::fromJson(QJsonObject & settings) {
     _customColorSpectrum = settings.value("customcolor_spectrum").toBool(false);
 
+    _autoBarsAmount = settings.value("auto_bars_amount").toBool(true);
+
     QVariant colorVar = settings.value("spectrum_color").toVariant();
     _spectrumColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(0, 0, 0);
 
@@ -23,6 +25,7 @@ void SpectrumSettings::fromJson(QJsonObject & settings) {
 }
 
 void SpectrumSettings::toJson(QJsonObject & settings) {
+    settings.insert("auto_bars_amount", QJsonValue::fromVariant(_autoBarsAmount));
     settings.insert("customcolor_spectrum", QJsonValue::fromVariant(_customColorSpectrum));
     settings.insert("spectrum_color", QJsonValue::fromVariant(_spectrumColor));
     settings.insert("spectrum_color2", QJsonValue::fromVariant(_spectrumColor2));
