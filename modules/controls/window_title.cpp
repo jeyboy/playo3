@@ -111,14 +111,14 @@ void WindowTitle::setVertical(bool isVertical) {
 }
 
 void WindowTitle::invertWindowState() {
-    QLabel * button = qobject_cast<QLabel *>(sender());
+//    QLabel * button = qobject_cast<QLabel *>(sender()); // not worked on double click by title
 
     if (parentWidget() -> isMaximized()) {
         parentWidget() -> showNormal();
-        button -> setToolTip("Maximize");
+//        button -> setToolTip("Maximize");
     } else {
         parentWidget() -> showMaximized();
-        button -> setToolTip("Normalize");
+//        button -> setToolTip("Normalize");
     }
 }
 
