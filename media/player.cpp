@@ -374,14 +374,6 @@ void Player::onMediaStatusChanged(MediaStatus status) {
             current_model -> itemNotExist(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);
         break;}
-
-        case NoRemoteMedia: {
-            qDebug() << "PLAYER: " << "NO REMOTE MEDIA";
-//            emit itemNotAccessable(playedIndex());
-            current_model -> itemNotExist(playedIndex());
-            emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);
-        break;}
-
         default: {  }
     }
 }

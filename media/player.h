@@ -61,10 +61,6 @@ public:
 
 signals:
     void nextItemNeeded(Player::Reason);
-//    void itemNotSupported(QModelIndex);
-//    void itemNotExisted(QModelIndex);
-//    void itemNotAccessable(QModelIndex);
-//    void itemExecError(QModelIndex);
 
 public slots:
     void playPause();

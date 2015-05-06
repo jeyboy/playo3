@@ -5,6 +5,7 @@
 #include <qclipboard.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
+#include <qdesktopservices.h>
 #include <qdebug.h>
 
 #include "misc/file_utils/extensions.h"

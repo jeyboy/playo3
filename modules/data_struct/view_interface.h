@@ -6,7 +6,6 @@
 #include <QMenu>
 #include <QDrag>
 
-#include <qdesktopservices.h>
 #include <qevent.h>
 
 #include "model_interface.h"

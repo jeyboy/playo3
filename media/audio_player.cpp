@@ -507,12 +507,7 @@ void AudioPlayer::play() {
                     case BASS_ERROR_FILEOPEN: {
                         emit mediaStatusChanged(NoMedia);
                     break;}
-                    default: {
-                        if (chan == -1)
-                            emit mediaStatusChanged(NoRemoteMedia);
-                        else
-                            emit mediaStatusChanged(StalledMedia);
-                    }
+                    default: emit mediaStatusChanged(StalledMedia);
                 }
             }
         }
