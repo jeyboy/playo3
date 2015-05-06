@@ -500,14 +500,20 @@ void AudioPlayer::play() {
                 syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
             } else {
                 currentState = UnknowState;
-                if (chan == 41)
-                    emit mediaStatusChanged(InvalidMedia);
-                else if (chan == 2)
-                    emit mediaStatusChanged(NoMedia);
-                else if (chan == -1)
-                    emit mediaStatusChanged(NoRemoteMedia);
-                else
-                    emit mediaStatusChanged(StalledMedia);
+                switch(BASS_ErrorGetCode()) {
+                    case BASS_ERROR_FILEFORM: {
+                        emit mediaStatusChanged(InvalidMedia);
+                    break;}
+                    case BASS_ERROR_FILEOPEN: {
+                        emit mediaStatusChanged(NoMedia);
+                    break;}
+                    default: {
+                        if (chan == -1)
+                            emit mediaStatusChanged(NoRemoteMedia);
+                        else
+                            emit mediaStatusChanged(StalledMedia);
+                    }
+                }
             }
         }
     }

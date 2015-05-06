@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QDrag>
 
+#include <qdesktopservices.h>
 #include <qevent.h>
 
 #include "model_interface.h"
@@ -87,9 +88,6 @@ namespace Playo3 {
 //        void showMessage(QString);
 
     protected slots:
-        inline void itemNotExist(QModelIndex node) { mdl -> setData(node, ItemState::not_exist, ISTATE); }
-        inline void itemNotSupported(QModelIndex node) { mdl -> setData(node, ItemState::not_supported, ISTATE); }
-        inline void itemError(QModelIndex node) { mdl -> setData(node, ItemState::not_supported, ISTATE); }
         inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
         void copyToClipboard();

@@ -337,6 +337,12 @@ void Player::onStateChanged(MediaState newState) {
 }
 
 void Player::onMediaStatusChanged(MediaStatus status) {
+//    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex)), this, SLOT(itemError(QModelIndex)));
+//    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex)), this, SLOT(itemNotSupported(QModelIndex)));
+//    connect(Player::instance(), SIGNAL(itemNotAccessable(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
+//    connect(Player::instance(), SIGNAL(itemNotExisted(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
+
+
     switch (status) {
         case UnknownMediaStatus: {
             qDebug() << "PLAYER: " << "UNKNOWN";
@@ -345,7 +351,8 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case StalledMedia: {
             qDebug() << "PLAYER: " << "STALLED";
-            emit itemExecError(playedIndex());
+//            emit itemExecError(playedIndex());
+            current_model -> itemError(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : stalled);
         break; }
 
@@ -356,19 +363,22 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case InvalidMedia: {
             qDebug() << "PLAYER: " << "INVALID";
-            emit itemNotSupported(playedIndex());
+//            emit itemNotSupported(playedIndex());
+            current_model -> itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
 
         case NoMedia: {
             qDebug() << "PLAYER: " << "NO MEDIA";
-            emit itemNotExisted(playedIndex());
+//            emit itemNotExisted(playedIndex());
+            current_model -> itemNotExist(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);
         break;}
 
         case NoRemoteMedia: {
             qDebug() << "PLAYER: " << "NO REMOTE MEDIA";
-            emit itemNotAccessable(playedIndex());
+//            emit itemNotAccessable(playedIndex());
+            current_model -> itemNotExist(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);
         break;}
 

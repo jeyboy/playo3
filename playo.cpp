@@ -1,7 +1,6 @@
 #include "playo.h"
 #include "ui_playo.h"
 
-#include <QDesktopServices>
 #include "misc/stylesheets.h"
 
 using namespace Playo3;

@@ -66,6 +66,13 @@ namespace Playo3 {
         inline QMutex * syncMutex() { return sync; }
 
     public slots:
+        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
+        inline void itemNotSupported(QModelIndex node) {
+            setData(node, ItemState::not_supported, ISTATE);
+            QDesktopServices::openUrl(node.data(IURL).toUrl());
+        }
+        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported, ISTATE); }
+
         void copyTitleToClipboard(const QModelIndex & index);
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
