@@ -11,7 +11,7 @@ DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
 }
 
 DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
-    paused(false), mdl(new DownloadModel(hash, this)), networkManager(new CustomNetworkAccessManager()) {
+    paused(false), mdl(new DownloadModel(hash, this)) {
 
     setModel(mdl);
 
@@ -145,7 +145,6 @@ void DownloadView::addRow(QUrl from, QString to, QString name) {
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
-    qDebug() << "DOWN" << from << to;
     QModelIndex ind = mdl -> appendRow(data);
     proceedDownload(ind);
 }
@@ -256,6 +255,7 @@ QString DownloadView::ioError(QNetworkReply * reply) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIndex> * watcher) {
     DownloadModelItem * itm = mdl -> item(ind);
+    CustomNetworkAccessManager * networkManager = new CustomNetworkAccessManager();
 
     QString to;
     QVariant toVar = itm -> data(DOWNLOAD_TO);
@@ -292,6 +292,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 source -> close();
                 delete source;
                 toFile.close();
+                delete networkManager;
                 return ind;
             }
 
@@ -305,6 +306,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             source -> close();
             delete source;
             toFile.close();
+            delete networkManager;
             return ind;
         }
 
@@ -332,6 +334,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         source -> close();
         delete source;
+        delete networkManager;
         if (watcher -> isCanceled())
             toFile.remove();
         else

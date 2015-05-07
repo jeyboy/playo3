@@ -78,7 +78,6 @@ namespace Playo3 {
         static DownloadView * self;
 
         DownloadDelegate * item_delegate;
-        CustomNetworkAccessManager * networkManager;
     };
 }
 #endif // DOWNLOAD_VIEW
