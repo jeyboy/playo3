@@ -12,7 +12,7 @@ DropButton::DropButton(int button_height, QWidget * parent) :
     ) {
 
     menu = new HoverableMenu(this);
-    menu -> setTearOffEnabled(false);
+    connect(parent, SIGNAL(hided()), menu, SLOT(close()));
 }
 DropButton::~DropButton() {}
 

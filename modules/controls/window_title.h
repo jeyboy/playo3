@@ -34,7 +34,12 @@ namespace Playo3 {
         void invertWindowState();
     signals:
         void doubleClicked();
+        void hided();
     protected:
+        inline void hideEvent(QHideEvent * e) {
+            emit hided();
+            QWidget::hideEvent(e);
+        }
         inline void resizeEvent(QResizeEvent * event) {
             QWidget::resizeEvent(event);
             setText(fullTitle);
