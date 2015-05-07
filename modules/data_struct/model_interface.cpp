@@ -456,6 +456,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
                     data -> attrs.remove(JSON_TYPE_PATH);
             }
         }
+        else data -> url = REMOTE_DND_URL;
 
         data -> dRow = row;
         dIndex = parent;

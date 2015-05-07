@@ -203,17 +203,6 @@ void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
 
     if (urls.contains(lastUrl)) return;
 
-    if (!isRemote())
-        stream << lastUrl << false << toInnerAttrs(itemType());
-    else stream << REMOTE_DND_URL << true << toInnerAttrs(itemType());
-
+    stream << lastUrl << isRemote() << toInnerAttrs(itemType());
     urls.insert(lastUrl, 0);
-
-
-//   if (!isRemote()) {
-//       QUrl lastUrl = toUrl();
-//       urls.append(lastUrl);
-//       stream << lastUrl << false << toInnerAttrs(itemType());
-//   }
-//   else stream << REMOTE_DND_URL << true << toInnerAttrs(itemType());
 }

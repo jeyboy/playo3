@@ -145,6 +145,7 @@ void DownloadView::addRow(QUrl from, QString to, QString name) {
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
+    qDebug() << "DOWN" << from << to;
     QModelIndex ind = mdl -> appendRow(data);
     proceedDownload(ind);
 }
