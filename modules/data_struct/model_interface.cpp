@@ -477,11 +477,11 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
                 new VkItem(data -> attrs, parentFolder, data -> dRow);
                 break;
             }
-//                case SOUNDCLOUD_ITEM: {
-//                    added++;
-//                    new SoundcloudItem(data -> attrs, *p_item, data -> dRow);
-//                    break;
-//                }
+            case SOUNDCLOUD_ITEM: {
+                counts[parentFolder]++;
+                new SoundcloudItem(data -> attrs, parentFolder, data -> dRow);
+                break;
+            }
 //                case CUE_ITEM: {
 //                    added++;
 //                    new CueItem(data -> attrs, *p_item, data -> dRow);

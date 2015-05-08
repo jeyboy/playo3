@@ -2,9 +2,25 @@
 
 using namespace Playo3;
 
-SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
+SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent), searchWatcher(0) {}
 
-SearchModel::~SearchModel() {}
+SearchModel::~SearchModel() {
+    delete searchWatcher;
+}
+
+void SearchModel::initiateSearch(SearchSettings params) {
+    searchWatcher = new QFutureWatcher<void>();
+//    connect(searchWatcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
+    searchWatcher -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, searchWatcher, params));
+}
+
+void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings params) {
+    emit moveInProcess();
+
+
+
+    emit moveOutProcess();
+}
 
 void SearchModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
     QFileInfo file = QFileInfo(url.toLocalFile());

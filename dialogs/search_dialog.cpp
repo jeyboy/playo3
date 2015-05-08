@@ -5,29 +5,35 @@ SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
 {
     ui -> setupUi(this);
-    connect(ui -> byUser, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
-    connect(ui -> byGroup, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
     connect(ui -> byTag, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
     connect(ui -> byTitle, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
-
-    connect(ui -> inVk, SIGNAL(clicked()), this, SLOT(on_inPortals_clicked()));
-    connect(ui -> inSc, SIGNAL(clicked()), this, SLOT(on_inPortals_clicked()));
-
-    on_inPortals_clicked();
+    connect(ui -> byArtist, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
+    connect(ui -> bySong, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
 }
 
 SearchDialog::~SearchDialog() {
     delete ui;
 }
 
-QStringList SearchDialog::predicates() {
+SearchSettings SearchDialog::params() {
+    SearchSettings res;
     int count = ui -> predicates -> count();
-    QStringList preds;
 
     for(int i = 0; i < count; i++)
-        preds.append(ui -> predicates -> item(i) -> text());
+        res.predicates.append(ui -> predicates -> item(i) -> text());
 
-    return preds;
+    if (ui -> byTitle -> isChecked())
+        res.type = ::title;
+    else if (ui -> byArtist -> isChecked())
+        res.type = ::artist;
+    else if (ui -> bySong -> isChecked())
+        res.type = ::song;
+    else if (ui -> byStyle -> isChecked())
+        res.type = ::style;
+    else
+        res.type = ::tag;
+
+    return res;
 }
 
 void SearchDialog::on_addPredicate_clicked() {
@@ -44,13 +50,3 @@ void SearchDialog::on_addPredicate_clicked() {
 
 void SearchDialog::on_byStyle_clicked() { ui -> textPredicate -> hide(); }
 void SearchDialog::on_nonByStyle_clicked() { ui -> textPredicate -> show(); }
-
-void SearchDialog::on_inPortals_clicked() {
-    bool selected = ui -> inVk -> isChecked() || ui -> inSc -> isChecked();
-
-    ui -> byGroup -> setDisabled(!selected);
-    ui -> byUser -> setDisabled(!selected);
-
-    if (!selected && (ui -> byGroup -> isChecked() || ui -> byUser -> isChecked()))
-        ui -> byTitle -> setChecked(true);
-}

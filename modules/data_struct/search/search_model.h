@@ -2,6 +2,7 @@
 #define SEARCH_MODEL_H
 
 #include "../model_interface.h"
+#include "search_settings.h"
 
 namespace Playo3 {
     class SearchModel : public IModel {
@@ -13,11 +14,18 @@ namespace Playo3 {
 
         inline bool isRelative() const { return false; }
         inline ContainerType containerType() const { return search; }
+
+        void initiateSearch(SearchSettings params);
     protected:
+        void searchRoutine(SearchSettings params);
+
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         int filesRoutine(QFileInfo & currFile, FolderItem * node, QHash<FolderItem *, int> & rels);
         int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
+    private:
+        QFutureWatcher<void> * searchWatcher;
+
     };
 }
 
