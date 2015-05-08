@@ -68,6 +68,9 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
     }
     ///////////////////////////////////////////////
 
+    BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, 10000);  // 10 sec
+    //    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, DWORD timeoutMili); // default is no timeout
+
     notifyTimer = new NotifyTimer(this);
     connect(notifyTimer, SIGNAL(timeout()), this, SLOT(signalUpdate()));
     connect(notifyTimer, SIGNAL(started()), this, SLOT(started()));
