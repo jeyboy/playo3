@@ -202,6 +202,13 @@ void Playo::openFolderTriggered() {
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
+void Playo::showSearchDialog() {
+    SearchDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+
+    }
+}
+
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {

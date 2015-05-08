@@ -14,6 +14,7 @@
 #include "media/genres/music_genres.h"
 #include "misc/file_utils/data_store.h"
 
+#include "dialogs/search_dialog.h"
 #include "dialogs/settings_dialog.h"
 #include "dialogs/web_dialog.h"
 #include "dialogs/relations_dialog.h"
@@ -37,6 +38,7 @@ public slots:
 private slots:
 //    void showError(QString);
 
+    void showSearchDialog();
     void showSettingsDialog();
 
     void openVKTabDialog();

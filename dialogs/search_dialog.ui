@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>160</y>
+     <y>180</y>
      <width>401</width>
      <height>51</height>
     </rect>
@@ -112,25 +112,12 @@
      <x>10</x>
      <y>10</y>
      <width>401</width>
-     <height>141</height>
+     <height>171</height>
     </rect>
    </property>
    <property name="title">
     <string>Search in locations</string>
    </property>
-   <widget class="QCheckBox" name="searchInTabs">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>101</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Search in tabs</string>
-    </property>
-   </widget>
    <widget class="QListWidget" name="tabsList">
     <property name="geometry">
      <rect>
@@ -168,30 +155,103 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="searchInInternet">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>110</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Search in internet</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="searchInComputer">
+   <widget class="QCheckBox" name="inVk">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>110</y>
-      <width>111</width>
+      <width>91</width>
       <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Search in VKontakte</string>
+    </property>
+    <property name="text">
+     <string>Search in VK</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="inComputer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>121</width>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
      <string>Search in computer</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="inTabs">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>101</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search in tabs</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="inSc">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>110</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Search in Soundcloud</string>
+    </property>
+    <property name="text">
+     <string>Search in SC</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="inEx">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Search in Ex.ua</string>
+    </property>
+    <property name="text">
+     <string>Search in EX</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="inOther">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>140</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Search in VKontakte</string>
+    </property>
+    <property name="text">
+     <string>Search in other sites</string>
     </property>
    </widget>
   </widget>
@@ -199,9 +259,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>220</y>
+     <y>230</y>
      <width>401</width>
-     <height>201</height>
+     <height>181</height>
     </rect>
    </property>
    <property name="title">
@@ -223,7 +283,7 @@
       <x>10</x>
       <y>50</y>
       <width>381</width>
-      <height>141</height>
+      <height>121</height>
      </rect>
     </property>
    </widget>
@@ -250,6 +310,10 @@
      </rect>
     </property>
    </widget>
+   <zorder>stylePredicate</zorder>
+   <zorder>predicates</zorder>
+   <zorder>addPredicate</zorder>
+   <zorder>textPredicate</zorder>
   </widget>
  </widget>
  <resources/>
