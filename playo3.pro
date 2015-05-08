@@ -118,7 +118,8 @@ SOURCES += main.cpp\
     misc/logger.cpp \
     modules/web/socials_api/soundcloud_api_private.cpp \
     modules/data_struct/web/soundcloud/soundcloud_folder.cpp \
-    dialogs/search_dialog.cpp
+    dialogs/search_dialog.cpp \
+    modules/data_struct/search/search_model.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -232,7 +233,9 @@ HEADERS  += playo.h \
     misc/logger.h \
     modules/web/socials_api/soundcloud_api_private.h \
     modules/data_struct/web/soundcloud/soundcloud_folder.h \
-    dialogs/search_dialog.h
+    dialogs/search_dialog.h \
+    modules/data_struct/search/search_model.h \
+    modules/data_struct/search/search_settings.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

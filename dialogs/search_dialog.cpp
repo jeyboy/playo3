@@ -1,6 +1,5 @@
 #include "search_dialog.h"
 #include "ui_search_dialog.h"
-#include <qdebug.h>
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
@@ -19,6 +18,16 @@ SearchDialog::SearchDialog(QWidget * parent) :
 
 SearchDialog::~SearchDialog() {
     delete ui;
+}
+
+QStringList SearchDialog::predicates() {
+    int count = ui -> predicates -> count();
+    QStringList preds;
+
+    for(int i = 0; i < count; i++)
+        preds.append(ui -> predicates -> item(i) -> text());
+
+    return preds;
 }
 
 void SearchDialog::on_addPredicate_clicked() {

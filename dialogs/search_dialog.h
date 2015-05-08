@@ -14,6 +14,8 @@ public:
     explicit SearchDialog(QWidget * parent = 0);
     ~SearchDialog();
 
+    QStringList predicates();
+
 private slots:
     void on_addPredicate_clicked();
 
