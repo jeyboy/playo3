@@ -297,27 +297,38 @@ QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOn
     QUrlQuery query = methodParams(token);
 
     // count max eq 300 , limit is 1000
-    //TODO: add loop for 1000 items reading
     query.addQueryItem("code",
                        QString(
+                           "var it = 0;"
                            "var search = [];"
-                           "search.push(API.audio.search({"
-                                "q: " + searchStr + ", "
-                                "count: 300, "
-                                "auto_complete: " + boolToStr(autoFix) + ", "
-                                "lyrics: 0, "
-                                "performer_only: " + boolToStr(artistOnly) + ", "
-                                "sort: " + QString::number(sort) + ", "
-                                "search_own: " + boolToStr(searchByOwn) + ""
-                           "}).items);"
-                           "return {audio_list: recomendations};"
+                           "var rule = true;"
+                           "do {"
+                           "    var items = API.audio.search({"
+                           "        q: " + searchStr + ", count: 300, offset: it, lyrics: 0,"
+                           "        auto_complete: " + boolToStr(autoFix) + ","
+                           "        performer_only: " + boolToStr(artistOnly) + ","
+                           "        sort: " + QString::number(sort) + ","
+                           "        search_own: " + boolToStr(searchByOwn) + ""
+                           "    }).items;"
+                           "    search = search + items;"
+                           "    it = it + items.length;"
+                           "    rule = it < 1000 && items.length != 0;"
+                           "} while(rule);"
+                           "return {count: it, audio_list: search};"
                        )
     );
 
     url.setQuery(query);
     return url;
+}
 
-    // response: [{}]
+QUrl VkApiPrivate::audioLyricsUrl(QString token, QString lyrics_id) {
+    QUrl url(getApiUrl() + "audio.getLyrics ");
+    QUrlQuery query = methodParams(token);
+
+    query.addQueryItem("lyrics_id", lyrics_id);
+    url.setQuery(query);
+    return url;
 }
 
 QUrl VkApiPrivate::isAppUser(QString token, QString uid) {

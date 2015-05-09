@@ -163,14 +163,36 @@ void VkApi::audioList(const QObject * receiver, const char * respSlot, QString u
     startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
 }
 
-//TODO: has some troubles with ids amount in request
-void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids) { // TODO: rewrite required
-    QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
-    QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
-//    responses.insert(m_http, responseSlot);
-//    collations.insert(m_http, uids);
-    QObject::connect(m_http, SIGNAL(finished()), this, SLOT(audioListResponse()));
+ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, SearchSettings & settings) {
+    QNetworkReply * m_http;
+    QUrl url = VkApiPrivate::audioSearchUrl(func -> uid, getUserID(), getToken());
+    CustomNetworkAccessManager * netManager = createManager();
+
+    m_http = netManager -> getSync(QNetworkRequest(url));
+    if (responseRoutine(m_http, func, func -> result)) {
+        func -> result = func -> result.value("response").toObject();
+
+        if (!func -> result.value("albums_finished").toBool()) {
+            int offset = func -> result.value("albums_offset").toInt();
+            audioAlbumsRoutine(func, offset);
+        }
+    }
+
+    delete netManager;
+    return func;
 }
+void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, SearchSettings & settings) {
+
+}
+
+////TODO: has some troubles with ids amount in request
+//void VkApi::refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids) { // TODO: rewrite required
+//    QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
+//    QNetworkReply * m_http = manager() -> get(QNetworkRequest(url));
+////    responses.insert(m_http, responseSlot);
+////    collations.insert(m_http, uids);
+//    QObject::connect(m_http, SIGNAL(finished()), this, SLOT(audioListResponse()));
+//}
 
 ///////////////////////////////////////////////////////////
 /// PROTECTED

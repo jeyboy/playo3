@@ -5,6 +5,7 @@
 #include "../auth_chemas/teu_auth.h"
 #include "vk_api_private.h"
 #include "media/genres/web/vk_genres.h"
+#include "modules/data_struct/search/search_settings.h"
 
 class VkApi : public WebApi, public TeuAuth {
     Q_OBJECT
@@ -24,7 +25,10 @@ public:
     ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
     void audioList(const QObject * receiver, const char * respSlot, QString uid);
 
-    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
+    ApiFuncContainer * searchRoutine(ApiFuncContainer * func, SearchSettings & settings);
+    void audioSearch(const QObject * receiver, const char * respSlot, QString uid, SearchSettings & settings);
+
+//    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 
     inline ~VkApi() {}
 
