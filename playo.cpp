@@ -229,7 +229,7 @@ void Playo::openVKTabDialog() {
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
         ToolBars::instance() -> initiateVkButton();
     }
-    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKTabDialog() {
@@ -246,7 +246,7 @@ void Playo::showVKRelTabDialog() {
         ViewSettings settings(vk, false, false, false, true, dialog.getId());
          addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings));
     }
-    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
@@ -254,9 +254,8 @@ void Playo::showSoundcloudRelTabDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(soundcloud, false, false, false, true, dialog.getId());
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [" + dialog.getName() + "]", settings));
-    } else {
-        QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
     }
+//    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
 
 void Playo::openSoundcloudTabDialog() {
@@ -265,16 +264,16 @@ void Playo::openSoundcloudTabDialog() {
         ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings));
         ToolBars::instance() -> initiateSoundcloudButton();
-    } else {
-        QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
     }
+//    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
 
 void Playo::showSoundcloudTabDialog() {
     if (SoundcloudApi::instance() -> isConnected()) {
         ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings));
-    } else openSoundcloudTabDialog();
+    }
+    else openSoundcloudTabDialog();
 }
 
 //void MainWindow::outputActiveItem(ModelItem *, ModelItem * to) {

@@ -26,6 +26,10 @@ private slots:
     void on_friendsList_activated(const QModelIndex & index);
     void on_groupsList_activated(const QModelIndex & index);
 
+    void on_friendManually_clicked();
+
+    void on_groupManually_clicked();
+
 private:
     Ui::RelationsDialog * ui;
     QString uid, name;

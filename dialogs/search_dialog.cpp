@@ -30,10 +30,10 @@ SearchSettings SearchDialog::params() {
         res.type = ::song;
     else if (ui -> byStyle -> isChecked())
         res.type = ::style;
-    else if (ui -> byPopular -> isChecked())
-        res.type = ::popular;
     else
         res.type = ::tag;
+
+    res.popular = ui -> byPopular -> isChecked();
 
     return res;
 }

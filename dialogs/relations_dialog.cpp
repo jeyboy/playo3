@@ -38,3 +38,22 @@ void RelationsDialog::on_groupsList_activated(const QModelIndex & index) {
     uid = "-" + api -> groupsList().key(name);
     accept();
 }
+
+void RelationsDialog::on_friendManually_clicked() {
+    uid = ui -> friendId -> text();
+
+    if (uid.isEmpty()) return;
+
+    name = "User " + uid;
+    accept();
+}
+
+void RelationsDialog::on_groupManually_clicked() {
+    uid = ui -> groupId -> text();
+
+    if (uid.isEmpty()) return;
+
+    name = "Group " + uid;
+    uid = "-" + uid;
+    accept();
+}

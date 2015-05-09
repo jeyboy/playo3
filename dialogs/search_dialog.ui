@@ -111,12 +111,12 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QRadioButton" name="byPopular">
+   <widget class="QCheckBox" name="byPopular">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>320</x>
       <y>20</y>
-      <width>71</width>
+      <width>70</width>
       <height>17</height>
      </rect>
     </property>

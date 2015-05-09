@@ -8,8 +8,7 @@ enum PredicateType {
     title,
     artist,
     song,
-    tag,
-    popular
+    tag
 };
 
 struct SearchSettings {
@@ -18,6 +17,7 @@ struct SearchSettings {
 
     QStringList predicates;
     PredicateType type;
+    bool popular;
 };
 
 #endif // SEARCH_SETTINGS
