@@ -17,7 +17,7 @@ namespace Playo3 {
 
         void initiateSearch(SearchSettings params);
     protected:
-        void searchRoutine(SearchSettings params);
+        void searchRoutine(QFutureWatcher<void> * watcher, SearchSettings params);
 
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

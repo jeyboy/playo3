@@ -8,7 +8,8 @@ enum PredicateType {
     title,
     artist,
     song,
-    tag
+    tag,
+    popular
 };
 
 struct SearchSettings {
