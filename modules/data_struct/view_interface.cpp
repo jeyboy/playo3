@@ -174,6 +174,19 @@ void IView::copyToClipboard() {
     mdl -> copyTitleToClipboard(ind);
 }
 
+void IView::openRecomendationsforUser() {
+    WebItem * it = mdl -> item<WebItem>(currentIndex());
+    if (it -> owner().isValid()) {
+//        Dockbars::instance -> createDocBar()
+    }
+}
+void IView::openRecomendationsforItem() {
+
+}
+void IView::openRecomendationsforItemUser() {
+
+}
+
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
     IItem * node = mdl -> item(index);
 
@@ -244,9 +257,26 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         act -> setSeparator(true);
     }
 
+    if (mdl -> containerType() == vk) {
+        actions.append((act = new QAction(QIcon(/*":/active_tab"*/), "Recommendations for user", this)));
+        connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforUser()));
+
+//        actions.append((act = new QAction(this)));
+//        act -> setSeparator(true);
+    }
+
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
+        if (ind.data(ITYPE).toInt() == VK_ITEM) {
+            actions.append((act = new QAction(QIcon(/*":/active_tab"*/), "Recommendations for item user", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforItemUser()));
+            actions.append((act = new QAction(QIcon(/*":/active_tab"*/), "Recommendations for item", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforItem()));
+            actions.append((act = new QAction(this)));
+            act -> setSeparator(true);
+        }
+
         actions.append((act = new QAction(QIcon(":/copy"), "Copy name to clipboard", this)));
         act -> setShortcut(QKeySequence(tr("Ctrl+C", "Copy")));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(copyToClipboard()));

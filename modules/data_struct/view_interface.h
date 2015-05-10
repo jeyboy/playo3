@@ -90,6 +90,9 @@ namespace Playo3 {
         inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
         void copyToClipboard();
+        void openRecomendationsforUser();
+        void openRecomendationsforItem();
+        void openRecomendationsforItemUser();
         bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
 
         void downloadSelected();

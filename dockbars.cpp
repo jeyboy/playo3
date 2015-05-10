@@ -137,7 +137,7 @@ DockBar * Dockbars::commonBar() {
     return common;
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable) {
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 
@@ -164,6 +164,9 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
     if (!attrs)
         ((IModel *)view -> model()) -> refresh();
 
+    if (addToView)
+        ((QMainWindow *)parent()) -> addDockWidget(Qt::TopDockWidgetArea, bar);
+
     return bar;
 }
 
@@ -172,8 +175,7 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
     connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon()));
-//    active = dock;
-//    dock -> showFullScreen();
+  //    dock -> showFullScreen();
 
     if (content) {
         content -> setParent(dock);

@@ -180,7 +180,7 @@ QVariant IItem::data(int column) const {
         case IREMOTE:           return isRemote();
         case ISTATE:            return visualStates();
         case IFULLPATH:         return fullPath();
-//        case IINNERCOPY:        return toInnerAttrs(itemType());
+        case ITYPE:             return itemType();
 
         default:                return QVariant();
     }

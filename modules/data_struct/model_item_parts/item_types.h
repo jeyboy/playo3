@@ -1,8 +1,6 @@
 #ifndef MODEL_ITEM_TYPES_H
 #define MODEL_ITEM_TYPES_H
 
-#include <qdebug.h>
-
 namespace Playo3 {
     namespace Type {
         #define ITEM 100

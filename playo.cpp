@@ -193,8 +193,7 @@ void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
     if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::instance() -> isOpenDropPointInTab()) {
         ViewSettings settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
-        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings);
-        addDockWidget(Qt::TopDockWidgetArea, bar);
+        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings, 0, true, true);
         QList<QUrl> urls;
         urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
         Dockbars::instance() -> view(bar) -> appendRows(urls);
@@ -226,7 +225,7 @@ void Playo::openVKTabDialog() {
     WebDialog dialog(this, VkApi::instance(), "VK auth");
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
+        Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
         ToolBars::instance() -> initiateVkButton();
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -235,7 +234,7 @@ void Playo::openVKTabDialog() {
 void Playo::showVKTabDialog() {
     if (VkApi::instance() -> isConnected()) {
         ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [YOU]", settings));
+        Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
     }
     else openVKTabDialog();
 }
@@ -244,7 +243,7 @@ void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(VkApi::instance(), this);
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(vk, false, false, false, true, dialog.getId());
-         addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings));
+         Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings, 0, true, true);
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
@@ -253,7 +252,7 @@ void Playo::showSoundcloudRelTabDialog() {
     RelationsDialog dialog(SoundcloudApi::instance(), this);
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(soundcloud, false, false, false, true, dialog.getId());
-        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [" + dialog.getName() + "]", settings));
+        Dockbars::instance() -> createDocBar("SC [" + dialog.getName() + "]", settings, 0, true, true);
     }
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
@@ -262,7 +261,7 @@ void Playo::openSoundcloudTabDialog() {
     WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings));
+        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
         ToolBars::instance() -> initiateSoundcloudButton();
     }
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
@@ -271,7 +270,7 @@ void Playo::openSoundcloudTabDialog() {
 void Playo::showSoundcloudTabDialog() {
     if (SoundcloudApi::instance() -> isConnected()) {
         ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-        addDockWidget(Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings));
+        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
     }
     else openSoundcloudTabDialog();
 }
