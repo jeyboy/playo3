@@ -173,8 +173,9 @@ ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, boo
     );
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-    if (responseRoutine(m_http, func, func -> result))
+    if (responseRoutine(m_http, func, func -> result)) {
         func -> result = func -> result.value("response").toObject();
+    }
 
     delete netManager;
     return func;
@@ -221,7 +222,6 @@ void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString
 
 bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
     doc = responseToJson(reply -> readAll());
-
     QUrl url = reply -> url();
     reply -> close();
     delete reply;

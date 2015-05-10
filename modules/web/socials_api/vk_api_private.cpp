@@ -249,7 +249,7 @@ QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, QString token
                                         + QString(byUser ? "user_id: " : "target_audio: ") + uid + ", "
                            "            count: 1000, "
                            "            shuffle: 0"
-                           "}).items;"
+                           "});"
                            "return { "
                            "    audio_list: recomendations "
                            "};"
