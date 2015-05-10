@@ -23,6 +23,9 @@ namespace Playo3 {
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         int filesRoutine(QFileInfo & currFile, FolderItem * node, QHash<FolderItem *, int> & rels);
         int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
+    protected slots:
+        void proceedVk(QJsonArray & collection);
+
     private:
         QFutureWatcher<void> * searchWatcher;
 

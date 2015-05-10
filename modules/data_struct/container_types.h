@@ -8,7 +8,8 @@ namespace Playo3 {
         tree = 3,
         vk = 4,
         soundcloud = 5,
-        search = 6
+        search = 6,
+        vk_rel = 7,
     };
 }
 

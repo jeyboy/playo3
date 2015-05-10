@@ -64,9 +64,6 @@ void VkModel::proceedWallList(QJsonObject & hash) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-
-    QHash<QString, IItem *> store;
-
     QJsonArray albums = hash.value("albums").toArray();
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
     int itemsAmount = 0;

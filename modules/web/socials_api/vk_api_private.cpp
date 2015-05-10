@@ -340,21 +340,6 @@ QUrl VkApiPrivate::isAppUser(QString token, QString uid) {
     return url;
 }
 
-//QUrl VkApi::getAudioListUrl() const { return QUrl(getApiUrl() + "audio.get"); }
-//QUrl VkApi::getAudioCountUrl() const { return QUrl(getApiUrl() + "audio.getCount"); }
-//QUrl VkApi::getAudioSearchUrl() const { return QUrl(getApiUrl() + "audio.search"); }
-//QUrl VkApi::getAudioCopyUrl() const { return QUrl(getApiUrl() + "audio.add"); }
-//QUrl VkApi::getAudioRemoveUrl() const { return QUrl(getApiUrl() + "audio.delete"); }
-
-//QUrl VkApi::getAudioAlbumsListUrl() const { return QUrl(getApiUrl() + "audio.getAlbums"); }
-//QUrl VkApi::getAudioAlbumAddUrl() const { return QUrl(getApiUrl() + "audio.addAlbum"); }
-//QUrl VkApi::getAudioAlbumEditUrl() const { return QUrl(getApiUrl() + "audio.editAlbum"); }
-//QUrl VkApi::getAudioAlbumRemoveUrl() const { return QUrl(getApiUrl() + "audio.deleteAlbum"); }
-//QUrl VkApi::getAudioAlbumMoveToUrl() const { return QUrl(getApiUrl() + "audio.moveToAlbum"); }
-
-//QUrl VkApi::getAudioSaveServerUrl() const { return QUrl(getApiUrl() + "audio.getUploadServer"); }
-//QUrl VkApi::getAudioSaveUrl() const { return QUrl(getApiUrl() + "audio.save"); }
-
 ///////////////////////////////////////////////////////////
 /// PROTECTED
 ///////////////////////////////////////////////////////////

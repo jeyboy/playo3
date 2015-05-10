@@ -16,7 +16,8 @@ SearchDialog::~SearchDialog() {
 }
 
 SearchSettings SearchDialog::params() {
-    SearchSettings res;
+    SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inOther -> isChecked(),
+                       ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
     int count = ui -> predicates -> count();
 
     for(int i = 0; i < count; i++)

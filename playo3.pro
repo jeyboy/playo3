@@ -120,7 +120,9 @@ SOURCES += main.cpp\
     modules/data_struct/web/soundcloud/soundcloud_folder.cpp \
     dialogs/search_dialog.cpp \
     modules/data_struct/search/search_model.cpp \
-    modules/data_struct/search/search_view.cpp
+    modules/data_struct/search/search_view.cpp \
+    modules/data_struct/web/vk/vk_rel_model.cpp \
+    modules/data_struct/web/vk/vk_rel_view.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -237,7 +239,10 @@ HEADERS  += playo.h \
     dialogs/search_dialog.h \
     modules/data_struct/search/search_model.h \
     modules/data_struct/search/search_settings.h \
-    modules/data_struct/search/search_view.h
+    modules/data_struct/search/search_view.h \
+    modules/data_struct/web/vk/vk_rel_model.h \
+    modules/data_struct/web/vk/vk_rel_view.h \
+    modules/data_struct/web/vk/vk_rel_types.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

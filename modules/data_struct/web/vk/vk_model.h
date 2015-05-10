@@ -16,8 +16,8 @@ namespace Playo3 {
         inline ContainerType containerType() const { return vk; }
         inline WebApi * api() { return VkApi::instance(); }
     public slots:
-        void refresh(bool retryPlaing = false);
-        void refreshWall();
+        virtual void refresh(bool retryPlaing = false);
+        virtual void refreshWall();
 
     protected slots:
         void proceedWallList(QJsonObject &);

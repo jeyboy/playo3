@@ -1,5 +1,7 @@
 #include "search_model.h"
 
+#include "modules/web/socials_api/vk_api.h"
+
 using namespace Playo3;
 
 SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent), searchWatcher(0) {}
@@ -17,9 +19,74 @@ void SearchModel::initiateSearch(SearchSettings params) {
 void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings params) {
     emit moveInProcess();
 
+    QStringList::Iterator it = params.predicates.begin();
 
+    for(; it != params.predicates.end(); it++) {
+        if  (watcher -> isCanceled()) return;
 
-    emit moveOutProcess();
+        if (params.inVk)
+            VkApi::instance() -> audioSearch(
+                this, SLOT(proceedVk(QJsonArray &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+            );
+
+        if  (watcher -> isCanceled()) return;
+
+        if (params.inTabs) {}
+
+        if  (watcher -> isCanceled()) return;
+
+        if (params.inComputer) {}
+
+        if  (watcher -> isCanceled()) return;
+
+        if (params.inSc) {}
+
+        if  (watcher -> isCanceled()) return;
+
+        if (params.inOther) {}
+    }
+
+//    emit moveOutProcess();
+}
+
+void SearchModel::proceedVk(QJsonArray & collection) {
+    int itemsAmount = 0;
+    QJsonObject itm;
+    VkItem * newItem;
+    QString uri, id, owner;
+    QVariant uid;
+
+    FolderItem * parent = rootItem -> createFolder("VK");
+
+    QJsonArray::Iterator it = collection.begin();
+
+    for(; it != collection.end(); it++) {
+        itm = (*it).toObject();
+
+        if (itm.isEmpty()) continue;
+
+        id = QString::number(itm.value("id").toInt());
+        owner = QString::number(itm.value("owner_id").toInt());
+        uid = WebItem::toUid(owner, id);
+
+        uri = itm.value("url").toString();
+        uri = uri.section('?', 0, 0); // remove extra info from url
+
+        itemsAmount++;
+        newItem = new VkItem(
+            id,
+            uri,
+            itm.value("artist").toString() + " - " + itm.value("title").toString(),
+            parent
+        );
+
+        newItem -> setOwner(owner);
+        newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
+        if (itm.contains("genre_id"))
+            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+    }
+
+    parent -> backPropagateItemsCountInBranch(itemsAmount);
 }
 
 void SearchModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {

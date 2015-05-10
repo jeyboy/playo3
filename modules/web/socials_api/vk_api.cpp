@@ -163,26 +163,47 @@ void VkApi::audioList(const QObject * receiver, const char * respSlot, QString u
     startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
 }
 
-ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, SearchSettings & settings) {
-    QNetworkReply * m_http;
-    QUrl url = VkApiPrivate::audioSearchUrl(func -> uid, getUserID(), getToken());
+ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, bool byUser) {
     CustomNetworkAccessManager * netManager = createManager();
 
-    m_http = netManager -> getSync(QNetworkRequest(url));
-    if (responseRoutine(m_http, func, func -> result)) {
-        func -> result = func -> result.value("response").toObject();
+    QUrl url = VkApiPrivate::audioRecomendationUrl(
+        func -> uid,
+        byUser,
+        getToken()
+    );
 
-        if (!func -> result.value("albums_finished").toBool()) {
-            int offset = func -> result.value("albums_offset").toInt();
-            audioAlbumsRoutine(func, offset);
-        }
-    }
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+    if (responseRoutine(m_http, func, func -> result))
+        func -> result = func -> result.value("response").toObject();
 
     delete netManager;
     return func;
 }
-void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, SearchSettings & settings) {
+void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser) {
+    startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), byUser));
+}
 
+ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    CustomNetworkAccessManager * netManager = createManager();
+
+    QUrl url = VkApiPrivate::audioSearchUrl(
+        predicate,
+        true,
+        onlyArtist,
+        inOwn,
+        mostPopular ? 2 : 0,
+        getToken()
+    );
+
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+    if (responseRoutine(m_http, func, func -> result))
+        func -> result = func -> result.value("response").toObject();
+
+    delete netManager;
+    return func;
+}
+void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    startApiCall(QtConcurrent::run(this, &VkApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
 }
 
 ////TODO: has some troubles with ids amount in request

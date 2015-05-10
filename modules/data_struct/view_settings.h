@@ -2,13 +2,14 @@
 #define VIEW_SETTINGS
 
 #include "modules/data_struct/container_types.h"
+#include "modules/data_struct/web/vk/vk_rel_types.h"
 #include <qjsonobject.h>
 
 namespace Playo3 {
     struct ViewSettings {
-        ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false, bool isPlaylist = false, QString uniq_id = QString())
-            : deleteFile(delFile), playlist(isPlaylist), interactive(isInteractive), common(isCommon), uid(uniq_id), type(cType)  {
-        }
+        ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+            bool isPlaylist = false, QString uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
+            interactive(isInteractive), common(isCommon), uid(uniq_id), type(cType), rel_type(rel) { }
 
         ViewSettings(QJsonObject obj) {
             deleteFile = obj["del"].toBool();
@@ -17,6 +18,7 @@ namespace Playo3 {
             common = obj["common"].toBool();
             type = (ContainerType)obj["type"].toInt();
             uid = obj["uid"].toString();
+            rel_type = (RelType)obj["rel_type"].toInt();
         }
 
         QJsonObject toJson() {
@@ -30,6 +32,8 @@ namespace Playo3 {
             if (!uid.isEmpty())
                 obj["uid"] = uid;
 
+            obj["rel_type"] = rel_type;
+
             return obj;
         }
 
@@ -38,6 +42,7 @@ namespace Playo3 {
         bool interactive;
         bool common;
         QString uid;
+        RelType rel_type;
 
         ContainerType type;
     };
