@@ -385,6 +385,7 @@ QToolButton * ToolBars::initiateVkButton() {
         vkMenu -> addAction("Reconect", parent(), SLOT(openVKTabDialog()));
         vkMenu -> addAction("Open your tab", parent(), SLOT(showVKTabDialog()));
         vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showVKRelTabDialog()));
+        vkMenu -> addAction("Open recommendations", parent(), SLOT(openVKRecomendations()));
         vkToolButton -> setMenu(vkMenu);
     } else {
         vkToolButton -> setIcon(QIcon(":/add_vk"));

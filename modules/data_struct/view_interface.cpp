@@ -175,16 +175,22 @@ void IView::copyToClipboard() {
 }
 
 void IView::openRecomendationsforUser() {
+    ViewSettings settings(vk_rel, false, false, false, true, sttngs.uid, user_rel);
+    Dockbars::instance() -> createDocBar("Rec for user " + sttngs.uid, settings, 0, true, true);
+}
+void IView::openRecomendationsforItemUser() {
     WebItem * it = mdl -> item<WebItem>(currentIndex());
     if (it -> owner().isValid()) {
-//        Dockbars::instance -> createDocBar()
+        ViewSettings settings(vk_rel, false, false, false, true, it -> owner().toString(), user_rel);
+        Dockbars::instance() -> createDocBar("Rec for user " + it -> owner().toString(), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
-
-}
-void IView::openRecomendationsforItemUser() {
-
+    WebItem * it = mdl -> item<WebItem>(currentIndex());
+    if (it -> uid().isValid()) {
+        ViewSettings settings(vk_rel, false, false, false, true, it -> uid().toString(), song_rel);
+        Dockbars::instance() -> createDocBar("Rec for song " + it -> title().toString(), settings, 0, true, true);
+    }
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
@@ -261,8 +267,8 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         actions.append((act = new QAction(QIcon(/*":/active_tab"*/), "Recommendations for user", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforUser()));
 
-//        actions.append((act = new QAction(this)));
-//        act -> setSeparator(true);
+        actions.append((act = new QAction(this)));
+        act -> setSeparator(true);
     }
 
     QModelIndex ind = indexAt(event -> pos());

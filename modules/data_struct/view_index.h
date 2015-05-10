@@ -10,6 +10,7 @@
 #include "level_tree/level_tree_view.h"
 
 #include "web/vk/vk_view.h"
+#include "web/vk/vk_rel_view.h"
 #include "web/soundcloud/soundcloud_view.h"
 
 #endif // VIEWS_INDEX_H

@@ -221,6 +221,11 @@ void Playo::showSettingsDialog() {
     }
 }
 
+void Playo::openVKRecomendations() {
+    ViewSettings settings(vk_rel, false, false, false, true, VkApi::instance() -> getUserID(), user_rel);
+    Dockbars::instance() -> createDocBar("Rec for YOU", settings, 0, true, true);
+}
+
 void Playo::openVKTabDialog() {
     WebDialog dialog(this, VkApi::instance(), "VK auth");
     if (dialog.exec() == QDialog::Accepted) {

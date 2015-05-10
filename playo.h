@@ -41,6 +41,7 @@ private slots:
     void showSearchDialog();
     void showSettingsDialog();
 
+    void openVKRecomendations();
     void openVKTabDialog();
     void showVKTabDialog();
     void showVKRelTabDialog();
