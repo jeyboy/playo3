@@ -24,6 +24,7 @@ struct SearchSettings {
     bool inTabs;
     bool inComputer;
 
+    QList<void *> tabs;
     QStringList predicates;
     PredicateType type;
     bool popular;

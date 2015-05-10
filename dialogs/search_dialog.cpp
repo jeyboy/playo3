@@ -1,5 +1,8 @@
 #include "search_dialog.h"
 #include "ui_search_dialog.h"
+#include "dockbars.h"
+
+#include <qdebug.h>
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
@@ -9,6 +12,20 @@ SearchDialog::SearchDialog(QWidget * parent) :
     connect(ui -> byTitle, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
     connect(ui -> byArtist, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
     connect(ui -> bySong, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
+
+    QList<DockBar *> bars = Dockbars::instance() -> dockbars();
+    QList<DockBar *>::Iterator it = bars.begin();
+
+    for(; it != bars.end(); it++) {
+        IView * v = Dockbars::instance() -> view(*it);
+        if (v) {
+            QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), ui -> tabsList);
+            item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+            item -> setCheckState(Qt::Checked);
+            item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) v));
+            ui -> tabsList -> addItem(item);
+        }
+    }
 }
 
 SearchDialog::~SearchDialog() {
@@ -36,6 +53,18 @@ SearchSettings SearchDialog::params() {
 
     res.popular = ui -> byPopular -> isChecked();
 
+    if (res.inTabs) {
+        int count = ui -> tabsList -> count();
+
+        for(int i = 0; i < count; i++) {
+            QListWidgetItem * item = ui -> tabsList -> item(i);
+            if (item -> checkState() == Qt::Checked)
+                res.tabs.append(item -> data(Qt::UserRole + 1).value<void *>());
+        }
+    }
+
+    qDebug() << "J" << res.tabs.length();
+
     return res;
 }
 
@@ -47,9 +76,23 @@ void SearchDialog::on_addPredicate_clicked() {
     else
         predicate = ui -> stylePredicate -> currentText();
 
-    if (!predicate.isEmpty())
-        ui -> predicates -> addItem(predicate);
+    if (!predicate.isEmpty()) {
+        if (ui -> predicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
+            ui -> predicates -> addItem(predicate);
+    }
 }
 
 void SearchDialog::on_byStyle_clicked() { ui -> textPredicate -> hide(); }
 void SearchDialog::on_nonByStyle_clicked() { ui -> textPredicate -> show(); }
+
+void SearchDialog::on_predicates_itemActivated(QListWidgetItem * item) {
+    ui -> predicates -> removeItemWidget(item);
+}
+
+void SearchDialog::on_cancelButton_clicked() {
+    reject();
+}
+
+void SearchDialog::on_acceptButton_clicked() {
+    accept();
+}

@@ -287,8 +287,6 @@ QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
 
     url.setQuery(query);
     return url;
-
-    // response: [{}]
 }
 
 // sort  2 - by popularity, 1 - by duration, 0 - by creation date
