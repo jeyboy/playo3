@@ -4,6 +4,7 @@
 #include "container_types.h"
 
 #include "downloads/download_view.h"
+#include "search/search_view.h"
 
 #include "list/list_view.h"
 #include "tree/tree_view.h"

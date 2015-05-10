@@ -137,7 +137,7 @@ DockBar * Dockbars::commonBar() {
     return common;
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView) {
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 
@@ -160,12 +160,19 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         case soundcloud: {
             view = new SoundcloudView(bar, settings, attrs);
         break;}
+        case search: {
+            view = new SearchView(bar, settings, attrs);
+        break;}
 
         default: view = 0;
     }
     bar -> setWidget(view);
-    if (!attrs)
-        ((IModel *)view -> model()) -> refresh();
+    if (!attrs) {
+        if (settings.type != search)
+            ((IModel *)view -> model()) -> refresh();
+        else
+            view -> search(*search_settings);
+    }
 
     if (addToView)
         ((QMainWindow *)parent()) -> addDockWidget(Qt::TopDockWidgetArea, bar);

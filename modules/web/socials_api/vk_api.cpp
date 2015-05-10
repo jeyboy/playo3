@@ -201,6 +201,7 @@ ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predica
         func -> result = func -> result.value("response").toObject();
 
     delete netManager;
+    func -> result.insert("predicate", predicate);
     return func;
 }
 void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {

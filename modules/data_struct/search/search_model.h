@@ -24,7 +24,7 @@ namespace Playo3 {
         int filesRoutine(QFileInfo & currFile, FolderItem * node, QHash<FolderItem *, int> & rels);
         int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
     protected slots:
-        void proceedVk(QJsonArray & collection);
+        void proceedVk(QJsonObject & collection);
 
     private:
         QFutureWatcher<void> * searchWatcher;

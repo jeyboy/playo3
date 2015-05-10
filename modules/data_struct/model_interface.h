@@ -20,7 +20,7 @@ namespace Playo3 {
         Q_OBJECT
     public:
         IModel(QJsonObject * hash, QObject * parent);
-        ~IModel();
+        virtual ~IModel();
 
         virtual ContainerType containerType() const = 0;
         virtual bool isRelative() const = 0;

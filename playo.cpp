@@ -204,7 +204,9 @@ void Playo::openFolderTriggered() {
 void Playo::showSearchDialog() {
     SearchDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-
+        ViewSettings settings(search, false, false, false, true);
+        SearchSettings prms = dialog.params();
+        Dockbars::instance() -> createDocBar("Search", settings, 0, true, true, &prms);
     }
 }
 

@@ -24,6 +24,7 @@
 #include "model_item_delegate.h"
 
 #include "media/player.h"
+#include "search/search_settings.h"
 
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
@@ -70,6 +71,8 @@ namespace Playo3 {
 
         void setIconSize(const QSize & size);
         void appendRows(QList<QUrl> & urls);
+
+        inline virtual void search(SearchSettings /*params*/) {/*stub*/}
 
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);

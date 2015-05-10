@@ -63,8 +63,6 @@ SearchSettings SearchDialog::params() {
         }
     }
 
-    qDebug() << "J" << res.tabs.length();
-
     return res;
 }
 
@@ -87,6 +85,7 @@ void SearchDialog::on_nonByStyle_clicked() { ui -> textPredicate -> show(); }
 
 void SearchDialog::on_predicates_itemActivated(QListWidgetItem * item) {
     ui -> predicates -> removeItemWidget(item);
+    delete item;
 }
 
 void SearchDialog::on_cancelButton_clicked() {

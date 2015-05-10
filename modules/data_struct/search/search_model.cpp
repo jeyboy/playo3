@@ -11,6 +11,16 @@ SearchModel::~SearchModel() {
 }
 
 void SearchModel::initiateSearch(SearchSettings params) {
+    if (!params.predicates.isEmpty()) {
+        beginInsertRows(QModelIndex(), 0, params.predicates.length());
+        QStringList::Iterator it = params.predicates.begin();
+
+        for(; it != params.predicates.end(); it++)
+            rootItem -> createFolder(*it);
+
+        endInsertRows();
+    }
+
     searchWatcher = new QFutureWatcher<void>();
 //    connect(searchWatcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
     searchWatcher -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, searchWatcher, params));
@@ -26,12 +36,17 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings p
 
         if (params.inVk)
             VkApi::instance() -> audioSearch(
-                this, SLOT(proceedVk(QJsonArray &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+                this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
             );
 
         if  (watcher -> isCanceled()) return;
 
-        if (params.inTabs) {}
+        if (params.inTabs) {
+            QList<void *>::Iterator it = params.tabs.begin();
+            for(; it != params.tabs.end(); it++) {
+
+            }
+        }
 
         if  (watcher -> isCanceled()) return;
 
@@ -49,44 +64,54 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings p
 //    emit moveOutProcess();
 }
 
-void SearchModel::proceedVk(QJsonArray & collection) {
+void SearchModel::proceedVk(QJsonObject & objects) {
+    qDebug() << "VK SUR";
+    QJsonArray collection = objects.value("audio_list").toArray();
+    if (collection.isEmpty()) {
+        qDebug() << "SUR";
+        return;
+    }
+
     int itemsAmount = 0;
     QJsonObject itm;
     VkItem * newItem;
     QString uri, id, owner;
     QVariant uid;
 
-    FolderItem * parent = rootItem -> createFolder("VK");
-
+    QString predicate = objects.value("predicate").toString();
+    FolderItem * pred_root = rootItem -> createFolder(predicate);
+    FolderItem * parent = pred_root -> createFolder<VkFolder>("", "VK");
     QJsonArray::Iterator it = collection.begin();
 
-    for(; it != collection.end(); it++) {
-        itm = (*it).toObject();
+    beginInsertRows(index(pred_root), parent -> row(), parent -> row());
+        for(; it != collection.end(); it++) {
+            itm = (*it).toObject();
 
-        if (itm.isEmpty()) continue;
+            if (itm.isEmpty()) continue;
 
-        id = QString::number(itm.value("id").toInt());
-        owner = QString::number(itm.value("owner_id").toInt());
-        uid = WebItem::toUid(owner, id);
+            id = QString::number(itm.value("id").toInt());
+            owner = QString::number(itm.value("owner_id").toInt());
+            uid = WebItem::toUid(owner, id);
 
-        uri = itm.value("url").toString();
-        uri = uri.section('?', 0, 0); // remove extra info from url
+            uri = itm.value("url").toString();
+            uri = uri.section('?', 0, 0); // remove extra info from url
 
-        itemsAmount++;
-        newItem = new VkItem(
-            id,
-            uri,
-            itm.value("artist").toString() + " - " + itm.value("title").toString(),
-            parent
-        );
+            itemsAmount++;
+            newItem = new VkItem(
+                id,
+                uri,
+                itm.value("artist").toString() + " - " + itm.value("title").toString(),
+                parent
+            );
 
-        newItem -> setOwner(owner);
-        newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-        if (itm.contains("genre_id"))
-            newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
-    }
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
+            if (itm.contains("genre_id"))
+                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+        }
 
-    parent -> backPropagateItemsCountInBranch(itemsAmount);
+        parent -> backPropagateItemsCountInBranch(itemsAmount);
+    endInsertRows();
 }
 
 void SearchModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
