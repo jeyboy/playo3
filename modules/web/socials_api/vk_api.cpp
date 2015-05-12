@@ -189,7 +189,7 @@ ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predica
 
     QUrl url = VkApiPrivate::audioSearchUrl(
         predicate,
-        true,
+        false,
         onlyArtist,
         inOwn,
         mostPopular ? 2 : 0,
@@ -223,6 +223,7 @@ void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString
 
 bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
     doc = responseToJson(reply -> readAll());
+
     QUrl url = reply -> url();
     reply -> close();
     delete reply;

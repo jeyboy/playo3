@@ -1,5 +1,7 @@
 #include "vk_api_private.h"
 
+//https://vk.com/dev/execute
+
 QString VkApiPrivate::authUrl() {
     QUrl url("https://oauth.vk.com/authorize");
     QUrlQuery queryParams = QUrlQuery();
@@ -308,8 +310,8 @@ QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOn
                            "        sort: " + QString::number(sort) + ","
                            "        search_own: " + boolToStr(searchByOwn) + ""
                            "    }).items;"
-                           "    search = search + items;"
-                           "    it = it + items.length;"
+                           "    search = search %2b items;"
+                           "    it = it %2b items.length;"
                            "    rule = it < 1000 && items.length != 0;"
                            "} while(rule);"
                            "return {audio_list: search};"

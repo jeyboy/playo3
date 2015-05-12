@@ -4,42 +4,23 @@
 
 using namespace Playo3;
 
-SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent), searchWatcher(0) {}
+SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
 
-SearchModel::~SearchModel() {
-    delete searchWatcher;
-}
+SearchModel::~SearchModel() {}
 
 void SearchModel::initiateSearch(SearchSettings params) {
-    if (!params.predicates.isEmpty()) {
-        beginInsertRows(QModelIndex(), 0, params.predicates.length());
-        QStringList::Iterator it = params.predicates.begin();
-
-        for(; it != params.predicates.end(); it++)
-            rootItem -> createFolder(*it);
-
-        endInsertRows();
-    }
-
-    searchWatcher = new QFutureWatcher<void>();
-//    connect(searchWatcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
-    searchWatcher -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, searchWatcher, params));
-}
-
-void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings params) {
     emit moveInProcess();
-
     QStringList::Iterator it = params.predicates.begin();
 
+    beginInsertRows(QModelIndex(), 0, params.predicates.length());
     for(; it != params.predicates.end(); it++) {
-        if  (watcher -> isCanceled()) return;
+        rootItem -> createFolder(*it);
 
-        if (params.inVk)
+        if (params.inVk) {
             VkApi::instance() -> audioSearch(
                 this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
             );
-
-        if  (watcher -> isCanceled()) return;
+        }
 
         if (params.inTabs) {
             QList<void *>::Iterator it = params.tabs.begin();
@@ -48,20 +29,13 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher, SearchSettings p
             }
         }
 
-        if  (watcher -> isCanceled()) return;
-
         if (params.inComputer) {}
-
-        if  (watcher -> isCanceled()) return;
 
         if (params.inSc) {}
 
-        if  (watcher -> isCanceled()) return;
-
         if (params.inOther) {}
     }
-
-//    emit moveOutProcess();
+    endInsertRows();
 }
 
 void SearchModel::proceedVk(QJsonObject & objects) {
@@ -112,6 +86,7 @@ void SearchModel::proceedVk(QJsonObject & objects) {
 
         parent -> backPropagateItemsCountInBranch(itemsAmount);
     endInsertRows();
+    emit moveOutProcess();
 }
 
 void SearchModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
