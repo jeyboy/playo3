@@ -1,6 +1,6 @@
 #include "simple_list_view.h"
 
-SimpleListView::SimpleListView(QWidget *parent) : QListView(parent) {}
+SimpleListView::SimpleListView(QWidget * parent) : QListView(parent) {}
 
 void SimpleListView::removeSelected() {
     QModelIndexList::Iterator it = selectedIndexes().begin();

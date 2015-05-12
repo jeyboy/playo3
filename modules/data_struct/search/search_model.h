@@ -23,6 +23,7 @@ namespace Playo3 {
         int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
     protected slots:
         void proceedVk(QJsonObject & collection);
+        void proceedTabs(SearchSettings params);
     };
 }
 

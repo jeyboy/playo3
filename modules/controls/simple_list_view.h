@@ -7,7 +7,7 @@
 class SimpleListView : public QListView {
     Q_OBJECT
 public:
-    explicit SimpleListView(QWidget *parent = 0);
+    explicit SimpleListView(QWidget * parent = 0);
     void removeSelected();
 
 protected:

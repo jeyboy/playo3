@@ -76,7 +76,7 @@ namespace Playo3 {
 
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
-        void threadedRowRemoving(QModelIndex node, int selectionUpdate, bool usePrevAction);
+        void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);
 
     public slots:
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);
@@ -96,7 +96,7 @@ namespace Playo3 {
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();
-        bool removeRow(const QModelIndex & node, int selectionUpdate = none, bool usePrevAction = false);
+        bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = none, bool usePrevAction = false);
 
         void downloadSelected();
         void downloadAll();
@@ -104,8 +104,8 @@ namespace Playo3 {
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
-        void removeProccessing(QModelIndexList & index_list, bool inProcess = false);
-        void removeSelectedItems();
+        void removeProccessing(QModelIndexList & index_list, bool remove, bool inProcess = false);
+        void removeSelectedItems(bool remove = true);
 
         void downloadItem(const QModelIndex & node, QString savePath);
         void downloadBranch(const QModelIndex & node, QString savePath);

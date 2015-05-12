@@ -23,10 +23,7 @@ void SearchModel::initiateSearch(SearchSettings params) {
         }
 
         if (params.inTabs) {
-            QList<void *>::Iterator it = params.tabs.begin();
-            for(; it != params.tabs.end(); it++) {
-
-            }
+            proceedTabs(params);
         }
 
         if (params.inComputer) {}
@@ -87,6 +84,13 @@ void SearchModel::proceedVk(QJsonObject & objects) {
         parent -> backPropagateItemsCountInBranch(itemsAmount);
     endInsertRows();
     emit moveOutProcess();
+}
+
+void SearchModel::proceedTabs(SearchSettings params) {
+    QList<void *>::Iterator it = params.tabs.begin();
+    for(; it != params.tabs.end(); it++) {
+//        ((IView *) *it) -> initiateSearch(params);
+    }
 }
 
 void SearchModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
