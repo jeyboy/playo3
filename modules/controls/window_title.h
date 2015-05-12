@@ -11,6 +11,7 @@
 #include "title_layout.h"
 #include "rotate_label.h"
 #include "misc/screen.h"
+#include "search_bar.h"
 
 namespace Playo3 {
     class WindowTitle : public QWidget {
@@ -30,7 +31,10 @@ namespace Playo3 {
         void setVertical(bool isVertical);
         inline bool isVertical() const { return titleLabel -> isVertical(); }
 
+        void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal);
     public slots:
+        void showSearch();
+        void hideSearch();
         void invertWindowState();
     signals:
         void doubleClicked();
@@ -52,6 +56,7 @@ namespace Playo3 {
         QMargins buttonMargins;
         RotateLabel * titleLabel;
         DropButton * dropButton;
+        SearchBar * search;
         QString fullTitle;
         bool isCompact;
         QMargins hMargins;

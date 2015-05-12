@@ -73,12 +73,13 @@ namespace Playo3 {
         void appendRows(QList<QUrl> & urls);
 
         inline virtual void search(SearchSettings /*params*/) {/*stub*/}
-
     signals:
         showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);
+        searchFinished();
 
     public slots:
+        void startInnerSearch(QString);
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);
 
         void expandeAll();

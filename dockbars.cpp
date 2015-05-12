@@ -167,6 +167,8 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         default: view = 0;
     }
     bar -> setWidget(view);
+    bar -> initiateSearch();
+
     if (!attrs) {
         if (settings.type != search)
             ((IModel *)view -> model()) -> refresh();

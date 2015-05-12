@@ -2,8 +2,10 @@
 
 using namespace Playo3;
 
-WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins, int left_padding, int right_padding, bool showMini, bool showMaxi, bool showClose)
-    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), isCompact(compact), hMargins(margins) {
+WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins,
+            int left_padding, int right_padding, bool showMini, bool showMaxi, bool showClose)
+    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), isCompact(compact), hMargins(margins), search(0)
+{
     button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
 
     dropButton = isCompact ? new DropButton(button_height, this) : 0;
@@ -120,6 +122,21 @@ void WindowTitle::invertWindowState() {
         parentWidget() -> showMaximized();
 //        button -> setToolTip("Normalize");
     }
+}
+
+void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal) {
+    if (!search) {
+        search = new SearchBar(searchContainer, search_start_slot, search_end_signal, this, SLOT(hideSearch()), this);
+        ((TitleLayout *)layout()) -> addWidget(search, 0, 1);
+    }
+}
+void WindowTitle::showSearch() {
+    if (search)
+        search -> show();
+}
+void WindowTitle::hideSearch() {
+    if (search)
+        search -> hide();
 }
 
 void WindowTitle::paintEvent(QPaintEvent *) {
