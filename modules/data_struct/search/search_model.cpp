@@ -89,7 +89,7 @@ void SearchModel::proceedVk(QJsonObject & objects) {
 void SearchModel::proceedTabs(SearchSettings params) {
     QList<void *>::Iterator it = params.tabs.begin();
     for(; it != params.tabs.end(); it++) {
-//        ((IView *) *it) -> initiateSearch(params);
+        ((IModel *) *it) -> initiateSearch(params);
     }
 }
 

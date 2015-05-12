@@ -2,8 +2,6 @@
 #include "ui_search_dialog.h"
 #include "dockbars.h"
 
-#include <qdebug.h>
-
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
 {
@@ -19,11 +17,14 @@ SearchDialog::SearchDialog(QWidget * parent) :
     for(; it != bars.end(); it++) {
         IView * v = Dockbars::instance() -> view(*it);
         if (v) {
-            QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), ui -> tabsList);
-            item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
-            item -> setCheckState(Qt::Checked);
-            item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) v));
-            ui -> tabsList -> addItem(item);
+            IModel * mdl = (IModel *)v -> model();
+            if (mdl -> containerType() != search) {
+                QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), ui -> tabsList);
+                item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+                item -> setCheckState(Qt::Checked);
+                item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) mdl));
+                ui -> tabsList -> addItem(item);
+            }
         }
     }
 }

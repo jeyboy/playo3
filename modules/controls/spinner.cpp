@@ -1,5 +1,4 @@
 #include "spinner.h"
-#include <qdebug.h>
 
 Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
         spineWidth(10), spinePad(2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
