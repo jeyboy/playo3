@@ -6,10 +6,6 @@ SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
 {
     ui -> setupUi(this);
-    connect(ui -> byTag, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
-    connect(ui -> byTitle, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
-    connect(ui -> byArtist, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
-    connect(ui -> bySong, SIGNAL(clicked()), this, SLOT(on_nonByStyle_clicked()));
 
     QList<DockBar *> bars = Dockbars::instance() -> dockbars();
     QList<DockBar *>::Iterator it = bars.begin();
@@ -27,6 +23,9 @@ SearchDialog::SearchDialog(QWidget * parent) :
             }
         }
     }
+
+    QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
+    ui -> stylePredicate -> addItems(genres);
 }
 
 SearchDialog::~SearchDialog() {
@@ -36,10 +35,14 @@ SearchDialog::~SearchDialog() {
 SearchSettings SearchDialog::params() {
     SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inOther -> isChecked(),
                        ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
-    int count = ui -> predicates -> count();
 
+    int count = ui -> textPredicates -> count();
     for(int i = 0; i < count; i++)
-        res.predicates.append(ui -> predicates -> item(i) -> text());
+        res.predicates.append(ui -> textPredicates -> item(i) -> text());
+
+    count = ui -> stylePredicates -> count();
+    for(int i = 0; i < count; i++)
+        res.addGenre(ui -> stylePredicates -> item(i) -> text());
 
     if (ui -> byTitle -> isChecked())
         res.type = ::title;
@@ -68,25 +71,12 @@ SearchSettings SearchDialog::params() {
 }
 
 void SearchDialog::on_addPredicate_clicked() {
-    QString predicate;
-
-    if (ui -> textPredicate -> isVisible())
-        predicate = ui -> textPredicate -> text();
-    else
-        predicate = ui -> stylePredicate -> currentText();
+    QString predicate = ui -> textPredicate -> text();
 
     if (!predicate.isEmpty()) {
-        if (ui -> predicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
-            ui -> predicates -> addItem(predicate);
+        if (ui -> textPredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
+            ui -> textPredicates -> addItem(predicate);
     }
-}
-
-void SearchDialog::on_byStyle_clicked() { ui -> textPredicate -> hide(); }
-void SearchDialog::on_nonByStyle_clicked() { ui -> textPredicate -> show(); }
-
-void SearchDialog::on_predicates_itemActivated(QListWidgetItem * item) {
-    ui -> predicates -> removeItemWidget(item);
-    delete item;
 }
 
 void SearchDialog::on_cancelButton_clicked() {
@@ -95,4 +85,23 @@ void SearchDialog::on_cancelButton_clicked() {
 
 void SearchDialog::on_acceptButton_clicked() {
     accept();
+}
+
+void SearchDialog::on_textPredicates_itemActivated(QListWidgetItem * item) {
+    ui -> textPredicates -> removeItemWidget(item);
+    delete item;
+}
+
+void SearchDialog::on_stylePredicates_itemActivated(QListWidgetItem * item) {
+    ui -> stylePredicates -> removeItemWidget(item);
+    delete item;
+}
+
+void SearchDialog::on_addStylePredicate_clicked() {
+    QString predicate = ui -> stylePredicate -> currentText();
+
+    if (!predicate.isEmpty()) {
+        if (ui -> stylePredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
+            ui -> stylePredicates -> addItem(predicate);
+    }
 }

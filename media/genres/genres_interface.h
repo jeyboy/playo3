@@ -2,7 +2,7 @@
 #define GENRES_INTERFACE
 
 #include <QHash>
-#include <QString>
+#include <QStringList>
 
 class IGenres {
 public:
@@ -12,6 +12,9 @@ public:
     inline virtual ~IGenres() {}
 
     int toInt(QString name) const;
+    QString toString(int id) const;
+    inline QStringList genresList() { return genres.keys(); }
+
     virtual int defaultInt() const = 0;
 protected:
 

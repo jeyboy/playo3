@@ -10,6 +10,8 @@ public:
 
     int fromStandartId(int genreId);
     int toStandartId(int vkGenreId);
+    QList<int> toStandartIds(int vkGenreId);
+
     inline int defaultInt() const { return 18; }
 protected:
     void initDefault();

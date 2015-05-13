@@ -22,14 +22,15 @@ public:
 private slots:
     void on_addPredicate_clicked();
 
-    void on_byStyle_clicked();
-    void on_nonByStyle_clicked();
-
-    void on_predicates_itemActivated(QListWidgetItem * item);
-
     void on_cancelButton_clicked();
 
     void on_acceptButton_clicked();
+
+    void on_textPredicates_itemActivated(QListWidgetItem *item);
+
+    void on_stylePredicates_itemActivated(QListWidgetItem *item);
+
+    void on_addStylePredicate_clicked();
 
 private:
     Ui::SearchDialog * ui;

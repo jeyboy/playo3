@@ -173,7 +173,7 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         if (settings.type != search)
             ((IModel *)view -> model()) -> refresh();
         else
-            view -> search(*search_settings);
+            ((SearchView *)view) -> search(*search_settings);
     }
 
     if (addToView)

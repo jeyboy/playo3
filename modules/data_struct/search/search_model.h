@@ -3,6 +3,8 @@
 
 #include "../model_interface.h"
 #include "search_settings.h"
+#include "modules/web/socials_api/vk_api.h"
+#include "media/genres/music_genres.h"
 
 namespace Playo3 {
     class SearchModel : public IModel {
@@ -15,7 +17,7 @@ namespace Playo3 {
         inline bool isRelative() const { return false; }
         inline ContainerType containerType() const { return search; }
 
-        void initiateSearch(SearchSettings params);
+        void initiateSearch(SearchSettings & params);
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
@@ -24,6 +26,8 @@ namespace Playo3 {
     protected slots:
         void proceedVk(QJsonObject & collection);
         void proceedTabs(SearchSettings params);
+    private:
+        SearchSettings request;
     };
 }
 

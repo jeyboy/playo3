@@ -1,47 +1,92 @@
 #include "search_model.h"
 
-#include "modules/web/socials_api/vk_api.h"
-
 using namespace Playo3;
 
 SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
 
 SearchModel::~SearchModel() {}
 
-void SearchModel::initiateSearch(SearchSettings params) {
+void SearchModel::initiateSearch(SearchSettings & params) {
+    request = params;
+
     emit moveInProcess();
-    QStringList::Iterator it = params.predicates.begin();
 
-    beginInsertRows(QModelIndex(), 0, params.predicates.length());
-    for(; it != params.predicates.end(); it++) {
-        rootItem -> createFolder(*it);
+    if (!params.predicates.isEmpty()) { // search by predicates
+        QStringList::Iterator it = params.predicates.begin();
 
-        if (params.inVk) {
-            VkApi::instance() -> audioSearch(
-                this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-            );
+        beginInsertRows(QModelIndex(), 0, params.predicates.length());
+        for(; it != params.predicates.end(); it++) {
+            rootItem -> createFolder(*it);
+
+            if (params.inVk) {
+                VkApi::instance() -> audioSearch(
+                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+                );
+            }
+
+            if (params.inTabs) {
+                proceedTabs(params);
+            }
+
+            if (params.inComputer) {}
+
+            if (params.inSc) {}
+
+            if (params.inOther) {}
         }
+    } else { // search by styles only
+        if (!params.genres.isEmpty()) {
+            QList<int>::Iterator it = params.genres.keys().begin();
+            QList<int>::Iterator it_end = params.genres.keys().end();
+            beginInsertRows(QModelIndex(), 0, params.genres.size());
 
-        if (params.inTabs) {
-            proceedTabs(params);
+            for(; it != it_end; it++) {
+                rootItem -> createFolder(MusicGenres::instance() -> toString(*it));
+
+                if (params.inVk) {
+    //                VkApi::instance() -> audioSearch(
+    //                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+    //                );
+                }
+
+                if (params.inTabs) {
+                    proceedTabs(params);
+                }
+
+                if (params.inComputer) {}
+
+                if (params.inSc) {}
+
+                if (params.inOther) {}
+            }
+        } else if (params.popular) {  // returns popular
+            beginInsertRows(QModelIndex(), 0, 5);
+
+            if (params.inVk) {
+//                VkApi::instance() -> audioSearch(
+//                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+//                );
+            }
+
+            if (params.inTabs) {
+                proceedTabs(params);
+            }
+
+            if (params.inComputer) {}
+
+            if (params.inSc) {}
+
+            if (params.inOther) {}
         }
-
-        if (params.inComputer) {}
-
-        if (params.inSc) {}
-
-        if (params.inOther) {}
     }
+
     endInsertRows();
 }
 
 void SearchModel::proceedVk(QJsonObject & objects) {
-    qDebug() << "VK SUR";
     QJsonArray collection = objects.value("audio_list").toArray();
-    if (collection.isEmpty()) {
-        qDebug() << "SUR";
+    if (collection.isEmpty())
         return;
-    }
 
     int itemsAmount = 0;
     QJsonObject itm;
@@ -59,6 +104,9 @@ void SearchModel::proceedVk(QJsonObject & objects) {
             itm = (*it).toObject();
 
             if (itm.isEmpty()) continue;
+            int genre_id = itm.value("genre_id").toInt();
+
+            if (!request.vkGenres.isEmpty() && !request.vkGenres.contains(genre_id)) continue;
 
             id = QString::number(itm.value("id").toInt());
             owner = QString::number(itm.value("owner_id").toInt());
@@ -78,7 +126,7 @@ void SearchModel::proceedVk(QJsonObject & objects) {
             newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
             if (itm.contains("genre_id"))
-                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+                newItem -> setGenre(VkGenres::instance() -> toStandartId(genre_id));
         }
 
         parent -> backPropagateItemsCountInBranch(itemsAmount);
@@ -89,7 +137,7 @@ void SearchModel::proceedVk(QJsonObject & objects) {
 void SearchModel::proceedTabs(SearchSettings params) {
     QList<void *>::Iterator it = params.tabs.begin();
     for(; it != params.tabs.end(); it++) {
-//        ((IModel *) *it) -> initiateSearch(params);
+//        ((IModel *) *it) -> initiateSearch(params, );
     }
 }
 

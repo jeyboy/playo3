@@ -349,6 +349,7 @@ QUrlQuery VkApiPrivate::methodParams(QString & token) {
 
     query.addQueryItem("v", apiVersion());
     query.addQueryItem("access_token", token);
+    query.addQueryItem("test_mode", "1");
 
     return query;
 }
