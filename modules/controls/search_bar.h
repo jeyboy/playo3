@@ -17,6 +17,7 @@ namespace Playo3 {
         );
     public slots:
         void searchEnded();
+        void onHide();
     signals:
         void searchCalled(QString predicate);
     private slots:

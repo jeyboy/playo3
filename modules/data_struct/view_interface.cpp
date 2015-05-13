@@ -136,26 +136,23 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
 /// SLOTS
 //////////////////////////////////////////////////////
 void IView::startInnerSearch(QString predicate, QModelIndex ind) {
-    qDebug() << "LAL";
-
-    QRegularExpression regex(".*" + predicate + ".*");
+    QRegularExpression regex(predicate, QRegularExpression::CaseInsensitiveOption);
     bool empty = predicate.isEmpty();
 
     QModelIndex it;
 
     for(int row = 0; ; row++) {
-        qDebug() << "T" + QString::number(row);
-
-        it = ind.child(row, 0);
-        qDebug() << it;
+        it = mdl -> index(row, 0, ind);
         if (it.isValid()) {
-            if (ind.data(IFOLDER).toBool())
+            if (it.data(IFOLDER).toBool()) {
                 startInnerSearch(predicate, it);
-            else {
+            } else {
                 if (empty)
                     setRowHidden(row, ind, false);
-                else if(!regex.match(ind.data().toString()).hasMatch()) {
-                    setRowHidden(row, ind, true);
+                else {
+                    QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
+                    if(!m.hasMatch())
+                        setRowHidden(row, ind, true);
                 }
             }
         } else break;

@@ -19,7 +19,7 @@ SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, c
     connect(this, SIGNAL(searchCalled(QString)), receiver, search_start_slot);
     l -> addWidget(searchButton, 1);
 
-    ClickableLabel * closeButton = new ClickableLabel("Close", "Close", this, 0, this, SLOT(hide()));
+    ClickableLabel * closeButton = new ClickableLabel("Close", "Close", this, 0, this, SLOT(onHide()));
     connect(closeButton, SIGNAL(clicked()), closeReceiver, close_slot);
     l -> addWidget(closeButton, 1);
 }
@@ -31,4 +31,10 @@ void SearchBar::initiateSearch() {
 
 void SearchBar::searchEnded() {
     text -> setDisabled(false);
+}
+
+void SearchBar::onHide() {
+    text -> setText("");
+    initiateSearch();
+    hide();
 }
