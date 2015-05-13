@@ -151,8 +151,7 @@ void IView::startInnerSearch(QString predicate, QModelIndex ind) {
                     setRowHidden(row, ind, false);
                 else {
                     QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
-                    if(!m.hasMatch())
-                        setRowHidden(row, ind, true);
+                    setRowHidden(row, ind, !m.hasMatch());
                 }
             }
         } else break;
