@@ -135,8 +135,34 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
-void IView::startInnerSearch(QString predicate) {
-    qDebug() << "in search" << predicate;
+void IView::startInnerSearch(QString predicate, QModelIndex ind) {
+    qDebug() << "LAL";
+
+    QRegularExpression regex(".*" + predicate + ".*");
+    bool empty = predicate.isEmpty();
+
+    QModelIndex it;
+
+    for(int row = 0; ; row++) {
+        qDebug() << "T" + QString::number(row);
+
+        it = ind.child(row, 0);
+        qDebug() << it;
+        if (it.isValid()) {
+            if (ind.data(IFOLDER).toBool())
+                startInnerSearch(predicate, it);
+            else {
+                if (empty)
+                    setRowHidden(row, ind, false);
+                else if(!regex.match(ind.data().toString()).hasMatch()) {
+                    setRowHidden(row, ind, true);
+                }
+            }
+        } else break;
+    }
+
+    if (ind == QModelIndex())
+        emit searchFinished();
 }
 
 void IView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {

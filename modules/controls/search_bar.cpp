@@ -25,10 +25,10 @@ SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, c
 }
 
 void SearchBar::initiateSearch() {
-    emit searchCalled(text -> text());
     text -> setEnabled(false);
+    emit searchCalled(text -> text());
 }
 
 void SearchBar::searchEnded() {
-    text -> setEnabled(true);
+    text -> setDisabled(false);
 }
