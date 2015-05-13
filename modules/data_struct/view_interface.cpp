@@ -280,6 +280,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     actions.append((act = new QAction(this)));
     act -> setSeparator(true);
 
+    actions.append((act = new QAction(QIcon(":/search"), "Search", this)));
+    connect(act, SIGNAL(triggered(bool)), parent(), SLOT(showSearch()));
+
+    actions.append((act = new QAction(this)));
+    act -> setSeparator(true);
+
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(":/active_tab"), "Show active elem", this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));

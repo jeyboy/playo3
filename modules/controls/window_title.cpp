@@ -128,6 +128,7 @@ void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_
     if (!search) {
         search = new SearchBar(searchContainer, search_start_slot, search_end_signal, this, SLOT(hideSearch()), this);
         ((TitleLayout *)layout()) -> addWidget(search, 0, 1);
+        search -> hide();
     }
 }
 void WindowTitle::showSearch() {

@@ -36,6 +36,7 @@ namespace Playo3 {
 //        }
 
         inline void initiateSearch() { titleWidget -> initiateSearch(mainWidget(), SLOT(startInnerSearch(QString)), SIGNAL(searchFinished())); }
+
         inline QWidget * mainWidget() { return inProcess ? mWidget : widget(); }
         void useVerticalTitles(bool vertical);
         inline bool isUsedVerticalTitles() const { return titleWidget -> isVertical(); }
@@ -43,6 +44,8 @@ namespace Playo3 {
     signals:
         void closing();
     public slots:
+        inline void showSearch() { titleWidget -> showSearch(); }
+
         inline void rotate() { useVerticalTitles(!isUsedVerticalTitles()); }
         void onMoveInProcess();
         void onMoveOutProcess();
