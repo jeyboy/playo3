@@ -140,6 +140,6 @@ void SearchModel::proceedTabs(SearchSettings params) {
 
     QList<void *>::Iterator it = params.tabs.begin();
     for(; it != params.tabs.end(); it++) {
-        ((IModel *) *it) -> initiateSearch(params.activePredicate, parent);
+        ((IModel *) *it) -> initiateSearch(params, parent);
     }
 }

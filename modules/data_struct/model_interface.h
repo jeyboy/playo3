@@ -8,6 +8,7 @@
 #include <qdesktopservices.h>
 #include <qdebug.h>
 
+#include "modules/data_struct/search/search_settings.h"
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
 #include "container_types.h"
@@ -66,7 +67,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
         inline QMutex * syncMutex() { return sync; }
 
-        void initiateSearch(QString predicate, FolderItem * destination, FolderItem * search_source = 0);
+        void initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source = 0);
 
     public slots:
         inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }

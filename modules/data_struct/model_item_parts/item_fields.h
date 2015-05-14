@@ -8,6 +8,8 @@
 #include "misc/settings.h"
 #include "misc/file_utils/filename_conversions.h"
 
+#include "media/genres/music_genres.h"
+
 namespace Playo3 {
     #define IURL Qt::UserRole + 1
     #define IFULLPATH IURL + 1
@@ -51,7 +53,7 @@ namespace Playo3 {
         inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
 
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
-        inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, ""); }
+        inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, MusicGenres::instance() -> defaultInt()); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
 
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }

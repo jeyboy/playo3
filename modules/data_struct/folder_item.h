@@ -33,6 +33,7 @@ namespace Playo3 {
 
         QJsonObject toJson();
 
+        inline QList<IItem *> childrenList() const { return children; }
         inline int childRow(IItem * child) { return children.indexOf(child); }
         inline IItem * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
         virtual inline int childCount() const { return children.count(); }

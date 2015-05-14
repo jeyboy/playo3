@@ -561,9 +561,27 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     return false;
 }
 
-void IModel::initiateSearch(QString predicate, FolderItem * destination, FolderItem * search_source) {
+void IModel::initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source) {
     if (search_source == 0)
         search_source = rootItem;
 
+    for(QList<IItem *>::Iterator it = search_source -> childrenList().begin(); it != search_source -> childrenList().end(); it++) {
+        if ((*it) -> isContainer()) {
+            initiateSearch(params, destination, (FolderItem *) *it);
+        } else {
+            bool is_valid = (*it) -> respondTo(params.activePredicate);
 
+            if (is_valid) {
+                if (!params.genres.isEmpty()) {
+                    int genre_id = (*it) -> genreID().toInt();
+                    is_valid |= params.genres.contains(genre_id);
+                }
+
+                if (is_valid) {
+                    QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
+                    new FileItem(attrs, destination);
+                }
+            }
+        }
+    }
 }

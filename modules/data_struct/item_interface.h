@@ -64,6 +64,14 @@ namespace Playo3 {
         }
 
         virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
+
+        inline bool respondTo(QString & predicate) {
+//            QRegularExpression regex(predicate, QRegularExpression::CaseInsensitiveOption);
+//            QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
+//            return m.hasMatch();
+
+            return predicate.isEmpty() || title().toString().contains(predicate, Qt::CaseInsensitive);
+        }
     protected:
         FolderItem * _parent;
     };
