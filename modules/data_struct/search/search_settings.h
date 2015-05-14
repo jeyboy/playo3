@@ -44,6 +44,8 @@ struct SearchSettings {
     PredicateType type;
     bool popular;
     bool search_in_own;
+
+    QString activePredicate;
 };
 
 #endif // SEARCH_SETTINGS

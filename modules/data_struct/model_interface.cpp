@@ -562,5 +562,8 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
 }
 
 void IModel::initiateSearch(QString predicate, FolderItem * destination, FolderItem * search_source) {
+    if (search_source == 0)
+        search_source = rootItem;
+
 
 }

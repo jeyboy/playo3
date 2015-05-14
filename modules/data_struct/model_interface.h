@@ -66,7 +66,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
         inline QMutex * syncMutex() { return sync; }
 
-        void initiateSearch(QString predicate, FolderItem * destination, FolderItem * search_source);
+        void initiateSearch(QString predicate, FolderItem * destination, FolderItem * search_source = 0);
 
     public slots:
         inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }

@@ -1,13 +1,12 @@
 #ifndef SEARCH_MODEL_H
 #define SEARCH_MODEL_H
 
-#include "../model_interface.h"
-#include "search_settings.h"
+#include "../level_tree/level_tree_model.h"
 #include "modules/web/socials_api/vk_api.h"
-#include "media/genres/music_genres.h"
+#include "search_settings.h"
 
 namespace Playo3 {
-    class SearchModel : public IModel {
+    class SearchModel : public LevelTreeModel {
         Q_OBJECT
 
     public:
@@ -18,11 +17,6 @@ namespace Playo3 {
         inline ContainerType containerType() const { return search; }
 
         void initiateSearch(SearchSettings & params);
-    protected:
-        void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
-        void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
-        int filesRoutine(QFileInfo & currFile, FolderItem * node, QHash<FolderItem *, int> & rels);
-        int filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos = -1);
     protected slots:
         void proceedVk(QJsonObject & collection);
         void proceedTabs(SearchSettings params);
