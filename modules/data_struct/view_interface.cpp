@@ -112,9 +112,10 @@ void IView::execNextIndex(bool deleteCurrent) {
 
 bool IView::execPath(const QString path, bool paused, uint start) {
     QModelIndex ind = mdl -> fromPath(path);
-    if (ind.isValid())
+    if (ind.isValid()) {
+        setFocus();
         return execIndex(ind, paused, start);
-    else
+    } else
         return false;
 }
 
@@ -126,7 +127,11 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node);
 
-        return Player::instance() -> playIndex(node, paused, start);
+        if (Player::instance() -> playedIndex() == node) {
+            Player::instance() -> playPause();
+            return true;
+        } else
+            return Player::instance() -> playIndex(node, paused, start);
     }
 
     return false;
@@ -681,11 +686,15 @@ void IView::dropEvent(QDropEvent * event) {
 }
 
 void IView::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
+    if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return || event -> key() == Qt::Key_Space) {
         QModelIndexList list = selectedIndexes();
 
-        if (!list.isEmpty())
+        if (!list.isEmpty()) {
             execIndex(list.first());
+        } else {
+            if (Player::instance() -> playedItem())
+                Player::instance() -> playPause();
+        }
 
     } else if (event -> key() == Qt::Key_Delete)
         removeSelectedItems();
