@@ -151,7 +151,7 @@ void IView::startInnerSearch(QString predicate, QModelIndex ind) {
             if (it.data(IFOLDER).toBool())
                 startInnerSearch(predicate, it);
             else
-                setRowHidden(row, ind, !(empty || ind.data().toString().contains(predicate)));
+                setRowHidden(row, ind, !(empty || it.data().toString().contains(predicate, Qt::CaseInsensitive)));
         } else break;
     }
 
@@ -278,7 +278,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     actions.append((act = new QAction(this)));
     act -> setSeparator(true);
 
-    actions.append((act = new QAction(QIcon(":/search"), "Search", this)));
+    actions.append((act = new QAction(QIcon(":/search"), "Find", this)));
     connect(act, SIGNAL(triggered(bool)), parent(), SLOT(showSearch()));
 
     actions.append((act = new QAction(this)));
@@ -698,6 +698,8 @@ void IView::keyPressEvent(QKeyEvent * event) {
 
     } else if (event -> key() == Qt::Key_Delete)
         removeSelectedItems();
+    else if (event -> key() == Qt::Key_F && event -> modifiers() & Qt::CTRL)
+        ((DockBar *)parent()) -> showSearch();
     else QTreeView::keyPressEvent(event);
 }
 
