@@ -21,6 +21,14 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     emit player -> downloadEnded();
 }
 
+#ifdef Q_OS_WIN
+    DWORD CALLBACK WasapiProc(void * buffer, DWORD length, void * /*user*/) {
+        DWORD c = BASS_ChannelGetData(mixer, buffer, length);
+        if (c == -1) c = 0; // an error, no data
+        return c;
+    }
+#endif
+
 AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
     channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");

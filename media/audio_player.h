@@ -18,6 +18,7 @@
 #ifdef Q_OS_WIN
     void __stdcall endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
     void __stdcall endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
+    DWORD CALLBACK WasapiProc(void * buffer, DWORD length, void * /*user*/);
 #else
     void endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
     void endTrackDownloading(HSYNC, DWORD, DWORD, void * user);

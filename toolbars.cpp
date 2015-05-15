@@ -350,8 +350,8 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addSeparator();
-    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
-    ptb -> addSeparator();
+//    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
+//    ptb -> addSeparator();
     ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
     ptb -> adjustSize();
 
@@ -385,7 +385,7 @@ QToolButton * ToolBars::initiateVkButton() {
         vkMenu -> addAction("Reconect", parent(), SLOT(openVKTabDialog()));
         vkMenu -> addAction("Open your tab", parent(), SLOT(showVKTabDialog()));
         vkMenu -> addAction("Open friend/group tab", parent(), SLOT(showVKRelTabDialog()));
-        vkMenu -> addAction("Open recommendations", parent(), SLOT(openVKRecomendations()));
+        vkMenu -> addAction("Open your recommendations", parent(), SLOT(openVKRecomendations()));
         vkToolButton -> setMenu(vkMenu);
     } else {
         vkToolButton -> setIcon(QIcon(":/add_vk"));
