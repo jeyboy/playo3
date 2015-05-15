@@ -39,6 +39,7 @@ struct SearchSettings {
     QHash<int, QString> genres;
     QHash<int, QString> vkGenres;
 
+    QStringList drives;
     QList<void *> tabs;
     QStringList predicates;
     PredicateType type;

@@ -2,6 +2,8 @@
 #include "ui_search_dialog.h"
 #include "dockbars.h"
 
+#include <QFileInfoList>
+
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
 {
@@ -26,6 +28,15 @@ SearchDialog::SearchDialog(QWidget * parent) :
 
     QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
+
+
+    QFileInfoList drives = QDir::drives();
+    for(QFileInfoList::Iterator it = drives.begin(); it != drives.end(); it++) {
+        QListWidgetItem * item = new QListWidgetItem((*it).absolutePath(), ui -> driveList);
+        item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+        item -> setCheckState(Qt::Checked);
+        ui -> driveList -> addItem(item);
+    }
 }
 
 SearchDialog::~SearchDialog() {
@@ -64,6 +75,16 @@ SearchSettings SearchDialog::params() {
             QListWidgetItem * item = ui -> tabsList -> item(i);
             if (item -> checkState() == Qt::Checked)
                 res.tabs.append(item -> data(Qt::UserRole + 1).value<void *>());
+        }
+    }
+
+    if (res.inComputer) {
+        int count = ui -> driveList -> count();
+
+        for(int i = 0; i < count; i++) {
+            QListWidgetItem * item = ui -> driveList -> item(i);
+            if (item -> checkState() == Qt::Checked)
+                res.drives.append(item -> text());
         }
     }
 

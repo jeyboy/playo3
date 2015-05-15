@@ -20,6 +20,7 @@ namespace Playo3 {
     protected slots:
         void proceedVk(QJsonObject & collection);
         void proceedTabs(SearchSettings params);
+        void proceedMyComputer(SearchSettings params);
     private:
         SearchSettings request;
     };

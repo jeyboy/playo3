@@ -145,7 +145,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>20</y>
       <width>91</width>
       <height>20</height>
      </rect>
@@ -161,7 +161,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>50</y>
       <width>91</width>
       <height>20</height>
      </rect>
@@ -180,7 +180,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
+      <y>80</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -196,7 +196,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
+      <y>110</y>
       <width>121</width>
       <height>20</height>
      </rect>
@@ -211,23 +211,24 @@ font-weight: bold;</string>
    <widget class="QCheckBox" name="inComputer">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>121</width>
-      <height>20</height>
+      <x>150</x>
+      <y>10</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="toolTip">
      <string>Search in VKontakte</string>
     </property>
     <property name="text">
-     <string>Search in Computer</string>
+     <string>Search in 
+ Computer</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="inTabs">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>240</x>
       <y>20</y>
       <width>121</width>
       <height>20</height>
@@ -243,9 +244,19 @@ font-weight: bold;</string>
    <widget class="QListWidget" name="tabsList">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>240</x>
       <y>50</y>
-      <width>221</width>
+      <width>151</width>
+      <height>111</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="driveList">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>50</y>
+      <width>81</width>
       <height>111</height>
      </rect>
     </property>
