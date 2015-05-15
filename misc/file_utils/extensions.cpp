@@ -18,15 +18,16 @@ Extensions::Extensions() {
         activeFilter = ext -> read("active").toString("all");
         QJsonObject obj = ext -> read("filters").toObject();
 
-        foreach (QString key, obj.keys()) {
+        foreach (QString key, obj.keys())
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());
-        }
 
     } else {
         QStringList commonfiltersList;
         commonfiltersList << "*";
         filters.insert("all", commonfiltersList);
         activeFilter = "all";
+
+        initMusicExtensions();
     }
 
     initSignatures();
@@ -188,4 +189,45 @@ void Extensions::removePreset(QString name) {
     filters.remove(name);
     if (name == activeFilter)
         activeFilter = filters.keys().first();
+}
+
+void Extensions::initMusicExtensions() { // TODO: not complete list
+    QStringList mList;
+    mList << "*.aif";   // Audio Interchange File
+    mList << "*.aifc";  // Audio Interchange File
+    mList << "*.aiff";  // Audio Interchange File
+    mList << "*.asf";   // Windows Media formats
+    mList << "*.adt";   // Windows Media formats
+    mList << "*.adts";  // Windows Media formats
+    mList << "*.cda";   // CD Audio track
+    mList << "*.flac";  // Audio files encoded by Flac - free lossless audio codec
+    mList << "*.fla";   // Audio files encoded by Flac - free lossless audio codec
+    mList << "*.mp2";   // Compressed audio and music file
+    mList << "*.mpa";   // Compressed audio and music file
+    mList << "*.mp3";   // Compressed audio and music file, mp3 songs or ringtones
+    mList << "*.amr";   // Adaptive Multi-Rate compressed audio file
+    mList << "*.wv";    // WavPack lossless compressed audio file
+    mList << "*.ram";   // Real Audio metafile
+    mList << "*.m4a";   // MPEG-4 compressed audio file
+    mList << "*.wav";   // WAVe PCM Sound, standard Windows sound format
+    mList << "*.ad4";   // 4D Systems audio file
+    mList << "*.thd";   // Dolby TrueHD audio file
+    mList << "*.wma";   // Windows Media Audio
+    mList << "*.aac";   // Advanced audio coding file
+    mList << "*.m4r";   // Apple iPhone ringtone format
+    mList << "*.mogg";  // Multitrack digital audio format
+    mList << "*.spx";   // Speex encoded audio
+    mList << "*.ogg";   // Ogg Vorbis audio file
+    mList << "*.au";    // Unix audio sound file format
+    mList << "*.pcm";   // PCM audio file
+    mList << "*.m4p";   // Apple iTunes Music Store audio file
+    mList << "*.mka";   // Matroska audio file
+    mList << "*.snd";   // Sound file
+    mList << "*.swa";   // Adobe Shockwave music file
+    mList << "*.aob";   // DVD Audio Object file
+    mList << "*.rms";   // RealMedia Secure Media file format
+    mList << "*.m4b";   // MPEG-4 Audio Layer audio book file
+    mList << "*.acm";   // ACM compressed sound file
+
+    filters.insert("music", mList);
 }

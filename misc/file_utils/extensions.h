@@ -47,6 +47,7 @@ namespace Playo3 {
     private:
         Extensions();
         void initSignatures();
+        void initMusicExtensions();
 
         static Extensions * self;
 

@@ -34,6 +34,8 @@ void SearchModel::initiateSearch(SearchSettings & params) {
 
             if (params.inOther) {}
         }
+
+        endInsertRows();
     } else { // search by styles only
         if (!params.genres.isEmpty()) {
             QList<int>::Iterator it = params.genres.keys().begin();
@@ -59,6 +61,8 @@ void SearchModel::initiateSearch(SearchSettings & params) {
 
                 if (params.inOther) {}
             }
+
+            endInsertRows();
         } else if (params.popular) {  // returns popular
             beginInsertRows(QModelIndex(), 0, 5);
 
@@ -77,10 +81,10 @@ void SearchModel::initiateSearch(SearchSettings & params) {
             if (params.inSc) {}
 
             if (params.inOther) {}
+
+            endInsertRows();
         }
     }
-
-    endInsertRows();
 }
 
 void SearchModel::proceedVk(QJsonObject & objects) {
@@ -148,13 +152,11 @@ void SearchModel::proceedMyComputer(SearchSettings params) {
 //    FolderItem * pred_root = rootItem -> createFolder(params.activePredicate);
 //    FolderItem * parent = pred_root -> createFolder<VkFolder>("", "Tabs");
 
-//    QList<void *>::Iterator it = params.tabs.begin();
-//    for(; it != params.tabs.end(); it++) {
-//        ((IModel *) *it) -> initiateSearch(params, parent);
-//    }
+    QStringList filters;
+    filters << params.activePredicate;
 
     for(QStringList::Iterator it = params.drives.begin(); it != params.drives.end(); it++) {
-        QDirIterator dir_it(*it,  QDir::AllEntries | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks, QDirIterator::Subdirectories);
 
         while(dir_it.hasNext()) {
             dir_it.next();
