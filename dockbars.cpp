@@ -314,12 +314,14 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
                 return;
             } else {
                 if (Player::instance() -> playedItem() -> itemType() == VK_ITEM) {
-                    Player::instance() -> playedItem() -> setPath(
-                        VkApi::instance() -> refreshAudioItemUrl(
-                            Player::instance() -> playedItem() -> toUid().toString()
-                        ).section('?', 0, 0)
-                    );
-                    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                    QString newUrl = VkApi::instance() -> refreshAudioItemUrl(
+                        Player::instance() -> playedItem() -> toUid().toString()
+                    ).section('?', 0, 0);
+
+                    if (Player::instance() -> playedItem() -> path().toString() != newUrl) {
+                        Player::instance() -> playedItem() -> setPath(newUrl);
+                        Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                    }
                 }
             }
         }
