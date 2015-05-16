@@ -212,7 +212,7 @@ void IView::openRecomendationsforItemUser() {
 void IView::openRecomendationsforItem() {
     WebItem * it = mdl -> item<WebItem>(currentIndex());
     if (it -> uid().isValid()) {
-        ViewSettings settings(vk_rel, false, false, false, true, it -> uid().toString(), song_rel);
+        ViewSettings settings(vk_rel, false, false, false, true, it -> toUid().toString(), song_rel);
         Dockbars::instance() -> createDocBar("Rec for song " + it -> title().toString(), settings, 0, true, true);
     }
 }

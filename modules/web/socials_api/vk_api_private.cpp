@@ -248,7 +248,7 @@ QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, QString token
     query.addQueryItem("code",
                        QString(
                            "var recomendations = API.audio.getRecommendations({"
-                                        + QString(byUser ? "user_id: " : "target_audio: ") + uid + ", "
+                                        + QString(byUser ? "user_id: " : "target_audio: ") + "\"" + uid + "\", "
                            "            count: 1000, "
                            "            shuffle: 0"
                            "});"
