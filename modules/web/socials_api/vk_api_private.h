@@ -12,7 +12,7 @@ public:
     static QUrl audioRefreshUrl(QStringList uids, QString token);
     static QUrl audioAlbumsUrl(QString uid, QString token, int offset);
     static QUrl audioInfoUrl(QString uid, QString currUid, QString token);
-    static QUrl audioRecomendationUrl(QString uid, bool byUser, QString token);
+    static QUrl audioRecomendationUrl(QString uid, bool byUser, bool randomize, QString token);
     static QUrl audioPopularUrl(bool onlyEng, QString token, int genreId = -1);
     static QUrl audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort, QString token);
     static QUrl audioLyricsUrl(QString token, QString lyrics_id);

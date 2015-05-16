@@ -19,6 +19,7 @@ void VkRelModel::refresh(bool /*retryPlaing*/) {
         this,
         SLOT(proceedAudioList(QJsonObject &)),
         tab_uid,
-        rel_type == user_rel
+        rel_type == user_rel,
+        true
     );
 }

@@ -163,12 +163,13 @@ void VkApi::audioList(const QObject * receiver, const char * respSlot, QString u
     startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
 }
 
-ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, bool byUser) {
+ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, bool byUser, bool randomize) {
     CustomNetworkAccessManager * netManager = createManager();
 
     QUrl url = VkApiPrivate::audioRecomendationUrl(
         func -> uid,
         byUser,
+        randomize,
         getToken()
     );
 
@@ -180,8 +181,8 @@ ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, boo
     delete netManager;
     return func;
 }
-void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser) {
-    startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), byUser));
+void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize) {
+    startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), byUser, randomize));
 }
 
 ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {

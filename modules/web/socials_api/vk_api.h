@@ -25,8 +25,8 @@ public:
     ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
     void audioList(const QObject * receiver, const char * respSlot, QString uid);
 
-    ApiFuncContainer * audioRecomendationRoutine(ApiFuncContainer * func, bool byUser);
-    void audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser);
+    ApiFuncContainer * audioRecomendationRoutine(ApiFuncContainer * func, bool byUser, bool randomize);
+    void audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize);
 
     ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);

@@ -241,7 +241,7 @@ QUrl VkApiPrivate::audioInfoUrl(QString uid, QString currUid, QString token) {
     return url;
 }
 
-QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, QString token) {
+QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, bool randomize, QString token) {
     QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
@@ -250,7 +250,7 @@ QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, QString token
                            "var recomendations = API.audio.getRecommendations({"
                                         + QString(byUser ? "user_id: " : "target_audio: ") + "\"" + uid + "\", "
                            "            count: 1000, "
-                           "            shuffle: 0"
+                           "            shuffle: " + boolToStr(randomize) + ""
                            "});"
                            "return { "
                            "    audio_list: recomendations "
