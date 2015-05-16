@@ -24,6 +24,7 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     DWORD CALLBACK wasapiProc(void * buffer, DWORD length, void * user) {
         DWORD c = BASS_ChannelGetData(((AudioPlayer *)(user)) -> getMixer(), buffer, length);
         if (c == -1) c = 0; // an error, no data
+        qDebug() << "READ" << c;
         return c;
     }
 
@@ -36,7 +37,8 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
         }
 
         // not playing anything via BASS, so don't need an update thread
-        BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+//        BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+        BASS_SetConfig(BASS_CONFIG_UPDATETHREADS,0);
 
         {
             BASS_WASAPI_INFO wi;
@@ -228,7 +230,7 @@ bool AudioPlayer::isStoped() const {
 
 int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
-    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
+    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT | (use_wasapi ? BASS_STREAM_DECODE : 0), NULL, 0);
 
 //    if (!chan) {
 //        int status = BASS_ErrorGetCode();
@@ -241,7 +243,7 @@ int AudioPlayer::openRemoteChannel(QString path) {
 
 int AudioPlayer::openChannel(QString path) {
     BASS_ChannelStop(chan);
-    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
+    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE | (use_wasapi ? BASS_STREAM_DECODE : 0))))
 //    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
 //        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
         qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
@@ -533,17 +535,25 @@ void AudioPlayer::play() {
                     channelsCount = 2;
 
                 #ifdef Q_OS_WIN
-                    BASS_Mixer_StreamAddChannel(mixer, chan, chan_flags1);
-//                    // update speaker flags
-//                    BASS_Mixer_ChannelFlags(chan[speaker],flags[speaker],BASS_SPEAKER_FRONT);
+                    if (use_wasapi) {
+//                        BASS_WASAPI_Stop(true);
+                        if (!BASS_Mixer_StreamAddChannel(mixer, chan, BASS_MIXER_DOWNMIX/*chan_flags1*/))
+                            qDebug() << "HUY" << BASS_ErrorGetCode();
+//                        BASS_WASAPI_Start();
+    //                    // update speaker flags
+    //                    BASS_Mixer_ChannelFlags(chan[speaker],flags[speaker],BASS_SPEAKER_FRONT);
+                    } else {
+                        BASS_ChannelPlay(chan, true);
+                    }
                 #else
                     BASS_ChannelPlay(chan, true);
-                    spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
-                    notifyTimer -> start(notifyInterval);
-
-                    syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
-                    syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
                 #endif
+
+                spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+                notifyTimer -> start(notifyInterval);
+
+                syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
+                syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
             } else {
                 currentState = UnknowState;
                 switch(BASS_ErrorGetCode()) {
@@ -569,13 +579,16 @@ void AudioPlayer::pause() {
 }
 
 void AudioPlayer::resume() {
-    if (!BASS_ChannelPlay(chan, false)) {
-        emit mediaStatusChanged(StalledMedia);
-        qDebug() << "Error resuming";
-    } else {
-        notifyTimer -> start(notifyInterval);
-        spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+    if (!use_wasapi) {
+        if (!BASS_ChannelPlay(chan, false)) {
+            emit mediaStatusChanged(StalledMedia);
+            qDebug() << "Error resuming";
+            return;
+        }
     }
+
+    notifyTimer -> start(notifyInterval);
+    spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
 }
 
 void AudioPlayer::stop() {
