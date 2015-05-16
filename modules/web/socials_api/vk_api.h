@@ -31,6 +31,8 @@ public:
     ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
 
+    QString refreshAudioItemUrl(QString uid);
+
 //    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 
     inline ~VkApi() {}

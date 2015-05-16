@@ -54,7 +54,7 @@ public:
 
     QModelIndex playedIndex();
     inline IModel * currentPlaylist() const { return current_model; }
-    inline IItem * playedItem() const { return current_item; }
+    inline IItem * playedItem() { return current_item; }
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
     void getFileInfo(QUrl uri, MediaInfo * info);

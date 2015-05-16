@@ -262,10 +262,6 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
     }
 }
 
-//A tabified dockwidget can be set as the selected tab like this:
-//dockwidget.raise()
-
-
 //// when the floating property of dockWidget is changed from docked to floating
 //// we make it a top level window (with minmize, maximize, and close button in the title bar)
 //// by calling setWindowFlags(Qt::Window)
@@ -312,9 +308,20 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     IView * v = view(played);
 
     if (v) {
-        if (reason == Player::refreshNeed && v -> isRequiredOnUpdate()) {
-            ((IModel *)v -> model()) -> refresh(true);
-            return;
+        if (reason == Player::refreshNeed) {
+            if (v -> isRequiredOnUpdate()) {
+                ((IModel *)v -> model()) -> refresh(true);
+                return;
+            } else {
+                if (Player::instance() -> playedItem() -> itemType() == VK_ITEM) {
+                    Player::instance() -> playedItem() -> setPath(
+                        VkApi::instance() -> refreshAudioItemUrl(
+                            Player::instance() -> playedItem() -> toUid().toString()
+                        ).section('?', 0, 0)
+                    );
+                    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                }
+            }
         }
 
         if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist()))
