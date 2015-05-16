@@ -284,14 +284,14 @@ void Dockbars::updateActiveTabIcon() {
     if (tabData.index != -1) {
         tabData.tabbar -> setTabIcon(tabData.index, QIcon(":played_tab"));
         tabData.tabbar -> setIconSize(QSize(14, 14));
-
-        if (tabData == lastTabData) return;
-
-        if (lastTabData.index != -1)
-            lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
-
-        lastTabData = tabData;
     }
+
+    if (tabData == lastTabData) return;
+
+    if (lastTabData.index != -1)
+        lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
+
+    lastTabData = tabData;
 }
 
 void Dockbars::updateAllViews() { // update for item height
