@@ -30,9 +30,9 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 
     bool AudioPlayer::initWASAPI() {
         // initialize the default WASAPI device (400ms buffer, 50ms update period, auto-select format)
-        if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_EXCLUSIVE, 0.4, 0.05, wasapiProc, this)) {
+        if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_EXCLUSIVE | BASS_WASAPI_BUFFER, 0.4, 0.05, wasapiProc, this)) {
             // exclusive mode failed, try shared mode
-            if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT, 0.4, 0.05, wasapiProc, this))
+            if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_BUFFER, 0.4, 0.05, wasapiProc, this))
                 return false;
         }
 
@@ -437,7 +437,12 @@ float AudioPlayer::fastSqrt(float x) {
 
 QVector<int> AudioPlayer::getSpectrum() {
     float fft[1024];
-    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048);
+
+    if (use_wasapi)
+        BASS_WASAPI_GetData(fft, BASS_DATA_FFT2048);
+    else
+        BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048);
+
     QVector<int> res;
     int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
 
@@ -471,7 +476,11 @@ QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
     int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
     float fft[gLimit];
-    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
+
+    if (use_wasapi)
+        BASS_WASAPI_GetData(fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
+    else
+        BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
 
 
     QVector<float> peaks;
