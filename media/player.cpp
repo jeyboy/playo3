@@ -212,7 +212,10 @@ void Player::getFileInfo(QUrl uri, MediaInfo * info) {
     else
         chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
 
-    if (!chUID) return;
+    if (!chUID) {
+        qDebug() << "INFO ERR" << BASS_ErrorGetCode();
+        return;
+    }
 
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
     DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length

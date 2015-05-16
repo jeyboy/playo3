@@ -28,15 +28,25 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     }
 
     bool AudioPlayer::initWASAPI() {
+        if (!BASS_Init(0, 44100, 0, NULL, NULL)) // no sound config for compatibility with wasapi
+            qDebug() << "Init error: " << BASS_ErrorGetCode();
+    //        throw "Cannot initialize device";
+
         // initialize the default WASAPI device (400ms buffer, 50ms update period, auto-select format)
         if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_EXCLUSIVE | BASS_WASAPI_BUFFER, 0.4, 0.05, wasapiProc, this)) {
             // exclusive mode failed, try shared mode
-            if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_BUFFER, 0.4, 0.05, wasapiProc, this))
+            if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_BUFFER, 0.4, 0.05, wasapiProc, this)) {
+                BASS_Free();
+                if (!BASS_Init(-1, 44100, 0, NULL, NULL))
+                    qDebug() << "Init error: " << BASS_ErrorGetCode();
+            //        throw "Cannot initialize device";
+
                 return false;
+            }
         }
 
         // not playing anything via BASS, so don't need an update thread
-//        BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+        BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
         BASS_SetConfig(BASS_CONFIG_UPDATETHREADS,0);
 
         {
@@ -74,12 +84,7 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
 
 
     #ifdef Q_OS_WIN
-        if (!BASS_Init(/*-1*/0, 44100, 0, NULL, NULL))
-            qDebug() << "Init error: " << BASS_ErrorGetCode();
-    //        throw "Cannot initialize device";
-
         use_wasapi = initWASAPI();
-        qDebug() << "INI" << use_wasapi;
     #else
         if (!BASS_Init(BASS_DEVICE_DEFAULT, 44100, 0, NULL, NULL))
             qDebug() << "Init error: " << BASS_ErrorGetCode();
@@ -251,6 +256,13 @@ int AudioPlayer::openChannel(QString path) {
 void AudioPlayer::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
     BASS_ChannelStop(chan);
+
+    if (use_wasapi) {
+        #ifdef Q_OS_WIN
+            BASS_WASAPI_Stop(true);
+        #endif
+    }
+
     BASS_ChannelRemoveSync(chan, syncHandle);
     BASS_ChannelRemoveSync(chan, syncDownloadHandle);
     BASS_StreamFree(chan);
@@ -544,7 +556,7 @@ void AudioPlayer::play() {
                 #ifdef Q_OS_WIN
                     if (use_wasapi) {
                         qDebug() << "WASAP";
-                        BASS_WASAPI_Stop(true);
+//                        BASS_WASAPI_Stop(true);
                         if (!BASS_Mixer_StreamAddChannel(mixer, chan, BASS_MIXER_DOWNMIX/*chan_flags1*/))
                             qDebug() << "HUY" << BASS_ErrorGetCode();
                         BASS_WASAPI_Start();
@@ -581,7 +593,17 @@ void AudioPlayer::play() {
 void AudioPlayer::pause() {
     notifyTimer -> stop();
     spectrumTimer -> stop();
+
     BASS_ChannelPause(chan);
+
+    if (!use_wasapi) {
+        BASS_ChannelPause(chan);
+    } else {
+        #ifdef Q_OS_WIN
+            BASS_WASAPI_Stop(false);
+        #endif
+    }
+
     emit stateChanged(PausedState);
     currentState = PausedState;
 }
@@ -593,6 +615,10 @@ void AudioPlayer::resume() {
             qDebug() << "Error resuming";
             return;
         }
+    } else {
+        #ifdef Q_OS_WIN
+            BASS_WASAPI_Start();
+        #endif
     }
 
     notifyTimer -> start(notifyInterval);
