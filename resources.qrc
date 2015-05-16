@@ -32,7 +32,7 @@
         <file>images/elements/playlist.png</file>
         <file alias="prev">images/elements/prev.png</file>
         <file>images/elements/remote.png</file>
-        <file>images/elements/remove.png</file>
+        <file alias="remove">images/elements/remove.png</file>
         <file alias="settings">images/elements/settings.png</file>
         <file alias="stop">images/elements/stop.png</file>
         <file alias="unlocked">images/elements/unlocked.png</file>

@@ -14,6 +14,7 @@ ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget 
 ClickableLabel::ClickableLabel(QString user_text, const QPixmap & icon, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel("", parent, f) {
     setPixmap(icon);
+    setContentsMargins(0,0,0,0);
     if (!user_text.isEmpty())
         setToolTip(user_text);
     if (receiver && slot)
