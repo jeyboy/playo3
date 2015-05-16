@@ -145,3 +145,22 @@ void SearchDialog::on_inComputer_toggled(bool checked) {
         item -> setCheckState(st);
     }
 }
+
+void SearchDialog::on_inTabs_toggled(bool checked) {
+    int count = ui -> tabsList -> count();
+
+    Qt::CheckState st = checked ? Qt::Checked : Qt::Unchecked;
+
+    for(int i = 0; i < count; i++) {
+        QListWidgetItem * item = ui -> tabsList -> item(i);
+        item -> setCheckState(st);
+    }
+}
+
+void SearchDialog::on_tabsList_itemClicked(QListWidgetItem * item) {
+    if (item -> checkState() == Qt::Checked) {
+        ui -> inTabs -> blockSignals(true);
+        ui -> inTabs -> setChecked(true);
+        ui -> inTabs -> blockSignals(false);
+    }
+}

@@ -26,15 +26,19 @@ private slots:
 
     void on_acceptButton_clicked();
 
-    void on_textPredicates_itemActivated(QListWidgetItem *item);
+    void on_textPredicates_itemActivated(QListWidgetItem * item);
 
-    void on_stylePredicates_itemActivated(QListWidgetItem *item);
+    void on_stylePredicates_itemActivated(QListWidgetItem * item);
 
     void on_addStylePredicate_clicked();
 
-    void on_driveList_itemClicked(QListWidgetItem *item);
+    void on_driveList_itemClicked(QListWidgetItem * item);
 
     void on_inComputer_toggled(bool checked);
+
+    void on_inTabs_toggled(bool checked);
+
+    void on_tabsList_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::SearchDialog * ui;
