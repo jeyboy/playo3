@@ -69,6 +69,7 @@ public:
     int getVolume() const;
     inline int getChannelsCount() const { return channelsCount; }
     float getSize() const;
+    void finishRemoteFileDownloading();
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
 
@@ -112,7 +113,6 @@ public slots:
     void resume();
     void stop();
     void endOfPlayback();
-    void endOfDownloading();
 
     void slidePosForward();
     void slidePosBackward();

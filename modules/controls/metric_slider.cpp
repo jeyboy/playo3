@@ -12,6 +12,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
   , margin(16), spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
+    connect(Player::instance(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {

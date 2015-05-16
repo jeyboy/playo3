@@ -18,6 +18,7 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     AudioPlayer * player = static_cast<AudioPlayer *>(user);
+    player -> finishRemoteFileDownloading();
     emit player -> downloadEnded();
 }
 
@@ -28,7 +29,6 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
 
     // cheat for cross treadhing
     connect(this, SIGNAL(playbackEnded()), this, SLOT(endOfPlayback()));
-    connect(this, SIGNAL(downloadEnded()), this, SLOT(endOfDownloading()));
 
     setSpectrumBandsCount(28);
 
@@ -302,6 +302,11 @@ int AudioPlayer::getVolume() const {
     return volumeVal * 10000;
 }
 
+
+void AudioPlayer::finishRemoteFileDownloading() {
+    prevDownloadPos = 1;
+}
+
 //from 0 to 1
 float AudioPlayer::getRemoteFileDownloadPosition() {
     if (size == -1) {
@@ -547,10 +552,6 @@ void AudioPlayer::endOfPlayback() {
     stop();
     closeChannel();
     emit mediaStatusChanged(EndOfMedia);
-}
-
-void AudioPlayer::endOfDownloading() {
-    prevDownloadPos = 1;
 }
 
 void AudioPlayer::setPosition(int position) {
