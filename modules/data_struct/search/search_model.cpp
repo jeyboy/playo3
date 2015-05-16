@@ -9,13 +9,20 @@ SearchModel::~SearchModel() {}
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
+    qDebug() << "SEARCH DRIVES" << params.drives;
+    qDebug() << "SEARCH GENRES" << params.genres;
+    qDebug() << "SEARCH VK GENRES" << params.vkGenres;
+    qDebug() << "SEARCH PREDICATES" << params.predicates;
+    qDebug() << "SEARCH TABS" << params.tabs;
+
     emit moveInProcess();
 
     if (!params.predicates.isEmpty()) { // search by predicates
         QStringList::Iterator it = params.predicates.begin();
 
         beginInsertRows(QModelIndex(), 0, params.predicates.length());
-        for(; it != params.predicates.end(); it++, params.activePredicate = *it) {
+        for(; it != params.predicates.end(); it++) {
+            params.activePredicate = *it;
             rootItem -> createFolder(*it);
 
             if (params.inVk) {
@@ -28,7 +35,9 @@ void SearchModel::initiateSearch(SearchSettings & params) {
                 proceedTabs(params);
             }
 
-            if (params.inComputer) {}
+            if (params.inComputer) {
+                proceedMyComputer(params);
+            }
 
             if (params.inSc) {}
 
@@ -42,7 +51,9 @@ void SearchModel::initiateSearch(SearchSettings & params) {
             QList<int>::Iterator it_end = params.genres.keys().end();
             beginInsertRows(QModelIndex(), 0, params.genres.size());
 
-            for(; it != it_end; it++, params.activePredicate = *it) {
+            for(; it != it_end; it++) {
+                qDebug() << "GENRE" << (*it);
+                params.activePredicate = *it;
                 rootItem -> createFolder(MusicGenres::instance() -> toString(*it));
 
                 if (params.inVk) {
@@ -55,7 +66,9 @@ void SearchModel::initiateSearch(SearchSettings & params) {
                     proceedTabs(params);
                 }
 
-                if (params.inComputer) {}
+                if (params.inComputer) {
+                    proceedMyComputer(params);
+                }
 
                 if (params.inSc) {}
 
@@ -149,17 +162,19 @@ void SearchModel::proceedTabs(SearchSettings params) {
 }
 
 void SearchModel::proceedMyComputer(SearchSettings params) {
-//    FolderItem * pred_root = rootItem -> createFolder(params.activePredicate);
-//    FolderItem * parent = pred_root -> createFolder<VkFolder>("", "Tabs");
+    FolderItem * parent = new FolderItem("My computer");
 
     QStringList filters;
     filters << params.activePredicate;
 
+    qDebug() << filters;
+
     for(QStringList::Iterator it = params.drives.begin(); it != params.drives.end(); it++) {
-        QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
 
         while(dir_it.hasNext()) {
-            dir_it.next();
+            qDebug() << "COMP FIND" << dir_it.next();
+            new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
         }
     }
 }

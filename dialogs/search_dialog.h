@@ -32,6 +32,10 @@ private slots:
 
     void on_addStylePredicate_clicked();
 
+    void on_driveList_itemClicked(QListWidgetItem *item);
+
+    void on_inComputer_toggled(bool checked);
+
 private:
     Ui::SearchDialog * ui;
 };

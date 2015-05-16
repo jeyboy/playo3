@@ -19,7 +19,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
             if (mdl -> containerType() != search) {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), ui -> tabsList);
                 item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
-                item -> setCheckState(Qt::Checked);
+                item -> setCheckState(Qt::Unchecked);
                 item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) mdl));
                 ui -> tabsList -> addItem(item);
             }
@@ -34,7 +34,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
     for(QFileInfoList::Iterator it = drives.begin(); it != drives.end(); it++) {
         QListWidgetItem * item = new QListWidgetItem((*it).absolutePath(), ui -> driveList);
         item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
-        item -> setCheckState(Qt::Checked);
+        item -> setCheckState(Qt::Unchecked);
         ui -> driveList -> addItem(item);
     }
 }
@@ -124,5 +124,24 @@ void SearchDialog::on_addStylePredicate_clicked() {
     if (!predicate.isEmpty()) {
         if (ui -> stylePredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
             ui -> stylePredicates -> addItem(predicate);
+    }
+}
+
+void SearchDialog::on_driveList_itemClicked(QListWidgetItem * item) {
+    if (item -> checkState() == Qt::Checked) {
+        ui -> inComputer -> blockSignals(true);
+        ui -> inComputer -> setChecked(true);
+        ui -> inComputer -> blockSignals(false);
+    }
+}
+
+void SearchDialog::on_inComputer_toggled(bool checked) {
+    int count = ui -> driveList -> count();
+
+    Qt::CheckState st = checked ? Qt::Checked : Qt::Unchecked;
+
+    for(int i = 0; i < count; i++) {
+        QListWidgetItem * item = ui -> driveList -> item(i);
+        item -> setCheckState(st);
     }
 }
