@@ -24,7 +24,6 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     DWORD CALLBACK wasapiProc(void * buffer, DWORD length, void * user) {
         DWORD c = BASS_ChannelGetData(((AudioPlayer *)(user)) -> getMixer(), buffer, length);
         if (c == -1) c = 0; // an error, no data
-        qDebug() << "READ" << c;
         return c;
     }
 
@@ -45,8 +44,6 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
             BASS_WASAPI_GetInfo(&wi);
             // create a mixer with same format as the output
             mixer = BASS_Mixer_StreamCreate(wi.freq, wi.chans, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE);
-
-            BASS_WASAPI_Start(); // start the output
         }
 
         return true;
@@ -77,11 +74,12 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
 
 
     #ifdef Q_OS_WIN
-        if (!BASS_Init(-1, 44100, 0, NULL, NULL))
+        if (!BASS_Init(/*-1*/0, 44100, 0, NULL, NULL))
             qDebug() << "Init error: " << BASS_ErrorGetCode();
     //        throw "Cannot initialize device";
 
         use_wasapi = initWASAPI();
+        qDebug() << "INI" << use_wasapi;
     #else
         if (!BASS_Init(BASS_DEVICE_DEFAULT, 44100, 0, NULL, NULL))
             qDebug() << "Init error: " << BASS_ErrorGetCode();
@@ -545,10 +543,11 @@ void AudioPlayer::play() {
 
                 #ifdef Q_OS_WIN
                     if (use_wasapi) {
-//                        BASS_WASAPI_Stop(true);
+                        qDebug() << "WASAP";
+                        BASS_WASAPI_Stop(true);
                         if (!BASS_Mixer_StreamAddChannel(mixer, chan, BASS_MIXER_DOWNMIX/*chan_flags1*/))
                             qDebug() << "HUY" << BASS_ErrorGetCode();
-//                        BASS_WASAPI_Start();
+                        BASS_WASAPI_Start();
     //                    // update speaker flags
     //                    BASS_Mixer_ChannelFlags(chan[speaker],flags[speaker],BASS_SPEAKER_FRONT);
                     } else {
