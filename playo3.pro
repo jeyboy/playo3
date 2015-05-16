@@ -286,6 +286,6 @@ DEPENDPATH += $$PWD/libs/taglib
 #else:unix:!macx: LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
 
 # add wasapi plugin
-LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix
+LIBS += -L$$PWD/libs/bass/ -lbass -lbass_fx -lbassmix -lbasswasapi
 INCLUDEPATH += $$PWD/libs/bass/include
 DEPENDPATH += $$PWD/libs/bass

@@ -8,7 +8,6 @@
 //QWORD buf=BASS_StreamGetFilePosition(stream, BASS_FILEPOS_BUFFER); // buffer level
 //float progress=buf*100.0/len; // percentage of buffer filled
 
-//void endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user)
 void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 //    BASS_ChannelStop(channel);
 //    BASS_ChannelRemoveSync(channel, handle);
@@ -22,15 +21,40 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 #ifdef Q_OS_WIN
-    DWORD CALLBACK WasapiProc(void * buffer, DWORD length, void * /*user*/) {
-        DWORD c = BASS_ChannelGetData(mixer, buffer, length);
+    DWORD CALLBACK wasapiProc(void * buffer, DWORD length, void * user) {
+        DWORD c = BASS_ChannelGetData(((AudioPlayer *)(user)) -> getMixer(), buffer, length);
         if (c == -1) c = 0; // an error, no data
         return c;
+    }
+
+    bool AudioPlayer::initWASAPI() {
+        // initialize the default WASAPI device (400ms buffer, 50ms update period, auto-select format)
+        if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT | BASS_WASAPI_EXCLUSIVE, 0.4, 0.05, wasapiProc, this)) {
+            // exclusive mode failed, try shared mode
+            if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_AUTOFORMAT, 0.4, 0.05, wasapiProc, this))
+                return false;
+        }
+
+        // not playing anything via BASS, so don't need an update thread
+        BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+
+        {
+            BASS_WASAPI_INFO wi;
+            BASS_WASAPI_GetInfo(&wi);
+            // create a mixer with same format as the output
+            mixer = BASS_Mixer_StreamCreate(wi.freq, wi.chans, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE);
+
+            BASS_WASAPI_Start(); // start the output
+        }
+
+        return true;
     }
 #endif
 
 AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
-    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2), currentState(StoppedState) {
+    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(-2),
+    currentState(StoppedState), use_wasapi(false)
+{
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
     qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
 
@@ -51,13 +75,15 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
 
 
     #ifdef Q_OS_WIN
-    if (!BASS_Init(-1, 44100, 0, NULL, NULL))
-        qDebug() << "Init error: " << BASS_ErrorGetCode();
-//        throw "Cannot initialize device";
+        if (!BASS_Init(-1, 44100, 0, NULL, NULL))
+            qDebug() << "Init error: " << BASS_ErrorGetCode();
+    //        throw "Cannot initialize device";
+
+        use_wasapi = initWASAPI();
     #else
-    if (!BASS_Init(BASS_DEVICE_DEFAULT, 44100, 0, NULL, NULL))
-        qDebug() << "Init error: " << BASS_ErrorGetCode();
-//        throw "Cannot initialize device";
+        if (!BASS_Init(BASS_DEVICE_DEFAULT, 44100, 0, NULL, NULL))
+            qDebug() << "Init error: " << BASS_ErrorGetCode();
+    //        throw "Cannot initialize device";
     #endif
 
     ///////////////////////////////////////////////
@@ -96,6 +122,9 @@ AudioPlayer::~AudioPlayer() {
 
     spectrumTimer -> stop();
     delete spectrumTimer;
+
+    if (use_wasapi)
+        BASS_WASAPI_Free();
 
     BASS_PluginFree(0);
     BASS_Free();
@@ -503,12 +532,18 @@ void AudioPlayer::play() {
                 else
                     channelsCount = 2;
 
-                BASS_ChannelPlay(chan, true);
-                spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
-                notifyTimer -> start(notifyInterval);
+                #ifdef Q_OS_WIN
+                    BASS_Mixer_StreamAddChannel(mixer, chan, chan_flags1);
+//                    // update speaker flags
+//                    BASS_Mixer_ChannelFlags(chan[speaker],flags[speaker],BASS_SPEAKER_FRONT);
+                #else
+                    BASS_ChannelPlay(chan, true);
+                    spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+                    notifyTimer -> start(notifyInterval);
 
-                syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
-                syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
+                    syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
+                    syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
+                #endif
             } else {
                 currentState = UnknowState;
                 switch(BASS_ErrorGetCode()) {

@@ -2,7 +2,6 @@
 #define AUDIO_PLAYER_H
 
 #include <QApplication>
-#include <QObject>
 #include <QUrl>
 #include <QDir>
 #include <QVector>
@@ -10,6 +9,7 @@
 #include "bass.h"
 #include "bass_fx.h"
 #include "bassmix.h"
+#include "basswasapi.h"
 
 #include "media/notify_timer.h"
 #include "media/format.h"
@@ -18,7 +18,7 @@
 #ifdef Q_OS_WIN
     void __stdcall endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
     void __stdcall endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
-    DWORD CALLBACK WasapiProc(void * buffer, DWORD length, void * /*user*/);
+    DWORD CALLBACK wasapiProc(void * buffer, DWORD length, void * user);
 #else
     void endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
     void endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
@@ -88,6 +88,10 @@ public:
     bool isPaused() const;
     bool isStoped() const;
 
+    #ifdef Q_OS_WIN
+        inline HSTREAM getMixer() { return mixer; }
+    #endif
+
 signals:
     void volumeChanged(int);
     void playbackEnded();
@@ -125,6 +129,7 @@ public slots:
     void setVolume(int val);
 
 protected:
+    bool initWASAPI();
     int duration;
 
 private:
@@ -159,6 +164,31 @@ private:
     HSYNC syncHandle, syncDownloadHandle;
     NotifyTimer * notifyTimer;
     NotifyTimer * spectrumTimer;
+
+
+#define BASS_SPEAKER_FRONT	0x1000000	// front speakers
+#define BASS_SPEAKER_REAR	0x2000000	// rear/side speakers
+#define BASS_SPEAKER_CENLFE	0x3000000	// center & LFE speakers (5.1)
+#define BASS_SPEAKER_REAR2	0x4000000	// rear center speakers (7.1)
+
+    bool use_wasapi;
+    #ifdef Q_OS_WIN
+        HSTREAM mixer; // mixer and source channels
+        DWORD chan_flags1    =   BASS_SPEAKER_FRONT;
+        DWORD chan_flags2[2] = { BASS_SPEAKER_FRONT + BASS_SPEAKER_LEFT, BASS_SPEAKER_FRONT + BASS_SPEAKER_RIGHT };
+        DWORD chan_flags4[4] = { BASS_SPEAKER_FRONT + BASS_SPEAKER_LEFT, BASS_SPEAKER_FRONT + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_REAR + BASS_SPEAKER_LEFT, BASS_SPEAKER_REAR + BASS_SPEAKER_RIGHT,
+                               };
+        DWORD chan_flags6[6] = { BASS_SPEAKER_FRONT + BASS_SPEAKER_LEFT, BASS_SPEAKER_FRONT + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_CENLFE + BASS_SPEAKER_LEFT, BASS_SPEAKER_CENLFE + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_REAR + BASS_SPEAKER_LEFT, BASS_SPEAKER_REAR + BASS_SPEAKER_RIGHT,
+                               };
+        DWORD chan_flags8[8] = { BASS_SPEAKER_FRONT + BASS_SPEAKER_LEFT, BASS_SPEAKER_FRONT + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_REAR + BASS_SPEAKER_LEFT, BASS_SPEAKER_REAR + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_CENLFE + BASS_SPEAKER_LEFT, BASS_SPEAKER_CENLFE + BASS_SPEAKER_RIGHT,
+                                 BASS_SPEAKER_REAR2 + BASS_SPEAKER_LEFT, BASS_SPEAKER_REAR2 + BASS_SPEAKER_RIGHT
+                               };
+    #endif
 };
 
 #endif // AUDIO_PLAYER_H
