@@ -128,11 +128,18 @@ void SearchDialog::on_addStylePredicate_clicked() {
 }
 
 void SearchDialog::on_driveList_itemClicked(QListWidgetItem * item) {
-    if (item -> checkState() == Qt::Checked) {
-        ui -> inComputer -> blockSignals(true);
-        ui -> inComputer -> setChecked(true);
-        ui -> inComputer -> blockSignals(false);
+    bool st = item -> checkState() == Qt::Checked;
+
+    if (!st) {
+        int count = ui -> driveList -> count();
+
+        for(int i = 0; i < count; i++)
+            st |= ui -> driveList -> item(i) -> checkState() == Qt::Checked;
     }
+
+    ui -> inComputer -> blockSignals(true);
+    ui -> inComputer -> setChecked(st);
+    ui -> inComputer -> blockSignals(false);
 }
 
 void SearchDialog::on_inComputer_toggled(bool checked) {
@@ -158,9 +165,16 @@ void SearchDialog::on_inTabs_toggled(bool checked) {
 }
 
 void SearchDialog::on_tabsList_itemClicked(QListWidgetItem * item) {
-    if (item -> checkState() == Qt::Checked) {
-        ui -> inTabs -> blockSignals(true);
-        ui -> inTabs -> setChecked(true);
-        ui -> inTabs -> blockSignals(false);
+    bool st = item -> checkState() == Qt::Checked;
+
+    if (!st) {
+        int count = ui -> tabsList -> count();
+
+        for(int i = 0; i < count; i++)
+            st |= ui -> tabsList -> item(i) -> checkState() == Qt::Checked;
     }
+
+    ui -> inTabs -> blockSignals(true);
+    ui -> inTabs -> setChecked(st);
+    ui -> inTabs -> blockSignals(false);
 }
