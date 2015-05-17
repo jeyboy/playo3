@@ -95,8 +95,10 @@ void SearchDialog::on_addPredicate_clicked() {
     QString predicate = ui -> textPredicate -> text();
 
     if (!predicate.isEmpty()) {
-        if (ui -> textPredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0)
+        if (ui -> textPredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0) {
             ui -> textPredicates -> addItem(predicate);
+            ui -> textPredicate -> setText("");
+        }
     }
 }
 

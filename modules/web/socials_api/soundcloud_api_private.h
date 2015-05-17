@@ -7,6 +7,8 @@
 class SoundcloudApiPrivate {
 public:
     static inline QString clientId() { return "8f84790a84f5a5acd1c92e850b5a91b7"; }
+    static inline int amountLimit() { return 200; }
+    static inline int offsetLimit() { return 1000; /*8000*/; }
 
     static QString authUrl();
     static inline QString confirmAuthUrl(QString access_token) {
@@ -15,15 +17,20 @@ public:
     static QByteArray authTokenUrlParams(QString code);
 
     static void setAudioTypesParam(QUrlQuery & query);
+    static void setAmountLimitation(QUrlQuery & query, int offset = 0);
+    static void setSearchPredicate(QUrlQuery & query, QString & predicate);
+    static void setGenreLimitation(QUrlQuery & query, QString & genre);
 
-    static QUrl groupAudiosUrl(QString uid);
-    static QUrl groupPlaylistsUrl(QString uid);
+    static QUrl audiosSearchUrl(QString predicate, QString genre, int offset = 0);
 
-    static QUrl userAudiosUrl(QString uid);
-    static QUrl userPlaylistsUrl(QString uid);
-    static QUrl userFolowingsUrl(QString uid);
-    static QUrl userFolowersUrl(QString uid);
-    static QUrl userGroupsUrl(QString uid);
+    static QUrl groupAudiosUrl(QString uid, int offset = 0);
+    static QUrl groupPlaylistsUrl(QString uid, int offset = 0);
+
+    static QUrl userAudiosUrl(QString uid, int offset = 0);
+    static QUrl userPlaylistsUrl(QString uid, int offset = 0);
+    static QUrl userFolowingsUrl(QString uid, int offset = 0);
+    static QUrl userFolowersUrl(QString uid, int offset = 0);
+    static QUrl userGroupsUrl(QString uid, int offset = 0);
 
     static QUrlQuery commonMethodParams();
 protected:

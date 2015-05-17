@@ -68,7 +68,6 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 ///////////////////////////////////////////////////////////
 /// AUDIO LIST
 ///////////////////////////////////////////////////////////
-//INFO: all requests return max 50 items
 
 void SoundcloudApi::getGroupInfo(const QObject * receiver, const char * respSlot, QString uid) {
     startApiCall(QtConcurrent::run(this, &SoundcloudApi::getGroupInfoRoutine, new ApiFuncContainer(receiver, respSlot, uid)));
@@ -127,6 +126,23 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
             }
         }
     }
+
+    delete netManager;
+    return func;
+}
+
+void SoundcloudApi::search(const QObject * receiver, const char * respSlot, QString predicate, QString style) {
+    startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, uid), predicate, style));
+}
+
+ApiFuncContainer * SoundcloudApi::searchRoutine(ApiFuncContainer * func, QString & predicate, QString & style) {
+    CustomNetworkAccessManager * netManager = createManager();
+
+//    func -> uid = /*"183";*/ func -> uid == "0" ? getUserID() : func -> uid;
+
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userAudiosUrl(func -> uid)));
+
+    responseRoutine("audio_list", m_http, func);
 
     delete netManager;
     return func;
