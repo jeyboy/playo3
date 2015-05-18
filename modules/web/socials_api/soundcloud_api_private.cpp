@@ -85,10 +85,15 @@ void SoundcloudApiPrivate::setGenreLimitation(QUrlQuery & query, QString & genre
     query.addQueryItem("genres", genre);
 }
 
-QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, int offset) {
+void SoundcloudApiPrivate::setOrder(QUrlQuery & query, bool hottest) {
+    query.addQueryItem("order", hottest ? "hotness" : "created_at");
+}
+
+QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, bool hottest, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);
     setAmountLimitation(query, offset);
+    setOrder(query, hottest);
 
     if (!genre.isEmpty())
         setGenreLimitation(query, genre);

@@ -20,8 +20,9 @@ public:
     static void setAmountLimitation(QUrlQuery & query, int offset = 0);
     static void setSearchPredicate(QUrlQuery & query, QString & predicate);
     static void setGenreLimitation(QUrlQuery & query, QString & genre);
+    static void setOrder(QUrlQuery & query, bool hottest);
 
-    static QUrl audiosSearchUrl(QString predicate, QString genre, int offset = 0);
+    static QUrl audiosSearchUrl(QString predicate, QString genre, bool hottest = false, int offset = 0);
 
     static QUrl groupAudiosUrl(QString uid, int offset = 0);
     static QUrl groupPlaylistsUrl(QString uid, int offset = 0);
