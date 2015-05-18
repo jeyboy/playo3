@@ -18,7 +18,7 @@ public:
 
     void getGroupInfo(const QObject * receiver, const char * respSlot, QString uid);
     void getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0");
-    void search(const QObject * receiver, const char * respSlot, QString predicate = QString(), QString style = QString());
+    void search(const QObject * receiver, const char * respSlot, QString predicate = QString(), QString genre = QString());
 
     ~SoundcloudApi() { }
 
@@ -34,7 +34,7 @@ public:
 protected:
     ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);
     ApiFuncContainer * getUidInfoRoutine(ApiFuncContainer * func);
-    ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString & predicate, QString & style);
+    ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString & predicate, QString & genre);
 
     bool responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func);
     void errorSend(QJsonObject & doc, const QObject * obj);

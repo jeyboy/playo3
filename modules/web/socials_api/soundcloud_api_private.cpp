@@ -85,10 +85,16 @@ void SoundcloudApiPrivate::setGenreLimitation(QUrlQuery & query, QString & genre
     query.addQueryItem("genres", genre);
 }
 
-QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, int offset = 0) {
+QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);
     setAmountLimitation(query, offset);
+
+    if (!genre.isEmpty())
+        setGenreLimitation(query, genre);
+
+    if (!predicate.isEmpty())
+        setSearchPredicate(query, predicate);
 
     QUrl url(getApiUrl() + "tracks.json");
     url.setQuery(query);

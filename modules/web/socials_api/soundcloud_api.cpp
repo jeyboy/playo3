@@ -131,18 +131,19 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
     return func;
 }
 
-void SoundcloudApi::search(const QObject * receiver, const char * respSlot, QString predicate, QString style) {
-    startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, uid), predicate, style));
+void SoundcloudApi::search(const QObject * receiver, const char * respSlot, QString predicate, QString genre) {
+    startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, QString()), predicate, genre));
 }
 
-ApiFuncContainer * SoundcloudApi::searchRoutine(ApiFuncContainer * func, QString & predicate, QString & style) {
+ApiFuncContainer * SoundcloudApi::searchRoutine(ApiFuncContainer * func, QString & predicate, QString & genre) {
     CustomNetworkAccessManager * netManager = createManager();
+    QNetworkReply * m_http;
 
-//    func -> uid = /*"183";*/ func -> uid == "0" ? getUserID() : func -> uid;
 
-    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::userAudiosUrl(func -> uid)));
-
-    responseRoutine("audio_list", m_http, func);
+    for(int i = 0; i < 5; i++) {
+        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audiosSearchUrl(predicate, genre, i * SoundcloudApiPrivate::amountLimit())));
+        responseRoutine("audio_list", m_http, func);
+    }
 
     delete netManager;
     return func;
@@ -166,8 +167,19 @@ bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, Ap
 
     if (hasError)
         errorSend(obj, func -> obj);
-    else
-        func -> result.insert(fieldName, obj.value("response").toArray());
+    else {
+        if (func -> result.contains(fieldName)) { // rewrite on array of json arrays
+            QVariantList n_ar = obj.value("response").toArray().toVariantList();
+
+            if (!n_ar.isEmpty()) {
+                QVariantList ar = func -> result.value(fieldName).toArray().toVariantList();
+                ar.append(n_ar);
+
+                func -> result.insert(fieldName, QJsonArray::fromVariantList(ar));
+            }
+        } else
+            func -> result.insert(fieldName, obj.value("response").toArray());
+    }
 
     return !hasError;
 }
