@@ -39,9 +39,15 @@ void SearchModel::initiateSearch(SearchSettings & params) {
                 proceedMyComputer(params);
             }
 
-            if (params.inSc) {}
+            if (params.inSc) {
+                SoundcloudApi::instance() -> search(
+                    this, SLOT(proceedSoundcloud(QJsonObject&)), *it, "genre", params.popular
+                );
+            }
 
-            if (params.inOther) {}
+            if (params.inOther) {
+
+            }
         }
 
         endInsertRows();
@@ -144,6 +150,66 @@ void SearchModel::proceedVk(QJsonObject & objects) {
             newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
             if (itm.contains("genre_id"))
                 newItem -> setGenre(VkGenres::instance() -> toStandartId(genre_id));
+        }
+
+        parent -> backPropagateItemsCountInBranch(itemsAmount);
+    endInsertRows();
+    emit moveOutProcess();
+}
+
+void SearchModel::proceedSoundcloud(QJsonObject & objects) {
+    QJsonArray collection = objects.value("audio_list").toArray();
+    if (collection.isEmpty())
+        return;
+
+    int itemsAmount = 0;
+    QJsonObject itm;
+    SoundcloudItem * newItem;
+    QString uri, id, owner;
+    QVariant uid;
+    bool original;
+
+    QString predicate = objects.value("predicate").toString();
+    FolderItem * pred_root = rootItem -> createFolder(predicate);
+    FolderItem * parent = pred_root -> createFolder<SoundcloudFolder>("", "Soundcloud");
+    QJsonArray::Iterator it = collection.begin();
+
+    beginInsertRows(index(pred_root), parent -> row(), parent -> row());
+        for(; it != collection.end(); it++) {
+            itm = (*it).toObject();
+
+            if (itm.isEmpty()) continue;
+            int genre_id = itm.value("genre_id").toInt(-1);
+
+            if (!request.genres.isEmpty() && !request.genres.contains(genre_id)) continue;
+
+            id = QString::number(itm.value("id").toInt());
+            owner = QString::number(itm.value("user_id").toInt());
+            uid = WebItem::toUid(owner, id);
+
+            uri = itm.value("download_url").toString();
+            if (uri.isEmpty()) {
+                uri = itm.value("stream_url").toString();
+                original = false;
+            } else { original = true;}
+            if (uri.isEmpty()) continue;
+
+
+            itemsAmount++;
+            newItem = new SoundcloudItem(
+                id,
+                uri,
+                itm.value("title").toString(),
+                parent
+            );
+
+            newItem -> setVideoPath(itm.value("video_url").toString());
+            newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
+
+            if (genre_id != -1)
+                newItem -> setGenre(genre_id);
         }
 
         parent -> backPropagateItemsCountInBranch(itemsAmount);

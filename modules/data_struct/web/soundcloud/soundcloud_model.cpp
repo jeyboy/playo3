@@ -183,48 +183,4 @@ int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * pare
     }
 
     return itemsAmount;
-
-    //    foreach(QJsonValue obj, ar) {
-    //        fileIterObj = obj.toObject();
-
-    //        if (fileIterObj.isEmpty()) continue;
-
-    //        owner = QString::number(fileIterObj.value("user_id").toInt());
-    //        id = QString::number(fileIterObj.value("id").toInt());
-    //        key = ModelItem::buildUid(owner, id);
-    //        items = store.keys(key);
-    //        if (items.isEmpty() && !containsUID(key)) {
-    //            url = fileIterObj.value("download_url").toString();
-    //            if (url.isEmpty()) {
-    //                url = fileIterObj.value("stream_url").toString();
-    //                original = false;
-    //            } else { original = true;}
-    //            if (url.isEmpty()) continue;
-
-    ////            video_url
-
-    //            newItem = new SoundcloudFile(
-    //                            url,
-    //                            fileIterObj.value("title").toString(),
-    //                            original ? fileIterObj.value("original_format").toString() : "mp3",
-    //                            owner,
-    //                            id,
-    //                            parent,
-    //                            Genre::instance() -> toInt(fileIterObj.value("genre").toString()),
-    //                            Duration::fromMillis(fileIterObj.value("duration").toInt(0)),
-    //                            original ? fileIterObj.value("original_content_size").toInt() : -1,
-    //                            fileIterObj.value("bpm").toInt(0)
-    //                        );
-
-    //            appendRow(newItem -> toModelItem());
-    //            qDebug() << "NEW ITEM " << original << " " << newItem -> data(0) << " " << fileIterObj.value("bpm").toInt(0);
-    //        } else {
-    //            foreach(ModelItem * item, items) {
-    ////                store.remove(item);
-    //                item -> setPath(fileIterObj.value("url").toString());
-    //                item -> setGenre(fileIterObj.value("genre_id").toInt(-1));
-    //            }
-    //            store.remove(items.first());
-    //        }
-    //    }
 }

@@ -686,15 +686,16 @@ void IView::dropEvent(QDropEvent * event) {
 }
 
 void IView::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return || event -> key() == Qt::Key_Space) {
+    if (event -> key() == Qt::Key_Space) {
+        if (Player::instance() -> playedItem())
+            Player::instance() -> playPause();
+        else
+           execNextIndex();
+    } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {
         QModelIndexList list = selectedIndexes();
 
-        if (!list.isEmpty()) {
+        if (!list.isEmpty())
             execIndex(list.first());
-        } else {
-            if (Player::instance() -> playedItem())
-                Player::instance() -> playPause();
-        }
 
     } else if (event -> key() == Qt::Key_Delete)
         removeSelectedItems();
