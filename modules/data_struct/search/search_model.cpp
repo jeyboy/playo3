@@ -15,95 +15,106 @@ void SearchModel::initiateSearch(SearchSettings & params) {
     qDebug() << "SEARCH PREDICATES" << params.predicates;
     qDebug() << "SEARCH TABS" << params.tabs;
 
-    emit moveInProcess();
-
     if (!params.predicates.isEmpty()) { // search by predicates
-        QStringList::Iterator it = params.predicates.begin();
-
-        beginInsertRows(QModelIndex(), 0, params.predicates.length());
-        for(; it != params.predicates.end(); it++) {
+        for(QStringList::Iterator it = params.predicates.begin(); it != params.predicates.end(); it++) {
             params.activePredicate = *it;
-            rootItem -> createFolder(*it);
 
-            if (params.inVk) {
-                VkApi::instance() -> audioSearch(
-                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-                );
-            }
+            if (!params.genres.isEmpty()) {
+                QList<int>::Iterator genre_it = params.genres.keys().begin();
+                QList<int>::Iterator genre_it_end = params.genres.keys().end();
 
-            if (params.inTabs) {
-                proceedTabs(params);
-            }
+                for(; genre_it != genre_it_end; genre_it++) {
 
-            if (params.inComputer) {
-                proceedMyComputer(params);
-            }
-
-            if (params.inSc) {
-                SoundcloudApi::instance() -> search(
-                    this, SLOT(proceedSoundcloud(QJsonObject&)), *it, "genre", params.popular
-                );
-            }
-
-            if (params.inOther) {
-
+                }
             }
         }
+    } else if (!params.genres.isEmpty()) {
 
-        endInsertRows();
-    } else { // search by styles only
-        if (!params.genres.isEmpty()) {
-            QList<int>::Iterator it = params.genres.keys().begin();
-            QList<int>::Iterator it_end = params.genres.keys().end();
-            beginInsertRows(QModelIndex(), 0, params.genres.size());
+    } if (params.popular) {
+        if (params.inVk) requests.append(SearchRequest(SearchRequest::request_vk));
+        if (params.inSc) requests.append(SearchRequest(SearchRequest::request_sc));
+        if (params.inOther) requests.append(SearchRequest(SearchRequest::request_other));
+    }
 
-            for(; it != it_end; it++) {
-                qDebug() << "GENRE" << (*it);
-                params.activePredicate = *it;
-                rootItem -> createFolder(MusicGenres::instance() -> toString(*it));
+//    emit moveInProcess();
 
-                if (params.inVk) {
-    //                VkApi::instance() -> audioSearch(
-    //                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-    //                );
-                }
+//    if (!params.predicates.isEmpty()) { // search by predicates
+//        QStringList::Iterator it = params.predicates.begin();
 
-                if (params.inTabs) {
-                    proceedTabs(params);
-                }
+//        for(; it != params.predicates.end(); it++) {
+//            params.activePredicate = *it;
+//            rootItem -> createFolder(*it);
 
-                if (params.inComputer) {
-                    proceedMyComputer(params);
-                }
-
-                if (params.inSc) {}
-
-                if (params.inOther) {}
-            }
-
-            endInsertRows();
-        } else if (params.popular) {  // returns popular
-            beginInsertRows(QModelIndex(), 0, 5);
-
-            if (params.inVk) {
+//            if (params.inVk) {
 //                VkApi::instance() -> audioSearch(
 //                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
 //                );
-            }
+//            }
 
 //            if (params.inTabs) {
 //                proceedTabs(params);
 //            }
 
-//            if (params.inComputer) {}
+//            if (params.inComputer) {
+//                proceedMyComputer(params);
+//            }
 
-            if (params.inSc) {}
+//            if (params.inSc) {
+//                SoundcloudApi::instance() -> search(
+//                    this, SLOT(proceedSoundcloud(QJsonObject&)), *it, "genre", params.popular
+//                );
+//            }
 
-            if (params.inOther) {}
+//            if (params.inOther) {
 
-            endInsertRows();
-        }
-    }
+//            }
+//        }
+//    } else { // search by styles only
+//        if (!params.genres.isEmpty()) {
+//            QList<int>::Iterator it = params.genres.keys().begin();
+//            QList<int>::Iterator it_end = params.genres.keys().end();
+
+//            for(; it != it_end; it++) {
+//                qDebug() << "GENRE" << (*it);
+//                params.activePredicate = *it;
+//                rootItem -> createFolder(MusicGenres::instance() -> toString(*it));
+
+//                if (params.inVk) {
+//    //                VkApi::instance() -> audioSearch(
+//    //                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+//    //                );
+//                }
+
+//                if (params.inTabs) {
+//                    proceedTabs(params);
+//                }
+
+//                if (params.inComputer) {
+//                    proceedMyComputer(params);
+//                }
+
+//                if (params.inSc) {}
+
+//                if (params.inOther) {}
+//            }
+//        } else if (params.popular) {  // returns popular
+//            if (params.inVk) {
+////                VkApi::instance() -> audioSearch(
+////                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
+////                );
+//            }
+
+////            if (params.inTabs) {
+////                proceedTabs(params);
+////            }
+
+////            if (params.inComputer) {}
+
+//            if (params.inSc) {}
+
+//            if (params.inOther) {}
+//        }
+//    }
 }
 
 void SearchModel::proceedVk(QJsonObject & objects) {

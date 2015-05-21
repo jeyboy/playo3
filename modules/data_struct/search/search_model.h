@@ -25,6 +25,7 @@ namespace Playo3 {
         void proceedMyComputer(SearchSettings params);
     private:
         SearchSettings request;
+        QList<SearchRequest> requests;
     };
 }
 

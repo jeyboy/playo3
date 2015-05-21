@@ -46,7 +46,26 @@ struct SearchSettings {
     bool popular;
     bool search_in_own;
 
-    QString activePredicate;
+    QString activePredicate; //remove later
+};
+
+struct SearchRequest {
+    enum ReuestObject {
+        request_vk,
+        request_sc,
+        request_computer,
+        request_tabs,
+        request_other
+    };
+
+    SearchRequest(ReuestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
+        : spredicate(predicate), sgenre(genre), sgenre_id(genre_id), popular(most_popular), search_type(tp) {}
+
+    QString spredicate;
+    QString sgenre;
+    int sgenre_id;
+    bool popular;
+    ReuestObject search_type;
 };
 
 #endif // SEARCH_SETTINGS

@@ -178,6 +178,16 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
                         Qt::AlignHCenter | Qt::AlignVCenter,
                         ext
                     );
+
+            if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
+                font.setPixelSize(16);
+                painter -> setFont(font);
+
+                painter -> drawText(
+                            pseudoIcoRect.topRight() + QPoint(-10, 14),
+                            "*"
+                        );
+            }
         }
     }
 

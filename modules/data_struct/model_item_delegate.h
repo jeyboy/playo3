@@ -8,6 +8,7 @@
 #include <QCheckBox>
 
 #include "model_item_parts/item_fields.h"
+#include "model_item_parts/item_types.h"
 
 class ModelItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
