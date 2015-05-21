@@ -2,15 +2,16 @@
 
 MediaInfo::MediaInfo(QUrl uri, bool hasExtension, bool onlyTags) : fileName(0),
     year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
-    sampleRate(-1), size(0), readed(false), remote(!uri.isLocalFile()) {
+    sampleRate(-1), size(0), error(false), readed(false), remote(!uri.isLocalFile()) {
 
     if (!remote) {
         QString file_path = uri.toLocalFile();
 
-        /*#ifdef Q_OS_WIN*/ // taglib not worked with files without extensions :(
-            if (!hasExtension)
-                Extensions::instance() -> restoreExtension(file_path, ext);
-//        #endif
+        // taglib not worked with files without extensions :(
+        if (!hasExtension)
+            Extensions::instance() -> restoreExtension(file_path, ext);
+
+//        error = !TagLib::FileRef::defaultFileExtensions.contains(TagLib::String(ext.toLower().toStdWString()));
 
         fileName = new TagLib::FileName(file_path.toStdWString().data());
         TagLib::FileRef f(*fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
@@ -29,14 +30,17 @@ MediaInfo::MediaInfo(QUrl uri, bool hasExtension, bool onlyTags) : fileName(0),
                 readInfo(f);
         } else {
             QFile f(file_path);
+            error = f.error() != QFile::NoError;
             size = f.size();
             f.close();
         }
     }
     else if (!onlyTags) {
         readed = true;
-        Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
+        error = !Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
     }
+
+    qDebug() << "wer" << error;
 }
 
 void MediaInfo::initInfo() {

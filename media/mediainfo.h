@@ -14,6 +14,7 @@ public:
     inline ~MediaInfo() { delete fileName; }
     void initInfo();
 
+    inline bool hasError() const { return error; }
     inline bool isReaded() const { return readed; }
     inline bool isRemote() const { return remote; }
 
@@ -65,6 +66,7 @@ private:
     int sampleRate;
     qint64 size;
 
+    bool error;
     bool readed;
     bool remote;
 };

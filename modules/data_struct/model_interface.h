@@ -8,6 +8,7 @@
 #include <qdesktopservices.h>
 #include <qdebug.h>
 
+#include "modules/web/socials_api/vk_api.h"
 #include "modules/data_struct/search/search_settings.h"
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
@@ -20,6 +21,8 @@ namespace Playo3 {
     class IModel : public QAbstractItemModel {
         Q_OBJECT
     public:
+        static bool restoreUrl(IItem * itm);
+
         IModel(QJsonObject * hash, QObject * parent);
         virtual ~IModel();
 

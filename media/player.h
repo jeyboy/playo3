@@ -57,7 +57,7 @@ public:
     inline IItem * playedItem() { return current_item; }
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-    void getFileInfo(QUrl uri, MediaInfo * info);
+    bool getFileInfo(QUrl uri, MediaInfo * info);
 
 signals:
     void nextItemNeeded(Player::Reason);

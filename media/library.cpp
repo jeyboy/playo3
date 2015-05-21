@@ -288,6 +288,11 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
     }
 
     MediaInfo m(itm -> toUrl(), itm -> extension().isValid(), has_info);
+    if (m.isRemote() && m.hasError()) {
+        if (IModel::restoreUrl(itm))
+            m = MediaInfo(itm -> toUrl(), itm -> extension().isValid(), has_info);
+    }
+
     initItemInfo(&m, itm);
 
     if (!watcher -> isCanceled())

@@ -204,7 +204,7 @@ void Player::updateControls(bool played, bool paused, bool stopped) {
     likeButton -> setVisible(!(played && !stopped && !paused));
 }
 
-void Player::getFileInfo(QUrl uri, MediaInfo * info) {
+bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
     if (uri.isLocalFile())
@@ -212,7 +212,7 @@ void Player::getFileInfo(QUrl uri, MediaInfo * info) {
     else
         chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
 
-    if (!chUID) return;
+    if (!chUID) return false;
 
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
     DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
@@ -229,6 +229,7 @@ void Player::getFileInfo(QUrl uri, MediaInfo * info) {
     }
 
     BASS_StreamFree(chUID);
+    return true;
 }
 
 //////////////////////SLOTS/////////////////////////

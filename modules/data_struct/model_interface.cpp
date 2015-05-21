@@ -2,6 +2,22 @@
 
 using namespace Playo3;
 
+bool IModel::restoreUrl(IItem * itm) {
+    qDebug() << "RESTORE" << itm -> title();
+    if (itm -> itemType() == VK_ITEM) {
+        QString newUrl = VkApi::instance() -> refreshAudioItemUrl(
+            itm -> toUid().toString()
+        ).section('?', 0, 0);
+
+        if (itm -> path().toString() != newUrl) {
+            itm -> setPath(newUrl);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
     if (hash != 0) {
