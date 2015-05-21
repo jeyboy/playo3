@@ -39,8 +39,6 @@ MediaInfo::MediaInfo(QUrl uri, bool hasExtension, bool onlyTags) : fileName(0),
         readed = true;
         error = !Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
     }
-
-    qDebug() << "wer" << error;
 }
 
 void MediaInfo::initInfo() {

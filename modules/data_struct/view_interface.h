@@ -70,6 +70,7 @@ namespace Playo3 {
 
         void setIconSize(const QSize & size);
         void appendRows(QList<QUrl> & urls);
+        void markSelectedAsLiked(bool liked);
     signals:
         void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);

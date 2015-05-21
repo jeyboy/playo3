@@ -565,9 +565,6 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
         ExtensionDialog(QApplication::activeWindow()).exec();
 
     if (data -> hasFormat(DROP_INNER_FORMAT)) {
-        //        if (column == -1)
-        //            column = 0;
-
         QByteArray encoded = data -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
         return decodeInnerData(row, column, parentIndex, stream);

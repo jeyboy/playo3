@@ -7,6 +7,7 @@
 #include <qfileinfo.h>
 
 #include "modules/data_struct/downloads/download_view.h"
+#include "modules/data_struct/view_interface.h"
 
 namespace Playo3 {
     class ToolbarButton : public QToolButton {

@@ -99,6 +99,7 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             InnerData data;
             stream >> data.url >> isRemote >> data.attrs;
 
+
             addRow(data.url, path, downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()));
         }
     } else if (event -> mimeData() -> hasUrls()) {

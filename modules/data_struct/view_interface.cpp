@@ -613,6 +613,15 @@ void IView::appendRows(QList<QUrl> & urls) {
     mdl -> threadlyInsertRows(urls, -1);
 }
 
+void IView::markSelectedAsLiked(bool liked) {
+    int state = liked ? ItemState::liked : -ItemState::liked;
+
+    QModelIndexList indexes = selectedIndexes();
+    QModelIndexList::ConstIterator it = indexes.begin();
+    for (; it != indexes.end(); ++it)
+        mdl -> setData(*it, state, ISTATE);
+}
+
 //////////////////////////////////////////////////////
 /// PROTECTED
 //////////////////////////////////////////////////////
