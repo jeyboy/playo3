@@ -184,7 +184,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
                 painter -> setFont(font);
 
                 painter -> drawText(
-                            pseudoIcoRect.topRight() + QPoint(-10, 14),
+                            pseudoIcoRect.topRight() + QPoint(-10, 13),
                             "*"
                         );
             }

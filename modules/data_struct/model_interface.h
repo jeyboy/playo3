@@ -96,6 +96,10 @@ namespace Playo3 {
         void expandNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
 
+        void moveInBackgroundProcess();
+        void moveOutBackgroundProcess();
+        void setBackgroundProgress(int percent);
+
         void moveInProcess();
         void moveOutProcess();
         void setProgress(int percent);

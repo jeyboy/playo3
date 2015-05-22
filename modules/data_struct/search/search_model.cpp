@@ -9,6 +9,8 @@ SearchModel::~SearchModel() {}
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
+    emit moveInBackgroundProcess();
+
     qDebug() << "SEARCH DRIVES" << params.drives;
     qDebug() << "SEARCH GENRES" << params.genres;
     qDebug() << "SEARCH VK GENRES" << params.vkGenres;
@@ -23,17 +25,45 @@ void SearchModel::initiateSearch(SearchSettings & params) {
                 QList<int>::Iterator genre_it = params.genres.keys().begin();
                 QList<int>::Iterator genre_it_end = params.genres.keys().end();
 
-                for(; genre_it != genre_it_end; genre_it++) {
+                if (params.inVk) requests.append(SearchRequest(SearchRequest::request_vk, *it, QString(), 0, params.popular));
 
+                for(; genre_it != genre_it_end; genre_it++) {
+                    if (params.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, *it, params.genres.value(*genre_it), *genre_it, params.popular));
+                    if (params.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, *it, params.genres.value(*genre_it), *genre_it, params.popular));
+                    if (params.inSc) requests.append(SearchRequest(SearchRequest::request_sc, *it, params.genres.value(*genre_it), *genre_it, params.popular));
+                    if (params.inOther) requests.append(SearchRequest(SearchRequest::request_other, *it, params.genres.value(*genre_it), *genre_it, params.popular));
                 }
+            } else {
+                if (params.inVk) requests.append(SearchRequest(SearchRequest::request_vk, *it, QString(), -1, params.popular));
+
+                if (params.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, *it, QString(), -1, params.popular));
+                if (params.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, *it, QString(), -1, params.popular));
+                if (params.inSc) requests.append(SearchRequest(SearchRequest::request_sc, *it, QString(), -1, params.popular));
+                if (params.inOther) requests.append(SearchRequest(SearchRequest::request_other, *it, QString(), -1, params.popular));
             }
         }
     } else if (!params.genres.isEmpty()) {
+        if (params.inVk) requests.append(SearchRequest(SearchRequest::request_vk, QString(), QString(), 0, params.popular));
 
+        if (!params.genres.isEmpty()) {
+            QList<int>::Iterator genre_it = params.genres.keys().begin();
+            QList<int>::Iterator genre_it_end = params.genres.keys().end();
+
+            for(; genre_it != genre_it_end; genre_it++) {
+                if (params.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, QString(), params.genres.value(*genre_it), *genre_it, params.popular));
+                if (params.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, QString(), params.genres.value(*genre_it), *genre_it, params.popular));
+                if (params.inSc) requests.append(SearchRequest(SearchRequest::request_sc, QString(), params.genres.value(*genre_it), *genre_it, params.popular));
+                if (params.inOther) requests.append(SearchRequest(SearchRequest::request_other, QString(), params.genres.value(*genre_it), *genre_it, params.popular));
+            }
+        }
     } if (params.popular) {
         if (params.inVk) requests.append(SearchRequest(SearchRequest::request_vk));
         if (params.inSc) requests.append(SearchRequest(SearchRequest::request_sc));
         if (params.inOther) requests.append(SearchRequest(SearchRequest::request_other));
+    }
+
+    while(!requests.isEmpty()) {
+        requests.takeFirst();
     }
 
 //    emit moveInProcess();

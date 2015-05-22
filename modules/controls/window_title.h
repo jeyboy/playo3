@@ -6,6 +6,8 @@
 #include <qevent.h>
 #include <qdatetime.h>
 
+#include "modules/controls/spinner.h"
+
 #include "hoverable_label.h"
 #include "drop_button.h"
 #include "title_layout.h"
@@ -32,6 +34,9 @@ namespace Playo3 {
         inline bool isVertical() const { return titleLabel -> isVertical(); }
 
         void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal);
+
+        inline void showProgress(bool show) { spinner -> setHidden(!show); }
+        inline void setProgress(int progress) { spinner -> setValue(progress); }
     public slots:
         void showSearch();
         void hideSearch();
@@ -60,6 +65,7 @@ namespace Playo3 {
         QString fullTitle;
         bool isCompact;
         QMargins hMargins;
+        Spinner * spinner;
     };
 }
 

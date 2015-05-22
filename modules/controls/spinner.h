@@ -19,6 +19,10 @@ public slots:
     void setValue(int percent);
     void setValue2(int percent);
     void clear();
+    inline void hide() {
+        clear();
+        QWidget::hide();
+    }
 protected slots:
     void continiousProgression();
     void continiousProgression2();
@@ -35,7 +39,7 @@ private:
     QPen * clearPen, * spinePen, * borderPen;
 
     QTimer timer, timer2;
-    bool continious, continious2;
+    bool continious, continious2, show_text;
 };
 
 #endif // SPINNER

@@ -5,7 +5,6 @@
 
 #include "modules/controls/window.h"
 #include "misc/stylesheets.h"
-#include "modules/controls/spinner.h"
 
 namespace Playo3 {
     struct TabifyParams {
@@ -47,6 +46,11 @@ namespace Playo3 {
         inline void showSearch() { titleWidget -> showSearch(); }
 
         inline void rotate() { useVerticalTitles(!isUsedVerticalTitles()); }
+
+        inline void onMoveInBackgroundProcess() { titleWidget -> showProgress(true); }
+        inline void onMoveOutBackgroundProcess() { titleWidget -> showProgress(false); }
+        inline void onSetBackgroundProgress(int percent) { titleWidget -> setProgress(percent); }
+
         void onMoveInProcess();
         void onMoveOutProcess();
         void onSetProgress(int percent);

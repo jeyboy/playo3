@@ -17,6 +17,10 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
 
     TitleLayout * l = new TitleLayout(this);
 
+    spinner = new Spinner("", 20, 20, this);
+    l -> addWidget(spinner, 0, 0);
+    spinner -> hide();
+
     titleLabel = new RotateLabel("", this);
 
     if (buttonsMargins.top() != 0 || buttonsMargins.bottom() != 0)
@@ -27,8 +31,8 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
     font.setBold(true);
     titleLabel -> setFont(font);
 
-    l -> addWidget(titleLabel, 0, 0, Qt::AlignLeft);
-    l -> setColumnStretch(0, 1);
+    l -> addWidget(titleLabel, 0, 1, Qt::AlignLeft);
+    l -> setColumnStretch(1, 1);
 
     if (isCompact) {
         dropButton -> setContentsMargins(buttonMargins);
@@ -127,7 +131,7 @@ void WindowTitle::invertWindowState() {
 void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal) {
     if (!search) {
         search = new SearchBar(searchContainer, search_start_slot, search_end_signal, this, SLOT(hideSearch()), this);
-        ((TitleLayout *)layout()) -> addWidget(search, 0, 1);
+        ((TitleLayout *)layout()) -> addWidget(search, 0, 2);
         search -> hide();
     }
 }

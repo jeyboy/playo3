@@ -1,17 +1,19 @@
 #include "spinner.h"
 
 Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
-        spineWidth(10), spinePad(2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
-        w(spinner_width), h(spinner_height), clearPen(0), spinePen(0) {
+        spineWidth(spinner_width < 30 ? 4 : 10), spinePad(spinner_width < 30 ? 0 : 2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
+        w(spinner_width), h(spinner_height), clearPen(0), spinePen(0), img_text(0) {
 
     setAutoFillBackground(false);
     clear();
 
-    img_text = new QStaticText(text);
-    QTextOption options(Qt::AlignCenter);
-    options.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    img_text -> setTextOption(options);
-    img_text -> setTextWidth(w);
+    if ((show_text = !text.isEmpty())) {
+        img_text = new QStaticText(text);
+        QTextOption options(Qt::AlignCenter);
+        options.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        img_text -> setTextOption(options);
+        img_text -> setTextWidth(w);
+    }
 
     borderPen = new QPen(QColor::fromRgb(32, 32, 32, 224));
     borderPen -> setWidth(borderWidth);
@@ -25,6 +27,8 @@ Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * 
     spinePen -> setWidth(spineWidth - spinePad * 2);
     spinePen -> setCosmetic(true);
     spinePen -> setCapStyle(Qt::RoundCap);
+
+    setFixedSize(w + 2, h + 2);
 
     setValue(SPINNER_IS_CONTINIOUS); // start from continious state
 }
@@ -76,7 +80,8 @@ void Spinner::paintEvent(QPaintEvent * e) {
     p.save();
     p.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
-    p.drawStaticText(textPoint, *img_text);
+    if (show_text)
+        p.drawStaticText(textPoint, *img_text);
 
     p.setPen(*borderPen);
 

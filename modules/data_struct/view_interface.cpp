@@ -50,6 +50,10 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
+    connect(mdl, SIGNAL(moveInBackgroundProcess()), parent, SLOT(onMoveInBackgroundProcess()));
+    connect(mdl, SIGNAL(moveOutBackgroundProcess()), parent, SLOT(onMoveOutBackgroundProcess()));
+    connect(mdl, SIGNAL(setBackgroundProgress(int)), parent, SLOT(onSetBackgroundProgress(int)));
+
     connect(mdl, SIGNAL(moveInProcess()), parent, SLOT(onMoveInProcess()));
     connect(mdl, SIGNAL(moveOutProcess()), parent, SLOT(onMoveOutProcess()));
     connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
