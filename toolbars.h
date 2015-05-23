@@ -44,6 +44,9 @@ namespace Playo3 {
 
         inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
         Spectrum * getSpectrum();
+        inline void updateMetricSliders() {
+            slider -> updateMetric();
+        }
 
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();
@@ -100,6 +103,7 @@ namespace Playo3 {
         QToolButton * soundcloudToolButton;
 
         QToolBar * highlighted;
+        MetricSlider * slider;
 
         Spectrum * spectrum;
         QToolBar * underMouseBar;

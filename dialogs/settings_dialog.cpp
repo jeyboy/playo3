@@ -195,6 +195,8 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 void SettingsDialog::initGlobalSettings() {
     ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
+    ui -> drawMetricsNumero -> setChecked(Settings::instance() -> isMetricNumero());
+
     ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());
 
     if (!QDir().mkdir(Settings::instance() -> defaultDownloadPath()))
@@ -330,6 +332,7 @@ void SettingsDialog::initExtensions() {
 void SettingsDialog::saveGlobalSettings() {
     Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
     Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
+    Settings::instance() -> setMetricNumeroShow(ui -> drawMetricsNumero -> isChecked());
     Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
 
     Settings::instance() -> setSaveCommonTab(ui -> saveCommonTab -> isChecked());
@@ -426,4 +429,8 @@ bool SettingsDialog::execColorDialog(QColor & color) {
 void SettingsDialog::on_openDropPointInTab_toggled(bool checked) {
     ui -> label_dropPointTabType -> setEnabled(checked);
     ui -> dropPointTabTypeSelect -> setEnabled(checked);
+}
+
+void SettingsDialog::on_drawMetrics_clicked(bool checked) {
+    ui -> drawMetricsNumero -> setEnabled(checked);
 }

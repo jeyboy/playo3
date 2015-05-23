@@ -64,6 +64,8 @@ private slots:
 
     void on_openDropPointInTab_toggled(bool checked);
 
+    void on_drawMetrics_clicked(bool checked);
+
 protected:
     void initGlobalSettings();
     void initItemsSettings();

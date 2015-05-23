@@ -24,9 +24,10 @@ namespace Playo3 {
             calcGrid();
             repaint();
         }
+        inline void updateMetric() { calcGrid(); }
 
     protected:
-        int pixelPosToRangeValue(int pos) const;
+        int valueConversion(int pos, bool toVal) const;
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *);
         void mouseMoveEvent(QMouseEvent *);

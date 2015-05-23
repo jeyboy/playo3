@@ -213,6 +213,7 @@ void Playo::showSearchDialog() {
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
+        ToolBars::instance() -> updateMetricSliders();
         ToolBars::instance() -> getSpectrum() -> updateColors();
         ToolBars::instance() -> getSpectrum() -> changeBandCount();
         ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());

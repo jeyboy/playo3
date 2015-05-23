@@ -2,6 +2,8 @@
 
 void GlobalSettings::fromJson(QJsonObject & settings) {
     _showMetric = settings.value("show_metric").toBool(true);
+    _showMetricNumero = settings.value("show_metric_numero").toBool(false);
+
     _defaultDownloadPath = settings.value("download_path").toString(QCoreApplication::applicationDirPath() + "/downloads/");
     _tabPosition = settings.value("tab_position").toInt(0);
 
@@ -12,6 +14,7 @@ void GlobalSettings::fromJson(QJsonObject & settings) {
 
 void GlobalSettings::toJson(QJsonObject & settings) {
     settings.insert("show_metric", QJsonValue::fromVariant(_showMetric));
+    settings.insert("show_metric_numero", QJsonValue::fromVariant(_showMetricNumero));
     settings.insert("download_path", QJsonValue::fromVariant(_defaultDownloadPath));
     settings.insert("tab_position", QJsonValue::fromVariant(_tabPosition));
 

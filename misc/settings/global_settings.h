@@ -17,6 +17,9 @@ public:
     inline bool isMetricShow() const { return _showMetric; }
     inline void setMetricShow(bool show) { _showMetric = show; }
 
+    inline bool isMetricNumero() const { return _showMetricNumero; }
+    inline void setMetricNumeroShow(bool show) { _showMetricNumero = show; }
+
     inline bool isSaveCommonTab() const { return _saveCommonTab; }
     inline void setSaveCommonTab(bool save) { _saveCommonTab = save; }
 
@@ -32,6 +35,8 @@ public:
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
+    bool _showMetricNumero;
+
     bool _saveCommonTab;
     bool _openDropPointInTab;
     Playo3::ContainerType _openDropPointInTabType;
