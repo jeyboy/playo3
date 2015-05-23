@@ -9,19 +9,20 @@ using namespace Playo3;
 
 MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
   , show_position(showPosition), show_mini_progress(true)
-  , margin(16), spacing(30), point_radius(2) {
+  , spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
     connect(Player::instance(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
-    if (orientation() == Qt::Vertical)
-        hVal = height() - margin;
-    else
-        hVal = width() - margin;
-
-    fVal = (float)(hVal - margin);
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+    QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    halfHandle = (0.5 * sr.width());
+    bodyRect = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+    bodyRect.moveTopLeft(bodyRect.topLeft() + QPoint(5, 5));
+    bodyRect.setSize(bodyRect.size() - QSize(10, 10));
 
     calcGrid();
 }
@@ -32,6 +33,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
     if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
 
     QPainter p(this);
+
     p.save();
     QColor c = QColor::fromRgb(0, 0, 0, 92);
 
@@ -65,27 +67,50 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
     int max = maximum();
     if (hasMouseTracking() && minimum() != max) {
         bool show = false;
-        int pos;
+        int val;
+        double pos;
 
-        float dur;
         if (orientation() == Qt::Vertical) {
             pos = ev -> localPos().y();
-            if ((show = (pos > margin && pos < hVal)))
-                dur = (hVal - pos) / fVal;
+            if ((show = (pos >= bodyRect.top() && pos <= bodyRect.bottom() + 1))) {
+                val = pixelPosToRangeValue(ev -> pos().y()- (halfHandle - 1));
+                qDebug() << "SV" << val;
+            }
         } else {
             pos = ev -> localPos().x();
-            if ((show = (pos > margin && pos < hVal)))
-                dur = (pos - margin) / fVal;
+            if ((show = (pos >= bodyRect.left() && pos <= bodyRect.right() + 1))) {
+                val = pixelPosToRangeValue(ev -> pos().x()- (halfHandle - 1));
+                qDebug() << "SH" << val;
+            }
         }
 
         if (show)
-            QToolTip::showText(ev -> globalPos(), Duration::fromMillis(max * dur));
+            QToolTip::showText(ev -> globalPos(), Duration::fromMillis(val));
 
 //        QTime(0, 0, 0).addMSecs(mpPlayer->duration()).toString("HH:mm:ss")
-
     }
 
     QSlider::mouseMoveEvent(ev);
+}
+
+int MetricSlider::pixelPosToRangeValue(int pos) const {
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+    QRect gr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+    QRect sr = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    int sliderMin, sliderMax, sliderLength;
+
+    if (orientation() == Qt::Horizontal) {
+        sliderLength = sr.width();
+        sliderMin = gr.x();
+        sliderMax = gr.right() - sliderLength + 1;
+    } else {
+        sliderLength = sr.height();
+        sliderMin = gr.y();
+        sliderMax = gr.bottom() - sliderLength + 1;
+    }
+    return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - sliderMin,
+                                           sliderMax - sliderMin, opt.upsideDown);
 }
 
 void MetricSlider::calcGrid() {
@@ -95,25 +120,21 @@ void MetricSlider::calcGrid() {
 
     int multiplyer = 0;
     float temp = 0, step = ((float)maximum()) / tickInterval();
-    rRect = rect();
 //    QFont strFont = font();
 //    strFont.setPixelSize(10);
 //    QFontMetrics metrics(strFont);
 
     if (orientation() == Qt::Horizontal) {
-        rRect.moveLeft(rRect.left() + margin + 2); // +2 border
-        rRect.setWidth(rRect.width() - margin * 2 - 4); // -4 border
-
-        if (rRect.width() < spacing) return;
+        if (bodyRect.width() < spacing) return;
 
         while(temp < spacing)
-            temp = ((float)(rRect.width())) / (step / ++multiplyer);
+            temp = ((float)(bodyRect.width())) / (step / ++multiplyer);
 
         step = temp;
 
-        int bottom = ((rRect.bottom() - rRect.top()) / 2) + point_radius/*, top = rRect.top() + 5 + point_radius*/;
+        int bottom = rect().center().y() - 1 + point_radius/*, top = rRect.top() + 5 + point_radius*/;
 
-        for(double pos = step + rRect.left(), val = multiplyer; pos <= rRect.right() + 0.5; pos += step, val += multiplyer) {
+        for(double pos = step + bodyRect.left(), val = multiplyer; pos <= bodyRect.right() + 0.5; pos += step, val += multiplyer) {
 //            path.addEllipse(QPoint(pos + point_radius, top), point_radius, point_radius);
             path.addEllipse(QPoint(pos + point_radius, bottom), point_radius, point_radius);
 
@@ -121,21 +142,18 @@ void MetricSlider::calcGrid() {
 //            path.addText(pos - metrics.width(strNum) / 2 , bottom - point_radius * 2, strFont, strNum);
         }
     } else {
-        rRect.moveTop(rRect.top() + margin + 2); // +2 border
-        rRect.setHeight(rRect.height() - margin * 2 - 4); // -4 border
-
-        if (rRect.height() < spacing) return;
+        if (bodyRect.height() < spacing) return;
 
         while(temp < spacing)
-            temp = ((float)(rRect.height())) / (step / ++multiplyer);
+            temp = ((float)(bodyRect.height())) / (step / ++multiplyer);
 
         step = temp;
 
-        int left = ((rRect.right() - rRect.left()) / 2) + point_radius - 1/*, right = rRect.right() - 4 - point_radius*/;
+        int left = ((bodyRect.right() - bodyRect.left()) / 2) + point_radius - 1/*, right = rRect.right() - 4 - point_radius*/;
 
         for(double pos = step, val = multiplyer; ; pos += step, val += multiplyer) {
-            temp = rRect.bottom() - pos;
-            if (temp < rRect.top() - 0.5)
+            temp = bodyRect.bottom() - pos;
+            if (temp < bodyRect.top() - 0.5)
                 break;
 
             path.addEllipse(QPoint(left, temp), point_radius, point_radius);

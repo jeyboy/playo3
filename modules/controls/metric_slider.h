@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QToolTip>
 #include <QLinearGradient>
+#include <QStyleOptionSlider>
 
 #include "misc/settings.h"
 
@@ -25,6 +26,7 @@ namespace Playo3 {
         }
 
     protected:
+        int pixelPosToRangeValue(int pos) const;
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *);
         void mouseMoveEvent(QMouseEvent *);
@@ -32,9 +34,9 @@ namespace Playo3 {
         void calcGrid();
     private:
         bool show_position, show_mini_progress;
-        int margin, spacing, point_radius;
-        float hVal, fVal;
-        QRect rRect;
+        int spacing, point_radius;
+        double halfHandle;
+        QRect bodyRect;
         QPainterPath path;
     };
 }
