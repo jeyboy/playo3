@@ -29,6 +29,7 @@ namespace Playo3 {
     protected:
         int posToVal(int pos) const;
         double valToPos(int pos) const;
+        int ticks() const;
 
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *);
