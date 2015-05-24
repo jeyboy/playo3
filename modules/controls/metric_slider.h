@@ -27,7 +27,9 @@ namespace Playo3 {
         inline void updateMetric() { calcGrid(); }
 
     protected:
-        int valueConversion(int pos, bool toVal) const;
+        int valueConversion(int pos) const;
+        double posConversion(int pos) const;
+
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *);
         void mouseMoveEvent(QMouseEvent *);
