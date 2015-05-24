@@ -27,6 +27,8 @@ public:
     static QUrl groupAudiosUrl(QString uid, int offset = 0);
     static QUrl groupPlaylistsUrl(QString uid, int offset = 0);
 
+    static QUrl audioUrl(QString audio_uid);
+
     static QUrl userAudiosUrl(QString uid, int offset = 0);
     static QUrl userPlaylistsUrl(QString uid, int offset = 0);
     static QUrl userFolowingsUrl(QString uid, int offset = 0);

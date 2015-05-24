@@ -18,6 +18,7 @@ public:
 
     void getGroupInfo(const QObject * receiver, const char * respSlot, QString uid);
     void getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0");
+    QJsonObject getAudioInfo(QString audio_uid);
     void search(const QObject * receiver, const char * respSlot, QString predicate = QString(), QString genre = QString(), bool popular = true);
 
     ~SoundcloudApi() { }

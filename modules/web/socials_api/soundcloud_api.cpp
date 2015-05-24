@@ -69,6 +69,20 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 /// AUDIO LIST
 ///////////////////////////////////////////////////////////
 
+//"id": 142370360,
+//"permalink": "sam-smith-stay-with-me",
+
+QJsonObject SoundcloudApi::getAudioInfo(QString audio_uid) {
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audioUrl(audio_uid)));
+
+    QJsonObject obj = responseToJson(m_http -> readAll());
+
+    m_http -> close();
+    delete m_http;
+
+    return obj;
+}
+
 void SoundcloudApi::getGroupInfo(const QObject * receiver, const char * respSlot, QString uid) {
     startApiCall(QtConcurrent::run(this, &SoundcloudApi::getGroupInfoRoutine, new ApiFuncContainer(receiver, respSlot, uid)));
 }

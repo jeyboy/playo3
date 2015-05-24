@@ -31,7 +31,8 @@ public:
     ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
 
-    QString refreshAudioItemUrl(QString uid);
+    QString refreshAudioItemUrl(QString audio_uid);
+    QJsonObject getAudioInfo(QString audio_uid);
 
 //    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 

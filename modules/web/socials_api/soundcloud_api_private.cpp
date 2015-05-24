@@ -126,6 +126,13 @@ QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString uid, int offset) {
     return url;
 }
 
+QUrl SoundcloudApiPrivate::audioUrl(QString audio_uid) {
+    QUrlQuery query = commonMethodParams();
+    QUrl url(getApiUrl() + "/tracks/" + audio_uid + ".json");
+    url.setQuery(query);
+    return url;
+}
+
 QUrl SoundcloudApiPrivate::userAudiosUrl(QString uid, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);

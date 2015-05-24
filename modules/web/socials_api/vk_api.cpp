@@ -209,9 +209,8 @@ void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString
     startApiCall(QtConcurrent::run(this, &VkApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
 }
 
-QString VkApi::refreshAudioItemUrl(QString uid) {
-    QStringList uids;
-    uids << uid;
+QJsonObject VkApi::getAudioInfo(QString audio_uid) {
+    QStringList uids; uids << audio_uid;
     QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
     QNetworkReply * reply = manager() -> getSync(QNetworkRequest(url));
 
@@ -219,7 +218,12 @@ QString VkApi::refreshAudioItemUrl(QString uid) {
 
     reply -> close();
     delete reply;
-    return doc.value("response").toArray().first().toObject().value("url").toString();
+
+    return doc.value("response").toArray().first().toObject();
+}
+
+QString VkApi::refreshAudioItemUrl(QString audio_uid) {
+    return getAudioInfo(audio_uid).value("url").toString();
 }
 
 ////TODO: has some troubles with ids amount in request

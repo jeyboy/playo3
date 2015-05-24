@@ -103,4 +103,5 @@ void WebApi::apiCallFinished() {
     connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
     emit routineFinished(func -> result);
     disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
+    delete func;
 }
