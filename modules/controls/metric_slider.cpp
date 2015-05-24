@@ -72,14 +72,12 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
 
         if (orientation() == Qt::Vertical) {
             pos = ev -> localPos().y();
-            if ((show = (pos >= bodyRect.top() && pos <= bodyRect.bottom() + 1))) {
-                val = valueConversion(ev -> pos().y()- (halfHandle - 1));
-            }
+            if ((show = (pos >= bodyRect.top() && pos <= bodyRect.bottom() + 1)))
+                val = posToVal(ev -> pos().y());
         } else {
             pos = ev -> localPos().x();
-            if ((show = (pos >= bodyRect.left() && pos <= bodyRect.right() + 1))) {
-                val = valueConversion(ev -> pos().x()- (halfHandle - 1));
-            }
+            if ((show = (pos >= bodyRect.left() && pos <= bodyRect.right() + 1)))
+                val = posToVal(ev -> pos().x());
         }
 
         if (show) {
@@ -93,7 +91,7 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
     QSlider::mouseMoveEvent(ev);
 }
 
-double MetricSlider::posConversion(int pos) const {
+int MetricSlider::posToVal(int pos) const {
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect gr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
@@ -101,38 +99,12 @@ double MetricSlider::posConversion(int pos) const {
     int sliderMin, sliderMax, sliderLength;
 
     if (orientation() == Qt::Horizontal) {
+        pos -= (0.5 * sr.width() - 1);
         sliderLength = sr.width();
         sliderMin = gr.x();
         sliderMax = gr.right() - sliderLength + 1;
     } else {
-        sliderLength = sr.height();
-        sliderMin = gr.y();
-        sliderMax = gr.bottom() - sliderLength + 1;
-    }
-
-    double percent = ((double)pos) / (maximum() - minimum());
-    qDebug() << "PERC" << pos << percent << bodyRect << rect();
-
-    if (opt.upsideDown)
-        return bodyRect.width() * (100.0 - percent);
-    else
-        return bodyRect.width() * percent;
-
-//    return QStyle::sliderPositionFromValue(minimum(), maximum(), pos, sliderMax - sliderMin, opt.upsideDown) + offset;
-}
-
-int MetricSlider::valueConversion(int pos) const {
-    QStyleOptionSlider opt;
-    initStyleOption(&opt);
-    QRect gr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
-    QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    int sliderMin, sliderMax, sliderLength;
-
-    if (orientation() == Qt::Horizontal) {
-        sliderLength = sr.width();
-        sliderMin = gr.x();
-        sliderMax = gr.right() - sliderLength + 1;
-    } else {
+        pos -= (0.5 * sr.height() - 1);
         sliderLength = sr.height();
         sliderMin = gr.y();
         sliderMax = gr.bottom() - sliderLength + 1;
@@ -141,12 +113,76 @@ int MetricSlider::valueConversion(int pos) const {
     return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - sliderMin, sliderMax - sliderMin, opt.upsideDown);
 }
 
+double MetricSlider::valToPos(int pos) const {
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+    opt.subControls = QStyle::SC_All;
+    int available = opt.rect.width() - style() -> pixelMetric(QStyle::PM_SliderLength, &opt, this);
+
+//    return QStyle::sliderPositionFromValue(minimum(), maximum(), pos, available, opt.upsideDown);
+    double percent = ((double)pos) / (maximum() - minimum());
+    qDebug() << "PERC" << pos << percent << bodyRect << available;
+
+    if (opt.upsideDown)
+        return bodyRect.width() * (100.0 - percent);
+    else
+        return bodyRect.width() * percent;
+}
+
+//double MetricSlider::posConversion(int pos) const {
+//    QStyleOptionSlider opt;
+//    initStyleOption(&opt);
+//    QRect gr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+//    QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+//    int sliderMin, sliderMax, sliderLength;
+
+//    if (orientation() == Qt::Horizontal) {
+//        sliderLength = sr.width();
+//        sliderMin = gr.x();
+//        sliderMax = gr.right() - sliderLength + 1;
+//    } else {
+//        sliderLength = sr.height();
+//        sliderMin = gr.y();
+//        sliderMax = gr.bottom() - sliderLength + 1;
+//    }
+
+//    double percent = ((double)pos) / (maximum() - minimum());
+//    qDebug() << "PERC" << pos << percent << bodyRect << rect();
+
+//    if (opt.upsideDown)
+//        return bodyRect.width() * (100.0 - percent);
+//    else
+//        return bodyRect.width() * percent;
+
+////    return QStyle::sliderPositionFromValue(minimum(), maximum(), pos, sliderMax - sliderMin, opt.upsideDown) + offset;
+//}
+
+//int MetricSlider::valueConversion(int pos) const {
+//    QStyleOptionSlider opt;
+//    initStyleOption(&opt);
+//    QRect gr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+//    QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+//    int sliderMin, sliderMax, sliderLength;
+
+//    if (orientation() == Qt::Horizontal) {
+//        sliderLength = sr.width();
+//        sliderMin = gr.x();
+//        sliderMax = gr.right() - sliderLength + 1;
+//    } else {
+//        sliderLength = sr.height();
+//        sliderMin = gr.y();
+//        sliderMax = gr.bottom() - sliderLength + 1;
+//    }
+
+//    return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - sliderMin, sliderMax - sliderMin, opt.upsideDown);
+//}
+
 void MetricSlider::calcGrid() {
     path = QPainterPath();
 
     int multiplyer = 1, step_val = tickInterval();
-    double start_point = posConversion(0);
-    double step = posConversion(step_val) - start_point;
+    double start_point = valToPos(0);
+    double step = valToPos(step_val) - start_point;
 
     QString strNum;
     QFont strFont = font();
@@ -157,7 +193,7 @@ void MetricSlider::calcGrid() {
         if (bodyRect.width() <= spacing || step == 0) return;
 
         while(step < spacing) {
-            step = posConversion(step_val * ++multiplyer) - start_point;
+            step = valToPos(step_val * ++multiplyer) - start_point;
         }
 
         int center = rect().center().y() + point_radius / 2;
@@ -175,7 +211,7 @@ void MetricSlider::calcGrid() {
         if (bodyRect.height() <= spacing || step == 0) return;
 
         while(step < spacing) {
-            step = start_point - posConversion(step_val * ++multiplyer);
+            step = start_point - valToPos(step_val * ++multiplyer);
         }
 
         int center = rect().center().x() + point_radius / 2;
