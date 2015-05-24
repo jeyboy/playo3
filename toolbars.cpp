@@ -348,8 +348,8 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addAction(QIcon(":/add"), "Add new local tab", Dockbars::instance(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
-    ptb -> addSeparator();
-    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
+//    ptb -> addSeparator();
+//    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
     ptb -> addSeparator();
     ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
     ptb -> adjustSize();

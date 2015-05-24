@@ -304,8 +304,6 @@ void Player::unmuteCheck(int val) {
 }
 
 void Player::changeTrackbarValue(int pos) {
-    qDebug() << "POS" << pos;
-
     #ifdef Q_OS_WIN
         stateProgress -> setValue(pos);
     #endif
