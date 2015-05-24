@@ -16,11 +16,23 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
-    QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
     halfHandle = (0.5 * sr.width());
     bodyRect = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
+
+    int sliderLength;
+
+    if (orientation() == Qt::Horizontal) {
+        sliderLength = sr.width();
+        sliderMin = bodyRect.x();
+        sliderMax = bodyRect.right() - sliderLength + 1;
+    } else {
+        sliderLength = sr.height();
+        sliderMin = bodyRect.y();
+        sliderMax = bodyRect.bottom() - sliderLength + 1;
+    }
+
     bodyRect.moveTopLeft(bodyRect.topLeft() + QPoint(5, 5));
     bodyRect.setSize(bodyRect.size() - QSize(10, 10));
 
@@ -88,23 +100,7 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
 }
 
 int MetricSlider::posToVal(int pos) const {
-    QStyleOptionSlider opt;
-    initStyleOption(&opt);
-    QRect gr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
-    QRect sr = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    int sliderMin, sliderMax, sliderLength;
-
-    if (orientation() == Qt::Horizontal) {
-        pos -= (0.5 * sr.width() - 1);
-        sliderLength = sr.width();
-        sliderMin = gr.x();
-        sliderMax = gr.right() - sliderLength + 1;
-    } else {
-        pos -= (0.5 * sr.height() - 1);
-        sliderLength = sr.height();
-        sliderMin = gr.y();
-        sliderMax = gr.bottom() - sliderLength + 1;
-    }
+    pos -= halfHandle - 1;
 
     return QStyle::sliderValueFromPosition(minimum(), maximum(), pos - sliderMin, sliderMax - sliderMin, opt.upsideDown);
 }
@@ -149,7 +145,7 @@ void MetricSlider::calcGrid() {
         int center = rect().center().y() + point_radius / 2;
         for(double pos = bodyRect.x() + halfHandle / 2 + step, val = 1; pos <= bodyRect.width(); pos += step, val++) {
             if (!Settings::instance() -> isMetricNumero()) {
-                path.addEllipse(QPoint(pos - point_radius / 2, center), point_radius, point_radius);
+                path.addEllipse(QPoint(pos, center), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);
                 path.addText(pos - metrics.width(strNum) / 2 , bodyRect.center().y() + metrics.height() / 3, strFont, strNum);
@@ -166,7 +162,7 @@ void MetricSlider::calcGrid() {
 
         for(double pos = bodyRect.bottom() - halfHandle / 2 - step, val = 1; pos > bodyRect.y(); pos -= step, val++) {
             if (!Settings::instance() -> isMetricNumero()) {
-                path.addEllipse(QPoint(center, pos - point_radius / 2), point_radius, point_radius);
+                path.addEllipse(QPoint(center, pos), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);
                 path.addText(bodyRect.center().x() - metrics.width(strNum) / 2, pos + metrics.height() / 3, strFont, strNum);

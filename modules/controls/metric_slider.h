@@ -37,8 +37,11 @@ namespace Playo3 {
 
         void calcGrid();
     private:
+        QStyleOptionSlider opt;
+
         bool show_position, show_mini_progress;
         int spacing, point_radius;
+        int sliderMin, sliderMax;
         double halfHandle;
         QRect bodyRect;
         QPainterPath path;
