@@ -123,7 +123,10 @@ void WindowTitle::invertWindowState() {
         parentWidget() -> showNormal();
 //        button -> setToolTip("Maximize");
     } else {
+        QRect area = Screen::screenRect(parentWidget());
         parentWidget() -> showMaximized();
+        if (area.isValid())
+            parentWidget() -> setGeometry(area);
 //        button -> setToolTip("Normalize");
     }
 }
