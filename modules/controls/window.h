@@ -57,10 +57,10 @@ namespace Playo3 {
         bool childInAction, skipChildAction;
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
-        QRect geom;
 
         QLinearGradient brush;
-        QRect backRect, borderRect, screenRect;
+        QRect backRect, borderRect, geom;
+        QList<QRect> screenRects;
     };
 }
 

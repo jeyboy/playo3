@@ -6,11 +6,15 @@
 
 class Screen {
 public:
-    static QList<QRect> screenRects() {
+    static QList<QRect> screenRects(QWidget * target) {
         QDesktopWidget * w = QApplication::desktop();
         QList<QRect> res;
         for(int loop1 = 0 ; loop1 < w -> screenCount(); loop1++)
             res << w -> availableGeometry(loop1);
+
+        int screen_index = w -> screenNumber(target);
+        if (screen_index != -1)
+            res.move(screen_index, 0);
 
         return res;
     }

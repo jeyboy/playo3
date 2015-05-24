@@ -105,7 +105,7 @@ void MainWindow::mousePressEvent(QMouseEvent * event) {
 //        qDebug() << QApplication::widgetAt(QCursor::pos());
         moveFlag = !isResizeable() && !isMaximized();
         if (moveFlag || resizeFlagX || resizeFlagY) {
-            screenRect = Screen::screenRect(this);
+            screenRects = Screen::screenRects(this);
             inAction = true;
             dragPos = event -> globalPos();
             geom = geometry();
@@ -296,17 +296,19 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
-    if (qAbs(screenRect.right() - rect.right()) < Stylesheets::stickDistance)
-        rect.moveRight(screenRect.right());
+    for(QList<QRect>::Iterator it = screenRects.begin(); it != screenRects.end(); it++) {
+        if (qAbs((*it).right() - rect.right()) < Stylesheets::stickDistance)
+            rect.moveRight((*it).right());
 
-    if (qAbs(screenRect.bottom() - rect.bottom()) < Stylesheets::stickDistance)
-        rect.moveBottom(screenRect.bottom());
+        if (qAbs((*it).bottom() - rect.bottom()) < Stylesheets::stickDistance)
+            rect.moveBottom((*it).bottom());
 
-    if (qAbs(screenRect.left() - rect.left()) < Stylesheets::stickDistance)
-        rect.moveLeft(screenRect.left());
+        if (qAbs((*it).left() - rect.left()) < Stylesheets::stickDistance)
+            rect.moveLeft((*it).left());
 
-    if (qAbs(screenRect.top() - rect.top()) < Stylesheets::stickDistance)
-        rect.moveTop(screenRect.top());
+        if (qAbs((*it).top() - rect.top()) < Stylesheets::stickDistance)
+            rect.moveTop((*it).top());
+    }
 
     return rect;
 }
