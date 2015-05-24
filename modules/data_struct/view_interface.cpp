@@ -202,6 +202,11 @@ void IView::copyToClipboard() {
     mdl -> copyTitleToClipboard(ind);
 }
 
+void IView::copyIdsToClipboard() {
+    QModelIndexList indexes = selectedIndexes();
+    mdl -> copyIdsToClipboard(indexes);
+}
+
 void IView::openRecomendationsforUser() {
     ViewSettings settings(vk_rel, false, false, false, true, sttngs.uid, user_rel);
     Dockbars::instance() -> createDocBar("Rec for user " + sttngs.uid, settings, 0, true, true);
@@ -356,6 +361,17 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     }
 
     if (mdl -> rowCount() > 0) {
+        if (!selectedIndexes().isEmpty()) {
+            actions.append((act = new QAction(QIcon(":/export"), "Copy Ids to Clipboard", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
+
+//            actions.append((act = new QAction(QIcon(":/import"), "Import Ids", this)));
+//            connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
+
+            actions.append((act = new QAction(this)));
+            act -> setSeparator(true);
+        }
+
         actions.append((act = new QAction(QIcon(":/download"), "Download", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadSelected()));
 

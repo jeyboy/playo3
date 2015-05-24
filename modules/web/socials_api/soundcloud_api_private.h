@@ -3,6 +3,7 @@
 
 #include <QUrl>
 #include <QUrlQuery>
+#include <QStringList>
 
 class SoundcloudApiPrivate {
 public:
@@ -19,26 +20,28 @@ public:
     static void setAudioTypesParam(QUrlQuery & query);
     static void setAmountLimitation(QUrlQuery & query, int offset = 0);
     static void setSearchPredicate(QUrlQuery & query, QString & predicate);
+    static void setIdsFilter(QUrlQuery & query, QStringList & uids);
     static void setGenreLimitation(QUrlQuery & query, QString & genre);
     static void setOrder(QUrlQuery & query, bool hottest);
 
-    static QUrl audiosSearchUrl(QString predicate, QString genre, bool hottest = false, int offset = 0);
+    static QUrl audiosSearchUrl(QString & predicate, QString & genre, bool hottest = false, int offset = 0);
 
-    static QUrl groupAudiosUrl(QString uid, int offset = 0);
-    static QUrl groupPlaylistsUrl(QString uid, int offset = 0);
+    static QUrl groupAudiosUrl(QString & uid, int offset = 0);
+    static QUrl groupPlaylistsUrl(QString & uid, int offset = 0);
 
-    static QUrl audioUrl(QString audio_uid);
+    static QUrl audioUrl(QString & audio_uid);
+    static QUrl audiosUrl(QStringList & audio_uids);
 
-    static QUrl userAudiosUrl(QString uid, int offset = 0);
-    static QUrl userPlaylistsUrl(QString uid, int offset = 0);
-    static QUrl userFolowingsUrl(QString uid, int offset = 0);
-    static QUrl userFolowersUrl(QString uid, int offset = 0);
-    static QUrl userGroupsUrl(QString uid, int offset = 0);
+    static QUrl userAudiosUrl(QString & uid, int offset = 0);
+    static QUrl userPlaylistsUrl(QString & uid, int offset = 0);
+    static QUrl userFolowingsUrl(QString & uid, int offset = 0);
+    static QUrl userFolowersUrl(QString & uid, int offset = 0);
+    static QUrl userGroupsUrl(QString & uid, int offset = 0);
 
     static QUrlQuery commonMethodParams();
 protected:
     inline static QString getApiUrl() { return "https://api.soundcloud.com/"; }
-    static QUrlQuery userMethodParams(QString token);
+    static QUrlQuery userMethodParams(QString & token);
 };
 #endif // SOUNDCLOUD_API_PRIVATE_H
 

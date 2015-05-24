@@ -1,6 +1,6 @@
 #include "soundcloud_api_private.h"
 
-QUrlQuery SoundcloudApiPrivate::userMethodParams(QString token) {
+QUrlQuery SoundcloudApiPrivate::userMethodParams(QString & token) {
     QUrlQuery query = QUrlQuery();
     query.addQueryItem("oauth_token", token); //getToken()
     return query;
@@ -81,6 +81,10 @@ void SoundcloudApiPrivate::setSearchPredicate(QUrlQuery & query, QString & predi
     query.addQueryItem("q", predicate);
 }
 
+void SoundcloudApiPrivate::setIdsFilter(QUrlQuery & query, QStringList & uids) {
+    query.addQueryItem("ids", uids.join(","));
+}
+
 void SoundcloudApiPrivate::setGenreLimitation(QUrlQuery & query, QString & genre) {
     query.addQueryItem("genres", genre);
 }
@@ -89,7 +93,7 @@ void SoundcloudApiPrivate::setOrder(QUrlQuery & query, bool hottest) {
     query.addQueryItem("order", hottest ? "hotness" : "created_at");
 }
 
-QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, bool hottest, int offset) {
+QUrl SoundcloudApiPrivate::audiosSearchUrl(QString & predicate, QString & genre, bool hottest, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);
     setAmountLimitation(query, offset);
@@ -107,7 +111,7 @@ QUrl SoundcloudApiPrivate::audiosSearchUrl(QString predicate, QString genre, boo
 }
 
 
-QUrl SoundcloudApiPrivate::groupAudiosUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::groupAudiosUrl(QString & uid, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);
     setAmountLimitation(query, offset);
@@ -117,7 +121,7 @@ QUrl SoundcloudApiPrivate::groupAudiosUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString & uid, int offset) {
     QUrl url(getApiUrl() + "groups/" + uid + "/playlists.json");
     QUrlQuery query = commonMethodParams();
     setAmountLimitation(query, offset);
@@ -126,14 +130,23 @@ QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::audioUrl(QString audio_uid) {
+QUrl SoundcloudApiPrivate::audioUrl(QString & audio_uid) {
     QUrlQuery query = commonMethodParams();
     QUrl url(getApiUrl() + "/tracks/" + audio_uid + ".json");
     url.setQuery(query);
     return url;
 }
 
-QUrl SoundcloudApiPrivate::userAudiosUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::audiosUrl(QStringList & audio_uids) {
+    QUrlQuery query = commonMethodParams();
+    setIdsFilter(query, audio_uids);
+
+    QUrl url(getApiUrl() + "/tracks.json");
+    url.setQuery(query);
+    return url;
+}
+
+QUrl SoundcloudApiPrivate::userAudiosUrl(QString & uid, int offset) {
     QUrlQuery query = commonMethodParams();
     setAudioTypesParam(query);
     setAmountLimitation(query, offset);
@@ -143,7 +156,7 @@ QUrl SoundcloudApiPrivate::userAudiosUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::userPlaylistsUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::userPlaylistsUrl(QString & uid, int offset) {
     QUrl url(getApiUrl() + "users/" + uid + "/playlists.json");
     QUrlQuery query = commonMethodParams();
     setAmountLimitation(query, offset);
@@ -152,7 +165,7 @@ QUrl SoundcloudApiPrivate::userPlaylistsUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::userFolowingsUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::userFolowingsUrl(QString & uid, int offset) {
     QUrl url(getApiUrl() + "users/" + uid + "/followings.json");
     QUrlQuery query = commonMethodParams();
     setAmountLimitation(query, offset);
@@ -161,7 +174,7 @@ QUrl SoundcloudApiPrivate::userFolowingsUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::userFolowersUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::userFolowersUrl(QString & uid, int offset) {
     QUrl url(getApiUrl() + "users/" + uid + "/followers.json");
     QUrlQuery query = commonMethodParams();
     setAmountLimitation(query, offset);
@@ -170,7 +183,7 @@ QUrl SoundcloudApiPrivate::userFolowersUrl(QString uid, int offset) {
     return url;
 }
 
-QUrl SoundcloudApiPrivate::userGroupsUrl(QString uid, int offset) {
+QUrl SoundcloudApiPrivate::userGroupsUrl(QString & uid, int offset) {
     QUrl url(getApiUrl() + "users/" + uid + "/groups.json");
     QUrlQuery query = commonMethodParams();
     setAmountLimitation(query, offset);

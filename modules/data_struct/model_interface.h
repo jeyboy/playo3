@@ -51,6 +51,9 @@ namespace Playo3 {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
+        int proceedVkList(QJsonArray & collection, FolderItem * parent);
+        int proceedScList(QJsonArray & collection, FolderItem * parent);
+
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
@@ -72,6 +75,7 @@ namespace Playo3 {
 
         void initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source = 0);
 
+        inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
     public slots:
         inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
         inline void itemNotSupported(QModelIndex node) {
@@ -81,6 +85,8 @@ namespace Playo3 {
         inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported, ISTATE); }
 
         void copyTitleToClipboard(const QModelIndex & index);
+        void copyIdsToClipboard(const QModelIndexList & indexes);
+
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
         void expandeAll();

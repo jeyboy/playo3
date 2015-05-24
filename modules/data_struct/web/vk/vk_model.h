@@ -23,7 +23,7 @@ namespace Playo3 {
 
         void proceedAudioList(QJsonObject &);
         void proceedAudioListAndRetry(QJsonObject &);
-        int proceedAudioList(QJsonArray &, FolderItem *);
+//        int proceedAudioList(QJsonArray &, FolderItem *);
     //    void proceedAudioListUpdate(QJsonObject &, QHash<QString, IItem *> &);
     };
 }

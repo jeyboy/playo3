@@ -33,6 +33,7 @@ public:
 
     QString refreshAudioItemUrl(QString audio_uid);
     QJsonObject getAudioInfo(QString audio_uid);
+    QJsonObject getAudiosInfo(QStringList audio_uid);
 
 //    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
 

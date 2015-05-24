@@ -72,6 +72,18 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 //"id": 142370360,
 //"permalink": "sam-smith-stay-with-me",
 
+QJsonObject SoundcloudApi::getAudiosInfo(QStringList audio_uids) {
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audiosUrl(audio_uids)));
+
+    QByteArray ar = m_http -> readAll();
+    ar.prepend("{\"response\":"); ar.append("}");
+
+    m_http -> close();
+    delete m_http;
+
+    return responseToJson(ar);
+}
+
 QJsonObject SoundcloudApi::getAudioInfo(QString audio_uid) {
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audioUrl(audio_uid)));
 

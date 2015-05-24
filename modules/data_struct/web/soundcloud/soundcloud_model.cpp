@@ -45,7 +45,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                         album.value("title").toString()
                     );
 
-                    int folderItemsAmount = proceedAudioList(albumItems, folder);
+                    int folderItemsAmount = proceedScList(albumItems, folder);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -55,7 +55,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
 
         if (audios.count() > 0)
-            itemsAmount += proceedAudioList(audios, rootItem);
+            itemsAmount += proceedScList(audios, rootItem);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
@@ -122,65 +122,4 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
-}
-
-int SoundcloudModel::proceedAudioList(QJsonArray & collection, FolderItem * parent) {
-    int itemsAmount = 0;
-    QJsonObject itm;
-    SoundcloudItem * newItem;
-    QString uri, id, owner;
-    QVariant uid;
-    QList<IItem *> items;
-    bool original;
-
-    QHash<QString, IItem *> store;
-    parent -> accumulateUids(store);
-
-    QJsonArray::Iterator it = collection.begin();
-
-    for(; it != collection.end(); it++) {
-        itm = (*it).toObject();
-
-        if (itm.isEmpty()) continue;
-
-        id = QString::number(itm.value("id").toInt());
-        owner = QString::number(itm.value("user_id").toInt());
-        uid = WebItem::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
-
-        uri = itm.value("download_url").toString();
-        if (uri.isEmpty()) {
-            uri = itm.value("stream_url").toString();
-            original = false;
-        } else { original = true;}
-        if (uri.isEmpty()) continue;
-
-        items = store.values(uid.toString());
-
-        if (items.isEmpty()) {
-            itemsAmount++;
-            newItem = new SoundcloudItem(
-                id,
-                uri,
-                itm.value("title").toString(),
-                parent
-            );
-
-            newItem -> setVideoPath(itm.value("video_url").toString());
-            newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
-
-//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-            if (itm.contains("genre_id"))
-                newItem -> setGenre(itm.value("genre_id").toInt());
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
-
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
-        }
-    }
-
-    return itemsAmount;
 }

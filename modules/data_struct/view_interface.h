@@ -92,6 +92,7 @@ namespace Playo3 {
         inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
         void openLocation();
         void copyToClipboard();
+        void copyIdsToClipboard();
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();

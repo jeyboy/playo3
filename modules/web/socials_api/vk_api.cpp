@@ -209,9 +209,8 @@ void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString
     startApiCall(QtConcurrent::run(this, &VkApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
 }
 
-QJsonObject VkApi::getAudioInfo(QString audio_uid) {
-    QStringList uids; uids << audio_uid;
-    QUrl url = VkApiPrivate::audioRefreshUrl(uids, getToken());
+QJsonObject VkApi::getAudiosInfo(QStringList audio_uids) {
+    QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, getToken());
     QNetworkReply * reply = manager() -> getSync(QNetworkRequest(url));
 
     QJsonObject doc = responseToJson(reply -> readAll());
@@ -219,6 +218,12 @@ QJsonObject VkApi::getAudioInfo(QString audio_uid) {
     reply -> close();
     delete reply;
 
+    return doc;
+}
+
+QJsonObject VkApi::getAudioInfo(QString audio_uid) {
+    QStringList uids; uids << audio_uid;
+    QJsonObject doc = getAudiosInfo(uids);
     return doc.value("response").toArray().first().toObject();
 }
 

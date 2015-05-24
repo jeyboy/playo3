@@ -224,6 +224,122 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
+int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
+    int itemsAmount = 0;
+    QJsonObject itm;
+    VkItem * newItem;
+    QString uri, id, owner;
+    QVariant uid;
+    QList<IItem *> items;
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
+    QJsonArray::Iterator it = collection.begin();
+
+    for(int pos = parent -> foldersAmount(); it != collection.end(); it++) {
+        itm = (*it).toObject();
+
+        if (itm.isEmpty()) continue;
+
+        id = QString::number(itm.value("id").toInt());
+        owner = QString::number(itm.value("owner_id").toInt());
+        uid = WebItem::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
+
+        uri = itm.value("url").toString();
+        uri = uri.section('?', 0, 0); // remove extra info from url
+
+        items = store.values(uid.toString());
+
+        if (items.isEmpty()) {
+            itemsAmount++;
+            newItem = new VkItem(
+                id,
+                uri,
+                itm.value("artist").toString() + " - " + itm.value("title").toString(),
+                parent,
+                pos
+            );
+
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
+            if (itm.contains("genre_id"))
+                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+        } else {
+            QList<IItem *>::Iterator it_it = items.begin();
+
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
+        }
+
+        pos++;
+    }
+
+    return itemsAmount;
+}
+
+int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
+    int itemsAmount = 0;
+    QJsonObject itm;
+    SoundcloudItem * newItem;
+    QString uri, id, owner;
+    QVariant uid;
+    QList<IItem *> items;
+    bool original;
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
+    QJsonArray::Iterator it = collection.begin();
+
+    for(; it != collection.end(); it++) {
+        itm = (*it).toObject();
+
+        if (itm.isEmpty()) continue;
+
+        id = QString::number(itm.value("id").toInt());
+        owner = QString::number(itm.value("user_id").toInt());
+        uid = WebItem::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
+
+        uri = itm.value("download_url").toString();
+        if (uri.isEmpty()) {
+            uri = itm.value("stream_url").toString();
+            original = false;
+        } else { original = true;}
+        if (uri.isEmpty()) continue;
+
+        items = store.values(uid.toString());
+
+        if (items.isEmpty()) {
+            itemsAmount++;
+            newItem = new SoundcloudItem(
+                id,
+                uri,
+                itm.value("title").toString(),
+                parent
+            );
+
+            newItem -> setVideoPath(itm.value("video_url").toString());
+            newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
+
+//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
+            if (itm.contains("genre_id"))
+                newItem -> setGenre(itm.value("genre_id").toInt());
+        } else {
+            QList<IItem *>::Iterator it_it = items.begin();
+
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
+        }
+    }
+
+    return itemsAmount;
+}
+
 bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;
 
@@ -380,6 +496,35 @@ void IModel::shuffle() {
 void IModel::copyTitleToClipboard(const QModelIndex & index) {
     if (index.isValid())
         QApplication::clipboard() -> setText(index.data().toString());
+}
+
+void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
+    QString ret = "";
+
+    for(QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); it++) {
+        IItem * itm = item(*it);
+        QString ident;
+
+        switch(itm -> itemType()) {
+            case VK_ITEM: {
+                ident = "vk";
+            break;}
+            case SOUNDCLOUD_ITEM: {
+                ident = "sc";
+            break;}
+        }
+
+        if (!ident.isEmpty()) {
+            QVariant uid = itm -> toUid();
+            if (uid.isValid())
+                ret += "," + (ident) + "|" + uid.toString();
+        }
+    }
+
+    if (!ret.isEmpty())
+        ret = ret.mid(1);
+
+    QApplication::clipboard() -> setText(ret);
 }
 
 void IModel::expandeAll() {
