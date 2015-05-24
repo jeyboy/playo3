@@ -127,7 +127,7 @@ double MetricSlider::valToPos(int pos) const {
 void MetricSlider::calcGrid() {
     path = QPainterPath();
 
-    int multiplyer = 1, step_val = tickInterval();
+    int multiplyer = 1, step_val = tickInterval(), vall_offset = tickInterval() < 60000 ? 10 : 1;
     double start_point = valToPos(0), step;
 
     QString strNum;
@@ -143,7 +143,7 @@ void MetricSlider::calcGrid() {
             step = valToPos(step_val * ++multiplyer) - start_point;
 
         int center = rect().center().y() + point_radius / 2;
-        for(double pos = bodyRect.x() + halfHandle / 2 + step, val = 1; pos <= bodyRect.width(); pos += step, val++) {
+        for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos <= bodyRect.width(); pos += step, val += vall_offset) {
             if (!Settings::instance() -> isMetricNumero()) {
                 path.addEllipse(QPoint(pos, center), point_radius, point_radius);
             } else {
@@ -160,7 +160,7 @@ void MetricSlider::calcGrid() {
 
         int center = rect().center().x() + point_radius / 2;
 
-        for(double pos = bodyRect.bottom() - halfHandle / 2 - step, val = 1; pos > bodyRect.y(); pos -= step, val++) {
+        for(double pos = bodyRect.bottom() - halfHandle / 2 - step, val = vall_offset; pos > bodyRect.y(); pos -= step, val += vall_offset) {
             if (!Settings::instance() -> isMetricNumero()) {
                 path.addEllipse(QPoint(center, pos), point_radius, point_radius);
             } else {

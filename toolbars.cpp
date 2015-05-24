@@ -295,7 +295,6 @@ QToolBar * ToolBars::createPositionMediaBar() {
     QToolBar * ptb = precreateToolBar("Media+Position", true);
 
     slider = new MetricSlider(ptb);
-    slider -> setTickInterval(60000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
 

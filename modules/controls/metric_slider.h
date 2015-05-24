@@ -21,6 +21,11 @@ namespace Playo3 {
         }
         inline void setMaximum(int max) {
             ClickableSlider::setMaximum(max);
+            if (max <= 60000)
+                setTickInterval(10000);
+            else
+                setTickInterval(60000);
+
             calcGrid();
             repaint();
         }
