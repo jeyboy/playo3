@@ -123,7 +123,8 @@ SOURCES += main.cpp\
     modules/data_struct/search/search_view.cpp \
     modules/data_struct/web/vk/vk_rel_model.cpp \
     modules/data_struct/web/vk/vk_rel_view.cpp \
-    modules/controls/search_bar.cpp
+    modules/controls/search_bar.cpp \
+    dialogs/export_dialog.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -245,7 +246,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_rel_view.h \
     modules/data_struct/web/vk/vk_rel_types.h \
     modules/controls/search_bar.h \
-    misc/autorun.h
+    misc/autorun.h \
+    dialogs/export_dialog.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
@@ -256,7 +258,8 @@ FORMS    += playo.ui \
     dialogs/extension_dialog.ui \
     dialogs/web_dialog.ui \
     dialogs/relations_dialog.ui \
-    dialogs/search_dialog.ui
+    dialogs/search_dialog.ui \
+    dialogs/export_dialog.ui
 
 RESOURCES += \
     resources.qrc

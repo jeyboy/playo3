@@ -743,3 +743,19 @@ void IModel::initiateSearch(SearchSettings params, FolderItem * destination, Fol
         }
     }
 }
+
+FolderItem * IModel::rootForRemote() {
+    switch(containerType()) {
+        case soundcloud:
+        case vk:
+        case vk_rel:
+        case list: {
+            return rootItem;
+        }
+        case search:
+        case tree:
+        case level_tree: {
+            return rootItem -> createFolder(REMOTE_DND_URL);
+        }
+    }
+}

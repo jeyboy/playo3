@@ -76,6 +76,7 @@ namespace Playo3 {
         void initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source = 0);
 
         inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
+        FolderItem * rootForRemote();
     public slots:
         inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
         inline void itemNotSupported(QModelIndex node) {
