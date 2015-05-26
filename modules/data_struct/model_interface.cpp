@@ -540,7 +540,7 @@ void IModel::importIds(QStringList ids) {
         case vk_rel:
         case list: {
             parentNode = rootItem;
-        }
+        break;}
         case search:
         case tree:
         case level_tree: {
@@ -549,8 +549,8 @@ void IModel::importIds(QStringList ids) {
             if (path.isEmpty()) path = Extensions::folderName(file);
             parentNode = rootItem -> folderItem(path);
             is_new = !parentNode;
-            if (!is_new) parentNode = rootItem -> createFolder(path);
-        }
+            if (is_new) parentNode = rootItem -> createFolder(path);
+        break;}
     }
 
     if (is_new) {

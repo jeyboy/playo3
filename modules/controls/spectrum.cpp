@@ -143,7 +143,7 @@ void Spectrum::recalcAttrs() {
             break;
     }
 
-    update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - (verticalPadd() * 2));
+    update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - verticalPadd());
 }
 
 int Spectrum::calcBarCount() {
