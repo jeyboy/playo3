@@ -206,7 +206,7 @@ void SearchModel::proceedTabs(SearchRequest & params) {
 
     QList<void *>::Iterator it = request.tabs.begin();
     for(; it != request.tabs.end(); it++) {
-//        ((IModel *) *it) -> initiateSearch(params, parent);
+        ((IModel *) *it) -> initiateSearch(params, parent);
     }
 }
 

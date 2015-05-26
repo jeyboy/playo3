@@ -11,6 +11,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
     connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));

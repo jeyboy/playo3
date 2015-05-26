@@ -228,9 +228,6 @@ QToolBar * ToolBars::createToolBar(QString name) {
     ptb -> setFloatable(false);
     ptb -> setStyleSheet(Stylesheets::toolbarMovableStyle());
 
-    ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
-    ptb -> setAttribute(Qt::WA_TranslucentBackground, true);
-
     ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
 
@@ -348,8 +345,8 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addAction(QIcon(":/add"), "Add new local tab", Dockbars::instance(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
-//    ptb -> addSeparator();
-//    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
+    ptb -> addSeparator();
+    ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
     ptb -> addSeparator();
     ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
     ptb -> adjustSize();

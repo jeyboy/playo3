@@ -770,7 +770,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     return false;
 }
 
-void IModel::initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source) {
+void IModel::initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source) {
     if (search_source == 0)
         search_source = rootItem;
 
@@ -778,12 +778,12 @@ void IModel::initiateSearch(SearchSettings params, FolderItem * destination, Fol
         if ((*it) -> isContainer()) {
             initiateSearch(params, destination, (FolderItem *) *it);
         } else {
-            bool is_valid = (*it) -> respondTo(params.activePredicate);
+            bool is_valid = (*it) -> respondTo(params.spredicate);
 
             if (is_valid) {
-                if (!params.genres.isEmpty()) {
+                if (!params.sgenre_id != -1) {
                     int genre_id = (*it) -> genreID().toInt();
-                    is_valid |= params.genres.contains(genre_id);
+                    is_valid |= params.sgenre_id == genre_id;
                 }
 
                 if (is_valid) {

@@ -11,6 +11,9 @@ ToolBar::ToolBar(const QString &title, QWidget * parent) : QToolBar(title, paren
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
 //    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
 
+    setAttribute(Qt::WA_NoSystemBackground, true);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
     QLabel * titleLabel = new QLabel(this);
     titleLabel -> setStyleSheet("color: white;");
     QFont f = titleLabel -> font();

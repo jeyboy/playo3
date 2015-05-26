@@ -5,7 +5,6 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QFileInfo>
-#include <qdebug.h>
 
 namespace Playo3 {
     class ToolBar : public QToolBar {

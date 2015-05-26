@@ -74,7 +74,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
         inline QMutex * syncMutex() { return sync; }
 
-        void initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source = 0);
+        void initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source = 0);
 
         inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
     public slots:
