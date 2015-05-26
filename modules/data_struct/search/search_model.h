@@ -21,8 +21,8 @@ namespace Playo3 {
     protected slots:
         void proceedVk(QJsonObject & collection);
         void proceedSoundcloud(QJsonObject & collection);
-        void proceedTabs(SearchSettings params);
-        void proceedMyComputer(SearchSettings params);
+        void proceedTabs(SearchRequest & params);
+        void proceedMyComputer(SearchRequest & params);
     private:
         SearchSettings request;
         QList<SearchRequest> requests;

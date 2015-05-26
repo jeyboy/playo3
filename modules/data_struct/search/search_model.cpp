@@ -63,88 +63,30 @@ void SearchModel::initiateSearch(SearchSettings & params) {
     }
 
     while(!requests.isEmpty()) {
-        requests.takeFirst();
+        SearchRequest r = requests.takeFirst();
+
+        switch(r.search_type) {
+            case SearchRequest::request_vk: {
+                VkApi::instance() -> audioSearch(
+                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), r.spredicate, params.type == artist, params.search_in_own, r.popular
+                );
+            break;}
+            case SearchRequest::request_sc: {
+                SoundcloudApi::instance() -> search(
+                    this, SLOT(proceedSoundcloud(QJsonObject&)), r.spredicate, r.sgenre, r.popular
+                );
+            break;}
+            case SearchRequest::request_computer: {
+                proceedMyComputer(r);
+            break;}
+            case SearchRequest::request_tabs: {
+                proceedTabs(r);
+            break;}
+            case SearchRequest::request_other: {
+
+            break;}
+        }
     }
-
-//    emit moveInProcess();
-
-//    if (!params.predicates.isEmpty()) { // search by predicates
-//        QStringList::Iterator it = params.predicates.begin();
-
-//        for(; it != params.predicates.end(); it++) {
-//            params.activePredicate = *it;
-//            rootItem -> createFolder(*it);
-
-//            if (params.inVk) {
-//                VkApi::instance() -> audioSearch(
-//                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-//                );
-//            }
-
-//            if (params.inTabs) {
-//                proceedTabs(params);
-//            }
-
-//            if (params.inComputer) {
-//                proceedMyComputer(params);
-//            }
-
-//            if (params.inSc) {
-//                SoundcloudApi::instance() -> search(
-//                    this, SLOT(proceedSoundcloud(QJsonObject&)), *it, "genre", params.popular
-//                );
-//            }
-
-//            if (params.inOther) {
-
-//            }
-//        }
-//    } else { // search by styles only
-//        if (!params.genres.isEmpty()) {
-//            QList<int>::Iterator it = params.genres.keys().begin();
-//            QList<int>::Iterator it_end = params.genres.keys().end();
-
-//            for(; it != it_end; it++) {
-//                qDebug() << "GENRE" << (*it);
-//                params.activePredicate = *it;
-//                rootItem -> createFolder(MusicGenres::instance() -> toString(*it));
-
-//                if (params.inVk) {
-//    //                VkApi::instance() -> audioSearch(
-//    //                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-//    //                );
-//                }
-
-//                if (params.inTabs) {
-//                    proceedTabs(params);
-//                }
-
-//                if (params.inComputer) {
-//                    proceedMyComputer(params);
-//                }
-
-//                if (params.inSc) {}
-
-//                if (params.inOther) {}
-//            }
-//        } else if (params.popular) {  // returns popular
-//            if (params.inVk) {
-////                VkApi::instance() -> audioSearch(
-////                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), *it, params.type == artist, params.search_in_own, params.popular
-////                );
-//            }
-
-////            if (params.inTabs) {
-////                proceedTabs(params);
-////            }
-
-////            if (params.inComputer) {}
-
-//            if (params.inSc) {}
-
-//            if (params.inOther) {}
-//        }
-//    }
 }
 
 void SearchModel::proceedVk(QJsonObject & objects) {
@@ -258,25 +200,25 @@ void SearchModel::proceedSoundcloud(QJsonObject & objects) {
     emit moveOutProcess();
 }
 
-void SearchModel::proceedTabs(SearchSettings params) {
-    FolderItem * pred_root = rootItem -> createFolder(params.activePredicate);
+void SearchModel::proceedTabs(SearchRequest & params) {
+    FolderItem * pred_root = rootItem -> createFolder(params.spredicate);
     FolderItem * parent = pred_root -> createFolder<VkFolder>("", "Tabs");
 
-    QList<void *>::Iterator it = params.tabs.begin();
-    for(; it != params.tabs.end(); it++) {
-        ((IModel *) *it) -> initiateSearch(params, parent);
+    QList<void *>::Iterator it = request.tabs.begin();
+    for(; it != request.tabs.end(); it++) {
+//        ((IModel *) *it) -> initiateSearch(params, parent);
     }
 }
 
-void SearchModel::proceedMyComputer(SearchSettings params) {
+void SearchModel::proceedMyComputer(SearchRequest & params) {
     FolderItem * parent = new FolderItem("My computer");
 
     QStringList filters;
-    filters << params.activePredicate;
+    filters << params.spredicate;
 
     qDebug() << filters;
 
-    for(QStringList::Iterator it = params.drives.begin(); it != params.drives.end(); it++) {
+    for(QStringList::Iterator it = request.drives.begin(); it != request.drives.end(); it++) {
         QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
 
         while(dir_it.hasNext()) {

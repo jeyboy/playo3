@@ -66,6 +66,7 @@ namespace Playo3 {
         bool isCompact;
         QMargins hMargins;
         Spinner * spinner;
+        QRect baseSize;
     };
 }
 
