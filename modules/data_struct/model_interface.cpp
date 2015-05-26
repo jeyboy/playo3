@@ -524,6 +524,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
 }
 
 void IModel::importIds(QStringList ids) {
+    emit moveInBackgroundProcess();
     QHash<QString, QStringList> uidsMap;
 
     for(QStringList::Iterator it = ids.begin(); it != ids.end(); it++) {
@@ -574,6 +575,7 @@ void IModel::importIds(QStringList ids) {
     }
 
     endInsertRows();
+    emit moveOutBackgroundProcess();
 }
 
 void IModel::expandeAll() {
