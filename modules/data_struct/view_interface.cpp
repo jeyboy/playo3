@@ -202,6 +202,12 @@ void IView::copyToClipboard() {
     mdl -> copyTitleToClipboard(ind);
 }
 
+void IView::importIds() {
+    ExportDialog d(this);
+    if (d.exec() == QDialog::Accepted)
+        mdl -> importIds(d.getUids());
+}
+
 void IView::copyIdsToClipboard() {
     QModelIndexList indexes = selectedIndexes();
     mdl -> copyIdsToClipboard(indexes);
@@ -360,13 +366,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         act -> setSeparator(true);
     }
 
+    actions.append((act = new QAction(QIcon(":/import"), "Import Ids", this)));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(importIds()));
+
     if (mdl -> rowCount() > 0) {
         if (!selectedIndexes().isEmpty()) {
             actions.append((act = new QAction(QIcon(":/export"), "Copy Ids to Clipboard", this)));
             connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
-
-//            actions.append((act = new QAction(QIcon(":/import"), "Import Ids", this)));
-//            connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
 
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);

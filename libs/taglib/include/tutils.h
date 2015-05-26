@@ -44,11 +44,6 @@
 # include <sys/endian.h>
 #endif
 
-#include "tstring.h"
-#include <cstdio>
-#include <cstdarg>
-#include <cstring>
-
 namespace TagLib
 {
   namespace Utils
@@ -150,47 +145,6 @@ namespace TagLib
 #endif
     }
 
-    inline String formatString(const char *format, ...)
-    {
-      // Sufficient buffer size for the current internal uses.
-      // Consider changing this value when you use this function.
-
-      static const size_t BufferSize = 128;
-
-      va_list args;
-      va_start(args, format);
-
-      char buf[BufferSize];
-      int length;
-
-#if defined(HAVE_SNPRINTF)
-
-      length = vsnprintf(buf, BufferSize, format, args);
-
-#elif defined(HAVE_SPRINTF_S)
-
-      length = vsprintf_s(buf, format, args);
-
-#else
-
-      // The last resort. May cause a buffer overflow.
-
-      length = vsprintf(buf, format, args);
-      if(length >= BufferSize) {
-        debug("Utils::formatString() - Buffer overflow! Returning an empty string.");
-        length = -1;
-      }
-
-#endif
-
-      va_end(args);
-
-      if(length != -1)
-        return String(buf);
-      else
-        return String::null;
-    }
-
     enum ByteOrder
     {
       LittleEndian,
@@ -201,11 +155,11 @@ namespace TagLib
 
 # if SYSTEM_BYTEORDER == 1
 
-    const ByteOrder SystemByteOrder = LittleEndian;
+    const ByteOrder SystemByteOrder = LittleEndian; 
 
 # else
 
-    const ByteOrder SystemByteOrder = BigEndian;
+    const ByteOrder SystemByteOrder = BigEndian; 
 
 # endif
 
@@ -224,40 +178,8 @@ namespace TagLib
       else
         return BigEndian;
     }
-
-    const ByteOrder SystemByteOrder = systemByteOrder();
-
-#endif
-
-#ifdef FLOAT_BYTEORDER
-
-# if FLOAT_BYTEORDER == 1
-
-    const ByteOrder FloatByteOrder = LittleEndian;
-
-# else
-
-    const ByteOrder FloatByteOrder = BigEndian;
-
-# endif
-
-#else
-
-    inline ByteOrder floatByteOrder()
-    {
-        double bin[] = {
-            // "*TAGLIB*" encoded as a little-endian floating-point number
-            (double) 3.9865557444897601e-105, (double) 0.0
-        };
-
-        char *str = (char*)&bin[0];
-        if(strncmp(&str[1], "TAGLIB", 6) == 0)
-          return LittleEndian;
-        else
-          return BigEndian;
-    }
-
-    const ByteOrder FloatByteOrder = floatByteOrder();
+    
+    const ByteOrder SystemByteOrder = systemByteOrder(); 
 
 #endif
   }

@@ -247,7 +247,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_rel_types.h \
     modules/controls/search_bar.h \
     misc/autorun.h \
-    dialogs/export_dialog.h
+    dialogs/export_dialog.h \
+    modules/web/web_apis.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

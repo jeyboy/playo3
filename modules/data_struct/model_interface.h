@@ -8,7 +8,8 @@
 #include <qdesktopservices.h>
 #include <qdebug.h>
 
-#include "modules/web/socials_api/vk_api.h"
+#include "modules/web/web_apis.h"
+
 #include "modules/data_struct/search/search_settings.h"
 #include "misc/file_utils/extensions.h"
 #include "item_index.h"
@@ -76,7 +77,6 @@ namespace Playo3 {
         void initiateSearch(SearchSettings params, FolderItem * destination, FolderItem * search_source = 0);
 
         inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
-        FolderItem * rootForRemote();
     public slots:
         inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
         inline void itemNotSupported(QModelIndex node) {
@@ -87,6 +87,7 @@ namespace Playo3 {
 
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);
+        void importIds(QStringList ids);
 
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);

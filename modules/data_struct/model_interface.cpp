@@ -506,12 +506,8 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         QString ident;
 
         switch(itm -> itemType()) {
-            case VK_ITEM: {
-                ident = "vk";
-            break;}
-            case SOUNDCLOUD_ITEM: {
-                ident = "sc";
-            break;}
+            case VK_ITEM: { ident = SHARE_TYPE_VK; break;}
+            case SOUNDCLOUD_ITEM: { ident = SHARE_TYPE_SOUNDCLOUD; break;}
         }
 
         if (!ident.isEmpty()) {
@@ -525,6 +521,55 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         ret = ret.mid(1);
 
     QApplication::clipboard() -> setText(ret);
+}
+
+void IModel::importIds(QStringList ids) {
+    QHash<QString, QStringList> uidsMap;
+
+    for(QStringList::Iterator it = ids.begin(); it != ids.end(); it++) {
+        uidsMap[(*it).mid(0, 2)].append((*it).mid(2));
+    }
+
+    FolderItem * parentNode;
+    bool is_new = false;
+
+
+    switch(containerType()) {
+        case soundcloud:
+        case vk:
+        case vk_rel:
+        case list: {
+            parentNode = rootItem;
+        }
+        case search:
+        case tree:
+        case level_tree: {
+            QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
+            QString path = file.path();
+            if (path.isEmpty()) path = Extensions::folderName(file);
+            parentNode = rootItem -> folderItem(path);
+            is_new = !parentNode;
+            if (!is_new) parentNode = rootItem -> createFolder(path);
+        }
+    }
+
+    if (is_new) {
+        beginInsertRows(index(parentNode -> parent()), parentNode -> row(), ids.size());
+    } else {
+        beginInsertRows(index(parentNode), parentNode -> childCount(), parentNode -> childCount() + ids.size() - 1);
+    }
+
+    for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
+        if (map_it.key() == SHARE_TYPE_VK) {
+            QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+            proceedVkList(obj, parentNode);
+        } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
+            QJsonArray obj = SoundcloudApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+            proceedScList(obj, parentNode);
+        }
+    }
+
+    endInsertRows();
 }
 
 void IModel::expandeAll() {
@@ -740,22 +785,6 @@ void IModel::initiateSearch(SearchSettings params, FolderItem * destination, Fol
                     new FileItem(attrs, destination);
                 }
             }
-        }
-    }
-}
-
-FolderItem * IModel::rootForRemote() {
-    switch(containerType()) {
-        case soundcloud:
-        case vk:
-        case vk_rel:
-        case list: {
-            return rootItem;
-        }
-        case search:
-        case tree:
-        case level_tree: {
-            return rootItem -> createFolder(REMOTE_DND_URL);
         }
     }
 }

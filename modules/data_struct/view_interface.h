@@ -10,6 +10,7 @@
 
 #include "model_interface.h"
 #include "dialogs/tabdialog.h"
+#include "dialogs/export_dialog.h"
 
 #include "view_settings.h"
 #include "misc/settings.h"
@@ -93,6 +94,7 @@ namespace Playo3 {
         void openLocation();
         void copyToClipboard();
         void copyIdsToClipboard();
+        void importIds();
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();

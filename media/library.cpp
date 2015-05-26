@@ -393,7 +393,7 @@ void Library::initItemData(IItem * itm) {
     if (has_titles && has_info) return;
 
     MediaInfo m(itm -> toUrl(), itm -> extension().isValid(), has_info);
-
+    if (m.hasError()) return;
     if (!has_titles) initItemTitles(&m, itm);
     if (!has_info) initItemInfo(&m, itm);
 }

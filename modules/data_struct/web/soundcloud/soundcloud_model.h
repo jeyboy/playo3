@@ -1,7 +1,6 @@
 #ifndef SOUNDCLOUD_MODEL_H
 #define SOUNDCLOUD_MODEL_H
 
-#include "modules/web/socials_api/soundcloud_api.h"
 #include "modules/data_struct/web/web_model.h"
 #include "media/duration.h"
 

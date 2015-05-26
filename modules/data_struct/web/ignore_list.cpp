@@ -1,4 +1,5 @@
 #include "ignore_list.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -21,6 +22,7 @@ void IgnoreList::ignoreListRemoveUid(QVariant uid) {
     list.removeAll(uid);
 }
 bool IgnoreList::ignoreListContainUid(QVariant uid) {
+    qDebug() << "IN IGNORE";
     return list.contains(uid);
 }
 
