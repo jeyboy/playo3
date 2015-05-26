@@ -513,7 +513,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         if (!ident.isEmpty()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret += "," + (ident) + "|" + uid.toString();
+                ret += "," + (ident) + uid.toString();
         }
     }
 
@@ -530,9 +530,8 @@ void IModel::importIds(QStringList ids) {
         uidsMap[(*it).mid(0, 2)].append((*it).mid(2));
     }
 
-    FolderItem * parentNode;
+    FolderItem * parentNode = 0;
     bool is_new = false;
-
 
     switch(containerType()) {
         case soundcloud:
@@ -553,10 +552,15 @@ void IModel::importIds(QStringList ids) {
         break;}
     }
 
+    if (!parentNode)
+        qDebug() << "UNDEF FOLDER";
+
     if (is_new) {
-        beginInsertRows(index(parentNode -> parent()), parentNode -> row(), ids.size());
+        int from = parentNode -> row();
+        beginInsertRows(index(parentNode -> parent()), from, from + ids.size() - 1);
     } else {
-        beginInsertRows(index(parentNode), parentNode -> childCount(), parentNode -> childCount() + ids.size() - 1);
+        int from = parentNode -> childCount();
+        beginInsertRows(index(parentNode), from, from + ids.size() - 1);
     }
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {

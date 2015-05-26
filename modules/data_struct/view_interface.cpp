@@ -294,6 +294,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     act -> setSeparator(true);
 
     actions.append((act = new QAction(QIcon(":/search"), "Find", this)));
+    act -> setShortcut(QKeySequence(tr("Ctrl+F", "Find items")));
     connect(act, SIGNAL(triggered(bool)), parent(), SLOT(showSearch()));
 
     actions.append((act = new QAction(this)));
@@ -367,11 +368,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     }
 
     actions.append((act = new QAction(QIcon(":/import"), "Import Ids", this)));
+    act -> setShortcut(QKeySequence(tr("Ctrl+Shift+V", "Insert ids")));
     connect(act, SIGNAL(triggered(bool)), this, SLOT(importIds()));
 
     if (mdl -> rowCount() > 0) {
         if (!selectedIndexes().isEmpty()) {
             actions.append((act = new QAction(QIcon(":/export"), "Copy Ids to Clipboard", this)));
+            act -> setShortcut(QKeySequence(tr("Ctrl+Shift+C", "Copy ids")));
             connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
 
             actions.append((act = new QAction(this)));
@@ -736,6 +739,10 @@ void IView::keyPressEvent(QKeyEvent * event) {
         removeSelectedItems();
     else if (event -> key() == Qt::Key_F && event -> modifiers() & Qt::CTRL)
         ((DockBar *)parent()) -> showSearch();
+    else if (event -> key() == Qt::Key_C && event -> modifiers() & Qt::CTRL && event -> modifiers() & Qt::SHIFT)
+        copyIdsToClipboard();
+    else if (event -> key() == Qt::Key_V && event -> modifiers() & Qt::CTRL && event -> modifiers() & Qt::SHIFT)
+        importIds();
     else QTreeView::keyPressEvent(event);
 }
 

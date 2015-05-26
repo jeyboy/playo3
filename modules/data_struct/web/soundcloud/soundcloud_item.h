@@ -18,6 +18,7 @@ namespace Playo3 {
             return url;
         }
 
+        inline QVariant toUid() { return uid(); }
         inline int itemType() const { return SOUNDCLOUD_ITEM; }
         bool removePhysicalObject();
 
