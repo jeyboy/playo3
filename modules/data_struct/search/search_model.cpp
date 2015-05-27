@@ -40,7 +40,15 @@ void SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent)
 }
 
 void SearchModel::searchFinished() {
+    QFutureWatcher<QList<FolderItem *> > * watcher = (QFutureWatcher<QList<FolderItem *> > *)sender();
+    QList<FolderItem *> folders = watcher -> result();
 
+    beginInsertRows(QModelIndex(), 0, folders.count());
+        for(QList<FolderItem *>::Iterator it = folders.begin(); it != folders.end(); it++)
+            rootItem -> linkNode(*it);
+    endInsertRows();
+
+    delete watcher;
 }
 
 QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher) {
@@ -55,11 +63,11 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
     qDebug() << "SEARCH PREDICATES" << request.predicates;
     qDebug() << "SEARCH TABS" << request.tabs;
 
-    if (request.inVk) res.insert(SearchRequest::request_vk, rootItem -> createFolder("VK"));
-    if (request.inTabs) res.insert(SearchRequest::request_tabs, rootItem -> createFolder("Tabs"));
-    if (request.inComputer) res.insert(SearchRequest::request_computer, rootItem -> createFolder("Computer"));
-    if (request.inSc) res.insert(SearchRequest::request_sc, rootItem -> createFolder("SC"));
-    if (request.inOther) res.insert(SearchRequest::request_other, rootItem -> createFolder("OTHER"));
+    if (request.inVk) res.insert(SearchRequest::request_vk, new FolderItem("VK"));
+    if (request.inTabs) res.insert(SearchRequest::request_tabs, new FolderItem("Tabs"));
+    if (request.inComputer) res.insert(SearchRequest::request_computer, new FolderItem("Computer"));
+    if (request.inSc) res.insert(SearchRequest::request_sc, new FolderItem("SC"));
+    if (request.inOther) res.insert(SearchRequest::request_other, new FolderItem("Other"));
 
     if (!request.predicates.isEmpty()) { // search by predicates
         for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {

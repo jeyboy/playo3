@@ -1,12 +1,10 @@
 #ifndef ITEM_INTERFACE
 #define ITEM_INTERFACE
 
+#include <qdebug.h>
 #include <qlist.h>
 #include <qdesktopservices.h>
 #include <qurl>
-
-////    #include "media/library.h"
-////    #include "media/player.h"
 
 #include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"
@@ -71,6 +69,11 @@ namespace Playo3 {
 //            return m.hasMatch();
 
             return predicate.isEmpty() || title().toString().contains(predicate, Qt::CaseInsensitive);
+        }
+
+        inline void setParent(FolderItem * pNode) {
+            if (_parent != 0) qDebug() << "Parent already setted";
+            _parent = pNode;
         }
     protected:
         FolderItem * _parent;

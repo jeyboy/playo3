@@ -15,7 +15,7 @@ namespace Playo3 {
         FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         ~FolderItem();
 
-//        void registerFolderItem(FolderItem * parent);
+        void linkNode(FolderItem * node);
 
         void accumulateUids(QHash<QString, IItem *> & store);
         QVariantList childrenUids(int position, int count);

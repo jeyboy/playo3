@@ -88,6 +88,12 @@ FolderItem::~FolderItem() {
         removePhysicalObject();
 }
 
+void FolderItem::linkNode(FolderItem * node) {
+    node -> setParent(this);
+    declareFolder(node -> folderUid(), node);
+    declareChild(node);
+}
+
 void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
     QList<IItem *>::Iterator it = children.begin();
     QVariant item_uid;
