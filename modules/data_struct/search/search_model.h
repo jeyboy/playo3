@@ -19,13 +19,13 @@ namespace Playo3 {
 
         void initiateSearch(SearchSettings & params);
     protected slots:
-        void proceedVk(QJsonObject & collection);
-        void proceedSoundcloud(QJsonObject & collection);
-        void proceedTabs(SearchRequest & params);
-        void proceedMyComputer(SearchRequest & params);
+        void proceedTabs(SearchRequest & params, FolderItem * parent);
+        void proceedMyComputer(SearchRequest & params, FolderItem * parent);
+        void searchFinished();
     private:
+        QList<FolderItem *> searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher);
+
         SearchSettings request;
-        QList<SearchRequest> requests;
     };
 }
 

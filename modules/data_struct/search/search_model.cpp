@@ -9,13 +9,57 @@ SearchModel::~SearchModel() {}
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
+    QFutureWatcher<QList<FolderItem *> > * initiator = new QFutureWatcher<QList<FolderItem *> >();
+    connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
+    initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
+}
+
+void SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
+    QList<void *>::Iterator it = request.tabs.begin();
+    for(; it != request.tabs.end(); it++) {
+        ((IModel *) *it) -> initiateSearch(params, parent);
+    }
+}
+
+void SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) {
+    QStringList filters;
+    filters << params.spredicate;
+
+    qDebug() << "OS" << filters;
+
+    for(QStringList::Iterator it = request.drives.begin(); it != request.drives.end(); it++) {
+        QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
+
+        while(dir_it.hasNext()) {
+            qDebug() << "COMP FIND" << dir_it.next();
+            new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
+        }
+    }
+
+    qDebug() << "SOSA";
+}
+
+void SearchModel::searchFinished() {
+
+}
+
+QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher) {
+    QList<SearchRequest> requests;
+    QHash<int, FolderItem *> res;
+
     emit moveInBackgroundProcess();
 
-    qDebug() << "SEARCH DRIVES" << params.drives;
-    qDebug() << "SEARCH GENRES" << params.genres;
-    qDebug() << "SEARCH VK GENRES" << params.vkGenres;
-    qDebug() << "SEARCH PREDICATES" << params.predicates;
-    qDebug() << "SEARCH TABS" << params.tabs;
+    qDebug() << "SEARCH DRIVES" << request.drives;
+    qDebug() << "SEARCH GENRES" << request.genres;
+    qDebug() << "SEARCH VK GENRES" << request.vkGenres;
+    qDebug() << "SEARCH PREDICATES" << request.predicates;
+    qDebug() << "SEARCH TABS" << request.tabs;
+
+    if (params.inVk) res.insert(SearchRequest::request_vk, rootItem -> createFolder("VK"));
+    if (params.inTabs) res.insert(SearchRequest::request_tabs, rootItem -> createFolder("Tabs"));
+    if (params.inComputer) res.insert(SearchRequest::request_computer, rootItem -> createFolder("Computer"));
+    if (params.inSc) res.insert(SearchRequest::request_sc, rootItem -> createFolder("SC"));
+    if (params.inOther) res.insert(SearchRequest::request_other, rootItem -> createFolder("OTHER"));
 
     if (!params.predicates.isEmpty()) { // search by predicates
         for(QStringList::Iterator it = params.predicates.begin(); it != params.predicates.end(); it++) {
@@ -64,168 +108,33 @@ void SearchModel::initiateSearch(SearchSettings & params) {
 
     while(!requests.isEmpty()) {
         SearchRequest r = requests.takeFirst();
+        FolderItem * parent = res.value(r.search_type) -> createFolder(r.token());
 
         switch(r.search_type) {
             case SearchRequest::request_vk: {
-                VkApi::instance() -> audioSearch(
-                    this, SLOT(proceedVk(QJsonObject &)), VkApi::instance() -> getUserID(), r.spredicate, params.type == artist, params.search_in_own, r.popular
-                );
+                QJsonArray items = VkApi::instance() -> audioSearchSync(
+                    this, VkApi::instance() -> getUserID(), r.spredicate, params.type == artist, params.search_in_own, r.popular
+                ).value("audio_list").toArray();
+                proceedVkList(items, parent);
             break;}
             case SearchRequest::request_sc: {
-                SoundcloudApi::instance() -> search(
-                    this, SLOT(proceedSoundcloud(QJsonObject&)), r.spredicate, r.sgenre, r.popular
-                );
+                QJsonArray items = SoundcloudApi::instance() -> searchAudioSync(
+                    this, r.spredicate, r.sgenre, r.popular
+                ).value("audio_list").toArray();
+                proceedScList(items, parent);
             break;}
             case SearchRequest::request_computer: {
-                proceedMyComputer(r);
+                proceedMyComputer(r, parent);
             break;}
             case SearchRequest::request_tabs: {
-                proceedTabs(r);
+                proceedTabs(r, parent);
             break;}
             case SearchRequest::request_other: {
-
+                //TODO: realize
             break;}
         }
     }
-}
 
-void SearchModel::proceedVk(QJsonObject & objects) {
-    QJsonArray collection = objects.value("audio_list").toArray();
-    if (collection.isEmpty())
-        return;
-
-    int itemsAmount = 0;
-    QJsonObject itm;
-    VkItem * newItem;
-    QString uri, id, owner;
-    QVariant uid;
-
-    QString predicate = objects.value("predicate").toString();
-    FolderItem * pred_root = rootItem -> createFolder(predicate);
-    FolderItem * parent = pred_root -> createFolder<VkFolder>("", "VK");
-    QJsonArray::Iterator it = collection.begin();
-
-    beginInsertRows(index(pred_root), parent -> row(), parent -> row());
-        for(; it != collection.end(); it++) {
-            itm = (*it).toObject();
-
-            if (itm.isEmpty()) continue;
-            int genre_id = itm.value("genre_id").toInt();
-
-            if (!request.vkGenres.isEmpty() && !request.vkGenres.contains(genre_id)) continue;
-
-            id = QString::number(itm.value("id").toInt());
-            owner = QString::number(itm.value("owner_id").toInt());
-            uid = WebItem::toUid(owner, id);
-
-            uri = itm.value("url").toString();
-            uri = uri.section('?', 0, 0); // remove extra info from url
-
-            itemsAmount++;
-            newItem = new VkItem(
-                id,
-                uri,
-                itm.value("artist").toString() + " - " + itm.value("title").toString(),
-                parent
-            );
-
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-            if (itm.contains("genre_id"))
-                newItem -> setGenre(VkGenres::instance() -> toStandartId(genre_id));
-        }
-
-        parent -> backPropagateItemsCountInBranch(itemsAmount);
-    endInsertRows();
-    emit moveOutProcess();
-}
-
-void SearchModel::proceedSoundcloud(QJsonObject & objects) {
-    QJsonArray collection = objects.value("audio_list").toArray();
-    if (collection.isEmpty())
-        return;
-
-    int itemsAmount = 0;
-    QJsonObject itm;
-    SoundcloudItem * newItem;
-    QString uri, id, owner;
-    QVariant uid;
-    bool original;
-
-    QString predicate = objects.value("predicate").toString();
-    FolderItem * pred_root = rootItem -> createFolder(predicate);
-    FolderItem * parent = pred_root -> createFolder<SoundcloudFolder>("", "Soundcloud");
-    QJsonArray::Iterator it = collection.begin();
-
-    beginInsertRows(index(pred_root), parent -> row(), parent -> row());
-        for(; it != collection.end(); it++) {
-            itm = (*it).toObject();
-
-            if (itm.isEmpty()) continue;
-            int genre_id = itm.value("genre_id").toInt(-1);
-
-            if (!request.genres.isEmpty() && !request.genres.contains(genre_id)) continue;
-
-            id = QString::number(itm.value("id").toInt());
-            owner = QString::number(itm.value("user_id").toInt());
-            uid = WebItem::toUid(owner, id);
-
-            uri = itm.value("download_url").toString();
-            if (uri.isEmpty()) {
-                uri = itm.value("stream_url").toString();
-                original = false;
-            } else { original = true;}
-            if (uri.isEmpty()) continue;
-
-
-            itemsAmount++;
-            newItem = new SoundcloudItem(
-                id,
-                uri,
-                itm.value("title").toString(),
-                parent
-            );
-
-            newItem -> setVideoPath(itm.value("video_url").toString());
-            newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
-
-            if (genre_id != -1)
-                newItem -> setGenre(genre_id);
-        }
-
-        parent -> backPropagateItemsCountInBranch(itemsAmount);
-    endInsertRows();
-    emit moveOutProcess();
-}
-
-void SearchModel::proceedTabs(SearchRequest & params) {
-    FolderItem * pred_root = rootItem -> createFolder(params.spredicate);
-    FolderItem * parent = pred_root -> createFolder<VkFolder>("", "Tabs");
-
-    QList<void *>::Iterator it = request.tabs.begin();
-    for(; it != request.tabs.end(); it++) {
-        ((IModel *) *it) -> initiateSearch(params, parent);
-    }
-}
-
-void SearchModel::proceedMyComputer(SearchRequest & params) {
-    FolderItem * parent = new FolderItem("My computer");
-
-    QStringList filters;
-    filters << params.spredicate;
-
-    qDebug() << "OS" << filters;
-
-    for(QStringList::Iterator it = request.drives.begin(); it != request.drives.end(); it++) {
-        QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
-
-        while(dir_it.hasNext()) {
-            qDebug() << "COMP FIND" << dir_it.next();
-            new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
-        }
-    }
-
-    qDebug() << "SOSA";
+    emit moveOutBackgroundProcess();
+    return res;
 }

@@ -157,11 +157,18 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
     return func;
 }
 
-void SoundcloudApi::search(const QObject * receiver, const char * respSlot, QString predicate, QString genre, bool popular) {
-    startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, QString()), predicate, genre, popular));
+void SoundcloudApi::searchAudio(const QObject * receiver, const char * respSlot, QString predicate, QString genre, bool popular) {
+    startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchAudioRoutine, new ApiFuncContainer(receiver, respSlot, QString()), predicate, genre, popular));
 }
 
-ApiFuncContainer * SoundcloudApi::searchRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular) {
+QJsonObject SoundcloudApi::searchAudioSync(const QObject * receiver, QString predicate, QString genre, bool popular) {
+    ApiFuncContainer * func = searchAudioRoutine(new ApiFuncContainer(receiver, 0, QString()), predicate, genre, popular);
+    QJsonObject res = func -> result;
+    delete func;
+    return res;
+}
+
+ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular) {
     CustomNetworkAccessManager * netManager = createManager();
     QNetworkReply * m_http;
 

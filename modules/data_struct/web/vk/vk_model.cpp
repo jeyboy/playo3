@@ -142,61 +142,6 @@ void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }
 
-//int VkModel::proceedAudioList(QJsonArray & collection, FolderItem * parent) {
-//    int itemsAmount = 0;
-//    QJsonObject itm;
-//    VkItem * newItem;
-//    QString uri, id, owner;
-//    QVariant uid;
-//    QList<IItem *> items;
-
-//    QHash<QString, IItem *> store;
-//    parent -> accumulateUids(store);
-
-//    QJsonArray::Iterator it = collection.begin();
-
-//    for(int pos = parent -> foldersAmount(); it != collection.end(); it++) {
-//        itm = (*it).toObject();
-
-//        if (itm.isEmpty()) continue;
-
-//        id = QString::number(itm.value("id").toInt());
-//        owner = QString::number(itm.value("owner_id").toInt());
-//        uid = WebItem::toUid(owner, id);
-//        if (ignoreListContainUid(uid)) continue;
-
-//        uri = itm.value("url").toString();
-//        uri = uri.section('?', 0, 0); // remove extra info from url
-
-//        items = store.values(uid.toString());
-
-//        if (items.isEmpty()) {
-//            itemsAmount++;
-//            newItem = new VkItem(
-//                id,
-//                uri,
-//                itm.value("artist").toString() + " - " + itm.value("title").toString(),
-//                parent,
-//                pos
-//            );
-
-//            newItem -> setOwner(owner);
-//            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-//            if (itm.contains("genre_id"))
-//                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
-//        } else {
-//            QList<IItem *>::Iterator it_it = items.begin();
-
-//            for(; it_it != items.end(); it_it++)
-//                (*it_it) -> setPath(uri);
-//        }
-
-//        pos++;
-//    }
-
-//    return itemsAmount;
-//}
-
 //void VkModel::proceedAudioListUpdate(QJsonObject & obj, QHash<ModelItem *, QString> & collation) {
 //    QJsonObject iterObj;
 //    QJsonArray ar = obj.value("response").toArray();

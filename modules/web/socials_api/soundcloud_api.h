@@ -21,7 +21,8 @@ public:
     QJsonObject getAudioInfo(QString audio_uid);
     QJsonObject getAudiosInfo(QStringList audio_uids);
 
-    void search(const QObject * receiver, const char * respSlot, QString predicate = QString(), QString genre = QString(), bool popular = true);
+    void searchAudio(const QObject * receiver, const char * respSlot, QString predicate = QString(), QString genre = QString(), bool popular = true);
+    QJsonObject searchAudioSync(const QObject * receiver, QString predicate = QString(), QString genre = QString(), bool popular = true);
 
     ~SoundcloudApi() { }
 
@@ -37,7 +38,7 @@ public:
 protected:
     ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);
     ApiFuncContainer * getUidInfoRoutine(ApiFuncContainer * func);
-    ApiFuncContainer * searchRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular);
+    ApiFuncContainer * searchAudioRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular);
 
     bool responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func);
     void errorSend(QJsonObject & doc, const QObject * obj);

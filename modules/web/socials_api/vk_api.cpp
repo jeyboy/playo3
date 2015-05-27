@@ -185,7 +185,7 @@ void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, 
     startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), byUser, randomize));
 }
 
-ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
     CustomNetworkAccessManager * netManager = createManager();
 
     QUrl url = VkApiPrivate::audioSearchUrl(
@@ -206,7 +206,14 @@ ApiFuncContainer * VkApi::searchRoutine(ApiFuncContainer * func, QString predica
     return func;
 }
 void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-    startApiCall(QtConcurrent::run(this, &VkApi::searchRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
+    startApiCall(QtConcurrent::run(this, &VkApi::searchAudioRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
+}
+
+QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    ApiFuncContainer * func = searchAudioRoutine(new ApiFuncContainer(receiver, 0, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular);
+    QJsonObject res = func -> result;
+    delete func;
+    return res;
 }
 
 QJsonObject VkApi::getAudiosInfo(QStringList audio_uids) {

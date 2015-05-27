@@ -45,8 +45,6 @@ struct SearchSettings {
     PredicateType type;
     bool popular;
     bool search_in_own;
-
-    QString activePredicate; //remove later
 };
 
 struct SearchRequest {
@@ -66,6 +64,21 @@ struct SearchRequest {
     int sgenre_id;
     bool popular;
     ReuestObject search_type;
+
+    QString token() {
+        bool has_predicate = !spredicate.isEmpty();
+        bool has_genre = !sgenre.isEmpty();
+
+        if (has_predicate) {
+            if (has_genre)
+                return spredicate + " (" + sgenre + ") ";
+            else
+                return spredicate;
+        } else if (has_genre) {
+            return sgenre;
+        }
+        else return "Popular";
+    }
 };
 
 #endif // SEARCH_SETTINGS
