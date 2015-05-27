@@ -1,6 +1,6 @@
 #include "spinner.h"
 
-Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent) : QWidget(parent),
+Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent, bool fixed_size) : QWidget(parent),
         spineWidth(spinner_width < 30 ? 4 : 10), spinePad(spinner_width < 30 ? 0 : 2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
         w(spinner_width), h(spinner_height), clearPen(0), spinePen(0), img_text(0) {
 
@@ -28,7 +28,8 @@ Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * 
     spinePen -> setCosmetic(true);
     spinePen -> setCapStyle(Qt::RoundCap);
 
-    setFixedSize(w + 2, h + 2);
+    if (fixed_size)
+        setFixedSize(w + 2, h + 2);
 
     setValue(SPINNER_IS_CONTINIOUS); // start from continious state
 }

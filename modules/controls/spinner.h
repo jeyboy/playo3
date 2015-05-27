@@ -13,7 +13,7 @@
 class Spinner : public QWidget {
     Q_OBJECT
 public:
-    Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent = 0);
+    Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent = 0, bool fixed_size = false);
     ~Spinner();
 public slots:
     void setValue(int percent);

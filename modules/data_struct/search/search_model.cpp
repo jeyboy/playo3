@@ -216,7 +216,7 @@ void SearchModel::proceedMyComputer(SearchRequest & params) {
     QStringList filters;
     filters << params.spredicate;
 
-    qDebug() << filters;
+    qDebug() << "OS" << filters;
 
     for(QStringList::Iterator it = request.drives.begin(); it != request.drives.end(); it++) {
         QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
@@ -226,4 +226,6 @@ void SearchModel::proceedMyComputer(SearchRequest & params) {
             new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
         }
     }
+
+    qDebug() << "SOSA";
 }

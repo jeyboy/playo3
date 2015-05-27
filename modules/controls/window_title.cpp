@@ -17,7 +17,7 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
 
     TitleLayout * l = new TitleLayout(this);
 
-    spinner = new Spinner("", 20, 20, this);
+    spinner = new Spinner("", 20, 20, this, true);
     l -> addWidget(spinner, 0, 0);
     spinner -> hide();
 
