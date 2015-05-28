@@ -770,7 +770,8 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     return false;
 }
 
-void IModel::initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source) {
+int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source) {
+    int amount = 0;
     if (search_source == 0)
         search_source = rootItem;
 
@@ -789,8 +790,11 @@ void IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fo
                 if (is_valid) {
                     QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
                     new FileItem(attrs, destination);
+                    amount++;
                 }
             }
         }
     }
+
+    return amount;
 }

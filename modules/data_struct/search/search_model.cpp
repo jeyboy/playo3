@@ -14,14 +14,16 @@ void SearchModel::initiateSearch(SearchSettings & params) {
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
 }
 
-void SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
-    QList<void *>::Iterator it = request.tabs.begin();
-    for(; it != request.tabs.end(); it++) {
-        ((IModel *) *it) -> initiateSearch(params, parent);
-    }
+int SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
+    int amount = 0;
+    for(QList<void *>::Iterator it = request.tabs.begin(); it != request.tabs.end(); it++)
+        amount += ((IModel *) *it) -> initiateSearch(params, parent);
+
+    return amount;
 }
 
-void SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) {
+int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) {
+    int amount = 0;
     QStringList filters;
     filters << params.spredicate;
 
@@ -33,10 +35,12 @@ void SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent)
         while(dir_it.hasNext()) {
             qDebug() << "COMP FIND" << dir_it.next();
             new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
+            amount++;
         }
     }
 
     qDebug() << "SOSA";
+    return amount;
 }
 
 void SearchModel::searchFinished() {
@@ -121,19 +125,19 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
                 QJsonArray items = VkApi::instance() -> audioSearchSync(
                     this, VkApi::instance() -> getUserID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
                 ).value("audio_list").toArray();
-                proceedVkList(items, parent);
+                parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
                 QJsonArray items = SoundcloudApi::instance() -> searchAudioSync(
                     this, r.spredicate, r.sgenre, r.popular
                 ).value("audio_list").toArray();
-                proceedScList(items, parent);
+                parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
             case SearchRequest::request_computer: {
-                proceedMyComputer(r, parent);
+                parent -> backPropagateItemsCountInBranch(proceedMyComputer(r, parent));
             break;}
             case SearchRequest::request_tabs: {
-                proceedTabs(r, parent);
+                parent -> backPropagateItemsCountInBranch(proceedTabs(r, parent));
             break;}
             case SearchRequest::request_other: {
                 //TODO: realize

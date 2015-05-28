@@ -35,7 +35,13 @@ namespace Playo3 {
 
         void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal);
 
-        inline void showProgress(bool show) { spinner -> setHidden(!show); }
+        inline void showProgress(bool show) {
+            if (show) {
+                spinner -> setValue(SPINNER_IS_CONTINIOUS);
+                spinner -> show();
+            } else
+                spinner -> hide();
+        }
         inline void setProgress(int progress) { spinner -> setValue(progress); }
     public slots:
         void showSearch();

@@ -19,8 +19,8 @@ namespace Playo3 {
 
         void initiateSearch(SearchSettings & params);
     protected slots:
-        void proceedTabs(SearchRequest & params, FolderItem * parent);
-        void proceedMyComputer(SearchRequest & params, FolderItem * parent);
+        int proceedTabs(SearchRequest & params, FolderItem * parent);
+        int proceedMyComputer(SearchRequest & params, FolderItem * parent);
         void searchFinished();
     private:
         QList<FolderItem *> searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher);

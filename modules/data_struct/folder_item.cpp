@@ -92,6 +92,7 @@ void FolderItem::linkNode(FolderItem * node) {
     node -> setParent(this);
     declareFolder(node -> folderUid(), node);
     declareChild(node);
+    node -> backPropagateItemsCountInBranch(node -> childCount() - node -> foldersAmount());
 }
 
 void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {

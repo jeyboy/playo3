@@ -57,7 +57,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
         if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < 1)
+            if (Player::instance() -> getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().left() + 6, rect().y(), (rect().width() - 8) * pos, 3, 1, 1);
         }
     } else {
@@ -65,7 +65,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
         if (show_mini_progress) {
             float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < 1)
+            if (Player::instance() -> getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().x(), rect().bottom() - 6, 3, -(rect().height() - 1) * pos, 1, 1);
         }
     }
