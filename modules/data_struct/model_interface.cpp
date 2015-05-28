@@ -678,32 +678,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         parentFolder = item<FolderItem>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-        switch(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-            case ITEM: {
-                counts[parentFolder]++;
-                new FileItem(data -> attrs, parentFolder, data -> dRow);
-                break;
-            }
-            case VK_ITEM: {
-                counts[parentFolder]++;
-                new VkItem(data -> attrs, parentFolder, data -> dRow);
-                break;
-            }
-            case SOUNDCLOUD_ITEM: {
-                counts[parentFolder]++;
-                new SoundcloudItem(data -> attrs, parentFolder, data -> dRow);
-                break;
-            }
-//                case CUE_ITEM: {
-//                    added++;
-//                    new CueItem(data -> attrs, *p_item, data -> dRow);
-//                    break;
-//                }
-
-            default: {
-                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-            }
-        }
+            counts[parentFolder] += FolderItem::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
         endInsertRows();
         delete data;
     }
@@ -791,9 +766,10 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
 
                 if (is_valid) {
                     QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
-                    //FIXME need to build elems with response to itemType
-                    new FileItem(attrs, destination);
-                    amount++;
+                    if (!attrs.contains(JSON_TYPE_PATH))
+                        attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
+
+                    amount += FolderItem::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
                 }
             }
         }

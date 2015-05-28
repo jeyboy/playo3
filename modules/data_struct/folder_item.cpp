@@ -2,6 +2,33 @@
 
 using namespace Playo3;
 
+int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs) {
+    switch(item_type) {
+        case ITEM: {
+            new FileItem(attrs, parentFolder, pos);
+            return 1;
+        }
+        case VK_ITEM: {
+            new VkItem(attrs, parentFolder, pos);
+            return 1;
+        }
+        case SOUNDCLOUD_ITEM: {
+            new SoundcloudItem(attrs, parentFolder, pos);
+            return 1;
+        }
+//                case CUE_ITEM: {
+//                    new CueItem(data -> attrs, parentFolder, pos);
+//                    return 1;
+//                }
+
+        default: {
+            qDebug() << "ITEM TYPE NOT SUPPORTED YET";
+        }
+    }
+
+    return 0;
+}
+
 ///////////////////////////////////////////////////////////
 FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {}
 

@@ -8,6 +8,8 @@
 namespace Playo3 {
     class FolderItem : public IItem {
     public:
+        static int restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs);
+
         FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
         FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
