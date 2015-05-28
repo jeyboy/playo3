@@ -273,7 +273,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
     ////    QIODevice::Append | QIODevice::Unbuffered
     if (toFile.open(QIODevice::WriteOnly)) {
-        int bufferLength;
+        int bufferLength, minBufferLen = 1024 * 128 * 4;  //512 kb
         double limit;
         qint64 pos = 0;
         double readTime = 15.0;
@@ -283,8 +283,9 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
 
         if (isRemote) {
+            //TODO: need update of bad urls for vk
             source = networkManager -> openUrl(from);
-            bufferLength = qMin(source -> bytesAvailable(), qint64(1024 * 1024 * 1)); //1 mb
+            bufferLength = qMin(source -> bytesAvailable(), qint64(minBufferLen));
         } else {
             source = new QFile(from.toLocalFile());
 
@@ -318,8 +319,10 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 v = QDateTime::currentMSecsSinceEpoch() - v;
                 pos += toFile.write(buffer);
 
-                if (v < readTime) bufferLength *= (1 + (1.0 - v / readTime));
-                else bufferLength /= 2;
+                if (v < readTime)
+                    bufferLength *= 1.1;/*(1 + (1.0 - v / readTime));*/
+                else if (bufferLength > minBufferLen)
+                    bufferLength /= 2;
             }
 
             emit updateAttr(ind, DOWNLOAD_PROGRESS, pos / limit);
