@@ -775,7 +775,9 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
     if (search_source == 0)
         search_source = rootItem;
 
-    for(QList<IItem *>::Iterator it = search_source -> childrenList().begin(); it != search_source -> childrenList().end(); it++) {
+    QList<IItem *> child = search_source -> childrenList();
+
+    for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
         if ((*it) -> isContainer()) {
             initiateSearch(params, destination, (FolderItem *) *it);
         } else {
@@ -789,6 +791,7 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
 
                 if (is_valid) {
                     QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
+                    //FIXME need to build elems with response to itemType
                     new FileItem(attrs, destination);
                     amount++;
                 }
