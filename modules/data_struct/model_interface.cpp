@@ -566,11 +566,19 @@ void IModel::importIds(QStringList ids) {
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         if (map_it.key() == SHARE_TYPE_VK) {
-            QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
-            proceedVkList(obj, parentNode);
+            if (VkApi::instance() -> isConnected()) {
+                QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+                proceedVkList(obj, parentNode);
+            } else {
+                //TODO: add notification about vk auth need
+            }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
-            QJsonArray obj = SoundcloudApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
-            proceedScList(obj, parentNode);
+            if (SoundcloudApi::instance() -> isConnected()) {
+                QJsonArray obj = SoundcloudApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+                proceedScList(obj, parentNode);
+            } else {
+                //TODO: add notification about sc auth need
+            }
         }
     }
 

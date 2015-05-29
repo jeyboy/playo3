@@ -17,7 +17,7 @@ public:
 
         QTextCharFormat socialId;
         socialId.setForeground(Qt::darkBlue);
-        QString pattern = "(vk|sc)\\w+";
+        QString pattern = "\\b(vk|sc)[\\d\\-_]+\\b";
 
         QRegExp expression2(pattern);
         int index = text.indexOf(expression2);
