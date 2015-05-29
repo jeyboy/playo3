@@ -1,7 +1,6 @@
 #include "spectrum.h"
 #include "media/player.h"
 #include <qelapsedtimer.h>
-#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -11,7 +10,7 @@ Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
-    setAttribute(Qt::WA_OpaquePaintEvent, true);
+//    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
     connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
     connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));

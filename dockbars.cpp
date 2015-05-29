@@ -59,8 +59,11 @@ void Dockbars::load(QJsonArray & bars) {
 
     QJsonObject def;
     ViewSettings defSettings;
-    while(barsList.length() > 0)
-        window -> addDockWidget(Qt::TopDockWidgetArea, linkNameToToolbars(barsList.takeFirst(), defSettings, def));
+    while(barsList.length() > 0) {
+        QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
+        widg -> hide();
+        window -> addDockWidget(Qt::TopDockWidgetArea, widg);
+    }
 }
 
 void Dockbars::save(DataStore * settings) {

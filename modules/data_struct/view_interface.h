@@ -20,8 +20,6 @@
 
 #include "tree_view_style.h"
 
-#include "modules/controls/user_dialog_box.h"
-
 #include "model_item_delegate.h"
 
 #include "media/player.h"

@@ -234,7 +234,6 @@ void Playo::openVKTabDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
         Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
-        ToolBars::instance() -> initiateVkButton();
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
@@ -270,7 +269,6 @@ void Playo::openSoundcloudTabDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
         Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
-        ToolBars::instance() -> initiateSoundcloudButton();
     }
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }

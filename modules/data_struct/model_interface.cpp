@@ -523,7 +523,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QApplication::clipboard() -> setText(ret);
 }
 
-void IModel::importIds(QStringList ids) {
+void IModel::importIds(QWidget * parent, QStringList ids) {
     emit moveInBackgroundProcess();
     QHash<QString, QStringList> uidsMap;
 
@@ -566,18 +566,24 @@ void IModel::importIds(QStringList ids) {
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         if (map_it.key() == SHARE_TYPE_VK) {
+            if (!VkApi::instance() -> isConnected()) {
+                WebDialog dialog(parent, VkApi::instance(), "VK auth");
+                dialog.exec();/* == QDialog::Accepted*/
+            }
+
             if (VkApi::instance() -> isConnected()) {
                 QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
                 proceedVkList(obj, parentNode);
-            } else {
-                //TODO: add notification about vk auth need
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
+            if (!VkApi::instance() -> isConnected()) {
+                WebDialog dialog(parent, SoundcloudApi::instance(), "Soundcloud auth");
+                dialog.exec();/* == QDialog::Accepted*/
+            }
+
             if (SoundcloudApi::instance() -> isConnected()) {
                 QJsonArray obj = SoundcloudApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
                 proceedScList(obj, parentNode);
-            } else {
-                //TODO: add notification about sc auth need
             }
         }
     }

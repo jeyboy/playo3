@@ -73,6 +73,7 @@ public:
 signals:
     void routineFinished(QJsonObject &);
     void errorReceived(int, QString);
+    void authorized();
 
 public slots:
     void showingCaptcha();

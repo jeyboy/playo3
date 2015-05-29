@@ -48,9 +48,6 @@ namespace Playo3 {
             slider -> updateMetric();
         }
 
-        QToolButton * initiateVkButton();
-        QToolButton * initiateSoundcloudButton();
-
     public slots:
         void hideAll();
         void showAll();
@@ -64,6 +61,9 @@ namespace Playo3 {
         void removePanelTriggered();
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
+
+        QToolButton * initiateVkButton();
+        QToolButton * initiateSoundcloudButton();
 
     protected slots:
         void onFolderDrop(QString name, QString path);
@@ -97,6 +97,8 @@ namespace Playo3 {
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
+            connect(VkApi::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
+            connect(SoundcloudApi::instance(), SIGNAL(authorized()), this, SLOT(initiateSoundcloudButton()));
         }
 
         QToolButton * vkToolButton;

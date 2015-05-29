@@ -56,6 +56,7 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
             delete m_http;
 
             setParams(newToken, QString::number(doc.value("id").toInt()), "");
+            emit authorized();
             return "accept";
         }
 

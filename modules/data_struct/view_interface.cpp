@@ -205,7 +205,7 @@ void IView::copyToClipboard() {
 void IView::importIds() {
     ExportDialog d(this);
     if (d.exec() == QDialog::Accepted)
-        mdl -> importIds(d.getUids());
+        mdl -> importIds(this, d.getUids());
 }
 
 void IView::copyIdsToClipboard() {

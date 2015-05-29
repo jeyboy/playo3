@@ -42,10 +42,11 @@ QString VkApi::proceedAuthResponse(const QUrl & url) {
         return "reject";
     } else if (query.hasQueryItem("access_token")) {
         setParams(
-                  query.queryItemValue("access_token"),
-                  query.queryItemValue("user_id"),
-                  query.queryItemValue("expires_in")
-                  );
+            query.queryItemValue("access_token"),
+            query.queryItemValue("user_id"),
+            query.queryItemValue("expires_in")
+        );
+        emit authorized();
         return "accept";
     }
 
