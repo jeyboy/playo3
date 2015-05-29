@@ -10,26 +10,17 @@ public:
     IdHighlighter(QTextDocument * parent) : QSyntaxHighlighter(parent) {}
 
     void highlightBlock(const QString & text) {
-
         QTextCharFormat sep;
+        sep.setFontWeight(QFont::Bold);
         sep.setForeground(Qt::darkRed);
-        QString pattern = "\\W";
-
-        QRegExp expression(pattern);
-        int index = text.indexOf(expression);
-        while (index >= 0) {
-            int length = expression.matchedLength();
-            setFormat(index, length, sep);
-            index = text.indexOf(expression, index + length);
-        }
+        setFormat(0, text.length(), sep);
 
         QTextCharFormat socialId;
-        socialId.setFontWeight(QFont::Bold);
         socialId.setForeground(Qt::darkBlue);
-        pattern = "\\*(vk|sc)\\w+";
+        QString pattern = "(vk|sc)\\w+";
 
         QRegExp expression2(pattern);
-        index = text.indexOf(expression2);
+        int index = text.indexOf(expression2);
         while (index >= 0) {
             int length = expression2.matchedLength();
             setFormat(index, length, socialId);
