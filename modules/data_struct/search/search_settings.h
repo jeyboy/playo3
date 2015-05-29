@@ -77,7 +77,8 @@ struct SearchRequest {
         } else if (has_genre) {
             return sgenre;
         }
-        else return "Popular";
+        else if (popular && search_type != request_computer && search_type != request_tabs) return "Popular";
+        else return "All";
     }
 };
 
