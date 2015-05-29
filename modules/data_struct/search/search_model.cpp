@@ -25,17 +25,35 @@ int SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
 int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) {
     int amount = 0;
     QStringList filters;
-    filters << params.spredicate;
 
-    qDebug() << "OS" << filters;
+    if (params.spredicate.isEmpty()) {
+        filters = Extensions::instance() -> filterList("music");
+    } else {
+        QStringList res = Extensions::instance() -> filterList("music");
+        for(QStringList::Iterator it = res.begin(); it != res.end(); it++)
+            filters.append("*" + params.spredicate + (*it));
+    }
+
+    //System.Music.Artist:(Beethoven OR Mozart)
 
     for(QStringList::Iterator it = request.drives.begin(); it != request.drives.end(); it++) {
         QDirIterator dir_it(*it, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
 
         while(dir_it.hasNext()) {
-            qDebug() << "COMP FIND" << dir_it.next();
-            new FileItem(dir_it.filePath(), dir_it.fileName(), parent);
-            amount++;
+            QString path = dir_it.next();
+            qDebug() << "COMP FIND" << path;
+            bool valid = params.sgenre_id == -1;
+
+            if (!valid) {
+                MediaInfo m(QUrl::fromLocalFile(path), true, true);
+                valid = m.getGenre() == params.sgenre_id;
+            }
+
+            if (valid) {
+                QFileInfo file = dir_it.fileInfo();
+                new FileItem(file.path(), file.fileName(), parent);
+                amount++;
+            }
         }
     }
 
