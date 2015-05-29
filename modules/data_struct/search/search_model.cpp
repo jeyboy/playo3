@@ -2,14 +2,19 @@
 
 using namespace Playo3;
 
-SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : LevelTreeModel(hash, parent) {}
+SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : LevelTreeModel(hash, parent), initiator(0) {}
 
-SearchModel::~SearchModel() {}
+SearchModel::~SearchModel() {
+    if (initiator)
+        initiator -> cancel();
+
+    delete initiator;
+}
 
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
-    QFutureWatcher<QList<FolderItem *> > * initiator = new QFutureWatcher<QList<FolderItem *> >();
+    initiator = new QFutureWatcher<QList<FolderItem *> >();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
 }
@@ -56,21 +61,21 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
             }
         }
     }
-
-    qDebug() << "SOSA";
     return amount;
 }
 
 void SearchModel::searchFinished() {
-    QFutureWatcher<QList<FolderItem *> > * watcher = (QFutureWatcher<QList<FolderItem *> > *)sender();
-    QList<FolderItem *> folders = watcher -> result();
+    if (!initiator -> isCanceled()) {
+        QList<FolderItem *> folders = initiator -> result();
 
-    beginInsertRows(QModelIndex(), 0, folders.count());
-        for(QList<FolderItem *>::Iterator it = folders.begin(); it != folders.end(); it++)
-            rootItem -> linkNode(*it);
-    endInsertRows();
+        beginInsertRows(QModelIndex(), 0, folders.count());
+            for(QList<FolderItem *>::Iterator it = folders.begin(); it != folders.end(); it++)
+                rootItem -> linkNode(*it);
+        endInsertRows();
+    }
 
-    delete watcher;
+    delete initiator;
+    initiator = 0;
 }
 
 QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher) {
@@ -135,6 +140,9 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
     }
 
     while(!requests.isEmpty()) {
+        if (watcher -> isCanceled())
+            return res.values();
+
         SearchRequest r = requests.takeFirst();
         FolderItem * parent = res.value(r.search_type) -> createFolder(r.token());
 

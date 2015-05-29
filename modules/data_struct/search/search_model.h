@@ -26,6 +26,7 @@ namespace Playo3 {
         QList<FolderItem *> searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher);
 
         SearchSettings request;
+        QFutureWatcher<QList<FolderItem *> > * initiator;
     };
 }
 
