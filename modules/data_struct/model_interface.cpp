@@ -513,7 +513,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         if (!ident.isEmpty()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret += "," + (ident) + uid.toString();
+                ret += ",*" + (ident) + uid.toString();
         }
     }
 
