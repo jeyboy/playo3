@@ -131,6 +131,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
     } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
+        connect(DownloadView::instance(), SIGNAL(downloadProceeded(QUrl&,QString&)), this, SLOT(onDownloadProceeded(QUrl&,QString&)));
         return bar;
     } else if (barName == LOGS_TAB) {
         DockBar * bar = createDocBar(barName, false);
@@ -368,6 +369,10 @@ void Dockbars::prevExecTriggering() {
     initPlayed();
     IView * v = view(played);
     if (v) v -> execPrevIndex();
+}
+
+void Dockbars::onDownloadProceeded(QUrl & from, QString & to) {
+    qDebug() << "DOWN" << from << to;
 }
 
 void Dockbars::barClosed() {

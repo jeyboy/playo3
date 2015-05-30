@@ -86,6 +86,7 @@ namespace Playo3 {
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
+        void onDownloadProceeded(QUrl & from, QString & to);
         void barClosed();
     private:
         TabifyParams lastTabData;
