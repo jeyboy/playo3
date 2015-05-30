@@ -549,8 +549,9 @@ void AudioPlayer::stop() {
 }
 
 void AudioPlayer::endOfPlayback() {
-    stop();
-    closeChannel();
+    setPosition(0);
+    pause();
+//    stop();
     emit mediaStatusChanged(EndOfMedia);
 }
 

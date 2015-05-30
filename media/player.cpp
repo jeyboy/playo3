@@ -364,6 +364,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break; }
 
         case EndOfMedia: {
+            setTrackbarValue(0);
             qDebug() << "PLAYER: " << "END";
             if (cycleButton -> isChecked())
                 play();
