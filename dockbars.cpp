@@ -36,6 +36,10 @@ void Dockbars::load(QJsonArray & bars) {
             if (obj.value("stick").toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
 
+            QString link = obj.value("link").toString();
+            if (!link.isEmpty())
+                linkedTabs.insert(link, (DockBar *)curr_bar);
+
             ((DockBar *)curr_bar) -> useVerticalTitles(obj.value("vertical").toBool());
 
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
@@ -89,6 +93,10 @@ void Dockbars::save(DataStore * settings) {
             curr_bar.insert("stick", (*it) -> isSticked());
             curr_bar.insert("vertical", (*it) -> isUsedVerticalTitles());
 
+            QString path = linkedTabs.key((*it), QString());
+            if (!path.isEmpty())
+                curr_bar.insert("link", path);
+
             if ((*it) -> windowTitle() == LOGS_TAB) {
                 //do nothing
             } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
@@ -138,6 +146,21 @@ DockBar * Dockbars::commonBar() {
     }
 
     return common;
+}
+
+DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings settings) {
+    DockBar * bar = linkedTabs.value(path, 0);
+
+    if (!bar) {
+        DockBar * bar = createDocBar(text, settings, 0, true, true);
+        QList<QUrl> urls;
+        urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash
+        view(bar) -> appendRows(urls);
+        linkedTabs.insert(path, bar);
+    }
+    else activate(bar);
+
+    return bar;
 }
 
 DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
@@ -349,6 +372,8 @@ void Dockbars::prevExecTriggering() {
 
 void Dockbars::barClosed() {
     DockBar * bar = (DockBar *)sender();
+
+    linkedTabs.remove(linkedTabs.key(bar));
 
     if (active == bar)
         active = 0;

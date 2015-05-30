@@ -193,10 +193,11 @@ void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
     if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::instance() -> isOpenDropPointInTab()) {
         ViewSettings settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
-        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings, 0, true, true);
-        QList<QUrl> urls;
-        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
-        Dockbars::instance() -> view(bar) -> appendRows(urls);
+        Dockbars::instance() -> createLinkedDocBar(button -> text(), button -> mainPath(), settings);
+//        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings, 0, true, true);
+//        QList<QUrl> urls;
+//        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
+//        Dockbars::instance() -> view(bar) -> appendRows(urls);
     }
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }

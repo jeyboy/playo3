@@ -53,6 +53,7 @@ namespace Playo3 {
         DockBar * commonBar();
         DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
+        DockBar * createLinkedDocBar(QString text, QString path, ViewSettings settings);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);
@@ -89,6 +90,8 @@ namespace Playo3 {
     private:
         TabifyParams lastTabData;
         DockBar * active, * played, * common;
+
+        QHash<QString, DockBar *> linkedTabs;
 
         inline Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
             connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), this, SLOT(onNextItemNeeded(Player::Reason)));
