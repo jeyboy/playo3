@@ -38,7 +38,7 @@ namespace Playo3 {
     signals:
         void updateRequired(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
         void updateAttr(const QModelIndex, int attr, QVariant val);
-        void downloadProceeded(QUrl & from, QString & to);
+        void downloadProceeded(QString to);
 
     public slots:
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);

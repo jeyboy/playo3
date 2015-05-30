@@ -146,8 +146,6 @@ void DownloadView::addRow(QUrl from, QString to, QString name) {
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
-    emit downloadProceeded(from, to);
-
     QModelIndex ind = mdl -> appendRow(data);
     proceedDownload(ind);
 }
@@ -285,7 +283,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
 
         if (isRemote) {
-            //TODO: need update of bad urls for vk
+            //FIXME: need update of bad urls for vk
             source = networkManager -> openUrl(from);
             bufferLength = qMin(source -> bytesAvailable(), qint64(minBufferLen));
         } else {
@@ -345,6 +343,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             toFile.remove();
         else
             toFile.close();
+
+        emit downloadProceeded(to);
     }
     else emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
 

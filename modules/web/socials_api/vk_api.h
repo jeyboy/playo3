@@ -32,6 +32,10 @@ public:
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     QJsonObject audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
 
+    ApiFuncContainer * audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId);
+    void audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId = -1);
+    QJsonObject audioPopularSync(const QObject * receiver, bool onlyEng, int genreId = -1);
+
     QString refreshAudioItemUrl(QString audio_uid);
     QJsonObject getAudioInfo(QString audio_uid);
     QJsonObject getAudiosInfo(QStringList audio_uid);

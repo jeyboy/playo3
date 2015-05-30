@@ -61,12 +61,11 @@ SearchSettings SearchDialog::params() {
         res.type = ::artist;
     else if (ui -> bySong -> isChecked())
         res.type = ::song;
-    else if (ui -> byStyle -> isChecked())
-        res.type = ::style;
     else
         res.type = ::tag;
 
     res.popular = ui -> byPopular -> isChecked();
+    res.search_in_own = ui -> byOwns -> isChecked();
 
     if (res.inTabs) {
         int count = ui -> tabsList -> count();

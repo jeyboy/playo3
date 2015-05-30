@@ -6,7 +6,6 @@
 #include "media/genres/web/vk_genres.h"
 
 enum PredicateType {
-    style,
     title,
     artist,
     song,

@@ -29,27 +29,14 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>180</y>
+     <y>150</y>
      <width>401</width>
-     <height>51</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="title">
     <string>Search By</string>
    </property>
-   <widget class="QRadioButton" name="byStyle">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>20</y>
-      <width>61</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Style</string>
-    </property>
-   </widget>
    <widget class="QRadioButton" name="byTitle">
     <property name="geometry">
      <rect>
@@ -67,6 +54,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="byTag">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -82,14 +72,14 @@
    <widget class="QRadioButton" name="byArtist">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>20</y>
-      <width>51</width>
+      <x>30</x>
+      <y>40</y>
+      <width>121</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Artist</string>
+     <string>by artist if possible</string>
     </property>
     <property name="checked">
      <bool>false</bool>
@@ -98,35 +88,57 @@
    <widget class="QRadioButton" name="bySong">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>20</y>
-      <width>51</width>
+      <x>30</x>
+      <y>60</y>
+      <width>131</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Song</string>
+     <string>by song title if possible</string>
     </property>
     <property name="checked">
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="byPopular">
+   <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>20</y>
-      <width>70</width>
-      <height>17</height>
+      <x>260</x>
+      <y>10</y>
+      <width>131</width>
+      <height>61</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">color: green;
-font-weight: bold;</string>
+    <property name="title">
+     <string>Search In</string>
     </property>
-    <property name="text">
-     <string>Popular</string>
-    </property>
+    <widget class="QCheckBox" name="byPopular">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>16</y>
+       <width>70</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>In popular</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="byOwns">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>70</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>In owns</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
@@ -135,7 +147,7 @@ font-weight: bold;</string>
      <x>10</x>
      <y>10</y>
      <width>401</width>
-     <height>171</height>
+     <height>141</height>
     </rect>
    </property>
    <property name="title">
@@ -247,7 +259,7 @@ font-weight: bold;</string>
       <x>240</x>
       <y>50</y>
       <width>151</width>
-      <height>111</height>
+      <height>81</height>
      </rect>
     </property>
    </widget>
@@ -257,7 +269,7 @@ font-weight: bold;</string>
       <x>150</x>
       <y>50</y>
       <width>81</width>
-      <height>111</height>
+      <height>81</height>
      </rect>
     </property>
    </widget>

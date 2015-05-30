@@ -114,17 +114,16 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
             }
         }
     } else if (!request.genres.isEmpty()) {
-        if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, QString(), QString(), 0, request.popular));
-
         if (!request.genres.isEmpty()) {
             QList<int>::Iterator genre_it = request.genres.keys().begin();
             QList<int>::Iterator genre_it_end = request.genres.keys().end();
 
             for(; genre_it != genre_it_end; genre_it++) {
-                if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
-                if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
+                if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, QString(), QString(), VkGenres::instance() -> fromStandartId(*genre_it), request.popular));
                 if (request.inSc) requests.append(SearchRequest(SearchRequest::request_sc, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
                 if (request.inOther) requests.append(SearchRequest(SearchRequest::request_other, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
+                if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
+                if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, QString(), request.genres.value(*genre_it), *genre_it, request.popular));
             }
         }
     } if (request.popular) {
@@ -147,9 +146,16 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
 
         switch(r.search_type) {
             case SearchRequest::request_vk: {
-                QJsonArray items = VkApi::instance() -> audioSearchSync(
-                    this, VkApi::instance() -> getUserID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
-                ).value("audio_list").toArray();
+                QJsonArray items;
+                if (r.spredicate.isEmpty() && r.popular) {
+                    qDebug() << "VK POPULAR";
+                    items = VkApi::instance() -> audioPopularSync(this, true, r.sgenre_id).value("audio_list").toArray();
+                } else {
+                    qDebug() << "VK SEARCH";
+                    items = VkApi::instance() -> audioSearchSync(
+                        this, VkApi::instance() -> getUserID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
+                    ).value("audio_list").toArray();
+                }
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {

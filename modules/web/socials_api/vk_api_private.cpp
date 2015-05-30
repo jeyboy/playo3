@@ -262,30 +262,27 @@ QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, bool randomiz
 }
 
 QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
-    //INFO: result through execute method limited by 200 items
-
-
-//    QUrl url(getApiUrl() + "execute");
-//    QUrlQuery query = methodParams(token);
-
-//    query.addQueryItem("code",
-//                       QString(
-//                           "var recomendations = API.audio.getPopular({"
-//                                "only_eng: " + boolToStr(onlyEng) + ", "
-//                                "count: 1000 "
-//                                (genreId != -1 ? ", genre_id: " + QString::number(genreId) : "") + ""
-//                             "}).items;"
-//                           "return {audio_list: recomendations};"
-//                       )
-//    );
-
-    QUrl url(getApiUrl() + "audio.getPopular");
+    QUrl url(getApiUrl() + "execute");
     QUrlQuery query = methodParams(token);
 
-    query.addQueryItem("only_eng", boolToStr(onlyEng));
-    query.addQueryItem("count", QString::number(1000));
-    if (genreId != -1)
-        query.addQueryItem("genre_id", QString::number(genreId));
+    //offset
+    query.addQueryItem("code",
+       QString(
+           "var recomendations = API.audio.getPopular({"
+                "only_eng: " + boolToStr(onlyEng) + ", "
+                "count: 1000 " + (genreId != -1 ? ", genre_id: " + QString::number(genreId) : "") + ""
+             "});"
+           "return {audio_list: recomendations};"
+       )
+    );
+
+//    QUrl url(getApiUrl() + "audio.getPopular");
+//    QUrlQuery query = methodParams(token);
+
+//    query.addQueryItem("only_eng", boolToStr(onlyEng));
+//    query.addQueryItem("count", QString::number(1000));
+//    if (genreId != -1)
+//        query.addQueryItem("genre_id", QString::number(genreId));
 
     url.setQuery(query);
     return url;

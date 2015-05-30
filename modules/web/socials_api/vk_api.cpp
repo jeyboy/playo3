@@ -203,7 +203,6 @@ ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString pr
         func -> result = func -> result.value("response").toObject();
 
     delete netManager;
-    func -> result.insert("predicate", predicate);
     return func;
 }
 void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
@@ -212,6 +211,33 @@ void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString
 
 QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
     ApiFuncContainer * func = searchAudioRoutine(new ApiFuncContainer(receiver, 0, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular);
+    QJsonObject res = func -> result;
+    delete func;
+    return res;
+}
+
+ApiFuncContainer * VkApi::audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId) {
+    CustomNetworkAccessManager * netManager = createManager();
+
+    QUrl url = VkApiPrivate::audioPopularUrl(
+        onlyEng,
+        getToken(),
+        genreId
+    );
+
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+    if (responseRoutine(m_http, func, func -> result))
+        func -> result = func -> result.value("response").toObject();
+
+    delete netManager;
+    return func;
+}
+void VkApi::audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId) {
+    startApiCall(QtConcurrent::run(this, &VkApi::audioPopularRoutine, new ApiFuncContainer(receiver, respSlot, 0), onlyEng, genreId));
+}
+
+QJsonObject VkApi::audioPopularSync(const QObject * receiver, bool onlyEng, int genreId) {
+    ApiFuncContainer * func = audioPopularRoutine(new ApiFuncContainer(receiver, 0, 0), onlyEng, genreId);
     QJsonObject res = func -> result;
     delete func;
     return res;
