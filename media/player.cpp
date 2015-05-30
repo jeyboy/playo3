@@ -41,6 +41,12 @@ void Player::setStopButton(QAction * stopAction) {
     stopButton -> setVisible(false);
     connect(stopAction, SIGNAL(triggered(bool)), this, SLOT(stop()));
 }
+void Player::setCyclingButton(QAction * cycleAction) {
+    cycleButton = cycleAction;
+    cycleButton -> setCheckable(true);
+//    connect(cycleButton, SIGNAL(triggered(bool)), this, SLOT(stop()));
+}
+
 
 void Player::setLikeButton(QAction * likeAction) {
     likeButton = likeAction;
@@ -359,7 +365,10 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case EndOfMedia: {
             qDebug() << "PLAYER: " << "END";
-            emit nextItemNeeded(endMedia);
+            if (cycleButton -> isChecked())
+                play();
+            else
+                emit nextItemNeeded(endMedia);
         break;}
 
         case InvalidMedia: {

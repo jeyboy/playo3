@@ -45,6 +45,8 @@ public:
     void setPlayButton(QAction * playAction);
     void setPauseButton(QAction * pauseAction);
     void setStopButton(QAction * stopAction);
+    void setCyclingButton(QAction * cycleAction);
+
     void setLikeButton(QAction * likeAction);
     void setMuteButton(QAction * likeAction);
 
@@ -99,6 +101,8 @@ private:
     QAction * playButton;
     QAction * pauseButton;
     QAction * stopButton;
+    QAction * cycleButton;
+
     QAction * likeButton;
     QAction * muteButton;
 

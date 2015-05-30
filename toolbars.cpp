@@ -261,6 +261,7 @@ QToolBar * ToolBars::createMediaBar() {
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(":/play"), "Play"));
     Player::instance() -> setPauseButton(ptb -> addAction(QIcon(":/pause"), "Pause"));
     Player::instance() -> setStopButton(ptb -> addAction(QIcon(":/stop"), "Stop"));
+    Player::instance() -> setCyclingButton(ptb -> addAction(QIcon(":/cycling"), "Cycle current track"));
 
     ptb -> adjustSize();
 
