@@ -99,8 +99,15 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             InnerData data;
             stream >> data.url >> isRemote >> data.attrs;
 
+            bool is_vk = data.attrs.take(JSON_TYPE_ITEM_TYPE).toInt() == VK_ITEM; // vk monkey patch
 
-            addRow(data.url, path, downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()));
+            addRow(
+                data.url,
+                path,
+                downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
+                is_vk ? "vk" : QString(),
+                is_vk ? (data.attrs[JSON_TYPE_OWNER_ID].toString() + "_" + data.attrs[JSON_TYPE_UID].toString()) : QString() //WebItem::toUid
+            );
         }
     } else if (event -> mimeData() -> hasUrls()) {
         event -> accept();
@@ -138,11 +145,17 @@ void DownloadView::downloadCompleted() {
     proceedDownload();
 }
 
-void DownloadView::addRow(QUrl from, QString to, QString name) {
+void DownloadView::addRow(QUrl from, QString to, QString name, QString dtype, QString uid) {
     QVariantMap data;
     data.insert(QString::number(DOWNLOAD_FROM), from);
     data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
+
+    if (!dtype.isEmpty())
+        data.insert(QString::number(DOWNLOAD_TYPE), dtype);
+
+    if (!uid.isEmpty())
+        data.insert(QString::number(DOWNLOAD_ID), uid);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
 
@@ -283,8 +296,30 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
 
         if (isRemote) {
-            //FIXME: need update of bad urls for vk
             source = networkManager -> openUrl(from);
+            int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); // vk monkey patch
+            if (status == 404) {
+                source -> close();
+                delete source;
+
+                bool invalid = true;
+
+                if (itm -> data(DOWNLOAD_TYPE).toString() == "vk") {
+                    QUrl newFrom = QUrl(VkApi::instance() -> refreshAudioItemUrl(itm -> data(DOWNLOAD_ID).toString()));
+                    if (newFrom != from) {
+                        source = networkManager -> openUrl(newFrom);
+                        invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
+                    }
+                }
+
+                if (invalid) {
+                    emit updateAttr(ind, DOWNLOAD_ERROR, "unprocessable");
+                    toFile.remove();
+                    delete networkManager;
+                    return ind;
+                }
+            }
+
             bufferLength = qMin(source -> bytesAvailable(), qint64(minBufferLen));
         } else {
             source = new QFile(from.toLocalFile());

@@ -16,8 +16,11 @@
 
 #include "misc/settings.h"
 #include "misc/file_utils/filename_conversions.h"
-#include "misc/web_utils/custom_network_access_manager.h"
+//#include "misc/web_utils/custom_network_access_manager.h"
 #include "modules/data_struct/item_drop_formats.h"
+#include "modules/data_struct/model_item_parts/item_types.h"
+
+#include "modules/web/socials_api/vk_api.h"
 
 namespace Playo3 {
     class Dockbars;
@@ -44,7 +47,7 @@ namespace Playo3 {
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);
         void downloadCompleted();
 
-        void addRow(QUrl from, QString to, QString name);
+        void addRow(QUrl from, QString to, QString name, QString dtype = QString(), QString uid = QString());
         bool removeRow(const QModelIndex & node);
 
     protected slots:
