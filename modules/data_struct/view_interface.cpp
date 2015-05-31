@@ -384,16 +384,16 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
         if (Settings::instance() -> isCheckboxShow()) {
             actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(moveCheckedToNewTab()));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(moveCheckedToNewTab()));
 
             actions.append((act = new QAction(QIcon(":/move"), "Check Liked", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markLikedAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markLikedAsChecked()));
 
             actions.append((act = new QAction(QIcon(":/move"), "Check New", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markNewAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markNewAsChecked()));
 
             actions.append((act = new QAction(QIcon(":/move"), "Check Listened", this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markListenedAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markListenedAsChecked()));
         }
 
 
@@ -673,21 +673,6 @@ void IView::downloadChecked(QString & path, FolderItem * root) {
 void IView::moveCheckedToNewTab(FolderItem * root) {
     //TODO: realisation needed
 }
-void IView::removeChecked(FolderItem * root) {
-    //TODO: realisation needed
-}
-
-void IView::markLikedAsChecked(FolderItem * root) {
-
-}
-void IView::markNewAsChecked(FolderItem * root) {
-
-}
-void IView::markListenedAsChecked(FolderItem * root) {
-
-}
-
-
 
 
 

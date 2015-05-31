@@ -103,11 +103,6 @@ namespace Playo3 {
         void downloadAll();
 
         void moveCheckedToNewTab(FolderItem * root = 0);
-        void removeChecked(FolderItem * root = 0);
-
-        void markLikedAsChecked(FolderItem * root = 0);
-        void markNewAsChecked(FolderItem * root = 0);
-        void markListenedAsChecked(FolderItem * root = 0);
 
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);

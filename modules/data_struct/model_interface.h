@@ -92,6 +92,11 @@ namespace Playo3 {
         void copyIdsToClipboard(const QModelIndexList & indexes);
         void importIds(QWidget * parent, QStringList ids);
 
+        void markLikedAsChecked();
+        void markNewAsChecked();
+        void markListenedAsChecked();
+        void removeChecked();
+
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
         void expandeAll();

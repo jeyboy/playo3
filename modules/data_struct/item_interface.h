@@ -61,6 +61,10 @@ namespace Playo3 {
             if (setChecked) set(checked); else unset(checked);
         }
 
+        inline void updateCheckedStateByPredicate(ItemStateFlag pred_state) {
+            updateCheckedState(is(pred_state));
+        }
+
         virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
 
         inline bool respondTo(QString & predicate) {
@@ -78,20 +82,6 @@ namespace Playo3 {
     protected:
         FolderItem * _parent;
     };
-
-    //            inline static QString buildUid(QString owner, QString id) { return owner + "_" + id;}
-    //            void accumulateUids(QHash<BaseItem*, QString> & store);
-
-    //            void setState(int new_state, bool append_to_library = true);
-
-    //            bool cacheIsPrepared() const;
-    //            void setCache(QList<QString> *newCache);
-    //            void addToCache(QString title);
-    //            QList<QString> * getTitlesCache() const;
-
-    //        protected:
-
-    //            QList<QString> * titlesCache;
 }
 
 #endif // ITEM_INTERFACE

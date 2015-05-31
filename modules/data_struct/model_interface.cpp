@@ -592,6 +592,29 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
     emit moveOutBackgroundProcess();
 }
 
+void IModel::markLikedAsChecked() {
+    beginResetModel();
+    rootItem -> propagateCheckedStateByPredicate(ItemState::liked);
+    endResetModel();
+}
+void IModel::markNewAsChecked() {
+    beginResetModel();
+    rootItem -> propagateCheckedStateByPredicate(ItemState::new_item);
+    endResetModel();
+}
+void IModel::markListenedAsChecked() {
+    beginResetModel();
+    rootItem -> propagateCheckedStateByPredicate(ItemState::listened);
+    endResetModel();
+}
+void IModel::removeChecked() {
+    beginResetModel();
+    //TODO: realisation needed
+    endResetModel();
+}
+
+
+
 void IModel::expandeAll() {
     rootItem -> propagateFolderSetFlag(ItemState::expanded);
 }

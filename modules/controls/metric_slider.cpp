@@ -145,7 +145,7 @@ void MetricSlider::calcGrid() {
         int center = rect().center().y() + point_radius / 2;
         for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos <= bodyRect.width(); pos += step, val += vall_offset) {
             if (!Settings::instance() -> isMetricNumero()) {
-                path.addEllipse(QPoint(pos, center), point_radius, point_radius);
+                path.addEllipse(QPoint(pos + point_radius / 2, center), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);
                 path.addText(pos - metrics.width(strNum) / 2 , bodyRect.center().y() + metrics.height() / 3, strFont, strNum);

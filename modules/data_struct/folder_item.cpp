@@ -40,8 +40,9 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         QJsonObject iterObj;
 
-        foreach(QJsonValue obj, ar) {
-            iterObj = obj.toObject();
+        for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
+//        foreach(QJsonValue obj, ar) {
+            iterObj = (*it).toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case ITEM: {
                     new FileItem(&iterObj, this);
@@ -270,20 +271,27 @@ int FolderItem::removeChildren(int position, int count) {
 
 void FolderItem::propagateFolderSetFlag(ItemStateFlag flag) {
     set(flag);
-    foreach(FolderItem * item, folders.values())
-        item -> propagateFolderSetFlag(flag);
+    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
+        it.value() -> propagateFolderSetFlag(flag);
 }
 void FolderItem::propagateFolderUnsetFlag(ItemStateFlag flag) {
     unset(flag);
-    foreach(FolderItem * item, folders.values())
-        item -> propagateFolderUnsetFlag(flag);
+    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
+        it.value() -> propagateFolderUnsetFlag(flag);
 }
 
 void FolderItem::propagateCheckedState(bool checked) {
     IItem::updateCheckedState(checked);
 
-    foreach(IItem * item, children)
-        item -> updateCheckedState(checked);
+    for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
+        (*it) -> updateCheckedState(checked);
+}
+
+void FolderItem::propagateCheckedStateByPredicate(ItemStateFlag pred_state) {
+    if (is(pred_state)) {
+        for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
+            (*it) -> updateCheckedStateByPredicate(pred_state);
+    }
 }
 
 void FolderItem::shuffle() { //TODO: test needed
@@ -293,8 +301,8 @@ void FolderItem::shuffle() { //TODO: test needed
     for (int i = 0; i < n; ++i)
         children.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
 
-    foreach(FolderItem * item, folders.values())
-        item -> shuffle();
+    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
+        it.value() -> shuffle();
 }
 
 void FolderItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
