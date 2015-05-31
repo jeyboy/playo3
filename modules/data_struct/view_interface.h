@@ -88,7 +88,13 @@ namespace Playo3 {
 //        void showMessage(QString);
 
     protected slots:
-        inline void onDoubleClick(const QModelIndex node) { execIndex(node); }
+        inline void onDoubleClick(const QModelIndex node) {
+            if (!execIndex(node)) { // find first valid for exec
+                QModelIndex node = QModelIndex();
+                findExecutable(node);
+                execIndex(node);
+            }
+        }
         void openLocation();
         void copyToClipboard();
         void copyIdsToClipboard();
