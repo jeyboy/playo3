@@ -245,12 +245,19 @@ QJsonObject VkApi::audioPopularSync(const QObject * receiver, bool onlyEng, int 
 
 QJsonObject VkApi::getAudiosInfo(QStringList audio_uids) {
     QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, getToken());
-    QNetworkReply * reply = manager() -> getSync(QNetworkRequest(url));
+
+    CustomNetworkAccessManager * netManager;
+    bool new_manager = getValidManager(netManager);
+
+    QNetworkReply * reply = netManager -> getSync(QNetworkRequest(url));
 
     QJsonObject doc = responseToJson(reply -> readAll());
 
     reply -> close();
     delete reply;
+
+    if (new_manager)
+        delete netManager;
 
     return doc;
 }

@@ -1,6 +1,8 @@
 #ifndef WEB_API_H
 #define WEB_API_H
 
+#include <Qapplication>
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -18,14 +20,13 @@
 #define REQUEST_DELAY 250 // ms
 
 struct ApiFuncContainer {
-    ApiFuncContainer() { }
-    ApiFuncContainer(const QObject * receiver, const char * respSlot, QString user_id) {
+    inline ApiFuncContainer() { }
+    inline ApiFuncContainer(const QObject * receiver, const char * respSlot, QString user_id) {
         obj = receiver;
         slot = respSlot;
         uid = user_id;
     }
-    ~ApiFuncContainer() {
-    }
+    inline ~ApiFuncContainer() {}
 
     QString uid;
     const QObject * obj;
@@ -50,6 +51,11 @@ public:
     virtual bool isConnected() = 0;
 
     inline CustomNetworkAccessManager * manager() const { return netManager; }
+    inline bool getValidManager(CustomNetworkAccessManager *& webManager) {
+        bool new_manager = QThread::currentThread() != QApplication::instance() -> thread();
+        webManager = new_manager ? createManager() : manager();
+        return new_manager;
+    }
 
     QPixmap openRemoteImage(QString url);
 
