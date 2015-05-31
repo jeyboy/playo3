@@ -656,11 +656,12 @@ void IView::downloadSelected() {
     if (Settings::instance() -> isCheckboxShow()) {
         downloadChecked(path);
     } else {
-        foreach(QModelIndex index, selectedIndexes()) {
-            if (index.data(IFOLDER).toBool())
-                downloadBranch(index, path);
+        QModelIndexList indexes = selectedIndexes();
+        for(QModelIndexList::Iterator index = indexes.begin(); index != indexes.end(); index++) {
+            if ((*index).data(IFOLDER).toBool())
+                downloadBranch((*index), path);
             else
-                downloadItem(index, path);
+                downloadItem((*index), path);
         }
     }
 }

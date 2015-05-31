@@ -41,7 +41,6 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
         QJsonObject iterObj;
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
-//        foreach(QJsonValue obj, ar) {
             iterObj = (*it).toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case ITEM: {

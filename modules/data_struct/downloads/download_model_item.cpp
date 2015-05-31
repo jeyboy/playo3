@@ -17,8 +17,8 @@ DownloadModelItem::DownloadModelItem(QJsonObject * data, DownloadModelItem * par
              QJsonArray ar = data -> take("childs").toArray();
              QJsonObject iterObj;
 
-             foreach(QJsonValue obj, ar) {
-                 iterObj = obj.toObject();
+             for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
+                 iterObj = (*it).toObject();
                  new DownloadModelItem(&iterObj, this);
              }
          }

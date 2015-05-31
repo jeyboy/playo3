@@ -11,12 +11,12 @@ namespace Playo3 {
         Q_OBJECT
 
     public:
-        ToolBar(const QString &title, QWidget *parent = 0);
+        ToolBar(const QString & title, QWidget * parent = 0);
         ~ToolBar();
 
     protected:
-        void dropEvent(QDropEvent *event);
-        void dragEnterEvent(QDragEnterEvent *event);
+        void dropEvent(QDropEvent * event);
+        void dragEnterEvent(QDragEnterEvent * event);
         bool event(QEvent * ev) {
             emit(eventTriggered(ev));
             return QToolBar::event(ev);
