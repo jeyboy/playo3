@@ -149,6 +149,7 @@ void Playo::putToCommonTab(QList<QUrl> urls) {
 //    if (!Player::instance() -> isPlayed())
 
     bar -> show();
+    Dockbars::instance() -> activate(bar);
 }
 
 void Playo::dragEnterEvent(QDragEnterEvent * event) {
