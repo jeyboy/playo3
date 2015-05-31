@@ -592,6 +592,17 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
     emit moveOutBackgroundProcess();
 }
 
+void IModel::markAllAsChecked() {
+    beginResetModel();
+    rootItem -> propagateCheckedState(true);
+    endResetModel();
+}
+void IModel::markAllAsUnchecked() {
+    beginResetModel();
+    rootItem -> propagateCheckedState(false);
+    endResetModel();
+}
+
 void IModel::markLikedAsChecked() {
     beginResetModel();
     rootItem -> propagateCheckedStateByPredicate(ItemState::liked);

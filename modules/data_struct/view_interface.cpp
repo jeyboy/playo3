@@ -389,6 +389,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 //            actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
 //            connect(act, SIGNAL(triggered(bool)), this, SLOT(moveCheckedToNewTab()));
 
+            actions.append((act = new QAction(QIcon(":/move"), "Check All", this)));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markAllAsChecked()));
+
+            actions.append((act = new QAction(QIcon(":/move"), "Uncheck All", this)));
+            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markAllAsUnchecked()));
+
+
             actions.append((act = new QAction(QIcon(":/move"), "Check Liked", this)));
             connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markLikedAsChecked()));
 
