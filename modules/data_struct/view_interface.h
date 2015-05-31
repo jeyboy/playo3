@@ -99,7 +99,15 @@ namespace Playo3 {
         bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = none, bool usePrevAction = false);
 
         void downloadSelected();
+        void downloadChecked(QString & path, FolderItem * root = 0);
         void downloadAll();
+
+        void moveCheckedToNewTab(FolderItem * root = 0);
+        void removeChecked(FolderItem * root = 0);
+
+        void markLikedAsChecked(FolderItem * root = 0);
+        void markNewAsChecked(FolderItem * root = 0);
+        void markListenedAsChecked(FolderItem * root = 0);
 
     protected:
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);

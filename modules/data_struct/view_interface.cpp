@@ -379,7 +379,23 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
+        }       
+
+
+        if (Settings::instance() -> isCheckboxShow()) {
+            actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(moveCheckedToNewTab()));
+
+            actions.append((act = new QAction(QIcon(":/move"), "Check Liked", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markLikedAsChecked()));
+
+            actions.append((act = new QAction(QIcon(":/move"), "Check New", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markNewAsChecked()));
+
+            actions.append((act = new QAction(QIcon(":/move"), "Check Listened", this)));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markListenedAsChecked()));
         }
+
 
         actions.append((act = new QAction(QIcon(":/download"), "Download", this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadSelected()));
@@ -624,13 +640,57 @@ void IView::downloadAll() {
 void IView::downloadSelected() {
     QString path = Settings::instance() -> defaultDownloadPath();
 
-    foreach(QModelIndex index, selectedIndexes()) {
-        if (index.data(IFOLDER).toBool())
-            downloadBranch(index, path);
-        else
-            downloadItem(index, path);
+    if (Settings::instance() -> isCheckboxShow()) {
+        downloadChecked(path);
+    } else {
+        foreach(QModelIndex index, selectedIndexes()) {
+            if (index.data(IFOLDER).toBool())
+                downloadBranch(index, path);
+            else
+                downloadItem(index, path);
+        }
     }
 }
+
+void IView::downloadChecked(QString & path, FolderItem * root) {
+    if (!root) root = mdl -> item<FolderItem>(QModelIndex());
+    QList<IItem *> children = root -> childrenList();
+
+    for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
+        if ((*it) -> is(IItem::checked)) {
+            if ((*it) -> isContainer())
+                downloadChecked(path, (FolderItem *)*it);
+            else
+                downloadItem(mdl -> index(*it), path);
+        }
+    }
+}
+
+
+
+
+
+void IView::moveCheckedToNewTab(FolderItem * root) {
+    //TODO: realisation needed
+}
+void IView::removeChecked(FolderItem * root) {
+    //TODO: realisation needed
+}
+
+void IView::markLikedAsChecked(FolderItem * root) {
+
+}
+void IView::markNewAsChecked(FolderItem * root) {
+
+}
+void IView::markListenedAsChecked(FolderItem * root) {
+
+}
+
+
+
+
+
 
 void IView::setIconSize(const QSize & size) {
     setIndentation(Settings::instance() -> treeIndentation());

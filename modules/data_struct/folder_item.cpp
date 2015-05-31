@@ -123,10 +123,9 @@ void FolderItem::linkNode(FolderItem * node) {
 }
 
 void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
-    QList<IItem *>::Iterator it = children.begin();
     QVariant item_uid;
 
-    for(; it != children.end(); it++) {
+    for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
         if ((*it) -> isRemote()) {
             if (!(*it) -> isContainer()) {
                 item_uid = (*it) -> toUid();
