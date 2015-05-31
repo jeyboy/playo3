@@ -383,8 +383,11 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
 
         if (Settings::instance() -> isCheckboxShow()) {
-            actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(moveCheckedToNewTab()));
+            actions.append((act = new QAction(this)));
+            act -> setSeparator(true);
+
+//            actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
+//            connect(act, SIGNAL(triggered(bool)), this, SLOT(moveCheckedToNewTab()));
 
             actions.append((act = new QAction(QIcon(":/move"), "Check Liked", this)));
             connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markLikedAsChecked()));
@@ -394,6 +397,9 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
             actions.append((act = new QAction(QIcon(":/move"), "Check Listened", this)));
             connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markListenedAsChecked()));
+
+            actions.append((act = new QAction(this)));
+            act -> setSeparator(true);
         }
 
 

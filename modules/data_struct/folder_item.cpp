@@ -288,7 +288,7 @@ void FolderItem::propagateCheckedState(bool checked) {
 }
 
 void FolderItem::propagateCheckedStateByPredicate(ItemStateFlag pred_state) {
-    if (is(pred_state)) {
+    if (is(checked)) {
         for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
             (*it) -> updateCheckedStateByPredicate(pred_state);
     }
