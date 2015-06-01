@@ -125,6 +125,7 @@ namespace Playo3 {
     protected:
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
+//        virtual void parseCue(FolderItem * parent, QUrl curUri, QUrl cueTargetUri = QUrl()) = 0;
 
         Qt::KeyboardModifiers dropKeyModifiers;
         QMutex * sync;
