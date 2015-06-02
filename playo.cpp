@@ -19,15 +19,15 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     initialization();
 
-//    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
-    QFile f("F:/o.cue");
-    if (f.open(QFile::ReadOnly)) {
-        Cue cue(f);
+////    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
+//    QFile f("F:/o.cue");
+//    if (f.open(QFile::ReadOnly)) {
+//        Cue cue(f);
 
-        qDebug() << cue.songs();
+//        qDebug() << cue.songs();
 
-        f.close();
-    }
+//        f.close();
+//    }
 }
 
 Playo::~Playo() {
