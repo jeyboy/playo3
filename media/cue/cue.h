@@ -4,16 +4,17 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qregularexpression.h>
-#include <qdebug.h>
 
 #include "cue_structs.h"
 
 class Cue {
     public:
         Cue(QIODevice & obj);
+//        Cue(QString & obj);
 
         inline QList<CueFile *> files() const { return _files; }
         inline QHash<QString, QString> infos() const { return _infos; }
+        QMap<qint64, QString> songs();
     protected:
         QList<QString> splitLine(QString & line);
         void proceedLine(QString & line);

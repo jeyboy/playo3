@@ -1,4 +1,5 @@
 #include "cue.h"
+#include <qdebug.h>
 
 Cue::Cue(QIODevice & obj) : level(0) {
     QTextStream in(&obj);
@@ -7,6 +8,24 @@ Cue::Cue(QIODevice & obj) : level(0) {
         QString str = in.readLine();
         proceedLine(str);
     }
+}
+
+QMap<qint64, QString> Cue::songs() {
+    QMap<qint64, QString> res;
+
+    for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
+        for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++) {
+            for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
+                res.insert((*index) -> toMillis(), (*track) -> title);
+            }
+        }
+
+        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {
+            res.insert((*index) -> toMillis(), (*file) -> path);
+        }
+    }
+
+    return res;
 }
 
 QList<QString> Cue::splitLine(QString & line) {
@@ -42,8 +61,6 @@ void Cue::proceedLine(QString & line) {
     QList<QString> parts = splitLine(line);
     if (!parts.isEmpty()) {
         QString token = parts.takeFirst();
-
-        qDebug() << line << parts;
 
         while(level > -1) {
             switch(level) {
@@ -106,34 +123,6 @@ void Cue::proceedLine(QString & line) {
         qDebug() << "ERROR LEVEL" << line;
     }
 }
-
-//void Cue::initRules() {
-//    QString paramPredicate = " (.+)";
-
-//    QRegularExpression firstLevel("(\\b)*(REM|TITLE|SONGWRITER|CATALOG|CDTEXTFILE|FILE)" + paramPredicate);
-//    firstLevel.optimize();
-//    regs << firstLevel;
-
-//    QRegularExpression secondLevel("(\\b)*(TRACK)" + paramPredicate);
-//    secondLevel.optimize();
-//    regs << secondLevel;
-
-//    QRegularExpression thirdLevel("(\\b)*(TITLE|SONGWRITER|INDEX|FLAGS|ISRC|PERFORMER|PREGAP|POSTGAP)" + paramPredicate);
-//    thirdLevel.optimize();
-//    regs << thirdLevel;
-//}
-
-//inline void parseCatalog(QString & line) {
-//    QRegularExpression regex("<ca>(.*)</ca>", QRegularExpression::MultilineOption);
-//    QRegularExpressionMatch match = regex.match(content);
-//    QString ca = match.captured(1);
-//}
-
-
-//REM GENRE Rock
-//REM DATE 2003
-//REM DISCID 24059504
-//REM COMMENT "ExactAudioCopy v0.95b3"
 
 //REM (comment)
 //TITLE [title-string] // not mandatory quotation marks // Strings should be limited to 80 character or less.

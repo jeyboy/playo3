@@ -45,10 +45,16 @@ struct CueTrackIndex { //      All times are relative to the beginning of the cu
         parseCueTimeStr(pos, minutes, seconds, millis);
     }
 
+    qint64 toMillis() {
+        return millis + seconds * 1000 + minutes * 60000;
+    }
+
+    QString toStr() {
+        return title;
+    }
+
     int number;
-    int minutes;
-    int seconds;
-    int millis;
+    int minutes, seconds, millis;
 
     QString title;
     QString writer;
@@ -96,11 +102,11 @@ struct CueTrack : IndexContainer {
     void setPregap(QString pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
     void setPostgap(QString postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
 
-    int pregap_minutes, pregap_seconds, pregap_millis;
-    int postgap_minutes, postgap_seconds, postgap_millis;
-
     int number;
     TrackDataType data_type;
+
+    int pregap_minutes, pregap_seconds, pregap_millis;
+    int postgap_minutes, postgap_seconds, postgap_millis;
 
     QString title;
     QString songwriter;
@@ -113,7 +119,6 @@ struct CueFile : IndexContainer {
     CueFile(QString fpath, QString fType) : path(fpath) {
         if (fType == "BINARY") format = BINARY;
         if (fType == "MOTOROLA") format = MOTOROLA;
-
         if (fType == "AIFF") format = AIFF;
         if (fType == "WAVE") format = WAVE;
         if (fType == "MP3") format = MP3;
