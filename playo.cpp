@@ -18,6 +18,15 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
 
     initialization();
+
+    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
+    if (f.open(QFile::ReadOnly)) {
+        Cue cue(f);
+
+        int i = 0;
+
+        f.close();
+    }
 }
 
 Playo::~Playo() {

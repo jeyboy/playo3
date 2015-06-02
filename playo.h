@@ -10,6 +10,7 @@
 
 #include <QSettings>
 
+#include "media/cue/cue.h"
 #include "media/library.h"
 #include "media/genres/music_genres.h"
 #include "misc/file_utils/data_store.h"
@@ -28,7 +29,7 @@ namespace Ui {
 class Playo : public Playo3::MainWindow {
     Q_OBJECT
 public:
-    explicit Playo(QWidget *parent = 0);
+    explicit Playo(QWidget * parent = 0);
     ~Playo();
 
 public slots:

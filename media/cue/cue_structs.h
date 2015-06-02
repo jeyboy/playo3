@@ -15,6 +15,7 @@ enum AudioFormat {
 };
 
 enum AudioFlag {
+    FLAG_NONE = 0,
     FLAG_DCP,   /*Digital copy permitted*/
     FLAG_4CH,   /*Four channel audio*/
     FLAG_PRE,   /*Pre-emphasis enabled (audio tracks only)*/
@@ -32,67 +33,14 @@ enum TrackDataType {
     CDI_2352    /*CDI Mode2 Data*/
 };
 
-///* disc modes
-// * DATA FORM OF MAIN DATA (5.29.2.8)
-// */
-//enum DiscMode {
-//    MODE_CD_DA,		/* CD-DA */
-//    MODE_CD_ROM,		/* CD-ROM mode 1 */
-//    MODE_CD_ROM_XA		/* CD-ROM XA and CD-I */
-//};
-
-///* track modes
-// * 5.29.2.8 DATA FORM OF MAIN DATA
-// * Table 350 - Data Block Type Codes
-// */
-//enum TrackMode {
-//    MODE_AUDIO,		/* 2352 byte block length */
-//    MODE_MODE1,		/* 2048 byte block length */
-//    MODE_MODE1_RAW,		/* 2352 byte block length */
-//    MODE_MODE2,		/* 2336 byte block length */
-//    MODE_MODE2_FORM1,	/* 2048 byte block length */
-//    MODE_MODE2_FORM2,	/* 2324 byte block length */
-//    MODE_MODE2_FORM_MIX,	/* 2332 byte block length */
-//    MODE_MODE2_RAW		/* 2352 byte block length */
-//};
-
-///* sub-channel mode
-// * 5.29.2.13 Data Form of Sub-channel
-// * NOTE: not sure if this applies to cue files
-// */
-//enum TrackSubMode {
-//    SUB_MODE_RW,		/* RAW Data */
-//    SUB_MODE_RW_RAW		/* PACK DATA (written R-W */
-//};
-
-///* track flags
-// * Q Sub-channel Control Field (4.2.3.3, 5.29.2.2)
-// */
-//enum TrackFlag {
-//    FLAG_NONE		= 0x00,	/* no flags set */
-//    FLAG_PRE_EMPHASIS	= 0x01,	/* audio recorded with pre-emphasis */
-//    FLAG_COPY_PERMITTED	= 0x02,	/* digital copy permitted */
-//    FLAG_DATA		= 0x04,	/* data track */
-//    FLAG_FOUR_CHANNEL	= 0x08,	/* 4 audio channels */
-//    FLAG_SCMS		= 0x10,	/* SCMS (not Q Sub-ch.) (5.29.2.7) */
-//    FLAG_ANY		= 0xff	/* any flags set */
-//};
-
-//enum DataType {
-//    DATA_AUDIO,
-//    DATA_DATA,
-//    DATA_FIFO,
-//    DATA_ZERO
-//};
-
-void parseCueTimeStr(QString str, int & min, int & sec, int & milli) {
+static void parseCueTimeStr(QString str, int & min, int & sec, int & milli) {
     QList<QString> attrs = str.split(':');
     min = attrs.value(0).toInt();
     sec = attrs.value(1).toInt();
     milli = (attrs.value(2).toFloat() / 75.0) * 1000;
 }
 
-struct CueTrackIndex { //      INDEX [number] [mm:ss:ff] // MAXINDEX // mm:ss:ff – Starting time in minutes, seconds, and frames (75 frames/second). All times are relative to the beginning of the current file.
+struct CueTrackIndex { //      All times are relative to the beginning of the current file.
     CueTrackIndex(int numb, QString pos) : number(numb) {
         parseCueTimeStr(pos, minutes, seconds, millis);
     }
@@ -106,8 +54,21 @@ struct CueTrackIndex { //      INDEX [number] [mm:ss:ff] // MAXINDEX // mm:ss:ff
     QString writer;
 };
 
-struct CueTrack {
-    CueTrack(int numb, QString dType) : number(numb) {
+struct IndexContainer {
+    void addIndex(QString numb, QString pos) {
+        indexes << (activeIndex = new CueTrackIndex(numb.toInt(), pos));
+    }
+
+    QList<CueTrackIndex *> indexes;
+    CueTrackIndex * activeIndex;
+};
+
+struct CueTrack : IndexContainer {
+    CueTrack(int numb, QString dType) : number(numb),
+        pregap_minutes(0), pregap_seconds(0), pregap_millis(0),
+        postgap_minutes(0), postgap_seconds(0), postgap_millis(0),
+        flags(FLAG_NONE)
+    {
         if (dType == "AUDIO") data_type = AUDIO;
         if (dType == "CDG") data_type = CDG;
 
@@ -119,25 +80,58 @@ struct CueTrack {
         if (dType == "CDI/2352") data_type = CDI_2352;
     }
 
-    //      PREGAP [mm:ss:ff] // mm:ss:ff – Specifies the pregap length in minutes, seconds, and frames. // must appear after a TRACK command, but before any INDEX commands. Only one PREGAP command is allowed per track
-    //      POSTGAP [mm:ss:ff] // mm:ss:ff – Specifies the postgap length in minutes, seconds, and frames. // must appear after all INDEX commands for the current track. Only one POSTGAP command is allowed per track.
+    ~CueTrack() {
+        qDeleteAll(indexes);
+    }
+
+    void parseFlags(QList<QString> flgs) {
+        for(QList<QString>::Iterator flag = flgs.begin(); flag != flgs.end(); flag++) {
+            if ((*flag) == "DCP") flags = (AudioFlag)(flags|FLAG_DCP);
+            if ((*flag) == "4CH") flags = (AudioFlag)(flags|FLAG_4CH);
+            if ((*flag) == "PRE") flags = (AudioFlag)(flags|FLAG_PRE);
+            if ((*flag) == "SCMS") flags = (AudioFlag)(flags|FLAG_SCMS);
+        }
+    }
+
+    void setPregap(QString pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
+    void setPostgap(QString postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
+
+    int pregap_minutes, pregap_seconds, pregap_millis;
+    int postgap_minutes, postgap_seconds, postgap_millis;
 
     int number;
     TrackDataType data_type;
 
     QString title;
-    QString writer;
+    QString songwriter;
     AudioFlag flags; //      FLAGS [flags] // one or more // AudioFlag
     QString isrc;
     QString performer;
 };
 
-struct CueFile {
-    CueFile(QString fpath, QString fType) : path(fpath), format(fType) {}
+struct CueFile : IndexContainer {
+    CueFile(QString fpath, QString fType) : path(fpath) {
+        if (fType == "BINARY") format = BINARY;
+        if (fType == "MOTOROLA") format = MOTOROLA;
 
-    QList<CueTrack> tracks;
+        if (fType == "AIFF") format = AIFF;
+        if (fType == "WAVE") format = WAVE;
+        if (fType == "MP3") format = MP3;
+    }
+
+    ~CueFile() {
+        qDeleteAll(tracks);
+    }
+
+    void addTrack(QString numb, QString dType) {
+        tracks << (activeTrack = new CueTrack(numb.toInt(), dType));
+    }
+
     QString path;
-    QString format;
+    AudioFormat format;
+
+    QList<CueTrack *> tracks;
+    CueTrack * activeTrack;
 };
 
 #endif // CUE_STRUCTS

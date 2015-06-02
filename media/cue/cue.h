@@ -3,16 +3,33 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
+#include <qregularexpression.h>
+#include <qdebug.h>
 
 #include "cue_structs.h"
 
 class Cue {
     public:
         Cue(QIODevice & obj);
+
+        inline QList<CueFile *> files() const { return _files; }
+        inline QHash<QString, QString> infos() const { return _infos; }
     protected:
-        void initRules();
+        QList<QString> splitLine(QString & line);
+        void proceedLine(QString & line);
+        inline void addFile(QString fpath, QString fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
     private:
-        QList<CueFile> files;
+        int level;
+
+        QList<CueFile *> _files;
+        CueFile * activeFile;
+
+        QHash<QString, QString> _infos;
+        QString title;
+        QString performer;
+        QString songwriter;
+        QString catalog; // 13 digits
+        QString text_file;
 };
 
 #endif // CUE
