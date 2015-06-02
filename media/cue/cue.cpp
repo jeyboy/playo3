@@ -16,7 +16,7 @@ QMap<qint64, QString> Cue::songs() {
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++) {
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
-                res.insert((*index) -> toMillis(), (*track) -> title);
+                res.insert((*index) -> toMillis(), (*track) -> toStr());
             }
         }
 

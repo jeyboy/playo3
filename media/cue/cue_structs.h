@@ -102,6 +102,12 @@ struct CueTrack : IndexContainer {
     void setPregap(QString pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
     void setPostgap(QString postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
 
+    QString toStr() {
+        if (!performer.isEmpty())
+            return performer + " - " + title;
+        else return title;
+    }
+
     int number;
     TrackDataType data_type;
 
