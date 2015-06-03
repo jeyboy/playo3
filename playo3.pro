@@ -251,7 +251,10 @@ HEADERS  += playo.h \
     dialogs/export_dialog.h \
     modules/web/web_apis.h \
     media/cue/cue_structs.h \
-    media/cue/cue.h
+    media/cue/cue.h \
+    modules/web/service_api/echonest_api.h \
+    modules/web/service_api/echonest_genre_api.h \
+    modules/web/service_api/iapi.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
