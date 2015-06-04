@@ -68,26 +68,19 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 //"permalink": "sam-smith-stay-with-me",
 
 QJsonObject SoundcloudApi::getAudiosInfo(QStringList audio_uids) {
-    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audiosUrl(audio_uids)));
-
-    QByteArray ar = m_http -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-
-    m_http -> close();
-    delete m_http;
-
-    return responseToJson(ar);
+    return CustomNetworkAccessManager::manager() -> getToJson(QNetworkRequest(SoundcloudApiPrivate::audiosUrl(audio_uids)), true);
 }
 
 QJsonObject SoundcloudApi::getAudioInfo(QString audio_uid) {
-    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audioUrl(audio_uid)));
+    return CustomNetworkAccessManager::manager() -> getToJson(QNetworkRequest(SoundcloudApiPrivate::audioUrl(audio_uid)), true);
+//    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audioUrl(audio_uid)));
 
-    QJsonObject obj = responseToJson(m_http -> readAll());
+//    QJsonObject obj = responseToJson(m_http -> readAll());
 
-    m_http -> close();
-    delete m_http;
+//    m_http -> close();
+//    delete m_http;
 
-    return obj;
+//    return obj;
 }
 
 void SoundcloudApi::getGroupInfo(const QObject * receiver, const char * respSlot, QString uid) {
@@ -96,16 +89,13 @@ void SoundcloudApi::getGroupInfo(const QObject * receiver, const char * respSlot
 
 ApiFuncContainer * SoundcloudApi::getGroupInfoRoutine(ApiFuncContainer * func) {
 //    uid = "101";
-    CustomNetworkAccessManager * netManager = createManager();
-
-    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupAudiosUrl(func -> uid)));
+    QNetworkReply * m_http = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupAudiosUrl(func -> uid)));
 
     if (responseRoutine("audio_list", m_http, func)) {
-        m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupPlaylistsUrl(func -> uid)));
+        m_http = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupPlaylistsUrl(func -> uid)));
         responseRoutine("playlists", m_http, func);
     }
 
-    delete netManager;
     return func;
 }
 
@@ -119,7 +109,7 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
         return getGroupInfoRoutine(func);
     }
 
-    CustomNetworkAccessManager * netManager = createManager();
+    CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
     func -> uid = /*"183";*/ func -> uid == "0" ? getUserID() : func -> uid;
 
@@ -164,7 +154,7 @@ QJsonObject SoundcloudApi::searchAudioSync(const QObject * receiver, QString pre
 }
 
 ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular) {
-    CustomNetworkAccessManager * netManager = createManager();
+    CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
     QNetworkReply * m_http;
 
 
@@ -182,12 +172,9 @@ ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QS
 ///////////////////////////////////////////////////////////
 
 bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-    QByteArray ar = reply -> readAll();
-    ar.prepend("{\"response\":"); ar.append("}");
-    QJsonObject obj = responseToJson(ar);
+    QJsonObject obj = CustomNetworkAccessManager::manager() -> replyToJson(reply, true);
 
-    reply -> close();
-    delete reply;
+    reply -> deleteLater();
 
     bool hasError = obj.value("response").toObject().contains("errors");
 

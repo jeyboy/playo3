@@ -1,12 +1,10 @@
 #include "web_api.h"
 
 WebApi::WebApi(QObject * parent) : QObject(parent) {
-    netManager = createManager();
     captchaDialog = new CaptchaDialog((QWidget *)parent);
 }
 
 WebApi::~WebApi() {
-    delete netManager;
     delete captchaDialog;
 }
 

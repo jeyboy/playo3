@@ -25,15 +25,15 @@ QNetworkReply * CustomNetworkAccessManager::postSync(const QNetworkRequest & req
     return ret;
 }
 
-QJsonObject CustomNetworkAccessManager::getToJson(const QNetworkRequest & request) {
+QJsonObject CustomNetworkAccessManager::getToJson(const QNetworkRequest & request, bool wrap) {
     QNetworkReply * reply = getSync(request);
-    QJsonObject res = replyToJson(reply);
+    QJsonObject res = replyToJson(reply, wrap);
     reply -> deleteLater();
     return res;
 }
-QJsonObject CustomNetworkAccessManager::postToJson(const QNetworkRequest & request, const QByteArray & data) {
+QJsonObject CustomNetworkAccessManager::postToJson(const QNetworkRequest & request, const QByteArray & data, bool wrap) {
     QNetworkReply * reply = postSync(request, data);
-    QJsonObject res = replyToJson(reply);
+    QJsonObject res = replyToJson(reply, wrap);
     reply -> deleteLater();
     return res;
 }

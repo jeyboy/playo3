@@ -20,13 +20,17 @@ public:
     QNetworkReply * getSync(const QNetworkRequest & request);
     QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data);
 
-    QJsonObject getToJson(const QNetworkRequest & request);
-    QJsonObject postToJson(const QNetworkRequest & request, const QByteArray & data);
+    QJsonObject getToJson(const QNetworkRequest & request, bool wrap = false);
+    QJsonObject postToJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
     QNetworkReply * openUrl(QUrl & url);
     QPixmap openImage(QUrl & url);
 
-    inline QJsonObject replyToJson(QNetworkReply * reply) { return QJsonDocument::fromJson(reply -> readAll()).object(); }
+    inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
+        QByteArray ar = reply -> readAll();
+        if (wrap) { ar.prepend("{\"response\":"); ar.append("}"); }
+        return QJsonDocument::fromJson(ar).object();
+    }
 protected:
     void synchronizeRequest(QNetworkReply * m_http);
     QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0);
