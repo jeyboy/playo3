@@ -16,6 +16,23 @@ class EchonestGenreApi : public IApi {
             return url;
         }
 
+        QJsonArray artistsByGenre(QString genre) {
+            QJsonObject response;
+            QJsonArray artists;
+            int offset = 0;
+
+            while (proceedQuery(artistsByGenreUrl(genre, offset), response)) {
+                artists.append(response.value("response").toObject().value("artists"));
+
+                offset += artistsByGenreLimit();
+
+                if (offset > extractAmount(response))
+                    break;
+            }
+
+            return artists;
+        }
+
         //{
         //    "response": {
         //        "artists": [
@@ -43,6 +60,14 @@ class EchonestGenreApi : public IApi {
             QUrlQuery query = buildDefaultParams();
             url.setQuery(query);
             return url;
+        }
+
+        QJsonArray genres() {
+            QJsonObject response;
+
+            if (proceedQuery(genresUrl(), response)) {
+                return response.value("response").toObject().value("genres").toArray();
+            } else return QJsonArray();
         }
 
         //{

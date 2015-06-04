@@ -41,19 +41,13 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
     } else if (query.hasQueryItem("code")) {
         QNetworkRequest request(authTokenUrl());
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QNetworkReply * m_http = manager() -> postSync(request, SoundcloudApiPrivate::authTokenUrlParams(query.queryItemValue("code")));
-
-        QJsonObject doc = responseToJson(m_http -> readAll());
-        delete m_http;
+        QJsonObject doc = CustomNetworkAccessManager::manager() -> postToJson(request, SoundcloudApiPrivate::authTokenUrlParams(query.queryItemValue("code")));
 
         if (doc.contains("access_token")) {
             QString newToken = doc.value("access_token").toString();
 
             QNetworkRequest request(SoundcloudApiPrivate::confirmAuthUrl(newToken));
-            m_http = manager() -> getSync(request);
-
-            doc = responseToJson(m_http -> readAll());
-            delete m_http;
+            doc = CustomNetworkAccessManager::manager() -> getToJson(request);
 
             setParams(newToken, QString::number(doc.value("id").toInt()), "");
             emit authorized();

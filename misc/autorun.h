@@ -4,6 +4,8 @@
 #include <qsettings.h>
 #include <qapplication.h>
 
+//NOT USED
+
 class Autorun {
 public:
     void registerApp() {

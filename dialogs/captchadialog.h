@@ -2,8 +2,6 @@
 #define CAPTCHADIALOG_H
 
 #include <QDialog>
-#include <QPicture>
-#include "modules/web/web_api.h"
 
 namespace Ui {
     class CaptchaDialog;
@@ -17,7 +15,7 @@ class CaptchaDialog : public QDialog {
 public:
     explicit CaptchaDialog(QWidget * parent = 0);
     ~CaptchaDialog();
-    void setImage(WebApi * api, QString url);
+    void setImage(QPixmap pixmap);
     void clearText();
     QString captchaText() const;
 

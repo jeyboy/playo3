@@ -50,15 +50,6 @@ public:
 
     virtual bool isConnected() = 0;
 
-    inline CustomNetworkAccessManager * manager() const { return netManager; }
-    inline bool getValidManager(CustomNetworkAccessManager *& webManager) {
-        bool new_manager = QThread::currentThread() != QApplication::instance() -> thread();
-        webManager = new_manager ? createManager() : manager();
-        return new_manager;
-    }
-
-    QPixmap openRemoteImage(QString url);
-
     void clearData();
 
     inline void addFriend(QString uid, QString name) {
@@ -90,12 +81,7 @@ protected slots:
 protected:
     void startApiCall(QFuture<ApiFuncContainer *> feature);
 
-    inline CustomNetworkAccessManager * createManager() { return new CustomNetworkAccessManager(); }
-
     CaptchaDialog * captchaDialog;
-    inline QJsonObject responseToJson(QByteArray data) { return QJsonDocument::fromJson(data).object(); }
-
-    CustomNetworkAccessManager * netManager;
 
     QHash<QString, QString> friends;
     QHash<QString, QString> groups;

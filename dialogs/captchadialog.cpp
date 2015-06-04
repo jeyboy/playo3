@@ -10,8 +10,8 @@ CaptchaDialog::~CaptchaDialog() {
     delete ui;
 }
 
-void CaptchaDialog::setImage(WebApi * api, QString url) {
-    ui -> captchaImg -> setPixmap(api -> openRemoteImage(url));
+void CaptchaDialog::setImage(QPixmap pixmap) {
+    ui -> captchaImg -> setPixmap(pixmap);
 }
 
 void CaptchaDialog::clearText() {
