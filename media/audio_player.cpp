@@ -36,9 +36,9 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
         throw "An incorrect version of BASS.DLL was loaded";
     }
 
-//    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION) {
-//        throw "An incorrect version of BASS_FX.DLL was loaded";
-//    }
+    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION) {
+        throw "An incorrect version of BASS_FX.DLL was loaded";
+    }
 
 
 
@@ -68,6 +68,7 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
     }
     ///////////////////////////////////////////////
 
+    BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, 10000);  // 10 sec
     //    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, DWORD timeoutMili); // default is no timeout
 
@@ -185,6 +186,66 @@ bool AudioPlayer::isStoped() const {
     return currentState == StoppedState;
 }
 
+void AudioPlayer::registerEQ(int channel) {
+  _fxEQ = BASS_ChannelSetFX(channel, BASS_FX_BFX_PEAKEQ, 0);
+  qDebug() << "FX" << BASS_ErrorGetCode();
+
+  // setup the EQ bands
+  BASS_BFX_PEAKEQ eq;
+  eq.fQ = 0;
+  eq.fGain = 0;
+  eq.fBandwidth = 2.5; // 3
+  eq.lChannel = BASS_BFX_CHANALL;
+
+//  eq.lBand = 0; eq.fCenter = 20; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 1; eq.fCenter = 31; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 2; eq.fCenter = 63; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 3; eq.fCenter = 90; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 4; eq.fCenter = 125; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 5; eq.fCenter = 160; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 6; eq.fCenter = 200; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 7; eq.fCenter = 250; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 8; eq.fCenter = 375; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 9; eq.fCenter = 500; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 10; eq.fCenter = 750; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 11; eq.fCenter = 1000; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 12; eq.fCenter = 1500; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 13; eq.fCenter = 2000; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 14; eq.fCenter = 3000; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 15; eq.fCenter = 4000; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 16; eq.fCenter = 8000; BASS_FXSetParameters(_fxEQ, eq);
+//  eq.lBand = 17; eq.fCenter = 16000; BASS_FXSetParameters(_fxEQ, eq);
+
+
+
+  // create 1st band for bass
+  eq.lBand = 0;
+  eq.fCenter = 125;
+  BASS_FXSetParameters(_fxEQ, &eq);
+
+  // create 2nd band for mid
+  eq.lBand = 1;
+  eq.fCenter = 1000;
+  BASS_FXSetParameters(_fxEQ, &eq);
+
+  // create 3rd band for treble
+  eq.lBand = 2;
+  eq.fCenter = 8000;
+  BASS_FXSetParameters(_fxEQ, &eq);
+}
+
+void AudioPlayer::unregisterEQ(int channel) {
+    BASS_ChannelRemoveFX(channel, _fxEQ);
+}
+
+void AudioPlayer::setEQBand(int band, float gain) {
+  BASS_BFX_PEAKEQ eq;
+  eq.lBand = band;
+  BASS_FXGetParameters(_fxEQ, &eq);
+  eq.fGain = gain;
+  BASS_FXSetParameters(_fxEQ, &eq);
+}
+
 ////////////////////////////////////////////////////////////////////////
 /// PRIVATE
 ////////////////////////////////////////////////////////////////////////
@@ -213,6 +274,7 @@ int AudioPlayer::openChannel(QString path) {
 
 void AudioPlayer::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
+    unregisterEQ(chan);
     BASS_ChannelStop(chan);
     BASS_ChannelRemoveSync(chan, syncHandle);
     BASS_ChannelRemoveSync(chan, syncDownloadHandle);
@@ -501,6 +563,7 @@ void AudioPlayer::play() {
                     channelsCount = 2;
 
                 BASS_ChannelPlay(chan, true);
+                registerEQ(chan);
                 spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
                 notifyTimer -> start(notifyInterval);
 

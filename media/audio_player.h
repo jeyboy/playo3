@@ -88,6 +88,10 @@ public:
     bool isPaused() const;
     bool isStoped() const;
 
+    void registerEQ(int channel);
+    void unregisterEQ(int channel);
+    void setEQBand(int band, float gain);
+
 signals:
     void volumeChanged(int);
     void playbackEnded();
@@ -127,6 +131,8 @@ protected:
     int duration;
 
 private:
+    HFX _fxEQ;
+
     float calcBpm(int channel_id);
     float fastSqrt(float x);
 

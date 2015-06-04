@@ -284,6 +284,19 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     Player::instance() -> setLikeButton(act);
 
     ptb -> addAction(QIcon(":/next"), "Next track", Dockbars::instance(), SLOT(nextExecTriggering()));
+
+
+    ClickableSlider * sl = new ClickableSlider(ptb);
+    sl -> setOrientation(Qt::Horizontal);
+    sl -> setMinimumSize(30, 30);
+    sl -> setMinimum(-10);
+    sl -> setMaximum(10);
+
+    connect(sl, SIGNAL(valueChanged(int)), this, SLOT(sp(int)));
+
+    ptb -> addWidget(sl);
+
+
     ptb -> adjustSize();
 
     return ptb;

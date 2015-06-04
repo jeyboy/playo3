@@ -66,6 +66,10 @@ namespace Playo3 {
         QToolButton * initiateSoundcloudButton();
 
     protected slots:
+        inline void sp(int v) {
+            Player::instance() -> setEQBand(2, v);
+        }
+
         void onFolderDrop(QString name, QString path);
 
         inline void onMovableChanged(bool /*movable*/) {
