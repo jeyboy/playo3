@@ -26,7 +26,7 @@ public:
     QNetworkReply * openUrl(QUrl & url);
     QPixmap openImage(QUrl & url);
 
-    inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
+    static inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
         QByteArray ar = reply -> readAll();
         if (wrap) { ar.prepend("{\"response\":"); ar.append("}"); }
         return QJsonDocument::fromJson(ar).object();

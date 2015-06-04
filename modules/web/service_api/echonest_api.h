@@ -26,11 +26,7 @@ protected:
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager);
 
-        QNetworkReply * m_http = manager -> getSync(QNetworkRequest(url));
-        response = manager -> replyToJson(m_http);
-
-        m_http -> close();
-        delete m_http;
+        response = manager -> getToJson(QNetworkRequest(url));
 
         if (isNew) delete manager;
     }

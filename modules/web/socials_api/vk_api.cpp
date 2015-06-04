@@ -288,7 +288,7 @@ QString VkApi::refreshAudioItemUrl(QString audio_uid) {
 ///////////////////////////////////////////////////////////
 
 bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
-    doc = CustomNetworkAccessManager::manager() -> replyToJson(reply);
+    doc = CustomNetworkAccessManager::replyToJson(reply);
 
     QUrl url = reply -> url();
     reply -> deleteLater();

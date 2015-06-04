@@ -172,7 +172,7 @@ ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QS
 ///////////////////////////////////////////////////////////
 
 bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-    QJsonObject obj = CustomNetworkAccessManager::manager() -> replyToJson(reply, true);
+    QJsonObject obj = CustomNetworkAccessManager::replyToJson(reply, true);
 
     reply -> deleteLater();
 
