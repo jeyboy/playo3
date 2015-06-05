@@ -23,7 +23,8 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
-    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(0), currentState(StoppedState) {
+    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(0),
+    currentState(StoppedState), _fxEQ(0), useEQ(false) {
     qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
     qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
 
@@ -49,6 +50,28 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
         qDebug() << "Init error: " << BASS_ErrorGetCode();
 //        throw "Cannot initialize device";
     #endif
+
+    eqBands.insert(20, "20");
+    eqBands.insert(32, "32");
+    eqBands.insert(64, "64");
+    eqBands.insert(90, "90");
+    eqBands.insert(125, "125");
+    eqBands.insert(160, "160");
+    eqBands.insert(200, "200");
+
+    eqBands.insert(250, "250");
+    eqBands.insert(375, "375");
+    eqBands.insert(500, "500");
+    eqBands.insert(750, "750");
+    eqBands.insert(1000, "1k");
+    eqBands.insert(1500, "1.5k");
+
+    eqBands.insert(2000, "2k");
+    eqBands.insert(3000, "3k");
+    eqBands.insert(4000, "4k");
+    eqBands.insert(8000, "8k");
+    eqBands.insert(12000, "12k");
+    eqBands.insert(16000, "16k");
 
     ///////////////////////////////////////////////
     /// load plugins
@@ -184,38 +207,27 @@ bool AudioPlayer::isStoped() const {
     return currentState == StoppedState;
 }
 
-void AudioPlayer::registerEQ(int channel) {
-  _fxEQ = BASS_ChannelSetFX(channel, BASS_FX_BFX_PEAKEQ, 0);
+void AudioPlayer::registerEQ() {
+    if (_fxEQ) unregisterEQ();
 
-  // setup the EQ bands
-  BASS_BFX_PEAKEQ eq;
-  eq.fQ = 0;
-  eq.fGain = 0;
-  eq.fBandwidth = 2.5; // 3
-  eq.lChannel = BASS_BFX_CHANALL;
+    _fxEQ = BASS_ChannelSetFX(chan, BASS_FX_BFX_PEAKEQ, 0);
 
-  eq.lBand = 0; eq.fCenter = 20; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 1; eq.fCenter = 32; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 2; eq.fCenter = 64; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 3; eq.fCenter = 90; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 4; eq.fCenter = 125; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 5; eq.fCenter = 160; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 6; eq.fCenter = 200; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 7; eq.fCenter = 250; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 8; eq.fCenter = 375; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 9; eq.fCenter = 500; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 10; eq.fCenter = 750; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 11; eq.fCenter = 1000; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 12; eq.fCenter = 1500; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 13; eq.fCenter = 2000; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 14; eq.fCenter = 3000; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 15; eq.fCenter = 4000; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 16; eq.fCenter = 8000; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 17; eq.fCenter = 16000; BASS_FXSetParameters(_fxEQ, &eq);
+    BASS_BFX_PEAKEQ eq;
+    eq.fQ = 0;
+    eq.fBandwidth = 3; //2.5
+    eq.lChannel = BASS_BFX_CHANALL;
+
+    QMap<int, QString>::Iterator band = eqBands.begin();
+    for(int num = 0; band != eqBands.end(); band++, num++) {
+        eq.fGain = eqBandsGain.value(num, 0);
+        eq.lBand = num; eq.fCenter = band.key(); BASS_FXSetParameters(_fxEQ, &eq);
+    }
 }
 
-void AudioPlayer::unregisterEQ(int channel) {
-    BASS_ChannelRemoveFX(channel, _fxEQ);
+void AudioPlayer::unregisterEQ() {
+    if (!_fxEQ) return;
+    BASS_ChannelRemoveFX(chan, _fxEQ);
+    _fxEQ = 0;
 }
 
 void AudioPlayer::setEQBand(int band, float gain) {
@@ -224,6 +236,7 @@ void AudioPlayer::setEQBand(int band, float gain) {
     BASS_FXGetParameters(_fxEQ, &eq);
     eq.fGain = gain;
     BASS_FXSetParameters(_fxEQ, &eq);
+    eqBandsGain.insert(band, gain);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -254,7 +267,7 @@ int AudioPlayer::openChannel(QString path) {
 
 void AudioPlayer::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
-    unregisterEQ(chan);
+    unregisterEQ();
     BASS_ChannelStop(chan);
     BASS_ChannelRemoveSync(chan, syncHandle);
     BASS_ChannelRemoveSync(chan, syncDownloadHandle);
@@ -512,6 +525,12 @@ QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
 
 ////////////////////////////////////////////////////////////////////////
 
+void AudioPlayer::registerEQ(bool registrate) {
+    useEQ = registrate;
+    if (registrate) registerEQ();
+    else unregisterEQ();
+}
+
 void AudioPlayer::play() {
     if (currentState == PausedState) {
         resume();
@@ -542,8 +561,9 @@ void AudioPlayer::play() {
                 else
                     channelsCount = 2;
 
+                if (useEQ) registerEQ();
+
                 BASS_ChannelPlay(chan, true);
-                registerEQ(chan);
                 spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
                 notifyTimer -> start(notifyInterval);
 

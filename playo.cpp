@@ -93,6 +93,7 @@ void Playo::initialization() {
 
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
+    ToolBars::instance() -> setEqualizerSettings(settings -> read("equalizer").toObject());
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
@@ -137,6 +138,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> write("vk", VkApi::instance() -> toJson());
     settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
+    settings -> write("equalizer", ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
 

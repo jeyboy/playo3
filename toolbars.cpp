@@ -140,6 +140,7 @@ void ToolBars::save(DataStore * settings) {
                     && bar -> windowTitle() != "Media+Volume"
                     && bar -> windowTitle() != "Controls"
                     && bar -> windowTitle() != "Spectrum"
+                    && bar -> windowTitle() != "Equalizer"
                ) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
@@ -360,7 +361,8 @@ QToolBar * ToolBars::createControlToolBar() {
 QToolBar * ToolBars::createEqualizerToolBar() {
     QToolBar * ptb = precreateToolBar("Equalizer");
 
-    ptb -> addWidget(new Equalizer(ptb));
+    equalizer = new Equalizer(ptb);
+    ptb -> addWidget(equalizer);
     ptb -> adjustSize();
 
     return ptb;

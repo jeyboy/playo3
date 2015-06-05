@@ -1,5 +1,4 @@
 #include "equalizer.h"
-#include "media/player.h"
 
 using namespace Playo3;
 
@@ -13,30 +12,69 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
     setMinimumWidth(200);
 
     QGridLayout * l = new QGridLayout(this);
-    QStringList hz;
-    hz << "20" << "32" << "64" << "90" << "125" << "160" << "200"
-       << "250" << "375" << "500" << "750" << "1k" << "1.5k"
-       << "2k" << "3k" << "4k" << "8k" << "16k";
 
-    for(int loop1 = 0; loop1 < 18; loop1++) {
+    QMap<int, QString> bands = Player::instance() -> bands();
+
+    QMap<int, QString>::Iterator band = bands.begin();
+    for(int num = 0; band != bands.end(); band++, num++) {
         ClickableSlider * slider = new ClickableSlider(this);
         slider -> setOrientation(Qt::Vertical);
-        slider -> setMinimum(-120); slider -> setMaximum(120);
-        slider -> setProperty("num", loop1);
+        slider -> setMinimum(-150); slider -> setMaximum(150);
+        slider -> setProperty("num", num);
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
-        l -> addWidget(slider, 0, loop1);
-        QLabel * label = new QLabel(hz[loop1]);
+        l -> addWidget(slider, 0, num, Qt::AlignCenter);
+        QLabel * label = new QLabel(band.value());
         label -> setAlignment(Qt::AlignCenter);
-        l -> addWidget(label, 1, loop1);
+        label -> setWordWrap(true);
+        l -> addWidget(label, 1, num, Qt::AlignCenter);
+
+        l -> setColumnStretch(num, 1);
     }
 
-    //TODO: add enable button
-    //TODO: add reset button
+    enabled = new QCheckBox(this);
+    connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
+    l -> addWidget(enabled, 1, bands.size(), Qt::AlignCenter);
+
+
+    QPushButton * reset = new QPushButton("reset", this);
+    connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
+    l -> addWidget(reset, 0, bands.size(), Qt::AlignCenter);
+    l -> setColumnStretch(bands.size(), 1);
 }
 
 Equalizer::~Equalizer() {}
 
+QJsonObject Equalizer::settings() {
+    QMap<int, int> gains = Player::instance() -> eqGains();
+    QMap<int, int>::Iterator gain = gains.begin();
+
+    QJsonObject res;
+    for(; gain != gains.end(); gain++)
+        res.insert(QString::number(gain.key()), gain.value());
+
+    res.insert("enabled", enabled -> isChecked());
+
+    return res;
+}
+void Equalizer::setSettings(QJsonObject settings) {
+    QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
+    QList<ClickableSlider *>::Iterator slider = sliders.begin();
+
+    for(; slider != sliders.end(); slider++)
+        (*slider) -> setValue(settings.value(QString::number((*slider) -> property("num").toInt())).toInt() * 15);
+
+    enabled -> setChecked(settings.value("enabled").toBool());
+}
+
 void Equalizer::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
-    Player::instance() -> setEQBand(slider -> property("num").toInt(), val / 12.0);
+    Player::instance() -> setEQBand(slider -> property("num").toInt(), val / 15.0);
+}
+
+void Equalizer::reset() {
+    QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
+    QList<ClickableSlider *>::Iterator slider = sliders.begin();
+
+    for(; slider != sliders.end(); slider++)
+        (*slider) -> setValue(0);
 }
