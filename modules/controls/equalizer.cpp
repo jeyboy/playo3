@@ -9,7 +9,7 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setFixedHeight(140);
-    setMinimumWidth(200);
+    setMinimumWidth(240);
 
     QGridLayout * l = new QGridLayout(this);
 
@@ -22,24 +22,23 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
         slider -> setMinimum(-150); slider -> setMaximum(150);
         slider -> setProperty("num", num);
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
-        l -> addWidget(slider, 0, num, Qt::AlignCenter);
+        l -> addWidget(slider, 1, num, Qt::AlignCenter);
         QLabel * label = new QLabel(band.value());
         label -> setAlignment(Qt::AlignCenter);
         label -> setWordWrap(true);
-        l -> addWidget(label, 1, num, Qt::AlignCenter);
+        l -> addWidget(label, 2, num, Qt::AlignCenter);
 
         l -> setColumnStretch(num, 1);
     }
 
     enabled = new QCheckBox(this);
     connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
-    l -> addWidget(enabled, 1, bands.size(), Qt::AlignCenter);
+    l -> addWidget(enabled, 0, 0, Qt::AlignCenter);
 
 
     QPushButton * reset = new QPushButton("reset", this);
     connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
-    l -> addWidget(reset, 0, bands.size(), Qt::AlignCenter);
-    l -> setColumnStretch(bands.size(), 1);
+    l -> addWidget(reset, 0, 1, 1, 3, Qt::AlignCenter);
 }
 
 Equalizer::~Equalizer() {}

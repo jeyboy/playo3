@@ -365,6 +365,8 @@ QToolBar * ToolBars::createEqualizerToolBar() {
     ptb -> addWidget(equalizer);
     ptb -> adjustSize();
 
+    ptb -> setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
+
     return ptb;
 }
 
