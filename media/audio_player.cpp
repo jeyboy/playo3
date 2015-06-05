@@ -195,8 +195,8 @@ void AudioPlayer::registerEQ(int channel) {
   eq.lChannel = BASS_BFX_CHANALL;
 
   eq.lBand = 0; eq.fCenter = 20; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 1; eq.fCenter = 31; BASS_FXSetParameters(_fxEQ, &eq);
-  eq.lBand = 2; eq.fCenter = 63; BASS_FXSetParameters(_fxEQ, &eq);
+  eq.lBand = 1; eq.fCenter = 32; BASS_FXSetParameters(_fxEQ, &eq);
+  eq.lBand = 2; eq.fCenter = 64; BASS_FXSetParameters(_fxEQ, &eq);
   eq.lBand = 3; eq.fCenter = 90; BASS_FXSetParameters(_fxEQ, &eq);
   eq.lBand = 4; eq.fCenter = 125; BASS_FXSetParameters(_fxEQ, &eq);
   eq.lBand = 5; eq.fCenter = 160; BASS_FXSetParameters(_fxEQ, &eq);
@@ -219,8 +219,6 @@ void AudioPlayer::unregisterEQ(int channel) {
 }
 
 void AudioPlayer::setEQBand(int band, float gain) {
-    qDebug() << "EQ " << band << gain;
-
     BASS_BFX_PEAKEQ eq;
     eq.lBand = band;
     BASS_FXGetParameters(_fxEQ, &eq);

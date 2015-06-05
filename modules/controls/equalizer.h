@@ -2,7 +2,7 @@
 #define EQUALIZER_H
 
 #include <qwidget.h>
-#include <qboxlayout.h>
+#include <qgridlayout.h>
 #include "clickable_slider.h"
 
 namespace Playo3 {
