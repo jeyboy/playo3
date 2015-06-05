@@ -8,7 +8,6 @@ using namespace Playo3;
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);
 //    ui-> centralWidget -> hide();
-
     QApplication::setWindowIcon(QIcon(":ico"));
     setWindowTitle("Playo");
     setAcceptDrops(true);
@@ -213,7 +212,7 @@ void Playo::openFolderTriggered() {
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
-void Playo::showSearchDialog() {
+void Playo::showSearchDialog() {    
     SearchDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(search, false, false, false, true);

@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <qmenu.h>
 
-#include "media/player.h"
 #include "misc/file_utils/data_store.h"
 
 #include "modules/web/socials_api/vk_api.h"
@@ -15,6 +14,7 @@
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
 #include "modules/controls/spectrum.h"
+#include "modules/controls/equalizer.h"
 
 #include "dialogs/toolbardialog.h"
 #include "dialogs/toolbarbuttondialog.h"
@@ -66,10 +66,6 @@ namespace Playo3 {
         QToolButton * initiateSoundcloudButton();
 
     protected slots:
-        inline void sp(int v) {
-            Player::instance() -> setEQBand(2, v);
-        }
-
         void onFolderDrop(QString name, QString path);
 
         inline void onMovableChanged(bool /*movable*/) {
@@ -96,6 +92,7 @@ namespace Playo3 {
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
+        QToolBar * createEqualizerToolBar();
 
         inline ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),

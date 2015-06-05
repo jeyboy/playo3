@@ -125,7 +125,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_rel_view.cpp \
     modules/controls/search_bar.cpp \
     dialogs/export_dialog.cpp \
-    media/cue/cue.cpp
+    media/cue/cue.cpp \
+    modules/controls/equalizer.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -251,7 +252,8 @@ HEADERS  += playo.h \
     dialogs/export_dialog.h \
     modules/web/web_apis.h \
     media/cue/cue_structs.h \
-    media/cue/cue.h
+    media/cue/cue.h \
+    modules/controls/equalizer.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

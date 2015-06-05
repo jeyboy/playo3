@@ -85,7 +85,7 @@ void ToolBars::load(QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
         barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
-        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
+        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum"); barsList.append("Equalizer");
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -217,6 +217,8 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
         return createControlToolBar();
     } else if (barName == "Spectrum") {
         return getSpectrum();
+    } else if (barName == "Equalizer") {
+        return createEqualizerToolBar();
     } else {
         return createToolBar(barName);
     }
@@ -363,6 +365,15 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
     ptb -> addSeparator();
     ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
+    ptb -> adjustSize();
+
+    return ptb;
+}
+
+QToolBar * ToolBars::createEqualizerToolBar() {
+    QToolBar * ptb = precreateToolBar("Equalizer");
+
+    ptb -> addWidget(new Equalizer(ptb));
     ptb -> adjustSize();
 
     return ptb;
