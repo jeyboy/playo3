@@ -31,43 +31,78 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
         l -> setColumnStretch(num, 1);
     }
 
-    enabled = new QCheckBox(this);
+    enabled = new QCheckBox("On", this);
     connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
-    l -> addWidget(enabled, 0, 0, Qt::AlignCenter);
+    l -> addWidget(enabled, 0, 0, 1, 3, Qt::AlignCenter);
 
 
     QPushButton * reset = new QPushButton("reset", this);
     connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
-    l -> addWidget(reset, 0, 1, 1, 3, Qt::AlignCenter);
+    l -> addWidget(reset, 0, 3, 1, 3, Qt::AlignCenter);
+
+    presetsList = new QComboBox(this);
+    presetsList -> insertItems(0, presetNames);
+    connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
+    l -> addWidget(presetsList, 0, 6, 1, 4, Qt::AlignCenter);
 }
 
 Equalizer::~Equalizer() {}
 
 QJsonObject Equalizer::settings() {
-    QMap<int, int> gains = Player::instance() -> eqGains();
-    QMap<int, int>::Iterator gain = gains.begin();
-
     QJsonObject res;
-    for(; gain != gains.end(); gain++)
-        res.insert(QString::number(gain.key()), gain.value());
+    QJsonObject presetsNode;
 
+    QMap<QString, QMap<int, int> >::Iterator preset = presets.begin();
+
+    for(; preset != presets.end(); preset++) {
+        QJsonObject curr_preset;
+
+        for(QMap<int, int>::Iterator gain = preset.value().begin(); gain != preset.value().end(); gain++)
+            curr_preset.insert(QString::number(gain.key()), gain.value());
+
+        presetsNode.insert(preset.key(), curr_preset);
+    }
+
+    res.insert("presets", presetsNode);
+    res.insert("active", presetsList -> currentText());
     res.insert("enabled", enabled -> isChecked());
 
     return res;
 }
 void Equalizer::setSettings(QJsonObject settings) {
+    QJsonObject presetsNode = settings.value("presets").toObject();
+
+    foreach(QString key, presetsNode.keys()) {
+        QJsonObject presetVals = presetsNode.value(key).toObject();
+        QMap<int, int> gains;
+
+        foreach(QString gKey, presetVals.keys())
+            gains.insert(gKey.toInt(), presetVals.value(gKey).toInt());
+
+        presets.insert(key, gains);
+    }
+
+    if (presetNames.isEmpty())
+        presetNames << "Manual";
+
+    presetsList -> setCurrentText(settings.value("active").toString());
+    enabled -> setChecked(settings.value("enabled").toBool());
+}
+
+void Equalizer::presetChanged(QString name) {
     QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
     QList<ClickableSlider *>::Iterator slider = sliders.begin();
+    QMap<int, int> gains = presets.value(name);
 
     for(; slider != sliders.end(); slider++)
-        (*slider) -> setValue(settings.value(QString::number((*slider) -> property("num").toInt())).toInt() * 15);
-
-    enabled -> setChecked(settings.value("enabled").toBool());
+        (*slider) -> setValue(gains.value((*slider) -> property("num").toInt()));
 }
 
 void Equalizer::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
-    Player::instance() -> setEQBand(slider -> property("num").toInt(), val / 15.0);
+    int pos = slider -> property("num").toInt();
+    Player::instance() -> setEQBand(pos, val / 15.0);
+    presets[presetsList -> currentText()].insert(pos, val);
 }
 
 void Equalizer::reset() {

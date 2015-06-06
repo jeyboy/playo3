@@ -18,11 +18,16 @@ namespace Playo3 {
         void setSettings(QJsonObject settings);
 
     protected slots:
+        void presetChanged(QString name);
         void eqValueChanged(int);
         void reset();
 
     private:
+        QStringList presetNames;
+        QMap<QString, QMap<int, int> > presets;
+
         QCheckBox * enabled;
+        QComboBox * presetsList;
     };
 }
 
