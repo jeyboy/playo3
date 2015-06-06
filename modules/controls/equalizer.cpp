@@ -85,6 +85,8 @@ void Equalizer::setSettings(QJsonObject settings) {
     if (presetNames.isEmpty())
         presetNames << "Manual";
 
+    presetsList -> insertItems(0, presetNames);
+
     presetsList -> setCurrentText(settings.value("active").toString());
     enabled -> setChecked(settings.value("enabled").toBool());
 }
