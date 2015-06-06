@@ -30,6 +30,8 @@ namespace Playo3 {
         void reset();
 
     private:
+        bool presetChanging;
+
         QMap<QString, QMap<int, int> > presets;
 
         QCheckBox * enabled;

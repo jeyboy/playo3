@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
+Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) {
     setObjectName("tool_equalizer");
 
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -114,9 +114,7 @@ void Equalizer::createPreset() {
 
         if (isNew)
             presetsList -> insertItem(0, name);
-        presetsList -> blockSignals(true);
         presetsList -> setCurrentText(name);
-        presetsList -> blockSignals(false);
     }
 }
 
@@ -128,18 +126,22 @@ void Equalizer::removePreset() {
 }
 
 void Equalizer::presetChanged(QString name) {
+    presetChanging = true;
     QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
     QList<ClickableSlider *>::Iterator slider = sliders.begin();
     QMap<int, int> gains = presets.value(name);
 
     for(; slider != sliders.end(); slider++)
         (*slider) -> setValue(gains.value((*slider) -> property("num").toInt()));
+    presetChanging = false;
 }
 
 void Equalizer::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
     Player::instance() -> setEQBand(pos, val / 15.0);
+
+    if (presetChanging) return;
 
     if (presetsList -> currentText() != DEFAULT_PRESET) {
         presetsList -> blockSignals(true);
