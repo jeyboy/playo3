@@ -8,7 +8,7 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    setFixedHeight(140);
+    setFixedHeight(200);
     setMinimumWidth(240);
 
     QGridLayout * l = new QGridLayout(this);
@@ -17,16 +17,23 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) 
 
     QMap<int, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
+        QLabel * dbLabel = new QLabel("0");
+        dbLabel -> setAlignment(Qt::AlignCenter);
+        l -> addWidget(dbLabel, 1, num, Qt::AlignCenter);
+        dbOutput << dbLabel;
+
+
         ClickableSlider * slider = new ClickableSlider(this);
         slider -> setOrientation(Qt::Vertical);
         slider -> setMinimum(-150); slider -> setMaximum(150);
         slider -> setProperty("num", num);
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
-        l -> addWidget(slider, 1, num, Qt::AlignCenter);
+        l -> addWidget(slider, 2, num, Qt::AlignCenter);
+
+
         QLabel * label = new QLabel(band.value());
         label -> setAlignment(Qt::AlignCenter);
-        label -> setWordWrap(true);
-        l -> addWidget(label, 2, num, Qt::AlignCenter);
+        l -> addWidget(label, 3, num, Qt::AlignCenter);
 
         l -> setColumnStretch(num, 1);
     }
@@ -140,6 +147,8 @@ void Equalizer::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
     Player::instance() -> setEQBand(pos, val / 15.0);
+
+    dbOutput[pos] -> setText(QString::number(val));
 
     if (presetChanging) return;
 

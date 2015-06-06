@@ -32,6 +32,7 @@ namespace Playo3 {
     private:
         bool presetChanging;
 
+        QList<QLabel *> dbOutput;
         QMap<QString, QMap<int, int> > presets;
 
         QCheckBox * enabled;
