@@ -9,6 +9,8 @@
 #include "dialogs/toolbardialog.h"
 
 namespace Playo3 {
+    #define DEFAULT_PRESET QString("Manual")
+
     class Equalizer : public QWidget {
         Q_OBJECT
 

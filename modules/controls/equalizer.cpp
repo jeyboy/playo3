@@ -90,7 +90,7 @@ void Equalizer::setSettings(QJsonObject settings) {
     }
 
     if (presets.isEmpty())
-        presets.insert("Manual", QMap<int, int>());
+        presets.insert(DEFAULT_PRESET, QMap<int, int>());
 
     presetsList -> insertItems(0, presets.keys());
 
@@ -107,17 +107,24 @@ void Equalizer::createPreset() {
         if (name.isEmpty()) return; // TODO: output error
         bool isNew = !presets.contains(name);
 
-        presets.insert(name, Player::instance() -> eqGains());
+        presets.insert(name, presets.value(presetsList -> currentText()));
+
+        if (presetsList -> currentText() == DEFAULT_PRESET)
+            presets.insert(DEFAULT_PRESET, QMap<int, int>());
 
         if (isNew)
             presetsList -> insertItem(0, name);
+        presetsList -> blockSignals(true);
         presetsList -> setCurrentText(name);
+        presetsList -> blockSignals(false);
     }
 }
 
 void Equalizer::removePreset() {
-    if (presetsList -> currentText() != "Manual")
+    if (presetsList -> currentText() != DEFAULT_PRESET) {
+        presets.remove(presetsList -> currentText());
         presetsList -> removeItem(presetsList -> currentIndex());
+    }
 }
 
 void Equalizer::presetChanged(QString name) {
@@ -133,6 +140,14 @@ void Equalizer::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
     Player::instance() -> setEQBand(pos, val / 15.0);
+
+    if (presetsList -> currentText() != DEFAULT_PRESET) {
+        presetsList -> blockSignals(true);
+        presets.insert(DEFAULT_PRESET, presets.value(presetsList -> currentText()));
+        presetsList -> setCurrentText(DEFAULT_PRESET);
+        presetsList -> blockSignals(false);
+    }
+
     presets[presetsList -> currentText()].insert(pos, val);
 }
 
