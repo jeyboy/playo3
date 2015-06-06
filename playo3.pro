@@ -125,7 +125,8 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_rel_view.cpp \
     modules/controls/search_bar.cpp \
     dialogs/export_dialog.cpp \
-    media/cue/cue.cpp
+    media/cue/cue.cpp \
+    modules/controls/equalizer.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -255,7 +256,8 @@ HEADERS  += playo.h \
     modules/web/service_api/echonest_api.h \
     modules/web/service_api/echonest_genre_api.h \
     modules/web/service_api/iapi.h \
-    misc/call_initiator.h
+    misc/call_initiator.h \
+    modules/controls/equalizer.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

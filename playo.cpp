@@ -8,7 +8,6 @@ using namespace Playo3;
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);
 //    ui-> centralWidget -> hide();
-
     QApplication::setWindowIcon(QIcon(":ico"));
     setWindowTitle("Playo");
     setAcceptDrops(true);
@@ -94,6 +93,7 @@ void Playo::initialization() {
 
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
+    ToolBars::instance() -> setEqualizerSettings(settings -> read("equalizer").toObject());
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
@@ -138,6 +138,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> write("vk", VkApi::instance() -> toJson());
     settings -> write("soundcloud", SoundcloudApi::instance() -> toJson());
 
+    settings -> write("equalizer", ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
 
@@ -213,7 +214,7 @@ void Playo::openFolderTriggered() {
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
 
-void Playo::showSearchDialog() {
+void Playo::showSearchDialog() {    
     SearchDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(search, false, false, false, true);

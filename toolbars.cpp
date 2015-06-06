@@ -85,7 +85,7 @@ void ToolBars::load(QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
         barsList.append("Media"); barsList.append("Media+"); barsList.append("Media+Position"); barsList.append("Media+Time");
-        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum");
+        barsList.append("Media+Volume"); barsList.append("Controls"); barsList.append("Spectrum"); barsList.append("Equalizer");
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -140,6 +140,7 @@ void ToolBars::save(DataStore * settings) {
                     && bar -> windowTitle() != "Media+Volume"
                     && bar -> windowTitle() != "Controls"
                     && bar -> windowTitle() != "Spectrum"
+                    && bar -> windowTitle() != "Equalizer"
                ) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
@@ -217,6 +218,8 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
         return createControlToolBar();
     } else if (barName == "Spectrum") {
         return getSpectrum();
+    } else if (barName == "Equalizer") {
+        return createEqualizerToolBar();
     } else {
         return createToolBar(barName);
     }
@@ -355,6 +358,18 @@ QToolBar * ToolBars::createControlToolBar() {
     return ptb;
 }
 
+QToolBar * ToolBars::createEqualizerToolBar() {
+    QToolBar * ptb = precreateToolBar("Equalizer");
+
+    equalizer = new Equalizer(ptb);
+    ptb -> addWidget(equalizer);
+    ptb -> adjustSize();
+
+    ptb -> setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
+
+    return ptb;
+}
+
 Spectrum * ToolBars::getSpectrum() {
     if (spectrum == 0) {
         spectrum = new Spectrum((QWidget *)parent());
@@ -451,7 +466,7 @@ void ToolBars::removePanelHighlight() {
 }
 
 void ToolBars::addPanelTriggered() {
-    ToolbarDialog dialog((QWidget *)parent());
+    ToolbarDialog dialog("Toolbar settings", (QWidget *)parent());
 
     if (dialog.exec() == QDialog::Accepted) {
         QToolBar * bar = createToolBar(dialog.getName());

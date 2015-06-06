@@ -88,6 +88,14 @@ public:
     bool isPaused() const;
     bool isStoped() const;
 
+    void registerEQ();
+    void unregisterEQ();
+
+    inline QMap<int, int> eqGains() const { return eqBandsGain; }
+    inline void setEqGains(QMap<int, int> gains) { eqBandsGain = gains; }
+    void setEQBand(int band, float gain);
+    inline QMap<int, QString> bands() const { return eqBands; }
+
 signals:
     void volumeChanged(int);
     void playbackEnded();
@@ -108,6 +116,8 @@ private slots:
     void calcSpectrum();
 
 public slots:
+    void registerEQ(bool registrate);
+
     void play();
     void pause();
     void resume();
@@ -127,9 +137,13 @@ protected:
     int duration;
 
 private:
+    HFX _fxEQ;
+    bool useEQ;
+    QMap<int, QString> eqBands;
+    QMap<int, int> eqBandsGain;
+
     float calcBpm(int channel_id);
     float fastSqrt(float x);
-
 
     QVector<int> spectrumPoints;
     QVector<int> spectrumComplexPoints;

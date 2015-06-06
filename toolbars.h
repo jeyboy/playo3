@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <qmenu.h>
 
-#include "media/player.h"
 #include "misc/file_utils/data_store.h"
 
 #include "modules/web/socials_api/vk_api.h"
@@ -15,8 +14,8 @@
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
 #include "modules/controls/spectrum.h"
+#include "modules/controls/equalizer.h"
 
-#include "dialogs/toolbardialog.h"
 #include "dialogs/toolbarbuttondialog.h"
 #include "misc/stylesheets.h"
 
@@ -44,9 +43,10 @@ namespace Playo3 {
 
         inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
         Spectrum * getSpectrum();
-        inline void updateMetricSliders() {
-            slider -> updateMetric();
-        }
+        inline void updateMetricSliders() { slider -> updateMetric(); }
+
+        inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
+        inline void setEqualizerSettings(QJsonObject settings) { equalizer -> setSettings(settings); }
 
     public slots:
         void hideAll();
@@ -92,9 +92,10 @@ namespace Playo3 {
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
+        QToolBar * createEqualizerToolBar();
 
         inline ToolBars(QObject * parent) : QObject(parent),
-            vkToolButton(0), soundcloudToolButton(0), highlighted(0), spectrum(0),
+            vkToolButton(0), soundcloudToolButton(0), highlighted(0), equalizer(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
             connect(VkApi::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
@@ -107,6 +108,7 @@ namespace Playo3 {
         QToolBar * highlighted;
         MetricSlider * slider;
 
+        Equalizer * equalizer;
         Spectrum * spectrum;
         QToolBar * underMouseBar;
         ToolbarButton * underMouseButton;

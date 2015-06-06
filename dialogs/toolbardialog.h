@@ -4,21 +4,21 @@
 #include <QDialog>
 
 namespace Ui {
-  class ToolbarDialog;
+    class ToolbarDialog;
 }
 
 class ToolbarDialog : public QDialog {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ToolbarDialog(QWidget *parent = 0);
-  ~ToolbarDialog();
+    explicit ToolbarDialog(QString title, QWidget * parent = 0);
+    ~ToolbarDialog();
 
-  QString getName();
-  void setName(QString name);
+    QString getName();
+    void setName(QString name);
 
 private:
-  Ui::ToolbarDialog *ui;
+    Ui::ToolbarDialog * ui;
 };
 
 #endif // TOOLBARDIALOG_H
