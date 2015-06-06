@@ -154,9 +154,14 @@ void Equalizer::eqValueChanged(int val) {
 }
 
 void Equalizer::reset() {
-    QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
-    QList<ClickableSlider *>::Iterator slider = sliders.begin();
+    if (presetsList -> currentText() == DEFAULT_PRESET) {
+        QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
+        QList<ClickableSlider *>::Iterator slider = sliders.begin();
 
-    for(; slider != sliders.end(); slider++)
-        (*slider) -> setValue(0);
+        for(; slider != sliders.end(); slider++)
+            (*slider) -> setValue(0);
+    } else {
+        presets.insert(DEFAULT_PRESET, QMap<int, int>());
+        presetsList -> setCurrentText(DEFAULT_PRESET);
+    }
 }
