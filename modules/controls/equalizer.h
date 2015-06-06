@@ -3,8 +3,10 @@
 
 #include <qwidget.h>
 #include <qgridlayout.h>
+
 #include "clickable_slider.h"
 #include "media/player.h"
+#include "dialogs/toolbardialog.h"
 
 namespace Playo3 {
     class Equalizer : public QWidget {
@@ -18,12 +20,14 @@ namespace Playo3 {
         void setSettings(QJsonObject settings);
 
     protected slots:
+        void createPreset();
+        void removePreset();
+
         void presetChanged(QString name);
         void eqValueChanged(int);
         void reset();
 
     private:
-        QStringList presetNames;
         QMap<QString, QMap<int, int> > presets;
 
         QCheckBox * enabled;

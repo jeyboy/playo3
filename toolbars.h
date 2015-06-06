@@ -16,7 +16,6 @@
 #include "modules/controls/spectrum.h"
 #include "modules/controls/equalizer.h"
 
-#include "dialogs/toolbardialog.h"
 #include "dialogs/toolbarbuttondialog.h"
 #include "misc/stylesheets.h"
 

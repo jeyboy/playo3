@@ -466,7 +466,7 @@ void ToolBars::removePanelHighlight() {
 }
 
 void ToolBars::addPanelTriggered() {
-    ToolbarDialog dialog((QWidget *)parent());
+    ToolbarDialog dialog("Toolbar settings", (QWidget *)parent());
 
     if (dialog.exec() == QDialog::Accepted) {
         QToolBar * bar = createToolBar(dialog.getName());

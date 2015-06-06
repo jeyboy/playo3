@@ -1,21 +1,21 @@
 #include "toolbardialog.h"
 #include "ui_toolbardialog.h"
 
-ToolbarDialog::ToolbarDialog(QWidget *parent) :
-  QDialog(parent), ui(new Ui::ToolbarDialog) {
-  ui->setupUi(this);
+ToolbarDialog::ToolbarDialog(QString title, QWidget * parent) :
+    QDialog(parent), ui(new Ui::ToolbarDialog) {
+    ui -> setupUi(this);
 
-  setWindowTitle("Toolbar settings");
+    setWindowTitle(title);
 }
 
 ToolbarDialog::~ToolbarDialog() {
-  delete ui;
+    delete ui;
 }
 
 QString ToolbarDialog::getName() {
-  return ui -> toolbarName ->text();
+    return ui -> toolbarName -> text();
 }
 
 void ToolbarDialog::setName(QString name) {
-  ui -> toolbarName -> setText(name);
+    ui -> toolbarName -> setText(name);
 }

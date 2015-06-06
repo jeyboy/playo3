@@ -41,9 +41,16 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent) {
     l -> addWidget(reset, 0, 3, 1, 3, Qt::AlignCenter);
 
     presetsList = new QComboBox(this);
-    presetsList -> insertItems(0, presetNames);
     connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
-    l -> addWidget(presetsList, 0, 6, 1, 4, Qt::AlignCenter);
+    l -> addWidget(presetsList, 0, 6, 1, 7, Qt::AlignCenter);
+
+    QPushButton * save = new QPushButton("save", this);
+    connect(save, SIGNAL(clicked()), this, SLOT(createPreset()));
+    l -> addWidget(save, 0, 13, 1, 3, Qt::AlignCenter);
+
+    QPushButton * remove = new QPushButton("remove", this);
+    connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
+    l -> addWidget(remove, 0, 16, 1, 3, Qt::AlignCenter);
 }
 
 Equalizer::~Equalizer() {}
@@ -82,13 +89,35 @@ void Equalizer::setSettings(QJsonObject settings) {
         presets.insert(key, gains);
     }
 
-    if (presetNames.isEmpty())
-        presetNames << "Manual";
+    if (presets.isEmpty())
+        presets.insert("Manual", QMap<int, int>());
 
-    presetsList -> insertItems(0, presetNames);
+    presetsList -> insertItems(0, presets.keys());
 
     presetsList -> setCurrentText(settings.value("active").toString());
     enabled -> setChecked(settings.value("enabled").toBool());
+}
+
+void Equalizer::createPreset() {
+    ToolbarDialog dialog("New preset name", this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QString name = dialog.getName();
+
+        if (name.isEmpty()) return; // TODO: output error
+        bool isNew = !presets.contains(name);
+
+        presets.insert(name, Player::instance() -> eqGains());
+
+        if (isNew)
+            presetsList -> insertItem(0, name);
+        presetsList -> setCurrentText(name);
+    }
+}
+
+void Equalizer::removePreset() {
+    if (presetsList -> currentText() != "Manual")
+        presetsList -> removeItem(presetsList -> currentIndex());
 }
 
 void Equalizer::presetChanged(QString name) {
