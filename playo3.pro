@@ -126,7 +126,8 @@ SOURCES += main.cpp\
     modules/controls/search_bar.cpp \
     dialogs/export_dialog.cpp \
     media/cue/cue.cpp \
-    modules/controls/equalizer.cpp
+    modules/controls/equalizer.cpp \
+    modules/web/service_api/echonest_api.cpp
 
 HEADERS  += playo.h \
     single_application.h \

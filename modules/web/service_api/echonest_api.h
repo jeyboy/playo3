@@ -15,11 +15,15 @@ public:
     ~EchonestApi() { }
 
     static EchonestApi * instance();
-    static EchonestApi * instance(QJsonObject obj);
+//    static EchonestApi * instance(QJsonObject obj);
     inline static void close() { delete self; }
 protected:
     inline int extractAmount(QJsonObject & response) {
         return response.value("response").toObject().value("total").toInt();
+    }
+    inline void setLimit(QUrlQuery & query, int limit, int offset = 0) {
+        if (offset > 0) setParam(query, "start", QString::number(offset));
+        setParam(query, "results", QString::number(limit));
     }
 
     bool proceedQuery(QUrl url, QJsonObject & response) {
@@ -29,6 +33,12 @@ protected:
         response = manager -> getToJson(QNetworkRequest(url));
 
         if (isNew) delete manager;
+        bool status = response.value("response").toObject().value("status").toObject().value("code").toInt() == 0;
+
+        if (!status)
+            qDebug() << response.value("response").toObject().value("status").toObject().value("message").toString();
+
+        return status;
     }
 
     QHash<QUrl, CallInitiator> requests;
