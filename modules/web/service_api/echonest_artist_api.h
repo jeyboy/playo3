@@ -424,8 +424,7 @@ class EchonestArtistApi : public IApi {
 //        moods	happy, sad^.5 	a mood like happy or sad. See the method list_terms for details on what moods are currently available
 //        description Some examples are: alt-rock,-emo, harp^2. 	a description of the artist. See below for more details on the .
 //        genre jazz, metal 	a musical genre such as rock, jazz, or dance pop. See the method list_genres for details on what genres are currently available
-
-//        style 	no 	yes 	jazz, metal^2 	a musical style or genre like rock, jazz, or funky. See the method list_terms for details on what styles are currently available
+//        style jazz, metal^2 	a musical style or genre like rock, jazz, or funky. See the method list_terms for details on what styles are currently available
 
 //        rank_type 	no 	no 	relevance, familiarity 	For search by description, style or mood indicates whether results should be ranked by query relevance or by artist familiarity
 //        max_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the maximum familiarity for returned artists
@@ -439,6 +438,7 @@ class EchonestArtistApi : public IApi {
 //        sort 	no 	no 	familiarity-asc, hotttnesss-asc, familiarity-desc, hotttnesss-desc, artist_start_year-asc, artist_start_year-desc, artist_end_year-asc, artist_end_year-desc, 	specified the sort order of the results
 
 
+        // did not use name and description at once
         inline QUrl artistSearchUrl(QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
                                     QStringList moods = QStringList(), QString artistLocation = QString(),
                                     QStringList genres = QStringList(), QStringList styles = QStringList(),
@@ -450,10 +450,19 @@ class EchonestArtistApi : public IApi {
             if (!artistLocation.isEmpty()) setParam(query, "artist_location", artistLocation);
             if (fuzzySearch) setParam(query, "fuzzy_match", "true");
             if (!name.isEmpty()) setParam(query, "name", name);
-            if (!tags.isEmpty()) setParam(query, "description", tags.join(','));
-            if (!moods.isEmpty()) setParam(query, "mood", moods.join(','));
             if (!genres.isEmpty()) setParam(query, "genre", genres.join(','));
-            if (!styles.isEmpty()) setParam(query, "style", styles.join(','));
+
+            // must be in separate parameters
+            if (!styles.isEmpty())
+                for(QStringList::Iterator style = styles.begin(); style != styles.end(); style++)
+                    setParam(query, "style", *style);
+            if (!tags.isEmpty())
+                for(QStringList::Iterator tag = tags.begin(); tag != tags.end(); tag++)
+                    setParam(query, "description", *tag);
+
+            if (!moods.isEmpty())
+                for(QStringList::Iterator mood = moods.begin(); mood != moods.end(); mood++)
+                    setParam(query, "mood", *mood);
 
             url.setQuery(query);
             return url;
