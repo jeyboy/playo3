@@ -128,8 +128,10 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
         qDebug() << "PLAYED " << node.data();
         Dockbars::instance() -> setPlayed((DockBar *)parent());
 
-        if (Settings::instance() -> isSpoilOnActivation())
-            scrollTo(node);
+        if (Settings::instance() -> isSpoilOnActivation()) {
+            scrollTo(node, QAbstractItemView::PositionAtCenter);
+            qDebug() << "UNSURE";
+        }
 
         if (Player::instance() -> playedIndex() == node) {
             Player::instance() -> playPause();

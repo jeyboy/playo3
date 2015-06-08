@@ -468,13 +468,19 @@ class EchonestArtistApi : public IApi {
             return url;
         }
 
-        QJsonArray artistSearch(QString name, QString id = QString(), int limit = 1) {
+        // need to check
+        QJsonArray artistSearch(QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
+                                QStringList moods = QStringList(), QString artistLocation = QString(),
+                                QStringList genres = QStringList(), QStringList styles = QStringList()) {
             QJsonObject response;
-            QJsonArray news;
+            QJsonArray artists;
             int offset = 0;
 
-            while (proceedQuery(artistNewsUrl(name, id, limit, offset), response)) {
-                news.append(response.value("response").toObject().value("news"));
+            while (proceedQuery(artistSearchUrl(
+                                    name, fuzzySearch, tags, moods,
+                                    artistLocation, genres, styles, limit, offset
+                                    ), response)) {
+                artists.append(response.value("response").toObject().value("artists"));
 
                 offset += limit;
 
@@ -482,7 +488,341 @@ class EchonestArtistApi : public IApi {
                     break;
             }
 
-            return news;
+            return artists;
+        }
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //    "artists": {
+        //      "artist": [
+        //        {
+        //          "name": "Radiohead",
+        //          "id": "ARH6W4X1187B99274F"
+        //          "foreign_ids": [
+        //                {
+        //                    "catalog": "CAXFDYO12E2688C130",
+        //                    "foreign_id": "CAXFDYO12E2688C130:artist:item-1"
+        //                },
+        //                {
+        //                    "catalog": "7digital-US",
+        //                    "foreign_id": "7digital-US:artist:304"
+        //                }
+        //            ]
+        //          }
+        //       ]
+        //     }
+        //   }
+        //}
+
+
+
+
+
+        inline QUrl artistSongsUrl(QString name, QString id = QString(), int limit = requestLimit(), int offset = 0) {
+            QUrl url(baseUrl("artist/songs"));
+            QUrlQuery query = buildDefaultParams();
+            setLimit(query, limit, offset);
+
+            if (!name.isEmpty())
+                setParam(query, "name", name);
+            else
+                setParam(query, "id", id);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistSongs() {
+            QJsonObject response;
+            QJsonArray songs;
+            int offset = 0;
+
+            while (proceedQuery(artistSongsUrl(name, id, limit, offset), response)) {
+                songs.append(response.value("response").toObject().value("songs"));
+
+                offset += limit;
+
+                if (offset >= limit || offset >= extractAmount(response))
+                    break;
+            }
+
+            return songs;
+        }
+
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //      "start": 0,
+        //      "total": 121,
+        //      "songs": [
+        //        {
+        //          "id": "SOXZYYG127F3E1B7A2",
+        //          "title": "Karma police"
+        //        },
+        //        {
+        //          "id": "SOXZABD127F3E1B7A2",
+        //          "title" : "Creep"
+        //        }
+        //      ]
+        //    }
+        //  }
+        //}
+
+
+
+
+
+
+
+
+
+        //id 	one of id or name 	yes (up to 5) 	ARH6W4X1187B99274F, 7digital-US:artist:304 ARH6W4X1187B99274F^2 	the artist ID. An Echo Nest ID or a Rosetta ID (See Project Rosetta Stone)
+        //name 	one of id or name 	yes 	Weezer, the+beatles ,the+beatles^0.5 	the artist name
+        //min_results 	no 	no 	0 < results < 100, (Default=15) 	Indicates the minimum number of results to be returned regardless of constraints
+        //bucket 	no 	yes 	biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss, hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space 	indicates what data should be returned with each artist
+        //max_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the maximum familiarity for returned artists
+        //min_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the minimum familiarity for returned artists
+        //max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum hotttnesss for returned artists
+        //min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum hotttnesss for returned artists
+        //artist_start_year_before 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year before the given value
+        //artist_start_year_after 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year after the given value
+        //artist_end_year_before 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year before the given value
+        //artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
+        //seed_catalog 	no 	yes (up to 5) 	CAKSMUX1321A708AA4 	only give similars to those in a catalog or catalogs, An Echo Nest artist catalog identifier
+
+        inline QUrl artistSimilarsUrl(QStringList names, QStringList ids = QStringList(), int limit = requestLimit(), int offset = 0) {
+            QUrl url(baseUrl("artist/similar"));
+            QUrlQuery query = buildDefaultParams();
+            setLimit(query, limit, offset);
+
+            setParam(query, "min_results", limit);
+
+            if (!names.isEmpty())
+                for(QStringList::Iterator name = names.begin(); name != names.end(); name++)
+                    setParam(query, "name", *name);
+            else
+                for(QStringList::Iterator id = ids.begin(); id != ids.end(); id++)
+                    setParam(query, "id", *id);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int limit = requestLimit()) {
+            QJsonObject response;
+            QJsonArray songs;
+            int offset = 0;
+
+            while (proceedQuery(artistSimilarsUrl(names, ids, limit, offset), response)) {
+                songs.append(response.value("response").toObject().value("artists"));
+
+                offset += limit;
+
+                if (offset >= limit || offset >= extractAmount(response))
+                    break;
+            }
+
+            return songs;
+        }
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //      "artists": [
+        //        {
+        //          "name": "Thom Yorke",
+        //          "id": "ARH1N081187B9AC562"
+        //        }
+        //      ]
+        //  }
+        //}
+
+
+        inline QUrl artistSuggestUrl(QStringList name_part, int limit = 15) {
+            QUrl url(baseUrl("artist/suggest"));
+            QUrlQuery query = buildDefaultParams();
+            setLimit(query, qMin(limit, 15), 0);
+
+            setParam(query, "name", name_part);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistSuggests(QStringList name, int limit = 15) {
+            QJsonObject response;
+
+            if (proceedQuery(artistSuggestUrl(name, limit), response))
+                response.value("response").toObject().value("artists").toObject().value("artist");
+
+            return QJsonArray();
+        }
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //    "artists": {
+
+        //      "artist": [
+        //        {
+        //            "id": "ARH6W4X1187B99274F",
+        //            "name": "Radiohead"
+        //        },
+        //        {
+        //            "id": "ARQCFYC12A10043E5B",
+        //            "name": "Go Radio"
+        //        },
+        //        {
+        //            "id": "AREKO1L1187B997EFE",
+        //            "name": "The Radio Dept."
+        //        },
+        //        {
+        //            "id": "AR0PK561187B9B9EF9",
+        //            "name": "TV on the Radio"
+        //        },
+        //        {
+        //            "id": "ARPCRYQ1187FB4ECB8",
+        //            "name": "Joshua Radin"
+        //        }
+        //      ]
+        //    }
+        //  }
+        //}
+
+
+//        sort 	no 	no 	weight, frequency
+        inline QUrl artistTermsUrl(QString name, QString id = QString(), QString sort = "frequency") {
+            QUrl url(baseUrl("artist/terms"));
+            QUrlQuery query = buildDefaultParams();
+
+            if (!name.isEmpty())
+                setParam(query, "name", name);
+            else
+                setParam(query, "id", id);
+
+            setParam(query, "sort", sort);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistTerms(QString name, QString id = QString()) {
+            QJsonObject response;
+
+            if (proceedQuery(artistTermsUrl(name, id), response))
+                return response.value("response").toObject().value("terms").toArray();
+
+            return QJsonArray();
+        }
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //      "terms": [
+        //        {
+        //          "name": "alternative",
+        //          "frequency": 1
+        //          "weight": .78
+        //        },
+        //        {
+        //          "name": "rock",
+        //          "frequency": .98
+        //          "weight": .79
+        //        }
+        //      ]
+        //    }
+        //  }
+        //}
+
+
+        //bucket biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss, hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
+        inline QUrl artistTopUrl(QStringList names, int limit = requestLimit(), int offset = 0) {
+            QUrl url(baseUrl("artist/top_hottt"));
+            QUrlQuery query = buildDefaultParams();
+            setLimit(query, limit, offset);
+
+            for(QStringList::Iterator name = names.begin(); name != names.end(); name++)
+                setParam(query, "name", *name);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistTop(QStringList names, int limit = requestLimit()) {
+            QJsonObject response;
+            QJsonArray artists;
+            int offset = 0;
+
+            while (proceedQuery(artistTopUrl(names, limit, offset), response)) {
+                artists.append(response.value("response").toObject().value("artists"));
+
+                offset += limit;
+
+                if (offset >= limit || offset >= extractAmount(response))
+                    break;
+            }
+
+            return artists;
+        }
+
+        //{
+        //  "response": {
+        //    "status": {
+        //      "code": "0",
+        //      "message": "Success",
+        //      "version": "4.2"
+        //    },
+        //      "artists": [
+        //        {
+        //          "id": "ARI3Y821187FB3649C",
+        //          "hotttnesss": 0.9733418,
+        //          "name": "MGMT"
+        //        }
+        //      ]
+        //  }
+        //}
+
+
+
+
+        inline QUrl artistTopTermsUrl(int limit = requestLimit()) {
+            QUrl url(baseUrl("artist/top_terms"));
+            QUrlQuery query = buildDefaultParams();
+            setLimit(query, limit, 0);
+
+            url.setQuery(query);
+            return url;
+        }
+
+        QJsonArray artistTopTerms(int limit = requestLimit()) {
+            QJsonObject response;
+
+            if (proceedQuery(artistTopTermsUrl(limit), response))
+                return response.value("response").toObject().value("terms");
+
+            return QJsonArray();
         }
 };
 
