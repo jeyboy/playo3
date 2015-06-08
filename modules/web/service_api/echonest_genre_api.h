@@ -3,13 +3,36 @@
 
 #include "iapi.h"
 
+//POSSIBLE BUCKETS
+
+//biographies 	returns up to the 15 most recent biographies found on the web related to the artist
+//blogs 	returns up to the 15 most recent blogs found on the web related to the artist
+//discovery 	returns the discovery score for the artist. This is a measure of how unexpectedly popular the artist is.
+//discovery_rank 	returns the discovery rank for the artist
+//doc_counts 	returns document counts for each of the various artist document types
+//familiarity 	returns the familiarity for the artist
+//familiarity_rank 	returns the familiarity rank for the artist
+//genre 	returns all genres for an artist
+//hotttnesss 	returns the hotttnesss for the artist
+//hotttnesss_rank 	returns the hotttnesss rank for the artist
+//images 	returns up to the 15 most recent images found on the web related to the artist
+//artist_location 	returns information about the location of origin for the artist
+//news 	returns up to the 15 most recent news articles found on the web related to the artist
+//reviews 	returns up to the 15 most recent reviews found on the web related to the artist
+//songs 	returns up to the 15 hotttest songs for the artist
+//urls 	returns links to this artist's pages on various sites
+//video 	returns up to the 15 most recent videos found on the web related to the artist
+//years_active 	returns years active information for the artist
+//id:rosetta-catalog 	returns catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
+//id:Taste-Profile-ID 	returns personal catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
+
+
 class EchonestGenreApi : public IApi {
     public:
-        inline int artistsByGenreLimit() const { return 100; }
         inline QUrl artistsByGenreUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/artists"));
             QUrlQuery query = buildDefaultParams();
-            setLimit(query, artistsByGenreLimit(), offset);
+            setLimit(query, requestLimit(), offset);
             setParam(query, "bucket", "hotttnesss");
             setParam(query, "name", genre);
             url.setQuery(query);
@@ -26,7 +49,7 @@ class EchonestGenreApi : public IApi {
 
                 offset += artistsByGenreLimit();
 
-                if (offset > extractAmount(response))
+                if (offset >= extractAmount(response))
                     break;
             }
 
@@ -116,11 +139,10 @@ class EchonestGenreApi : public IApi {
         //    }
         //}
 
-        inline int serachGenreLimit() const { return 100; }
         inline QUrl serachGenresUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/search"));
             QUrlQuery query = buildDefaultParams();
-            setLimit(query, serachGenreLimit(), offset);
+            setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
             url.setQuery(query);
             return url;
@@ -147,11 +169,10 @@ class EchonestGenreApi : public IApi {
         //}
 
 
-        inline int similarGenresLimit() const { return 100; }
         inline QUrl similarGenresUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/similar"));
             QUrlQuery query = buildDefaultParams();
-            setLimit(query, serachGenreLimit(), offset);
+            setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
             url.setQuery(query);
             return url;

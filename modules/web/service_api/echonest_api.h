@@ -2,22 +2,25 @@
 #define ECHONEST_API_H
 
 #include "echonest_genre_api.h"
+#include "echonest_artist_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
 
-class EchonestApi : public QObject, public EchonestGenreApi {
+class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi {
     Q_OBJECT
 public:
     inline QString name() const { return "echonest"; }
-    inline QString token() const { return "TSCA6XDZTJQ1OOJSV"; }
-    inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
-    void registerQuery(QUrl url);
-
     ~EchonestApi() { }
 
     static EchonestApi * instance();
 //    static EchonestApi * instance(QJsonObject obj);
     inline static void close() { delete self; }
 protected:
+    inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
+    void registerQuery(QUrl url);
+
+    inline QString token() const { return "TSCA6XDZTJQ1OOJSV"; }
+    inline int requestLimit() const { return 100; }
+
     inline int extractAmount(QJsonObject & response) {
         return response.value("response").toObject().value("total").toInt();
     }
@@ -54,7 +57,7 @@ protected slots:
     }
 
 private:
-    inline EchonestApi() { }
+    inline EchonestApi() : QObject() { }
 
     static EchonestApi * self;
 };

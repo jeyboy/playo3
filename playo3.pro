@@ -258,7 +258,8 @@ HEADERS  += playo.h \
     modules/web/service_api/echonest_genre_api.h \
     modules/web/service_api/iapi.h \
     misc/call_initiator.h \
-    modules/controls/equalizer.h
+    modules/controls/equalizer.h \
+    modules/web/service_api/echonest_artist_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
