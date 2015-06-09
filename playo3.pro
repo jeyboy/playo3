@@ -8,8 +8,8 @@ VERSION = 0.5.4.1
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-QT  += core gui webkitwidgets network opengl
-#QT       += multimedia multimediawidgets
+QT  += core gui network
+#QT       += multimedia multimediawidgets opengl
 
 win32: {
     QT  += winextras
@@ -81,7 +81,6 @@ SOURCES += main.cpp\
     modules/data_struct/model_item_parts/item_fields.cpp \
     dialogs/captchadialog.cpp \
     dialogs/extension_dialog.cpp \
-    dialogs/web_dialog.cpp \
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
     modules/controls/spinner.cpp \
@@ -199,7 +198,6 @@ HEADERS  += playo.h \
     misc/file_utils/icon_provider.h \
     dialogs/captchadialog.h \
     dialogs/extension_dialog.h \
-    dialogs/web_dialog.h \
     modules/controls/simple_list_view.h \
     modules/data_struct/model_item_delegate.h \
     misc/spectrum_types.h \
@@ -253,7 +251,9 @@ HEADERS  += playo.h \
     modules/web/web_apis.h \
     media/cue/cue_structs.h \
     media/cue/cue.h \
-    modules/controls/equalizer.h
+    modules/controls/equalizer.h \
+    modules/plugins/web_dialog_interface.h \
+    modules/plugins/loader.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
@@ -262,7 +262,6 @@ FORMS    += playo.ui \
     dialogs/tabdialog.ui \
     dialogs/captchadialog.ui \
     dialogs/extension_dialog.ui \
-    dialogs/web_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
     dialogs/export_dialog.ui

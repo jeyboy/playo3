@@ -46,7 +46,6 @@ public:
 
     virtual QString name() const = 0;
     virtual QString authUrl() const = 0;
-    virtual QString proceedAuthResponse(const QUrl & url) = 0;
 
     virtual bool isConnected() = 0;
 
@@ -77,12 +76,14 @@ public:
     void toJson(QJsonObject & hash);
 
 signals:
+    void responseReady(QString);
     void routineFinished(QJsonObject &);
     void errorReceived(int, QString);
     void authorized();
 
 public slots:
     void showingCaptcha();
+    virtual void proceedAuthResponse(const QUrl & url) = 0;
 
 protected slots:
     void apiCallFinished();

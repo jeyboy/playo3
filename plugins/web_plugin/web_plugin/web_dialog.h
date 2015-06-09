@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include <QtWebKitWidgets>
-#include "modules/web/web_api.h"
 
 namespace Ui {
     class WebDialog;
@@ -13,14 +12,16 @@ class WebDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit WebDialog(QWidget * parent, WebApi * apiClass, QString title);
+    explicit WebDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl & url, QString title);
     ~WebDialog();
-
-private slots:
+signals:
     void urlChanged(const QUrl &);
+public slots:
+    void setApiResponse(QString);
+private slots:
+    void onUrlChanged(const QUrl &);
 
 private:
-    WebApi * api;
     Ui::WebDialog * ui;
 };
 

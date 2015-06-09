@@ -32,12 +32,12 @@ QJsonObject SoundcloudApi::toJson() {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
+void SoundcloudApi::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.query());
 
     if (query.hasQueryItem("error")) {
         error = query.queryItemValue("error_description");
-        return "reject";
+        emit responseReady("reject");
     } else if (query.hasQueryItem("code")) {
         QNetworkRequest request(authTokenUrl());
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -57,13 +57,12 @@ QString SoundcloudApi::proceedAuthResponse(const QUrl & url) {
 
             setParams(newToken, QString::number(doc.value("id").toInt()), "");
             emit authorized();
-            return "accept";
+            emit responseReady("accept");
         }
 
-        return "reject";
+        emit responseReady("reject");
     }
-
-    return "";
+    else emit responseReady("");
 }
 
 ///////////////////////////////////////////////////////////

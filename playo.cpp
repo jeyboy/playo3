@@ -243,10 +243,17 @@ void Playo::openVKRecomendations() {
 }
 
 void Playo::openVKTabDialog() {
-    WebDialog dialog(this, VkApi::instance(), "VK auth");
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-        Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
+    WebDialogInterface * dInt;
+    if (loadWebDialogPlugin(dInt)) {
+        QDialog * dialog = dInt -> createDialog(this, VkApi::instance() -> manager(), api -> authUrl(), "VK auth");
+        connect(dialog, SIGNAL(urlChanged(const QUrl &)), VkApi::instance(), SLOT(proceedAuthResponse(QUrl)));
+        connect(VkApi::instance(), SIGNAL(responseReady(QString)), dialog, SLOT(setApiResponse(QString)));
+
+        if (dialog -> exec() == QDialog::Accepted) {
+            ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
+            Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
+        }
+        dInt -> closeDialog();
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
@@ -278,12 +285,11 @@ void Playo::showSoundcloudRelTabDialog() {
 }
 
 void Playo::openSoundcloudTabDialog() {
-    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
-    }
-//    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
+//    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
+//    if (dialog.exec() == QDialog::Accepted) {
+//        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
+//        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
+//    }
 }
 
 void Playo::showSoundcloudTabDialog() {
