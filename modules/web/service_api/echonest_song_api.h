@@ -72,8 +72,8 @@ class EchonestSongApi : public IApi {
 
 
         //mode - (minor, major) 0, 1
-        inline QUrl songSearchUrl(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
-                QStringList styles = QStringList(), QStringList moods = QStringList(), int offset = 0) {
+        inline QUrl songSearchUrl(int mode, QString & artist, QString & title, QStringList & tags,
+                QStringList & styles, QStringList & moods, int offset = 0) {
             QUrl url(baseUrl("song/search"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);

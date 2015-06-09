@@ -1,6 +1,19 @@
 #ifndef ECHONEST_API_H
 #define ECHONEST_API_H
 
+//Currently supported ID spaces are:
+//Deezer artists - Example: deezer:artist:399
+//Deezer tracks - Example: deezer:track:20592361
+//Free Music Archive artists - Example: fma:artist:3243
+//Free Music Archive tracks - Example: fma:track:11764
+//Spotify artists - Example: spotify:artist:4Z8W4fKeB5YxbusRsdQVPb or spotify-XX:artist:4Z8W4fKeB5YxbusRsdQVPb where XX is the locale. Supported locales are AD AR AT AU BE BG BO BR CA CH CL CO CR CY CZ DE DK DO EC EE ES FI FR GB GR GT HK HN HR HU IE IS IT LI LT LU LV MC MT MX MY NI NL NO NZ PA PE PH PL PT PY RO SE SG SI SK SV TR TW US UY ZZ
+//Spotify tracks - Example: spotify:track:3L7BcXHCG8uT92viO6Tikl or spotify-XX:track:3L7BcXHCG8uT92viO6Tikl where XX is the locale. Supported locales are AD AR AT AU BE BG BO BR CA CH CL CO CR CY CZ DE DK DO EC EE ES FI FR GB GR GT HK HN HR HU IE IS IT LI LT LU LV MC MT MX MY NI NL NO NZ PA PE PH PL PT PY RO SE SG SI SK SV TR TW US UY ZZ
+
+//lyrics
+//MusixMatch songs - Example: musixmatch-WW:song:3310380
+//SongMeanings artists - Example: songmeaningsg:artist:200
+//SongMeanings songs - Example: songmeanings:song:471679
+
 #include "echonest_genre_api.h"
 #include "echonest_artist_api.h"
 #include "echonest_song_api.h"

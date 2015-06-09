@@ -29,7 +29,7 @@
 
 class EchonestArtistApi : public IApi {
     public:
-        inline QUrl artistBiographiesUrl(QString name, QString id = QString(), int limit = 999999) {
+        inline QUrl artistBiographiesUrl(QString & name, QString & id, int limit = 999) {
             QUrl url(baseUrl("artist/biographies"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
@@ -76,7 +76,7 @@ class EchonestArtistApi : public IApi {
 
 
 
-        inline QUrl artistFamiliarityUrl(QString name, QString id = QString()) {
+        inline QUrl artistFamiliarityUrl(QString & name, QString & id) {
             QUrl url(baseUrl("artist/familiarity"));
             QUrlQuery query = buildDefaultParams();
             if (!name.isEmpty())
@@ -114,7 +114,7 @@ class EchonestArtistApi : public IApi {
 
 
         //types - overall, social, reviews, mainstream
-        inline QUrl artistHotttnesssUrl(QString name, QString id = QString(), QString type = "overall") {
+        inline QUrl artistHotttnesssUrl(QString & name, QString & id, QString type = "overall") {
             QUrl url(baseUrl("artist/hotttnesss"));
             QUrlQuery query = buildDefaultParams();
             if (!name.isEmpty())
@@ -154,7 +154,7 @@ class EchonestArtistApi : public IApi {
 
 
 
-        inline QUrl artistImagesUrl(QString name, QString id = QString(), int limit = 9999, int offset = 0) {
+        inline QUrl artistImagesUrl(QString & name, QString & id, int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/images"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -176,7 +176,7 @@ class EchonestArtistApi : public IApi {
             while (proceedQuery(artistImagesUrl(name, id, limit, offset), response)) {
                 images.append(response.value("response").toObject().value("images"));
 
-                offset += limit;//artistsByGenreLimit();
+                offset += limit;
 
                 if (offset >= limit || offset >= extractAmount(response))
                     break;
@@ -208,7 +208,7 @@ class EchonestArtistApi : public IApi {
         //}
 
 
-        inline QUrl artistNewsUrl(QString name, QString id = QString(), int limit = 9999, int offset = 0) {
+        inline QUrl artistNewsUrl(QString & name, QString & id, int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/news"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -350,9 +350,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistGenresForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistGenresUrl(), response)) {
+            if (proceedQuery(artistGenresUrl(), response))
                 return response.value("response").toObject().value("terms").toArray();
-            }
 
             return QJsonArray();
         }
@@ -379,9 +378,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistMoodsForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistGenresUrl("mood"), response)) {
+            if (proceedQuery(artistGenresUrl("mood"), response))
                 return response.value("response").toObject().value("terms").toArray();
-            }
 
             return QJsonArray();
         }
@@ -426,10 +424,10 @@ class EchonestArtistApi : public IApi {
 
 
         // did not use name and description at once
-        inline QUrl artistSearchUrl(QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
-                                    QStringList moods = QStringList(), QString artistLocation = QString(),
-                                    QStringList genres = QStringList(), QStringList styles = QStringList(),
-                                    int limit = 9999, int offset = 0) {
+        inline QUrl artistSearchUrl(QString & name, bool fuzzySearch, QStringList & tags,
+                                    QStringList & moods, QString & artistLocation,
+                                    QStringList & genres, QStringList & styles,
+                                    int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/search"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -510,7 +508,7 @@ class EchonestArtistApi : public IApi {
 
 
 
-        inline QUrl artistSongsUrl(QString name, QString id = QString(), int limit = 9999, int offset = 0) {
+        inline QUrl artistSongsUrl(QString & name, QString & id, int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/songs"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -587,7 +585,7 @@ class EchonestArtistApi : public IApi {
         //artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
         //seed_catalog 	no 	yes (up to 5) 	CAKSMUX1321A708AA4 	only give similars to those in a catalog or catalogs, An Echo Nest artist catalog identifier
 
-        inline QUrl artistSimilarsUrl(QStringList names, QStringList ids = QStringList(), int limit = 9999, int offset = 0) {
+        inline QUrl artistSimilarsUrl(QStringList & names, QStringList & ids, int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/similar"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -605,7 +603,7 @@ class EchonestArtistApi : public IApi {
             return url;
         }
 
-        QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int limit = 9999) {
+        QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int limit = 999) {
             QJsonObject response;
             QJsonArray songs;
             int offset = 0;
@@ -639,7 +637,7 @@ class EchonestArtistApi : public IApi {
         //}
 
 
-        inline QUrl artistSuggestUrl(QString name_part, int limit = 15) {
+        inline QUrl artistSuggestUrl(QString & name_part, int limit = 15) {
             QUrl url(baseUrl("artist/suggest"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, 15), 0);
@@ -696,7 +694,7 @@ class EchonestArtistApi : public IApi {
 
 
 //        sort 	no 	no 	weight, frequency
-        inline QUrl artistTermsUrl(QString name, QString id = QString(), QString sort = "frequency") {
+        inline QUrl artistTermsUrl(QString & name, QString & id, QString sort = "frequency") {
             QUrl url(baseUrl("artist/terms"));
             QUrlQuery query = buildDefaultParams();
 
@@ -745,7 +743,7 @@ class EchonestArtistApi : public IApi {
 
 
         //bucket biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss, hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
-        inline QUrl artistTopUrl(QStringList names, int limit = 9999, int offset = 0) {
+        inline QUrl artistTopUrl(QStringList & names, int limit = 999, int offset = 0) {
             QUrl url(baseUrl("artist/top_hottt"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
@@ -757,7 +755,7 @@ class EchonestArtistApi : public IApi {
             return url;
         }
 
-        QJsonArray artistTop(QStringList names, int limit = 9999) {
+        QJsonArray artistTop(QStringList names, int limit = 999) {
             QJsonObject response;
             QJsonArray artists;
             int offset = 0;
@@ -794,7 +792,7 @@ class EchonestArtistApi : public IApi {
 
 
 
-        inline QUrl artistTopTermsUrl(int limit = 9999) {
+        inline QUrl artistTopTermsUrl(int limit = 999) {
             QUrl url(baseUrl("artist/top_terms"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
@@ -803,7 +801,7 @@ class EchonestArtistApi : public IApi {
             return url;
         }
 
-        QJsonArray artistTopTerms(int limit = 9999) {
+        QJsonArray artistTopTerms(int limit = 999) {
             QJsonObject response;
 
             if (proceedQuery(artistTopTermsUrl(limit), response))

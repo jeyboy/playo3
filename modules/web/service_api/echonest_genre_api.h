@@ -88,9 +88,10 @@ class EchonestGenreApi : public IApi {
         QJsonArray genresList() {
             QJsonObject response;
 
-            if (proceedQuery(genresListUrl(), response)) {
+            if (proceedQuery(genresListUrl(), response))
                 return response.value("response").toObject().value("genres").toArray();
-            } else return QJsonArray();
+
+            return QJsonArray();
         }
 
         //{
@@ -128,7 +129,6 @@ class EchonestGenreApi : public IApi {
 
             if (proceedQuery(genreInfoUrl(genre), response))
                 response.value("response").toObject().value("genres");
-
 
             return QJsonArray();
         }
