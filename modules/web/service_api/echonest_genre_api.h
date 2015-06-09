@@ -29,7 +29,7 @@
 
 class EchonestGenreApi : public IApi {
     public:
-        inline QUrl artistsByGenreUrl(QString & genre, int offset = 0) {
+        inline QUrl genreArtistsUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/artists"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
@@ -39,15 +39,15 @@ class EchonestGenreApi : public IApi {
             return url;
         }
 
-        QJsonArray artistsByGenre(QString genre) {
+        QJsonArray genreArtists(QString genre) {
             QJsonObject response;
             QJsonArray artists;
             int offset = 0;
 
-            while (proceedQuery(artistsByGenreUrl(genre, offset), response)) {
+            while (proceedQuery(genreArtistsUrl(genre, offset), response)) {
                 artists.append(response.value("response").toObject().value("artists"));
 
-                offset += artistsByGenreLimit();
+                offset += requestLimit();
 
                 if (offset >= extractAmount(response))
                     break;
@@ -78,17 +78,17 @@ class EchonestGenreApi : public IApi {
         //    }
         //}
 
-        inline QUrl genresUrl() {
+        inline QUrl genresListUrl() {
             QUrl url(baseUrl("genre/list"));
             QUrlQuery query = buildDefaultParams();
             url.setQuery(query);
             return url;
         }
 
-        QJsonArray genres() {
+        QJsonArray genresList() {
             QJsonObject response;
 
-            if (proceedQuery(genresUrl(), response)) {
+            if (proceedQuery(genresListUrl(), response)) {
                 return response.value("response").toObject().value("genres").toArray();
             } else return QJsonArray();
         }
@@ -122,6 +122,16 @@ class EchonestGenreApi : public IApi {
             return url;
         }
 
+
+        QJsonArray genreInfo(QString genre) {
+            QJsonObject response;
+
+            if (proceedQuery(genreInfoUrl(genre), response))
+                response.value("response").toObject().value("genres");
+
+
+            return QJsonArray();
+        }
         //{
         //    "response": {
         //        "genres": [
@@ -139,13 +149,30 @@ class EchonestGenreApi : public IApi {
         //    }
         //}
 
-        inline QUrl serachGenresUrl(QString & genre, int offset = 0) {
+        inline QUrl genresSerachUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/search"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
             url.setQuery(query);
             return url;
+        }
+
+        QJsonArray genresSerach(QString genre) {
+            QJsonObject response;
+            QJsonArray genres;
+            int offset = 0;
+
+            while (proceedQuery(genresSerachUrl(genre, offset), response)) {
+                genres.append(response.value("response").toObject().value("genres"));
+
+                offset += requestLimit();
+
+                if (offset >= extractAmount(response))
+                    break;
+            }
+
+            return genres;
         }
 
         //{
@@ -169,13 +196,30 @@ class EchonestGenreApi : public IApi {
         //}
 
 
-        inline QUrl similarGenresUrl(QString & genre, int offset = 0) {
+        inline QUrl genreSimilarUrl(QString & genre, int offset = 0) {
             QUrl url(baseUrl("genre/similar"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
             url.setQuery(query);
             return url;
+        }
+
+        QJsonArray genreSimilar(QString genre) {
+            QJsonObject response;
+            QJsonArray genres;
+            int offset = 0;
+
+            while (proceedQuery(genreSimilarUrl(genre, offset), response)) {
+                genres.append(response.value("response").toObject().value("genres"));
+
+                offset += requestLimit();
+
+                if (offset >= extractAmount(response))
+                    break;
+            }
+
+            return genres;
         }
 
         //{

@@ -15,8 +15,8 @@ class IApi { // format=json
         virtual QString baseUrl(QString predicate) = 0;
         virtual QString token() const = 0;
 
-        virtual int extractAmount(QJsonObject & response);
-        virtual int requestLimit() const;
+        virtual int extractAmount(QJsonObject & response) = 0;
+        virtual int requestLimit() = 0;
 
 //        virtual void registerQuery(QUrl url, CallInitiator & initiator) = 0;
         virtual bool proceedQuery(QUrl url, QJsonObject & response) = 0;

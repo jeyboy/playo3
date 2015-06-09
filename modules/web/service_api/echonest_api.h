@@ -3,30 +3,30 @@
 
 #include "echonest_genre_api.h"
 #include "echonest_artist_api.h"
+#include "echonest_song_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
 
-class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi {
+class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi, public EchonestSongApi {
     Q_OBJECT
 public:
     inline QString name() const { return "echonest"; }
     ~EchonestApi() { }
 
     static EchonestApi * instance();
-//    static EchonestApi * instance(QJsonObject obj);
     inline static void close() { delete self; }
 protected:
     inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
     void registerQuery(QUrl url);
 
     inline QString token() const { return "TSCA6XDZTJQ1OOJSV"; }
-    inline int requestLimit() const { return 100; }
+    inline int requestLimit() { return 100; }
 
     inline int extractAmount(QJsonObject & response) {
         return response.value("response").toObject().value("total").toInt();
     }
     inline void setLimit(QUrlQuery & query, int limit, int offset = 0) {
-        if (offset > 0) setParam(query, "start", QString::number(offset));
-        setParam(query, "results", QString::number(limit));
+        if (offset > 0) EchonestGenreApi::setParam(query, "start", QString::number(offset));
+        EchonestGenreApi::setParam(query, "results", QString::number(limit));
     }
 
     bool proceedQuery(QUrl url, QJsonObject & response) {
