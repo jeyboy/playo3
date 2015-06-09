@@ -88,7 +88,7 @@ IView::~IView() {
 
 void IView::scrollToActive() {
     if (Player::instance() -> playedIndex().isValid())
-        scrollTo(Player::instance() -> playedIndex());
+        scrollTo(Player::instance() -> playedIndex(), QAbstractItemView::PositionAtCenter);
 }
 
 void IView::execPrevIndex(bool deleteCurrent) {
@@ -181,7 +181,7 @@ void IView::collapseAll() {
 void IView::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
         setCurrentIndex(node);
-        scrollTo(node);
+        scrollTo(node, QAbstractItemView::PositionAtCenter);
     }
 }
 
