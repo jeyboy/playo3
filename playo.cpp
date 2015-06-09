@@ -48,7 +48,7 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Library::instance(QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
+    Library::instance((QObject *)QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
 
     Stylesheets::initPens();
     new Tray(this);
@@ -245,7 +245,7 @@ void Playo::openVKRecomendations() {
 void Playo::openVKTabDialog() {
     WebDialogInterface * dInt;
     if (loadWebDialogPlugin(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, VkApi::instance() -> manager(), api -> authUrl(), "VK auth");
+        QDialog * dialog = dInt -> createDialog(this, VkApi::instance() -> manager(), VkApi::instance() -> authUrl(), "VK auth");
         connect(dialog, SIGNAL(urlChanged(const QUrl &)), VkApi::instance(), SLOT(proceedAuthResponse(QUrl)));
         connect(VkApi::instance(), SIGNAL(responseReady(QString)), dialog, SLOT(setApiResponse(QString)));
 

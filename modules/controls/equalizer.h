@@ -3,6 +3,9 @@
 
 #include <qwidget.h>
 #include <qgridlayout.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
+#include <qpushbutton.h>
 
 #include "clickable_slider.h"
 #include "media/player.h"

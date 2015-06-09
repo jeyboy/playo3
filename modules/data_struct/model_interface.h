@@ -18,7 +18,6 @@
 #include "item_drop_formats.h"
 #include "media/library.h"
 
-#include "dialogs/web_dialog.h"
 #include "modules/controls/user_dialog_box.h"
 
 namespace Playo3 {
