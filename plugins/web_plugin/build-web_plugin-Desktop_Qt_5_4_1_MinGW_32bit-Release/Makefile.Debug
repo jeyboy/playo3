@@ -2211,7 +2211,13 @@ debug/web_dialog.o: ../web_plugin/web_dialog.cpp ../web_plugin/web_dialog.h \
 		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWebKitWidgets/qwebinspector.h \
 		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWebKitWidgets/qwebview.h \
 		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWebKitWidgets/qtwebkitwidgetsversion.h \
-		ui_web_dialog.h
+		ui_web_dialog.h \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWebKitWidgets/QWebView \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWidgets/QAction \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWidgets/QApplication \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWidgets/QGridLayout \
+		F:/IDES/Qt5.4.1/5.4/mingw491_32/include/QtWidgets/QHeaderView
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\web_dialog.o ..\web_plugin\web_dialog.cpp
 
 debug/moc_webplugin.o: debug/moc_webplugin.cpp 
