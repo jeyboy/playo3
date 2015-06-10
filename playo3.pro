@@ -252,19 +252,16 @@ HEADERS  += playo.h \
     modules/web/web_apis.h \
     media/cue/cue_structs.h \
     media/cue/cue.h \
-<<<<<<< HEAD
     modules/web/service_api/echonest_api.h \
     modules/web/service_api/echonest_genre_api.h \
     modules/web/service_api/iapi.h \
     misc/call_initiator.h \
     modules/controls/equalizer.h \
     modules/web/service_api/echonest_artist_api.h \
-    modules/web/service_api/echonest_song_api.h
-=======
+    modules/web/service_api/echonest_song_api.h \
     modules/controls/equalizer.h \
     modules/plugins/web_dialog_interface.h \
     modules/plugins/loader.h
->>>>>>> 245f999c062b006a8e0b3cd9ecbca5f0b08fa371
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
