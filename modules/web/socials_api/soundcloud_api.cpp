@@ -59,8 +59,7 @@ void SoundcloudApi::proceedAuthResponse(const QUrl & url) {
             emit authorized();
             emit responseReady("accept");
         }
-
-        emit responseReady("reject");
+        else emit responseReady("reject");
     }
     else emit responseReady("");
 }

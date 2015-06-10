@@ -15,6 +15,7 @@ public:
     WebPlugin() : dialog(0) {}
     ~WebPlugin() { delete dialog; }
     QDialog * createDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl url, QString title);
+    void registerActions(QObject * api);
     void closeDialog();
 protected:
     WebDialog * dialog;

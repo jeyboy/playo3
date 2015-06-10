@@ -19,6 +19,7 @@
 #include "media/library.h"
 
 #include "modules/controls/user_dialog_box.h"
+#include "modules/plugins/loader.h"
 
 namespace Playo3 {
     class IModel : public QAbstractItemModel {

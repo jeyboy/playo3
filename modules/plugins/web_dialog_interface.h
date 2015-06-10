@@ -8,6 +8,7 @@ class WebDialogInterface {
 public:
     virtual ~WebDialogInterface() {}
     virtual QDialog * createDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl url, QString title);
+    virtual void registerActions(QObject * api);
     virtual void closeDialog();
 };
 
