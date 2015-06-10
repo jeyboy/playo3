@@ -14,7 +14,6 @@ public:
     inline QUrl authTokenUrl() const { return QUrl("https://api.soundcloud.com/oauth2/token"); }
 
     QByteArray authTokenUrlParams(QString code) const;
-    QString proceedAuthResponse(const QUrl & url);
 
     void getGroupInfo(const QObject * receiver, const char * respSlot, QString uid);
     void getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0");
@@ -33,7 +32,10 @@ public:
     void fromJson(QJsonObject hash);
     QJsonObject toJson();
 
-    inline bool isConnected() { return !getToken().isEmpty(); }
+    inline bool isConnected() { return !getToken().isEmpty(); }   
+
+public slots:
+    void proceedAuthResponse(const QUrl & url);
 
 protected:
     ApiFuncContainer * getGroupInfoRoutine(ApiFuncContainer * func);

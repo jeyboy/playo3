@@ -567,8 +567,13 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         if (map_it.key() == SHARE_TYPE_VK) {
             if (!VkApi::instance() -> isConnected()) {
-                WebDialog dialog(parent, VkApi::instance(), "VK auth");
-                dialog.exec();/* == QDialog::Accepted*/
+                WebDialogInterface * dInt;
+                if (loadWebDialogPlugin(dInt)) {
+                    QDialog * dialog = dInt -> createDialog(parent, VkApi::instance() -> manager(), VkApi::instance() -> authUrl(), "VK auth");
+                    dInt -> registerActions(VkApi::instance());
+                    dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
+                    delete dInt;
+                }
             }
 
             if (VkApi::instance() -> isConnected()) {
@@ -576,9 +581,14 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
-            if (!VkApi::instance() -> isConnected()) {
-                WebDialog dialog(parent, SoundcloudApi::instance(), "Soundcloud auth");
-                dialog.exec();/* == QDialog::Accepted*/
+            if (!SoundcloudApi::instance() -> isConnected()) {
+                WebDialogInterface * dInt;
+                if (loadWebDialogPlugin(dInt)) {
+                    QDialog * dialog = dInt -> createDialog(parent, SoundcloudApi::instance() -> manager(), SoundcloudApi::instance() -> authUrl(), "Soundcloud auth");
+                    dInt -> registerActions(SoundcloudApi::instance());
+                    dialog -> exec();
+                    delete dInt;
+                }
             }
 
             if (SoundcloudApi::instance() -> isConnected()) {

@@ -14,8 +14,6 @@ public:
 
     inline QString authUrl() const { return VkApiPrivate::authUrl(); }
 
-    QString proceedAuthResponse(const QUrl & url);
-
     ApiFuncContainer * wallMediaRoutine(ApiFuncContainer * func, int offset, int count);
     void wallMediaList(const QObject * receiver, const char * respSlot, QString uid = "0", int offset = 0, int count = 0);
 
@@ -55,7 +53,8 @@ public:
 
 signals:
     void showCaptcha();
-
+public slots:
+    void proceedAuthResponse(const QUrl & url);
 protected:
     inline QString adapteUid(QString & uid) { return uid == "0" ? getUserID() : uid; }
     bool responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc);

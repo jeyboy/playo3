@@ -1,0 +1,12 @@
+#ifndef WEB_PLUGIN_GLOBAL_H
+#define WEB_PLUGIN_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(WEB_PLUGIN_LIBRARY)
+#  define WEB_PLUGINSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define WEB_PLUGINSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // WEB_PLUGIN_GLOBAL_H

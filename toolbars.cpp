@@ -182,6 +182,8 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
   window -> addToolBar(Qt::BottomToolBarArea, createToolBar("Folder linker 1"));
   window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
+  window -> addToolBarBreak();
+  window -> addToolBar(Qt::BottomToolBarArea, createEqualizerToolBar());
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {

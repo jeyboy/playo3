@@ -34,12 +34,12 @@ bool VkApi::isConnected() {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-QString VkApi::proceedAuthResponse(const QUrl & url) {
+void VkApi::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.fragment());
 
     if (query.hasQueryItem("error")) {
         error = query.queryItemValue("error_description");
-        return "reject";
+        emit responseReady("reject");
     } else if (query.hasQueryItem("access_token")) {
         setParams(
             query.queryItemValue("access_token"),
@@ -47,10 +47,9 @@ QString VkApi::proceedAuthResponse(const QUrl & url) {
             query.queryItemValue("expires_in")
         );
         emit authorized();
-        return "accept";
+        emit responseReady("accept");
     }
-
-    return "";
+    else emit responseReady("");
 }
 
 ///////////////////////////////////////////////////////////

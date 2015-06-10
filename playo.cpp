@@ -48,7 +48,7 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Library::instance(QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
+    Library::instance((QObject *)QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
 
     Stylesheets::initPens();
     new Tray(this);
@@ -243,10 +243,16 @@ void Playo::openVKRecomendations() {
 }
 
 void Playo::openVKTabDialog() {
-    WebDialog dialog(this, VkApi::instance(), "VK auth");
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-        Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
+    WebDialogInterface * dInt;
+    if (loadWebDialogPlugin(dInt)) {
+        QDialog * dialog = dInt -> createDialog(this, VkApi::instance() -> manager(), VkApi::instance() -> authUrl(), "VK auth");
+        dInt -> registerActions(VkApi::instance());
+
+        if (dialog -> exec() == QDialog::Accepted) {
+            ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
+            Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
+        }
+        delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
@@ -278,12 +284,23 @@ void Playo::showSoundcloudRelTabDialog() {
 }
 
 void Playo::openSoundcloudTabDialog() {
-    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
+    WebDialogInterface * dInt;
+    if (loadWebDialogPlugin(dInt)) {
+        QDialog * dialog = dInt -> createDialog(this, SoundcloudApi::instance() -> manager(), SoundcloudApi::instance() -> authUrl(), "Soundcloud auth");
+        dInt -> registerActions(SoundcloudApi::instance());
+
+        if (dialog -> exec() == QDialog::Accepted) {
+            ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
+            Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
+        }
+        delete dInt;
     }
-//    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
+
+//    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
+//    if (dialog.exec() == QDialog::Accepted) {
+//        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
+//        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
+//    }
 }
 
 void Playo::showSoundcloudTabDialog() {
