@@ -18,12 +18,16 @@ class IApi { // format=json
         virtual int extractAmount(QJsonObject & response) = 0;
         virtual int requestLimit() = 0;
 
-//        virtual void registerQuery(QUrl url, CallInitiator & initiator) = 0;
         virtual bool proceedQuery(QUrl url, QJsonObject & response) = 0;
 
         virtual void setLimit(QUrlQuery & query, int limit, int offset = 0);
         inline void setToken(QUrlQuery & query) { setParam(query, "api_key", token()); }
         inline void setParam(QUrlQuery & query, QString name, QString value) { query.addQueryItem(name, value); }
+        inline void setParam(QUrlQuery & query, QString name, QStringList values) {
+            if (values.isEmpty()) return;
+            for(QStringList::Iterator val = values.begin(); val != values.end(); val++)
+                query.addQueryItem(name, *val);
+        }
         inline QUrlQuery buildDefaultParams() {
             QUrlQuery query;
             setToken(query);

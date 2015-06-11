@@ -84,17 +84,10 @@ class EchonestSongApi : public IApi {
             if (mode == 0 || mode == 1)
                 setParam(query, "mode", QString::number(mode));
 
-            if (!styles.isEmpty())
-                for(QStringList::Iterator style = styles.begin(); style != styles.end(); style++)
-                    setParam(query, "style", *style);
-            if (!tags.isEmpty())
-                for(QStringList::Iterator tag = tags.begin(); tag != tags.end(); tag++)
-                    setParam(query, "description", *tag);
 
-            if (!moods.isEmpty())
-                for(QStringList::Iterator mood = moods.begin(); mood != moods.end(); mood++)
-                    setParam(query, "mood", *mood);
-
+            setParam(query, "style", styles);
+            setParam(query, "description", tags);
+            setParam(query, "mood", moods);
 
             url.setQuery(query);
             return url;

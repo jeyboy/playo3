@@ -29,7 +29,6 @@ public:
     inline static void close() { delete self; }
 protected:
     inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
-    void registerQuery(QUrl url);
 
     inline QString token() const { return "TSCA6XDZTJQ1OOJSV"; }
     inline int requestLimit() { return 100; }
@@ -56,8 +55,6 @@ protected:
 
         return status;
     }
-
-    QHash<QUrl, CallInitiator> requests;
 
 protected slots:
     void requestFinished() {

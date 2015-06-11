@@ -437,17 +437,9 @@ class EchonestArtistApi : public IApi {
             if (!name.isEmpty()) setParam(query, "name", name);
             if (!genres.isEmpty()) setParam(query, "genre", genres.join(','));
 
-            // must be in separate parameters
-            if (!styles.isEmpty())
-                for(QStringList::Iterator style = styles.begin(); style != styles.end(); style++)
-                    setParam(query, "style", *style);
-            if (!tags.isEmpty())
-                for(QStringList::Iterator tag = tags.begin(); tag != tags.end(); tag++)
-                    setParam(query, "description", *tag);
-
-            if (!moods.isEmpty())
-                for(QStringList::Iterator mood = moods.begin(); mood != moods.end(); mood++)
-                    setParam(query, "mood", *mood);
+            setParam(query, "style", styles);
+            setParam(query, "description", tags);
+            setParam(query, "mood", moods);
 
             url.setQuery(query);
             return url;
@@ -592,12 +584,11 @@ class EchonestArtistApi : public IApi {
 
             setParam(query, "min_results", QString::number(qMin(limit, requestLimit())));
 
+            setParam(query, "name", names);
             if (!names.isEmpty())
-                for(QStringList::Iterator name = names.begin(); name != names.end(); name++)
-                    setParam(query, "name", *name);
+                setParam(query, "name", names);
             else
-                for(QStringList::Iterator id = ids.begin(); id != ids.end(); id++)
-                    setParam(query, "id", *id);
+                setParam(query, "id", ids);
 
             url.setQuery(query);
             return url;
@@ -748,9 +739,7 @@ class EchonestArtistApi : public IApi {
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), offset);
 
-            for(QStringList::Iterator name = names.begin(); name != names.end(); name++)
-                setParam(query, "name", *name);
-
+            setParam(query, "name", names);
             url.setQuery(query);
             return url;
         }
