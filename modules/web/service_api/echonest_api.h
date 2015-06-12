@@ -17,9 +17,11 @@
 #include "echonest_genre_api.h"
 #include "echonest_artist_api.h"
 #include "echonest_song_api.h"
+#include "echonest_playlist_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
 
-class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi, public EchonestSongApi {
+class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi,
+        public EchonestSongApi, public EchonestPlaylistApi {
     Q_OBJECT
 public:
     inline QString name() const { return "echonest"; }

@@ -24,6 +24,8 @@ class IApi { // format=json
 
         virtual void setLimit(QUrlQuery & query, int limit, int offset = 0);
         inline void setToken(QUrlQuery & query) { setParam(query, "api_key", token()); }
+        inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }
+        inline void setParam(QUrlQuery & query, QString name, float value) { query.addQueryItem(name, QString::number(value)); }
         inline void setParam(QUrlQuery & query, QString name, QString value) { query.addQueryItem(name, value); }
         inline void setParam(QUrlQuery & query, QString name, QStringList values) {
             if (values.isEmpty()) return;

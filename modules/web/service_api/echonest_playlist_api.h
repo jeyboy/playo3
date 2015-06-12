@@ -221,12 +221,8 @@ class EchonestPlaylistApi : public IApi {
         // artist_min_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the minimum artist familiarity for songs in the playlist
         // artist_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum artist hotttness for songs in the playlist
         // artist_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum artist hotttnesss for songs in the playlist
-
-
-
         // artist_start_year_before 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year before the given value
         // artist_start_year_after 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year after the given value
-
         // artist_end_year_before 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year before the given value
         // artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
 
@@ -305,7 +301,7 @@ class EchonestPlaylistApi : public IApi {
 
         QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
                                     QString seed_catalog = QString(), QStringList artists = QStringList(), QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
-                                    QStringList song_types = QStringList(), QString sort = QString(), QString genre_preset = QStringList(),
+                                    QStringList song_types = QStringList(), QString sort = QString(), QString genre_preset = QString(),
                                     QString artist_start_year_before = QString(), QString artist_start_year_after = QString(),
                                     QString artist_end_year_before = QString(), QString artist_end_year_after = QString(),
                                     int limit = 100, float min_tempo = 0, float max_tempo = 500,
