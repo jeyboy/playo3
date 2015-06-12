@@ -189,35 +189,13 @@ class EchonestPlaylistApi : public IApi {
 
 
 
-        // max_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the maximum duration of any song on the playlist
-        // min_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the minimum duration of any song on the playlist
 
-        // max_danceability 	no 	no 	0.0 < danceability < 1.0 	the maximum danceability of any song
-        // min_danceability 	no 	no 	0.0 < danceability < 1.0 	the minimum danceability of any song
-
-        // max_liveness 	no 	no 	0.0 < liveness < 1.0 	the maximum liveness of any song
-        // min_liveness 	no 	no 	0.0 < liveness < 1.0 	the minimum liveness of any song
-
-        // max_speechiness 	no 	no 	0.0 < speechiness < 1.0 	the maximum speechiness of any song
-        // min_speechiness 	no 	no 	0.0 < speechiness < 1.0 	the minimum speechiness of any song
-
-        // max_acousticness 	no 	no 	0.0 < acousticness < 1.0 	the maximum acousticness of any song. This is a beta feature.
-        // min_acousticness 	no 	no 	0.0 < acousticness < 1.0 	the minimum acousticness of any song. This is a beta feature.
-
-        // artist_max_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the maximum artist familiarity for songs in the playlist
-        // artist_min_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the minimum artist familiarity for songs in the playlist
-
-        // artist_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum artist hotttness for songs in the playlist
-        // artist_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum artist hotttnesss for songs in the playlist
 
         // artist_start_year_before 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year before the given value
         // artist_start_year_after 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year after the given value
 
         // artist_end_year_before 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year before the given value
         // artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
-
-        // song_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum hotttnesss for songs in the playlist
-        // song_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum hotttnesss for songs in the playlist
 
         // bucket 	no 	yes 	audio_summary, artist_discovery, artist_discovery_rank, artist_familiarity, artist_familiarity_rank, artist_hotttnesss, artist_hotttnesss_rank, artist_location, song_currency, song_currency_rank, song_hotttnesss, song_hotttnesss_rank, song_type, tracks, id:Rosetta-space 	indicates what data should be returned in the playlist (for json and xml types only)
 
@@ -231,11 +209,33 @@ class EchonestPlaylistApi : public IApi {
         // min_loudness 	no 	no 	-100.0 < loudness < 100.0 (dB) 	the minimum loudness of any song on the playlist
         // max_energy 	no 	no 	0.0 < energy < 1.0 	the maximum energy of any song
         // min_energy 	no 	no 	0.0 < energy < 1.0 	the minimum energy of any song
+        // max_danceability 	no 	no 	0.0 < danceability < 1.0 	the maximum danceability of any song
+        // min_danceability 	no 	no 	0.0 < danceability < 1.0 	the minimum danceability of any song
+        // max_liveness 	no 	no 	0.0 < liveness < 1.0 	the maximum liveness of any song
+        // min_liveness 	no 	no 	0.0 < liveness < 1.0 	the minimum liveness of any song
+        // max_speechiness 	no 	no 	0.0 < speechiness < 1.0 	the maximum speechiness of any song
+        // min_speechiness 	no 	no 	0.0 < speechiness < 1.0 	the minimum speechiness of any song
+        // max_acousticness 	no 	no 	0.0 < acousticness < 1.0 	the maximum acousticness of any song. This is a beta feature.
+        // min_acousticness 	no 	no 	0.0 < acousticness < 1.0 	the minimum acousticness of any song. This is a beta feature.
+        // song_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum hotttnesss for songs in the playlist
+        // song_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum hotttnesss for songs in the playlist
+        // max_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the maximum duration of any song on the playlist
+        // min_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the minimum duration of any song on the playlist
+
+        // artist_max_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the maximum artist familiarity for songs in the playlist
+        // artist_min_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the minimum artist familiarity for songs in the playlist
+
+        // artist_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum artist hotttness for songs in the playlist
+        // artist_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum artist hotttnesss for songs in the playlist
 
         inline QUrl playlistStaticExUrl(QString & type, QString & song_selection_creteria, float variety, QString & distribution, float adventurousness,
                                       QString & seed_catalog, QStringList & artists, QStringList & genres, QStringList & songs_ids,
                                       QStringList & song_types, QString & sort, QString & genre_preset, float min_tempo = 0, float max_tempo = 500,
                                       float min_loudness = -100, float max_loudness = 100, float min_energy = 0, float max_energy = 1,
+                                      float min_danceability = 0, float max_danceability = 1, float min_liveness = 0, float max_liveness = 1,
+                                      float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,
+                                      float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
+                                      float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1,
                                       int limit = 100) {
             QUrl url(baseUrl("playlist/static"));
             QUrlQuery query = buildDefaultParams();
@@ -253,6 +253,30 @@ class EchonestPlaylistApi : public IApi {
 
             setParam(query, "min_energy", min_energy);
             setParam(query, "max_energy", max_energy);
+
+            setParam(query, "min_danceability", min_danceability);
+            setParam(query, "max_danceability", max_danceability);
+
+            setParam(query, "min_liveness", min_liveness);
+            setParam(query, "max_liveness", max_liveness);
+
+            setParam(query, "min_speechiness", min_speechiness);
+            setParam(query, "max_speechiness", max_speechiness);
+
+            setParam(query, "min_acousticness", min_acousticness);
+            setParam(query, "max_acousticness", max_acousticness);
+
+            setParam(query, "song_min_hotttnesss", song_min_hotttnesss);
+            setParam(query, "song_max_hotttnesss", song_max_hotttnesss);
+
+            setParam(query, "min_duration", min_duration);
+            setParam(query, "max_duration", max_duration);
+
+            setParam(query, "artist_min_familiarity", artist_min_familiarity);
+            setParam(query, "artist_max_familiarity", artist_max_familiarity);
+
+            setParam(query, "artist_min_hotttnesss", artist_min_hotttnesss);
+            setParam(query, "artist_max_hotttnesss", artist_max_hotttnesss);
 
             if (!genre_preset.isEmpty()) setParam(query, "genre_preset", genre_preset);
             if (!sort.isEmpty()) setParam(query, "sort", sort);
@@ -275,7 +299,7 @@ class EchonestPlaylistApi : public IApi {
                                   QStringList song_types = QStringList(), int limit = 100) {
             QJsonObject response;
 
-            if (proceedQuery(playlistStaticUrl(type, song_selection_creteria, variety, distribution, adventurousness,
+            if (proceedQuery(playlistStaticExUrl(type, song_selection_creteria, variety, distribution, adventurousness,
                                                seed_catalog, artists, genres, songs_ids, song_types, limit), response))
                 return response.value("response").toObject().value("songs").toArray();
 
