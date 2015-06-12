@@ -1,6 +1,8 @@
 #ifndef IAPI
 #define IAPI
 
+//http://musicmachinery.com/music-apis/
+
 #include "misc/call_initiator.h"
 
 #include <qurl.h>
