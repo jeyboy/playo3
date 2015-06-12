@@ -191,11 +191,7 @@ class EchonestPlaylistApi : public IApi {
 
 
 
-        // artist_start_year_before 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year before the given value
-        // artist_start_year_after 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year after the given value
 
-        // artist_end_year_before 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year before the given value
-        // artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
 
         // bucket 	no 	yes 	audio_summary, artist_discovery, artist_discovery_rank, artist_familiarity, artist_familiarity_rank, artist_hotttnesss, artist_hotttnesss_rank, artist_location, song_currency, song_currency_rank, song_hotttnesss, song_hotttnesss_rank, song_type, tracks, id:Rosetta-space 	indicates what data should be returned in the playlist (for json and xml types only)
 
@@ -221,25 +217,40 @@ class EchonestPlaylistApi : public IApi {
         // song_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum hotttnesss for songs in the playlist
         // max_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the maximum duration of any song on the playlist
         // min_duration 	no 	no 	0.0 < duration < 3600.0 (seconds) 	the minimum duration of any song on the playlist
-
         // artist_max_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the maximum artist familiarity for songs in the playlist
         // artist_min_familiarity 	no 	no 	0.0 < familiarity < 1.0 	the minimum artist familiarity for songs in the playlist
-
         // artist_max_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the maximum artist hotttness for songs in the playlist
         // artist_min_hotttnesss 	no 	no 	0.0 < hotttnesss < 1.0 	the minimum artist hotttnesss for songs in the playlist
 
+
+
+        // artist_start_year_before 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year before the given value
+        // artist_start_year_after 	no 	no 	1970, 2011, present 	Matches artists that have an earliest start year after the given value
+
+        // artist_end_year_before 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year before the given value
+        // artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
+
         inline QUrl playlistStaticExUrl(QString & type, QString & song_selection_creteria, float variety, QString & distribution, float adventurousness,
                                       QString & seed_catalog, QStringList & artists, QStringList & genres, QStringList & songs_ids,
-                                      QStringList & song_types, QString & sort, QString & genre_preset, float min_tempo = 0, float max_tempo = 500,
+                                      QStringList & song_types, QString & sort, QString & genre_preset,
+                                      QString & artist_start_year_before, QString & artist_start_year_after,
+                                      QString & artist_end_year_before, QString & artist_end_year_after,
+                                      int limit = 100, float min_tempo = 0, float max_tempo = 500,
                                       float min_loudness = -100, float max_loudness = 100, float min_energy = 0, float max_energy = 1,
                                       float min_danceability = 0, float max_danceability = 1, float min_liveness = 0, float max_liveness = 1,
                                       float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,
                                       float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
-                                      float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1,
-                                      int limit = 100) {
+                                      float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1
+                                      ) {
             QUrl url(baseUrl("playlist/static"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
+
+            if (!artist_start_year_before.isEmpty()) setParam(query, "artist_start_year_before", artist_start_year_before);
+            if (!artist_start_year_after.isEmpty()) setParam(query, "artist_start_year_after", artist_start_year_after);
+
+            if (!artist_end_year_before.isEmpty()) setParam(query, "artist_end_year_before", artist_end_year_before);
+            if (!artist_end_year_after.isEmpty()) setParam(query, "artist_end_year_after", artist_end_year_after);
 
             setParam(query, "artist", artists);
             setParam(query, "genre", genres);
@@ -292,15 +303,27 @@ class EchonestPlaylistApi : public IApi {
             return url;
         }
 
-        QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5,
-                                  QString distribution = QString(), float adventurousness = .2,
-                                  QString seed_catalog = QString(), QStringList artists = QStringList(),
-                                  QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
-                                  QStringList song_types = QStringList(), int limit = 100) {
+        QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
+                                    QString seed_catalog = QString(), QStringList artists = QStringList(), QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
+                                    QStringList song_types = QStringList(), QString sort = QString(), QString genre_preset = QStringList(),
+                                    QString artist_start_year_before = QString(), QString artist_start_year_after = QString(),
+                                    QString artist_end_year_before = QString(), QString artist_end_year_after = QString(),
+                                    int limit = 100, float min_tempo = 0, float max_tempo = 500,
+                                    float min_loudness = -100, float max_loudness = 100, float min_energy = 0, float max_energy = 1,
+                                    float min_danceability = 0, float max_danceability = 1, float min_liveness = 0, float max_liveness = 1,
+                                    float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,
+                                    float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
+                                    float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1) {
             QJsonObject response;
 
             if (proceedQuery(playlistStaticExUrl(type, song_selection_creteria, variety, distribution, adventurousness,
-                                               seed_catalog, artists, genres, songs_ids, song_types, limit), response))
+                                                 seed_catalog, artists, genres, songs_ids, song_types, sort, genre_preset,
+                                                 artist_start_year_before, artist_start_year_after, artist_end_year_before, artist_end_year_after,
+                                                 limit, min_tempo, max_tempo, min_loudness, max_loudness, min_energy, max_energy,
+                                                 min_danceability, max_danceability, min_liveness, max_liveness,
+                                                 min_speechiness, max_speechiness, min_acousticness, max_acousticness,
+                                                 song_min_hotttnesss, song_max_hotttnesss, min_duration, max_duration,
+                                                 artist_min_familiarity, artist_max_familiarity, artist_min_hotttnesss, artist_max_hotttnesss), response))
                 return response.value("response").toObject().value("songs").toArray();
 
             return QJsonArray();
