@@ -139,10 +139,8 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
             case SearchRequest::request_vk: {
                 QJsonArray items;
                 if (r.spredicate.isEmpty() && r.popular) {
-                    qDebug() << "VK POPULAR";
                     items = VkApi::instance() -> audioPopularSync(this, true, r.sgenre_id).value("audio_list").toArray();
                 } else {
-                    qDebug() << "VK SEARCH";
                     items = VkApi::instance() -> audioSearchSync(
                         this, VkApi::instance() -> getUserID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
                     ).value("audio_list").toArray();
