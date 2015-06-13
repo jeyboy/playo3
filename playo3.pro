@@ -126,7 +126,8 @@ SOURCES += main.cpp\
     dialogs/export_dialog.cpp \
     media/cue/cue.cpp \
     modules/controls/equalizer.cpp \
-    modules/web/service_api/echonest_api.cpp
+    modules/web/service_api/echonest_api.cpp \
+    dialogs/echonest_dialog.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -262,7 +263,8 @@ HEADERS  += playo.h \
     modules/controls/equalizer.h \
     modules/plugins/web_dialog_interface.h \
     modules/plugins/loader.h \
-    modules/web/service_api/echonest_playlist_api.h
+    modules/web/service_api/echonest_playlist_api.h \
+    dialogs/echonest_dialog.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
@@ -273,7 +275,8 @@ FORMS    += playo.ui \
     dialogs/extension_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
-    dialogs/export_dialog.ui
+    dialogs/export_dialog.ui \
+    dialogs/echonest_dialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -267,32 +267,36 @@ class EchonestArtistApi : public IApi {
 
 
 
-//        // buckets: biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss,
-//        // hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
-//        inline QUrl artistProfileUrl(QString name, QString id = QString(), QString buckets) {
-//            QUrl url(baseUrl("artist/profile"));
-//            QUrlQuery query = buildDefaultParams();
+        // buckets: biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss,
+        // hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
+        inline QUrl artistProfileUrl(QString name, QString id = QString(), QStringList buckets) {
+            QUrl url(baseUrl("artist/profile"));
+            QUrlQuery query = buildDefaultParams();
 
-//            if (!name.isEmpty())
-//                setParam(query, "name", name);
-//            else
-//                setParam(query, "id", id);
+            if (!name.isEmpty())
+                setParam(query, "name", name);
+            else
+                setParam(query, "id", id);
 
-//            setParam(query, "bucket", buckets);
+            setParam(query, "bucket", buckets);
 
-//            url.setQuery(query);
-//            return url;
-//        }
+            url.setQuery(query);
+            return url;
+        }
 
-//        QJsonArray artistProfile(QString name, QString id = QString()) {
-//            QJsonObject response;
+        QJsonObject artistProfile(QString name, QString id = QString()) {
+            QJsonObject response;
 
-//            if (proceedQuery(artistGenresUrl(name, id), response)) {
-//                return response.value("response").toObject().value("terms").toArray();
-//            }
+            QStringList buckets;
+            buckets << "biographies" << "familiarity" << "familiarity_rank" << "genre" <<
+                       "hotttnesss" << "hotttnesss_rank" << "images" << "songs" <<
+                       "years_active" << "news" << "terms";
 
-//            return QJsonArray();
-//        }
+            if (proceedQuery(artistProfileUrl(name, id, buckets), response))
+                return response.value("response").toObject().value("artist").toArray();
+
+            return QJsonObject();
+        }
 
         //{
         //    "response": {

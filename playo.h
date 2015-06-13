@@ -43,6 +43,8 @@ private slots:
     void showSearchDialog();
     void showSettingsDialog();
 
+    void showEchonestDialog();
+
     void openVKRecomendations();
     void openVKTabDialog();
     void showVKTabDialog();

@@ -237,6 +237,10 @@ void Playo::showSettingsDialog() {
     }
 }
 
+void Playo::showEchonestDialog() {
+
+}
+
 void Playo::openVKRecomendations() {
     ViewSettings settings(vk_rel, false, false, false, true, VkApi::instance() -> getUserID(), user_rel);
     Dockbars::instance() -> createDocBar("Rec for YOU", settings, 0, true, true);

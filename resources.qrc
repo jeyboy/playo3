@@ -63,5 +63,6 @@
         <file alias="tree_opened_hover">images/controls/tree/tree_opened_hover.png</file>
         <file alias="search">images/elements/search.png</file>
         <file alias="cycling">images/elements/cycling.png</file>
+        <file alias="echonest">images/elements/echonest.png</file>
     </qresource>
 </RCC>

@@ -352,6 +352,8 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addSeparator();
+    ptb -> addWidget(initiateEchonestButton());
+    ptb -> addSeparator();
     ptb -> addAction(QIcon(":/search"), "Search", parent(), SLOT(showSearchDialog()));
     ptb -> addSeparator();
     ptb -> addAction(QIcon(":/settings"), "Common setting", parent(), SLOT(showSettingsDialog()));
@@ -381,6 +383,16 @@ Spectrum * ToolBars::getSpectrum() {
     }
 
     return spectrum;
+}
+
+QToolButton * ToolBars::initiateEchonestButton() {
+    QToolButton * echoToolButton = new QToolButton((QWidget *)parent());
+
+    echoToolButton -> setIcon(QIcon(":/echonest"));
+    connect(echoToolButton, SIGNAL(clicked()), parent(), SLOT(showEchonestDialog()));
+    echoToolButton -> setToolTip("Echonest(the.echonest.com)");
+
+    return echoToolButton;
 }
 
 // move to the vk class
