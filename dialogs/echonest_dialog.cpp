@@ -6,6 +6,20 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
     QDialog(parent),
     ui(new Ui::EchonestDialog) {
     ui -> setupUi(this);
+
+
+    accordion = new Accordion(this);
+
+    for(int loop1 = 0; loop1<10; loop1++) {
+        QWidget * w = new QWidget();
+
+        for(int l = 0 ; l < 10; l++) {
+            QLabel * label = new QLabel("Label " + QString::number(l), w);
+//            w -> layout() -> addWidget(label);
+        }
+
+        accordion -> addItem("Page " + QString::number(loop1), w);
+    }
 }
 
 EchonestDialog::~EchonestDialog() {
@@ -13,133 +27,129 @@ EchonestDialog::~EchonestDialog() {
 }
 
 void EchonestDialog::on_findArtistSongs_clicked() {
-    if (!ui -> findArtistName -> text().isEmpty()) {
-        QJsonObject info = EchonestApi::instance() -> artistProfile(ui -> findArtistName -> text());
+//    if (!ui -> findArtistName -> text().isEmpty()) {
+//        QJsonObject info = EchonestApi::instance() -> artistProfile(ui -> findArtistName -> text());
+
+//        for(int loop1 = ui -> artistTabs -> count() - 1; loop1 > -1; loop1--) {
+//            QWidget * widget =  ui -> artistTabs -> widget(loop1);
+//            ui -> artistTabs -> removeItem(loop1);
+//            delete widget;
+//        }
+
+//        if (!info.isEmpty()) {
+//            QJsonArray biographies = info.value("biographies").toArray();
+//            QJsonArray::Iterator biographie = biographies.begin();
+
+//            for(int i = 1; biographie != biographies.end(); biographie++, i++) {
+//                QLabel * biographie_label = new QLabel((*biographie).toObject().value("text").toString(), ui -> artistTabs);
+//                biographie_label -> setWordWrap(true);
+//                ui -> artistTabs -> addItem(biographie_label, "Biographie " + QString::number(i));
+//            }
 
 
-//        Accordion * accordion = new Accordion(this);
-//        accordion -> addItem();
+//            QWidget * statistic = new QWidget(ui -> artistTabs);
+//            QVBoxLayout * l = new QVBoxLayout(statistic);
+//            l -> addWidget(new QLabel(
+//                "Familiarity: " + QString::number((info.value("familiarity").toDouble() * 100)) + "%",
+//                statistic)
+//            );
 
-        for(int loop1 = ui -> artistTabs -> count() - 1; loop1 > -1; loop1--) {
-            QWidget * widget =  ui -> artistTabs -> widget(loop1);
-            ui -> artistTabs -> removeItem(loop1);
-            delete widget;
-        }
+//            l -> addWidget(new QLabel(
+//                "Hotttnesss: " + QString::number((info.value("hotttnesss").toDouble() * 100)) + "%",
+//                statistic)
+//            );
 
-        if (!info.isEmpty()) {
-            QJsonArray biographies = info.value("biographies").toArray();
-            QJsonArray::Iterator biographie = biographies.begin();
-
-            for(int i = 1; biographie != biographies.end(); biographie++, i++) {
-                QLabel * biographie_label = new QLabel((*biographie).toObject().value("text").toString(), ui -> artistTabs);
-                biographie_label -> setWordWrap(true);
-                ui -> artistTabs -> addItem(biographie_label, "Biographie " + QString::number(i));
-            }
+//            l -> addWidget(new QLabel(
+//                "Start career from: " + QString::number(info.value("years_active").toArray().first().toObject().value("start").toInt()),
+//                statistic)
+//            );
 
 
-            QWidget * statistic = new QWidget(ui -> artistTabs);
-            QVBoxLayout * l = new QVBoxLayout(statistic);
-            l -> addWidget(new QLabel(
-                "Familiarity: " + QString::number((info.value("familiarity").toDouble() * 100)) + "%",
-                statistic)
-            );
+//            QJsonArray genres = info.value("genres").toArray();
 
-            l -> addWidget(new QLabel(
-                "Hotttnesss: " + QString::number((info.value("hotttnesss").toDouble() * 100)) + "%",
-                statistic)
-            );
+//            if (!genres.isEmpty()) {
+//                QStringList genresList;
 
-            l -> addWidget(new QLabel(
-                "Start career from: " + QString::number(info.value("years_active").toArray().first().toObject().value("start").toInt()),
-                statistic)
-            );
+//                for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
+//                    genresList << (*genre).toObject().value("name").toString();
 
+//                l -> addWidget(new QLabel("Genres: " + genresList.join(','), statistic));
+//            }
 
-            QJsonArray genres = info.value("genres").toArray();
+//            QJsonArray terms = info.value("terms").toArray();
 
-            if (!genres.isEmpty()) {
-                QStringList genresList;
+//            if (!terms.isEmpty()) {
+//                QStringList termsList;
 
-                for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
-                    genresList << (*genre).toObject().value("name").toString();
+//                for(QJsonArray::Iterator term = terms.begin(); term != terms.end(); term++) {
+//                    QJsonObject obj = (*term).toObject();
+//                    termsList <<
+//                        (
+//                            obj.value("name").toString() +
+//                                "(frequency: " + (obj.value("frequency").toDouble() * 100) + ")" +
+//                                    "(weight: " + (obj.value("weight").toDouble() * 100) + ")"
+//                        );
+//                }
 
-                l -> addWidget(new QLabel("Genres: " + genresList.join(','), statistic));
-            }
+//                l -> addWidget(new QLabel("Terms: " + termsList.join(','), statistic));
+//            }
 
-            QJsonArray terms = info.value("terms").toArray();
-
-            if (!terms.isEmpty()) {
-                QStringList termsList;
-
-                for(QJsonArray::Iterator term = terms.begin(); term != terms.end(); term++) {
-                    QJsonObject obj = (*term).toObject();
-                    termsList <<
-                        (
-                            obj.value("name").toString() +
-                                "(frequency: " + (obj.value("frequency").toDouble() * 100) + ")" +
-                                    "(weight: " + (obj.value("weight").toDouble() * 100) + ")"
-                        );
-                }
-
-                l -> addWidget(new QLabel("Terms: " + termsList.join(','), statistic));
-            }
-
-            ui -> artistTabs -> addItem(statistic, "Statistic");
+//            ui -> artistTabs -> addItem(statistic, "Statistic");
 
 
 
-            QJsonArray news = info.value("news").toArray();
+//            QJsonArray news = info.value("news").toArray();
 
-            if (!news.isEmpty()) {
-                QWidget * newsBlock = new QWidget(ui -> artistTabs);
-                QVBoxLayout * il = new QVBoxLayout(newsBlock);
+//            if (!news.isEmpty()) {
+//                QWidget * newsBlock = new QWidget(ui -> artistTabs);
+//                QVBoxLayout * il = new QVBoxLayout(newsBlock);
 
-                for(QJsonArray::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
-                    QJsonObject obj = (*news_item).toObject();
-                    QLabel * newsLabel = new QLabel(
-                                obj.value("date_found").toString() + "\n" + obj.value("name").toString() + "\n\n" + obj.value("summary").toString()
-                                , newsBlock);
-                    il -> addWidget(newsLabel);
-                }
+//                for(QJsonArray::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
+//                    QJsonObject obj = (*news_item).toObject();
+//                    QLabel * newsLabel = new QLabel(
+//                                obj.value("date_found").toString() + "\n" + obj.value("name").toString() + "\n\n" + obj.value("summary").toString()
+//                                , newsBlock);
+//                    il -> addWidget(newsLabel);
+//                }
 
-                ui -> artistTabs -> addItem(newsBlock, "News");
-            }
+//                ui -> artistTabs -> addItem(newsBlock, "News");
+//            }
 
-            QJsonArray songs = info.value("songs").toArray();
+//            QJsonArray songs = info.value("songs").toArray();
 
-            if (!songs.isEmpty()) {
-                QWidget * songsBlock = new QWidget(ui -> artistTabs);
-                QVBoxLayout * il = new QVBoxLayout(songsBlock);
+//            if (!songs.isEmpty()) {
+//                QWidget * songsBlock = new QWidget(ui -> artistTabs);
+//                QVBoxLayout * il = new QVBoxLayout(songsBlock);
 
-                for(QJsonArray::Iterator song = songs.begin(); song != songs.end(); song++) {
-                    QJsonObject obj = (*song).toObject();
-                    QLabel * newsLabel = new QLabel(
-                                obj.value("title").toString()
-                                , songsBlock);
-//                    obj.value("name").toString()
-                    il -> addWidget(newsLabel);
-                }
+//                for(QJsonArray::Iterator song = songs.begin(); song != songs.end(); song++) {
+//                    QJsonObject obj = (*song).toObject();
+//                    QLabel * newsLabel = new QLabel(
+//                                obj.value("title").toString()
+//                                , songsBlock);
+////                    obj.value("name").toString()
+//                    il -> addWidget(newsLabel);
+//                }
 
-                ui -> artistTabs -> addItem(songsBlock, "Songs");
-            }
+//                ui -> artistTabs -> addItem(songsBlock, "Songs");
+//            }
 
-            QJsonArray images = info.value("images").toArray();
+//            QJsonArray images = info.value("images").toArray();
 
-            if (!images.isEmpty()) {
-                QWidget * imagesBlock = new QWidget(ui -> artistTabs);
-                QVBoxLayout * il = new QVBoxLayout(imagesBlock);
+//            if (!images.isEmpty()) {
+//                QWidget * imagesBlock = new QWidget(ui -> artistTabs);
+//                QVBoxLayout * il = new QVBoxLayout(imagesBlock);
 
-                for(QJsonArray::Iterator image = images.begin(); image != images.end(); image++) {
-                    QLabel * imageLabel = new QLabel(imagesBlock);
-                    QUrl url((*image).toObject().value("url").toString());
-                    QPixmap pixma = CustomNetworkAccessManager::manager() -> openImage(url);
+//                for(QJsonArray::Iterator image = images.begin(); image != images.end(); image++) {
+//                    QLabel * imageLabel = new QLabel(imagesBlock);
+//                    QUrl url((*image).toObject().value("url").toString());
+//                    QPixmap pixma = CustomNetworkAccessManager::manager() -> openImage(url);
 
-                    imageLabel -> setPixmap(pixma);
-                    il -> addWidget(imageLabel);
-                }
+//                    imageLabel -> setPixmap(pixma);
+//                    il -> addWidget(imageLabel);
+//                }
 
-                ui -> artistTabs -> addItem(imagesBlock, "Images");
-            }
-        }
-    }
+//                ui -> artistTabs -> addItem(imagesBlock, "Images");
+//            }
+//        }
+//    }
 }

@@ -18,11 +18,13 @@ public:
     explicit EchonestDialog(QWidget * parent = 0);
     ~EchonestDialog();
 
-private slots:
     void on_findArtistSongs_clicked();
+private slots:
+//    void on_findArtistSongs_clicked();
 
 private:
     Ui::EchonestDialog * ui;
+    Accordion * accordion;
 };
 
 #endif // ECHONEST_DIALOG_H

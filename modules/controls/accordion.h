@@ -12,6 +12,7 @@ public:
     AccordionCell(QString name, QWidget * container, QWidget * parent = 0) :
         QWidget(parent), item(container), title(new QPushButton(name, this))
     {
+        container -> setParent(this);
         QVBoxLayout * l = new QVBoxLayout(this);
 
         l -> addWidget(title, 1);
