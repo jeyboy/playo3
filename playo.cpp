@@ -238,7 +238,8 @@ void Playo::showSettingsDialog() {
 }
 
 void Playo::showEchonestDialog() {
-
+    EchonestDialog d(this);
+    d.exec();
 }
 
 void Playo::openVKRecomendations() {

@@ -127,7 +127,8 @@ SOURCES += main.cpp\
     media/cue/cue.cpp \
     modules/controls/equalizer.cpp \
     modules/web/service_api/echonest_api.cpp \
-    dialogs/echonest_dialog.cpp
+    dialogs/echonest_dialog.cpp \
+    modules/controls/accordion.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -264,7 +265,8 @@ HEADERS  += playo.h \
     modules/plugins/web_dialog_interface.h \
     modules/plugins/loader.h \
     modules/web/service_api/echonest_playlist_api.h \
-    dialogs/echonest_dialog.h
+    dialogs/echonest_dialog.h \
+    modules/controls/accordion.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

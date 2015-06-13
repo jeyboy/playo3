@@ -269,7 +269,7 @@ class EchonestArtistApi : public IApi {
 
         // buckets: biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss,
         // hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
-        inline QUrl artistProfileUrl(QString name, QString id = QString(), QStringList buckets) {
+        inline QUrl artistProfileUrl(QString name, QStringList buckets, QString id = QString()) {
             QUrl url(baseUrl("artist/profile"));
             QUrlQuery query = buildDefaultParams();
 
@@ -292,8 +292,8 @@ class EchonestArtistApi : public IApi {
                        "hotttnesss" << "hotttnesss_rank" << "images" << "songs" <<
                        "years_active" << "news" << "terms";
 
-            if (proceedQuery(artistProfileUrl(name, id, buckets), response))
-                return response.value("response").toObject().value("artist").toArray();
+            if (proceedQuery(artistProfileUrl(name, buckets, id), response))
+                return response.value("response").toObject().value("artist").toObject();
 
             return QJsonObject();
         }

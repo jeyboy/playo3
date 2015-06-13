@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Echonest</string>
   </property>
   <widget class="QToolBox" name="toolBox">
    <property name="geometry">
@@ -39,6 +39,14 @@
     </attribute>
    </widget>
    <widget class="QWidget" name="page_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>561</width>
+      <height>410</height>
+     </rect>
+    </property>
     <attribute name="label">
      <string>Playlist extended creation</string>
     </attribute>
@@ -78,16 +86,6 @@
       </rect>
      </property>
     </widget>
-    <widget class="QListWidget" name="artistSongs">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>200</y>
-       <width>541</width>
-       <height>181</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QPushButton" name="findSelectedArtistSongs">
      <property name="geometry">
       <rect>
@@ -101,43 +99,31 @@
       <string>Try to find selected</string>
      </property>
     </widget>
-    <widget class="QLabel" name="artistFoto">
+    <widget class="QToolBox" name="artistTabs">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>44</y>
-       <width>151</width>
-       <height>144</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Panel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
-     </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QPlainTextEdit" name="plainTextEdit">
-     <property name="geometry">
-      <rect>
-       <x>177</x>
+       <x>10</x>
        <y>40</y>
-       <width>371</width>
-       <height>151</height>
+       <width>541</width>
+       <height>331</height>
       </rect>
      </property>
-     <property name="undoRedoEnabled">
-      <bool>false</bool>
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
+     <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>541</width>
+        <height>304</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Biographie</string>
+      </attribute>
+     </widget>
     </widget>
    </widget>
   </widget>
