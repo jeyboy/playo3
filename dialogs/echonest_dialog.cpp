@@ -74,7 +74,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
                     genresList << (*genre).toObject().value("name").toString();
 
-                l -> addWidget(new QLabel("Genres: " + genresList.join(','), statistic));
+                l -> addWidget(new QLabel("Genres: \n\t" + genresList.join("\n\t"), statistic));
             }
 
             QJsonArray terms = info.value("terms").toArray();
