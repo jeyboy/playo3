@@ -17,11 +17,16 @@ public:
 
         l -> addWidget(title);
         l -> addWidget(item);
-        l -> setMargin(1);
-//        l -> setContentsMargins(1,1,1,1);
-        l -> setSpacing(1);
+        l -> setMargin(0);
+        l -> setSpacing(0);
 
         setLayout(l);
+
+//        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//        sizePolicy.setHorizontalStretch(1);
+//        sizePolicy.setVerticalStretch(1);
+//        setSizePolicy(sizePolicy);
+
     }
 
     ~AccordionCell() {}

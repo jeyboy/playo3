@@ -1,12 +1,14 @@
 #include "accordion.h"
 
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent) {
+//    setWidgetResizable(true);
 //    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(1);
 //    sizePolicy.setVerticalStretch(1);
 //    setSizePolicy(sizePolicy);
 
     new_layout = new QVBoxLayout;
+    new_layout -> setSizeConstraint(QLayout::SetMinAndMaxSize);
     setLayout(new_layout);
 }
 
