@@ -301,7 +301,7 @@ QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOn
                            "var rule = true;"
                            "do {"
                            "    var items = API.audio.search({"
-                           "        q: \"" + searchStr + "\", count: 300, offset: it, lyrics: 0,"
+                           "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: 300, offset: it, lyrics: 0,"
                            "        auto_complete: " + boolToStr(autoFix) + ","
                            "        performer_only: " + boolToStr(artistOnly) + ","
                            "        sort: " + QString::number(sort) + ","

@@ -82,7 +82,6 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
     }
 
     func -> result.insert("posts", QJsonArray::fromVariantList(res));
-    delete netManager;
     return func;
 }
 
@@ -127,7 +126,6 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
     }
 
     func -> result.insert("albums", QJsonArray::fromVariantList(res));
-    delete netManager;
 
     return func;
 }
@@ -155,7 +153,6 @@ ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
         }
     }
 
-    delete netManager;
     return func;
 }
 
@@ -178,7 +175,6 @@ ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, boo
         func -> result = func -> result.value("response").toObject();
     }
 
-    delete netManager;
     return func;
 }
 void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize) {
@@ -201,7 +197,6 @@ ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString pr
     if (responseRoutine(m_http, func, func -> result))
         func -> result = func -> result.value("response").toObject();
 
-    delete netManager;
     return func;
 }
 void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
@@ -228,7 +223,6 @@ ApiFuncContainer * VkApi::audioPopularRoutine(ApiFuncContainer * func, bool only
     if (responseRoutine(m_http, func, func -> result))
         func -> result = func -> result.value("response").toObject();
 
-    delete netManager;
     return func;
 }
 void VkApi::audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId) {
