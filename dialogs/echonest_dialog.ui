@@ -13,6 +13,7 @@
   <property name="windowTitle">
    <string>Echonest</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout"/>
  </widget>
  <resources/>
  <connections/>

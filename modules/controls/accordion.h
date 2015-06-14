@@ -1,7 +1,7 @@
 #ifndef ACCORDION
 #define ACCORDION
 
-#include <qframe.h>
+#include <qscrollarea.h>
 #include <qpushbutton.h>
 #include <QVBoxLayout>
 
@@ -13,11 +13,15 @@ public:
         QWidget(parent), item(container), title(new QPushButton(name, this))
     {
         container -> setParent(this);
-        QVBoxLayout * l = new QVBoxLayout(this);
+        QVBoxLayout * l = new QVBoxLayout;
 
-        l -> addWidget(title, 1);
-        l -> addWidget(item, 1);
-        l -> insertStretch(-1, 2);
+        l -> addWidget(title);
+        l -> addWidget(item);
+        l -> setMargin(1);
+//        l -> setContentsMargins(1,1,1,1);
+        l -> setSpacing(1);
+
+        setLayout(l);
     }
 
     ~AccordionCell() {}
@@ -26,7 +30,7 @@ public:
     QPushButton * title;
 };
 
-class Accordion : public QFrame {
+class Accordion : public QScrollArea {
     Q_OBJECT
 public:
     Accordion(QWidget * parent = 0);

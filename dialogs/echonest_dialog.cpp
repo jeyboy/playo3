@@ -7,19 +7,21 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
     ui(new Ui::EchonestDialog) {
     ui -> setupUi(this);
 
-
     accordion = new Accordion(this);
 
     for(int loop1 = 0; loop1<10; loop1++) {
         QWidget * w = new QWidget();
+        QVBoxLayout * l = new QVBoxLayout(w);
 
         for(int l = 0 ; l < 10; l++) {
             QLabel * label = new QLabel("Label " + QString::number(l), w);
-//            w -> layout() -> addWidget(label);
+            w -> layout() -> addWidget(label);
         }
 
         accordion -> addItem("Page " + QString::number(loop1), w);
     }
+
+    layout() -> addWidget(accordion);
 }
 
 EchonestDialog::~EchonestDialog() {
