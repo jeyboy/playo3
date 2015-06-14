@@ -21,6 +21,12 @@ void Accordion::addItem(QString name, QWidget * item, bool expanded) {
     new_layout -> addWidget(cell);
     cell -> setCollapse(!expanded);
 }
+QWidget * Accordion::addItem(QString name, bool expanded) {
+    QWidget * panel = new QWidget(this);
+    addItem(name, panel, expanded);
+    return panel;
+}
+
 void Accordion::removeItem(int index) {
     if (index < 0 || index >= cells.size()) return;
     delete cells.takeAt(index);

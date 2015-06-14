@@ -43,6 +43,7 @@ public:
     Accordion(QWidget * parent = 0);
 
     void addItem(QString name, QWidget * item, bool expanded = false);
+    QWidget * addItem(QString name, bool expanded = false);
     void removeItem(int index);
     void setItemCollapsed(int index, bool collapsed = true);
     void ensureVisible(int index);

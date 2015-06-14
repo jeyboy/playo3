@@ -3,6 +3,8 @@
 
 #include <qdialog.h>
 #include <qlabel.h>
+#include <qlineedit.h>
+
 #include <QVBoxLayout>
 #include "modules/web/service_api/echonest_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
@@ -18,13 +20,14 @@ public:
     explicit EchonestDialog(QWidget * parent = 0);
     ~EchonestDialog();
 
-    void on_findArtistSongs_clicked();
 private slots:
-//    void on_findArtistSongs_clicked();
+    void onArtistInfoButtonClicked();
 
 private:
+    QLineEdit * artistName;
+
     Ui::EchonestDialog * ui;
-    Accordion * accordion;
+    Accordion * artistAccordion;
 };
 
 #endif // ECHONEST_DIALOG_H
