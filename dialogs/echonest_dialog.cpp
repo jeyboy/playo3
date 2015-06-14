@@ -9,14 +9,13 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
 
     accordion = new Accordion(this);
 
-    for(int loop1 = 0; loop1<4; loop1++) {
+    for(int loop1 = 0; loop1<40; loop1++) {
         QWidget * w = new QWidget();
         QVBoxLayout * l = new QVBoxLayout;
         w -> setLayout(l);
 
-        for(int lo = 0 ; lo < 10; lo++) {
+        for(int lo = 0 ; lo < 100; lo++) {
             QLabel * label = new QLabel("Label " + QString::number(lo), w);
-            label -> setStyleSheet("background-color: green;");
             l -> addWidget(label);
         }
 

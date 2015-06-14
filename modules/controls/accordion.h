@@ -3,7 +3,7 @@
 
 #include <qscrollarea.h>
 #include <qpushbutton.h>
-#include <QVBoxLayout>
+#include <qboxlayout.h>
 
 struct AccordionCell : public QWidget {
     Q_OBJECT
@@ -25,8 +25,6 @@ public:
         l -> setSpacing(0);
 
         setLayout(l);
-        title -> setStyleSheet("background-color: green;");
-        item -> setStyleSheet("background-color: blue;");
     }
 
     ~AccordionCell() {}

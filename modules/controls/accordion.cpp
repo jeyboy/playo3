@@ -16,7 +16,6 @@ Accordion::Accordion(QWidget * parent) : QScrollArea(parent) {
 
 void Accordion::addItem(QString name, QWidget * item, bool expanded) {
     Q_ASSERT(!item);
-    item -> setStyleSheet("background-color: red;");
     AccordionCell * cell;
     cells << (cell = new AccordionCell(name, item, this));
     new_layout -> addWidget(cell);
