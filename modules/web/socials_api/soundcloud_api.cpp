@@ -136,7 +136,6 @@ ApiFuncContainer * SoundcloudApi::getUidInfoRoutine(ApiFuncContainer * func) {
         }
     }
 
-    delete netManager;
     return func;
 }
 
@@ -155,13 +154,11 @@ ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QS
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
     QNetworkReply * m_http;
 
-
     for(int i = 0; i < 5; i++) {
         m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audiosSearchUrl(predicate, genre, popular, i * SoundcloudApiPrivate::amountLimit())));
         responseRoutine("audio_list", m_http, func);
     }
 
-    delete netManager;
     return func;
 }
 
