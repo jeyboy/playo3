@@ -86,13 +86,15 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                     QJsonObject obj = (*term).toObject();
                     termsList <<
                         (
-                            obj.value("name").toString() +
-                                "(frequency: " + (obj.value("frequency").toDouble() * 100) + ")" +
-                                    "(weight: " + (obj.value("weight").toDouble() * 100) + ")"
+                            obj.value("name").toString() + "\n" +
+                                "\t\tfrequency: " + QString::number(obj.value("frequency").toDouble() * 100) + "%\n" +
+                                "\t\tweight: " + QString::number(obj.value("weight").toDouble() * 100) + "%"
                         );
                 }
 
-                l -> addWidget(new QLabel("Terms: " + termsList.join(','), statistic));
+                QLabel * termsLabel = new QLabel("Terms: \n\t" + termsList.join("\n\t"), statistic);
+                termsLabel -> setWordWrap(true);
+                l -> addWidget(termsLabel);
             }
 
             artistAccordion -> addItem("Statistic", statistic);
@@ -110,6 +112,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                     QLabel * newsLabel = new QLabel(
                                 obj.value("date_found").toString() + "\n" + obj.value("name").toString() + "\n\n" + obj.value("summary").toString()
                                 , newsBlock);
+                    newsLabel -> setWordWrap(true);
                     il -> addWidget(newsLabel);
                 }
 
@@ -121,14 +124,19 @@ void EchonestDialog::onArtistInfoButtonClicked() {
             if (!songs.isEmpty()) {
                 QWidget * songsBlock = new QWidget(artistAccordion);
                 QVBoxLayout * il = new QVBoxLayout(songsBlock);
+                QHash<QString, bool> songsHash;
 
                 for(QJsonArray::Iterator song = songs.begin(); song != songs.end(); song++) {
                     QJsonObject obj = (*song).toObject();
-                    QLabel * newsLabel = new QLabel(
-                                obj.value("title").toString()
-                                , songsBlock);
-//                    obj.value("name").toString()
-                    il -> addWidget(newsLabel);
+
+                    QString str = obj.value("title").toString();
+
+                    if (!songsHash.contains(str)) {
+                        QLabel * newsLabel = new QLabel(str, songsBlock);
+    //                    obj.value("name").toString()
+                        il -> addWidget(newsLabel);
+                        songsHash.insert(str, true);
+                    }
                 }
 
                 artistAccordion -> addItem("Songs", songsBlock);
@@ -144,6 +152,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                     QLabel * imageLabel = new QLabel(imagesBlock);
                     QUrl url((*image).toObject().value("url").toString());
                     QPixmap pixma = CustomNetworkAccessManager::manager() -> openImage(url);
+                    pixma = pixma.scaledToWidth(artistAccordion -> width() - 60, Qt::SmoothTransformation);
 
                     imageLabel -> setPixmap(pixma);
                     il -> addWidget(imageLabel);

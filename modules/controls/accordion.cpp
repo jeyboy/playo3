@@ -2,7 +2,7 @@
 
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent) {
     setWidgetResizable(true);
-//    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 //    sizePolicy.setHorizontalStretch(1);
 //    sizePolicy.setVerticalStretch(1);
 //    setSizePolicy(sizePolicy);
