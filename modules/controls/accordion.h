@@ -5,13 +5,17 @@
 #include <qpushbutton.h>
 #include <qboxlayout.h>
 
+struct AccordionButton : public QPushButton {
+    AccordionButton(QString name, QWidget * parent = 0) : QPushButton(name, parent) {}
+};
+
 struct AccordionCell : public QWidget {
     Q_OBJECT
 public:
     AccordionCell(QWidget * parent = 0) : QWidget(parent), item(0), title(0) {}
 
     AccordionCell(QString name, QWidget * container, QWidget * parent = 0) :
-        QWidget(parent), item(container), title(new QPushButton(name, this))
+        QWidget(parent), item(container), title(new AccordionButton(name, this))
     {
         connect(title, SIGNAL(clicked()), this, SLOT(toogleCollapse()));
 
@@ -32,12 +36,14 @@ public:
     QWidget * item;
     QPushButton * title;
 
+
+    inline bool isCollapsed() { return item -> isHidden(); }
 public slots:
     inline void setCollapse(bool collapse) { item -> setHidden(collapse); }
     inline void toogleCollapse() { item -> setHidden(!item -> isHidden()); }
 };
 
-class Accordion : public QScrollArea {
+class Accordion : public QFrame {
     Q_OBJECT
 public:
     Accordion(QWidget * parent = 0);
@@ -84,6 +90,10 @@ protected slots:
     void scrollValueChanged(int value);
 
 private:
+    AccordionCell * currentCell;
+    AccordionButton * topButton;
+
+    QScrollArea * scrollArea;
     QVBoxLayout * new_layout;
     QList<AccordionCell *> cells;
 };
