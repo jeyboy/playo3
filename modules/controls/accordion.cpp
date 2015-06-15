@@ -1,28 +1,20 @@
 #include "accordion.h"
 #include <qdebug.h>
 
-Accordion::Accordion(QWidget * parent) : QFrame(parent), currentCell(0) {
-    QVBoxLayout * base_layout = new QVBoxLayout;
-    base_layout -> setSizeConstraint(QLayout::SetMinAndMaxSize);
-    setLayout(base_layout);
-    base_layout -> setContentsMargins(0,0,0,0);
-
-    topButton = new AccordionButton("", this);
-    base_layout -> addWidget(topButton);
+Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
+    topButton = new AccordionButton("*", this);
+    topButton -> setFixedSize(12, 12);
     topButton -> hide();
 
-    scrollArea = new QScrollArea(this);
-    scrollArea -> setWidgetResizable(true);
+    setWidgetResizable(true);
 
     QWidget * container = new QWidget(this);
     new_layout = new QVBoxLayout;
     new_layout -> setSizeConstraint(QLayout::SetMinAndMaxSize);
+    new_layout -> setContentsMargins(2, 2, 2, 2);
     container -> setLayout(new_layout);
-    scrollArea -> setWidget(container);
-
-    base_layout -> addWidget(scrollArea);
-
-    connect((QObject *)scrollArea -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
+    setWidget(container);
+    connect((QObject *)verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
 }
 
 void Accordion::addItem(QString name, QWidget * item, bool expanded) {
@@ -50,13 +42,13 @@ void Accordion::setItemCollapsed(int index, bool collapsed) {
 void Accordion::ensureVisible(int index) {
     if (index < 0 || index >= cells.size()) return;
 
-    scrollArea -> ensureWidgetVisible(cells[index] -> title);
+    ensureWidgetVisible(cells[index] -> title);
 }
 
 void Accordion::activate(int index) {
     if (index < 0 || index >= cells.size()) return;
 
-    scrollArea -> ensureWidgetVisible(cells[index] -> title);
+    ensureWidgetVisible(cells[index] -> title);
     cells[index] -> setCollapse(false);
 }
 
@@ -71,16 +63,17 @@ int Accordion::indexOf(QWidget * obj) {
 void Accordion::scrollValueChanged(int value) {
     if (value == 0) return;
 
-    QWidget * w = qobject_cast<QWidget *>(childAt(width() / 2, scrollArea -> pos().y() + 1));
+    QWidget * w = qobject_cast<QWidget *>(childAt(width() / 2, 1));
 
     if (!w) return;
 
     if (dynamic_cast<AccordionButton *>(w)) {
         topButton -> hide();
+        new_layout -> setContentsMargins(1, 1, 1, 1);
         return;
     }
 
-    while(w -> parent() && w -> parentWidget() != scrollArea -> widget())
+    while(w -> parent() && w -> parentWidget() != widget())
         w = w -> parentWidget();
 
     AccordionCell * cell = dynamic_cast<AccordionCell *>(w);
@@ -92,10 +85,15 @@ void Accordion::scrollValueChanged(int value) {
             if (currentCell) disconnect(currentCell, SLOT(toogleCollapse()));
             currentCell = cell;
 
-            topButton -> setText(currentCell -> title -> text());
+//            topButton -> setText(currentCell -> title -> text());
             connect(topButton, SIGNAL(clicked()), currentCell, SLOT(toogleCollapse()));
         }
+
+        new_layout -> setContentsMargins(13, 1, 1, 1);
         topButton -> show();
     }
-    else topButton -> hide();
+    else {
+        topButton -> hide();
+        new_layout -> setContentsMargins(1, 1, 1, 1);
+    }
 }
