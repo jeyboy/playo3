@@ -6,7 +6,9 @@
 #include <qboxlayout.h>
 
 struct AccordionButton : public QPushButton {
-    AccordionButton(QString name, QWidget * parent = 0) : QPushButton(name, parent) {}
+    AccordionButton(QString name, QWidget * parent = 0) : QPushButton(name, parent) {
+        setCheckable(true);
+    }
 };
 
 struct AccordionCell : public QWidget {
@@ -39,8 +41,11 @@ public:
 
     inline bool isCollapsed() { return item -> isHidden(); }
 public slots:
-    inline void setCollapse(bool collapse) { item -> setHidden(collapse); }
-    inline void toogleCollapse() { item -> setHidden(!item -> isHidden()); }
+    inline void setCollapse(bool collapse) {
+        item -> setHidden(collapse);
+        title -> setChecked(!collapse);
+    }
+    inline void toogleCollapse() { setCollapse(!item -> isHidden()); }
 };
 
 class Accordion : public QScrollArea {

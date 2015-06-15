@@ -66,6 +66,7 @@ void Accordion::collapseRequired() {
         currentCell -> toogleCollapse();
         topButton -> hide();
         new_layout -> setContentsMargins(1, 1, 1, 1);
+        ensureWidgetVisible(currentCell -> title, 10, 10);
     }
 }
 
