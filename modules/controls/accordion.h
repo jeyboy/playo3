@@ -58,6 +58,7 @@ public:
     int indexOf(QWidget * obj);
 protected slots:
     void scrollValueChanged(int value);
+    void collapseRequired();
 
 private:
     AccordionCell * currentCell;

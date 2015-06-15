@@ -5,6 +5,7 @@ Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
     topButton = new AccordionButton("*", this);
     topButton -> setFixedSize(12, 12);
     topButton -> hide();
+    connect(topButton, SIGNAL(clicked()), this, SLOT(collapseRequired()));
 
     setWidgetResizable(true);
 
@@ -60,6 +61,14 @@ int Accordion::indexOf(QWidget * obj) {
     return -1;
 }
 
+void Accordion::collapseRequired() {
+    if (currentCell) {
+        currentCell -> toogleCollapse();
+        topButton -> hide();
+        new_layout -> setContentsMargins(1, 1, 1, 1);
+    }
+}
+
 void Accordion::scrollValueChanged(int value) {
     if (value == 0) return;
 
@@ -67,33 +76,26 @@ void Accordion::scrollValueChanged(int value) {
 
     if (!w) return;
 
-    if (dynamic_cast<AccordionButton *>(w)) {
-        topButton -> hide();
-        new_layout -> setContentsMargins(1, 1, 1, 1);
-        return;
-    }
+    if (!dynamic_cast<AccordionButton *>(w)) {
+        while(w -> parent() && w -> parentWidget() != widget())
+            w = w -> parentWidget();
 
-    while(w -> parent() && w -> parentWidget() != widget())
-        w = w -> parentWidget();
+        AccordionCell * cell = dynamic_cast<AccordionCell *>(w);
 
-    AccordionCell * cell = dynamic_cast<AccordionCell *>(w);
+        if (cell) {
+            if (cell -> isCollapsed()) return;
 
-    if (cell) {
-        if (cell -> isCollapsed()) return;
+            if (currentCell != cell) {
+                currentCell = cell;
+    //            topButton -> setText(currentCell -> title -> text());
+            }
 
-        if (currentCell != cell) {
-            if (currentCell) disconnect(currentCell, SLOT(toogleCollapse()));
-            currentCell = cell;
-
-//            topButton -> setText(currentCell -> title -> text());
-            connect(topButton, SIGNAL(clicked()), currentCell, SLOT(toogleCollapse()));
+            new_layout -> setContentsMargins(13, 1, 1, 1);
+            topButton -> show();
+            return;
         }
+    }
 
-        new_layout -> setContentsMargins(13, 1, 1, 1);
-        topButton -> show();
-    }
-    else {
-        topButton -> hide();
-        new_layout -> setContentsMargins(1, 1, 1, 1);
-    }
+    topButton -> hide();
+    new_layout -> setContentsMargins(1, 1, 1, 1);
 }
