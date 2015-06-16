@@ -3,7 +3,7 @@
 
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
     topButton = new AccordionButton("*", this);
-    topButton -> setFixedSize(12, 12);
+    topButton -> setFixedSize(16, 16);
     topButton -> hide();
     connect(topButton, SIGNAL(clicked()), this, SLOT(collapseRequired()));
 
@@ -91,7 +91,7 @@ void Accordion::scrollValueChanged(int value) {
     //            topButton -> setText(currentCell -> title -> text());
             }
 
-            new_layout -> setContentsMargins(13, 1, 1, 1);
+            new_layout -> setContentsMargins(17, 1, 1, 1);
             topButton -> show();
             return;
         }

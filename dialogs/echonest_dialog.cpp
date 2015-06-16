@@ -2,12 +2,18 @@
 #include "ui_echonest_dialog.h"
 #include <qdebug.h>
 
+#include "double_slider/qxtspanslider.h"
+
 EchonestDialog::EchonestDialog(QWidget * parent) :
     QDialog(parent),
     ui(new Ui::EchonestDialog) {
     ui -> setupUi(this);
 
     Accordion * accordion = new Accordion(this);
+
+//    QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
+//    slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+//    layout() -> addWidget(slider);
 
     layout() -> addWidget(accordion);
 
