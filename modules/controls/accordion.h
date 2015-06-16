@@ -40,10 +40,13 @@ public:
 
 
     inline bool isCollapsed() { return item -> isHidden(); }
+signals:
+    void collapsed(bool);
 public slots:
     inline void setCollapse(bool collapse) {
         item -> setHidden(collapse);
         title -> setChecked(!collapse);
+        emit collapsed(collapse);
     }
     inline void toogleCollapse() { setCollapse(!item -> isHidden()); }
 };
@@ -61,6 +64,7 @@ public:
     void activate(int index);
     inline void clear() { qDeleteAll(cells); }
     int indexOf(QWidget * obj);
+
 protected slots:
     void scrollValueChanged(int value);
     void collapseRequired();

@@ -4,8 +4,11 @@
 #include <qdialog.h>
 #include <qlabel.h>
 #include <qlineedit.h>
+#include <qcombobox.h>
 
-#include <QVBoxLayout>
+#include <qformlayout.h>
+#include <qboxlayout.h>
+
 #include "modules/web/service_api/echonest_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
 #include "modules/controls/accordion.h"
@@ -24,6 +27,9 @@ private slots:
     void onArtistInfoButtonClicked();
 
 private:
+    QComboBox * createGenresCombo(QWidget * parent);
+    QComboBox * createMoodsCombo(QWidget * parent);
+
     QLineEdit * artistName;
 
     Ui::EchonestDialog * ui;

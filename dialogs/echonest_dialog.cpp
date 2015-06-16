@@ -23,6 +23,8 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
     artistName = new QLineEdit(tab1);
     gl -> addWidget(artistName, 0, 0);
 
+    connect(artistName, SIGNAL(returnPressed()), this, SLOT(onArtistInfoButtonClicked()));
+
     QPushButton * artistInfoButton = new QPushButton("Find Info", tab1);
     connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
     gl -> addWidget(artistInfoButton, 0, 1);
@@ -31,6 +33,30 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
     gl -> addWidget(artistAccordion, 1, 0, 10, 2);
 
     tab1 -> setLayout(gl);
+
+
+    QWidget * tab2 = accordion -> addItem("Playlist generation");
+    QVBoxLayout * gl2 = new QVBoxLayout(tab2);
+
+    Accordion * playlistAccordion = new Accordion(tab2);
+    gl2 -> addWidget(playlistAccordion);
+
+
+    QWidget * playlistSimilar = playlistAccordion -> addItem("Playlist By Similarity");
+//    QFormLayout * layoutSimilar = new QVBoxLayout(playlistSimilar);
+
+//    layoutSimilar -> addRow();
+
+
+//    artistName = new QLineEdit(tab1);
+//    gl -> addWidget(artistName, 0, 0);
+
+//    QPushButton * artistInfoButton = new QPushButton("Find Info", tab1);
+//    connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
+//    gl -> addWidget(artistInfoButton, 0, 1);
+
+//    artistAccordion = new Accordion(tab1);
+//    gl -> addWidget(artistAccordion, 1, 0, 10, 2);
 }
 
 EchonestDialog::~EchonestDialog() {
@@ -168,4 +194,28 @@ void EchonestDialog::onArtistInfoButtonClicked() {
             }
         }
     }
+}
+
+QComboBox * EchonestDialog::createGenresCombo(QWidget * parent) {
+    QStringList styles;
+
+    QJsonArray genres = EchonestApi::instance() -> artistGenresForSearch();
+    for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
+        styles.append((*genre).toObject().value("name").toString());
+
+    QComboBox * combo = new QComboBox(parent);
+    combo -> insertItems(0, styles);
+    return combo;
+}
+
+QComboBox * EchonestDialog::createMoodsCombo(QWidget * parent) {
+    QStringList moodsList;
+
+    QJsonArray moods = EchonestApi::instance() -> artistMoodsForSearch();
+    for(QJsonArray::Iterator mood = moods.begin(); mood != moods.end(); mood++)
+        moodsList.append((*mood).toObject().value("name").toString());
+
+    QComboBox * combo = new QComboBox(parent);
+    combo -> insertItems(0, moodsList);
+    return combo;
 }
