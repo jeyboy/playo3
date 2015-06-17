@@ -213,10 +213,30 @@ void Player::updateControls(bool played, bool paused, bool stopped) {
 bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
-    if (uri.isLocalFile())
-        chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
-    else
-        chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
+    if (uri.isLocalFile()) {
+        chUID = BASS_StreamCreateFile(false,
+                                      uri.toLocalFile()
+                                          #ifdef Q_OS_WIN
+                                            .toStdWString().data()
+                                          #else
+                                            .toStdString().c_str()
+                                          #endif
+                                      , 0, 0, 0);
+    } else {
+        chUID = BASS_StreamCreateURL(
+                    uri.toString()
+                        #ifdef Q_OS_WIN
+                            .toStdWString().data()
+                        #else
+                            .toStdString().c_str()
+                        #endif
+                    , 0, 0, NULL, 0);
+    }
+
+//    if (uri.isLocalFile())
+//        chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
+//    else
+//        chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
 
     if (!chUID) return false;
 
