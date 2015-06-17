@@ -13,14 +13,11 @@ MediaInfo::MediaInfo(QUrl uri, bool hasExtension, bool onlyTags) : fileName(0),
 
 //        error = !TagLib::FileRef::defaultFileExtensions.contains(TagLib::String(ext.toLower().toStdWString()));
 
-        fileName = new TagLib::FileName(
-            file_path
-                #ifdef Q_OS_WIN
-                    .toStdWString().data()
-                #else
-                    .toStdString().c_str()
-                #endif
-        );
+        #ifdef Q_OS_WIN
+            fileName = new TagLib::FileName(file_path.toStdWString().data());
+        #else
+            fileName = new TagLib::FileName(QFile::encodeName(file_path).toStdString().data());
+        #endif
         TagLib::FileRef f(*fileName, !onlyTags, onlyTags ? TagLib::AudioProperties::Fast : TagLib::AudioProperties::Accurate);
 
         if (!f.isNull()) {
