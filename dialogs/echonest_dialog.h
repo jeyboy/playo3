@@ -5,9 +5,11 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
+#include <qgroupbox.h>
 
 #include <qformlayout.h>
 #include <qboxlayout.h>
+#include <qcheckbox.h>
 
 #include "modules/web/service_api/echonest_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
@@ -25,10 +27,21 @@ public:
 
 private slots:
     void onArtistInfoButtonClicked();
+    void onBasicPlaylistGenerateClicked();
 
 private:
-    QComboBox * createGenresCombo(QWidget * parent);
-    QComboBox * createMoodsCombo(QWidget * parent);
+    void basicPlaylistGeneration(QWidget * base);
+
+    QStringList genresList();
+    QStringList moodsList();
+
+    // basic playlist
+    QCheckBox * artistTypeCheck, * genreTypeCheck;
+    QList<QLineEdit *> basicPlaylistArtists;
+    QList<QComboBox *> basicPlaylistGenres;
+
+//    QComboBox * createGenresCombo(QWidget * parent);
+//    QComboBox * createMoodsCombo(QWidget * parent);
 
     QLineEdit * artistName;
 

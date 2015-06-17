@@ -1,7 +1,7 @@
 #ifndef FILE_ITEM_H
 #define FILE_ITEM_H
 
-#include <QFile>
+#include <qfile.h>
 #include "item_interface.h"
 #include "folder_item.h"
 

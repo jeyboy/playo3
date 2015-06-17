@@ -10,7 +10,7 @@
 #include <qstringlist.h>
 
 #include <qjsonobject.h>
-#include <qjsonarray>
+#include <qjsonarray.h>
 
 class IApi { // format=json
     protected:

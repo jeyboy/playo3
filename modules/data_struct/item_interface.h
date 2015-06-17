@@ -4,7 +4,7 @@
 #include <qdebug.h>
 #include <qlist.h>
 #include <qdesktopservices.h>
-#include <qurl>
+#include <qurl.h>
 
 #include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"

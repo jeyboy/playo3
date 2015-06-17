@@ -2,7 +2,7 @@
 #define FOLDER_ITEM_H
 
 #include "item_interface.h"
-#include <qdir>
+#include <qdir.h>
 #include <qdatetime.h>
 
 namespace Playo3 {
@@ -69,7 +69,7 @@ namespace Playo3 {
         inline int undeclareFolder(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
-        inline foldersAmount() const { return folders.size(); }
+        inline int foldersAmount() const { return folders.size(); }
 
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:

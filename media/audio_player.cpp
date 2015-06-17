@@ -245,25 +245,53 @@ void AudioPlayer::setEQBand(int band, float gain) {
 
 int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
-    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
 
-//    if (!chan) {
-//        int status = BASS_ErrorGetCode();
-//        if (chan == -1 || status == BASS_ERROR_FILEOPEN)// || status == BASS_ERROR_NONET)
-//            emit remoteUnprocessed();
-//        qDebug() << "Can't play stream" <<  BASS_ErrorGetCode() << path.toUtf8();
-//    }
+    #ifdef Q_OS_WIN
+        chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
+    #else
+        chan = BASS_StreamCreateURL(path.toStdString().c_str(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
+    #endif
+
     return chan;
 }
 
 int AudioPlayer::openChannel(QString path) {
     BASS_ChannelStop(chan);
-    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
+
+    #ifdef Q_OS_WIN
+        chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
+    #else
+        chan = BASS_StreamCreateFile(false, path.toStdString().c_str(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
+    #endif
+
+    if (!chan)
 //    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
 //        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
         qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
     return chan;
 }
+
+//int AudioPlayer::openRemoteChannel(QString path) {
+//    BASS_ChannelStop(chan);
+//    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
+
+////    if (!chan) {
+////        int status = BASS_ErrorGetCode();
+////        if (chan == -1 || status == BASS_ERROR_FILEOPEN)// || status == BASS_ERROR_NONET)
+////            emit remoteUnprocessed();
+////        qDebug() << "Can't play stream" <<  BASS_ErrorGetCode() << path.toUtf8();
+////    }
+//    return chan;
+//}
+
+//int AudioPlayer::openChannel(QString path) {
+//    BASS_ChannelStop(chan);
+//    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
+////    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
+////        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
+//        qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
+//    return chan;
+//}
 
 void AudioPlayer::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
