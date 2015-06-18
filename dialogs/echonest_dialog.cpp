@@ -159,6 +159,12 @@ void EchonestDialog::onArtistInfoButtonClicked() {
 }
 
 void EchonestDialog::onBasicPlaylistGenerateClicked() {
+//    if () {
+
+//    } else {
+
+//    }
+
     //    QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
     //                             QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
 }

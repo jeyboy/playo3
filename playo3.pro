@@ -291,7 +291,7 @@ RC_FILE = playo.rc
 
 unix:!mac {
         QT += gui-private
-        CONFIG += link_pkgconfig
+        CONFIG += link_pkgconfig release
         PKGCONFIG += x11
         LDFLAGS =- lX11
         DEFINES += HAVE_X11

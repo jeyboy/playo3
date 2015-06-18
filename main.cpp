@@ -7,6 +7,8 @@
 int main(int argc, char * argv[]) {
     qRegisterMetaType<QVector <int> >("QVector<int>");
 
+    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
+
 //    QCoreApplication::setOrganizationName("BigBug");
 //    QCoreApplication::setOrganizationDomain("bigbug.sos");
 //    QCoreApplication::setApplicationName("Playo3");

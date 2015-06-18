@@ -11,7 +11,14 @@
 static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
     QDir pluginsDir(QApplication::instance() -> applicationDirPath());
     QStringList filters;
-    filters << "web_plugin.dll";
+
+    filters
+        #ifdef Q_OS_WIN
+            << "web_plugin.dll";
+//        #else ifdef Q_OS_DARWIN
+        #else
+            << "libweb_plugin.so" << "libweb_plugin.so.1" << "libweb_plugin.so.1.0" << "libweb_plugin.so.1.0.0";
+        #endif
 
     foreach (QString fileName, pluginsDir.entryList(filters, QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));

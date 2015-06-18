@@ -6,10 +6,9 @@
 
 class WebDialogInterface {
 public:
-    virtual ~WebDialogInterface() {}
-    virtual QDialog * createDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl url, QString title);
-    virtual void registerActions(QObject * api);
-    virtual void closeDialog();
+    virtual QDialog * createDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl url, QString title) = 0;
+    virtual void registerActions(QObject * api) = 0;
+    virtual void closeDialog() = 0;
 };
 
 #define WebDialogInterface_iid "org.qt-project.lalka.WebDialogInterface"
