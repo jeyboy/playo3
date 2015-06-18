@@ -45,6 +45,7 @@ private:
 //    QComboBox * createMoodsCombo(QWidget * parent);
 
     QLineEdit * artistName;
+    QRadioButton * artistTypeCheck, * genreTypeCheck;
 
     Ui::EchonestDialog * ui;
     Accordion * artistAccordion;

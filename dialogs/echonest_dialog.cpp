@@ -159,14 +159,62 @@ void EchonestDialog::onArtistInfoButtonClicked() {
 }
 
 void EchonestDialog::onBasicPlaylistGenerateClicked() {
-//    if () {
+    QJsonArray results;
 
-//    } else {
+    qDebug() << artistTypeCheck -> isChecked() << genreTypeCheck -> isChecked();
 
-//    }
+    if (artistTypeCheck -> isChecked()) {
+        QStringList artists;
 
-    //    QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
-    //                             QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
+        for(QList<QLineEdit *>::Iterator artist = basicPlaylistArtists.begin(); artist != basicPlaylistArtists.end(); artist++) {
+            if (!(*artist) -> text().isEmpty())
+                artists << (*artist) -> text();
+        }
+
+        qDebug() << "LALA" << artists;
+        results = EchonestApi::instance() -> playlistBasicByArtists(artists);
+    } else if (genreTypeCheck -> isChecked()) {
+        QStringList genres;
+
+        for(QList<QComboBox *>::Iterator genre = basicPlaylistGenres.begin(); genre != basicPlaylistGenres.end(); genre++) {
+            if (!(*genre) -> currentText().isEmpty())
+                genres << (*genre) -> currentText();
+        }
+
+        qDebug() << "LULU" << genres;
+        results = EchonestApi::instance() -> playlistBasicByGenres(genres);
+    } else {
+        return;
+        // nothing choosed
+    }
+
+    //            {
+    //                "artist_foreign_ids": [
+    //                    {
+    //                        "catalog": "7digital-US",
+    //                        "foreign_id": "7digital-US:artist:7516"
+    //                    }
+    //                ],
+    //                "artist_id": "AR633SY1187B9AC3B9",
+    //                "artist_name": "Weezer",
+    //                "id": "SOBSLVH12A8C131F38",
+    //                "title": "Island In The Sun",
+    //                "tracks": [
+    //                    {
+    //                        "catalog": "7digital-US",
+    //                        "foreign_id": "7digital-US:track:20637990",
+    //                        "foreign_release_id": "7digital-US:release:1914387",
+    //                        "id": "TRTXLYU13A79B0B112",
+    //                        "preview_url": "http://previews.7digital.com/clips/34/20637990.clip.mp3",
+    //                        "release_image": "http://cdn.7static.com/static/img/sleeveart/00/019/143/0001914387_200.jpg"
+    //                    }
+    //                ]
+    //            }
+
+    qDebug() << results;
+
+//    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++)
+//        genresList << (*song).toObject().value("title").toString();
 }
 
 void EchonestDialog::artistInfoGeneration(QWidget * base) {
@@ -194,9 +242,9 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
 
     QGroupBox * playlist_type = new QGroupBox("Playlist Type", playlistType);
     QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
-    QRadioButton * artistTypeCheck = new QRadioButton("By similar artists", playlist_type);
+    artistTypeCheck = new QRadioButton("By similar artists", playlist_type);
     playlist_type_layout -> addWidget(artistTypeCheck);
-    QRadioButton * genreTypeCheck = new QRadioButton("By genres", playlist_type);
+    genreTypeCheck = new QRadioButton("By genres", playlist_type);
     playlist_type_layout -> addWidget(genreTypeCheck);
 
     layoutSimilar -> addWidget(playlist_type);
@@ -226,10 +274,10 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
     genre_type_fields -> hide();
 
     connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
-    connect(artistTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setHidden(bool)));
+//    connect(artistTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setHidden(bool)));
 
     connect(genreTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setVisible(bool)));
-    connect(genreTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setHidden(bool)));
+//    connect(genreTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setHidden(bool)));
 
     QPushButton * basicPlaylistStart = new QPushButton("Generate basic playlist", base);
     connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));

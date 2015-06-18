@@ -2,6 +2,7 @@
 #define ECHONEST_PLAYLIST_API
 
 #include "iapi.h"
+#include <qdebug.h>
 
 class EchonestPlaylistApi : public IApi {
     public:
@@ -14,7 +15,7 @@ class EchonestPlaylistApi : public IApi {
         //            genre-radio - plays songs from artists matching the given genre
 
         //bucket id:catalog-name, tracks
-        inline QUrl playlistBasicUrl(QString & type, QStringList & artists, QStringList & genres, QStringList & songs_ids, int limit = 100) {
+        inline QUrl playlistBasicUrl(QString type, QStringList artists, QStringList genres, QStringList songs_ids, int limit = 100) {
             QUrl url(baseUrl("playlist/basic"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
@@ -23,17 +24,49 @@ class EchonestPlaylistApi : public IApi {
             setParam(query, "genre", genres);
             setParam(query, "song_id", songs_ids);
 
+            setParam(query, "bucket", "tracks");
+
             if (!type.isEmpty())
                 setParam(query, "type", type);
             url.setQuery(query);
+
+            qDebug() << url;
+
             return url;
         }
 
-        QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
-                                 QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
+//        QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
+//                                 QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
+//            QJsonObject response;
+
+//            if (proceedQuery(playlistBasicUrl(type, artists, genres, songs_ids, limit), response))
+//                return response.value("response").toObject().value("songs").toArray();
+
+//            return QJsonArray();
+//        }
+
+        QJsonArray playlistBasicByArtists(QStringList & artists, int limit = 100) {
             QJsonObject response;
 
-            if (proceedQuery(playlistBasicUrl(type, artists, genres, songs_ids, limit), response))
+            if (proceedQuery(playlistBasicUrl("artist-radio", artists, QStringList(), QStringList(), limit), response))
+                return response.value("response").toObject().value("songs").toArray();
+
+            return QJsonArray();
+        }
+
+        QJsonArray playlistBasicByGenres(QStringList & genres, int limit = 100) {
+            QJsonObject response;
+
+            if (proceedQuery(playlistBasicUrl("genre-radio", QStringList(), genres, QStringList(), limit), response))
+                return response.value("response").toObject().value("songs").toArray();
+
+            return QJsonArray();
+        }
+
+        QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = 100) {
+            QJsonObject response;
+
+            if (proceedQuery(playlistBasicUrl("song-radio", QStringList(), QStringList(), songs_ids, limit), response))
                 return response.value("response").toObject().value("songs").toArray();
 
             return QJsonArray();
