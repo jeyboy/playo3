@@ -30,6 +30,7 @@ private slots:
     void onBasicPlaylistGenerateClicked();
 
 private:
+    void artistInfoGeneration(QWidget * base);
     void basicPlaylistGeneration(QWidget * base);
 
     QStringList genresList();

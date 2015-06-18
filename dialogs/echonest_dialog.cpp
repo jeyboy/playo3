@@ -17,34 +17,8 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
 
     layout() -> addWidget(accordion);
 
-    QWidget * tab1 = accordion -> addItem("Artist Info");
-    QGridLayout * gl = new QGridLayout();
-
-    artistName = new QLineEdit(tab1);
-    gl -> addWidget(artistName, 0, 0);
-
-    connect(artistName, SIGNAL(returnPressed()), this, SLOT(onArtistInfoButtonClicked()));
-
-    QPushButton * artistInfoButton = new QPushButton("Find Info", tab1);
-    connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
-    gl -> addWidget(artistInfoButton, 0, 1);
-
-    artistAccordion = new Accordion(tab1);
-    gl -> addWidget(artistAccordion, 1, 0, 10, 2);
-
-    tab1 -> setLayout(gl);
-
-
-    QWidget * tab2 = accordion -> addItem("Playlist generation");
-    QVBoxLayout * gl2 = new QVBoxLayout(tab2);
-
-    Accordion * playlistAccordion = new Accordion(tab2);
-    gl2 -> addWidget(playlistAccordion);
-
-
-    QWidget * playlistBasic = playlistAccordion -> addItem("Base Playlist");
-
-    basicPlaylistGeneration(playlistBasic);
+    artistInfoGeneration(accordion -> addItem("Artist Info"));
+    basicPlaylistGeneration(accordion -> addItem("Base Playlist"));
 }
 
 EchonestDialog::~EchonestDialog() {
@@ -187,6 +161,24 @@ void EchonestDialog::onArtistInfoButtonClicked() {
 void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //    QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
     //                             QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
+}
+
+void EchonestDialog::artistInfoGeneration(QWidget * base) {
+    QGridLayout * gl = new QGridLayout();
+
+    artistName = new QLineEdit(base);
+    gl -> addWidget(artistName, 0, 0);
+
+    connect(artistName, SIGNAL(returnPressed()), this, SLOT(onArtistInfoButtonClicked()));
+
+    QPushButton * artistInfoButton = new QPushButton("Find Info", base);
+    connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
+    gl -> addWidget(artistInfoButton, 0, 1);
+
+    artistAccordion = new Accordion(base);
+    gl -> addWidget(artistAccordion, 1, 0, 10, 2);
+
+    base -> setLayout(gl);
 }
 
 void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
