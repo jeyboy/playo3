@@ -22,13 +22,13 @@ static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
 
     foreach (QString fileName, pluginsDir.entryList(filters, QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        qDebug() << pluginLoader.errorString();
         QObject * plugin = pluginLoader.instance();
         if (plugin) {
             wdi = qobject_cast<WebDialogInterface *>(plugin);
             if (wdi)
                 return true;
         }
+        else qDebug() << fileName << pluginLoader.errorString();
     }
 
     return false;

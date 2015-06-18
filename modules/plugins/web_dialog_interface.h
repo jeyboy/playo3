@@ -2,10 +2,11 @@
 #define WEB_DIALOG_INTERFACE
 
 #include <qdialog.h>
-#include <QNetworkAccessManager>
+#include <qnetworkaccessmanager.h>
 
 class WebDialogInterface {
 public:
+    virtual ~WebDialogInterface() {}
     virtual QDialog * createDialog(QWidget * parent, QNetworkAccessManager * manager, QUrl url, QString title) = 0;
     virtual void registerActions(QObject * api) = 0;
     virtual void closeDialog() = 0;
