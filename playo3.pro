@@ -22,6 +22,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = playo3
 TEMPLATE = app
 
+#QMAKE_CXXFLAGS_RELEASE -= -O2
+#QMAKE_CXXFLAGS_RELEASE += -O3
+
+#QMAKE_LFLAGS_RELEASE -= -O1
+
 #QMAKE_CXXFLAGS+= -fopenmp
 #QMAKE_LFLAGS +=  -fopenmp
 

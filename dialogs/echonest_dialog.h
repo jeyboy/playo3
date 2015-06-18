@@ -10,6 +10,7 @@
 #include <qformlayout.h>
 #include <qboxlayout.h>
 #include <qcheckbox.h>
+#include <qradiobutton.h>
 
 #include "modules/web/service_api/echonest_api.h"
 #include "misc/web_utils/custom_network_access_manager.h"
@@ -37,7 +38,6 @@ private:
     QStringList moodsList();
 
     // basic playlist
-    QCheckBox * artistTypeCheck, * genreTypeCheck;
     QList<QLineEdit *> basicPlaylistArtists;
     QList<QComboBox *> basicPlaylistGenres;
 

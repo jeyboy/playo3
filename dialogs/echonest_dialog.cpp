@@ -194,9 +194,9 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
 
     QGroupBox * playlist_type = new QGroupBox("Playlist Type", playlistType);
     QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
-    artistTypeCheck = new QCheckBox("By similar artists", playlist_type);
+    QRadioButton * artistTypeCheck = new QRadioButton("By similar artists", playlist_type);
     playlist_type_layout -> addWidget(artistTypeCheck);
-    genreTypeCheck = new QCheckBox("By genres", playlist_type);
+    QRadioButton * genreTypeCheck = new QRadioButton("By genres", playlist_type);
     playlist_type_layout -> addWidget(genreTypeCheck);
 
     layoutSimilar -> addWidget(playlist_type);
@@ -210,6 +210,7 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
     }
 
     layoutSimilar -> addWidget(artist_type_fields);
+    artist_type_fields -> hide();
 
     QGroupBox * genre_type_fields = new QGroupBox("Genres for query", playlistType);
     QStringList genres = genresList();
@@ -222,6 +223,13 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
     }
 
     layoutSimilar -> addWidget(genre_type_fields);
+    genre_type_fields -> hide();
+
+    connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
+    connect(artistTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setHidden(bool)));
+
+    connect(genreTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setVisible(bool)));
+    connect(genreTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setHidden(bool)));
 
     QPushButton * basicPlaylistStart = new QPushButton("Generate basic playlist", base);
     connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));
