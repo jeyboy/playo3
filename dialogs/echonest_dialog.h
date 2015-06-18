@@ -35,6 +35,7 @@ private:
     void basicPlaylistGeneration(QWidget * base);
 
     QStringList genresList();
+    QStringList stylesList();
     QStringList moodsList();
 
     // basic playlist

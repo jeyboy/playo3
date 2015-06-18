@@ -341,7 +341,7 @@ class EchonestArtistApi : public IApi {
 
 
 
-        inline QUrl artistGenresUrl(QString type = "style") {
+        inline QUrl artistStylesUrl(QString type = "style") {
             QUrl url(baseUrl("artist/list_terms"));
             QUrlQuery query = buildDefaultParams();
 
@@ -351,10 +351,10 @@ class EchonestArtistApi : public IApi {
             return url;
         }
 
-        QJsonArray artistGenresForSearch() {
+        QJsonArray artistStylesForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistGenresUrl(), response))
+            if (proceedQuery(artistStylesUrl(), response))
                 return response.value("response").toObject().value("terms").toArray();
 
             return QJsonArray();
@@ -382,7 +382,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistMoodsForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistGenresUrl("mood"), response))
+            if (proceedQuery(artistStylesUrl("mood"), response))
                 return response.value("response").toObject().value("terms").toArray();
 
             return QJsonArray();

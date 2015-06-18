@@ -171,7 +171,6 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
                 artists << (*artist) -> text();
         }
 
-        qDebug() << "LALA" << artists;
         results = EchonestApi::instance() -> playlistBasicByArtists(artists);
     } else if (genreTypeCheck -> isChecked()) {
         QStringList genres;
@@ -181,7 +180,6 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
                 genres << (*genre) -> currentText();
         }
 
-        qDebug() << "LULU" << genres;
         results = EchonestApi::instance() -> playlistBasicByGenres(genres);
     } else {
         return;
@@ -211,6 +209,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
+    qDebug() << "RES";
     qDebug() << results;
 
 //    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++)
@@ -274,10 +273,7 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
     genre_type_fields -> hide();
 
     connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
-//    connect(artistTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setHidden(bool)));
-
     connect(genreTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setVisible(bool)));
-//    connect(genreTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setHidden(bool)));
 
     QPushButton * basicPlaylistStart = new QPushButton("Generate basic playlist", base);
     connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));
@@ -287,12 +283,23 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
 QStringList EchonestDialog::genresList() {
     QStringList styles; styles << "";
 
-    QJsonArray genres = EchonestApi::instance() -> artistGenresForSearch();
+    QJsonArray genres = EchonestApi::instance() -> genresList();
     for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
         styles.append((*genre).toObject().value("name").toString());
 
     return styles;
 }
+
+QStringList EchonestDialog::stylesList() {
+    QStringList styles; styles << "";
+
+    QJsonArray genres = EchonestApi::instance() -> artistStylesForSearch();
+    for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
+        styles.append((*genre).toObject().value("name").toString());
+
+    return styles;
+}
+
 QStringList EchonestDialog::moodsList() {
     QStringList moodsList;
 

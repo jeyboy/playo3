@@ -24,13 +24,18 @@ class EchonestPlaylistApi : public IApi {
             setParam(query, "genre", genres);
             setParam(query, "song_id", songs_ids);
 
-            setParam(query, "bucket", "tracks");
+//            setParam(query, "bucket", "id:7digital-US");
+//            setParam(query, "bucket", "id:spotify-US");
+//            setParam(query, "bucket", "id:deezer");
+//            setParam(query, "bucket", "id:fma");
+//            setParam(query, "bucket", "id:musicbrainz");
+//            setParam(query, "bucket", "id:playme");
+
+//            setParam(query, "bucket", "tracks");
 
             if (!type.isEmpty())
                 setParam(query, "type", type);
             url.setQuery(query);
-
-            qDebug() << url;
 
             return url;
         }
