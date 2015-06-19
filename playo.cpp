@@ -253,38 +253,30 @@ void Playo::openVKTabDialog() {
         QDialog * dialog = dInt -> createDialog(this, CustomNetworkAccessManager::manager(), VkApi::instance() -> authUrl(), "VK auth");
         dInt -> registerActions(VkApi::instance());
 
-        if (dialog -> exec() == QDialog::Accepted) {
-            ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-            Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
-        }
+        if (dialog -> exec() == QDialog::Accepted)
+            Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> getUserID()), 0, true, true);
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKTabDialog() {
-    if (VkApi::instance() -> isConnected()) {
-        ViewSettings settings(vk, false, false, false, true, VkApi::instance() -> getUserID());
-        Dockbars::instance() -> createDocBar("VK [YOU]", settings, 0, true, true);
-    }
+    if (VkApi::instance() -> isConnected())
+        Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> getUserID()), 0, true, true);
     else openVKTabDialog();
 }
 
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(VkApi::instance(), this);
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(vk, false, false, false, true, dialog.getId());
-         Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", settings, 0, true, true);
-    }
+    if (dialog.exec() == QDialog::Accepted)
+       Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", ViewSettings::vk(dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
     RelationsDialog dialog(SoundcloudApi::instance(), this);
-    if (dialog.exec() == QDialog::Accepted) {
-        ViewSettings settings(soundcloud, false, false, false, true, dialog.getId());
-        Dockbars::instance() -> createDocBar("SC [" + dialog.getName() + "]", settings, 0, true, true);
-    }
+    if (dialog.exec() == QDialog::Accepted)
+        Dockbars::instance() -> createDocBar("SC [" + dialog.getName() + "]", ViewSettings::soundcloud(dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
 
@@ -294,25 +286,15 @@ void Playo::openSoundcloudTabDialog() {
         QDialog * dialog = dInt -> createDialog(this, CustomNetworkAccessManager::manager(), SoundcloudApi::instance() -> authUrl(), "Soundcloud auth");
         dInt -> registerActions(SoundcloudApi::instance());
 
-        if (dialog -> exec() == QDialog::Accepted) {
-            ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-            Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
-        }
+        if (dialog -> exec() == QDialog::Accepted)
+            Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> getUserID()), 0, true, true);
         delete dInt;
     }
-
-//    WebDialog dialog(this, SoundcloudApi::instance(), "Soundcloud auth");
-//    if (dialog.exec() == QDialog::Accepted) {
-//        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-//        Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
-//    }
 }
 
 void Playo::showSoundcloudTabDialog() {
-    if (SoundcloudApi::instance() -> isConnected()) {
-        ViewSettings settings(soundcloud, false, false, false, true, SoundcloudApi::instance() -> getUserID());
-        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", settings, 0, true, true);
-    }
+    if (SoundcloudApi::instance() -> isConnected())
+        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> getUserID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

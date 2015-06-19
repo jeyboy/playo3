@@ -49,6 +49,11 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
                 case PLAYLIST: {
                     new FolderItem(&iterObj, this);
                 break;}
+
+                case ECHO_ITEM: {
+                    new EchoItem(&iterObj, this);
+                break;}
+
                 case VK_ITEM: {
                     new VkItem(&iterObj, this);
                 break;}

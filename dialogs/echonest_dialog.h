@@ -16,6 +16,8 @@
 #include "misc/web_utils/custom_network_access_manager.h"
 #include "modules/controls/accordion.h"
 
+#include "modules/data_struct/list/list_view.h"
+
 namespace Ui {
     class EchonestDialog;
 }

@@ -10,6 +10,7 @@ namespace Playo3 {
         #define VK_ITEM 500
         #define SOUNDCLOUD_PLAYLIST 600
         #define SOUNDCLOUD_ITEM 700
+        #define ECHO_ITEM 800
     }
 
     #define SHARE_TYPE_VK "vk"

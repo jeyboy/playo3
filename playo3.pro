@@ -134,7 +134,8 @@ SOURCES += main.cpp\
     modules/web/service_api/echonest_api.cpp \
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
-    double_slider/qxtspanslider.cpp
+    double_slider/qxtspanslider.cpp \
+    modules/data_struct/web/echo/echo_item.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -275,7 +276,8 @@ HEADERS  += playo.h \
     modules/controls/accordion.h \
     double_slider/qxtspanslider.h \
     double_slider/qxtspanslider_p.h \
-    double_slider/qxtglobal.h
+    double_slider/qxtglobal.h \
+    modules/data_struct/web/echo/echo_item.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

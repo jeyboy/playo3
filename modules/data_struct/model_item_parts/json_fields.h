@@ -7,6 +7,7 @@ namespace Playo3 {
     #define JSON_TYPE_CHILDS "c"
     #define JSON_TYPE_DURATION "d"
     #define JSON_TYPE_EXTENSION "e"
+    #define JSON_TYPE_ARTIST_UID "f"
     #define JSON_TYPE_GENRE_ID "g"
     #define JSON_TYPE_ITEM_TYPE "i"
 

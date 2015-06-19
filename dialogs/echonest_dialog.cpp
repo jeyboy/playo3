@@ -161,8 +161,6 @@ void EchonestDialog::onArtistInfoButtonClicked() {
 void EchonestDialog::onBasicPlaylistGenerateClicked() {
     QJsonArray results;
 
-    qDebug() << artistTypeCheck -> isChecked() << genreTypeCheck -> isChecked();
-
     if (artistTypeCheck -> isChecked()) {
         QStringList artists;
 
@@ -209,11 +207,24 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
-    qDebug() << "RES";
-    qDebug() << results;
 
-//    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++)
-//        genresList << (*song).toObject().value("title").toString();
+
+    ListView * view = new ListView(this, ViewSettings::echo());
+    ListModel * model = (ListModel *)view -> model();
+
+    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
+        QJsonObject obj = (*song).toObject();
+        new EchoItem(
+            obj.value("id").toString(),
+            obj.value("artist_id").toString(),
+            QString(),
+            obj.value("artist_name").toString() + " - " + obj.value("title").toString(),
+            model -> root()
+        );
+    }
+
+    view -> reset();
+    //TODO: insert view to form
 }
 
 void EchonestDialog::artistInfoGeneration(QWidget * base) {
