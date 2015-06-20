@@ -214,17 +214,16 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
 
     for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
         QJsonObject obj = (*song).toObject();
-        new EchoItem(
+        new WebItem(
             obj.value("id").toString(),
             obj.value("artist_id").toString(),
-            QString(),
             obj.value("artist_name").toString() + " - " + obj.value("title").toString(),
             model -> root()
         );
     }
 
     view -> reset();
-    //TODO: insert view to form
+    ((QWidget *)sender()) -> parentWidget() -> layout() -> addWidget(view);
 }
 
 void EchonestDialog::artistInfoGeneration(QWidget * base) {

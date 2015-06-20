@@ -1,27 +1,27 @@
 #ifndef TEU_H
 #define TEU_H
 
-#include <QString>
-#include <QJsonObject>
+#include <qstring.h>
+#include <qjsonobject.h>
 
 class TeuAuth {
 public:
-    TeuAuth();
-    TeuAuth(QJsonObject & hash);
+    inline TeuAuth() {}
+    inline TeuAuth(QJsonObject & hash) { fromJson(hash); }
 
     void setParams(QString accessToken, QString userID, QString expiresIn);
 
-    inline QString getToken() { return token; }
-    inline QString getExpire() { return expires_in; }
-    inline QString getUserID() { return user_id; }
+    inline QString token() const { return _token; }
+    inline QString expire() const { return _expires_in; }
+    inline QString userID() const { return _user_id; }
 
     void fromJson(QJsonObject & hash);
     void toJson(QJsonObject & hash);
 
 private:
-    QString token;
-    QString expires_in;
-    QString user_id;
+    QString _token;
+    QString _expires_in;
+    QString _user_id;
 };
 
 #endif // TEU_H

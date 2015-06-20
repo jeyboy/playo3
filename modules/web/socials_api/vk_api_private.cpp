@@ -288,6 +288,23 @@ QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
     return url;
 }
 
+QUrl VkApiPrivate::audioSearchLimitedUrl(QString searchStr, int limit, QString token) {
+    QUrl url(getApiUrl() + "execute");
+    QUrlQuery query = methodParams(token);
+
+    query.addQueryItem("code",
+                       QString(
+                           "    var items = API.audio.search({"
+                           "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: " + QString::number(limit) + ", lyrics: 0"
+                           "    }).items;"
+                           "return {audio_list: search};"
+                       )
+    );
+
+    url.setQuery(query);
+    return url;
+}
+
 // sort  2 - by popularity, 1 - by duration, 0 - by creation date
 QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort, QString token) {
     QUrl url(getApiUrl() + "execute");

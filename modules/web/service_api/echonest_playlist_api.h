@@ -1,8 +1,7 @@
 #ifndef ECHONEST_PLAYLIST_API
 #define ECHONEST_PLAYLIST_API
 
-#include "iapi.h"
-#include <qdebug.h>
+#include "../iapi.h"
 
 class EchonestPlaylistApi : public IApi {
     public:

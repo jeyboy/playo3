@@ -1,7 +1,7 @@
 #ifndef ECHONEST_SONG_API
 #define ECHONEST_GENRE_API
 
-#include "iapi.h"
+#include "../iapi.h"
 
 //POSSIBLE BUCKETS
 

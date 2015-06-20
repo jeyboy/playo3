@@ -12,9 +12,6 @@ namespace Playo3 {
         ~VkItem();
 
         inline int itemType() const { return VK_ITEM; }
-        bool removePhysicalObject();
-
-        bool isExist() const;
     };
 }
 

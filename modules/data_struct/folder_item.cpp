@@ -50,8 +50,8 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
                     new FolderItem(&iterObj, this);
                 break;}
 
-                case ECHO_ITEM: {
-                    new EchoItem(&iterObj, this);
+                case WEB_ITEM: {
+                    new WebItem(&iterObj, this);
                 break;}
 
                 case VK_ITEM: {

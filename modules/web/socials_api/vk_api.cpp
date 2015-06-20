@@ -210,6 +210,25 @@ QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString uid, QStrin
     return res;
 }
 
+QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString predicate, int limitation) {
+    CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
+    ApiFuncContainer * func = new ApiFuncContainer(receiver, 0, "");
+
+    QUrl url = VkApiPrivate::audioSearchLimitedUrl(
+        predicate,
+        limitation,
+        getToken()
+    );
+
+    QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+    QJsonObject res;
+    if (responseRoutine(m_http, func, res))
+        res = res.value("response").toObject();
+
+    delete func;
+    return res;
+}
+
 ApiFuncContainer * VkApi::audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId) {
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 

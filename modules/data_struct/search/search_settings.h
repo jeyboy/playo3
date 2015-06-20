@@ -14,7 +14,7 @@ enum PredicateType {
 
 struct SearchSettings {   
     inline SearchSettings(bool vk = false, bool sc = false, bool other = false, bool tabs = false, bool comp = false)
-        : inVk(vk), inSc(sc), inOther(other), inTabs(tabs), inComputer(comp)
+        : inVk(vk), inSc(sc), inOther(other), inTabs(tabs), inComputer(comp), onlyOne(false)
     {
         search_in_own = false;
     }
@@ -34,6 +34,8 @@ struct SearchSettings {
     bool inOther;
     bool inTabs;
     bool inComputer;
+
+    bool onlyOne;
 
     QHash<int, QString> genres;
     QHash<int, QString> vkGenres;

@@ -10,16 +10,25 @@ namespace Playo3 {
             return owner.isValid() && id.isValid() ? owner.toString() + "_" + id.toString() : QVariant();
         }
 
-        WebItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
-        WebItem(QJsonObject * hash, FolderItem * parent = 0);
+        inline WebItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
+        inline WebItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
         WebItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
+        WebItem(QVariant song_uid, QVariant artist_uid, QString fileName, FolderItem * parent, int pos) : IItem(parent, fileName, pos) {
+            setArtistUid(artist_uid);
+            setSongUid(song_uid);
+        }
 
-        ~WebItem();
+        inline ~WebItem() {}
+
+        inline virtual int itemType() const { return WEB_ITEM; }
 
         inline QString fullPath() const { return path().toString(); }
         virtual inline QUrl toUrl() const { return QUrl(fullPath()); }
         virtual inline QVariant toUid() { return WebItem::toUid(owner(), uid()); }
         inline bool isRemote() const { return true; }
+
+        inline virtual bool removePhysicalObject() { return false; }
+        inline virtual bool isExist() const { return true; }
     };
 }
 

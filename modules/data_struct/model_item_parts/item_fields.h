@@ -44,7 +44,9 @@ namespace Playo3 {
 
         inline QVariant uid() const         { return attrs.value(JSON_TYPE_UID); }
         inline QVariant owner() const       { return attrs.value(JSON_TYPE_OWNER_ID); }
-        inline QVariant artistUid() const  { return attrs.value(JSON_TYPE_ARTIST_UID); }
+        inline QVariant artistUid() const   { return attrs.value(JSON_TYPE_ARTIST_UID); }
+        inline QVariant songUid() const     { return attrs.value(JSON_TYPE_SONG_UID); }
+
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
@@ -61,6 +63,7 @@ namespace Playo3 {
 
         inline void setUid(QVariant newId)              { attrs[JSON_TYPE_UID] = newId; }
         inline void setArtistUid(QVariant newArtistId)  { attrs[JSON_TYPE_ARTIST_UID] = newArtistId; }
+        inline void setSongUid(QVariant newSongId)      { attrs[JSON_TYPE_SONG_UID] = newSongId; }
 
         inline void setOwner(QVariant newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline void setBpm(QVariant newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }

@@ -12,6 +12,7 @@ namespace Playo3 {
         ~SearchView();
 
         inline void search(SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
+        inline void search(QStringList & predicates) { ((SearchModel *)mdl) -> initiateSearch(predicates); }
     };
 }
 #endif // SEARCH_VIEW_H

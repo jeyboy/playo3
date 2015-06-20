@@ -29,6 +29,7 @@ public:
     ApiFuncContainer * searchAudioRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     QJsonObject audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
+    QJsonObject audioSearchSync(const QObject * receiver, QString predicate, int limitation = 1);
 
     ApiFuncContainer * audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId);
     void audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId = -1);

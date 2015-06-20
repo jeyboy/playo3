@@ -10,13 +10,3 @@ SoundcloudItem::SoundcloudItem(QVariant uid, QString filePath, QString fileName,
 }
 
 SoundcloudItem::~SoundcloudItem() {}
-
-bool SoundcloudItem::removePhysicalObject() {
-    //TODO: realization require
-    return false;
-}
-
-bool SoundcloudItem::isExist() const {
-    //TODO: realization require
-    return true;
-}

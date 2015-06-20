@@ -19,6 +19,13 @@ void SearchModel::initiateSearch(SearchSettings & params) {
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
 }
 
+void SearchModel::initiateSearch(QStringList & predicates) {
+    SearchSettings settings(true, true, true, true, true);
+    settings.predicates = predicates;
+    settings.onlyOne = true;
+    initiateSearch(settings);
+}
+
 int SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
     int amount = 0;
     for(QList<void *>::Iterator it = request.tabs.begin(); it != request.tabs.end(); it++)

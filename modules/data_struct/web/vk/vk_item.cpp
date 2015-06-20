@@ -9,13 +9,3 @@ VkItem::VkItem(QVariant uid, QString filePath, QString fileName, FolderItem * pa
 }
 
 VkItem::~VkItem() {}
-
-bool VkItem::removePhysicalObject() {
-    //TODO: realization require
-    return false;
-}
-
-bool VkItem::isExist() const {
-    //TODO: realization require
-    return true;
-}

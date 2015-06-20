@@ -18,6 +18,7 @@ namespace Playo3 {
         inline ContainerType containerType() const { return search; }
 
         void initiateSearch(SearchSettings & params);
+        void initiateSearch(QStringList & predicates);
     protected slots:
         int proceedTabs(SearchRequest & params, FolderItem * parent);
         int proceedMyComputer(SearchRequest & params, FolderItem * parent);

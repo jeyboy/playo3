@@ -18,7 +18,6 @@
 #include "echonest_artist_api.h"
 #include "echonest_song_api.h"
 #include "echonest_playlist_api.h"
-#include "misc/web_utils/custom_network_access_manager.h"
 
 class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi,
         public EchonestSongApi, public EchonestPlaylistApi {
@@ -30,30 +29,35 @@ public:
     static EchonestApi * instance();
     inline static void close() { delete self; }
 protected:
+    inline void appendParams(QUrlQuery & query) { setParam(query, "api_key", "TSCA6XDZTJQ1OOJSV"); }
     inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
 
-    inline QString token() const { return "TSCA6XDZTJQ1OOJSV"; }
     inline int requestLimit() { return 100; }
 
-    inline int extractAmount(QJsonObject & response) {
-        return response.value("response").toObject().value("total").toInt();
-    }
-    inline void setLimit(QUrlQuery & query, int limit, int offset = 0) {
+    inline int extractAmount(QJsonObject & response) { return response.value("response").toObject().value("total").toInt(); }
+    inline void setLimit(QUrlQuery & query, int limit = 99999, int offset = 0) {
         if (offset > 0) EchonestGenreApi::setParam(query, "start", QString::number(offset));
-        EchonestGenreApi::setParam(query, "results", QString::number(limit));
+        EchonestGenreApi::setParam(query, "results", QString::number(qMin(limit, requestLimit())));
     }
 
-    bool proceedQuery(QUrl url, QJsonObject & response) {
+    bool proceedQuery(QUrl url, QJsonObject & response, QObject * errorReceiver = 0) {
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager);
 
         response = manager -> getToJson(QNetworkRequest(url));
 
         if (isNew) delete manager;
-        bool status = response.value("response").toObject().value("status").toObject().value("code").toInt() == 0;
+        int status_code = response.value("response").toObject().value("status").toObject().value("code").toInt();
+        bool status = status_code == 0;
 
-        if (!status)
-            qDebug() << response.value("response").toObject().value("status").toObject().value("message").toString();
+        if (!status) {
+            QString message = response.value("response").toObject().value("status").toObject().value("message").toString();
+            sendError(errorReceiver, message, status_code);
+//            if (errorReceiver)
+//                sendError(errorReceiver);
+////                QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, status_code), Q_ARG(QString, message));
+//            else qDebug() << message;
+        }
 
         return status;
     }

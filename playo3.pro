@@ -22,6 +22,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = playo3
 TEMPLATE = app
 
+##profiling
+#QMAKE_CXXFLAGS_DEBUG += -pg
+#QMAKE_LFLAGS_DEBUG += -pg
+###############
+
 #QMAKE_CXXFLAGS_RELEASE -= -O2
 #QMAKE_CXXFLAGS_RELEASE += -O3
 
@@ -120,7 +125,6 @@ SOURCES += main.cpp\
     modules/controls/drop_button.cpp \
     modules/controls/rotate_label.cpp \
     misc/logger.cpp \
-    modules/web/socials_api/soundcloud_api_private.cpp \
     modules/data_struct/web/soundcloud/soundcloud_folder.cpp \
     dialogs/search_dialog.cpp \
     modules/data_struct/search/search_model.cpp \
@@ -134,8 +138,7 @@ SOURCES += main.cpp\
     modules/web/service_api/echonest_api.cpp \
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
-    double_slider/qxtspanslider.cpp \
-    modules/data_struct/web/echo/echo_item.cpp
+    double_slider/qxtspanslider.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -246,7 +249,6 @@ HEADERS  += playo.h \
     modules/controls/hoverable_menu.h \
     modules/controls/rotate_label.h \
     misc/logger.h \
-    modules/web/socials_api/soundcloud_api_private.h \
     modules/data_struct/web/soundcloud/soundcloud_folder.h \
     dialogs/search_dialog.h \
     modules/data_struct/search/search_model.h \
@@ -263,7 +265,6 @@ HEADERS  += playo.h \
     media/cue/cue.h \
     modules/web/service_api/echonest_api.h \
     modules/web/service_api/echonest_genre_api.h \
-    modules/web/service_api/iapi.h \
     misc/call_initiator.h \
     modules/controls/equalizer.h \
     modules/web/service_api/echonest_artist_api.h \
@@ -277,7 +278,8 @@ HEADERS  += playo.h \
     double_slider/qxtspanslider.h \
     double_slider/qxtspanslider_p.h \
     double_slider/qxtglobal.h \
-    modules/data_struct/web/echo/echo_item.h
+    modules/web/iapi.h \
+    modules/web/socials_api/soundcloud_request_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

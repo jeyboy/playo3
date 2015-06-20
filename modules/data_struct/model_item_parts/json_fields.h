@@ -10,6 +10,7 @@ namespace Playo3 {
     #define JSON_TYPE_ARTIST_UID "f"
     #define JSON_TYPE_GENRE_ID "g"
     #define JSON_TYPE_ITEM_TYPE "i"
+    #define JSON_TYPE_SONG_UID "h"
 
     #define JSON_TYPE_BPM "m"
     #define JSON_TYPE_PATH "p"
