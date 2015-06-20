@@ -15,9 +15,12 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+#define DEFAULT_LIMIT_AMOUNT 999999
+
 class IApi { // format=json
     protected:
-        virtual QString baseUrl(QString predicate) = 0;
+        virtual QString baseUrlStr(QString predicate) = 0;
+        virtual QUrl baseUrl(QString predicate, QUrlQuery & query) = 0;
         virtual void appendParams(QUrlQuery & query) = 0;
 
         virtual int extractAmount(QJsonObject & response) = 0;
@@ -25,7 +28,7 @@ class IApi { // format=json
 
         virtual bool proceedQuery(QUrl url, QJsonObject & response, QObject * errorReceiver = 0) = 0;
 
-        virtual void setLimit(QUrlQuery & query, int limit = 99999, int offset = 0) = 0;
+        virtual void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) = 0;
 
         inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
             if (errorReceiver)

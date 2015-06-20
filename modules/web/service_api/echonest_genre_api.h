@@ -30,13 +30,11 @@
 class EchonestGenreApi : public IApi {
     public:
         inline QUrl genreArtistsUrl(QString & genre, int offset = 0) {
-            QUrl url(baseUrl("genre/artists"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
             setParam(query, "bucket", "hotttnesss");
             setParam(query, "name", genre);
-            url.setQuery(query);
-            return url;
+            return baseUrl("genre/artists", query);
         }
 
         QJsonArray genreArtists(QString genre) {
@@ -79,10 +77,8 @@ class EchonestGenreApi : public IApi {
         //}
 
         inline QUrl genresListUrl() {
-            QUrl url(baseUrl("genre/list"));
             QUrlQuery query = buildDefaultParams();
-            url.setQuery(query);
-            return url;
+            return baseUrl("genre/list", query);
         }
 
         QJsonArray genresList() {
@@ -115,12 +111,10 @@ class EchonestGenreApi : public IApi {
         //}
 
         inline QUrl genreInfoUrl(QString & genre) {
-            QUrl url(baseUrl("genre/profile"));
             QUrlQuery query = buildDefaultParams();
             setParam(query, "bucket", "description");
             setParam(query, "name", genre);
-            url.setQuery(query);
-            return url;
+            return baseUrl("genre/profile", query);
         }
 
 
@@ -150,12 +144,10 @@ class EchonestGenreApi : public IApi {
         //}
 
         inline QUrl genresSerachUrl(QString & genre, int offset = 0) {
-            QUrl url(baseUrl("genre/search"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
-            url.setQuery(query);
-            return url;
+            return baseUrl("genre/search", query);
         }
 
         QJsonArray genresSerach(QString genre) {
@@ -197,12 +189,10 @@ class EchonestGenreApi : public IApi {
 
 
         inline QUrl genreSimilarUrl(QString & genre, int offset = 0) {
-            QUrl url(baseUrl("genre/similar"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, requestLimit(), offset);
             setParam(query, "name", genre);
-            url.setQuery(query);
-            return url;
+            return baseUrl("genre/similar", query);
         }
 
         QJsonArray genreSimilar(QString genre) {

@@ -3,6 +3,8 @@
 
 #include "../iapi.h"
 
+#define DEFAULT_PLAYLIST_LIMIT_AMOUNT 100
+
 class EchonestPlaylistApi : public IApi {
     public:
         //type 	no 	no 	artist-radio, song-radio , genre-radio 	the type of the playlist to be generated. See below for details on each of the types - the type of playlist to be generated
@@ -14,8 +16,7 @@ class EchonestPlaylistApi : public IApi {
         //            genre-radio - plays songs from artists matching the given genre
 
         //bucket id:catalog-name, tracks
-        inline QUrl playlistBasicUrl(QString type, QStringList artists, QStringList genres, QStringList songs_ids, int limit = 100) {
-            QUrl url(baseUrl("playlist/basic"));
+        inline QUrl playlistBasicUrl(QString type, QStringList artists, QStringList genres, QStringList songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
@@ -34,13 +35,12 @@ class EchonestPlaylistApi : public IApi {
 
             if (!type.isEmpty())
                 setParam(query, "type", type);
-            url.setQuery(query);
 
-            return url;
+            return baseUrl("playlist/basic", query);
         }
 
 //        QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
-//                                 QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = 100) {
+//                                 QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
 //            QJsonObject response;
 
 //            if (proceedQuery(playlistBasicUrl(type, artists, genres, songs_ids, limit), response))
@@ -49,7 +49,7 @@ class EchonestPlaylistApi : public IApi {
 //            return QJsonArray();
 //        }
 
-        QJsonArray playlistBasicByArtists(QStringList & artists, int limit = 100) {
+        QJsonArray playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
             if (proceedQuery(playlistBasicUrl("artist-radio", artists, QStringList(), QStringList(), limit), response))
@@ -58,7 +58,7 @@ class EchonestPlaylistApi : public IApi {
             return QJsonArray();
         }
 
-        QJsonArray playlistBasicByGenres(QStringList & genres, int limit = 100) {
+        QJsonArray playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
             if (proceedQuery(playlistBasicUrl("genre-radio", QStringList(), genres, QStringList(), limit), response))
@@ -67,7 +67,7 @@ class EchonestPlaylistApi : public IApi {
             return QJsonArray();
         }
 
-        QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = 100) {
+        QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
             if (proceedQuery(playlistBasicUrl("song-radio", QStringList(), QStringList(), songs_ids, limit), response))
@@ -159,8 +159,7 @@ class EchonestPlaylistApi : public IApi {
 
         inline QUrl playlistStaticUrl(QString & type, QString & song_selection_creteria, float variety, QString & distribution, float adventurousness,
                                       QString & seed_catalog, QStringList & artists, QStringList & genres, QStringList & songs_ids,
-                                      QStringList & song_types, int limit = 100) {
-            QUrl url(baseUrl("playlist/static"));
+                                      QStringList & song_types, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
@@ -176,15 +175,14 @@ class EchonestPlaylistApi : public IApi {
             setParam(query, "variety", QString::number(variety));
             setParam(query, "adventurousness", QString::number(adventurousness));
 
-            url.setQuery(query);
-            return url;
+            return baseUrl("playlist/static", query);
         }
 
         QJsonArray playlistStatic(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5,
                                   QString distribution = QString(), float adventurousness = .2,
                                   QString seed_catalog = QString(), QStringList artists = QStringList(),
                                   QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
-                                  QStringList song_types = QStringList(), int limit = 100) {
+                                  QStringList song_types = QStringList(), int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
             if (proceedQuery(playlistStaticUrl(type, song_selection_creteria, variety, distribution, adventurousness,
@@ -268,14 +266,13 @@ class EchonestPlaylistApi : public IApi {
                                       QStringList & song_types, QString & sort, QString & genre_preset,
                                       QString & artist_start_year_before, QString & artist_start_year_after,
                                       QString & artist_end_year_before, QString & artist_end_year_after,
-                                      int limit = 100, float min_tempo = 0, float max_tempo = 500,
+                                      int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT, float min_tempo = 0, float max_tempo = 500,
                                       float min_loudness = -100, float max_loudness = 100, float min_energy = 0, float max_energy = 1,
                                       float min_danceability = 0, float max_danceability = 1, float min_liveness = 0, float max_liveness = 1,
                                       float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,
                                       float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
                                       float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1
                                       ) {
-            QUrl url(baseUrl("playlist/static"));
             QUrlQuery query = buildDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
@@ -332,8 +329,7 @@ class EchonestPlaylistApi : public IApi {
             setParam(query, "variety", QString::number(variety));
             setParam(query, "adventurousness", QString::number(adventurousness));
 
-            url.setQuery(query);
-            return url;
+            return baseUrl("playlist/static", query);
         }
 
         QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
@@ -341,7 +337,7 @@ class EchonestPlaylistApi : public IApi {
                                     QStringList song_types = QStringList(), QString sort = QString(), QString genre_preset = QString(),
                                     QString artist_start_year_before = QString(), QString artist_start_year_after = QString(),
                                     QString artist_end_year_before = QString(), QString artist_end_year_after = QString(),
-                                    int limit = 100, float min_tempo = 0, float max_tempo = 500,
+                                    int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT, float min_tempo = 0, float max_tempo = 500,
                                     float min_loudness = -100, float max_loudness = 100, float min_energy = 0, float max_energy = 1,
                                     float min_danceability = 0, float max_danceability = 1, float min_liveness = 0, float max_liveness = 1,
                                     float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,

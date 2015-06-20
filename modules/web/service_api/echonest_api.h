@@ -30,12 +30,17 @@ public:
     inline static void close() { delete self; }
 protected:
     inline void appendParams(QUrlQuery & query) { setParam(query, "api_key", "TSCA6XDZTJQ1OOJSV"); }
-    inline QString baseUrl(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
+    inline QString baseUrlStr(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
+    inline QUrl baseUrl(QString predicate, QUrlQuery & query) {
+        QUrl url(baseUrlStr(predicate));
+        url.setQuery(query);
+        return url;
+    }
 
     inline int requestLimit() { return 100; }
 
     inline int extractAmount(QJsonObject & response) { return response.value("response").toObject().value("total").toInt(); }
-    inline void setLimit(QUrlQuery & query, int limit = 99999, int offset = 0) {
+    inline void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
         if (offset > 0) EchonestGenreApi::setParam(query, "start", QString::number(offset));
         EchonestGenreApi::setParam(query, "results", QString::number(qMin(limit, requestLimit())));
     }
