@@ -279,7 +279,8 @@ HEADERS  += playo.h \
     double_slider/qxtspanslider_p.h \
     double_slider/qxtglobal.h \
     modules/web/iapi.h \
-    modules/web/socials_api/soundcloud_request_api.h
+    modules/web/socials_api/soundcloud_request_api.h \
+    misc/web_utils/json.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

@@ -15,6 +15,8 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+//#include "misc/web_utils/json.h"
+
 #define DEFAULT_LIMIT_AMOUNT 999999
 
 class IApi {
@@ -52,12 +54,10 @@ protected:
         return status;
     }
 
-    bool proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, QObject * errorReceiver = 0) {
+    bool proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, int offset = 0, QObject * errorReceiver = 0) {
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager), status = true;
-
         QJsonObject response;
-        int offset = 0;
 
         while (status = proceedQuery(buildUrl(url, offset, limit), response, errorReceiver, manager)) {
             result.append(extractBody(response).value(key));
