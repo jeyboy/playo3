@@ -73,9 +73,8 @@ class EchonestSongApi : public IApi {
 
         //mode - (minor, major) 0, 1
         inline QUrl songSearchUrl(int mode, QString & artist, QString & title, QStringList & tags,
-                QStringList & styles, QStringList & moods, int offset = 0) {
-            QUrlQuery query = buildDefaultParams();
-            setLimit(query, requestLimit(), offset);
+                QStringList & styles, QStringList & moods) {
+            QUrlQuery query = genDefaultParams();
 
             if (!artist.isEmpty()) setParam(query, "artist", artist);
             if (!title.isEmpty()) setParam(query, "title", title);
@@ -93,20 +92,8 @@ class EchonestSongApi : public IApi {
 
         QJsonArray songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
                               QStringList styles = QStringList(), QStringList moods = QStringList()) {
-            QJsonObject response;
-            QJsonArray songs;
-            int offset = 0;
 
-            while (proceedQuery(songSearchUrl(mode, artist, title, tags, styles, moods, offset), response)) {
-                songs.append(response.value("response").toObject().value("songs"));
-
-                offset += requestLimit();
-
-                if (offset >= extractAmount(response))
-                    break;
-            }
-
-            return songs;
+            return proceedQuery(songSearchUrl(mode, artist, title, tags, styles, moods), limit, "songs");
         }
 
         //{

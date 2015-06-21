@@ -17,7 +17,7 @@ class EchonestPlaylistApi : public IApi {
 
         //bucket id:catalog-name, tracks
         inline QUrl playlistBasicUrl(QString type, QStringList artists, QStringList genres, QStringList songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QUrlQuery query = buildDefaultParams();
+            QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
             setParam(query, "artist", artists);
@@ -160,7 +160,7 @@ class EchonestPlaylistApi : public IApi {
         inline QUrl playlistStaticUrl(QString & type, QString & song_selection_creteria, float variety, QString & distribution, float adventurousness,
                                       QString & seed_catalog, QStringList & artists, QStringList & genres, QStringList & songs_ids,
                                       QStringList & song_types, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QUrlQuery query = buildDefaultParams();
+            QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
             setParam(query, "artist", artists);
@@ -273,7 +273,7 @@ class EchonestPlaylistApi : public IApi {
                                       float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
                                       float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1
                                       ) {
-            QUrlQuery query = buildDefaultParams();
+            QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
             if (!artist_start_year_before.isEmpty()) setParam(query, "artist_start_year_before", artist_start_year_before);

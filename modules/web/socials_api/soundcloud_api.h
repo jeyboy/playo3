@@ -23,42 +23,21 @@ public slots:
     void proceedAuthResponse(const QUrl & url);
 
 protected:
-    inline void appendParams(QUrlQuery & query) { setParam(query, "client_id", "8f84790a84f5a5acd1c92e850b5a91b7"); }
-    inline QString baseUrl(QString predicate) { return "https://api.soundcloud.com/" + predicate + ".json"; }
+    inline QUrlQuery genDefaultParams() { return QUrlQuery("client_id=8f84790a84f5a5acd1c92e850b5a91b7"); }
+    inline QString baseUrlStr(QString & predicate) { return "https://api.soundcloud.com/" + predicate + ".json"; }
 
-//    static inline int offsetLimit() { return 1000; /*8000*/; }
-
-
-
+    inline QString offsetKey() { return "start"; }
+    inline QString limitKey() { return "results"; }
     inline int requestLimit() { return 200; }
 
-    inline int extractAmount(QJsonObject & response) {
-//        return response.value("response").toObject().value("total").toInt();
-    }
-    inline void setLimit(QUrlQuery & query, int limit = 99999, int offset = 0) {
-        setParam(query, "limit", QString::number(qMin(limit, requestLimit())));
-        if (offset > 0) setParam(query, "offset", QString::number(offset));
-    }
-
-    bool proceedQuery(QUrl url, QJsonObject & response, QObject * errorReceiver = 0) {
-        CustomNetworkAccessManager * manager;
-        bool isNew = CustomNetworkAccessManager::validManager(manager);
-
-        response = manager -> getToJson(QNetworkRequest(url));
-
-        if (isNew) delete manager;
-//        int status_code = response.value("response").toObject().value("status").toObject().value("code").toInt();
-//        bool status = status_code == 0;
-
-//        if (!status) {
-//            QString message = response.value("response").toObject().value("status").toObject().value("message").toString();
-//            if (errorReceiver)
-//                QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, status_code), Q_ARG(QString, message));
-//            else qDebug() << message;
-//        }
-
-//        return status;
-    }
+//    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
+//    inline int extractAmount(QJsonObject & response) { return extractBody(response).value("total").toInt(); }
+//    inline void extractStatus(QJsonObject & response, int & code, QString & message) {
+//        QJsonObject stat_obj = extractBody(response).value("status").toObject();
+//        code = stat_obj.value("code").toInt();
+//        message = stat_obj.value("message").toString();
+//    }
+//    inline int offsetLimit() { return 1000; /*8000*/; }
 private:
     inline SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
 

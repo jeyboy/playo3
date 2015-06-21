@@ -29,9 +29,12 @@ public:
     static EchonestApi * instance();
     inline static void close() { delete self; }
 protected:
-    inline void appendParams(QUrlQuery & query) { setParam(query, "api_key", "TSCA6XDZTJQ1OOJSV"); }
+    inline QUrlQuery genDefaultParams() { return QUrlQuery("api_key=TSCA6XDZTJQ1OOJSV"); }
+
     inline QString baseUrlStr(QString & predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
 
+    inline QString offsetKey() { return "start"; }
+    inline QString limitKey() { return "results"; }
     inline int requestLimit() { return 100; }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
@@ -41,12 +44,6 @@ protected:
         code = stat_obj.value("code").toInt();
         message = stat_obj.value("message").toString();
     }
-
-    void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-        if (offset > 0) EchonestGenreApi::setParam(query, "start", QString::number(offset));
-        EchonestGenreApi::setParam(query, "results", QString::number(qMin(limit, requestLimit())));
-    }
-
 protected slots:
 //    void requestFinished() {
 ////        QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();

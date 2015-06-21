@@ -28,16 +28,13 @@ protected:
         return url;
     }
 
-    QUrlQuery buildDefaultParams() {
-        QUrlQuery query;
-        appendParams(query);
-        return query;
-    }
-
-    virtual void appendParams(QUrlQuery & query) = 0;
+    virtual QUrlQuery genDefaultParams() = 0;
 
     virtual int extractAmount(QJsonObject & response) = 0;
     virtual int requestLimit() = 0;
+
+    virtual QString offsetKey() = 0;
+    virtual QString limitKey() = 0;
 
     virtual void extractStatus(QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
@@ -54,7 +51,13 @@ protected:
         return status;
     }
 
-    bool proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, int offset = 0, QObject * errorReceiver = 0) {
+
+    QJsonArray proceedQuery(QUrl url, int limit, QString key, int offset = 0, QObject * errorReceiver = 0) {
+        QJsonArray res;
+        return proceedQuery(url, limit, key, res, offset, errorReceiver);
+    }
+
+    QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, int offset = 0, QObject * errorReceiver = 0) {
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager), status = true;
         QJsonObject response;
@@ -67,16 +70,20 @@ protected:
         }
 
         if (isNew) delete manager;
-        return status;
+        return result;
     }
-
-    virtual void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) = 0;
 
     inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
         if (errorReceiver)
             QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
         else qDebug() << message;
     }
+
+    void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
+        if (offset > 0) EchonestGenreApi::setParam(query, offsetName(), QString::number(offset));
+        EchonestGenreApi::setParam(query, limitName(), QString::number(qMin(limit, requestLimit())));
+    }
+
 
     inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }
     inline void setParam(QUrlQuery & query, QString name, float value) { query.addQueryItem(name, QString::number(value)); }
