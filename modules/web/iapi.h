@@ -30,7 +30,7 @@ protected:
 
     virtual QUrlQuery genDefaultParams() = 0;
 
-    virtual int extractAmount(QJsonObject & response) = 0;
+    virtual bool endReched(QJsonObject & response, int offset) = 0;
     virtual int requestLimit() = 0;
 
     virtual QString offsetKey() = 0;
@@ -39,9 +39,15 @@ protected:
     virtual void extractStatus(QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
-    bool proceedQuery(QUrl url, QJsonObject & response, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+    QJsonObject proceedQuery(QUrl url, bool wrapJson = false, QObject * errorReceiver = 0) {
+        QJsonObject res;
+        proceedQuery(url, res, wrapJson, errorReceiver);
+        return res;
+    }
+
+    bool proceedQuery(QUrl url, QJsonObject & response, bool wrapJson = false, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
-        response = manager -> getToJson(QNetworkRequest(url));
+        response = manager -> getToJson(QNetworkRequest(url), wrapJson);
         if (isNew) delete manager;
         ectractStatus(response, code, message);
         bool status = code == 0;
@@ -51,22 +57,21 @@ protected:
         return status;
     }
 
-
-    QJsonArray proceedQuery(QUrl url, int limit, QString key, int offset = 0, QObject * errorReceiver = 0) {
+    QJsonArray proceedQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0) {
         QJsonArray res;
-        return proceedQuery(url, limit, key, res, offset, errorReceiver);
+        return proceedQuery(url, limit, key, res, wrapJson, offset, errorReceiver);
     }
 
-    QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, int offset = 0, QObject * errorReceiver = 0) {
+    QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0) {
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager), status = true;
         QJsonObject response;
 
-        while (status = proceedQuery(buildUrl(url, offset, limit), response, errorReceiver, manager)) {
+        while (status = proceedQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
             result.append(extractBody(response).value(key));
 
             offset += requestLimit();
-            if (offset >= limit || offset >= extractAmount(response)) break;
+            if (offset >= limit || endReached(response, offset)) break;
         }
 
         if (isNew) delete manager;
