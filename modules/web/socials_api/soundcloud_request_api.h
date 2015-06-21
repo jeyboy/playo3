@@ -3,6 +3,15 @@
 
 #include "../iapi.h"
 
+//QVariantList n_ar = obj.value("response").toArray().toVariantList();
+
+//if (!n_ar.isEmpty()) {
+//    QVariantList ar = func -> result.value(fieldName).toArray().toVariantList();
+//    ar.append(n_ar);
+
+//    func -> result.insert(fieldName, QJsonArray::fromVariantList(ar));
+//}
+
 class SoundcloudRequestApi : public IApi {
 private:
     inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, "types", "original,remix,live,podcast"); }
@@ -67,7 +76,7 @@ public:
     /// API
     ////////////////
 
-    QUrl audiosSearchUrl(QString & predicate, QString & genre, bool hottest, int offset) {
+    QUrl audioSearchUrl(QString & predicate, QString & genre, bool hottest, int offset) {
         QUrlQuery query = buildDefaultParams();
         setAudioTypesParam(query);
         setLimit(query, 99999, offset);
@@ -79,21 +88,83 @@ public:
         if (!predicate.isEmpty())
             setSearchPredicate(query, predicate);
 
-        QUrl url(getApiUrl() + "tracks.json");
-        url.setQuery(query);
-        return url;
+        return baseUrl("tracks", query);
+    }
+
+    QJsonArray searchAudioRoutine(QString & predicate, QString & genre, bool popular) {
+        QJsonObject response;
+        QJsonArray songs;
+        int offset = 0;
+
+        while (proceedQuery(audioSearchUrl(predicate, genre, popular, offset), response)) {
+            songs.append(response.value("response"));
+
+            offset += limit;
+
+            if (offset >= limit || offset >= requestLimit() * 5)
+                break;
+        }
+
+        return songs;
     }
 
 
-    QUrl SoundcloudApiPrivate::groupAudiosUrl(QString & uid, int offset) {
+    QUrl groupAudiosUrl(QString & uid, int offset) {
         QUrlQuery query = buildDefaultParams();
         setAudioTypesParam(query);
         setLimit(query, 99999, offset);
-
-        QUrl url(getApiUrl() + "groups/" + uid + "/tracks.json");
-        url.setQuery(query);
-        return url;
+        return baseUrl("groups/" + uid + "/tracks", query);
     }
+
+    QJsonArray groupAudios(QString & group_id, int limit = requestLimit() * 5) {
+    //    uid = "101";
+        QJsonObject response;
+        QJsonArray songs;
+        int offset = 0;
+
+        while (proceedQuery(groupAudiosUrl(group_id, offset), response)) {
+            songs.append(response.value("response"));
+
+            offset += requestLimit();
+            if (offset >= limit)  break;
+        }
+
+        return songs;
+    }
+
+
+    QUrl groupPlaylistsUrl(QString & uid, int offset) {
+        QUrlQuery query = buildDefaultParams();
+        setLimit(query, 99999, offset);
+        return baseUrl("groups/" + uid + "/playlists", query);
+    }
+
+    QJsonArray groupPlaylists(QString & group_id, int limit = requestLimit() * 5) {
+    //    uid = "101";
+        QJsonObject response;
+        QJsonArray playlists;
+        int offset = 0;
+
+        while (proceedQuery(groupPlaylistsUrl(group_id, offset), response)) {
+            playlists.append(response.value("response"));
+
+            offset += limit;
+
+            if (offset >= limit)
+                break;
+        }
+
+        return playlists;
+    }
+
+
+
+
+
+
+
+
+
 
     QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "groups/" + uid + "/playlists.json");
@@ -262,21 +333,6 @@ public:
     //    return obj;
     }
 
-    void SoundcloudApi::getGroupInfo(const QObject * receiver, const char * respSlot, QString uid) {
-        startApiCall(QtConcurrent::run(this, &SoundcloudApi::getGroupInfoRoutine, new ApiFuncContainer(receiver, respSlot, uid)));
-    }
-
-    ApiFuncContainer * SoundcloudApi::getGroupInfoRoutine(ApiFuncContainer * func) {
-    //    uid = "101";
-        QNetworkReply * m_http = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupAudiosUrl(func -> uid)));
-
-        if (responseRoutine("audio_list", m_http, func)) {
-            m_http = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(SoundcloudApiPrivate::groupPlaylistsUrl(func -> uid)));
-            responseRoutine("playlists", m_http, func);
-        }
-
-        return func;
-    }
 
     void SoundcloudApi::getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0") {
         startApiCall(QtConcurrent::run(this, &SoundcloudApi::getUidInfoRoutine, new ApiFuncContainer(receiver, respSlot, uid)));
@@ -331,17 +387,7 @@ public:
         return res;
     }
 
-    ApiFuncContainer * SoundcloudApi::searchAudioRoutine(ApiFuncContainer * func, QString & predicate, QString & genre, bool popular) {
-        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-        QNetworkReply * m_http;
 
-        for(int i = 0; i < 5; i++) {
-            m_http = netManager -> getSync(QNetworkRequest(SoundcloudApiPrivate::audiosSearchUrl(predicate, genre, popular, i * SoundcloudApiPrivate::amountLimit())));
-            responseRoutine("audio_list", m_http, func);
-        }
-
-        return func;
-    }
 
     ///////////////////////////////////////////////////////////
     /// PROTECTED

@@ -30,52 +30,32 @@ public:
     inline static void close() { delete self; }
 protected:
     inline void appendParams(QUrlQuery & query) { setParam(query, "api_key", "TSCA6XDZTJQ1OOJSV"); }
-    inline QString baseUrlStr(QString predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
-    inline QUrl baseUrl(QString predicate, QUrlQuery & query) {
-        QUrl url(baseUrlStr(predicate));
-        url.setQuery(query);
-        return url;
-    }
+    inline QString baseUrlStr(QString & predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
 
     inline int requestLimit() { return 100; }
 
-    inline int extractAmount(QJsonObject & response) { return response.value("response").toObject().value("total").toInt(); }
-    inline void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
+    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
+    inline int extractAmount(QJsonObject & response) { return extractBody(response).value("total").toInt(); }
+    inline void extractStatus(QJsonObject & response, int & code, QString & message) {
+        QJsonObject stat_obj = extractBody(response).value("status").toObject();
+        code = stat_obj.value("code").toInt();
+        message = stat_obj.value("message").toString();
+    }
+
+    void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
         if (offset > 0) EchonestGenreApi::setParam(query, "start", QString::number(offset));
         EchonestGenreApi::setParam(query, "results", QString::number(qMin(limit, requestLimit())));
     }
 
-    bool proceedQuery(QUrl url, QJsonObject & response, QObject * errorReceiver = 0) {
-        CustomNetworkAccessManager * manager;
-        bool isNew = CustomNetworkAccessManager::validManager(manager);
-
-        response = manager -> getToJson(QNetworkRequest(url));
-
-        if (isNew) delete manager;
-        int status_code = response.value("response").toObject().value("status").toObject().value("code").toInt();
-        bool status = status_code == 0;
-
-        if (!status) {
-            QString message = response.value("response").toObject().value("status").toObject().value("message").toString();
-            sendError(errorReceiver, message, status_code);
-//            if (errorReceiver)
-//                sendError(errorReceiver);
-////                QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, status_code), Q_ARG(QString, message));
-//            else qDebug() << message;
-        }
-
-        return status;
-    }
-
 protected slots:
-    void requestFinished() {
-//        QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
-//        ApiFuncContainer * func = initiator -> result();
-//        connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-//        emit routineFinished(func -> result);
-//        disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-//        delete func;
-    }
+//    void requestFinished() {
+////        QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
+////        ApiFuncContainer * func = initiator -> result();
+////        connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
+////        emit routineFinished(func -> result);
+////        disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
+////        delete func;
+//    }
 
 private:
     inline EchonestApi() : QObject() { }

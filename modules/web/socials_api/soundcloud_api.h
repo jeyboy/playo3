@@ -44,9 +44,9 @@ protected:
         CustomNetworkAccessManager * manager;
         bool isNew = CustomNetworkAccessManager::validManager(manager);
 
-//        response = manager -> getToJson(QNetworkRequest(url));
+        response = manager -> getToJson(QNetworkRequest(url));
 
-//        if (isNew) delete manager;
+        if (isNew) delete manager;
 //        int status_code = response.value("response").toObject().value("status").toObject().value("code").toInt();
 //        bool status = status_code == 0;
 
