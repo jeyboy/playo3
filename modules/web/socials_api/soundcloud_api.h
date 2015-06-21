@@ -30,7 +30,7 @@ protected:
     inline QString limitKey() { return "results"; }
     inline int requestLimit() { return 200; }
 
-//    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
+    inline QJsonObject & extractBody(QJsonObject & response) { return response; }
 //    inline int extractAmount(QJsonObject & response) { return extractBody(response).value("total").toInt(); }
 //    inline void extractStatus(QJsonObject & response, int & code, QString & message) {
 //        QJsonObject stat_obj = extractBody(response).value("status").toObject();

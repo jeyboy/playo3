@@ -15,6 +15,9 @@
 class SoundcloudRequestApi : public IApi {
 private:
     inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, "types", "original,remix,live,podcast"); }
+    inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, "types", "original,live"); }
+    inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, "types", "remix"); }
+
     inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, "q", predicate); }
     inline void setIdsFilter(QUrlQuery & query, QStringList & uids) { setParam(query, "ids", uids.join(",")); }
     inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, "genres", genre); }
@@ -26,7 +29,7 @@ public:
     inline QString authUrl() const {
         QUrl url("https://soundcloud.com/connect");
 
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setParam(query, "response_type", "code");
         setParam(query, "scope", "non-expiring");
         setParam(query, "redirect_uri", "http://sos.com");
@@ -38,7 +41,7 @@ public:
 
     //QString authTokenUrl() const {
     //    QUrl url("https://api.soundcloud.com/oauth2/token");
-    //    QUrlQuery query = buildDefaultParams();
+    //    QUrlQuery query = genDefaultParams();
 
 
     //    query.addQueryItem("client_secret", "54ca588303e1d2bf524509faf20931b4");
@@ -52,12 +55,10 @@ public:
     //    return url.toString();
     //}
     inline QUrl authTokenUrl() const { return QUrl("https://api.soundcloud.com/oauth2/token"); }
-    inline QString confirmAuthUrl(QString access_token) {
-        return "https://api.soundcloud.com/me.json?oauth_token=" + access_token;
-    }
+    inline QString confirmAuthUrl(QString access_token) { return "https://api.soundcloud.com/me.json?oauth_token=" + access_token; }
 
     QByteArray authTokenUrlParams(QString code) {
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
 
         setParam(query, "client_secret", "54ca588303e1d2bf524509faf20931b4");
         setParam(query, "grant_type", "authorization_code");
@@ -75,11 +76,9 @@ public:
     /////////////////
     /// API
     ////////////////
-
-    QUrl audioSearchUrl(QString & predicate, QString & genre, bool hottest, int offset) {
-        QUrlQuery query = buildDefaultParams();
+    QUrl audioSearchUrl(QString & predicate, QString & genre, bool hottest = false) {
+        QUrlQuery query = genDefaultParams();
         setAudioTypesParam(query);
-        setLimit(query, 99999, offset);
         setOrder(query, hottest);
 
         if (!genre.isEmpty())
@@ -91,70 +90,31 @@ public:
         return baseUrl("tracks", query);
     }
 
-    QJsonArray searchAudioRoutine(QString & predicate, QString & genre, bool popular) {
-        QJsonObject response;
-        QJsonArray songs;
-        int offset = 0;
-
-        while (proceedQuery(audioSearchUrl(predicate, genre, popular, offset), response)) {
-            songs.append(response.value("response"));
-
-            offset += limit;
-
-            if (offset >= limit || offset >= requestLimit() * 5)
-                break;
-        }
-
-        return songs;
+    QJsonArray audioSearch(QString & predicate, QString & genre, bool popular, int limit = 5) {
+        return proceedQuery(audioSearchUrl(predicate, genre, popular), qMin(limit, requestLimit() * 5), "response");
     }
 
 
-    QUrl groupAudiosUrl(QString & uid, int offset) {
-        QUrlQuery query = buildDefaultParams();
+    QUrl groupAudioUrl(QString & uid) {
+        QUrlQuery query = genDefaultParams();
         setAudioTypesParam(query);
-        setLimit(query, 99999, offset);
         return baseUrl("groups/" + uid + "/tracks", query);
     }
 
-    QJsonArray groupAudios(QString & group_id, int limit = requestLimit() * 5) {
-    //    uid = "101";
-        QJsonObject response;
-        QJsonArray songs;
-        int offset = 0;
-
-        while (proceedQuery(groupAudiosUrl(group_id, offset), response)) {
-            songs.append(response.value("response"));
-
-            offset += requestLimit();
-            if (offset >= limit)  break;
-        }
-
-        return songs;
+    QJsonArray groupAudio(QString & group_id, int limit = requestLimit() * 5) {
+    //    group_id = "101";
+        return proceedQuery(groupAudioUrl(group_id), qMin(limit, requestLimit() * 5), "response");
     }
 
 
-    QUrl groupPlaylistsUrl(QString & uid, int offset) {
-        QUrlQuery query = buildDefaultParams();
-        setLimit(query, 99999, offset);
+    QUrl groupPlaylistsUrl(QString & uid) {
+        QUrlQuery query = genDefaultParams();
         return baseUrl("groups/" + uid + "/playlists", query);
     }
 
     QJsonArray groupPlaylists(QString & group_id, int limit = requestLimit() * 5) {
-    //    uid = "101";
-        QJsonObject response;
-        QJsonArray playlists;
-        int offset = 0;
-
-        while (proceedQuery(groupPlaylistsUrl(group_id, offset), response)) {
-            playlists.append(response.value("response"));
-
-            offset += limit;
-
-            if (offset >= limit)
-                break;
-        }
-
-        return playlists;
+    //    group_id = "101";
+        return proceedQuery(groupPlaylistsUrl(group_id), qMin(limit, requestLimit() * 5), "response");
     }
 
 
@@ -168,7 +128,7 @@ public:
 
     QUrl SoundcloudApiPrivate::groupPlaylistsUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "groups/" + uid + "/playlists.json");
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setLimit(query, 99999, offset);
         url.setQuery(query);
 
@@ -176,14 +136,14 @@ public:
     }
 
     QUrl SoundcloudApiPrivate::audioUrl(QString & audio_uid) {
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         QUrl url(getApiUrl() + "/tracks/" + audio_uid + ".json");
         url.setQuery(query);
         return url;
     }
 
     QUrl SoundcloudApiPrivate::audiosUrl(QStringList & audio_uids) {
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setIdsFilter(query, audio_uids);
 
         QUrl url(getApiUrl() + "/tracks.json");
@@ -192,7 +152,7 @@ public:
     }
 
     QUrl SoundcloudApiPrivate::userAudiosUrl(QString & uid, int offset) {
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setAudioTypesParam(query);
         setLimit(query, 99999, offset);
 
@@ -203,7 +163,7 @@ public:
 
     QUrl SoundcloudApiPrivate::userPlaylistsUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "users/" + uid + "/playlists.json");
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setLimit(query, 99999, offset);
         url.setQuery(query);
 
@@ -212,7 +172,7 @@ public:
 
     QUrl SoundcloudApiPrivate::userFolowingsUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "users/" + uid + "/followings.json");
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setLimit(query, 99999, offset);
         url.setQuery(query);
 
@@ -221,7 +181,7 @@ public:
 
     QUrl SoundcloudApiPrivate::userFolowersUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "users/" + uid + "/followers.json");
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setLimit(query, 99999, offset);
         url.setQuery(query);
 
@@ -230,7 +190,7 @@ public:
 
     QUrl SoundcloudApiPrivate::userGroupsUrl(QString & uid, int offset) {
         QUrl url(getApiUrl() + "users/" + uid + "/groups.json");
-        QUrlQuery query = buildDefaultParams();
+        QUrlQuery query = genDefaultParams();
         setLimit(query, 99999, offset);
         url.setQuery(query);
 
@@ -266,7 +226,7 @@ public:
 //        inline QUrl songSearchUrl(int mode, QString & artist, QString & title, QStringList & tags,
 //                QStringList & styles, QStringList & moods, int offset = 0) {
 //            QUrl url(baseUrl("song/search"));
-//            QUrlQuery query = buildDefaultParams();
+//            QUrlQuery query = genDefaultParams();
 //            setLimit(query, requestLimit(), offset);
 
 //            if (!artist.isEmpty()) setParam(query, "artist", artist);
@@ -430,24 +390,6 @@ public:
         emit errorReceived(err_code, err_msg);
         disconnect(this, SIGNAL(errorReceived(int,QString)), obj, SLOT(errorReceived(int,QString)));
     }
-
-
-
-
-
-    static QUrl audiosSearchUrl(QString & predicate, QString & genre, bool hottest = false, int offset = 0);
-
-    static QUrl groupAudiosUrl(QString & uid, int offset = 0);
-    static QUrl groupPlaylistsUrl(QString & uid, int offset = 0);
-
-    static QUrl audioUrl(QString & audio_uid);
-    static QUrl audiosUrl(QStringList & audio_uids);
-
-    static QUrl userAudiosUrl(QString & uid, int offset = 0);
-    static QUrl userPlaylistsUrl(QString & uid, int offset = 0);
-    static QUrl userFolowingsUrl(QString & uid, int offset = 0);
-    static QUrl userFolowersUrl(QString & uid, int offset = 0);
-    static QUrl userGroupsUrl(QString & uid, int offset = 0);
 };
 
 #endif // SOUNDCLOUD_REQUEST_API
