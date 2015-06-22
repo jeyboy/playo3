@@ -2,7 +2,7 @@
 #define SOUNDCLOUD_ITEM_H
 
 #include "../web_item.h"
-#include "modules/web/socials_api/soundcloud_api_private.h"
+#include "modules/web/socials_api/soundcloud_api.h"
 
 namespace Playo3 {
     class SoundcloudItem : public WebItem {
@@ -14,7 +14,7 @@ namespace Playo3 {
 
         inline QUrl toUrl() const {
             QUrl url = QUrl(fullPath());
-            url.setQuery(SoundcloudApiPrivate::commonMethodParams());
+            url.setQuery(SoundcloudApi::instance() -> genDefaultParams());
             return url;
         }
 

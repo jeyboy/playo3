@@ -38,7 +38,7 @@ protected:
     inline int requestLimit() const { return 100; }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
-    inline bool endReched(QJsonObject & response, int offset) { return offset >= extractBody(response).value("total").toInt(); }
+    inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value("total").toInt(); }
     inline void extractStatus(QJsonObject & response, int & code, QString & message) {
         QJsonObject stat_obj = extractBody(response).value("status").toObject();
         code = stat_obj.value("code").toInt();

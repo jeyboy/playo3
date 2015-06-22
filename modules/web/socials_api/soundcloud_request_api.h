@@ -19,7 +19,7 @@ public:
     /////////////////
     /// AUTH
     ////////////////
-    inline QString authUrl() const {
+    inline QString authUrl() {
         QUrl url("https://soundcloud.com/connect");
 
         QUrlQuery query = genDefaultParams();

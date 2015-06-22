@@ -30,7 +30,7 @@ protected:
 
     virtual QUrlQuery genDefaultParams() = 0;
 
-    virtual bool endReched(QJsonObject & response, int offset) = 0;
+    virtual bool endReached(QJsonObject & response, int offset) = 0;
     virtual int requestLimit() const = 0;
 
     virtual QString offsetKey() const = 0;
@@ -49,7 +49,7 @@ protected:
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
         response = manager -> getToJson(QNetworkRequest(url), wrapJson);
         if (isNew) delete manager;
-        ectractStatus(response, code, message);
+        extractStatus(response, code, message);
         bool status = code == 0;
 
         if (!status) sendError(errorReceiver, message, code);
@@ -84,8 +84,8 @@ protected:
     }
 
     void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-        if (offset > 0) setParam(query, offsetName(), QString::number(offset));
-        setParam(query, limitName(), QString::number(qMin(limit, requestLimit())));
+        if (offset > 0) setParam(query, offsetKey(), QString::number(offset));
+        setParam(query, limitKey(), QString::number(qMin(limit, requestLimit())));
     }
 
 
@@ -103,7 +103,7 @@ protected:
         QUrlQuery query = QUrlQuery(url);
         setLimit(query, limit, offset);
         url.setQuery(query);
-        return query;
+        return url;
     }
 private:
     int code;

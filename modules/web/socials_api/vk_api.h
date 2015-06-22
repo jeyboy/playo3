@@ -57,7 +57,7 @@ signals:
 public slots:
     void proceedAuthResponse(const QUrl & url);
 protected:
-    inline QString adapteUid(QString & uid) { return uid == "0" ? getUserID() : uid; }
+    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
     bool responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc);
     bool errorSend(QJsonObject & doc, ApiFuncContainer * func, QUrl url);
     bool captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url);
