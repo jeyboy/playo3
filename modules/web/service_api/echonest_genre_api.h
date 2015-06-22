@@ -36,7 +36,7 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/artists", query);
         }
 
-        QJsonArray genreArtists(QString genre, int limit = DEFAULT_LIMIT_AMOUNT, offset = 0) {
+        QJsonArray genreArtists(QString genre, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
             return proceedQuery(genreArtistsUrl(genre), limit, "artists", offset);
         }
 
@@ -108,7 +108,7 @@ class EchonestGenreApi : public IApi {
             QJsonObject response;
 
             if (proceedQuery(genreInfoUrl(genre), response))
-                return extractBody(response).value("genres");
+                return extractBody(response).value("genres").toArray();
 
             return QJsonArray();
         }
@@ -135,7 +135,7 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/search", query);
         }
 
-        QJsonArray genresSerach(QString genre, limit = DEFAULT_LIMIT_AMOUNT) {
+        QJsonArray genresSerach(QString genre, int limit = DEFAULT_LIMIT_AMOUNT) {
             return proceedQuery(genresSerachUrl(genre), limit, "genres");
         }
 
@@ -166,7 +166,7 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/similar", query);
         }
 
-        QJsonArray genreSimilar(QString genre, limit = DEFAULT_LIMIT_AMOUNT) {
+        QJsonArray genreSimilar(QString genre, int limit = DEFAULT_LIMIT_AMOUNT) {
             return proceedQuery(genreSimilarUrl(genre), limit, "genres");
         }
 

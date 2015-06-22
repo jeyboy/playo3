@@ -160,7 +160,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistImages(QString name, QString id = QString(), int limit = 1) {
-            return proceedQuery(artistImagesUrl(name, id), limit, "images",);
+            return proceedQuery(artistImagesUrl(name, id), limit, "images");
         }
 
         //{
@@ -504,10 +504,10 @@ class EchonestArtistApi : public IApi {
         //artist_end_year_after 	no 	no 	1970, 2011, present 	Matches artists that have a latest end year after the given value
         //seed_catalog 	no 	yes (up to 5) 	CAKSMUX1321A708AA4 	only give similars to those in a catalog or catalogs, An Echo Nest artist catalog identifier
 
-        inline QUrl artistSimilarsUrl(QStringList & names, QStringList & ids) {
+        inline QUrl artistSimilarsUrl(QStringList & names, QStringList & ids, int min_results) {
             QUrlQuery query = genDefaultParams();
 
-            setParam(query, "min_results", QString::number(qMin(limit, requestLimit())));
+            setParam(query, "min_results", QString::number(qMin(min_results, requestLimit())));
 
             setParam(query, "name", names);
             if (!names.isEmpty())
@@ -519,7 +519,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int limit = DEFAULT_LIMIT_AMOUNT) {
-            return proceedQuery(artistSimilarsUrl(names, ids), limit, "artists");
+            return proceedQuery(artistSimilarsUrl(names, ids, limit), limit, "artists");
         }
 
         //{
