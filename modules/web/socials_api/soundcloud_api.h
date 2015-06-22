@@ -27,10 +27,9 @@ protected:
     inline QUrlQuery genDefaultParams() { return QUrlQuery("client_id=8f84790a84f5a5acd1c92e850b5a91b7"); }
     inline QString baseUrlStr(QString & predicate) { return "https://api.soundcloud.com/" + predicate + ".json"; }  
 
-    inline QString offsetKey() { return "offset"; }
-    inline QString limitKey() { return "limit"; }
-    inline int requestLimit() { return 200; }
-    //    inline int offsetLimit() { return 1000; /*8000*/; }
+    inline QString offsetKey() const { return "offset"; }
+    inline QString limitKey() const { return "limit"; }
+    inline int requestLimit() const { return 200; }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return response; }
     inline bool endReched(QJsonObject & response, int /*offset*/) { return response.value("response").toArray().isEmpty(); }

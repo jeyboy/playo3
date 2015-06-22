@@ -3,6 +3,8 @@
 
 #include "../iapi.h"
 
+#define SOUNDCLOUD_OFFSET_LIMIT 1000 // 8000 max
+
 class SoundcloudRequestApi : public IApi {
 private:
     inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, "types", "original,remix,live,podcast"); }
@@ -81,7 +83,7 @@ public:
         return baseUrl("tracks", query);
     }
     QJsonArray audioSearch(QString & predicate, QString & genre, bool popular, int limit = 5) {
-        return proceedQuery(audioSearchUrl(predicate, genre, popular), qMin(limit, requestLimit() * 5), "response", true);
+        return proceedQuery(audioSearchUrl(predicate, genre, popular), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true);
     }
 
 
@@ -90,9 +92,9 @@ public:
         setAudioTypesParam(query);
         return baseUrl("groups/" + uid + "/tracks", query);
     }
-    QJsonArray groupAudio(QString & group_id, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
+    QJsonArray groupAudio(QString & group_id, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
     //    group_id = "101";
-        return proceedQuery(groupAudioUrl(group_id), qMin(limit, requestLimit() * 5), "response", true, manager);
+        return proceedQuery(groupAudioUrl(group_id), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -100,9 +102,9 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("groups/" + uid + "/playlists", query);
     }
-    QJsonArray groupPlaylists(QString & group_id, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
+    QJsonArray groupPlaylists(QString & group_id, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
     //    group_id = "101";
-        return proceedQuery(groupPlaylistsUrl(group_id), qMin(limit, requestLimit() * 5), "response", true, manager);
+        return proceedQuery(groupPlaylistsUrl(group_id), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -127,8 +129,8 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/tracks", query);
     }  
-    QJsonArray userAudio(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
-        return proceedQuery(userAudioUrl(uid), qMin(limit, requestLimit() * 5), "response", true, manager);
+    QJsonArray userAudio(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
+        return proceedQuery(userAudioUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -136,8 +138,8 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/playlists", query);
     }
-    QJsonArray userPlaylists(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
-        return proceedQuery(userPlaylistsUrl(uid), qMin(limit, requestLimit() * 5), "response", true, manager);
+    QJsonArray userPlaylists(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
+        return proceedQuery(userPlaylistsUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -145,8 +147,8 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/followings", query);
     }
-    QJsonArray userFollowings(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
-        return proceedQuery(userFollowingsUrl(uid), qMin(limit, requestLimit() * 5), "response", true, manager);
+    QJsonArray userFollowings(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
+        return proceedQuery(userFollowingsUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -154,8 +156,8 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/followers", query);
     }
-    QJsonArray userFollowers(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
-        return proceedQuery(userFollowersUrl(uid), qMin(limit, requestLimit() * 5), "response", true, manager);
+    QJsonArray userFollowers(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
+        return proceedQuery(userFollowersUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
@@ -163,8 +165,8 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/groups", query);
     }
-    QJsonArray userGroups(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = requestLimit() * 5) {
-        return proceedQuery(userGroupsUrl(uid), qMin(limit, requestLimit() * 5), "response", true, manager);
+    QJsonArray userGroups(QString & uid, CustomNetworkAccessManager * manager = 0, int limit = SOUNDCLOUD_OFFSET_LIMIT) {
+        return proceedQuery(userGroupsUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, manager);
     }
 
 
