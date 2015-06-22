@@ -16,6 +16,19 @@ SoundcloudApi * SoundcloudApi::instance(QJsonObject obj) {
     return self;
 }
 
+QString SoundcloudApi::authUrl() {
+    QUrl url("https://soundcloud.com/connect");
+
+    QUrlQuery query = genDefaultParams();
+    setParam(query, "response_type", "code");
+    setParam(query, "scope", "non-expiring");
+    setParam(query, "redirect_uri", "http://sos.com");
+    setParam(query, "display", "popup");
+
+    url.setQuery(query);
+    return url.toString();
+}
+
 void SoundcloudApi::fromJson(QJsonObject hash) {
     TeuAuth::fromJson(hash);
     WebApi::fromJson(hash);

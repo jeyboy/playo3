@@ -243,7 +243,7 @@ void Playo::showEchonestDialog() {
 }
 
 void Playo::openVKRecomendations() {
-    ViewSettings settings(vk_rel, false, false, false, true, VkApi::instance() -> getUserID(), user_rel);
+    ViewSettings settings(vk_rel, false, false, false, true, VkApi::instance() -> userID(), user_rel);
     Dockbars::instance() -> createDocBar("Rec for YOU", settings, 0, true, true);
 }
 
@@ -254,7 +254,7 @@ void Playo::openVKTabDialog() {
         dInt -> registerActions(VkApi::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> getUserID()), 0, true, true);
+            Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> userID()), 0, true, true);
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -262,7 +262,7 @@ void Playo::openVKTabDialog() {
 
 void Playo::showVKTabDialog() {
     if (VkApi::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> getUserID()), 0, true, true);
+        Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> userID()), 0, true, true);
     else openVKTabDialog();
 }
 
@@ -287,14 +287,14 @@ void Playo::openSoundcloudTabDialog() {
         dInt -> registerActions(SoundcloudApi::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> getUserID()), 0, true, true);
+            Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
         delete dInt;
     }
 }
 
 void Playo::showSoundcloudTabDialog() {
     if (SoundcloudApi::instance() -> isConnected())
-        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> getUserID()), 0, true, true);
+        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

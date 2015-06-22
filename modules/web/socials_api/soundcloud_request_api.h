@@ -19,18 +19,6 @@ public:
     /////////////////
     /// AUTH
     ////////////////
-    inline QString authUrl() {
-        QUrl url("https://soundcloud.com/connect");
-
-        QUrlQuery query = genDefaultParams();
-        setParam(query, "response_type", "code");
-        setParam(query, "scope", "non-expiring");
-        setParam(query, "redirect_uri", "http://sos.com");
-        setParam(query, "display", "popup");
-
-        url.setQuery(query);
-        return url.toString();
-    }
 
     //QString authTokenUrl() const {
     //    QUrl url("https://api.soundcloud.com/oauth2/token");

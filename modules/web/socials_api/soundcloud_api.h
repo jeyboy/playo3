@@ -8,18 +8,21 @@
 class SoundcloudApi : public WebApi, public TeuAuth, public SoundcloudRequestApi {
     Q_OBJECT
 public:
-    inline QString name() const { return "soundcloud"; }
-    inline QUrlQuery genDefaultParams() { return QUrlQuery("client_id=8f84790a84f5a5acd1c92e850b5a91b7"); }
-
     static SoundcloudApi * instance();
     static SoundcloudApi * instance(QJsonObject obj);
     inline static void close() { delete self; }
+
+    inline QString name() const { return "soundcloud"; }
+    inline QUrlQuery genDefaultParams() { return QUrlQuery("client_id=8f84790a84f5a5acd1c92e850b5a91b7"); }
+    QString authUrl();
 
     void fromJson(QJsonObject hash);
     QJsonObject toJson();
 
     inline bool isConnected() { return !token().isEmpty(); }
 
+    void getGroupInfo(QString uid, QJsonObject & object);
+    void getUserInfo(QString uid, QJsonObject & object);
     QJsonObject objectInfo(QString uid);
 public slots:
     void proceedAuthResponse(const QUrl & url);
