@@ -33,9 +33,9 @@ protected:
 
     inline QString baseUrlStr(QString & predicate) { return "http://developer.echonest.com/api/v4/" + predicate; }
 
-    inline QString offsetKey() { return "start"; }
-    inline QString limitKey() { return "results"; }
-    inline int requestLimit() { return 100; }
+    inline QString offsetKey() const { return "start"; }
+    inline QString limitKey() const { return "results"; }
+    inline int requestLimit() const { return 100; }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
     inline bool endReched(QJsonObject & response, int offset) { return offset >= extractBody(response).value("total").toInt(); }

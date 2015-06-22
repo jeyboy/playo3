@@ -29,6 +29,45 @@ QJsonObject SoundcloudApi::toJson() {
     return root;
 }
 
+//////////////////////////////////////////////////////////
+/// COMMON
+//////////////////////////////////////////////////////////
+
+void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
+//    uid = "101";
+    CustomNetworkAccessManager * manager;
+    bool isNew = CustomNetworkAccessManager::validManager(manager);
+
+    object.insert("audio_list", groupAudio(uid, manager));
+    object.insert("playlists", groupPlaylists(uid, manager));
+
+    if (isNew) delete manager;
+}
+
+void SoundcloudApi::getUserInfo(QString uid, QJsonObject & object) {
+    CustomNetworkAccessManager * manager;
+    bool isNew = CustomNetworkAccessManager::validManager(manager);
+
+    object.insert("audio_list", userAudio(uid, manager));
+    object.insert("playlists", userPlaylists(uid, manager));
+    object.insert("followings", userFollowings(uid, manager));
+    object.insert("followers", userFollowers(uid, manager));
+    object.insert("groups", userGroups(uid, manager));
+
+    if (isNew) delete manager;
+}
+
+QJsonObject SoundcloudApi::objectInfo(QString uid) {
+    QJsonObject res;
+
+    if (uid[0] == '-')
+        getGroupInfo(uid.mid(1), res);
+    else
+        getUserInfo(uid, res);
+
+    return res;
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////

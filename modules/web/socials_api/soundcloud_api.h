@@ -19,6 +19,7 @@ public:
 
     inline bool isConnected() { return !token().isEmpty(); }
 
+    QJsonObject objectInfo(QString uid);
 public slots:
     void proceedAuthResponse(const QUrl & url);
 

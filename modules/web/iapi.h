@@ -31,17 +31,17 @@ protected:
     virtual QUrlQuery genDefaultParams() = 0;
 
     virtual bool endReched(QJsonObject & response, int offset) = 0;
-    virtual int requestLimit() = 0;
+    virtual int requestLimit() const = 0;
 
-    virtual QString offsetKey() = 0;
-    virtual QString limitKey() = 0;
+    virtual QString offsetKey() const = 0;
+    virtual QString limitKey() const = 0;
 
     virtual void extractStatus(QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
-    QJsonObject proceedQuery(QUrl url, bool wrapJson = false, QObject * errorReceiver = 0) {
+    QJsonObject proceedQuery(QUrl url, bool wrapJson = false, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         QJsonObject res;
-        proceedQuery(url, res, wrapJson, errorReceiver);
+        proceedQuery(url, res, wrapJson, errorReceiver, manager);
         return res;
     }
 
@@ -57,17 +57,16 @@ protected:
         return status;
     }
 
-    QJsonArray proceedQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0) {
+    QJsonArray proceedQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         QJsonArray res;
-        return proceedQuery(url, limit, key, res, wrapJson, offset, errorReceiver);
+        return proceedQuery(url, limit, key, res, wrapJson, offset, errorReceiver, manager);
     }
 
-    QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0) {
-        CustomNetworkAccessManager * manager;
-        bool isNew = CustomNetworkAccessManager::validManager(manager), status = true;
+    QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+        bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
         QJsonObject response;
 
-        while (status = proceedQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
+        while (proceedQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
             result.append(extractBody(response).value(key));
 
             offset += requestLimit();
@@ -85,8 +84,8 @@ protected:
     }
 
     void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-        if (offset > 0) EchonestGenreApi::setParam(query, offsetName(), QString::number(offset));
-        EchonestGenreApi::setParam(query, limitName(), QString::number(qMin(limit, requestLimit())));
+        if (offset > 0) setParam(query, offsetName(), QString::number(offset));
+        setParam(query, limitName(), QString::number(qMin(limit, requestLimit())));
     }
 
 
