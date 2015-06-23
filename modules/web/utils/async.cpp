@@ -73,10 +73,6 @@ void WebApi::showingCaptcha() {
     captchaDialog -> exec();
 }
 
-void WebApi::packBackPropagation(QJsonObject) {
-
-}
-
 void WebApi::startApiCall(QFuture<ApiFuncContainer *> feature) {
     QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));

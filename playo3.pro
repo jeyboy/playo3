@@ -138,7 +138,8 @@ SOURCES += main.cpp\
     modules/web/service_api/echonest_api.cpp \
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
-    double_slider/qxtspanslider.cpp
+    double_slider/qxtspanslider.cpp \
+    modules/web/utils/async.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -280,7 +281,8 @@ HEADERS  += playo.h \
     double_slider/qxtglobal.h \
     modules/web/iapi.h \
     modules/web/socials_api/soundcloud_request_api.h \
-    misc/web_utils/json.h
+    misc/web_utils/json.h \
+    modules/web/utils/async.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

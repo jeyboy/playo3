@@ -1,41 +1,29 @@
-#ifndef WEB_API_H
-#define WEB_API_H
+#ifndef ASYNC_H
+#define ASYNC_H
 
-#include <qapplication.h>
+#include <qjsonobject.h>
+#include <qhash.h>
 
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
+#include <QtConcurrent/qtconcurrentrun.h>
+#include <qfuturewatcher.h>
 
-#include <qurl.h>
-#include <qpixmap.h>
-
-#include "dialogs/captchadialog.h"
-
-#include "misc/web_utils/custom_network_access_manager.h"
-
-struct ApiFunc {
-    inline ApiFunc() { }
-    inline ApiFunc(const QObject * receiver, const char * respSlot, QString user_id) {
+struct Func {
+    inline Func() { }
+    inline Func(const QObject * receiver, const char * respSlot) {
         obj = receiver;
         slot = respSlot;
-        uid = user_id;
     }
-    inline ~ApiFunc() {}
+    inline ~Func() {}
 
-    QString uid;
     const QObject * obj;
     const char * slot;
-    QJsonObject result;
 };
 
-class CaptchaDialog;
-
-class WebApi : public QObject {
+class Async : public QObject {
     Q_OBJECT
 public:
-    WebApi(QObject * parent = 0);
-    virtual ~WebApi();
+    Async(QObject * parent = 0);
+    virtual ~Async();
 
     inline QString getError() { return error; }
 
@@ -72,17 +60,10 @@ public slots:
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 
 protected slots:
-    void apiCallFinished();
+    void asyncFinished();
 
 protected:
-    void startApiCall(QFuture<ApiFuncContainer *> feature);
-
-    CaptchaDialog * captchaDialog;
-
-    QHash<QString, QString> friends;
-    QHash<QString, QString> groups;
-
-    QString error;
+    QHash<QFutureWatcherBase *, Func> requests;
 };
 
-#endif // WEB_API_H
+#endif // ASYNC_H

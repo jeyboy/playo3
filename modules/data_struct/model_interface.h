@@ -6,7 +6,6 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
 #include <qdesktopservices.h>
-#include <qdebug.h>
 
 #include "modules/web/web_apis.h"
 

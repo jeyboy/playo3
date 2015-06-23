@@ -63,12 +63,15 @@ void SoundcloudApi::getUserInfo(QString uid, QJsonObject & object) {
 
     object.insert("audio_list", userAudio(uid, manager));
     object.insert("playlists", userPlaylists(uid, manager));
+    QThread::msleep(REQUEST_DELAY);
     object.insert("followings", userFollowings(uid, manager));
     object.insert("followers", userFollowers(uid, manager));
+    QThread::msleep(REQUEST_DELAY);
     object.insert("groups", userGroups(uid, manager));
 
     if (isNew) delete manager;
 }
+
 
 QJsonObject SoundcloudApi::objectInfo(QString uid) {
     QJsonObject res;

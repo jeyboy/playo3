@@ -18,6 +18,7 @@
 //#include "misc/web_utils/json.h"
 
 #define DEFAULT_LIMIT_AMOUNT 999999
+#define REQUEST_DELAY 250 // ms
 
 class IApi {
 protected:
@@ -71,6 +72,7 @@ protected:
 
             offset += requestLimit();
             if (offset >= limit || endReached(response, offset)) break;
+            QThread::msleep(REQUEST_DELAY);
         }
 
         if (isNew) delete manager;
