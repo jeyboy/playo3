@@ -29,6 +29,8 @@
 
 class EchonestArtistApi : public IApi {
     public:
+        inline virtual ~EchonestArtistApi() {}
+
         inline QUrl artistBiographiesUrl(QString & name, QString & id, int limit = DEFAULT_LIMIT_AMOUNT) {
             QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);

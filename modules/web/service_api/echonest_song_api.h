@@ -27,6 +27,8 @@
 
 class EchonestSongApi : public IApi {
     public:
+        inline virtual ~EchonestSongApi() {}
+
         //    description 	no 	yes 	Some examples are: alt-rock,-emo, harp^2. 	a description of the artist.
         //    style 	no 	yes 	jazz, metal^2 	a musical style or genre like rock, jazz, or funky. See the method list_terms for details on what styles are currently available
         //    mood 	no 	yes 	happy, sad^.5 	a mood like happy or sad. See the method list_terms for details on what moods are currently available

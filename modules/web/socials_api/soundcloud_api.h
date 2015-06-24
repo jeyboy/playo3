@@ -23,8 +23,9 @@ public:
 
     void getGroupInfo(QString uid, QJsonObject & object);
     void getUserInfo(QString uid, QJsonObject & object);
+
     QJsonObject objectInfo(QString uid);
-    void objectInfo(ApiFunc * func);
+    void objectInfo(QString uid, ApiFunc func);
 public slots:
     void proceedAuthResponse(const QUrl & url);
 
@@ -45,6 +46,7 @@ protected:
 private:
     inline SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
     inline SoundcloudApi() : WebApi(), TeuAuth() { }
+    inline virtual ~SoundcloudApi() {}
 
     static SoundcloudApi * self;
 };

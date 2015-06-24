@@ -14,6 +14,8 @@
 
 #include "misc/web_utils/custom_network_access_manager.h"
 
+#include "utils/async.h"
+
 struct ApiFunc {
     inline ApiFunc() { }
     inline ApiFunc(const QObject * receiver, const char * respSlot, QString user_id) {
@@ -31,7 +33,7 @@ struct ApiFunc {
 
 class CaptchaDialog;
 
-class WebApi : public QObject {
+class WebApi : public Async {
     Q_OBJECT
 public:
     WebApi(QObject * parent = 0);
@@ -72,10 +74,10 @@ public slots:
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 
 protected slots:
-    void apiCallFinished();
+    void apiCallFinished();  // remove later
 
 protected:
-    void startApiCall(QFuture<ApiFuncContainer *> feature);
+    void startApiCall(QFuture<ApiFuncContainer *> feature); // remove later
 
     CaptchaDialog * captchaDialog;
 

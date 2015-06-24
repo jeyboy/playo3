@@ -1,6 +1,6 @@
 #include "web_api.h"
 
-WebApi::WebApi(QObject * parent) : QObject(parent) {
+WebApi::WebApi(QObject * parent) : Async(parent) {
     captchaDialog = new CaptchaDialog((QWidget *)parent);
 }
 

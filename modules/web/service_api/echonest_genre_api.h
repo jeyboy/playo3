@@ -29,6 +29,8 @@
 
 class EchonestGenreApi : public IApi {
     public:
+        inline virtual ~EchonestGenreApi() {}
+
         inline QUrl genreArtistsUrl(QString & genre) {
             QUrlQuery query = genDefaultParams();
             setParam(query, "bucket", "hotttnesss");

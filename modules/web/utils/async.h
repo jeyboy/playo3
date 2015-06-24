@@ -9,58 +9,48 @@
 
 struct Func {
     inline Func() { }
-    inline Func(const QObject * receiver, const char * respSlot) {
+    inline Func(QObject * receiver, char * respSlot) {
         obj = receiver;
         slot = respSlot;
     }
     inline ~Func() {}
 
-    const QObject * obj;
-    const char * slot;
+    QObject * obj;
+    char * slot;
 };
 
-class Async : public QObject {
+class Async : public QObject { // refactor ?
     Q_OBJECT
 public:
     Async(QObject * parent = 0);
     virtual ~Async();
 
-    inline QString getError() { return error; }
-
-    virtual QString name() const = 0;
-    virtual QString authUrl() = 0;
-
-    virtual bool isConnected() = 0;
-
-    void clearData();
-
-    inline void addFriend(QString uid, QString name) {
-        if (!uid.isEmpty() && !name.isEmpty())
-            friends.insert(uid, name);
-    }
-    inline void addGroup(QString uid, QString name) {
-        if (!uid.isEmpty() && !name.isEmpty())
-            groups.insert(uid, name);
+    void registerAsync(QFuture<QJsonObject> feature, Func func) {
+        QFutureWatcher<QJsonObject> * initiator = new QFutureWatcher<QJsonObject>();
+        connect(initiator, SIGNAL(finished()), this, SLOT(asyncFinished()));
+        initiator -> setFuture(feature);
+        requests.insert(initiator, func);
     }
 
-    inline QHash<QString, QString> friendsList() const { return friends; }
-    inline QHash<QString, QString> groupsList() const { return groups; }
-
-    void fromJson(QJsonObject & hash);
-    void toJson(QJsonObject & hash);
-
-signals:
-    void responseReady(QString);
-    void routineFinished(QJsonObject &);
-    void errorReceived(int, QString);
-    void authorized();
-
-public slots:
-    void showingCaptcha();
-    virtual void proceedAuthResponse(const QUrl & url) = 0;
-
+    void registerAsync(QFuture<QJsonArray> feature, Func func) {
+        QFutureWatcher<QJsonArray> * initiator = new QFutureWatcher<QJsonArray>();
+        connect(initiator, SIGNAL(finished()), this, SLOT(asyncFinished2()));
+        initiator -> setFuture(feature);
+        requests.insert(initiator, func);
+    }
 protected slots:
-    void asyncFinished();
+    void asyncFinished() {
+        QFutureWatcher<QJsonObject> * initiator = (QFutureWatcher<QJsonObject> *)sender();
+        Func func = requests.take(initiator);
+        QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QJsonObject, initiator -> result()));
+        delete initiator;
+    }
+    void asyncFinished2() {
+        QFutureWatcher<QJsonArray> * initiator = (QFutureWatcher<QJsonArray> *)sender();
+        Func func = requests.take(initiator);
+        QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QJsonArray, initiator -> result()));
+        delete initiator;
+    }
 
 protected:
     QHash<QFutureWatcherBase *, Func> requests;

@@ -24,7 +24,7 @@ class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArti
     Q_OBJECT
 public:
     inline QString name() const { return "echonest"; }
-    ~EchonestApi() { }
+    virtual ~EchonestApi() { }
 
     static EchonestApi * instance();
     inline static void close() { delete self; }
@@ -44,16 +44,6 @@ protected:
         code = stat_obj.value("code").toInt();
         message = stat_obj.value("message").toString();
     }
-protected slots:
-//    void requestFinished() {
-////        QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
-////        ApiFuncContainer * func = initiator -> result();
-////        connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-////        emit routineFinished(func -> result);
-////        disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-////        delete func;
-//    }
-
 private:
     inline EchonestApi() : QObject() { }
 

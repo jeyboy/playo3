@@ -90,7 +90,6 @@ protected:
         setParam(query, limitKey(), QString::number(qMin(limit, requestLimit())));
     }
 
-
     inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }
     inline void setParam(QUrlQuery & query, QString name, float value) { query.addQueryItem(name, QString::number(value)); }
     inline void setParam(QUrlQuery & query, QString name, QString value) { query.addQueryItem(name, value); }

@@ -7,6 +7,8 @@
 
 class EchonestPlaylistApi : public IApi {
     public:
+        inline virtual ~EchonestPlaylistApi() {}
+
         //type 	no 	no 	artist-radio, song-radio , genre-radio 	the type of the playlist to be generated. See below for details on each of the types - the type of playlist to be generated
 
         //    Playlist Types:
