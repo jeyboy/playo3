@@ -73,19 +73,15 @@ void WebApi::showingCaptcha() {
     captchaDialog -> exec();
 }
 
-void WebApi::packBackPropagation(QJsonObject) {
-
-}
-
-void WebApi::startApiCall(QFuture<ApiFuncContainer *> feature) {
-    QFutureWatcher<ApiFuncContainer *> * initiator = new QFutureWatcher<ApiFuncContainer *>();
+void WebApi::startApiCall(QFuture<ApiFunc *> feature) {
+    QFutureWatcher<ApiFunc *> * initiator = new QFutureWatcher<ApiFunc *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
     initiator -> setFuture(feature);
 }
 
 void WebApi::apiCallFinished() {
-    QFutureWatcher<ApiFuncContainer *> * initiator = (QFutureWatcher<ApiFuncContainer *> *)sender();
-    ApiFuncContainer * func = initiator -> result();
+    QFutureWatcher<ApiFunc *> * initiator = (QFutureWatcher<ApiFunc *> *)sender();
+    ApiFunc * func = initiator -> result();
     connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
     emit routineFinished(func -> result);
     disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);

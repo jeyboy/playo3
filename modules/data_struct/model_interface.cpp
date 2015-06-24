@@ -291,49 +291,50 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    QJsonArray::Iterator it = collection.begin();
+    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        QJsonArray part = (*parts_it).toArray();
+        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+            itm = (*it).toObject();
 
-    for(; it != collection.end(); it++) {
-        itm = (*it).toObject();
+            if (itm.isEmpty()) continue;
 
-        if (itm.isEmpty()) continue;
+            id = QString::number(itm.value("id").toInt());
+            owner = QString::number(itm.value("user_id").toInt());
+            uid = WebItem::toUid(owner, id);
+            if (ignoreListContainUid(uid)) continue;
 
-        id = QString::number(itm.value("id").toInt());
-        owner = QString::number(itm.value("user_id").toInt());
-        uid = WebItem::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
+            uri = itm.value("download_url").toString();
+            if (uri.isEmpty()) {
+                uri = itm.value("stream_url").toString();
+                original = false;
+            } else { original = true;}
+            if (uri.isEmpty()) continue;
 
-        uri = itm.value("download_url").toString();
-        if (uri.isEmpty()) {
-            uri = itm.value("stream_url").toString();
-            original = false;
-        } else { original = true;}
-        if (uri.isEmpty()) continue;
+            items = store.values(uid.toString());
 
-        items = store.values(uid.toString());
+            if (items.isEmpty()) {
+                itemsAmount++;
+                newItem = new SoundcloudItem(
+                    id,
+                    uri,
+                    itm.value("title").toString(),
+                    parent
+                );
 
-        if (items.isEmpty()) {
-            itemsAmount++;
-            newItem = new SoundcloudItem(
-                id,
-                uri,
-                itm.value("title").toString(),
-                parent
-            );
+                newItem -> setVideoPath(itm.value("video_url").toString());
+                newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
+                newItem -> setOwner(owner);
+                newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
 
-            newItem -> setVideoPath(itm.value("video_url").toString());
-            newItem -> setExtension(original ? itm.value("original_format").toString() : "mp3");
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromMillis(itm.value("duration").toInt(0)));
+    //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
+                if (itm.contains("genre_id"))
+                    newItem -> setGenre(itm.value("genre_id").toInt());
+            } else {
+                QList<IItem *>::Iterator it_it = items.begin();
 
-//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-            if (itm.contains("genre_id"))
-                newItem -> setGenre(itm.value("genre_id").toInt());
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
-
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
+                for(; it_it != items.end(); it_it++)
+                    (*it_it) -> setPath(uri);
+            }
         }
     }
 

@@ -149,15 +149,13 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
                     items = VkApi::instance() -> audioPopularSync(this, true, r.sgenre_id).value("audio_list").toArray();
                 } else {
                     items = VkApi::instance() -> audioSearchSync(
-                        this, VkApi::instance() -> getUserID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
+                        this, VkApi::instance() -> userID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
                     ).value("audio_list").toArray();
                 }
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
-                QJsonArray items = SoundcloudApi::instance() -> searchAudioSync(
-                    this, r.spredicate, r.sgenre, r.popular
-                ).value("audio_list").toArray();
+                QJsonArray items = SoundcloudApi::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular);
                 parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
             case SearchRequest::request_computer: {
