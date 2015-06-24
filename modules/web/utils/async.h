@@ -2,6 +2,7 @@
 #define ASYNC_H
 
 #include <qjsonobject.h>
+#include <qjsonarray.h>
 #include <qhash.h>
 
 #include <QtConcurrent/qtconcurrentrun.h>
@@ -22,8 +23,8 @@ struct Func {
 class Async : public QObject { // refactor ?
     Q_OBJECT
 public:
-    Async(QObject * parent = 0);
-    virtual ~Async();
+    inline Async(QObject * parent = 0) : QObject(parent) {}
+    virtual ~Async() {}
 
     void registerAsync(QFuture<QJsonObject> feature, Func func) {
         QFutureWatcher<QJsonObject> * initiator = new QFutureWatcher<QJsonObject>();
