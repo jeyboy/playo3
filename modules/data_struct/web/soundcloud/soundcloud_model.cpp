@@ -15,17 +15,17 @@ void SoundcloudModel::refresh(bool retryPlaing) {
     lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    SoundcloudApi::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
+    SoundcloudApi::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray albums = hash.value("playlists").toArray();
     QJsonArray audios = hash.value("audio_list").toArray();
-    int itemsAmount = 0;
+    int itemsAmount = 0, albums_count = albums.takeAt(0).toObject().value("count").toInt(), audios_count = audios.takeAt(0).toObject().value("count").toInt();
 
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count()); // refresh all indexes // maybe this its not good idea
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
     {
-        if (albums.count() > 0) {
+        if (albums_count > 0) {
             SoundcloudFolder * folder;
             QJsonObject album;
 
@@ -50,7 +50,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 
     /////////////////////////////////////////////////////////////////////
 
-        if (audios.count() > 0)
+        if (audios_count > 0)
             itemsAmount += proceedScList(audios, rootItem);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
@@ -75,10 +75,9 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     {
         QJsonObject frend;
         QJsonArray friends = hash.value("followings").toArray();
-        QJsonArray::Iterator it = friends.begin();
         QString name;
 
-        for(; it != friends.end(); it++) {
+        for(QJsonArray::Iterator it = friends.begin(); it != friends.end(); it++) {
             frend = (*it).toObject();
 
             name = frend.value("full_name").toString();

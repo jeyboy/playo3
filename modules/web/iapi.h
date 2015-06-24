@@ -65,10 +65,20 @@ protected:
 
     QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
-        QJsonObject response;
+        int count = 0;
+        QJsonObject response, countObj;
 
         while (proceedQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
-            result.append(extractBody(response).value(key));
+            QJsonValue val = extractBody(response).value(key);
+            bool invalid = val.isArray();
+
+            if (invalid) {
+                QJsonArray ar = val.toArray();
+                invalid = ar.isEmpty();
+                count += ar.size();
+            }
+
+            if (!invalid) result.append(val);
 
             offset += requestLimit();
             if (offset >= limit || endReached(response, offset)) break;
@@ -76,6 +86,9 @@ protected:
         }
 
         if (isNew) delete manager;
+        countObj.insert("count", count);
+        result.prepend(countObj);
+
         return result;
     }
 

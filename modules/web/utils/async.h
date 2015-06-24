@@ -20,6 +20,8 @@ struct Func {
     const char * slot;
 };
 
+//Q_INVOKABLE void test(QString value);
+
 class Async : public QObject { // refactor ?
     Q_OBJECT
 public:
@@ -43,13 +45,15 @@ protected slots:
     void asyncFinished() {
         QFutureWatcher<QJsonObject> * initiator = (QFutureWatcher<QJsonObject> *)sender();
         Func func = requests.take(initiator);
-        QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QJsonObject, initiator -> result()));
+        QJsonObject res = initiator -> result();
+        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonObject&, res));
         delete initiator;
     }
     void asyncFinished2() {
         QFutureWatcher<QJsonArray> * initiator = (QFutureWatcher<QJsonArray> *)sender();
         Func func = requests.take(initiator);
-        QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QJsonArray, initiator -> result()));
+        QJsonArray res = initiator -> result();
+        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonArray, res));
         delete initiator;
     }
 
