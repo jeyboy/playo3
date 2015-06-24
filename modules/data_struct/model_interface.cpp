@@ -592,7 +592,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             }
 
             if (SoundcloudApi::instance() -> isConnected()) {
-                QJsonArray obj = SoundcloudApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+                QJsonArray obj = SoundcloudApi::instance() -> audioInfo(map_it.value()).value("response").toArray();
                 proceedScList(obj, parentNode);
             }
         }

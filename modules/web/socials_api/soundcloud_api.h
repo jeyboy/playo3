@@ -25,7 +25,7 @@ public:
     void getUserInfo(QString uid, QJsonObject & object);
 
     QJsonObject objectInfo(QString uid);
-    void objectInfo(QString & uid, ApiFunc func);
+    void objectInfo(QString & uid, Func func);
 public slots:
     void proceedAuthResponse(const QUrl & url);
 

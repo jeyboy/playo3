@@ -12,7 +12,7 @@ class VkApi : public WebApi, public TeuAuth {
 public:
     inline QString name() const { return "vk"; }
 
-    inline QString authUrl() const { return VkApiPrivate::authUrl(); }
+    inline QString authUrl() { return VkApiPrivate::authUrl(); }
 
     ApiFunc * wallMediaRoutine(ApiFunc * func, int offset, int count);
     void wallMediaList(const QObject * receiver, const char * respSlot, QString uid = "0", int offset = 0, int count = 0);

@@ -28,7 +28,7 @@ QJsonObject VkApi::toJson() {
 }
 
 bool VkApi::isConnected() {
-    return !getToken().isEmpty() && !getUserID().isEmpty();
+    return !token().isEmpty() && !userID().isEmpty();
 }
 
 ///////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ void VkApi::proceedAuthResponse(const QUrl & url) {
 /// WALL
 ///////////////////////////////////////////////////////////
 
-ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, int count) {
+ApiFunc * VkApi::wallMediaRoutine(ApiFunc * func, int offset, int count) {
     QJsonObject doc;
     QVariantList res;
 
@@ -65,7 +65,7 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
 
     while(true) {
         m_http = netManager -> getSync(QNetworkRequest(
-            VkApiPrivate::wallUrl(func -> uid, getToken(), offset, count)
+            VkApiPrivate::wallUrl(func -> uid, token(), offset, count)
         ));
 
         if (!responseRoutine(m_http, func, doc))
@@ -86,14 +86,14 @@ ApiFuncContainer * VkApi::wallMediaRoutine(ApiFuncContainer * func, int offset, 
 }
 
 void VkApi::wallMediaList(const QObject * receiver, const char * respSlot, QString uid, int offset, int count) {
-    startApiCall(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), offset, count));
+    startApiCall(QtConcurrent::run(this, &VkApi::wallMediaRoutine, new ApiFunc(receiver, respSlot, adapteUid(uid)), offset, count));
 }
 
 ///////////////////////////////////////////////////////////
 /// FOLDERS LIST
 ///////////////////////////////////////////////////////////
 
-ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset) {
+ApiFunc * VkApi::audioAlbumsRoutine(ApiFunc * func, int offset) {
     QJsonObject doc;
     QVariantList res, temp;
     res.append(func -> result.value("albums").toArray().toVariantList());
@@ -103,7 +103,7 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
 
     while(true) {
         m_http = netManager -> getSync(QNetworkRequest(
-            VkApiPrivate::audioAlbumsUrl(func -> uid, getToken(), offset)
+            VkApiPrivate::audioAlbumsUrl(func -> uid, token(), offset)
         ));
 
         if (!responseRoutine(m_http, func, doc))
@@ -121,8 +121,6 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
         offset = doc.value("offset").toInt();
         if (doc.value("finished").toBool())
             break;
-
-        QThread::msleep(REQUEST_DELAY);
     }
 
     func -> result.insert("albums", QJsonArray::fromVariantList(res));
@@ -131,16 +129,16 @@ ApiFuncContainer * VkApi::audioAlbumsRoutine(ApiFuncContainer * func, int offset
 }
 
 void VkApi::audioAlbums(const QObject * receiver, const char * respSlot, QString uid) {
-    startApiCall(QtConcurrent::run(this, &VkApi::audioAlbumsRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), 0));
+    startApiCall(QtConcurrent::run(this, &VkApi::audioAlbumsRoutine, new ApiFunc(receiver, respSlot, adapteUid(uid)), 0));
 }
 
 ///////////////////////////////////////////////////////////
 /// AUDIO LIST
 ///////////////////////////////////////////////////////////
 
-ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
+ApiFunc * VkApi::audioListRoutine(ApiFunc * func) {
     QNetworkReply * m_http;
-    QUrl url = VkApiPrivate::audioInfoUrl(func -> uid, getUserID(), getToken());
+    QUrl url = VkApiPrivate::audioInfoUrl(func -> uid, userID(), token());
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
     m_http = netManager -> getSync(QNetworkRequest(url));
@@ -157,17 +155,17 @@ ApiFuncContainer * VkApi::audioListRoutine(ApiFuncContainer * func) {
 }
 
 void VkApi::audioList(const QObject * receiver, const char * respSlot, QString uid) {
-    startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid))));
+    startApiCall(QtConcurrent::run(this, &VkApi::audioListRoutine, new ApiFunc(receiver, respSlot, adapteUid(uid))));
 }
 
-ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, bool byUser, bool randomize) {
+ApiFunc * VkApi::audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize) {
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
     QUrl url = VkApiPrivate::audioRecomendationUrl(
         func -> uid,
         byUser,
         randomize,
-        getToken()
+        token()
     );
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
@@ -178,10 +176,10 @@ ApiFuncContainer * VkApi::audioRecomendationRoutine(ApiFuncContainer * func, boo
     return func;
 }
 void VkApi::audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize) {
-    startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), byUser, randomize));
+    startApiCall(QtConcurrent::run(this, &VkApi::audioRecomendationRoutine, new ApiFunc(receiver, respSlot, adapteUid(uid)), byUser, randomize));
 }
 
-ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+ApiFunc * VkApi::searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
     QUrl url = VkApiPrivate::audioSearchUrl(
@@ -190,7 +188,7 @@ ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString pr
         onlyArtist,
         inOwn,
         mostPopular ? 2 : 0,
-        getToken()
+        token()
     );
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
@@ -200,11 +198,11 @@ ApiFuncContainer * VkApi::searchAudioRoutine(ApiFuncContainer * func, QString pr
     return func;
 }
 void VkApi::audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-    startApiCall(QtConcurrent::run(this, &VkApi::searchAudioRoutine, new ApiFuncContainer(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
+    startApiCall(QtConcurrent::run(this, &VkApi::searchAudioRoutine, new ApiFunc(receiver, respSlot, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular));
 }
 
 QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-    ApiFuncContainer * func = searchAudioRoutine(new ApiFuncContainer(receiver, 0, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular);
+    ApiFunc * func = searchAudioRoutine(new ApiFunc(receiver, 0, adapteUid(uid)), predicate, onlyArtist, inOwn, mostPopular);
     QJsonObject res = func -> result;
     delete func;
     return res;
@@ -212,12 +210,12 @@ QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString uid, QStrin
 
 QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString predicate, int limitation) {
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-    ApiFuncContainer * func = new ApiFuncContainer(receiver, 0, "");
+    ApiFunc * func = new ApiFunc(receiver, 0, "");
 
     QUrl url = VkApiPrivate::audioSearchLimitedUrl(
         predicate,
         limitation,
-        getToken()
+        token()
     );
 
     QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
@@ -229,12 +227,12 @@ QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString predicate, 
     return res;
 }
 
-ApiFuncContainer * VkApi::audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId) {
+ApiFunc * VkApi::audioPopularRoutine(ApiFunc * func, bool onlyEng, int genreId) {
     CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
     QUrl url = VkApiPrivate::audioPopularUrl(
         onlyEng,
-        getToken(),
+        token(),
         genreId
     );
 
@@ -245,18 +243,18 @@ ApiFuncContainer * VkApi::audioPopularRoutine(ApiFuncContainer * func, bool only
     return func;
 }
 void VkApi::audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId) {
-    startApiCall(QtConcurrent::run(this, &VkApi::audioPopularRoutine, new ApiFuncContainer(receiver, respSlot, 0), onlyEng, genreId));
+    startApiCall(QtConcurrent::run(this, &VkApi::audioPopularRoutine, new ApiFunc(receiver, respSlot, 0), onlyEng, genreId));
 }
 
 QJsonObject VkApi::audioPopularSync(const QObject * receiver, bool onlyEng, int genreId) {
-    ApiFuncContainer * func = audioPopularRoutine(new ApiFuncContainer(receiver, 0, 0), onlyEng, genreId);
+    ApiFunc * func = audioPopularRoutine(new ApiFunc(receiver, 0, 0), onlyEng, genreId);
     QJsonObject res = func -> result;
     delete func;
     return res;
 }
 
 QJsonObject VkApi::getAudiosInfo(QStringList audio_uids) {
-    QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, getToken());
+    QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, token());
 
     CustomNetworkAccessManager * netManager;
     bool new_manager = CustomNetworkAccessManager::validManager(netManager);
@@ -299,7 +297,7 @@ QString VkApi::refreshAudioItemUrl(QString audio_uid) {
 /// PROTECTED
 ///////////////////////////////////////////////////////////
 
-bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc) {
+bool VkApi::responseRoutine(QNetworkReply * reply, ApiFunc * func, QJsonObject & doc) {
     doc = CustomNetworkAccessManager::replyToJson(reply);
 
     QUrl url = reply -> url();
@@ -313,7 +311,7 @@ bool VkApi::responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJso
     return true;
 }
 
-bool VkApi::errorSend(QJsonObject & error, ApiFuncContainer * func, QUrl url) {
+bool VkApi::errorSend(QJsonObject & error, ApiFunc * func, QUrl url) {
     int err_code = error.value("error_code").toInt();
     QString err_msg = error.value("error_msg").toString();
 
@@ -328,7 +326,7 @@ bool VkApi::errorSend(QJsonObject & error, ApiFuncContainer * func, QUrl url) {
     else return captchaProcessing(error, func, url);
 }
 
-bool VkApi::captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url) {
+bool VkApi::captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url) {
     CustomNetworkAccessManager * manager = CustomNetworkAccessManager::manager();
 
     QUrl image_url(error.value("captcha_img").toString());
