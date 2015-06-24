@@ -14,24 +14,24 @@ public:
 
     inline QString authUrl() const { return VkApiPrivate::authUrl(); }
 
-    ApiFuncContainer * wallMediaRoutine(ApiFuncContainer * func, int offset, int count);
+    ApiFunc * wallMediaRoutine(ApiFunc * func, int offset, int count);
     void wallMediaList(const QObject * receiver, const char * respSlot, QString uid = "0", int offset = 0, int count = 0);
 
-    ApiFuncContainer * audioAlbumsRoutine(ApiFuncContainer * func, int offset = 0);
+    ApiFunc * audioAlbumsRoutine(ApiFunc * func, int offset = 0);
     void audioAlbums(const QObject * receiver, const char * respSlot, QString uid);
 
-    ApiFuncContainer * audioListRoutine(ApiFuncContainer * func);
+    ApiFunc * audioListRoutine(ApiFunc * func);
     void audioList(const QObject * receiver, const char * respSlot, QString uid);
 
-    ApiFuncContainer * audioRecomendationRoutine(ApiFuncContainer * func, bool byUser, bool randomize);
+    ApiFunc * audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize);
     void audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize);
 
-    ApiFuncContainer * searchAudioRoutine(ApiFuncContainer * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
+    ApiFunc * searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     QJsonObject audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
     QJsonObject audioSearchSync(const QObject * receiver, QString predicate, int limitation = 1);
 
-    ApiFuncContainer * audioPopularRoutine(ApiFuncContainer * func, bool onlyEng, int genreId);
+    ApiFunc * audioPopularRoutine(ApiFunc * func, bool onlyEng, int genreId);
     void audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId = -1);
     QJsonObject audioPopularSync(const QObject * receiver, bool onlyEng, int genreId = -1);
 
@@ -58,9 +58,9 @@ public slots:
     void proceedAuthResponse(const QUrl & url);
 protected:
     inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
-    bool responseRoutine(QNetworkReply * reply, ApiFuncContainer * func, QJsonObject & doc);
-    bool errorSend(QJsonObject & doc, ApiFuncContainer * func, QUrl url);
-    bool captchaProcessing(QJsonObject & error, ApiFuncContainer * func, QUrl url);
+    bool responseRoutine(QNetworkReply * reply, ApiFunc * func, QJsonObject & doc);
+    bool errorSend(QJsonObject & doc, ApiFunc * func, QUrl url);
+    bool captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url);
 
 private:   
     inline VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {

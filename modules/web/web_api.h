@@ -77,7 +77,7 @@ protected slots:
     void apiCallFinished();  // remove later
 
 protected:
-    void startApiCall(QFuture<ApiFuncContainer *> feature); // remove later
+    void startApiCall(QFuture<ApiFunc *> feature); // remove later
 
     CaptchaDialog * captchaDialog;
 
