@@ -9,14 +9,14 @@
 
 struct Func {
     inline Func() { }
-    inline Func(QObject * receiver, char * respSlot) {
+    inline Func(QObject * receiver, const char * respSlot) {
         obj = receiver;
         slot = respSlot;
     }
     inline ~Func() {}
 
     QObject * obj;
-    char * slot;
+    const char * slot;
 };
 
 class Async : public QObject { // refactor ?
