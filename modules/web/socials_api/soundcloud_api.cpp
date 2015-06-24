@@ -84,7 +84,7 @@ QJsonObject SoundcloudApi::objectInfo(QString uid) {
     return res;
 }
 
-void SoundcloudApi::objectInfo(QString uid, Func func) {
+void SoundcloudApi::objectInfo(QString & uid, Func func) {
     registerAsync(QtConcurrent::run(this, &SoundcloudApi::objectInfo, uid), func);
 }
 
