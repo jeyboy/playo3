@@ -288,6 +288,14 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     QList<IItem *> items;
     bool original;
 
+    if (!collection.at(0).isArray()) {
+        QJsonArray ar;
+        ar.append(collection);
+        collection = ar;
+    }
+
+    qDebug() << "KJ" << collection;
+
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 

@@ -21,6 +21,8 @@
 #define REQUEST_DELAY 250 // ms
 
 class IApi {
+public:
+    static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value("count").toInt(); }
 protected:
     virtual QString baseUrlStr(QString & predicate) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
