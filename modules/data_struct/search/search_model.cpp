@@ -155,8 +155,9 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
-                QJsonArray items = SoundcloudApi::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular);
-                parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
+                QJsonArray items = SoundcloudApi::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
+                if (SoundcloudApi::extractCount(items) > 0)
+                    parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
             case SearchRequest::request_computer: {
                 parent -> backPropagateItemsCountInBranch(proceedMyComputer(r, parent));
