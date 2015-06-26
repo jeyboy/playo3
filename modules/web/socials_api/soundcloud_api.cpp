@@ -57,7 +57,7 @@ void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
     if (isNew) delete manager;
 }
 
-void SoundcloudApi::getUserInfo(QString uid, QJsonObject & object) {
+void SoundcloudApi::getUserInfo(QString & uid, QJsonObject & object) {
     CustomNetworkAccessManager * manager;
     bool isNew = CustomNetworkAccessManager::validManager(manager);
 
@@ -73,7 +73,7 @@ void SoundcloudApi::getUserInfo(QString uid, QJsonObject & object) {
 }
 
 
-QJsonObject SoundcloudApi::objectInfo(QString uid) {
+QJsonObject SoundcloudApi::objectInfo(QString & uid) {
     QJsonObject res;
 
     if (uid[0] == '-')
@@ -82,10 +82,6 @@ QJsonObject SoundcloudApi::objectInfo(QString uid) {
         getUserInfo(uid, res);
 
     return res;
-}
-
-void SoundcloudApi::objectInfo(QString & uid, Func func) {
-    registerAsync(QtConcurrent::run(this, &SoundcloudApi::objectInfo, uid), func);
 }
 
 ///////////////////////////////////////////////////////////

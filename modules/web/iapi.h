@@ -17,7 +17,7 @@
 
 //#include "misc/web_utils/json.h"
 
-#define DEFAULT_LIMIT_AMOUNT 999999
+#define DEFAULT_LIMIT_AMOUNT 99999
 #define REQUEST_DELAY 250 // ms
 
 class IApi {

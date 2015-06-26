@@ -157,47 +157,6 @@ public:
         return proceedQuery(userGroupsUrl(uid), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, 0, 0, manager);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    QJsonObject SoundcloudApi::getAudiosInfo(QStringList audio_uids) {
-//        return CustomNetworkAccessManager::manager() -> getToJson(QNetworkRequest(SoundcloudApiPrivate::audiosUrl(audio_uids)), true);
-//    }
-
-
-//    void SoundcloudApi::getUidInfo(const QObject * receiver, const char * respSlot, QString uid = "0") {
-//        startApiCall(QtConcurrent::run(this, &SoundcloudApi::getUidInfoRoutine, new ApiFuncContainer(receiver, respSlot, uid)));
-//    }
-
-//    void SoundcloudApi::searchAudio(const QObject * receiver, const char * respSlot, QString predicate, QString genre, bool popular) {
-//        startApiCall(QtConcurrent::run(this, &SoundcloudApi::searchAudioRoutine, new ApiFuncContainer(receiver, respSlot, QString()), predicate, genre, popular));
-//    }
-
-//    QJsonObject SoundcloudApi::searchAudioSync(const QObject * receiver, QString predicate, QString genre, bool popular) {
-//        ApiFuncContainer * func = searchAudioRoutine(new ApiFuncContainer(receiver, 0, QString()), predicate, genre, popular);
-//        QJsonObject res = func -> result;
-//        delete func;
-//        return res;
-//    }
-
-
-
-
-
-
-
-
-
 //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
 //        QJsonObject obj = CustomNetworkAccessManager::replyToJson(reply, true);
 

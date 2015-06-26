@@ -22,10 +22,14 @@ public:
     inline bool isConnected() { return !token().isEmpty(); }
 
     void getGroupInfo(QString uid, QJsonObject & object);
-    void getUserInfo(QString uid, QJsonObject & object);
+    void getUserInfo(QString & uid, QJsonObject & object);
 
-    QJsonObject objectInfo(QString uid);
-    void objectInfo(QString & uid, Func func);
+    QJsonObject objectInfo(QString & uid);
+    inline void objectInfo(QString & uid, Func func) {
+        registerAsync(
+            QtConcurrent::run(this, &SoundcloudApi::objectInfo, uid), func
+        );
+    }
 public slots:
     void proceedAuthResponse(const QUrl & url);
 
