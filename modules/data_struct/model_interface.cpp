@@ -294,8 +294,6 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
         collection = ar;
     }
 
-    qDebug() << "KJ" << collection;
-
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 

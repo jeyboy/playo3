@@ -17,6 +17,8 @@ int main(int argc, char * argv[]) {
     a.setApplicationVersion(APP_VERSION);
     a.setStyleSheet(Stylesheets::appStyles());
 
+    QThread::currentThread() -> setPriority(QThread::HighPriority);
+
     QString message;
     QStringList list = QCoreApplication::arguments();
     if (list.length() > 1) {

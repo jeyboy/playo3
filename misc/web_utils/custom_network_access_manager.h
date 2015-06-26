@@ -11,7 +11,7 @@ public:
     static CustomNetworkAccessManager * manager();
     static bool validManager(CustomNetworkAccessManager *& webManager) {
         bool new_manager = QThread::currentThread() != QApplication::instance() -> thread();
-        webManager = new_manager ? new CustomNetworkAccessManager(QApplication::instance()) : manager();
+        webManager = new_manager ? new CustomNetworkAccessManager(/*QThread::currentThread()*/) : manager();
         return new_manager;
     }
 

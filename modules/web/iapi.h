@@ -67,6 +67,7 @@ protected:
 
     QJsonArray & proceedQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
+
         int count = 0;
         QJsonObject response, countObj;
 
