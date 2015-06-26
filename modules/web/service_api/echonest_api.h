@@ -39,10 +39,10 @@ protected:
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
     inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value("total").toInt(); }
-    inline void extractStatus(QJsonObject & response, int & code, QString & message) {
+    inline bool extractStatus(QJsonObject & response, int & code, QString & message) {
         QJsonObject stat_obj = extractBody(response).value("status").toObject();
-        code = stat_obj.value("code").toInt();
         message = stat_obj.value("message").toString();
+        return (code = stat_obj.value("code").toInt()) == 0;
     }
 private:
     inline EchonestApi() : QObject() { }

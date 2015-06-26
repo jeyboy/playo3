@@ -114,7 +114,6 @@ SOURCES += main.cpp\
     modules/web/auth_chemas/teu_auth.cpp \
     modules/web/socials_api/soundcloud_api.cpp \
     modules/web/socials_api/vk_api.cpp \
-    modules/web/socials_api/vk_api_private.cpp \
     modules/web/web_api.cpp \
     modules/data_struct/web/web_item.cpp \
     modules/data_struct/web/web_folder_item.cpp \
@@ -237,7 +236,6 @@ HEADERS  += playo.h \
     modules/web/auth_chemas/teu_auth.h \
     modules/web/socials_api/soundcloud_api.h \
     modules/web/socials_api/vk_api.h \
-    modules/web/socials_api/vk_api_private.h \
     modules/web/web_api.h \
     modules/data_struct/web/web_item.h \
     modules/data_struct/web/web_folder_item.h \
@@ -281,7 +279,8 @@ HEADERS  += playo.h \
     modules/web/iapi.h \
     modules/web/socials_api/soundcloud_request_api.h \
     misc/web_utils/json.h \
-    modules/web/utils/async.h
+    modules/web/utils/async.h \
+    modules/web/socials_api/vk_request_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

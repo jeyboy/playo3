@@ -16,6 +16,8 @@ private:
     inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, "genres", genre); }
     inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, "order", hottest ? "hotness" : "created_at"); }
 public:
+//    inline ~SoundcloudRequestApi() {}
+
     /////////////////
     /// AUTH
     ////////////////

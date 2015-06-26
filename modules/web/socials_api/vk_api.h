@@ -3,43 +3,25 @@
 
 #include "../web_api.h"
 #include "../auth_chemas/teu_auth.h"
-#include "vk_api_private.h"
+#include "vk_request_api.h"
 #include "media/genres/web/vk_genres.h"
-#include "modules/data_struct/search/search_settings.h"
+//#include "modules/data_struct/search/search_settings.h"
 
-class VkApi : public WebApi, public TeuAuth {
+class VkApi : public WebApi, public TeuAuth, public VkRequestApi {
     Q_OBJECT
 public:
     inline QString name() const { return "vk"; }
+    inline QUrlQuery genDefaultParams() {
+        QUrlQuery query = QUrlQuery();
 
-    inline QString authUrl() { return VkApiPrivate::authUrl(); }
+        query.addQueryItem("v", apiVersion());
+        query.addQueryItem("access_token", token);
+        query.addQueryItem("test_mode", "1");
 
-    ApiFunc * wallMediaRoutine(ApiFunc * func, int offset, int count);
-    void wallMediaList(const QObject * receiver, const char * respSlot, QString uid = "0", int offset = 0, int count = 0);
+        return query;
+    }
 
-    ApiFunc * audioAlbumsRoutine(ApiFunc * func, int offset = 0);
-    void audioAlbums(const QObject * receiver, const char * respSlot, QString uid);
-
-    ApiFunc * audioListRoutine(ApiFunc * func);
-    void audioList(const QObject * receiver, const char * respSlot, QString uid);
-
-    ApiFunc * audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize);
-    void audioRecomendation(const QObject * receiver, const char * respSlot, QString uid, bool byUser, bool randomize);
-
-    ApiFunc * searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
-    void audioSearch(const QObject * receiver, const char * respSlot, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
-    QJsonObject audioSearchSync(const QObject * receiver, QString uid, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular);
-    QJsonObject audioSearchSync(const QObject * receiver, QString predicate, int limitation = 1);
-
-    ApiFunc * audioPopularRoutine(ApiFunc * func, bool onlyEng, int genreId);
-    void audioPopular(const QObject * receiver, const char * respSlot, bool onlyEng, int genreId = -1);
-    QJsonObject audioPopularSync(const QObject * receiver, bool onlyEng, int genreId = -1);
-
-    QString refreshAudioItemUrl(QString audio_uid);
-    QJsonObject getAudioInfo(QString audio_uid);
-    QJsonObject getAudiosInfo(QStringList audio_uid);
-
-//    void refreshAudioList(const QObject * receiver, const char * respSlot, QList<QString> uids);
+    inline QString authUrl() { return VkRequestApi::authUrl(); }
 
     inline ~VkApi() {}
 
@@ -50,17 +32,35 @@ public:
     void fromJson(QJsonObject hash);
     QJsonObject toJson();
 
-    bool isConnected();
+    inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
 signals:
     void showCaptcha();
 public slots:
     void proceedAuthResponse(const QUrl & url);
 protected:
-    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
-    bool responseRoutine(QNetworkReply * reply, ApiFunc * func, QJsonObject & doc);
-    bool errorSend(QJsonObject & doc, ApiFunc * func, QUrl url);
-    bool captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url);
+    inline QString baseUrlStr(QString & predicate) { return "https://api.vk.com/method/" + predicate; }
+
+    inline QString offsetKey() const { return "offset"; }
+    inline QString limitKey() const { return "count"; }
+//    inline int requestLimit() const { return 200; }
+
+//    inline QJsonObject & extractBody(QJsonObject & response) { return response; }
+//    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("response").toArray().isEmpty(); }
+    inline bool extractStatus(QJsonObject & response, int & code, QString & message) {
+        QJsonObject stat_obj = response.value("error").toObject();
+        message = stat_obj.value("error_msg").toString();
+        return (code = stat_obj.value("error_code").toInt()) == 0;
+    }
+
+//    bool responseRoutine(QNetworkReply * reply, ApiFunc * func, QJsonObject & doc);
+//    bool errorSend(QJsonObject & doc, ApiFunc * func, QUrl url);
+
+
+
+
+//    bool captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url);
+//    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
 private:   
     inline VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {
