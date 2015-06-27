@@ -71,6 +71,7 @@ ApiFunc * VkApi::wallMediaRoutine(ApiFunc * func, int offset, int count) {
         if (!responseRoutine(m_http, func, doc))
             break;
 
+        qDebug() << doc;
         doc = doc.value("response").toObject();
 
         res.append(doc.value("posts").toArray().toVariantList());
