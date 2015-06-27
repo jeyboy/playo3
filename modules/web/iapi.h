@@ -113,7 +113,7 @@ protected:
             query.addQueryItem(name, *val);
     }
 
-    QUrl buildUrl(QUrl tUrl, int offset, int limit) {
+    virtual QUrl buildUrl(QUrl tUrl, int offset, int limit) {
         QUrl url(tUrl);
         QUrlQuery query = QUrlQuery(url);
         setLimit(query, limit, offset);

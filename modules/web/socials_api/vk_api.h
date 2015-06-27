@@ -53,10 +53,11 @@ protected:
         return (code = stat_obj.value("error_code").toInt()) == 0;
     }
 
-//    bool responseRoutine(QNetworkReply * reply, ApiFunc * func, QJsonObject & doc);
-//    bool errorSend(QJsonObject & doc, ApiFunc * func, QUrl url);
-
-
+    QUrl buildUrl(QUrl tUrl, int offset, int limit) {
+        QString urlStr = tUrl.toString();
+        urlStr.replace("%%1", QString::number(offset)).replace("%%2", QString::number(limit));
+        return QUrl(urlStr);
+    }
 
 
 //    bool captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url);
