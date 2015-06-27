@@ -31,21 +31,48 @@ protected:
 
         QString head;
 
-        QString body = QString("var posts = API.wall.get({ count: limit, owner_id: " + uid + "});");
+        QString body = QString("var posts = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "})");
+
+        QString(
+            head +
+            "while (offset < count || offset < look_window) {"
+            "    post_items.push("+ body + ").items);"
+            "    offset = offset %2b limit;"
+            "}"
+
+            "while(post_items.length > 0) {"
+            "    var curr = post_items.pop();"
+            "    var audios = curr.attachments@.audio %2b curr.copy_history[0].attachments@.audio %2b curr.copy_history[1].attachments@.audio;"
+            "    if (audios.length > 0) {"
+            "        response.unshift({"
+            "            title: curr.text,"
+            "            date: curr.date,"
+            "            audios: audios"
+            "        });"
+            "    }"
+            "}"
+
+            "return {"
+            "    count: count, "
+            "    offset: offset, "
+            "    posts: response"
+            "};"
+        )
+
 
         if (offset > 0) {
             head = QString(
                 "var limit = 100;"
                 "var offset = " + QString::number(offset) + "; var response = []; var look_window = limit * " + getObjLimit() + " + offset;"
-                + body +
-                "var count = " + QString::number(count) + ", post_items = []; var last_date = nil;"
+                + body + ";"
+                "var count = " + QString::number(count) + ", post_items = [];"
             );
         } else {
             head = QString(
                 "var limit = 100;"
                 "var offset = limit; var response = []; var look_window = limit * " + getObjLimit() + ";"
                 + body +
-                "var count = posts.count, post_items = posts.items; var last_date = posts.items[0].date;"
+                "var count = posts.count, post_items = posts.items;"
             );
         }
 
@@ -53,13 +80,8 @@ protected:
                                QString(
                                    head +
                                    "while (offset < count || offset < look_window) {"
-                                   "    post_items.push("
-                                   "        API.wall.get({"
-                                   "            count: limit,"
-                                   "            offset: offset,"
-                                   "            owner_id: " + uid + ""
-                                   "        }).items);"
-                                   "        offset = offset %2b limit;"
+                                   "    post_items.push("+ body + ").items);"
+                                   "    offset = offset %2b limit;"
                                    "}"
 
                                    "while(post_items.length > 0) {"
@@ -75,7 +97,6 @@ protected:
                                    "}"
 
                                    "return {"
-                                   "    date: last_date, "
                                    "    count: count, "
                                    "    offset: offset, "
                                    "    posts: response"
@@ -114,7 +135,7 @@ protected:
         return func;
     }
 
-    QUrl VkApiPrivate::audioAlbumsUrl(QString uid, QString token, int offset) {
+    QUrl audioAlbumsUrl(QString uid, int offset) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
         QString limit = "5";
@@ -151,7 +172,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    ApiFunc * VkApi::audioAlbumsRoutine(ApiFunc * func, int offset) {
+    ApiFunc * audioAlbumsRoutine(ApiFunc * func, int offset) {
         QJsonObject doc;
         QVariantList res, temp;
         res.append(func -> result.value("albums").toArray().toVariantList());
@@ -187,7 +208,7 @@ protected:
     }
 
 
-    QUrl VkApiPrivate::audioInfoUrl(QString uid, QString currUid, QString token) {
+    QUrl audioInfoUrl(QString uid, QString currUid) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -292,7 +313,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    ApiFunc * VkApi::audioListRoutine(ApiFunc * func) {
+    ApiFunc * audioListRoutine(ApiFunc * func) {
         QNetworkReply * m_http;
         QUrl url = VkApiPrivate::audioInfoUrl(func -> uid, userID(), token());
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
@@ -310,7 +331,7 @@ protected:
         return func;
     }
 
-    QUrl VkApiPrivate::audioRecomendationUrl(QString uid, bool byUser, bool randomize, QString token) {
+    QUrl audioRecomendationUrl(QString uid, bool byUser, bool randomize) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -329,7 +350,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    ApiFunc * VkApi::audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize) {
+    ApiFunc * audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize) {
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
         QUrl url = VkApiPrivate::audioRecomendationUrl(
@@ -348,7 +369,7 @@ protected:
     }
 
     // sort  2 - by popularity, 1 - by duration, 0 - by creation date
-    QUrl VkApiPrivate::audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort, QString token) {
+    QUrl audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -377,7 +398,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    ApiFunc * VkApi::searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    ApiFunc * searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
         QUrl url = VkApiPrivate::audioSearchUrl(
@@ -396,7 +417,7 @@ protected:
         return func;
     }
 
-    QUrl VkApiPrivate::audioSearchLimitedUrl(QString searchStr, int limit, QString token) {
+    QUrl audioSearchLimitedUrl(QString searchStr, int limit) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -412,7 +433,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    QJsonObject VkApi::audioSearchSync(const QObject * receiver, QString predicate, int limitation) {
+    QJsonObject audioSearchSync(const QObject * receiver, QString predicate, int limitation) {
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
         ApiFunc * func = new ApiFunc(receiver, 0, "");
 
@@ -431,7 +452,7 @@ protected:
         return res;
     }
 
-    QUrl VkApiPrivate::audioPopularUrl(bool onlyEng, QString token, int genreId) {
+    QUrl audioPopularUrl(bool onlyEng, int genreId) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -457,7 +478,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    ApiFunc * VkApi::audioPopularRoutine(ApiFunc * func, bool onlyEng, int genreId) {
+    ApiFunc * audioPopularRoutine(ApiFunc * func, bool onlyEng, int genreId) {
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
         QUrl url = VkApiPrivate::audioPopularUrl(
@@ -472,14 +493,14 @@ protected:
 
         return func;
     }
-    QJsonObject VkApi::audioPopularSync(const QObject * receiver, bool onlyEng, int genreId) {
+    QJsonObject audioPopularSync(const QObject * receiver, bool onlyEng, int genreId) {
         ApiFunc * func = audioPopularRoutine(new ApiFunc(receiver, 0, 0), onlyEng, genreId);
         QJsonObject res = func -> result;
         delete func;
         return res;
     }
 
-    QUrl VkApiPrivate::audioRefreshUrl(QStringList uids, QString token) {
+    QUrl audioRefreshUrl(QStringList uids) {
         QUrl url(getApiUrl() + "execute");
         QUrlQuery query = methodParams(token);
 
@@ -493,7 +514,7 @@ protected:
         url.setQuery(query);
         return url;
     }
-    QJsonObject VkApi::getAudiosInfo(QStringList audio_uids) {
+    QJsonObject getAudiosInfo(QStringList audio_uids) {
         QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, token());
 
         CustomNetworkAccessManager * netManager;
@@ -513,13 +534,13 @@ protected:
 
         return doc;
     }
-    QJsonObject VkApi::getAudioInfo(QString audio_uid) {
+    QJsonObject getAudioInfo(QString audio_uid) {
         QStringList uids; uids << audio_uid;
         QJsonObject doc = getAudiosInfo(uids);
         return doc.value("response").toArray().first().toObject();
     }
 
-    QString VkApi::refreshAudioItemUrl(QString audio_uid) {
+    QString refreshAudioItemUrl(QString audio_uid) {
         return getAudioInfo(audio_uid).value("url").toString();
     }
 
