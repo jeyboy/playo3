@@ -53,7 +53,7 @@ protected slots:
         QFutureWatcher<QJsonArray> * initiator = (QFutureWatcher<QJsonArray> *)sender();
         Func func = requests.take(initiator);
         QJsonArray res = initiator -> result();
-        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonArray, res));
+        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonArray&, res));
         delete initiator;
     }
 

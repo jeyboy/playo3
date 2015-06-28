@@ -57,10 +57,8 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
     message = stat_obj.value("error_msg").toString();
     code = stat_obj.value("error_code").toInt();
 
-    if (code == 14) {
+    if (code == 14)
         return captchaProcessing(response, url);
-//            return proceedQuery(url, response);
-    }
     else return code == 0;
 }
 
@@ -93,7 +91,7 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
 
     url.setQuery(query);
 
-    return proceedQuery(url, response);
+    return sQuery(url, response);
 }
 
 ///////////////////////////////////////////////////////////

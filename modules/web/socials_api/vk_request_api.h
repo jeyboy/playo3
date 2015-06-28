@@ -59,7 +59,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray wallAudio(QString & uid) {
-        return proceedQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
+        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
 //        QJsonObject doc;
 //        QVariantList res;
 
@@ -124,7 +124,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
-        return proceedQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
+        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
 
 //        QJsonObject doc;
 //        QVariantList res, temp;
@@ -271,7 +271,7 @@ public:
 
     QJsonObject userInfo(QString & uid, bool fullInfo = true) {
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
-        QJsonObject ret = proceedQuery(url);
+        QJsonObject ret = sQuery(url);
         ret = extractBody(ret);
 
         if (!ret.value("albums_finished").toBool()) {
@@ -315,7 +315,7 @@ public:
     }
 
     QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
-        return proceedQuery(audioRecomendationsUrl(uid, byUser, randomize));
+        return sQuery(audioRecomendationsUrl(uid, byUser, randomize));
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
@@ -366,7 +366,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-        return proceedQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
+        return sQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
 
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
@@ -401,7 +401,7 @@ public:
     }
 
     QJsonObject audioSearchLimited(QString & predicate, int limitation) {
-        return proceedQuery(audioSearchLimitedUrl(predicate, limitation));
+        return sQuery(audioSearchLimitedUrl(predicate, limitation));
 
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
@@ -438,7 +438,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonObject audioPopular(bool onlyEng, int genreId) {
-        return proceedQuery(audioPopularUrl(onlyEng, genreId));
+        return sQuery(audioPopularUrl(onlyEng, genreId));
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
@@ -459,17 +459,13 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
-           QString(
-               "return API.audio.getById({"
-               "    audios: \"" + uids.join(',') + "\""
-               "});"
-           )
+           QString("return API.audio.getById({ audios: \"" + uids.join(',') + "\"});")
         );
 
         return baseUrl("execute", query);
     }
-    QJsonObject getAudiosInfo(QStringList & audio_uids) {
-        return proceedQuery(audioRefreshUrl(audio_uids));
+    QJsonArray getAudiosInfo(QStringList & audio_uids) {
+        return sQuery(audioRefreshUrl(audio_uids), false, 0, 0, true).value("response").toArray();
 
 
 //        QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, token());
@@ -493,7 +489,7 @@ public:
     }
     QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
-        return proceedQuery(audioRefreshUrl(uids));
+        return sQuery(audioRefreshUrl(uids));
     }
 
     QString refreshAudioItemUrl(QString audio_uid) {

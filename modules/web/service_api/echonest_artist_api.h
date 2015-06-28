@@ -45,7 +45,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistBiographie(QString artist, QString id = QString(), int limit = 1) {
             QJsonObject response;
 
-            if (proceedQuery(artistBiographiesUrl(artist, id, limit), response))
+            if (sQuery(artistBiographiesUrl(artist, id, limit), response))
                 return extractBody(response).value("biographies").toArray();
 
             return QJsonArray();
@@ -89,7 +89,7 @@ class EchonestArtistApi : public IApi {
         QJsonObject artistFamiliarity(QString artist, QString id = QString()) {
             QJsonObject response;
 
-            if (proceedQuery(artistFamiliarityUrl(artist, id), response))
+            if (sQuery(artistFamiliarityUrl(artist, id), response))
                 return extractBody(response).value("artist").toObject();
 
             return QJsonObject();
@@ -127,7 +127,7 @@ class EchonestArtistApi : public IApi {
         QJsonObject artistHotttnesss(QString artist, QString id = QString()) {
             QJsonObject response;
 
-            if (proceedQuery(artistHotttnesssUrl(artist, id), response))
+            if (sQuery(artistHotttnesssUrl(artist, id), response))
                 return extractBody(response).value("artist").toObject();
 
             return QJsonObject();
@@ -162,7 +162,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistImages(QString name, QString id = QString(), int limit = 1) {
-            return proceedQuery(artistImagesUrl(name, id), limit, "images");
+            return lQuery(artistImagesUrl(name, id), limit, "images");
         }
 
         //{
@@ -202,7 +202,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistNews(QString name, QString id = QString(), int limit = 1) {
-            return proceedQuery(artistNewsUrl(name, id), limit, "news");
+            return lQuery(artistNewsUrl(name, id), limit, "news");
         }
 
         //{
@@ -254,7 +254,7 @@ class EchonestArtistApi : public IApi {
                        "hotttnesss" << "hotttnesss_rank" << "images" << "songs" <<
                        "years_active" << "news" << "terms";
 
-            if (proceedQuery(artistProfileUrl(name, buckets, id), response))
+            if (sQuery(artistProfileUrl(name, buckets, id), response))
                 return extractBody(response).value("artist").toObject();
 
             return QJsonObject();
@@ -312,7 +312,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistStylesForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistStylesUrl(), response))
+            if (sQuery(artistStylesUrl(), response))
                 return extractBody(response).value("terms").toArray();
 
             return QJsonArray();
@@ -340,7 +340,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistMoodsForSearch() {
             QJsonObject response;
 
-            if (proceedQuery(artistStylesUrl("mood"), response))
+            if (sQuery(artistStylesUrl("mood"), response))
                 return extractBody(response).value("terms").toArray();
 
             return QJsonArray();
@@ -409,7 +409,7 @@ class EchonestArtistApi : public IApi {
                                 QStringList moods = QStringList(), QString artistLocation = QString(),
                                 QStringList genres = QStringList(), QStringList styles = QStringList())
         {
-            return proceedQuery(artistSearchUrl(name, fuzzySearch, tags, moods,
+            return lQuery(artistSearchUrl(name, fuzzySearch, tags, moods,
                              artistLocation, genres, styles), limit, "artists");
         }
 
@@ -457,7 +457,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistSongs(QString name, QString id = QString(), int limit = DEFAULT_LIMIT_AMOUNT) {
-            return proceedQuery(artistSongsUrl(name, id), limit, "songs");
+            return lQuery(artistSongsUrl(name, id), limit, "songs");
         }
 
 
@@ -521,7 +521,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int limit = DEFAULT_LIMIT_AMOUNT) {
-            return proceedQuery(artistSimilarsUrl(names, ids, limit), limit, "artists");
+            return lQuery(artistSimilarsUrl(names, ids, limit), limit, "artists");
         }
 
         //{
@@ -552,7 +552,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistSuggests(QString name_part, int limit = 15) {
             QJsonObject response;
 
-            if (proceedQuery(artistSuggestUrl(name_part, limit), response))
+            if (sQuery(artistSuggestUrl(name_part, limit), response))
                 extractBody(response).value("artists").toObject().value("artist");
 
             return QJsonArray();
@@ -611,7 +611,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistTerms(QString name, QString id = QString()) {
             QJsonObject response;
 
-            if (proceedQuery(artistTermsUrl(name, id), response))
+            if (sQuery(artistTermsUrl(name, id), response))
                 return extractBody(response).value("terms").toArray();
 
             return QJsonArray();
@@ -649,7 +649,7 @@ class EchonestArtistApi : public IApi {
         }
 
         QJsonArray artistTop(QStringList names, int limit = DEFAULT_LIMIT_AMOUNT) {
-            return proceedQuery(artistTopUrl(names), limit, "artists");
+            return lQuery(artistTopUrl(names), limit, "artists");
         }
 
         //{
@@ -681,7 +681,7 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistTopTerms(int limit = 999) {
             QJsonObject response;
 
-            if (proceedQuery(artistTopTermsUrl(limit), response))
+            if (sQuery(artistTopTermsUrl(limit), response))
                 return extractBody(response).value("terms").toArray();
 
             return QJsonArray();

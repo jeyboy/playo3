@@ -232,48 +232,56 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     QVariant uid;
     QList<IItem *> items;
 
+    if (!collection.at(0).isArray()) {
+        QJsonArray ar;
+        ar.append(collection);
+        collection = ar;
+    }
+
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    QJsonArray::Iterator it = collection.begin();
+    int pos = parent -> foldersAmount();
+    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        QJsonArray part = (*parts_it).toArray();
+        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+            itm = (*it).toObject();
 
-    for(int pos = parent -> foldersAmount(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+            if (itm.isEmpty()) continue;
 
-        if (itm.isEmpty()) continue;
+            id = QString::number(itm.value("id").toInt());
+            owner = QString::number(itm.value("owner_id").toInt());
+            uid = WebItem::toUid(owner, id);
+            if (ignoreListContainUid(uid)) continue;
 
-        id = QString::number(itm.value("id").toInt());
-        owner = QString::number(itm.value("owner_id").toInt());
-        uid = WebItem::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
+            uri = itm.value("url").toString();
+            uri = uri.section('?', 0, 0); // remove extra info from url
 
-        uri = itm.value("url").toString();
-        uri = uri.section('?', 0, 0); // remove extra info from url
+            items = store.values(uid.toString());
 
-        items = store.values(uid.toString());
+            if (items.isEmpty()) {
+                itemsAmount++;
+                newItem = new VkItem(
+                    id,
+                    uri,
+                    itm.value("artist").toString() + " - " + itm.value("title").toString(),
+                    parent,
+                    pos
+                );
 
-        if (items.isEmpty()) {
-            itemsAmount++;
-            newItem = new VkItem(
-                id,
-                uri,
-                itm.value("artist").toString() + " - " + itm.value("title").toString(),
-                parent,
-                pos
-            );
+                newItem -> setOwner(owner);
+                newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
+                if (itm.contains("genre_id"))
+                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
+            } else {
+                QList<IItem *>::Iterator it_it = items.begin();
 
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromSeconds(itm.value("duration").toInt(0)));
-            if (itm.contains("genre_id"))
-                newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value("genre_id").toInt()));
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
+                for(; it_it != items.end(); it_it++)
+                    (*it_it) -> setPath(uri);
+            }
 
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
+            pos++;
         }
-
-        pos++;
     }
 
     return itemsAmount;
@@ -584,7 +592,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             }
 
             if (VkApi::instance() -> isConnected()) {
-                QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value()).value("response").toArray();
+                QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value());
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
@@ -599,7 +607,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             }
 
             if (SoundcloudApi::instance() -> isConnected()) {
-                QJsonArray obj = SoundcloudApi::instance() -> audioInfo(map_it.value()).value("response").toArray();
+                QJsonArray obj = SoundcloudApi::instance() -> audioInfo(map_it.value());
                 proceedScList(obj, parentNode);
             }
         }
