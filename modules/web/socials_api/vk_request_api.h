@@ -295,7 +295,7 @@ public:
 //        return func;
     }
 
-    QUrl audioRecomendationUrl(QString & uid, bool byUser, bool randomize) {
+    QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -314,8 +314,8 @@ public:
         return baseUrl("execute", query);
     }
 
-    QJsonObject audioRecomendation(QString & uid, bool byUser, bool randomize) {
-        return proceedQuery(audioRecomendationUrl(uid, byUser, randomize));
+    QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
+        return proceedQuery(audioRecomendationsUrl(uid, byUser, randomize));
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
@@ -365,7 +365,7 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonObject searchAudio(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
         return proceedQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
 
 
@@ -400,7 +400,7 @@ public:
         return baseUrl("execute", query);
     }
 
-    QJsonObject searchAudioLimited(QString & predicate, int limitation) {
+    QJsonObject audioSearchLimited(QString & predicate, int limitation) {
         return proceedQuery(audioSearchLimitedUrl(predicate, limitation));
 
 

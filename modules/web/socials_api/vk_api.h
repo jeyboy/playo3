@@ -34,8 +34,21 @@ public:
 
     inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
-    void userInfo(QString & uid, bool fullInfo, Func func);
-    void wallAudio(QString & uid, Func func);
+    void userInfo(QString & uid, bool fullInfo, Func func) {
+        registerAsync(
+            QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::userInfo, uid, fullInfo), func
+        );
+    }
+    void wallAudio(QString & uid, Func func) {
+        registerAsync(
+            QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::wallAudio, uid), func
+        );
+    }
+    void audioRecomendations(QString & uid, bool byUser, bool randomize, Func func) {
+        registerAsync(
+            QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::audioRecomendations, uid, byUser, randomize), func
+        );
+    }
 
 signals:
     void showCaptcha();
@@ -58,7 +71,7 @@ protected:
 //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
 private:   
-    inline VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth() {
+    inline VkApi(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth(), VkRequestApi() {
         fromJson(hash);
         connect(this, SIGNAL(showCaptcha()), this, SLOT(showingCaptcha()), Qt::BlockingQueuedConnection);
     }

@@ -146,10 +146,10 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
             case SearchRequest::request_vk: {
                 QJsonArray items;
                 if (r.spredicate.isEmpty() && r.popular) {
-                    items = VkApi::instance() -> audioPopularSync(this, true, r.sgenre_id).value("audio_list").toArray();
+                    items = VkApi::instance() -> audioPopular(true, r.sgenre_id).value("audio_list").toArray();
                 } else {
-                    items = VkApi::instance() -> audioSearchSync(
-                        this, VkApi::instance() -> userID(), r.spredicate, request.type == artist, request.search_in_own, r.popular
+                    items = VkApi::instance() -> audioSearch(
+                        r.spredicate, request.type == artist, request.search_in_own, r.popular
                     ).value("audio_list").toArray();
                 }
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));

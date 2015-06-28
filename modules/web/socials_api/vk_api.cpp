@@ -27,18 +27,6 @@ QJsonObject VkApi::toJson() {
     return root;
 }
 
-void VkApi::userInfo(QString & uid, bool fullInfo, Func func) {
-    registerAsync(
-        QtConcurrent::run(this, &VkApi::userInfo, uid, fullInfo), func
-    );
-}
-
-void VkApi::wallAudio(QString & uid, Func func) {
-    registerAsync(
-        QtConcurrent::run(this, &VkApi::wallAudio, uid), func
-    );
-}
-
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
