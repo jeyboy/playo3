@@ -42,7 +42,7 @@ protected:
 
     inline QJsonObject & extractBody(QJsonObject & response) { return response; }
     inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("response").toArray().isEmpty(); }
-    inline bool extractStatus(QJsonObject & response, int & code, QString & message) {
+    inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
         QJsonObject stat_obj = response.value("response").toObject().value("errors").toArray().first().toObject();
         message = stat_obj.value("error_message").toString();
         return (code = stat_obj.value("error_code").toInt()) == 0;

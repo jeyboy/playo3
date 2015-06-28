@@ -52,12 +52,34 @@ void VkApi::proceedAuthResponse(const QUrl & url) {
 /// PROTECTED
 ///////////////////////////////////////////////////////////
 
-bool VkApi::captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url) {
-    CustomNetworkAccessManager * manager = CustomNetworkAccessManager::manager();
+bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
+    QJsonObject stat_obj = response.value("error").toObject();
+    message = stat_obj.value("error_msg").toString();
+    code = stat_obj.value("error_code").toInt();
 
-    QUrl image_url(error.value("captcha_img").toString());
+
+    if (err_code == 14) {
+        return captchaProcessing(response, url);
+//            return proceedQuery(url, response);
+    }
+    else return code == 0;
+}
+
+QUrl VkApi::buildUrl(QUrl tUrl, int offset, int limit) {
+    QString urlStr = tUrl.toString();
+    urlStr.replace("%%1", QString::number(offset)).replace("%%2", QString::number(limit));
+    return QUrl(urlStr);
+}
+
+
+bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
+    QUrl image_url(response.value("captcha_img").toString());
+
+    CustomNetworkAccessManager * manager = 0;
+    bool isNew = CustomNetworkAccessManager::validManager(manager);
     captchaDialog -> setImage(manager -> openImage(image_url));
     emit showCaptcha();
+    if (isNew) delete manager;
 
     QString captchaText = captchaDialog -> captchaText();
     if (captchaText.isEmpty())
@@ -67,13 +89,12 @@ bool VkApi::captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url) {
     query.removeQueryItem("captcha_sid");
     query.removeQueryItem("captcha_key");
 
-    query.addQueryItem("captcha_sid", error.value("captcha_sid").toString());
+    query.addQueryItem("captcha_sid", response.value("captcha_sid").toString());
     query.addQueryItem("captcha_key", captchaText);
 
     url.setQuery(query);
 
-    QNetworkReply * m_http = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(url));
-    return responseRoutine(m_http, func, error);
+    return proceedQuery(url, response);
 }
 
 ///////////////////////////////////////////////////////////

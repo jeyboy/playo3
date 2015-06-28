@@ -15,7 +15,7 @@ public:
         QUrlQuery query = QUrlQuery();
 
         query.addQueryItem("v", apiVersion());
-        query.addQueryItem("access_token", token);
+        query.addQueryItem("access_token", token());
         query.addQueryItem("test_mode", "1");
 
         return query;
@@ -44,26 +44,14 @@ protected:
     inline QString offsetKey() const { return "offset"; }
     inline QString limitKey() const { return "count"; }
     inline int requestLimit() const { return 200; }
-    inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) {
-        offset = response.value("offset").toInt();
-    }
+    inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value("offset").toInt(); }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
     inline bool endReached(QJsonObject & response, int /*offset*/) { return extractBody(response).value("finished").toBool(); }
-    inline bool extractStatus(QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = response.value("error").toObject();
-        message = stat_obj.value("error_msg").toString();
-        return (code = stat_obj.value("error_code").toInt()) == 0;
-    }
+    bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
-    QUrl buildUrl(QUrl tUrl, int offset, int limit) {
-        QString urlStr = tUrl.toString();
-        urlStr.replace("%%1", QString::number(offset)).replace("%%2", QString::number(limit));
-        return QUrl(urlStr);
-    }
-
-
-//    bool captchaProcessing(QJsonObject & error, ApiFunc * func, QUrl url);
+    QUrl buildUrl(QUrl tUrl, int offset, int limit);
+    bool captchaProcessing(QJsonObject & response, QUrl & url);
 //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
 private:   

@@ -40,7 +40,7 @@ protected:
     virtual QString offsetKey() const = 0;
     virtual QString limitKey() const = 0;
 
-    virtual bool extractStatus(QJsonObject & response, int & code, QString & message) = 0;
+    virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
     QJsonObject proceedQuery(QUrl url, bool wrapJson = false, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
@@ -54,7 +54,7 @@ protected:
         response = manager -> getToJson(QNetworkRequest(url), wrapJson);
         if (isNew) delete manager;
 
-        bool status = extractStatus(response, code, message);//code == 0;
+        bool status = extractStatus(url, response, code, message);//code == 0;
         if (!status) sendError(errorReceiver, message, code);
         return status;
     }
