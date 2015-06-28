@@ -31,7 +31,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code", QString(
-            "var limit = 100; var offset = %%1; finished = false"
+            "var limit = 100; var offset = _1_; var finished = false; "
             "var response = []; var look_window = limit * " + getApiLimit() + " + offset; var post_items = [];"
 
             "while (offset < look_window && !finished) {"
@@ -96,7 +96,7 @@ public:
                "var curr; var count = 5;"
                "var folders_result = API.audio.getAlbums({"
                "                count: count, "
-               "                offset: %%1, "
+               "                offset: _1_, "
                "                owner_id: " + uid + ""
                "    });"
                "var folders_count = folders_result.count;"
@@ -116,7 +116,7 @@ public:
                "return { "
                "    albums: proceed_folders, "
                "    finished: (folders_count < " + getApiLimit() + "), "
-               "    offset: %%1 + count"
+               "    offset: _1_ + count"
                "};"
            )
         );
@@ -125,39 +125,6 @@ public:
     }
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
         return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
-
-//        QJsonObject doc;
-//        QVariantList res, temp;
-//        res.append(func -> result.value("albums").toArray().toVariantList());
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-//        QNetworkReply * m_http;
-
-//        while(true) {
-//            m_http = netManager -> getSync(QNetworkRequest(
-//                VkApiPrivate::audioAlbumsUrl(func -> uid, token(), offset)
-//            ));
-
-//            if (!responseRoutine(m_http, func, doc))
-//                break;
-
-//            doc = doc.value("response").toObject();
-
-//            temp = doc.value("albums").toArray().toVariantList();
-//            if (temp.isEmpty())
-//                break;
-
-//            temp.append(res);
-//            res = temp;
-//    //        res.append(doc.value("albums").toArray().toVariantList());
-//            offset = doc.value("offset").toInt();
-//            if (doc.value("finished").toBool())
-//                break;
-//        }
-
-//        func -> result.insert("albums", QJsonArray::fromVariantList(res));
-
-//        return func;
     }
 
 

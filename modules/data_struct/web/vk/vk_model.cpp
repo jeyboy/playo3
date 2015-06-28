@@ -25,9 +25,7 @@ void VkModel::refreshWall() {
     VkApi::instance() -> wallAudio(tab_uid, Func(this, "proceedWallList"));
 }
 
-void VkModel::proceedWallList(QJsonObject & hash) {
-    QJsonArray posts = hash.value("posts").toArray();
-
+void VkModel::proceedWallList(QJsonArray & posts) {
     if (posts.count() > 0) {
         QJsonArray audios;
         QJsonObject post;

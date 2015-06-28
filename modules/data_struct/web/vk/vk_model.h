@@ -19,7 +19,7 @@ namespace Playo3 {
         virtual void refreshWall();
 
     protected slots:
-        void proceedWallList(QJsonObject &);
+        void proceedWallList(QJsonArray &);
 
         void proceedAudioList(QJsonObject &);
         void proceedAudioListAndRetry(QJsonObject &);

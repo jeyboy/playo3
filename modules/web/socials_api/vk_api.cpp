@@ -64,7 +64,8 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
 
 QUrl VkApi::buildUrl(QUrl tUrl, int offset, int limit) {
     QString urlStr = tUrl.toString();
-    urlStr.replace("%%1", QString::number(offset)).replace("%%2", QString::number(limit));
+    urlStr = urlStr.replace("_1_", QString::number(offset)).replace("_2_", QString::number(limit));
+    qDebug() << "LALA" << urlStr;
     return QUrl(urlStr);
 }
 
@@ -93,22 +94,3 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
 
     return sQuery(url, response);
 }
-
-///////////////////////////////////////////////////////////
-/// SLOTS
-///////////////////////////////////////////////////////////
-
-
-//void VkApi::audioCountRequest() {}
-//void VkApi::audioSearchRequest() {}
-//void VkApi::audioCopyRequest() {}
-//void VkApi::audioRemoveRequest() {}
-
-//void VkApi::audioSaveServerRequest() {}
-//void VkApi::audioSave() {}
-
-//void VkApi::audioAlbumsRequest() {}
-//void VkApi::audioAlbumAddRequest() {}
-//void VkApi::audioAlbumEditRequest() {}
-//void VkApi::audioAlbumRemoveRequest() {}
-//void VkApi::audioAlbumMoveToRequest() {}
