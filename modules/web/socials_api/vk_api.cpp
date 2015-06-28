@@ -27,6 +27,18 @@ QJsonObject VkApi::toJson() {
     return root;
 }
 
+void VkApi::userInfo(QString & uid, bool fullInfo, Func func) {
+    registerAsync(
+        QtConcurrent::run(this, &VkApi::userInfo, uid, fullInfo), func
+    );
+}
+
+void VkApi::wallAudio(QString & uid, Func func) {
+    registerAsync(
+        QtConcurrent::run(this, &VkApi::wallAudio, uid), func
+    );
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
@@ -57,8 +69,7 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
     message = stat_obj.value("error_msg").toString();
     code = stat_obj.value("error_code").toInt();
 
-
-    if (err_code == 14) {
+    if (code == 14) {
         return captchaProcessing(response, url);
 //            return proceedQuery(url, response);
     }

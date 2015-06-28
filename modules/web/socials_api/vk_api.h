@@ -34,6 +34,9 @@ public:
 
     inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
+    void userInfo(QString & uid, bool fullInfo, Func func);
+    void wallAudio(QString & uid, Func func);
+
 signals:
     void showCaptcha();
 public slots:

@@ -27,7 +27,7 @@ protected:
     }
 
 public:
-    QUrl wallUrl(QString uid) {
+    QUrl wallUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code", QString(
@@ -58,7 +58,7 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonArray wallMedia(QString uid) {
+    QJsonArray wallAudio(QString & uid) {
         return proceedQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
 //        QJsonObject doc;
 //        QVariantList res;
@@ -88,7 +88,7 @@ public:
 //        return func;
     }
 
-    QUrl audioAlbumsUrl(QString uid) {
+    QUrl audioAlbumsUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -123,7 +123,7 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonArray audioAlbums(QString uid, int offset = 0) {
+    QJsonArray audioAlbums(QString & uid, int offset = 0) {
         return proceedQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
 
 //        QJsonObject doc;
@@ -161,7 +161,7 @@ public:
     }
 
 
-    QUrl userFullInfoUrl(QString uid) {
+    QUrl userFullInfoUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -229,7 +229,7 @@ public:
 
        return baseUrl("execute", query);
     }
-    QUrl userShortInfoUrl(QString uid) {
+    QUrl userShortInfoUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -269,7 +269,7 @@ public:
     }
 
 
-    QJsonObject userInfo(QString uid, bool fullInfo = true) {
+    QJsonObject userInfo(QString & uid, bool fullInfo = true) {
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
         QJsonObject ret = proceedQuery(url);
         ret = extractBody(ret);
@@ -295,7 +295,7 @@ public:
 //        return func;
     }
 
-    QUrl audioRecomendationUrl(QString uid, bool byUser, bool randomize) {
+    QUrl audioRecomendationUrl(QString & uid, bool byUser, bool randomize) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -314,7 +314,7 @@ public:
         return baseUrl("execute", query);
     }
 
-    QJsonObject audioRecomendation(QString uid, bool byUser, bool randomize) {
+    QJsonObject audioRecomendation(QString & uid, bool byUser, bool randomize) {
         return proceedQuery(audioRecomendationUrl(uid, byUser, randomize));
 
 //        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
@@ -340,7 +340,7 @@ public:
         popularity = 2
     };
 
-    QUrl audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort) {
+    QUrl audioSearchUrl(QString & searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort) {
         // count max eq 300 , limit is 1000
         QUrlQuery query = genDefaultParams();
 
@@ -365,7 +365,7 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonObject searchAudio(QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+    QJsonObject searchAudio(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
         return proceedQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
 
 
@@ -387,7 +387,7 @@ public:
 //        return func;
     }
 
-    QUrl audioSearchLimitedUrl(QString searchStr, int limit) {
+    QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code", QString(
@@ -400,7 +400,7 @@ public:
         return baseUrl("execute", query);
     }
 
-    QJsonObject searchAudioLimited(QString predicate, int limitation) {
+    QJsonObject searchAudioLimited(QString & predicate, int limitation) {
         return proceedQuery(audioSearchLimitedUrl(predicate, limitation));
 
 
@@ -455,7 +455,7 @@ public:
 //        return func;
     }
 
-    QUrl audioRefreshUrl(QStringList uids) {
+    QUrl audioRefreshUrl(QStringList & uids) {
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code",
@@ -468,7 +468,7 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonObject getAudiosInfo(QStringList audio_uids) {
+    QJsonObject getAudiosInfo(QStringList & audio_uids) {
         return proceedQuery(audioRefreshUrl(audio_uids));
 
 
@@ -491,7 +491,7 @@ public:
 
 //        return doc;
     }
-    QJsonObject getAudioInfo(QString audio_uid) {
+    QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
         return proceedQuery(audioRefreshUrl(uids));
     }
@@ -500,7 +500,7 @@ public:
         return getAudioInfo(audio_uid).value("url").toString();
     }
 
-    QUrl audioLyricsUrl(QString lyrics_id) {
+    QUrl audioLyricsUrl(QString & lyrics_id) {
         QUrlQuery query = genDefaultParams();
         setParam(query, "lyrics_id", lyrics_id);
         return baseUrl("audio.getLyrics", query);

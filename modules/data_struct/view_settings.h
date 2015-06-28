@@ -13,7 +13,7 @@ namespace Playo3 {
 
         ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
             bool isPlaylist = false, QString uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
-            interactive(isInteractive), common(isCommon), uid(uniq_id), type(cType), rel_type(rel) { }
+            interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
         ViewSettings(QJsonObject obj) {
             deleteFile = obj["del"].toBool();
