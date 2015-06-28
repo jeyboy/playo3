@@ -26,6 +26,7 @@ protected:
         return url.toString();
     }
 
+public:
     QUrl wallUrl(QString uid) {
         QUrlQuery query = genDefaultParams();
 

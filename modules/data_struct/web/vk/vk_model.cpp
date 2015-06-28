@@ -15,17 +15,27 @@ void VkModel::refresh(bool retryPlaing) {
     lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    VkApi::instance() -> audioList(
-        this,
-        retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)),
-        tab_uid
-    );
+
+    VkApi::instance() -> userInfo(tab_uid, tab_uid == VkApi::instance() -> userID());
+//        audioList(
+//        this,
+//        retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)),
+//        tab_uid
+//    );
+
+
+
+//    VkApi::instance() -> audioList(
+//        this,
+//        retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)),
+//        tab_uid
+//    );
 }
 
 void VkModel::refreshWall() {
     emit moveInProcess();
     QApplication::processEvents();
-    VkApi::instance() -> wallMediaList(this, SLOT(proceedWallList(QJsonObject &)), tab_uid);
+    VkApi::instance() -> wallMedia(tab_uid);
 }
 
 void VkModel::proceedWallList(QJsonObject & hash) {
