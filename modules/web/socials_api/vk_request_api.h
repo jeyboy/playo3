@@ -279,19 +279,6 @@ public:
         }
 
         return ret;
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-
-//        m_http = netManager -> getSync(QNetworkRequest(url));
-//        if (responseRoutine(m_http, func, func -> result)) {
-//            func -> result = func -> result.value("response").toObject();
-
-//            if (!func -> result.value("albums_finished").toBool()) {
-//                int offset = func -> result.value("albums_offset").toInt();
-//                audioAlbumsRoutine(func, offset);
-//            }
-//        }
-
-//        return func;
     }
 
     QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
@@ -315,21 +302,6 @@ public:
 
     QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
         return sQuery(audioRecomendationsUrl(uid, byUser, randomize));
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-
-//        QUrl url = VkApiPrivate::audioRecomendationUrl(
-//            uid,
-//            byUser,
-//            randomize,
-//        );
-
-//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-//        if (responseRoutine(m_http, func, func -> result)) {
-//            func -> result = func -> result.value("response").toObject();
-//        }
-
-//        return func;
     }
 
 
@@ -366,24 +338,6 @@ public:
     }
     QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
         return sQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
-
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-
-//        QUrl url = VkApiPrivate::audioSearchUrl(
-//            predicate,
-//            false,
-//            onlyArtist,
-//            inOwn,
-//            mostPopular ? 2 : 0,
-//            token()
-//        );
-
-//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-//        if (responseRoutine(m_http, func, func -> result))
-//            func -> result = func -> result.value("response").toObject();
-
-//        return func;
     }
 
     QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
@@ -401,24 +355,6 @@ public:
 
     QJsonObject audioSearchLimited(QString & predicate, int limitation) {
         return sQuery(audioSearchLimitedUrl(predicate, limitation));
-
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-//        ApiFunc * func = new ApiFunc(receiver, 0, "");
-
-//        QUrl url = VkApiPrivate::audioSearchLimitedUrl(
-//            predicate,
-//            limitation,
-//            token()
-//        );
-
-//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-//        QJsonObject res;
-//        if (responseRoutine(m_http, func, res))
-//            res = res.value("response").toObject();
-
-//        delete func;
-//        return res;
     }
 
     QUrl audioPopularUrl(bool onlyEng, int genreId) {
@@ -438,20 +374,6 @@ public:
     }
     QJsonObject audioPopular(bool onlyEng, int genreId) {
         return sQuery(audioPopularUrl(onlyEng, genreId));
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-
-//        QUrl url = VkApiPrivate::audioPopularUrl(
-//            onlyEng,
-//            token(),
-//            genreId
-//        );
-
-//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-//        if (responseRoutine(m_http, func, func -> result))
-//            func -> result = func -> result.value("response").toObject();
-
-//        return func;
     }
 
     QUrl audioRefreshUrl(QStringList & uids) {
@@ -465,26 +387,6 @@ public:
     }
     QJsonArray getAudiosInfo(QStringList & audio_uids) {
         return sQuery(audioRefreshUrl(audio_uids), false, 0, 0, true).value("response").toArray();
-
-
-//        QUrl url = VkApiPrivate::audioRefreshUrl(audio_uids, token());
-
-//        CustomNetworkAccessManager * netManager;
-//        bool new_manager = CustomNetworkAccessManager::validManager(netManager);
-
-//    //    QNetworkReply * reply = netManager -> getSync(QNetworkRequest(url));
-
-//    //    QJsonObject doc = responseToJson(reply -> readAll());
-
-//    //    reply -> close();
-//    //    delete reply;
-
-//        QJsonObject doc = netManager -> getToJson(QNetworkRequest(url));
-
-//        if (new_manager)
-//            delete netManager;
-
-//        return doc;
     }
     QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
