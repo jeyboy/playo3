@@ -35,6 +35,7 @@ protected:
 
     virtual bool endReached(QJsonObject & response, int offset) = 0;
     virtual int requestLimit() const = 0;
+    inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
 
     virtual QString offsetKey() const = 0;
     virtual QString limitKey() const = 0;
@@ -81,7 +82,7 @@ protected:
 
             if (!invalid) result.append(val);
 
-            offset += requestLimit();
+            iterateOffset(offset, response, url);
             if (offset >= limit || endReached(response, offset)) break;
             QThread::msleep(REQUEST_DELAY);
         }
@@ -101,7 +102,7 @@ protected:
 
     void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
         if (offset > 0) setParam(query, offsetKey(), QString::number(offset));
-        setParam(query, limitKey(), QString::number(qMin(limit, requestLimit())));
+        setParam(query, limitKey(), QString::number(limit));
     }
 
     inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }

@@ -43,10 +43,13 @@ protected:
 
     inline QString offsetKey() const { return "offset"; }
     inline QString limitKey() const { return "count"; }
-//    inline int requestLimit() const { return 200; }
+    inline int requestLimit() const { return 200; }
+    inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) {
+        offset = response.value("offset").toInt();
+    }
 
-//    inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-//    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("response").toArray().isEmpty(); }
+    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
+    inline bool endReached(QJsonObject & response, int /*offset*/) { return extractBody(response).value("finished").toBool(); }
     inline bool extractStatus(QJsonObject & response, int & code, QString & message) {
         QJsonObject stat_obj = response.value("error").toObject();
         message = stat_obj.value("error_msg").toString();

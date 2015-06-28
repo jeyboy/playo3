@@ -29,8 +29,6 @@ void VkModel::refreshWall() {
 }
 
 void VkModel::proceedWallList(QJsonObject & hash) {
-    qDebug() << "DATE " << QDateTime::fromTime_t(hash.value("date").toInt());
-
     QJsonArray posts = hash.value("posts").toArray();
 
     if (posts.count() > 0) {
