@@ -300,101 +300,105 @@ protected:
         setParam(query, "code",
            QString(
                "var recomendations = API.audio.getRecommendations({"
-                            + QString(byUser ? "user_id: " : "target_audio: ") + "\"" + uid + "\", "
-               "            count: 1000, "
-               "            shuffle: " + boolToStr(randomize) + ""
+               + QString(byUser ? "user_id: " : "target_audio: ") + "\"" + uid + "\", "
+               "   count: 1000, "
+               "   shuffle: " + boolToStr(randomize) + ""
                "});"
                "return { "
-               "    audio_list: recomendations "
+               "   audio_list: recomendations "
                "};"
            )
         );
 
         return baseUrl("execute", query);
     }
-    ApiFunc * audioRecomendationRoutine(ApiFunc * func, bool byUser, bool randomize) {
-        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
-        QUrl url = VkApiPrivate::audioRecomendationUrl(
-            func -> uid,
-            byUser,
-            randomize,
-            token()
-        );
+    QJsonObject audioRecomendation(QString uid, bool byUser, bool randomize) {
+        return proceedQuery(audioRecomendationUrl(uid, byUser, randomize));
 
-        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-        if (responseRoutine(m_http, func, func -> result)) {
-            func -> result = func -> result.value("response").toObject();
-        }
+//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
-        return func;
+//        QUrl url = VkApiPrivate::audioRecomendationUrl(
+//            uid,
+//            byUser,
+//            randomize,
+//        );
+
+//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+//        if (responseRoutine(m_http, func, func -> result)) {
+//            func -> result = func -> result.value("response").toObject();
+//        }
+
+//        return func;
     }
 
-    // sort  2 - by popularity, 1 - by duration, 0 - by creation date
-    QUrl audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, int sort) {
-        QUrl url(getApiUrl() + "execute");
-        QUrlQuery query = methodParams(token);
 
+    enum SearchSort : int {
+        creation_date = 0,
+        duration = 1,
+        popularity = 2
+    };
+
+    QUrl audioSearchUrl(QString searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort) {
         // count max eq 300 , limit is 1000
-        query.addQueryItem("code",
-                           QString(
-                               "var it = 0;"
-                               "var search = [];"
-                               "var rule = true;"
-                               "do {"
-                               "    var items = API.audio.search({"
-                               "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: 300, offset: it, lyrics: 0,"
-                               "        auto_complete: " + boolToStr(autoFix) + ","
-                               "        performer_only: " + boolToStr(artistOnly) + ","
-                               "        sort: " + QString::number(sort) + ","
-                               "        search_own: " + boolToStr(searchByOwn) + ""
-                               "    }).items;"
-                               "    search = search %2b items;"
-                               "    it = it %2b items.length;"
-                               "    rule = it < 1000 && items.length != 0;"
-                               "} while(rule);"
-                               "return {audio_list: search};"
-                           )
-        );
+        QUrlQuery query = genDefaultParams();
 
-        url.setQuery(query);
-        return url;
+        setParam(query, "code", QString(
+            "var it = 0;"
+            "var search = [];"
+            "var rule = true;"
+            "do {"
+            "    var items = API.audio.search({"
+            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: 300, offset: it, lyrics: 0,"
+            "        auto_complete: " + boolToStr(autoFix) + ","
+            "        performer_only: " + boolToStr(artistOnly) + ","
+            "        sort: " + QString::number(sort) + ","
+            "        search_own: " + boolToStr(searchByOwn) + ""
+            "    }).items;"
+            "    search = search %2b items;"
+            "    it = it %2b items.length;"
+            "    rule = it < 1000 && items.length != 0;"
+            "} while(rule);"
+            "return {audio_list: search};"
+        ));
+
+        return baseUrl("execute", query);
     }
-    ApiFunc * searchAudioRoutine(ApiFunc * func, QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
+    QJsonObject searchAudio(QString predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
+        return proceedQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
 
-        QUrl url = VkApiPrivate::audioSearchUrl(
-            predicate,
-            false,
-            onlyArtist,
-            inOwn,
-            mostPopular ? 2 : 0,
-            token()
-        );
 
-        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
-        if (responseRoutine(m_http, func, func -> result))
-            func -> result = func -> result.value("response").toObject();
+//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
 
-        return func;
+//        QUrl url = VkApiPrivate::audioSearchUrl(
+//            predicate,
+//            false,
+//            onlyArtist,
+//            inOwn,
+//            mostPopular ? 2 : 0,
+//            token()
+//        );
+
+//        QNetworkReply * m_http = netManager -> getSync(QNetworkRequest(url));
+//        if (responseRoutine(m_http, func, func -> result))
+//            func -> result = func -> result.value("response").toObject();
+
+//        return func;
     }
 
     QUrl audioSearchLimitedUrl(QString searchStr, int limit) {
-        QUrl url(getApiUrl() + "execute");
-        QUrlQuery query = methodParams(token);
+        QUrlQuery query = genDefaultParams();
 
-        query.addQueryItem("code",
-                           QString(
-                               "    var items = API.audio.search({"
-                               "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: " + QString::number(limit) + ", lyrics: 0"
-                               "    }).items;"
-                               "return {audio_list: search};"
-                           )
-        );
+        setParam(query, "code", QString(
+            "    var items = API.audio.search({"
+            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: " + QString::number(limit) + ", lyrics: 0"
+            "    }).items;"
+            "return {audio_list: search};"
+        ));
 
-        url.setQuery(query);
-        return url;
+        return baseUrl("execute", query);
     }
+    // stop here
     QJsonObject audioSearchSync(const QObject * receiver, QString predicate, int limitation) {
         CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
         ApiFunc * func = new ApiFunc(receiver, 0, "");
