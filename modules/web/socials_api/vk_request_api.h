@@ -272,7 +272,6 @@ public:
     QJsonObject userInfo(QString & uid, bool fullInfo = true) {
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
         QJsonObject ret = sQuery(url);
-        ret = extractBody(ret);
 
         if (!ret.value("albums_finished").toBool()) {
             QJsonArray ar = audioAlbums(uid, ret.value("albums_offset").toInt());
