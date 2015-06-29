@@ -65,8 +65,9 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
 QUrl VkApi::buildUrl(QUrl tUrl, int offset, int limit) {
     QString urlStr = tUrl.toString();
     urlStr = urlStr.replace("_1_", QString::number(offset)).replace("_2_", QString::number(limit));
-    qDebug() << "LALA" << urlStr;
-    return QUrl(urlStr);
+    QUrl url(urlStr);
+    qDebug() << "LALA" << url;
+    return url;
 }
 
 
