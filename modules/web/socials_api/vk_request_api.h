@@ -99,6 +99,9 @@ public:
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
         return lQuery(audioAlbumsUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
     }
+    void audioAlbums(QString & uid, QJsonArray & arr, int offset = 0) {
+        lQuery(audioAlbumsUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", arr, false, offset);
+    }
 
 
     QUrl userFullInfoUrl(QString & uid) {
@@ -214,8 +217,11 @@ public:
         QJsonObject ret = sQuery(url);
 
         if (!ret.value("albums_finished").toBool()) {
-            QJsonArray ar = audioAlbums(uid, ret.value("albums_offset").toInt());
-            ret.value("albums").toArray().append(ar);
+            QJsonArray ar = ret.value("albums").toArray();
+            qDebug() << ar.count();
+            audioAlbums(uid, ar, ret.value("albums_offset").toInt());
+            ret.insert("albums", ar);
+            qDebug() << ar.count();
         }
 
         return ret;
