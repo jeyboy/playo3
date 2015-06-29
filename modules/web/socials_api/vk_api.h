@@ -63,7 +63,7 @@ protected:
     inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value("offset").toInt(); }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
-    inline bool endReached(QJsonObject & response, int /*offset*/) { return extractBody(response).value("finished").toBool(); }
+    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("finished").toBool(); }
     bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
     QUrl buildUrl(QUrl tUrl, int offset, int limit);

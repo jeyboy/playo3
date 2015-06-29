@@ -32,13 +32,12 @@ public:
 
         setParam(query, "code", QString(
             "var limit = 100; var offset = _1_; var finished = false; "
-            "var response = []; var post_items = [];"
-            "var look_window = (offset %2b limit * " + getApiLimit() + ");"
+            "var response = []; var look_window = limit * " + getApiLimit() + " %2b offset; var post_items = [];"
 
             "while (offset < look_window && !finished) {"
             "   var items = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "}).items;"
-            "   finished = items.length == 0;"
-            "   post_items = post_items %2b items;"
+            "   finished = items.length < limit;"
+            "   post_items.push(items);"
             "   offset = offset %2b limit;"
             "}"
 
@@ -61,32 +60,6 @@ public:
     }
     QJsonArray wallAudio(QString & uid) {
         return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
-//        QJsonObject doc;
-//        QVariantList res;
-
-//        CustomNetworkAccessManager * netManager = CustomNetworkAccessManager::manager();
-//        QNetworkReply * m_http;
-
-//        while(true) {
-//            m_http = netManager -> getSync(QNetworkRequest(
-//                VkApiPrivate::wallUrl(func -> uid, token(), offset)
-//            ));
-
-//            if (!responseRoutine(m_http, func, doc))
-//                break;
-
-//            doc = doc.value("response").toObject();
-
-//            res.append(doc.value("posts").toArray().toVariantList());
-
-//            offset = doc.value("offset").toInt();
-//            count = doc.value("count").toInt();
-//            if (offset >= count)
-//                break;
-//        }
-
-//        func -> result.insert("posts", QJsonArray::fromVariantList(res));
-//        return func;
     }
 
     QUrl audioAlbumsUrl(QString & uid) {
@@ -100,7 +73,6 @@ public:
                "                offset: _1_, "
                "                owner_id: " + uid + ""
                "    });"
-               "var folders_count = folders_result.count;"
                "var folders_result = folders_result.items;"
                "var proceed_folders = {};"
                "while(folders_result.length > 0) {"
@@ -116,8 +88,8 @@ public:
                "};"
                "return { "
                "    albums: proceed_folders, "
-               "    finished: (folders_count < " + getApiLimit() + "), "
-               "    offset: _1_ + count"
+               "    finished: (proceed_folders.length < count), "
+               "    offset: _1_ %2b count"
                "};"
            )
         );
@@ -125,7 +97,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
-        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
+        return lQuery(audioAlbumsUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
     }
 
 

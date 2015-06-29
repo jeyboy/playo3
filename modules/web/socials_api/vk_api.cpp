@@ -65,14 +65,12 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
 QUrl VkApi::buildUrl(QUrl tUrl, int offset, int limit) {
     QString urlStr = tUrl.toString();
     urlStr = urlStr.replace("_1_", QString::number(offset)).replace("_2_", QString::number(limit));
-    QUrl url(urlStr);
-    qDebug() << "LALA" << url;
-    return url;
+    return QUrl(urlStr);
 }
 
-
 bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
-    QUrl image_url(response.value("captcha_img").toString());
+    QJsonObject stat_obj = response.value("error").toObject();
+    QUrl image_url(stat_obj.value("captcha_img").toString());
 
     CustomNetworkAccessManager * manager = 0;
     bool isNew = CustomNetworkAccessManager::validManager(manager);
@@ -88,10 +86,10 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
     query.removeQueryItem("captcha_sid");
     query.removeQueryItem("captcha_key");
 
-    query.addQueryItem("captcha_sid", response.value("captcha_sid").toString());
+    query.addQueryItem("captcha_sid", stat_obj.value("captcha_sid").toString());
     query.addQueryItem("captcha_key", captchaText);
 
     url.setQuery(query);
 
-    return sQuery(url, response);
+    return sQuery(url, response, true);
 }
