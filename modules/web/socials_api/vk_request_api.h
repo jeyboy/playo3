@@ -335,7 +335,9 @@ public:
     }
     QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
-        return sQuery(audioRefreshUrl(uids));
+        QJsonObject ret = getAudiosInfo(uids)[0].toObject();
+        qDebug() << ret;
+        return ret;
     }
 
     QString refreshAudioItemUrl(QString audio_uid) {
