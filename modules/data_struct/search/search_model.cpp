@@ -149,7 +149,7 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
                     items = VkApi::instance() -> audioPopular(true, r.sgenre_id).value("audio_list").toArray();
                 } else {
                     items = VkApi::instance() -> audioSearch(
-                        r.spredicate, request.type == artist, request.search_in_own, r.popular
+                        r.spredicate, request.type == artist, request.search_in_own, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT
                     ).value("audio_list").toArray();
                 }
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));

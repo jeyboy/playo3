@@ -256,33 +256,33 @@ public:
         popularity = 2
     };
 
-    QUrl audioSearchUrl(QString & searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort) {
+    QUrl audioSearchUrl(QString & searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort, int limit = 1000) {
         // count max eq 300 , limit is 1000
         QUrlQuery query = genDefaultParams();
 
         setParam(query, "code", QString(
-            "var it = 0;"
-            "var search = [];"
-            "var rule = true;"
+            "var limit = " + QString::number(limit) + ";"
+            "var search = []; var rule = true;"
             "do {"
+            "    var count = limit - search.length;"
+            "    if (count > 300) count = 300;"
             "    var items = API.audio.search({"
-            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: 300, offset: it, lyrics: 0,"
+            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: count, offset: search.length, lyrics: 0,"
             "        auto_complete: " + boolToStr(autoFix) + ","
             "        performer_only: " + boolToStr(artistOnly) + ","
             "        sort: " + QString::number(sort) + ","
             "        search_own: " + boolToStr(searchByOwn) + ""
             "    }).items;"
             "    search = search %2b items;"
-            "    it = it %2b items.length;"
-            "    rule = it < 1000 && items.length != 0;"
+            "    rule = search.length < limit && items.length != 0;"
             "} while(rule);"
             "return {audio_list: search};"
         ));
 
         return baseUrl("execute", query);
     }
-    QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular) {
-        return sQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date));
+    QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
+        return sQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)));
     }
 
     QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
