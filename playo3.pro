@@ -267,7 +267,6 @@ HEADERS  += playo.h \
     modules/controls/equalizer.h \
     modules/web/service_api/echonest_artist_api.h \
     modules/web/service_api/echonest_song_api.h \
-    modules/controls/equalizer.h \
     modules/plugins/web_dialog_interface.h \
     modules/plugins/loader.h \
     modules/web/service_api/echonest_playlist_api.h \

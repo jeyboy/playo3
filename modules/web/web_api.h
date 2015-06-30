@@ -16,21 +16,6 @@
 
 #include "utils/async.h"
 
-struct ApiFunc {
-    inline ApiFunc() { }
-    inline ApiFunc(const QObject * receiver, const char * respSlot, QString user_id) {
-        obj = receiver;
-        slot = respSlot;
-        uid = user_id;
-    }
-    inline ~ApiFunc() {}
-
-    QString uid;
-    const QObject * obj;
-    const char * slot;
-    QJsonObject result;
-};
-
 class CaptchaDialog;
 
 class WebApi : public Async {
@@ -65,7 +50,6 @@ public:
 
 signals:
     void responseReady(QString);
-    void routineFinished(QJsonObject &);
     void errorReceived(int, QString);
     void authorized();
 
@@ -73,12 +57,7 @@ public slots:
     void showingCaptcha();
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 
-protected slots:
-    void apiCallFinished();  // remove later
-
 protected:
-    void startApiCall(QFuture<ApiFunc *> feature); // remove later
-
     CaptchaDialog * captchaDialog;
 
     QHash<QString, QString> friends;

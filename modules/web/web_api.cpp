@@ -72,18 +72,3 @@ void WebApi::showingCaptcha() {
     captchaDialog -> clearText();
     captchaDialog -> exec();
 }
-
-void WebApi::startApiCall(QFuture<ApiFunc *> feature) {
-    QFutureWatcher<ApiFunc *> * initiator = new QFutureWatcher<ApiFunc *>();
-    connect(initiator, SIGNAL(finished()), this, SLOT(apiCallFinished()));
-    initiator -> setFuture(feature);
-}
-
-void WebApi::apiCallFinished() {
-    QFutureWatcher<ApiFunc *> * initiator = (QFutureWatcher<ApiFunc *> *)sender();
-    ApiFunc * func = initiator -> result();
-    connect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-    emit routineFinished(func -> result);
-    disconnect(this, SIGNAL(routineFinished(QJsonObject &)), func -> obj, func -> slot);
-    delete func;
-}
