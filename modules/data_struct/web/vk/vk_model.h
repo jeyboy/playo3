@@ -16,7 +16,7 @@ namespace Playo3 {
         inline WebApi * api() { return VkApi::instance(); }
     public slots:
         virtual void refresh(bool retryPlaing = false);
-        virtual void refreshWall();
+//        virtual void refreshWall();
 
     protected slots:
         void proceedWallList(QJsonArray &);

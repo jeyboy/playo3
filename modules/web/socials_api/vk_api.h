@@ -39,11 +39,11 @@ public:
             QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::userInfo, uid, fullInfo), func
         );
     }
-    void wallAudio(QString & uid, Func func) {
-        registerAsync(
-            QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::wallAudio, uid), func
-        );
-    }
+//    void wallAudio(QString & uid, Func func) {
+//        registerAsync(
+//            QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::wallAudio, uid), func
+//        );
+//    }
     void audioRecomendations(QString & uid, bool byUser, bool randomize, Func func) {
         registerAsync(
             QtConcurrent::run((VkRequestApi *)this, &VkRequestApi::audioRecomendations, uid, byUser, randomize), func

@@ -354,10 +354,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
             //        actions.append(openAct);
             //    }
 
-            if (mdl -> containerType() == vk) {
-                actions.append((act = new QAction(QIcon(":/refresh"), "Parse/Refresh Wall", this)));
-                connect(act, SIGNAL(triggered(bool)), mdl, SLOT(refreshWall()));
-            }
+//            if (mdl -> containerType() == vk) {
+//                actions.append((act = new QAction(QIcon(":/refresh"), "Parse/Refresh Wall", this)));
+//                connect(act, SIGNAL(triggered(bool)), mdl, SLOT(refreshWall()));
+//            }
 
 //            sepAct = new QAction(this);
 //            sepAct -> setSeparator(true);

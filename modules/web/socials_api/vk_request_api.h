@@ -27,40 +27,40 @@ protected:
     }
 
 public:
-    QUrl wallUrl(QString & uid) {
-        QUrlQuery query = genDefaultParams();
+//    QUrl wallUrl(QString & uid) {
+//        QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code", QString(
-            "var limit = 100; var offset = _1_; var finished = false; "
-            "var response = []; var look_window = limit * " + getApiLimit() + " %2b offset; var post_items = [];"
+//        setParam(query, "code", QString(
+//            "var limit = 100; var offset = _1_; var finished = false; "
+//            "var response = []; var look_window = limit * " + getApiLimit() + " %2b offset; var post_items = [];"
 
-            "while (offset < look_window && !finished) {"
-            "   var items = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "}).items;"
-            "   finished = items.length < limit;"
-            "   post_items.push(items);"
-            "   offset = offset %2b limit;"
-            "}"
+//            "while (offset < look_window && !finished) {"
+//            "   var items = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "}).items;"
+//            "   finished = items.length < limit;"
+//            "   post_items.push(items);"
+//            "   offset = offset %2b limit;"
+//            "}"
 
-            "while(post_items.length > 0) {"
-            "   var curr = post_items.pop();"
-            "   var audios = curr.attachments@.audio %2b"
-            "       curr.copy_history[0].attachments@.audio %2b"
-            "       curr.copy_history[1].attachments@.audio %2b"
-            "       curr.copy_history[2].attachments@.audio %2b"
-            "       curr.copy_history[3].attachments@.audio;"
-            "   if (audios.length > 0) {"
-            "       response.unshift({ title: curr.text, date: curr.date, audios: audios });"
-            "   }"
-            "}"
+//            "while(post_items.length > 0) {"
+//            "   var curr = post_items.pop();"
+//            "   var audios = curr.attachments@.audio %2b"
+//            "       curr.copy_history[0].attachments@.audio %2b"
+//            "       curr.copy_history[1].attachments@.audio %2b"
+//            "       curr.copy_history[2].attachments@.audio %2b"
+//            "       curr.copy_history[3].attachments@.audio;"
+//            "   if (audios.length > 0) {"
+//            "       response.unshift({ title: curr.text, date: curr.date, audios: audios });"
+//            "   }"
+//            "}"
 
-            "return { offset: offset, posts: response, finished: finished };"
-        ));
+//            "return { offset: offset, posts: response, finished: finished };"
+//        ));
 
-        return baseUrl("execute", query);
-    }
-    QJsonArray wallAudio(QString & uid) {
-        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
-    }
+//        return baseUrl("execute", query);
+//    }
+//    QJsonArray wallAudio(QString & uid) {
+//        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
+//    }
 
     QUrl audioAlbumsUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();

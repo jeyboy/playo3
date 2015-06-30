@@ -19,11 +19,11 @@ void VkModel::refresh(bool retryPlaing) {
     VkApi::instance() -> userInfo(tab_uid, tab_uid == VkApi::instance() -> userID(), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
-void VkModel::refreshWall() {
-    emit moveInProcess();
-    QApplication::processEvents();
-    VkApi::instance() -> wallAudio(tab_uid, Func(this, "proceedWallList"));
-}
+//void VkModel::refreshWall() {
+//    emit moveInProcess();
+//    QApplication::processEvents();
+//    VkApi::instance() -> wallAudio(tab_uid, Func(this, "proceedWallList"));
+//}
 
 void VkModel::proceedWallList(QJsonArray & posts) {
     if (posts.count() > 0) {
