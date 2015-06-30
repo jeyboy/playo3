@@ -161,7 +161,7 @@ public:
                "    audio_list: API.audio.get({ "
                "        count: 6000, owner_id: " + uid + ""
                "    }),"
-               "    albums: proceed_folders, "
+               "    albums: [proceed_folders], "
                "    groups: proceed_groups, "
                "    friends: proceed_friends, "
                "    albums_offset: " + getApiLimit() + ", "
@@ -201,7 +201,7 @@ public:
                "        count: 6000, "
                "        owner_id: " + uid + ""
                "    }), "
-               "    albums: sort_by_folders, "
+               "    albums: [sort_by_folders], "
                "    albums_offset: " + getApiLimit() + ", "
                "    albums_finished: (folders_count < " + getApiLimit() + "), "
                "};"
@@ -216,14 +216,13 @@ public:
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
         QJsonObject ret = sQuery(url);
 
-        if (!ret.value("albums_finished").toBool()) {
-            QJsonArray ar = ret.value("albums").toArray();
-            qDebug() << ar.count();
-            audioAlbums(uid, ar, ret.value("albums_offset").toInt());
-            ret.insert("albums", ar);
-            qDebug() << ar.count();
-        }
+        QJsonArray ar = ret.value("albums").toArray();
 
+        if (!ret.value("albums_finished").toBool())
+            audioAlbums(uid, ar, ret.value("albums_offset").toInt());
+        else setCount(ar, ar[0].toArray().size());
+
+        ret.insert("albums", ar);
         return ret;
     }
 

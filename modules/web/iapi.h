@@ -69,7 +69,7 @@ protected:
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
 
         int count = 0;
-        QJsonObject response, countObj;
+        QJsonObject response;
 
         while (sQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
             QJsonValue val = response.value(key);
@@ -89,10 +89,15 @@ protected:
         }
 
         if (isNew) delete manager;
-        countObj.insert("count", count);
-        result.prepend(countObj);
+        setCount(result, count);
 
         return result;
+    }
+
+    inline void setCount(QJsonArray & ar, int count) {
+        QJsonObject countObj;
+        countObj.insert("count", count);
+        ar.prepend(countObj);
     }
 
     inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {

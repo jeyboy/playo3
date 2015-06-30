@@ -59,31 +59,34 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 void VkModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray albums = hash.value("albums").toArray();
     QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
-    int itemsAmount = 0;
+    int itemsAmount = 0, albums_count = VkApi::extractCount(albums);
 
 //    beginResetModel();
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums.count() + audios.count());
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
     {
-        if (albums.count() > 0) {
+        if (albums_count > 0) {
             VkFolder * folder;
             QJsonObject album;
 
-            QJsonArray::Iterator it = albums.begin();
+            for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
+                QJsonArray part_arr = (*album_part).toArray();
+                QJsonArray::Iterator it = part_arr.begin();
+                for(int pos = 0; it != part_arr.end(); it++, pos++) {
+                    qDebug() << (*it);
+                    album = (*it).toObject();
 
-            for(int pos = 0; it != albums.end(); it++, pos++) {
-                album = (*it).toObject();
+                    QJsonArray albumItems = album.value("items").toArray();
+                    if (albumItems.size() > 0) {
+                        folder = rootItem -> createFolder<VkFolder>(
+                            album.value("folder_id").toString(),
+                            album.value("title").toString(),
+                            pos
+                        );
 
-                QJsonArray albumItems = album.value("items").toArray();
-                if (albumItems.size() > 0) {
-                    folder = rootItem -> createFolder<VkFolder>(
-                        album.value("folder_id").toString(),
-                        album.value("title").toString(),
-                        pos
-                    );
-
-                    int folderItemsAmount = proceedVkList(albumItems, folder);
-                    folder -> updateItemsCountInBranch(folderItemsAmount);
-                    itemsAmount += folderItemsAmount;
+                        int folderItemsAmount = proceedVkList(albumItems, folder);
+                        folder -> updateItemsCountInBranch(folderItemsAmount);
+                        itemsAmount += folderItemsAmount;
+                    }
                 }
             }
         }
