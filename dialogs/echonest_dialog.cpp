@@ -207,22 +207,23 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
+      SearchView  * view = new SearchView(this, ViewSettings::echo());
+      QStringList predicates;
 
+      for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
+          QJsonObject obj = (*song).toObject();
+          predicates << (obj.value("artist_name").toString() + " - " + obj.value("title").toString());
+//          new WebItem(
+//              obj.value("id").toString(),
+//              obj.value("artist_id").toString(),
+//              obj.value("artist_name").toString() + " - " + obj.value("title").toString(),
+//              model -> root()
+//          );
+      }
 
-    ListView * view = new ListView(this, ViewSettings::echo());
-    ListModel * model = (ListModel *)view -> model();
+      view -> search(predicates);
 
-    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
-        QJsonObject obj = (*song).toObject();
-        new WebItem(
-            obj.value("id").toString(),
-            obj.value("artist_id").toString(),
-            obj.value("artist_name").toString() + " - " + obj.value("title").toString(),
-            model -> root()
-        );
-    }
-
-    view -> reset();
+//    view -> reset();
     ((QWidget *)sender()) -> parentWidget() -> layout() -> addWidget(view);
 }
 
@@ -294,6 +295,7 @@ QStringList EchonestDialog::genresList() {
     QStringList styles; styles << "";
 
     QJsonArray genres = EchonestApi::instance() -> genresList();
+
     for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
         styles.append((*genre).toObject().value("name").toString());
 

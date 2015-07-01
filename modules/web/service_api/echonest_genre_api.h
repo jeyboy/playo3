@@ -72,8 +72,8 @@ class EchonestGenreApi : public IApi {
         QJsonArray genresList() {
             QJsonObject response;
 
-            if (sQuery(genresListUrl(), response))
-                return extractBody(response).value("genres").toArray();
+            if (sQuery(genresListUrl(), response, false, 0, 0, true))
+                return response.value("genres").toArray();
 
             return QJsonArray();
         }
