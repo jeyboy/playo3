@@ -45,8 +45,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistBiographie(QString artist, QString id = QString(), int limit = 1) {
             QJsonObject response;
 
-            if (sQuery(artistBiographiesUrl(artist, id, limit), response))
-                return extractBody(response).value("biographies").toArray();
+            if (sQuery(artistBiographiesUrl(artist, id, limit), response, true))
+                return response.value("biographies").toArray();
 
             return QJsonArray();
         }
@@ -89,8 +89,8 @@ class EchonestArtistApi : public IApi {
         QJsonObject artistFamiliarity(QString artist, QString id = QString()) {
             QJsonObject response;
 
-            if (sQuery(artistFamiliarityUrl(artist, id), response))
-                return extractBody(response).value("artist").toObject();
+            if (sQuery(artistFamiliarityUrl(artist, id), response, true))
+                return response.value("artist").toObject();
 
             return QJsonObject();
         }
@@ -127,8 +127,8 @@ class EchonestArtistApi : public IApi {
         QJsonObject artistHotttnesss(QString artist, QString id = QString()) {
             QJsonObject response;
 
-            if (sQuery(artistHotttnesssUrl(artist, id), response))
-                return extractBody(response).value("artist").toObject();
+            if (sQuery(artistHotttnesssUrl(artist, id), response, true))
+                return response.value("artist").toObject();
 
             return QJsonObject();
         }
@@ -254,8 +254,8 @@ class EchonestArtistApi : public IApi {
                        "hotttnesss" << "hotttnesss_rank" << "images" << "songs" <<
                        "years_active" << "news" << "terms";
 
-            if (sQuery(artistProfileUrl(name, buckets, id), response))
-                return extractBody(response).value("artist").toObject();
+            if (sQuery(artistProfileUrl(name, buckets, id), response, true))
+                return response.value("artist").toObject();
 
             return QJsonObject();
         }
@@ -312,8 +312,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistStylesForSearch() {
             QJsonObject response;
 
-            if (sQuery(artistStylesUrl(), response))
-                return extractBody(response).value("terms").toArray();
+            if (sQuery(artistStylesUrl(), response, true))
+                return response.value("terms").toArray();
 
             return QJsonArray();
         }
@@ -340,8 +340,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistMoodsForSearch() {
             QJsonObject response;
 
-            if (sQuery(artistStylesUrl("mood"), response))
-                return extractBody(response).value("terms").toArray();
+            if (sQuery(artistStylesUrl("mood"), response, true))
+                return response.value("terms").toArray();
 
             return QJsonArray();
         }
@@ -552,8 +552,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistSuggests(QString name_part, int limit = 15) {
             QJsonObject response;
 
-            if (sQuery(artistSuggestUrl(name_part, limit), response))
-                extractBody(response).value("artists").toObject().value("artist");
+            if (sQuery(artistSuggestUrl(name_part, limit), response, true))
+                return response.value("artists").toObject().value("artist").toArray();
 
             return QJsonArray();
         }
@@ -611,8 +611,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistTerms(QString name, QString id = QString()) {
             QJsonObject response;
 
-            if (sQuery(artistTermsUrl(name, id), response))
-                return extractBody(response).value("terms").toArray();
+            if (sQuery(artistTermsUrl(name, id), response, true))
+                return response.value("terms").toArray();
 
             return QJsonArray();
         }
@@ -681,8 +681,8 @@ class EchonestArtistApi : public IApi {
         QJsonArray artistTopTerms(int limit = 999) {
             QJsonObject response;
 
-            if (sQuery(artistTopTermsUrl(limit), response))
-                return extractBody(response).value("terms").toArray();
+            if (sQuery(artistTopTermsUrl(limit), response, true))
+                return response.value("terms").toArray();
 
             return QJsonArray();
         }

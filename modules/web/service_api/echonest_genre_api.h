@@ -72,31 +72,11 @@ class EchonestGenreApi : public IApi {
         QJsonArray genresList() {
             QJsonObject response;
 
-            if (sQuery(genresListUrl(), response, false, 0, 0, true))
+            if (sQuery(genresListUrl(), response, true))
                 return response.value("genres").toArray();
 
             return QJsonArray();
         }
-
-        //{
-        //    "response": {
-        //        "genres": [
-        //            {
-        //                "name": "a cappella"
-        //            },
-        //            {
-        //                "name": "abstract hip hop"
-        //            }
-        //        ],
-        //        "start": 0,
-        //        "status": {
-        //            "code": 0,
-        //            "message": "Success",
-        //            "version": "4.2"
-        //        },
-        //        "total": 777
-        //    }
-        //}
 
         inline QUrl genreInfoUrl(QString & genre) {
             QUrlQuery query = genDefaultParams();
@@ -109,8 +89,8 @@ class EchonestGenreApi : public IApi {
         QJsonArray genreInfo(QString genre) {
             QJsonObject response;
 
-            if (sQuery(genreInfoUrl(genre), response))
-                return extractBody(response).value("genres").toArray();
+            if (sQuery(genreInfoUrl(genre), response, true))
+                return response.value("genres").toArray();
 
             return QJsonArray();
         }

@@ -221,6 +221,8 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
 //          );
       }
 
+      qDebug() << "EL" << predicates.size();
+      qDebug() << "ELO" << predicates;
       view -> search(predicates);
 
 //    view -> reset();

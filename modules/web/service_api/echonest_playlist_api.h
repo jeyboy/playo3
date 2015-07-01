@@ -54,8 +54,8 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("artist-radio", artists, QStringList(), QStringList(), limit), response))
-                return response.value("response").toObject().value("songs").toArray();
+            if (sQuery(playlistBasicUrl("artist-radio", artists, QStringList(), QStringList(), limit), response, true))
+                return response.value("songs").toArray();
 
             return QJsonArray();
         }
@@ -63,8 +63,9 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("genre-radio", QStringList(), genres, QStringList(), limit), response))
-                return response.value("response").toObject().value("songs").toArray();
+            if (sQuery(playlistBasicUrl("genre-radio", QStringList(), genres, QStringList(), limit), response, true)) {
+                return response.value("songs").toArray();
+            }
 
             return QJsonArray();
         }
@@ -72,8 +73,8 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("song-radio", QStringList(), QStringList(), songs_ids, limit), response))
-                return response.value("response").toObject().value("songs").toArray();
+            if (sQuery(playlistBasicUrl("song-radio", QStringList(), QStringList(), songs_ids, limit), response), true)
+                return response.value("songs").toArray();
 
             return QJsonArray();
         }
@@ -188,8 +189,8 @@ class EchonestPlaylistApi : public IApi {
             QJsonObject response;
 
             if (sQuery(playlistStaticUrl(type, song_selection_creteria, variety, distribution, adventurousness,
-                                               seed_catalog, artists, genres, songs_ids, song_types, limit), response))
-                return response.value("response").toObject().value("songs").toArray();
+                                               seed_catalog, artists, genres, songs_ids, song_types, limit), response, true))
+                return response.value("songs").toArray();
 
             return QJsonArray();
         }
@@ -354,8 +355,8 @@ class EchonestPlaylistApi : public IApi {
                                                  min_danceability, max_danceability, min_liveness, max_liveness,
                                                  min_speechiness, max_speechiness, min_acousticness, max_acousticness,
                                                  song_min_hotttnesss, song_max_hotttnesss, min_duration, max_duration,
-                                                 artist_min_familiarity, artist_max_familiarity, artist_min_hotttnesss, artist_max_hotttnesss), response))
-                return response.value("response").toObject().value("songs").toArray();
+                                                 artist_min_familiarity, artist_max_familiarity, artist_min_hotttnesss, artist_max_hotttnesss), response, true))
+                return response.value("songs").toArray();
 
             return QJsonArray();
         }
