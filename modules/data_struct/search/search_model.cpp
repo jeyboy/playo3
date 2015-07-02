@@ -84,12 +84,14 @@ void SearchModel::searchFinished() {
 
     beginResetModel();
     endResetModel();
+    emit moveOutProcess();
 
     delete initiator;
     initiator = 0;
 }
 
 FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) {
+    emit moveInProcess();
     QList<SearchRequest> requests;
     FolderItem * res = rootItem;
 
