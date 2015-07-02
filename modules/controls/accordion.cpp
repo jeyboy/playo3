@@ -19,7 +19,7 @@ Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
 }
 
 void Accordion::addItem(QString name, QWidget * item, bool expanded) {
-    Q_ASSERT(!item);
+//    Q_ASSERT(!item);
     AccordionCell * cell;
     cells << (cell = new AccordionCell(name, item, this));
     new_layout -> addWidget(cell);

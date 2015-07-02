@@ -49,7 +49,7 @@ struct SearchSettings {
 };
 
 struct SearchRequest {
-    enum ReuestObject {
+    enum RequestObject {
         request_vk,
         request_sc,
         request_computer,
@@ -57,14 +57,24 @@ struct SearchRequest {
         request_other
     };
 
-    SearchRequest(ReuestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
+    SearchRequest(RequestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
         : spredicate(predicate), sgenre(genre), sgenre_id(genre_id), popular(most_popular), search_type(tp) {}
 
     QString spredicate;
     QString sgenre;
     int sgenre_id;
     bool popular;
-    ReuestObject search_type;
+    RequestObject search_type;
+
+    static inline QString objToStr(RequestObject obj) {
+        switch(obj) {
+            case request_vk: return "VK";
+            case request_sc: return "SC";
+            case request_computer: return "Computer";
+            case request_tabs: return "Tabs";
+            default: "Other";
+        }
+    }
 
     QString token() {
         bool has_predicate = !spredicate.isEmpty();

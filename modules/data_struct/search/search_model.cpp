@@ -14,7 +14,7 @@ SearchModel::~SearchModel() {
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
-    initiator = new QFutureWatcher<QList<FolderItem *> >();
+    initiator = new QFutureWatcher<FolderItem *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
 }
@@ -73,29 +73,27 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
 
 void SearchModel::searchFinished() {
     if (!initiator -> isCanceled()) {
-        QList<FolderItem *> folders = initiator -> result();
+//        FolderItem * folder = initiator -> result();
+//        QList<FolderItem *> children = folder -> folderChildren();
 
-        beginInsertRows(QModelIndex(), 0, folders.count());
-            for(QList<FolderItem *>::Iterator it = folders.begin(); it != folders.end(); it++)
-                rootItem -> linkNode(*it);
-        endInsertRows();
+//        beginInsertRows(QModelIndex(), 0, children.count());
+//            for(QList<FolderItem *>::Iterator it = children.begin(); it != children.end(); it++)
+//                rootItem -> linkNode(*it);
+//        endInsertRows();
     }
+
+    beginResetModel();
+    endResetModel();
 
     delete initiator;
     initiator = 0;
 }
 
-QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher) {
+FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) {
     QList<SearchRequest> requests;
-    QHash<int, FolderItem *> res;
+    FolderItem * res = rootItem;
 
     emit moveInBackgroundProcess();
-
-    if (request.inVk) res.insert(SearchRequest::request_vk, new FolderItem("VK"));
-    if (request.inTabs) res.insert(SearchRequest::request_tabs, new FolderItem("Tabs"));
-    if (request.inComputer) res.insert(SearchRequest::request_computer, new FolderItem("Computer"));
-    if (request.inSc) res.insert(SearchRequest::request_sc, new FolderItem("SC"));
-    if (request.inOther) res.insert(SearchRequest::request_other, new FolderItem("Other"));
 
     if (!request.predicates.isEmpty()) { // search by predicates
         for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
@@ -137,10 +135,10 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
 
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled())
-            return res.values();
+            return res;
 
         SearchRequest r = requests.takeFirst();
-        FolderItem * parent = res.value(r.search_type) -> createFolder(r.token());
+        FolderItem * parent = res -> createFolder(r.token());
 
         switch(r.search_type) {
             case SearchRequest::request_vk: {
@@ -152,6 +150,7 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
                         r.spredicate, request.type == artist, request.search_in_own, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT
                     ).value("audio_list").toArray();
                 }
+
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
@@ -172,5 +171,5 @@ QList<FolderItem *> SearchModel::searchRoutine(QFutureWatcher<QList<FolderItem *
     }
 
     emit moveOutBackgroundProcess();
-    return res.values();
+    return res;
 }

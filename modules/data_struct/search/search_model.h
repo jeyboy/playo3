@@ -24,10 +24,10 @@ namespace Playo3 {
         int proceedMyComputer(SearchRequest & params, FolderItem * parent);
         void searchFinished();
     private:
-        QList<FolderItem *> searchRoutine(QFutureWatcher<QList<FolderItem *> > * watcher);
+        FolderItem * searchRoutine(QFutureWatcher<FolderItem *> * watcher);
 
         SearchSettings request;
-        QFutureWatcher<QList<FolderItem *> > * initiator;
+        QFutureWatcher<FolderItem *> * initiator;
     };
 }
 

@@ -70,6 +70,7 @@ namespace Playo3 {
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline FolderItem * folderItem(QString name) { return folders.value(name); }
         inline int foldersAmount() const { return folders.size(); }
+        inline QList<FolderItem *> folderChildren() const { return folders.values(); }
 
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:
