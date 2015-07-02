@@ -54,24 +54,25 @@ protected:
         response = manager -> getToJson(QNetworkRequest(url), wrapJson);
         if (isNew) delete manager;
 
+        qDebug() << url << response;
         bool status = extractStatus(url, response, code, message);
         if (!status) sendError(errorReceiver, message, code);
         else if (!skipExtraction) extractBody(response);
         return status;
     }
 
-    QJsonArray lQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+    QJsonArray lQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
         QJsonArray res;
-        return lQuery(url, limit, key, res, wrapJson, offset, errorReceiver, manager);
+        return lQuery(url, limit, key, res, wrapJson, offset, errorReceiver, manager, skipExtraction);
     }
 
-    QJsonArray & lQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+    QJsonArray & lQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
 
         int count = 0;
         QJsonObject response;
 
-        while (sQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager)) {
+        while (sQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager, skipExtraction)) {
             QJsonValue val = response.value(key);
             bool invalid = val.isArray();
 

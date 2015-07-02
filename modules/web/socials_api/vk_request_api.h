@@ -281,8 +281,10 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonObject audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
-        return sQuery(audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)));
+    QJsonArray audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
+        return sQuery(
+            audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit))
+        ).value("audio_list").toArray();
     }
 
     QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
@@ -317,8 +319,8 @@ public:
 
         return baseUrl("execute", query);
     }
-    QJsonObject audioPopular(bool onlyEng, int genreId) {
-        return sQuery(audioPopularUrl(onlyEng, genreId));
+    QJsonArray audioPopular(bool onlyEng, int genreId) {
+        return sQuery(audioPopularUrl(onlyEng, genreId)).value("audio_list").toArray();
     }
 
     QUrl audioRefreshUrl(QStringList & uids) {

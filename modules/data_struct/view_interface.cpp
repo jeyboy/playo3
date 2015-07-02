@@ -736,6 +736,8 @@ void IView::findExecutable(QModelIndex & curr) {
     if (Player::instance() -> playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
+    expand(curr.parent());
+
     if (forwardOrder) {
         while(true) {
             if (model() -> hasChildren(curr)) // maybe try to expand all items

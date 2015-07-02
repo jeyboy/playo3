@@ -73,7 +73,7 @@ public:
         return baseUrl("tracks", query);
     }
     QJsonArray audioSearch(QString & predicate, QString & genre, bool popular, int limit = 5) {
-        return lQuery(audioSearchUrl(predicate, genre, popular), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true);
+        return lQuery(audioSearchUrl(predicate, genre, popular), qMin(limit, SOUNDCLOUD_OFFSET_LIMIT), "response", true, 0, 0, 0, true);
     }
 
 

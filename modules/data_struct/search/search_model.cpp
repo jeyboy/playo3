@@ -150,17 +150,18 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_vk: {
                 QJsonArray items;
                 if (r.spredicate.isEmpty() && r.popular) {
-                    items = VkApi::instance() -> audioPopular(true, r.sgenre_id).value("audio_list").toArray();
+                    items = VkApi::instance() -> audioPopular(true, r.sgenre_id);
                 } else {
                     items = VkApi::instance() -> audioSearch(
                         r.spredicate, request.type == artist, request.search_in_own, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT
-                    ).value("audio_list").toArray();
+                    );
                 }
 
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
                 QJsonArray items = SoundcloudApi::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
+                qDebug() << items;
                 if (SoundcloudApi::extractCount(items) > 0)
                     parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
