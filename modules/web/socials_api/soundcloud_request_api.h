@@ -3,7 +3,7 @@
 
 #include "../iapi.h"
 
-#define SOUNDCLOUD_OFFSET_LIMIT 1000 // 8000 max
+#define SOUNDCLOUD_OFFSET_LIMIT 100
 
 class SoundcloudRequestApi : public IApi {
 private:

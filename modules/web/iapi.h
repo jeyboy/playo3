@@ -20,10 +20,26 @@
 #define DEFAULT_LIMIT_AMOUNT 99999
 #define REQUEST_DELAY 260 // ms // 250
 
+struct QueryRules {
+    QueryRules(QString _field, int _limit = 5, int _offset = 0, int _count = DEFAULT_LIMIT_AMOUNT)
+        : field(_field), offset(_offset), limit(_limit), count(_count), fact_count(0) {}
+
+    QString field;
+    int count, offset, limit, fact_count;
+};
+
 class IApi {
 public:
     static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value("count").toInt(); }
 protected:
+    enum JsonPostProc : int {
+        none = 0,
+        wrap = 1,
+        extract = 2,
+        wrap_extract = wrap | extract
+    };
+
+
     virtual QString baseUrlStr(QString & predicate) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
         QUrl url(baseUrlStr(predicate));
@@ -43,54 +59,52 @@ protected:
     virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
-    QJsonObject sQuery(QUrl url, bool wrapJson = false, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
+    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         QJsonObject res;
-        sQuery(url, res, wrapJson, errorReceiver, manager, skipExtraction);
+        sQuery(url, res, post_proc, errorReceiver, manager);
         return res;
     }
 
-    bool sQuery(QUrl url, QJsonObject & response, bool wrapJson = false, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
+    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
-        response = manager -> getToJson(QNetworkRequest(url), wrapJson);
+        response = manager -> getToJson(QNetworkRequest(url), post_proc & wrap);
         if (isNew) delete manager;
 
-        qDebug() << url << response;
         bool status = extractStatus(url, response, code, message);
         if (!status) sendError(errorReceiver, message, code);
-        else if (!skipExtraction) extractBody(response);
+        else if (post_proc & extract) extractBody(response);
         return status;
     }
 
-    QJsonArray lQuery(QUrl url, int limit, QString key, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
+    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         QJsonArray res;
-        return lQuery(url, limit, key, res, wrapJson, offset, errorReceiver, manager, skipExtraction);
+        return lQuery(url, rules, res, post_proc, errorReceiver, manager);
     }
 
-    QJsonArray & lQuery(QUrl url, int limit, QString key, QJsonArray & result, bool wrapJson = false, int offset = 0, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0, bool skipExtraction = false) {
+    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
 
-        int count = 0;
         QJsonObject response;
 
-        while (sQuery(buildUrl(url, offset, limit), response, wrapJson, errorReceiver, manager, skipExtraction)) {
-            QJsonValue val = response.value(key);
+        while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver, manager)) {
+            QJsonValue val = response.value(rules.key);
             bool invalid = val.isArray();
 
             if (invalid) {
                 QJsonArray ar = val.toArray();
                 invalid = ar.isEmpty();
-                count += ar.size();
+                rules.fact_count += ar.size();
             }
 
             if (!invalid) result.append(val);
 
             iterateOffset(offset, response, url);
-            if (offset >= limit || endReached(response, offset)) break;
+            if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
             QThread::msleep(REQUEST_DELAY);
         }
 
         if (isNew) delete manager;
-        setCount(result, count);
+        setCount(result, rules.fact_count);
 
         return result;
     }
