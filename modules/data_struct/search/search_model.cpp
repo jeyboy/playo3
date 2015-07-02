@@ -135,11 +135,15 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
         if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer));
     }
 
+    float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled())
             return res;
 
         SearchRequest r = requests.takeFirst();
+
+        emit setProgress(requests.size() / total);
+
         FolderItem * parent = res -> createFolder(r.token());
 
         switch(r.search_type) {
