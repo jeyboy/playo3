@@ -38,8 +38,11 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/artists", query);
         }
 
-        QJsonArray genreArtists(QString genre, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-            return lQuery(genreArtistsUrl(genre), limit, "artists", offset);
+        QJsonArray genreArtists(QString genre, int offset = 0, int count = DEFAULT_LIMIT_AMOUNT) {
+            return lQuery(
+                genreArtistsUrl(genre),
+                QueryRules("artists", requestLimit(), count, offset)
+            );
         }
 
         //{
@@ -72,7 +75,7 @@ class EchonestGenreApi : public IApi {
         QJsonArray genresList() {
             QJsonObject response;
 
-            if (sQuery(genresListUrl(), response, true))
+            if (sQuery(genresListUrl(), response, wrap_extract))
                 return response.value("genres").toArray();
 
             return QJsonArray();
@@ -89,7 +92,7 @@ class EchonestGenreApi : public IApi {
         QJsonArray genreInfo(QString genre) {
             QJsonObject response;
 
-            if (sQuery(genreInfoUrl(genre), response, true))
+            if (sQuery(genreInfoUrl(genre), response, wrap_extract))
                 return response.value("genres").toArray();
 
             return QJsonArray();
@@ -117,8 +120,11 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/search", query);
         }
 
-        QJsonArray genresSerach(QString genre, int limit = DEFAULT_LIMIT_AMOUNT) {
-            return lQuery(genresSerachUrl(genre), limit, "genres");
+        QJsonArray genresSerach(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+            return lQuery(
+                genresSerachUrl(genre),
+                QueryRules("genres", requestLimit(), count)
+            );
         }
 
         //{
@@ -148,8 +154,11 @@ class EchonestGenreApi : public IApi {
             return baseUrl("genre/similar", query);
         }
 
-        QJsonArray genreSimilar(QString genre, int limit = DEFAULT_LIMIT_AMOUNT) {
-            return lQuery(genreSimilarUrl(genre), limit, "genres");
+        QJsonArray genreSimilar(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+            return lQuery(
+                genreSimilarUrl(genre),
+                QueryRules("genres", requestLimit(), count)
+            );
         }
 
         //{

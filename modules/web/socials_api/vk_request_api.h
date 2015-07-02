@@ -97,10 +97,18 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
-        return lQuery(audioAlbumsUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", false, offset);
+        return lQuery(
+            audioAlbumsUrl(uid),
+            QueryRules("albums", 5, DEFAULT_LIMIT_AMOUNT, offset),
+            extract
+        );
     }
     void audioAlbums(QString & uid, QJsonArray & arr, int offset = 0) {
-        lQuery(audioAlbumsUrl(uid), DEFAULT_LIMIT_AMOUNT, "albums", arr, false, offset);
+        lQuery(
+            audioAlbumsUrl(uid),
+            QueryRules("albums", 5, DEFAULT_LIMIT_AMOUNT, offset),
+            arr, extract
+        );
     }
 
 
@@ -214,7 +222,7 @@ public:
 
     QJsonObject userInfo(QString & uid, bool fullInfo = true) {
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
-        QJsonObject ret = sQuery(url);
+        QJsonObject ret = sQuery(url, extract);
 
         QJsonArray ar = ret.value("albums").toArray();
 
@@ -246,7 +254,7 @@ public:
     }
 
     QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
-        return sQuery(audioRecomendationsUrl(uid, byUser, randomize));
+        return sQuery(audioRecomendationsUrl(uid, byUser, randomize), extract);
     }
 
 
@@ -283,7 +291,7 @@ public:
     }
     QJsonArray audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
         return sQuery(
-            audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit))
+            audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)), extract
         ).value("audio_list").toArray();
     }
 
@@ -301,7 +309,7 @@ public:
     }
 
     QJsonObject audioSearchLimited(QString & predicate, int limitation) {
-        return sQuery(audioSearchLimitedUrl(predicate, limitation));
+        return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
     }
 
     QUrl audioPopularUrl(bool onlyEng, int genreId) {
@@ -320,7 +328,7 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray audioPopular(bool onlyEng, int genreId) {
-        return sQuery(audioPopularUrl(onlyEng, genreId)).value("audio_list").toArray();
+        return sQuery(audioPopularUrl(onlyEng, genreId), extract).value("audio_list").toArray();
     }
 
     QUrl audioRefreshUrl(QStringList & uids) {
@@ -333,12 +341,11 @@ public:
         return baseUrl("execute", query);
     }
     QJsonArray getAudiosInfo(QStringList & audio_uids) {
-        return sQuery(audioRefreshUrl(audio_uids), false, 0, 0, true).value("response").toArray();
+        return sQuery(audioRefreshUrl(audio_uids)).value("response").toArray();
     }
     QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
         QJsonObject ret = getAudiosInfo(uids)[0].toObject();
-        qDebug() << ret;
         return ret;
     }
 

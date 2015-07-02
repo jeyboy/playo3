@@ -91,5 +91,5 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
 
     url.setQuery(query);
 
-    return sQuery(url, response, true);
+    return sQuery(url, response, wrap_extract);
 }

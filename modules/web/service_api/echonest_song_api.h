@@ -93,9 +93,12 @@ class EchonestSongApi : public IApi {
         }
 
         QJsonArray songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
-                              QStringList styles = QStringList(), QStringList moods = QStringList(), int limit = DEFAULT_LIMIT_AMOUNT) {
+                              QStringList styles = QStringList(), QStringList moods = QStringList(), int count = DEFAULT_LIMIT_AMOUNT) {
 
-            return lQuery(songSearchUrl(mode, artist, title, tags, styles, moods), limit, "songs");
+            return lQuery(
+                songSearchUrl(mode, artist, title, tags, styles, moods),
+                QueryRules("songs", requestLimit(), count)
+            );
         }
 
         //{

@@ -21,7 +21,7 @@
 #define REQUEST_DELAY 260 // ms // 250
 
 struct QueryRules {
-    QueryRules(QString _field, int _limit = 5, int _offset = 0, int _count = DEFAULT_LIMIT_AMOUNT)
+    QueryRules(QString _field, int _limit = 5, int _count = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
         : field(_field), offset(_offset), limit(_limit), count(_count), fact_count(0) {}
 
     QString field;
@@ -87,7 +87,7 @@ protected:
         QJsonObject response;
 
         while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver, manager)) {
-            QJsonValue val = response.value(rules.key);
+            QJsonValue val = response.value(rules.field);
             bool invalid = val.isArray();
 
             if (invalid) {
@@ -98,7 +98,7 @@ protected:
 
             if (!invalid) result.append(val);
 
-            iterateOffset(offset, response, url);
+            iterateOffset(rules.offset, response, url);
             if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
             QThread::msleep(REQUEST_DELAY);
         }
