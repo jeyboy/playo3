@@ -124,7 +124,10 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert("name", title());
+            params.insert("checkable", Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
+                if (Settings::instance() -> isShowSystemIcons())
+                    params.insert("icon", IconProvider::fileIcon(fullPath(), extension().toString()));
                 params.insert("info", info());
                 params.insert("ext", extension());
                 params.insert("state", visualStates());

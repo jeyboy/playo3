@@ -42,14 +42,13 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icon_size = item_icon_size - 2;
 }
 
-void ModelItemDelegate::drawCheckbox(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
     QStyleOptionButton checkboxstyle;
-    bool checked = index.data(Qt::CheckStateRole).toBool();
     QRect rect = option.rect;
-    rect.setLeft(rect.left() + 4);
+    rect.setLeft(rect.left() + (is_container ? 4 : -14));
     checkboxstyle.rect = rect;
     checkboxstyle.state = option.state;
-    checkboxstyle.state |= checked ? QStyle::State_On : QStyle::State_Off;
+    checkboxstyle.state |= checkable.toBool() ? QStyle::State_On : QStyle::State_Off;
 
     QApplication::style() -> drawControl(QStyle::CE_CheckBox, &checkboxstyle, painter, &templateCheckbox);
 }
@@ -59,20 +58,15 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
 
-    QColor textColor;
     QRect bodyRect = option.rect;
-    bodyRect.marginsAdded(QMargins(0, 2, 0, 2));
     bodyRect.setTop(bodyRect.top() + 1); // space between items
     bodyRect.setHeight(bodyRect.height() - 2);  // space between items
 
     QVariantMap attrs = index.data(IATTRS).toMap();
-
-    QString ext;
-    int angle = bodyRect.height() / 2.2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
+    QVariant checkable = attrs.value("checkable");
 
     int background_state = attrs.value("state").toInt();
-    QVariant checkable = index.data(Qt::CheckStateRole);
-
+    int angle = bodyRect.height() / 2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
     QBrush fill_color;
@@ -92,145 +86,85 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
             break;
         default:
             is_folder = true;
-            fill_color = Settings::instance() -> unprocessedState(bodyRect, is_selected);
+//            fill_color = Settings::instance() -> unprocessedState(bodyRect, is_selected);
             break;
     }
 
-    painter -> setPen(
-                is_selected ?
-                    Settings::instance() -> selectedItemTextColor()
-                  :
-                    option.palette.color(QPalette::Dark)
-                );
-
-    painter -> setBrush(fill_color);
+    QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor(); // option.palette.color(QPalette::Dark)
 
     if (!is_folder) {
-        if (!Settings::instance() -> isShowSystemIcons())
-            ext = attrs.value("ext").toString();
-
-        if (icon_size < ico_mini && !Settings::instance() -> isShowSystemIcons())
-            ico_offset = 8 * (ext.length() - 1);
-
+        int rectOffset = checkable.isValid() ? 2 : 18;
         left_offset += icon_size + ico_offset;
 
-        int rectOffset = (checkable.isValid() ? 18 : 2);
         bodyRect.moveLeft(bodyRect.left() + rectOffset);
         bodyRect.setWidth(bodyRect.width() - rectOffset);
     }
 
-//    painter -> setClipRect(bodyRect);
-    painter -> drawRoundedRect(bodyRect, angle, angle);
+    if (checkable.isValid()) {
+        left_offset += is_folder ? 14 : 2;
+        drawCheckbox(is_folder, checkable, painter, option);
+    }
 
-    if (checkable.isValid())
-        left_offset += 14;
-
-    textColor = is_selected ?
-            Settings::instance() -> selectedItemTextColor()
-          :
-            Settings::instance() -> itemTextColor();
-
-    painter -> setPen(textColor);
+    //    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
-        if (Settings::instance() -> isShowSystemIcons()) {
-            QRect icoRect = QRect(
-                        bodyRect.left() + 4 + (icon_size / 20),
-                        option.rect.top() + (option.rect.height() - icon_size) / 2,
-                        icon_size,
-                        icon_size
-                    );
-            QVariant iconVal = index.data(Qt::DecorationRole);
+        QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
 
+        if (Settings::instance() -> isShowSystemIcons()) {
+            QVariant iconVal = attrs.value("icon");
             if (iconVal.isValid()) {
                 QIcon icon = qvariant_cast<QIcon>(iconVal);
                 painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
             }
+
+//            if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
+//                QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
+//                painter -> setFont(font);
+//                painter -> drawText(icoRect.topRight() + QPoint(-10, 13), "*");
+//            }
         } else {
-            QRect pseudoIcoRect = QRect(
-                        bodyRect.left(),
-                        option.rect.top() + 1,
-                        icon_size + (ico_offset + 4),
-                        bodyRect.height()
-                    );
 
-            QFont font;
-            font.setFamily("Arial Black");
+        }
 
-            if (icon_size < ico_mini) {
-                painter -> drawLine(pseudoIcoRect.topRight(), pseudoIcoRect.bottomRight());
-            } else {
-                if(!is_selected)
-                    painter -> setPen(option.palette.color(QPalette::Dark));
-                painter -> drawEllipse(pseudoIcoRect);
-                painter -> setPen(textColor);
+        QPen cPen(fill_color, 6); cPen.setCosmetic(true);
+        painter -> setPen(cPen);
+        painter -> drawEllipse(icoRect);
 
-                if (ext.length() > 3) {
-                    ext.insert(3, '\n');
-                  if (ext.length() > 6)
-                    font.setPixelSize(icon_size / (ext.length() / 2));
-                }
-                painter -> setFont(font);
-            }
-
-            painter -> drawText(
-                        pseudoIcoRect,
-                        Qt::AlignHCenter | Qt::AlignVCenter,
-                        ext
-                    );
-
-            if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
-                font.setPixelSize(16);
-                painter -> setFont(font);
-
-                painter -> drawText(
-                            pseudoIcoRect.topRight() + QPoint(-10, 13),
-                            "*"
+        if (Settings::instance() -> isShowInfo()) {
+            painter -> setFont(itemInfoFont);
+            painter -> setPen(
+                        is_selected ?
+                            Settings::instance() -> selectedItemInfoTextColor()
+                          :
+                            Settings::instance() -> itemInfoTextColor()
                         );
-            }
+
+            QStringList infos = attrs.value("info").toStringList();
+
+            int timeWidth = fmfInfo -> width(infos.last());
+            int right_offset_with_corner = right_offset - (angle / 3);
+            int beetweeX = right_offset_with_corner - timeWidth - 2;
+            top = bodyRect.bottom() - fmfInfo -> height() - 2;
+
+            QPoint topLeft(left_offset, top);
+            QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
+            QRect rectText(topLeft, bottomRight);
+            QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
+
+            QPoint topTLeft(beetweeX, top);
+            QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
+            QRect rectTimeText(topTLeft, bottomTRight);
+
+            painter -> drawText(rectText, Qt::AlignLeft, s);
+            painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
+
+            painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
         }
     }
 
-    painter -> setFont(itemInfoFont);
-
-    if (!is_folder && Settings::instance() -> isShowInfo()) {
-        painter -> setPen(
-                    is_selected ?
-                        Settings::instance() -> selectedItemInfoTextColor()
-                      :
-                        Settings::instance() -> itemInfoTextColor()
-                    );
-
-        QStringList infos = attrs.value("info").toStringList();
-
-        int timeWidth = fmfInfo -> width(infos.last());
-        int right_offset_with_corner = right_offset - (angle / 3);
-        int beetweeX = right_offset_with_corner - timeWidth - 2;
-        top = bodyRect.bottom() - fmfInfo -> height() - 2;
-
-        QPoint topLeft(left_offset, top);
-        QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
-        QRect rectText(topLeft, bottomRight);
-        QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
-
-        QPoint topTLeft(beetweeX, top);
-        QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
-        QRect rectTimeText(topTLeft, bottomTRight);
-
-        painter -> drawText(rectText, Qt::AlignLeft, s);
-        painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
-
-        painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
-    }
-
     painter -> setFont(itemFont);
-
-    painter -> setPen(
-                is_selected ?
-                    Settings::instance() -> selectedItemTextColor()
-                  :
-                    Settings::instance() -> itemTextColor()
-                );
+    painter -> setPen(textColor);
+    painter -> drawRoundedRect(bodyRect, angle, angle);
 
     QPoint topMLeft(left_offset, bodyRect.top() + 2);
     QPoint bottomMRight(right_offset, top - 2);
@@ -244,9 +178,6 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         painter -> setBrush(hoverColor);
         painter -> drawRoundedRect(bodyRect, angle, angle);
     }
-
-    if (checkable.isValid())
-        drawCheckbox(painter, option, index);
 
     painter -> restore();
 }

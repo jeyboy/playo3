@@ -287,10 +287,10 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
         return false;
     }
 
-    MediaInfo m(itm -> toUrl(), itm -> extension().isValid(), has_info);
+    MediaInfo m(itm -> toUrl(), itm -> extension(), has_info);
     if (m.isRemote() && m.hasError()) {
         if (IModel::restoreUrl(itm))
-            m = MediaInfo(itm -> toUrl(), itm -> extension().isValid(), has_info);
+            m = MediaInfo(itm -> toUrl(), itm -> extension(), has_info);
     }
 
     initItemInfo(&m, itm);
@@ -392,7 +392,7 @@ void Library::initItemData(IItem * itm) {
 
     if (has_titles && has_info) return;
 
-    MediaInfo m(itm -> toUrl(), itm -> extension().isValid(), has_info);
+    MediaInfo m(itm -> toUrl(), itm -> extension(), has_info);
     if (m.hasError()) return;
     if (!has_titles) initItemTitles(&m, itm);
     if (!has_info) initItemInfo(&m, itm);
@@ -401,9 +401,9 @@ void Library::initItemData(IItem * itm) {
 void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     itm -> setSize(info -> getSize());
     if (info -> isReaded())
-        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
     else
-        itm -> setInfo(Format::toUnits(info -> getSize()));
+        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension()));
     if (info -> getDuration() > 0)
         itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
     itm -> setGenre(info -> getGenre());

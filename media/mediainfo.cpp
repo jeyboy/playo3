@@ -1,14 +1,19 @@
 #include "mediainfo.h"
 
-MediaInfo::MediaInfo(QUrl uri, bool hasExtension, bool onlyTags) : fileName(0),
+MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
     year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
     sampleRate(-1), size(0), error(false), readed(false), remote(!uri.isLocalFile()) {
+
+    if (extension.isValid())
+        ext = extension.toString();
 
     if (!remote) {
         QString file_path = uri.toLocalFile();
 
         // taglib not worked with files without extensions :(
-        if (!hasExtension)
+        qDebug() << "EXT" << extension;
+
+        if (!extension.isValid())
             Extensions::instance() -> restoreExtension(file_path, ext);
 
 //        error = !TagLib::FileRef::defaultFileExtensions.contains(TagLib::String(ext.toLower().toStdWString()));

@@ -20,6 +20,11 @@ public:
 
     QBrush buildGradient(QRect rect, QColor color, bool dark);
 
+    inline QColor defaultState() { return _defaultItemColor; }
+    inline QColor listenedState() { return _listenedItemColor; }
+    inline QColor likedState() { return _likedItemColor; }
+    inline QColor playedState() { return _playedItemColor; }
+
     inline QBrush defaultState(QRect rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
     inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
     inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }

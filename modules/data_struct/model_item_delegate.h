@@ -41,7 +41,7 @@ public slots:
     void recalcAttrs(int item_icon_size);
 
 private:
-    void drawCheckbox(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem & option) const;
     QCheckBox templateCheckbox;
     QColor hoverColor;
 
