@@ -69,24 +69,23 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     int angle = bodyRect.height() / 2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
-    QBrush fill_color;
+    QBrush state_color;
 
     switch (background_state) {
         case Playo3::ItemState::new_item:
-            fill_color = Settings::instance() -> defaultState(bodyRect, is_selected);
+            state_color = Settings::instance() -> defaultState(bodyRect, !is_selected);
             break;
         case Playo3::ItemState::listened:
-            fill_color = Settings::instance() -> listenedState(bodyRect, is_selected);
+            state_color = Settings::instance() -> listenedState(bodyRect, !is_selected);
             break;
         case Playo3::ItemState::liked:
-            fill_color = Settings::instance() -> likedState(bodyRect, is_selected);
+            state_color = Settings::instance() -> likedState(bodyRect, !is_selected);
             break;
         case Playo3::ItemState::played:
-            fill_color = Settings::instance() -> playedState(bodyRect, is_selected);
+            state_color = Settings::instance() -> playedState(bodyRect, !is_selected);
             break;
         default:
             is_folder = true;
-//            fill_color = Settings::instance() -> unprocessedState(bodyRect, is_selected);
             break;
     }
 
@@ -99,9 +98,15 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bodyRect.setWidth(bodyRect.width() - 2);
     }
 
+    painter -> setPen(textColor);
+    painter -> setBrush(Settings::instance() -> unprocessedState(bodyRect, is_selected));
+    painter -> drawRoundedRect(bodyRect, angle, angle);
+
     if (checkable.isValid()) {
-        left_offset += is_folder ? 14 : 2;
+        left_offset += is_folder ? 14 : 6;
         drawCheckbox(is_folder, checkable, painter, option);
+    } else {
+        left_offset += is_folder ? 0 : 6;
     }
 
     //    painter -> setClipRect(bodyRect);
@@ -115,19 +120,21 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
                 QIcon icon = qvariant_cast<QIcon>(iconVal);
                 painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
             }
-
-//            if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
-//                QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
-//                painter -> setFont(font);
-//                painter -> drawText(icoRect.topRight() + QPoint(-10, 13), "*");
-//            }
         } else {
 
         }
 
-        QPen cPen(fill_color, 6); cPen.setCosmetic(true);
+        if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
+            QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
+            painter -> setFont(font);
+            painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
+        }
+
+        ///////////////////////////////////////////////////
+        QPen cPen(state_color, 6); cPen.setCosmetic(true);
         painter -> setPen(cPen);
         painter -> drawEllipse(icoRect);
+        ///////////////////////////////////////////////////
 
         if (Settings::instance() -> isShowInfo()) {
             painter -> setFont(itemInfoFont);
@@ -163,7 +170,6 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
 
     painter -> setFont(itemFont);
     painter -> setPen(textColor);
-    painter -> drawRoundedRect(bodyRect, angle, angle);
 
     QPoint topMLeft(left_offset, bodyRect.top() + 2);
     QPoint bottomMRight(right_offset, top - 2);
