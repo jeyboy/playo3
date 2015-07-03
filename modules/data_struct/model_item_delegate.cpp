@@ -93,11 +93,10 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor(); // option.palette.color(QPalette::Dark)
 
     if (!is_folder) {
-        int rectOffset = checkable.isValid() ? 2 : 18;
         left_offset += icon_size + ico_offset;
 
-        bodyRect.moveLeft(bodyRect.left() + rectOffset);
-        bodyRect.setWidth(bodyRect.width() - rectOffset);
+        bodyRect.moveLeft(bodyRect.left() + 2);
+        bodyRect.setWidth(bodyRect.width() - 2);
     }
 
     if (checkable.isValid()) {
