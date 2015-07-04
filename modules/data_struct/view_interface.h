@@ -89,7 +89,7 @@ namespace Playo3 {
 
     protected slots:
         inline void onDoubleClick(const QModelIndex node) {
-            if (!execIndex(node)) { // find first valid for exec
+            if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
                 if (Settings::instance() -> isCheckboxShow()) {
                     QModelIndex node = QModelIndex();
                     findExecutable(node);
