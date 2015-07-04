@@ -65,4 +65,12 @@
         <file alias="cycling">images/elements/cycling.png</file>
         <file alias="echonest">images/elements/echonest.png</file>
     </qresource>
+    <qresource prefix="/items">
+        <file alias="sc_item">images/items/sc.png</file>
+        <file alias="sc_item_on">images/items/sc_on.png</file>
+        <file alias="vk_item">images/items/vk.png</file>
+        <file alias="vk_item_on">images/items/vk_on.png</file>
+        <file alias="web_item">images/items/web.png</file>
+        <file alias="web_item_on">images/items/web_on.png</file>
+    </qresource>
 </RCC>

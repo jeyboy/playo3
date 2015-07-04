@@ -124,9 +124,17 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
             }
         } else {
             if ((is_vk || is_sc) && icon_size > 24) {
-                QPixmap ico(":link");
                 QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
-                painter -> drawPixmap(rect, ico);
+                if (is_vk) {
+                    QPixmap ico(QLatin1String(":/items/vk_item") + (is_selected ? "_on" : ""));
+                    painter -> drawPixmap(rect, ico);
+                } else if (is_sc) {
+                    QPixmap ico(QLatin1String(":/items/sc_item") + (is_selected ? "_on" : ""));
+                    painter -> drawPixmap(rect, ico);
+                } else {
+                    QPixmap ico(QLatin1String(":/items/web_item") + (is_selected ? "_on" : ""));
+                    painter -> drawPixmap(rect, ico);
+                }
             }
         }
 
