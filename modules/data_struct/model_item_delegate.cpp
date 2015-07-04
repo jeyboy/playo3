@@ -109,7 +109,10 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         attrs.value("played").toBool() ?
             Settings::instance() -> playedState(bodyRect, is_selected)
         :
-            Settings::instance() -> unprocessedState(bodyRect, is_selected)
+            is_folder ?
+                Settings::instance() -> unprocessedState(bodyRect, is_selected)
+            :
+                Settings::instance() -> itemState(bodyRect, is_selected)
     );
     painter -> drawRoundedRect(bodyRect, angle, angle);
 

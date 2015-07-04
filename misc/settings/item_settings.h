@@ -29,6 +29,7 @@ public:
     inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
     inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
     inline QBrush playedState(QRect rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
+    inline QBrush itemState(QRect rect, bool dark) { return buildGradient(rect, _itemColor, dark); }
 
     QBrush unprocessedState(QRect rect, bool dark);
 
@@ -49,6 +50,9 @@ public:
 
     inline QColor folderItemColor() const { return _folderItemColor; }
     inline void setFolderItemColor(QColor newColor) { _folderItemColor = newColor; }
+
+    inline QColor itemColor() const { return _itemColor; }
+    inline void setItemColor(QColor newColor) { _itemColor = newColor; }
 
     inline int itemHeight() { return _itemHeight; }
     inline void setItemHeight(int newHeight) { _itemHeight = newHeight; }
@@ -84,7 +88,7 @@ public:
 protected:
     bool _useGradient;
     int _itemHeight;
-    QColor _defaultItemColor, _listenedItemColor, _likedItemColor, _playedItemColor, _folderItemColor;
+    QColor _defaultItemColor, _listenedItemColor, _likedItemColor, _playedItemColor, _folderItemColor, _itemColor;
     ItemTextAttrs __title, __info;
 };
 

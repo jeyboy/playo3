@@ -157,6 +157,11 @@ void SettingsDialog::on_folderColorButton_clicked() {
         ui -> folderColorButton -> setStyleSheet("background-color: " + folderColor.name() + ";");
 }
 
+void SettingsDialog::on_itemColorButton_clicked() {
+    if (execColorDialog(itemColor))
+        ui -> itemColorButton -> setStyleSheet("background-color: " + itemColor.name() + ";");
+}
+
 void SettingsDialog::on_defaultItemTextColorButton_clicked() {
     if (execColorDialog(itemTextColor))
         ui -> defaultItemTextColorButton -> setStyleSheet("background-color: " + itemTextColor.name() + ";");
@@ -255,6 +260,9 @@ void SettingsDialog::initItemsSettings() {
     folderColor = Settings::instance() -> folderItemColor();
     ui -> folderColorButton -> setStyleSheet("background-color: " + folderColor.name() + ";");
 
+    itemColor = Settings::instance() -> itemColor();
+    ui -> itemColorButton -> setStyleSheet("background-color: " + itemColor.name() + ";");
+
 
     itemTextColor = Settings::instance() -> itemTextColor();
     ui -> defaultItemTextColorButton -> setStyleSheet("background-color: " + itemTextColor.name() + ";");
@@ -350,6 +358,7 @@ void SettingsDialog::saveItemsSettings() {
     Settings::instance() -> setLikedItemColor(likedColor);
     Settings::instance() -> setPlayedItemColor(playedColor);
     Settings::instance() -> setFolderItemColor(folderColor);
+    Settings::instance() -> setItemColor(itemColor);
 
     Settings::instance() -> setItemFontName(ui -> itemFontSelect -> currentText());
     Settings::instance() -> setItemFontSize(ui -> itemFontSize -> value());

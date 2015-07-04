@@ -17,7 +17,10 @@ void ItemSettings::fromJson(QJsonObject & settings) {
     _playedItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(144, 238, 144);
 
     colorVar = settings.value("folder_color").toVariant();
-    _folderItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(220, 220, 220);
+    _folderItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(180, 180, 180);
+
+    colorVar = settings.value("item_color").toVariant();
+    _itemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(220, 220, 220);
 
     __title.fontName = settings.value("item_font_name").toString("Arial");
     __title.fontSize = settings.value("item_font_size").toInt(9);
@@ -43,6 +46,7 @@ void ItemSettings::toJson(QJsonObject & settings) {
     settings.insert("liked_color", QJsonValue::fromVariant(_likedItemColor));
     settings.insert("played_color", QJsonValue::fromVariant(_playedItemColor));
     settings.insert("folder_color", QJsonValue::fromVariant(_folderItemColor));
+    settings.insert("item_color", QJsonValue::fromVariant(_itemColor));
 
     settings.insert("item_font_name", QJsonValue::fromVariant(__title.fontName));
     settings.insert("item_font_size", QJsonValue::fromVariant(__title.fontSize));
