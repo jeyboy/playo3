@@ -105,7 +105,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bodyRect.setWidth(bodyRect.width() - 2);
     }
 
-    painter -> setPen(textColor);
+//    painter -> setPen(textColor);
     painter -> setBrush(
         attrs.value("played").toBool() ?
             Settings::instance() -> playedState(bodyRect, is_selected)
@@ -154,8 +154,14 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
             }
 
             ///////////////////////////////////////////////////
-            QPen cPen(state_color, state_width); cPen.setCosmetic(true);
-            painter -> setPen(cPen);
+            if (icon_size > 24) {
+                QPen cPen(state_color, state_width); cPen.setCosmetic(true);
+                painter -> setPen(cPen);
+            } else {
+                painter -> setPen(Qt::NoPen);
+                painter -> setBrush(state_color);
+            }
+
             painter -> drawEllipse(icoRect);
             ///////////////////////////////////////////////////
         }
