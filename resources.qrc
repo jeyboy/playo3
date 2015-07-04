@@ -20,7 +20,7 @@
         <file>images/elements/error.png</file>
         <file>images/elements/expand.png</file>
         <file alias="like">images/elements/like.png</file>
-        <file>images/elements/link.png</file>
+        <file alias="link">images/elements/link.png</file>
         <file alias="locked">images/elements/locked.png</file>
         <file alias="mute">images/elements/mute2.png</file>
         <file alias="next">images/elements/next.png</file>

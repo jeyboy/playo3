@@ -65,7 +65,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     QVariantMap attrs = index.data(IATTRS).toMap();
     QVariant checkable = attrs.value("checkable");
 
-    int background_state = attrs.value("state").toInt();
+    int background_state = attrs.value("state").toInt(), state_width = 6;
     int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
@@ -111,7 +111,10 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     //    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
+        bool is_vk = attrs["type"] == VK_ITEM, is_sc = attrs["type"] == SOUNDCLOUD_ITEM;
+
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+        painter -> setBrush(Qt::NoBrush);
 
         if (Settings::instance() -> isShowSystemIcons()) {
             QVariant iconVal = attrs.value("icon");
@@ -120,17 +123,21 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
                 painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
             }
         } else {
-
+            if ((is_vk || is_sc) && icon_size > 24) {
+                QPixmap ico(":link");
+                QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
+                painter -> drawPixmap(rect, ico);
+            }
         }
 
-        if (attrs["type"] == VK_ITEM || attrs["type"] == SOUNDCLOUD_ITEM) {
+        if (is_vk || is_sc) {
             QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
             painter -> setFont(font);
             painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
         }
 
         ///////////////////////////////////////////////////
-        QPen cPen(state_color, 6); cPen.setCosmetic(true);
+        QPen cPen(state_color, state_width); cPen.setCosmetic(true);
         painter -> setPen(cPen);
         painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////

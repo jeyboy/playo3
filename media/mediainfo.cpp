@@ -11,8 +11,6 @@ MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
         QString file_path = uri.toLocalFile();
 
         // taglib not worked with files without extensions :(
-        qDebug() << "EXT" << extension;
-
         if (!extension.isValid())
             Extensions::instance() -> restoreExtension(file_path, ext);
 
