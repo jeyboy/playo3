@@ -159,11 +159,11 @@ QVariant IItem::data(int column) const {
 
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
-        case Qt::SizeHintRole: {
-                if (isContainer())
-                    return QSize(0, Settings::instance() -> itemHeight());
-                else
-                    return QSize(0, Settings::instance() -> totalItemHeight());
+        case Qt::SizeHintRole: { // scrollTo work wrongly with different item heights
+//                if (isContainer())
+//                    return QSize(0, Settings::instance() -> itemHeight());
+//                else
+                    return QSize(0, Settings::instance() -> totalItemHeight() + 6);
         }
         case Qt::TextAlignmentRole:
             if (isContainer() || !Settings::instance() -> isShowInfo())

@@ -21,7 +21,7 @@ public:
         delete fmfInfo;
     }
 
-    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+//    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 //    QWidget *createEditor(QWidget *parent,
 //                          const QStyleOptionViewItem &option,
@@ -37,7 +37,7 @@ public:
 //                              const QModelIndex & index) const;
 
    inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-       paintVar2(painter, option, index);
+       paintVar1(painter, option, index);
    }
 
 protected:

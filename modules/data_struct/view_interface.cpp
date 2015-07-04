@@ -28,6 +28,7 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
 
+    setUniformRowHeights(false);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     setItemDelegate((item_delegate = new ModelItemDelegate(this)));
@@ -129,7 +130,7 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
         Dockbars::instance() -> setPlayed((DockBar *)parent());
 
         if (Settings::instance() -> isSpoilOnActivation())
-            scrollTo(node, QAbstractItemView::PositionAtCenter);
+            scrollTo(node);
 
         if (Player::instance() -> playedIndex() == node) {
             Player::instance() -> playPause();

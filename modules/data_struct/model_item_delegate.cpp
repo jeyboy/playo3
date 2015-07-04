@@ -24,13 +24,13 @@ ModelItemDelegate::ModelItemDelegate(QObject * parent)
     extra_font_size = 16;
 }
 
-QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
-    QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(size.height() + 6);
-    return size;
+//QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
+//    QSize size = QStyledItemDelegate::sizeHint(option, index);
+//    size.setHeight(size.height() + 6);
+//    return size;
 
-//    return QStyledItemDelegate::sizeHint(option, index);
-}
+////    return QStyledItemDelegate::sizeHint(option, index);
+//}
 
 //QWidget * ModelItemDelegate::createEditor(QWidget *parent,
 //                      const QStyleOptionViewItem &option,
@@ -190,9 +190,8 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         }
     }
 
-    painter -> setFont(itemInfoFont);
-
     if (!is_folder && Settings::instance() -> isShowInfo()) {
+        painter -> setFont(itemInfoFont);
         painter -> setPen(
                     is_selected ?
                         Settings::instance() -> selectedItemInfoTextColor()
@@ -231,6 +230,12 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     QRect rectText2(topMLeft, bottomMRight);
     QString s = fmf -> elidedText(attrs.value("name").toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
+
+    if (is_folder) {
+        painter -> setPen(textColor);
+        int y = rectText2.center().y();
+        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
+    }
 
     if (option.state & (QStyle::State_MouseOver)) {
         painter -> setPen(hoverColor);
@@ -391,6 +396,12 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QRect rectText2(topMLeft, bottomMRight);
     QString s = fmf -> elidedText(attrs.value("name").toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
+
+    if (is_folder) {
+        painter -> setPen(textColor);
+        int y = rectText2.center().y();
+        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
+    }
 
 //    if (option.state & (QStyle::State_MouseOver)) {
 ////        painter -> setPen(hoverColor);
