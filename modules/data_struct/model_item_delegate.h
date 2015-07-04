@@ -36,8 +36,13 @@ public:
 //                              const QStyleOptionViewItem & option,
 //                              const QModelIndex & index) const;
 
-   void paint(QPainter * painter, const QStyleOptionViewItem & option,
-               const QModelIndex & index) const;
+   inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+       paintVar2(painter, option, index);
+   }
+
+protected:
+   void paintVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+   void paintVar2(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 public slots:
     void recalcAttrs(int item_icon_size);
@@ -50,7 +55,8 @@ private:
     QFont itemFont, itemInfoFont;
     QFontMetrics * fmf, * fmfInfo;
     QHash<int, QPixmap> icons;
-    int icon_size, ico_mini;
+    int icon_size, ico_mini, extra_font_size;
+    QString extra_font_name;
 
 //    static QPainterPath backroundRectPath(const QRect & rect, int offset);
 //    static QPainterPath roundRectPath(const QRect & rect, int offset);
