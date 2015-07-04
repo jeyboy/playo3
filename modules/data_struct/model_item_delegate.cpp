@@ -105,7 +105,11 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bodyRect.setWidth(bodyRect.width() - 2);
     }
 
-    painter -> setPen(Qt::NoPen);
+
+    if (option.state & (QStyle::State_MouseOver))
+        painter -> setPen(QPen(QBrush(textColor), 3));
+    else
+        painter -> setPen(Qt::NoPen);
     painter -> setBrush(
         attrs.value("played").toBool() ?
             Settings::instance() -> playedState(bodyRect, is_selected)
@@ -148,6 +152,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
             }
 
             if (is_vk || is_sc) {
+                painter -> setPen(textColor);
                 QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
                 painter -> setFont(font);
                 painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
@@ -208,11 +213,11 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     QString s = fmf -> elidedText(attrs.value("name").toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
-    if (option.state & (QStyle::State_MouseOver)) {
-        painter -> setPen(hoverColor);
-        painter -> setBrush(hoverColor);
-        painter -> drawRoundedRect(bodyRect, angle, angle);
-    }
+//    if (option.state & (QStyle::State_MouseOver)) {
+////        painter -> setPen(hoverColor);
+////        painter -> setBrush(hoverColor);
+//        painter -> drawRoundedRect(bodyRect, angle, angle);
+//    }
 
     painter -> restore();
 }
