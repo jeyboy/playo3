@@ -7,6 +7,17 @@ ModelItemDelegate::ModelItemDelegate(QObject * parent)
 
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
+
+    icons.insert(VK_ITEM, QPixmap(":/items/vk_item"));
+    icons.insert(VK_ITEM + SELECTION_ITER, QPixmap(":/items/vk_item_on"));
+    icons.insert(SOUNDCLOUD_ITEM, QPixmap(":/items/sc_item"));
+    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER, QPixmap(":/items/sc_item_on"));
+    icons.insert(WEB_ITEM, QPixmap(":/items/web_item"));
+    icons.insert(WEB_ITEM + SELECTION_ITER, QPixmap(":/items/web_item_on"));
+    icons.insert(ITEM, QPixmap(":/items/local_item"));
+    icons.insert(ITEM + SELECTION_ITER, QPixmap(":/items/local_item_on"));
+    icons.insert(CUE_ITEM, icons[ITEM]);
+    icons.insert(CUE_ITEM + SELECTION_ITER, icons[ITEM + SELECTION_ITER]);
 }
 
 QSize ModelItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
@@ -84,7 +95,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         default: is_folder = true;
     }
 
-    QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor(); // option.palette.color(QPalette::Dark)
+    QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor();
 
     if (!is_folder) {
         left_offset += icon_size;
@@ -114,28 +125,18 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bool is_vk = attrs["type"] == VK_ITEM, is_sc = attrs["type"] == SOUNDCLOUD_ITEM;
 
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+        QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
 
         if (Settings::instance() -> isShowSystemIcons()) {
             QVariant iconVal = attrs.value("icon");
             if (iconVal.isValid()) {
                 QIcon icon = qvariant_cast<QIcon>(iconVal);
-                painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
+                painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
             }
         } else {
-            if ((is_vk || is_sc) && icon_size > 24) {
-                QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
-                if (is_vk) {
-                    QPixmap ico(QLatin1String(":/items/vk_item") + (is_selected ? "_on" : ""));
-                    painter -> drawPixmap(rect, ico);
-                } else if (is_sc) {
-                    QPixmap ico(QLatin1String(":/items/sc_item") + (is_selected ? "_on" : ""));
-                    painter -> drawPixmap(rect, ico);
-                } else {
-                    QPixmap ico(QLatin1String(":/items/web_item") + (is_selected ? "_on" : ""));
-                    painter -> drawPixmap(rect, ico);
-                }
-            }
+            if (icon_size > 24)
+                painter -> drawPixmap(rect, icons[attrs["type"].toInt() + (is_selected ? SELECTION_ITER : 0)]);
         }
 
         if (is_vk || is_sc) {

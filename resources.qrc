@@ -72,5 +72,7 @@
         <file alias="vk_item_on">images/items/vk_on.png</file>
         <file alias="web_item">images/items/web.png</file>
         <file alias="web_item_on">images/items/web_on.png</file>
+        <file alias="local_item">images/items/local.png</file>
+        <file alias="local_item_on">images/items/local_on.png</file>
     </qresource>
 </RCC>

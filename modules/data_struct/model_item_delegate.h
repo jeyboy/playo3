@@ -10,6 +10,8 @@
 #include "model_item_parts/item_fields.h"
 #include "model_item_parts/item_types.h"
 
+#define SELECTION_ITER 9
+
 class ModelItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
 public:
@@ -47,6 +49,7 @@ private:
 
     QFont itemFont, itemInfoFont;
     QFontMetrics * fmf, * fmfInfo;
+    QHash<int, QPixmap> icons;
     int icon_size, ico_mini;
 
 //    static QPainterPath backroundRectPath(const QRect & rect, int offset);
