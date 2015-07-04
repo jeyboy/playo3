@@ -279,7 +279,8 @@ HEADERS  += playo.h \
     modules/web/socials_api/soundcloud_request_api.h \
     misc/web_utils/json.h \
     modules/web/utils/async.h \
-    modules/web/socials_api/vk_request_api.h
+    modules/web/socials_api/vk_request_api.h \
+    modules/web/sites/grabber.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
