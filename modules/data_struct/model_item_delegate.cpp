@@ -105,7 +105,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bodyRect.setWidth(bodyRect.width() - 2);
     }
 
-//    painter -> setPen(textColor);
+    painter -> setPen(Qt::NoPen);
     painter -> setBrush(
         attrs.value("played").toBool() ?
             Settings::instance() -> playedState(bodyRect, is_selected)
