@@ -66,7 +66,7 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     QVariant checkable = attrs.value("checkable");
 
     int background_state = attrs.value("state").toInt();
-    int angle = bodyRect.height() / 2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
+    int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
     QBrush state_color;
@@ -81,33 +81,32 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         case Playo3::ItemState::liked:
             state_color = Settings::instance() -> likedState(bodyRect, !is_selected);
             break;
-        case Playo3::ItemState::played:
-            state_color = Settings::instance() -> playedState(bodyRect, !is_selected);
-            break;
-        default:
-            is_folder = true;
-            break;
+        default: is_folder = true;
     }
 
     QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor(); // option.palette.color(QPalette::Dark)
 
     if (!is_folder) {
-        left_offset += icon_size + ico_offset;
+        left_offset += icon_size;
 
         bodyRect.moveLeft(bodyRect.left() + 2);
         bodyRect.setWidth(bodyRect.width() - 2);
     }
 
     painter -> setPen(textColor);
-    painter -> setBrush(Settings::instance() -> unprocessedState(bodyRect, is_selected));
+    painter -> setBrush(
+        attrs.value("played").toBool() ?
+            Settings::instance() -> playedState(bodyRect, is_selected)
+        :
+            Settings::instance() -> unprocessedState(bodyRect, is_selected)
+    );
     painter -> drawRoundedRect(bodyRect, angle, angle);
 
     if (checkable.isValid()) {
         left_offset += is_folder ? 14 : 6;
         drawCheckbox(is_folder, checkable, painter, option);
-    } else {
-        left_offset += is_folder ? 0 : 6;
     }
+    else left_offset += is_folder ? 0 : 6;
 
     //    painter -> setClipRect(bodyRect);
 

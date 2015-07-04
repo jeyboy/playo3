@@ -68,15 +68,13 @@ QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {
 }
 
 QBrush ItemSettings::unprocessedState(QRect rect, bool dark) {
-//    QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
+    if (dark) {
+        QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
+        grad.setColorAt(0, _folderItemColor);
+        grad.setColorAt(0.9, Qt::black);
+        return grad;
+    }
+    else return buildGradient(rect, _folderItemColor, dark);
 
-//    if (dark) {
-//        grad.setColorAt(0, folderColor1);
-//        grad.setColorAt(0.8, Qt::black);
-//    } else
-//        grad.setColorAt(0, Qt::white);
-
-//    return grad;
-
-    return buildGradient(rect, _folderItemColor, dark);
+//    return buildGradient(rect, _folderItemColor, dark);
 }

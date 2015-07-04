@@ -131,6 +131,7 @@ QVariant IItem::data(int column) const {
                 params.insert("info", info());
                 params.insert("ext", extension());
                 params.insert("state", visualStates());
+                params.insert("played", is(played));
                 params.insert("type", itemType());
             }
             return params;
