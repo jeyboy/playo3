@@ -37,7 +37,7 @@ public:
 //                              const QModelIndex & index) const;
 
    inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-       paintVar1(painter, option, index);
+       paintVar2(painter, option, index);
    }
 
 protected:

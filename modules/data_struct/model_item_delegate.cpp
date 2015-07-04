@@ -231,11 +231,11 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     QString s = fmf -> elidedText(attrs.value("name").toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
-    if (is_folder) {
-        painter -> setPen(textColor);
-        int y = rectText2.center().y();
-        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
-    }
+//    if (is_folder) {
+//        painter -> setPen(textColor);
+//        int y = rectText2.center().y();
+//        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
+//    }
 
     if (option.state & (QStyle::State_MouseOver)) {
         painter -> setPen(hoverColor);
@@ -397,11 +397,11 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QString s = fmf -> elidedText(attrs.value("name").toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
-    if (is_folder) {
-        painter -> setPen(textColor);
-        int y = rectText2.center().y();
-        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
-    }
+//    if (is_folder) {
+//        painter -> setPen(textColor);
+//        int y = rectText2.center().y();
+//        painter -> drawLine(bodyRect.left() + fmf -> width(s) + 30, y, bodyRect.right() - 10, y);
+//    }
 
 //    if (option.state & (QStyle::State_MouseOver)) {
 ////        painter -> setPen(hoverColor);

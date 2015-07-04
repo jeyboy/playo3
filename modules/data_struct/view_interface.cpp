@@ -28,7 +28,7 @@ IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
 
-    setUniformRowHeights(false);
+    setUniformRowHeights(true);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     setItemDelegate((item_delegate = new ModelItemDelegate(this)));
