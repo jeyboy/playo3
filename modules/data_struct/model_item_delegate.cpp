@@ -8,6 +8,7 @@ ModelItemDelegate::ModelItemDelegate(QObject * parent)
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
 
+    icons.insert(-1, QPixmap(":/items/err"));
     icons.insert(VK_ITEM, QPixmap(":/items/vk_item"));
     icons.insert(VK_ITEM + SELECTION_ITER, QPixmap(":/items/vk_item_on"));
     icons.insert(SOUNDCLOUD_ITEM, QPixmap(":/items/sc_item"));
@@ -128,31 +129,36 @@ void ModelItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         bool is_vk = attrs["type"] == VK_ITEM, is_sc = attrs["type"] == SOUNDCLOUD_ITEM;
 
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
-        QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
-        painter -> setBrush(Qt::NoBrush);
 
-        if (Settings::instance() -> isShowSystemIcons()) {
-            QVariant iconVal = attrs.value("icon");
-            if (iconVal.isValid()) {
-                QIcon icon = qvariant_cast<QIcon>(iconVal);
-                painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
-            }
+        if (attrs["not_exist"].toBool()) {
+            painter -> drawPixmap(icoRect, icons[-1].scaled(icoRect.width(), icoRect.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         } else {
-            if (icon_size > 24)
-                painter -> drawPixmap(rect, icons[attrs["type"].toInt() + (is_selected ? SELECTION_ITER : 0)]);
-        }
+            QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
+            painter -> setBrush(Qt::NoBrush);
 
-        if (is_vk || is_sc) {
-            QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
-            painter -> setFont(font);
-            painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
-        }
+            if (Settings::instance() -> isShowSystemIcons()) {
+                QVariant iconVal = attrs.value("icon");
+                if (iconVal.isValid()) {
+                    QIcon icon = qvariant_cast<QIcon>(iconVal);
+                    painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
+                }
+            } else {
+                if (icon_size > 24)
+                    painter -> drawPixmap(rect, icons[attrs["type"].toInt() + (is_selected ? SELECTION_ITER : 0)]);
+            }
 
-        ///////////////////////////////////////////////////
-        QPen cPen(state_color, state_width); cPen.setCosmetic(true);
-        painter -> setPen(cPen);
-        painter -> drawEllipse(icoRect);
-        ///////////////////////////////////////////////////
+            if (is_vk || is_sc) {
+                QFont font; font.setFamily("Arial Black"); font.setPixelSize(16);
+                painter -> setFont(font);
+                painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
+            }
+
+            ///////////////////////////////////////////////////
+            QPen cPen(state_color, state_width); cPen.setCosmetic(true);
+            painter -> setPen(cPen);
+            painter -> drawEllipse(icoRect);
+            ///////////////////////////////////////////////////
+        }
 
         if (Settings::instance() -> isShowInfo()) {
             painter -> setFont(itemInfoFont);

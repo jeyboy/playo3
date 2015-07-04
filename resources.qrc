@@ -49,6 +49,7 @@
         <file alias="web_item_on">images/items/web_on.png</file>
         <file alias="local_item">images/items/local.png</file>
         <file alias="local_item_on">images/items/local_on.png</file>
+        <file alias="err">images/items/err.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>
