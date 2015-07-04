@@ -23,35 +23,35 @@ QString Stylesheets::appStyles() {
                 "}"
 
                 "QCheckBox::indicator:unchecked {"
-                "   image: url(:check_blank);"
+                "   image: url(:/controls/check_blank);"
                 "}"
 
                 "QCheckBox::indicator:unchecked:hover {"
-                "   image: url(:check_blank);"
+                "   image: url(:/controls/check_blank);"
                 "}"
 
                 "QCheckBox::indicator:unchecked:disabled {"
-                "   image: url(:check_blank_disabled);"
+                "   image: url(:/controls/check_blank_disabled);"
                 "}"
 
                 "QCheckBox::indicator:unchecked:pressed {"
-                "   image: url(:check_blank);"
+                "   image: url(:/controls/check_blank);"
                 "}"
 
                 "QCheckBox::indicator:checked {"
-                "   image: url(:check_fill);"
+                "   image: url(:/controls/check_fill);"
                 "}"
 
                 "QCheckBox::indicator:checked:hover {"
-                "   image: url(:check_tristate);"
+                "   image: url(:/controls/check_tristate);"
                 "}"
 
                 "QCheckBox::indicator:checked:disabled {"
-                "   image: url(:check_fill_disabled);"
+                "   image: url(:/controls/check_fill_disabled);"
                 "}"
 
                 "QCheckBox::indicator:checked:pressed {"
-                "   image: url(:check_fill);"
+                "   image: url(:/controls/check_fill);"
                 "}"
             );
 }
@@ -174,11 +174,11 @@ QString Stylesheets::scrollStyles() {
         "}"
 
         "QScrollBar:left-arrow:horizontal  {"
-        "    background: url(:scroll_left) no-repeat center center;"
+        "    background: url(:/controls/scroll_left) no-repeat center center;"
         "}"
 
         "QScrollBar::right-arrow:horizontal  {"
-        "    background: url(:scroll_right) no-repeat center center;"
+        "    background: url(:/controls/scroll_right) no-repeat center center;"
         "}"
 
         "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
@@ -213,11 +213,11 @@ QString Stylesheets::scrollStyles() {
         "}"
 
         "QScrollBar::up-arrow:vertical  {"
-        "    background: url(:scroll_top) no-repeat center center;"
+        "    background: url(:/controls/scroll_top) no-repeat center center;"
         "}"
 
         "QScrollBar::down-arrow:vertical  {"
-        "    background: url(:scroll_bottom) no-repeat center center;"
+        "    background: url(:/controls/scroll_bottom) no-repeat center center;"
         "}"
 
         "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
@@ -236,25 +236,25 @@ QString Stylesheets::treeViewStyles() {
                 "QTreeView::branch:has-children:!has-siblings:closed,"
                 "QTreeView::branch:closed:has-children:has-siblings {"
                 "   border-image: none;"
-                "   image: url(:tree_closed);"
+                "   image: url(:/controls/tree_closed);"
                 "}"
 
                 "QTreeView::branch:open:has-children:!has-siblings,"
                 "QTreeView::branch:open:has-children:has-siblings  {"
                 "   border-image: none;"
-                "   image: url(:tree_opened);"
+                "   image: url(:/controls/tree_opened);"
                 "}"
 
                "QTreeView::branch:has-children:!has-siblings:closed:hover,"
                "QTreeView::branch:closed:has-children:has-siblings:hover {"
                "   border-image: none;"
-               "   image: url(:tree_closed_hover);"
+               "   image: url(:/controls/tree_closed_hover);"
                "}"
 
                "QTreeView::branch:open:has-children:!has-siblings:hover,"
                "QTreeView::branch:open:has-children:has-siblings:hover  {"
                "   border-image: none;"
-               "   image: url(:tree_opened_hover);"
+               "   image: url(:/controls/tree_opened_hover);"
                "}"
               ) + scrollStyles();
 }

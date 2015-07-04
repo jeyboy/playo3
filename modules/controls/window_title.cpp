@@ -80,13 +80,13 @@ void WindowTitle::addCustomButton(QString userText, const QPixmap & icon, const 
     }
 }
 void WindowTitle::addMiniButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Minimize", QPixmap(":mini_button"), QPixmap(":mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
+    addCustomButton("Minimize", QPixmap(":/controls/mini_button"), QPixmap(":/controls/mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
 }
 void WindowTitle::addMaxiButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Maximize", QPixmap(":maxi_button"), QPixmap(":maxi_button_hover"), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
+    addCustomButton("Maximize", QPixmap(":/controls/maxi_button"), QPixmap(":/controls/maxi_button_hover"), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
 }
 void WindowTitle::addCloseButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Close", QPixmap(":close_button"), QPixmap(":close_button_hover"), receiver, slot ? slot : SLOT(close()));
+    addCustomButton("Close", QPixmap(":/controls/close_button"), QPixmap(":/controls/close_button_hover"), receiver, slot ? slot : SLOT(close()));
 }
 
 void WindowTitle::setText(const QString & text) {

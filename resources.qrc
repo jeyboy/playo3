@@ -1,12 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="main">images/main.png</file>
-        <file alias="close_button_hover">images/controls/close_temp.png</file>
-        <file alias="close_button">images/controls/close_temp2.png</file>
-        <file alias="maxi_button_hover">images/controls/maxi_temp.png</file>
-        <file alias="maxi_button">images/controls/maxi_temp2.png</file>
-        <file alias="mini_button_hover">images/controls/mini_temp.png</file>
-        <file alias="mini_button">images/controls/mini_temp2.png</file>
         <file alias="played_tab">images/elements/active_tab.png</file>
         <file alias="add">images/elements/add.png</file>
         <file alias="add_soundcloud">images/elements/add_soundcloud.png</file>
@@ -37,30 +31,11 @@
         <file alias="stop">images/elements/stop.png</file>
         <file alias="unlocked">images/elements/unlocked.png</file>
         <file alias="volume">images/elements/volume2.png</file>
-        <file alias="scroll_bottom">images/controls/scroll/scroll_bottom.png</file>
-        <file alias="scroll_left">images/controls/scroll/scroll_left.png</file>
-        <file alias="scroll_right">images/controls/scroll/scroll_right.png</file>
-        <file alias="scroll_top">images/controls/scroll/scroll_top.png</file>
         <file alias="refresh">images/elements/refresh.png</file>
         <file alias="ico">images/main_alt.ico</file>
-        <file alias="top_off_button">images/controls/top.png</file>
-        <file alias="top_on_button">images/controls/top_on.png</file>
-        <file alias="drop_off">images/controls/drop_off.png</file>
-        <file alias="drop_on">images/controls/drop_on.png</file>
-        <file alias="rotate_off">images/controls/rotate_off.png</file>
-        <file alias="rotate_on">images/controls/rotate_on.png</file>
         <file alias="task_pause">images/elements/taskbar_pause.png</file>
         <file alias="task_play">images/elements/taskbar_play.png</file>
         <file alias="unlike">images/elements/unlike.png</file>
-        <file alias="check_blank">images/controls/check/check_blank.png</file>
-        <file alias="check_blank_disabled">images/controls/check/check_blank_disabled.png</file>
-        <file alias="check_fill">images/controls/check/check_fill.png</file>
-        <file alias="check_fill_disabled">images/controls/check/check_fill_disabled.png</file>
-        <file alias="check_tristate">images/controls/check/check_trist.png</file>
-        <file alias="tree_closed">images/controls/tree/tree_closed.png</file>
-        <file alias="tree_closed_hover">images/controls/tree/tree_closed_hover.png</file>
-        <file alias="tree_opened">images/controls/tree/tree_opened.png</file>
-        <file alias="tree_opened_hover">images/controls/tree/tree_opened_hover.png</file>
         <file alias="search">images/elements/search.png</file>
         <file alias="cycling">images/elements/cycling.png</file>
         <file alias="echonest">images/elements/echonest.png</file>
@@ -74,5 +49,32 @@
         <file alias="web_item_on">images/items/web_on.png</file>
         <file alias="local_item">images/items/local.png</file>
         <file alias="local_item_on">images/items/local_on.png</file>
+    </qresource>
+    <qresource prefix="/controls">
+        <file alias="close_button_hover">images/controls/close_temp.png</file>
+        <file alias="close_button">images/controls/close_temp2.png</file>
+        <file alias="maxi_button_hover">images/controls/maxi_temp.png</file>
+        <file alias="maxi_button">images/controls/maxi_temp2.png</file>
+        <file alias="mini_button_hover">images/controls/mini_temp.png</file>
+        <file alias="mini_button">images/controls/mini_temp2.png</file>
+        <file alias="scroll_bottom">images/controls/scroll/scroll_bottom.png</file>
+        <file alias="scroll_left">images/controls/scroll/scroll_left.png</file>
+        <file alias="scroll_right">images/controls/scroll/scroll_right.png</file>
+        <file alias="scroll_top">images/controls/scroll/scroll_top.png</file>
+        <file alias="top_off_button">images/controls/top.png</file>
+        <file alias="top_on_button">images/controls/top_on.png</file>
+        <file alias="drop_off">images/controls/drop_off.png</file>
+        <file alias="drop_on">images/controls/drop_on.png</file>
+        <file alias="rotate_off">images/controls/rotate_off.png</file>
+        <file alias="rotate_on">images/controls/rotate_on.png</file>
+        <file alias="check_blank">images/controls/check/check_blank.png</file>
+        <file alias="check_blank_disabled">images/controls/check/check_blank_disabled.png</file>
+        <file alias="check_fill">images/controls/check/check_fill.png</file>
+        <file alias="check_fill_disabled">images/controls/check/check_fill_disabled.png</file>
+        <file alias="check_tristate">images/controls/check/check_trist.png</file>
+        <file alias="tree_closed">images/controls/tree/tree_closed.png</file>
+        <file alias="tree_closed_hover">images/controls/tree/tree_closed_hover.png</file>
+        <file alias="tree_opened">images/controls/tree/tree_opened.png</file>
+        <file alias="tree_opened_hover">images/controls/tree/tree_opened_hover.png</file>
     </qresource>
 </RCC>
