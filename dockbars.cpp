@@ -327,8 +327,8 @@ void Dockbars::updateAllViews() { // update for item height
 
     QList<IView *>::Iterator it = views.begin();
     for(; it != views.end(); it++) {
-        (*it) -> setIconSize(QSize(iconDimension, iconDimension));
         (*it) -> setUniformRowHeights(Settings::instance() -> isHeightUnificate());
+        (*it) -> setIconSize(QSize(iconDimension, iconDimension));
     }
 }
 
