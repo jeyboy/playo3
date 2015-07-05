@@ -32,7 +32,7 @@ namespace Playo3 {
             inline int states() const { return item_state; }
             inline int saveStates() const { return (unsigned char)item_state; }
 //            inline int innerStates() { return item_state & ((0 << 6) - 1) << 3; }
-            inline int visualStates() const { return /*is(played) ? played : */visualStateOffset(); }
+            inline int visualStates() const { return visualStateOffset(); }
 
         protected:
             inline int visualStateOffset() const { return item_state & 7; }  // get six first bits

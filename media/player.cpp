@@ -63,12 +63,7 @@ void Player::setItemState(int state) {
     QModelIndex ind = playedIndex();
     if (ind.isValid()) {
         QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(ind.model());
-
-        mdl -> setData(
-            ind,
-            state,
-            ISTATE
-        );
+        mdl -> setData(ind, state, ISTATE);
     }
 }
 
