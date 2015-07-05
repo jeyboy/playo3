@@ -284,6 +284,8 @@ void SettingsDialog::initViewSettings() {
     ui -> alertOnDeletion -> setChecked(Settings::instance() -> isAlertOnFolderDeletion());
     ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
 
+    ui -> unifyHeight -> setChecked(Settings::instance() -> isHeightUnificate());
+
     ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
     ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
 }
@@ -380,6 +382,8 @@ void SettingsDialog::saveViewSettings() {
 
     iconSizeChanged |= Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
     Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
+    iconSizeChanged |= Settings::instance() -> isHeightUnificate() != ui -> unifyHeight -> isChecked();
+    Settings::instance() -> setHeightUnification(ui -> unifyHeight -> isChecked());
 
     Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
 

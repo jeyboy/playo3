@@ -29,7 +29,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -76,8 +76,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>335</width>
-            <height>245</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <widget class="QGroupBox" name="groupBox">
@@ -269,7 +269,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>140</y>
+             <y>170</y>
              <width>311</width>
              <height>17</height>
             </rect>
@@ -348,6 +348,19 @@ font-weight: bold;</string>
            </property>
            <property name="text">
             <string>Alert on folder deletion if not empty</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="unifyHeight">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>130</y>
+             <width>311</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Unify item height (optimisation)</string>
            </property>
           </widget>
          </widget>
@@ -431,7 +444,7 @@ font-weight: bold;</string>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-133</y>
+            <y>0</y>
             <width>335</width>
             <height>361</height>
            </rect>
@@ -896,8 +909,8 @@ text color</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>335</width>
-            <height>245</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <widget class="QPushButton" name="spectrumColor3">

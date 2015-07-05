@@ -8,6 +8,8 @@ void TabSettings::fromJson(QJsonObject & settings) {
 
     _showSystemIcons = settings.value("show_system_icons").toBool(false);
 
+    _heightUnification = settings.value("height_unification").toBool(true);
+
     _treeIndentation = settings.value("tree_indentation").toInt(12);
 }
 
@@ -17,7 +19,8 @@ void TabSettings::toJson(QJsonObject & settings) {
     settings.insert("spoil_on_activation", QJsonValue(_spoilOnActivation));
     settings.insert("alert_on_folder_deletion", QJsonValue(_alertOnFolderDeletion));
 
-    settings.insert("show_system_icons", QJsonValue(_showSystemIcons));
+    settings.insert("show_system_icons", QJsonValue(_showSystemIcons));  
+    settings.insert("height_unification", QJsonValue(_heightUnification));
 
     settings.insert("tree_indentation", QJsonValue(_treeIndentation));
 }
