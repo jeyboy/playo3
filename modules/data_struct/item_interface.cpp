@@ -160,9 +160,9 @@ QVariant IItem::data(int column) const {
 //        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole: { // scrollTo work wrongly with different item heights
-//                if (isContainer())
-//                    return QSize(0, Settings::instance() -> itemHeight());
-//                else
+                if (!Settings::instance() -> isHeightUnificate() && isContainer())
+                    return QSize(0, Settings::instance() -> itemHeight() + 6);
+                else
                     return QSize(0, Settings::instance() -> totalItemHeight() + 6);
         }
         case Qt::TextAlignmentRole:
