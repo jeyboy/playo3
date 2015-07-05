@@ -263,7 +263,6 @@ HEADERS  += playo.h \
     media/cue/cue.h \
     modules/web/service_api/echonest_api.h \
     modules/web/service_api/echonest_genre_api.h \
-    misc/call_initiator.h \
     modules/controls/equalizer.h \
     modules/web/service_api/echonest_artist_api.h \
     modules/web/service_api/echonest_song_api.h \
@@ -280,7 +279,7 @@ HEADERS  += playo.h \
     misc/web_utils/json.h \
     modules/web/utils/async.h \
     modules/web/socials_api/vk_request_api.h \
-    modules/web/sites/grabber.h
+    modules/web/sites/igrabber_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
