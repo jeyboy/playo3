@@ -33,9 +33,9 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     QString s = QString(
         "<html class='no-js' xmlns:fb='http://ogp.me/ns/fb#'>"
-        "<head>"
+        "<head coco lal='1' pido>"
         "<title>DESKTOP SABEResPODER</title>"
-        "<meta charset='UTF-8'>"
+        "<meta charset='UTF-8'></meta>"
         "<meta content='' name='description'>"
         "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui' name='viewport'>"
         "<link href='http://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>"

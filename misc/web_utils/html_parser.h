@@ -94,7 +94,7 @@ private:
     }
 
     void parseTag(QIODevice * device) {
-        curr.reserve(64);
+        curr.reserve(48);
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -108,10 +108,20 @@ private:
                     else parseAttr(device);
                 } else if (*ch == '>') {
                     state = content;
+
                     if (!curr.isEmpty()) {
-                        if (*last != '/') elem = elem -> appendTag(curr);
-                        else elem -> appendTag(curr);
+                        bool close_tag = curr[0] == '/';
+
+                        if (close_tag || (!close_tag && isSolo(elem))) { // add ignoring of the close tag for solo tags
+                            elem = elem -> parentTag();
+                        } else {
+                            if (*last != '/') elem = elem -> appendTag(curr);
+                            else elem -> appendTag(curr);
+                        }
                     }
+                    else if (isSolo(elem)) elem = elem -> parentTag();
+
+                    curr.clear();
                     return;
                 } else {
                     curr.append(ch);
@@ -132,8 +142,13 @@ private:
                     elem -> addAttr(curr, value);
                     return;
                 } else if (*ch == ' ') {
-                    return; // skip attrs without value
+                    if (!curr.isEmpty()) // proceed attrs without value
+                        elem -> addAttr(curr, value);
+                    else return;
                 } else if (*ch == '>') {
+                    if (!curr.isEmpty()) // proceed attrs without value
+                        elem -> addAttr(curr, value);
+
                     state = content;
                     if (isSolo(elem)) elem = elem -> parentTag();
                     return;
