@@ -71,22 +71,18 @@ private:
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
-                switch(ch) {
-                    case '<':
-                        if (!curr.isEmpty()) {
-                            QString text(HTML_PARSER_TEXT_BLOCK);
-                            elem -> appendTag(text, curr);
-                        }
+                if (*ch == '<') {
+                    if (!curr.isEmpty()) {
+                        QString text(HTML_PARSER_TEXT_BLOCK);
+                        elem -> appendTag(text, curr);
+                    }
 
-                        state = tag;
-                        parseTag(device);
-                    break;
-
-                    case '>':
-                        qDebug() << "MAIN " << ch;
-                    break;
-                    default: curr.append(ch);
+                    state = tag;
+                    parseTag(device);
+                } else if (*ch ==  '>') {
+                    qDebug() << "MAIN " << (*ch);
                 }
+                else curr.append(ch);
             }
 
             prev = ch;
@@ -99,22 +95,21 @@ private:
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
-                switch(ch) {
-                    case ' ':
-                        if (state == tag) {
-                            state = attr;
-                            elem = elem -> appendTag(curr);
-                            parseAttr(device);
-                            state = attr;
-                        } else parseAttr(device);
-                    case '>':
-                        state = content;
-                        if (last != '/') elem = elem -> appendTag(curr);
-                        else elem -> appendTag(curr);
-                        return;
-                    default:
-                        curr.append(ch);
-                        last = ch;
+                if (*ch == ' ') {
+                    if (state == tag) {
+                        state = attr;
+                        elem = elem -> appendTag(curr);
+                        parseAttr(device);
+                        state = attr;
+                    } else parseAttr(device);
+                } else if (*ch == '>') {
+                    state = content;
+                    if (*last != '/') elem = elem -> appendTag(curr);
+                    else elem -> appendTag(curr);
+                    return;
+                } else {
+                    curr.append(ch);
+                    last = ch;
                 }
             }
         }
@@ -126,21 +121,21 @@ private:
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
-                switch(ch) {
-                    case '=':
-                        state = val;
-                        parseValue(device);
-                        elem -> addAttr(curr, value);
-                        return;
-                    case ' ': return; // skip attrs without value
-                    case '>':
-                        state = content;
-                        if (isSolo(elem))
-                            elem = elem -> parentTag();
-                        return;
-                    default:
-                        curr.append(ch);
-                        last = ch;
+                if (*ch == '=') {
+                    state = val;
+                    parseValue(device);
+                    elem -> addAttr(curr, value);
+                    return;
+                } else if (*ch == ' ') {
+                    return; // skip attrs without value
+                } else if (*ch == '>') {
+                    state = content;
+                    if (isSolo(elem))
+                        elem = elem -> parentTag();
+                    return;
+                } else {
+                    curr.append(ch);
+                    last = ch;
                 }
             }
         }
@@ -152,33 +147,31 @@ private:
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
-                switch(ch) {
-                    case '"':
-                        if (state == val) {
-                            initiator = ch;
-                            state = content;
-                        } else if (state == content) {
-                            if (initiator == ch && last != '\\') {
-                               return;
-                            } else curr.append(ch);
-                        } else {
-                            qDebug() << "WRONG STATE";
-                            return;
-                        }
-                    case '\'':
-                        if (state == val) {
-                            initiator = ch;
-                            state = content;
-                        } else if (state == content) {
-                            if (initiator == ch && last != '\\') {
-                               return;
-                            } else curr.append(ch);
-                        } else {
-                            qDebug() << "WRONG STATE";
-                            return;
-                        }
-                    default: curr.append(ch);
-                }
+                if (*ch == '"') {
+                    if (state == val) {
+                        initiator = ch;
+                        state = content;
+                    } else if (state == content) {
+                        if (initiator == ch && *last != '\\') {
+                           return;
+                        } else curr.append(ch);
+                    } else {
+                        qDebug() << "WRONG STATE";
+                        return;
+                    }
+                } if (*ch == '\'') {
+                    if (state == val) {
+                        initiator = ch;
+                        state = content;
+                    } else if (state == content) {
+                        if (initiator == ch && *last != '\\') {
+                           return;
+                        } else curr.append(ch);
+                    } else {
+                        qDebug() << "WRONG STATE";
+                        return;
+                    }
+                } else  curr.append(ch);
                 last = ch;
             }
         }
