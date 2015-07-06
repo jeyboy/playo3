@@ -4,15 +4,14 @@
 #include <qiodevice.h>
 #include <qstringbuilder.h>
 #include <qhash.h>
-
 #include <qbuffer.h>
 
 #define HTML_PARSER_TEXT_BLOCK QString("text")
 
 class HtmlTag {
 public:
-    HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _name(tag), next(0), parent(parent_tag) {}
-    ~HtmlTag() { qDeleteAll(tags); delete next; }
+    HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _name(tag), parent(parent_tag) {}
+    ~HtmlTag() { qDeleteAll(tags); }
 
     inline QString name() const { return _name; }
 
@@ -34,11 +33,11 @@ private:
     QString _name;
     QHash<QString, QString> attrs;
     QList<HtmlTag *> tags;
-    HtmlTag * next, * parent;
+    HtmlTag * parent;
 };
 
 class HtmlParser {
-    enum PState : int {
+    enum PState {
         content,
         tag,
         attr,
@@ -52,6 +51,7 @@ public:
         QBuffer stream(&ar);
         stream.open(QIODevice::ReadOnly);
         parse((QIODevice *)&stream);
+        stream.close();
     }
 
     ~HtmlParser() { delete root; }
@@ -66,15 +66,15 @@ private:
     }
 
     void parse(QIODevice * device) {
+        initSoloTags();
+        ch = QString().toLatin1().data(); initiator = NULL; last = NULL;
+
         curr.reserve(1024);
 
-        char * ch;
         elem = root = new HtmlTag("*");
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
-                qDebug() << "MAIN " << (*ch);
-
                 if (*ch == '<') {
                     if (!curr.isEmpty()) {
                         QString text(HTML_PARSER_TEXT_BLOCK);
@@ -83,17 +83,18 @@ private:
 
                     state = tag;
                     parseTag(device);
-                } else if (*ch ==  '>') {
+                } else if (*ch == '>') {
                     qDebug() << "MAIN " << (*ch);
                 }
                 else curr.append(ch);
             }
         }
+
+        int i = 0;
     }
 
     void parseTag(QIODevice * device) {
         curr.reserve(64);
-        char * ch, * last = 0;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -103,7 +104,8 @@ private:
                         elem = elem -> appendTag(curr);
                         parseAttr(device);
                         state = attr;
-                    } else parseAttr(device);
+                    }
+                    else parseAttr(device);
                 } else if (*ch == '>') {
                     state = content;
                     if (*last != '/') elem = elem -> appendTag(curr);
@@ -119,7 +121,6 @@ private:
 
     void parseAttr(QIODevice * device) {
         curr.reserve(256);
-        char * ch;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -132,8 +133,7 @@ private:
                     return; // skip attrs without value
                 } else if (*ch == '>') {
                     state = content;
-                    if (isSolo(elem))
-                        elem = elem -> parentTag();
+                    if (isSolo(elem)) elem = elem -> parentTag();
                     return;
                 } else {
                     curr.append(ch);
@@ -144,44 +144,33 @@ private:
 
     void parseValue(QIODevice * device) {
         value.reserve(512);
-        char * ch, * last = 0, * initiator;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
-                if (*ch == '"') {
+                if (*ch == '"' || *ch == '\'') {
                     if (state == val) {
                         initiator = ch;
                         state = content;
                     } else if (state == content) {
                         if (initiator == ch && *last != '\\') {
                            return;
-                        } else curr.append(ch);
+                        } else value.append(ch);
                     } else {
                         qDebug() << "WRONG STATE";
                         return;
                     }
-                } if (*ch == '\'') {
-                    if (state == val) {
-                        initiator = ch;
-                        state = content;
-                    } else if (state == content) {
-                        if (initiator == ch && *last != '\\') {
-                           return;
-                        } else curr.append(ch);
-                    } else {
-                        qDebug() << "WRONG STATE";
-                        return;
-                    }
-                } else  curr.append(ch);
+                }
+                else value.append(ch);
                 last = ch;
             }
         }
     }
 
+    QHash<QString, bool> solo;
     HtmlTag * root, * elem;
     QString curr, value;
     PState state;
-    QHash<QString, bool> solo;
+    char * ch, * last, * initiator;
 };
 
 #endif // HTML_PARSER
