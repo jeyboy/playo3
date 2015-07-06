@@ -93,7 +93,7 @@ private:
 
     void parseTag(QIODevice * device) {
         curr.reserve(64);
-        char * ch = 0, * last = 0;
+        char * ch, * last = 0;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -119,7 +119,7 @@ private:
 
     void parseAttr(QIODevice * device) {
         curr.reserve(256);
-        char * ch = 0;
+        char * ch;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -144,7 +144,7 @@ private:
 
     void parseValue(QIODevice * device) {
         value.reserve(512);
-        char * ch = 0, * last = 0, * initiator;
+        char * ch, * last = 0, * initiator;
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
