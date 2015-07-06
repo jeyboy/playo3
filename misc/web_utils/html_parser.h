@@ -5,7 +5,7 @@
 #include <qstringbuilder.h>
 #include <qhash.h>
 
-#include <qtextstream.h>
+#include <qbuffer.h>
 
 #define HTML_PARSER_TEXT_BLOCK QString("text")
 
@@ -48,7 +48,9 @@ class HtmlParser {
 public:
     inline HtmlParser(QIODevice * device) : state(content) { parse(device); }
     inline HtmlParser(QString & str) : state(content) {
-        QTextStream stream(&str, QIODevice::ReadOnly);
+        QByteArray ar = str.toUtf8();
+        QBuffer stream(&ar);
+        stream.open(QIODevice::ReadOnly);
         parse((QIODevice *)&stream);
     }
 
@@ -66,10 +68,10 @@ private:
     void parse(QIODevice * device) {
         curr.reserve(1024);
 
-        char * ch = 0;
+        char * ch;
         elem = root = new HtmlTag("*");
 
-        while(device -> atEnd()) {
+        while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 qDebug() << "MAIN " << (*ch);
 
@@ -93,7 +95,7 @@ private:
         curr.reserve(64);
         char * ch = 0, * last = 0;
 
-        while(device -> atEnd()) {
+        while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == ' ') {
                     if (state == tag) {
@@ -119,7 +121,7 @@ private:
         curr.reserve(256);
         char * ch = 0;
 
-        while(device -> atEnd()) {
+        while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == '=') {
                     state = val;
@@ -144,7 +146,7 @@ private:
         value.reserve(512);
         char * ch = 0, * last = 0, * initiator;
 
-        while(device -> atEnd()) {
+        while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == '"') {
                     if (state == val) {
