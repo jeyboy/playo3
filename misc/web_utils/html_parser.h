@@ -66,15 +66,17 @@ private:
     void parse(QIODevice * device) {
         curr.reserve(1024);
 
-        char * ch, prev;
-        elem = root = new HtmlTag();
+        char * ch, * prev;
+        elem = root = new HtmlTag("*");
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
                 switch(ch) {
                     case '<':
-                        if (!curr.isEmpty())
-                            elem -> appendTag(HTML_PARSER_TEXT_BLOCK, curr);
+                        if (!curr.isEmpty()) {
+                            QString text(HTML_PARSER_TEXT_BLOCK);
+                            elem -> appendTag(text, curr);
+                        }
 
                         state = tag;
                         parseTag(device);
