@@ -66,11 +66,13 @@ private:
     void parse(QIODevice * device) {
         curr.reserve(1024);
 
-        char * ch, * prev;
+        char * ch = 0;
         elem = root = new HtmlTag("*");
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
+                qDebug() << "MAIN " << (*ch);
+
                 if (*ch == '<') {
                     if (!curr.isEmpty()) {
                         QString text(HTML_PARSER_TEXT_BLOCK);
@@ -84,8 +86,6 @@ private:
                 }
                 else curr.append(ch);
             }
-
-            prev = ch;
         }
     }
 
@@ -117,7 +117,7 @@ private:
 
     void parseAttr(QIODevice * device) {
         curr.reserve(256);
-        char * ch = 0, * last = 0;
+        char * ch = 0;
 
         while(device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -135,7 +135,6 @@ private:
                     return;
                 } else {
                     curr.append(ch);
-                    last = ch;
                 }
             }
         }
