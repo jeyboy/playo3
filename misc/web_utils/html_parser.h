@@ -26,7 +26,8 @@ public:
     }
     inline void appendTag(QString & tname, QString & val) {
         HtmlTag * newTag = appendTag(tname);
-        newTag -> addAttr(HTML_PARSER_TEXT_BLOCK, val); val.clear();
+        QString nm(HTML_PARSER_TEXT_BLOCK);
+        newTag -> addAttr(nm, val); val.clear();
     }
 
 private:
@@ -47,8 +48,8 @@ class HtmlParser {
 public:
     inline HtmlParser(QIODevice * device) : state(content) { parse(device); }
     inline HtmlParser(QString & str) : state(content) {
-        QTextStream stream(*str, QIODevice::ReadOnly);
-        parse(*stream);
+        QTextStream stream(&str, QIODevice::ReadOnly);
+        parse((QIODevice *)&stream);
     }
 
     ~HtmlParser() { delete root; }
