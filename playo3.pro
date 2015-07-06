@@ -7,6 +7,7 @@
 VERSION = 0.5.4.1
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+#DEFINES *= QT_USE_QSTRINGBUILDER
 
 QT  += core gui network
 #QT       += multimedia multimediawidgets opengl
@@ -279,7 +280,10 @@ HEADERS  += playo.h \
     misc/web_utils/json.h \
     modules/web/utils/async.h \
     modules/web/socials_api/vk_request_api.h \
-    modules/web/sites/igrabber_api.h
+    modules/web/sites/igrabber_api.h \
+    modules/web/sites/myzuka_album.h \
+    media/genres/web/target_genres.h \
+    misc/web_utils/html_parser.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

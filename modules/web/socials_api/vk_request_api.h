@@ -315,11 +315,12 @@ public:
     QUrl audioPopularUrl(bool onlyEng, int genreId) {
         QUrlQuery query = genDefaultParams();
 
+
         setParam(query, "code",
            QString(
                "var recomendations = API.audio.getPopular({"
-                    "only_eng: " + boolToStr(onlyEng) + ", "
-                    "count: 1000 " + (genreId != -1 ? ", genre_id: " + QString::number(genreId) : "") + ""
+                    "only_eng: " % boolToStr(onlyEng) % ", "
+                    "count: 1000 " + (genreId != -1 ? (", genre_id: " + QString::number(genreId)) : "") + ""
                  "});"
                "return {audio_list: recomendations};"
            )

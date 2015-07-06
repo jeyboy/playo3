@@ -10,6 +10,7 @@
 
 #include <QSettings>
 
+#include "misc/web_utils/html_parser.h"
 //#include "media/cue/cue.h"
 #include "media/library.h"
 #include "media/genres/music_genres.h"
