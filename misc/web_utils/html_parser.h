@@ -108,8 +108,10 @@ private:
                     else parseAttr(device);
                 } else if (*ch == '>') {
                     state = content;
-                    if (*last != '/') elem = elem -> appendTag(curr);
-                    else elem -> appendTag(curr);
+                    if (!curr.isEmpty()) {
+                        if (*last != '/') elem = elem -> appendTag(curr);
+                        else elem -> appendTag(curr);
+                    }
                     return;
                 } else {
                     curr.append(ch);
