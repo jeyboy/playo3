@@ -17,12 +17,12 @@ void ItemState::setStates(int flags) {
         if (bitIsSet(-flags, liked))     unsetLiked();
         if (bitIsSet(-flags, not_exist)) unset(not_exist);
     } else {
-        if (bitIsSet(flags, listened))  setListened();
-        if (bitIsSet(flags, liked))     setLiked();
-        if (bitIsSet(flags, played)) {
-            setBit(item_state, played);
+        if (bitIsSet(flags, listened))  {
+            setListened();
             unsetBit(item_state, not_exist);
         }
+        if (bitIsSet(flags, liked))     setLiked();
+        if (bitIsSet(flags, played))    setBit(item_state, played);
         if (bitIsSet(flags, not_exist)) setBit(item_state, not_exist);
         if (bitIsSet(flags, proceeded)) setBit(item_state, proceeded);
         if (bitIsSet(flags, mark_on_removing)) setBit(item_state, mark_on_removing);
