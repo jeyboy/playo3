@@ -9,6 +9,7 @@
 #include <qdebug.h>
 
 #define HTML_PARSER_TEXT_BLOCK "text"
+#define DEBUG_LIMIT_OUTPUT 100
 
 class HtmlTag {
 public:
@@ -40,7 +41,7 @@ public:
         QHash<QString, QString> vals = c.attributes();
 
         for (QHash<QString, QString>::iterator it = vals.begin(); it != vals.end(); ++it)
-            attrStr.append("(" + it.key() + " : " + it.value() + ")");
+            attrStr.append("(" + it.key() + " : " + (it.value().size() > DEBUG_LIMIT_OUTPUT ? (it.value().mid(0, DEBUG_LIMIT_OUTPUT / 2) % "..." % it.value().mid(it.value().size() - DEBUG_LIMIT_OUTPUT / 2, DEBUG_LIMIT_OUTPUT / 2)) : it.value()) + ")");
 
         qDebug("%s%s%s%s%s", QString(c.level() * 3, ' ').toUtf8().constData(), c.name().toUtf8().constData(), " ||| [", attrStr.toUtf8().constData(), "]");
 
