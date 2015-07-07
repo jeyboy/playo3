@@ -8,7 +8,7 @@
 
 #include <qdebug.h>
 
-#define HTML_PARSER_TEXT_BLOCK QString("text")
+#define HTML_PARSER_TEXT_BLOCK "text"
 
 class HtmlTag {
 public:
@@ -111,8 +111,6 @@ private:
                 else curr.append(ch);
             }
         }
-
-        int i = 0;
         delete ch;
     }
 
@@ -136,8 +134,11 @@ private:
                     if (!curr.isEmpty()) {
                         bool close_tag = curr[0] == '/';
 
-                        if (close_tag && !isSolo(elem)) { // add ignoring of the close tag for solo tags
-                            elem = elem -> parentTag();
+                        if (close_tag) {
+                            // if (!isSolo(elem))
+                            if (elem -> name() == curr.mid(1)) // add ignoring of the close tag for solo tags
+                                elem = elem -> parentTag();
+
                             curr.clear();
                         } else {
                             if (last != '/') elem = elem -> appendTag(curr);
@@ -190,6 +191,7 @@ private:
                         state = content;
                     } else if (state == content) {
                         if (initiator == *ch && last != '\\') {
+                           state = attr;
                            return;
                         } else value.append(ch);
                     } else {
