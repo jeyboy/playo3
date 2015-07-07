@@ -59,21 +59,21 @@ private:
     HtmlTag * parent;
 };
 
-class HtmlParser {
-    enum PState {
-        content,
-        tag,
-        attr,
-        val
-    };
+struct HtmlSelector {
+    enum SState { none, tag, attr, id, klass, type };
 
-    enum SState {
-        stag,
-        sattr,
-        sid,
-        sclass,
-        stype
-    };
+    inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
+    inline void addToken(SState tType, QString & token) { tokens.insert(tType, token); token.clear(); }
+
+    QHash<SState, QString> _tokens;
+    bool _direct;
+
+    HtmlSelector * prev;
+    HtmlSelector * next;
+};
+
+class HtmlParser {
+    enum PState { content, tag, attr, val };
 
 public:
     inline HtmlParser(QIODevice * device) : state(content) { parse(device); }
@@ -88,20 +88,32 @@ public:
     ~HtmlParser() { delete root; }
 
     QList<HtmlTag *> search(QString predicate) {
-        SState state = stag;
+        HtmlSelector::SState state = HtmlSelector::tag;
+        HtmlSelector * selector = new HtmlSelector(), * head = selector;
         QString token;
 
         for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
             if ((*it) == '#') {
-
+                selector -> addToken(state, token);
+                state = HtmlSelector::id;
             } else if ((*it) == '.') {
-
+                selector -> addToken(state, token);
+                state = HtmlSelector::klass;
             } else if ((*it) == '[') {
-
+                selector -> addToken(state, token);
+                state = HtmlSelector::attr;
             } else if ((*it) == ']') {
-
+                selector -> addToken(state, token);
+                state = HtmlSelector::none;
             } else if ((*it) == ':') {
-
+                selector -> addToken(state, token);
+                state = HtmlSelector::type;
+            } else if ((*it) == '>') {
+                selector -> addToken(state, token);
+                selector = new HtmlSelector(true, selector);
+            } else if ((*it) == ' ') {
+                selector -> addToken(state, token);
+                selector = new HtmlSelector(false, selector);
             } else token.append((*it));
         }
     }
