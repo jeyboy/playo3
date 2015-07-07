@@ -690,7 +690,7 @@ void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelInd
     exRow = dRow < 0 ? 0 : dRow;
 }
 
-QModelIndex IModel::fromPath(QString path) {
+QModelIndex IModel::fromPath(QString path, Direction direction) {
     QStringList parts = path.split(' ', QString::SkipEmptyParts);
 
     if (parts.isEmpty())

@@ -33,12 +33,6 @@ namespace Playo3 {
     class IView : public QTreeView {
       Q_OBJECT
     public:
-        enum SearchDirection {
-            none = 0,
-            forward = 1,
-            backward = 2
-        };
-
         IView(IModel * model, QWidget * parent, ViewSettings & settins);
         ~IView();
 
@@ -104,7 +98,7 @@ namespace Playo3 {
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();
-        bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = none, bool usePrevAction = false);
+        bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, bool usePrevAction = false);
 
         void downloadSelected();
         void downloadChecked(QString & path, FolderItem * root = 0);
@@ -141,7 +135,7 @@ namespace Playo3 {
         IModel * mdl;
         ViewSettings sttngs;
         QPoint dragPoint;
-        bool forwardOrder;
+        IModel::Direction direction;
         int _deleteFolderAnswer;
     private:
         ModelItemDelegate * item_delegate;

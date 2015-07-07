@@ -92,15 +92,15 @@ public:
         QString token;
 
         for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
-            if (*(*it) == '#') {
+            if ((*it) == '#') {
 
-            } else if (*(*it) == '.') {
+            } else if ((*it) == '.') {
 
-            } else if (*(*it) == '[') {
+            } else if ((*it) == '[') {
 
-            } else if (*(*it) == ']') {
+            } else if ((*it) == ']') {
 
-            } else if (*(*it) == ':') {
+            } else if ((*it) == ':') {
 
             } else token.append((*it));
         }

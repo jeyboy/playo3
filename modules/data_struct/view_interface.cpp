@@ -4,7 +4,7 @@
 using namespace Playo3;
 
 IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings), forwardOrder(true), blockRepaint(false) {
+    : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
     setIndentation(Settings::instance() -> treeIndentation());
     setStyle(new TreeViewStyle);
@@ -93,12 +93,12 @@ void IView::scrollToActive() {
 }
 
 void IView::execPrevIndex(bool deleteCurrent) {
-    forwardOrder = false;
+    direction = IModel::backward;
     findAndExecIndex(deleteCurrent);
 }
 
 void IView::execNextIndex(bool deleteCurrent) {
-    forwardOrder = true;
+    direction = IModel::forward;
     findAndExecIndex(deleteCurrent);
 }
 
@@ -456,7 +456,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
     if (deleteCurrent && node.isValid()) {
         QString nodePath = node.data(ITREEPATH).toString();
         removeRow(node, isRemoveFileWithItem());
-        node = mdl -> fromPath(nodePath);
+        node = mdl -> fromPath(nodePath, direction);
         findExecutable(node);
     }
     else findExecutable(node);
@@ -511,13 +511,13 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
     if (remove_file_with_item)
         mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
 
-    if (selectionUpdate != none) {
+    if (selectionUpdate != IModel::none) {
         QModelIndex newSel = QModelIndex();
 
-        if (selectionUpdate & backward)
+        if (selectionUpdate & IModel::backward)
             newSel = candidateOnSelection(node, true);
 
-        if (selectionUpdate & forward && !newSel.isValid()) { // this not worked for threaded deletion, because tree is not updated in process and contain a broken keys as result
+        if (selectionUpdate & IModel::forward && !newSel.isValid()) { // this not worked for threaded deletion, because tree is not updated in process and contain a broken keys as result
             if (isFolder) {
                 collapse(newSel);
                 newSel = indexBelow(newSel);
@@ -571,7 +571,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     if (mdl -> containerType() == list || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
-            removeRow((*eit), remove, none, true);
+            removeRow((*eit), remove, IModel::none, true);
 
             if (inProcess)
                 emit mdl -> setProgress(--temp / total);
@@ -579,9 +579,9 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     } else {
         for (; eit != index_list.begin(); --eit) {
             if ((*eit).data(IFOLDER).toBool())
-                emit threadedRowRemoving((*eit), remove, none, true);
+                emit threadedRowRemoving((*eit), remove, IModel::none, true);
             else
-                removeRow((*eit), remove, none, true);
+                removeRow((*eit), remove, IModel::none, true);
             emit mdl -> setProgress(--temp / total);
         }
     }
@@ -589,9 +589,9 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     if (inProcess)
         // in thread item selected in view, but not added to selected model :(
-        emit threadedRowRemoving((*eit), remove, none, true); // if last elem is folder - throwned error if we in thread
+        emit threadedRowRemoving((*eit), remove, IModel::none, true); // if last elem is folder - throwned error if we in thread
     else
-        removeRow((*eit), remove, backward | forward, true);
+        removeRow((*eit), remove, IModel::backward | IModel::forward, true);
 
     index_list.clear();
     if (inProcess)
@@ -739,7 +739,7 @@ void IView::findExecutable(QModelIndex & curr) {
 
     expand(curr.parent());
 
-    if (forwardOrder) {
+    if (direction & IModel::forward) {
         while(true) {
             if (model() -> hasChildren(curr)) // maybe try to expand all items
                 expand(curr);

@@ -24,6 +24,12 @@ namespace Playo3 {
     class IModel : public QAbstractItemModel {
         Q_OBJECT
     public:
+        enum Direction {
+            none = 0,
+            forward = 1,
+            backward = 2
+        };
+
         static bool restoreUrl(IItem * itm);
 
         IModel(QJsonObject * hash, QObject * parent);
@@ -68,7 +74,7 @@ namespace Playo3 {
         void shuffle();
         virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
 
-        QModelIndex fromPath(QString path);
+        QModelIndex fromPath(QString path, Direction direction = none);
 
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
