@@ -42,7 +42,7 @@ public:
         for (QHash<QString, QString>::iterator it = vals.begin(); it != vals.end(); ++it)
             attrStr.append("(" + it.key() + " : " + it.value() + ")");
 
-        debug.space() << QString(c.level() * 3, ' ') << c.name() << " ||| [" << attrStr << "]";
+        qDebug("%s%s%s%s%s", QString(c.level() * 3, ' ').toUtf8().constData(), c.name().toUtf8().constData(), " ||| [", attrStr.toUtf8().constData(), "]");
 
         foreach(HtmlTag * it, c.childs())
             qDebug() << (*it);
