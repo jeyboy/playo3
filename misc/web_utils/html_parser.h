@@ -28,8 +28,9 @@ public:
         tags.append(newTag);
         return newTag;
     }
-    inline void appendTag(QString & tname, QString & val) {
-        HtmlTag * newTag = appendTag(tname);
+    inline void appendText(QString & val) {
+        QString tnm(HTML_PARSER_TEXT_BLOCK);
+        HtmlTag * newTag = appendTag(tnm);
         QString nm(HTML_PARSER_TEXT_BLOCK);
         newTag -> addAttr(nm, val); val.clear();
     }
@@ -39,9 +40,9 @@ public:
         QHash<QString, QString> vals = c.attributes();
 
         for (QHash<QString, QString>::iterator it = vals.begin(); it != vals.end(); ++it)
-            attrStr.append("(" + it.key() + " : " + it.value());
+            attrStr.append("(" + it.key() + " : " + it.value() + ")");
 
-        debug.space() << QString(c.level() * 3, ' ') << c.name() << " ||| " << attrStr;
+        debug.space() << QString(c.level() * 3, ' ') << c.name() << " ||| [" << attrStr << "]";
 
         foreach(HtmlTag * it, c.childs())
             qDebug() << (*it);
@@ -102,15 +103,15 @@ private:
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == '<') {
-                    if (!curr.isEmpty()) {
-                        QString text(HTML_PARSER_TEXT_BLOCK);
-                        elem -> appendTag(text, curr);
-                    }
+                    if (!curr.isEmpty())
+                        elem -> appendText(curr);
 
                     state = tag;
                     parseTag(device);
                 } else if (*ch == '>') {
-                    qDebug() << "MAIN " << (*ch);
+                    qDebug() << "ERROR " << elem << (*ch);
+                } else if (*ch == ' ') {
+                    // skip spaces
                 }
                 else curr.append(ch);
             }

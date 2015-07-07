@@ -60,8 +60,14 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "</html>"
     );
 
-    HtmlParser p(s);
-    p.output();
+    QElapsedTimer t;
+    t.start();
+    int n = 100;
+    for(int it = 0; it < n; it++) {
+        HtmlParser p(s);
+    }
+    qDebug() << "PARSE" << (t.nsecsElapsed() / n);
+//    p.output();
     int i = 0;
 }
 
