@@ -703,7 +703,24 @@ QModelIndex IModel::fromPath(QString path, Direction direction) {
         if (curr == 0) return QModelIndex(); // while not fixed correct played item removing
     }
 
-    IItem * res = curr -> child(parts.takeFirst().toInt());
+    int ind = parts.takeFirst().toInt();
+    IItem * res = curr -> child(ind);
+
+    if (!res)
+        switch (direction) {
+            case forward:
+                while(!res && curr -> parent()) {
+                    res = curr -> parent() -> child(curr -> row() + 1);
+                    curr = curr -> parent();
+                }
+
+                break;
+            case backward:
+                res = curr -> parent();
+                break;
+            default: ;
+        }
+
     return res ? index(res) : QModelIndex();
 }
 
