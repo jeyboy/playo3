@@ -67,6 +67,14 @@ class HtmlParser {
         val
     };
 
+    enum SState {
+        stag,
+        sattr,
+        sid,
+        sclass,
+        stype
+    };
+
 public:
     inline HtmlParser(QIODevice * device) : state(content) { parse(device); }
     inline HtmlParser(QString & str) : state(content) {
@@ -80,7 +88,22 @@ public:
     ~HtmlParser() { delete root; }
 
     QList<HtmlTag *> search(QString predicate) {
+        SState state = stag;
+        QString token;
 
+        for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
+            if (*(*it) == '#') {
+
+            } else if (*(*it) == '.') {
+
+            } else if (*(*it) == '[') {
+
+            } else if (*(*it) == ']') {
+
+            } else if (*(*it) == ':') {
+
+            } else token.append((*it));
+        }
     }
 
     inline void output() { qDebug() << (*root); }
