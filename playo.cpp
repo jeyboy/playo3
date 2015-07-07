@@ -61,6 +61,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     );
 
     HtmlParser p(s);
+    p.output();
     int i = 0;
 }
 

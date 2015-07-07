@@ -55,7 +55,7 @@ private:
     QFont itemFont, itemInfoFont;
     QFontMetrics * fmf, * fmfInfo;
     QHash<int, QPixmap> icons;
-    int icon_size, ico_mini, extra_font_size;
+    int icon_size, ico_mini, extra_font_size, state_width;
     QString extra_font_name;
 
 //    static QPainterPath backroundRectPath(const QRect & rect, int offset);

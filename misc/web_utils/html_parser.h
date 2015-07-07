@@ -6,14 +6,19 @@
 #include <qhash.h>
 #include <qbuffer.h>
 
+#include <qdebug.h>
+
 #define HTML_PARSER_TEXT_BLOCK QString("text")
 
 class HtmlTag {
 public:
-    HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _name(tag), parent(parent_tag) {}
+    HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _level(parent_tag ? parent_tag -> level() + 1 : 0), _name(tag), parent(parent_tag) {}
     ~HtmlTag() { qDeleteAll(tags); }
 
     inline QString name() const { return _name; }
+    inline int level() const { return _level; }
+    QHash<QString, QString> attributes() const { return attrs; }
+    QList<HtmlTag *> childs() const { return tags; }
 
     inline HtmlTag * parentTag() { return parent; }
 
@@ -29,7 +34,23 @@ public:
         newTag -> addAttr(nm, val); val.clear();
     }
 
+    friend QDebug operator<< (QDebug debug, const HtmlTag & c) {
+        QString attrStr;
+        QHash<QString, QString> vals = c.attributes();
+
+        for (QHash<QString, QString>::iterator it = vals.begin(); it != vals.end(); ++it)
+            attrStr.append("(" + it.key() + " : " + it.value());
+
+        debug.space() << QString(c.level() * 3, ' ') << c.name() << " ||| " << attrStr;
+
+        foreach(HtmlTag * it, c.childs())
+            qDebug() << (*it);
+
+        return debug;
+    }
+
 private:
+    int _level;
     QString _name;
     QHash<QString, QString> attrs;
     QList<HtmlTag *> tags;
@@ -56,6 +77,7 @@ public:
 
     ~HtmlParser() { delete root; }
 
+    inline void output() { qDebug() << (*root); }
 private:
     inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
 
@@ -67,9 +89,9 @@ private:
 
     void parse(QIODevice * device) {
         initSoloTags();
-        ch = QString().toLatin1().data(); initiator = NULL; last = NULL;
+        ch = new char[2](); initiator = '\0'; last = '\0';
 
-        curr.reserve(1024);
+        curr.reserve(4096);
 
         elem = root = new HtmlTag("*");
 
@@ -91,11 +113,10 @@ private:
         }
 
         int i = 0;
+        delete ch;
     }
 
     void parseTag(QIODevice * device) {
-        curr.reserve(48);
-
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == ' ') {
@@ -106,34 +127,35 @@ private:
                         state = attr;
                     }
                     else parseAttr(device);
+
+                    if (state == content)
+                        return;
                 } else if (*ch == '>') {
                     state = content;
 
                     if (!curr.isEmpty()) {
                         bool close_tag = curr[0] == '/';
 
-                        if (close_tag || (!close_tag && isSolo(elem))) { // add ignoring of the close tag for solo tags
+                        if (close_tag && !isSolo(elem)) { // add ignoring of the close tag for solo tags
                             elem = elem -> parentTag();
+                            curr.clear();
                         } else {
-                            if (*last != '/') elem = elem -> appendTag(curr);
+                            if (last != '/') elem = elem -> appendTag(curr);
                             else elem -> appendTag(curr);
                         }
                     }
                     else if (isSolo(elem)) elem = elem -> parentTag();
 
-                    curr.clear();
                     return;
                 } else {
                     curr.append(ch);
-                    last = ch;
+                    last = *ch;
                 }
             }
         }
     }
 
     void parseAttr(QIODevice * device) {
-        curr.reserve(256);
-
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == '=') {
@@ -160,16 +182,14 @@ private:
     }
 
     void parseValue(QIODevice * device) {
-        value.reserve(512);
-
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch == '"' || *ch == '\'') {
                     if (state == val) {
-                        initiator = ch;
+                        initiator = *ch;
                         state = content;
                     } else if (state == content) {
-                        if (initiator == ch && *last != '\\') {
+                        if (initiator == *ch && last != '\\') {
                            return;
                         } else value.append(ch);
                     } else {
@@ -178,7 +198,7 @@ private:
                     }
                 }
                 else value.append(ch);
-                last = ch;
+                last = *ch;
             }
         }
     }
@@ -187,7 +207,7 @@ private:
     HtmlTag * root, * elem;
     QString curr, value;
     PState state;
-    char * ch, * last, * initiator;
+    char * ch, last, initiator;
 };
 
 #endif // HTML_PARSER

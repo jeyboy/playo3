@@ -3,22 +3,10 @@
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
-    ico_mini(30) {
+    ico_mini(30), state_width(6) {
 
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
-
-    icons.insert(-1, QPixmap(":/items/err"));
-    icons.insert(VK_ITEM, QPixmap(":/items/vk_item"));
-    icons.insert(VK_ITEM + SELECTION_ITER, QPixmap(":/items/vk_item_on"));
-    icons.insert(SOUNDCLOUD_ITEM, QPixmap(":/items/sc_item"));
-    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER, QPixmap(":/items/sc_item_on"));
-    icons.insert(WEB_ITEM, QPixmap(":/items/web_item"));
-    icons.insert(WEB_ITEM + SELECTION_ITER, QPixmap(":/items/web_item_on"));
-    icons.insert(ITEM, QPixmap(":/items/local_item"));
-    icons.insert(ITEM + SELECTION_ITER, QPixmap(":/items/local_item_on"));
-    icons.insert(CUE_ITEM, icons[ITEM]);
-    icons.insert(CUE_ITEM + SELECTION_ITER, icons[ITEM + SELECTION_ITER]);
 
     extra_font_name = "Arial Black";
     extra_font_size = 16;
@@ -55,6 +43,20 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     fmf = new QFontMetrics(itemFont);
     fmfInfo = new QFontMetrics(itemInfoFont);
     icon_size = item_icon_size - 2;
+
+    int size = icon_size - state_width * 2;
+
+    icons.insert(-1, QPixmap(":/items/err").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(VK_ITEM, QPixmap(":/items/vk_item").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(VK_ITEM + SELECTION_ITER, QPixmap(":/items/vk_item_on").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(SOUNDCLOUD_ITEM, QPixmap(":/items/sc_item").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER, QPixmap(":/items/sc_item_on").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(WEB_ITEM, QPixmap(":/items/web_item").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(WEB_ITEM + SELECTION_ITER, QPixmap(":/items/web_item_on").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(ITEM, QPixmap(":/items/local_item").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(ITEM + SELECTION_ITER, QPixmap(":/items/local_item_on").scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(CUE_ITEM, icons[ITEM]);
+    icons.insert(CUE_ITEM + SELECTION_ITER, icons[ITEM + SELECTION_ITER]);
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
@@ -261,7 +263,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QVariantMap attrs = index.data(IATTRS).toMap();
     QVariant checkable = attrs.value("checkable");
 
-    int background_state = attrs.value("state").toInt(), state_width = 6;
+    int background_state = attrs.value("state").toInt();
     int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
@@ -319,7 +321,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
 
         if (attrs["not_exist"].toBool()) {
-            painter -> drawPixmap(icoRect, icons[-1].scaled(icoRect.width(), icoRect.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            painter -> drawPixmap(icoRect, icons[-1]);
         } else {
             QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
             painter -> setBrush(Qt::NoBrush);
