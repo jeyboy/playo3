@@ -319,13 +319,12 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         bool is_vk = attrs["type"] == VK_ITEM, is_sc = attrs["type"] == SOUNDCLOUD_ITEM;
 
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+        QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
+        painter -> setBrush(Qt::NoBrush);
 
         if (attrs["not_exist"].toBool()) {
-            painter -> drawPixmap(icoRect, icons[-1]);
+            painter -> drawPixmap(rect, icons[-1]);
         } else {
-            QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5, icon_size - state_width * 2, icon_size - state_width * 2);
-            painter -> setBrush(Qt::NoBrush);
-
             if (Settings::instance() -> isShowSystemIcons()) {
                 QVariant iconVal = attrs.value("icon");
                 if (iconVal.isValid()) {
@@ -336,26 +335,26 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                 if (icon_size > 24)
                     painter -> drawPixmap(rect, icons[attrs["type"].toInt() + (is_selected ? SELECTION_ITER : 0)]);
             }
-
-            if (is_vk || is_sc) {
-                painter -> setPen(textColor);
-                QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
-                painter -> setFont(font);
-                painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
-            }
-
-            ///////////////////////////////////////////////////
-            if (icon_size > 24) {
-                QPen cPen(state_color, state_width); cPen.setCosmetic(true);
-                painter -> setPen(cPen);
-            } else {
-                painter -> setPen(Qt::NoPen);
-                painter -> setBrush(state_color);
-            }
-
-            painter -> drawEllipse(icoRect);
-            ///////////////////////////////////////////////////
         }
+
+        if (is_vk || is_sc) {
+            painter -> setPen(textColor);
+            QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
+            painter -> setFont(font);
+            painter -> drawText(icoRect.topRight() + QPoint(3, 10), "*");
+        }
+
+        ///////////////////////////////////////////////////
+        if (icon_size > 24) {
+            QPen cPen(state_color, state_width); cPen.setCosmetic(true);
+            painter -> setPen(cPen);
+        } else {
+            painter -> setPen(Qt::NoPen);
+            painter -> setBrush(state_color);
+        }
+
+        painter -> drawEllipse(icoRect);
+        ///////////////////////////////////////////////////
 
         if (Settings::instance() -> isShowInfo()) {
             painter -> setFont(itemInfoFont);

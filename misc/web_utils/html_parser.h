@@ -77,6 +77,10 @@ public:
 
     ~HtmlParser() { delete root; }
 
+    QList<HtmlTag *> search(QString predicate) {
+
+    }
+
     inline void output() { qDebug() << (*root); }
 private:
     inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
