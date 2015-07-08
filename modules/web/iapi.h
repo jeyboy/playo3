@@ -3,6 +3,7 @@
 
 //http://musicmachinery.com/music-apis/
 
+#include "misc/logger.h"
 #include "misc/web_utils/custom_network_access_manager.h"
 
 #include <qdebug.h>
@@ -70,8 +71,10 @@ protected:
         if (isNew) delete manager;
 
         bool status = extractStatus(url, response, code, message);
-        if (!status) sendError(errorReceiver, message, code);
-        else if (post_proc & extract) extractBody(response);
+        if (!status) {
+            Logger::instance() -> writeToStream("sQuery", url.toString(), message);
+            sendError(errorReceiver, message, code);
+        } else if (post_proc & extract) extractBody(response);
         return status;
     }
 

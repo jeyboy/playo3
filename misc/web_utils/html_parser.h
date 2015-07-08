@@ -15,11 +15,24 @@ struct HtmlSelector {
     enum SState { none, tag, attr, id, klass, type };
 
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
-    inline void addToken(SState tType, QString & token) { tokens.insert(tType, token); token.clear(); }
-    inline void prepareKlasses() { QStringList klasses = _tokens[klass].split(" ", QString::SkipEmptyParts); }
+    inline void addToken(SState tType, QString & token) {
+        switch(tType) { // preparing on multy params
+            case attr:
+                QStringList parts = token.split("=", QString::SkipEmptyParts);
+                _attrs.insert(parts.first(), parts.length() > 1 ? parts.last() : "");
+                break;
+            case klass:
+                klasses.append(token.split(" ", QString::SkipEmptyParts));
+                break;
+        }
+
+        tokens.insert(tType, token);
+        token.clear();
+    }
 
     QStringList klasses;
     QHash<SState, QString> _tokens;
+    QHash<QString, QString> _attrs;
     bool _direct;
 
     HtmlSelector * prev;
@@ -34,7 +47,7 @@ public:
     inline QString name() const { return _name; }
     inline int level() const { return _level; }
     QHash<QString, QString> attributes() const { return attrs; }
-    QList<HtmlTag *> childs() const { return tags; }
+    QList<HtmlTag *> children() const { return tags; }
 
     inline HtmlTag * parentTag() { return parent; }
 
@@ -58,7 +71,10 @@ public:
 
             switch(it.key()) {
                 case HtmlSelector::tag: res |= _name == it.value(); break;
-                case HtmlSelector::attr: break; // realisation needed
+                case HtmlSelector::attr:
+                    for(QHash<QString, QString>::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
+                        if (attrs.value(it.key()) != it.value()) return false;
+                    break;
                 case HtmlSelector::id:  res |= attrs["id"] == it.value(); break;
                 case HtmlSelector::klass:  //TODO: optimisation needed
                     QStringList node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
@@ -73,7 +89,9 @@ public:
                         }
                     }
                     break;
-//                case HtmlSelector::type: break;
+                case HtmlSelector::type:
+                    ret |= ((name == "input" || name == "select") && attrs["type"] == it.value());
+                    break;
                 default: ;
             }
         }
@@ -156,11 +174,18 @@ public:
 
     inline void output() { qDebug() << (*root); }
 private:
-    void proceedSearch(HtmlSelector * selector, HtmlTag * tag, QList<HtmlTag *> & res) {
-        while(selector) {
-            selector -> prepareKlasses();
+    void proceedSearch(HtmlSelector * selector, HtmlTag * node, QList<HtmlTag *> & res) {
+        QList<HtmlTag *> nodes = node -> children();
+        for(QList<HtmlTag *>::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
+            if (tag -> validTo(selector)) {
+                if (selector -> next)
+                    selector = selector -> next;
+                else
+                    res.append(tag);
+            } else if (selector -> _direct)
+                continue;
 
-
+            proceedSearch(selector, tag, res);
         }
     }
 
