@@ -11,6 +11,19 @@
 #define HTML_PARSER_TEXT_BLOCK "text"
 #define DEBUG_LIMIT_OUTPUT 100
 
+struct HtmlSelector {
+    enum SState { none, tag, attr, id, klass, type };
+
+    inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
+    inline void addToken(SState tType, QString & token) { tokens.insert(tType, token); token.clear(); }
+
+    QHash<SState, QString> _tokens;
+    bool _direct;
+
+    HtmlSelector * prev;
+    HtmlSelector * next;
+};
+
 class HtmlTag {
 public:
     HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _level(parent_tag ? parent_tag -> level() + 1 : 0), _name(tag), parent(parent_tag) {}
@@ -36,6 +49,37 @@ public:
         newTag -> addAttr(nm, val); val.clear();
     }
 
+    bool validTo(HtmlSelector * selector) {
+        bool res = true;
+        for(QHash<HtmlSelector::SState, QString>::Iterator it = selector -> _tokens.begin(); it != selector -> _tokens.end(); it++) {
+            if (!res) break;
+
+            switch(it.key()) {
+                case HtmlSelector::tag: res |= _name == it.value(); break;
+                case HtmlSelector::attr: break; // realisation needed
+                case HtmlSelector::id:  res |= attrs["id"] == it.value(); break;
+                case HtmlSelector::klass:  //TODO: optimisation needed
+                    QStringList<QString> klasses = it.value().split(" ", QString::SkipEmptyParts);
+                    QStringList<QString> node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
+
+                    if (res |= !node_klasses.isEmpty()) {
+                        for(QStringList::Iterator it = klasses.begin(); it != klasses.end(); it++) {
+                            bool finded = false;
+                            for(QStringList::Iterator xit = node_klasses.begin(); xit != node_klasses.end(); xit++) // TODO: if list generated each time - remove finded classes for speed up of the proccess of search
+                                if ((finded = (*xit) == (*it))) break;
+
+                            if (!finded) return false;
+                        }
+                    }
+                    break;
+//                case HtmlSelector::type: break;
+                default: ;
+            }
+        }
+
+        return res;
+    }
+
     friend QDebug operator<< (QDebug debug, const HtmlTag & c) {
         QString attrStr;
         QHash<QString, QString> vals = c.attributes();
@@ -57,19 +101,6 @@ private:
     QHash<QString, QString> attrs;
     QList<HtmlTag *> tags;
     HtmlTag * parent;
-};
-
-struct HtmlSelector {
-    enum SState { none, tag, attr, id, klass, type };
-
-    inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
-    inline void addToken(SState tType, QString & token) { tokens.insert(tType, token); token.clear(); }
-
-    QHash<SState, QString> _tokens;
-    bool _direct;
-
-    HtmlSelector * prev;
-    HtmlSelector * next;
 };
 
 class HtmlParser {
@@ -105,9 +136,9 @@ public:
             } else if ((*it) == ']') {
                 selector -> addToken(state, token);
                 state = HtmlSelector::none;
-            } else if ((*it) == ':') {
-                selector -> addToken(state, token);
-                state = HtmlSelector::type;
+//            } else if ((*it) == ':') {
+//                selector -> addToken(state, token);
+//                state = HtmlSelector::type;
             } else if ((*it) == '>') {
                 selector -> addToken(state, token);
                 selector = new HtmlSelector(true, selector);
@@ -116,10 +147,20 @@ public:
                 selector = new HtmlSelector(false, selector);
             } else token.append((*it));
         }
+
+        QList<HtmlTag *> res;
+
+
+
+        return res;
     }
 
     inline void output() { qDebug() << (*root); }
 private:
+    void proceedSearch(HtmlSelector * selector, HtmlTag * tag, QList<HtmlTag *> & res) {
+
+    }
+
     inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
 
     inline void initSoloTags() {
