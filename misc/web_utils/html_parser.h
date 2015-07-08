@@ -16,7 +16,9 @@ struct HtmlSelector {
 
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
     inline void addToken(SState tType, QString & token) { tokens.insert(tType, token); token.clear(); }
+    inline void prepareKlasses() { QStringList klasses = _tokens[klass].split(" ", QString::SkipEmptyParts); }
 
+    QStringList klasses;
     QHash<SState, QString> _tokens;
     bool _direct;
 
@@ -59,11 +61,10 @@ public:
                 case HtmlSelector::attr: break; // realisation needed
                 case HtmlSelector::id:  res |= attrs["id"] == it.value(); break;
                 case HtmlSelector::klass:  //TODO: optimisation needed
-                    QStringList<QString> klasses = it.value().split(" ", QString::SkipEmptyParts);
-                    QStringList<QString> node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
+                    QStringList node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
 
                     if (res |= !node_klasses.isEmpty()) {
-                        for(QStringList::Iterator it = klasses.begin(); it != klasses.end(); it++) {
+                        for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
                             bool finded = false;
                             for(QStringList::Iterator xit = node_klasses.begin(); xit != node_klasses.end(); xit++) // TODO: if list generated each time - remove finded classes for speed up of the proccess of search
                                 if ((finded = (*xit) == (*it))) break;
@@ -149,16 +150,18 @@ public:
         }
 
         QList<HtmlTag *> res;
-
-
-
+        proceedSearch(head, root, res);
         return res;
     }
 
     inline void output() { qDebug() << (*root); }
 private:
     void proceedSearch(HtmlSelector * selector, HtmlTag * tag, QList<HtmlTag *> & res) {
+        while(selector) {
+            selector -> prepareKlasses();
 
+
+        }
     }
 
     inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
