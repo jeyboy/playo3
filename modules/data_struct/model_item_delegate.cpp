@@ -62,7 +62,7 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
     QStyleOptionButton checkboxstyle;
     QRect rect = option.rect;
-    rect.setLeft(rect.left() + (is_container ? 4 : -14));
+    rect.setLeft(rect.left() + (is_container ? 4 : -3));
     checkboxstyle.rect = rect;
     checkboxstyle.state = option.state;
     checkboxstyle.state |= checkable.toBool() ? QStyle::State_On : QStyle::State_Off;
@@ -307,11 +307,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     );
     painter -> drawRoundedRect(bodyRect, angle, angle);
 
-    if (checkable.isValid()) {
-        left_offset += is_folder ? 14 : 6;
-        drawCheckbox(is_folder, checkable, painter, option);
-    }
-    else left_offset += is_folder ? 0 : 6;
+    left_offset += is_folder ? (checkable.isValid() ? 14 : 0) : 6;
 
     //    painter -> setClipRect(bodyRect);
 
@@ -409,6 +405,9 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 ////        painter -> setBrush(hoverColor);
 //        painter -> drawRoundedRect(bodyRect, angle, angle);
 //    }
+
+    if (checkable.isValid())
+        drawCheckbox(is_folder, checkable, painter, option);
 
     painter -> restore();
 }

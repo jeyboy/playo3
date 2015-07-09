@@ -14,7 +14,9 @@
 struct HtmlSelector {
     enum SState { none, tag, attr, id, klass, type };
 
-    inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {}
+    inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
+        if (prev_selector) prev_selector -> next = this;
+    }
     inline void addToken(SState tType, QString & token) {
         switch(tType) { // preparing on multy params
             case attr: {
@@ -160,9 +162,9 @@ public:
             } else if ((*it) == ']') {
                 selector -> addToken(state, token);
                 state = HtmlSelector::none;
-//            } else if ((*it) == ':') {
-//                selector -> addToken(state, token);
-//                state = HtmlSelector::type;
+            } else if ((*it) == ':') {
+                selector -> addToken(state, token);
+                state = HtmlSelector::type;
             } else if ((*it) == '>') {
                 selector -> addToken(state, token);
                 selector = new HtmlSelector(true, selector);
