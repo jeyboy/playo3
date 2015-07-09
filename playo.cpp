@@ -69,7 +69,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 ////    qDebug() << "PARSE" << (t.nsecsElapsed() / n);
     HtmlParser p(s);
     p.output();
-    qDebug() << p.search("html meta[name='description']");
+    HtmlSet set = p.search("html meta[name='description']");
     int i = 0;
 }
 
