@@ -59,7 +59,7 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
 
 ////////  HtmlParser //////////
 
-HtmlSet HtmlParser::search(QString predicate) {
+HtmlSet HtmlParser::find(QString predicate) {
     HtmlSelector::SState state = HtmlSelector::tag;
     HtmlSelector * selector = new HtmlSelector(), * head = selector;
     QString token;
@@ -93,8 +93,7 @@ HtmlSet HtmlParser::search(QString predicate) {
         } else token.append((*it));
     }
 
-    HtmlSet res;
-    return root -> children().find(head, res);
+    return root -> children().find(head);
 }
 
 void HtmlParser::initSoloTags() {

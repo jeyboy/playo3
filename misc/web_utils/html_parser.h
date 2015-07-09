@@ -46,6 +46,11 @@ struct HtmlSelector {
 class HtmlTag;
 class HtmlSet : public QList<HtmlTag *> {
 public:
+    inline HtmlSet find(HtmlSelector * selector) {
+        HtmlSet set;
+        return find(selector, set);
+    }
+private:
     HtmlSet & find(HtmlSelector * selector, HtmlSet & set);
 };
 
@@ -114,7 +119,7 @@ public:
 
     inline ~HtmlParser() { delete root; }
 
-    HtmlSet search(QString predicate);
+    HtmlSet find(QString predicate);
 
     inline void output() { qDebug() << (*root); }
 private:
