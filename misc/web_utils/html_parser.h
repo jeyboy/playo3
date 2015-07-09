@@ -43,6 +43,11 @@ struct HtmlSelector {
     HtmlSelector * next;
 };
 
+class HtmlTag;
+class HtmlSet : public QList<HtmlTag *> {
+
+};
+
 class HtmlTag {
 public:
     HtmlTag(QString tag, HtmlTag * parent_tag = 0) : _level(parent_tag ? parent_tag -> level() + 1 : 0), _name(tag), parent(parent_tag) {}
@@ -51,7 +56,7 @@ public:
     inline QString name() const { return _name; }
     inline int level() const { return _level; }
     QHash<QString, QString> attributes() const { return attrs; }
-    QList<HtmlTag *> children() const { return tags; }
+    HtmlSet children() const { return tags; }
 
     inline HtmlTag * parentTag() { return parent; }
 
@@ -125,7 +130,7 @@ private:
     int _level;
     QString _name;
     QHash<QString, QString> attrs;
-    QList<HtmlTag *> tags;
+    HtmlSet tags;
     HtmlTag * parent;
 };
 
@@ -178,23 +183,21 @@ public:
             } else token.append((*it));
         }
 
-        QList<HtmlTag *> res;
+        HtmlSet res;
         proceedSearch(head, root, res);
         return res;
     }
 
     inline void output() { qDebug() << (*root); }
 private:
-    void proceedSearch(HtmlSelector * selector, HtmlTag * node, QList<HtmlTag *> & res) {
-        QList<HtmlTag *> nodes = node -> children();
-        for(QList<HtmlTag *>::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
+    void proceedSearch(HtmlSelector * selector, HtmlTag * node, HtmlSet & res) {
+        HtmlSet nodes = node -> children();
+        for(HtmlSet::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
             if ((*tag) -> validTo(selector)) {
                 if (selector -> next && !(*tag) -> children().isEmpty())
                     proceedSearch(selector -> next, (*tag), res);
-                else  {
-                    qDebug() << (*(*tag));
+                else
                     res.append((*tag));
-                }
             }
             else if (!selector -> _direct && !(*tag) -> children().isEmpty())
                 proceedSearch(selector, (*tag), res);
