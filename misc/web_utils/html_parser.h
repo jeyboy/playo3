@@ -74,7 +74,7 @@ public:
             if (!res) break;
 
             switch(it.key()) {
-                case HtmlSelector::tag: { res |= _name == it.value(); break; }
+                case HtmlSelector::tag: { res |= (it.value() == "*" || _name == it.value()); break; }
                 case HtmlSelector::attr: {
                     for(QHash<QString, QString>::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
                         if (attrs.value(it.key()) != it.value()) return false;
@@ -185,14 +185,15 @@ private:
         QList<HtmlTag *> nodes = node -> children();
         for(QList<HtmlTag *>::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
             if ((*tag) -> validTo(selector)) {
-                if (selector -> next)
-                    selector = selector -> next;
-                else
+                if (selector -> next && !(*tag) -> children().isEmpty())
+                    proceedSearch(selector -> next, (*tag), res);
+                else  {
+                    qDebug() << (*(*tag));
                     res.append((*tag));
-            } else if (selector -> _direct)
-                continue;
-
-            proceedSearch(selector, (*tag), res);
+                }
+            }
+            else if (!selector -> _direct && !(*tag) -> children().isEmpty())
+                proceedSearch(selector, (*tag), res);
         }
     }
 
