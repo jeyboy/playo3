@@ -29,8 +29,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    }
 
 
-
-
     QString s = QString(
         "<html class='no-js' xmlns:fb='http://ogp.me/ns/fb#'>"
         "<head coco lal='1' pido>"
@@ -60,18 +58,18 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "</html>"
     );
 
-////    QElapsedTimer t;
-////    t.start();
-////    int n = 100;
-////    for(int it = 0; it < n; it++) {
-////        HtmlParser p(s);
-////    }
-////    qDebug() << "PARSE" << (t.nsecsElapsed() / n);
+//    QElapsedTimer t;
+//    t.start();
+//    int n = 100;
+//    for(int it = 0; it < n; it++) {
+//        HtmlParser p(s);
+//    }
+//    qDebug() << "PARSE" << (t.nsecsElapsed() / n);
+    qDebug() << "WWWWWWWWWWWWWW";
     HtmlParser p(s);
     p.output();
     HtmlSet set = p.find("html meta[name='description']");
     qDebug() << set;
-    int i = 0;
 }
 
 Playo::~Playo() {

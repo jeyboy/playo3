@@ -17,6 +17,46 @@ HtmlSet & HtmlSet::find(HtmlSelector * selector, HtmlSet & set) {
     return set;
 }
 
+////////  HtmlSelector //////////
+
+
+HtmlSelector * HtmlSelector::build(QString & predicate) {
+    HtmlSelector::SState state = HtmlSelector::tag;
+    HtmlSelector * selector = new HtmlSelector(), * head = selector;
+    QString token;
+
+    for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
+        if ((*it) == '#') {
+            selector -> addToken(state, token);
+            state = HtmlSelector::id;
+        } else if ((*it) == '.') {
+            selector -> addToken(state, token);
+            state = HtmlSelector::klass;
+        } else if ((*it) == '[' || (*it) == ',') {
+            selector -> addToken(state, token);
+            state = HtmlSelector::attr;
+        } else if ((*it) == ']') {
+            selector -> addToken(state, token);
+            state = HtmlSelector::none;
+        } else if ((*it) == ':') {
+            selector -> addToken(state, token);
+            state = HtmlSelector::type;
+        } else if ((*it) == '>') {
+            selector -> addToken(state, token);
+            selector = new HtmlSelector(true, selector);
+        } else if ((*it) == ' ') {
+            if (state != attr) {
+                selector -> addToken(state, token);
+                selector = new HtmlSelector(false, selector);
+            }
+        } else if ((*it) == '\'' || (*it) == '"') {
+            // skipping
+        } else token.append((*it));
+    }
+
+    return head;
+}
+
 ////////  HtmlTag //////////
 
 bool HtmlTag::validTo(HtmlSelector * selector) {
@@ -58,43 +98,6 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
 }
 
 ////////  HtmlParser //////////
-
-HtmlSet HtmlParser::find(QString predicate) {
-    HtmlSelector::SState state = HtmlSelector::tag;
-    HtmlSelector * selector = new HtmlSelector(), * head = selector;
-    QString token;
-
-    for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
-        if ((*it) == '#') {
-            selector -> addToken(state, token);
-            state = HtmlSelector::id;
-        } else if ((*it) == '.') {
-            selector -> addToken(state, token);
-            state = HtmlSelector::klass;
-        } else if ((*it) == '[' || (*it) == ',') {
-            selector -> addToken(state, token);
-            state = HtmlSelector::attr;
-        } else if ((*it) == ']') {
-            selector -> addToken(state, token);
-            state = HtmlSelector::none;
-        } else if ((*it) == ':') {
-            selector -> addToken(state, token);
-            state = HtmlSelector::type;
-        } else if ((*it) == '>') {
-            selector -> addToken(state, token);
-            selector = new HtmlSelector(true, selector);
-        } else if ((*it) == ' ') {
-            if (state != attr) {
-                selector -> addToken(state, token);
-                selector = new HtmlSelector(false, selector);
-            }
-        } else if ((*it) == '\'' || (*it) == '"') {
-            // skipping
-        } else token.append((*it));
-    }
-
-    return root -> children().find(head);
-}
 
 void HtmlParser::initSoloTags() {
     solo.insert("br", true);

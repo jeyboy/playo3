@@ -5,6 +5,7 @@
 #include <qstringbuilder.h>
 #include <qhash.h>
 #include <qbuffer.h>
+#include <qpair.h>
 
 #include <qdebug.h>
 
@@ -14,9 +15,13 @@
 struct HtmlSelector {
     enum SState { none, tag, attr, id, klass, type };
 
+    static HtmlSelector * build(QString & predicate);
+
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
         if (prev_selector) prev_selector -> next = this;
     }
+    inline ~HtmlSelector() { delete next; }
+
     inline void addToken(SState tType, QString & token) {
         switch(tType) { // preparing on multy params
             case attr: {
@@ -50,6 +55,13 @@ public:
         HtmlSet set;
         return find(selector, set);
     }
+
+    inline HtmlSet find(QString predicate) {
+        HtmlSelector * selector = HtmlSelector::build(predicate);
+        HtmlSet set = find(selector);
+        delete selector;
+        return set;
+    }
 private:
     HtmlSet & find(HtmlSelector * selector, HtmlSet & set);
 };
@@ -63,8 +75,17 @@ public:
     inline int level() const { return _level; }
     inline QHash<QString, QString> attributes() const { return attrs; }
     inline HtmlSet children() const { return tags; }
+    inline QString value(QString name) { return attrs.value(name); }
 
     inline HtmlTag * parentTag() { return parent; }
+
+    inline HtmlSet find(HtmlSelector * selector) { return tags.find(selector); }
+    inline HtmlSet find(QString predicate) {
+        HtmlSelector * selector = HtmlSelector::build(predicate);
+        HtmlSet set = tags.find(selector);
+        delete selector;
+        return set;
+    }
 
     inline void addAttr(QString & name, QString & val) { attrs.insert(name, val);  name.clear(); val.clear(); }
     inline HtmlTag * appendTag(QString & tname) {
@@ -119,7 +140,16 @@ public:
 
     inline ~HtmlParser() { delete root; }
 
-    HtmlSet find(QString predicate);
+    inline HtmlSet find(HtmlSelector * selector) {
+        return root -> children().find(selector);
+    }
+
+    inline HtmlSet find(QString predicate) {
+        HtmlSelector * selector = HtmlSelector::build(predicate);
+        HtmlSet set = find(selector);
+        delete selector;
+        return set;
+    }
 
     inline void output() { qDebug() << (*root); }
 private:
