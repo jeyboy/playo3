@@ -45,7 +45,8 @@ struct HtmlSelector {
 
 class HtmlTag;
 class HtmlSet : public QList<HtmlTag *> {
-
+public:
+    HtmlSet & find(HtmlSelector * selector, HtmlSet & set);
 };
 
 class HtmlTag {
@@ -184,25 +185,24 @@ public:
         }
 
         HtmlSet res;
-        proceedSearch(head, root, res);
-        return res;
+        return root -> children().find(head, res);
     }
 
     inline void output() { qDebug() << (*root); }
 private:
-    void proceedSearch(HtmlSelector * selector, HtmlTag * node, HtmlSet & res) {
-        HtmlSet nodes = node -> children();
-        for(HtmlSet::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
-            if ((*tag) -> validTo(selector)) {
-                if (selector -> next && !(*tag) -> children().isEmpty())
-                    proceedSearch(selector -> next, (*tag), res);
-                else
-                    res.append((*tag));
-            }
-            else if (!selector -> _direct && !(*tag) -> children().isEmpty())
-                proceedSearch(selector, (*tag), res);
-        }
-    }
+//    void proceedSearch(HtmlSelector * selector, HtmlTag * node, HtmlSet & res) {
+//        HtmlSet nodes = node -> children();
+//        for(HtmlSet::Iterator tag = nodes.begin(); tag != nodes.end(); tag++) {
+//            if ((*tag) -> validTo(selector)) {
+//                if (selector -> next && !(*tag) -> children().isEmpty())
+//                    proceedSearch(selector -> next, (*tag), res);
+//                else
+//                    res.append((*tag));
+//            }
+//            else if (!selector -> _direct && !(*tag) -> children().isEmpty())
+//                proceedSearch(selector, (*tag), res);
+//        }
+//    }
 
     inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
 
