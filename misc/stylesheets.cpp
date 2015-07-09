@@ -18,8 +18,8 @@ QString Stylesheets::appStyles() {
                 "}"
 
                 "QCheckBox::indicator {"
-                "   width: 16px;"
-                "   height: 16px;"
+                "   width: 14px;"
+                "   height: 14px;"
                 "}"
 
                 "QCheckBox::indicator:unchecked {"
