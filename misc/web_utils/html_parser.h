@@ -156,7 +156,7 @@ public:
             } else if ((*it) == '.') {
                 selector -> addToken(state, token);
                 state = HtmlSelector::klass;
-            } else if ((*it) == '[') {
+            } else if ((*it) == '[' || (*it) == ',') {
                 selector -> addToken(state, token);
                 state = HtmlSelector::attr;
             } else if ((*it) == ']') {
@@ -169,8 +169,12 @@ public:
                 selector -> addToken(state, token);
                 selector = new HtmlSelector(true, selector);
             } else if ((*it) == ' ') {
-                selector -> addToken(state, token);
-                selector = new HtmlSelector(false, selector);
+                if (state != attr) {
+                    selector -> addToken(state, token);
+                    selector = new HtmlSelector(false, selector);
+                }
+            } else if ((*it) == '\'' || (*it) == '"') {
+                // skipping
             } else token.append((*it));
         }
 
