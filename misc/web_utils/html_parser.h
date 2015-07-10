@@ -61,6 +61,7 @@ public:
     inline QHash<QString, QString> attributes() const { return attrs; }
     inline HtmlSet children() const { return tags; }
     inline QString value(QString name) { return attrs.value(name); }
+    inline QString text() const { return attrs.value(HTML_PARSER_TEXT_BLOCK); }
 
     inline HtmlTag * parentTag() { return parent; }
 

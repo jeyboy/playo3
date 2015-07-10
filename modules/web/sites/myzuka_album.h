@@ -9,21 +9,26 @@ protected:
     void toJson(QNetworkReply * reply, QJsonObject & json) {
         HtmlParser parser(reply);
 
+//        HtmlSet set;
         HtmlTag * tag;
         HtmlSelector * trackSelector = HtmlSelector::build(trackPredicate());
         HtmlSet tracks = parser.find(trackSelector);
         HtmlSelector * urlSelector = HtmlSelector::build(urlPredicate());
-        HtmlSelector * infoSelector = HtmlSelector::build(infoPredicate());
+//        HtmlSelector * infoSelector = HtmlSelector::build(infoPredicate());
 
         QJsonArray track_ar;
         for(HtmlSet::Iterator track = tracks.begin(); track != tracks.end(); track++){
             QJsonObject track_obj;
 
             tag = (*track) -> find(urlSelector).first();
+            qDebug() << "TAG" << tag;
             track_obj.insert("url", baseUrlStr(tag -> value("data-url")));
+            track_obj.insert("title", tag -> value("title").section(' ', 1));
 
-            tag = (*track) -> find(urlSelector).first();
-            track_obj.insert("url", baseUrlStr(tag -> value("data-url")));
+//            set = (*track) -> find(infoSelector);
+//            track_obj.insert("time", set.first() -> text());
+//            track_obj.insert("bitrate", set.last() -> text().section(' ', 0, 0));
+//            track_obj.insert("bitrate", set.last() -> text().section(' ', 0, 0));
 
             track_ar << track_obj;
         }
@@ -36,7 +41,7 @@ protected:
 private:
     inline QString trackPredicate() { return "div[itemprop='tracks']"; }
     inline QString urlPredicate() { return "span[data-url^'/Song']"; }
-    inline QString infoPredicate() { return ".data"; }
+//    inline QString infoPredicate() { return ".data text"; }
 
 
 //    <div id="playerDiv5103163" class="player-inline" itemprop="tracks" itemscope="itemscope" itemtype="http://schema.org/MusicRecording">
