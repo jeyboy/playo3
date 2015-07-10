@@ -298,6 +298,8 @@ void Playo::openVKTabDialog() {
 
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar("VK [YOU]", ViewSettings::vk(VkApi::instance() -> userID()), 0, true, true);
+
+        Logger::instance() -> writeToStream("VkApi", "Connection", VkApi::instance() -> isConnected() ? "true" : VkApi::instance() -> getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -313,7 +315,8 @@ void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(VkApi::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::instance() -> createDocBar("VK [" + dialog.getName() + "]", ViewSettings::vk(dialog.getId()), 0, true, true);
-//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
+
+    Logger::instance() -> writeToStream("VkApi", "Open Relation", VkApi::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
@@ -331,13 +334,15 @@ void Playo::openSoundcloudTabDialog() {
 
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
+
+        Logger::instance() -> writeToStream("SoundcloudApi", "Connection", SoundcloudApi::instance() -> isConnected() ? "true" : SoundcloudApi::instance() -> getError());
         delete dInt;
     }
 }
 
 void Playo::showSoundcloudTabDialog() {
     if (SoundcloudApi::instance() -> isConnected())
-        Qt::TopDockWidgetArea, Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
+        Dockbars::instance() -> createDocBar("SC [YOU]", ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

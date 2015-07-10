@@ -74,7 +74,10 @@ protected:
         if (!status) {
             Logger::instance() -> writeToStream("sQuery", url.toString(), message);
             sendError(errorReceiver, message, code);
-        } else if (post_proc & extract) extractBody(response);
+        } else {
+            if (post_proc & extract) extractBody(response);
+            Logger::instance() -> writeToStream("sQuery", url.toString(), response.keys());
+        }
         return status;
     }
 

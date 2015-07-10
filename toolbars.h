@@ -62,6 +62,9 @@ namespace Playo3 {
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
 
+        void disconnectVk();
+        void disconnectSoundcloud();
+
         QToolButton * initiateEchonestButton();
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();

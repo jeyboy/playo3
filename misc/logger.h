@@ -47,6 +47,7 @@ signals:
 
 public slots:
     void writeToStream(QString initiator, QString value);
+    void writeToStream(QString initiator, QString value, QStringList attrs);
     void writeToStream(QString initiator, QString value, QString attr);
 };
 

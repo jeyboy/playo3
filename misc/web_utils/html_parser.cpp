@@ -53,7 +53,7 @@ HtmlSelector * HtmlSelector::build(QString & predicate) {
         } else if ((*it) == '[' || (*it) == ',') {
             selector -> addToken(state, token, rel);
             state = HtmlSelector::attr;
-        } else if ((*it) == '=' || (*it) == '^') {
+        } else if ((*it) == '=' || (*it) == '^'  || (*it) == '&' || (*it) == '~') {
             rel = (*it);
             token.append((*it));
         } else if ((*it) == ']') {
@@ -93,9 +93,11 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
                         if (attrs.value(it.key()) != it.value().second) return false;
                     } else if (it.value().first == '^') {
                         if (!attrs.value(it.key()).startsWith(it.value().second)) return false;
+                    } else if (it.value().first == '&') {
+                        if (!attrs.value(it.key()).endsWith(it.value().second)) return false;
+                    } else if (it.value().first == '~') {
+                        if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;
                     } else qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
-
-
                 break;
             }
             case HtmlSelector::id:  { res |= attrs["id"] == it.value(); break; }

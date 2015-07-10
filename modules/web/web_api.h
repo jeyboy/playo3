@@ -54,6 +54,7 @@ signals:
     void authorized();
 
 public slots:
+    virtual inline void disconnect() { clearData(); }
     void showingCaptcha();
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 

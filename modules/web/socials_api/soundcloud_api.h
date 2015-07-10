@@ -31,6 +31,7 @@ public:
         );
     }
 public slots:
+    inline void disconnect() { WebApi::disconnect(); setParams("", "", ""); }
     void proceedAuthResponse(const QUrl & url);
 
 protected:

@@ -75,6 +75,10 @@ void Logger::writeToStream(QString initiator, QString value) {
     toFile(initiator, value);
 }
 
+void Logger::writeToStream(QString initiator, QString value, QStringList attrs) {
+    writeToStream(initiator, value, attrs.join(' , '));
+}
+
 void Logger::writeToStream(QString initiator, QString value, QString attr) {
     toFile(initiator, QString("%1   :::   %2").arg(value, attr));
     toEditor(initiator,

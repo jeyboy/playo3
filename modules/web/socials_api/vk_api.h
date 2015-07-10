@@ -53,6 +53,7 @@ public:
 signals:
     void showCaptcha();
 public slots:
+    inline void disconnect() { WebApi::disconnect(); setParams("", "", ""); }
     void proceedAuthResponse(const QUrl & url);
 protected:
     inline QString baseUrlStr(QString & predicate) { return "https://api.vk.com/method/" + predicate; }
