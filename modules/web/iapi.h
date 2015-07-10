@@ -72,9 +72,11 @@ protected:
 
         bool status = extractStatus(url, response, code, message);
         if (!status) {
-            Logger::instance() -> writeToStream("sQuery", url.toString(), message);
+            Logger::instance() -> writeToStream("sQuery", url.toString(), message, true);
+            qDebug() << "error";
             sendError(errorReceiver, message, code);
         } else {
+            qDebug() << "norm";
             if (post_proc & extract) extractBody(response);
             Logger::instance() -> writeToStream("sQuery", url.toString(), response.keys());
         }

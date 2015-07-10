@@ -75,13 +75,13 @@ void Logger::writeToStream(QString initiator, QString value) {
     toFile(initiator, value);
 }
 
-void Logger::writeToStream(QString initiator, QString value, QStringList attrs) {
-    writeToStream(initiator, value, attrs.join(' , '));
+void Logger::writeToStream(QString initiator, QString value, QStringList attrs, bool error) {
+    writeToStream(initiator, value, attrs.join(" , "), error);
 }
 
-void Logger::writeToStream(QString initiator, QString value, QString attr) {
+void Logger::writeToStream(QString initiator, QString value, QString attr, bool error) {
     toFile(initiator, QString("%1   :::   %2").arg(value, attr));
     toEditor(initiator,
-        QString("<span style='color: green'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
+        QString("<span style='color: " + QString(error ? "red" : "green") + "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
     );
 }

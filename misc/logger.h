@@ -6,6 +6,7 @@
 #include <qtextstream.h>
 #include <qdatetime.h>
 #include <qscrollbar.h>
+#include <qstringbuilder.h>
 
 class Logger : public QObject {
     Q_OBJECT
@@ -47,8 +48,8 @@ signals:
 
 public slots:
     void writeToStream(QString initiator, QString value);
-    void writeToStream(QString initiator, QString value, QStringList attrs);
-    void writeToStream(QString initiator, QString value, QString attr);
+    void writeToStream(QString initiator, QString value, QStringList attrs, bool error = false);
+    void writeToStream(QString initiator, QString value, QString attr, bool error = false);
 };
 
 #endif // LOGGER

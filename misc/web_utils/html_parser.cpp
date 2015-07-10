@@ -37,9 +37,9 @@ void HtmlSelector::addToken(SState tType, QString & token, QChar rel) {
     token.clear();
 }
 
-HtmlSelector * HtmlSelector::build(QString & predicate) {
+HtmlSelector::HtmlSelector(QString predicate) : _direct(false), prev(0), next(0) {
     HtmlSelector::SState state = HtmlSelector::tag;
-    HtmlSelector * selector = new HtmlSelector(), * head = selector;
+    HtmlSelector * selector = this;
     QString token;
     QChar rel;
 
@@ -66,7 +66,7 @@ HtmlSelector * HtmlSelector::build(QString & predicate) {
             selector -> addToken(state, token, rel);
             selector = new HtmlSelector(true, selector);
         } else if ((*it) == ' ') {
-            if (state != attr) {
+            if (state != attr && !token.isEmpty()) {
                 selector -> addToken(state, token, rel);
                 selector = new HtmlSelector(false, selector);
             }
@@ -74,8 +74,6 @@ HtmlSelector * HtmlSelector::build(QString & predicate) {
             // skipping
         } else token.append((*it));
     }
-
-    return head;
 }
 
 ////////  HtmlTag //////////

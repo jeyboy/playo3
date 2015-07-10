@@ -15,7 +15,7 @@
 struct HtmlSelector {
     enum SState { none, tag, attr, id, klass, type };
 
-    static HtmlSelector * build(QString & predicate);
+    HtmlSelector(QString predicate);
 
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
         if (prev_selector) prev_selector -> next = this;
@@ -42,10 +42,8 @@ public:
     }
 
     inline HtmlSet find(QString predicate) {
-        HtmlSelector * selector = HtmlSelector::build(predicate);
-        HtmlSet set = find(selector);
-        delete selector;
-        return set;
+        HtmlSelector selector(predicate);
+        return find(&selector);
     }
 private:
     HtmlSet & find(HtmlSelector * selector, HtmlSet & set);
@@ -67,10 +65,8 @@ public:
 
     inline HtmlSet find(HtmlSelector * selector) { return tags.find(selector); }
     inline HtmlSet find(QString predicate) {
-        HtmlSelector * selector = HtmlSelector::build(predicate);
-        HtmlSet set = tags.find(selector);
-        delete selector;
-        return set;
+        HtmlSelector selector(predicate);
+        return tags.find(&selector);
     }
 
     inline void addAttr(QString & name, QString & val) { attrs.insert(name, val);  name.clear(); val.clear(); }
@@ -131,10 +127,8 @@ public:
     }
 
     inline HtmlSet find(QString predicate) {
-        HtmlSelector * selector = HtmlSelector::build(predicate);
-        HtmlSet set = find(selector);
-        delete selector;
-        return set;
+        HtmlSelector selector(predicate);
+        return find(&selector);
     }
 
     inline void output() { qDebug() << (*root); }
