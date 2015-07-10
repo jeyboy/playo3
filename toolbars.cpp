@@ -408,8 +408,10 @@ QToolButton * ToolBars::initiateEchonestButton() {
 QToolButton * ToolBars::initiateVkButton() {
     if (vkToolButton == 0)
         vkToolButton = new QToolButton();
-    else
+    else {
+        vkToolButton -> setMenu(0);
         disconnect(vkToolButton, SIGNAL(clicked()), parent(), SLOT(showVKTabDialog()));
+    }
 
     if (VkApi::instance() -> isConnected()) {
         vkToolButton -> setIcon(QIcon(":/add_vk_on"));
@@ -436,8 +438,10 @@ QToolButton * ToolBars::initiateVkButton() {
 QToolButton * ToolBars::initiateSoundcloudButton() {
     if (soundcloudToolButton == 0)
         soundcloudToolButton = new QToolButton();
-    else
+    else {
+        soundcloudToolButton -> setMenu(0);
         disconnect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
+    }
 
     if (SoundcloudApi::instance() -> isConnected()) {
         soundcloudToolButton -> setIcon(QIcon(":/add_soundcloud_on"));
