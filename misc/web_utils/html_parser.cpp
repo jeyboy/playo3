@@ -19,34 +19,55 @@ HtmlSet & HtmlSet::find(HtmlSelector * selector, HtmlSet & set) {
 
 ////////  HtmlSelector //////////
 
+void HtmlSelector::addToken(SState tType, QString & token, QChar rel) {
+    switch(tType) { // preparing on multy params
+        case attr: {
+            QStringList parts = token.split(rel, QString::SkipEmptyParts);
+            QPair<QChar, QString> newAttr(rel, parts.length() > 1 ? parts.last() : "*");
+            _attrs.insert(parts.first(), newAttr);
+            break;
+        }
+        case klass: {
+            klasses.append(token.split(" ", QString::SkipEmptyParts));
+            break;
+        }
+    }
+
+    _tokens.insert(tType, token);
+    token.clear();
+}
 
 HtmlSelector * HtmlSelector::build(QString & predicate) {
     HtmlSelector::SState state = HtmlSelector::tag;
     HtmlSelector * selector = new HtmlSelector(), * head = selector;
     QString token;
+    QChar rel;
 
     for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
         if ((*it) == '#') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             state = HtmlSelector::id;
         } else if ((*it) == '.') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             state = HtmlSelector::klass;
         } else if ((*it) == '[' || (*it) == ',') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             state = HtmlSelector::attr;
+        } else if ((*it) == '=' || (*it) == '^') {
+            rel = (*it);
+            token.append((*it));
         } else if ((*it) == ']') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             state = HtmlSelector::none;
         } else if ((*it) == ':') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             state = HtmlSelector::type;
         } else if ((*it) == '>') {
-            selector -> addToken(state, token);
+            selector -> addToken(state, token, rel);
             selector = new HtmlSelector(true, selector);
         } else if ((*it) == ' ') {
             if (state != attr) {
-                selector -> addToken(state, token);
+                selector -> addToken(state, token, rel);
                 selector = new HtmlSelector(false, selector);
             }
         } else if ((*it) == '\'' || (*it) == '"') {
@@ -67,8 +88,14 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
         switch(it.key()) {
             case HtmlSelector::tag: { res |= (it.value() == "*" || _name == it.value()); break; }
             case HtmlSelector::attr: {
-                for(QHash<QString, QString>::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
-                    if (attrs.value(it.key()) != it.value()) return false;
+                for(QHash<QString, QPair<QChar, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
+                    if (it.value().first == '=') {
+                        if (attrs.value(it.key()) != it.value().second) return false;
+                    } else if (it.value().first == '^') {
+                        if (!attrs.value(it.key()).startsWith(it.value().second)) return false;
+                    } else qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
+
+
                 break;
             }
             case HtmlSelector::id:  { res |= attrs["id"] == it.value(); break; }

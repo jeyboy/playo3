@@ -22,26 +22,11 @@ struct HtmlSelector {
     }
     inline ~HtmlSelector() { delete next; }
 
-    inline void addToken(SState tType, QString & token) {
-        switch(tType) { // preparing on multy params
-            case attr: {
-                QStringList parts = token.split("=", QString::SkipEmptyParts);
-                _attrs.insert(parts.first(), parts.length() > 1 ? parts.last() : "");
-                break;
-            }
-            case klass: {
-                klasses.append(token.split(" ", QString::SkipEmptyParts));
-                break;
-            }
-        }
-
-        _tokens.insert(tType, token);
-        token.clear();
-    }
+    void addToken(SState tType, QString & token, QChar rel);
 
     QStringList klasses;
     QHash<SState, QString> _tokens;
-    QHash<QString, QString> _attrs;
+    QHash<QString, QPair<QChar, QString> > _attrs;
     bool _direct;
 
     HtmlSelector * prev;
