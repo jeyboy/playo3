@@ -24,7 +24,7 @@ void HtmlSelector::addToken(SState & tType, QString & token, char & rel) {
         case attr: {
             QStringList parts = token.split(rel, QString::SkipEmptyParts);
             QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : "*");
-            _attrs.insert(parts.first(), newAttr);
+            _attrs.insert(parts.first(), newAttr); rel = attr_rel_eq;
             break;
         }
         case klass: {
@@ -43,14 +43,6 @@ HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) 
     QString token;
     char rel, * it = predicate;
 
-//    char &exp = infix.c_str();
-//    while(&exp!='\0')
-//    {
-//             cout<< &exp++ << endl;
-//        }
-//    }
-
-//    for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
     while(*it) {
         switch(*it) {
             case id_token: {
@@ -116,16 +108,13 @@ HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) 
 ////////  HtmlTag //////////
 
 bool HtmlTag::validTo(HtmlSelector * selector) {
-    bool res = true;
     for(QHash<HtmlSelector::SState, QString>::Iterator it = selector -> _tokens.begin(); it != selector -> _tokens.end(); it++) {
-        if (!res) break;
-
         switch(it.key()) {
-            case HtmlSelector::tag: { res |= (it.value() == "*" || _name == it.value()); break; }
+            case HtmlSelector::tag: { if (!(it.value() == "*" || _name == it.value())) return false; break; }
             case HtmlSelector::attr: {
                 for(QHash<QString, QPair<char, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
                     switch(it.value().first) {
-                        case HtmlSelector::attr_rel_eq: { if (attrs.value(it.key()) != it.value().second) return false;  break;}
+                        case HtmlSelector::attr_rel_eq: { if (!(it.value().second == "*" || attrs.value(it.key()) == it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
@@ -133,30 +122,29 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
                     };
                 break;
             }
-            case HtmlSelector::id:  { res |= attrs["id"] == it.value(); break; }
+            case HtmlSelector::id:  { if (attrs["id"] != it.value()) return false; break; }
             case HtmlSelector::klass: { //TODO: optimisation needed
                 QStringList node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
+                if (node_klasses.isEmpty()) return false;
 
-                if (res |= !node_klasses.isEmpty()) {
-                    for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
-                        bool finded = false;
-                        for(QStringList::Iterator xit = node_klasses.begin(); xit != node_klasses.end(); xit++) // TODO: if list generated each time - remove finded classes for speed up of the proccess of search
-                            if ((finded = (*xit) == (*it))) break;
+                for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
+                    bool finded = false;
+                    for(QStringList::Iterator xit = node_klasses.begin(); xit != node_klasses.end(); xit++) // TODO: if list generated each time - remove finded classes for speed up of the proccess of search
+                        if ((finded = (*xit) == (*it))) break;
 
-                        if (!finded) return false;
-                    }
+                    if (!finded) return false;
                 }
                 break;
             }
             case HtmlSelector::type: {
-                res |= ((_name == "input" || _name == "select") && attrs["type"] == it.value());
+                if (!((_name == "input" || _name == "select") && attrs["type"] == it.value())) return false;
                 break;
             }
             default: ;
         }
     }
 
-    return res;
+    return true;
 }
 
 ////////  HtmlParser //////////
