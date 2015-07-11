@@ -51,7 +51,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "</head>"
         "<body class='home-show-page'>"
         "    <ul class='caps title-area'>"
-        "        <li class='name'>dsfsd</li>"
+        "        <li class='name'>ds fsd</li>"
         "    </ul>"
         "</body>"
         "</html>"

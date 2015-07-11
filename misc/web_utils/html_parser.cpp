@@ -172,6 +172,7 @@ void HtmlParser::parse(QIODevice * device) {
                             if (!curr.isEmpty()) elem -> appendText(curr);
                             state = tag;
                         break;}
+                        case space: if (curr.isEmpty()) continue;
                         default: { curr.append((last = *ch)); }
                     }
                 break;}
