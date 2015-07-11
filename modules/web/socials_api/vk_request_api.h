@@ -234,6 +234,14 @@ public:
         return ret;
     }
 
+    QJsonObject userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
+        QUrlQuery query;
+        setParam(query, "fields", "counters");
+        setParam(query, "user_ids", uid);
+
+        return sQuery(baseUrl("users.get", query)).value("response").toArray().first().toObject();
+    }
+
     QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
         QUrlQuery query = genDefaultParams();
 
@@ -352,6 +360,14 @@ public:
 
     QString refreshAudioItemUrl(QString audio_uid) {
         return getAudioInfo(audio_uid).value("url").toString();
+    }
+
+    void nameToId(QString name, QString & id, QString & id_type) {
+        QUrlQuery query;
+        setParam(query, "screen_name", name);
+        QJsonObject ret = sQuery(baseUrl("utils.resolveScreenName", query)).value("response").toObject();
+        id = QString::number(ret.value("object_id").toInt());
+        id_type = ret.value("type").toString();
     }
 
     QUrl audioLyricsUrl(QString & lyrics_id) {
