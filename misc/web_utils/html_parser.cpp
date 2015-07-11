@@ -182,29 +182,31 @@ void HtmlParser::parse(QIODevice * device) {
                 break;}
 
                 case attr_rel: {
-                    state = val;
                     parseValue(device, value, ch, initiator, last, state);
                     elem -> addAttr(curr, value);
+                    state = attr;
                 break;}
 
                 case close_tag_predicate: { is_closed = state == tag; break; }
 
                 case close_tag: {
                     if (!curr.isEmpty()) {
-                        if (state & attr_val) elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
-
-                        if (is_closed) {
-                            // if (!isSolo(elem))
-                            if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
-                            curr.clear(); is_closed = false;
-                        } else {
-                            if (last != close_tag_predicate) elem = elem -> appendTag(curr);
-                            else elem -> appendTag(curr);
+                        if (state & attr_val)
+                            elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+                        else {
+                            if (is_closed) {
+                                // if (!isSolo(elem))
+                                if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
+                                curr.clear(); is_closed = false;
+                            } else {
+                                if (last != close_tag_predicate) elem = elem -> appendTag(curr);
+                                else elem -> appendTag(curr);
+                            }
                         }
-                    }
-                    else if (isSolo(elem)) elem = elem -> parentTag();
+                    } else if (isSolo(elem)) elem = elem -> parentTag();
+
                     state = content;
-                }
+                break;}
 
                 default: { curr.append((last = *ch)); }
             }
@@ -214,22 +216,16 @@ void HtmlParser::parse(QIODevice * device) {
 }
 
 void HtmlParser::parseValue(QIODevice * device, QString & value, char * ch, char & initiator, char & last, PState & state) {
+    state = val;
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
             switch(*ch) {
                 case content_del1:
                 case content_del2: {
-                    if (state == val) {
-                        initiator = *ch;
-                        state = content;
-                    } else if (state == content) {
-                        if (initiator == *ch && last != mean_sym) {
-                           state = attr;
-                           return;
-                        } else value.append(ch);
-                    } else {
-                        qDebug() << "WRONG STATE";
-                        return;
+                    switch(state) {
+                        case val: { initiator = *ch; state = content; break;}
+                        case content: { if (initiator == *ch && last != mean_sym) return; value.append(ch); break;}
+                        default: { qDebug() << "WRONG STATE" << state; return; }
                     }
                 break;}
                 default: value.append((last = *ch));
