@@ -125,11 +125,22 @@ private:
 };
 
 class HtmlParser {
-    enum PState { content, tag, attr, val };
+    enum PState { content = 1, tag = 2, attr = 4, val = 8, attr_val = attr | val };
+
+    enum PToken {
+        open_tag = 60,
+        close_tag_predicate = 47,
+        close_tag = 62,
+        space = 32,
+        attr_rel = 61,
+        content_del1 = 34,
+        content_del2 = 39,
+        mean_sym = 92
+    };
 
 public:
-    inline HtmlParser(QIODevice * device) : state(content) { parse(device); }
-    inline HtmlParser(QString & str) : state(content) {
+    inline HtmlParser(QIODevice * device) { parse(device); }
+    inline HtmlParser(QString & str) {
         QByteArray ar = str.toUtf8();
         QBuffer stream(&ar);
         stream.open(QIODevice::ReadOnly);
@@ -155,15 +166,10 @@ private:
     void initSoloTags();
 
     void parse(QIODevice * device);
-    void parseTag(QIODevice * device);
-    void parseAttr(QIODevice * device);
-    void parseValue(QIODevice * device);
+    void parseValue(QIODevice * device, QString & value, char * ch, char & initiator, char & last, PState & state);
 
     QHash<QString, bool> solo;
-    HtmlTag * root, * elem;
-    QString curr, value;
-    PState state;
-    char * ch, last, initiator;
+    HtmlTag * root;
 };
 
 #endif // HTML_PARSER

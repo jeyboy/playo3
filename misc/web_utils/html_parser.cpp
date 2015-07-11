@@ -40,7 +40,7 @@ void HtmlSelector::addToken(SState & tType, QString & token, char & rel) {
 HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) {
     HtmlSelector::SState state = HtmlSelector::tag;
     HtmlSelector * selector = this;
-    QString token;
+    QString token; token.reserve(128);
     char rel, * it = predicate;
 
     while(*it) {
@@ -157,118 +157,83 @@ void HtmlParser::initSoloTags() {
 
 void HtmlParser::parse(QIODevice * device) {
     initSoloTags();
-    ch = new char[2](); initiator = '\0'; last = '\0';
-
-    curr.reserve(4096);
-
-    elem = root = new HtmlTag("*");
+    PState state = content;
+    char * ch = new char[2](), initiator = 0, last = 0;
+    QString curr, value; curr.reserve(4096); value.reserve(1024);
+    HtmlTag * elem = (root = new HtmlTag("*"));
+    bool is_closed = false;
 
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
-            if (*ch == '<') {
-                if (!curr.isEmpty())
-                    elem -> appendText(curr);
+            switch(*ch) {
+                case open_tag: {
+                    if (!curr.isEmpty()) elem -> appendText(curr);
+                    state = tag;
+                break;}
 
-                state = tag;
-                parseTag(device);
-            } else if (*ch == '>') {
-                qDebug() << "ERROR " << elem << (*ch);
-            } else if (*ch == ' ') {
-                // skip spaces
+                case space: {
+                    switch(state) {
+                        case tag: { elem = elem -> appendTag(curr); break;}
+                        case attr:
+                        case val: { if (!curr.isEmpty()) elem -> addAttr(curr, value); break; } // proceed attrs without value
+                        default: continue; // else skip spaces
+                    }
+                    state = attr;
+                break;}
+
+                case attr_rel: {
+                    state = val;
+                    parseValue(device, value, ch, initiator, last, state);
+                    elem -> addAttr(curr, value);
+                break;}
+
+                case close_tag_predicate: { is_closed = state == tag; break; }
+
+                case close_tag: {
+                    if (!curr.isEmpty()) {
+                        if (state & attr_val) elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+
+                        if (is_closed) {
+                            // if (!isSolo(elem))
+                            if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
+                            curr.clear(); is_closed = false;
+                        } else {
+                            if (last != close_tag_predicate) elem = elem -> appendTag(curr);
+                            else elem -> appendTag(curr);
+                        }
+                    }
+                    else if (isSolo(elem)) elem = elem -> parentTag();
+                    state = content;
+                }
+
+                default: { curr.append((last = *ch)); }
             }
-            else curr.append(ch);
         }
     }
     delete ch;
 }
 
-void HtmlParser::parseTag(QIODevice * device) {
+void HtmlParser::parseValue(QIODevice * device, QString & value, char * ch, char & initiator, char & last, PState & state) {
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
-            if (*ch == ' ') {
-                if (state == tag) {
-                    state = attr;
-                    elem = elem -> appendTag(curr);
-                    parseAttr(device);
-                    state = attr;
-                }
-                else parseAttr(device);
-
-                if (state == content)
-                    return;
-            } else if (*ch == '>') {
-                state = content;
-
-                if (!curr.isEmpty()) {
-                    bool close_tag = curr[0] == '/';
-
-                    if (close_tag) {
-                        // if (!isSolo(elem))
-                        if (elem -> name() == curr.mid(1)) // add ignoring of the close tag for solo tags
-                            elem = elem -> parentTag();
-
-                        curr.clear();
+            switch(*ch) {
+                case content_del1:
+                case content_del2: {
+                    if (state == val) {
+                        initiator = *ch;
+                        state = content;
+                    } else if (state == content) {
+                        if (initiator == *ch && last != mean_sym) {
+                           state = attr;
+                           return;
+                        } else value.append(ch);
                     } else {
-                        if (last != '/') elem = elem -> appendTag(curr);
-                        else elem -> appendTag(curr);
+                        qDebug() << "WRONG STATE";
+                        return;
                     }
-                }
-                else if (isSolo(elem)) elem = elem -> parentTag();
-
-                return;
-            } else {
-                curr.append(ch);
-                last = *ch;
+                break;}
+                default: value.append((last = *ch));
             }
-        }
-    }
-}
-
-void HtmlParser::parseAttr(QIODevice * device) {
-    while(!device -> atEnd()) {
-        if (device -> getChar(ch)) {
-            if (*ch == '=') {
-                state = val;
-                parseValue(device);
-                elem -> addAttr(curr, value);
-                return;
-            } else if (*ch == ' ') {
-                if (!curr.isEmpty()) // proceed attrs without value
-                    elem -> addAttr(curr, value);
-                else return;
-            } else if (*ch == '>') {
-                if (!curr.isEmpty()) // proceed attrs without value
-                    elem -> addAttr(curr, value);
-
-                state = content;
-                if (isSolo(elem)) elem = elem -> parentTag();
-                return;
-            } else {
-                curr.append(ch);
-            }
-        }
-    }
-}
-
-void HtmlParser::parseValue(QIODevice * device) {
-    while(!device -> atEnd()) {
-        if (device -> getChar(ch)) {
-            if (*ch == '"' || *ch == '\'') {
-                if (state == val) {
-                    initiator = *ch;
-                    state = content;
-                } else if (state == content) {
-                    if (initiator == *ch && last != '\\') {
-                       state = attr;
-                       return;
-                    } else value.append(ch);
-                } else {
-                    qDebug() << "WRONG STATE";
-                    return;
-                }
-            }
-            else value.append(ch);
-            last = *ch;
         }
     }
 }
