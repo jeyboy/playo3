@@ -165,50 +165,60 @@ void HtmlParser::parse(QIODevice * device) {
 
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
-            switch(*ch) {
-                case open_tag: {
-                    if (!curr.isEmpty()) elem -> appendText(curr);
-                    state = tag;
-                break;}
-
-                case space: {
-                    switch(state) {
-                        case tag: { elem = elem -> appendTag(curr); break;}
-                        case attr:
-                        case val: { if (!curr.isEmpty()) elem -> addAttr(curr, value); break; } // proceed attrs without value
-                        default: continue; // else skip spaces
+            switch (state) {
+                case content: {
+                    switch(*ch) {
+                        case open_tag: {
+                            if (!curr.isEmpty()) elem -> appendText(curr);
+                            state = tag;
+                        break;}
+                        default: { curr.append((last = *ch)); }
                     }
-                    state = attr;
                 break;}
 
-                case attr_rel: {
-                    parseValue(device, value, ch, initiator, last, state);
-                    elem -> addAttr(curr, value);
-                    state = attr;
-                break;}
+                default: switch(*ch) {
+                    case open_tag: {
+                        if (!curr.isEmpty()) elem -> appendText(curr);
+                        state = tag;
+                    break;}
 
-                case close_tag_predicate: { is_closed = state == tag; break; }
-
-                case close_tag: {
-                    if (!curr.isEmpty()) {
-                        if (state & attr_val)
-                            elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
-                        else {
-                            if (is_closed) {
-                                // if (!isSolo(elem))
-                                if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
-                                curr.clear(); is_closed = false;
-                            } else {
-                                if (last != close_tag_predicate) elem = elem -> appendTag(curr);
-                                else elem -> appendTag(curr);
-                            }
+                    case space: {
+                        switch(state) {
+                            case attr:
+                            case val: { if (!curr.isEmpty()) elem -> addAttr(curr, value); state = attr; break; } // proceed attrs without value
+                            case tag: { elem = elem -> appendTag(curr); state = attr; break;}
+                            default: /*continue*/; // else skip spaces
                         }
-                    } else if (isSolo(elem)) elem = elem -> parentTag();
+                    break;}
 
-                    state = content;
-                break;}
+                    case attr_rel: {
+                        parseValue(device, value, ch, initiator, last, state);
+                        elem -> addAttr(curr, value);
+                        state = attr;
+                    break;}
 
-                default: { curr.append((last = *ch)); }
+                    case close_tag_predicate: { is_closed = state == tag; break; }
+
+                    case close_tag: {
+                        if (!curr.isEmpty()) {
+                            if (state & attr_val)
+                                elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+                            else {
+                                if (is_closed) {
+                                    if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
+                                    curr.clear(); is_closed = false;
+                                } else {
+                                    if (last != close_tag_predicate) elem = elem -> appendTag(curr);
+                                    else elem -> appendTag(curr);
+                                }
+                            }
+                        } else if (isSolo(elem)) elem = elem -> parentTag();
+
+                        state = content;
+                    break;}
+
+                    default: { curr.append((last = *ch)); }
+                }
             }
         }
     }
