@@ -19,11 +19,11 @@ HtmlSet & HtmlSet::find(HtmlSelector * selector, HtmlSet & set) {
 
 ////////  HtmlSelector //////////
 
-void HtmlSelector::addToken(SState tType, QString & token, QChar rel) {
-    switch(tType) { // preparing on multy params
+void HtmlSelector::addToken(SState & tType, QString & token, char & rel) {
+    switch(tType) {
         case attr: {
             QStringList parts = token.split(rel, QString::SkipEmptyParts);
-            QPair<QChar, QString> newAttr(rel, parts.length() > 1 ? parts.last() : "*");
+            QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : "*");
             _attrs.insert(parts.first(), newAttr);
             break;
         }
@@ -37,42 +37,79 @@ void HtmlSelector::addToken(SState tType, QString & token, QChar rel) {
     token.clear();
 }
 
-HtmlSelector::HtmlSelector(QString predicate) : _direct(false), prev(0), next(0) {
+HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) {
     HtmlSelector::SState state = HtmlSelector::tag;
     HtmlSelector * selector = this;
     QString token;
-    QChar rel;
+    char rel, * it = predicate;
 
-    for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
-        if ((*it) == '#') {
-            selector -> addToken(state, token, rel);
-            state = HtmlSelector::id;
-        } else if ((*it) == '.') {
-            selector -> addToken(state, token, rel);
-            state = HtmlSelector::klass;
-        } else if ((*it) == '[' || (*it) == ',') {
-            selector -> addToken(state, token, rel);
-            state = HtmlSelector::attr;
-        } else if ((*it) == '=' || (*it) == '^'  || (*it) == '&' || (*it) == '~') {
-            rel = (*it);
-            token.append((*it));
-        } else if ((*it) == ']') {
-            selector -> addToken(state, token, rel);
-            state = HtmlSelector::none;
-        } else if ((*it) == ':') {
-            selector -> addToken(state, token, rel);
-            state = HtmlSelector::type;
-        } else if ((*it) == '>') {
-            selector -> addToken(state, token, rel);
-            selector = new HtmlSelector(true, selector);
-        } else if ((*it) == ' ') {
-            if (state != attr && !token.isEmpty()) {
+//    char &exp = infix.c_str();
+//    while(&exp!='\0')
+//    {
+//             cout<< &exp++ << endl;
+//        }
+//    }
+
+//    for(QString::Iterator it = predicate.begin(); it != predicate.end(); it++) {
+    while(*it) {
+        switch(*it) {
+            case id_token: {
                 selector -> addToken(state, token, rel);
-                selector = new HtmlSelector(false, selector);
-            }
-        } else if ((*it) == '\'' || (*it) == '"') {
-            // skipping
-        } else token.append((*it));
+                state = HtmlSelector::id;
+            break;}
+
+            case class_token: {
+                selector -> addToken(state, token, rel);
+                state = HtmlSelector::klass;
+            break;}
+
+            case attr_token:
+            case attr_separator: {
+                selector -> addToken(state, token, rel);
+                state = HtmlSelector::attr;
+            break;}
+
+            case attr_rel_eq:
+            case attr_rel_begin:
+            case attr_rel_end:
+            case attr_rel_match: {
+                token.append((rel = *it));
+            break;}
+
+            case attr_token_end: {
+                selector -> addToken(state, token, rel);
+                state = HtmlSelector::none;
+            break;}
+
+            case type_token: {
+                selector -> addToken(state, token, rel);
+                state = HtmlSelector::type;
+            break;}
+
+            case direct_token: {
+                if (!token.isEmpty())
+                    selector -> addToken(state, token, rel);
+                selector = new HtmlSelector(true, selector);
+                state = HtmlSelector::tag;
+            break;}
+
+            case space_token: {
+                if (state != attr && !token.isEmpty()) {
+                    selector -> addToken(state, token, rel);
+                    selector = new HtmlSelector(false, selector);
+                    state = HtmlSelector::tag;
+                }
+            break;}
+
+            case cont1_token:
+            case cont2_token: {
+                // skipping
+            break;}
+
+            default: token.append(*it);
+        }
+
+        it++;
     }
 }
 
@@ -86,16 +123,14 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
         switch(it.key()) {
             case HtmlSelector::tag: { res |= (it.value() == "*" || _name == it.value()); break; }
             case HtmlSelector::attr: {
-                for(QHash<QString, QPair<QChar, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
-                    if (it.value().first == '=') {
-                        if (attrs.value(it.key()) != it.value().second) return false;
-                    } else if (it.value().first == '^') {
-                        if (!attrs.value(it.key()).startsWith(it.value().second)) return false;
-                    } else if (it.value().first == '&') {
-                        if (!attrs.value(it.key()).endsWith(it.value().second)) return false;
-                    } else if (it.value().first == '~') {
-                        if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;
-                    } else qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
+                for(QHash<QString, QPair<char, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
+                    switch(it.value().first) {
+                        case HtmlSelector::attr_rel_eq: { if (attrs.value(it.key()) != it.value().second) return false;  break;}
+                        case HtmlSelector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
+                        case HtmlSelector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
+                        case HtmlSelector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
+                        default: qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
+                    };
                 break;
             }
             case HtmlSelector::id:  { res |= attrs["id"] == it.value(); break; }

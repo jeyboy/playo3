@@ -15,18 +15,35 @@
 struct HtmlSelector {
     enum SState { none, tag, attr, id, klass, type };
 
-    HtmlSelector(QString predicate);
+    enum SToken {
+        id_token = 35,
+        class_token = 46,
+        attr_token = 91,
+        attr_separator = 44,
+        attr_rel_eq = 61,
+        attr_rel_begin = 94,
+        attr_rel_end = 38,
+        attr_rel_match = 126,
+        attr_token_end = 93,
+        type_token = 58,
+        direct_token = 62,
+        space_token = 32,
+        cont1_token = 34,
+        cont2_token = 39
+    };
+
+    HtmlSelector(char * predicate);
 
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
         if (prev_selector) prev_selector -> next = this;
     }
     inline ~HtmlSelector() { delete next; }
 
-    void addToken(SState tType, QString & token, QChar rel);
+    void addToken(SState & tType, QString & token, char & rel);
 
     QStringList klasses;
     QHash<SState, QString> _tokens;
-    QHash<QString, QPair<QChar, QString> > _attrs;
+    QHash<QString, QPair<char, QString> > _attrs;
     bool _direct;
 
     HtmlSelector * prev;
@@ -42,7 +59,7 @@ public:
     }
 
     inline HtmlSet find(QString predicate) {
-        HtmlSelector selector(predicate);
+        HtmlSelector selector(predicate.toUtf8().data());
         return find(&selector);
     }
 private:
@@ -65,7 +82,7 @@ public:
 
     inline HtmlSet find(HtmlSelector * selector) { return tags.find(selector); }
     inline HtmlSet find(QString predicate) {
-        HtmlSelector selector(predicate);
+        HtmlSelector selector(predicate.toUtf8().data());
         return tags.find(&selector);
     }
 
@@ -127,7 +144,7 @@ public:
     }
 
     inline HtmlSet find(QString predicate) {
-        HtmlSelector selector(predicate);
+        HtmlSelector selector(predicate.toUtf8().data());
         return find(&selector);
     }
 
