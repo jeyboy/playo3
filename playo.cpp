@@ -64,18 +64,13 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    );
 
 
-    QString s = QString(
-                "<noscript><div><img src='//mc.yandex.ru/watch/21273337' style='position:absolute; left:-9999px;' alt='' /></div></noscript>"
-                "<!-- /Yandex.Metrika counter -->"
-                );
-
-    QElapsedTimer t2;
-    t2.start();
-    HtmlParser p(s);
-    qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-    p.output();
-    HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
-    qDebug() << set;
+//    QElapsedTimer t2;
+//    t2.start();
+//    HtmlParser p(s);
+//    qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+//    p.output();
+//    HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
+//    qDebug() << set;
 
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
@@ -87,8 +82,10 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //        HtmlParser p(&f);
 //        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
 //        p.output();
-//        HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
-//        qDebug() << set;
+//        QElapsedTimer t8;
+//        t8.start();
+//        HtmlSet set = p.find(QStringLiteral("div[itemprop='tracks']"));
+//        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
 
 //        f.close();
 //    }

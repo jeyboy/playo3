@@ -39,8 +39,8 @@ protected:
         return res;
     }
 private:
-    inline QString trackPredicate() { return "div[itemprop='tracks']"; }
-    inline QString urlPredicate() { return "span[data-url^'/Song']"; }
+    inline QString trackPredicate() { return QStringLiteral("div[itemprop='tracks']"); }
+    inline QString urlPredicate() { return QStringLiteral("span[data-url^'/Song']"); }
 //    inline QString infoPredicate() { return ".data text"; }
 
 
