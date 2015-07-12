@@ -184,37 +184,31 @@ private:
     inline void scanUtf8Char(QIODevice * io, QString & result, char & in) {
         int need;
         uint min_uc, uc;
-        uchar ch;
 
-        if (in > 0) { result.append(in); return; }
-        else {
-            ch = in;
-
-            if ((ch & 0xe0) == 0xc0) {
-                uc = ch & 0x1f;
-                need = 1;
-                min_uc = 0x80;
-            } else if ((ch & 0xf0) == 0xe0) {
-                uc = ch & 0x0f;
-                need = 2;
-                min_uc = 0x800;
-            } else if ((ch&0xf8) == 0xf0) {
-                uc = ch & 0x07;
-                need = 3;
-                min_uc = 0x10000;
-            } else {
-                qDebug() << "BLIA " << ch;
-                result.append(ch);
-                return;
-            }
+        if ((in & 0xe0) == 0xc0) {
+            uc = in & 0x1f;
+            need = 1;
+            min_uc = 0x80;
+        } else if ((in & 0xf0) == 0xe0) {
+            uc = in & 0x0f;
+            need = 2;
+            min_uc = 0x800;
+        } else if ((in&0xf8) == 0xf0) {
+            uc = in & 0x07;
+            need = 3;
+            min_uc = 0x10000;
+        } else {
+            qDebug() << "BLIA " << in;
+            result.append(in);
+            return;
         }
 
-        if (io -> bytesAvailable() < need) { result.append(ch); return;}
+//        if (io -> bytesAvailable() < need) { result.append(ch); return;}
 
         for (int i = 0; i < need; ++i) {
-            io -> getChar(&in); ch = in;
-            if ((ch&0xc0) != 0x80) { qDebug() << "PIPEC" << ch; return; }
-            uc = (uc << 6) | (ch & 0x3f);
+            io -> getChar(&in);
+            if ((in&0xc0) != 0x80) { qDebug() << "PIPEC" << in; return; }
+            uc = (uc << 6) | (in & 0x3f);
         }
 
         if (isUnicodeNonCharacter(uc) || uc >= 0x110000 || (uc < min_uc) || (uc >= 0xd800 && uc <= 0xdfff)) {

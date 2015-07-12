@@ -174,7 +174,7 @@ void HtmlParser::parse(QIODevice * device) {
                     switch(*ch) {
                         case comment_post_token: break; // skip -
                         case close_tag: { elem -> appendComment(curr); state = content;  break;}
-                        default: scanUtf8Char(device, curr, (last = ch[0]));  //curr.append((last = *ch));
+                        default: if ((last = *ch) > 0) curr.append(*ch); else scanUtf8Char(device, curr, ch[0]);
                     }
                 break;}
 
@@ -195,7 +195,7 @@ void HtmlParser::parse(QIODevice * device) {
                                 default: { qDebug() << "WRONG STATE" << state; return; }
                             }
                         break;}
-                        default: scanUtf8Char(device, value, (last = ch[0]));//value.append((last = *ch));
+                        default: if ((last = *ch) > 0) value.append(*ch); else scanUtf8Char(device, value, ch[0]);
                     }
                 break;}
 
@@ -206,7 +206,7 @@ void HtmlParser::parse(QIODevice * device) {
                             state = tag;
                         break;}
                         case space: if (curr.isEmpty()) continue;
-                        default: scanUtf8Char(device, curr, (last = ch[0])); //{ curr.append((last = *ch)); }
+                        default: if ((last = *ch) > 0) curr.append(*ch); else scanUtf8Char(device, curr, ch[0]);
                     }
                 break;}
 
