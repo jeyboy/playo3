@@ -71,8 +71,9 @@ protected:
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
-        Logger::instance() -> writeToStream();
+        Logger::instance() -> startMark();
         toJson(response, res);
+        Logger::instance() -> endMark("Grabber", url.toString());
         delete response;
         if (isNew) delete manager;
         return res;
