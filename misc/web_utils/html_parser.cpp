@@ -153,6 +153,7 @@ void HtmlParser::initSoloTags() {
     solo.insert("br", true);
     solo.insert("meta", true);
     solo.insert("link", true);
+    solo.insert("img", true);
 }
 
 void HtmlParser::parse(QIODevice * device) {
@@ -188,7 +189,7 @@ void HtmlParser::parse(QIODevice * device) {
                                         elem -> addAttr(curr, value);
                                         state = attr;
                                     }
-                                    else value.append(ch);
+                                    else value.append((last = *ch));
                                 break;}
                                 default: { qDebug() << "WRONG STATE" << state; return; }
                             }
@@ -227,7 +228,14 @@ void HtmlParser::parse(QIODevice * device) {
                         state = val;
                     break;}
 
-                    case close_tag_predicate: { is_closed = state == tag; break; }
+                    case close_tag_predicate: {
+                        last = *ch;
+                        switch (state) {
+                            case tag: is_closed = true; break;
+                            case attr: state = tag;
+                            default: ;
+                        }
+                    break; }
 
                     case close_tag: {
                         if (!curr.isEmpty()) {
