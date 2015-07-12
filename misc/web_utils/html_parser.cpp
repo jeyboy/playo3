@@ -156,6 +156,7 @@ void HtmlParser::initSoloTags() {
     solo.insert("img", true);
 }
 
+
 void HtmlParser::parse(QIODevice * device) {
     initSoloTags();
     PState state = content;
@@ -166,14 +167,14 @@ void HtmlParser::parse(QIODevice * device) {
 
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
-            if (*ch < 31) continue;
+            if (*ch > 0 && *ch < 31) continue;
 
             switch (state) {
                 case comment: {
                     switch(*ch) {
                         case comment_post_token: break; // skip -
                         case close_tag: { elem -> appendComment(curr); state = content;  break;}
-                        default: curr.append((last = *ch));
+                        default: scanUtf8Char(device, curr, (last = ch[0]));  //curr.append((last = *ch));
                     }
                 break;}
 
@@ -194,7 +195,7 @@ void HtmlParser::parse(QIODevice * device) {
                                 default: { qDebug() << "WRONG STATE" << state; return; }
                             }
                         break;}
-                        default: value.append((last = *ch));
+                        default: scanUtf8Char(device, value, (last = ch[0]));//value.append((last = *ch));
                     }
                 break;}
 
@@ -205,7 +206,7 @@ void HtmlParser::parse(QIODevice * device) {
                             state = tag;
                         break;}
                         case space: if (curr.isEmpty()) continue;
-                        default: { curr.append((last = *ch)); }
+                        default: scanUtf8Char(device, curr, (last = ch[0])); //{ curr.append((last = *ch)); }
                     }
                 break;}
 
