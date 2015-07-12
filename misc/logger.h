@@ -4,9 +4,11 @@
 #include <qplaintextedit.h>
 #include <qfile.h>
 #include <qtextstream.h>
+#include <qelapsedtimer.h>
 #include <qdatetime.h>
 #include <qscrollbar.h>
 #include <qstringbuilder.h>
+#include "misc/conversions.h"
 
 class Logger : public QObject {
     Q_OBJECT
@@ -21,9 +23,9 @@ public:
     inline QPlainTextEdit * getEditor() { return m_editor; }
     inline void unregisterEditor() { m_editor = 0; }
 
-    inline void startMark() { mark = QDateTime::currentMSecsSinceEpoch(); }
+    inline void startMark() { timer.start(); }
     inline void endMark(QString initiator, QString value) {
-        emit write(initiator, value, QString::number(QDateTime::currentMSecsSinceEpoch() - mark) + " ms");
+        emit write(initiator, value, QString::number(timer.elapsed()) % " ms (" % Conversion::paddedNumber(timer.nsecsElapsed()) % " ns)");
     }
 
 private:
@@ -38,7 +40,7 @@ private:
     bool m_showDate;
     QString lastInitiator;
 
-    qint64 mark;
+    QElapsedTimer timer;
 
     static Logger * self;
 

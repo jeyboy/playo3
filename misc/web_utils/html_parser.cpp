@@ -154,27 +154,36 @@ void HtmlParser::initSoloTags() {
     solo.insert("meta", true);
     solo.insert("link", true);
     solo.insert("img", true);
+    solo.insert("!DOCTYPE", true);
 }
 
 
 void HtmlParser::parse(QIODevice * device) {
     initSoloTags();
     PState state = content;
-    char * ch = new char[2](), initiator = 0, last = 0;
-    QString curr, value; curr.reserve(4096); value.reserve(1024);
+    char * ch = new char[2](), last = 0;
+    QString curr, value; curr.reserve(1024); value.reserve(1024);
     HtmlTag * elem = (root = new HtmlTag("*"));
     bool is_closed = false;
 
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
-            if (*ch > 0 && *ch < 31) continue;
+            if (*ch > 0 && *ch < 31) continue; // skip not printable trash
 
             switch (state) {
                 case comment: {
                     switch(*ch) {
                         case comment_post_token: break; // skip -
-                        case close_tag: { elem -> appendComment(curr); state = content;  break;}
-                        default: if ((last = *ch) > 0) curr.append(*ch); else scanUtf8Char(device, curr, ch[0]);
+                        case close_tag: {
+                            if (flags & skip_comment) curr.clear();
+                            else  elem -> appendComment(curr);
+                            state = content;
+                        break;}
+                        default:
+                            if (*ch > 0)
+                                curr.append(*ch);
+                            else
+                                scanUtf8Char(device, curr, ch[0]);
                     }
                 break;}
 
@@ -184,25 +193,26 @@ void HtmlParser::parse(QIODevice * device) {
                         case content_del1:
                         case content_del2: {
                             switch(state) {
-                                case val: { initiator = *ch; state = in_val; break;}
+                                case val: { state = in_val; break;}
                                 case in_val: {
-                                    if (initiator == *ch && last != mean_sym) {
-                                        elem -> addAttr(curr, value);
-                                        state = attr;
-                                    }
-                                    else value.append((last = *ch));
+                                    elem -> addAttr(curr, value);
+                                    state = attr;
                                 break;}
                                 default: { qDebug() << "WRONG STATE" << state; return; }
                             }
                         break;}
-                        default: if ((last = *ch) > 0) value.append(*ch); else scanUtf8Char(device, value, ch[0]);
+                        default:
+                            if (*ch > 0)
+                                value.append(*ch);
+                            else
+                                scanUtf8Char(device, value, ch[0]);
                     }
                 break;}
 
                 case content: {
                     switch(*ch) {
                         case open_tag: {
-                            if (!curr.isEmpty()) elem -> appendText(curr);
+                            if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
                             state = tag;
                         break;}
                         case space: if (curr.isEmpty()) continue;
@@ -211,10 +221,11 @@ void HtmlParser::parse(QIODevice * device) {
                 break;}
 
                 default: switch(*ch) {
-                    case open_tag: {
-                        if (!curr.isEmpty()) elem -> appendText(curr);
-                        state = tag;
-                    break;}
+//                    case open_tag: {
+//                        qDebug() << "MAYBE NOT USABLE";
+//                        if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
+//                        state = tag;
+//                    break;}
 
                     case space: {
                         switch(state) {
@@ -240,9 +251,10 @@ void HtmlParser::parse(QIODevice * device) {
 
                     case close_tag: {
                         if (!curr.isEmpty()) {
-                            if (state & attr_val)
+                            if (state & attr_val) {
                                 elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
-                            else {
+                                if (isSolo(elem)) elem = elem -> parentTag();
+                            } else {
                                 if (is_closed) {
                                     if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
                                     curr.clear(); is_closed = false;

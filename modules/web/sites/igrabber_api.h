@@ -3,6 +3,8 @@
 
 ////http://musicmachinery.com/music-apis/
 
+#include "misc/logger.h"
+
 #include "misc/web_utils/custom_network_access_manager.h"
 #include "misc/web_utils/html_parser.h"
 #include "media/genres/web/target_genres.h"
@@ -69,6 +71,7 @@ protected:
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
+        Logger::instance() -> writeToStream();
         toJson(response, res);
         delete response;
         if (isNew) delete manager;

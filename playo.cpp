@@ -74,21 +74,21 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
-    QFile f("F:/test_page/home.htm");
-    if (f.open(QFile::ReadOnly)) {
+//    QFile f("F:/test_page/home.htm");
+//    if (f.open(QFile::ReadOnly)) {
 
-        QElapsedTimer t2;
-        t2.start();
-        HtmlParser p(&f);
-        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-        p.output();
-        QElapsedTimer t8;
-        t8.start();
-        HtmlSet set = p.find(QStringLiteral("div[itemprop='tracks']"));
-        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
+//        QElapsedTimer t2;
+//        t2.start();
+//        HtmlParser p(&f);
+//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+//        p.output();
+//        QElapsedTimer t8;
+//        t8.start();
+//        HtmlSet set = p.find(QStringLiteral("div[itemprop='tracks']"));
+//        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
 
-        f.close();
-    }
+//        f.close();
+//    }
 }
 
 Playo::~Playo() {
