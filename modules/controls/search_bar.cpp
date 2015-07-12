@@ -11,22 +11,18 @@ SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, c
     setLayout(l);
 
     text = new QLineEdit(this);
+    connect(text, SIGNAL(textChanged(QString)), receiver, search_start_slot);
     l -> addWidget(text, 7);
 
     connect(receiver, search_end_signal, this, SLOT(searchEnded()));
 
-    ClickableLabel * searchButton = new ClickableLabel("Search", QPixmap(":search").scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(initiateSearch()));
-    connect(this, SIGNAL(searchCalled(QString)), receiver, search_start_slot);
-    l -> addWidget(searchButton, 1);
+//    ClickableLabel * searchButton = new ClickableLabel("Search", QPixmap(":search").scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(initiateSearch()));
+//    connect(this, SIGNAL(searchCalled(QString)), receiver, search_start_slot);
+//    l -> addWidget(searchButton, 1);
 
     ClickableLabel * closeButton = new ClickableLabel("Close", QPixmap(":remove").scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(onHide()));
     connect(closeButton, SIGNAL(clicked()), closeReceiver, close_slot);
-    l -> addWidget(closeButton, 2);
-}
-
-void SearchBar::initiateSearch() {
-    text -> setEnabled(false);
-    emit searchCalled(text -> text());
+    l -> addWidget(closeButton, 1);
 }
 
 void SearchBar::searchEnded() {
@@ -35,6 +31,5 @@ void SearchBar::searchEnded() {
 
 void SearchBar::onHide() {
     text -> setText("");
-    initiateSearch();
     hide();
 }
