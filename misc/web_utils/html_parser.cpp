@@ -165,7 +165,17 @@ void HtmlParser::parse(QIODevice * device) {
 
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
+            if (*ch < 31) continue;
+
             switch (state) {
+                case comment: {
+                    switch(*ch) {
+                        case comment_post_token: break; // skip -
+                        case close_tag: { elem -> appendComment(curr); state = content;  break;}
+                        default: curr.append((last = *ch));
+                    }
+                break;}
+
                 case val:
                 case in_val: {
                     switch(*ch) {
@@ -237,6 +247,12 @@ void HtmlParser::parse(QIODevice * device) {
                         state = content;
                     break;}
 
+                    case comment_post_token: {
+                        switch(state) {
+                            case tag: if (last == comment_token) { state = comment; curr.clear(); continue; }
+                            default: ;
+                        }
+                    }
                     default: { curr.append((last = *ch)); }
                 }
             }

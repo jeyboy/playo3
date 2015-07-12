@@ -32,11 +32,17 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "<html class='no-js' xmlns:fb='http://ogp.me/ns/fb#'>"
         "<head coco lal='1' pido>"
         "<title>DESKTOP SABEResPODER</title>"
+        "<!-- Yandex.Metrika counter -->"
         "<meta charset='UTF-8'></meta>"
         "<meta content='' name='description'>"
         "<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui' name='viewport'>"
         "<link href='http://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>"
         "<link rel='stylesheet' href='css/ie8.css'>"
+        "<!--"
+        "function displayMsg() {"
+        "    alert('Hello World!')"
+        "}"
+        "//-->"
         "<script type='text/javascript'>"
         "   var _gaq = _gaq || [];"
         "   _gaq.push(['_setAccount','UA-42547686-1']);"
@@ -62,15 +68,24 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     HtmlParser p(s);
     qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
     p.output();
-    HtmlSet set = p.find("html meta[name='description']");
+    HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
     qDebug() << set;
 
 
-    QElapsedTimer t;
-    t.start();
-    HtmlSelector r("div[itemprop='tracks'] > span[data-url^'/Song']");
-    qDebug() << "PARSE SELECTOR" << t.nsecsElapsed() << t.elapsed() << "ms";
-    int i = 0;
+//    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
+//    QFile f("F:/test_page/home.htm");
+//    if (f.open(QFile::ReadOnly)) {
+
+//        QElapsedTimer t2;
+//        t2.start();
+//        HtmlParser p(&f);
+//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+//        p.output();
+//        HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
+//        qDebug() << set;
+
+//        f.close();
+//    }
 }
 
 Playo::~Playo() {
