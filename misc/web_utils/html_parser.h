@@ -125,7 +125,7 @@ private:
 };
 
 class HtmlParser {
-    enum PState { content = 1, tag = 2, attr = 4, val = 8, attr_val = attr | val };
+    enum PState { content = 1, tag = 2, attr = 4, val = 8, in_val = 16, attr_val = attr | val };
 
     enum PToken {
         open_tag = 60,
@@ -166,7 +166,6 @@ private:
     void initSoloTags();
 
     void parse(QIODevice * device);
-    void parseValue(QIODevice * device, QString & value, char * ch, char & initiator, char & last, PState & state);
 
     QHash<QString, bool> solo;
     HtmlTag * root;

@@ -166,6 +166,27 @@ void HtmlParser::parse(QIODevice * device) {
     while(!device -> atEnd()) {
         if (device -> getChar(ch)) {
             switch (state) {
+                case val:
+                case in_val: {
+                    switch(*ch) {
+                        case content_del1:
+                        case content_del2: {
+                            switch(state) {
+                                case val: { initiator = *ch; state = in_val; break;}
+                                case in_val: {
+                                    if (initiator == *ch && last != mean_sym) {
+                                        elem -> addAttr(curr, value);
+                                        state = attr;
+                                    }
+                                    else value.append(ch);
+                                break;}
+                                default: { qDebug() << "WRONG STATE" << state; return; }
+                            }
+                        break;}
+                        default: value.append((last = *ch));
+                    }
+                break;}
+
                 case content: {
                     switch(*ch) {
                         case open_tag: {
@@ -193,9 +214,7 @@ void HtmlParser::parse(QIODevice * device) {
                     break;}
 
                     case attr_rel: {
-                        parseValue(device, value, ch, initiator, last, state);
-                        elem -> addAttr(curr, value);
-                        state = attr;
+                        state = val;
                     break;}
 
                     case close_tag_predicate: { is_closed = state == tag; break; }
@@ -224,23 +243,4 @@ void HtmlParser::parse(QIODevice * device) {
         }
     }
     delete ch;
-}
-
-void HtmlParser::parseValue(QIODevice * device, QString & value, char * ch, char & initiator, char & last, PState & state) {
-    state = val;
-    while(!device -> atEnd()) {
-        if (device -> getChar(ch)) {
-            switch(*ch) {
-                case content_del1:
-                case content_del2: {
-                    switch(state) {
-                        case val: { initiator = *ch; state = content; break;}
-                        case content: { if (initiator == *ch && last != mean_sym) return; value.append(ch); break;}
-                        default: { qDebug() << "WRONG STATE" << state; return; }
-                    }
-                break;}
-                default: value.append((last = *ch));
-            }
-        }
-    }
 }
