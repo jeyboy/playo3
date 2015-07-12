@@ -139,7 +139,8 @@ SOURCES += main.cpp\
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
     double_slider/qxtspanslider.cpp \
-    misc/web_utils/html_parser.cpp
+    misc/web_utils/html_parser.cpp \
+    modules/web/sites/myzuka_album.cpp
 
 HEADERS  += playo.h \
     single_application.h \

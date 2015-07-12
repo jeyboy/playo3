@@ -4,9 +4,13 @@
 #include "igrabber_api.h"
 
 class MyzukaAlbum : public  IGrabberApi {
+public:
+    static MyzukaAlbum * instance();
+    inline static void close() { delete self; }
+
 protected:
-    QString baseUrlStr(QString & predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" + predicate; }
-    void toJson(QNetworkReply * reply, QJsonObject & json) {
+    QString baseUrlStr(QString & predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
+    void toJson(QNetworkReply * reply, QJsonArray & json) {
         HtmlParser parser(reply);
 
 //        HtmlSet set;
@@ -22,20 +26,19 @@ protected:
 
             tag = (*track) -> find(urlSelector).first();
             qDebug() << "TAG" << tag;
-            track_obj.insert("url", baseUrlStr(tag -> value("data-url")));
-            track_obj.insert("title", tag -> value("title").section(' ', 1));
+            track_obj.insert(GRAB_FIELD_URL, baseUrlStr(tag -> value(QStringLiteral("data-url"))));
+            track_obj.insert(GRAB_FIELD_TITLE, tag -> value(QStringLiteral("title")).section(' ', 1));
 
 //            set = (*track) -> find(infoSelector);
-//            track_obj.insert("time", set.first() -> text());
-//            track_obj.insert("bitrate", set.last() -> text().section(' ', 0, 0));
-//            track_obj.insert("bitrate", set.last() -> text().section(' ', 0, 0));
+//            track_obj.insert(GRAB_FIELD_DURATION, set.first() -> text());
+//            track_obj.insert(GRAB_FIELD_BITRATE, set.last() -> text().section(' ', 0, 0));
 
             track_ar << track_obj;
         }
 
         delete trackSelector;
 
-        json.insert("audio", track_ar);
+        json.append(track_ar);
         return res;
     }
 private:
@@ -85,6 +88,11 @@ private:
 //                </div>
 //            </div>
 //        </div>
+
+    inline MyzukaAlbum() : IGrabberApi() { }
+    inline virtual ~MyzukaAlbum() {}
+
+    static MyzukaAlbum * self;
 };
 
 #endif // MYZUKA_ALBUM

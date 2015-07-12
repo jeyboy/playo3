@@ -30,9 +30,18 @@
 //    int count, offset, limit, fact_count;
 //};
 
-#define AUDIO_KEY_NAME QLatin1String("audio")
-#define DEFAULT_PREDICATE_NAME QLatin1String("")
+#define AUDIO_KEY_NAME QStringLiteral("audio")
+#define DEFAULT_PREDICATE_NAME QString()
 #define GRAB_DELAY 200 // ms
+
+#define GRAB_FIELD_TITLE QStringLiteral("title")
+#define GRAB_FIELD_DURATION QStringLiteral("duration")
+#define GRAB_FIELD_ID QStringLiteral("id")
+#define GRAB_FIELD_URL QStringLiteral("url")
+#define GRAB_FIELD_GENRE_ID QStringLiteral("genre_id")
+#define GRAB_FIELD_EXTENSION QStringLiteral("extension")
+#define GRAB_FIELD_BITRATE QStringLiteral("bitrate")
+#define GRAB_FIELD_BPM QStringLiteral("bpm")
 
 class IGrabberApi {
 protected:

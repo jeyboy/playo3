@@ -287,6 +287,55 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
+int IModel::proceedGrabberList(QJsonArray & collection, FolderItem * parent) {
+    int itemsAmount = 0;
+    QJsonObject itm;
+    WebItem * newItem;
+    QString uri;
+
+    if (!collection.at(0).isArray()) {
+        QJsonArray ar;
+        ar.append(collection);
+        collection = ar;
+    }
+
+    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        QJsonArray part = (*parts_it).toArray();
+        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+            itm = (*it).toObject();
+
+            if (itm.isEmpty()) continue;
+
+            id = QString::number(itm.value(GRAB_FIELD_ID).toInt());
+
+            uri = itm.value(GRAB_FIELD_URL).toString();
+            if (uri.isEmpty()) continue;
+
+            itemsAmount++;
+            newItem = new WebItem(
+                id,
+                uri,
+                itm.value(GRAB_FIELD_TITLE).toString(),
+                parent
+            );
+
+            newItem -> setExtension(itm.value(GRAB_FIELD_EXTENSION).toString(QStringLiteral("mp3")));
+
+            if (itm.contains(GRAB_FIELD_DURATION)) {
+                if (itm.value(GRAB_FIELD_DURATION).isDouble())
+                    newItem -> setDuration(Duration::fromMillis(itm.value(GRAB_FIELD_DURATION).toInt(0)));
+                else
+                    qDebug() << QStringLiteral("proceed parsing by mask from str");
+            }
+
+            if (itm.contains(GRAB_FIELD_GENRE_ID))
+                newItem -> setGenre(itm.value(GRAB_FIELD_GENRE_ID).toInt());
+        }
+    }
+
+    return itemsAmount;
+}
+
 int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
     QJsonObject itm;

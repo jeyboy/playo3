@@ -3,6 +3,7 @@
 
 #include "socials_api/vk_api.h"
 #include "socials_api/soundcloud_api.h"
+#include "sites/myzuka_album.h"
 
 #endif // WEB_APIS
 
