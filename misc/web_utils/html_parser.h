@@ -33,7 +33,7 @@ struct HtmlSelector {
         cont2_token = 39
     };
 
-    HtmlSelector(char * predicate);
+    HtmlSelector(const char * predicate);
 
     inline HtmlSelector(bool direct = false, HtmlSelector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
         if (prev_selector) prev_selector -> next = this;

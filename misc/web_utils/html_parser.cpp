@@ -31,17 +31,19 @@ void HtmlSelector::addToken(SState & tType, QString & token, char & rel) {
             klasses.append(token.split(" ", QString::SkipEmptyParts));
             break;
         }
+        default:;
     }
 
     _tokens.insert(tType, token);
     token.clear();
 }
 
-HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) {
+HtmlSelector::HtmlSelector(const char * predicate) : _direct(false), prev(0), next(0) {
     HtmlSelector::SState state = HtmlSelector::tag;
     HtmlSelector * selector = this;
     QString token; token.reserve(128);
-    char rel, * it = predicate;
+    char rel;
+    const char * it = predicate;
 
     while(*it) {
         switch(*it) {
@@ -104,7 +106,7 @@ HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) 
         it++;
     }
 
-    free(predicate);
+    free((void *)predicate);
 }
 
 ////////  HtmlTag //////////
