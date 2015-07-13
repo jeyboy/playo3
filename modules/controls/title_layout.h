@@ -1,7 +1,7 @@
 #ifndef TITLE_LAYOUT
 #define TITLE_LAYOUT
 
-#include <QGridLayout>
+#include <qgridlayout.h>
 
 class TitleLayout : public QGridLayout {
 public :

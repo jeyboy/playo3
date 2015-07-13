@@ -1,7 +1,7 @@
 #ifndef TRAY_H
 #define TRAY_H
 
-#include <QSystemTrayIcon>
+#include <qsystemtrayicon.h>
 #include <qmenu.h>
 
 namespace Playo3 {
@@ -13,7 +13,7 @@ namespace Playo3 {
 
             if(isSystemTrayAvailable()) {
         //        m_tray.showMessage();
-                QMenu *pTrayMenu = new QMenu(parent);
+                QMenu * pTrayMenu = new QMenu(parent);
         //        pTrayMenu->addAction("Add snippet", this, SLOT(onAddSnippet()),Qt::ControlModifier + Qt::Key_D);
         //        pTrayMenu->addAction("Search", this, SLOT(onSearch()),Qt::MetaModifier + Qt::Key_V);
         //        pTrayMenu->addSeparator();
@@ -25,9 +25,7 @@ namespace Playo3 {
             }
         }
 
-        ~Tray() {
-            hide();
-        }
+        inline ~Tray() { hide(); }
     };
 }
 

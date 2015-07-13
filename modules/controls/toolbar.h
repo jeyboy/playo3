@@ -1,15 +1,14 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include <QToolBar>
-#include <QMimeData>
-#include <QMouseEvent>
-#include <QFileInfo>
+#include <qtoolbar.h>
+#include <qmimedata.h>
+#include <qevent.h>
+#include <qfileinfo.h>
 
 namespace Playo3 {
     class ToolBar : public QToolBar {
         Q_OBJECT
-
     public:
         ToolBar(const QString & title, QWidget * parent = 0);
         ~ToolBar();

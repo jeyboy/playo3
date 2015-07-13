@@ -2,10 +2,10 @@
 #define METRIC_SLIDER_H
 
 #include "clickable_slider.h"
-#include <QPainter>
-#include <QToolTip>
-#include <QLinearGradient>
-#include <QStyleOptionSlider>
+#include <qpainter.h>
+#include <qtooltip.h>
+#include <qbrush.h>
+#include <qstyleoption.h>
 
 #include "misc/settings.h"
 

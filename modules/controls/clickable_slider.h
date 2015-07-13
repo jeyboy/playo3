@@ -1,7 +1,7 @@
 #ifndef CLICKABLE_SLIDER_H
 #define CLICKABLE_SLIDER_H
 
-#include <QSlider>
+#include <qslider.h>
 
 class ClickableSlider : public QSlider {
     Q_OBJECT

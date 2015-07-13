@@ -266,11 +266,7 @@ public:
     }
 
 
-    enum SearchSort : int {
-        creation_date = 0,
-        duration = 1,
-        popularity = 2
-    };
+    enum SearchSort { creation_date = 0, duration = 1, popularity = 2 };
 
     QUrl audioSearchUrl(QString & searchStr, bool autoFix, bool artistOnly, bool searchByOwn, SearchSort sort, int limit = 1000) {
         // count max eq 300 , limit is 1000

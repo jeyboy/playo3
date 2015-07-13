@@ -1,11 +1,13 @@
 #ifndef CONTROL_JSON_FIELDS_H
 #define CONTROL_JSON_FIELDS_H
 
+#include <qstringbuilder.h>
+
 namespace Playo3 {
-    #define JSON_TYPE_TAB_ITEM_COUNT "l"
-    #define JSON_TYPE_TAB_NAME "n"
-    #define JSON_TYPE_TAB_SETTINGS "set"
-    #define JSON_TYPE_VK_TAB_SETTINGS "vk"
+    #define JSON_TYPE_TAB_ITEM_COUNT QStringLiteral("l")
+    #define JSON_TYPE_TAB_NAME QStringLiteral("n")
+    #define JSON_TYPE_TAB_SETTINGS QStringLiteral("set")
+    #define JSON_TYPE_VK_TAB_SETTINGS QStringLiteral("vk")
 }
 
 /// a - item info

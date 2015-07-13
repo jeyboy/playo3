@@ -6,7 +6,7 @@
 #include <qlineedit.h>
 #include <qevent.h>
 #include <qpixmap.h>
-#include <QHBoxLayout>
+#include <qboxlayout.h>
 
 namespace Playo3 {
     class SearchBar : public QWidget {

@@ -7,7 +7,6 @@
 namespace Playo3 {
     class ClickableLabel : public QLabel {
       Q_OBJECT
-
     public:
         ClickableLabel(QString user_text, const QString & text, QWidget * parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char * slot = 0);
         ClickableLabel(QString user_text, const QPixmap & icon, QWidget * parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char * slot = 0);

@@ -22,7 +22,7 @@
 
 struct QueryRules {
     QueryRules(QString _field, int _limit = 5, int _count = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-        : field(_field), offset(_offset), limit(_limit), count(_count), fact_count(0) {}
+        : field(_field), count(_count), offset(_offset), limit(_limit) , fact_count(0) {}
 
     QString field;
     int count, offset, limit, fact_count;
@@ -32,13 +32,7 @@ class IApi {
 public:
     static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value("count").toInt(); }
 protected:
-    enum JsonPostProc : int {
-        none = 0,
-        wrap = 1,
-        extract = 2,
-        wrap_extract = wrap | extract
-    };
-
+    enum JsonPostProc { none = 0, wrap = 1, extract = 2, wrap_extract = wrap | extract };
 
     virtual QString baseUrlStr(QString & predicate) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {

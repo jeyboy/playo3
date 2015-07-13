@@ -1,8 +1,8 @@
 #ifndef WINDOW_TITLE
 #define WINDOW_TITLE
 
-#include <QStyleOption>
-#include <QPainter>
+#include <qstyleoption.h>
+#include <qpainter.h>
 #include <qevent.h>
 #include <qdatetime.h>
 

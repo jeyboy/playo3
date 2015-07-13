@@ -72,7 +72,7 @@ struct SearchRequest {
             case request_sc: return "SC";
             case request_computer: return "Computer";
             case request_tabs: return "Tabs";
-            default: "Other";
+            default: return "Other";
         }
     }
 

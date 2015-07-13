@@ -1,16 +1,15 @@
 #ifndef SLIDER_STYLE_H
 #define SLIDER_STYLE_H
 
-#include <QProxyStyle>
+#include <qproxystyle.h>
 
 class SliderStyle: public QProxyStyle {
 public:
     virtual int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0) const {
-        if (hint == QStyle::SH_Slider_AbsoluteSetButtons){
+        if (hint == QStyle::SH_Slider_AbsoluteSetButtons)
             return Qt::LeftButton;
-        } else {
+        else
             return QProxyStyle::styleHint(hint, option, widget, returnData);
-        }
     }
 };
 

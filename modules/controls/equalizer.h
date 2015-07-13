@@ -12,11 +12,10 @@
 #include "dialogs/toolbardialog.h"
 
 namespace Playo3 {
-    #define DEFAULT_PRESET QString("Manual")
+    #define DEFAULT_PRESET QStringLiteral("Manual")
 
     class Equalizer : public QWidget {
         Q_OBJECT
-
     public:
         Equalizer(QWidget * parent = 0);
         ~Equalizer();

@@ -12,7 +12,6 @@
 namespace Playo3 {
     class ToolbarButton : public QToolButton {
         Q_OBJECT
-
     public:
         ToolbarButton(QString text, QString folderPath, QWidget * parent = 0);
         inline QString mainPath() const { return path; }

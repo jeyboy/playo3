@@ -14,9 +14,7 @@ namespace Playo3 {
         void alert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void files();
     private:
-        inline UserDialogBox(QWidget * parent) : QWidget(parent) {
-
-        }
+        inline UserDialogBox(QWidget * parent) : QWidget(parent) {}
 
         int last_answer;
         QList<QUrl> selectedFiles;
