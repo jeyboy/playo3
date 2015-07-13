@@ -30,8 +30,7 @@
 //    int count, offset, limit, fact_count;
 //};
 
-#define AUDIO_KEY_NAME QStringLiteral("audio")
-#define DEFAULT_PREDICATE_NAME QString()
+#define DEFAULT_PREDICATE_NAME QStringLiteral("")
 #define GRAB_DELAY 200 // ms
 
 #define GRAB_FIELD_TITLE QStringLiteral("title")
@@ -44,8 +43,11 @@
 #define GRAB_FIELD_BPM QStringLiteral("bpm")
 
 class IGrabberApi {
+public:
+    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
+
 protected:
-    virtual QString baseUrlStr(QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+    virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
         QUrl url(baseUrlStr(predicate));
         url.setQuery(query);
@@ -54,29 +56,26 @@ protected:
 
     virtual QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
-    virtual bool endReached(QJsonObject & response, int offset) = 0;
-//    virtual int requestLimit() const = 0;
-//    inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
+//    virtual bool endReached(QJsonObject & response, int offset) = 0;
+////    virtual int requestLimit() const = 0;
+////    inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
 
-    virtual QString offsetKey() const = 0;
-    virtual QString limitKey() const = 0;
+//    virtual QString offsetKey() const = 0;
+//    virtual QString limitKey() const = 0;
 
     virtual TargetGenres genresList() { return TargetGenres(); }
 
-    virtual QJsonObject byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonObject(); }
+    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonArray(); }
 
-    virtual QJsonObject byChar(QChar /*target_char*/) { return QJsonObject(); }
+    virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
 
-    virtual QJsonObject byType(QString /*target_type*/) { return QJsonObject(); }
+    virtual QJsonArray byType(QString /*target_type*/) { return QJsonArray(); }
 
-    virtual QJsonObject search(QString & /*predicate*/) { return QJsonObject(); }
+    virtual QJsonArray popular() { return QJsonArray(); }
 
-    virtual QJsonObject popular() { return QJsonObject(); }
+    virtual void toJson(QNetworkReply * reply, QJsonArray & json) = 0;
 
-    void toJson(QNetworkReply * reply, QJsonObject & json) = 0;
-
-    QJsonObject sQuery(QUrl url, CustomNetworkAccessManager * manager = 0) {
-        QJsonObject res;
+    void sQuery(QUrl url, QJsonArray & res, CustomNetworkAccessManager * manager = 0) {
         bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
@@ -85,7 +84,6 @@ protected:
         Logger::instance() -> endMark("Grabber", url.toString());
         delete response;
         if (isNew) delete manager;
-        return res;
     }
 
 //    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {

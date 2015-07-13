@@ -291,7 +291,7 @@ int IModel::proceedGrabberList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     WebItem * newItem;
-    QString uri;
+    QString uri, id;
 
     if (!collection.at(0).isArray()) {
         QJsonArray ar;

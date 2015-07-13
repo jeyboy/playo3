@@ -3,28 +3,28 @@
 
 #include "igrabber_api.h"
 
-class MyzukaAlbum : public  IGrabberApi {
+class MyzukaAlbum : public IGrabberApi {
 public:
     static MyzukaAlbum * instance();
     inline static void close() { delete self; }
 
 protected:
-    QString baseUrlStr(QString & predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
+    QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
     void toJson(QNetworkReply * reply, QJsonArray & json) {
         HtmlParser parser(reply);
 
 //        HtmlSet set;
         HtmlTag * tag;
-        HtmlSelector * trackSelector = HtmlSelector::build(trackPredicate());
-        HtmlSet tracks = parser.find(trackSelector);
-        HtmlSelector * urlSelector = HtmlSelector::build(urlPredicate());
+        HtmlSelector trackSelector("div[itemprop='tracks']");
+        HtmlSet tracks = parser.find(&trackSelector);
+        HtmlSelector urlSelector("span[data-url^'/Song']");
 //        HtmlSelector * infoSelector = HtmlSelector::build(infoPredicate());
 
         QJsonArray track_ar;
         for(HtmlSet::Iterator track = tracks.begin(); track != tracks.end(); track++){
             QJsonObject track_obj;
 
-            tag = (*track) -> find(urlSelector).first();
+            tag = (*track) -> find(&urlSelector).first();
             qDebug() << "TAG" << tag;
             track_obj.insert(GRAB_FIELD_URL, baseUrlStr(tag -> value(QStringLiteral("data-url"))));
             track_obj.insert(GRAB_FIELD_TITLE, tag -> value(QStringLiteral("title")).section(' ', 1));
@@ -36,14 +36,9 @@ protected:
             track_ar << track_obj;
         }
 
-        delete trackSelector;
-
         json.append(track_ar);
-        return res;
     }
 private:
-    inline QString trackPredicate() { return QStringLiteral("div[itemprop='tracks']"); }
-    inline QString urlPredicate() { return QStringLiteral("span[data-url^'/Song']"); }
 //    inline QString infoPredicate() { return ".data text"; }
 
 
