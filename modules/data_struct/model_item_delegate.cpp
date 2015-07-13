@@ -342,13 +342,16 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
         ///////////////////////////////////////////////////
         if (icon_size > 24) {
-            QPen cPen(state_color, state_width); cPen.setCosmetic(true);
+            QPen cPen(state_color, state_width); cPen.setCosmetic(true); cPen.setCapStyle(Qt::SquareCap);
             painter -> setPen(cPen);
         } else {
             painter -> setPen(Qt::NoPen);
             painter -> setBrush(state_color);
         }
 
+//        painter -> drawArc(icoRect, 120 * 16, 70 * 16);
+//        painter -> drawArc(icoRect, 235 * 16, 70 * 16);
+//        painter -> drawArc(icoRect, 60 * 16, -70 * 16);
         painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////
 

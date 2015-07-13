@@ -1,8 +1,8 @@
 #ifndef GENRES_INTERFACE
 #define GENRES_INTERFACE
 
-#include <QHash>
-#include <QStringList>
+#include <qhash.h>
+#include <qstringlist.h>
 
 class IGenres {
 public:
@@ -15,7 +15,6 @@ public:
 
     virtual int defaultInt() const { return 0; }
 protected:
-
     QHash<QString, int> genres;
 };
 

@@ -1,31 +1,26 @@
 #ifndef ICON_PROVIDER_H
 #define ICON_PROVIDER_H
 
-#include <QIcon>
-#include <QHash>
-#include <QPixmapCache>
-#include <QFileIconProvider>
-#include <QStyle>
-#include <QApplication>
+#include <qicon.h>
+#include <qhash.h>
+#include <qpixmapcache.h>
+#include <qfileiconprovider.h>
+#include <qstyle.h>
+#include <qapplication.h>
 
 namespace Playo3 {
     class IconProvider {
     public:
-        ~IconProvider() {
-        }
+        inline ~IconProvider() {}
 
         static IconProvider * instance();
         static QIcon fileIcon(const QString filename, QString extension);
         static QIcon dirIcon();
         static QIcon remoteIcon();
         static QIcon missedIcon();
-        static void close() {
-            delete self;
-        }
-
+        inline static void close() { delete self; }
     private:
-        IconProvider() {
-        }
+        inline IconProvider() {}
 
         static IconProvider * self;
 

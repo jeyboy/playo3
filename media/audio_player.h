@@ -1,11 +1,10 @@
 #ifndef AUDIO_PLAYER_H
 #define AUDIO_PLAYER_H
 
-#include <QApplication>
-#include <QObject>
-#include <QUrl>
-#include <QDir>
-#include <QVector>
+#include <qapplication.h>
+#include <qurl.h>
+#include <qdir.h>
+#include <qvector.h>
 
 #include "bass.h"
 #include "bass_fx.h"

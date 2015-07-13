@@ -1,7 +1,7 @@
 #ifndef DURATION_H
 #define DURATION_H
 
-#include <QString>
+#include <qstringbuilder.h>
 #include "media/format.h"
 
 //QTime(0, 0, 0).addMSecs(mpPlayer->duration()).toString("HH:mm:ss")

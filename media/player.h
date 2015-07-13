@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <qaction.h>
-#include <QModelIndex>
+#include <qabstractitemmodel.h>
 
 #ifdef Q_OS_WIN
     #include <QWinTaskbarButton>
@@ -19,9 +19,7 @@ using namespace Playo3;
 
 class MediaInfo;
 
-namespace Playo3 {
-    class IModel;
-}
+namespace Playo3 { class IModel; }
 
 class Player : public AudioPlayer {
     Q_OBJECT

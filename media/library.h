@@ -1,6 +1,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include <qstringbuilder.h>
 #include <qabstractitemmodel.h>
 #include <qfile.h>
 #include <qmutex.h>
@@ -61,7 +62,7 @@ namespace Playo3 {
 
         ~Library();
 
-        inline QString libraryPath() { return QCoreApplication::applicationDirPath() + "/library/"; }
+        inline QString libraryPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/library/"); }
 
         bool proceedItemNames(QStringList names, int state);
         QChar getCatalogName(QString name);
@@ -88,10 +89,10 @@ namespace Playo3 {
         QHash<const QAbstractItemModel *, int > waitListLimit;
 
         QHash<const QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
-        QHash<QModelIndex, QFutureWatcher<void> * > inProc;
+        QHash<QModelIndex, QFutureWatcher<void> *> inProc;
 
         QHash<const QAbstractItemModel *, QList<QModelIndex> > waitRemoteOnProc;
-        QHash<QModelIndex, QFutureWatcher<bool> * > inRemoteProc;
+        QHash<QModelIndex, QFutureWatcher<bool> *> inRemoteProc;
 
         QTimer * saveTimer;
         QMutex saveBlock;

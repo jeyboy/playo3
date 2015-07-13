@@ -1,7 +1,8 @@
 #ifndef CUE_STRUCTS
 #define CUE_STRUCTS
 
-#include <QList>
+#include <qlist.h>
+#include <qstringbuilder.h>
 
 #define MAXTRACK	99	/* Red Book track limit */
 #define MAXINDEX	99	/* Red Book index limit */
@@ -41,17 +42,10 @@ static void parseCueTimeStr(QString str, int & min, int & sec, int & milli) {
 }
 
 struct CueTrackIndex { //      All times are relative to the beginning of the current file.
-    CueTrackIndex(int numb, QString pos) : number(numb) {
-        parseCueTimeStr(pos, minutes, seconds, millis);
-    }
+    inline CueTrackIndex(int numb, QString pos) : number(numb) { parseCueTimeStr(pos, minutes, seconds, millis); }
 
-    qint64 toMillis() {
-        return millis + seconds * 1000 + minutes * 60000;
-    }
-
-    QString toStr() {
-        return title;
-    }
+    inline qint64 toMillis() { return millis + seconds * 1000 + minutes * 60000; }
+    inline QString toStr() { return title; }
 
     int number;
     int minutes, seconds, millis;
@@ -61,7 +55,7 @@ struct CueTrackIndex { //      All times are relative to the beginning of the cu
 };
 
 struct IndexContainer {
-    void addIndex(QString numb, QString pos) {
+    inline void addIndex(QString numb, QString pos) {
         indexes << (activeIndex = new CueTrackIndex(numb.toInt(), pos));
     }
 
@@ -75,15 +69,15 @@ struct CueTrack : IndexContainer {
         postgap_minutes(0), postgap_seconds(0), postgap_millis(0),
         flags(FLAG_NONE)
     {
-        if (dType == "AUDIO") data_type = AUDIO;
-        if (dType == "CDG") data_type = CDG;
+        if (dType == QStringLiteral("AUDIO")) data_type = AUDIO;
+        if (dType == QStringLiteral("CDG")) data_type = CDG;
 
-        if (dType == "MODE1/2048") data_type = MODE1_2048;
-        if (dType == "MODE1/2352") data_type = MODE1_2352;
-        if (dType == "MODE2/2336") data_type = MODE2_2336;
-        if (dType == "MODE2/2352") data_type = MODE2_2352;
-        if (dType == "CDI/2336") data_type = CDI_2336;
-        if (dType == "CDI/2352") data_type = CDI_2352;
+        if (dType == QStringLiteral("MODE1/2048")) data_type = MODE1_2048;
+        if (dType == QStringLiteral("MODE1/2352")) data_type = MODE1_2352;
+        if (dType == QStringLiteral("MODE2/2336")) data_type = MODE2_2336;
+        if (dType == QStringLiteral("MODE2/2352")) data_type = MODE2_2352;
+        if (dType == QStringLiteral("CDI/2336")) data_type = CDI_2336;
+        if (dType == QStringLiteral("CDI/2352")) data_type = CDI_2352;
     }
 
     ~CueTrack() {
@@ -92,10 +86,10 @@ struct CueTrack : IndexContainer {
 
     void parseFlags(QList<QString> flgs) {
         for(QList<QString>::Iterator flag = flgs.begin(); flag != flgs.end(); flag++) {
-            if ((*flag) == "DCP") flags = (AudioFlag)(flags|FLAG_DCP);
-            if ((*flag) == "4CH") flags = (AudioFlag)(flags|FLAG_4CH);
-            if ((*flag) == "PRE") flags = (AudioFlag)(flags|FLAG_PRE);
-            if ((*flag) == "SCMS") flags = (AudioFlag)(flags|FLAG_SCMS);
+            if ((*flag) == QStringLiteral("DCP")) flags = (AudioFlag)(flags|FLAG_DCP);
+            if ((*flag) == QStringLiteral("4CH")) flags = (AudioFlag)(flags|FLAG_4CH);
+            if ((*flag) == QStringLiteral("PRE")) flags = (AudioFlag)(flags|FLAG_PRE);
+            if ((*flag) == QStringLiteral("SCMS")) flags = (AudioFlag)(flags|FLAG_SCMS);
         }
     }
 
@@ -104,7 +98,7 @@ struct CueTrack : IndexContainer {
 
     QString toStr() {
         if (!performer.isEmpty())
-            return performer + " - " + title;
+            return performer % QStringLiteral(" - ") % title;
         else return title;
     }
 
@@ -123,18 +117,16 @@ struct CueTrack : IndexContainer {
 
 struct CueFile : IndexContainer {
     CueFile(QString fpath, QString fType) : path(fpath) {
-        if (fType == "BINARY") format = BINARY;
-        if (fType == "MOTOROLA") format = MOTOROLA;
-        if (fType == "AIFF") format = AIFF;
-        if (fType == "WAVE") format = WAVE;
-        if (fType == "MP3") format = MP3;
+        if (fType == QStringLiteral("BINARY")) format = BINARY;
+        if (fType == QStringLiteral("MOTOROLA")) format = MOTOROLA;
+        if (fType == QStringLiteral("AIFF")) format = AIFF;
+        if (fType == QStringLiteral("WAVE")) format = WAVE;
+        if (fType == QStringLiteral("MP3")) format = MP3;
     }
 
-    ~CueFile() {
-        qDeleteAll(tracks);
-    }
+    virtual ~CueFile() { qDeleteAll(tracks); }
 
-    void addTrack(QString numb, QString dType) {
+    inline void addTrack(QString numb, QString dType) {
         tracks << (activeTrack = new CueTrack(numb.toInt(), dType));
     }
 

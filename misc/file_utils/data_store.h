@@ -1,13 +1,13 @@
 #ifndef DATA_STORE_H
 #define DATA_STORE_H
 
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QJsonArray>
+#include <qjsonobject.h>
+#include <qjsondocument.h>
+#include <qjsonarray.h>
 
-#include <QFile>
-#include <QStringList>
-#include <QVariant>
+#include <qfile.h>
+#include <qstringlist.h>
+#include <qvariant.h>
 
 namespace Playo3 {
     class DataStore {

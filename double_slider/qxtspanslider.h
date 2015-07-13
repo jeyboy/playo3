@@ -25,7 +25,7 @@
 #ifndef QXTSPANSLIDER_H
 #define QXTSPANSLIDER_H
 
-#include <QSlider>
+#include <qslider.h>
 #include "qxtglobal.h"
 
 class QxtSpanSliderPrivate;
@@ -42,19 +42,17 @@ class QxtSpanSlider : public QSlider {
     Q_ENUMS(HandleMovementMode)
 
 public:
-    explicit QxtSpanSlider(QWidget* parent = 0);
-    explicit QxtSpanSlider(Qt::Orientation orientation, QWidget* parent = 0);
+    explicit QxtSpanSlider(QWidget * parent = 0);
+    explicit QxtSpanSlider(Qt::Orientation orientation, QWidget * parent = 0);
     virtual ~QxtSpanSlider();
 
-    enum HandleMovementMode
-    {
+    enum HandleMovementMode {
         FreeMovement,
         NoCrossing,
         NoOverlapping
     };
 
-    enum SpanHandle
-    {
+    enum SpanHandle {
         NoHandle,
         LowerHandle,
         UpperHandle
@@ -92,11 +90,11 @@ Q_SIGNALS:
     void sliderPressed(SpanHandle handle);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent* event);
-    virtual void mousePressEvent(QMouseEvent* event);
-    virtual void mouseMoveEvent(QMouseEvent* event);
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-    virtual void paintEvent(QPaintEvent* event);
+    virtual void keyPressEvent(QKeyEvent * event);
+    virtual void mousePressEvent(QMouseEvent * event);
+    virtual void mouseMoveEvent(QMouseEvent * event);
+    virtual void mouseReleaseEvent(QMouseEvent * event);
+    virtual void paintEvent(QPaintEvent * event);
 };
 
 #endif // QXTSPANSLIDER_H

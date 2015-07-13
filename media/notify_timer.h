@@ -1,11 +1,10 @@
 #ifndef NOTIFY_TIMER_H
 #define NOTIFY_TIMER_H
 
-#include <QTimer>
+#include <qtimer.h>
 
 class NotifyTimer : public QTimer {
     Q_OBJECT
-
 public:
     NotifyTimer(QObject * parent);
 
@@ -18,6 +17,5 @@ signals:
     void started();
     void stoped();
 };
-
 
 #endif // NOTIFY_TIMER_H

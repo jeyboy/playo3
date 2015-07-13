@@ -11,9 +11,7 @@ public:
 protected:
     void initDefault();
 private:
-    inline MusicGenres() : IGenres() {
-        initDefault();
-    }
+    inline MusicGenres() : IGenres() { initDefault(); }
 
     static MusicGenres * self;
 };

@@ -7,17 +7,17 @@
     #define FILENAME_MAX_LEN 320
 #endif
 
-#include <QRegExp>
+#include <qregexp.h>
 
-static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp("(\\W|[_])")).toLower(); }
-static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp("\\A(\\[|\\()+\\d{1,}(\\]|\\))")); }
+static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QStringLiteral("(\\W|[_])"))).toLower(); }
+static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("\\A(\\[|\\()+\\d{1,}(\\]|\\))"))); }
 static QString downloadTitle(QString title, QString extension) {
-  QString ret = title.replace(QRegExp("[^()\\w\\-&.]|_"), " ");
+  QString ret = title.replace(QRegExp(QStringLiteral("[^()\\w\\-&.]|_")), QStringLiteral(" "));
 
   if (!extension.isEmpty())
-      ret = ret + '.' + extension;
+      ret = ret % '.' % extension;
 
-  return ret.replace(QRegExp("\\s+"), " ").trimmed().mid(0, FILENAME_MAX_LEN);
+  return ret.replace(QRegExp(QStringLiteral("\\s+")), QStringLiteral(" ")).trimmed().mid(0, FILENAME_MAX_LEN);
 }
 
 //static inline QString sitesFilter(QString title)				{ return title.remove(QRegExp("((http:\\/\\/)?(www\\.)?[\\w-]+\\.(\\w+)(\\.(\\w+))*)")); }

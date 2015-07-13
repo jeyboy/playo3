@@ -1,7 +1,9 @@
 #ifndef EXTENSIONS_H
 #define EXTENSIONS_H
 
-#include <QDir>
+#include <qdir.h>
+#include <qstring.h>
+
 #include "data_store.h"
 #include "dialogs/extension_dialog.h"
 
@@ -12,22 +14,20 @@ namespace Playo3 {
 
         ~Extensions() {
             ext -> clear();
-            ext -> write("active", activeFilterName());
+            ext -> write(QStringLiteral("active"), activeFilterName());
 
             QJsonObject filtersObj;
             foreach(QString key, filters.keys()) {
                 filtersObj.insert(key, QJsonValue::fromVariant(filters.value(key)));
             }
 
-            ext -> write("filters", filtersObj);
+            ext -> write(QStringLiteral("filters"), filtersObj);
             ext -> save();
             delete ext;
         }
 
         static Extensions * instance();
-        static void close() {
-            delete self;
-        }
+        inline static void close() { delete self; }
 
         bool restoreExtension(QString & file_path, QString & restoredExt);
         QFileInfoList folderFiles(QFileInfo file);
