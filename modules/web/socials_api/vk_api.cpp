@@ -72,8 +72,8 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
     QJsonObject stat_obj = response.value("error").toObject();
     QUrl image_url(stat_obj.value("captcha_img").toString());
 
-    CustomNetworkAccessManager * manager = 0;
-    bool isNew = CustomNetworkAccessManager::validManager(manager);
+    WebManager * manager = 0;
+    bool isNew = WebManager::valid(manager);
     captchaDialog -> setImage(manager -> openImage(image_url));
     emit showCaptcha();
     if (isNew) delete manager;

@@ -105,7 +105,6 @@ SOURCES += main.cpp\
     modules/data_struct/downloads/download_model.cpp \
     modules/data_struct/downloads/download_model_item.cpp \
     modules/data_struct/downloads/download_view.cpp \
-    misc/web_utils/custom_network_access_manager.cpp \
     media/library.cpp \
     media/mediainfo.cpp \
     media/genres/genres_interface.cpp \
@@ -140,7 +139,8 @@ SOURCES += main.cpp\
     modules/controls/accordion.cpp \
     double_slider/qxtspanslider.cpp \
     misc/web_utils/html_parser.cpp \
-    modules/web/sites/myzuka_album.cpp
+    modules/web/sites/myzuka_album.cpp \
+    misc/web_utils/web_manager.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -228,7 +228,6 @@ HEADERS  += playo.h \
     modules/data_struct/downloads/download_model.h \
     modules/data_struct/downloads/download_model_item.h \
     modules/data_struct/downloads/download_view.h \
-    misc/web_utils/custom_network_access_manager.h \
     modules/data_struct/item_drop_formats.h \
     media/library.h \
     media/mediainfo.h \
@@ -285,7 +284,8 @@ HEADERS  += playo.h \
     modules/web/sites/igrabber_api.h \
     modules/web/sites/myzuka_album.h \
     media/genres/web/target_genres.h \
-    misc/web_utils/html_parser.h
+    misc/web_utils/html_parser.h \
+    misc/web_utils/web_manager.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

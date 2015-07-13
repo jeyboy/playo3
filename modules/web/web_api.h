@@ -12,7 +12,7 @@
 
 #include "dialogs/captchadialog.h"
 
-#include "misc/web_utils/custom_network_access_manager.h"
+#include "misc/web_utils/web_manager.h"
 
 #include "utils/async.h"
 

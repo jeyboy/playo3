@@ -1,21 +1,24 @@
-#ifndef CUSTOM_NETWORK_ACCESS_MANAGER_H
-#define CUSTOM_NETWORK_ACCESS_MANAGER_H
+#ifndef WEB_MANAGER_H
+#define WEB_MANAGER_H
 
 #include <QtNetwork>
 #include <qapplication.h>
 #include <qpixmap.h>
 
-class CustomNetworkAccessManager : public QNetworkAccessManager {
+class WebManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
-    static CustomNetworkAccessManager * manager();
-    static bool validManager(CustomNetworkAccessManager *& webManager) {
+    inline static WebManager * stock() {
+        if (!default_manager) default_manager = new WebManager(QApplication::instance());
+        return default_manager;
+    }
+    static bool valid(WebManager *& webManager) {
         bool new_manager = QThread::currentThread() != QApplication::instance() -> thread();
-        webManager = new_manager ? new CustomNetworkAccessManager(/*QThread::currentThread()*/) : manager();
+        webManager = new_manager ? new WebManager(/*QThread::currentThread()*/) : stock();
         return new_manager;
     }
 
-    CustomNetworkAccessManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
+    WebManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
     QNetworkReply * getSync(const QNetworkRequest & request);
     QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data);
@@ -38,7 +41,7 @@ private:
     QSsl::SslProtocol protocol;
     QSslSocket::PeerVerifyMode mode;
 
-    static CustomNetworkAccessManager * default_manager;
+    static WebManager * default_manager;
 };
 
-#endif // CUSTOM_NETWORK_ACCESS_MANAGER_H
+#endif // WEB_MANAGER_H

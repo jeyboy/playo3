@@ -48,8 +48,8 @@ QJsonObject SoundcloudApi::toJson() {
 
 void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
 //    uid = "101";
-    CustomNetworkAccessManager * manager;
-    bool isNew = CustomNetworkAccessManager::validManager(manager);
+    WebManager * manager;
+    bool isNew = WebManager::valid(manager);
 
     object.insert("audio_list", groupAudio(uid, manager));
     object.insert("playlists", groupPlaylists(uid, manager));
@@ -58,8 +58,8 @@ void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
 }
 
 void SoundcloudApi::getUserInfo(QString & uid, QJsonObject & object) {
-    CustomNetworkAccessManager * manager;
-    bool isNew = CustomNetworkAccessManager::validManager(manager);
+    WebManager * manager;
+    bool isNew = WebManager::valid(manager);
 
     object.insert("audio_list", userAudio(uid, manager));
     object.insert("playlists", userPlaylists(uid, manager));
@@ -96,13 +96,13 @@ void SoundcloudApi::proceedAuthResponse(const QUrl & url) {
     } else if (query.hasQueryItem("code")) {
         QNetworkRequest request(authTokenUrl());
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QJsonObject doc = CustomNetworkAccessManager::manager() -> postToJson(request, authTokenUrlParams(query.queryItemValue("code")));
+        QJsonObject doc = WebManager::stock() -> postToJson(request, authTokenUrlParams(query.queryItemValue("code")));
 
         if (doc.contains("access_token")) {
             QString newToken = doc.value("access_token").toString();
 
             QNetworkRequest request(confirmAuthUrl(newToken));
-            doc = CustomNetworkAccessManager::manager() -> getToJson(request);
+            doc = WebManager::stock() -> getToJson(request);
 
             setParams(newToken, QString::number(doc.value("id").toInt()), "");
             emit authorized();

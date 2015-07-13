@@ -9,7 +9,7 @@ WebDialog::WebDialog(QWidget * parent, WebApi * apiClass, QString title) :
 
     setWindowTitle(title);
 
-    ui -> webView -> page() -> setNetworkAccessManager(CustomNetworkAccessManager::manager());
+    ui -> webView -> page() -> setNetworkAccessManager(Web::manager());
 
     connect(ui -> webView, SIGNAL(urlChanged(const QUrl &)), SLOT(urlChanged(const QUrl &)));
 

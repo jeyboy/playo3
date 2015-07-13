@@ -269,7 +269,7 @@ QString DownloadView::ioError(QNetworkReply * reply) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIndex> * watcher) {
     DownloadModelItem * itm = mdl -> item(ind);
-    CustomNetworkAccessManager * networkManager = new CustomNetworkAccessManager();
+    WebManager * networkManager = new WebManager();
 
     QString to;
     QVariant toVar = itm -> data(DOWNLOAD_TO);

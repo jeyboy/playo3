@@ -4,7 +4,7 @@
 //http://musicmachinery.com/music-apis/
 
 #include "misc/logger.h"
-#include "misc/web_utils/custom_network_access_manager.h"
+#include "misc/web_utils/web_manager.h"
 
 #include <qdebug.h>
 
@@ -59,14 +59,14 @@ protected:
     virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
-    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
         QJsonObject res;
         sQuery(url, res, post_proc, errorReceiver, manager);
         return res;
     }
 
-    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
-        bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
+    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
+        bool isNew = !manager ? WebManager::valid(manager) : false;
         response = manager -> getToJson(QNetworkRequest(url), post_proc & wrap);
         if (isNew) delete manager;
 
@@ -81,13 +81,13 @@ protected:
         return status;
     }
 
-    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
         QJsonArray res;
         return lQuery(url, rules, res, post_proc, errorReceiver, manager);
     }
 
-    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
-        bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
+    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
+        bool isNew = !manager ? WebManager::valid(manager) : false;
 
         QJsonObject response;
 

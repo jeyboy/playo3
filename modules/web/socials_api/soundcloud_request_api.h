@@ -88,12 +88,12 @@ public:
         setAudioTypesParam(query);
         return baseUrl("groups/" + uid + "/tracks", query);
     }
-    QJsonArray groupAudio(QString & group_id, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray groupAudio(QString & group_id, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
     //    group_id = "101";
         return lQuery(
             groupAudioUrl(group_id),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-            wrap_extract
+            wrap_extract, 0, manager
         );
     }
 
@@ -102,7 +102,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("groups/" + uid + "/playlists", query);
     }
-    QJsonArray groupPlaylists(QString & group_id, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray groupPlaylists(QString & group_id, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
     //    group_id = "101";
         return lQuery(
             groupPlaylistsUrl(group_id),
@@ -133,7 +133,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/tracks", query);
     }  
-    QJsonArray userAudio(QString & uid, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray userAudio(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         return lQuery(
             userAudioUrl(uid),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
@@ -146,7 +146,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/playlists", query);
     }
-    QJsonArray userPlaylists(QString & uid, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray userPlaylists(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         return lQuery(
             userPlaylistsUrl(uid),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
@@ -159,7 +159,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/followings", query);
     }
-    QJsonArray userFollowings(QString & uid, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray userFollowings(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         return lQuery(
             userFollowingsUrl(uid),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
@@ -172,7 +172,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/followers", query);
     }
-    QJsonArray userFollowers(QString & uid, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray userFollowers(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         return lQuery(
             userFollowersUrl(uid),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
@@ -185,7 +185,7 @@ public:
         QUrlQuery query = genDefaultParams();
         return baseUrl("users/" + uid + "/groups", query);
     }
-    QJsonArray userGroups(QString & uid, CustomNetworkAccessManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+    QJsonArray userGroups(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         return lQuery(
             userGroupsUrl(uid),
             QueryRules("response", requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
@@ -194,7 +194,7 @@ public:
     }
 
 //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-//        QJsonObject obj = CustomNetworkAccessManager::replyToJson(reply, true);
+//        QJsonObject obj = Web::replyToJson(reply, true);
 
 //        reply -> deleteLater();
 

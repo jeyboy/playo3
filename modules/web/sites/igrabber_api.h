@@ -5,7 +5,7 @@
 
 #include "misc/logger.h"
 
-#include "misc/web_utils/custom_network_access_manager.h"
+#include "misc/web_utils/web_manager.h"
 #include "misc/web_utils/html_parser.h"
 #include "media/genres/web/target_genres.h"
 
@@ -75,8 +75,8 @@ protected:
 
     virtual void toJson(QNetworkReply * reply, QJsonArray & json) = 0;
 
-    void sQuery(QUrl url, QJsonArray & res, CustomNetworkAccessManager * manager = 0) {
-        bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
+    void sQuery(QUrl url, QJsonArray & res, WebManager * manager = 0) {
+        bool isNew = !manager ? WebManager::valid(manager) : false;
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
         Logger::instance() -> startMark();
@@ -86,13 +86,13 @@ protected:
         if (isNew) delete manager;
     }
 
-//    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
+//    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, Web * manager = 0) {
 //        QJsonArray res;
 //        return lQuery(url, rules, res, post_proc, errorReceiver, manager);
 //    }
 
-//    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, CustomNetworkAccessManager * manager = 0) {
-//        bool isNew = !manager ? CustomNetworkAccessManager::validManager(manager) : false;
+//    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, Web * manager = 0) {
+//        bool isNew = !manager ? Web::validManager(manager) : false;
 
 //        QJsonObject response;
 

@@ -13,7 +13,7 @@
 #include <qradiobutton.h>
 
 #include "modules/web/service_api/echonest_api.h"
-#include "misc/web_utils/custom_network_access_manager.h"
+#include "misc/web_utils/web_manager.h"
 #include "modules/controls/accordion.h"
 
 #include "modules/data_struct/search/search_view.h"
