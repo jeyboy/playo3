@@ -12,7 +12,7 @@ class Settings : public GlobalSettings, public HotkeySettings,
         public ItemSettings, public SpectrumSettings,
         public TabSettings, public LibrarySettings {
 public:
-    ~Settings() { }
+    virtual ~Settings() { }
 
     static Settings * instance();
     inline static void close() { delete self; }

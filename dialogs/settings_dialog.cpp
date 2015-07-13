@@ -199,6 +199,10 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 
 void SettingsDialog::initGlobalSettings() {
+    ui -> autorunned -> blockSignals(true);
+    ui -> autorunned -> setChecked(Settings::instance() -> isAutorunned());
+    ui -> autorunned -> blockSignals(false);
+
     ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
     ui -> drawMetricsNumero -> setChecked(Settings::instance() -> isMetricNumero());
 
@@ -298,6 +302,7 @@ void SettingsDialog::initHotkeysSettings() {
 }
 void SettingsDialog::initSpectrumSettings() {
     ui -> autoBarsAmount -> setChecked(Settings::instance() -> isAutoBarsAmount());
+    ui -> autoBarWidth -> setValue(Settings::instance() -> autoBarWidth());
 
     spectrumColor = Settings::instance() -> spectrumColor();
     ui -> spectrumColor -> setStyleSheet("background-color: " + spectrumColor.name() + ";");
@@ -340,6 +345,8 @@ void SettingsDialog::initExtensions() {
 }
 
 void SettingsDialog::saveGlobalSettings() {
+    Settings::instance() -> setAutorun(ui -> autorunned -> isChecked());
+
     Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
     Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
     Settings::instance() -> setMetricNumeroShow(ui -> drawMetricsNumero -> isChecked());
@@ -404,6 +411,7 @@ void SettingsDialog::saveHotkeysSettings() {
 
 void SettingsDialog::saveSpectrumSettings() {
     Settings::instance() -> setAutoBarsAmount(ui -> autoBarsAmount -> isChecked());
+    Settings::instance() -> setAutoBarWidth(ui -> autoBarWidth -> value());
 
     Settings::instance() -> setSpectrumColor(spectrumColor);
     Settings::instance() -> setSpectrumColor2(spectrumColor2);
@@ -446,4 +454,11 @@ void SettingsDialog::on_openDropPointInTab_toggled(bool checked) {
 
 void SettingsDialog::on_drawMetrics_clicked(bool checked) {
     ui -> drawMetricsNumero -> setEnabled(checked);
+}
+
+void SettingsDialog::on_autorunned_toggled(bool checked) {
+    if (checked)
+        Autorun::registerApp();
+    else
+        Autorun::unregisterApp();
 }

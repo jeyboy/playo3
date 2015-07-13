@@ -148,7 +148,7 @@ void Spectrum::recalcAttrs() {
 
 int Spectrum::calcBarCount() {
     if (Settings::instance() -> isAutoBarsAmount())
-        return (width() - start_h_offset) / 10;
+        return (width() - start_h_offset) / Settings::instance() -> autoBarWidth();
     else
         return Settings::instance() -> spectrumBarsCount();
 }

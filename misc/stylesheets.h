@@ -1,8 +1,8 @@
 #ifndef STYLESHEETS_H
 #define STYLESHEETS_H
 
-#include <QColor>
-#include <QPen>
+#include <qcolor.h>
+#include <qpen.h>
 
 class Stylesheets {
 public:

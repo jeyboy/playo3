@@ -8,6 +8,7 @@
 #include <qdatetime.h>
 #include <qscrollbar.h>
 #include <qstringbuilder.h>
+
 #include "misc/conversions.h"
 
 class Logger : public QObject {
@@ -25,7 +26,7 @@ public:
 
     inline void startMark() { timer.start(); }
     inline void endMark(QString initiator, QString value) {
-        emit write(initiator, value, QString::number(timer.elapsed()) % " ms (" % Conversion::paddedNumber(timer.nsecsElapsed()) % " ns)");
+        emit write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Conversion::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
     }
 
 private:

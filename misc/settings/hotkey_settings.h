@@ -1,8 +1,8 @@
 #ifndef HOTKEY_SETTINGS
 #define HOTKEY_SETTINGS
 
-#include <QJsonArray>
-#include <QJsonObject>
+#include <qjsonarray.h>
+#include <qjsonobject.h>
 
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
 #include "misc/hotkey_types.h"

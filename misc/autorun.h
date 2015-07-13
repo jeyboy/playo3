@@ -6,34 +6,35 @@
 
 //NOT USED
 
+#define AUTORUN_NAME QStringLiteral("Playo3")
+
 class Autorun {
 public:
-    void registerApp() {
-
+    static void registerApp() {
         #ifdef Q_OS_WIN
     //        HKMU/Software/Microsoft/Windows/CurrentVersion/Run
-            QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+            QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
 
             QString value = QCoreApplication::applicationFilePath();
-            value = value.replace("/", "\\");
+            value = value.replace(QStringLiteral("/"), QStringLiteral("\\"));
 
-            settings.setValue("Playo3", "\"" + value + "\"");
+            settings.setValue(AUTORUN_NAME, QStringLiteral("\"") + value + QStringLiteral("\""));
         #else
 //        mkdir -p ~/.config/autostart/
 //        .. and add a <Desktop entry> ( AppName.desktop ),
 //        or a link to the executable in ~.config/autostart/
 
         //For Linux you have to create an entry file for your application in '$HOME/.config/autostart'.
-        #end
+        #endif
     }
 
-    void unregisterApp() {
+    static void unregisterApp() {
         #ifdef Q_OS_WIN
-            QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-            settings.remove("Playo3");
+            QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
+            settings.remove(AUTORUN_NAME);
         #else
 
-        #end
+        #endif
     }
 };
 

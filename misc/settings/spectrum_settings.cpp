@@ -22,9 +22,12 @@ void SpectrumSettings::fromJson(QJsonObject & settings) {
     _spectrumType = (Playo3::SpectrumType)settings.value("spectrum_type").toInt(1);
 
     _spectrumMultiplier = settings.value("spectrum_multiplier").toInt(3);
+
+    _autoBarWidth = settings.value("auto_bar_width").toInt(10);
 }
 
 void SpectrumSettings::toJson(QJsonObject & settings) {
+    settings.insert("auto_bar_width", QJsonValue::fromVariant(_autoBarWidth));
     settings.insert("auto_bars_amount", QJsonValue::fromVariant(_autoBarsAmount));
     settings.insert("customcolor_spectrum", QJsonValue::fromVariant(_customColorSpectrum));
     settings.insert("spectrum_color", QJsonValue::fromVariant(_spectrumColor));

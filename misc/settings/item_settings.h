@@ -1,10 +1,10 @@
 #ifndef ITEM_SETTINGS
 #define ITEM_SETTINGS
 
-#include <QVariant>
-#include <QFont>
-#include <QLinearGradient>
-#include <QJsonObject>
+#include <qvariant.h>
+#include <qfont.h>
+#include <qbrush.h>
+#include <qjsonobject.h>
 
 struct ItemTextAttrs {
     QString fontName;

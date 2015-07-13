@@ -8,6 +8,7 @@
 
 #include "misc/settings.h"
 #include "misc/hotkey_manager.h"
+#include "misc/autorun.h"
 
 #include "modules/data_struct/hotkeys/hotkey_model.h"
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
@@ -63,6 +64,8 @@ private slots:
     void on_drawMetrics_clicked(bool checked);
 
     void on_itemColorButton_clicked();
+
+    void on_autorunned_toggled(bool checked);
 
 protected:
     void initGlobalSettings();

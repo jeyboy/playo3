@@ -17,6 +17,9 @@ public:
     inline bool isMetricShow() const { return _showMetric; }
     inline void setMetricShow(bool show) { _showMetric = show; }
 
+    inline bool isAutorunned() const { return _isAutorunned; }
+    inline void setAutorun(bool is_autorunned) { _isAutorunned = is_autorunned; }
+
     inline bool isMetricNumero() const { return _showMetricNumero; }
     inline void setMetricNumeroShow(bool show) { _showMetricNumero = show; }
 
@@ -36,6 +39,7 @@ protected:
     QString _defaultDownloadPath;
     bool _showMetric;
     bool _showMetricNumero;
+    bool _isAutorunned;
 
     bool _saveCommonTab;
     bool _openDropPointInTab;

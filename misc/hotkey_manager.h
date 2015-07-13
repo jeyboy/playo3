@@ -1,7 +1,7 @@
 #ifndef HOTKEY_MANAGER_H
 #define HOTKEY_MANAGER_H
 
-#include <QHash>
+#include <qhash.h>
 #include "globalshortcut/qxtglobalshortcut.h"
 #include "misc/hotkey_types.h"
 
@@ -18,15 +18,11 @@ struct HotkeySlot {
 class HotkeyManager : public QObject {
     Q_OBJECT
 public:
-    ~HotkeyManager() {
-        qDeleteAll(shortcuts.values());
-    }
+    inline virtual ~HotkeyManager() { qDeleteAll(shortcuts.values()); }
 
     static HotkeyManager * instance(QObject * parent = 0);
 
-    static void close() {
-        delete self;
-    }
+    inline static void close() { delete self; }
 
     bool registerSequence(int hotkeyType, QString sequence, QObject * receiver = 0, const char * slot = 0);
     void clear();

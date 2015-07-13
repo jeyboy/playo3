@@ -1,8 +1,8 @@
 #ifndef SCREEN
 #define SCREEN
 
-#include <QApplication>
-#include <QDesktopWidget>
+#include <qapplication.h>
+#include <qdesktopwidget.h>
 
 class Screen {
 public:

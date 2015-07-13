@@ -10,9 +10,13 @@ void GlobalSettings::fromJson(QJsonObject & settings) {
     _saveCommonTab = settings.value("save_common_tab").toBool(false);
     _openDropPointInTab = settings.value("open_drop_point_in_tab").toBool(false);
     _openDropPointInTabType = (Playo3::ContainerType)settings.value("open_drop_point_in_tab_type").toInt(Playo3::tree);
+
+    _isAutorunned = settings.value("autorunned").toBool(false);
 }
 
-void GlobalSettings::toJson(QJsonObject & settings) {
+void GlobalSettings::toJson(QJsonObject & settings) {   
+    settings.insert("autorunned", QJsonValue::fromVariant(_isAutorunned));
+
     settings.insert("show_metric", QJsonValue::fromVariant(_showMetric));
     settings.insert("show_metric_numero", QJsonValue::fromVariant(_showMetricNumero));
     settings.insert("download_path", QJsonValue::fromVariant(_defaultDownloadPath));

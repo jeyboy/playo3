@@ -9,8 +9,8 @@
 
 #include <qdebug.h>
 
-#define HTML_PARSER_TEXT_BLOCK "text"
-#define HTML_PARSER_COMMENT_BLOCK "comment"
+#define HTML_PARSER_TEXT_BLOCK QStringLiteral("text")
+#define HTML_PARSER_COMMENT_BLOCK QStringLiteral("comment")
 #define DEBUG_LIMIT_OUTPUT 100
 
 struct HtmlSelector {
