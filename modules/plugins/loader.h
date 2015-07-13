@@ -3,9 +3,9 @@
 
 #include <qdir.h>
 #include <qapplication.h>
-#include <QPluginLoader>
-#include <qdebug.h>
+#include <qpluginloader.h>
 
+#include "misc/logger.h"
 #include "web_dialog_interface.h"
 
 static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
@@ -28,7 +28,7 @@ static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
             if (wdi)
                 return true;
         }
-        else qDebug() << fileName << pluginLoader.errorString();
+        else Logger::instance() -> writeToStream("Plugin loader", pluginLoader.errorString());
     }
 
     return false;

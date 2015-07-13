@@ -103,6 +103,8 @@ HtmlSelector::HtmlSelector(char * predicate) : _direct(false), prev(0), next(0) 
 
         it++;
     }
+
+    free(predicate);
 }
 
 ////////  HtmlTag //////////
