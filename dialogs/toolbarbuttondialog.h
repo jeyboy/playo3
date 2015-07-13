@@ -1,18 +1,14 @@
 #ifndef TOOLBARBUTTONDIALOG_H
 #define TOOLBARBUTTONDIALOG_H
 
-#include <QDialog>
-#include <QFileDialog>
+#include <qfiledialog.h>
 
-namespace Ui {
-  class ToolbarButtonDialog;
-}
+namespace Ui { class ToolbarButtonDialog; }
 
 class ToolbarButtonDialog : public QDialog {
   Q_OBJECT
-
 public:
-  explicit ToolbarButtonDialog(QWidget *parent = 0);
+  explicit ToolbarButtonDialog(QWidget * parent = 0);
   ~ToolbarButtonDialog();
 
   QString getName();
@@ -25,7 +21,7 @@ private slots:
   void on_browseButton_clicked();
 
 private:
-  Ui::ToolbarButtonDialog *ui;
+  Ui::ToolbarButtonDialog * ui;
 };
 
 #endif // TOOLBARBUTTONDIALOG_H

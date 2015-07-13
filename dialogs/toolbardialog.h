@@ -1,15 +1,12 @@
 #ifndef TOOLBARDIALOG_H
 #define TOOLBARDIALOG_H
 
-#include <QDialog>
+#include <qdialog.h>
 
-namespace Ui {
-    class ToolbarDialog;
-}
+namespace Ui { class ToolbarDialog; }
 
 class ToolbarDialog : public QDialog {
     Q_OBJECT
-
 public:
     explicit ToolbarDialog(QString title, QWidget * parent = 0);
     ~ToolbarDialog();

@@ -1,9 +1,8 @@
 #ifndef SETTINGS_DIALOG_H
 #define SETTINGS_DIALOG_H
 
-#include <QDialog>
-#include <QFileDialog>
-#include <QColorDialog>
+#include <qfiledialog.h>
+#include <qcolordialog.h>
 
 #include "extension_dialog.h"
 
@@ -14,15 +13,12 @@
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
 #include "modules/data_struct/hotkeys/hotkey_delegate.h"
 
-namespace Ui {
-    class SettingsDialog;
-}
+namespace Ui { class SettingsDialog; }
 
 class SettingsDialog : public QDialog {
     Q_OBJECT
-
 public:
-    explicit SettingsDialog(QWidget *parent);
+    explicit SettingsDialog(QWidget * parent);
     ~SettingsDialog();
 
     static void registerHotkeys(QWidget * receiver);
@@ -94,6 +90,5 @@ private:
     QColor defaultColor, listenedColor, likedColor, playedColor, folderColor, itemColor, spectrumColor, spectrumColor2, spectrumColor3;
     QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;
 };
-
 
 #endif // SETTINGS_DIALOG_H

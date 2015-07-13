@@ -1,12 +1,10 @@
 #ifndef TABDIALOG_H
 #define TABDIALOG_H
 
-#include <QDialog>
+#include <qdialog.h>
 #include "modules/data_struct/view_settings.h"
 
-namespace Ui {
-  class TabDialog;
-}
+namespace Ui { class TabDialog; }
 
 class TabDialog : public QDialog {
   Q_OBJECT

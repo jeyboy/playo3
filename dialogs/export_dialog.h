@@ -1,8 +1,8 @@
 #ifndef EXPORT_DIALOG_H
 #define EXPORT_DIALOG_H
 
-#include <QDialog>
-#include <QSyntaxHighlighter>
+#include <qdialog.h>
+#include <qsyntaxhighlighter.h>
 
 class IdHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
 
         QTextCharFormat socialId;
         socialId.setForeground(Qt::darkBlue);
-        QString pattern = "\\b(vk|sc)[\\d\\-_]+\\b";
+        QString pattern = QStringLiteral("\\b(vk|sc)[\\d\\-_]+\\b");
 
         QRegExp expression2(pattern);
         int index = text.indexOf(expression2);
@@ -29,9 +29,7 @@ public:
     }
 };
 
-namespace Ui {
-    class ExportDialog;
-}
+namespace Ui { class ExportDialog; }
 
 class ExportDialog : public QDialog {
     Q_OBJECT

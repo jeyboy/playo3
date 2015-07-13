@@ -1,13 +1,11 @@
 #ifndef EXTENSION_DIALOG_H
 #define EXTENSION_DIALOG_H
 
-#include <QDialog>
-#include <QStringListModel>
+#include <qdialog.h>
+#include <qstringlistmodel.h>
 #include "misc/file_utils/extensions.h"
 
-namespace Ui {
-class ExtensionDialog;
-}
+namespace Ui { class ExtensionDialog; }
 
 namespace Playo3 {
     class ExtensionDialog : public QDialog {
@@ -24,7 +22,7 @@ namespace Playo3 {
     private slots:
         void on_addPreset_clicked();
 
-        void on_presets_currentIndexChanged(const QString &arg1);
+        void on_presets_currentIndexChanged(const QString & arg1);
 
         void on_addExtension_clicked();
 
@@ -37,7 +35,7 @@ namespace Playo3 {
     private:
         void proceedFilter(QString & filter, QStringList & preset);
 
-        Ui::ExtensionDialog *ui;
+        Ui::ExtensionDialog * ui;
     };
 }
 

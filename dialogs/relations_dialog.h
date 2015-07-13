@@ -1,15 +1,13 @@
 #ifndef RELATIONS_DIALOG_H
 #define RELATIONS_DIALOG_H
 
-#include <QDialog>
-#include <QStringListModel>
-#include <QHash>
+#include <qdialog.h>
+#include <qstringlistmodel.h>
+#include <qhash.h>
 
 #include "modules/web/web_api.h"
 
-namespace Ui {
-    class RelationsDialog;
-}
+namespace Ui { class RelationsDialog; }
 
 class RelationsDialog : public QDialog {
     Q_OBJECT

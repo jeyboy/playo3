@@ -1,11 +1,9 @@
 #ifndef CAPTCHADIALOG_H
 #define CAPTCHADIALOG_H
 
-#include <QDialog>
+#include <qdialog.h>
 
-namespace Ui {
-    class CaptchaDialog;
-}
+namespace Ui { class CaptchaDialog; }
 
 class WebApi;
 

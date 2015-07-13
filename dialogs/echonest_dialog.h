@@ -18,9 +18,7 @@
 
 #include "modules/data_struct/search/search_view.h"
 
-namespace Ui {
-    class EchonestDialog;
-}
+namespace Ui { class EchonestDialog; }
 
 class EchonestDialog : public QDialog {
     Q_OBJECT

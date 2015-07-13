@@ -1,18 +1,15 @@
 #ifndef SEARCH_DIALOG_H
 #define SEARCH_DIALOG_H
 
-#include <QDialog>
-#include <QListWidgetItem>
+#include <qdialog.h>
+#include <qlistwidget.h>
 
 #include "modules/data_struct/search/search_settings.h"
 
-namespace Ui {
-    class SearchDialog;
-}
+namespace Ui { class SearchDialog; }
 
 class SearchDialog : public QDialog {
     Q_OBJECT
-
 public:
     explicit SearchDialog(QWidget * parent = 0);
     ~SearchDialog();
