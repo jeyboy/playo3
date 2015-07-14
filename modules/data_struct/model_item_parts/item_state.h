@@ -22,6 +22,7 @@ namespace Playo3 {
             };
 
             inline ItemState(int state = DEFAULT_MODEL_ITEM_STATE) { item_state = state; }
+            inline virtual ~ItemState() {}
 
             inline bool is(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
             inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }

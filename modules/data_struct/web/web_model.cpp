@@ -2,15 +2,6 @@
 
 using namespace Playo3;
 ///////////////////////////////////////////////////////////
-
-WebModel::WebModel(QString uid, QJsonObject * hash, QObject * parent) :
-    IModel(hash, parent), IgnoreList(hash), tab_uid(uid)
-{
-    lastRefresh = QDateTime::currentMSecsSinceEpoch() - UPDATE_INTERVAL;
-}
-
-WebModel::~WebModel() {}
-
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     FolderItem * parentItem = item<FolderItem>(parent);
     QVariantList uids = parentItem -> childrenUids(position, rows);

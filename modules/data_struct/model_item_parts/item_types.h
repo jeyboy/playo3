@@ -13,8 +13,8 @@ namespace Playo3 {
         #define WEB_ITEM 800
     }
 
-    #define SHARE_TYPE_VK "vk"
-    #define SHARE_TYPE_SOUNDCLOUD "sc"
+    #define SHARE_TYPE_VK QStringLiteral("vk")
+    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
 }
 
 #endif // MODEL_ITEM_TYPES_H

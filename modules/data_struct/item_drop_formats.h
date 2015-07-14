@@ -8,8 +8,6 @@
 #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 
 struct InnerData {
-    InnerData() {}
-
     QUrl url;
     QVariantMap attrs;
     QModelIndex eIndex;
@@ -17,8 +15,6 @@ struct InnerData {
 };
 
 struct DropData {
-    DropData() {}
-
     QModelIndex eIndex;
     int eRow, limitRow;
 };

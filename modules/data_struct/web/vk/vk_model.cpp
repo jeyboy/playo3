@@ -1,14 +1,8 @@
 #include "vk_model.h"
 #include "media/player.h"
-#include <QDebug>
 
 using namespace Playo3;
 /////////////////////////////////////////////////////////////
-
-VkModel::VkModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {}
-
-VkModel::~VkModel() {}
-
 void VkModel::refresh(bool retryPlaing) {
     if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 
@@ -136,18 +130,3 @@ void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }
-
-//void VkModel::proceedAudioListUpdate(QJsonObject & obj, QHash<ModelItem *, QString> & collation) {
-//    QJsonObject iterObj;
-//    QJsonArray ar = obj.value("response").toArray();
-//    QString uid;
-//    ModelItem * item;
-
-//    foreach(QJsonValue obj, ar) {
-//        iterObj = obj.toObject();
-//        uid = QString::number(iterObj.value("owner_id").toInt()) + "_" + QString::number(iterObj.value("id").toInt());
-
-//        item = collation.key(uid);
-//        item -> setPath(iterObj.value("url").toString());
-//    }
-//}

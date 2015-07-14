@@ -2,10 +2,6 @@
 
 using namespace Playo3;
 
-LevelTreeModel::LevelTreeModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
-
-LevelTreeModel::~LevelTreeModel() {}
-
 void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
     QFileInfo file = QFileInfo(url.toLocalFile());
     QString fName;

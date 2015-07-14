@@ -6,16 +6,21 @@
 namespace Playo3 {
     class VkFolder : public WebFolderItem {
     public:
-        VkFolder(int initState);
-        VkFolder(QJsonObject * hash, FolderItem * parent = 0);
-        VkFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-
-        ~VkFolder();
+        inline VkFolder(int initState) : WebFolderItem(initState) {}
+        inline VkFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
+        inline VkFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+            : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return VK_PLAYLIST; }
-        bool removePhysicalObject();
+        inline bool removePhysicalObject() {
+            //TODO: add realization
+            return false;
+        }
 
-        bool isExist() const;
+        inline bool isExist() const {
+            //TODO: add realization
+            return true;
+        }
     };
 }
 

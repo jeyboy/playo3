@@ -1,18 +1,6 @@
 #include "download_model.h"
 #include <QDebug>
 
-DownloadModel::DownloadModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent) {
-    rootItem = new DownloadModelItem(hash);
-}
-
-DownloadModel::~DownloadModel() {
-    delete rootItem;
-}
-
-int DownloadModel::columnCount(const QModelIndex & /* parent */) const {
-    return rootItem -> columnCount();
-}
-
 QVariant DownloadModel::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
         return QVariant();

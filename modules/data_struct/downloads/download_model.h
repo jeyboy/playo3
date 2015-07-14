@@ -1,17 +1,16 @@
 #ifndef DOWNLOAD_MODEL_H
 #define DOWNLOAD_MODEL_H
 
-#include <QAbstractItemModel>
+#include <qabstractitemmodel.h>
 #include <qsize.h>
 
 #include "download_model_item.h"
 
 class DownloadModel : public QAbstractItemModel {
     Q_OBJECT
-
 public:
-    DownloadModel(QJsonObject * hash = 0, QObject * parent = 0);
-    ~DownloadModel();
+    inline DownloadModel(QJsonObject * hash = 0, QObject * parent = 0) : QAbstractItemModel(parent) { rootItem = new DownloadModelItem(hash); }
+    inline ~DownloadModel() { delete rootItem; }
 
     inline QJsonObject toJson() { return rootItem -> toJson(); }
 
@@ -27,13 +26,13 @@ public:
 
     int itemsCount() const;
 
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return rootItem -> columnCount(); }
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QModelIndex appendRow(const QVariantMap & data);
     bool removeRows(int position, int rows, const QModelIndex & parent);
-    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
-                          const QModelIndex &destinationParent, int destinationChild);
+    bool moveRows(const QModelIndex & sourceParent, int sourceRow, int count,
+                          const QModelIndex & destinationParent, int destinationChild);
 
     DownloadModelItem * item(const QModelIndex & index) const;
     DownloadModelItem * root() const;

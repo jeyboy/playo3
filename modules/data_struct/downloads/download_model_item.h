@@ -4,8 +4,8 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#include <QVariant>
-#include <QVector>
+#include <qvariant.h>
+#include <qvector.h>
 
 #define DOWNLOAD_TITLE 0
 #define DOWNLOAD_FROM 1

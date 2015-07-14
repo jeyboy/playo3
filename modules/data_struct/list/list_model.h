@@ -6,10 +6,8 @@
 namespace Playo3 {
     class ListModel : public IModel {
         Q_OBJECT
-
     public:
-        ListModel(QJsonObject * hash = 0, QObject * parent = 0);
-        ~ListModel();
+        inline ListModel(QJsonObject * hash = 0, QObject * parent = 0) : IModel(hash, parent) {}
 
         inline bool isRelative() const { return false; }
         inline ContainerType containerType() const { return list; }

@@ -2,8 +2,6 @@
 
 using namespace Playo3;
 
-SearchModel::SearchModel(QJsonObject * hash, QObject * parent) : LevelTreeModel(hash, parent), initiator(0) {}
-
 SearchModel::~SearchModel() {
     if (initiator)
         initiator -> cancel();

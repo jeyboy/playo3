@@ -7,10 +7,13 @@
 namespace Playo3 {
     class SoundcloudItem : public WebItem {
     public:
-        SoundcloudItem(QJsonObject * hash, FolderItem * parent = 0);
-        SoundcloudItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
-        SoundcloudItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
-        ~SoundcloudItem();
+        inline SoundcloudItem(QJsonObject * hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
+        inline SoundcloudItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
+        inline SoundcloudItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+            : WebItem(uid, filePath, fileName, parent, pos) {
+            //    setExtension("mp3");
+            //    setBpm(itemBpm);
+        }
 
         inline QUrl toUrl() const {
             QUrl url = QUrl(fullPath());

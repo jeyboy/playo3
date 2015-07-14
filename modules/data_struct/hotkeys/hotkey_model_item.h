@@ -1,14 +1,14 @@
 #ifndef HOTKEY_MODEL_ITEM_H
 #define HOTKEY_MODEL_ITEM_H
 
-#include <QList>
-#include <QVariant>
-#include <QVector>
+#include <qlist.h>
+#include <qvariant.h>
+#include <qvector.h>
 
 class HotkeyModelItem {
 public:
     HotkeyModelItem(const QVector<QVariant> & data, HotkeyModelItem * parent = 0);
-    ~HotkeyModelItem();
+    inline ~HotkeyModelItem() { qDeleteAll(childItems); }
 
     HotkeyModelItem * child(int number);
     int childCount() const;

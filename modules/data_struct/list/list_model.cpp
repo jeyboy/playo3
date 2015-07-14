@@ -2,10 +2,6 @@
 
 using namespace Playo3;
 
-ListModel::ListModel(QJsonObject * hash, QObject * parent) : IModel(hash, parent) {}
-
-ListModel::~ListModel() {}
-
 void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
     exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
     if (dRow == -1)

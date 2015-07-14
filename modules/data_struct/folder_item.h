@@ -10,12 +10,12 @@ namespace Playo3 {
     public:
         static int restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs);
 
-        FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        inline FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : IItem(0, initState), inBranchCount(0) {}
         FolderItem(QJsonObject * hash, FolderItem * parent = 0);
         FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        ~FolderItem();
+        virtual ~FolderItem();
 
         void linkNode(FolderItem * node);
 
@@ -32,7 +32,7 @@ namespace Playo3 {
         inline int itemType() const { return PLAYLIST; }
         bool removePhysicalObject();
 
-        bool isExist() const;
+        inline bool isExist() const { return QDir(fullPath()).exists(); }
         inline bool isContainer() const { return true; }
 
         QJsonObject toJson();

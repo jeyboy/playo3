@@ -2,12 +2,6 @@
 
 using namespace Playo3;
 /////////////////////////////////////////////////////////////
-
-VkRelModel::VkRelModel(RelType rtype, QString uid, QJsonObject * hash, QObject * parent)
-    : VkModel(uid, hash, parent), rel_type(rtype) {}
-
-VkRelModel::~VkRelModel() {}
-
 void VkRelModel::refresh(bool /*retryPlaing*/) {
     if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 

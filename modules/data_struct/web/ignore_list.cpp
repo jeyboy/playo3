@@ -8,8 +8,6 @@ IgnoreList::IgnoreList(QJsonObject * obj) {
         ignoreListFromJson(obj -> take(jsonName()).toArray());
 }
 
-IgnoreList::~IgnoreList() {}
-
 void IgnoreList::ignoreListAddUid(QVariant uid) {
     list.append(uid);
 }

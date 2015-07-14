@@ -6,16 +6,21 @@
 namespace Playo3 {
     class SoundcloudFolder : public WebFolderItem {
     public:
-        SoundcloudFolder(int initState);
-        SoundcloudFolder(QJsonObject * hash, FolderItem * parent = 0);
-        SoundcloudFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-
-        ~SoundcloudFolder();
+        inline SoundcloudFolder(int initState) : WebFolderItem(initState) {}
+        inline SoundcloudFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
+        inline SoundcloudFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+            : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return SOUNDCLOUD_PLAYLIST; }
-        bool removePhysicalObject();
 
-        bool isExist() const;
+        inline bool removePhysicalObject() {
+            //TODO: add realization
+            return false;
+        }
+        inline bool isExist() const {
+            //TODO: add realization
+            return true;
+        }
     };
 }
 

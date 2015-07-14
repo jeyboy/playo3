@@ -36,8 +36,6 @@ IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
     }
 }
 
-IItem::~IItem() {}
-
 QJsonObject IItem::toJson() {
     QJsonObject root = ItemFields::toJson();
 

@@ -65,10 +65,6 @@ QJsonObject DownloadView::toJson() {
     return mdl -> toJson();
 }
 
-void DownloadView::scrollToActive() {
-    scrollTo(currentIndex());
-}
-
 bool DownloadView::proceedDownload(QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 

@@ -7,10 +7,8 @@
 namespace Playo3 {
     class SoundcloudModel : public WebModel {
         Q_OBJECT
-
-    public:
-        SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0);
-        ~SoundcloudModel();
+    public:       
+        inline SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return soundcloud; }
         inline WebApi * api() { return SoundcloudApi::instance(); }

@@ -12,13 +12,16 @@ namespace Playo3 {
 
         inline WebItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline WebItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
-        WebItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
-        WebItem(QVariant song_uid, QVariant artist_uid, QString fileName, FolderItem * parent, int pos) : IItem(parent, fileName, pos) {
+        inline WebItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, fileName, pos) {
+            setUid(uid);
+            setPath(filePath);
+        }
+        inline WebItem(QVariant song_uid, QVariant artist_uid, QString fileName, FolderItem * parent, int pos) : IItem(parent, fileName, pos) {
             setArtistUid(artist_uid);
             setSongUid(song_uid);
         }
 
-        inline ~WebItem() {}
+        inline virtual ~WebItem() {}
 
         inline virtual int itemType() const { return WEB_ITEM; }
 

@@ -30,8 +30,6 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 }
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(int initState) : IItem(0, initState), inBranchCount(0) {}
-
 FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
       inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
@@ -181,10 +179,6 @@ bool FolderItem::removePhysicalObject() { // this is a little dangerous (
 //    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
 //        return delDir.removeRecursively();
     return false;
-}
-
-bool FolderItem::isExist() const {
-    return QDir(fullPath()).exists();
 }
 
 QJsonObject FolderItem::toJson() {

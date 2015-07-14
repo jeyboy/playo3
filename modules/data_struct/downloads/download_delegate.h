@@ -1,11 +1,10 @@
 #ifndef DOWNLOAD_DELEGATE_H
 #define DOWNLOAD_DELEGATE_H
 
-#include <QStyledItemDelegate>
-#include <QPainter>
-//#include <QApplication>
+#include <qstyleditemdelegate.h>
+#include <qpainter>
 #include <qprogressbar.h>
-#include <QStyleOption>
+#include <qstyleoption.h>
 
 #include "download_model_item.h"
 
@@ -13,9 +12,8 @@
 
 class DownloadDelegate : public QStyledItemDelegate {
     Q_OBJECT
-
 public:
-    DownloadDelegate(QWidget * parent = 0) : QStyledItemDelegate(parent) {}
+    inline DownloadDelegate(QWidget * parent = 0) : QStyledItemDelegate(parent) {}
 
     void paint(QPainter * painter, const QStyleOptionViewItem & option,
                const QModelIndex & index) const;

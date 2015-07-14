@@ -6,10 +6,8 @@
 namespace Playo3 {
     class LevelTreeModel : public IModel {
         Q_OBJECT
-
     public:
-        LevelTreeModel(QJsonObject * hash = 0, QObject * parent = 0);
-        ~LevelTreeModel();
+        inline LevelTreeModel(QJsonObject * hash = 0, QObject * parent = 0) : IModel(hash, parent) {}
 
         inline bool isRelative() const { return false; }
         inline ContainerType containerType() const { return level_tree; }

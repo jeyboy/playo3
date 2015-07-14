@@ -2,15 +2,12 @@
 #define SEARCH_SETTINGS
 
 #include <qstringlist.h>
+#include <qstringbuilder.h>
+
 #include "media/genres/music_genres.h"
 #include "media/genres/web/vk_genres.h"
 
-enum PredicateType {
-    title,
-    artist,
-    song,
-    tag
-};
+enum PredicateType { title, artist, song, tag };
 
 struct SearchSettings {   
     inline SearchSettings(bool vk = false, bool sc = false, bool other = false, bool tabs = false, bool comp = false)
@@ -49,15 +46,9 @@ struct SearchSettings {
 };
 
 struct SearchRequest {
-    enum RequestObject {
-        request_vk,
-        request_sc,
-        request_computer,
-        request_tabs,
-        request_other
-    };
+    enum RequestObject { request_vk, request_sc, request_computer, request_tabs, request_other };
 
-    SearchRequest(RequestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
+    inline SearchRequest(RequestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
         : spredicate(predicate), sgenre(genre), sgenre_id(genre_id), popular(most_popular), search_type(tp) {}
 
     QString spredicate;
@@ -68,11 +59,11 @@ struct SearchRequest {
 
     static inline QString objToStr(RequestObject obj) {
         switch(obj) {
-            case request_vk: return "VK";
-            case request_sc: return "SC";
-            case request_computer: return "Computer";
-            case request_tabs: return "Tabs";
-            default: return "Other";
+            case request_vk: return QStringLiteral("VK");
+            case request_sc: return QStringLiteral("SC");
+            case request_computer: return QStringLiteral("Computer");
+            case request_tabs: return QStringLiteral("Tabs");
+            default: return QStringLiteral("Other");
         }
     }
 
@@ -82,14 +73,12 @@ struct SearchRequest {
 
         if (has_predicate) {
             if (has_genre)
-                return spredicate + " (" + sgenre + ") ";
+                return spredicate % QStringLiteral(" (") % sgenre % QStringLiteral(") ");
             else
                 return spredicate;
-        } else if (has_genre) {
-            return sgenre;
-        }
-        else if (popular && search_type != request_computer && search_type != request_tabs) return "Popular";
-        else return "All";
+        } else if (has_genre) return sgenre;
+        else if (popular && search_type != request_computer && search_type != request_tabs) return QStringLiteral("Popular");
+        else return QStringLiteral("All");
     }
 };
 

@@ -34,7 +34,7 @@ namespace Playo3 {
       Q_OBJECT
     public:
         IView(IModel * model, QWidget * parent, ViewSettings & settins);
-        ~IView();
+        virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
 

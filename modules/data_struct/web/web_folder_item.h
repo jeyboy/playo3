@@ -6,10 +6,12 @@
 namespace Playo3 {
     class WebFolderItem : public FolderItem {
     public:
-        WebFolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        WebFolderItem(QJsonObject * hash, FolderItem * parent = 0);
-        WebFolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        ~WebFolderItem();
+        inline WebFolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : FolderItem(initState) {}
+        inline WebFolderItem(QJsonObject * hash, FolderItem * parent = 0) : FolderItem(hash, parent) {}
+        inline WebFolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+            : FolderItem(folderTitle, parent, uid, pos, initState) {}
+
+        inline virtual ~WebFolderItem() {}
 
         inline QUrl toUrl() { return QUrl(path().toString()); }
         inline bool isRemote() const { return true; }

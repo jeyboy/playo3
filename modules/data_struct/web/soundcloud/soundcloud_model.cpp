@@ -1,13 +1,8 @@
 #include "soundcloud_model.h"
 #include "media/player.h"
-#include <QDebug>
 
 using namespace Playo3;
 /////////////////////////////////////////////////////////////
-
-SoundcloudModel::SoundcloudModel(QString uid, QJsonObject * hash, QObject * parent) : WebModel(uid, hash, parent) {}
-
-SoundcloudModel::~SoundcloudModel() {}
 
 void SoundcloudModel::refresh(bool retryPlaing) {
     if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;

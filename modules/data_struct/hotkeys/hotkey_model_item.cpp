@@ -5,10 +5,6 @@ HotkeyModelItem::HotkeyModelItem(const QVector<QVariant> & data, HotkeyModelItem
      itemData = data;
 }
 
-HotkeyModelItem::~HotkeyModelItem() {
-    qDeleteAll(childItems);
-}
-
 HotkeyModelItem * HotkeyModelItem::child(int number) {
     return childItems.value(number);
 }

@@ -5,11 +5,11 @@
 
 namespace Playo3 {
     class VkItem : public WebItem {
-    public:
-        VkItem(QJsonObject * hash, FolderItem * parent = 0);
-        VkItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
-        VkItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
-        ~VkItem();
+    public:        
+        inline VkItem(QJsonObject * hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
+        inline VkItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
+        inline VkItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+            : WebItem(uid, filePath, fileName, parent, pos) { setExtension("mp3"); }
 
         inline int itemType() const { return VK_ITEM; }
     };

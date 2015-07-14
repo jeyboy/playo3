@@ -10,17 +10,26 @@
 namespace Playo3 {
     class FileItem : public IItem {
     public:
-        FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1);
-        FileItem(QJsonObject * hash, FolderItem * parent = 0);
-        FileItem(QString fileName, FolderItem * parent = 0, int pos = -1);
-        FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1);
+        inline FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
+        inline FileItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
+        inline FileItem(QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
+            proceedTitle(fileName);
+        }
+        inline FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+            : IItem(parent, DEFAULT_TITLE, pos) {
+            proceedTitle(fileName);
+            setPath(filePath);
+        }
 
-        ~FileItem();
+        inline virtual ~FileItem() {
+            if (is(mark_on_removing))
+                removePhysicalObject();
+        }
 
         inline int itemType() const { return ITEM; }
-        bool removePhysicalObject();
+        inline bool removePhysicalObject() { return QFile::remove(fullPath()); }
 
-        bool isExist() const;
+        inline bool isExist() const { return QFile::exists(fullPath()); }
     protected:
         void proceedTitle(QString & title);
     };

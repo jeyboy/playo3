@@ -1,15 +1,15 @@
 #ifndef HOTKEY_MODEL_H
 #define HOTKEY_MODEL_H
 
-#include <QAbstractItemModel>
+#include <qabstractitemmodel.h>
+
 #include "hotkey_model_item.h"
 
 class HotkeyModel : public QAbstractItemModel {
     Q_OBJECT
-
 public:
     HotkeyModel(QList<HotkeyModelItem *> * toplevelchilds = 0, QObject * parent = 0);
-    ~HotkeyModel();
+    inline ~HotkeyModel() { delete rootItem; }
 
     QVariant data(const QModelIndex & index, int role) const;
     bool setData(const QModelIndex & index, const QVariant &value, int role = Qt::EditRole);
@@ -23,14 +23,12 @@ public:
 
     int itemsCount() const;
 
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
-
+    inline int columnCount(const QModelIndex & /* parent */) const { return rootItem -> columnCount(); }
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
     HotkeyModelItem * getItem(const QModelIndex &index) const;
-    HotkeyModelItem * root() const;
-    QList<HotkeyModelItem * > toplevelItems();
-
+    inline HotkeyModelItem * root() const { return rootItem; }
+    inline QList<HotkeyModelItem * > toplevelItems() { return root() -> childList(); }
 protected:
     HotkeyModelItem * rootItem;
 };

@@ -1,19 +1,10 @@
 #include "hotkey_model.h"
-#include <QDebug>
 
 HotkeyModel::HotkeyModel(QList<HotkeyModelItem * > * toplevelchilds, QObject * parent) : QAbstractItemModel(parent) {
     QVector<QVariant> rootData;
     rootData << "" << "";
     rootItem = new HotkeyModelItem(rootData);
     rootItem -> appendChilds(toplevelchilds);
-}
-
-HotkeyModel::~HotkeyModel() {
-    delete rootItem;
-}
-
-int HotkeyModel::columnCount(const QModelIndex & /* parent */) const {
-    return rootItem -> columnCount();
 }
 
 QVariant HotkeyModel::data(const QModelIndex & index, int role) const {
@@ -50,17 +41,9 @@ HotkeyModelItem * HotkeyModel::getItem(const QModelIndex & index) const {
     return rootItem;
 }
 
-HotkeyModelItem * HotkeyModel::root() const {
-    return rootItem;
-}
-
-QList<HotkeyModelItem * > HotkeyModel::toplevelItems() {
-    return root() -> childList();
-}
-
 QVariant HotkeyModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return rootItem->data(section);
+        return rootItem -> data(section);
 
     return QVariant();
 }
@@ -109,8 +92,7 @@ bool HotkeyModel::setData(const QModelIndex & index, const QVariant & value, int
     return result;
 }
 
-bool HotkeyModel::setHeaderData(int section, Qt::Orientation orientation,
-                              const QVariant & value, int role) {
+bool HotkeyModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role) {
     if (role != Qt::EditRole || orientation != Qt::Horizontal)
         return false;
 

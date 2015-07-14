@@ -22,7 +22,7 @@ namespace Playo3 {
         IItem(FolderItem * parent, QJsonObject * hash);
         IItem(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
-        virtual ~IItem();
+        inline virtual ~IItem() {}
 
         virtual QJsonObject toJson();
 

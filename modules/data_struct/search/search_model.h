@@ -9,9 +9,10 @@
 namespace Playo3 {
     class SearchModel : public LevelTreeModel {
         Q_OBJECT
-
     public:
-        SearchModel(QJsonObject * hash = 0, QObject * parent = 0);
+        inline SearchModel(QJsonObject * hash = 0, QObject * parent = 0)
+            : LevelTreeModel(hash, parent), initiator(0) {}
+
         ~SearchModel();
 
         inline bool isRelative() const { return false; }

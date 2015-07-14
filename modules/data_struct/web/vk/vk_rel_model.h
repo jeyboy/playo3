@@ -7,9 +7,9 @@
 namespace Playo3 {
     class VkRelModel : public VkModel {
         Q_OBJECT
-    public:
-        VkRelModel(RelType rtype, QString uid, QJsonObject * hash = 0, QObject * parent = 0);
-        ~VkRelModel();
+    public:       
+        inline VkRelModel(RelType rtype, QString uid, QJsonObject * hash = 0, QObject * parent = 0)
+            : VkModel(uid, hash, parent), rel_type(rtype) {}
 
         inline ContainerType containerType() const { return vk_rel; }
     public slots:

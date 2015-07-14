@@ -36,6 +36,7 @@ namespace Playo3 {
     class ItemFields : public ItemState {
     public:
         inline ItemFields() {}
+        inline virtual ~ItemFields() {}
 
         ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
@@ -46,7 +47,6 @@ namespace Playo3 {
         inline QVariant owner() const       { return attrs.value(JSON_TYPE_OWNER_ID); }
         inline QVariant artistUid() const   { return attrs.value(JSON_TYPE_ARTIST_UID); }
         inline QVariant songUid() const     { return attrs.value(JSON_TYPE_SONG_UID); }
-
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
