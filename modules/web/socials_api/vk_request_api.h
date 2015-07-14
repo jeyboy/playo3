@@ -7,20 +7,20 @@
 
 class VkRequestApi : public IApi {
 protected:
-    inline QString boolToStr(bool val) { return val ? "1" : "0"; }
-    inline QString apiVersion() { return "5.21"; }
-    inline QString getApiLimit() { return "20"; }
+    inline QString boolToStr(bool val) { return val ? QStringLiteral("1") : QStringLiteral("0"); }
+    inline QString apiVersion() { return QStringLiteral("5.21"); }
+    inline QString getApiLimit() { return QStringLiteral("20"); }
 
     QString authUrl() {
-        QUrl url("https://oauth.vk.com/authorize");
+        QUrl url(QStringLiteral("https://oauth.vk.com/authorize"));
 
         QUrlQuery query = QUrlQuery();
-        setParam(query, "v", apiVersion());
-        setParam(query, "display", "page");
-        setParam(query, "client_id", "4332211");
-        setParam(query, "response_type", "token");
-        setParam(query, "scope", "audio,video,friends,groups,offline");
-        setParam(query, "redirect_uri", "https://oauth.vk.com/blank.html");
+        setParam(query, QStringLiteral("v"), apiVersion());
+        setParam(query, QStringLiteral("display"), QStringLiteral("page"));
+        setParam(query, QStringLiteral("client_id"), QStringLiteral("4332211"));
+        setParam(query, QStringLiteral("response_type"), QStringLiteral("token"));
+        setParam(query, QStringLiteral("scope"), QStringLiteral("audio,video,friends,groups,offline"));
+        setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("https://oauth.vk.com/blank.html"));
 
         url.setQuery(query);
         return url.toString();
@@ -65,13 +65,13 @@ public:
     QUrl audioAlbumsUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code",
-            QString(
+        setParam(query, QStringLiteral("code"),
+            QStringLiteral(
                "var curr; var count = 5;"
                "var folders_result = API.audio.getAlbums({"
                "                count: count, "
                "                offset: _1_, "
-               "                owner_id: " + uid + ""
+               "                owner_id: " % uid % ""
                "    });"
                "var folders_result = folders_result.items;"
                "var proceed_folders = {};"
@@ -81,7 +81,7 @@ public:
                "        folder_id: curr.id,"
                "        title: curr.title,"
                "        items: API.audio.get({"
-               "            owner_id: " + uid + ","
+               "            owner_id: " % uid % ","
                "            album_id: curr.id"
                "        }).items "
                "    });"
@@ -94,19 +94,19 @@ public:
            )
         );
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
     QJsonArray audioAlbums(QString & uid, int offset = 0) {
         return lQuery(
             audioAlbumsUrl(uid),
-            QueryRules("albums", 5, DEFAULT_LIMIT_AMOUNT, offset),
+            QueryRules(QStringLiteral("albums"), 5, DEFAULT_LIMIT_AMOUNT, offset),
             extract
         );
     }
     void audioAlbums(QString & uid, QJsonArray & arr, int offset = 0) {
         lQuery(
             audioAlbumsUrl(uid),
-            QueryRules("albums", 5, DEFAULT_LIMIT_AMOUNT, offset),
+            QueryRules(QStringLiteral("albums"), 5, DEFAULT_LIMIT_AMOUNT, offset),
             arr, extract
         );
     }
@@ -115,11 +115,11 @@ public:
     QUrl userFullInfoUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code",
-           QString(
+        setParam(query, QStringLiteral("code"),
+           QStringLiteral(
                "var curr; var proceed_groups = [];"
                "var groups = API.groups.get({"
-               "            owner_id: " + uid + ", "
+               "            owner_id: " % uid % ", "
                "            count: 1000, "
                "            extended: 1"
                "    }).items;"
@@ -132,7 +132,7 @@ public:
                "};"
 
                "var friends = API.friends.get({"
-               "            user_id: " + uid + ", "
+               "            user_id: " % uid % ", "
                "            order: \"name\", "
                "            fields: \"nickname\""
                "    });"
@@ -148,8 +148,8 @@ public:
                "};"
 
                "var folders_result = API.audio.getAlbums({"
-               "            count: " + getApiLimit() + ", "
-               "            owner_id: " + uid + ""
+               "            count: " % getApiLimit() % ", "
+               "            owner_id: " % uid % ""
                "    });"
                "var folders_count = folders_result.count;"
                "var proceed_folders = {};"
@@ -167,38 +167,38 @@ public:
                "};"
                "return {"
                "    audio_list: API.audio.get({ "
-               "        count: 6000, owner_id: " + uid + ""
+               "        count: 6000, owner_id: " % uid % ""
                "    }),"
                "    albums: [proceed_folders], "
                "    groups: proceed_groups, "
                "    friends: proceed_friends, "
-               "    albums_offset: " + getApiLimit() + ", "
-               "    albums_finished: (folders_count < " + getApiLimit() + "), "
+               "    albums_offset: " % getApiLimit() % ", "
+               "    albums_finished: (folders_count < " % getApiLimit() % "), "
                "};"
            )
        );
 
-       return baseUrl("execute", query);
+       return baseUrl(QStringLiteral("execute"), query);
     }
     QUrl userShortInfoUrl(QString & uid) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code",
-           QString(
+        setParam(query, QStringLiteral("code"),
+           QStringLiteral(
                "var folders_result = API.audio.getAlbums({ "
-               "            count: " + getApiLimit() + ", "
-               "            owner_id: " + uid + ""
+               "            count: " % getApiLimit() % ", "
+               "            owner_id: " % uid % ""
                "        });"
                "var folders_count = folders_result.count;"
                "var sort_by_folders = {};"
                "if (folders_count > 0) { "
                "    while(folders_result.items.length > 0) { "
                "        var curr = folders_result.items.pop(); "
-               "        sort_by_folders.push({" +
+               "        sort_by_folders.push({"
                "            folder_id: curr.id, "
                "            title: curr.title, "
                "            items: API.audio.get({ "
-               "                owner_id: " + uid + ", "
+               "                owner_id: " % uid % ", "
                "                album_id: curr.id"
                "            }).items"
                "        });"
@@ -207,16 +207,16 @@ public:
                "return {"
                "    audio_list: API.audio.get({ "
                "        count: 6000, "
-               "        owner_id: " + uid + ""
+               "        owner_id: " % uid % ""
                "    }), "
                "    albums: [sort_by_folders], "
-               "    albums_offset: " + getApiLimit() + ", "
-               "    albums_finished: (folders_count < " + getApiLimit() + "), "
+               "    albums_offset: " % getApiLimit() % ", "
+               "    albums_finished: (folders_count < " % getApiLimit() % "), "
                "};"
            )
         );
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
 
 
@@ -224,33 +224,33 @@ public:
         QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
         QJsonObject ret = sQuery(url, extract);
 
-        QJsonArray ar = ret.value("albums").toArray();
+        QJsonArray ar = ret.value(QStringLiteral("albums")).toArray();
 
-        if (!ret.value("albums_finished").toBool())
-            audioAlbums(uid, ar, ret.value("albums_offset").toInt());
+        if (!ret.value(QStringLiteral("albums_finished")).toBool())
+            audioAlbums(uid, ar, ret.value(QStringLiteral("albums_offset")).toInt());
         else setCount(ar, ar[0].toArray().size());
 
-        ret.insert("albums", ar);
+        ret.insert(QStringLiteral("albums"), ar);
         return ret;
     }
 
     QJsonObject userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
         QUrlQuery query;
-        setParam(query, "fields", "counters");
-        setParam(query, "user_ids", uid);
+        setParam(query, QStringLiteral("fields"), QStringLiteral("counters"));
+        setParam(query, QStringLiteral("user_ids"), uid);
 
-        return sQuery(baseUrl("users.get", query)).value("response").toArray().first().toObject();
+        return sQuery(baseUrl(QStringLiteral("users.get"), query)).value(QStringLiteral("response")).toArray().first().toObject();
     }
 
     QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code",
-           QString(
+        setParam(query, QStringLiteral("code"),
+           QStringLiteral(
                "var recomendations = API.audio.getRecommendations({"
-               + QString(byUser ? "user_id: " : "target_audio: ") + "\"" + uid + "\", "
+               + QString(byUser ? "user_id: " : "target_audio: ") % "\"" % uid % "\", "
                "   count: 1000, "
-               "   shuffle: " + boolToStr(randomize) + ""
+               "   shuffle: " % boolToStr(randomize) % ""
                "});"
                "return { "
                "   audio_list: recomendations "
@@ -258,7 +258,7 @@ public:
            )
         );
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
 
     QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
@@ -272,18 +272,18 @@ public:
         // count max eq 300 , limit is 1000
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code", QString(
-            "var limit = " + QString::number(limit) + ";"
+        setParam(query, QStringLiteral("code"), QStringLiteral(
+            "var limit = " % QString::number(limit) % ";"
             "var search = []; var rule = true;"
             "do {"
             "    var count = limit - search.length;"
             "    if (count > 300) count = 300;"
             "    var items = API.audio.search({"
-            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: count, offset: search.length, lyrics: 0,"
-            "        auto_complete: " + boolToStr(autoFix) + ","
-            "        performer_only: " + boolToStr(artistOnly) + ","
-            "        sort: " + QString::number(sort) + ","
-            "        search_own: " + boolToStr(searchByOwn) + ""
+            "        q: \"" % QUrl::toPercentEncoding(searchStr) % "\", count: count, offset: search.length, lyrics: 0,"
+            "        auto_complete: " % boolToStr(autoFix) % ","
+            "        performer_only: " % boolToStr(artistOnly) % ","
+            "        sort: " % QString::number(sort) % ","
+            "        search_own: " % boolToStr(searchByOwn) % ""
             "    }).items;"
             "    search = search %2b items;"
             "    rule = search.length < limit && items.length != 0;"
@@ -291,25 +291,25 @@ public:
             "return {audio_list: search};"
         ));
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
     QJsonArray audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
         return sQuery(
             audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)), extract
-        ).value("audio_list").toArray();
+        ).value(QStringLiteral("audio_list")).toArray();
     }
 
     QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code", QString(
+        setParam(query, "code", QStringLiteral(
             "    var items = API.audio.search({"
-            "        q: \"" + QUrl::toPercentEncoding(searchStr) + "\", count: " + QString::number(limit) + ", lyrics: 0"
+            "        q: \"" % QUrl::toPercentEncoding(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
             "    }).items;"
             "return {audio_list: search};"
         ));
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
 
     QJsonObject audioSearchLimited(QString & predicate, int limitation) {
@@ -320,33 +320,33 @@ public:
         QUrlQuery query = genDefaultParams();
 
 
-        setParam(query, "code",
-           QString(
+        setParam(query, QStringLiteral("code"),
+           QStringLiteral(
                "var recomendations = API.audio.getPopular({"
                     "only_eng: " % boolToStr(onlyEng) % ", "
-                    "count: 1000 " + (genreId != -1 ? (", genre_id: " + QString::number(genreId)) : "") + ""
+                    "count: 1000 " % (genreId != -1 ? (", genre_id: " % QString::number(genreId)) : "") % ""
                  "});"
                "return {audio_list: recomendations};"
            )
         );
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
     QJsonArray audioPopular(bool onlyEng, int genreId) {
-        return sQuery(audioPopularUrl(onlyEng, genreId), extract).value("audio_list").toArray();
+        return sQuery(audioPopularUrl(onlyEng, genreId), extract).value(QStringLiteral("audio_list")).toArray();
     }
 
     QUrl audioRefreshUrl(QStringList & uids) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code",
-           QString("return API.audio.getById({ audios: \"" + uids.join(',') + "\"});")
+        setParam(query, QStringLiteral("code"),
+           QString(QStringLiteral("return API.audio.getById({ audios: \"") % uids.join(',') % QStringLiteral("\"});"))
         );
 
-        return baseUrl("execute", query);
+        return baseUrl(QStringLiteral("execute"), query);
     }
     QJsonArray getAudiosInfo(QStringList & audio_uids) {
-        return sQuery(audioRefreshUrl(audio_uids)).value("response").toArray();
+        return sQuery(audioRefreshUrl(audio_uids)).value(QStringLiteral("response")).toArray();
     }
     QJsonObject getAudioInfo(QString & audio_uid) {
         QStringList uids; uids << audio_uid;
@@ -355,21 +355,21 @@ public:
     }
 
     QString refreshAudioItemUrl(QString audio_uid) {
-        return getAudioInfo(audio_uid).value("url").toString();
+        return getAudioInfo(audio_uid).value(QStringLiteral("url")).toString();
     }
 
     void nameToId(QString name, QString & id, QString & id_type) {
         QUrlQuery query;
-        setParam(query, "screen_name", name);
-        QJsonObject ret = sQuery(baseUrl("utils.resolveScreenName", query)).value("response").toObject();
-        id = QString::number(ret.value("object_id").toInt());
-        id_type = ret.value("type").toString();
+        setParam(query, QStringLiteral("screen_name"), name);
+        QJsonObject ret = sQuery(baseUrl(QStringLiteral("utils.resolveScreenName"), query)).value(QStringLiteral("response")).toObject();
+        id = QString::number(ret.value(QStringLiteral("object_id")).toInt());
+        id_type = ret.value(QStringLiteral("type")).toString();
     }
 
     QUrl audioLyricsUrl(QString & lyrics_id) {
         QUrlQuery query = genDefaultParams();
-        setParam(query, "lyrics_id", lyrics_id);
-        return baseUrl("audio.getLyrics", query);
+        setParam(query, QStringLiteral("lyrics_id"), lyrics_id);
+        return baseUrl(QStringLiteral("audio.getLyrics"), query);
     }
 };
 

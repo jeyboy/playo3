@@ -81,7 +81,7 @@ protected:
 
         Logger::instance() -> startMark();
         toJson(response, res);
-        Logger::instance() -> endMark("Grabber", url.toString());
+        Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
         delete response;
         if (isNew) delete manager;
     }

@@ -25,7 +25,7 @@ namespace Playo3 {
         static Dockbars * instance(QWidget * parent = 0);
         inline static void close() { delete self; }
 
-        static inline QString settingsName() { return "docks"; }
+        static inline QString settingsName() { return QStringLiteral("docks"); }
 
         void load(QJsonArray & bars);
         void save(DataStore * settings);

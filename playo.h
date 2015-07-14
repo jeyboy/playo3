@@ -8,7 +8,7 @@
 #include "toolbars.h"
 #include "dockbars.h"
 
-#include <QSettings>
+#include <qsettings.h>
 
 #include "misc/web_utils/html_parser.h"
 //#include "media/cue/cue.h"

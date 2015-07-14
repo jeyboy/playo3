@@ -1,21 +1,20 @@
 #ifndef SINGLE_APPLICATION_H
 #define SINGLE_APPLICATION_H
 
-#include <QApplication>
-#include <QSharedMemory>
-#include <QTimer>
-#include <QByteArray>
+#include <qapplication.h>
+#include <qsharedmemory.h>
+#include <qtimer.h>
+#include <qbytearray.h>
 
-class SingleApplication : public QApplication
-{
+class SingleApplication : public QApplication {
     Q_OBJECT
 public:
-    SingleApplication(int &argc, char *argv[], const QString uniqueKey);
+    SingleApplication(int & argc, char * argv[], const QString uniqueKey);
 
     bool isRunning();
-    bool sendMessage(const QString &message);
+    bool sendMessage(const QString & message);
 
-    bool notify(QObject* receiver, QEvent* even);
+    bool notify(QObject * receiver, QEvent * even);
 
 public slots:
     void checkForMessage();

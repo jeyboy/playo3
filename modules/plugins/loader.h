@@ -14,10 +14,10 @@ static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
 
     filters
         #ifdef Q_OS_WIN
-            << "web_plugin.dll";
+            << QStringLiteral("web_plugin.dll");
 //        #else ifdef Q_OS_DARWIN
         #else
-            << "libweb_plugin.so" << "libweb_plugin.so.1" << "libweb_plugin.so.1.0" << "libweb_plugin.so.1.0.0";
+            << QStringLiteral("libweb_plugin.so") << QStringLiteral("libweb_plugin.so.1") << QStringLiteral("libweb_plugin.so.1.0") << QStringLiteral("libweb_plugin.so.1.0.0");
         #endif
 
     foreach (QString fileName, pluginsDir.entryList(filters, QDir::Files)) {
@@ -28,7 +28,7 @@ static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
             if (wdi)
                 return true;
         }
-        else Logger::instance() -> writeToStream("Plugin loader", pluginLoader.errorString());
+        else Logger::instance() -> writeToStream(QStringLiteral("Plugin loader"), pluginLoader.errorString());
     }
 
     return false;

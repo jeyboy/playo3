@@ -1,8 +1,8 @@
 #ifndef TOOLBARS_H
 #define TOOLBARS_H
 
-#include <QToolBar>
-#include <QMainWindow>
+#include <qtoolbar.h>
+#include <qmainwindow.h>
 #include <qmenu.h>
 
 #include "misc/file_utils/data_store.h"
@@ -32,7 +32,7 @@ namespace Playo3 {
         static ToolBars * instance(QObject * parent = 0);
         static void close() { delete self; }
 
-        static inline QString settingsName() { return "bars"; }
+        static inline QString settingsName() { return QStringLiteral("bars"); }
 
         QMenu * createPopupMenu(QMainWindow * window);
 

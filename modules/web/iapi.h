@@ -6,7 +6,7 @@
 #include "misc/logger.h"
 #include "misc/web_utils/web_manager.h"
 
-#include <qdebug.h>
+#include <qstringbuilder.h>
 
 #include <qurl.h>
 #include <qurlquery.h>
@@ -30,7 +30,7 @@ struct QueryRules {
 
 class IApi {
 public:
-    static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value("count").toInt(); }
+    static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
 protected:
     enum JsonPostProc { none = 0, wrap = 1, extract = 2, wrap_extract = wrap | extract };
 
@@ -66,11 +66,11 @@ protected:
 
         bool status = extractStatus(url, response, code, message);
         if (!status) {
-            Logger::instance() -> writeToStream("sQuery", url.toString(), message, true);
+            Logger::instance() -> writeToStream(QStringLiteral("sQuery"), url.toString(), message, true);
             sendError(errorReceiver, message, code);
         } else {
             if (post_proc & extract) extractBody(response);
-            Logger::instance() -> writeToStream("sQuery", url.toString(), response.keys());
+            Logger::instance() -> writeToStream(QStringLiteral("sQuery"), url.toString(), response.keys());
         }
         return status;
     }

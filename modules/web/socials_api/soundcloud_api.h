@@ -12,8 +12,8 @@ public:
     static SoundcloudApi * instance(QJsonObject obj);
     inline static void close() { delete self; }
 
-    inline QString name() const { return "soundcloud"; }
-    inline QUrlQuery genDefaultParams() { return QUrlQuery("client_id=8f84790a84f5a5acd1c92e850b5a91b7"); }
+    inline QString name() const { return QStringLiteral("soundcloud"); }
+    inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
     QString authUrl();
 
     void fromJson(QJsonObject hash);
@@ -35,18 +35,18 @@ public slots:
     void proceedAuthResponse(const QUrl & url);
 
 protected:
-    inline QString baseUrlStr(QString & predicate) { return "https://api.soundcloud.com/" + predicate + ".json"; }  
+    inline QString baseUrlStr(QString & predicate) { return "https://api.soundcloud.com/" % predicate % ".json"; }
 
-    inline QString offsetKey() const { return "offset"; }
-    inline QString limitKey() const { return "limit"; }
+    inline QString offsetKey() const { return QStringLiteral("offset"); }
+    inline QString limitKey() const { return QStringLiteral("limit"); }
     inline int requestLimit() const { return 200; }
 
     inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("response").toArray().isEmpty(); }
+    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("response")).toArray().isEmpty(); }
     inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = response.value("response").toObject().value("errors").toArray().first().toObject();
-        message = stat_obj.value("error_message").toString();
-        return (code = stat_obj.value("error_code").toInt()) == 0;
+        QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
+        message = stat_obj.value(QStringLiteral("error_message")).toString();
+        return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
     }
 private:
     inline SoundcloudApi(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }

@@ -10,13 +10,13 @@
 class VkApi : public WebApi, public TeuAuth, public VkRequestApi {
     Q_OBJECT
 public:
-    inline QString name() const { return "vk"; }
+    inline QString name() const { return QStringLiteral("vk"); }
     inline QUrlQuery genDefaultParams() {
         QUrlQuery query = QUrlQuery();
 
-        query.addQueryItem("v", apiVersion());
-        query.addQueryItem("access_token", token());
-//        query.addQueryItem("test_mode", "1");
+        query.addQueryItem(QStringLiteral("v"), apiVersion());
+        query.addQueryItem(QStringLiteral("access_token"), token());
+//        query.addQueryItem(QStringLiteral("test_mode"), "1");
 
         return query;
     }
@@ -56,15 +56,15 @@ public slots:
     inline void disconnect() { WebApi::disconnect(); setParams("", "", ""); }
     void proceedAuthResponse(const QUrl & url);
 protected:
-    inline QString baseUrlStr(QString & predicate) { return "https://api.vk.com/method/" + predicate; }
+    inline QString baseUrlStr(QString & predicate) { return QStringLiteral("https://api.vk.com/method/") % predicate; }
 
-    inline QString offsetKey() const { return "offset"; }
-    inline QString limitKey() const { return "count"; }
+    inline QString offsetKey() const { return QStringLiteral("offset"); }
+    inline QString limitKey() const { return QStringLiteral("count"); }
     inline int requestLimit() const { return 200; }
-    inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value("offset").toInt(); }
+    inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value("response").toObject()); }
-    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value("finished").toBool(); }
+    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
+    inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("finished")).toBool(); }
     bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
     QUrl buildUrl(QUrl tUrl, int offset, int limit);

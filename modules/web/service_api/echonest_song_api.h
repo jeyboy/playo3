@@ -78,18 +78,18 @@ class EchonestSongApi : public IApi {
                 QStringList & styles, QStringList & moods) {
             QUrlQuery query = genDefaultParams();
 
-            if (!artist.isEmpty()) setParam(query, "artist", artist);
-            if (!title.isEmpty()) setParam(query, "title", title);
+            if (!artist.isEmpty()) setParam(query, QStringLiteral("artist"), artist);
+            if (!title.isEmpty()) setParam(query, QStringLiteral("title"), title);
 
             if (mode == 0 || mode == 1)
-                setParam(query, "mode", QString::number(mode));
+                setParam(query, QStringLiteral("mode"), QString::number(mode));
 
 
-            setParam(query, "style", styles);
-            setParam(query, "description", tags);
-            setParam(query, "mood", moods);
+            setParam(query, QStringLiteral("style"), styles);
+            setParam(query, QStringLiteral("description"), tags);
+            setParam(query, QStringLiteral("mood"), moods);
 
-            return baseUrl("song/search", query);
+            return baseUrl(QStringLiteral("song/search"), query);
         }
 
         QJsonArray songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),

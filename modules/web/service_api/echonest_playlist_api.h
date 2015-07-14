@@ -22,9 +22,9 @@ class EchonestPlaylistApi : public IApi {
             QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
-            setParam(query, "artist", artists);
-            setParam(query, "genre", genres);
-            setParam(query, "song_id", songs_ids);
+            setParam(query, QStringLiteral("artist"), artists);
+            setParam(query, QStringLiteral("genre"), genres);
+            setParam(query, QStringLiteral("song_id"), songs_ids);
 
 //            setParam(query, "bucket", "id:7digital-US");
 //            setParam(query, "bucket", "id:spotify-US");
@@ -36,9 +36,9 @@ class EchonestPlaylistApi : public IApi {
 //            setParam(query, "bucket", "tracks");
 
             if (!type.isEmpty())
-                setParam(query, "type", type);
+                setParam(query, QStringLiteral("type"), type);
 
-            return baseUrl("playlist/basic", query);
+            return baseUrl(QStringLiteral("playlist/basic"), query);
         }
 
 //        QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
@@ -54,8 +54,8 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("artist-radio", artists, QStringList(), QStringList(), limit), response, wrap_extract))
-                return response.value("songs").toArray();
+            if (sQuery(playlistBasicUrl(QStringLiteral("artist-radio"), artists, QStringList(), QStringList(), limit), response, wrap_extract))
+                return response.value(QStringLiteral("songs")).toArray();
 
             return QJsonArray();
         }
@@ -63,8 +63,8 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("genre-radio", QStringList(), genres, QStringList(), limit), response, wrap_extract))
-                return response.value("songs").toArray();
+            if (sQuery(playlistBasicUrl(QStringLiteral("genre-radio"), QStringList(), genres, QStringList(), limit), response, wrap_extract))
+                return response.value(QStringLiteral("songs")).toArray();
 
             return QJsonArray();
         }
@@ -72,8 +72,8 @@ class EchonestPlaylistApi : public IApi {
         QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
             QJsonObject response;
 
-            if (sQuery(playlistBasicUrl("song-radio", QStringList(), QStringList(), songs_ids, limit), response), wrap_extract)
-                return response.value("songs").toArray();
+            if (sQuery(playlistBasicUrl(QStringLiteral("song-radio"), QStringList(), QStringList(), songs_ids, limit), response), wrap_extract)
+                return response.value(QStringLiteral("songs")).toArray();
 
             return QJsonArray();
         }
@@ -165,19 +165,19 @@ class EchonestPlaylistApi : public IApi {
             QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
-            setParam(query, "artist", artists);
-            setParam(query, "genre", genres);
-            setParam(query, "song_id", songs_ids);
+            setParam(query, QStringLiteral("artist"), artists);
+            setParam(query, QStringLiteral("genre"), genres);
+            setParam(query, QStringLiteral("song_id"), songs_ids);
 
-            if (!song_types.isEmpty()) setParam(query, "song_types", song_types);
-            if (!seed_catalog.isEmpty()) setParam(query, "seed_catalog", seed_catalog);
-            if (!type.isEmpty()) setParam(query, "type", type);
-            if (!song_selection_creteria.isEmpty()) setParam(query, "song_selection", song_selection_creteria);
-            if (!distribution.isEmpty()) setParam(query, "distribution", distribution);
-            setParam(query, "variety", QString::number(variety));
-            setParam(query, "adventurousness", QString::number(adventurousness));
+            if (!song_types.isEmpty()) setParam(query, QStringLiteral("song_types"), song_types);
+            if (!seed_catalog.isEmpty()) setParam(query, QStringLiteral("seed_catalog"), seed_catalog);
+            if (!type.isEmpty()) setParam(query, QStringLiteral("type"), type);
+            if (!song_selection_creteria.isEmpty()) setParam(query, QStringLiteral("song_selection"), song_selection_creteria);
+            if (!distribution.isEmpty()) setParam(query, QStringLiteral("distribution"), distribution);
+            setParam(query, QStringLiteral("variety"), QString::number(variety));
+            setParam(query, QStringLiteral("adventurousness"), QString::number(adventurousness));
 
-            return baseUrl("playlist/static", query);
+            return baseUrl(QStringLiteral("playlist/static"), query);
         }
 
         QJsonArray playlistStatic(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5,
@@ -189,7 +189,7 @@ class EchonestPlaylistApi : public IApi {
 
             if (sQuery(playlistStaticUrl(type, song_selection_creteria, variety, distribution, adventurousness,
                                                seed_catalog, artists, genres, songs_ids, song_types, limit), response, wrap_extract))
-                return response.value("songs").toArray();
+                return response.value(QStringLiteral("songs")).toArray();
 
             return QJsonArray();
         }
@@ -278,60 +278,60 @@ class EchonestPlaylistApi : public IApi {
             QUrlQuery query = genDefaultParams();
             setLimit(query, qMin(limit, requestLimit()), 0);
 
-            if (!artist_start_year_before.isEmpty()) setParam(query, "artist_start_year_before", artist_start_year_before);
-            if (!artist_start_year_after.isEmpty()) setParam(query, "artist_start_year_after", artist_start_year_after);
+            if (!artist_start_year_before.isEmpty()) setParam(query, QStringLiteral("artist_start_year_before"), artist_start_year_before);
+            if (!artist_start_year_after.isEmpty()) setParam(query, QStringLiteral("artist_start_year_after"), artist_start_year_after);
 
-            if (!artist_end_year_before.isEmpty()) setParam(query, "artist_end_year_before", artist_end_year_before);
-            if (!artist_end_year_after.isEmpty()) setParam(query, "artist_end_year_after", artist_end_year_after);
+            if (!artist_end_year_before.isEmpty()) setParam(query, QStringLiteral("artist_end_year_before"), artist_end_year_before);
+            if (!artist_end_year_after.isEmpty()) setParam(query, QStringLiteral("artist_end_year_after"), artist_end_year_after);
 
-            setParam(query, "artist", artists);
-            setParam(query, "genre", genres);
-            setParam(query, "song_id", songs_ids);
+            setParam(query, QStringLiteral("artist"), artists);
+            setParam(query, QStringLiteral("genre"), genres);
+            setParam(query, QStringLiteral("song_id"), songs_ids);
 
-            setParam(query, "min_tempo", min_tempo);
-            setParam(query, "max_tempo", max_tempo);
+            setParam(query, QStringLiteral("min_tempo"), min_tempo);
+            setParam(query, QStringLiteral("max_tempo"), max_tempo);
 
-            setParam(query, "min_loudness", min_loudness);
-            setParam(query, "max_loudness", max_loudness);
+            setParam(query, QStringLiteral("min_loudness"), min_loudness);
+            setParam(query, QStringLiteral("max_loudness"), max_loudness);
 
-            setParam(query, "min_energy", min_energy);
-            setParam(query, "max_energy", max_energy);
+            setParam(query, QStringLiteral("min_energy"), min_energy);
+            setParam(query, QStringLiteral("max_energy"), max_energy);
 
-            setParam(query, "min_danceability", min_danceability);
-            setParam(query, "max_danceability", max_danceability);
+            setParam(query, QStringLiteral("min_danceability"), min_danceability);
+            setParam(query, QStringLiteral("max_danceability"), max_danceability);
 
-            setParam(query, "min_liveness", min_liveness);
-            setParam(query, "max_liveness", max_liveness);
+            setParam(query, QStringLiteral("min_liveness"), min_liveness);
+            setParam(query, QStringLiteral("max_liveness"), max_liveness);
 
-            setParam(query, "min_speechiness", min_speechiness);
-            setParam(query, "max_speechiness", max_speechiness);
+            setParam(query, QStringLiteral("min_speechiness"), min_speechiness);
+            setParam(query, QStringLiteral("max_speechiness"), max_speechiness);
 
-            setParam(query, "min_acousticness", min_acousticness);
-            setParam(query, "max_acousticness", max_acousticness);
+            setParam(query, QStringLiteral("min_acousticness"), min_acousticness);
+            setParam(query, QStringLiteral("max_acousticness"), max_acousticness);
 
-            setParam(query, "song_min_hotttnesss", song_min_hotttnesss);
-            setParam(query, "song_max_hotttnesss", song_max_hotttnesss);
+            setParam(query, QStringLiteral("song_min_hotttnesss"), song_min_hotttnesss);
+            setParam(query, QStringLiteral("song_max_hotttnesss"), song_max_hotttnesss);
 
-            setParam(query, "min_duration", min_duration);
-            setParam(query, "max_duration", max_duration);
+            setParam(query, QStringLiteral("min_duration"), min_duration);
+            setParam(query, QStringLiteral("max_duration"), max_duration);
 
-            setParam(query, "artist_min_familiarity", artist_min_familiarity);
-            setParam(query, "artist_max_familiarity", artist_max_familiarity);
+            setParam(query, QStringLiteral("artist_min_familiarity"), artist_min_familiarity);
+            setParam(query, QStringLiteral("artist_max_familiarity"), artist_max_familiarity);
 
-            setParam(query, "artist_min_hotttnesss", artist_min_hotttnesss);
-            setParam(query, "artist_max_hotttnesss", artist_max_hotttnesss);
+            setParam(query, QStringLiteral("artist_min_hotttnesss"), artist_min_hotttnesss);
+            setParam(query, QStringLiteral("artist_max_hotttnesss"), artist_max_hotttnesss);
 
-            if (!genre_preset.isEmpty()) setParam(query, "genre_preset", genre_preset);
-            if (!sort.isEmpty()) setParam(query, "sort", sort);
-            if (!song_types.isEmpty()) setParam(query, "song_types", song_types);
-            if (!seed_catalog.isEmpty()) setParam(query, "seed_catalog", seed_catalog);
-            if (!type.isEmpty()) setParam(query, "type", type);
-            if (!song_selection_creteria.isEmpty()) setParam(query, "song_selection", song_selection_creteria);
-            if (!distribution.isEmpty()) setParam(query, "distribution", distribution);
-            setParam(query, "variety", QString::number(variety));
-            setParam(query, "adventurousness", QString::number(adventurousness));
+            if (!genre_preset.isEmpty()) setParam(query, QStringLiteral("genre_preset"), genre_preset);
+            if (!sort.isEmpty()) setParam(query, QStringLiteral("sort"), sort);
+            if (!song_types.isEmpty()) setParam(query, QStringLiteral("song_types"), song_types);
+            if (!seed_catalog.isEmpty()) setParam(query, QStringLiteral("seed_catalog"), seed_catalog);
+            if (!type.isEmpty()) setParam(query, QStringLiteral("type"), type);
+            if (!song_selection_creteria.isEmpty()) setParam(query, QStringLiteral("song_selection"), song_selection_creteria);
+            if (!distribution.isEmpty()) setParam(query, QStringLiteral("distribution"), distribution);
+            setParam(query, QStringLiteral("variety"), QString::number(variety));
+            setParam(query, QStringLiteral("adventurousness"), QString::number(adventurousness));
 
-            return baseUrl("playlist/static", query);
+            return baseUrl(QStringLiteral("playlist/static"), query);
         }
 
         QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
@@ -355,7 +355,7 @@ class EchonestPlaylistApi : public IApi {
                                                  min_speechiness, max_speechiness, min_acousticness, max_acousticness,
                                                  song_min_hotttnesss, song_max_hotttnesss, min_duration, max_duration,
                                                  artist_min_familiarity, artist_max_familiarity, artist_min_hotttnesss, artist_max_hotttnesss), response, wrap_extract))
-                return response.value("songs").toArray();
+                return response.value(QStringLiteral("songs")).toArray();
 
             return QJsonArray();
         }
