@@ -1,11 +1,11 @@
 #ifndef MODEL_ITEM_DELEGATE_H
 #define MODEL_ITEM_DELEGATE_H
 
-#include <QStyledItemDelegate>
-#include <QPainter>
-#include <QStyleOption>
-#include <QTreeView>
-#include <QCheckBox>
+#include <qstyleditemdelegate.h>
+#include <qpainter>
+#include <qstyleoption.h>
+#include <qtreeview.h>
+#include <qcheckbox.h>
 
 #include "model_item_parts/item_fields.h"
 #include "model_item_parts/item_types.h"

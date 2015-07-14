@@ -16,27 +16,27 @@ namespace Playo3 {
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
         ViewSettings(QJsonObject obj) {
-            deleteFile = obj["del"].toBool();
-            playlist = obj["play"].toBool();
-            interactive = obj["int"].toBool();
-            common = obj["common"].toBool();
-            type = (ContainerType)obj["type"].toInt();
-            uid = obj["uid"].toString();
-            rel_type = (RelType)obj["rel_type"].toInt();
+            deleteFile = obj[QStringLiteral("del")].toBool();
+            playlist = obj[QStringLiteral("play")].toBool();
+            interactive = obj[QStringLiteral("int")].toBool();
+            common = obj[QStringLiteral("common")].toBool();
+            type = (ContainerType)obj[QStringLiteral("type")].toInt();
+            uid = obj[QStringLiteral("uid")].toString();
+            rel_type = (RelType)obj[QStringLiteral("rel_type")].toInt();
         }
 
         QJsonObject toJson() {
             QJsonObject obj;
 
-            obj["del"] = deleteFile;
-            obj["play"] = playlist;
-            obj["int"] = interactive;
-            obj["common"] = common;
-            obj["type"] = type;
+            obj[QStringLiteral("del")] = deleteFile;
+            obj[QStringLiteral("play")] = playlist;
+            obj[QStringLiteral("int")] = interactive;
+            obj[QStringLiteral("common")] = common;
+            obj[QStringLiteral("type")] = type;
             if (!uid.isEmpty())
-                obj["uid"] = uid;
+                obj[QStringLiteral("uid")] = uid;
 
-            obj["rel_type"] = rel_type;
+            obj[QStringLiteral("rel_type")] = rel_type;
 
             return obj;
         }

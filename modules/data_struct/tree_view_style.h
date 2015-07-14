@@ -1,8 +1,8 @@
 #ifndef TREE_VIEW_STYLE_H
 #define TREE_VIEW_STYLE_H
 
-#include <QProxyStyle>
-#include <QPainter>
+#include <qproxystyle.h>
+#include <qpainter.h>
 
 class TreeViewStyle : public QProxyStyle {
 public:

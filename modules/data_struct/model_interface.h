@@ -35,7 +35,7 @@ namespace Playo3 {
         IModel(QJsonObject * hash, QObject * parent);
         virtual ~IModel();
 
-        FolderItem * root() { return rootItem; }
+        inline FolderItem * root() { return rootItem; }
 
         virtual ContainerType containerType() const = 0;
         virtual bool isRelative() const = 0;
