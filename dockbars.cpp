@@ -303,7 +303,8 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 //}
 
-void Dockbars::updateActiveTabIcon() {
+void Dockbars::updateActiveTabIcon(bool isFloating) {
+    if (isFloating) return;
     if (!played) return;
 
     TabifyParams tabData = played -> tabIndex();

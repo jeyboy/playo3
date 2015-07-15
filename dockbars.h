@@ -58,7 +58,7 @@ namespace Playo3 {
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);
     public slots:
-        void updateActiveTabIcon();
+        void updateActiveTabIcon(bool isFloating = false);
         void updateAllViews();
         inline void hideAll() { changeBarsVisibility(true); }
         inline void showAll() { changeBarsVisibility(false); }

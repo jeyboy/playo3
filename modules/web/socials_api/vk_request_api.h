@@ -66,7 +66,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, QStringLiteral("code"),
-            QStringLiteral(
+            QString(
                "var curr; var count = 5;"
                "var folders_result = API.audio.getAlbums({"
                "                count: count, "
@@ -116,7 +116,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, QStringLiteral("code"),
-           QStringLiteral(
+           QString(
                "var curr; var proceed_groups = [];"
                "var groups = API.groups.get({"
                "            owner_id: " % uid % ", "
@@ -184,7 +184,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, QStringLiteral("code"),
-           QStringLiteral(
+           QString(
                "var folders_result = API.audio.getAlbums({ "
                "            count: " % getApiLimit() % ", "
                "            owner_id: " % uid % ""
@@ -246,7 +246,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, QStringLiteral("code"),
-           QStringLiteral(
+           QString(
                "var recomendations = API.audio.getRecommendations({"
                + QString(byUser ? "user_id: " : "target_audio: ") % "\"" % uid % "\", "
                "   count: 1000, "
@@ -272,7 +272,7 @@ public:
         // count max eq 300 , limit is 1000
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, QStringLiteral("code"), QStringLiteral(
+        setParam(query, QStringLiteral("code"), QString(
             "var limit = " % QString::number(limit) % ";"
             "var search = []; var rule = true;"
             "do {"
@@ -302,7 +302,7 @@ public:
     QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, "code", QStringLiteral(
+        setParam(query, "code", QString(
             "    var items = API.audio.search({"
             "        q: \"" % QUrl::toPercentEncoding(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
             "    }).items;"
@@ -321,10 +321,10 @@ public:
 
 
         setParam(query, QStringLiteral("code"),
-           QStringLiteral(
+           QString(
                "var recomendations = API.audio.getPopular({"
-                    "only_eng: " % boolToStr(onlyEng) % ", "
-                    "count: 1000 " % (genreId != -1 ? (", genre_id: " % QString::number(genreId)) : "") % ""
+                    "only_eng: " + boolToStr(onlyEng) + ", "
+                    "count: 1000 " + (genreId != -1 ? (", genre_id: " + QString::number(genreId)) : "") + ""
                  "});"
                "return {audio_list: recomendations};"
            )
@@ -340,7 +340,7 @@ public:
         QUrlQuery query = genDefaultParams();
 
         setParam(query, QStringLiteral("code"),
-           QString(QStringLiteral("return API.audio.getById({ audios: \"") % uids.join(',') % QStringLiteral("\"});"))
+           QStringLiteral("return API.audio.getById({ audios: \"") % uids.join(',') % QStringLiteral("\"});")
         );
 
         return baseUrl(QStringLiteral("execute"), query);

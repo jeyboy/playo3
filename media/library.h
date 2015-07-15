@@ -64,7 +64,7 @@ namespace Playo3 {
 
         inline QString libraryPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/library/"); }
 
-        bool proceedItemNames(QStringList names, int state);
+        bool proceedItemNames(IItem * itm, int state);
         QChar getCatalogName(QString name);
 
         QHash<QString, int> * getCatalog(QChar & letter);

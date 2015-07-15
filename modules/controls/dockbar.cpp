@@ -131,24 +131,24 @@ void DockBar::paintEvent(QPaintEvent * event) {
 
 void DockBar::setTabBarSettings() {
     QList<QTabBar *> tabbars = parentWidget() -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
-    QList<QTabBar *>::Iterator it = tabbars.begin();
 
-    for(; it != tabbars.end(); it++) {
+    for(QList<QTabBar *>::Iterator it = tabbars.begin(); it != tabbars.end(); it++)
         (*it) -> setElideMode(Qt::ElideRight);
-    }
 }
 
 TabifyParams DockBar::tabIndex() const {
-    QWidget * widget = parentWidget();
+    if (parent()) {
+        QWidget * widget = parentWidget();
 
-    if (widget) {
-        QList<QTabBar *> tabbars = widget -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
-        QList<QTabBar *>::Iterator it = tabbars.begin();
+        if (widget) {
+            QList<QTabBar *> tabbars = widget -> findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+            QList<QTabBar *>::Iterator it = tabbars.begin();
 
-        for(; it != tabbars.end(); it++) {
-            for(int index = 0; index < (*it) -> count(); index++) {
-                if (this == ((DockBar *)((*it) -> tabData(index).toInt())))
-                    return TabifyParams(*it, index);
+            for(; it != tabbars.end(); it++) {
+                for(int index = 0; index < (*it) -> count(); index++) {
+                    if (this == ((DockBar *)((*it) -> tabData(index).toInt())))
+                        return TabifyParams(*it, index);
+                }
             }
         }
     }

@@ -58,7 +58,7 @@ namespace Playo3 {
 
         inline void toggleFloating() { setFloating(!isFloating()); }
         inline void floatingChanged(bool floating) {
-            if (floating)
+            if (!floating)
                 setTabBarSettings();
         }
         inline void onDockLocationChanged(Qt::DockWidgetArea area) {

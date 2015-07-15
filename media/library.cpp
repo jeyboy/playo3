@@ -45,7 +45,7 @@ void Library::setItemState(const QModelIndex & ind, int state) {
     IItem * itm = indToItm(ind);
     initItemData(itm);
 
-    proceedItemNames(itm -> titlesCache().toStringList(), state);
+    proceedItemNames(itm, state);
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
@@ -324,14 +324,14 @@ void Library::saveCatalogs() {
         catsSaveResult = QtConcurrent::run(this, &Library::save);
 }
 
-bool Library::proceedItemNames(QStringList names, int state) {
+bool Library::proceedItemNames(IItem * itm, int state) {
     QHash<QString, int> * cat;
     QChar letter;
     bool catState = false, catalog_has_item, catalog_state_has_item;
     QList<QString> * saveList;
-    QList<QString>::iterator i;
+    QStringList names = itm -> titlesCache().toStringList();
 
-    for (i = names.begin(); i != names.end(); ++i) {
+    for (QList<QString>::iterator i = names.begin(); i != names.end(); ++i) {
         saveList = 0;
         letter = getCatalogName((*i));
         cat = getCatalog(letter);
@@ -350,10 +350,8 @@ bool Library::proceedItemNames(QStringList names, int state) {
                     delete saveList;
                 catalogs_state.insert(letter, 0);
             } else {
-                if (!catalog_state_has_item) {
-                    if (saveList == 0)
-                        saveList = new QList<QString>();
-                }
+                if (saveList == 0)
+                    saveList = new QList<QString>();
 
                 saveList -> append((*i));
                 catalogs_state.insert(letter, saveList);
