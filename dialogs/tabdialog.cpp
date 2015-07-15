@@ -7,7 +7,7 @@ TabDialog::TabDialog(QWidget * parent) :
   QDialog(parent), ui(new Ui::TabDialog) {
   ui -> setupUi(this);
 
-  setWindowTitle("View settings");
+  setWindowTitle(QStringLiteral("View settings"));
   ui -> interactive -> setEnabled(false);
   ui -> isVkRadio -> setEnabled(false);
   ui -> isSoundcloudRadio -> setEnabled(false);

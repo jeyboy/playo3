@@ -1,11 +1,11 @@
 #include "toolbarbuttondialog.h"
 #include "ui_toolbarbuttondialog.h"
 
-ToolbarButtonDialog::ToolbarButtonDialog(QWidget *parent) :
+ToolbarButtonDialog::ToolbarButtonDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::ToolbarButtonDialog) {
-    ui->setupUi(this);
+    ui -> setupUi(this);
 
-    setWindowTitle("Toolbar button settings");
+    setWindowTitle(QStringLiteral("Toolbar button settings"));
 }
 
 ToolbarButtonDialog::~ToolbarButtonDialog() {

@@ -69,7 +69,7 @@ void ExtensionDialog::on_newPreset_clicked() {
 }
 
 void ExtensionDialog::on_removePreset_clicked() {
-    if (ui -> presets -> count() > 0 && ui -> presets -> currentText() != "all") {
+    if (ui -> presets -> count() > 0 && ui -> presets -> currentText() != QStringLiteral("all")) {
         Extensions::instance() -> removePreset(ui -> presets -> currentText());
         updatePresets();
     }
@@ -81,10 +81,10 @@ void ExtensionDialog::on_addPreset_clicked() {
     Extensions::instance() -> setActiveFilterName(ui -> newPresetName -> text());
     updatePresets();
     updatePresetsButtons(false);
-    ui -> newPresetName -> setText("");
+    ui -> newPresetName -> clear();
 }
 
 void ExtensionDialog::on_cancelPreset_clicked() {
     updatePresetsButtons(false);
-    ui -> newPresetName -> setText("");
+    ui -> newPresetName -> clear();
 }

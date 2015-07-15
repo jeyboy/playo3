@@ -35,7 +35,7 @@ void RelationsDialog::on_friendsList_activated(const QModelIndex & index) {
 
 void RelationsDialog::on_groupsList_activated(const QModelIndex & index) {
     name = index.data().toString();
-    uid = "-" + api -> groupsList().key(name);
+    uid = QStringLiteral("-") % api -> groupsList().key(name);
     accept();
 }
 
@@ -44,7 +44,7 @@ void RelationsDialog::on_friendManually_clicked() {
 
     if (uid.isEmpty()) return;
 
-    name = "User " + uid;
+    name = QStringLiteral("User ") % uid;
     accept();
 }
 
@@ -53,7 +53,7 @@ void RelationsDialog::on_groupManually_clicked() {
 
     if (uid.isEmpty()) return;
 
-    name = "Group " + uid;
-    uid = "-" + uid;
+    name = QStringLiteral("Group ") % uid;
+    uid = QStringLiteral("-") % uid;
     accept();
 }

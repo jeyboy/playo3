@@ -2,7 +2,7 @@
 #include "ui_search_dialog.h"
 #include "dockbars.h"
 
-#include <QFileInfoList>
+#include <qfileinfo.h>
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)

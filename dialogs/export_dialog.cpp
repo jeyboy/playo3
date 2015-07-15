@@ -14,7 +14,7 @@ ExportDialog::~ExportDialog() {
 }
 
 QStringList ExportDialog::getUids() {
-    return ui -> uids -> toPlainText().split(QRegularExpression("\\W"), QString::SkipEmptyParts);
+    return ui -> uids -> toPlainText().split(QRegularExpression(QStringLiteral("\\W")), QString::SkipEmptyParts);
 }
 
 void ExportDialog::on_uids_textChanged() {
