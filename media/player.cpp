@@ -1,5 +1,4 @@
 #include "player.h"
-#include <qdebug.h>
 
 Player * Player::self = 0;
 
@@ -367,12 +366,12 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
     switch (status) {
         case UnknownMediaStatus: {
-            qDebug() << "PLAYER: " << "UNKNOWN";
+//            qDebug() << "PLAYER: " << "UNKNOWN";
             emit nextItemNeeded(error);
         break; }
 
         case StalledMedia: {
-            qDebug() << "PLAYER: " << "STALLED";
+//            qDebug() << "PLAYER: " << "STALLED";
 //            emit itemExecError(playedIndex());
             current_model -> itemError(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : stalled);
@@ -380,7 +379,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
         case EndOfMedia: {
             setTrackbarValue(0);
-            qDebug() << "PLAYER: " << "END";
+//            qDebug() << "PLAYER: " << "END";
             if (cycleButton -> isChecked())
                 play();
             else
@@ -388,14 +387,14 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case InvalidMedia: {
-            qDebug() << "PLAYER: " << "INVALID";
+//            qDebug() << "PLAYER: " << "INVALID";
 //            emit itemNotSupported(playedIndex());
             current_model -> itemNotSupported(playedIndex());
             emit nextItemNeeded(error);
         break;}
 
         case NoMedia: {
-            qDebug() << "PLAYER: " << "NO MEDIA";
+//            qDebug() << "PLAYER: " << "NO MEDIA";
 //            emit itemNotExisted(playedIndex());
             current_model -> itemNotExist(playedIndex());
             emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);

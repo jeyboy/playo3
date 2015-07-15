@@ -5,5 +5,5 @@ int IGenres::toInt(QString name) const {
 }
 
 QString IGenres::toString(int id) const {
-    return genres.key(id, "Other");
+    return genres.key(id, QStringLiteral("Other"));
 }

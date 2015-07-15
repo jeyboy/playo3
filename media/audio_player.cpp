@@ -51,32 +51,32 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
 //        throw "Cannot initialize device";
     #endif
 
-    eqBands.insert(20, "20");
-    eqBands.insert(32, "32");
-    eqBands.insert(64, "64");
-    eqBands.insert(90, "90");
-    eqBands.insert(125, "125");
-    eqBands.insert(160, "160");
-    eqBands.insert(200, "200");
+    eqBands.insert(20, QStringLiteral("20"));
+    eqBands.insert(32, QStringLiteral("32"));
+    eqBands.insert(64, QStringLiteral("64"));
+    eqBands.insert(90, QStringLiteral("90"));
+    eqBands.insert(125, QStringLiteral("125"));
+    eqBands.insert(160, QStringLiteral("160"));
+    eqBands.insert(200, QStringLiteral("200"));
 
-    eqBands.insert(250, "250");
-    eqBands.insert(375, "375");
-    eqBands.insert(500, "500");
-    eqBands.insert(750, "750");
-    eqBands.insert(1000, "1k");
-    eqBands.insert(1500, "1.5k");
+    eqBands.insert(250, QStringLiteral("250"));
+    eqBands.insert(375, QStringLiteral("375"));
+    eqBands.insert(500, QStringLiteral("500"));
+    eqBands.insert(750, QStringLiteral("750"));
+    eqBands.insert(1000, QStringLiteral("1k"));
+    eqBands.insert(1500, QStringLiteral("1.5k"));
 
-    eqBands.insert(2000, "2k");
-    eqBands.insert(3000, "3k");
-    eqBands.insert(4000, "4k");
-    eqBands.insert(8000, "8k");
-    eqBands.insert(12000, "12k");
-    eqBands.insert(16000, "16k");
+    eqBands.insert(2000, QStringLiteral("2k"));
+    eqBands.insert(3000, QStringLiteral("3k"));
+    eqBands.insert(4000, QStringLiteral("4k"));
+    eqBands.insert(8000, QStringLiteral("8k"));
+    eqBands.insert(12000, QStringLiteral("12k"));
+    eqBands.insert(16000, QStringLiteral("16k"));
 
     ///////////////////////////////////////////////
     /// load plugins
     ///////////////////////////////////////////////
-    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() + "/bass_plugins").entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QStringLiteral("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
     QFileInfoList::Iterator it = list.begin();
 
     for(; it != list.end(); it++) {
@@ -404,73 +404,25 @@ float AudioPlayer::getRemoteFileDownloadPosition() {
     return prevDownloadPos;
 }
 
-float AudioPlayer::getBpmValue(QUrl /*uri*/) {
-    return 0;
-//    int cochan;
+float AudioPlayer::getBpmValue(QUrl uri) {
+    int cochan;
 
-//    if (uri.isLocalFile())
-//        cochan = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO);
-//    else
-//        cochan = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO, NULL, 0);
+    if (uri.isLocalFile())
+        cochan = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO);
+    else
+        cochan = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO, NULL, 0);
 
-//    if (cochan) {
-////        return calcBpm(cochan);
+    if (cochan) {
+        int playBackDuration = BASS_ChannelBytes2Seconds(cochan, BASS_ChannelGetLength(cochan, BASS_POS_BYTE));
 
-//        int playBackDuration = BASS_ChannelBytes2Seconds(cochan, BASS_ChannelGetLength(cochan, BASS_POS_BYTE));
-
-//        return BASS_FX_BPM_DecodeGet(cochan,
-//                              0,
-//                              playBackDuration,
-//                              MAKEWORD(20, 180),
-//                              BASS_FX_FREESOURCE, //BASS_FX_BPM_BKGRND // BASS_FX_BPM_MULT2
-//                              NULL, NULL);
-//    } else return 0;
-}
-
-// did not work :(
-float AudioPlayer::calcBpm(int channel) {
-    int ret, C = 1.1;
-    int history_lim = 43, bands_count = 32, fft_length = 1024, cadr_len = fft_length / bands_count;
-    float history_aprox = 1.0 / history_lim, beats = 0;
-    float energy_aprox = (float)bands_count / fft_length;
-
-    QVector<QVector<float> > history;
-    history.fill(QVector<float>(), bands_count);
-
-    while(true) {
-        float fft[fft_length];
-        ret = BASS_ChannelGetData(channel, fft, BASS_DATA_FFT2048); // fft_length * 2
-        if (ret == -1) break;
-        int fft_pos = 0;
-
-        for (int band = 0; band < bands_count; band++) {
-            float energy = 0;
-
-            for(int limit = 0; limit < cadr_len; limit++, fft_pos++)
-                energy += fft[fft_pos];
-
-            float history_total = 0;
-
-            for(int history_pos = 0; history_pos < history[band].count(); history_pos++)
-                history_total += history[band][history_pos];
-
-            if ((energy_aprox * energy) > (history_aprox * history_total * C))
-                beats += 1;
-
-            history[band].append(energy);
-            if (history[band].count() > history_lim)
-                history[band].remove(0);
-        }
-
-//        delete [] fft;
-    }
-
-    int playBackDuration = BASS_ChannelBytes2Seconds(channel, BASS_ChannelGetLength(channel, BASS_POS_BYTE));
-    qDebug() << "!!!!!!!!!!!!!!!!BEAT COUNT " << beats;
-
-    if (beats != 0)
-        return beats / (playBackDuration / 60.0);
-    else return 0;
+        return BASS_FX_BPM_DecodeGet(cochan,
+            0,
+            playBackDuration,
+            MAKEWORD(20, 180),
+            BASS_FX_FREESOURCE, //BASS_FX_BPM_BKGRND // BASS_FX_BPM_MULT2
+            NULL, NULL
+        );
+    } else return 0;
 }
 
 float AudioPlayer::fastSqrt(float x) {
@@ -642,7 +594,6 @@ void AudioPlayer::stop() {
 void AudioPlayer::endOfPlayback() {
     setPosition(0);
     pause();
-//    stop();
     emit mediaStatusChanged(EndOfMedia);
 }
 

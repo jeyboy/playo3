@@ -14,15 +14,12 @@ QMap<qint64, QString> Cue::songs() {
     QMap<qint64, QString> res;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
-        for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++) {
-            for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
+        for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
+            for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
                 res.insert((*index) -> toMillis(), (*track) -> toStr());
-            }
-        }
 
-        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {
+        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
             res.insert((*index) -> toMillis(), (*file) -> path);
-        }
     }
 
     return res;
@@ -65,63 +62,62 @@ void Cue::proceedLine(QString & line) {
         while(level > -1) {
             switch(level) {
                 case 0: {
-                    if (token == "REM") {
+                    if (token == QStringLiteral("REM")) {
                         _infos.insert(parts[0], parts[1]); return;
-                    } else if (token == "TITLE") {
+                    } else if (token == QStringLiteral("TITLE")) {
                         title = parts[0]; return;
-                    } else if (token == "SONGWRITER") {
+                    } else if (token == QStringLiteral("SONGWRITER")) {
                         songwriter = parts[0]; return;
-                    } else if (token == "CATALOG") {
+                    } else if (token == QStringLiteral("CATALOG")) {
                         catalog = parts[0]; return;
-                    } else if (token == "CDTEXTFILE") {
+                    } else if (token == QStringLiteral("CDTEXTFILE")) {
                         text_file = parts[0]; return;
-                    } else if (token == "FILE") {
+                    } else if (token == QStringLiteral("FILE")) {
                         level++;
                         addFile(parts[0], parts[1]); return;
-                    } else if (token == "PERFORMER") {
+                    } else if (token == QStringLiteral("PERFORMER")) {
                         performer = parts[0]; return;
                     }
                 break;}
 
                 case 1: {
-                    if (token == "TRACK") {
+                    if (token == QStringLiteral("TRACK")) {
                         level++;
                         activeFile -> addTrack(parts[0], parts[1]); return;
-                    } else if (token == "INDEX") {
+                    } else if (token == QStringLiteral("INDEX")) {
                         activeFile -> addIndex(parts[0], parts[1]); return;
                     }
                 break;}
 
                 case 2: {
-                    if (token == "TITLE") {
+                    if (token == QStringLiteral("TITLE")) {
                         activeFile -> activeTrack -> title = parts[0]; return;
-                    } else if (token == "SONGWRITER") {
+                    } else if (token == QStringLiteral("SONGWRITER")) {
                         activeFile -> activeTrack -> songwriter = parts[0]; return;
-                    } else if (token == "ISRC") {
+                    } else if (token == QStringLiteral("ISRC")) {
                         activeFile -> activeTrack -> isrc = parts[0]; return;
-                    } else if (token == "PERFORMER") {
+                    } else if (token == QStringLiteral("PERFORMER")) {
                         activeFile -> activeTrack -> performer = parts[0]; return;
-                    } else if (token == "FLAGS") {
+                    } else if (token == QStringLiteral("FLAGS")) {
                         activeFile -> activeTrack -> parseFlags(parts); return;
-                    } else if (token == "INDEX") {
+                    } else if (token == QStringLiteral("INDEX")) {
                         activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
-                    } else if (token == "PREGAP") {
+                    } else if (token == QStringLiteral("PREGAP")) {
                         activeFile -> activeTrack -> setPregap(parts[0]); return;
-                    } else if (token == "POSTGAP") {
+                    } else if (token == QStringLiteral("POSTGAP")) {
                         activeFile -> activeTrack -> setPostgap(parts[0]); return;
                     }
                 break;}
 
-                default: qDebug() << "UNSUPPORTED PREDICATE" << parts;
+                default: qDebug() << QStringLiteral("UNSUPPORTED PREDICATE") << parts;
             }
 
             level--;
         }
     }
 
-    if (level == -1) {
-        qDebug() << "ERROR LEVEL" << line;
-    }
+    if (level == -1)
+        qDebug() << QStringLiteral("ERROR LEVEL") << line;
 }
 
 //REM (comment)

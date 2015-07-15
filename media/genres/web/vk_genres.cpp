@@ -213,25 +213,25 @@ QList<int> VkGenres::toStandartIds(int vkGenreId) {
 }
 
 void VkGenres::initDefault() {
-    genres.insert("Rock", 1);
-    genres.insert("Pop", 2);
-    genres.insert("Rap & Hip-Hop", 3);
-    genres.insert("Easy Listening", 4);
-    genres.insert("Dance & House", 5);
-    genres.insert("Instrumental", 6);
-    genres.insert("Metal", 7);
-    genres.insert("Dubstep", 8);
-    genres.insert("Jazz & Blues", 9);
-    genres.insert("Drum & Bass", 10);
-    genres.insert("Trance", 11);
-    genres.insert("Chanson", 12);
-    genres.insert("Ethnic", 13);
-    genres.insert("Acoustic & Vocal", 14);
-    genres.insert("Reggae", 15);
-    genres.insert("Classical", 16);
-    genres.insert("Indie Pop", 17);
-    genres.insert("Other", 18);
-    genres.insert("Speech", 19);
-    genres.insert("Alternative", 21);
-    genres.insert("Electropop & Disco", 22);
+    genres.insert(QStringLiteral("Rock"), 1);
+    genres.insert(QStringLiteral("Pop"), 2);
+    genres.insert(QStringLiteral("Rap & Hip-Hop"), 3);
+    genres.insert(QStringLiteral("Easy Listening"), 4);
+    genres.insert(QStringLiteral("Dance & House"), 5);
+    genres.insert(QStringLiteral("Instrumental"), 6);
+    genres.insert(QStringLiteral("Metal"), 7);
+    genres.insert(QStringLiteral("Dubstep"), 8);
+    genres.insert(QStringLiteral("Jazz & Blues"), 9);
+    genres.insert(QStringLiteral("Drum & Bass"), 10);
+    genres.insert(QStringLiteral("Trance"), 11);
+    genres.insert(QStringLiteral("Chanson"), 12);
+    genres.insert(QStringLiteral("Ethnic"), 13);
+    genres.insert(QStringLiteral("Acoustic & Vocal"), 14);
+    genres.insert(QStringLiteral("Reggae"), 15);
+    genres.insert(QStringLiteral("Classical"), 16);
+    genres.insert(QStringLiteral("Indie Pop"), 17);
+    genres.insert(QStringLiteral("Other"), 18);
+    genres.insert(QStringLiteral("Speech"), 19);
+    genres.insert(QStringLiteral("Alternative"), 21);
+    genres.insert(QStringLiteral("Electropop & Disco"), 22);
 }

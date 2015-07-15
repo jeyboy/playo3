@@ -141,7 +141,6 @@ private:
     QMap<int, QString> eqBands;
     QMap<int, int> eqBandsGain;
 
-    float calcBpm(int channel_id);
     float fastSqrt(float x);
 
     QVector<int> spectrumPoints;

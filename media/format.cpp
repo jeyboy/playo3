@@ -13,7 +13,7 @@ QString Format::toInfo(QString size, QString ext, int bitrate, int freq, int cha
 }
 
 QString Format::toUnits(long long val) {
-    QString unitList[] = {"B", "Kb", "Mb", "Gb", "Tb", "Pb"};
+    QString unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
     int size = sizeof(unitList) / sizeof(unitList[0]);
 
     int loop1 = 0;
