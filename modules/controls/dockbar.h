@@ -57,14 +57,8 @@ namespace Playo3 {
         void onSetProgress2(int percent);
 
         inline void toggleFloating() { setFloating(!isFloating()); }
-        inline void floatingChanged(bool floating) {
-            if (!floating)
-                setTabBarSettings();
-        }
-        inline void onDockLocationChanged(Qt::DockWidgetArea area) {
-            if (area != Qt::NoDockWidgetArea)
-                setTabBarSettings();
-        }
+        inline void floatingChanged(bool floating) { if (!floating) setTabBarSettings(); }
+        inline void onDockLocationChanged(Qt::DockWidgetArea area) { if (area != Qt::NoDockWidgetArea) setTabBarSettings(); }
         TabifyParams tabIndex() const;
 
     protected:

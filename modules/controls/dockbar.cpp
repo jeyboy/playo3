@@ -1,7 +1,6 @@
 #include "dockbar.h"
 
 #include <qdatetime.h>
-#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -137,7 +136,7 @@ void DockBar::setTabBarSettings() {
 }
 
 TabifyParams DockBar::tabIndex() const {
-    if (parent()) {
+    if (titleWidget && parent()) {
         QWidget * widget = parentWidget();
 
         if (widget) {

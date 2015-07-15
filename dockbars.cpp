@@ -213,7 +213,7 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
     DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
-    connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon()));
+    connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon(bool)));
   //    dock -> showFullScreen();
 
     if (content) {
