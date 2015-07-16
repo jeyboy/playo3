@@ -22,7 +22,7 @@ QStringList ItemFields::info() const {
     QVariant i = _info();
 
     if (!i.isValid())
-        list.append("Processing ...");
+        list.append(QStringLiteral("Processing ..."));
     else
         list.append(i.toString());
     list.append(duration().toString());

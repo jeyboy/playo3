@@ -50,22 +50,22 @@ QString IItem::fullPath() const {
     QString path_buff;
 
     if (path().isValid()) {
-        path_buff = path().toString() + '/' + title().toString();
+        path_buff = path().toString() % '/' % title().toString();
     } else {
         path_buff = title().toString();
 
         while(curr != 0 && curr -> title().isValid()) {
-            path_buff = curr -> title().toString() + '/' + path_buff;
+            path_buff = curr -> title().toString() % '/' % path_buff;
             curr = curr -> _parent;
         }
     }
 
 #ifdef Q_OS_LINUX
-    path_buff = '/' + path_buff;
+    path_buff = '/' % path_buff;
 #endif
 
     if (extension().isValid())
-        path_buff += '.' + extension().toString();
+        path_buff += '.' % extension().toString();
 
     return path_buff;
 }
@@ -109,29 +109,29 @@ int IItem::row() const {
 //}
 
 QString IItem::buildTreePath() const {
-    return _parent ? _parent -> buildTreePath() + " " + QString::number(row()) : "";
+    return _parent ? _parent -> buildTreePath() % QStringLiteral(" ") % QString::number(row()) : QString();
 }
 
 QString IItem::buildTreeStr() const {
     int rNum = row();
-    return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : "";
+    return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : QString();
 }
 
 QVariant IItem::data(int column) const {
     switch(column) {
         case IATTRS: {
             QVariantMap params;
-            params.insert("name", title());
-            params.insert("checkable", Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(QStringLiteral("name"), title());
+            params.insert(QStringLiteral("checkable"), Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
                 if (Settings::instance() -> isShowSystemIcons())
-                    params.insert("icon", IconProvider::fileIcon(fullPath(), extension().toString()));
-                params.insert("info", info());
-                params.insert("ext", extension());
-                params.insert("state", visualStates());
-                params.insert("played", is(played));
-                params.insert("not_exist", is(not_exist));
-                params.insert("type", itemType());
+                    params.insert(QStringLiteral("icon"), IconProvider::fileIcon(fullPath(), extension().toString()));
+                params.insert(QStringLiteral("info"), info());
+                params.insert(QStringLiteral("ext"), extension());
+                params.insert(QStringLiteral("state"), visualStates());
+                params.insert(QStringLiteral("played"), is(played));
+                params.insert(QStringLiteral("not_exist"), is(not_exist));
+                params.insert(QStringLiteral("type"), itemType());
             }
             return params;
         }

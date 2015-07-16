@@ -101,8 +101,8 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
                 data.url,
                 path,
                 downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
-                is_vk ? "vk" : QString(),
-                is_vk ? (data.attrs[JSON_TYPE_OWNER_ID].toString() + "_" + data.attrs[JSON_TYPE_UID].toString()) : QString() //WebItem::toUid
+                is_vk ? QStringLiteral("vk") : QString(),
+                is_vk ? (data.attrs[JSON_TYPE_OWNER_ID].toString() % QStringLiteral("_") % data.attrs[JSON_TYPE_UID].toString()) : QString() //WebItem::toUid
             );
         }
     } else if (event -> mimeData() -> hasUrls()) {
@@ -224,42 +224,42 @@ QString DownloadView::ioError(QFile * file) {
 }
 QString DownloadView::ioError(QNetworkReply * reply) {
     switch(reply -> error()) {
-        case QNetworkReply::NoError:                            { return "All ok"; }
-        case QNetworkReply::ConnectionRefusedError:             { return "Connection: refused"; }
-        case QNetworkReply::RemoteHostClosedError:              { return "Connection: host closed"; }
-        case QNetworkReply::HostNotFoundError:                  { return "Connection: host not found"; }
-        case QNetworkReply::TimeoutError:                       { return "Connection: timeout"; }
-        case QNetworkReply::OperationCanceledError:             { return "Connection: operation canceled"; }
-        case QNetworkReply::TemporaryNetworkFailureError:       { return "Connection: network is not accessible"; }
-        case QNetworkReply::NetworkSessionFailedError:          { return "Connection: network session is not accessible"; }
-        case QNetworkReply::BackgroundRequestNotAllowedError:   { return "Connection: background request not allowed"; }
-        case QNetworkReply::UnknownNetworkError:                { return "Connection: unknow error"; }
+        case QNetworkReply::NoError:                            { return QStringLiteral("All ok"); }
+        case QNetworkReply::ConnectionRefusedError:             { return QStringLiteral("Connection: refused"); }
+        case QNetworkReply::RemoteHostClosedError:              { return QStringLiteral("Connection: host closed"); }
+        case QNetworkReply::HostNotFoundError:                  { return QStringLiteral("Connection: host not found"); }
+        case QNetworkReply::TimeoutError:                       { return QStringLiteral("Connection: timeout"); }
+        case QNetworkReply::OperationCanceledError:             { return QStringLiteral("Connection: operation canceled"); }
+        case QNetworkReply::TemporaryNetworkFailureError:       { return QStringLiteral("Connection: network is not accessible"); }
+        case QNetworkReply::NetworkSessionFailedError:          { return QStringLiteral("Connection: network session is not accessible"); }
+        case QNetworkReply::BackgroundRequestNotAllowedError:   { return QStringLiteral("Connection: background request not allowed"); }
+        case QNetworkReply::UnknownNetworkError:                { return QStringLiteral("Connection: unknow error"); }
 
-        case QNetworkReply::ProxyConnectionRefusedError:        { return "Proxy: connection refused"; }
-        case QNetworkReply::ProxyConnectionClosedError:         { return "Proxy: connection closed"; }
-        case QNetworkReply::ProxyNotFoundError:                 { return "Proxy: not found"; }
-        case QNetworkReply::ProxyTimeoutError:                  { return "Proxy: timeout"; }
-        case QNetworkReply::ProxyAuthenticationRequiredError:   { return "Proxy: authentication required"; }
-        case QNetworkReply::UnknownProxyError:                  { return "Proxy: unknow error"; }
+        case QNetworkReply::ProxyConnectionRefusedError:        { return QStringLiteral("Proxy: connection refused"); }
+        case QNetworkReply::ProxyConnectionClosedError:         { return QStringLiteral("Proxy: connection closed"); }
+        case QNetworkReply::ProxyNotFoundError:                 { return QStringLiteral("Proxy: not found"); }
+        case QNetworkReply::ProxyTimeoutError:                  { return QStringLiteral("Proxy: timeout"); }
+        case QNetworkReply::ProxyAuthenticationRequiredError:   { return QStringLiteral("Proxy: authentication required"); }
+        case QNetworkReply::UnknownProxyError:                  { return QStringLiteral("Proxy: unknow error"); }
 
-        case QNetworkReply::ContentAccessDenied:                { return "Content: access denied"; }
-        case QNetworkReply::ContentOperationNotPermittedError:  { return "Content: operation not permitted"; }
-        case QNetworkReply::ContentNotFoundError:               { return "Content: not found"; }
-        case QNetworkReply::AuthenticationRequiredError:        { return "Content: authentication required"; }
-        case QNetworkReply::ContentReSendError:                 { return "Content: resend required"; } //TODO: maybe auto resend ?
-        case QNetworkReply::ContentConflictError:               { return "Content: state conflict"; } //TODO: maybe auto resend ?
-        case QNetworkReply::ContentGoneError:                   { return "Content: is gone"; }
-        case QNetworkReply::UnknownContentError:                { return "Content: unknow error"; }
+        case QNetworkReply::ContentAccessDenied:                { return QStringLiteral("Content: access denied"); }
+        case QNetworkReply::ContentOperationNotPermittedError:  { return QStringLiteral("Content: operation not permitted"); }
+        case QNetworkReply::ContentNotFoundError:               { return QStringLiteral("Content: not found"); }
+        case QNetworkReply::AuthenticationRequiredError:        { return QStringLiteral("Content: authentication required"); }
+        case QNetworkReply::ContentReSendError:                 { return QStringLiteral("Content: resend required"); } //TODO: maybe auto resend ?
+        case QNetworkReply::ContentConflictError:               { return QStringLiteral("Content: state conflict"); } //TODO: maybe auto resend ?
+        case QNetworkReply::ContentGoneError:                   { return QStringLiteral("Content: is gone"); }
+        case QNetworkReply::UnknownContentError:                { return QStringLiteral("Content: unknow error"); }
 
-        case QNetworkReply::ProtocolUnknownError:               { return "Protocol: unknow"; }
-        case QNetworkReply::ProtocolInvalidOperationError:      { return "Protocol: invalid operation"; }
-        case QNetworkReply::ProtocolFailure:                    { return "Protocol: failure"; }
+        case QNetworkReply::ProtocolUnknownError:               { return QStringLiteral("Protocol: unknow"); }
+        case QNetworkReply::ProtocolInvalidOperationError:      { return QStringLiteral("Protocol: invalid operation"); }
+        case QNetworkReply::ProtocolFailure:                    { return QStringLiteral("Protocol: failure"); }
 
-        case QNetworkReply::InternalServerError:                { return "Server: internal error"; }
-        case QNetworkReply::OperationNotImplementedError:       { return "Server: operation not implemented"; }
-        case QNetworkReply::ServiceUnavailableError:            { return "Server: service unavailable"; }
-        case QNetworkReply::UnknownServerError:                 { return "Server: unknow error"; }
-        default: return "Unknow error";
+        case QNetworkReply::InternalServerError:                { return QStringLiteral("Server: internal error"); }
+        case QNetworkReply::OperationNotImplementedError:       { return QStringLiteral("Server: operation not implemented"); }
+        case QNetworkReply::ServiceUnavailableError:            { return QStringLiteral("Server: service unavailable"); }
+        case QNetworkReply::UnknownServerError:                 { return QStringLiteral("Server: unknow error"); }
+        default: return QStringLiteral("Unknow error");
     }
 }
 
@@ -300,7 +300,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
                 bool invalid = true;
 
-                if (itm -> data(DOWNLOAD_TYPE).toString() == "vk") {
+                if (itm -> data(DOWNLOAD_TYPE).toString() == QStringLiteral("vk")) {
                     QUrl newFrom = QUrl(VkApi::instance() -> refreshAudioItemUrl(itm -> data(DOWNLOAD_ID).toString()));
                     if (newFrom != from) {
                         source = networkManager -> openUrl(newFrom);
@@ -309,7 +309,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 }
 
                 if (invalid) {
-                    emit updateAttr(ind, DOWNLOAD_ERROR, "unprocessable");
+                    emit updateAttr(ind, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
                     toFile.remove();
                     delete networkManager;
                     return ind;
@@ -388,7 +388,7 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
     QList<QAction *> actions;
     QAction * act;
 
-    actions.append((act = new QAction("Restart all blocked", this)));
+    actions.append((act = new QAction(QStringLiteral("Restart all blocked"), this)));
     connect(act, SIGNAL(triggered(bool)), this, SLOT(reproceedDownload()));
 
 //    if (isEditable()) {
@@ -529,7 +529,7 @@ void DownloadView::mouseMoveEvent(QMouseEvent * event) {
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);
             QMimeData * mimeData = model() -> mimeData(selectedIndexes());
-            drag -> setPixmap(QPixmap(":drag"));
+            drag -> setPixmap(QPixmap(QStringLiteral(":drag")));
             drag -> setMimeData(mimeData);
             drag -> exec(Qt::CopyAction, Qt::CopyAction);
         }

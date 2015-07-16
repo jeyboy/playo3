@@ -17,13 +17,13 @@ SoundcloudApi * SoundcloudApi::instance(QJsonObject obj) {
 }
 
 QString SoundcloudApi::authUrl() {
-    QUrl url("https://soundcloud.com/connect");
+    QUrl url(QStringLiteral("https://soundcloud.com/connect"));
 
     QUrlQuery query = genDefaultParams();
-    setParam(query, "response_type", "code");
-    setParam(query, "scope", "non-expiring");
-    setParam(query, "redirect_uri", "http://sos.com");
-    setParam(query, "display", "popup");
+    setParam(query, QStringLiteral("response_type"), QStringLiteral("code"));
+    setParam(query, QStringLiteral("scope"), QStringLiteral("non-expiring"));
+    setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
+    setParam(query, QStringLiteral("display"), QStringLiteral("popup"));
 
     url.setQuery(query);
     return url.toString();
@@ -51,8 +51,8 @@ void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
     WebManager * manager;
     bool isNew = WebManager::valid(manager);
 
-    object.insert("audio_list", groupAudio(uid, manager));
-    object.insert("playlists", groupPlaylists(uid, manager));
+    object.insert(QStringLiteral("audio_list"), groupAudio(uid, manager));
+    object.insert(QStringLiteral("playlists"), groupPlaylists(uid, manager));
 
     if (isNew) delete manager;
 }
@@ -61,13 +61,13 @@ void SoundcloudApi::getUserInfo(QString & uid, QJsonObject & object) {
     WebManager * manager;
     bool isNew = WebManager::valid(manager);
 
-    object.insert("audio_list", userAudio(uid, manager));
-    object.insert("playlists", userPlaylists(uid, manager));
+    object.insert(QStringLiteral("audio_list"), userAudio(uid, manager));
+    object.insert(QStringLiteral("playlists"), userPlaylists(uid, manager));
     QThread::msleep(REQUEST_DELAY);
-    object.insert("followings", userFollowings(uid, manager));
-    object.insert("followers", userFollowers(uid, manager));
+    object.insert(QStringLiteral("followings"), userFollowings(uid, manager));
+    object.insert(QStringLiteral("followers"), userFollowers(uid, manager));
     QThread::msleep(REQUEST_DELAY);
-    object.insert("groups", userGroups(uid, manager));
+    object.insert(QStringLiteral("groups"), userGroups(uid, manager));
 
     if (isNew) delete manager;
 }
@@ -90,25 +90,25 @@ QJsonObject SoundcloudApi::objectInfo(QString & uid) {
 void SoundcloudApi::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.query());
 
-    if (query.hasQueryItem("error")) {
-        error = query.queryItemValue("error_description");
-        emit responseReady("reject");
-    } else if (query.hasQueryItem("code")) {
+    if (query.hasQueryItem(QStringLiteral("error"))) {
+        error = query.queryItemValue(QStringLiteral("error_description"));
+        emit responseReady(QStringLiteral("reject"));
+    } else if (query.hasQueryItem(QStringLiteral("code"))) {
         QNetworkRequest request(authTokenUrl());
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QJsonObject doc = WebManager::stock() -> postToJson(request, authTokenUrlParams(query.queryItemValue("code")));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
+        QJsonObject doc = WebManager::stock() -> postToJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
 
-        if (doc.contains("access_token")) {
-            QString newToken = doc.value("access_token").toString();
+        if (doc.contains(QStringLiteral("access_token"))) {
+            QString newToken = doc.value(QStringLiteral("access_token")).toString();
 
             QNetworkRequest request(confirmAuthUrl(newToken));
             doc = WebManager::stock() -> getToJson(request);
 
-            setParams(newToken, QString::number(doc.value("id").toInt()), "");
+            setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), "");
             emit authorized();
-            emit responseReady("accept");
+            emit responseReady(QStringLiteral("accept"));
         }
-        else emit responseReady("reject");
+        else emit responseReady(QStringLiteral("reject"));
     }
     else emit responseReady("");
 }

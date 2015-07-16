@@ -13,8 +13,8 @@ DownloadModelItem::DownloadModelItem(QJsonObject * data, DownloadModelItem * par
      parentItem = parent;
 
      if (data) {
-         if (data -> contains("childs")) {
-             QJsonArray ar = data -> take("childs").toArray();
+         if (data -> contains(QStringLiteral("childs"))) {
+             QJsonArray ar = data -> take(QStringLiteral("childs")).toArray();
              QJsonObject iterObj;
 
              for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
@@ -42,7 +42,7 @@ QJsonObject DownloadModelItem::toJson() {
         for(int i = 0; i < childItems.length(); i++)
             ar.append(childItems.at(i) -> toJson());
 
-        root["childs"] = ar;
+        root[QStringLiteral("childs")] = ar;
     }
 
     return root;

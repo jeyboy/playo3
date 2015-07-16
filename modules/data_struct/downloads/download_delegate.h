@@ -5,6 +5,7 @@
 #include <qpainter>
 #include <qprogressbar.h>
 #include <qstyleoption.h>
+#include <qstringbuilder.h>
 
 #include "download_model_item.h"
 

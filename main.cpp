@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
 //    QCoreApplication::setOrganizationDomain("bigbug.sos");
 //    QCoreApplication::setApplicationName("Playo3");
 
-    SingleApplication a(argc, argv, "bigbugplayo");
+    SingleApplication a(argc, argv, QStringLiteral("bigbugplayo"));
     a.setApplicationVersion(APP_VERSION);
     a.setStyleSheet(Stylesheets::appStyles());
 
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 //        return 0; // uncomment later
     }
 
-    Logger::instance(QCoreApplication::instance()) -> initiate("log.txt", new QPlainTextEdit());
+    Logger::instance(QCoreApplication::instance()) -> initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
 
     Playo w;
 

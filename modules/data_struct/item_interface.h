@@ -5,6 +5,7 @@
 #include <qlist.h>
 #include <qdesktopservices.h>
 #include <qurl.h>
+#include <qstringbuilder.h>
 
 #include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"

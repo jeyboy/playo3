@@ -24,7 +24,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
         QJsonArray audios;
         QJsonObject post;
         QString title;
-        FolderItem * folder, * rootFolder = rootItem -> createFolder("!!!WALL!!!");
+        FolderItem * folder, * rootFolder = rootItem -> createFolder(QStringLiteral("!!!WALL!!!"));
         int index = rootItem -> childRow(rootFolder);
 
         beginInsertRows(QModelIndex(), index, index);
@@ -33,10 +33,10 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 
         for(; it != posts.end(); it++) {
             post = (*it).toObject();
-            audios = post.value("audios").toArray();
+            audios = post.value(QStringLiteral("audios")).toArray();
 
-            title = post.value("title").toString();
-            title = QDateTime::fromTime_t(post.value("date").toInt()).toString() + (title.isEmpty() ? "" : " : ") + title;
+            title = post.value(QStringLiteral("title")).toString();
+            title = QDateTime::fromTime_t(post.value(QStringLiteral("date")).toInt()).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
 
             folder = rootFolder -> createFolder(title);
             proceedVkList(audios, folder);
@@ -51,8 +51,8 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QJsonArray albums = hash.value("albums").toArray();
-    QJsonArray audios = hash.value("audio_list").toObject().value("items").toArray();
+    QJsonArray albums = hash.value(QStringLiteral("albums")).toArray();
+    QJsonArray audios = hash.value(QStringLiteral("audio_list")).toObject().value(QStringLiteral("items")).toArray();
     int itemsAmount = 0, albums_count = VkApi::extractCount(albums);
 
 //    beginResetModel();
@@ -68,11 +68,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
                 for(int pos = 0; it != part_arr.end(); it++, pos++) {
                     album = (*it).toObject();
 
-                    QJsonArray albumItems = album.value("items").toArray();
+                    QJsonArray albumItems = album.value(QStringLiteral("items")).toArray();
                     if (albumItems.size() > 0) {
                         folder = rootItem -> createFolder<VkFolder>(
-                            album.value("folder_id").toString(),
-                            album.value("title").toString(),
+                            album.value(QStringLiteral("folder_id")).toString(),
+                            album.value(QStringLiteral("title")).toString(),
                             pos
                         );
 
@@ -95,30 +95,30 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
     {
         QJsonObject group;
-        QJsonArray groups = hash.value("groups").toArray();
+        QJsonArray groups = hash.value(QStringLiteral("groups")).toArray();
         QJsonArray::Iterator it = groups.begin();
 
         for(; it != groups.end(); it++) {
             group = (*it).toObject();
 
             VkApi::instance() -> addGroup(
-                QString::number(group.value("id").toInt()),
-                group.value("title").toString()
+                QString::number(group.value(QStringLiteral("id")).toInt()),
+                group.value(QStringLiteral("title")).toString()
             );
         }
     }
 /////////////////////////////////////////////////////////////////////
     {
         QJsonObject frend;
-        QJsonArray friends = hash.value("friends").toArray();
+        QJsonArray friends = hash.value(QStringLiteral("friends")).toArray();
         QJsonArray::Iterator it = friends.begin();
 
         for(; it != friends.end(); it++) {
             frend = (*it).toObject();
 
             VkApi::instance() -> addFriend(
-                QString::number(frend.value("id").toInt()),
-                frend.value("title").toString()
+                QString::number(frend.value(QStringLiteral("id")).toInt()),
+                frend.value(QStringLiteral("title")).toString()
             );
         }
     }

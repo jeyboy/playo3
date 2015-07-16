@@ -46,11 +46,11 @@ void WebApi::clearData() {
 //}
 
 void WebApi::fromJson(QJsonObject & hash) {
-    QJsonObject ar = hash.value("friends").toObject();
+    QJsonObject ar = hash.value(QStringLiteral("friends")).toObject();
     foreach(QString key, ar.keys())
         addFriend(key, ar.value(key).toString());
 
-    ar = hash.value("groups").toObject();
+    ar = hash.value(QStringLiteral("groups")).toObject();
     foreach(QString key, ar.keys())
         addGroup(key, ar.value(key).toString());
 }
@@ -59,13 +59,13 @@ void WebApi::toJson(QJsonObject & root) {
     foreach(QString key, friends.keys())
         friendsJson.insert(key, QJsonValue(friends.value(key)));
 
-    root.insert("friends", friendsJson);
+    root.insert(QStringLiteral("friends"), friendsJson);
 
     QJsonObject groupsJson;
     foreach(QString key, groups.keys())
         groupsJson.insert(key, QJsonValue(groups.value(key)));
 
-    root.insert("groups", groupsJson);
+    root.insert(QStringLiteral("groups"), groupsJson);
 }
 
 void WebApi::showingCaptcha() {

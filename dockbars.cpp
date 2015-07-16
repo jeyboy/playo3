@@ -28,28 +28,28 @@ void Dockbars::load(QJsonArray & bars) {
 
         for(;it != bars.end(); it++) {
             obj = (*it).toObject();
-            barName = obj.value("title").toString();
+            barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
-            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value("set").toObject()), obj.value("cont").toObject());
-            curr_bar -> setObjectName(obj.value("name").toString(curr_bar -> objectName()));
+            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
+            curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
 
-            if (obj.value("stick").toBool())
+            if (obj.value(QStringLiteral("stick")).toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
 
-            QString link = obj.value("link").toString();
+            QString link = obj.value(QStringLiteral("link")).toString();
             if (!link.isEmpty())
                 linkedTabs.insert(link, (DockBar *)curr_bar);
 
-            ((DockBar *)curr_bar) -> useVerticalTitles(obj.value("vertical").toBool());
+            ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
 
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
-            if (obj.value("played").toBool()) {
+            if (obj.value(QStringLiteral("played")).toBool()) {
                 IView * v = view(qobject_cast<DockBar *>(curr_bar));
                 if (v) {
-                    QString path = obj.value("played_item").toString();
+                    QString path = obj.value(QStringLiteral("played_item")).toString();
                     if (!path.isEmpty())
-                        v -> execPath(path, true, obj.value("played_time").toInt());
+                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt());
                 }
             }
         }
@@ -88,31 +88,31 @@ void Dockbars::save(DataStore * settings) {
             }
 
             curr_bar = QJsonObject();
-            curr_bar.insert("title", (*it) -> windowTitle());
-            curr_bar.insert("name", (*it) -> objectName());
-            curr_bar.insert("stick", (*it) -> isSticked());
-            curr_bar.insert("vertical", (*it) -> isUsedVerticalTitles());
+            curr_bar.insert(QStringLiteral("title"), (*it) -> windowTitle());
+            curr_bar.insert(QStringLiteral("name"), (*it) -> objectName());
+            curr_bar.insert(QStringLiteral("stick"), (*it) -> isSticked());
+            curr_bar.insert(QStringLiteral("vertical"), (*it) -> isUsedVerticalTitles());
 
             QString path = linkedTabs.key((*it), QString());
             if (!path.isEmpty())
-                curr_bar.insert("link", path);
+                curr_bar.insert(QStringLiteral("link"), path);
 
             if ((*it) -> windowTitle() == LOGS_TAB) {
                 //do nothing
             } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
-                curr_bar.insert("cont", ((DownloadView *)(*it) -> mainWidget()) -> toJson());
+                curr_bar.insert(QStringLiteral("cont"), ((DownloadView *)(*it) -> mainWidget()) -> toJson());
             } else {
                 if ((*it) == played) {
-                    curr_bar.insert("played", true);
+                    curr_bar.insert(QStringLiteral("played"), true);
                     if (Player::instance() -> playedIndex().isValid()) {
-                        curr_bar.insert("played_item", Player::instance() -> playedIndex().data(ITREEPATH).toString());
-                        curr_bar.insert("played_time", Player::instance() -> getPosition());
+                        curr_bar.insert(QStringLiteral("played_item"), Player::instance() -> playedIndex().data(ITREEPATH).toString());
+                        curr_bar.insert(QStringLiteral("played_time"), Player::instance() -> getPosition());
                     }
                 }
 
                 if (v) {
-                    curr_bar.insert("set", v -> settings().toJson());
-                    curr_bar.insert("cont", v -> toJson());
+                    curr_bar.insert(QStringLiteral("set"), v -> settings().toJson());
+                    curr_bar.insert(QStringLiteral("cont"), v -> toJson());
                 }
             }
 
@@ -268,7 +268,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
         if (!view -> isEditable()) {
-            QMessageBox::warning(this, "Settings", "This view type is not editable ...");
+            QMessageBox::warning(this, QStringLiteral("Settings"), QStringLiteral("This view type is not editable ..."));
             return;
         }
 
@@ -310,7 +310,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
     TabifyParams tabData = played -> tabIndex();
 
     if (tabData.index != -1) {
-        tabData.tabbar -> setTabIcon(tabData.index, QIcon(":played_tab"));
+        tabData.tabbar -> setTabIcon(tabData.index, QIcon(QStringLiteral(":played_tab")));
         tabData.tabbar -> setIconSize(QSize(14, 14));
     }
 

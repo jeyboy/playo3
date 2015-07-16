@@ -33,17 +33,17 @@ QJsonObject VkApi::toJson() {
 void VkApi::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.fragment());
 
-    if (query.hasQueryItem("error")) {
-        error = query.queryItemValue("error_description");
-        emit responseReady("reject");
-    } else if (query.hasQueryItem("access_token")) {
+    if (query.hasQueryItem(QStringLiteral("error"))) {
+        error = query.queryItemValue(QStringLiteral("error_description"));
+        emit responseReady(QStringLiteral("reject"));
+    } else if (query.hasQueryItem(QStringLiteral("access_token"))) {
         setParams(
-            query.queryItemValue("access_token"),
-            query.queryItemValue("user_id"),
-            query.queryItemValue("expires_in")
+            query.queryItemValue(QStringLiteral("access_token")),
+            query.queryItemValue(QStringLiteral("user_id")),
+            query.queryItemValue(QStringLiteral("expires_in"))
         );
         emit authorized();
-        emit responseReady("accept");
+        emit responseReady(QStringLiteral("accept"));
     }
     else emit responseReady("");
 }
@@ -53,9 +53,9 @@ void VkApi::proceedAuthResponse(const QUrl & url) {
 ///////////////////////////////////////////////////////////
 
 bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
-    QJsonObject stat_obj = response.value("error").toObject();
-    message = stat_obj.value("error_msg").toString();
-    code = stat_obj.value("error_code").toInt();
+    QJsonObject stat_obj = response.value(QStringLiteral("error")).toObject();
+    message = stat_obj.value(QStringLiteral("error_msg")).toString();
+    code = stat_obj.value(QStringLiteral("error_code")).toInt();
 
     if (code == 14)
         return captchaProcessing(response, url);
@@ -64,13 +64,13 @@ bool VkApi::extractStatus(QUrl & url, QJsonObject & response, int & code, QStrin
 
 QUrl VkApi::buildUrl(QUrl tUrl, int offset, int limit) {
     QString urlStr = tUrl.toString();
-    urlStr = urlStr.replace("_1_", QString::number(offset)).replace("_2_", QString::number(limit));
+    urlStr = urlStr.replace(QStringLiteral("_1_"), QString::number(offset)).replace(QStringLiteral("_2_"), QString::number(limit));
     return QUrl(urlStr);
 }
 
 bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
-    QJsonObject stat_obj = response.value("error").toObject();
-    QUrl image_url(stat_obj.value("captcha_img").toString());
+    QJsonObject stat_obj = response.value(QStringLiteral("error")).toObject();
+    QUrl image_url(stat_obj.value(QStringLiteral("captcha_img")).toString());
 
     WebManager * manager = 0;
     bool isNew = WebManager::valid(manager);
@@ -83,11 +83,11 @@ bool VkApi::captchaProcessing(QJsonObject & response, QUrl & url) {
         return false;
 
     QUrlQuery query(url.query());
-    query.removeQueryItem("captcha_sid");
-    query.removeQueryItem("captcha_key");
+    query.removeQueryItem(QStringLiteral("captcha_sid"));
+    query.removeQueryItem(QStringLiteral("captcha_key"));
 
-    query.addQueryItem("captcha_sid", stat_obj.value("captcha_sid").toString());
-    query.addQueryItem("captcha_key", captchaText);
+    query.addQueryItem(QStringLiteral("captcha_sid"), stat_obj.value(QStringLiteral("captcha_sid")).toString());
+    query.addQueryItem(QStringLiteral("captcha_key"), captchaText);
 
     url.setQuery(query);
 

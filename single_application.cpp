@@ -1,7 +1,7 @@
 #include "single_application.h"
 #include <typeinfo>
 
-SingleApplication::SingleApplication(int &argc, char *argv[], const QString uniqueKey) : QApplication(argc, argv) {
+SingleApplication::SingleApplication(int & argc, char * argv[], const QString uniqueKey) : QApplication(argc, argv) {
     // fix for linux crashed app memory clear
     {
         QSharedMemory shmem(uniqueKey);
@@ -20,12 +20,12 @@ SingleApplication::SingleApplication(int &argc, char *argv[], const QString uniq
             return;
         }
         sharedMemory.lock();
-        char *to = (char*)sharedMemory.data();
-        const char *from = byteArray.data();
+        char * to = (char *)sharedMemory.data();
+        const char * from = byteArray.data();
         memcpy(to, from, qMin(sharedMemory.size(), byteArray.size()));
         sharedMemory.unlock();
         // start checking for messages of other instances.
-        QTimer *timer = new QTimer(this);
+        QTimer * timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(checkForMessage()));
         timer -> start(1000);
     }
@@ -35,7 +35,7 @@ SingleApplication::SingleApplication(int &argc, char *argv[], const QString uniq
 
 void SingleApplication::checkForMessage() {
     sharedMemory.lock();
-    QByteArray byteArray = QByteArray((char*)sharedMemory.constData(), sharedMemory.size());
+    QByteArray byteArray = QByteArray((char *)sharedMemory.constData(), sharedMemory.size());
     sharedMemory.unlock();
 
     if (byteArray.left(1) == "0")
@@ -59,7 +59,7 @@ bool SingleApplication::isRunning() {
     return _isRunning;
 }
 
-bool SingleApplication::sendMessage(const QString &message) {
+bool SingleApplication::sendMessage(const QString & message) {
     if (!_isRunning)
         return false;
     QByteArray byteArray("1");
@@ -73,10 +73,10 @@ bool SingleApplication::sendMessage(const QString &message) {
     return true;
 }
 
-bool SingleApplication::notify(QObject* receiver, QEvent* event) {
+bool SingleApplication::notify(QObject * receiver, QEvent * event) {
     try {
         return QApplication::notify(receiver, event);
-    } catch (std::exception &e) {
+    } catch (std::exception & e) {
         qFatal("Error %s sending event %s to object %s (%s)",
             e.what(), typeid(*event).name(), qPrintable(receiver -> objectName()),
             typeid(*receiver).name());

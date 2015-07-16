@@ -32,11 +32,11 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         QString style;
 
         if(option.state & QStyle::State_Selected) {
-            style = "QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; background-color: #999999; }";
-            style += "QProgressBar::chunk { background-color: #87CEFA; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }";
+            style = QStringLiteral("QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; background-color: #999999; }")
+                % QStringLiteral("QProgressBar::chunk { background-color: #87CEFA; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }");
         } else {
-            style = "QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; }";
-            style += "QProgressBar::chunk { background-color: #05B8CC; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }";
+            style = QStringLiteral("QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; }")
+                % QStringLiteral("QProgressBar::chunk { background-color: #05B8CC; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }");
         }
 
         renderer.setTextVisible(true);

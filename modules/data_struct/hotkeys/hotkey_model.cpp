@@ -2,7 +2,7 @@
 
 HotkeyModel::HotkeyModel(QList<HotkeyModelItem * > * toplevelchilds, QObject * parent) : QAbstractItemModel(parent) {
     QVector<QVariant> rootData;
-    rootData << "" << "";
+    rootData << QString() << QString();
     rootItem = new HotkeyModelItem(rootData);
     rootItem -> appendChilds(toplevelchilds);
 }

@@ -21,9 +21,7 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 //                    return 1;
 //                }
 
-        default: {
-            qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-        }
+        default: qDebug() << "ITEM TYPE NOT SUPPORTED YET";
     }
 
     return 0;
@@ -168,7 +166,7 @@ void FolderItem::backPropagateItemsCountInBranch(int offset) {
 
 QVariant FolderItem::data(int column) const {
     switch(column) {
-        case Qt::ToolTipRole:  return title().toString() + "(" + QString::number(inBranchCount) + " items)";
+        case Qt::ToolTipRole:  return QVariant(title().toString() % QStringLiteral("(") % QString::number(inBranchCount) % QStringLiteral(" items)"));
         case IEXECCOUNTS:      return inBranchCount;
         default:               return IItem::data(column);
     }
