@@ -5,6 +5,7 @@
 #include <qpainter.h>
 #include <qevent.h>
 #include <qdatetime.h>
+#include <qstringbuilder.h>
 
 #include "modules/controls/spinner.h"
 

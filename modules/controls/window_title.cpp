@@ -11,7 +11,7 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
     dropButton = isCompact ? new DropButton(button_height, this) : 0;
 
     buttonMargins = buttonsMargins;
-    setObjectName("WindowTitle" + QString::number(QDateTime::currentMSecsSinceEpoch()));
+    setObjectName(QStringLiteral("WindowTitle") % QString::number(QDateTime::currentMSecsSinceEpoch()));
     setContentsMargins(hMargins);
     setMinimumHeight(height);
 
@@ -21,7 +21,7 @@ WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins ma
     l -> addWidget(spinner, 0, 0);
     spinner -> hide();
 
-    titleLabel = new RotateLabel("", this);
+    titleLabel = new RotateLabel(QString(), this);
 
     if (buttonsMargins.top() != 0 || buttonsMargins.bottom() != 0)
         titleLabel -> setMinimumHeight(height);
@@ -80,13 +80,13 @@ void WindowTitle::addCustomButton(QString userText, const QPixmap & icon, const 
     }
 }
 void WindowTitle::addMiniButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Minimize", QPixmap(":/controls/mini_button"), QPixmap(":/controls/mini_button_hover"), receiver, slot ? slot : SLOT(showMinimized()));
+    addCustomButton(QStringLiteral("Minimize"), QPixmap(QStringLiteral(":/controls/mini_button")), QPixmap(QStringLiteral(":/controls/mini_button_hover")), receiver, slot ? slot : SLOT(showMinimized()));
 }
 void WindowTitle::addMaxiButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Maximize", QPixmap(":/controls/maxi_button"), QPixmap(":/controls/maxi_button_hover"), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
+    addCustomButton(QStringLiteral("Maximize"), QPixmap(QStringLiteral(":/controls/maxi_button")), QPixmap(QStringLiteral(":/controls/maxi_button_hover")), receiver ? receiver : this, slot ? slot : SLOT(invertWindowState()));
 }
 void WindowTitle::addCloseButton(const QObject * receiver, const char * slot) {
-    addCustomButton("Close", QPixmap(":/controls/close_button"), QPixmap(":/controls/close_button_hover"), receiver, slot ? slot : SLOT(close()));
+    addCustomButton(QStringLiteral("Close"), QPixmap(QStringLiteral(":/controls/close_button")), QPixmap(QStringLiteral(":/controls/close_button_hover")), receiver, slot ? slot : SLOT(close()));
 }
 
 void WindowTitle::setText(const QString & text) {
@@ -108,10 +108,10 @@ void WindowTitle::setVertical(bool isVertical) {
     ((TitleLayout *)layout()) -> setVertical(isVertical);
     titleLabel -> setVertical(isVertical);
     if (isVertical) {
-        setStyleSheet("#" + objectName() + " { border-right: 2px solid white; margin: " + QString::number(leftPadding) + "px 0 " + QString::number(rightPadding - 1) + "px 0; }");
+        setStyleSheet(QStringLiteral("#") % objectName() % QStringLiteral(" { border-right: 2px solid white; margin: ") % QString::number(leftPadding) % QStringLiteral("px 0 ") % QString::number(rightPadding - 1) % QStringLiteral("px 0; }"));
         setContentsMargins(5, 0, 0, 0);
     } else {
-        setStyleSheet("#" + objectName() + " { border-bottom: 2px solid white; margin: 0 " + QString::number(rightPadding) + "px 0 " + QString::number(leftPadding) + "px; }");
+        setStyleSheet(QStringLiteral("#") % objectName() % QStringLiteral(" { border-bottom: 2px solid white; margin: 0 ") % QString::number(rightPadding) % QStringLiteral("px 0 ") % QString::number(leftPadding) % QStringLiteral("px; }"));
         setContentsMargins(hMargins);
     }
 }

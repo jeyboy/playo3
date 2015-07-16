@@ -26,7 +26,7 @@ void ToolbarButton::checkState() {
 }
 
 void ToolbarButton::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> hasFormat("text/uri-list"))
+    if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list")))
         event -> accept();
     else event -> ignore();
 }

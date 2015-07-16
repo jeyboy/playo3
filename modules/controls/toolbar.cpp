@@ -1,13 +1,12 @@
 #include "toolbar.h"
-#include <QLabel>
-#include <QAction>
-#include <qdebug.h>
+#include <qlabel.h>
+#include <qaction.h>
 
 using namespace Playo3;
 
 ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, parent) {
     setAcceptDrops(true);
-    setObjectName("tool_" + title);
+    setObjectName(QStringLiteral("tool_") % title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
 //    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
 
@@ -15,7 +14,7 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     QLabel * titleLabel = new QLabel(this);
-    titleLabel -> setStyleSheet("color: white;");
+    titleLabel -> setStyleSheet(QStringLiteral("color: white;"));
     QFont f = titleLabel -> font();
     f.setBold(true);
     f.setPixelSize(10);
@@ -23,7 +22,7 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     QString row = titleLabel -> fontMetrics().elidedText(title, Qt::ElideRight, 30, Qt::TextWrapAnywhere);
     if (row.size() < title.size()) {
         row.chop(1);
-        row = row + title.at(row.size()) + "\n" + title.mid(row.length() + 1, row.length()) + ((title.size() > (row.length() * 2) + 1) ? ".." : "");
+        row = row + title.at(row.size()) % QStringLiteral("\n") % title.mid(row.length() + 1, row.length()) + ((title.size() > (row.length() * 2) + 1) ? QStringLiteral("..") : QStringLiteral(""));
     }
 
     titleLabel -> setText(row);
@@ -31,14 +30,14 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     titleLabel -> setMaximumSize(30, 30);
     titleLabel -> setAlignment(Qt::AlignCenter);
     titleLabel -> setContentsMargins(0,0,0,0);
-    addWidget(titleLabel) -> setObjectName("*Title");
+    addWidget(titleLabel) -> setObjectName(QStringLiteral("*Title"));
 }
 
 ToolBar::~ToolBar() {
 }
 
 void ToolBar::dragEnterEvent(QDragEnterEvent * event) {
-   if (event -> mimeData() -> hasFormat("text/uri-list"))
+   if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list")))
        event -> accept();
    else
        event -> ignore();

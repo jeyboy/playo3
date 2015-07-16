@@ -6,8 +6,8 @@ using namespace Playo3;
 DropButton::DropButton(int button_height, QWidget * parent) :
     HoverableLabel(
         "",
-        QPixmap(":/controls/drop_off").scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
-        QPixmap(":/controls/drop_off").scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+        QPixmap(QStringLiteral(":/controls/drop_off")).scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
+        QPixmap(QStringLiteral(":/controls/drop_off")).scaled(button_height, button_height, Qt::KeepAspectRatio, Qt::SmoothTransformation),
         parent
     ) {
 

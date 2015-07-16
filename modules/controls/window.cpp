@@ -6,7 +6,7 @@ using namespace Playo3;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),
-    halfBorderWidth(Stylesheets::borderWidth / 2), background(new QPixmap(":main")),
+    halfBorderWidth(Stylesheets::borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
      resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
      childInAction(false), skipChildAction(false)
 {
@@ -31,15 +31,15 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         Stylesheets::borderWidth,
         false, false, false
     );
-    titleWidget -> addCustomButton("Most top", QPixmap(":/controls/top_off_button"), QPixmap(":/controls/top_on_button"), this, SLOT(toggleWindowMostTop()));
+    titleWidget -> addCustomButton(QStringLiteral("Most top"), QPixmap(QStringLiteral(":/controls/top_off_button")), QPixmap(QStringLiteral(":/controls/top_on_button")), this, SLOT(toggleWindowMostTop()));
     titleWidget -> addMiniButton();
     titleWidget -> addMaxiButton();
     titleWidget -> addCloseButton();
 
     if (parent == 0) {
         QString tooltip(
-            "<p><b>" + QApplication::applicationName() + "<b></p>"
-            "<p><b>Version:<b> " + QApplication::applicationVersion() + "</p>"
+            "<p><b>" % QApplication::applicationName() % "<b></p>"
+            "<p><b>Version:<b> " % QApplication::applicationVersion() % "</p>"
             "<p><b>Developer:<b> Jenua Boiko</p>"
             "<p><b>Site:<b> https://github.com/jeyboy/playo3</p>"
         );

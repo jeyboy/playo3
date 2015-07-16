@@ -4,8 +4,8 @@
 
 using namespace Playo3;
 
-Spectrum::Spectrum(QWidget * parent) : QToolBar("Spectrum", parent), last_pairs_count(0), type(split_bars) {
-    setObjectName("tool_Spectrum");
+Spectrum::Spectrum(QWidget * parent) : QToolBar(QStringLiteral("Spectrum"), parent), last_pairs_count(0), type(split_bars) {
+    setObjectName(QStringLiteral("tool_Spectrum"));
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -28,19 +28,19 @@ Spectrum::~Spectrum() {}
 
 void Spectrum::generateContextMenu(QMenu * parent) {
     QAction * act;
-    QMenu * spectrMenu = parent -> addMenu("Spectrum");
+    QMenu * spectrMenu = parent -> addMenu(QStringLiteral("Spectrum"));
     spectrMenu -> addAction(toggleViewAction());
     spectrMenu -> addSeparator();
 
-    act = spectrMenu -> addAction("Bars view", this, SLOT(setBarsView()));
+    act = spectrMenu -> addAction(QStringLiteral("Bars view"), this, SLOT(setBarsView()));
     act -> setCheckable(true);
     act -> setChecked(type == Playo3::bars);
 
-    act = spectrMenu -> addAction("Split channel bars view", this, SLOT(setSplitBarsView()));
+    act = spectrMenu -> addAction(QStringLiteral("Split channel bars view"), this, SLOT(setSplitBarsView()));
     act -> setCheckable(true);
     act -> setChecked(type == Playo3::split_bars);
 
-    act = spectrMenu -> addAction("Waves view", this, SLOT(setWavesView()));
+    act = spectrMenu -> addAction(QStringLiteral("Waves view"), this, SLOT(setWavesView()));
     act -> setCheckable(true);
     act -> setChecked(type == Playo3::waves);
 }

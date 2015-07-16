@@ -5,6 +5,7 @@
 #include <qmimedata.h>
 #include <qevent.h>
 #include <qfileinfo.h>
+#include <qstringbuilder.h>
 
 namespace Playo3 {
     class ToolBar : public QToolBar {

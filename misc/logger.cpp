@@ -61,9 +61,8 @@ void Logger::toEditor(QString initiator, QString value) {
         bool atEnd = m_editor -> verticalScrollBar() -> maximum() - m_editor -> verticalScrollBar() -> value() < 10;
         m_editor -> appendHtml(text);
 
-        if (atEnd) {
+        if (atEnd)
             m_editor -> ensureCursorVisible();
-        }
     }
 }
 

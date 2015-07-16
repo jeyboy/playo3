@@ -1,8 +1,7 @@
 #include "accordion.h"
-#include <qdebug.h>
 
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
-    topButton = new AccordionButton("*", this);
+    topButton = new AccordionButton(QStringLiteral("*"), this);
     topButton -> setFixedSize(16, 16);
     topButton -> hide();
     connect(topButton, SIGNAL(clicked()), this, SLOT(collapseRequired()));

@@ -3,7 +3,7 @@
 using namespace Playo3;
 
 Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) {
-    setObjectName("tool_equalizer");
+    setObjectName(QStringLiteral("tool_equalizer"));
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -38,12 +38,12 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) 
         l -> setColumnStretch(num, 1);
     }
 
-    enabled = new QCheckBox("On", this);
+    enabled = new QCheckBox(QStringLiteral("On"), this);
     connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
     l -> addWidget(enabled, 0, 0, 1, 3, Qt::AlignCenter);
 
 
-    QPushButton * reset = new QPushButton("reset", this);
+    QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
     connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
     l -> addWidget(reset, 0, 3, 1, 3, Qt::AlignCenter);
 
@@ -51,11 +51,11 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) 
     connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
     l -> addWidget(presetsList, 0, 6, 1, 7, Qt::AlignCenter);
 
-    QPushButton * save = new QPushButton("save", this);
+    QPushButton * save = new QPushButton(QStringLiteral("save"), this);
     connect(save, SIGNAL(clicked()), this, SLOT(createPreset()));
     l -> addWidget(save, 0, 13, 1, 3, Qt::AlignCenter);
 
-    QPushButton * remove = new QPushButton("remove", this);
+    QPushButton * remove = new QPushButton(QStringLiteral("remove"), this);
     connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
     l -> addWidget(remove, 0, 16, 1, 3, Qt::AlignCenter);
 }
@@ -77,14 +77,14 @@ QJsonObject Equalizer::settings() {
         presetsNode.insert(preset.key(), curr_preset);
     }
 
-    res.insert("presets", presetsNode);
-    res.insert("active", presetsList -> currentText());
-    res.insert("enabled", enabled -> isChecked());
+    res.insert(QStringLiteral("presets"), presetsNode);
+    res.insert(QStringLiteral("active"), presetsList -> currentText());
+    res.insert(QStringLiteral("enabled"), enabled -> isChecked());
 
     return res;
 }
 void Equalizer::setSettings(QJsonObject settings) {
-    QJsonObject presetsNode = settings.value("presets").toObject();
+    QJsonObject presetsNode = settings.value(QStringLiteral("presets")).toObject();
 
     foreach(QString key, presetsNode.keys()) {
         QJsonObject presetVals = presetsNode.value(key).toObject();
@@ -101,12 +101,12 @@ void Equalizer::setSettings(QJsonObject settings) {
 
     presetsList -> insertItems(0, presets.keys());
 
-    presetsList -> setCurrentText(settings.value("active").toString());
-    enabled -> setChecked(settings.value("enabled").toBool());
+    presetsList -> setCurrentText(settings.value(QStringLiteral("active")).toString());
+    enabled -> setChecked(settings.value(QStringLiteral("enabled")).toBool());
 }
 
 void Equalizer::createPreset() {
-    ToolbarDialog dialog("New preset name", this);
+    ToolbarDialog dialog(QStringLiteral("New preset name"), this);
 
     if (dialog.exec() == QDialog::Accepted) {
         QString name = dialog.getName();
