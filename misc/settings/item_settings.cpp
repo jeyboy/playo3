@@ -1,62 +1,62 @@
 #include "item_settings.h"
 
 void ItemSettings::fromJson(QJsonObject & settings) {
-    _useGradient = settings.value("use_gradient").toBool(true);
-    _itemHeight = settings.value("item_height").toInt(18);
+    _useGradient = settings.value(SETTINGS_USE_GRADIENT_KEY).toBool(true);
+    _itemHeight = settings.value(SETTINGS_ITEM_HEIGHT_KEY).toInt(18);
 
-    QVariant colorVar = settings.value("default_color").toVariant();
+    QVariant colorVar = settings.value(SETTINGS_DEFAULT_ITEM_COLOR_KEY).toVariant();
     _defaultItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(98, 173, 248);
 
-    colorVar = settings.value("listened_color").toVariant();
+    colorVar = settings.value(SETTINGS_LISTENED_ITEM_COLOR_KEY).toVariant();
     _listenedItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(240, 128, 128);
 
-    colorVar = settings.value("liked_color").toVariant();
+    colorVar = settings.value(SETTINGS_LIKED_ITEM_COLOR_KEY).toVariant();
     _likedItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(232, 196, 0);
 
-    colorVar = settings.value("played_color").toVariant();
+    colorVar = settings.value(SETTINGS_PLAYED_ITEM_COLOR_KEY).toVariant();
     _playedItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(144, 238, 144);
 
-    colorVar = settings.value("folder_color").toVariant();
+    colorVar = settings.value(SETTINGS_FOLDER_ITEM_COLOR_KEY).toVariant();
     _folderItemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(180, 180, 180);
 
-    colorVar = settings.value("item_color").toVariant();
+    colorVar = settings.value(SETTINGS_ITEM_COLOR_KEY).toVariant();
     _itemColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(220, 220, 220);
 
-    __title.fontName = settings.value("item_font_name").toString("Arial");
-    __title.fontSize = settings.value("item_font_size").toInt(9);
-    colorVar = settings.value("item_text_color").toVariant();
+    __title.fontName = settings.value(SETTINGS_ITEM_FONT_NAME_KEY).toString(QStringLiteral("Arial Black"));
+    __title.fontSize = settings.value(SETTINGS_ITEM_FONT_SIZE_KEY).toInt(8);
+    colorVar = settings.value(SETTINGS_ITEM_TEXT_COLOR_KEY).toVariant();
     __title.textColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(0, 0, 0);
-    colorVar = settings.value("selected_item_text_color").toVariant();
+    colorVar = settings.value(SETTINGS_SELECTED_ITEM_TEXT_COLOR).toVariant();
     __title.selectedTextColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(255, 255, 255);
 
-    __info.fontName = settings.value("item_info_font_name").toString("Arial");
-    __info.fontSize = settings.value("item_info_font_size").toInt(8);
-    colorVar = settings.value("item_info_text_color").toVariant();
+    __info.fontName = settings.value(SETTINGS_ITEM_INFO_FONT_NAME_KEY).toString(QStringLiteral("Arial Black"));
+    __info.fontSize = settings.value(SETTINGS_ITEM_INFO_FONT_SIZE_KEY).toInt(7);
+    colorVar = settings.value(SETTINGS_ITEM_INFO_TEXT_COLOR_KEY).toVariant();
     __info.textColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(0, 0, 0);
-    colorVar = settings.value("selected_item_info_text_color").toVariant();
+    colorVar = settings.value(SETTINGS_SELECTED_ITEM_INFO_TEXT_COLOR_KEY).toVariant();
     __info.selectedTextColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(255, 255, 255);
 }
 
 void ItemSettings::toJson(QJsonObject & settings) {
-    settings.insert("use_gradient", QJsonValue::fromVariant(_useGradient));
-    settings.insert("item_height", QJsonValue::fromVariant(_itemHeight));
+    settings.insert(SETTINGS_USE_GRADIENT_KEY, QJsonValue::fromVariant(_useGradient));
+    settings.insert(SETTINGS_ITEM_HEIGHT_KEY, QJsonValue::fromVariant(_itemHeight));
 
-    settings.insert("default_color", QJsonValue::fromVariant(_defaultItemColor));
-    settings.insert("listened_color", QJsonValue::fromVariant(_listenedItemColor));
-    settings.insert("liked_color", QJsonValue::fromVariant(_likedItemColor));
-    settings.insert("played_color", QJsonValue::fromVariant(_playedItemColor));
-    settings.insert("folder_color", QJsonValue::fromVariant(_folderItemColor));
-    settings.insert("item_color", QJsonValue::fromVariant(_itemColor));
+    settings.insert(SETTINGS_DEFAULT_ITEM_COLOR_KEY, QJsonValue::fromVariant(_defaultItemColor));
+    settings.insert(SETTINGS_LISTENED_ITEM_COLOR_KEY, QJsonValue::fromVariant(_listenedItemColor));
+    settings.insert(SETTINGS_LIKED_ITEM_COLOR_KEY, QJsonValue::fromVariant(_likedItemColor));
+    settings.insert(SETTINGS_PLAYED_ITEM_COLOR_KEY, QJsonValue::fromVariant(_playedItemColor));
+    settings.insert(SETTINGS_FOLDER_ITEM_COLOR_KEY, QJsonValue::fromVariant(_folderItemColor));
+    settings.insert(SETTINGS_ITEM_COLOR_KEY, QJsonValue::fromVariant(_itemColor));
 
-    settings.insert("item_font_name", QJsonValue::fromVariant(__title.fontName));
-    settings.insert("item_font_size", QJsonValue::fromVariant(__title.fontSize));
-    settings.insert("item_text_color", QJsonValue::fromVariant(__title.textColor));
-    settings.insert("selected_item_text_color", QJsonValue::fromVariant(__title.selectedTextColor));
+    settings.insert(SETTINGS_ITEM_FONT_NAME_KEY, QJsonValue::fromVariant(__title.fontName));
+    settings.insert(SETTINGS_ITEM_FONT_SIZE_KEY, QJsonValue::fromVariant(__title.fontSize));
+    settings.insert(SETTINGS_ITEM_TEXT_COLOR_KEY, QJsonValue::fromVariant(__title.textColor));
+    settings.insert(SETTINGS_SELECTED_ITEM_TEXT_COLOR, QJsonValue::fromVariant(__title.selectedTextColor));
 
-    settings.insert("item_info_font_name", QJsonValue::fromVariant(__info.fontName));
-    settings.insert("item_info_font_size", QJsonValue::fromVariant(__info.fontSize));
-    settings.insert("item_info_text_color", QJsonValue::fromVariant(__info.textColor));
-    settings.insert("selected_item_info_text_color", QJsonValue::fromVariant(__info.selectedTextColor));
+    settings.insert(SETTINGS_ITEM_INFO_FONT_NAME_KEY, QJsonValue::fromVariant(__info.fontName));
+    settings.insert(SETTINGS_ITEM_INFO_FONT_SIZE_KEY, QJsonValue::fromVariant(__info.fontSize));
+    settings.insert(SETTINGS_ITEM_INFO_TEXT_COLOR_KEY, QJsonValue::fromVariant(__info.textColor));
+    settings.insert(SETTINGS_SELECTED_ITEM_INFO_TEXT_COLOR_KEY, QJsonValue::fromVariant(__info.selectedTextColor));
 }
 
 QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {

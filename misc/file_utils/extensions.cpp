@@ -1,5 +1,4 @@
 #include "extensions.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -12,20 +11,20 @@ Extensions * Extensions::instance() {
 }
 
 Extensions::Extensions() {
-    ext = new DataStore("extensions.json");
+    ext = new DataStore(QStringLiteral("extensions.json"));
 
     if (ext -> state) {
-        activeFilter = ext -> read("active").toString("all");
-        QJsonObject obj = ext -> read("filters").toObject();
+        activeFilter = ext -> read(QStringLiteral("active")).toString(QStringLiteral("all"));
+        QJsonObject obj = ext -> read(QStringLiteral("filters")).toObject();
 
         foreach (QString key, obj.keys())
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());
 
     } else {
         QStringList commonfiltersList;
-        commonfiltersList << "*";
-        filters.insert("all", commonfiltersList);
-        activeFilter = "all";
+        commonfiltersList << QStringLiteral("*");
+        filters.insert(QStringLiteral("all"), commonfiltersList);
+        activeFilter = QStringLiteral("all");
 
         initMusicExtensions();
     }
@@ -34,88 +33,88 @@ Extensions::Extensions() {
 }
 
 void Extensions::initSignatures() {
-    ext_signatures.insert("6d6f6f76", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("6d6f6f76", 4);
+    ext_signatures.insert(QStringLiteral("6d6f6f76"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("6d6f6f76"), 4);
 
-    ext_signatures.insert("66726565", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("66726565", 4);
+    ext_signatures.insert(QStringLiteral("66726565"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("66726565"), 4);
 
-    ext_signatures.insert("6d646174", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("6d646174", 4);
+    ext_signatures.insert(QStringLiteral("6d646174"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("6d646174"), 4);
 
-    ext_signatures.insert("77696465", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("77696465", 4);
+    ext_signatures.insert(QStringLiteral("77696465"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("77696465"), 4);
 
-    ext_signatures.insert("706e6f74", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("706e6f74", 4);
+    ext_signatures.insert(QStringLiteral("706e6f74"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("706e6f74"), 4);
 
-    ext_signatures.insert("736b6970", "mov");                               // QuickTime movie // offset: 4 bytes
-    ext_signature_offset.insert("736b6970", 4);
+    ext_signatures.insert(QStringLiteral("736b6970"), QStringLiteral("mov"));                               // QuickTime movie // offset: 4 bytes
+    ext_signature_offset.insert(QStringLiteral("736b6970"), 4);
 
-    ext_signatures.insert("0000001466747970", "3gp");                       // 3GPP multimedia files
-    ext_signatures.insert("0000002066747970", "3gp");                       // 3GPP2 multimedia files
-    ext_signatures.insert("0000001866747970", "3gp5");                      // MPEG-4 video files
-    ext_signatures.insert("464f524d00", "aiff");                            // Audio Interchange File
-    ext_signatures.insert("3026b2758e66cf11", "asf" /*"wma" "wmv"*/);       // Windows Media Audio|Video File
-    ext_signatures.insert("a6d900aa0062ce6c", "asf" /*"wma" "wmv"*/);       // Windows Media Audio|Video File
-    ext_signatures.insert("5343486c", "ast");                               // Underground Audio
-    ext_signatures.insert("52494646", "dat" /*"4xm" "avi" "wav"*/);         // Video CD MPEG movie
-    ext_signatures.insert("574d4d50", "dat");                               // Walkman MP3 file
-    ext_signatures.insert("664c6143", "flac");                              // Free Lossless Audio Codec file
-    ext_signatures.insert("4d4143", "ape");                                 // Monkeys Lossless Audio Codec file
-    ext_signatures.insert("464c56", "flv");                                 // Flash video file
-    ext_signatures.insert("445644", "ifo");                                 // DVD info file
-    ext_signatures.insert("2e524543", "ivr");                               // RealPlayer video file (V11+)
-    ext_signatures.insert("00000020667479704d3441", "m4a");                 // Apple audio and video files
-    ext_signatures.insert("4d546864", "midi");                              // MIDI sound file
-    ext_signatures.insert("1a45dfa393428288", "mkv");                       // Matroska stream file
-    ext_signatures.insert("494433", "mp3");                                 // MP3 audio file
-    ext_signatures.insert("fffb", "mp3");                                   // MP3 audio file
-    ext_signatures.insert("000001ba", "mpg" /*"vob"*/);                     // DVD video file
-    ext_signatures.insert("000001b3", "mpg");                               // MPEG video file
-    ext_signatures.insert("4f67675300020000", "ogg" /*"oga" "ogv" "ogx"*/); // Ogg Vorbis Codec compressed file
-    ext_signatures.insert("2e524d4600000012", "ra");                        // RealAudio file
-    ext_signatures.insert("2e7261fd00", "ra");                              // RealAudio streaming media
-    ext_signatures.insert("2e524d46", "rm" /*rmvb*/);                       // RealMedia streaming media
+    ext_signatures.insert(QStringLiteral("0000001466747970"), QStringLiteral("3gp"));                       // 3GPP multimedia files
+    ext_signatures.insert(QStringLiteral("0000002066747970"), QStringLiteral("3gp"));                       // 3GPP2 multimedia files
+    ext_signatures.insert(QStringLiteral("0000001866747970"), QStringLiteral("3gp5"));                      // MPEG-4 video files
+    ext_signatures.insert(QStringLiteral("464f524d00"), QStringLiteral("aiff"));                            // Audio Interchange File
+    ext_signatures.insert(QStringLiteral("3026b2758e66cf11"), QStringLiteral("asf" /*"wma" "wmv"*/));       // Windows Media Audio|Video File
+    ext_signatures.insert(QStringLiteral("a6d900aa0062ce6c"), QStringLiteral("asf" /*"wma" "wmv"*/));       // Windows Media Audio|Video File
+    ext_signatures.insert(QStringLiteral("5343486c"), QStringLiteral("ast"));                               // Underground Audio
+    ext_signatures.insert(QStringLiteral("52494646"), QStringLiteral("dat" /*"4xm" "avi" "wav"*/));         // Video CD MPEG movie
+    ext_signatures.insert(QStringLiteral("574d4d50"), QStringLiteral("dat"));                               // Walkman MP3 file
+    ext_signatures.insert(QStringLiteral("664c6143"), QStringLiteral("flac"));                              // Free Lossless Audio Codec file
+    ext_signatures.insert(QStringLiteral("4d4143"), QStringLiteral("ape"));                                 // Monkeys Lossless Audio Codec file
+    ext_signatures.insert(QStringLiteral("464c56"), QStringLiteral("flv"));                                 // Flash video file
+    ext_signatures.insert(QStringLiteral("445644"), QStringLiteral("ifo"));                                 // DVD info file
+    ext_signatures.insert(QStringLiteral("2e524543"), QStringLiteral("ivr"));                               // RealPlayer video file (V11+)
+    ext_signatures.insert(QStringLiteral("00000020667479704d3441"), QStringLiteral("m4a"));                 // Apple audio and video files
+    ext_signatures.insert(QStringLiteral("4d546864"), QStringLiteral("midi"));                              // MIDI sound file
+    ext_signatures.insert(QStringLiteral("1a45dfa393428288"), QStringLiteral("mkv"));                       // Matroska stream file
+    ext_signatures.insert(QStringLiteral("494433"), QStringLiteral("mp3"));                                 // MP3 audio file
+    ext_signatures.insert(QStringLiteral("fffb"), QStringLiteral("mp3"));                                   // MP3 audio file
+    ext_signatures.insert(QStringLiteral("000001ba"), QStringLiteral("mpg" /*"vob"*/));                     // DVD video file
+    ext_signatures.insert(QStringLiteral("000001b3"), QStringLiteral("mpg"));                               // MPEG video file
+    ext_signatures.insert(QStringLiteral("4f67675300020000"), QStringLiteral("ogg" /*"oga" "ogv" "ogx"*/)); // Ogg Vorbis Codec compressed file
+    ext_signatures.insert(QStringLiteral("2e524d4600000012"), QStringLiteral("ra"));                        // RealAudio file
+    ext_signatures.insert(QStringLiteral("2e7261fd00"), QStringLiteral("ra"));                              // RealAudio streaming media
+    ext_signatures.insert(QStringLiteral("2e524d46"), QStringLiteral("rm" /*rmvb*/));                       // RealMedia streaming media
 
-    ext_signatures.insert("646e732e", "au");                                // Audacity audio file
+    ext_signatures.insert(QStringLiteral("646e732e"), QStringLiteral("au"));                                // Audacity audio file
 
-    ext_signatures.insert("47494638", "gif");                               // GIF file
-    ext_signatures.insert("424d", "bmp" /*"dib"*/);                         // Bitmap image
-    ext_signatures.insert("b168de3a", "dcx");                               // PCX bitmap
-    ext_signatures.insert("7801730d626260", "dmg");                         // MacOS X image file
-    ext_signatures.insert("ffd8ffe0", "jfif" /*"jpg" "jpe" "jpeg"*/);       // JPEG IMAGE
-    ext_signatures.insert("0ced", "mp");                                    // Monochrome Picture TIFF bitmap
-    ext_signatures.insert("89504e470d0a1a0a", "png");                       // PNG image
-    ext_signatures.insert("492049", "tif");                                 // TIFF file
-    ext_signatures.insert("49492a00", "tif");                               // TIFF file
-    ext_signatures.insert("4d4d002a", "tif");                               // TIFF file
-    ext_signatures.insert("4d4d002b", "tif");                               // TIFF file
+    ext_signatures.insert(QStringLiteral("47494638"), QStringLiteral("gif"));                               // GIF file
+    ext_signatures.insert(QStringLiteral("424d"), QStringLiteral("bmp" /*"dib"*/));                         // Bitmap image
+    ext_signatures.insert(QStringLiteral("b168de3a"), QStringLiteral("dcx"));                               // PCX bitmap
+    ext_signatures.insert(QStringLiteral("7801730d626260"), QStringLiteral("dmg"));                         // MacOS X image file
+    ext_signatures.insert(QStringLiteral("ffd8ffe0"), QStringLiteral("jfif" /*"jpg" "jpe" "jpeg"*/));       // JPEG IMAGE
+    ext_signatures.insert(QStringLiteral("0ced"), QStringLiteral("mp"));                                    // Monochrome Picture TIFF bitmap
+    ext_signatures.insert(QStringLiteral("89504e470d0a1a0a"), QStringLiteral("png"));                       // PNG image
+    ext_signatures.insert(QStringLiteral("492049"), QStringLiteral("tif"));                                 // TIFF file
+    ext_signatures.insert(QStringLiteral("49492a00"), QStringLiteral("tif"));                               // TIFF file
+    ext_signatures.insert(QStringLiteral("4d4d002a"), QStringLiteral("tif"));                               // TIFF file
+    ext_signatures.insert(QStringLiteral("4d4d002b"), QStringLiteral("tif"));                               // TIFF file
 
-    ext_signatures.insert("25504446", "pdf" /*"fdf"*/);                     // PDF file
-    ext_signatures.insert("dba52d00", "doc");                               // Word 2.0 file
-    ext_signatures.insert("504b030414000600", "docx" /*"pptx" "xlsx"*/);    // MS Office 2007 documents
-    ext_signatures.insert("d0cf11e0a1b11ae1", "ppt" /*"pps"*/);             // Microsoft Office document
-    ext_signatures.insert("4d534346", "ppz");                               // Powerpoint Packaged Presentation
+    ext_signatures.insert(QStringLiteral("25504446"), QStringLiteral("pdf" /*"fdf"*/));                     // PDF file
+    ext_signatures.insert(QStringLiteral("dba52d00"), QStringLiteral("doc"));                               // Word 2.0 file
+    ext_signatures.insert(QStringLiteral("504b030414000600"), QStringLiteral("docx" /*"pptx" "xlsx"*/));    // MS Office 2007 documents
+    ext_signatures.insert(QStringLiteral("d0cf11e0a1b11ae1"), QStringLiteral("ppt" /*"pps"*/));             // Microsoft Office document
+    ext_signatures.insert(QStringLiteral("4d534346"), QStringLiteral("ppz"));                               // Powerpoint Packaged Presentation
 
-    ext_signatures.insert("377a bc af 27 1c", "7z");                        // 7-Zip compressed file
-    ext_signatures.insert("4172 43 01", "arc");                             // FreeArc compressed file
-    ext_signatures.insert("1a02", "arc");                                   // LH archive (old vers.|type 1)
-    ext_signatures.insert("1a03", "arc");                                   // LH archive (old vers.|type 2)
-    ext_signatures.insert("1a04", "arc");                                   // LH archive (old vers.|type 3)
-    ext_signatures.insert("1a08", "arc");                                   // LH archive (old vers.|type 4)
-    ext_signatures.insert("1a09", "arc");                                   // LH archive (old vers.|type 5)
-    ext_signatures.insert("60ea", "arj");                                   // ARJ Compressed archive file
-    ext_signatures.insert("425a68", "bz2");                                 // bzip2 compressed archive
-    ext_signatures.insert("1f8b08", "gz");                                  // GZIP archive file
-    ext_signatures.insert("5f27a889", "jar");                               // Jar archive
-    ext_signatures.insert("4a4152435300", "jar");                           // JARCS compressed archive
-    ext_signatures.insert("526172211a07", "rar");                           // RAR archive
-    ext_signatures.insert("504b0506", "zip");                               // PKZIP archive
-    ext_signatures.insert("504b0708", "zip");                               // PKZIP archive
-    ext_signatures.insert("5a4f4f20", "zoo");                               // ZOO compressed archive
+    ext_signatures.insert(QStringLiteral("377a bc af 27 1c"), QStringLiteral("7z"));                        // 7-Zip compressed file
+    ext_signatures.insert(QStringLiteral("4172 43 01"), QStringLiteral("arc"));                             // FreeArc compressed file
+    ext_signatures.insert(QStringLiteral("1a02"), QStringLiteral("arc"));                                   // LH archive (old vers.|type 1)
+    ext_signatures.insert(QStringLiteral("1a03"), QStringLiteral("arc"));                                   // LH archive (old vers.|type 2)
+    ext_signatures.insert(QStringLiteral("1a04"), QStringLiteral("arc"));                                   // LH archive (old vers.|type 3)
+    ext_signatures.insert(QStringLiteral("1a08"), QStringLiteral("arc"));                                   // LH archive (old vers.|type 4)
+    ext_signatures.insert(QStringLiteral("1a09"), QStringLiteral("arc"));                                   // LH archive (old vers.|type 5)
+    ext_signatures.insert(QStringLiteral("60ea"), QStringLiteral("arj"));                                   // ARJ Compressed archive file
+    ext_signatures.insert(QStringLiteral("425a68"), QStringLiteral("bz2"));                                 // bzip2 compressed archive
+    ext_signatures.insert(QStringLiteral("1f8b08"), QStringLiteral("gz"));                                  // GZIP archive file
+    ext_signatures.insert(QStringLiteral("5f27a889"), QStringLiteral("jar"));                               // Jar archive
+    ext_signatures.insert(QStringLiteral("4a4152435300"), QStringLiteral("jar"));                           // JARCS compressed archive
+    ext_signatures.insert(QStringLiteral("526172211a07"), QStringLiteral("rar"));                           // RAR archive
+    ext_signatures.insert(QStringLiteral("504b0506"), QStringLiteral("zip"));                               // PKZIP archive
+    ext_signatures.insert(QStringLiteral("504b0708"), QStringLiteral("zip"));                               // PKZIP archive
+    ext_signatures.insert(QStringLiteral("5a4f4f20"), QStringLiteral("zoo"));                               // ZOO compressed archive
 
-    ext_signatures.insert("4d5a", "exe");                                   // Executable
+    ext_signatures.insert(QStringLiteral("4d5a"), QStringLiteral("exe"));                                   // Executable
 }
 
 QString Extensions::folderName(QFileInfo & info) {
@@ -163,7 +162,7 @@ QFileInfoList Extensions::folderDirectories(QFileInfo file) {
 }
 
 bool Extensions::respondToExtension(QString ext) const {
-    return activeFilterList().contains("*." + ext) || activeFilterList().contains("*.*") || activeFilterList().contains("*");
+    return activeFilterList().contains(QStringLiteral("*.") % ext) || activeFilterList().contains(QStringLiteral("*.*")) || activeFilterList().contains(QStringLiteral("*"));
 }
 
 QStringList Extensions::activeFilterList() const {
@@ -193,41 +192,41 @@ void Extensions::removePreset(QString name) {
 
 void Extensions::initMusicExtensions() { // TODO: not complete list
     QStringList mList;
-    mList << "*.aif";   // Audio Interchange File
-    mList << "*.aifc";  // Audio Interchange File
-    mList << "*.aiff";  // Audio Interchange File
-    mList << "*.asf";   // Windows Media formats
-    mList << "*.adt";   // Windows Media formats
-    mList << "*.adts";  // Windows Media formats
-    mList << "*.cda";   // CD Audio track
-    mList << "*.flac";  // Audio files encoded by Flac - free lossless audio codec
-    mList << "*.fla";   // Audio files encoded by Flac - free lossless audio codec
-    mList << "*.mp2";   // Compressed audio and music file
-    mList << "*.mpa";   // Compressed audio and music file
-    mList << "*.mp3";   // Compressed audio and music file, mp3 songs or ringtones
-    mList << "*.amr";   // Adaptive Multi-Rate compressed audio file
-    mList << "*.wv";    // WavPack lossless compressed audio file
-    mList << "*.ram";   // Real Audio metafile
-    mList << "*.m4a";   // MPEG-4 compressed audio file
-    mList << "*.wav";   // WAVe PCM Sound, standard Windows sound format
-    mList << "*.ad4";   // 4D Systems audio file
-    mList << "*.thd";   // Dolby TrueHD audio file
-    mList << "*.wma";   // Windows Media Audio
-    mList << "*.aac";   // Advanced audio coding file
-    mList << "*.m4r";   // Apple iPhone ringtone format
-    mList << "*.mogg";  // Multitrack digital audio format
-    mList << "*.spx";   // Speex encoded audio
-    mList << "*.ogg";   // Ogg Vorbis audio file
-    mList << "*.au";    // Unix audio sound file format
-    mList << "*.pcm";   // PCM audio file
-    mList << "*.m4p";   // Apple iTunes Music Store audio file
-    mList << "*.mka";   // Matroska audio file
-    mList << "*.snd";   // Sound file
-    mList << "*.swa";   // Adobe Shockwave music file
-    mList << "*.aob";   // DVD Audio Object file
-    mList << "*.rms";   // RealMedia Secure Media file format
-    mList << "*.m4b";   // MPEG-4 Audio Layer audio book file
-    mList << "*.acm";   // ACM compressed sound file
+    mList << QStringLiteral("*.aif");   // Audio Interchange File
+    mList << QStringLiteral("*.aifc");  // Audio Interchange File
+    mList << QStringLiteral("*.aiff");  // Audio Interchange File
+    mList << QStringLiteral("*.asf");   // Windows Media formats
+    mList << QStringLiteral("*.adt");   // Windows Media formats
+    mList << QStringLiteral("*.adts");  // Windows Media formats
+    mList << QStringLiteral("*.cda");   // CD Audio track
+    mList << QStringLiteral("*.flac");  // Audio files encoded by Flac - free lossless audio codec
+    mList << QStringLiteral("*.fla");   // Audio files encoded by Flac - free lossless audio codec
+    mList << QStringLiteral("*.mp2");   // Compressed audio and music file
+    mList << QStringLiteral("*.mpa");   // Compressed audio and music file
+    mList << QStringLiteral("*.mp3");   // Compressed audio and music file, mp3 songs or ringtones
+    mList << QStringLiteral("*.amr");   // Adaptive Multi-Rate compressed audio file
+    mList << QStringLiteral("*.wv");    // WavPack lossless compressed audio file
+    mList << QStringLiteral("*.ram");   // Real Audio metafile
+    mList << QStringLiteral("*.m4a");   // MPEG-4 compressed audio file
+    mList << QStringLiteral("*.wav");   // WAVe PCM Sound, standard Windows sound format
+    mList << QStringLiteral("*.ad4");   // 4D Systems audio file
+    mList << QStringLiteral("*.thd");   // Dolby TrueHD audio file
+    mList << QStringLiteral("*.wma");   // Windows Media Audio
+    mList << QStringLiteral("*.aac");   // Advanced audio coding file
+    mList << QStringLiteral("*.m4r");   // Apple iPhone ringtone format
+    mList << QStringLiteral("*.mogg");  // Multitrack digital audio format
+    mList << QStringLiteral("*.spx");   // Speex encoded audio
+    mList << QStringLiteral("*.ogg");   // Ogg Vorbis audio file
+    mList << QStringLiteral("*.au");    // Unix audio sound file format
+    mList << QStringLiteral("*.pcm");   // PCM audio file
+    mList << QStringLiteral("*.m4p");   // Apple iTunes Music Store audio file
+    mList << QStringLiteral("*.mka");   // Matroska audio file
+    mList << QStringLiteral("*.snd");   // Sound file
+    mList << QStringLiteral("*.swa");   // Adobe Shockwave music file
+    mList << QStringLiteral("*.aob");   // DVD Audio Object file
+    mList << QStringLiteral("*.rms");   // RealMedia Secure Media file format
+    mList << QStringLiteral("*.m4b");   // MPEG-4 Audio Layer audio book file
+    mList << QStringLiteral("*.acm");   // ACM compressed sound file
 
-    filters.insert("music", mList);
+    filters.insert(QStringLiteral("music"), mList);
 }

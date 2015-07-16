@@ -1,10 +1,20 @@
 #ifndef GLOBAL_SETTINGS
 #define GLOBAL_SETTINGS
 
+#include <qstringbuilder.h>
 #include <qapplication.h>
 #include <qjsonobject.h>
 
 #include "modules/data_struct/container_types.h"
+
+#define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
+#define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")
+#define SETTINGS_DOWNLOAD_PATH_KEY QStringLiteral("download_path")
+#define SETTINGS_AUTORUNNED_KEY QStringLiteral("autorunned")
+#define SETTINGS_TAB_POSITION_KEY QStringLiteral("tab_position")
+#define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
+#define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
+#define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
 
 class GlobalSettings {
 public:

@@ -35,11 +35,11 @@ QIcon IconProvider::fileIcon(const QString filename, QString extension) {
 }
 
 QIcon IconProvider::remoteIcon() {
-    return QIcon(":remote");
+    return QIcon(QStringLiteral(":remote"));
 }
 
 QIcon IconProvider::missedIcon() {
-    return QIcon(":/ext/_audio");
+    return QIcon(QStringLiteral(":/ext/_audio"));
 }
 
 QIcon IconProvider::dirIcon() {

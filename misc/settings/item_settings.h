@@ -6,6 +6,23 @@
 #include <qbrush.h>
 #include <qjsonobject.h>
 
+#define SETTINGS_USE_GRADIENT_KEY QStringLiteral("use_gradient")
+#define SETTINGS_ITEM_HEIGHT_KEY QStringLiteral("item_height")
+#define SETTINGS_DEFAULT_ITEM_COLOR_KEY QStringLiteral("default_color")
+#define SETTINGS_LISTENED_ITEM_COLOR_KEY QStringLiteral("listened_color")
+#define SETTINGS_LIKED_ITEM_COLOR_KEY QStringLiteral("liked_color")
+#define SETTINGS_PLAYED_ITEM_COLOR_KEY QStringLiteral("played_color")
+#define SETTINGS_FOLDER_ITEM_COLOR_KEY QStringLiteral("folder_color")
+#define SETTINGS_ITEM_COLOR_KEY QStringLiteral("item_color")
+#define SETTINGS_ITEM_FONT_NAME_KEY QStringLiteral("item_font_name")
+#define SETTINGS_ITEM_FONT_SIZE_KEY QStringLiteral("item_font_size")
+#define SETTINGS_ITEM_TEXT_COLOR_KEY QStringLiteral("item_text_color")
+#define SETTINGS_SELECTED_ITEM_TEXT_COLOR QStringLiteral("selected_item_text_color")
+#define SETTINGS_ITEM_INFO_FONT_NAME_KEY QStringLiteral("item_info_font_name")
+#define SETTINGS_ITEM_INFO_FONT_SIZE_KEY QStringLiteral("item_info_font_size")
+#define SETTINGS_ITEM_INFO_TEXT_COLOR_KEY QStringLiteral("item_info_text_color")
+#define SETTINGS_SELECTED_ITEM_INFO_TEXT_COLOR_KEY QStringLiteral("selected_item_info_text_color")
+
 struct ItemTextAttrs {
     QString fontName;
     int fontSize;

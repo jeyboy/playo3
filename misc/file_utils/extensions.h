@@ -2,7 +2,7 @@
 #define EXTENSIONS_H
 
 #include <qdir.h>
-#include <qstring.h>
+#include <qstringbuilder.h>
 
 #include "data_store.h"
 #include "dialogs/extension_dialog.h"

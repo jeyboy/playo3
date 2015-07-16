@@ -1,24 +1,24 @@
 #include "hotkey_settings.h"
 
 HotkeySettings::HotkeySettings() {
-    _humanizeHotkeyText.insert(HOTKEY_NEXT, "Activate next item");
-    _humanizeHotkeyText.insert(HOTKEY_NEXT_AND_DELETE, "Remove current and activate next");
-    _humanizeHotkeyText.insert(HOTKEY_PREV, "Activate prev item");
-    _humanizeHotkeyText.insert(HOTKEY_PLAY, "Play/pause");
-    _humanizeHotkeyText.insert(HOTKEY_STOP, "Stop");
-    _humanizeHotkeyText.insert(HOTKEY_OPEN_SETTINGS, "Active tab settings");
-    _humanizeHotkeyText.insert(HOTKEY_POS_SLIDE_FORWARD, "Move position slider at 10 % forward");
-    _humanizeHotkeyText.insert(HOTKEY_POS_SLIDE_BACKWARD, "Move position slider at 10 % backward");
-    _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_FORWARD, "Move volume slider at 10 % forward");
-    _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_BACKWARD, "Move volume slider at 10 % backward");
+    _humanizeHotkeyText.insert(HOTKEY_NEXT, QStringLiteral("Activate next item"));
+    _humanizeHotkeyText.insert(HOTKEY_NEXT_AND_DELETE, QStringLiteral("Remove current and activate next"));
+    _humanizeHotkeyText.insert(HOTKEY_PREV, QStringLiteral("Activate prev item"));
+    _humanizeHotkeyText.insert(HOTKEY_PLAY, QStringLiteral("Play/pause"));
+    _humanizeHotkeyText.insert(HOTKEY_STOP, QStringLiteral("Stop"));
+    _humanizeHotkeyText.insert(HOTKEY_OPEN_SETTINGS, QStringLiteral("Active tab settings"));
+    _humanizeHotkeyText.insert(HOTKEY_POS_SLIDE_FORWARD, QStringLiteral("Move position slider at 10 % forward"));
+    _humanizeHotkeyText.insert(HOTKEY_POS_SLIDE_BACKWARD, QStringLiteral("Move position slider at 10 % backward"));
+    _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_FORWARD, QStringLiteral("Move volume slider at 10 % forward"));
+    _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_BACKWARD, QStringLiteral("Move volume slider at 10 % backward"));
 }
 
 void HotkeySettings::fromJson(QJsonObject & settings) {
-    setHotKeys(settings.value("hotkeys").toObject());
+    setHotKeys(settings.value(QStringLiteral("hotkeys")).toObject());
 }
 
 void HotkeySettings::toJson(QJsonObject & settings) {
-    settings.insert("hotkeys", _hotkeys);
+    settings.insert(QStringLiteral("hotkeys"), _hotkeys);
 }
 
 QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage

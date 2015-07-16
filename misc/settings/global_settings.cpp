@@ -1,28 +1,28 @@
 #include "global_settings.h"
 
 void GlobalSettings::fromJson(QJsonObject & settings) {
-    _showMetric = settings.value("show_metric").toBool(true);
-    _showMetricNumero = settings.value("show_metric_numero").toBool(false);
+    _showMetric = settings.value(SETTINGS_SHOW_METRICS_KEY).toBool(true);
+    _showMetricNumero = settings.value(SETTINGS_SHOW_METRICS_NUMERO_KEY).toBool(false);
 
-    _defaultDownloadPath = settings.value("download_path").toString(QCoreApplication::applicationDirPath() + "/downloads/");
-    _tabPosition = settings.value("tab_position").toInt(0);
+    _defaultDownloadPath = settings.value(SETTINGS_DOWNLOAD_PATH_KEY).toString(QCoreApplication::applicationDirPath() % QStringLiteral("/downloads/"));
+    _tabPosition = settings.value(SETTINGS_TAB_POSITION_KEY).toInt(0);
 
-    _saveCommonTab = settings.value("save_common_tab").toBool(false);
-    _openDropPointInTab = settings.value("open_drop_point_in_tab").toBool(false);
-    _openDropPointInTabType = (Playo3::ContainerType)settings.value("open_drop_point_in_tab_type").toInt(Playo3::tree);
+    _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
+    _openDropPointInTab = settings.value(SETTINGS_OPEN_DROP_IN_TAB_KEY).toBool(false);
+    _openDropPointInTabType = (Playo3::ContainerType)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Playo3::tree);
 
-    _isAutorunned = settings.value("autorunned").toBool(false);
+    _isAutorunned = settings.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
 }
 
 void GlobalSettings::toJson(QJsonObject & settings) {   
-    settings.insert("autorunned", QJsonValue::fromVariant(_isAutorunned));
+    settings.insert(SETTINGS_AUTORUNNED_KEY, QJsonValue::fromVariant(_isAutorunned));
 
-    settings.insert("show_metric", QJsonValue::fromVariant(_showMetric));
-    settings.insert("show_metric_numero", QJsonValue::fromVariant(_showMetricNumero));
-    settings.insert("download_path", QJsonValue::fromVariant(_defaultDownloadPath));
-    settings.insert("tab_position", QJsonValue::fromVariant(_tabPosition));
+    settings.insert(SETTINGS_SHOW_METRICS_KEY, QJsonValue::fromVariant(_showMetric));
+    settings.insert(SETTINGS_SHOW_METRICS_NUMERO_KEY, QJsonValue::fromVariant(_showMetricNumero));
+    settings.insert(SETTINGS_DOWNLOAD_PATH_KEY, QJsonValue::fromVariant(_defaultDownloadPath));
+    settings.insert(SETTINGS_TAB_POSITION_KEY, QJsonValue::fromVariant(_tabPosition));
 
-    settings.insert("save_common_tab", QJsonValue::fromVariant(_saveCommonTab));
-    settings.insert("open_drop_point_in_tab", QJsonValue::fromVariant(_openDropPointInTab));
-    settings.insert("open_drop_point_in_tab_type", QJsonValue::fromVariant(_openDropPointInTabType));
+    settings.insert(SETTINGS_SAVE_COMMON_TAB_KEY, QJsonValue::fromVariant(_saveCommonTab));
+    settings.insert(SETTINGS_OPEN_DROP_IN_TAB_KEY, QJsonValue::fromVariant(_openDropPointInTab));
+    settings.insert(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY, QJsonValue::fromVariant(_openDropPointInTabType));
 }
