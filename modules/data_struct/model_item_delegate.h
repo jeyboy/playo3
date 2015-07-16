@@ -36,13 +36,16 @@ public:
 //                              const QStyleOptionViewItem & option,
 //                              const QModelIndex & index) const;
 
-   inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-       paintVar2(painter, option, index);
-   }
+    inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+        if (Settings::instance() -> itemPresentType() == 1)
+            paintVar1(painter, option, index);
+        else
+            paintVar2(painter, option, index);
+    }
 
 protected:
-   void paintVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
-   void paintVar2(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void paintVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void paintVar2(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 public slots:
     void recalcAttrs(int item_icon_size);

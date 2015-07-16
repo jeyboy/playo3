@@ -3,6 +3,11 @@
 
 #include <qjsonobject.h>
 
+#define SETTINGS_REMOTE_LIB_PROC_DELAY_KEY QStringLiteral("remote_lib_proc_delay")
+#define SETTINGS_SAVE_LIB_DELAY_KEY QStringLiteral("save_lib_delay")
+#define SETTINGS_INTERACTIVE_LIB_PROC_KEY QStringLiteral("interactive_lib_proc")
+#define SETTINGS_SHOW_INFO_KEY QStringLiteral("show_info")
+
 class LibrarySettings {
 public:
     void fromJson(QJsonObject & settings);

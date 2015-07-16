@@ -1,17 +1,17 @@
 #include "library_settings.h"
 
 void LibrarySettings::fromJson(QJsonObject & settings) {
-    _remoteItemsProcDelay = settings.value("remote_lib_proc_delay").toInt(2000); // in msec
+    _remoteItemsProcDelay = settings.value(SETTINGS_REMOTE_LIB_PROC_DELAY_KEY).toInt(2000); // in msec
 
-    _saveLibDelay = settings.value("save_lib_delay").toInt(10000); // in msec
+    _saveLibDelay = settings.value(SETTINGS_SAVE_LIB_DELAY_KEY).toInt(10000); // in msec
 
-    _interactiveProc = settings.value("interactive_lib_proc").toBool(false);
-    _showInfo = settings.value("show_info").toBool(true);
+    _interactiveProc = settings.value(SETTINGS_INTERACTIVE_LIB_PROC_KEY).toBool(false);
+    _showInfo = settings.value(SETTINGS_SHOW_INFO_KEY).toBool(true);
 }
 
 void LibrarySettings::toJson(QJsonObject & settings) {
-    settings.insert("remote_lib_proc_delay", QJsonValue(_remoteItemsProcDelay));
-    settings.insert("save_lib_delay", QJsonValue(_saveLibDelay));
-    settings.insert("interactive_lib_proc", QJsonValue(_interactiveProc));
-    settings.insert("show_info", QJsonValue(_showInfo));
+    settings.insert(SETTINGS_REMOTE_LIB_PROC_DELAY_KEY, QJsonValue(_remoteItemsProcDelay));
+    settings.insert(SETTINGS_SAVE_LIB_DELAY_KEY, QJsonValue(_saveLibDelay));
+    settings.insert(SETTINGS_INTERACTIVE_LIB_PROC_KEY, QJsonValue(_interactiveProc));
+    settings.insert(SETTINGS_SHOW_INFO_KEY, QJsonValue(_showInfo));
 }

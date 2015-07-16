@@ -1,26 +1,28 @@
 #include "tab_settings.h"
 
 void TabSettings::fromJson(QJsonObject & settings) {
-    _showCheckbox = settings.value("show_checkboxes").toBool(true);
+    _showCheckbox = settings.value(SETTINGS_SHOW_CHECKBOX_KEY).toBool(true);
 
-    _spoilOnActivation = settings.value("spoil_on_activation").toBool(true);
-    _alertOnFolderDeletion = settings.value("alert_on_folder_deletion").toBool(true);
+    _spoilOnActivation = settings.value(SETTINGS_SPOIL_ON_ACTIVATION_KEY).toBool(true);
+    _alertOnFolderDeletion = settings.value(SETTINGS_ALERT_ON_FOLDER_DELETION_KEY).toBool(true);
 
-    _showSystemIcons = settings.value("show_system_icons").toBool(false);
+    _showSystemIcons = settings.value(SETTINGS_SHOW_SYSTEM_ICON_KEY).toBool(false);
 
-    _heightUnification = settings.value("height_unification").toBool(true);
+    _heightUnification = settings.value(SETTINGS_HEIGHT_UNIFICATION_KEY).toBool(true);
 
-    _treeIndentation = settings.value("tree_indentation").toInt(12);
+    _treeIndentation = settings.value(SETTINGS_TREE_IDENTATION_KEY).toInt(12);
+    _item_present_type = settings.value(SETTINGS_ITEM_PRESENTATION_TYPE_KEY).toInt(2);
 }
 
 void TabSettings::toJson(QJsonObject & settings) {
-    settings.insert("show_checkboxes", QJsonValue(_showCheckbox));
+    settings.insert(SETTINGS_SHOW_CHECKBOX_KEY, QJsonValue(_showCheckbox));
 
-    settings.insert("spoil_on_activation", QJsonValue(_spoilOnActivation));
-    settings.insert("alert_on_folder_deletion", QJsonValue(_alertOnFolderDeletion));
+    settings.insert(SETTINGS_SPOIL_ON_ACTIVATION_KEY, QJsonValue(_spoilOnActivation));
+    settings.insert(SETTINGS_ALERT_ON_FOLDER_DELETION_KEY, QJsonValue(_alertOnFolderDeletion));
 
-    settings.insert("show_system_icons", QJsonValue(_showSystemIcons));  
-    settings.insert("height_unification", QJsonValue(_heightUnification));
+    settings.insert(SETTINGS_SHOW_SYSTEM_ICON_KEY, QJsonValue(_showSystemIcons));
+    settings.insert(SETTINGS_HEIGHT_UNIFICATION_KEY, QJsonValue(_heightUnification));
 
-    settings.insert("tree_indentation", QJsonValue(_treeIndentation));
+    settings.insert(SETTINGS_TREE_IDENTATION_KEY, QJsonValue(_treeIndentation));
+    settings.insert(SETTINGS_ITEM_PRESENTATION_TYPE_KEY, QJsonValue(_item_present_type));
 }

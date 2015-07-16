@@ -292,6 +292,11 @@ void SettingsDialog::initViewSettings() {
 
     ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
     ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
+
+    if (Settings::instance() -> itemPresentType() == 1)
+        ui -> fullyFilledItem -> setChecked(true);
+    else
+        ui -> partialyFilledItem -> setChecked(true);
 }
 void SettingsDialog::initHotkeysSettings() {
     ui -> treeView -> setEditTriggers(QTreeView::AllEditTriggers);
@@ -395,6 +400,8 @@ void SettingsDialog::saveViewSettings() {
     Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
 
     Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
+
+    Settings::instance() -> setItemPresentType(ui -> fullyFilledItem -> isChecked() ? 1 : 2);
 }
 
 void SettingsDialog::saveHotkeysSettings() {

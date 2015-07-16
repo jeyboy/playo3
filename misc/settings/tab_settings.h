@@ -3,6 +3,14 @@
 
 #include <qjsonobject.h>
 
+#define SETTINGS_SHOW_CHECKBOX_KEY QStringLiteral("show_checkboxes")
+#define SETTINGS_SPOIL_ON_ACTIVATION_KEY QStringLiteral("spoil_on_activation")
+#define SETTINGS_ALERT_ON_FOLDER_DELETION_KEY QStringLiteral("alert_on_folder_deletion")
+#define SETTINGS_SHOW_SYSTEM_ICON_KEY QStringLiteral("show_system_icons")
+#define SETTINGS_HEIGHT_UNIFICATION_KEY QStringLiteral("height_unification")
+#define SETTINGS_TREE_IDENTATION_KEY QStringLiteral("tree_indentation")
+#define SETTINGS_ITEM_PRESENTATION_TYPE_KEY QStringLiteral("item_present_type")
+
 class TabSettings {
 public:
     void fromJson(QJsonObject & settings);
@@ -25,8 +33,12 @@ public:
 
     inline int treeIndentation() const { return _treeIndentation; }
     inline void setTreeIndentation(int newIndent) { _treeIndentation = newIndent; }
+
+    inline int itemPresentType() const { return _item_present_type; }
+    inline void setItemPresentType(int newType) { _item_present_type = newType; }
 protected:
     int _treeIndentation;
+    int _item_present_type;
 
     bool _heightUnification;
     bool _showSystemIcons;
