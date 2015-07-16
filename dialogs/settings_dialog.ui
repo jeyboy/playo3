@@ -29,7 +29,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -285,7 +285,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>170</y>
+             <y>120</y>
              <width>311</width>
              <height>17</height>
             </rect>
@@ -314,9 +314,9 @@ font-weight: bold;</string>
           <widget class="QCheckBox" name="spoilOnActivate">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>70</y>
-             <width>311</width>
+             <x>190</x>
+             <y>80</y>
+             <width>131</width>
              <height>17</height>
             </rect>
            </property>
@@ -357,7 +357,7 @@ font-weight: bold;</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>100</y>
+             <y>60</y>
              <width>311</width>
              <height>17</height>
             </rect>
@@ -370,20 +370,20 @@ font-weight: bold;</string>
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>130</y>
-             <width>311</width>
+             <y>80</y>
+             <width>171</width>
              <height>17</height>
             </rect>
            </property>
            <property name="text">
-            <string>Unify item height (optimisation)</string>
+            <string>Unify item height (optimization)</string>
            </property>
           </widget>
           <widget class="QGroupBox" name="groupBox_5">
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>190</y>
+             <y>170</y>
              <width>321</width>
              <height>51</height>
             </rect>
