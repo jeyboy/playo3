@@ -1,7 +1,7 @@
 #include "library_settings.h"
 
 void LibrarySettings::fromJson(QJsonObject & settings) {
-    _remoteItemsProcDelay = settings.value(SETTINGS_REMOTE_LIB_PROC_DELAY_KEY).toInt(2000); // in msec
+    _remoteItemsProcDelay = settings.value(SETTINGS_REMOTE_LIB_PROC_DELAY_KEY).toInt(1000); // in msec
 
     _saveLibDelay = settings.value(SETTINGS_SAVE_LIB_DELAY_KEY).toInt(10000); // in msec
 

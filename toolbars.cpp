@@ -54,11 +54,11 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
         barsMenu -> addAction("Hide all", this, SLOT(hideAll()));
         barsMenu -> addSeparator();
 
-        foreach(QToolBar * bar, bars) {
-            if (bar == spectrum) {
+        for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
+            if ((*bar) == spectrum)
                 spectrum -> generateContextMenu(barsMenu);
-            } else
-                barsMenu -> addAction(bar -> toggleViewAction());
+            else
+                barsMenu -> addAction((*bar) -> toggleViewAction());
         }
 
         connect(barsMenu, SIGNAL(hovered(QAction *)), this, SLOT(panelHighlight(QAction *)));
@@ -72,8 +72,9 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
         docsMenu -> addAction("Hide all", Dockbars::instance(window), SLOT(hideAll()));
         docsMenu -> addSeparator();
 
-        foreach(DockBar * doc, docs)
-            docsMenu -> addAction(doc -> toggleViewAction());
+
+        for(QList<DockBar *>::Iterator doc = docs.begin(); doc != docs.end(); doc++)
+            docsMenu -> addAction((*doc) -> toggleViewAction());
     }
 
     return menu;
@@ -182,7 +183,7 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
   window -> addToolBar(Qt::BottomToolBarArea, createToolBar("Folder linker 1"));
   window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
-  window -> addToolBarBreak();
+  window -> addToolBarBreak(Qt::BottomToolBarArea);
   window -> addToolBar(Qt::BottomToolBarArea, createEqualizerToolBar());
 }
 
