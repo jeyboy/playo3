@@ -1,5 +1,4 @@
 #include "logger.h"
-#include <qdebug.h>
 
 Logger * Logger::self = 0;
 
@@ -8,7 +7,6 @@ Logger * Logger::instance(QObject * parent) {
         self = new Logger(parent);
     return self;
 }
-
 
 Logger::Logger(QObject * parent) : QObject(parent), out(0), file(0), m_showDate(true)  {
     connect(this, SIGNAL(write(QString,QString)), this, SLOT(writeToStream(QString,QString)));
@@ -26,9 +24,8 @@ Logger::~Logger() {
 }
 
 void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
-    if ((m_editor = editor)) {
+    if ((m_editor = editor))
         editor -> setReadOnly(true);
-    }
 
     if (!fileName.isEmpty()) {
         file = new QFile;
@@ -52,12 +49,12 @@ void Logger::toEditor(QString initiator, QString value) {
 
         if (initiator != lastInitiator) {
             lastInitiator = initiator;
-            text = "<br>" + initiator + "<br>";
+            text = "<br>" % initiator % "<br>";
         }
 
         text = QString("%1%2 ::: %3").arg(
             text,
-            (m_showDate ? "<b>" + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ") + "</b>" : ""),
+            (m_showDate ? QStringLiteral("<b>") % QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yyyy hh:mm:ss ")) % QStringLiteral("</b>") : QStringLiteral("")),
             value
         );
 
@@ -82,6 +79,6 @@ void Logger::writeToStream(QString initiator, QString value, QStringList attrs, 
 void Logger::writeToStream(QString initiator, QString value, QString attr, bool error) {
     toFile(initiator, QString("%1   :::   %2").arg(value, attr));
     toEditor(initiator,
-        QString("<span style='color: " + QString(error ? "red" : "green") + "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
+        QString("<span style='color: " % QString(error ? QStringLiteral("red") : QStringLiteral("green")) % "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
     );
 }

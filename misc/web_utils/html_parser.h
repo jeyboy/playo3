@@ -9,8 +9,17 @@
 
 #include <qdebug.h>
 
+#define HTML_PARSER_ANY_ELEMENT QStringLiteral("*")
+
 #define HTML_PARSER_TEXT_BLOCK QStringLiteral("text")
 #define HTML_PARSER_COMMENT_BLOCK QStringLiteral("comment")
+
+#define HTML_PARSER_ID_ATTR QStringLiteral("id")
+#define HTML_PARSER_CLASS_ATTR QStringLiteral("class")
+#define HTML_PARSER_TYPE_ATTR QStringLiteral("type")
+#define HTML_PARSER_INPUT_ATTR QStringLiteral("input")
+#define HTML_PARSER_SELECT_ATTR QStringLiteral("select")
+
 #define DEBUG_LIMIT_OUTPUT 100
 
 struct HtmlSelector {

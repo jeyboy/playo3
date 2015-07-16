@@ -23,7 +23,7 @@ void HtmlSelector::addToken(SState & tType, QString & token, char & rel) {
     switch(tType) {
         case attr: {
             QStringList parts = token.split(rel, QString::SkipEmptyParts);
-            QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : "*");
+            QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : HTML_PARSER_ANY_ELEMENT);
             _attrs.insert(parts.first(), newAttr); rel = attr_rel_eq;
             break;
         }
@@ -114,11 +114,11 @@ HtmlSelector::HtmlSelector(const char * predicate) : _direct(false), prev(0), ne
 bool HtmlTag::validTo(HtmlSelector * selector) {
     for(QHash<HtmlSelector::SState, QString>::Iterator it = selector -> _tokens.begin(); it != selector -> _tokens.end(); it++) {
         switch(it.key()) {
-            case HtmlSelector::tag: { if (!(it.value() == "*" || _name == it.value())) return false; break; }
+            case HtmlSelector::tag: { if (!(it.value() == HTML_PARSER_ANY_ELEMENT || _name == it.value())) return false; break; }
             case HtmlSelector::attr: {
                 for(QHash<QString, QPair<char, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
                     switch(it.value().first) {
-                        case HtmlSelector::attr_rel_eq: { if (!(it.value().second == "*" || attrs.value(it.key()) == it.value().second)) return false;  break;}
+                        case HtmlSelector::attr_rel_eq: { if (!(it.value().second == HTML_PARSER_ANY_ELEMENT || attrs.value(it.key()) == it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
                         case HtmlSelector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
@@ -126,9 +126,9 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
                     };
                 break;
             }
-            case HtmlSelector::id:  { if (attrs["id"] != it.value()) return false; break; }
+            case HtmlSelector::id:  { if (attrs[HTML_PARSER_ID_ATTR] != it.value()) return false; break; }
             case HtmlSelector::klass: { //TODO: optimisation needed
-                QStringList node_klasses = attrs["class"].split(" ", QString::SkipEmptyParts);
+                QStringList node_klasses = attrs[HTML_PARSER_CLASS_ATTR].split(QStringLiteral(" "), QString::SkipEmptyParts);
                 if (node_klasses.isEmpty()) return false;
 
                 for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
@@ -141,7 +141,7 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
                 break;
             }
             case HtmlSelector::type: {
-                if (!((_name == "input" || _name == "select") && attrs["type"] == it.value())) return false;
+                if (!((_name == HTML_PARSER_INPUT_ATTR || _name == HTML_PARSER_SELECT_ATTR) && attrs[HTML_PARSER_TYPE_ATTR] == it.value())) return false;
                 break;
             }
             default: ;
@@ -154,11 +154,11 @@ bool HtmlTag::validTo(HtmlSelector * selector) {
 ////////  HtmlParser //////////
 
 void HtmlParser::initSoloTags() {
-    solo.insert("br", true);
-    solo.insert("meta", true);
-    solo.insert("link", true);
-    solo.insert("img", true);
-    solo.insert("!DOCTYPE", true);
+    solo.insert(QStringLiteral("br"), true);
+    solo.insert(QStringLiteral("meta"), true);
+    solo.insert(QStringLiteral("link"), true);
+    solo.insert(QStringLiteral("img"), true);
+    solo.insert(QStringLiteral("!DOCTYPE"), true);
 }
 
 
@@ -167,7 +167,7 @@ void HtmlParser::parse(QIODevice * device) {
     PState state = content;
     char * ch = new char[2](), last = 0;
     QString curr, value; curr.reserve(1024); value.reserve(1024);
-    HtmlTag * elem = (root = new HtmlTag("*"));
+    HtmlTag * elem = (root = new HtmlTag(HTML_PARSER_ANY_ELEMENT));
     bool is_closed = false;
 
     while(!device -> atEnd()) {

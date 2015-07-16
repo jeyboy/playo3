@@ -387,9 +387,9 @@ void Stylesheets::initPens() {
 
 void Stylesheets::calcBorderRect(QRect origin, QRect & res) {
     res.setRect(
-                origin.x() + borderWidth / 4,
-                origin.y() + borderWidth / 4,
-                origin.width() - borderWidth / 2,
-                origin.height() - borderWidth / 2
+        origin.x() + borderWidth / 4,
+        origin.y() + borderWidth / 4,
+        origin.width() - borderWidth / 2,
+        origin.height() - borderWidth / 2
     );
 }
