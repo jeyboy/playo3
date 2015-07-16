@@ -177,14 +177,17 @@ void ToolBars::createToolbars(QMainWindow * window) {
   window -> addToolBar(Qt::TopToolBarArea, createMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createTimeMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createPositionMediaBar());
-  window -> addToolBarBreak();
+  window -> addToolBarBreak(Qt::TopToolBarArea);
   window -> addToolBar(Qt::TopToolBarArea, createAdditionalMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
   window -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
   window -> addToolBar(Qt::BottomToolBarArea, createToolBar("Folder linker 1"));
   window -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
   window -> addToolBarBreak(Qt::BottomToolBarArea);
-  window -> addToolBar(Qt::BottomToolBarArea, createEqualizerToolBar());
+
+  QToolBar * eql = createEqualizerToolBar();
+  window -> addToolBar(Qt::BottomToolBarArea, eql);
+  eql -> hide();
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
