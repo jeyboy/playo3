@@ -124,16 +124,16 @@ void Playo::activation() {
 void Playo::initialization() {
     Logger::instance() -> startMark();
 
-    QSettings stateSettings(QStringLiteral("settings.ini"), QSettings::IniFormat, this);
-    settings = new DataStore(QStringLiteral("settings.json"));
+    QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
+    settings = new DataStore(BACKEND_SETTINGS_FILE_NAME);
 
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    VkApi::instance(this, settings -> read(QStringLiteral("vk")).toObject());
-    SoundcloudApi::instance(settings -> read(QStringLiteral("soundcloud")).toObject());
+    VkApi::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
+    SoundcloudApi::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
 
-    Settings::instance() -> fromJson(settings -> read(QStringLiteral("settings")).toObject());
+    Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
     activation();
 
@@ -141,7 +141,7 @@ void Playo::initialization() {
 
     setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
 
-    QVariant geometryState = stateSettings.value(QStringLiteral("geometry"));
+    QVariant geometryState = stateSettings.value(SETTINGS_GEOMETRY_SET_KEY);
     if (geometryState.isValid())
         restoreGeometry(geometryState.toByteArray());
 
@@ -155,23 +155,23 @@ void Playo::initialization() {
 
     QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
-    ToolBars::instance() -> setEqualizerSettings(settings -> read(QStringLiteral("equalizer")).toObject());
+    ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
 
     QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
 
-    QVariant objState = stateSettings.value(QStringLiteral("windowState"));
+    QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
     if (objState.isValid())
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
     Dockbars::instance() -> updateActiveTabIcon();
 
-    if (stateSettings.value(QStringLiteral("maximized")).toBool()) {
+    if (stateSettings.value(SETTINGS_WINDOW_MAXIMIZED_KEY).toBool()) {
         QApplication::processEvents();
         showMaximized();
     }
-    Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Loading"));
+    Logger::instance() -> endMark(tr("Main"), tr("Loading"));
 }
 
 QMenu * Playo::createPopupMenu() {
@@ -183,10 +183,10 @@ void Playo::closeEvent(QCloseEvent * e) {
     bool is_maximized = isMaximized();
     showNormal();
 
-    QSettings stateSettings(QStringLiteral("settings.ini"), QSettings::IniFormat, this);
-    stateSettings.setValue(QStringLiteral("geometry"), saveGeometry());
-    stateSettings.setValue(QStringLiteral("windowState"), saveState());
-    stateSettings.setValue(QStringLiteral("maximized"), is_maximized);
+    QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
+    stateSettings.setValue(SETTINGS_GEOMETRY_SET_KEY, saveGeometry());
+    stateSettings.setValue(SETTINGS_WINDOW_STATE_SET_KEY, saveState());
+    stateSettings.setValue(SETTINGS_WINDOW_MAXIMIZED_KEY, is_maximized);
     stateSettings.sync();
 
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
@@ -197,14 +197,14 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     settings -> clear();
 
-    settings -> write(QStringLiteral("vk"), VkApi::instance() -> toJson());
-    settings -> write(QStringLiteral("soundcloud"), SoundcloudApi::instance() -> toJson());
+    settings -> write(SETTINGS_VK_SET_KEY, VkApi::instance() -> toJson());
+    settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, SoundcloudApi::instance() -> toJson());
 
-    settings -> write(QStringLiteral("equalizer"), ToolBars::instance() -> getEqualizerSettings());
+    settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
 
-    settings -> write(QStringLiteral("settings"), Settings::instance() -> toJson());
+    settings -> write(SETTINGS_SET_KEY, Settings::instance() -> toJson());
     settings -> save();
 
     Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
