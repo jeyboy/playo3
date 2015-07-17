@@ -130,12 +130,6 @@ namespace Playo3 {
         const QString toolbar_spectrum_key = QStringLiteral("Spectrum");
         const QString toolbar_equalizer_key = QStringLiteral("Equalizer");
         const char * toolbar_service_mark = "service";
-
-        const QString toolbar_js_title_key = QStringLiteral("title");
-        const QString toolbar_js_name_key = QStringLiteral("name");
-        const QString toolbar_js_movable_key = QStringLiteral("movable");
-        const QString toolbar_js_path_key = QStringLiteral("path");
-        const QString toolbar_js_actions_key = QStringLiteral("actions");
     };
 }
 

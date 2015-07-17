@@ -140,7 +140,8 @@ SOURCES += main.cpp\
     double_slider/qxtspanslider.cpp \
     misc/web_utils/html_parser.cpp \
     modules/web/sites/myzuka_album.cpp \
-    misc/web_utils/web_manager.cpp
+    misc/web_utils/web_manager.cpp \
+    external_keys.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -285,7 +286,8 @@ HEADERS  += playo.h \
     modules/web/sites/myzuka_album.h \
     media/genres/web/target_genres.h \
     misc/web_utils/html_parser.h \
-    misc/web_utils/web_manager.h
+    misc/web_utils/web_manager.h \
+    external_keys.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
