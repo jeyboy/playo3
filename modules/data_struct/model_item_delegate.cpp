@@ -1,4 +1,5 @@
 #include "model_item_delegate.h"
+#include "external_keys.h"
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
@@ -79,16 +80,16 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     bodyRect.setHeight(bodyRect.height() - 2);  // space between items
 
     QVariantMap attrs = index.data(IATTRS).toMap();
-    QVariant checkable = attrs.value(QStringLiteral("checkable"));
+    QVariant checkable = attrs.value(Key::checkable);
 
     QString ext;
     int angle = bodyRect.height() / 2.2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
-    int background_state = attrs.value(QStringLiteral("state")).toInt();
+    int background_state = attrs.value(Key::state).toInt();
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
     QBrush fill_color;
 
-    if (attrs.value(QStringLiteral("played")).toBool())
+    if (attrs.value(Key::played).toBool())
         fill_color = Settings::instance() -> playedState(bodyRect, is_selected);
     else {
         switch (background_state) {
@@ -112,7 +113,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
 
     if (!is_folder) {
         if (!Settings::instance() -> isShowSystemIcons())
-            ext = attrs.value(QStringLiteral("ext")).toString();
+            ext = attrs.value(Key::ext).toString();
 
         if (icon_size < ico_mini && !Settings::instance() -> isShowSystemIcons())
             ico_offset = 8 * (ext.length() - 1);
@@ -179,13 +180,13 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                         ext
                     );
 
-            if (attrs[QStringLiteral("type")] == VK_ITEM || attrs[QStringLiteral("type")] == SOUNDCLOUD_ITEM) {
+            if (attrs[Key::type] == VK_ITEM || attrs[Key::type] == SOUNDCLOUD_ITEM) {
                 font.setPixelSize(extra_font_size);
                 painter -> setFont(font);
 
                 painter -> drawText(
                     pseudoIcoRect.topRight() + QPoint(-10, 13),
-                    QStringLiteral("*")
+                    Key::asterix
                 );
             }
         }
@@ -200,7 +201,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                         Settings::instance() -> itemInfoTextColor()
                     );
 
-        QStringList infos = attrs.value(QStringLiteral("info")).toStringList();
+        QStringList infos = attrs.value(Key::icon).toStringList();
 
         int timeWidth = fmfInfo -> width(infos.last());
         int right_offset_with_corner = right_offset - (angle / 3);
@@ -229,7 +230,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     QPoint bottomMRight(right_offset, top - 2);
 
     QRect rectText2(topMLeft, bottomMRight);
-    QString s = fmf -> elidedText(attrs.value(QStringLiteral("name")).toString(), Qt::ElideRight, rectText2.width());
+    QString s = fmf -> elidedText(attrs.value(Key::name).toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
 //    if (is_folder) {
@@ -260,9 +261,9 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     bodyRect.setHeight(bodyRect.height() - 2);  // space between items
 
     QVariantMap attrs = index.data(IATTRS).toMap();
-    QVariant checkable = attrs.value(QStringLiteral("checkable"));
+    QVariant checkable = attrs.value(Key::checkable);
 
-    int background_state = attrs.value(QStringLiteral("state")).toInt();
+    int background_state = attrs.value(Key::state).toInt();
     int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
@@ -311,24 +312,24 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     //    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
-        bool is_vk = attrs[QStringLiteral("type")] == VK_ITEM, is_sc = attrs[QStringLiteral("type")] == SOUNDCLOUD_ITEM;
+        bool is_vk = attrs[Key::type] == VK_ITEM, is_sc = attrs[Key::type] == SOUNDCLOUD_ITEM;
 
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
 
-        if (attrs[QStringLiteral("not_exist")].toBool()) {
+        if (attrs[Key::not_exist].toBool()) {
             painter -> drawPixmap(rect, icons[-1]);
         } else {
             if (Settings::instance() -> isShowSystemIcons()) {
-                QVariant iconVal = attrs.value(QStringLiteral("icon"));
+                QVariant iconVal = attrs.value(Key::icon);
                 if (iconVal.isValid()) {
                     QIcon icon = qvariant_cast<QIcon>(iconVal);
                     painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
                 }
             } else {
                 if (icon_size > 24)
-                    painter -> drawPixmap(rect, icons[attrs[QStringLiteral("type")].toInt() + (is_selected ? SELECTION_ITER : 0)]);
+                    painter -> drawPixmap(rect, icons[attrs[Key::type].toInt() + (is_selected ? SELECTION_ITER : 0)]);
             }
         }
 
@@ -336,7 +337,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             painter -> setPen(textColor);
             QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
             painter -> setFont(font);
-            painter -> drawText(icoRect.topRight() + QPoint(3, 10), QStringLiteral("*"));
+            painter -> drawText(icoRect.topRight() + QPoint(3, 10), Key::asterix);
         }
 
         ///////////////////////////////////////////////////
@@ -363,7 +364,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                             Settings::instance() -> itemInfoTextColor()
                         );
 
-            QStringList infos = attrs.value(QStringLiteral("info")).toStringList();
+            QStringList infos = attrs.value(Key::info).toStringList();
 
             int timeWidth = fmfInfo -> width(infos.last());
             int right_offset_with_corner = right_offset - (angle / 3);
@@ -393,7 +394,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QPoint bottomMRight(right_offset, top - 2);
 
     QRect rectText2(topMLeft, bottomMRight);
-    QString s = fmf -> elidedText(attrs.value(QStringLiteral("name")).toString(), Qt::ElideRight, rectText2.width());
+    QString s = fmf -> elidedText(attrs.value(Key::name).toString(), Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
 //    if (is_folder) {

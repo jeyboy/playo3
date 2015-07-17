@@ -1,5 +1,6 @@
 #include "item_interface.h"
 #include "folder_item.h"
+#include "external_keys.h"
 
 using namespace Playo3;
 
@@ -121,17 +122,17 @@ QVariant IItem::data(int column) const {
     switch(column) {
         case IATTRS: {
             QVariantMap params;
-            params.insert(QStringLiteral("name"), title());
-            params.insert(QStringLiteral("checkable"), Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Key::name, title());
+            params.insert(Key::checkable, Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
                 if (Settings::instance() -> isShowSystemIcons())
-                    params.insert(QStringLiteral("icon"), IconProvider::fileIcon(fullPath(), extension().toString()));
-                params.insert(QStringLiteral("info"), info());
-                params.insert(QStringLiteral("ext"), extension());
-                params.insert(QStringLiteral("state"), visualStates());
-                params.insert(QStringLiteral("played"), is(played));
-                params.insert(QStringLiteral("not_exist"), is(not_exist));
-                params.insert(QStringLiteral("type"), itemType());
+                    params.insert(Key::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
+                params.insert(Key::info, info());
+                params.insert(Key::ext, extension());
+                params.insert(Key::state, visualStates());
+                params.insert(Key::played, is(played));
+                params.insert(Key::not_exist, is(not_exist));
+                params.insert(Key::type, itemType());
             }
             return params;
         }

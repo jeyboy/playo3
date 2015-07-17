@@ -68,8 +68,6 @@ private slots:
     void openFolderTriggered();
 
 //    void dropEvent(QDropEvent * event);
-
-
 protected:
     void activation();
     void initialization();
@@ -81,7 +79,7 @@ protected:
     QMenu * createPopupMenu();
     void closeEvent(QCloseEvent *);
 private:
-    Ui::Playo *ui;
+    Ui::Playo * ui;
 
     DataStore * settings;
 };
