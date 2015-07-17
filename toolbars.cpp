@@ -85,29 +85,29 @@ void ToolBars::load(QJsonArray & bars) {
 
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList.append(QStringLiteral("Media")); barsList.append(QStringLiteral("Media+")); barsList.append(QStringLiteral("Media+Position")); barsList.append(QStringLiteral("Media+Time"));
-        barsList.append(QStringLiteral("Media+Volume")); barsList.append(QStringLiteral("Controls")); barsList.append(QStringLiteral("Spectrum")); barsList.append(QStringLiteral("Equalizer"));
+        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key
+            << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key;
 
         QJsonObject obj, actionObj;
         QString barName;
         QToolBar * curr_bar;
 
-        foreach(QJsonValue bar, bars) {
+        foreach(QJsonValue bar, bars) { // rewrite on for
             obj = bar.toObject();
-            barName = obj.value(QStringLiteral("title")).toString();
+            barName = obj.value(toolbar_js_title_key).toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
-            curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
-            curr_bar -> setMovable(obj.value(QStringLiteral("movable")).toBool());
+            curr_bar -> setObjectName(obj.value(toolbar_js_name_key).toString(curr_bar -> objectName()));
+            curr_bar -> setMovable(obj.value(toolbar_js_movable_key).toBool());
 
             window -> addToolBar(Qt::BottomToolBarArea, curr_bar);
 
-            if (obj.contains(QStringLiteral("actions"))) {
-                QJsonArray actions = obj.value(QStringLiteral("actions")).toArray();
+            if (obj.contains(toolbar_js_actions_key)) {
+                QJsonArray actions = obj.value(toolbar_js_actions_key).toArray();
 
-                foreach(QJsonValue act, actions) {
+                foreach(QJsonValue act, actions) { // rewrite on for
                     actionObj = act.toObject();
-                    addPanelButton(actionObj.value(QStringLiteral("name")).toString(), actionObj.value(QStringLiteral("path")).toString(), curr_bar);
+                    addPanelButton(actionObj.value(toolbar_js_name_key).toString(), actionObj.value(toolbar_js_path_key).toString(), curr_bar);
                 }
             }
         }
@@ -127,40 +127,32 @@ void ToolBars::save(DataStore * settings) {
         QList<QAction*> actions;
         ToolbarButton* button;
 
-        foreach(QToolBar * bar, bars) {
+        foreach(QToolBar * bar, bars) { // rewrite on for
             curr_tab = QJsonObject();
 
-            curr_tab.insert(QStringLiteral("title"), bar -> windowTitle());
-            curr_tab.insert(QStringLiteral("name"), bar -> objectName());
-            curr_tab.insert(QStringLiteral("movable"), bar -> isMovable());
+            curr_tab.insert(toolbar_js_title_key, bar -> windowTitle());
+            curr_tab.insert(toolbar_js_name_key, bar -> objectName());
+            curr_tab.insert(toolbar_js_movable_key, bar -> isMovable());
 
-            if (bar -> windowTitle() != QStringLiteral("Media")
-                    && bar -> windowTitle() != QStringLiteral("Media+")
-                    && bar -> windowTitle() != QStringLiteral("Media+Position")
-                    && bar -> windowTitle() != QStringLiteral("Media+Time")
-                    && bar -> windowTitle() != QStringLiteral("Media+Volume")
-                    && bar -> windowTitle() != QStringLiteral("Controls")
-                    && bar -> windowTitle() != QStringLiteral("Spectrum")
-                    && bar -> windowTitle() != QStringLiteral("Equalizer")
-               ) {
+            if (!bar -> property(toolbar_service_mark).toBool()) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
                     QJsonArray action_array = QJsonArray();
                     QJsonObject curr_act;
 
-                    foreach(QAction * act, actions) {
+                    foreach(QAction * act, actions) { // rewrite on for
                         if (act -> objectName() != QStringLiteral("*Title") && QString(act -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
                             curr_act = QJsonObject();
                             button = (ToolbarButton*) bar -> widgetForAction(act);
 
-                            curr_act.insert(QStringLiteral("path"), button -> mainPath());
-                            curr_act.insert(QStringLiteral("name"), button -> text());
+                            curr_act.insert(toolbar_js_path_key, button -> mainPath());
+                            curr_act.insert(toolbar_js_name_key, button -> text());
                             action_array.append(curr_act);
                         }
                     }
 
                     if (action_array.count() > 0)
-                        curr_tab.insert(QStringLiteral("actions"), action_array);
+                        curr_tab.insert(toolbar_js_actions_key, action_array);
                 }
             }
 
@@ -210,25 +202,15 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
 }
 
 QToolBar * ToolBars::linkNameToToolbars(QString barName) {
-    if (barName == QStringLiteral("Media")) {
-        return createMediaBar();
-    } else if (barName == QStringLiteral("Media+")) {
-        return createAdditionalMediaBar();
-    } else if (barName == QStringLiteral("Media+Position")) {
-        return createPositionMediaBar();
-    } else if (barName == QStringLiteral("Media+Time")) {
-        return createTimeMediaBar();
-    } else if (barName == QStringLiteral("Media+Volume")) {
-        return createVolumeMediaBar();
-    } else if (barName == QStringLiteral("Controls")) {
-        return createControlToolBar();
-    } else if (barName == QStringLiteral("Spectrum")) {
-        return getSpectrum();
-    } else if (barName == QStringLiteral("Equalizer")) {
-        return createEqualizerToolBar();
-    } else {
-        return createToolBar(barName);
-    }
+    if (barName == toolbar_media_key)               return createMediaBar();
+    else if (barName == toolbar_media_plus_key)     return createAdditionalMediaBar();
+    else if (barName == toolbar_media_pos_key)      return createPositionMediaBar();
+    else if (barName == toolbar_media_time_key)     return createTimeMediaBar();
+    else if (barName == toolbar_media_volume_key)   return createVolumeMediaBar();
+    else if (barName == toolbar_controls_key)       return createControlToolBar();
+    else if (barName == toolbar_spectrum_key)       return getSpectrum();
+    else if (barName == toolbar_equalizer_key)      return createEqualizerToolBar();
+    else                                            return createToolBar(barName);
 }
 
 QToolBar * ToolBars::createToolBar(QString name) {
@@ -249,6 +231,7 @@ QToolBar * ToolBars::createToolBar(QString name) {
 
 QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
     QToolBar * ptb = new QToolBar(name);
+    ptb -> setProperty(toolbar_service_mark, true);
     ptb -> setObjectName(QStringLiteral("_") % name);
     ptb -> setMinimumSize(30, 30);
 
@@ -265,7 +248,7 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 }
 
 QToolBar * ToolBars::createMediaBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Media"));
+    QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
     Player::instance() -> setPlayButton(ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play")));
     Player::instance() -> setPauseButton(ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause")));
@@ -278,7 +261,7 @@ QToolBar * ToolBars::createMediaBar() {
 }
 
 QToolBar * ToolBars::createAdditionalMediaBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Media+"));
+    QToolBar * ptb = precreateToolBar(toolbar_media_plus_key);
 
     //TODO: add del versions od buttons
     ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), Dockbars::instance(), SLOT(prevExecTriggering()));
@@ -299,7 +282,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 }
 
 QToolBar * ToolBars::createPositionMediaBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Media+Position"), true);
+    QToolBar * ptb = precreateToolBar(toolbar_media_pos_key, true);
 
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
@@ -314,7 +297,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 }
 
 QToolBar * ToolBars::createTimeMediaBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Media+Time"));
+    QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
 
     ClickableLabel * timeLabel = new ClickableLabel(QStringLiteral("After click invert showing time") , QStringLiteral("00:00"), ptb);
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
@@ -326,7 +309,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
 }
 
 QToolBar * ToolBars::createVolumeMediaBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Media+Volume"), true);
+    QToolBar * ptb = precreateToolBar(toolbar_media_volume_key, true);
 
     QIcon ico;
     ico.addPixmap(QPixmap(QStringLiteral(":/mute")), QIcon::Normal);
@@ -350,7 +333,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 }
 
 QToolBar * ToolBars::createControlToolBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Controls"));
+    QToolBar * ptb = precreateToolBar(toolbar_controls_key);
 
     ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), Dockbars::instance(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
@@ -367,7 +350,7 @@ QToolBar * ToolBars::createControlToolBar() {
 }
 
 QToolBar * ToolBars::createEqualizerToolBar() {
-    QToolBar * ptb = precreateToolBar(QStringLiteral("Equalizer"));
+    QToolBar * ptb = precreateToolBar(toolbar_equalizer_key);
 
     equalizer = new Equalizer(ptb);
     ptb -> addWidget(equalizer);
@@ -380,7 +363,8 @@ QToolBar * ToolBars::createEqualizerToolBar() {
 
 Spectrum * ToolBars::getSpectrum() {
     if (spectrum == 0) {
-        spectrum = new Spectrum((QWidget *)parent());
+        spectrum = new Spectrum(toolbar_spectrum_key, (QWidget *)parent());
+        spectrum -> setProperty(toolbar_service_mark, true);
 
         connect(spectrum, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
         connect(spectrum, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));

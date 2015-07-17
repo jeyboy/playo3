@@ -4,7 +4,7 @@
 
 using namespace Playo3;
 
-Spectrum::Spectrum(QWidget * parent) : QToolBar(QStringLiteral("Spectrum"), parent), last_pairs_count(0), type(split_bars) {
+Spectrum::Spectrum(const QString & objName, QWidget * parent) : QToolBar(objName, parent), last_pairs_count(0), type(split_bars) {
     setObjectName(QStringLiteral("tool_Spectrum"));
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 

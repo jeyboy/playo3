@@ -120,6 +120,22 @@ namespace Playo3 {
         QPoint lastClickPoint;
 
         static ToolBars *self;
+
+        const QString toolbar_media_key = QStringLiteral("Media");
+        const QString toolbar_media_plus_key = QStringLiteral("Media+");
+        const QString toolbar_media_pos_key = QStringLiteral("Media+Position");
+        const QString toolbar_media_time_key = QStringLiteral("Media+Time");
+        const QString toolbar_media_volume_key = QStringLiteral("Media+Volume");
+        const QString toolbar_controls_key = QStringLiteral("Controls");
+        const QString toolbar_spectrum_key = QStringLiteral("Spectrum");
+        const QString toolbar_equalizer_key = QStringLiteral("Equalizer");
+        const char * toolbar_service_mark = "service";
+
+        const QString toolbar_js_title_key = QStringLiteral("title");
+        const QString toolbar_js_name_key = QStringLiteral("name");
+        const QString toolbar_js_movable_key = QStringLiteral("movable");
+        const QString toolbar_js_path_key = QStringLiteral("path");
+        const QString toolbar_js_actions_key = QStringLiteral("actions");
     };
 }
 

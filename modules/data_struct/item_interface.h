@@ -1,7 +1,6 @@
 #ifndef ITEM_INTERFACE
 #define ITEM_INTERFACE
 
-#include <qdebug.h>
 #include <qlist.h>
 #include <qdesktopservices.h>
 #include <qurl.h>
@@ -77,7 +76,7 @@ namespace Playo3 {
         }
 
         inline void setParent(FolderItem * pNode) {
-            if (_parent != 0) qDebug() << "Parent already setted";
+//            if (_parent != 0) qDebug() << "Parent already setted";
             _parent = pNode;
         }
     protected:

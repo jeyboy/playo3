@@ -15,7 +15,7 @@ namespace Playo3  {
     class Spectrum : public QToolBar {
         Q_OBJECT
     public:
-        Spectrum(QWidget * parent = 0);
+        Spectrum(const QString & objName, QWidget * parent = 0);
         ~Spectrum();
 
         inline SpectrumType viewType() const { return type; }
