@@ -51,8 +51,8 @@ void SoundcloudApi::getGroupInfo(QString uid, QJsonObject & object) {
     WebManager * manager;
     bool isNew = WebManager::valid(manager);
 
-    object.insert(QStringLiteral("audio_list"), groupAudio(uid, manager));
-    object.insert(QStringLiteral("playlists"), groupPlaylists(uid, manager));
+    object.insert(sc_audio_list_key, groupAudio(uid, manager));
+    object.insert(sc_playlist_key, groupPlaylists(uid, manager));
 
     if (isNew) delete manager;
 }
@@ -61,13 +61,13 @@ void SoundcloudApi::getUserInfo(QString & uid, QJsonObject & object) {
     WebManager * manager;
     bool isNew = WebManager::valid(manager);
 
-    object.insert(QStringLiteral("audio_list"), userAudio(uid, manager));
-    object.insert(QStringLiteral("playlists"), userPlaylists(uid, manager));
+    object.insert(sc_audio_list_key, userAudio(uid, manager));
+    object.insert(sc_playlist_key, userPlaylists(uid, manager));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(QStringLiteral("followings"), userFollowings(uid, manager));
-    object.insert(QStringLiteral("followers"), userFollowers(uid, manager));
+    object.insert(sc_followings_key, userFollowings(uid, manager));
+    object.insert(sc_followers_key, userFollowers(uid, manager));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(QStringLiteral("groups"), userGroups(uid, manager));
+    object.insert(sc_groups_key, userGroups(uid, manager));
 
     if (isNew) delete manager;
 }

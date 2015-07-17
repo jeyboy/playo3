@@ -5,6 +5,12 @@
 #include "../auth_chemas/teu_auth.h"
 #include "soundcloud_request_api.h"
 
+const QString sc_audio_list_key = QStringLiteral("audio_list");
+const QString sc_playlist_key = QStringLiteral("playlists");
+const QString sc_followings_key = QStringLiteral("followings");
+const QString sc_followers_key = QStringLiteral("followers");
+const QString sc_groups_key = QStringLiteral("groups");
+
 class SoundcloudApi : public WebApi, public TeuAuth, public SoundcloudRequestApi {
     Q_OBJECT
 public:
