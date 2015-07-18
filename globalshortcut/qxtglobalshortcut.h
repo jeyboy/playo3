@@ -31,12 +31,12 @@
 
 #define QXTGLOBALSHORTCUT_H
 
-#include "qxtglobal.h"
+#include "../double_slider/qxtglobal.h"
 #include <QObject>
 #include <QKeySequence>
 class QxtGlobalShortcutPrivate;
 
-class QXT_GUI_EXPORT QxtGlobalShortcut : public QObject
+class QxtGlobalShortcut : public QObject
 {
     Q_OBJECT
     QXT_DECLARE_PRIVATE(QxtGlobalShortcut)

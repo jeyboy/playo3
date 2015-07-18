@@ -141,7 +141,8 @@ SOURCES += main.cpp\
     misc/web_utils/html_parser.cpp \
     modules/web/sites/myzuka_album.cpp \
     misc/web_utils/web_manager.cpp \
-    external_keys.cpp
+    external_keys.cpp \
+    modules/web/socials_api/soundcloud_api_keys.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -170,7 +171,6 @@ HEADERS  += playo.h \
     media/duration.h \
     media/format.h \
     media/notify_timer.h \
-    globalshortcut/qxtglobal.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
     modules/controls/slider_style.h \
@@ -287,7 +287,8 @@ HEADERS  += playo.h \
     media/genres/web/target_genres.h \
     misc/web_utils/html_parser.h \
     misc/web_utils/web_manager.h \
-    external_keys.h
+    external_keys.h \
+    modules/web/socials_api/soundcloud_api_keys.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

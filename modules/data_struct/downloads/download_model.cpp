@@ -1,5 +1,4 @@
 #include "download_model.h"
-#include <QDebug>
 
 QVariant DownloadModel::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
