@@ -5,7 +5,7 @@ using namespace Playo3;
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
     if (itm -> itemType() == VK_ITEM) {
-        QString newUrl = VkApi::instance() -> refreshAudioItemUrl(
+        QString newUrl = Vk::Api::instance() -> refreshAudioItemUrl(
             itm -> toUid().toString()
         ).section('?', 0, 0);
 
@@ -630,18 +630,18 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         if (map_it.key() == SHARE_TYPE_VK) {
-            if (!VkApi::instance() -> isConnected()) {
+            if (!Vk::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
                 if (loadWebDialogPlugin(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, WebManager::stock(), VkApi::instance() -> authUrl(), QStringLiteral("VK auth"));
-                    dInt -> registerActions(VkApi::instance());
+                    QDialog * dialog = dInt -> createDialog(parent, WebManager::stock(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
+                    dInt -> registerActions(Vk::Api::instance());
                     dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
                     delete dInt;
                 }
             }
 
-            if (VkApi::instance() -> isConnected()) {
-                QJsonArray obj = VkApi::instance() -> getAudiosInfo(map_it.value());
+            if (Vk::Api::instance() -> isConnected()) {
+                QJsonArray obj = Vk::Api::instance() -> getAudiosInfo(map_it.value());
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {

@@ -9,7 +9,7 @@ void VkRelModel::refresh(bool /*retryPlaing*/) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    VkApi::instance() -> audioRecomendations(
+    Vk::Api::instance() -> audioRecomendations(
         tab_uid,
         rel_type == user_rel,
         true,

@@ -377,7 +377,7 @@ Spectrum * ToolBars::getSpectrum() {
 }
 
 void ToolBars::disconnectVk() {
-    VkApi::instance() -> disconnect();
+    Vk::Api::instance() -> disconnect();
     initiateVkButton();
 }
 void ToolBars::disconnectSoundcloud() {
@@ -404,7 +404,7 @@ QToolButton * ToolBars::initiateVkButton() {
         disconnect(vkToolButton, SIGNAL(clicked()), parent(), SLOT(showVKTabDialog()));
     }
 
-    if (VkApi::instance() -> isConnected()) {
+    if (Vk::Api::instance() -> isConnected()) {
         vkToolButton -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
         vkToolButton -> setPopupMode(QToolButton::InstantPopup);
         vkToolButton -> setToolTip(QStringLiteral("VKontakte(vk.com)"));

@@ -102,7 +102,7 @@ Playo::~Playo() {
         Settings::close();
 //        Genre::close();
 
-        VkApi::close();
+        Vk::Api::close();
         Soundcloud::Api::close();
     ///////////////////////////////////////////////
 
@@ -130,7 +130,7 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    VkApi::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
+    Vk::Api::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
     Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
 
     Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
@@ -197,7 +197,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     settings -> clear();
 
-    settings -> write(SETTINGS_VK_SET_KEY, VkApi::instance() -> toJson());
+    settings -> write(SETTINGS_VK_SET_KEY, Vk::Api::instance() -> toJson());
     settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::instance() -> toJson());
 
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
@@ -305,37 +305,37 @@ void Playo::showEchonestDialog() {
 }
 
 void Playo::openVKRecomendations() {
-    ViewSettings settings(vk_rel, false, false, false, true, VkApi::instance() -> userID(), user_rel);
+    ViewSettings settings(vk_rel, false, false, false, true, Vk::Api::instance() -> userID(), user_rel);
     Dockbars::instance() -> createDocBar(QStringLiteral("Rec for YOU"), settings, 0, true, true);
 }
 
 void Playo::openVKTabDialog() {
     WebDialogInterface * dInt;
     if (loadWebDialogPlugin(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, WebManager::stock(), VkApi::instance() -> authUrl(), QStringLiteral("VK auth"));
-        dInt -> registerActions(VkApi::instance());
+        QDialog * dialog = dInt -> createDialog(this, WebManager::stock(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
+        dInt -> registerActions(Vk::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(VkApi::instance() -> userID()), 0, true, true);
+            Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(Vk::Api::instance() -> userID()), 0, true, true);
 
-        Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Connection"), VkApi::instance() -> isConnected() ? QStringLiteral("true") : VkApi::instance() -> getError());
+        Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKTabDialog() {
-    if (VkApi::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(VkApi::instance() -> userID()), 0, true, true);
+    if (Vk::Api::instance() -> isConnected())
+        Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(Vk::Api::instance() -> userID()), 0, true, true);
     else openVKTabDialog();
 }
 
 void Playo::showVKRelTabDialog() {
-    RelationsDialog dialog(VkApi::instance(), this);
+    RelationsDialog dialog(Vk::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), ViewSettings::vk(dialog.getId()), 0, true, true);
 
-    Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), VkApi::instance() -> getError());
+    Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {

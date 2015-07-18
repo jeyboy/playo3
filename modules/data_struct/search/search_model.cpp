@@ -148,9 +148,9 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_vk: {
                 QJsonArray items;
                 if (r.spredicate.isEmpty() && r.popular) {
-                    items = VkApi::instance() -> audioPopular(true, r.sgenre_id);
+                    items = Vk::Api::instance() -> audioPopular(true, r.sgenre_id);
                 } else {
-                    items = VkApi::instance() -> audioSearch(
+                    items = Vk::Api::instance() -> audioSearch(
                         r.spredicate, request.type == artist, request.search_in_own, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT
                     );
                 }

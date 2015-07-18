@@ -102,7 +102,7 @@ namespace Playo3 {
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), equalizer(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
-            connect(VkApi::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
+            connect(Vk::Api::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
             connect(Soundcloud::Api::instance(), SIGNAL(authorized()), this, SLOT(initiateSoundcloudButton()));
         }
 

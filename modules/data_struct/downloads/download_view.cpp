@@ -301,7 +301,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 bool invalid = true;
 
                 if (itm -> data(DOWNLOAD_TYPE).toString() == QStringLiteral("vk")) {
-                    QUrl newFrom = QUrl(VkApi::instance() -> refreshAudioItemUrl(itm -> data(DOWNLOAD_ID).toString()));
+                    QUrl newFrom = QUrl(Vk::Api::instance() -> refreshAudioItemUrl(itm -> data(DOWNLOAD_ID).toString()));
                     if (newFrom != from) {
                         source = networkManager -> openUrl(newFrom);
                         invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;

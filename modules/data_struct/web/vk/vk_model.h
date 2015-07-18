@@ -11,7 +11,7 @@ namespace Playo3 {
         inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return vk; }
-        inline WebApi * api() { return VkApi::instance(); }
+        inline WebApi * api() { return Vk::Api::instance(); }
     public slots:
         virtual void refresh(bool retryPlaing = false);
 //        virtual void refreshWall();

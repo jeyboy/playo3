@@ -10,7 +10,7 @@ void VkModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    VkApi::instance() -> userInfo(tab_uid, tab_uid == VkApi::instance() -> userID(), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Vk::Api::instance() -> userInfo(tab_uid, tab_uid == Vk::Api::instance() -> userID(), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 //void VkModel::refreshWall() {
@@ -53,7 +53,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 void VkModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray albums = hash.value(QStringLiteral("albums")).toArray();
     QJsonArray audios = hash.value(QStringLiteral("audio_list")).toObject().value(QStringLiteral("items")).toArray();
-    int itemsAmount = 0, albums_count = VkApi::extractCount(albums);
+    int itemsAmount = 0, albums_count = Vk::Api::extractCount(albums);
 
 //    beginResetModel();
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
@@ -101,7 +101,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
         for(; it != groups.end(); it++) {
             group = (*it).toObject();
 
-            VkApi::instance() -> addGroup(
+            Vk::Api::instance() -> addGroup(
                 QString::number(group.value(QStringLiteral("id")).toInt()),
                 group.value(QStringLiteral("title")).toString()
             );
@@ -116,7 +116,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
         for(; it != friends.end(); it++) {
             frend = (*it).toObject();
 
-            VkApi::instance() -> addFriend(
+            Vk::Api::instance() -> addFriend(
                 QString::number(frend.value(QStringLiteral("id")).toInt()),
                 frend.value(QStringLiteral("title")).toString()
             );
