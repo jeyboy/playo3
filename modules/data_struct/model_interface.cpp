@@ -249,12 +249,12 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(QStringLiteral("id")).toInt());
-            owner = QString::number(itm.value(QStringLiteral("owner_id")).toInt());
+            id = QString::number(itm.value(Vk::id_key).toInt());
+            owner = QString::number(itm.value(Vk::owner_id_key).toInt());
             uid = WebItem::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(QStringLiteral("url")).toString();
+            uri = itm.value(Vk::url_key).toString();
             uri = uri.section('?', 0, 0); // remove extra info from url
 
             items = store.values(uid.toString());
@@ -264,15 +264,15 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
                 newItem = new VkItem(
                     id,
                     uri,
-                    itm.value(QStringLiteral("artist")).toString() % QStringLiteral(" - ") % itm.value(QStringLiteral("title")).toString(),
+                    itm.value(Vk::artist_key).toString() % QStringLiteral(" - ") % itm.value(Vk::title_key).toString(),
                     parent,
                     pos
                 );
 
                 newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromSeconds(itm.value(QStringLiteral("duration")).toInt(0)));
-                if (itm.contains(QStringLiteral("genre_id")))
-                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(QStringLiteral("genre_id")).toInt()));
+                newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::duration_key).toInt(0)));
+                if (itm.contains(Vk::genre_id_key))
+                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
             } else {
                 QList<IItem *>::Iterator it_it = items.begin();
 
@@ -306,30 +306,30 @@ int IModel::proceedGrabberList(QJsonArray & collection, FolderItem * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(GRAB_FIELD_ID).toInt());
+            id = QString::number(itm.value(Grabber::id_key).toInt());
 
-            uri = itm.value(GRAB_FIELD_URL).toString();
+            uri = itm.value(Grabber::url_key).toString();
             if (uri.isEmpty()) continue;
 
             itemsAmount++;
             newItem = new WebItem(
                 id,
                 uri,
-                itm.value(GRAB_FIELD_TITLE).toString(),
+                itm.value(Grabber::title_key).toString(),
                 parent
             );
 
-            newItem -> setExtension(itm.value(GRAB_FIELD_EXTENSION).toString(QStringLiteral("mp3")));
+            newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
 
-            if (itm.contains(GRAB_FIELD_DURATION)) {
-                if (itm.value(GRAB_FIELD_DURATION).isDouble())
-                    newItem -> setDuration(Duration::fromMillis(itm.value(GRAB_FIELD_DURATION).toInt(0)));
+            if (itm.contains(Grabber::duration_key)) {
+                if (itm.value(Grabber::duration_key).isDouble())
+                    newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
                 else
                     qDebug() << QStringLiteral("proceed parsing by mask from str");
             }
 
-            if (itm.contains(GRAB_FIELD_GENRE_ID))
-                newItem -> setGenre(itm.value(GRAB_FIELD_GENRE_ID).toInt());
+            if (itm.contains(Grabber::genre_id_key))
+                newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
         }
     }
 
@@ -361,14 +361,14 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(QStringLiteral("id")).toInt());
-            owner = QString::number(itm.value(QStringLiteral("user_id")).toInt());
+            id = QString::number(itm.value(Soundcloud::id_key).toInt());
+            owner = QString::number(itm.value(Soundcloud::user_id_key).toInt());
             uid = WebItem::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(QStringLiteral("download_url")).toString();
+            uri = itm.value(Soundcloud::download_url_key).toString();
             if (uri.isEmpty()) {
-                uri = itm.value(QStringLiteral("stream_url")).toString();
+                uri = itm.value(Soundcloud::stream_url_key).toString();
                 original = false;
             } else { original = true;}
             if (uri.isEmpty()) continue;
@@ -380,18 +380,18 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
                 newItem = new SoundcloudItem(
                     id,
                     uri,
-                    itm.value(QStringLiteral("title")).toString(),
+                    itm.value(Soundcloud::title_key).toString(),
                     parent
                 );
 
-                newItem -> setVideoPath(itm.value(QStringLiteral("video_url")).toString());
-                newItem -> setExtension(original ? itm.value(QStringLiteral("original_format")).toString() : QStringLiteral("mp3"));
+                newItem -> setVideoPath(itm.value(Soundcloud::video_url_key).toString());
+                newItem -> setExtension(original ? itm.value(Soundcloud::original_format_key).toString() : Soundcloud::default_extension);
                 newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromMillis(itm.value(QStringLiteral("duration")).toInt(0)));
+                newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::duration_key).toInt(0)));
 
     //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-                if (itm.contains(QStringLiteral("genre_id")))
-                    newItem -> setGenre(itm.value(QStringLiteral("genre_id")).toInt());
+                if (itm.contains(Soundcloud::genre_id_key))
+                    newItem -> setGenre(itm.value(Soundcloud::genre_id_key).toInt());
             } else {
                 QList<IItem *>::Iterator it_it = items.begin();
 

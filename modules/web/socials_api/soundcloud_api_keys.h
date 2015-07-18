@@ -20,6 +20,15 @@ namespace Soundcloud {
     extern const QString name_key;
     extern const QString full_name_key;
     extern const QString username_key;
+
+    extern const QString user_id_key;
+    extern const QString download_url_key;
+    extern const QString stream_url_key;
+    extern const QString video_url_key;
+    extern const QString original_format_key;
+    extern const QString default_extension;
+    extern const QString duration_key;
+    extern const QString genre_id_key;
 }
 
 #endif // SOUNDCLOUD_API_KEYS

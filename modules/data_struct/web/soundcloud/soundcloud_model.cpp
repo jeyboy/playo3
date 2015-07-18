@@ -63,7 +63,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                 group = (*it).toObject();
 
                 Soundcloud::Api::instance() -> addGroup(
-                    QString::number(group.value(QStringLiteral("id")).toInt()),
+                    QString::number(group.value(Soundcloud::id_key).toInt()),
                     group.value(Soundcloud::name_key).toString()
                 );
             }

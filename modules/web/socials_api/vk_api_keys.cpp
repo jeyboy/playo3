@@ -29,4 +29,11 @@ namespace Vk {
     extern const QString albums_offset_key = QStringLiteral("albums_offset");
     extern const QString albums_finished_key = QStringLiteral("albums_finished");
     extern const QString url_key = QStringLiteral("url");
+
+    extern const QString id_key = QStringLiteral("id");
+    extern const QString owner_id_key = QStringLiteral("owner_id");
+    extern const QString artist_key = QStringLiteral("artist");
+    extern const QString title_key = QStringLiteral("title");
+    extern const QString duration_key = QStringLiteral("duration");
+    extern const QString genre_id_key = QStringLiteral("genre_id");
 }

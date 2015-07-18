@@ -58,7 +58,7 @@ namespace Vk {
     //            "return { offset: offset, posts: response, " % finished_key % ": finished };"
     //        ));
 
-    //        return baseUrl("execute", query);
+    //        return baseUrl(execute_key, query);
     //    }
     //    QJsonArray wallAudio(QString & uid) {
     //        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
@@ -91,7 +91,7 @@ namespace Vk {
                    "return { "
                    "    " % albums_key % ": proceed_folders, "
                    "    " % finished_key % ": (proceed_folders.length < count), "
-                   "    offset: " % predef1_key % " %2b count"
+                   "    " % offset_key % ": " % predef1_key % " %2b count"
                    "};"
                )
             );
@@ -254,9 +254,7 @@ namespace Vk {
                    "   count: 1000, "
                    "   shuffle: " % boolToStr(randomize) % ""
                    "});"
-                   "return { "
-                   "   " % audio_list_key % ": recomendations "
-                   "};"
+                   "return {" % audio_list_key % ": recomendations };"
                )
             );
 

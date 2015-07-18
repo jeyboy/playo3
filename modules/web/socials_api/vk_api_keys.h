@@ -32,6 +32,13 @@ namespace Vk {
     extern const QString albums_offset_key;
     extern const QString albums_finished_key;
     extern const QString url_key;
+
+    extern const QString id_key;
+    extern const QString owner_id_key;
+    extern const QString artist_key;
+    extern const QString title_key;
+    extern const QString duration_key;
+    extern const QString genre_id_key;
 }
 
 #endif // VK_API_KEYS
