@@ -381,7 +381,7 @@ void ToolBars::disconnectVk() {
     initiateVkButton();
 }
 void ToolBars::disconnectSoundcloud() {
-    SoundcloudApi::instance() -> disconnect();
+    Soundcloud::Api::instance() -> disconnect();
     initiateSoundcloudButton();
 }
 
@@ -434,7 +434,7 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
         disconnect(soundcloudToolButton, SIGNAL(clicked()), parent(), SLOT(showSoundcloudTabDialog()));
     }
 
-    if (SoundcloudApi::instance() -> isConnected()) {
+    if (Soundcloud::Api::instance() -> isConnected()) {
         soundcloudToolButton -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
         soundcloudToolButton -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
         soundcloudToolButton -> setPopupMode(QToolButton::InstantPopup);

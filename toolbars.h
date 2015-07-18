@@ -103,7 +103,7 @@ namespace Playo3 {
             underMouseBar(0), underMouseButton(0) {
 
             connect(VkApi::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
-            connect(SoundcloudApi::instance(), SIGNAL(authorized()), this, SLOT(initiateSoundcloudButton()));
+            connect(Soundcloud::Api::instance(), SIGNAL(authorized()), this, SLOT(initiateSoundcloudButton()));
         }
 
         QToolButton * vkToolButton;

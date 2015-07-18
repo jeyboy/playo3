@@ -11,7 +11,7 @@ namespace Playo3 {
         inline SoundcloudModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return soundcloud; }
-        inline WebApi * api() { return SoundcloudApi::instance(); }
+        inline WebApi * api() { return Soundcloud::Api::instance(); }
     public slots:
         void refresh(bool retryPlaing = false);
 

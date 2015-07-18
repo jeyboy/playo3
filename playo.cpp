@@ -103,7 +103,7 @@ Playo::~Playo() {
 //        Genre::close();
 
         VkApi::close();
-        SoundcloudApi::close();
+        Soundcloud::Api::close();
     ///////////////////////////////////////////////
 
     delete settings;
@@ -131,7 +131,7 @@ void Playo::initialization() {
     ///services loading
     ///////////////////////////////////////////////////////////
     VkApi::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
-    SoundcloudApi::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
+    Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
 
     Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
@@ -198,7 +198,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> clear();
 
     settings -> write(SETTINGS_VK_SET_KEY, VkApi::instance() -> toJson());
-    settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, SoundcloudApi::instance() -> toJson());
+    settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::instance() -> toJson());
 
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);
@@ -339,7 +339,7 @@ void Playo::showVKRelTabDialog() {
 }
 
 void Playo::showSoundcloudRelTabDialog() {
-    RelationsDialog dialog(SoundcloudApi::instance(), this);
+    RelationsDialog dialog(Soundcloud::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
         Dockbars::instance() -> createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), ViewSettings::soundcloud(dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
@@ -348,20 +348,20 @@ void Playo::showSoundcloudRelTabDialog() {
 void Playo::openSoundcloudTabDialog() {
     WebDialogInterface * dInt;
     if (loadWebDialogPlugin(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, WebManager::stock(), SoundcloudApi::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
-        dInt -> registerActions(SoundcloudApi::instance());
+        QDialog * dialog = dInt -> createDialog(this, WebManager::stock(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
+        dInt -> registerActions(Soundcloud::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
+            Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(Soundcloud::Api::instance() -> userID()), 0, true, true);
 
-        Logger::instance() -> writeToStream(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), SoundcloudApi::instance() -> isConnected() ? QStringLiteral("true") : SoundcloudApi::instance() -> getError());
+        Logger::instance() -> writeToStream(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
         delete dInt;
     }
 }
 
 void Playo::showSoundcloudTabDialog() {
-    if (SoundcloudApi::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(SoundcloudApi::instance() -> userID()), 0, true, true);
+    if (Soundcloud::Api::instance() -> isConnected())
+        Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(Soundcloud::Api::instance() -> userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

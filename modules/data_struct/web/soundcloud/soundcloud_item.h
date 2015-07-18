@@ -17,7 +17,7 @@ namespace Playo3 {
 
         inline QUrl toUrl() const {
             QUrl url = QUrl(fullPath());
-            url.setQuery(SoundcloudApi::instance() -> genDefaultParams());
+            url.setQuery(Soundcloud::Api::instance() -> genDefaultParams());
             return url;
         }
 

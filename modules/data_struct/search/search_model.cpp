@@ -158,9 +158,8 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
-                QJsonArray items = SoundcloudApi::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
-                qDebug() << items;
-                if (SoundcloudApi::extractCount(items) > 0)
+                QJsonArray items = Soundcloud::Api::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
+                if (Soundcloud::Api::extractCount(items) > 0)
                     parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
             case SearchRequest::request_computer: {
@@ -172,7 +171,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_other: {
                 QJsonArray items = MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
                 qDebug() << items;
-                if (SoundcloudApi::extractCount(items) > 0)
+                if (Soundcloud::Api::extractCount(items) > 0)
                     parent -> backPropagateItemsCountInBranch(proceedGrabberList(items, parent));
 
 

@@ -10,13 +10,13 @@ void SoundcloudModel::refresh(bool retryPlaing) {
     lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    SoundcloudApi::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Soundcloud::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
     QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
-    int itemsAmount = 0, albums_count = SoundcloudApi::extractCount(albums), audios_count = SoundcloudApi::extractCount(audios);
+    int itemsAmount = 0, albums_count = Soundcloud::Api::extractCount(albums), audios_count = Soundcloud::Api::extractCount(audios);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
     {
@@ -62,7 +62,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
             for(QJsonArray::Iterator it = group_part.begin(); it != group_part.end(); it++) {
                 group = (*it).toObject();
 
-                SoundcloudApi::instance() -> addGroup(
+                Soundcloud::Api::instance() -> addGroup(
                     QString::number(group.value(QStringLiteral("id")).toInt()),
                     group.value(Soundcloud::name_key).toString()
                 );
@@ -85,7 +85,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                 if (name.isEmpty())
                     name = frend.value(Soundcloud::username_key).toString();
 
-                SoundcloudApi::instance() -> addFriend(
+                Soundcloud::Api::instance() -> addFriend(
                     QString::number(frend.value(Soundcloud::id_key).toInt()),
                     name
                 );
@@ -105,7 +105,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                 if (name.isEmpty())
                     name = frend.value(Soundcloud::username_key).toString();
 
-                SoundcloudApi::instance() -> addFriend(
+                Soundcloud::Api::instance() -> addFriend(
                     QString::number(frend.value(Soundcloud::id_key).toInt()),
                     name
                 );
