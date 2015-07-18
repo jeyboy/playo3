@@ -142,7 +142,8 @@ SOURCES += main.cpp\
     modules/web/sites/myzuka_album.cpp \
     misc/web_utils/web_manager.cpp \
     external_keys.cpp \
-    modules/web/socials_api/soundcloud_api_keys.cpp
+    modules/web/socials_api/soundcloud_api_keys.cpp \
+    modules/web/socials_api/vk_api_keys.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -288,7 +289,8 @@ HEADERS  += playo.h \
     misc/web_utils/html_parser.h \
     misc/web_utils/web_manager.h \
     external_keys.h \
-    modules/web/socials_api/soundcloud_api_keys.h
+    modules/web/socials_api/soundcloud_api_keys.h \
+    modules/web/socials_api/vk_api_keys.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

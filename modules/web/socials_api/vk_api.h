@@ -15,8 +15,8 @@ namespace Vk {
         inline QUrlQuery genDefaultParams() {
             QUrlQuery query = QUrlQuery();
 
-            query.addQueryItem(QStringLiteral("v"), apiVersion());
-            query.addQueryItem(QStringLiteral("access_token"), token());
+            query.addQueryItem(version_key, apiVersion());
+            query.addQueryItem(access_token_key, token());
     //        query.addQueryItem(QStringLiteral("test_mode"), "1");
 
             return query;
@@ -57,15 +57,15 @@ namespace Vk {
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
     protected:
-        inline QString baseUrlStr(QString & predicate) { return QStringLiteral("https://api.vk.com/method/") % predicate; }
+        inline QString baseUrlStr(QString & predicate) { return base_url % predicate; }
 
-        inline QString offsetKey() const { return QStringLiteral("offset"); }
-        inline QString limitKey() const { return QStringLiteral("count"); }
+        inline QString offsetKey() const { return offset_key; }
+        inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 200; }
         inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-        inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
-        inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("finished")).toBool(); }
+        inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(response_key).toObject()); }
+        inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(finished_key).toBool(); }
         bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
         QUrl buildUrl(QUrl tUrl, int offset, int limit);

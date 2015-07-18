@@ -54,9 +54,9 @@ namespace Vk {
     ///////////////////////////////////////////////////////////
 
     bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = response.value(QStringLiteral("error")).toObject();
-        message = stat_obj.value(QStringLiteral("error_msg")).toString();
-        code = stat_obj.value(QStringLiteral("error_code")).toInt();
+        QJsonObject stat_obj = response.value(error_key).toObject();
+        message = stat_obj.value(error_msg_key).toString();
+        code = stat_obj.value(error_code_key).toInt();
 
         if (code == 14)
             return captchaProcessing(response, url);
@@ -65,13 +65,13 @@ namespace Vk {
 
     QUrl Api::buildUrl(QUrl tUrl, int offset, int limit) {
         QString urlStr = tUrl.toString();
-        urlStr = urlStr.replace(QStringLiteral("_1_"), QString::number(offset)).replace(QStringLiteral("_2_"), QString::number(limit));
+        urlStr = urlStr.replace(predef1_key, QString::number(offset)).replace(predef2_key, QString::number(limit));
         return QUrl(urlStr);
     }
 
     bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {
-        QJsonObject stat_obj = response.value(QStringLiteral("error")).toObject();
-        QUrl image_url(stat_obj.value(QStringLiteral("captcha_img")).toString());
+        QJsonObject stat_obj = response.value(error_key).toObject();
+        QUrl image_url(stat_obj.value(captcha_img_key).toString());
 
         WebManager * manager = 0;
         bool isNew = WebManager::valid(manager);
@@ -84,11 +84,11 @@ namespace Vk {
             return false;
 
         QUrlQuery query(url.query());
-        query.removeQueryItem(QStringLiteral("captcha_sid"));
-        query.removeQueryItem(QStringLiteral("captcha_key"));
+        query.removeQueryItem(captcha_sid_key);
+        query.removeQueryItem(captcha_key);
 
-        query.addQueryItem(QStringLiteral("captcha_sid"), stat_obj.value(QStringLiteral("captcha_sid")).toString());
-        query.addQueryItem(QStringLiteral("captcha_key"), captchaText);
+        query.addQueryItem(captcha_sid_key, stat_obj.value(captcha_sid_key).toString());
+        query.addQueryItem(captcha_key, captchaText);
 
         url.setQuery(query);
 
