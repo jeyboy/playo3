@@ -33,14 +33,14 @@ namespace Soundcloud {
             );
         }
     public slots:
-        inline void disconnect() { WebApi::disconnect(); setParams("", "", ""); }
+        inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
 
     protected:
-        inline QString baseUrlStr(QString & predicate) { return "https://api.soundcloud.com/" % predicate % ".json"; }
+        inline QString baseUrlStr(QString & predicate) { return base_url % predicate % ".json"; }
 
-        inline QString offsetKey() const { return QStringLiteral("offset"); }
-        inline QString limitKey() const { return QStringLiteral("limit"); }
+        inline QString offsetKey() const { return offset_key; }
+        inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 200; }
 
         inline QJsonObject & extractBody(QJsonObject & response) { return response; }

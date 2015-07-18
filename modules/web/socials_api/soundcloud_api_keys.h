@@ -4,6 +4,10 @@
 #include <qstringbuilder.h>
 
 namespace Soundcloud {
+    extern const QString base_url;
+    extern const QString offset_key;
+    extern const QString limit_key;
+
     extern const QString audio_list_key;
     extern const QString playlist_key;
     extern const QString followings_key;

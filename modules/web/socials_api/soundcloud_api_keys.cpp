@@ -1,6 +1,11 @@
 #include "soundcloud_api_keys.h"
 
 namespace Soundcloud {
+    extern const QString base_url = QStringLiteral("https://api.soundcloud.com/");
+
+    extern const QString offset_key = QStringLiteral("offset");
+    extern const QString limit_key = QStringLiteral("limit");
+
     extern const QString audio_list_key = QStringLiteral("audio_list");
     extern const QString playlist_key = QStringLiteral("playlists");
     extern const QString followings_key = QStringLiteral("followings");
