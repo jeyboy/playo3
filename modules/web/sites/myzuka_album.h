@@ -12,17 +12,17 @@ namespace Grabber {
     protected:
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
         void toJson(QNetworkReply * reply, QJsonArray & json) {
-            HtmlParser parser(reply);
+            Html::Document parser(reply);
 
-    //        HtmlSet set;
-            HtmlTag * tag;
-            HtmlSelector trackSelector("div[itemprop='tracks']");
-            HtmlSet tracks = parser.find(&trackSelector);
-            HtmlSelector urlSelector("span[data-url^'/Song']");
-    //        HtmlSelector * infoSelector = HtmlSelector::build(infoPredicate());
+    //        Html::Set set;
+            Html::Tag * tag;
+            Html::Selector trackSelector("div[itemprop='tracks']");
+            Html::Set tracks = parser.find(&trackSelector);
+            Html::Selector urlSelector("span[data-url^'/Song']");
+    //        Html::Selector * infoSelector = Html::Selector::build(infoPredicate());
 
             QJsonArray track_ar;
-            for(HtmlSet::Iterator track = tracks.begin(); track != tracks.end(); track++){
+            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++){
                 QJsonObject track_obj;
 
                 tag = (*track) -> find(&urlSelector).first();

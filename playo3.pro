@@ -144,7 +144,8 @@ SOURCES += main.cpp\
     external_keys.cpp \
     modules/web/socials_api/soundcloud_api_keys.cpp \
     modules/web/socials_api/vk_api_keys.cpp \
-    modules/web/sites/grabber_keys.cpp
+    modules/web/sites/grabber_keys.cpp \
+    misc/web_utils/json_parser.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -281,7 +282,6 @@ HEADERS  += playo.h \
     double_slider/qxtglobal.h \
     modules/web/iapi.h \
     modules/web/socials_api/soundcloud_request_api.h \
-    misc/web_utils/json.h \
     modules/web/utils/async.h \
     modules/web/socials_api/vk_request_api.h \
     modules/web/sites/igrabber_api.h \
@@ -292,7 +292,9 @@ HEADERS  += playo.h \
     external_keys.h \
     modules/web/socials_api/soundcloud_api_keys.h \
     modules/web/socials_api/vk_api_keys.h \
-    modules/web/sites/grabber_keys.h
+    modules/web/sites/grabber_keys.h \
+    misc/web_utils/json_parser.h \
+    misc/web_utils/unicode_decoding.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
