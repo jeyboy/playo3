@@ -74,21 +74,44 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
-    QFile f("F:/test_page/home.htm");
-    if (f.open(QFile::ReadOnly)) {
+//    QFile f("F:/test_page/home.htm");
+//    if (f.open(QFile::ReadOnly)) {
 
-        QElapsedTimer t2;
-        t2.start();
-        Html::Document p(&f);
-        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-        p.output();
-        QElapsedTimer t8;
-        t8.start();
-        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
-        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
+//        QElapsedTimer t2;
+//        t2.start();
+//        Html::Document p(&f);
+//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+//        p.output();
+//        QElapsedTimer t8;
+//        t8.start();
+//        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
+//        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
 
-        f.close();
-    }
+//        f.close();
+//    }
+
+
+    QString js = QString(
+        "{"
+        "   \"firstName\": \"Иван\","
+        "   \"lastName\": \"Иванов\","
+        "   \"address\": {"
+        "       \"streetAddress\": \"Московское ш., 101, кв.101\","
+        "       \"city\": \"Ленинград\","
+        "       \"postalCode\": 101101"
+        "   },"
+        "   \"pido\": true,"
+        "   \"phoneNumbers\": ["
+        "       \"812 123-1234\","
+        "       \"916 123-4567\""
+        "   ]"
+        "}     "
+    );
+
+    QElapsedTimer t2;
+    t2.start();
+    Json::Document c(js);
+    qDebug() << "PARSE JSON" << t2.nsecsElapsed() << t2.elapsed() << "ms";
 }
 
 Playo::~Playo() {

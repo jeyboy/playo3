@@ -2,103 +2,90 @@
 
 namespace Json {
     void Document::parse(QIODevice * device) {
-        State state = none;
+        Cell::CellType state = Cell::object;
         char * ch = new char[2]();
         QString key, value; value.reserve(1024); key.reserve(256);
-        ObjectCell * elem = root = new ObjectCell();
+        Cell * elem = root = new ObjectCell();
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
                 if (*ch > 0 && *ch < 31) continue; // skip not printable trash
 
                 switch (state) {
-                    case val: {
+                    case Cell::key: {
                         switch(*ch) {
-                            case space: break; // skip -
+                            case string_token: state = Cell::value; break;
+                            default:
+                                if (*ch > 0) key.append(*ch);
+                                else scanUtf8Char(device, key, ch[0]);
+                        }
+                    break;}
+
+                    case Cell::value: {
+                        switch(*ch) {
+                            case breaker:
+                            case space:
+                                break; // skip -
                             case open_object: {
+                                Cell * prev = elem;
                                 elem = new ObjectCell(elem);
+                                prev -> addVal(key, (state = Cell::object), elem);
                             break;}
                             case open_array: {
-
+                                Cell * prev = elem;
+                                elem = new ArrayCell(elem);
+                                prev -> addVal(key, (state = Cell::array), elem);
                             break;}
-                            case string_token: state = str; break;
+                            case string_token: state = Cell::string; break;
                             default:
-                                if (*ch > num_start && *ch < num_start)
-                                    state = num;
-                                else
-                                    state = lit;
-                                curr.append(*ch);
+                                if (*ch > num_start && *ch < num_start) state = Cell::number_str;
+                                else state = Cell::literal_str;
+                                value.append(*ch);
                         }
-
                     break;}
 
-                    case str: {
+                    case Cell::string: {
                         switch(*ch) {
                             case string_token: {
-                                elem -> addVal(key, );
-                                state = none;
+                                elem -> addVal(key, state, value);
+                                state = Cell::object;
                             break;}
                             default:
-                                if (*ch > 0)
-                                    curr.append(*ch);
-                                else
-                                    scanUtf8Char(device, curr, ch[0]);
+                                if (*ch > 0) value.append(*ch);
+                                else scanUtf8Char(device, value, ch[0]);
                         }
                     break;}
 
-                    case num: {
+                    case Cell::number_str:
+                    case Cell::literal_str: {
                         switch(*ch) {
-                            case content_del1:
-                            case content_del2: {
-                                switch(state) {
-                                    case val: { state = in_val; break;}
-                                    case in_val: {
-                                        elem -> addAttr(curr, value);
-                                        state = attr;
-                                    break;}
-                                    default: { qDebug() << "WRONG STATE" << state; return; }
-                                }
+                            case close_object:
+                            case close_array: {
+                                elem -> addVal(key, state, value); break;
+                                elem = elem -> parent();
+                                state = Cell::object;
                             break;}
-                            default:
-                                if (*ch > 0)
-                                    value.append(*ch);
-                                else
-                                    scanUtf8Char(device, value, ch[0]);
-                        }
-                    break;}
-
-                    case lit: {
-                        switch(*ch) {
-                            case content_del1:
-                            case content_del2: {
-                                switch(state) {
-                                    case val: { state = in_val; break;}
-                                    case in_val: {
-                                        elem -> addAttr(curr, value);
-                                        state = attr;
-                                    break;}
-                                    default: { qDebug() << "WRONG STATE" << state; return; }
-                                }
+                            case comma_token: {
+                                elem -> addVal(key, state, value);
+                                state = Cell::key;
                             break;}
-                            default:
-                                if (*ch > 0)
-                                    value.append(*ch);
-                                else
-                                    scanUtf8Char(device, value, ch[0]);
+                            default: value.append(*ch);
                         }
                     break;}
 
                     default: switch(*ch) {
-                        case space: {
-                            switch(state) {
-                                case attr:
-                                case val: { if (!curr.isEmpty()) elem -> addAttr(curr, value); state = attr; break; } // proceed attrs without value
-                                case tag: { elem = elem -> appendTag(curr); state = attr; break;}
-                                default: /*continue*/; // else skip spaces
-                            }
+                        case breaker: state = Cell::value; break;
+                        case comma_token:
+                        case string_token:
+                            state = Cell::key; break;
+                        case close_object:
+                        case close_array: elem = elem -> parent(); break;
+                        case open_object: {
+                            Cell * prev = elem;
+                            elem = new ObjectCell(elem);
+                            prev -> addVal(key, (state = Cell::object), elem);
                         break;}
-
-                        default: { curr.append(*ch); }
+                        default: break;
                     }
                 }
             }
