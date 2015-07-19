@@ -4,7 +4,7 @@
 #include <qstringbuilder.h>
 #include <qhash.h>
 #include <qbuffer.h>
-//#include <qpair.h>
+#include <qpair.h>
 
 #include "unicode_decoding.h"
 
@@ -13,8 +13,9 @@
 namespace Json {
     class Cell {
         public:
-            enum CellType {object = 1, array, string, number, literal};
+            enum CellType {object = 1, array, string, number, number_str, literal, literal_str, vmap};
 
+            Cell(Cell * parent = 0) : parent(parent) {}
         private:
             CellType cell_type;
             Cell * parent;
@@ -23,29 +24,37 @@ namespace Json {
     class ObjectCell : public Cell {
         public:
             inline ObjectCell() : Cell(), cell_type(object) {}
-            inline ~ObjectCell() { qDeleteAll(cells.values()); }
+            inline ~ObjectCell() {
+                QList<QPair<CellType, void *> > attrs = cells.values();
+                for(QList<QPair<CellType, void *> >::Iterator cell = attrs.begin(); cell != attrs.end(); cell++)
+                    switch((*cell).first) {
+                        case object:
+                        case array: delete (*cell).second;
+                    }
+            }
 
         private:
-            QHash<QString, Cell *> cells;
+            QHash<QString, QPair<CellType, void *> > cells;
     };
 
     class Document : public UnicodeDecoding {
-        enum PToken {
-            open_tag = 60,
-            close_tag_predicate = 47,
-            close_tag = 62,
+        enum Token {
             space = 32,
-            comment_token = 33,
-            comment_post_token = 45,
-            attr_rel = 61,
-            content_del1 = 34,
-            content_del2 = 39,
-            mean_sym = 92
+            breaker = 58,
+            open_object = 123,
+            close_object = 125,
+            open_array = 91,
+            close_array = 93,
+            string_token = 34,
+            num_start = 47,
+            num_end = 58
         };
 
+        enum State {none, val, str, num, lit};
+
     public:
-        inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags) { parse(device); }
-        inline Document(QString & str, Flags parse_flags = skip_comment) : flags(parse_flags) {
+        inline Document(QIODevice * device) { parse(device); }
+        inline Document(QString & str) {
             QByteArray ar = str.toUtf8();
             QBuffer stream(&ar);
             stream.open(QIODevice::ReadOnly);
@@ -57,15 +66,9 @@ namespace Json {
 
         inline void output() { qDebug() << (*root); }
     private:
-        inline bool isSolo(HtmlTag * tag) { return solo.contains(tag -> name()); }
-
-        void initSoloTags();
-
         void parse(QIODevice * device);
 
-        QHash<QString, bool> solo;
-        HtmlTag * root;
-        Flags flags;
+        Cell * root;
     };
 }
 
