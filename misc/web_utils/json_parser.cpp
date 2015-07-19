@@ -4,8 +4,8 @@ namespace Json {
     void Document::parse(QIODevice * device) {
         State state = none;
         char * ch = new char[2]();
-        QString curr; curr.reserve(1024);
-        Cell * elem = root = new ObjectCell();
+        QString key, value; value.reserve(1024); key.reserve(256);
+        ObjectCell * elem = root = new ObjectCell();
 
         while(!device -> atEnd()) {
             if (device -> getChar(ch)) {
@@ -16,7 +16,7 @@ namespace Json {
                         switch(*ch) {
                             case space: break; // skip -
                             case open_object: {
-                                elem = new ObjectCell();
+                                elem = new ObjectCell(elem);
                             break;}
                             case open_array: {
 
@@ -34,11 +34,9 @@ namespace Json {
 
                     case str: {
                         switch(*ch) {
-                            case comment_post_token: break; // skip -
-                            case close_tag: {
-                                if (flags & skip_comment) curr.clear();
-                                else  elem -> appendComment(curr);
-                                state = content;
+                            case string_token: {
+                                elem -> addVal(key, );
+                                state = none;
                             break;}
                             default:
                                 if (*ch > 0)

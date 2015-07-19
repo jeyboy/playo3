@@ -23,7 +23,7 @@ namespace Json {
 
     class ObjectCell : public Cell {
         public:
-            inline ObjectCell() : Cell(), cell_type(object) {}
+            inline ObjectCell(Cell * parent = 0) : Cell(parent), cell_type(object) {}
             inline ~ObjectCell() {
                 QList<QPair<CellType, void *> > attrs = cells.values();
                 for(QList<QPair<CellType, void *> >::Iterator cell = attrs.begin(); cell != attrs.end(); cell++)
@@ -31,6 +31,11 @@ namespace Json {
                         case object:
                         case array: delete (*cell).second;
                     }
+            }
+
+            inline addVal(QString & key, CellType val_type, QString & val) {
+                cells.insert(key, QPair<CellType, void *>(val_type, val));
+                key.clear(); val.clear();
             }
 
         private:
