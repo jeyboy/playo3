@@ -104,8 +104,12 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "   \"phoneNumbers\": ["
         "       \"812 123-1234\","
         "       \"916 123-4567\""
+        "   ],"
+        "   \"dialo\": ["
+        "       true,"
+        "       234567.34"
         "   ]"
-        "}     "
+        "}"
     );
 
     QElapsedTimer t2;
