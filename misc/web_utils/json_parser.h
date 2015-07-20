@@ -54,8 +54,8 @@ namespace Json {
             inline ArrayCell(Cell * parent = 0) : Cell(parent) { cell_type = array; }
             virtual ~ArrayCell();
 
-            inline void addVal(QString & key, CellType val_type, QString & /*val*/) {
-                cells.append(QPair<CellType, void *>(val_type, new QString(key))); key.clear();
+            inline void addVal(QString & /*key*/, CellType val_type, QString & val) {
+                cells.append(QPair<CellType, void *>(val_type, new QString(val))); val.clear();
             }
 
             inline void addVal(QString & /*key*/, CellType val_type, Cell * cell) {
