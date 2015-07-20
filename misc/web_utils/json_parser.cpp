@@ -23,9 +23,9 @@ namespace Json {
     }
 
     void Document::parse(QIODevice * device) {
-        Cell::CellType state = Cell::object;
+        Cell::CellType state = Cell::object, comma_type = Cell::object;
         char * ch = new char[2]();
-        QString key, value; value.reserve(1024); key.reserve(256);
+        QString key, value;
         Cell * elem = root = 0;
 
         while(!device -> atEnd()) {
@@ -53,15 +53,12 @@ namespace Json {
                         switch(*ch) {
                             case space: break; // skip -
                             case open_object: {
-                                Cell * prev = elem;
-                                elem = new ObjectCell(elem);
-                                prev -> addVal(key, (state = Cell::object), elem);
+                                elem = new ObjectCell(key, elem);
+                                comma_type = Cell::key; state = Cell::object;
                             break;}
                             case open_array: {
-                                Cell * prev = elem;
-                                elem = new ArrayCell(elem);
-                                prev -> addVal(key, Cell::array, elem);
-                                state = Cell::value;
+                                elem = new ArrayCell(key, elem);
+                                comma_type = Cell::value;
                             break;}
                             case string_token: state = Cell::string; break;
                             default:
@@ -89,7 +86,7 @@ namespace Json {
                             case close_object:
                             case close_array: {
                                 elem -> addVal(key, state, value); break;
-                                elem = elem -> parent();
+                                elem = elem -> parent(comma_type);
                                 state = Cell::object;
                             break;}
                             case comma_token: {
@@ -101,20 +98,103 @@ namespace Json {
                     break;}
 
                     default: switch(*ch) {
-                        case comma_token:
-                            state = Cell::value; break;
-                        case string_token:
-                            state = Cell::key; break;
+                        case comma_token: state = comma_type; break;
+                        case string_token: state = Cell::key; break;
                         case close_object:
-                        case close_array: elem = elem -> parent(); break;
-                        case open_object: {
-                            elem = root = new ObjectCell(elem);
-                        break;}
+                        case close_array: elem = elem -> parent(comma_type); break;
+                        case open_object: elem = root = new ObjectCell(); break;
                         default: break;
                     }
                 }
             }
         }
         delete ch;
+    }
+
+    void Document::parse(QByteArray & data) {
+        Cell::CellType state = Cell::object, comma_type = Cell::object;
+        char * ch = data.data();
+        QString key, value;
+        Cell * elem = root = 0;
+
+        while(*ch) {
+            if (*ch > 0 && *ch < 31) { ch++; continue; } // skip not printable trash
+
+            switch (state) {
+                case Cell::pre_value: {
+                    switch(*ch) {
+                        case breaker: state = Cell::value; break;
+                        default: ch++; continue;
+                    }
+                break;}
+
+                case Cell::key: {
+                    switch(*ch) {
+                        case string_token: state = Cell::pre_value; break;
+                        default: key.append(*ch);
+//                            if (*ch > 0) key.append(*ch);
+//                            else scanUtf8Char(ch, key);
+                    }
+                break;}
+
+                case Cell::value: {
+                    switch(*ch) {
+                        case space: break; // skip -
+                        case open_object: {
+                            elem = new ObjectCell(key, elem);
+                            comma_type = Cell::key; state = Cell::object;
+                        break;}
+                        case open_array: {
+                            elem = new ArrayCell(key, elem);
+                            comma_type = Cell::value;
+                        break;}
+                        case string_token: state = Cell::string; break;
+                        default:
+                            if (*ch > num_start && *ch < num_start) state = Cell::number_str;
+                            else state = Cell::literal_str;
+                            value.append(*ch);
+                    }
+                break;}
+
+                case Cell::string: {
+                    switch(*ch) {
+                        case string_token: {
+                            elem -> addVal(key, state, value);
+                            state = Cell::object;
+                        break;}
+                        default: value.append(*ch);
+//                            if (*ch > 0) value.append(*ch);
+//                            else scanUtf8Char(ch, value);
+                    }
+                break;}
+
+                case Cell::number_str:
+                case Cell::literal_str: {
+                    switch(*ch) {
+                        case close_object:
+                        case close_array: {
+                            elem -> addVal(key, state, value); break;
+                            elem = elem -> parent(comma_type);
+                            state = Cell::object;
+                        break;}
+                        case comma_token: {
+                            elem -> addVal(key, state, value);
+                            state = Cell::value;
+                        break;}
+                        default: value.append(*ch);
+                    }
+                break;}
+
+                default: switch(*ch) {
+                    case comma_token: state = comma_type; break;
+                    case string_token: state = Cell::key; break;
+                    case close_object:
+                    case close_array: elem = elem -> parent(comma_type); break;
+                    case open_object: elem = root = new ObjectCell(); break;
+                    default: break;
+                }
+            }
+            ch++;
+        }
     }
 }

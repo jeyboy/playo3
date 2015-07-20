@@ -11,6 +11,9 @@
 #define DEBUG_LIMIT_OUTPUT 100
 
 namespace Json {
+    class ArrayCell;
+    class ObjectCell;
+
     class Cell {
         public:
             enum CellType {
@@ -20,19 +23,48 @@ namespace Json {
 
             inline Cell(Cell * parent = 0) : _parent(parent) {}
             inline virtual ~Cell() {}
+            virtual inline CellType cell_type() const { return object; }
 
             virtual void addVal(QString & key, CellType val_type, QString & val) = 0;
             virtual void addVal(QString & key, CellType val_type, Cell * cell) = 0;
-            inline Cell * parent() { return _parent; }
-        protected:
-            CellType cell_type;
+            inline Cell * parent(CellType & cType) {
+                cType = cell_type() == Cell::object ? Cell::object : Cell::value;
+                return _parent;
+            }
+//            virtual inline Cell * operator[](int index) = 0;
+//            virtual Cell * operator[](QString name) = 0;
+
+//            inline float toNum(QPair<CellType, void *> & val) {
+//                switch(val.first) {
+//                    case number: return val.second;
+//                    case number_str: {
+////                        QString * str = val.second;
+////                        val = QPair<CellType, void *>
+////                        val.second = &str -> toFloat();
+
+//                    break;}
+//                }
+//            }
+//            inline bool toBool(QPair<CellType, void *> & val) {
+
+//            }
+//            inline bool toStr(QPair<CellType, void *> & val) {
+
+//            }
+//            inline bool toCell(QPair<CellType, void *> & val) {
+
+//            }
         private:
             Cell * _parent;
     };
 
+
     class ObjectCell : public Cell {
         public:
-            inline ObjectCell(Cell * parent = 0) : Cell(parent) { cell_type = object; }
+            inline ObjectCell() : Cell(0) {}
+            inline ObjectCell(QString & key, Cell * parent) : Cell(parent) {
+                parent -> addVal(key, object, this); key.clear();
+            }
             virtual ~ObjectCell();
 
             inline void addVal(QString & key, CellType val_type, QString & val) {
@@ -45,14 +77,22 @@ namespace Json {
                 key.clear();
             }
 
+            inline int count() { return cells.size(); }
+
+//            inline Cell * operator[](int index) {
+//            }
+//            inline Cell * operator[](QString name) = 0;
         private:
             QHash<QString, QPair<CellType, void *> > cells;
     };
 
     class ArrayCell : public Cell {
         public:
-            inline ArrayCell(Cell * parent = 0) : Cell(parent) { cell_type = array; }
+            inline ArrayCell(QString & key, Cell * parent) : Cell(parent) {
+                parent -> addVal(key, Cell::array, this);
+            }
             virtual ~ArrayCell();
+            virtual inline CellType cell_type() const { return array; }
 
             inline void addVal(QString & /*key*/, CellType val_type, QString & val) {
                 cells.append(QPair<CellType, void *>(val_type, new QString(val))); val.clear();
@@ -82,19 +122,14 @@ namespace Json {
 
     public:
         inline Document(QIODevice * device) { parse(device); }
-        inline Document(QString & str) {
-            QByteArray ar = str.toUtf8();
-            QBuffer stream(&ar);
-            stream.open(QIODevice::ReadOnly);
-            parse((QIODevice *)&stream);
-            stream.close();
-        }
+        inline Document(QByteArray & data) { parse(data); }
 
         inline ~Document() { delete root; }
 
 //        inline void output() { qDebug() << (*root); }
     private:
         void parse(QIODevice * device);
+        void parse(QByteArray & data);
 
         Cell * root;
     };

@@ -112,10 +112,17 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         "}"
     );
 
+    QByteArray ar = js.toUtf8();
     QElapsedTimer t2;
     t2.start();
-    Json::Document c(js);
+    Json::Document c(ar);
     qDebug() << "PARSE JSON" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+
+
+    QElapsedTimer t3;
+    t3.start();
+    QJsonDocument::fromBinaryData(js.toUtf8());
+    qDebug() << "DOC PARSE JSON" << t3.nsecsElapsed() << t3.elapsed() << "ms";
 }
 
 Playo::~Playo() {

@@ -54,6 +54,43 @@ protected:
         if (QChar::requiresSurrogates(uc)) { result.append(QChar::highSurrogate(uc)); result.append(QChar::lowSurrogate(uc)); }
         else result.append(QChar(uc));
     }
+
+    inline void scanUtf8Char(char * io, QString & result) {
+        int need;
+        uint min_uc, uc;
+
+        if (((*io) & 0xe0) == 0xc0) {
+            uc = (*io) & 0x1f;
+            need = 1;
+            min_uc = 0x80;
+        } else if (((*io) & 0xf0) == 0xe0) {
+            uc = (*io) & 0x0f;
+            need = 2;
+            min_uc = 0x800;
+        } else if (((*io)&0xf8) == 0xf0) {
+            uc = (*io) & 0x07;
+            need = 3;
+            min_uc = 0x10000;
+        } else {
+            qDebug() << "BLIA " << (*io);
+            result.append((*io));
+            return;
+        }
+
+//        if (io -> bytesAvailable() < need) { result.append(ch); return;}
+
+        for (int i = 0; i < need; ++i, io++) {
+            if (((*io)&0xc0) != 0x80) { qDebug() << "PIPEC" << (*io); return; }
+            uc = (uc << 6) | ((*io) & 0x3f);
+        }
+
+        if (isUnicodeNonCharacter(uc) || uc >= 0x110000 || (uc < min_uc) || (uc >= 0xd800 && uc <= 0xdfff)) {
+            qDebug() << "UNEBABLE"; return;
+        }
+
+        if (QChar::requiresSurrogates(uc)) { result.append(QChar::highSurrogate(uc)); result.append(QChar::lowSurrogate(uc)); }
+        else result.append(QChar(uc));
+    }
 };
 
 #endif // UNICODE_DECODING
