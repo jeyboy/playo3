@@ -38,12 +38,22 @@ class IGrabberApi {
 public:
     virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
 
+    virtual TargetGenres genresList() { return TargetGenres(); }
+
+    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonArray(); }
+
+    virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
+
+    virtual QJsonArray byType(QString /*target_type*/) { return QJsonArray(); }
+
+    virtual QJsonArray popular() { return QJsonArray(); }
+
     QString refresh(QUrl refresh_page) {
         if (refresh_page.isEmpty()) return QString();
-        return rQuery(refresh_page);
+        return refreshQuery(refresh_page);
     }
 
-    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
+//    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 protected:
     virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
@@ -61,21 +71,11 @@ protected:
 //    virtual QString offsetKey() const = 0;
 //    virtual QString limitKey() const = 0;
 
-    virtual TargetGenres genresList() { return TargetGenres(); }
-
-    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonArray(); }
-
-    virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
-
-    virtual QJsonArray byType(QString /*target_type*/) { return QJsonArray(); }
-
-    virtual QJsonArray popular() { return QJsonArray(); }
-
     virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
 
-    virtual void toJson(QNetworkReply * reply, QJsonArray & json) = 0;
+    virtual void toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
-    void rQuery(QUrl & url) {
+    QString refreshQuery(QUrl & url) {
         bool isNew = !manager ? WebManager::valid(manager) : false;
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
         QString res = refresh_postprocess(response);
