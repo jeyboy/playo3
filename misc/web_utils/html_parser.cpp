@@ -48,12 +48,12 @@ namespace Html {
         while(*it) {
             switch(*it) {
                 case id_token: {
-                    selector -> addToken(state, token, rel);
+                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
                     state = Selector::id;
                 break;}
 
                 case class_token: {
-                    selector -> addToken(state, token, rel);
+                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
                     state = Selector::klass;
                 break;}
 
@@ -76,13 +76,12 @@ namespace Html {
                 break;}
 
                 case type_token: {
-                    selector -> addToken(state, token, rel);
+                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
                     state = Selector::type;
                 break;}
 
                 case direct_token: {
-                    if (!token.isEmpty())
-                        selector -> addToken(state, token, rel);
+                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
                     selector = new Selector(true, selector);
                     state = Selector::tag;
                 break;}
@@ -170,27 +169,13 @@ namespace Html {
         Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
 
+        qDebug() << device -> bytesAvailable();
+
         while(true) {
             if (device -> getChar(ch)) {
                 if (*ch > 0 && *ch < 31) continue; // skip not printable trash
 
                 switch (state) {
-                    case comment: {
-                        switch(*ch) {
-                            case comment_post_token: break; // skip -
-                            case close_tag: {
-                                if (flags & skip_comment) curr.clear();
-                                else  elem -> appendComment(curr);
-                                state = content;
-                            break;}
-                            default:
-                                if (*ch > 0)
-                                    curr.append(*ch);
-                                else
-                                    scanUtf8Char(device, curr, ch[0]);
-                        }
-                    break;}
-
                     case val:
                     case in_val: {
                         switch(*ch) {
@@ -224,13 +209,23 @@ namespace Html {
                         }
                     break;}
 
-                    default: switch(*ch) {
-    //                    case open_tag: {
-    //                        qDebug() << "MAYBE NOT USABLE";
-    //                        if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
-    //                        state = tag;
-    //                    break;}
+                    case comment: {
+                        switch(*ch) {
+                            case comment_post_token: break; // skip -
+                            case close_tag: {
+                                if (flags & skip_comment) curr.clear();
+                                else  elem -> appendComment(curr);
+                                state = content;
+                            break;}
+                            default:
+                                if (*ch > 0)
+                                    curr.append(*ch);
+                                else
+                                    scanUtf8Char(device, curr, ch[0]);
+                        }
+                    break;}
 
+                    default: switch(*ch) {
                         case space: {
                             switch(state) {
                                 case attr:
@@ -240,9 +235,7 @@ namespace Html {
                             }
                         break;}
 
-                        case attr_rel: {
-                            state = val;
-                        break;}
+                        case attr_rel: state = val; break;
 
                         case close_tag_predicate: {
                             last = *ch;

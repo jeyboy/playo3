@@ -3,6 +3,7 @@
 namespace Grabber {
     extern const QString title_key = QStringLiteral("title");
     extern const QString duration_key = QStringLiteral("duration");
+    extern const QString size_key = QStringLiteral("size");
     extern const QString id_key = QStringLiteral("id");
     extern const QString url_key = QStringLiteral("url");
     extern const QString genre_id_key = QStringLiteral("genre_id");

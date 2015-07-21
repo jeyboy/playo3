@@ -2,6 +2,7 @@
 #include "ui_playo.h"
 
 #include "misc/stylesheets.h"
+#include "modules/web/sites/myzuka_album.h"
 
 using namespace Playo3;
 
@@ -72,20 +73,18 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    HtmlSet set = p.find(QStringLiteral("html meta[name='description']"));
 //    qDebug() << set;
 
-
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
     QFile f("F:/test_page/home.htm");
     if (f.open(QFile::ReadOnly)) {
-
-        QElapsedTimer t2;
-        t2.start();
-        Html::Document p(&f);
-        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-        p.output();
-        QElapsedTimer t8;
-        t8.start();
-        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
-        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
+//        QElapsedTimer t2;
+//        t2.start();
+//        Html::Document p(&f);
+//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+//        p.output();
+//        QElapsedTimer t8;
+//        t8.start();
+//        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
+//        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
 
         f.close();
     }
