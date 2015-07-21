@@ -6,6 +6,7 @@ namespace Grabber {
     extern const QString size_key = QStringLiteral("size");
     extern const QString id_key = QStringLiteral("id");
     extern const QString url_key = QStringLiteral("url");
+    extern const QString refresh_key = QStringLiteral("refresh_url");
     extern const QString genre_id_key = QStringLiteral("genre_id");
     extern const QString extension_key = QStringLiteral("extension");
     extern const QString bitrate_key = QStringLiteral("bitrate");

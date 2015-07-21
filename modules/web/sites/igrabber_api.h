@@ -31,13 +31,19 @@
 //    int count, offset, limit, fact_count;
 //};
 
-#define DEFAULT_PREDICATE_NAME QStringLiteral("")
+#define DEFAULT_PREDICATE_NAME QString()
 #define GRAB_DELAY 200 // ms
 
 class IGrabberApi {
 public:
     virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
 
+    QString refresh(QUrl refresh_page) {
+        if (refresh_page.isEmpty()) return QString();
+        return rQuery(refresh_page);
+    }
+
+    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 protected:
     virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
@@ -65,7 +71,18 @@ protected:
 
     virtual QJsonArray popular() { return QJsonArray(); }
 
+    virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
+
     virtual void toJson(QNetworkReply * reply, QJsonArray & json) = 0;
+
+    void rQuery(QUrl & url) {
+        bool isNew = !manager ? WebManager::valid(manager) : false;
+        QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+        QString res = refresh_postprocess(response);
+        delete response;
+        if (isNew) delete manager;
+        return res;
+    }
 
     void sQuery(QUrl url, QJsonArray & res, WebManager * manager = 0) {
         bool isNew = !manager ? WebManager::valid(manager) : false;

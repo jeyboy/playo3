@@ -95,10 +95,7 @@ namespace Html {
                 break;}
 
                 case cont1_token:
-                case cont2_token: {
-                    // skipping
-                break;}
-
+                case cont2_token: break; // skipping
                 default: token.append(*it);
             }
 

@@ -13,6 +13,7 @@
 namespace Html {
     const QString any_elem_token = QStringLiteral("*");
     const QString text_block_token = QStringLiteral("text");
+    const QString href_token = QStringLiteral("href");
     const QString comment_block_token = QStringLiteral("comment");
 
     const QString id_token = QStringLiteral("id");
@@ -87,6 +88,7 @@ namespace Html {
         inline Set children() const { return tags; }
         inline QString value(QString name) { return attrs.value(name); }
         inline QString text() const { return attrs.value(text_block_token); }
+        inline QString link() const { return attrs.value(href_token); }
 
         inline Tag * parentTag() { return parent; }
 
