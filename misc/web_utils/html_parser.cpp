@@ -170,7 +170,7 @@ namespace Html {
         Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
 
-        while(!device -> atEnd()) {
+        while(true) {
             if (device -> getChar(ch)) {
                 if (*ch > 0 && *ch < 31) continue; // skip not printable trash
 
@@ -281,7 +281,7 @@ namespace Html {
                         default: { curr.append((last = *ch)); }
                     }
                 }
-            }
+            } else break;
         }
         delete ch;
     }
