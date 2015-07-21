@@ -23,7 +23,7 @@ namespace Html {
         switch(tType) {
             case attr: {
                 QStringList parts = token.split(rel, QString::SkipEmptyParts);
-                QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : HTML_PARSER_ANY_ELEMENT);
+                QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : any_elem_token);
                 _attrs.insert(parts.first(), newAttr); rel = attr_rel_eq;
                 break;
             }
@@ -114,11 +114,11 @@ namespace Html {
     bool Tag::validTo(Selector * selector) {
         for(QHash<Selector::SState, QString>::Iterator it = selector -> _tokens.begin(); it != selector -> _tokens.end(); it++) {
             switch(it.key()) {
-                case Selector::tag: { if (!(it.value() == HTML_PARSER_ANY_ELEMENT || _name == it.value())) return false; break; }
+                case Selector::tag: { if (!(it.value() == any_elem_token || _name == it.value())) return false; break; }
                 case Selector::attr: {
                     for(QHash<QString, QPair<char, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
                         switch(it.value().first) {
-                            case Selector::attr_rel_eq: { if (!(it.value().second == HTML_PARSER_ANY_ELEMENT || attrs.value(it.key()) == it.value().second)) return false;  break;}
+                            case Selector::attr_rel_eq: { if (!(it.value().second == any_elem_token || attrs.value(it.key()) == it.value().second)) return false;  break;}
                             case Selector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
                             case Selector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
                             case Selector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
@@ -126,9 +126,9 @@ namespace Html {
                         };
                     break;
                 }
-                case Selector::id:  { if (attrs[HTML_PARSER_ID_ATTR] != it.value()) return false; break; }
+                case Selector::id:  { if (attrs[id_token] != it.value()) return false; break; }
                 case Selector::klass: { //TODO: optimisation needed
-                    QStringList node_klasses = attrs[HTML_PARSER_CLASS_ATTR].split(QStringLiteral(" "), QString::SkipEmptyParts);
+                    QStringList node_klasses = attrs[class_token].split(split_token, QString::SkipEmptyParts);
                     if (node_klasses.isEmpty()) return false;
 
                     for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
@@ -141,7 +141,7 @@ namespace Html {
                     break;
                 }
                 case Selector::type: {
-                    if (!((_name == HTML_PARSER_INPUT_ATTR || _name == HTML_PARSER_SELECT_ATTR) && attrs[HTML_PARSER_TYPE_ATTR] == it.value())) return false;
+                    if (!((_name == input_token || _name == select_token) && attrs[type_token] == it.value())) return false;
                     break;
                 }
                 default: ;
@@ -167,7 +167,7 @@ namespace Html {
         PState state = content;
         char * ch = new char[2](), last = 0;
         QString curr, value; curr.reserve(1024); value.reserve(1024);
-        Tag * elem = (root = new Tag(HTML_PARSER_ANY_ELEMENT));
+        Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
 
         while(!device -> atEnd()) {

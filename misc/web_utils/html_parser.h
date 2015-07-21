@@ -8,20 +8,20 @@
 
 #include "unicode_decoding.h"
 
-#define HTML_PARSER_ANY_ELEMENT QStringLiteral("*")
-
-#define HTML_PARSER_TEXT_BLOCK QStringLiteral("text")
-#define HTML_PARSER_COMMENT_BLOCK QStringLiteral("comment")
-
-#define HTML_PARSER_ID_ATTR QStringLiteral("id")
-#define HTML_PARSER_CLASS_ATTR QStringLiteral("class")
-#define HTML_PARSER_TYPE_ATTR QStringLiteral("type")
-#define HTML_PARSER_INPUT_ATTR QStringLiteral("input")
-#define HTML_PARSER_SELECT_ATTR QStringLiteral("select")
-
 #define DEBUG_LIMIT_OUTPUT 100
 
 namespace Html {
+    const QString any_elem_token = QStringLiteral("*");
+    const QString text_block_token = QStringLiteral("text");
+    const QString comment_block_token = QStringLiteral("comment");
+
+    const QString id_token = QStringLiteral("id");
+    const QString class_token = QStringLiteral("class");
+    const QString type_token = QStringLiteral("type");
+    const QString input_token = QStringLiteral("input");
+    const QString select_token = QStringLiteral("select");
+    const QString split_token = QStringLiteral(" ");
+
     struct Selector {
         enum SState { none, tag, attr, id, klass, type };
 
@@ -86,7 +86,7 @@ namespace Html {
         inline QHash<QString, QString> attributes() const { return attrs; }
         inline Set children() const { return tags; }
         inline QString value(QString name) { return attrs.value(name); }
-        inline QString text() const { return attrs.value(HTML_PARSER_TEXT_BLOCK); }
+        inline QString text() const { return attrs.value(text_block_token); }
 
         inline Tag * parentTag() { return parent; }
 
@@ -103,15 +103,15 @@ namespace Html {
             return newTag;
         }
         inline void appendText(QString & val) {
-            QString tnm(HTML_PARSER_TEXT_BLOCK);
+            QString tnm(text_block_token);
             Tag * newTag = appendTag(tnm);
-            QString nm(HTML_PARSER_TEXT_BLOCK);
+            QString nm(text_block_token);
             newTag -> addAttr(nm, val); val.clear();
         }
         inline void appendComment(QString & val) {
-            QString tnm(HTML_PARSER_COMMENT_BLOCK);
+            QString tnm(comment_block_token);
             Tag * newTag = appendTag(tnm);
-            QString nm(HTML_PARSER_COMMENT_BLOCK);
+            QString nm(comment_block_token);
             newTag -> addAttr(nm, val); val.clear();
         }
 

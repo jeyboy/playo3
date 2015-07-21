@@ -28,8 +28,9 @@ namespace Json {
         QString key, value;
         Cell * elem = root = 0;
 
-        while(!device -> atEnd()) {
+        while(true) {
             if (device -> getChar(ch)) {
+                if (*ch == 0) break;
                 if (*ch > 0 && *ch < 31) continue; // skip not printable trash
 
                 switch (state) {

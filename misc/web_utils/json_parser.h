@@ -1,6 +1,8 @@
 #ifndef JSON_PARSER
 #define JSON_PARSER
 
+//NOT USING // NOT FINISHED
+
 #include <qstringbuilder.h>
 #include <qhash.h>
 #include <qbuffer.h>
@@ -9,6 +11,27 @@
 #include "unicode_decoding.h"
 
 #define DEBUG_LIMIT_OUTPUT 100
+
+//QString js = QString(
+//    "{"
+//    "   \"firstName\": \"Иван\","
+//    "   \"lastName\": \"Иванов\","
+//    "   \"address\": {"
+//    "       \"streetAddress\": \"Московское ш., 101, кв.101\","
+//    "       \"city\": \"Ленинград\","
+//    "       \"postalCode\": 101101"
+//    "   },"
+//    "   \"pido\": true,"
+//    "   \"phoneNumbers\": ["
+//    "       \"812 123-1234\","
+//    "       \"916 123-4567\""
+//    "   ],"
+//    "   \"dialo\": ["
+//    "       true,"
+//    "       234567.34"
+//    "   ]"
+//    "}"
+//);
 
 namespace Json {
     class ArrayCell;
