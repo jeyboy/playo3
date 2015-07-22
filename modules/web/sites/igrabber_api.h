@@ -73,7 +73,7 @@ protected:
 
     virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
 
-    virtual void toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
+    virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
     QString refreshQuery(QUrl & url) {
         bool isNew = !manager ? WebManager::valid(manager) : false;

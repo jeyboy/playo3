@@ -13,29 +13,35 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) {
-            bool isNew = !manager ? WebManager::valid(manager) : false;
+        QJsonArray search(QString & predicate, QString & genre, bool popular, int count) {
+            QUrl url;
 
+            if (!predicate.isEmpty())
+                url = QUrl(baseUrlStr())
+            else if (!genre.isEmpty())
+
+            else return popular();
+
+            bool isNew = !manager ? WebManager::valid(manager) : false;
             QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
             search_postprocess(response, arr);
             delete response;
-
             if (isNew) delete manager;
         }
 
-//        TargetGenres genresList() { return TargetGenres(); }
+//        TargetGenres genresList() { return TargetGenres(); } // https://myzuka.org/Genre/Page1
 
-        QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) {
-
-        }
-
-        QJsonArray byChar(QChar /*target_char*/) {
+        QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { // https://myzuka.org/Genre/92/8-Bit
 
         }
 
-        QJsonArray byType(QString /*target_type*/) {
+        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs
 
         }
+
+//        QJsonArray byType(QString /*target_type*/) {
+
+//        }
 
         QJsonArray popular() {
             bool isNew = !manager ? WebManager::valid(manager) : false;
@@ -47,7 +53,7 @@ namespace Grabber {
 
     protected:
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
-        void toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
 
             Html::Set set;
@@ -86,6 +92,7 @@ namespace Grabber {
 
             json.append(track_ar);
             if (removeReply) delete reply;
+            return !tracks.isEmpty();
         }
 
         QString refresh_postprocess(QNetworkReply * reply) {
