@@ -439,15 +439,17 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 }
 
 void IView::checkByPredicate(IItem::ItemStateFlag flag) {
+    emit mdl -> moveInProcess();
+    QApplication::processEvents();
+
+    bool ensureVisibility = false;
     QModelIndex curr = mdl -> index(0, 0);
     expandAll();
 
     while(true) {
-        if (!curr.isValid()) return;
+        if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        qDebug() << node -> title();
-
         if (!node -> is(ItemState::proceeded)) {
 //            node -> set(ItemState::proceeded);
             if (!node -> isContainer()) {
@@ -456,8 +458,16 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
             }
         }
         node -> updateCheckedStateByPredicate(flag);
+
+        if (!ensureVisibility && node -> is(flag)) {
+            ensureVisibility = true;
+            scrollTo(curr, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+        }
+
         curr = indexBelow(curr);
     }
+
+    emit mdl -> moveOutProcess();
 }
 
 QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
