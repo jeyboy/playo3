@@ -125,7 +125,7 @@ bool IView::execPath(const QString path, bool paused, uint start) {
 }
 
 bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
-    if (node.isValid() && node.data(IPLAYABLE).toBool()) {
+    if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
         qDebug() << "PLAYED " << node.data();
         Dockbars::instance() -> setPlayed((DockBar *)parent());
 
