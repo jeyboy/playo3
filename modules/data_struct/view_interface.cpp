@@ -397,13 +397,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
 
             actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Liked"), this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markLikedAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markLikedAsChecked()));
 
             actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check New"), this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markNewAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markNewAsChecked()));
 
             actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Listened"), this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markListenedAsChecked()));
+            connect(act, SIGNAL(triggered(bool)), this, SLOT(markListenedAsChecked()));
 
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
@@ -443,19 +443,20 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
     expandAll();
 
     while(true) {
-        curr = indexBelow(curr);
+        if (!curr.isValid()) return;
 
         IItem * node = mdl -> item(curr);
-        bool is_proceeded = node -> is(ItemState::proceeded);
+        qDebug() << node -> title();
 
-        if (!is_proceeded) {
+        if (!node -> is(ItemState::proceeded)) {
 //            node -> set(ItemState::proceeded);
-            if (!node -> isContainer())
+            if (!node -> isContainer()) {
+                qDebug() << node -> title() << "LIB";
                 Library::instance() -> directItemStateRestoration(curr);
+            }
         }
         node -> updateCheckedStateByPredicate(flag);
-
-        if (!curr.isValid()) return;
+        curr = indexBelow(curr);
     }
 }
 

@@ -228,7 +228,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
                 else
                     emitItemAttrChanging(ind, ItemState::liked);
 
-                listSyncs[ind.model()] -> unlock();
+                if (watcher) listSyncs[ind.model()] -> unlock();
                 return;
             }
 
@@ -246,7 +246,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
         if (!canceled)
             emitItemAttrChanging(ind, ItemState::new_item);
 
-    listSyncs[ind.model()] -> unlock();
+    if (watcher) listSyncs[ind.model()] -> unlock();
 }
 
 void Library::cancelActiveRestorations() {

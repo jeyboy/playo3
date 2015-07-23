@@ -173,10 +173,6 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 //                qDebug() << items;
 //                if (Soundcloud::Api::extractCount(items) > 0)
 //                    parent -> backPropagateItemsCountInBranch(proceedGrabberList(items, parent));
-
-
-
-
             break;}
         }
     }
