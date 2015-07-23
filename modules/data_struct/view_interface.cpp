@@ -438,6 +438,27 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         QMenu::exec(actions, event -> globalPos(), 0, this);
 }
 
+void IView::checkByPredicate(IItem::ItemStateFlag flag) {
+    QModelIndex curr = mdl -> index(0, 0);
+    expandAll();
+
+    while(true) {
+        curr = indexBelow(curr);
+
+        IItem * node = mdl -> item(curr);
+        bool is_proceeded = node -> is(ItemState::proceeded);
+
+        if (!is_proceeded) {
+//            node -> set(ItemState::proceeded);
+            if (!node -> isContainer())
+                Library::instance() -> directItemStateRestoration(curr);
+        }
+        node -> updateCheckedStateByPredicate(flag);
+
+        if (!curr.isValid()) return;
+    }
+}
+
 QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
     while(true) {
         if (model() -> hasChildren(node))
@@ -680,9 +701,15 @@ void IView::downloadChecked(QString & path, FolderItem * root) {
     }
 }
 
-
-
-
+void IView::markLikedAsChecked() {
+    checkByPredicate(IItem::liked);
+}
+void IView::markNewAsChecked() {
+    checkByPredicate(IItem::new_item);
+}
+void IView::markListenedAsChecked() {
+    checkByPredicate(IItem::listened);
+}
 
 void IView::moveCheckedToNewTab(FolderItem * root) {
     //TODO: realisation needed
@@ -741,7 +768,7 @@ void IView::findExecutable(QModelIndex & curr) {
 
     if (direction & IModel::forward) {
         while(true) {
-            if (model() -> hasChildren(curr)) // maybe try to expand all items
+            if (model() -> hasChildren(curr))
                 expand(curr);
 
             curr = indexBelow(curr);

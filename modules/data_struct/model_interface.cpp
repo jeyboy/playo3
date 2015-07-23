@@ -677,21 +677,6 @@ void IModel::markAllAsUnchecked() {
     endResetModel();
 }
 
-void IModel::markLikedAsChecked() {
-    beginResetModel();
-    rootItem -> propagateCheckedStateByPredicate(ItemState::liked);
-    endResetModel();
-}
-void IModel::markNewAsChecked() {
-    beginResetModel();
-    rootItem -> propagateCheckedStateByPredicate(ItemState::new_item);
-    endResetModel();
-}
-void IModel::markListenedAsChecked() {
-    beginResetModel();
-    rootItem -> propagateCheckedStateByPredicate(ItemState::listened);
-    endResetModel();
-}
 void IModel::removeChecked() {
     beginResetModel();
     //TODO: realisation needed

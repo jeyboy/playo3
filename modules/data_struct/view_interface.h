@@ -104,9 +104,13 @@ namespace Playo3 {
         void downloadChecked(QString & path, FolderItem * root = 0);
         void downloadAll();
 
+        void markLikedAsChecked();
+        void markNewAsChecked();
+        void markListenedAsChecked();
         void moveCheckedToNewTab(FolderItem * root = 0);
 
     protected:
+        void checkByPredicate(IItem::ItemStateFlag flag);
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
         void removeProccessing(QModelIndexList & index_list, bool remove, bool inProcess = false);

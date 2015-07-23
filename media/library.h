@@ -31,6 +31,7 @@ namespace Playo3 {
 
         void setItemState(const QModelIndex & ind, int state);
 
+        void directItemStateRestoration(const QModelIndex & ind);
         void restoreItemState(const QModelIndex & ind);
         void declineItemStateRestoring(const QModelIndex & ind);
         void declineAllItemsRestoration(const QAbstractItemModel * model);

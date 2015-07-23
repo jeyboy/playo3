@@ -48,6 +48,10 @@ void Library::setItemState(const QModelIndex & ind, int state) {
     proceedItemNames(itm, state);
 }
 
+void Library::directItemStateRestoration(const QModelIndex & ind) {
+    stateRestoring(0, ind);
+}
+
 void Library::restoreItemState(const QModelIndex & ind) {
 //    if (!listSyncs.value(ind.model(), 0)) return;
     Logger::instance() -> write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
@@ -219,7 +223,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
 
         if (state != -1) {
             if (state == 1) {
-                if (watcher -> isCanceled())
+                if (!watcher || (watcher && watcher -> isCanceled()))
                     itm -> set(ItemState::liked);
                 else
                     emitItemAttrChanging(ind, ItemState::liked);
@@ -232,7 +236,7 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
         }
     }
 
-    bool canceled = watcher -> isCanceled();
+    bool canceled = !watcher || (watcher && watcher -> isCanceled());
     if (isListened) {
         if (canceled)
             itm -> set(ItemState::listened);
