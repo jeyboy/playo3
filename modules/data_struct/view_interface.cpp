@@ -450,13 +450,10 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> is(ItemState::proceeded)) {
-//            node -> set(ItemState::proceeded);
-            if (!node -> isContainer()) {
-                qDebug() << node -> title() << "LIB";
+        if (!node -> is(ItemState::proceeded))
+            if (!node -> isContainer())
                 Library::instance() -> directItemStateRestoration(curr);
-            }
-        }
+
         node -> updateCheckedStateByPredicate(flag);
 
         if (!ensureVisibility && node -> is(flag)) {
