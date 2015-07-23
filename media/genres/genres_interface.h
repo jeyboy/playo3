@@ -13,7 +13,7 @@ public:
     QString toString(int id) const;
     inline QStringList genresList() { return genres.keys(); }
 
-    virtual int defaultInt() const { return 0; }
+    virtual int defaultInt() const { return -1; }
 protected:
     QHash<QString, int> genres;
 };

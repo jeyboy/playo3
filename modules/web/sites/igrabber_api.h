@@ -38,7 +38,7 @@ class IGrabberApi {
 public:
     virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
 
-    virtual TargetGenres genresList() { return TargetGenres(); }
+    virtual TargetGenres genresList() const { return genres; }
 
     virtual QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonArray(); }
 
@@ -55,6 +55,8 @@ public:
 
 //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 protected:
+    TargetGenres genres;
+
     virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
         QUrl url(baseUrlStr(predicate));
@@ -76,7 +78,8 @@ protected:
     virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
     QString refreshQuery(QUrl & url) {
-        bool isNew = !manager ? WebManager::valid(manager) : false;
+        WebManager * manager = 0;
+        bool isNew = WebManager::valid(manager);
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
         QString res = refresh_postprocess(response);
         delete response;

@@ -24,6 +24,7 @@ namespace Html {
     const QString split_token = QStringLiteral(" ");
 
     struct Selector {
+        enum SType { direct, forward, backward};
         enum SState { none, tag, attr, id, klass, type };
 
         enum SToken {
@@ -38,6 +39,7 @@ namespace Html {
             attr_token_end = 93,
             type_token = 58,
             direct_token = 62,
+            back_direct_token = 60,
             space_token = 32,
             cont1_token = 34,
             cont2_token = 39
@@ -45,17 +47,20 @@ namespace Html {
 
         Selector(const char * predicate);
 
-        inline Selector(bool direct = false, Selector * prev_selector = 0) : _direct(direct), prev(prev_selector), next(0) {
+        inline Selector(SType selector_type = forward, Selector * prev_selector = 0) : sType(selector_type), prev(prev_selector), next(0) {
             if (prev_selector) prev_selector -> next = this;
         }
         inline ~Selector() { delete next; }
 
         void addToken(SState & tType, QString & token, char & rel);
 
+        inline bool isDirect() { return sType == direct; }
+        inline bool isBackward() { return sType == backward; }
+
         QStringList klasses;
         QHash<SState, QString> _tokens;
         QHash<QString, QPair<char, QString> > _attrs;
-        bool _direct;
+        SType sType;
 
         Selector * prev;
         Selector * next;
@@ -68,7 +73,6 @@ namespace Html {
             Set set;
             return find(selector, set);
         }
-
         inline Set find(QString predicate) {
             Selector selector(predicate.toUtf8().data());
             return find(&selector);
@@ -118,6 +122,7 @@ namespace Html {
         }
 
         bool validTo(Selector * selector);
+        Set & backwardFind(Selector * selector, Set & set);
 
         friend QDebug operator<< (QDebug debug, const Tag & c) {
             QString attrStr;

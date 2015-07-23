@@ -5,13 +5,16 @@ namespace Html {
     Set & Set::find(Selector * selector, Set & set) {
         for(Set::Iterator tag = begin(); tag != end(); tag++) {
             if ((*tag) -> validTo(selector)) {
-                if (selector -> next && !(*tag) -> children().isEmpty())
-                    (*tag)-> children().find(selector -> next, set);
-                else
-                    set.append((*tag));
+                if (selector -> next) {
+                    if (selector -> next -> isBackward())
+                        (*tag) -> backwardFind(selector -> next, set);
+                    else if (!(*tag) -> children().isEmpty())
+                        (*tag) -> children().find(selector -> next, set);
+                }
+                else set.append((*tag));
             }
-            else if (!selector -> _direct && !(*tag) -> children().isEmpty())
-                (*tag)-> children().find(selector, set);
+            else if (!selector -> isDirect() && !(*tag) -> children().isEmpty())
+                (*tag) -> children().find(selector, set);
         }
 
         return set;
@@ -38,7 +41,7 @@ namespace Html {
         token.clear();
     }
 
-    Selector::Selector(const char * predicate) : _direct(false), prev(0), next(0) {
+    Selector::Selector(const char * predicate) : sType(forward), prev(0), next(0) {
         Selector::SState state = Selector::tag;
         Selector * selector = this;
         QString token; token.reserve(128);
@@ -82,14 +85,20 @@ namespace Html {
 
                 case direct_token: {
                     if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    selector = new Selector(true, selector);
+                    selector = new Selector(direct, selector);
+                    state = Selector::tag;
+                break;}
+
+                case back_direct_token: {
+                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
+                    selector = new Selector(backward, selector);
                     state = Selector::tag;
                 break;}
 
                 case space_token: {
                     if (state != attr && !token.isEmpty()) {
                         selector -> addToken(state, token, rel);
-                        selector = new Selector(false, selector);
+                        selector = new Selector(forward, selector);
                         state = Selector::tag;
                     }
                 break;}
@@ -145,6 +154,20 @@ namespace Html {
         }
 
         return true;
+    }
+
+    Set & Tag::backwardFind(Selector * selector, Set & set) {
+        if (!parent) return set;
+
+        if (parent -> validTo(selector))
+            selector = selector -> next;
+
+        if (!selector)
+            set.append(parent);
+        else if (selector -> isBackward() && parent -> parent)
+            parent -> backwardFind(selector, set);
+
+        return set;
     }
 
     ////////  Document //////////
