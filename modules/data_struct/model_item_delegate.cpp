@@ -141,7 +141,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                         icon_size,
                         icon_size
                     );
-            QVariant iconVal = index.data(Qt::DecorationRole);
+            QVariant iconVal = attrs.value(Key::icon);
 
             if (iconVal.isValid()) {
                 QIcon icon = qvariant_cast<QIcon>(iconVal);
@@ -201,7 +201,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                         Settings::instance() -> itemInfoTextColor()
                     );
 
-        QStringList infos = attrs.value(Key::icon).toStringList();
+        QStringList infos = attrs.value(Key::info).toStringList();
 
         int timeWidth = fmfInfo -> width(infos.last());
         int right_offset_with_corner = right_offset - (angle / 3);
