@@ -97,6 +97,7 @@ namespace Playo3 {
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
         QToolBar * createEqualizerToolBar();
+        QToolBar * createEqualizerButtonBar();
 
         inline ToolBars(QObject * parent) : QObject(parent),
             vkToolButton(0), soundcloudToolButton(0), highlighted(0), equalizer(0), spectrum(0),
@@ -129,6 +130,7 @@ namespace Playo3 {
         const QString toolbar_controls_key = QStringLiteral("Controls");
         const QString toolbar_spectrum_key = QStringLiteral("Spectrum");
         const QString toolbar_equalizer_key = QStringLiteral("Equalizer");
+        const QString toolbar_equalizer_button_key = QStringLiteral("EqualizerButton");
         const char * toolbar_service_mark = "service";
     };
 }

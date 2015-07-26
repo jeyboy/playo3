@@ -88,7 +88,7 @@ void ToolBars::load(QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
         barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key
-            << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key;
+            << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -106,7 +106,6 @@ void ToolBars::load(QJsonArray & bars) {
 
             if (obj.contains(Key::actions)) {
                 QJsonArray actions = obj.value(Key::actions).toArray();
-
 
                 foreach(QJsonValue act, actions) { // rewrite on for
                     actionObj = act.toObject();
@@ -205,15 +204,16 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
 }
 
 QToolBar * ToolBars::linkNameToToolbars(QString barName) {
-    if (barName == toolbar_media_key)               return createMediaBar();
-    else if (barName == toolbar_media_plus_key)     return createAdditionalMediaBar();
-    else if (barName == toolbar_media_pos_key)      return createPositionMediaBar();
-    else if (barName == toolbar_media_time_key)     return createTimeMediaBar();
-    else if (barName == toolbar_media_volume_key)   return createVolumeMediaBar();
-    else if (barName == toolbar_controls_key)       return createControlToolBar();
-    else if (barName == toolbar_spectrum_key)       return getSpectrum();
-    else if (barName == toolbar_equalizer_key)      return createEqualizerToolBar();
-    else                                            return createToolBar(barName);
+    if (barName == toolbar_media_key)                   return createMediaBar();
+    else if (barName == toolbar_equalizer_button_key)   return createEqualizerButtonBar();
+    else if (barName == toolbar_media_plus_key)         return createAdditionalMediaBar();
+    else if (barName == toolbar_media_pos_key)          return createPositionMediaBar();
+    else if (barName == toolbar_media_time_key)         return createTimeMediaBar();
+    else if (barName == toolbar_media_volume_key)       return createVolumeMediaBar();
+    else if (barName == toolbar_controls_key)           return createControlToolBar();
+    else if (barName == toolbar_spectrum_key)           return getSpectrum();
+    else if (barName == toolbar_equalizer_key)          return createEqualizerToolBar();
+    else                                                return createToolBar(barName);
 }
 
 QToolBar * ToolBars::createToolBar(QString name) {
@@ -361,6 +361,18 @@ QToolBar * ToolBars::createEqualizerToolBar() {
 
     ptb -> setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
+    return ptb;
+}
+
+QToolBar * ToolBars::createEqualizerButtonBar() {
+    QToolBar * ptb = precreateToolBar(toolbar_equalizer_button_key);
+
+    QToolBar * bar = (QToolBar *)equalizer -> parent();
+    QAction * act = bar -> toggleViewAction();
+    act -> setIcon(QIcon(QStringLiteral(":/equalizer")));
+    act -> setCheckable(true);
+    act -> setChecked(bar -> isVisible());
+    ptb -> addAction(act);
     return ptb;
 }
 
