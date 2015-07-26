@@ -145,23 +145,30 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
-void IView::startInnerSearch(QString predicate, QModelIndex ind) {
-    bool empty = predicate.isEmpty();
+bool IView::startInnerSearch(QString predicate, QModelIndex ind) {
+    bool empty = predicate.isEmpty(), has_item = false;
 
     QModelIndex it;
 
     for(int row = 0; ; row++) {
         it = mdl -> index(row, 0, ind);
         if (it.isValid()) {
-            if (it.data(IFOLDER).toBool())
-                startInnerSearch(predicate, it);
-            else
-                setRowHidden(row, ind, !(empty || it.data().toString().contains(predicate, Qt::CaseInsensitive)));
+            if (it.data(IFOLDER).toBool()) {
+                bool has_items = startInnerSearch(predicate, it);
+                has_item |= has_items;
+                setRowHidden(row, ind, !has_items);
+            } else {
+                bool valid = empty || it.data().toString().contains(predicate, Qt::CaseInsensitive);
+                has_item |= valid;
+                setRowHidden(row, ind, !valid);
+            }
         } else break;
     }
 
     if (ind == QModelIndex())
         emit searchFinished();
+
+    return has_item;
 }
 
 void IView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {

@@ -70,7 +70,7 @@ namespace Playo3 {
         void searchFinished();
 
     public slots:
-        void startInnerSearch(QString, QModelIndex it = QModelIndex());
+        bool startInnerSearch(QString, QModelIndex it = QModelIndex());
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);
 
         void expandeAll();
