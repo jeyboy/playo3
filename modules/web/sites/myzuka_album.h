@@ -46,55 +46,45 @@ namespace Grabber {
 
             Html::Set tables = parser.find(".content table>tbody]");
 
-            Html::Selector songSelector(".details a[href^'/Song']");
-            Html::Selector artistSelector("tr td a[href^'/Artist']");
+            Html::Selector songTrSelector("a[href^'/Song']<tr");
+            Html::Selector artistSelector("td a[href^'/Artist']");
 
-            if (!tables.isEmpty()) {
-                Html::Tag * artists_table = tables.first();
-                Html::Set artists = artists_table -> find(artistSelector);
-                for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-                    QString artistPage = (*artist) -> link() % QStringLiteral("/Page");
+            Html::Selector songSelector("a[href^'/Song']");
 
-                    for(int page = 1; page < MAX_PAGE; page++) {
-                        if (!toJson(manager -> getSync(QNetworkRequest(QUrl(artistPage % QString::number(page)))), track_ar, true))
-                            break;
+            if (!tables.isEmpty()) { // at this time table with albums is ignored
+                if (count > 10) {
+                    Html::Tag * artists_table = tables.first();
+                    Html::Set artists = artists_table -> find(&artistSelector);
+                    for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                        QString artistPage = (*artist) -> link() % QStringLiteral("/Songs/Page");
+
+                        for(int page = 1; page < MAX_PAGE; page++)
+                            if (!toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr(artistPage % QString::number(page))))), track_ar, true))
+                                break;
                     }
                 }
 
-
                 Html::Tag * songs_table = tables.last();
-                Html::Set songs = songs_table -> find(songSelector);
+                Html::Set songs = songs_table -> find(&songTrSelector);
                 for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                    QJsonObject track_obj;
 
+                    Html::Tag * artist_tag = (*song) -> find(&artistSelector).first();
+                    Html::Tag * track_tag = (*song) -> find(&songSelector).first();
+                    Html::Tag * size_tag = (*song) -> childTag("td", 2);
+
+                    if (!size_tag) {
+                        Logger::instance() -> writeToStream("Myzuka grabber", "Search: parsing of songs", "Some shit happened", true);
+                        return track_ar;
+                    }
+
+                    QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
+                    track_obj.insert(title_key, title);
+                    track_obj.insert(size_key, size_tag -> text().section(' ', 0, 0));
+
+                    track_ar << track_obj;
                 }
-
-
-
-    //            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-    //                QJsonObject track_obj;
-
-    //                tag = (*track) -> find(&urlSelector).first();
-    //                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
-    //                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
-
-    //                set = (*track) -> find(&infoSelector);
-    //                if (!set.isEmpty()) {
-    //                    track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
-    //                    track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
-    //                }
-
-    //                set = (*track) -> find(&detailsSelector);
-    //                if (!set.isEmpty())
-    //                    track_obj.insert(size_key, set.first() -> text().section(' ', 0, 0));
-
-    //                set = (*track) -> find(&refreshSelector);
-    //                if (!set.isEmpty())
-    //                    track_obj.insert(refresh_key, set.first() -> link());
-
-    //                track_ar << track_obj;
-    //            }
             }
-
 
             delete response;
             if (isNew) delete manager;
@@ -113,15 +103,14 @@ namespace Grabber {
                     QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genresPath % QString::number(page))));
 
                     Html::Document parser(response);
-                    Html::Set links = parser.find(linksSelector);
+                    Html::Set links = parser.find(&linksSelector);
 
                     for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
                         QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
-                        genres.addGenre(list[2], list[1]);
+                        genres.addGenre(list[2], list[1].toInt());
                     }
 
                     delete response;
-
                     if (links.isEmpty()) break;
                 }
 
@@ -136,11 +125,11 @@ namespace Grabber {
         }
 
         QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
-
+            //TODO: realize later
         }
 
         QJsonArray byType(QString /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
-
+            //TODO: realize later
         }
 
         QJsonArray popular() {
@@ -165,7 +154,6 @@ namespace Grabber {
             Html::Selector detailsSelector(".details>.time>text");
             Html::Selector refreshSelector(".details a[href^'/Song']");
 
-            QJsonArray track_ar;
             for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                 QJsonObject track_obj;
 
@@ -187,10 +175,9 @@ namespace Grabber {
                 if (!set.isEmpty())
                     track_obj.insert(refresh_key, set.first() -> link());
 
-                track_ar << track_obj;
+                json << track_obj;
             }
 
-            json.append(track_ar);
             if (removeReply) delete reply;
             return !tracks.isEmpty();
         }

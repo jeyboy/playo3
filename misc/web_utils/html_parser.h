@@ -95,6 +95,19 @@ namespace Html {
         inline QString link() const { return attrs.value(href_token); }
 
         inline Tag * parentTag() { return parent; }
+        inline Tag * childTag(int pos) { return tags[pos]; }
+        inline Tag * childTag(QString name_predicate, int pos = 0) {
+            Set::Iterator tag = tags.begin();
+            for(int i = 0; tag != tags.end(); tag++) {
+                if ((*tag) -> name() == name_predicate) {
+                    if (i == pos) return (*tag);
+                    i++;
+                }
+            }
+
+            return 0;
+        }
+        inline int childrenCount() { return tags.size(); }
 
         inline Set find(Selector * selector) { return tags.find(selector); }
         inline Set find(QString predicate) {
