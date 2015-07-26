@@ -33,6 +33,7 @@
 
 #define DEFAULT_PREDICATE_NAME QString()
 #define GRAB_DELAY 200 // ms
+#define MAX_PAGE 999
 
 class IGrabberApi {
 public:

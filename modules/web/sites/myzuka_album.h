@@ -9,6 +9,9 @@ namespace Grabber {
     class MyzukaAlbum : public IGrabberApi {
         const QString data_url_token = QStringLiteral("data-url");
         const QString title_token = QStringLiteral("title");
+
+        const QString search_path_token = QStringLiteral("Search");
+        const QString search_predicate_token = QStringLiteral("searchText=");
     public:
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
@@ -17,9 +20,11 @@ namespace Grabber {
             QUrl url;
 
             if (!predicate.isEmpty()) {
-                url = QUrl(baseUrlStr("Search"));
-                url.setQuery("searchText=" % predicate);
+                url = QUrl(baseUrlStr(search_path_token));
+                url.setQuery(search_predicate_token % predicate);
             } else if (!genre.isEmpty()) {
+                if (genresList().isEmpty()) genresList();
+
                 int code = genres.toInt(genre);
                 if (code != genres.defaultInt())
                     return byGenre(genre, code);
@@ -44,29 +49,51 @@ namespace Grabber {
             Html::Selector songSelector(".details a[href^'/Song']");
             Html::Selector artistSelector("tr td a[href^'/Artist']");
 
-//            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-//                QJsonObject track_obj;
+            if (!tables.isEmpty()) {
+                Html::Tag * artists_table = tables.first();
+                Html::Set artists = artists_table -> find(artistSelector);
+                for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                    QString artistPage = (*artist) -> link() % QStringLiteral("/Page");
 
-//                tag = (*track) -> find(&urlSelector).first();
-//                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
-//                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+                    for(int page = 1; page < MAX_PAGE; page++) {
+                        if (!toJson(manager -> getSync(QNetworkRequest(QUrl(artistPage % QString::number(page)))), track_ar, true))
+                            break;
+                    }
+                }
 
-//                set = (*track) -> find(&infoSelector);
-//                if (!set.isEmpty()) {
-//                    track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
-//                    track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
-//                }
 
-//                set = (*track) -> find(&detailsSelector);
-//                if (!set.isEmpty())
-//                    track_obj.insert(size_key, set.first() -> text().section(' ', 0, 0));
+                Html::Tag * songs_table = tables.last();
+                Html::Set songs = songs_table -> find(songSelector);
+                for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
 
-//                set = (*track) -> find(&refreshSelector);
-//                if (!set.isEmpty())
-//                    track_obj.insert(refresh_key, set.first() -> link());
+                }
 
-//                track_ar << track_obj;
-//            }
+
+
+    //            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+    //                QJsonObject track_obj;
+
+    //                tag = (*track) -> find(&urlSelector).first();
+    //                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
+    //                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+
+    //                set = (*track) -> find(&infoSelector);
+    //                if (!set.isEmpty()) {
+    //                    track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
+    //                    track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
+    //                }
+
+    //                set = (*track) -> find(&detailsSelector);
+    //                if (!set.isEmpty())
+    //                    track_obj.insert(size_key, set.first() -> text().section(' ', 0, 0));
+
+    //                set = (*track) -> find(&refreshSelector);
+    //                if (!set.isEmpty())
+    //                    track_obj.insert(refresh_key, set.first() -> link());
+
+    //                track_ar << track_obj;
+    //            }
+            }
 
 
             delete response;
@@ -76,55 +103,39 @@ namespace Grabber {
 
         TargetGenres genresList() {
             if (genres.isEmpty()) {
-                QUrl url(baseUrlStr("Genre/Page1"));
+                QString genresPath = baseUrlStr("Genre/Page");
                 WebManager * manager = 0;
                 bool isNew = WebManager::valid(manager);
-                QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
-//                Html::Document parser(response);
+                Html::Selector linksSelector("a[href^'/Genre/']");
 
-//                Html::Set tables = parser.find(".content table>tbody]");
+                for(int page = 1; page < 50; page++) {
+                    QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genresPath % QString::number(page))));
 
-//                Html::Selector songSelector(".details a[href^'/Song']");
-//                Html::Selector artistSelector("tr td a[href^'/Artist']");
+                    Html::Document parser(response);
+                    Html::Set links = parser.find(linksSelector);
 
-//                QJsonArray track_ar;
-//                for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-//                    QJsonObject track_obj;
+                    for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
+                        QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
+                        genres.addGenre(list[2], list[1]);
+                    }
 
-//                    tag = (*track) -> find(&urlSelector).first();
-//                    track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
-//                    track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+                    delete response;
 
-//                    set = (*track) -> find(&infoSelector);
-//                    if (!set.isEmpty()) {
-//                        track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
-//                        track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
-//                    }
+                    if (links.isEmpty()) break;
+                }
 
-//                    set = (*track) -> find(&detailsSelector);
-//                    if (!set.isEmpty())
-//                        track_obj.insert(size_key, set.first() -> text().section(' ', 0, 0));
-
-//                    set = (*track) -> find(&refreshSelector);
-//                    if (!set.isEmpty())
-//                        track_obj.insert(refresh_key, set.first() -> link());
-
-//                    track_ar << track_obj;
-//                }
-
-                delete response;
                 if (isNew) delete manager;
             }
 
             return genres;
-        } // https://myzuka.org/Genre/Page1
+        }
 
         QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { // https://myzuka.org/Genre/92/8-Bit
 
         }
 
-        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs
+        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 
         }
 
@@ -142,7 +153,7 @@ namespace Grabber {
         }
 
     protected:
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return "https://myzuka.org" % predicate; }
+        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
         bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
 
