@@ -324,6 +324,9 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     Player::instance() -> setMuteButton(act);
 
     ClickableSlider * slider = new ClickableSlider(ptb);
+    slider -> setProperty("volume", true);
+    slider -> style() -> unpolish(slider);
+    slider -> style() -> polish(slider);
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);

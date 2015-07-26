@@ -127,6 +127,10 @@ QString Stylesheets::sliderStyles() {
                     "height: 18px;"
                 "}"
 
+                "QSlider::handle[volume=\"true\"] {"
+                    "image: url(:/controls/volume_btn);"
+                "}"
+
                 "QSlider::handle:hover {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #fff, stop:1 #ddd);"
                   "border: 1px solid #444;"
@@ -313,7 +317,7 @@ QString Stylesheets::toolbarButtonStyle() {
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:0.8 #AAA, stop:1 #666);"
                 "}"
 
-                "QToolButton[error=\"true\"], QToolButton:hover[error=\"true\"] {"
+                "QToolButton[error=\"true\"] {"
                     "color: #FFF;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:1 #AA0000);"
                 "}"
