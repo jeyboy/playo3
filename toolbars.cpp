@@ -290,6 +290,9 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
+    slider -> setProperty("position", true);
+    slider -> style() -> unpolish(slider);
+    slider -> style() -> polish(slider);
 
     Player::instance() -> setTrackBar(slider);
 
