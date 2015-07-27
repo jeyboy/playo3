@@ -4,6 +4,7 @@
 #include "igrabber_api.h"
 
 #define ITEMS_PER_PAGE 50
+#define MAX_PAGES_PER_ARTIST 2
 
 namespace Grabber {
     class MyzukaAlbum : public IGrabberApi {
@@ -40,7 +41,6 @@ namespace Grabber {
             bool isNew = WebManager::valid(manager);
             QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
-
             QJsonArray track_ar;
             Html::Document parser(response);
 
@@ -58,7 +58,7 @@ namespace Grabber {
                     for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
                         QString artistPage = (*artist) -> link() % QStringLiteral("/Songs/Page");
 
-                        for(int page = 1; page < MAX_PAGE; page++)
+                        for(int page = 1; page < MAX_PAGES_PER_ARTIST; page++)
                             if (!toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr(artistPage % QString::number(page))))), track_ar, true))
                                 break;
                     }
@@ -99,7 +99,7 @@ namespace Grabber {
 
                 Html::Selector linksSelector("a[href^'/Genre/']");
 
-                for(int page = 1; page < 50; page++) {
+                for(int page = 1; page < STYLES_MAX_PAGE; page++) {
                     QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genresPath % QString::number(page))));
 
                     Html::Document parser(response);
@@ -120,17 +120,40 @@ namespace Grabber {
             return genres;
         }
 
-        QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { // https://myzuka.org/Genre/92/8-Bit
+        // artists by genre
+        QJsonArray byGenre(QString genre, int genre_code = 0) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            WebManager * manager = 0;
+            bool isNew = WebManager::valid(manager);
+            QJsonArray track_ar;
+            QString genrePath = baseUrlStr("Genre/" % QString::number(genre_code) % "/" % genre % "/Page");
 
+            for(int page = 1; page < MAX_PAGE; page++) {
+                QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genrePath % QString::number(page))));
+                Html::Document parser(response);
+
+                Html::Set artists = parser.find(".content table>tbody td a[href^'/Artist']");
+                for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                    QString artistPage = (*artist) -> link() % QStringLiteral("/Songs/Page");
+
+                    for(int page = 1; page < MAX_PAGES_PER_ARTIST; page++)
+                        if (!toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr(artistPage % QString::number(page))))), track_ar, true))
+                            break;
+                }
+
+                delete response;
+            }
+
+            if (isNew) delete manager;
+            return track_ar;
         }
 
-        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
-            //TODO: realize later
-        }
+//        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+//            //TODO: realize later
+//        }
 
-        QJsonArray byType(QString /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
-            //TODO: realize later
-        }
+//        QJsonArray byType(QString /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//            //TODO: realize later
+//        }
 
         QJsonArray popular() {
             WebManager * manager = 0;
