@@ -54,8 +54,8 @@ namespace Html {
 
         void addToken(SState & tType, QString & token, char & rel);
 
-        inline bool isDirect() { return sType == direct; }
-        inline bool isBackward() { return sType == backward; }
+        inline bool isDirect() const { return sType == direct; }
+        inline bool isBackward() const { return sType == backward; }
 
         QStringList klasses;
         QHash<SState, QString> _tokens;
@@ -69,7 +69,7 @@ namespace Html {
     class Tag;
     class Set : public QList<Tag *> {
     public:
-        inline Set find(Selector * selector) {
+        inline Set find(const Selector * selector) {
             Set set;
             return find(selector, set);
         }
@@ -78,7 +78,7 @@ namespace Html {
             return find(&selector);
         }
     private:
-        Set & find(Selector * selector, Set & set);
+        Set & find(const Selector * selector, Set & set);
     };
 
     class Tag {
@@ -109,7 +109,7 @@ namespace Html {
         }
         inline int childrenCount() { return tags.size(); }
 
-        inline Set find(Selector * selector) { return tags.find(selector); }
+        inline Set find(const Selector * selector) { return tags.find(selector); }
         inline Set find(QString predicate) {
             Selector selector(predicate.toUtf8().data());
             return tags.find(&selector);
@@ -134,7 +134,7 @@ namespace Html {
             newTag -> addAttr(nm, val); val.clear();
         }
 
-        bool validTo(Selector * selector);
+        bool validTo(const Selector * selector);
         Set & backwardFind(Selector * selector, Set & set);
 
         friend QDebug operator<< (QDebug debug, const Tag & c) {
@@ -190,7 +190,7 @@ namespace Html {
 
         inline ~Document() { delete root; }
 
-        inline Set find(Selector * selector) {
+        inline Set find(const Selector * selector) {
             return root -> children().find(selector);
         }
 

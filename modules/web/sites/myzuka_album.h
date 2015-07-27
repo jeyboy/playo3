@@ -14,6 +14,12 @@ namespace Grabber {
 
         const QString search_path_token = QStringLiteral("Search");
         const QString search_predicate_token = QStringLiteral("searchText=");
+
+        const Html::Selector searchTablesSelector = Html::Selector(".content table>tbody]");
+        const Html::Selector songTrSelector = Html::Selector("a[href^'/Song']<tr");
+        const Html::Selector artistSelector = Html::Selector("td a[href^'/Artist']");
+        const Html::Selector songSelector = Html::Selector("a[href^'/Song']");
+        const Html::Selector linksSelector = Html::Selector("a[href^'/Genre/']");
     public:
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
@@ -38,12 +44,7 @@ namespace Grabber {
             QJsonArray json;
             Html::Document parser(response);
 
-            Html::Set tables = parser.find(QStringLiteral(".content table>tbody]"));
-
-            Html::Selector songTrSelector("a[href^'/Song']<tr");
-            Html::Selector artistSelector("td a[href^'/Artist']");
-
-            Html::Selector songSelector("a[href^'/Song']");
+            Html::Set tables = parser.find(&searchTablesSelector);
 
             if (!tables.isEmpty()) { // at this time table with albums is ignored (second table in the list)
                 if (count > 10) {
@@ -87,8 +88,6 @@ namespace Grabber {
                 QString genresPath = baseUrlStr(QStringLiteral("Genre/Page"));
                 WebManager * manager = 0;
                 bool isNew = WebManager::valid(manager);
-
-                Html::Selector linksSelector("a[href^'/Genre/']");
 
                 for(int page = 1; page < STYLES_MAX_PAGE; page++) {
                     QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genresPath % QString::number(page))));

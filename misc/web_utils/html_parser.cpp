@@ -2,7 +2,7 @@
 
 ////////  Set //////////
 namespace Html {
-    Set & Set::find(Selector * selector, Set & set) {
+    Set & Set::find(const Selector * selector, Set & set) {
         for(Set::Iterator tag = begin(); tag != end(); tag++) {
             if ((*tag) -> validTo(selector)) {
                 if (selector -> next) {
@@ -116,12 +116,12 @@ namespace Html {
 
     ////////  Tag //////////
 
-    bool Tag::validTo(Selector * selector) {
-        for(QHash<Selector::SState, QString>::Iterator it = selector -> _tokens.begin(); it != selector -> _tokens.end(); it++) {
+    bool Tag::validTo(const Selector * selector) {
+        for(QHash<Selector::SState, QString>::ConstIterator it = selector -> _tokens.cbegin(); it != selector -> _tokens.cend(); it++) {
             switch(it.key()) {
                 case Selector::tag: { if (!(it.value() == any_elem_token || _name == it.value())) return false; break; }
                 case Selector::attr: {
-                    for(QHash<QString, QPair<char, QString> >::Iterator it = selector -> _attrs.begin(); it != selector -> _attrs.end(); it++)
+                    for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++)
                         switch(it.value().first) {
                             case Selector::attr_rel_eq: { if (!(it.value().second == any_elem_token || attrs.value(it.key()) == it.value().second)) return false;  break;}
                             case Selector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
@@ -136,7 +136,7 @@ namespace Html {
                     QStringList node_klasses = attrs[class_token].split(split_token, QString::SkipEmptyParts);
                     if (node_klasses.isEmpty()) return false;
 
-                    for(QStringList::Iterator it = selector -> klasses.begin(); it != selector -> klasses.end(); it++) {
+                    for(QStringList::ConstIterator it = selector -> klasses.cbegin(); it != selector -> klasses.cend(); it++) {
                         bool finded = false;
                         for(QStringList::Iterator xit = node_klasses.begin(); xit != node_klasses.end(); xit++) // TODO: if list generated each time - remove finded classes for speed up of the proccess of search
                             if ((finded = (*xit) == (*it))) break;
