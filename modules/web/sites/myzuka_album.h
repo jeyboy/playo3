@@ -9,17 +9,8 @@
 // store all selectors in global variables
 namespace Grabber {
     class MyzukaAlbum : public IGrabberApi {
-        const QString data_url_token = QStringLiteral("data-url");
-        const QString title_token = QStringLiteral("title");
-
-        const QString search_path_token = QStringLiteral("Search");
-        const QString search_predicate_token = QStringLiteral("searchText=");
-
-        const Html::Selector searchTablesSelector = Html::Selector(".content table>tbody]");
-        const Html::Selector songTrSelector = Html::Selector("a[href^'/Song']<tr");
-        const Html::Selector artistSelector = Html::Selector("td a[href^'/Artist']");
-        const Html::Selector songSelector = Html::Selector("a[href^'/Song']");
-        const Html::Selector linksSelector = Html::Selector("a[href^'/Genre/']");
+        const QString data_url_token, title_token, search_path_token, search_predicate_token;
+        const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector;
     public:
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
@@ -213,7 +204,12 @@ namespace Grabber {
                 return baseUrlStr(tracks.first() -> link());
         }
     private:
-        inline MyzukaAlbum() : IGrabberApi() { }
+        inline MyzukaAlbum() : IGrabberApi(), data_url_token(QStringLiteral("data-url")),
+            title_token(QStringLiteral("title")), search_path_token(QStringLiteral("Search")),
+            search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table>tbody]")),
+            songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
+            songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("a[href^'/Genre/']")) { }
+
         inline virtual ~MyzukaAlbum() {}
 
         static MyzukaAlbum * self;
