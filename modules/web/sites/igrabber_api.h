@@ -42,7 +42,7 @@ public:
 
     virtual TargetGenres genresList() const { return genres; }
 
-    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_code*/ = 0) { return QJsonArray(); }
+    virtual QJsonArray byGenre(QString /*genre*/) { return QJsonArray(); }
 
     virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
 

@@ -390,8 +390,8 @@ void Dockbars::barClosed() {
 
     linkedTabs.remove(linkedTabs.key(bar));
 
-    if (active == bar)
-        active = 0;
+    if (active == bar) active = 0;
+    if (played == bar) played = 0;
 
     IView * v = view(bar);
 

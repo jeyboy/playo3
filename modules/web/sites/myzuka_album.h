@@ -6,6 +6,7 @@
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2
 
+// store all selectors in global variables
 namespace Grabber {
     class MyzukaAlbum : public IGrabberApi {
         const QString data_url_token = QStringLiteral("data-url");
@@ -23,19 +24,12 @@ namespace Grabber {
             if (!predicate.isEmpty()) {
                 url = QUrl(baseUrlStr(search_path_token));
                 url.setQuery(search_predicate_token % predicate);
-            } else if (!genre.isEmpty()) {
-                if (genresList().isEmpty()) genresList();
+            } else if (!genre.isEmpty())
+                return byGenre(genre);
+            else if (popular_items)
+                return popular();
 
-                int code = genres.toInt(genre);
-                if (code != genres.defaultInt())
-                    return byGenre(genre, code);
-            }
-
-            if (url.isEmpty()) {
-                if (popular_items)
-                    return popular();
-                else return QJsonArray();
-            }
+            if (url.isEmpty()) return QJsonArray();
 
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
@@ -44,14 +38,14 @@ namespace Grabber {
             QJsonArray json;
             Html::Document parser(response);
 
-            Html::Set tables = parser.find(".content table>tbody]");
+            Html::Set tables = parser.find(QStringLiteral(".content table>tbody]"));
 
             Html::Selector songTrSelector("a[href^'/Song']<tr");
             Html::Selector artistSelector("td a[href^'/Artist']");
 
             Html::Selector songSelector("a[href^'/Song']");
 
-            if (!tables.isEmpty()) { // at this time table with albums is ignored
+            if (!tables.isEmpty()) { // at this time table with albums is ignored (second table in the list)
                 if (count > 10) {
                     Html::Tag * artists_table = tables.first();
                     artistsToJson(manager, artists_table -> find(&artistSelector), json);
@@ -67,7 +61,11 @@ namespace Grabber {
                     Html::Tag * size_tag = (*song) -> childTag("td", 2);
 
                     if (!size_tag) {
-                        Logger::instance() -> writeToStream(QStringLiteral("Myzuka grabber"), QStringLiteral("Search: parsing of songs"), QStringLiteral("Some shit happened"), true);
+                        Logger::instance() -> writeToStream(
+                            QStringLiteral("Myzuka grabber"),
+                            QStringLiteral("Search: parsing of songs"),
+                            QStringLiteral("Some shit happened"), true
+                        );
                         return json;
                     }
 
@@ -114,11 +112,17 @@ namespace Grabber {
         }
 
         // artists by genre
-        QJsonArray byGenre(QString genre, int genre_code = 0) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+        QJsonArray byGenre(QString genre) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            QJsonArray json;
+            if (genresList().isEmpty()) genresList();
+
+            int code = genres.toInt(genre);
+            if (code == genres.defaultInt()) return json;
+
+
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
-            QJsonArray json;
-            QString genrePath = baseUrlStr(QStringLiteral("Genre/%1/%2/Page").arg(QString::number(genre_code), genre));
+            QString genrePath = baseUrlStr(QStringLiteral("Genre/%1/%2/Page").arg(QString::number(code), genre));
 
             for(int page = 1; page < MAX_PAGE; page++) {
                 QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genrePath % QString::number(page))));
