@@ -19,6 +19,11 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     initialization();
 
+    Grabber::MyzukaAlbum::instance() -> byGenre(QStringLiteral("Pop"));
+    QString pred = QStringLiteral("lal - alarm");
+    QString genre;
+    Grabber::MyzukaAlbum::instance() -> search(pred, genre, false);
+
 ////    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
 //    QFile f("F:/o.cue");
 //    if (f.open(QFile::ReadOnly)) {
@@ -74,8 +79,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    qDebug() << set;
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
-    QFile f("F:/test_page/home.htm");
-    if (f.open(QFile::ReadOnly)) {
+//    QFile f("F:/test_page/home.htm");
+//    if (f.open(QFile::ReadOnly)) {
 //        QElapsedTimer t2;
 //        t2.start();
 //        Html::Document p(&f);
@@ -86,8 +91,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
 //        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
 
-        f.close();
-    }
+//        f.close();
+//    }
 }
 
 Playo::~Playo() {

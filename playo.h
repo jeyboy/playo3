@@ -11,6 +11,7 @@
 #include <qsettings.h>
 
 #include "misc/web_utils/html_parser.h"
+#include "modules/web/sites/myzuka_album.h"
 
 //#include "media/cue/cue.h"
 #include "media/library.h"

@@ -20,7 +20,6 @@
 #include <qjsonarray.h>
 
 
-//#define DEFAULT_LIMIT_AMOUNT 99999
 //#define REQUEST_DELAY 260 // ms // 250
 
 //struct QueryRules {
@@ -31,6 +30,7 @@
 //    int count, offset, limit, fact_count;
 //};
 
+#define DEFAULT_LIMIT_AMOUNT 99999
 #define DEFAULT_PREDICATE_NAME QString()
 #define GRAB_DELAY 200 // ms
 #define MAX_PAGE 99999
@@ -38,7 +38,7 @@
 
 class IGrabberApi {
 public:
-    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
+    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/ = DEFAULT_LIMIT_AMOUNT) { return QJsonArray(); }
 
     virtual TargetGenres genresList() const { return genres; }
 
