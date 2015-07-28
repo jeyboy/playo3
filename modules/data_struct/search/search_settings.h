@@ -16,7 +16,7 @@ struct SearchSettings {
         search_in_own = false;
     }
 
-    void addGenre(QString genreName) {
+    inline void addGenre(QString genreName) {
         int id = MusicGenres::instance() -> toInt(genreName);
         genres.insert(id, genreName);
 
@@ -25,6 +25,8 @@ struct SearchSettings {
             vkGenres.insert(vkId, VkGenres::instance() -> toString(vkId));
         }
     }
+
+    inline int limit(int def) { return onlyOne ? 1 : def; }
 
     bool inVk;
     bool inSc;

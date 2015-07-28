@@ -24,6 +24,7 @@ namespace Html {
     const QString split_token = QStringLiteral(" ");
 
     struct Selector {
+        enum SRel { eq, lt, gt, nt };
         enum SType { direct, forward, backward};
         enum SState { none, tag, attr, id, klass, type };
 
@@ -47,7 +48,7 @@ namespace Html {
 
         Selector(const char * predicate);
 
-        inline Selector(SType selector_type = forward, Selector * prev_selector = 0) : sType(selector_type), prev(prev_selector), next(0) {
+        inline Selector(SType selector_type = forward, Selector * prev_selector = 0) : sType(selector_type), limit(-1), limit_rel(gt), prev(prev_selector), next(0) {
             if (prev_selector) prev_selector -> next = this;
         }
         inline ~Selector() { delete next; }
@@ -56,11 +57,15 @@ namespace Html {
 
         inline bool isDirect() const { return sType == direct; }
         inline bool isBackward() const { return sType == backward; }
+        bool validTo(int index);
+        bool skipable(int index);
 
         QStringList klasses;
         QHash<SState, QString> _tokens;
         QHash<QString, QPair<char, QString> > _attrs;
         SType sType;
+        int limit;
+        SRel limit_rel;
 
         Selector * prev;
         Selector * next;
@@ -77,6 +82,7 @@ namespace Html {
             Selector selector(predicate.toUtf8().data());
             return find(&selector);
         }
+        QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
     private:
         Set & find(const Selector * selector, Set & set);
     };
@@ -93,6 +99,8 @@ namespace Html {
         inline QString value(QString name) { return attrs.value(name); }
         inline QString text() const { return attrs.value(text_block_token); }
         inline QString link() const { return attrs.value(href_token); }
+
+        inline bool is_link() { return _name == QStringLiteral("a"); }
 
         inline Tag * parentTag() { return parent; }
         inline Tag * childTag(int pos) { return tags[pos]; }
@@ -113,6 +121,9 @@ namespace Html {
         inline Set find(QString predicate) {
             Selector selector(predicate.toUtf8().data());
             return tags.find(&selector);
+        }
+        inline QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links) {
+            return tags.findLinks(selector, links);
         }
 
         inline void addAttr(QString & name, QString & val) { attrs.insert(name, val);  name.clear(); val.clear(); }
@@ -136,6 +147,7 @@ namespace Html {
 
         bool validTo(const Selector * selector);
         Set & backwardFind(Selector * selector, Set & set);
+        QHash<QString, QString> & backwardFindLinks(Selector * selector, QHash<QString, QString> & links);
 
         friend QDebug operator<< (QDebug debug, const Tag & c) {
             QString attrStr;

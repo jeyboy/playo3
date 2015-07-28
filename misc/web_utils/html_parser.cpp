@@ -3,15 +3,19 @@
 ////////  Set //////////
 namespace Html {
     Set & Set::find(const Selector * selector, Set & set) {
-        for(Set::Iterator tag = begin(); tag != end(); tag++) {
+        Set::Iterator tag = begin();
+        for(int i = 0; tag != end(); tag++) {
             if ((*tag) -> validTo(selector)) {
-                if (selector -> next) {
-                    if (selector -> next -> isBackward())
-                        (*tag) -> backwardFind(selector -> next, set);
-                    else if (!(*tag) -> children().isEmpty())
-                        (*tag) -> children().find(selector -> next, set);
-                }
-                else set.append((*tag));
+                if (selector -> validTo(++i)) {
+                    if (selector -> next) {
+                        if (selector -> next -> isBackward())
+                            (*tag) -> backwardFind(selector -> next, set);
+                        else if (!(*tag) -> children().isEmpty())
+                            (*tag) -> children().find(selector -> next, set);
+                    }
+                    else set.append((*tag));
+                } else if (selector -> skipable(i))
+                    break;
             }
             else if (!selector -> isDirect() && !(*tag) -> children().isEmpty())
                 (*tag) -> children().find(selector, set);
@@ -20,7 +24,49 @@ namespace Html {
         return set;
     }
 
+    QHash<QString, QString> & Set::findLinks(const Selector * selector, QHash<QString, QString> & links) {
+        Set::Iterator tag = begin();
+        for(int i = 0; tag != end(); tag++) {
+            if ((*tag) -> validTo(selector)) {
+                if (selector -> validTo(++i)) {
+                    if (selector -> next) {
+                        if (selector -> next -> isBackward())
+                            (*tag) -> backwardFindLinks(selector -> next, links);
+                        else if (!(*tag) -> children().isEmpty())
+                            (*tag) -> children().findLinks(selector -> next, links);
+                    } else if ((*tag) -> is_link())
+                        links.insert((*tag) -> link(), (*tag) -> text());
+                } else if (selector -> skipable(i))
+                    break;
+            }
+            else if (!selector -> isDirect() && !(*tag) -> children().isEmpty())
+                (*tag) -> children().findLinks(selector, links);
+        }
+
+        return links;
+    }
+
     ////////  Selector //////////
+
+    bool Selector::validTo(int index) {
+        switch(limit_rel) {
+            case lt: return index < limit;
+            case eq: return index == limit;
+            case gt: return index > limit;
+            case nt: return index % limit == 0;
+            default: true;
+        }
+    }
+
+    bool Selector::skipable(int index) {
+        switch(limit_rel) {
+            case lt: return true;
+            case eq: return index > limit;
+            case gt: return false;
+            case nt: return false;
+            default: false;
+        }
+    }
 
     void Selector::addToken(SState & tType, QString & token, char & rel) {
         switch(tType) {
@@ -28,12 +74,25 @@ namespace Html {
                 QStringList parts = token.split(rel, QString::SkipEmptyParts);
                 QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : any_elem_token);
                 _attrs.insert(parts.first(), newAttr); rel = attr_rel_eq;
-                break;
-            }
+            break;}
             case klass: {
                 klasses.append(token.split(" ", QString::SkipEmptyParts));
-                break;
-            }
+            break;}
+            case type: {
+                if (token.startsWith("lt(")) {
+                    limit_rel = lt;
+                    limit = token.mid(3, token.length() - 4).toInt();
+                } else if (token.startsWith("eq(")) {
+                    limit_rel = eq;
+                    limit = token.mid(3, token.length() - 4).toInt();
+                } else if (token.startsWith("qt(")) {
+                    limit_rel = gt;
+                    limit = token.mid(3, token.length() - 4).toInt();
+                } else if (token.startsWith("nt(")) {
+                    limit_rel = nt;
+                    limit = token.mid(3, token.length() - 4).toInt();
+                }
+            break;}
             default:;
         }
 
@@ -41,7 +100,7 @@ namespace Html {
         token.clear();
     }
 
-    Selector::Selector(const char * predicate) : sType(forward), prev(0), next(0) {
+    Selector::Selector(const char * predicate) : sType(forward), limit(-1), limit_rel(gt), prev(0), next(0) {
         Selector::SState state = Selector::tag;
         Selector * selector = this;
         QString token; token.reserve(128);
@@ -170,6 +229,21 @@ namespace Html {
         return set;
     }
 
+    QHash<QString, QString> & Tag::backwardFindLinks(Selector * selector, QHash<QString, QString> & links) {
+        if (!parent) return links;
+
+        if (parent -> validTo(selector))
+            selector = selector -> next;
+
+        if (!selector) {
+            if (parent -> is_link())
+                links.insert(parent -> link(), parent -> text());
+        } else if (selector -> isBackward() && parent -> parent)
+            parent -> backwardFindLinks(selector, links);
+
+        return links;
+    }
+
     ////////  Document //////////
 
     void Document::initSoloTags() {
@@ -188,8 +262,6 @@ namespace Html {
         QString curr, value; curr.reserve(1024); value.reserve(1024);
         Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
-
-        qDebug() << device -> bytesAvailable();
 
         while(true) {
             if (device -> getChar(ch)) {

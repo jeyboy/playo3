@@ -15,7 +15,7 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & predicate, QString & genre, bool popular_items, int count = DEFAULT_LIMIT_AMOUNT) {
+        QJsonArray search(QString & predicate, QString & genre, bool popular_items, int count) {
             QUrl url;
 
             if (!predicate.isEmpty()) {
@@ -51,8 +51,10 @@ namespace Grabber {
                     }
                 }
 
-                if (artists_table && count > 10)
-                    artistsToJson(manager, artists_table -> find(&artistSelector), json);
+                if (artists_table && count > 10) {
+                    QHash<QString, QString> artistLinks;
+                    artistsToJson(manager, artists_table -> findLinks(&artistSelector, artistLinks), json);
+                }
 
                 if (songs_table) {
                     Html::Set songs = songs_table -> find(&songTrSelector);
@@ -123,22 +125,23 @@ namespace Grabber {
             int code = genres.toInt(genre);
             if (code == genres.defaultInt()) return json;
 
-
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
             QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(code), genre));
-            //"https://myzuka.org/Genre/11/Pop/Page1"
+            QHash<QString, QString> artistLinks;
+
             for(int page = 1; page < MAX_PAGE; page++) {
                 QUrl url(genrePath % QString::number(page));
                 QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
                 Html::Document doc(response);
-                Html::Set artists = doc.find(&searchTablesSelector);
-                artists = artists.find(&artistSelector);
 
-                artistsToJson(manager, artists, json);
+                doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
+
                 QThread::msleep(GRAB_DELAY); // extra pause
                 delete response;
             }
+
+            artistsToJson(manager, artistLinks, json);
 
             if (isNew) delete manager;
             return json;
@@ -163,9 +166,9 @@ namespace Grabber {
 
     protected:
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
-        void artistsToJson(WebManager * manager, Html::Set artists, QJsonArray & json) {
-            for(Html::Set::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-                QString artistPage = (*artist) -> link() % QStringLiteral("/Songs/Page");
+        void artistsToJson(WebManager * manager, QHash<QString, QString> & artists, QJsonArray & json) {
+            for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                QString artistPage = artist.key() % QStringLiteral("/Songs/Page");
 
                 for(int page = 1; page < MAX_PAGES_PER_ARTIST; page++) {
                     if (!toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr(artistPage % QString::number(page))))), json, true))
@@ -228,7 +231,7 @@ namespace Grabber {
     private:
         inline MyzukaAlbum() : IGrabberApi(), data_url_token(QStringLiteral("data-url")),
             title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
-            search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table>tbody]")),
+            search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table]")),
             songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
             songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("table a[href^'/Genre/']")),
             table_columns_selector("thead th") { }

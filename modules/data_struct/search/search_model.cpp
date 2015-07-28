@@ -149,16 +149,15 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 QJsonArray items;
                 if (r.spredicate.isEmpty() && r.popular) {
                     items = Vk::Api::instance() -> audioPopular(true, r.sgenre_id);
-                } else {
+                } else
                     items = Vk::Api::instance() -> audioSearch(
-                        r.spredicate, request.type == artist, request.search_in_own, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT
+                        r.spredicate, request.type == artist, request.search_in_own, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT)
                     );
-                }
 
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
             case SearchRequest::request_sc: {
-                QJsonArray items = Soundcloud::Api::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
+                QJsonArray items = Soundcloud::Api::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
                 if (Soundcloud::Api::extractCount(items) > 0)
                     parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
             break;}
@@ -169,7 +168,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 parent -> backPropagateItemsCountInBranch(proceedTabs(r, parent));
             break;}
             case SearchRequest::request_other: {
-//                QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.onlyOne ? 1 : DEFAULT_LIMIT_AMOUNT);
+//                QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
 //                qDebug() << items;
 //                if (Soundcloud::Api::extractCount(items) > 0)
 //                    parent -> backPropagateItemsCountInBranch(proceedGrabberList(items, parent));
