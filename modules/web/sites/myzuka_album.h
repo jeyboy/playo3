@@ -93,7 +93,8 @@ namespace Grabber {
                 bool isNew = WebManager::valid(manager);
 
                 for(int page = 1; page < STYLES_MAX_PAGE; page++) {
-                    QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genresPath % QString::number(page))));
+                    QUrl url(genresPath % QString::number(page));
+                    QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
                     Html::Document parser(response);
                     Html::Set links = parser.find(&linksSelector);
@@ -126,10 +127,15 @@ namespace Grabber {
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
             QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(code), genre));
-
+            //"https://myzuka.org/Genre/11/Pop/Page1"
             for(int page = 1; page < MAX_PAGE; page++) {
-                QNetworkReply * response = manager -> getSync(QNetworkRequest(QUrl(genrePath % QString::number(page))));
-                artistsToJson(manager, Html::Document(response).find(QStringLiteral(".content table>tbody td a[href^'/Artist']")), json);
+                QUrl url(genrePath % QString::number(page));
+                QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+                Html::Document doc(response);
+                Html::Set artists = doc.find(&searchTablesSelector);
+                artists = artists.find(&artistSelector);
+
+                artistsToJson(manager, artists, json);
                 QThread::msleep(GRAB_DELAY); // extra pause
                 delete response;
             }
@@ -224,7 +230,7 @@ namespace Grabber {
             title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
             search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table>tbody]")),
             songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
-            songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("a[href^'/Genre/']")),
+            songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("table a[href^'/Genre/']")),
             table_columns_selector("thead th") { }
 
         inline virtual ~MyzukaAlbum() {}
