@@ -24,10 +24,6 @@ namespace Html {
     const QString split_token = QStringLiteral(" ");
 
     struct Selector {
-        enum SRel { eq, lt, gt, nt };
-        enum SType { direct, forward, backward};
-        enum SState { none, tag, attr, id, klass, type };
-
         enum SToken {
             id_token = 35,
             class_token = 46,
@@ -45,6 +41,9 @@ namespace Html {
             cont1_token = 34,
             cont2_token = 39
         };
+        enum SRel { eq, lt, gt, nt };
+        enum SType { direct = direct_token, forward, backward = back_direct_token };
+        enum SState { none = attr_token_end, tag, attr, id = id_token, klass = class_token, type = type_token };
 
         Selector(const char * predicate);
 
@@ -57,8 +56,8 @@ namespace Html {
 
         inline bool isDirect() const { return sType == direct; }
         inline bool isBackward() const { return sType == backward; }
-        bool validTo(int index);
-        bool skipable(int index);
+        bool validTo(int index) const;
+        bool skipable(int index) const;
 
         QStringList klasses;
         QHash<SState, QString> _tokens;
@@ -97,16 +96,19 @@ namespace Html {
         inline QHash<QString, QString> attributes() const { return attrs; }
         inline Set children() const { return tags; }
         inline QString value(QString name) { return attrs.value(name); }
-        inline QString text() const { return attrs.value(text_block_token); }
+        inline QString text() const {
+            const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
+            return text ? text -> attrs.value(text_block_token) : QString();
+        }
         inline QString link() const { return attrs.value(href_token); }
 
         inline bool is_link() { return _name == QStringLiteral("a"); }
 
         inline Tag * parentTag() { return parent; }
-        inline Tag * childTag(int pos) { return tags[pos]; }
-        inline Tag * childTag(QString name_predicate, int pos = 0) {
-            Set::Iterator tag = tags.begin();
-            for(int i = 0; tag != tags.end(); tag++) {
+        inline Tag * childTag(int pos) const { return tags[pos]; }
+        inline Tag * childTag(QString name_predicate, int pos = 0) const {
+            Set::ConstIterator tag = tags.cbegin();
+            for(int i = 0; tag != tags.cend(); tag++) {
                 if ((*tag) -> name() == name_predicate) {
                     if (i == pos) return (*tag);
                     i++;

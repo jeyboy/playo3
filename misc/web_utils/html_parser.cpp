@@ -48,23 +48,23 @@ namespace Html {
 
     ////////  Selector //////////
 
-    bool Selector::validTo(int index) {
+    bool Selector::validTo(int index) const {
         switch(limit_rel) {
             case lt: return index < limit;
             case eq: return index == limit;
             case gt: return index > limit;
             case nt: return index % limit == 0;
-            default: true;
+            default: return true;
         }
     }
 
-    bool Selector::skipable(int index) {
+    bool Selector::skipable(int index) const {
         switch(limit_rel) {
             case lt: return true;
             case eq: return index > limit;
             case gt: return false;
             case nt: return false;
-            default: false;
+            default: return false;
         }
     }
 
@@ -109,15 +109,13 @@ namespace Html {
 
         while(*it) {
             switch(*it) {
+                case attr_token_end:
+                case type_token:
+                case class_token:
                 case id_token: {
                     if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    state = Selector::id;
-                break;}
-
-                case class_token: {
-                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    state = Selector::klass;
-                break;}
+                    state = (SState)*it;
+                break;}         
 
                 case attr_token:
                 case attr_separator: {
@@ -132,25 +130,10 @@ namespace Html {
                     token.append((rel = *it));
                 break;}
 
-                case attr_token_end: {
-                    selector -> addToken(state, token, rel);
-                    state = Selector::none;
-                break;}
-
-                case type_token: {
-                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    state = Selector::type;
-                break;}
-
+                case back_direct_token:
                 case direct_token: {
                     if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    selector = new Selector(direct, selector);
-                    state = Selector::tag;
-                break;}
-
-                case back_direct_token: {
-                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    selector = new Selector(backward, selector);
+                    selector = new Selector((SType)*it, selector);
                     state = Selector::tag;
                 break;}
 
@@ -164,12 +147,14 @@ namespace Html {
 
                 case cont1_token:
                 case cont2_token: break; // skipping
+
                 default: token.append(*it);
             }
 
             it++;
         }
 
+        if (!token.isEmpty()) selector -> addToken(state, token, rel);
         free((void *)predicate);
     }
 

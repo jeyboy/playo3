@@ -24,10 +24,9 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    QTextCodec* codec = QTextCodec::codecForName("windows-1251");
 //    QString res  =codec->toUnicode(ba);
 
-    qDebug() << Grabber::MyzukaAlbum::instance() -> byGenre(QStringLiteral("Pop"));
     QString pred = QStringLiteral("lal - alarm");
     QString genre;
-    qDebug() << Grabber::MyzukaAlbum::instance() -> search(pred, genre, false);
+    qDebug() << Grabber::MyzukaAlbum::instance() -> search(pred, genre, false, 10);
 
 ////    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
 //    QFile f("F:/o.cue");

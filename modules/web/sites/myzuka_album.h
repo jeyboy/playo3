@@ -231,10 +231,10 @@ namespace Grabber {
     private:
         inline MyzukaAlbum() : IGrabberApi(), data_url_token(QStringLiteral("data-url")),
             title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
-            search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table]")),
+            search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table")),
             songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
             songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("table a[href^'/Genre/']")),
-            table_columns_selector("thead th") { }
+            table_columns_selector("tr th") { }
 
         inline virtual ~MyzukaAlbum() {}
 
