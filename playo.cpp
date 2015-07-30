@@ -26,7 +26,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     QString pred = QStringLiteral("lal - alarm");
     QString genre;
-    qDebug() << Grabber::MyzukaAlbum::instance() -> search(pred, genre, false, 10);
+    qDebug() << Grabber::MyzukaAlbum::instance() -> search(pred, genre, false, 1);
+    qDebug() << Grabber::MyzukaAlbum::instance() -> search(pred, genre, false, 2);
 
 ////    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
 //    QFile f("F:/o.cue");

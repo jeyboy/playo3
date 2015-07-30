@@ -41,13 +41,12 @@ namespace Html {
             cont1_token = 34,
             cont2_token = 39
         };
-        enum SRel { eq, lt, gt, nt };
         enum SType { direct = direct_token, forward, backward = back_direct_token };
         enum SState { none = attr_token_end, tag, attr, id = id_token, klass = class_token, type = type_token };
 
         Selector(const char * predicate);
 
-        inline Selector(SType selector_type = forward, Selector * prev_selector = 0) : sType(selector_type), limit(-1), limit_rel(gt), prev(prev_selector), next(0) {
+        inline Selector(SType selector_type = forward, Selector * prev_selector = 0) : sType(selector_type), prev(prev_selector), next(0) {
             if (prev_selector) prev_selector -> next = this;
         }
         inline ~Selector() { delete next; }
@@ -63,8 +62,6 @@ namespace Html {
         QHash<SState, QString> _tokens;
         QHash<QString, QPair<char, QString> > _attrs;
         SType sType;
-        int limit;
-        SRel limit_rel;
 
         Selector * prev;
         Selector * next;
