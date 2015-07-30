@@ -82,6 +82,7 @@ namespace Grabber {
                         QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
                         track_obj.insert(title_key, title);
                         track_obj.insert(size_key, size_tag -> text().section(' ', 0, 0));
+                        track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
 
                         json << track_obj;
                     }
@@ -213,7 +214,7 @@ namespace Grabber {
 
                 set = (*track) -> find(&refreshSelector);
                 if (!set.isEmpty())
-                    track_obj.insert(refresh_key, set.first() -> link());
+                    track_obj.insert(refresh_key, baseUrlStr(set.first() -> link()));
 
                 json << track_obj;
             }

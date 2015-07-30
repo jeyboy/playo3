@@ -4,16 +4,24 @@ using namespace Playo3;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    if (itm -> itemType() == VK_ITEM) {
-        QString newUrl = Vk::Api::instance() -> refreshAudioItemUrl(
-            itm -> toUid().toString()
-        ).section('?', 0, 0);
 
-        if (itm -> path().toString() != newUrl) {
-            itm -> setPath(newUrl);
-            return true;
-        }
-    }
+    switch(itm -> itemType()) {
+        case VK_ITEM: {
+            QString newUrl = Vk::Api::instance() -> refreshAudioItemUrl(
+                itm -> toUid().toString()
+            ).section('?', 0, 0);
+
+            if (itm -> path().toString() != newUrl) {
+                itm -> setPath(newUrl);
+                return true;
+            }
+        break;}
+
+        case WEB_ITEM: {
+            // use refresh url for receiving of the song url
+        break;}
+        default: return false;
+    };
 
     return false;
 }
