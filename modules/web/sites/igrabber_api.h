@@ -49,9 +49,9 @@ public:
 
     virtual QJsonArray popular() { return QJsonArray(); }
 
-    QString refresh(QUrl refresh_page) {
+    QString refresh(QString refresh_page) {
         if (refresh_page.isEmpty()) return QString();
-        return refreshQuery(refresh_page);
+        return refreshQuery(QUrl(refresh_page));
     }
 
 //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
@@ -78,7 +78,7 @@ protected:
 
     virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
-    QString refreshQuery(QUrl & url) {
+    QString refreshQuery(QUrl url) {
         WebManager * manager = 0;
         bool isNew = WebManager::valid(manager);
         QNetworkReply * response = manager -> getSync(QNetworkRequest(url));

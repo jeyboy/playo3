@@ -20,7 +20,12 @@ bool IModel::restoreUrl(IItem * itm) {
         case WEB_ITEM: {
             switch(itm -> subtipe()) {
                 case Playo3::myzuka: {
-                    QString newUrl = Grabber::MyzukaAlbum::instance() -> refresh(QUrl(itm -> refresh_path()));
+                    QString newUrl = Grabber::MyzukaAlbum::instance() -> refresh(itm -> refresh_path());
+                    qDebug() << itm -> refresh_path() << newUrl;
+                    if (itm -> path().toString() != newUrl) {
+                        itm -> setPath(newUrl);
+                        return true;
+                    }
                 break;}
                 default:;
             }
@@ -307,44 +312,35 @@ int IModel::proceedGrabberList(QJsonArray & collection, FolderItem * parent) {
     WebItem * newItem;
     QString uri, id;
 
-    if (!collection.at(0).isArray()) {
-        QJsonArray ar;
-        ar.append(collection);
-        collection = ar;
-    }
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
 
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+        if (itm.isEmpty()) continue;
 
-            if (itm.isEmpty()) continue;
+        id = QString::number(itm.value(Grabber::id_key).toInt());
 
-            id = QString::number(itm.value(Grabber::id_key).toInt());
+        uri = itm.value(Grabber::url_key).toString();
+        if (uri.isEmpty()) continue;
 
-            uri = itm.value(Grabber::url_key).toString();
-            if (uri.isEmpty()) continue;
+        itemsAmount++;
+        newItem = new WebItem(
+            id,
+            uri,
+            itm.value(Grabber::title_key).toString(),
+            parent
+        );
 
-            itemsAmount++;
-            newItem = new WebItem(
-                id,
-                uri,
-                itm.value(Grabber::title_key).toString(),
-                parent
-            );
+        newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
 
-            newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
-
-            if (itm.contains(Grabber::duration_key)) {
-                if (itm.value(Grabber::duration_key).isDouble())
-                    newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
-                else
-                    qDebug() << QStringLiteral("proceed parsing by mask from str");
-            }
-
-            if (itm.contains(Grabber::genre_id_key))
-                newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
+        if (itm.contains(Grabber::duration_key)) {
+            if (itm.value(Grabber::duration_key).isDouble())
+                newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
+            else
+                qDebug() << QStringLiteral("proceed parsing by mask from str");
         }
+
+        if (itm.contains(Grabber::genre_id_key))
+            newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
     }
 
     return itemsAmount;

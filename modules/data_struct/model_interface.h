@@ -64,7 +64,7 @@ namespace Playo3 {
 
         int proceedVkList(QJsonArray & collection, FolderItem * parent);
         int proceedScList(QJsonArray & collection, FolderItem * parent);
-        int proceedGrabberList(QJsonArray & collection, FolderItem * parent);
+        int proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
