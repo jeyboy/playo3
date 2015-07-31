@@ -33,6 +33,11 @@ namespace Playo3 {
     #define IADDFONT ITITLESCACHE - 1
     #define IREMOTE IADDFONT - 1
 
+    enum WebSubType {
+        none,
+        myzuka
+    };
+
     class ItemFields : public ItemState {
     public:
         inline ItemFields() {}
@@ -50,6 +55,8 @@ namespace Playo3 {
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
+        inline QString refresh_path() const { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
+
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }
         QStringList info() const;
@@ -58,6 +65,8 @@ namespace Playo3 {
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, MusicGenres::instance() -> defaultInt()); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
+
+        inline WebSubType subtipe() const   { return (WebSubType)attrs.value(JSON_TYPE_SUB_TYPE, none).toInt(); }
 
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
@@ -71,11 +80,14 @@ namespace Playo3 {
         inline void setGenre(QVariant newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }
         inline void setSize(QVariant newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
         inline void setPath(QVariant newPath)           { attrs[JSON_TYPE_PATH] = newPath; }
+        inline void setRefreshPath(QVariant newPath)    { attrs[JSON_TYPE_REFRESH_PATH] = newPath; }
+
         inline void setTitle(QVariant newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
         inline void setExtension(QVariant newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
         inline void setInfo(QVariant newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
         inline void setTitlesCache(QVariant newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
         inline void setVideoPath(QVariant videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
+        inline void setSubtype(WebSubType subType)      { attrs[JSON_TYPE_SUB_TYPE] = subType; }
 
         inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
 

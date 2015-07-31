@@ -18,6 +18,12 @@ bool IModel::restoreUrl(IItem * itm) {
         break;}
 
         case WEB_ITEM: {
+            switch(itm -> subtipe()) {
+                case Playo3::myzuka: {
+                    QString newUrl = Grabber::MyzukaAlbum::instance() -> refresh(QUrl(itm -> refresh_path()));
+                break;}
+                default:;
+            }
             // use refresh url for receiving of the song url
         break;}
         default: return false;

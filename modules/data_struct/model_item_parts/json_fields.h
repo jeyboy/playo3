@@ -15,11 +15,13 @@ namespace Playo3 {
     const QString JSON_TYPE_SONG_UID = QStringLiteral("h");
     const QString JSON_TYPE_BPM = QStringLiteral("m");
     const QString JSON_TYPE_PATH = QStringLiteral("p");
+    const QString JSON_TYPE_REFRESH_PATH = QStringLiteral("r");
     const QString JSON_TYPE_STATE = QStringLiteral("s");
     const QString JSON_TYPE_OWNER_ID = QStringLiteral("o");
     const QString JSON_TYPE_TITLE = QStringLiteral("t");
     const QString JSON_TYPE_UID = QStringLiteral("u");
     const QString JSON_TYPE_VIDEO_PATH = QStringLiteral("v");
+    const QString JSON_TYPE_SUB_TYPE = QStringLiteral("w");
     const QString JSON_TYPE_TITLE_CACHES = QStringLiteral("z");
     const QString JSON_TYPE_CONTAINER_ITEMS_COUNT = QStringLiteral("l");
     const QString JSON_TYPE_TAB_NAME = QStringLiteral("n");
