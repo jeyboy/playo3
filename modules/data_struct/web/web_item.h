@@ -16,11 +16,11 @@ namespace Playo3 {
             setUid(uid);
             setPath(filePath);
         }
-        inline WebItem(QVariant song_uid, QVariant artist_uid, QString fileName, FolderItem * parent, WebSubType subtype = none, int pos = -1) : IItem(parent, fileName, pos) {
-            setArtistUid(artist_uid);
-            setSongUid(song_uid);
-            setSubtype(subtype);
-        }
+//        inline WebItem(QVariant song_uid, QVariant artist_uid, QString fileName, FolderItem * parent, WebSubType subtype = none, int pos = -1) : IItem(parent, fileName, pos) {
+//            setArtistUid(artist_uid);
+//            setSongUid(song_uid);
+//            setSubtype(subtype);
+//        }
 
         inline virtual ~WebItem() {}
 

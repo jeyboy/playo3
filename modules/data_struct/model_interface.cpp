@@ -306,7 +306,7 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     WebItem * newItem;
