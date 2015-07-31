@@ -310,7 +310,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
     int itemsAmount = 0;
     QJsonObject itm;
     WebItem * newItem;
-    QString uri, id;
+    QString uri, refresh_url, id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         itm = (*it).toObject();
@@ -320,7 +320,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
         id = QString::number(itm.value(Grabber::id_key).toInt());
 
         uri = itm.value(Grabber::url_key).toString();
-        if (uri.isEmpty()) continue;
+        refresh_url = itm.value(Grabber::refresh_key).toString();
 
         itemsAmount++;
         newItem = new WebItem(
@@ -330,6 +330,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
             parent
         );
 
+        newItem -> setRefreshPath(refresh_url);
         newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
 
         if (itm.contains(Grabber::duration_key)) {
@@ -341,6 +342,13 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
 
         if (itm.contains(Grabber::genre_id_key))
             newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
+
+        if (itm.contains(Grabber::bpm_key))
+            newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
+
+//        if (itm.contains(Grabber::bitrate_key) && itm.contains(Grabber::duration_key) && itm.contains(Grabber::size_key)) {
+//            newItem -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+//        }
     }
 
     return itemsAmount;

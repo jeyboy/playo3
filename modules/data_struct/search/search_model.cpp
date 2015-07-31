@@ -170,8 +170,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_other: {
                 QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
                 qDebug() << items;
-                if (Soundcloud::Api::extractCount(items) > 0)
-                    parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
             break;}
         }
     }
