@@ -1,13 +1,5 @@
 #include "format.h"
 
-QString Format::toTime(int h, int m, int s, bool forciblyIncludeHours) {
-    if (h > 0 || forciblyIncludeHours) {
-        return QString().sprintf("%02d:%02d:%02d", h, m, s);
-    } else {
-        return QString().sprintf("%02d:%02d", m, s);
-    }
-}
-
 QString Format::toInfo(QString size, QString ext, int bitrate, int freq, int channelsCount) {
     return toInfo(size, ext) % " :: " % QString::number(channelsCount) % " ch :: " % QString::number(bitrate) % " kbps :: " % QString::number(freq) % " kHz";
 }
