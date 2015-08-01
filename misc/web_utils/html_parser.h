@@ -247,18 +247,12 @@ namespace Html {
                 if (device -> getChar(ch)) {
                     switch(*ch) {
                         case code_unicode: { is_unicode = true; break;}
-                        case code_end: {
-                            if (is_unicode)
-                                return QChar(code.toInt());
-                            else
-                                return html_entities.value(code);
-                        }
-                        case content_del1:
-                        case content_del2: {
-                            device -> ungetChar(*ch);
-                            return code;
-                        }
-                        default: code.append(*ch);
+                        case code_end:
+                            return is_unicode ? QChar(code.toInt()) : html_entities.value(code);
+                        default:
+                            if ((*ch > 47 && *ch < 58) || (*ch > 96 && *ch < 123))
+                                code.append(*ch);
+                            else { device -> ungetChar(*ch); return code; }
                     }
                 } else return code;
             }

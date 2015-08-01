@@ -244,8 +244,8 @@ namespace Html {
                                 if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
                                 state = tag;
                             break;}
-                            case space: if (curr.isEmpty()) continue;
                             case code_start: { curr.append(parseCode(device, ch)); break; }
+                            case space: if (curr.isEmpty()) continue;
                             default:
                                 if ((last = *ch) > 0)
                                     curr.append(*ch);
