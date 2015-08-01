@@ -189,6 +189,11 @@ namespace Html {
     ////////  Document //////////
 
     void Document::initSoloTags() {
+        html_entities.insert("nbsp", ' ');
+        html_entities.insert("amp", '&');
+        html_entities.insert("lt", '<');
+        html_entities.insert("gt", '>');
+
         solo.insert(QStringLiteral("br"), true);
         solo.insert(QStringLiteral("meta"), true);
         solo.insert(QStringLiteral("link"), true);
@@ -224,6 +229,7 @@ namespace Html {
                                     default: { qDebug() << "WRONG STATE" << state; return; }
                                 }
                             break;}
+                            case code_start: { value.append(parseCode(device, ch)); break; }
                             default:
                                 if (*ch > 0)
                                     value.append(*ch);
@@ -239,7 +245,12 @@ namespace Html {
                                 state = tag;
                             break;}
                             case space: if (curr.isEmpty()) continue;
-                            default: if ((last = *ch) > 0) curr.append(*ch); else scanUtf8Char(device, curr, ch[0]);
+                            case code_start: { curr.append(parseCode(device, ch)); break; }
+                            default:
+                                if ((last = *ch) > 0)
+                                    curr.append(*ch);
+                                else
+                                    scanUtf8Char(device, curr, ch[0]);
                         }
                     break;}
 

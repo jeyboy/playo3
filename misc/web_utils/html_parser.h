@@ -206,7 +206,10 @@ namespace Html {
             attr_rel = 61,
             content_del1 = 34,
             content_del2 = 39,
-            mean_sym = 92
+            mean_sym = 92,
+            code_start = 38,
+            code_unicode = 35,
+            code_end = 59
         };
 
     public:
@@ -237,8 +240,32 @@ namespace Html {
         void initSoloTags();
 
         void parse(QIODevice * device);
+        inline QString parseCode(QIODevice * device, char * ch) {
+            QString code;
+            bool is_unicode = false;
+            while(true) {
+                if (device -> getChar(ch)) {
+                    switch(*ch) {
+                        case code_unicode: { is_unicode = true; break;}
+                        case code_end: {
+                            if (is_unicode)
+                                return QChar(code.toInt());
+                            else
+                                return html_entities.value(code);
+                        }
+                        case content_del1:
+                        case content_del2: {
+                            device -> ungetChar(*ch);
+                            return code;
+                        }
+                        default: code.append(*ch);
+                    }
+                } else return code;
+            }
+        }
 
         QHash<QString, bool> solo;
+        QHash<QString, QChar> html_entities;
         Tag * root;
         Flags flags;
     };

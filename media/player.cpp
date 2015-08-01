@@ -209,22 +209,22 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
 
     if (uri.isLocalFile()) {
         chUID = BASS_StreamCreateFile(false,
-                                      uri.toLocalFile()
-                                          #ifdef Q_OS_WIN
-                                            .toStdWString().data()
-                                          #else
-                                            .toStdString().c_str()
-                                          #endif
-                                      , 0, 0, 0);
+            uri.toLocalFile()
+              #ifdef Q_OS_WIN
+                .toStdWString().data()
+              #else
+                .toStdString().c_str()
+              #endif
+            , 0, 0, 0);
     } else {
         chUID = BASS_StreamCreateURL(
-                    uri.toString()
-                        #ifdef Q_OS_WIN
-                            .toStdWString().data()
-                        #else
-                            .toStdString().c_str()
-                        #endif
-                    , 0, 0, NULL, 0);
+            uri.toString()
+                #ifdef Q_OS_WIN
+                    .toStdWString().data()
+                #else
+                    .toStdString().c_str()
+                #endif
+            , 0, 0, NULL, 0);
     }
 
 //    if (uri.isLocalFile())

@@ -83,7 +83,6 @@ namespace Grabber {
                         track_obj.insert(title_key, title);
                         track_obj.insert(size_key, size_tag -> text().section(' ', 0, 0));
                         track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
-                        track_obj.insert(url_key, track_obj[refresh_key]);
 
                         json << track_obj;
                     }
