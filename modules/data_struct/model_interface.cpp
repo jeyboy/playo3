@@ -330,6 +330,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
             parent
         );
 
+        newItem -> setSubtype(wType);
         newItem -> setRefreshPath(refresh_url);
         newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
 
