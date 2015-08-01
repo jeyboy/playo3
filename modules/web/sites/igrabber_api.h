@@ -50,6 +50,7 @@ public:
     virtual QJsonArray popular() { return QJsonArray(); }
 
     QString refresh(QString refresh_page) {
+        qDebug() << "REF" << refresh_page;
         if (refresh_page.isEmpty()) return QString();
         return refreshQuery(QUrl(refresh_page));
     }

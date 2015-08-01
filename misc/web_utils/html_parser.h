@@ -164,6 +164,26 @@ namespace Html {
         }
 
     private:
+//        QString decodeUrlEntities(QString htmlCoded) const {
+//            QString res = htmlCoded
+//                    .replace("&nbsp;", " ")
+//                    .replace("&amp;", "&")
+//                    .replace("&lt;", "<")
+//                    .replace("&gt;", ">");
+
+//            QRegExp re("&#([0-9]+);");
+//            re.setMinimal(true);
+
+//            int pos = 0;
+//            while( (pos = re.indexIn(res, pos)) != -1 )
+//            {
+//                res = res.replace(re.cap(0), QChar(re.cap(1).toInt(0,10)));
+//                pos += re.matchedLength();
+//            }
+
+//            return res;
+//        }
+
         int _level;
         QString _name;
         QHash<QString, QString> attrs;
