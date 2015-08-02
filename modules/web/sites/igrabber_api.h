@@ -8,6 +8,7 @@
 #include "misc/web_utils/web_manager.h"
 #include "misc/web_utils/html_parser.h"
 #include "media/genres/web/target_genres.h"
+#include "media/duration.h"
 #include "grabber_keys.h"
 
 #include <qdebug.h>

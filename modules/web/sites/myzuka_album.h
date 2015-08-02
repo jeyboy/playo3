@@ -81,7 +81,7 @@ namespace Grabber {
 
                         QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
                         track_obj.insert(title_key, title);
-                        track_obj.insert(size_key, size_tag -> text().section(' ', 0, 0));
+                        track_obj.insert(size_key, prepareSize(size_tag -> text()));
                         track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
 
                         json << track_obj;
@@ -172,6 +172,10 @@ namespace Grabber {
         }
 
     protected:
+        inline QString prepareSize(QString size) {
+            return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
+        }
+
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
         void artistsToJson(WebManager * manager, QHash<QString, QString> & artists, QJsonArray & json) {
             for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
@@ -211,7 +215,7 @@ namespace Grabber {
 
                 set = (*track) -> find(&detailsSelector);
                 if (!set.isEmpty())
-                    track_obj.insert(size_key, set.first() -> text().section(' ', 0, 0));
+                    track_obj.insert(size_key, prepareSize(set.first() -> text()));
 
                 set = (*track) -> find(&refreshSelector);
                 if (!set.isEmpty())
