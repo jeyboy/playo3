@@ -5,7 +5,6 @@
 #include <qapplication.h>
 #include <qstandardpaths.h>
 #include <qfile.h>
-#include <qdebug.h>
 
 #define AUTORUN_NAME QStringLiteral("Playo3")
 

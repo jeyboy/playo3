@@ -338,7 +338,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
             if (itm.value(Grabber::duration_key).isDouble())
                 newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
             else
-                qDebug() << QStringLiteral("proceed parsing by mask from str");
+                newItem -> setDuration(itm.value(Grabber::duration_key));
         }
 
         if (itm.contains(Grabber::genre_id_key))
@@ -347,6 +347,9 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
         if (itm.contains(Grabber::bpm_key))
             newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
 
+        if (itm.contains(Grabber::size_key))
+            newItem -> setSize(Format::fromUnits(itm.value(Grabber::size_key).toString()));
+
 //        if (itm.contains(Grabber::bitrate_key) && itm.contains(Grabber::duration_key) && itm.contains(Grabber::size_key)) {
 //            newItem -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
 //        }
@@ -354,10 +357,6 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
 //        itm -> setSize(info -> getSize());
 //        if (info -> isReaded())
 //            itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
-//        else
-//            itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension()));
-//        if (info -> getDuration() > 0)
-//            itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
     }
 
     return itemsAmount;
