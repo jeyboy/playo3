@@ -2,6 +2,10 @@
 
 QString Format::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
 
+QString Format::toInfo(QString size, QString ext, QString bitrate, QString freq, QString channelsCount) {
+    return toInfo(size, ext) % " :: " % channelsCount % " ch :: " % bitrate % " kbps :: " % freq % " kHz";
+}
+
 QString Format::toInfo(QString size, QString ext, int bitrate, int freq, int channelsCount) {
     return toInfo(size, ext) % " :: " % QString::number(channelsCount) % " ch :: " % QString::number(bitrate) % " kbps :: " % QString::number(freq) % " kHz";
 }

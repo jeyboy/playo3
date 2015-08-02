@@ -350,13 +350,14 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
         if (itm.contains(Grabber::size_key))
             newItem -> setSize(Format::fromUnits(itm.value(Grabber::size_key).toString()));
 
-//        if (itm.contains(Grabber::bitrate_key) && itm.contains(Grabber::duration_key) && itm.contains(Grabber::size_key)) {
-//            newItem -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
-//        }
-
-//        itm -> setSize(info -> getSize());
-//        if (info -> isReaded())
-//            itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+        newItem -> setInfo(Format::toInfo(
+                itm.value(Grabber::size_key).toString("?"),
+                newItem -> extension().toString(),
+                itm.value(Grabber::bitrate_key).toString("?"),
+                itm.value(Grabber::discretion_rate_key).toString("?"),
+                itm.value(Grabber::channels_key).toString("?")
+            )
+        );
     }
 
     return itemsAmount;

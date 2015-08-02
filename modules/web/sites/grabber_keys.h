@@ -13,7 +13,8 @@ namespace Grabber {
     extern const QString genre_id_key;
     extern const QString extension_key;
     extern const QString bitrate_key;
-    extern const QString rate_key;
+    extern const QString discretion_rate_key;
+    extern const QString channels_key;
     extern const QString bpm_key;
 
     extern const QString default_extension;

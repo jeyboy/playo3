@@ -11,7 +11,8 @@ namespace Grabber {
     extern const QString extension_key = QStringLiteral("extension");
     extern const QString bitrate_key = QStringLiteral("bitrate");
     extern const QString bpm_key = QStringLiteral("bpm");
+    extern const QString channels_key = QStringLiteral("channels");
+    extern const QString discretion_rate_key = QStringLiteral("discretion_rate");
 
     extern const QString default_extension = QStringLiteral("mp3");
 }
-
