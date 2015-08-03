@@ -145,7 +145,9 @@ SOURCES += main.cpp\
     modules/web/socials_api/soundcloud_api_keys.cpp \
     modules/web/socials_api/vk_api_keys.cpp \
     modules/web/sites/grabber_keys.cpp \
-    misc/web_utils/json_parser.cpp
+    misc/web_utils/json_parser.cpp \
+    modules/web/storages/fourshared/fourshared_api.cpp \
+    modules/web/storages/fourshared/fourshared_api_keys.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -294,7 +296,10 @@ HEADERS  += playo.h \
     modules/web/socials_api/vk_api_keys.h \
     modules/web/sites/grabber_keys.h \
     misc/web_utils/json_parser.h \
-    misc/web_utils/unicode_decoding.h
+    misc/web_utils/unicode_decoding.h \
+    modules/web/storages/fourshared/fourshared_api.h \
+    modules/web/storages/fourshared/fourshared_request_api.h \
+    modules/web/storages/fourshared/fourshared_api_keys.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
