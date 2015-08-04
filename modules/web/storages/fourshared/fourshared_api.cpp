@@ -1,6 +1,6 @@
 #include "fourshared_api.h"
 
-namespace Fourshared {
+namespace Fourshared { // for auth required oauth 1
     Api * Api::self = 0;
 
     Api * Api::instance() {
@@ -15,7 +15,7 @@ namespace Fourshared {
     }
 
     QString Api::authUrl() {
-        QUrl url(QStringLiteral("https://soundcloud.com/connect"));
+        QUrl url(base_url % QStringLiteral("oauth/initiate"));
 
 //        QUrlQuery query = genDefaultParams();
 //        setParam(query, QStringLiteral("response_type"), QStringLiteral("code"));

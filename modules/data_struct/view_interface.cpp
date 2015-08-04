@@ -664,7 +664,7 @@ void IView::downloadItem(const QModelIndex & node, QString savePath) {
     DownloadView::instance() -> addRow(
         node.data(IURL).toUrl(),
         savePath,
-        downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
+        FilenameConversions::downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
     );
 }
 

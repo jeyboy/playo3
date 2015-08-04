@@ -13,11 +13,20 @@ namespace Playo3 {
         inline FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline FileItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
         inline FileItem(QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
-            proceedTitle(fileName);
+            QString ext;
+            if (FilenameConversions::extractExtension(fileName, ext))
+                setExtension(ext);
+
+            setTitle(fileName);
         }
         inline FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
             : IItem(parent, DEFAULT_TITLE, pos) {
-            proceedTitle(fileName);
+
+            QString ext;
+            if (FilenameConversions::extractExtension(fileName, ext))
+                setExtension(ext);
+
+            setTitle(fileName);
             setPath(filePath);
         }
 
@@ -30,8 +39,6 @@ namespace Playo3 {
         inline bool removePhysicalObject() { return QFile::remove(fullPath()); }
 
         inline bool isExist() const { return QFile::exists(fullPath()); }
-    protected:
-        void proceedTitle(QString & title);
     };
 }
 

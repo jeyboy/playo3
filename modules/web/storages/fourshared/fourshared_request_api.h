@@ -2,6 +2,9 @@
 #define FOURSHARED_REQUEST_API
 
 #include "../../iapi.h"
+#include "fourshared_api_keys.h"
+
+#define FOURSHARED_OFFSET_LIMIT 1000
 
 namespace Fourshared {
     class RequestApi : public IApi {
@@ -12,23 +15,39 @@ namespace Fourshared {
         };
 
         inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, "category", (int)cType); }
-        inline void setSearchPredicate(QUrlQuery & query, CategoryTypes cType = music) { setParam(query, "category", (int)cType); }
+        inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, "query", predicate); }
     public:
         QUrl audioSearchUrl(QString & predicate, CategoryTypes cType = music) {
             QUrlQuery query = genDefaultParams();
-            setCategory(query);
+            setCategory(query, cType);
             setSearchPredicate(query, predicate);
 
-            return baseUrl(QStringLiteral("tracks"), query);
+            return baseUrl(QStringLiteral("files"), query);
         }
         QJsonArray audioSearch(QString & predicate, int count = 5) {
-            return lQuery(
-                audioSearchUrl(predicate, genre, popular),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
+            QJsonArray res = lQuery(
+                audioSearchUrl(predicate),
+                QueryRules(QStringLiteral("files"), requestLimit(), qMin(count, FOURSHARED_OFFSET_LIMIT)),
                 wrap
             );
+
+            return prepareAudios(res);
         }
-    };
+    private:
+        QJsonArray prepareAudios(QJsonArray & items) {
+            QJsonArray ar;
+
+            for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
+                QJsonObject obj;
+
+//                obj
+
+                ar << obj;
+            }
+
+            return ar;
+        }
+    };       
 }
 
 #endif // FOURSHARED_REQUEST_API

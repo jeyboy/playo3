@@ -16,7 +16,7 @@ namespace Playo3 {
     class FolderItem;
 
     class IItem : public ItemFields {
-    public:
+    public:       
         IItem(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         IItem(FolderItem * parent, QVariantMap & hash, int pos = -1);
         IItem(FolderItem * parent, QJsonObject * hash);

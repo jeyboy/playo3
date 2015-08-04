@@ -416,14 +416,14 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
 
 void Library::initItemTitles(MediaInfo * info, IItem * itm) {
     QStringList list;
-    QString title = cacheTitleFilter(itm -> title().toString());
+    QString title = FilenameConversions::cacheTitleFilter(itm -> title().toString());
     list.append(title);
 
-    QString temp = forwardNumberFilter(title);
+    QString temp = FilenameConversions::forwardNumberFilter(title);
     if (temp != title)
         list.append(temp);
 
-    QString tagTitle = cacheTitleFilter(info -> getArtist() + info -> getTitle());
+    QString tagTitle = FilenameConversions::cacheTitleFilter(info -> getArtist() + info -> getTitle());
     if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
         list.append(tagTitle);
 

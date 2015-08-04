@@ -100,7 +100,7 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             addRow(
                 data.url,
                 path,
-                downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
+                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
                 is_vk ? QStringLiteral("vk") : QString(),
                 is_vk ? (data.attrs[JSON_TYPE_OWNER_ID].toString() % QStringLiteral("_") % data.attrs[JSON_TYPE_UID].toString()) : QString() //WebItem::toUid
             );
@@ -111,7 +111,7 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
 
         for(; it != event -> mimeData() -> urls().end(); it++) {
             QFileInfo file = QFileInfo((*it).toLocalFile());
-            addRow((*it), path, downloadTitle(file.baseName(), file.completeSuffix()));
+            addRow((*it), path, FilenameConversions::downloadTitle(file.baseName(), file.completeSuffix()));
         }
     }
     else event -> ignore();

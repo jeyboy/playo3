@@ -4,6 +4,7 @@
 #include <qstringbuilder.h>
 
 namespace Fourshared {
+    extern const QString down_base_url;
     extern const QString base_url;
     extern const QString offset_key;
     extern const QString limit_key;
