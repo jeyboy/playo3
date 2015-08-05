@@ -73,7 +73,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
 
         if (node -> isContainer()) {
             FolderItem * it = dynamic_cast<FolderItem *>(node);
-            it -> propagateCheckedState(checked);
+            it -> updateCheckedState(checked);
             emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
             return true;
         }
@@ -695,12 +695,12 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
 
 void IModel::markAllAsChecked() {
     beginResetModel();
-    rootItem -> propagateCheckedState(true);
+    rootItem -> updateCheckedState(true);
     endResetModel();
 }
 void IModel::markAllAsUnchecked() {
     beginResetModel();
-    rootItem -> propagateCheckedState(false);
+    rootItem -> updateCheckedState(false);
     endResetModel();
 }
 
@@ -902,12 +902,13 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
         search_source = rootItem;
 
     QList<IItem *> child = search_source -> childrenList();
+    bool has_empty_predicate = params.spredicate.isEmpty();
 
     for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
         if ((*it) -> isContainer()) {
             initiateSearch(params, destination, (FolderItem *) *it);
         } else {
-            bool is_valid = (*it) -> respondTo(params.spredicate);
+            bool is_valid = has_empty_predicate || (*it) -> respondTo(params.spredicate);
 
             if (is_valid) {
                 if (!params.sgenre_id != -1) {

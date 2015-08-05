@@ -52,8 +52,8 @@ namespace Playo3 {
 
         void propagateFolderSetFlag(ItemStateFlag flag);
         void propagateFolderUnsetFlag(ItemStateFlag flag);
-        void propagateCheckedState(bool checked);
-        void propagateCheckedStateByPredicate(ItemStateFlag pred_state);
+        void updateCheckedState(bool checked);
+        void updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
         FolderItem * createFolderPath(QString path);
         template<class T> T * createFolder(QString uid, QString name, int pos = -1) {

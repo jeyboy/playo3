@@ -276,21 +276,21 @@ void FolderItem::propagateFolderUnsetFlag(ItemStateFlag flag) {
         it.value() -> propagateFolderUnsetFlag(flag);
 }
 
-void FolderItem::propagateCheckedState(bool checked) {
+void FolderItem::updateCheckedState(bool checked) {
     IItem::updateCheckedState(checked);
 
     for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
         (*it) -> updateCheckedState(checked);
 }
 
-void FolderItem::propagateCheckedStateByPredicate(ItemStateFlag pred_state) {
+void FolderItem::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
     if (is(checked)) {
         for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
             (*it) -> updateCheckedStateByPredicate(pred_state);
     }
 }
 
-void FolderItem::shuffle() { //TODO: test needed
+void FolderItem::shuffle() {
     qsrand((uint)QTime::currentTime().msec());
     int n = children.count() - 1;
 

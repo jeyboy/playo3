@@ -661,13 +661,6 @@ void IView::removeSelectedItems(bool remove) {
 }
 
 void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
-// remove after test of new realization
-//    DownloadView::instance() -> addRow(
-//        node.data(IURL).toUrl(),
-//        savePath,
-//        FilenameConversions::downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
-//    );
-
     QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
     DownloadView::instance() -> proceedDrop(event, savePath);
 }
@@ -696,17 +689,11 @@ void IView::downloadAll() {
 void IView::downloadSelected() {
     QString path = Settings::instance() -> defaultDownloadPath();
 
-    if (Settings::instance() -> isCheckboxShow()) {
+    if (Settings::instance() -> isCheckboxShow())
         downloadChecked(path);
-    } else {
+    else {
         QModelIndexList indexes = selectedIndexes();
         downloadItems(indexes, path);
-//        for(QModelIndexList::Iterator index = indexes.begin(); index != indexes.end(); index++) {
-//            if ((*index).data(IFOLDER).toBool())
-//                downloadBranch((*index), path);
-//            else
-//                downloadItem((*index), path);
-//        }
     }
 }
 
@@ -715,14 +702,13 @@ void IView::downloadChecked(QString & path, FolderItem * root) {
     QList<IItem *> children = root -> childrenList();
     QModelIndexList list;
 
-    for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
+    for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
         if ((*it) -> is(IItem::checked)) {
             if ((*it) -> isContainer())
                 downloadChecked(path, (FolderItem *)*it);
             else
                 list << mdl -> index(*it);
         }
-    }
 
     downloadItems(list, path);
 }

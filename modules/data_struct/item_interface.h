@@ -5,6 +5,7 @@
 #include <qdesktopservices.h>
 #include <qurl.h>
 #include <qstringbuilder.h>
+#include <qdebug.h>
 
 #include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"
@@ -58,10 +59,11 @@ namespace Playo3 {
         inline virtual int columnCount() const { return 1; }
 
         inline virtual void updateCheckedState(bool setChecked) {
+            qDebug() << "CHECK" << setChecked << title();
             if (setChecked) set(checked); else unset(checked);
         }
 
-        inline void updateCheckedStateByPredicate(ItemStateFlag pred_state) {
+        inline virtual void updateCheckedStateByPredicate(ItemStateFlag pred_state) {
             updateCheckedState(is(pred_state));
         }
 
@@ -72,7 +74,7 @@ namespace Playo3 {
 //            QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
 //            return m.hasMatch();
 
-            return predicate.isEmpty() || title().toString().contains(predicate, Qt::CaseInsensitive);
+            return /*predicate.isEmpty() ||*/ title().toString().contains(predicate, Qt::CaseInsensitive);
         }
 
         inline void setParent(FolderItem * pNode) {
