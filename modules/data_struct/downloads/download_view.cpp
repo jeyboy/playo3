@@ -96,6 +96,7 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             stream >> data.url >> isRemote >> data.attrs;
 
             bool is_vk = data.attrs.take(JSON_TYPE_ITEM_TYPE).toInt() == VK_ITEM; // vk monkey patch
+            // need to add patch for 4shared // need to prepare download link before row creation
 
             addRow(
                 data.url,

@@ -660,17 +660,22 @@ void IView::removeSelectedItems(bool remove) {
     }
 }
 
-void IView::downloadItem(const QModelIndex & node, QString savePath) {
-    DownloadView::instance() -> addRow(
-        node.data(IURL).toUrl(),
-        savePath,
-        FilenameConversions::downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
-    );
+void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
+// remove after test of new realization
+//    DownloadView::instance() -> addRow(
+//        node.data(IURL).toUrl(),
+//        savePath,
+//        FilenameConversions::downloadTitle(node.data(ITITLE).toString(), node.data(IEXTENSION).toString())
+//    );
+
+    QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
+    DownloadView::instance() -> proceedDrop(event, savePath);
 }
 
 void IView::downloadBranch(const QModelIndex & node, QString savePath) {
     FolderItem * curr = mdl -> item<FolderItem>(node);
     IItem * item;
+    QModelIndexList list;
 
     for(int i = 0; i < curr -> childCount(); i++) {
         item = curr -> child(i);
@@ -678,8 +683,10 @@ void IView::downloadBranch(const QModelIndex & node, QString savePath) {
         if (item -> isContainer())
             downloadBranch(mdl -> index(item), savePath);
         else
-            downloadItem(mdl -> index(item), savePath);
+            list << mdl -> index(item);
     }
+
+    downloadItems(list, savePath);
 }
 
 void IView::downloadAll() {
@@ -693,27 +700,31 @@ void IView::downloadSelected() {
         downloadChecked(path);
     } else {
         QModelIndexList indexes = selectedIndexes();
-        for(QModelIndexList::Iterator index = indexes.begin(); index != indexes.end(); index++) {
-            if ((*index).data(IFOLDER).toBool())
-                downloadBranch((*index), path);
-            else
-                downloadItem((*index), path);
-        }
+        downloadItems(indexes, path);
+//        for(QModelIndexList::Iterator index = indexes.begin(); index != indexes.end(); index++) {
+//            if ((*index).data(IFOLDER).toBool())
+//                downloadBranch((*index), path);
+//            else
+//                downloadItem((*index), path);
+//        }
     }
 }
 
 void IView::downloadChecked(QString & path, FolderItem * root) {
     if (!root) root = mdl -> item<FolderItem>(QModelIndex());
     QList<IItem *> children = root -> childrenList();
+    QModelIndexList list;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
         if ((*it) -> is(IItem::checked)) {
             if ((*it) -> isContainer())
                 downloadChecked(path, (FolderItem *)*it);
             else
-                downloadItem(mdl -> index(*it), path);
+                list << mdl -> index(*it);
         }
     }
+
+    downloadItems(list, path);
 }
 
 void IView::markLikedAsChecked() {

@@ -2,6 +2,7 @@
 #define FOURSHARED_API_KEYS
 
 #include <qstringbuilder.h>
+#include "../../sites/grabber_keys.h"
 
 namespace Fourshared {
     extern const QString down_base_url;

@@ -204,7 +204,7 @@ bool IItem::setData(int column, const QVariant &value) {
 }
 
 void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
-    QUrl lastUrl = toUrl();
+    QUrl lastUrl = toUrl(); // maybe needed update for some services // need to retreive download link
 
     if (urls.contains(lastUrl)) return;
 

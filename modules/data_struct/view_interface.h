@@ -116,7 +116,7 @@ namespace Playo3 {
         void removeProccessing(QModelIndexList & index_list, bool remove, bool inProcess = false);
         void removeSelectedItems(bool remove = true);
 
-        void downloadItem(const QModelIndex & node, QString savePath);
+        void downloadItems(const QModelIndexList & nodes, QString savePath);
         void downloadBranch(const QModelIndex & node, QString savePath);
 
         QModelIndex activeIndex();
