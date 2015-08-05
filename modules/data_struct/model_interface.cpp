@@ -70,14 +70,13 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
 
     if (role == Qt::CheckStateRole) {
         bool checked = !node -> is(ItemState::checked);
+        node -> updateCheckedState(checked);
 
         if (node -> isContainer()) {
             FolderItem * it = dynamic_cast<FolderItem *>(node);
-            it -> updateCheckedState(checked);
             emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
             return true;
         }
-        else node -> updateCheckedState(checked);
 
         result = true;
     } else if (role == ISTATERESTORE) {

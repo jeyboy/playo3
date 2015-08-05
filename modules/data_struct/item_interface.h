@@ -5,7 +5,6 @@
 #include <qdesktopservices.h>
 #include <qurl.h>
 #include <qstringbuilder.h>
-#include <qdebug.h>
 
 #include "misc/file_utils/icon_provider.h"
 #include "model_item_parts/item_types.h"
@@ -59,7 +58,6 @@ namespace Playo3 {
         inline virtual int columnCount() const { return 1; }
 
         inline virtual void updateCheckedState(bool setChecked) {
-            qDebug() << "CHECK" << setChecked << title();
             if (setChecked) set(checked); else unset(checked);
         }
 
