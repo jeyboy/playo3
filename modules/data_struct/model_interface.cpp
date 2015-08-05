@@ -693,14 +693,12 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
 }
 
 void IModel::markAllAsChecked() {
-    beginResetModel();
     rootItem -> updateCheckedState(true);
-    endResetModel();
+    emit dataChanged(QModelIndex(), index(rootItem -> child(rootItem -> childCount() - 1)));
 }
 void IModel::markAllAsUnchecked() {
-    beginResetModel();
     rootItem -> updateCheckedState(false);
-    endResetModel();
+    emit dataChanged(QModelIndex(), index(rootItem -> child(rootItem -> childCount() - 1)));
 }
 
 void IModel::removeChecked() {
