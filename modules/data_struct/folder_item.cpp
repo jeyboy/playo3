@@ -283,11 +283,13 @@ void FolderItem::updateCheckedState(bool checked) {
         (*it) -> updateCheckedState(checked);
 }
 
-void FolderItem::updateCheckedStateByPredicate(ItemStateFlag pred_state) { // not check folders without checked items
-//    if (is(checked)) {
+bool FolderItem::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
+    bool valid = false;
+
     for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
-        (*it) -> updateCheckedStateByPredicate(pred_state);
-//    }
+        valid |= (*it) -> updateCheckedStateByPredicate(pred_state);
+
+    IItem::updateCheckedState(valid);
 }
 
 void FolderItem::shuffle() {

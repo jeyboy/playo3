@@ -61,8 +61,10 @@ namespace Playo3 {
             if (setChecked) set(checked); else unset(checked);
         }
 
-        inline virtual void updateCheckedStateByPredicate(ItemStateFlag pred_state) {
-            updateCheckedState(is(pred_state));
+        inline virtual bool updateCheckedStateByPredicate(ItemStateFlag pred_state) {
+            bool valid = is(pred_state);
+            updateCheckedState(valid);
+            return valid;
         }
 
         virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);

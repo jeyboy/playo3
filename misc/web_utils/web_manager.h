@@ -20,6 +20,8 @@ public:
 
     WebManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
+    inline QNetworkReply * getSync(QString path) { return getSync(QUrl(path)); }
+    inline QNetworkReply * getSync(QUrl url) { return getSync(QNetworkRequest(url)); }
     QNetworkReply * getSync(const QNetworkRequest & request);
     QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data);
 

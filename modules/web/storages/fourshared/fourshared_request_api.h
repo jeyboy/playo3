@@ -5,6 +5,7 @@
 #include "fourshared_api_keys.h"
 #include "misc/file_utils/filename_conversions.h"
 #include "media/format.h"
+#include "misc/web_utils/html_parser.h"
 
 #define FOURSHARED_OFFSET_LIMIT 1000
 
@@ -36,12 +37,12 @@ namespace Fourshared {
             return prepareAudios(res);
         }
     private:
-        bool retreivePreviewUrl(QString & path, QString & song_path, WebManager * manager) {
-//            response = manager -> getToJson(QNetworkRequest(url), post_proc & wrap);
-        }
-
         QJsonArray prepareAudios(QJsonArray & items) {
             if (items.isEmpty()) return items;
+
+            Html::Selector prevSelector("input.jsD1PreviewUrl");
+            Html::Selector durSelector("input.jsD1Duration");
+            Html::Selector tagsSelector(".generalID3tags .id3tag");
 
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
@@ -53,7 +54,13 @@ namespace Fourshared {
                 QJsonObject obj, item_obj = (*item).toObject();
                 path = item_obj.value("downloadPage").toString();
 
-                if (retreivePreviewUrl(path, song_path, manager)) {
+                QNetworkReply * reply = manager -> getSync(path);
+                Html::Document doc(reply);
+                reply -> deleteLater();
+
+
+
+                if (!song_path.isEmpty()) {
                     title = item_obj.value("name").toString();
 
                     if (FilenameConversions::extractExtension(title, ext))
