@@ -102,7 +102,7 @@ namespace Playo3 {
 
         void markAllAsChecked();
         void markAllAsUnchecked();
-        void removeChecked();
+//        void removeChecked();
 
         inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);

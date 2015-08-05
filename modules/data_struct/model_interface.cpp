@@ -701,11 +701,11 @@ void IModel::markAllAsUnchecked() {
     emit dataChanged(QModelIndex(), index(rootItem -> child(rootItem -> childCount() - 1)));
 }
 
-void IModel::removeChecked() {
-    beginResetModel();
-    //TODO: realisation needed
-    endResetModel();
-}
+//void IModel::removeChecked() {
+//    beginResetModel();
+//    //TODO: realisation needed
+//    endResetModel();
+//}
 
 
 
