@@ -33,15 +33,15 @@ namespace Fourshared {
             QJsonArray res = lQuery(
                 audioSearchUrl(predicate),
                 QueryRules(QStringLiteral("files"), requestLimit(), qMin(count, FOURSHARED_OFFSET_LIMIT)),
-                wrap
+                none
             );
 
             return prepareAudios(res);
         }
     private:
         QJsonArray prepareAudios(QJsonArray & items) {
-            qDebug() << "4shared" << items.count();
-            if (items.isEmpty()) return items;
+            if (extractCount(items) == 0)
+                return items;
 
             Html::Selector prevSelector("input.jsD1PreviewUrl");
             Html::Selector durSelector("input.jsD1Duration");
@@ -53,11 +53,6 @@ namespace Fourshared {
             QJsonArray ar;
             QString ext, title, path, song_path;
 
-            if (!items.at(0).isArray()) {
-                QJsonArray ar;
-                ar.append(items);
-                items = ar;
-            }
 
             for(QJsonArray::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
                 QJsonArray part = (*parts_it).toArray();
