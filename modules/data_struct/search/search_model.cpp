@@ -97,6 +97,8 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
     if (!request.predicates.isEmpty()) { // search by predicates
         for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
+            if (request.inFourshared) requests.append(SearchRequest(SearchRequest::request_4shared, *it, QString(), 0, request.popular));
+
             if (!request.genres.isEmpty()) {
                 if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, *it, QString(), 0, request.popular));
 
@@ -156,6 +158,10 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
                 parent -> backPropagateItemsCountInBranch(proceedVkList(items, parent));
             break;}
+            case SearchRequest::request_4shared: {
+                QJsonArray items = Fourshared::Api::instance() -> audioSearch(r.spredicate, request.limit(DEFAULT_LIMIT_AMOUNT));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::fourshared, items, parent));
+            break;}
             case SearchRequest::request_sc: {
                 QJsonArray items = Soundcloud::Api::instance() -> audioSearch(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
                 if (Soundcloud::Api::extractCount(items) > 0)
@@ -170,9 +176,6 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_other: {
                 QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
-
-                items = Fourshared::Api::instance() -> audioSearch(r.spredicate, request.limit(DEFAULT_LIMIT_AMOUNT));
-                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::fourshared, items, parent));
             break;}
         }
     }

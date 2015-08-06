@@ -11,5 +11,9 @@ namespace Fourshared {
     extern const QString bitrate_tag = QStringLiteral("Bit rate");
     extern const QString discretion_rate_tag = QStringLiteral("Sample rate");
     extern const QString genre_tag = QStringLiteral("Genre");
-//    extern const QString genre_tag = QStringLiteral("Year");
+
+    extern const QString filetype_tag2 = QStringLiteral("Тип файла");
+    extern const QString bitrate_tag2 = QStringLiteral("Битрейт");
+    extern const QString discretion_rate_tag2 = QStringLiteral("Частота");
+    extern const QString genre_tag2 = QStringLiteral("Жанр");
 }

@@ -173,7 +173,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>40</y>
       <width>91</width>
       <height>20</height>
      </rect>
@@ -192,7 +192,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>60</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -271,6 +271,25 @@
       <width>81</width>
       <height>81</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="inFourshared">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Search in Ex.ua</string>
+    </property>
+    <property name="text">
+     <string>Search in 4shared</string>
     </property>
    </widget>
   </widget>

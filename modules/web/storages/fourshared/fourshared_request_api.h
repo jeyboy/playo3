@@ -2,6 +2,7 @@
 #define FOURSHARED_REQUEST_API
 
 #include "../../iapi.h"
+
 #include "fourshared_api_keys.h"
 #include "misc/file_utils/filename_conversions.h"
 #include "media/format.h"
@@ -27,19 +28,32 @@ namespace Fourshared {
             setCategory(query, cType);
             setSearchPredicate(query, predicate);
 
-            return baseUrl(QStringLiteral("files"), query);
+            return IApi::baseUrl(QStringLiteral("files"), query);
         }
-        QJsonArray audioSearch(QString & predicate, int count = 5) {
+        QJsonArray audioSearch(QString & predicate, int count = 5, bool initInfo = false) {
             QJsonArray res = lQuery(
                 audioSearchUrl(predicate),
                 QueryRules(QStringLiteral("files"), requestLimit(), qMin(count, FOURSHARED_OFFSET_LIMIT)),
                 none
             );
 
-            return prepareAudios(res);
+            return prepareAudios(res, initInfo);
         }
+
+        QString refresh(QString refresh_page) {
+            if (refresh_page.isEmpty()) return QString();
+
+            WebManager * manager = 0;
+            bool is_new = WebManager::valid(manager);
+            QNetworkReply * response = manager -> getSync(refresh_page);
+            QString res = Html::Document(response).find(QStringLiteral("input.jsD1PreviewUrl")).value();
+            delete response;
+            if (is_new) manager -> deleteLater();
+            return res;
+        }
+
     private:
-        QJsonArray prepareAudios(QJsonArray & items) {
+        QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
             if (extractCount(items) == 0)
                 return items;
 
@@ -53,7 +67,6 @@ namespace Fourshared {
             QJsonArray ar;
             QString ext, title, path, song_path;
 
-
             for(QJsonArray::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
                 QJsonArray part = (*parts_it).toArray();
                 for(QJsonArray::Iterator item = part.begin(); item != part.end(); item++) {
@@ -61,13 +74,13 @@ namespace Fourshared {
                     QJsonObject obj, item_obj = (*item).toObject();
                     path = item_obj.value("downloadPage").toString();
 
-                    QNetworkReply * reply = manager -> getSync(path);
-                    Html::Document doc(reply);
-                    reply -> deleteLater();
+                    if (initInfo) {
+                        QNetworkReply * reply = manager -> getSync(path);
+                        Html::Document doc(reply);
+                        reply -> deleteLater();
 
-                    song_path = doc.find(&prevSelector).link();
+                        song_path = doc.find(&prevSelector).value();
 
-                    if (!song_path.isEmpty()) {
                         obj.insert(Grabber::duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
 
                         Html::Set tags = doc.find(&tagsSelector);
@@ -76,13 +89,13 @@ namespace Fourshared {
                             if (span) {
                                 QString tag_title = span -> text();
 
-                                if (tag_title == filetype_tag)
+                                if (tag_title == filetype_tag || tag_title == filetype_tag2)
                                     obj.insert(Grabber::extension_key, (*tag) -> text());
-                                else if (tag_title == bitrate_tag)
+                                else if (tag_title == bitrate_tag || tag_title == bitrate_tag2)
                                     obj.insert(Grabber::bitrate_key, (*tag) -> text());
-                                else if (tag_title == discretion_rate_tag)
+                                else if (tag_title == discretion_rate_tag || tag_title == discretion_rate_tag2)
                                     obj.insert(Grabber::discretion_rate_key, (*tag) -> text());
-                                else if (tag_title == genre_tag) {
+                                else if (tag_title == genre_tag || tag_title == genre_tag2) {
                                     int genre_id = MusicGenres::instance() -> toInt((*tag) -> text().trimmed());
                                     if (MusicGenres::instance() -> defaultInt() != genre_id)
                                         obj.insert(Grabber::genre_id_key, genre_id);
@@ -92,6 +105,10 @@ namespace Fourshared {
                             }
                         }
 
+                        obj.insert(Grabber::url_key, song_path);
+                    } else obj.insert(Grabber::skip_info_key, true);
+
+                    if (!initInfo || !song_path.isEmpty()) {
                         title = item_obj.value("name").toString();
 
                         if (FilenameConversions::extractExtension(title, ext))
@@ -101,11 +118,11 @@ namespace Fourshared {
 
                         obj.insert(Grabber::size_key, Format::toUnits(item_obj.value("size").toInt()));
                         obj.insert(Grabber::refresh_key, path);
-                        obj.insert(Grabber::url_key, song_path);
 
-                        qDebug() << "4shared" << obj;
                         ar << obj;
                     }
+
+                    if (initInfo) QThread::msleep(REQUEST_DELAY);
                 }
             }
 

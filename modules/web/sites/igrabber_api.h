@@ -51,7 +51,6 @@ public:
     virtual QJsonArray popular() { return QJsonArray(); }
 
     QString refresh(QString refresh_page) {
-        qDebug() << "REF" << refresh_page;
         if (refresh_page.isEmpty()) return QString();
         return refreshQuery(QUrl(refresh_page));
     }
@@ -83,7 +82,7 @@ protected:
     QString refreshQuery(QUrl url) {
         WebManager * manager = 0;
         bool isNew = WebManager::valid(manager);
-        QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+        QNetworkReply * response = manager -> getSync(url);
         QString res = refresh_postprocess(response);
         delete response;
         if (isNew) delete manager;
@@ -92,7 +91,7 @@ protected:
 
     void sQuery(QUrl url, QJsonArray & res, WebManager * manager = 0) {
         bool isNew = !manager ? WebManager::valid(manager) : false;
-        QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+        QNetworkReply * response = manager -> getSync(url);
 
         Logger::instance() -> startMark();
         toJson(response, res);

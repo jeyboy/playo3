@@ -10,8 +10,8 @@
 enum PredicateType { title, artist, song, tag };
 
 struct SearchSettings {   
-    inline SearchSettings(bool vk = false, bool sc = false, bool other = false, bool tabs = false, bool comp = false)
-        : inVk(vk), inSc(sc), inOther(other), inTabs(tabs), inComputer(comp), onlyOne(false)
+    inline SearchSettings(bool vk = false, bool sc = false, bool fourshared = false, bool other = false, bool tabs = false, bool comp = false)
+        : inVk(vk), inSc(sc), inFourshared(fourshared), inOther(other), inTabs(tabs), inComputer(comp), onlyOne(false)
     {
         search_in_own = false;
     }
@@ -30,6 +30,7 @@ struct SearchSettings {
 
     bool inVk;
     bool inSc;
+    bool inFourshared;
     bool inOther;
     bool inTabs;
     bool inComputer;
@@ -48,7 +49,7 @@ struct SearchSettings {
 };
 
 struct SearchRequest {
-    enum RequestObject { request_vk, request_sc, request_computer, request_tabs, request_other };
+    enum RequestObject { request_vk, request_sc, request_4shared, request_computer, request_tabs, request_other };
 
     inline SearchRequest(RequestObject tp = request_other, QString predicate = QString(), QString genre = QString(), int genre_id = -1, bool most_popular = true)
         : spredicate(predicate), sgenre(genre), sgenre_id(genre_id), popular(most_popular), search_type(tp) {}

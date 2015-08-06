@@ -29,7 +29,6 @@ SearchDialog::SearchDialog(QWidget * parent) :
     QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
 
-
     QFileInfoList drives = QDir::drives();
     for(QFileInfoList::Iterator it = drives.begin(); it != drives.end(); it++) {
         QListWidgetItem * item = new QListWidgetItem((*it).absolutePath(), ui -> driveList);
@@ -44,8 +43,8 @@ SearchDialog::~SearchDialog() {
 }
 
 SearchSettings SearchDialog::params() {
-    SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inOther -> isChecked(),
-                       ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
+    SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inFourshared -> isChecked(),
+                       ui -> inOther -> isChecked(), ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
 
     int count = ui -> textPredicates -> count();
     for(int i = 0; i < count; i++)

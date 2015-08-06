@@ -12,9 +12,13 @@ namespace Fourshared {
 
     extern const QString span_tag;
     extern const QString filetype_tag;
+    extern const QString filetype_tag2;
     extern const QString bitrate_tag;
+    extern const QString bitrate_tag2;
     extern const QString discretion_rate_tag;
+    extern const QString discretion_rate_tag2;
     extern const QString genre_tag;
+    extern const QString genre_tag2;
 }
 
 #endif // FOURSHARED_API_KEYS

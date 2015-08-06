@@ -18,18 +18,23 @@ bool IModel::restoreUrl(IItem * itm) {
         break;}
 
         case WEB_ITEM: {
+            QString newUrl;
             switch(itm -> subtipe()) {
                 case Playo3::myzuka: {
-                    QString newUrl = Grabber::MyzukaAlbum::instance() -> refresh(itm -> refresh_path());
-                    qDebug() << itm -> refresh_path() << newUrl;
-                    if (itm -> path().toString() != newUrl) {
-                        itm -> setPath(newUrl);
-                        return true;
-                    }
+                    newUrl = Grabber::MyzukaAlbum::instance() -> refresh(itm -> refresh_path());
                 break;}
-                default:;
+
+                case Playo3::fourshared: {
+                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
+                break;}
+                default: return false;
             }
-            // use refresh url for receiving of the song url
+
+            qDebug() << itm -> refresh_path() << newUrl;
+            if (itm -> path().toString() != newUrl) {
+                itm -> setPath(newUrl);
+                return true;
+            }
         break;}
         default: return false;
     };
@@ -349,14 +354,15 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
         if (itm.contains(Grabber::size_key))
             newItem -> setSize(Format::fromUnits(itm.value(Grabber::size_key).toString()));
 
-        newItem -> setInfo(Format::toInfo(
-                itm.value(Grabber::size_key).toString("?"),
-                newItem -> extension().toString(),
-                itm.value(Grabber::bitrate_key).toString("?"),
-                itm.value(Grabber::discretion_rate_key).toString("?"),
-                itm.value(Grabber::channels_key).toString("?")
-            )
-        );
+        if (!itm.contains(Grabber::skip_info_key))
+            newItem -> setInfo(Format::toInfo(
+                    itm.value(Grabber::size_key).toString("?"),
+                    newItem -> extension().toString(),
+                    itm.value(Grabber::bitrate_key).toString("?"),
+                    itm.value(Grabber::discretion_rate_key).toString("?"),
+                    itm.value(Grabber::channels_key).toString("?")
+                )
+            );
     }
 
     return itemsAmount;
