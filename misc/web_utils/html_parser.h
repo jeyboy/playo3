@@ -22,6 +22,7 @@ namespace Html {
     const QString input_token = QStringLiteral("input");
     const QString select_token = QStringLiteral("select");
     const QString split_token = QStringLiteral(" ");
+    const QString def_value_key = QStringLiteral("value");
 
     struct Selector {
         enum SToken {
@@ -70,6 +71,10 @@ namespace Html {
     class Tag;
     class Set : public QList<Tag *> {
     public:
+        QString link();
+        QString text();
+        QString value(QString name = def_value_key);
+
         inline Set find(const Selector * selector) {
             Set set;
             return find(selector, set);
@@ -92,7 +97,7 @@ namespace Html {
         inline int level() const { return _level; }
         inline QHash<QString, QString> attributes() const { return attrs; }
         inline Set children() const { return tags; }
-        inline QString value(QString name) { return attrs.value(name); }
+        inline QString value(QString name = def_value_key) { return attrs.value(name); }
         inline QString text() const {
             const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
             return text ? text -> attrs.value(text_block_token) : QString();
@@ -164,26 +169,6 @@ namespace Html {
         }
 
     private:
-//        QString decodeUrlEntities(QString htmlCoded) const {
-//            QString res = htmlCoded
-//                    .replace("&nbsp;", " ")
-//                    .replace("&amp;", "&")
-//                    .replace("&lt;", "<")
-//                    .replace("&gt;", ">");
-
-//            QRegExp re("&#([0-9]+);");
-//            re.setMinimal(true);
-
-//            int pos = 0;
-//            while( (pos = re.indexIn(res, pos)) != -1 )
-//            {
-//                res = res.replace(re.cap(0), QChar(re.cap(1).toInt(0,10)));
-//                pos += re.matchedLength();
-//            }
-
-//            return res;
-//        }
-
         int _level;
         QString _name;
         QHash<QString, QString> attrs;

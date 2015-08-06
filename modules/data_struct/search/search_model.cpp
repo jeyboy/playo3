@@ -169,8 +169,10 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             break;}
             case SearchRequest::request_other: {
                 QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT));
-                qDebug() << items;
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
+
+                items = Fourshared::Api::instance() -> audioSearch(r.spredicate, request.limit(DEFAULT_LIMIT_AMOUNT));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::fourshared, items, parent));
             break;}
         }
     }

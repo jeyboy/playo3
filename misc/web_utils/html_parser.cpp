@@ -2,6 +2,10 @@
 
 ////////  Set //////////
 namespace Html {
+    QString Set::link() { return (isEmpty()) ? QString() : first() -> link(); }
+    QString Set::text() { return (isEmpty()) ? QString() : first() -> text(); }
+    QString Set::value(QString name) { return (isEmpty()) ? QString() : first() -> value(name); }
+
     Set & Set::find(const Selector * selector, Set & set) {
         for(Set::Iterator tag = begin(); tag != end(); tag++) {
             if ((*tag) -> validTo(selector)) {

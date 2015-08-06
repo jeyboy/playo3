@@ -34,8 +34,9 @@ namespace Playo3 {
     #define IREMOTE IADDFONT - 1
 
     enum WebSubType {
-        none,
-        myzuka
+        none = 0,
+        myzuka,
+        fourshared
     };
 
     class ItemFields : public ItemState {

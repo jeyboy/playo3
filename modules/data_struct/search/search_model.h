@@ -4,6 +4,7 @@
 #include "../level_tree/level_tree_model.h"
 #include "modules/web/socials_api/vk_api.h"
 #include "modules/web/socials_api/soundcloud_api.h"
+#include "modules/web/storages/fourshared/fourshared_api.h"
 #include "search_settings.h"
 
 namespace Playo3 {
