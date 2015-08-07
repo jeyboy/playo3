@@ -45,8 +45,10 @@ namespace Fourshared {
 
             WebManager * manager = 0;
             bool is_new = WebManager::valid(manager);
+
             QNetworkReply * response = manager -> getSync(refresh_page);
             QString res = Html::Document(response).find(QStringLiteral("input.jsD1PreviewUrl")).value();
+
             delete response;
             if (is_new) manager -> deleteLater();
             return res;

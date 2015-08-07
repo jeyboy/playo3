@@ -132,7 +132,11 @@ QVariant IItem::data(int column) const {
                 params.insert(Key::state, visualStates());
                 params.insert(Key::played, is(played));
                 params.insert(Key::not_exist, is(not_exist));
-                params.insert(Key::type, itemType());
+
+
+                int iType = itemType();
+                if (iType == WEB_ITEM && subtipe() == fourshared) iType = FOURSHARED_ITEM;
+                params.insert(Key::type, iType);
             }
             return params;
         }
