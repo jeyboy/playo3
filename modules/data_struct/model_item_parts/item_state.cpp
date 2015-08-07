@@ -1,5 +1,4 @@
 #include "item_state.h"
-#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -13,7 +12,6 @@ bool ItemState::set(enum ItemStateFlag flag) {
 }
 
 void ItemState::setStates(int flags) {
-    qDebug() << "FLAG SET" << flags;
     if (flags < 0) {
         if (bitIsSet(-flags, proccessing))    unset(proccessing);
         if (bitIsSet(-flags, played))    unset(played);

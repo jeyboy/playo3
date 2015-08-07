@@ -1,6 +1,5 @@
 #include "model_item_delegate.h"
 #include "external_keys.h"
-#include <qdebug.h>
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
@@ -341,7 +340,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             painter -> drawPixmap(rect, icons[-2]);
         } else {
             if (attrs[Key::not_exist].toBool()) {
-                qDebug() << "SOSA";
                 painter -> drawPixmap(rect, icons[-1]);
             } else {
                 if (Settings::instance() -> isShowSystemIcons()) {

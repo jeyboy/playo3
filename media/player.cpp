@@ -371,6 +371,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
     switch (status) {
         case UnknownMediaStatus: {
 //            qDebug() << "PLAYER: " << "UNKNOWN";
+            setItemState(-ItemState::proccessing);
             emit nextItemNeeded(error);
         break; }
 
@@ -378,7 +379,13 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 //            qDebug() << "PLAYER: " << "STALLED";
 //            emit itemExecError(playedIndex());
             current_model -> itemError(playedIndex());
-            emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : stalled);
+
+            if (current_item -> isRemote()) {
+                emit nextItemNeeded(refreshNeed);
+            } else {
+                setItemState(-ItemState::proccessing);
+                emit nextItemNeeded(stalled);
+            }
         break; }
 
         case EndOfMedia: {
@@ -391,7 +398,6 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case LoadedMedia: {
-            qDebug() << "END PROC";
             setItemState(-ItemState::proccessing);
         break;}
 
@@ -399,6 +405,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 //            qDebug() << "PLAYER: " << "INVALID";
 //            emit itemNotSupported(playedIndex());
             current_model -> itemNotSupported(playedIndex());
+            setItemState(-ItemState::proccessing);
             emit nextItemNeeded(error);
         break;}
 
@@ -406,7 +413,13 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 //            qDebug() << "PLAYER: " << "NO MEDIA";
 //            emit itemNotExisted(playedIndex());
             current_model -> itemNotExist(playedIndex());
-            emit nextItemNeeded(current_item -> isRemote() ? refreshNeed : noMedia);
+
+            if (current_item -> isRemote()) {
+                emit nextItemNeeded(refreshNeed);
+            } else {
+                setItemState(-ItemState::proccessing);
+                emit nextItemNeeded(noMedia);
+            }
         break;}
         default: {  }
     }
