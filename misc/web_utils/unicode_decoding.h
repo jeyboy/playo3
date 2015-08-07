@@ -55,7 +55,7 @@ protected:
         else result.append(QChar(uc));
     }
 
-    inline void scanUtf8Char(char * io, QString & result) {
+    inline void scanUtf8Char(char * io, QString & result) { // not worked
         int need;
         uint min_uc, uc;
 

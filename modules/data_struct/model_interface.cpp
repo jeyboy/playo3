@@ -26,6 +26,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
                 case Playo3::fourshared: {
                     newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
+//                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
                 break;}
                 default: return false;
             }

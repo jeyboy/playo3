@@ -237,9 +237,9 @@ namespace Html {
                         default:
                             if ((*ch > 47 && *ch < 58) || (*ch > 96 && *ch < 123))
                                 code.append(*ch);
-                            else { device -> ungetChar(*ch); return code; }
+                            else { device -> ungetChar(*ch); return code.prepend('&'); }
                     }
-                } else return code;
+                } else return code.prepend('&');
             }
         }
 

@@ -52,6 +52,20 @@ namespace Fourshared {
             return res;
         }
 
+        QString downloadLink(QString refresh_page) {
+            if (refresh_page.isEmpty()) return QString();
+
+            WebManager * manager = 0;
+            bool is_new = WebManager::valid(manager);
+
+            QNetworkReply * response = manager -> getSync(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12));
+            QString res = Html::Document(response).find(QStringLiteral("a[href~'/download/']")).link();
+
+            delete response;
+            if (is_new) manager -> deleteLater();
+            return res;
+        }
+
     private:
         QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
             if (extractCount(items) == 0)
