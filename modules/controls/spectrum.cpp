@@ -81,7 +81,7 @@ void Spectrum::changeBandCount() {
 
 void Spectrum::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
-    setMinimumWidth(200);
+    setMinimumWidth(100);
     recalcAttrs();
     Player::instance() -> setSpectrumHeight(peakDimension());
 }

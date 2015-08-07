@@ -38,7 +38,7 @@
 
 class IGrabberApi {
 public:
-    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, int /*count*/) { return QJsonArray(); }
+    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
 
     virtual TargetGenres genresList() const { return genres; }
 

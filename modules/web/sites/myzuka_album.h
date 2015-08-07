@@ -15,7 +15,7 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & predicate, QString & genre, bool popular_items, int count) {
+        QJsonArray search(QString & predicate, QString & genre, bool popular_items, bool by_artist, int count) {
             QUrl url;
 
             if (!predicate.isEmpty()) {
@@ -51,12 +51,12 @@ namespace Grabber {
                     }
                 }
 
-                if (artists_table && count > 10) {
+                if (by_artist && artists_table) {
                     QHash<QString, QString> artistLinks;
                     artistsToJson(manager, artists_table -> findLinks(&artistSelector, artistLinks), json);
                 }
 
-                if (songs_table) {
+                if (!by_artist && songs_table) {
                     Html::Set songs = songs_table -> find(&songTrSelector);
 
                     if (count < ITEMS_PER_PAGE)
@@ -91,7 +91,6 @@ namespace Grabber {
 
             delete response;
             if (isNew) delete manager;
-            qDebug() << json;
             return json;
         }
 
