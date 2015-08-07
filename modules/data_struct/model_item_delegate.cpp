@@ -1,5 +1,6 @@
 #include "model_item_delegate.h"
 #include "external_keys.h"
+#include <qdebug.h>
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
@@ -137,69 +138,74 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         left_offset += 14;
 
     if (!is_folder) {
-        if (attrs[Key::not_exist].toBool()) {
-            QRect rect = QRect(
-                        bodyRect.left(),
-                        option.rect.top() + 1,
-                        icon_size + (ico_offset + 4),
-                        bodyRect.height()
-                    );
-            painter -> drawPixmap(rect, icons[-1]);
-        } else {
-            if (Settings::instance() -> isShowSystemIcons()) {
-                QRect icoRect = QRect(
-                            bodyRect.left() + 4 + (icon_size / 20),
-                            option.rect.top() + (option.rect.height() - icon_size) / 2,
-                            icon_size,
-                            icon_size
-                        );
-                QVariant iconVal = attrs.value(Key::icon);
+        QRect rect = QRect(
+                    bodyRect.left(),
+                    option.rect.top() + 1,
+                    icon_size + (ico_offset + 4),
+                    bodyRect.height()
+                );
 
-                if (iconVal.isValid()) {
-                    QIcon icon = qvariant_cast<QIcon>(iconVal);
-                    painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
-                }
-            } else {
-                QRect pseudoIcoRect = QRect(
-                            bodyRect.left(),
-                            option.rect.top() + 1,
-                            icon_size + (ico_offset + 4),
-                            bodyRect.height()
-                        );
+        if (attrs[Key::proccessing].toBool())
+            painter -> drawPixmap(rect, icons[-2]);
+        else {
+            if (attrs[Key::not_exist].toBool())
+                painter -> drawPixmap(rect, icons[-1]);
+            else {
+                if (Settings::instance() -> isShowSystemIcons()) {
+                    QRect icoRect = QRect(
+                                bodyRect.left() + 4 + (icon_size / 20),
+                                option.rect.top() + (option.rect.height() - icon_size) / 2,
+                                icon_size,
+                                icon_size
+                            );
+                    QVariant iconVal = attrs.value(Key::icon);
 
-                QFont font;
-                font.setFamily(extra_font_name);
-
-                if (icon_size < ico_mini) {
-                    painter -> drawLine(pseudoIcoRect.topRight(), pseudoIcoRect.bottomRight());
-                } else {
-                    if(!is_selected)
-                        painter -> setPen(option.palette.color(QPalette::Dark));
-                    painter -> drawEllipse(pseudoIcoRect);
-                    painter -> setPen(textColor);
-
-                    if (ext.length() > 3) {
-                        ext.insert(3, '\n');
-                      if (ext.length() > 6)
-                        font.setPixelSize(icon_size / (ext.length() / 2));
+                    if (iconVal.isValid()) {
+                        QIcon icon = qvariant_cast<QIcon>(iconVal);
+                        painter -> drawPixmap(icoRect, icon.pixmap(QSize(icon_size, icon_size)));
                     }
-                    painter -> setFont(font);
-                }
+                } else {
+                    QRect pseudoIcoRect = QRect(
+                                bodyRect.left(),
+                                option.rect.top() + 1,
+                                icon_size + (ico_offset + 4),
+                                bodyRect.height()
+                            );
 
-                painter -> drawText(
-                            pseudoIcoRect,
-                            Qt::AlignHCenter | Qt::AlignVCenter,
-                            ext
-                        );
+                    QFont font;
+                    font.setFamily(extra_font_name);
 
-                if (attrs[Key::type] == VK_ITEM || attrs[Key::type] == SOUNDCLOUD_ITEM) {
-                    font.setPixelSize(extra_font_size);
-                    painter -> setFont(font);
+                    if (icon_size < ico_mini) {
+                        painter -> drawLine(pseudoIcoRect.topRight(), pseudoIcoRect.bottomRight());
+                    } else {
+                        if(!is_selected)
+                            painter -> setPen(option.palette.color(QPalette::Dark));
+                        painter -> drawEllipse(pseudoIcoRect);
+                        painter -> setPen(textColor);
+
+                        if (ext.length() > 3) {
+                            ext.insert(3, '\n');
+                          if (ext.length() > 6)
+                            font.setPixelSize(icon_size / (ext.length() / 2));
+                        }
+                        painter -> setFont(font);
+                    }
 
                     painter -> drawText(
-                        pseudoIcoRect.topRight() + QPoint(-10, 13),
-                        Key::asterix
-                    );
+                                pseudoIcoRect,
+                                Qt::AlignHCenter | Qt::AlignVCenter,
+                                ext
+                            );
+
+                    if (attrs[Key::type] == VK_ITEM || attrs[Key::type] == SOUNDCLOUD_ITEM) {
+                        font.setPixelSize(extra_font_size);
+                        painter -> setFont(font);
+
+                        painter -> drawText(
+                            pseudoIcoRect.topRight() + QPoint(-10, 13),
+                            Key::asterix
+                        );
+                    }
                 }
             }
         }
@@ -331,11 +337,12 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
 
-        if (attrs[Key::not_exist].toBool()) {
-            painter -> drawPixmap(rect, icons[-1]);
+        if (attrs[Key::proccessing].toBool()) {
+            painter -> drawPixmap(rect, icons[-2]);
         } else {
-            if (attrs[Key::proccessing].toBool()) {
-                painter -> drawPixmap(rect, icons[-2]);
+            if (attrs[Key::not_exist].toBool()) {
+                qDebug() << "SOSA";
+                painter -> drawPixmap(rect, icons[-1]);
             } else {
                 if (Settings::instance() -> isShowSystemIcons()) {
                     QVariant iconVal = attrs.value(Key::icon);

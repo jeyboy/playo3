@@ -67,7 +67,7 @@ void Player::setItemState(int state) {
 }
 
 void Player::updateItemState(bool isPlayed) {
-    setItemState(isPlayed ? (ItemState::listened | ItemState::played | ItemState::proccessing) : -ItemState::played);
+    setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
 }
 
 void Player::eject(bool updateState) {
@@ -95,6 +95,7 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
     if (item.isValid()) {
         current_model = (IModel *)item.model();
         current_item = current_model -> item(item);
+        setItemState(ItemState::proccessing);
 
         likeButton -> setChecked(current_item -> is(ItemState::liked));
 
@@ -390,6 +391,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case LoadedMedia: {
+            qDebug() << "END PROC";
             setItemState(-ItemState::proccessing);
         break;}
 
