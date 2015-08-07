@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-VERSION = 0.5.4.1
+VERSION = 0.5.8.0
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES *= QT_USE_QSTRINGBUILDER
