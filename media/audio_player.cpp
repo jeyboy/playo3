@@ -117,10 +117,6 @@ AudioPlayer::~AudioPlayer() {
     BASS_Free();
 }
 
-QList<QVector<int> > & AudioPlayer::getDefaultSpectrum() {
-    return defaultSpectrum;
-}
-
 int AudioPlayer::getCalcSpectrumBandsCount() {
     if (channelsCount != prevChannelsCount) {
         prevChannelsCount = channelsCount;
@@ -130,25 +126,10 @@ int AudioPlayer::getCalcSpectrumBandsCount() {
     return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
 }
 
-int AudioPlayer::getPosition() const {
-    return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * 1000;
-}
-
-int AudioPlayer::getDuration() const {
-    return duration;
-}
-
-int AudioPlayer::getNotifyInterval() {
-    return notifyInterval;
-}
 void AudioPlayer::setNotifyInterval(signed int milis) {
     notifyInterval = milis;
     if (notifyTimer -> isActive())
         notifyTimer -> setInterval(notifyInterval);
-}
-
-void AudioPlayer::setMedia(QUrl mediaPath) {
-    mediaUri = mediaPath;
 }
 
 void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
@@ -186,27 +167,6 @@ void AudioPlayer::setSpectrumBandsCount(int bandsCount) {
 
         b0 = b1;
     }
-}
-void AudioPlayer::setSpectrumHeight(int newHeight) {
-    spectrumHeight = newHeight;
-}
-
-void AudioPlayer::setSpectrumFreq(int millis) {
-    spectrumTimer -> setInterval(millis);
-}
-
-AudioPlayer::MediaState AudioPlayer::state() const {
-    return currentState;
-}
-
-bool AudioPlayer::isPlayed() const {
-    return currentState == PlayingState;
-}
-bool AudioPlayer::isPaused() const {
-    return currentState == PausedState;
-}
-bool AudioPlayer::isStoped() const {
-    return currentState == StoppedState;
 }
 
 void AudioPlayer::registerEQ() {
@@ -313,13 +273,8 @@ void AudioPlayer::started() {
     emit stateChanged(PlayingState);
 }
 
-void AudioPlayer::stoped() {
-    currentState = StoppedState;
-}
-
 void AudioPlayer::signalUpdate() {
     int curr_pos = BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * 1000;
-
     emit positionChanged(curr_pos);
 }
 
@@ -332,9 +287,8 @@ void AudioPlayer::calcSpectrum() {
                 QList<QVector<int> > res;
                 res.append(getSpectrum());
                 emit spectrumChanged(res);
-            } else {
-                emit spectrumChanged(getComplexSpectrum());
             }
+            else emit spectrumChanged(getComplexSpectrum());
         }
     }
 }
@@ -377,19 +331,6 @@ void AudioPlayer::slideVolBackward() {
 void AudioPlayer::setVolume(int val) {
     BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, val);
     emit volumeChanged(val);
-}
-
-float AudioPlayer::getSize() const {
-    return size;
-}
-
-int AudioPlayer::getVolume() const {
-    return volumeVal * 10000;
-}
-
-
-void AudioPlayer::finishRemoteFileDownloading() {
-    prevDownloadPos = 1;
 }
 
 //from 0 to 1
@@ -476,7 +417,6 @@ QList<QVector<int> > AudioPlayer::getComplexSpectrum() {
     float fft[gLimit];
     BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
 
-
     QVector<float> peaks;
     int b0 = 0, x, y, z, peakNum;
 
@@ -517,6 +457,7 @@ void AudioPlayer::play() {
     if (currentState == PausedState) {
         resume();
     } else {
+        emit mediaStatusChanged(LoadingMedia);
         closeChannel();
         if (mediaUri.isEmpty()) {
             emit mediaStatusChanged(NoMedia);
@@ -545,6 +486,7 @@ void AudioPlayer::play() {
 
                 if (useEQ) registerEQ();
 
+                emit mediaStatusChanged(LoadedMedia);
                 BASS_ChannelPlay(chan, true);
                 spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
                 notifyTimer -> start(notifyInterval);
@@ -597,8 +539,4 @@ void AudioPlayer::endOfPlayback() {
     setPosition(0);
     pause();
     emit mediaStatusChanged(EndOfMedia);
-}
-
-void AudioPlayer::setPosition(int position) {
-    BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / 1000.0), BASS_POS_BYTE);
 }

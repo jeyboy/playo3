@@ -61,31 +61,31 @@ public:
     explicit AudioPlayer(QObject * parent = 0);
     ~AudioPlayer();
 
-    QList<QVector<int> > & getDefaultSpectrum();
+    inline QList<QVector<int> > & getDefaultSpectrum() { return defaultSpectrum; }
     int getCalcSpectrumBandsCount();
-    int getPosition() const;
-    int getDuration() const;
-    int getVolume() const;
+    inline int getPosition() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * 1000; }
+    inline int getDuration() const { return duration; }
+    inline int getVolume() const { return volumeVal * 10000; }
     inline int getChannelsCount() const { return channelsCount; }
-    float getSize() const;
-    void finishRemoteFileDownloading();
+    inline float getSize() const { return size; }
+    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
 
-    int getNotifyInterval();
+    inline int getNotifyInterval() { return notifyInterval; }
     void setNotifyInterval(signed int milis);
 
-    void setMedia(QUrl mediaPath);
+    inline void setMedia(QUrl mediaPath) { mediaUri = mediaPath; }
     void setSpectrumBandsCount(int bandsCount);
     inline int spectrumBandsCount() const { return _spectrumBandsCount; }
-    void setSpectrumHeight(int newHeight);
-    void setSpectrumFreq(int millis);
+    inline void setSpectrumHeight(int newHeight) { spectrumHeight = newHeight; }
+    inline void setSpectrumFreq(int millis) { spectrumTimer -> setInterval(millis); }
 
-    MediaState state() const;
+    inline MediaState state() const { return currentState; }
 
-    bool isPlayed() const;
-    bool isPaused() const;
-    bool isStoped() const;
+    inline bool isPlayed() const { return currentState == PlayingState; }
+    inline bool isPaused() const { return currentState == PausedState; }
+    inline bool isStoped() const { return currentState == StoppedState; }
 
     void registerEQ();
     void unregisterEQ();
@@ -110,7 +110,7 @@ signals:
 
 private slots:
     void started();
-    void stoped();
+    inline void stoped() { currentState = StoppedState; }
     void signalUpdate();
     void calcSpectrum();
 
@@ -125,13 +125,12 @@ public slots:
 
     void slidePosForward();
     void slidePosBackward();
-    void setPosition(int position);
+    inline void setPosition(int position) { BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / 1000.0), BASS_POS_BYTE); }
 
     void slideVolForward();
     void slideVolBackward();
     void setChannelVolume(int val);
     void setVolume(int val);
-
 protected:
     int duration;
 

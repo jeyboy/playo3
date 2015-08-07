@@ -339,6 +339,9 @@ void Player::onStateChanged(MediaState newState) {
             setTimePanelVal(0);
             slider -> blockSignals(false);
             updateControls(true, false, false);
+
+            if (current_item && current_item -> is(ItemState::proccessing))
+                emit mediaStatusChanged(LoadedMedia);
             break;
         }
 
@@ -384,6 +387,10 @@ void Player::onMediaStatusChanged(MediaStatus status) {
                 play();
             else
                 emit nextItemNeeded(endMedia);
+        break;}
+
+        case LoadedMedia: {
+            setItemState(-ItemState::proccessing);
         break;}
 
         case InvalidMedia: {

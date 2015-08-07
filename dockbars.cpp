@@ -15,9 +15,7 @@ void Dockbars::load(QJsonArray & bars) {
     int userTabsAmount = 0;
     MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
-//    barsList.append(SCREEN_TAB);
-    barsList.append(DOWNLOADS_TAB);
-    barsList.append(LOGS_TAB);
+    barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
 
     if (bars.count() > 0) {
         QJsonObject obj;
@@ -345,6 +343,8 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             } else {
                 if (IModel::restoreUrl(Player::instance() -> playedItem()))
                     Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                else
+                    Player::instance() -> stop();
             }
         }
 
