@@ -16,6 +16,7 @@ namespace Key {
     extern const QString state;
     extern const QString played;
     extern const QString not_exist;
+    extern const QString proccessing;
     extern const QString type;
     extern const QString asterix;
 }

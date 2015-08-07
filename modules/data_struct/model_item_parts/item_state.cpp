@@ -13,6 +13,7 @@ bool ItemState::set(enum ItemStateFlag flag) {
 
 void ItemState::setStates(int flags) {
     if (flags < 0) {
+        if (bitIsSet(-flags, proccessing))    unset(proccessing);
         if (bitIsSet(-flags, played))    unset(played);
         if (bitIsSet(-flags, liked))     unsetLiked();
         if (bitIsSet(-flags, not_exist)) unset(not_exist);

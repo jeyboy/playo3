@@ -14,6 +14,7 @@ namespace Key {
     extern const QString state = QStringLiteral("state");
     extern const QString played = QStringLiteral("played");
     extern const QString not_exist = QStringLiteral("not_exist");
+    extern const QString proccessing = QStringLiteral("proccess");
     extern const QString type = QStringLiteral("type");
 
     extern const QString asterix = QStringLiteral("*");

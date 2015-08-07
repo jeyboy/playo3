@@ -67,7 +67,7 @@ void Player::setItemState(int state) {
 }
 
 void Player::updateItemState(bool isPlayed) {
-    setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
+    setItemState(isPlayed ? (ItemState::listened | ItemState::played | ItemState::proccessing) : -ItemState::played);
 }
 
 void Player::eject(bool updateState) {

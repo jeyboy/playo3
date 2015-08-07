@@ -53,6 +53,7 @@
         <file alias="err">images/items/err.png</file>
         <file alias="fourshared_item">images/items/4shared.png</file>
         <file alias="fourshared_item_on">images/items/4shared_on.png</file>
+        <file alias="process">images/items/process.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>
