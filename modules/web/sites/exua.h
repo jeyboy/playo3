@@ -10,7 +10,7 @@ namespace Grabber {
     class Exua : public IGrabberApi {
         const QString search_predicate_song_token, search_predicate_artist_token;
 //        const QString data_url_token, title_token, search_path_token, search_predicate_token;
-//        const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
+        const Html::Selector searchIndexSelector, songTrSelector /*, artistSelector, songSelector, linksSelector, table_columns_selector*/;
     public:
         static Exua * instance();
         inline static void close() { delete self; }
@@ -31,9 +31,15 @@ namespace Grabber {
 
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
-            QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
-
             QJsonArray json;
+
+            if (by_artist)
+                artistsToJson()
+            else {
+                QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+            }
+
+
 //            Html::Document parser(response);
 
 //            Html::Set tables = parser.find(&searchTablesSelector);
@@ -102,8 +108,12 @@ namespace Grabber {
 
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua/") % predicate; }
 
-        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-//            Html::Document parser(reply);
+        bool indexToJson(WebManager * manager, QJsonArray & json, QUrl baseUrl) {
+            QNetworkReply * reply = manager -> getSync(url);
+            Html::Document parser(reply);
+            Html::Set positions = parser.find(&searchIndexSelector);
+
+
 
 //            Html::Set set;
 //            Html::Tag * tag;
@@ -141,19 +151,55 @@ namespace Grabber {
 //            return !tracks.isEmpty();
         }
 
-//        QString refresh_postprocess(QNetworkReply * reply) {
-//            Html::Document parser(reply);
+        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+            Html::Document parser(reply);
+            Html::Set positions = parser.find(&searchIndexSelector);
 
-//            Html::Selector trackSelector(".options a[itemprop='audio']");
-//            Html::Set tracks = parser.find(&trackSelector);
+            for(Html::Set::Iterator position = positions.begin(); position != positions.end(); position++) {
+                QString url = position -> findChild("a").link();
 
-//            if (tracks.isEmpty())
-//                return QString();
-//            else
-//                return baseUrlStr(tracks.first() -> link());
-//        }
+
+            }
+
+
+//            Html::Set set;
+//            Html::Tag * tag;
+//            Html::Set tracks = parser.find("div[itemprop='tracks']");
+//            Html::Selector urlSelector("span[data-url^'/Song']");
+//            Html::Selector infoSelector(".data>text");
+//            Html::Selector detailsSelector(".details>.time>text");
+//            Html::Selector refreshSelector(".details a[href^'/Song']");
+
+//            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+//                QJsonObject track_obj;
+
+//                tag = (*track) -> find(&urlSelector).first();
+//                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
+//                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+
+//                set = (*track) -> find(&infoSelector);
+//                if (!set.isEmpty()) {
+//                    track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
+//                    track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
+//                }
+
+//                set = (*track) -> find(&detailsSelector);
+//                if (!set.isEmpty())
+//                    track_obj.insert(size_key, prepareSize(set.first() -> text()));
+
+//                set = (*track) -> find(&refreshSelector);
+//                if (!set.isEmpty())
+//                    track_obj.insert(refresh_key, baseUrlStr(set.first() -> link()));
+
+//                json << track_obj;
+//            }
+
+//            if (removeReply) delete reply;
+//            return !tracks.isEmpty();
+        }
     private:
-        inline Exua() : IGrabberApi(), search_predicate_song_token("search?original_id=3&s="), search_predicate_artist_token("search?original_id=7513588&s=")
+        inline Exua() : IGrabberApi(), search_predicate_song_token("search?original_id=3&s="), search_predicate_artist_token("search?original_id=7513588&s="),
+            searchIndexSelector(Html::Selector("table.panel tr[id!'ad_block']")), songTrSelector(Html::Selector("table.list tr a[rel='nofollow']"))
         {} /*, data_url_token(QStringLiteral("data-url")),
             title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
             search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table")),

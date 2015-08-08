@@ -87,7 +87,8 @@ namespace Html {
                 case attr_rel_eq:
                 case attr_rel_begin:
                 case attr_rel_end:
-                case attr_rel_match: {
+                case attr_rel_match:
+                case attr_rel_not: {
                     token.append((rel = *it));
                 break;}
 
@@ -132,6 +133,8 @@ namespace Html {
                             case Selector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
                             case Selector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
                             case Selector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
+                            case Selector::attr_rel_not: { if (attrs.value(it.key()).indexOf(it.value().second) != -1) return false;  break;}
+
                             default: qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
                         };
                     break;
