@@ -27,13 +27,13 @@ namespace Grabber {
             else if (popular_items)
                 return popular();
 
-//            if (url.isEmpty()) return QJsonArray();
+            if (url.isEmpty()) return QJsonArray();
 
-//            WebManager * manager = 0;
-//            bool isNew = WebManager::valid(manager);
-//            QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+            WebManager * manager = 0;
+            bool isNew = WebManager::valid(manager);
+            QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
-//            QJsonArray json;
+            QJsonArray json;
 //            Html::Document parser(response);
 
 //            Html::Set tables = parser.find(&searchTablesSelector);
@@ -90,9 +90,9 @@ namespace Grabber {
 //                }
 //            }
 
-//            delete response;
-//            if (isNew) delete manager;
-//            return json;
+            delete response;
+            if (isNew) delete manager;
+            return json;
         }
 
     protected:
