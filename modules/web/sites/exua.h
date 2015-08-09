@@ -106,7 +106,7 @@ namespace Grabber {
 //            return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
 //        }
 
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua/") % predicate; }
+        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua") % predicate; }
 
         bool indexToJson(WebManager * manager, QJsonArray & json, QUrl baseUrl) {
             QNetworkReply * reply = manager -> getSync(url);
@@ -155,8 +155,10 @@ namespace Grabber {
             Html::Document parser(reply);
             Html::Set positions = parser.find(&searchIndexSelector);
 
+            parser.find("p>b[text='Исполнитель']<p");
+
             for(Html::Set::Iterator position = positions.begin(); position != positions.end(); position++) {
-                QString url = position -> findChild("a").link();
+                QString url = (*position).link();
 
 
             }
@@ -198,7 +200,7 @@ namespace Grabber {
 //            return !tracks.isEmpty();
         }
     private:
-        inline Exua() : IGrabberApi(), search_predicate_song_token("search?original_id=3&s="), search_predicate_artist_token("search?original_id=7513588&s="),
+        inline Exua() : IGrabberApi(), search_predicate_song_token("/search?original_id=3&s="), search_predicate_artist_token("/search?original_id=7513588&s="),
             searchIndexSelector(Html::Selector("table.panel tr[id!'ad_block']")), songTrSelector(Html::Selector("table.list tr a[rel='nofollow']"))
         {} /*, data_url_token(QStringLiteral("data-url")),
             title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
