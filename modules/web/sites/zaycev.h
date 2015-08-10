@@ -175,18 +175,13 @@ namespace Grabber {
             Html::Document parser(reply);
 
             Html::Set songs = parser.find(".musicset-track-list__items .musicset-track");
-            WebManager * manager = (WebManager *)reply -> manager();
 
             for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                 QJsonObject song_obj;
 
-                QString url = manager -> getToJson(QNetworkRequest(
-                        QUrl(baseUrlStr((*song) -> value(QStringLiteral("data-url"))))
-                    )).value(QStringLiteral("url")).toString();
-                track_obj.insert(url_key, url);
-
+                song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
                 song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
-                //                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+                //                song_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
 
                 json << song_obj;
             }
@@ -227,6 +222,10 @@ namespace Grabber {
 
             if (removeReply) delete reply;
             return !songs.isEmpty();
+        }
+
+        QString refresh_postprocess(QNetworkReply * reply) {
+            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
     private:
         inline Zaycev() : IGrabberApi() {}
