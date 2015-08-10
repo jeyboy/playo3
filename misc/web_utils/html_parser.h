@@ -214,8 +214,8 @@ namespace Html {
             return root -> children().find(selector);
         }
 
-        inline Set find(QString predicate) {
-            Selector selector(predicate.toUtf8().data());
+        inline Set find(const char * predicate) {
+            Selector selector(predicate);
             return find(&selector);
         }
 

@@ -1,10 +1,10 @@
-#include "exua.h"
+//#include "exua.h"
 
-namespace Grabber {
-    Exua * Exua::self = 0;
+//namespace Grabber {
+//    Exua * Exua::self = 0;
 
-    Exua * Exua::instance() {
-        if(!self) self = new Exua();
-        return self;
-    }
-}
+//    Exua * Exua::instance() {
+//        if(!self) self = new Exua();
+//        return self;
+//    }
+//}
