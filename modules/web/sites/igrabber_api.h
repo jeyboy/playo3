@@ -34,7 +34,7 @@ public:
         fresh
     };
 
-    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
+    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, int /*genre_id*/, bool /*popular*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
 
     virtual TargetGenres genresList() const { return genres; }
 

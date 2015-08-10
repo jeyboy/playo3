@@ -13,14 +13,14 @@ namespace Grabber {
         static Zaycev * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & predicate, QString & genre, bool popular_items, bool /*by_artist*/, int count) {
+        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool /*by_artist*/, int count) {
             QUrl url;
 
             if (!predicate.isEmpty()) {
                 url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
                 url.setQuery(QStringLiteral("query_search=") % predicate); // &page=7
             } else if (!genre.isEmpty())
-                return byGenre(genre);
+                return byGenre(genre, genre_id);
             else if (popular_items)
                 return popular();
 
@@ -42,7 +42,7 @@ namespace Grabber {
             return json;
         }
 
-        TargetGenres genresList() {
+        TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
                 genres.addGenre(QStringLiteral("pop"), 13);
                 genres.addGenre(QStringLiteral("rock"), 17);
