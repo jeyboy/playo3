@@ -124,16 +124,16 @@ namespace Grabber {
         }
 
         // artists by genre
-        QJsonArray byGenre(QString genre) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+        QJsonArray byGenre(QString genre, int genre_id) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
             QJsonArray json;
             if (genresList().isEmpty()) genresList();
 
-            int code = genres.toInt(genre);
-            if (code == genres.defaultInt()) return json;
+            genre_id = genres.toInt(genre);
+            if (genre_id == genres.defaultInt()) return json;
 
             WebManager * manager = 0;
             bool isNew = WebManager::valid(manager);
-            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(code), genre));
+            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
             QHash<QString, QString> artistLinks;
 
             for(int page = 1; page < MAX_PAGE; page++) {
@@ -157,7 +157,7 @@ namespace Grabber {
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(QString /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//        QJsonArray byType(ByTypeArg /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
 //            //TODO: realize later
 //        }
 

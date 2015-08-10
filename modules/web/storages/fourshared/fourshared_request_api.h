@@ -47,7 +47,7 @@ namespace Fourshared {
             bool is_new = WebManager::valid(manager);
 
             QNetworkReply * response = manager -> getSync(refresh_page);
-            QString res = Html::Document(response).find(QStringLiteral("input.jsD1PreviewUrl")).value();
+            QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
 
             delete response;
             if (is_new) manager -> deleteLater();
@@ -61,7 +61,7 @@ namespace Fourshared {
             bool is_new = WebManager::valid(manager);
 
             QNetworkReply * response = manager -> getSync(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12));
-            QString res = Html::Document(response).find(QStringLiteral("a[href~'/download/']")).link();
+            QString res = Html::Document(response).find("a[href~'/download/']").link();
 
             delete response;
             if (is_new) manager -> deleteLater();

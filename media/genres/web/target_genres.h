@@ -7,6 +7,7 @@ class TargetGenres : public IGenres {
 public:
     inline void addGenre(QString name, int code) { genres.insert(name, code); }
     inline bool isEmpty() { return genres.isEmpty(); }
+    inline QString toString(int id) const { return genres.key(id, QStringLiteral("")); }
 };
 
 #endif // TARGET_GENRES

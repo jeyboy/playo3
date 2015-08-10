@@ -1,8 +1,6 @@
 #ifndef IGRABBER_API
 #define IGRABBER_API
 
-////http://musicmachinery.com/music-apis/
-
 #include "misc/logger.h"
 
 #include "misc/web_utils/web_manager.h"
@@ -20,17 +18,6 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-
-//#define REQUEST_DELAY 260 // ms // 250
-
-//struct QueryRules {
-//    QueryRules(QString _field, int _limit = 5, int _count = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-//        : field(_field), offset(_offset), limit(_limit), count(_count), fact_count(0) {}
-
-//    QString field;
-//    int count, offset, limit, fact_count;
-//};
-
 #define DEFAULT_PREDICATE_NAME QString()
 #define GRAB_DELAY 200 // ms
 #define MAX_PAGE 999
@@ -38,21 +25,37 @@
 
 class IGrabberApi {
 public:
+    enum ByTypeArg {
+        sets,
+        charts,
+        soundtracks,
+        top_n,
+        hits,
+        fresh
+    };
+
     virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, bool /*popular*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
 
     virtual TargetGenres genresList() const { return genres; }
 
-    virtual QJsonArray byGenre(QString /*genre*/) { return QJsonArray(); }
+    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_id*/) { return QJsonArray(); }
 
     virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
 
-    virtual QJsonArray byType(QString /*target_type*/) { return QJsonArray(); }
+    virtual QJsonArray byType(ByTypeArg /*target_type*/) { return QJsonArray(); }
 
     virtual QJsonArray popular() { return QJsonArray(); }
 
     QString refresh(QString refresh_page) {
         if (refresh_page.isEmpty()) return QString();
-        return refreshQuery(QUrl(refresh_page));
+
+        WebManager * manager = 0;
+        bool isNew = WebManager::valid(manager);
+        QNetworkReply * response = manager -> getSync(QUrl(refresh_page));
+        QString res = refresh_postprocess(response);
+        delete response;
+        if (isNew) delete manager;
+        return res;
     }
 
 //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
@@ -78,16 +81,6 @@ protected:
     virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
 
     virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
-
-    QString refreshQuery(QUrl url) {
-        WebManager * manager = 0;
-        bool isNew = WebManager::valid(manager);
-        QNetworkReply * response = manager -> getSync(url);
-        QString res = refresh_postprocess(response);
-        delete response;
-        if (isNew) delete manager;
-        return res;
-    }
 
     void sQuery(QUrl url, QJsonArray & res, WebManager * manager = 0) {
         bool isNew = !manager ? WebManager::valid(manager) : false;

@@ -123,8 +123,8 @@ namespace Html {
         inline int childrenCount() { return tags.size(); }
 
         inline Set find(const Selector * selector) { return tags.find(selector); }
-        inline Set find(QString predicate) {
-            Selector selector(predicate.toUtf8().data());
+        inline Set find(const char * predicate) {
+            Selector selector(predicate);
             return tags.find(&selector);
         }
         inline QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links) {
