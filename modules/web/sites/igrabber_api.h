@@ -29,7 +29,9 @@ public:
         sets,
         charts,
         soundtracks,
-        top_n,
+        by_genres,
+        by_years,
+        other,
         hits,
         fresh
     };

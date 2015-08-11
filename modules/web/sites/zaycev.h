@@ -89,8 +89,18 @@ namespace Grabber {
 //            //TODO: realize later
 //        }
 
-        QJsonArray byType(ByTypeArg target_type) { http://zaycev.net/musicset/more.html?page=1
-            //TODO: realize later
+        // one page contains 30 albums
+        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+            switch (target_type) { // need to modify grab processing of folder support in model
+                case sets: break; // http://zaycev.net/musicset/more.html?page=2
+                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
+                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
+                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
+                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
+                case fresh: break; // http://zaycev.net/new/more.html?page=2
+                default: return QJsonArray();
+            }
+            //TODO: stop if result not contains elements
         }
 
         QJsonArray popular() {
@@ -108,7 +118,7 @@ namespace Grabber {
         bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
 
-            Html::Set songs = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
+            Html::Set songs = parser.find(".musicset-track-list__items .musicset-track[class!'track-is-banned']"); //.track-is-banned // banned track is not playable for some countries
 
             for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                 QJsonObject song_obj;
