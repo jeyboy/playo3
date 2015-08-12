@@ -89,19 +89,19 @@ namespace Grabber {
 //            //TODO: realize later
 //        }
 
-        // one page contains 30 albums
-        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
-            switch (target_type) { // need to modify grab processing of folder support in model
-                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-                case fresh: break; // http://zaycev.net/new/more.html?page=2
-                default: return QJsonArray();
-            }
-            //TODO: stop if result not contains elements
-        }
+//        // one page contains 30 albums
+//        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+//            switch (target_type) { // need to modify grab processing of folder support in model
+//                case sets: break; // http://zaycev.net/musicset/more.html?page=2
+//                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
+//                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
+//                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
+//                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
+//                case fresh: break; // http://zaycev.net/new/more.html?page=2
+//                default: return QJsonArray();
+//            }
+//            //TODO: stop if result not contains elements
+//        }
 
         QJsonArray popular() {
             WebManager * manager = 0;

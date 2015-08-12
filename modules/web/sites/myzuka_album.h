@@ -153,12 +153,33 @@ namespace Grabber {
             return json;
         }
 
+        // byChar and byType has too many items - parse it all at once is not good idea ?
+
 //        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(ByTypeArg /*target_type*/) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
-//            //TODO: realize later
+//        QJsonArray byType(ByTypeArg target_type) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//            QList<QUrl> urls;
+
+//            switch (target_type) { // need to modify grab processing of folder support in model
+//                case sets:
+//                case hits: {
+//                    urls << QUrl();
+//                break;}
+//                case soundtracks: { // https://myzuka.org/Soundtracks/Page2 https://myzuka.org/Soundtracks/2014/Page6
+//                    // has too many pages - more than 270
+//                break;}
+//                case charts: {
+
+//                break;}
+//                case by_years: {
+
+//                break;}
+//                case hits: break; // http://zaycev.net/musicset/other/more.html?page=2
+//                default: return QJsonArray();
+//            }
+//            //TODO: stop if result not contains elements
 //        }
 
         QJsonArray popular() {
