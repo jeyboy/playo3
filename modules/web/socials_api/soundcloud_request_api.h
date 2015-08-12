@@ -94,7 +94,7 @@ namespace Soundcloud {
             return lQuery(
                 groupAudioUrl(group_id),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -108,7 +108,7 @@ namespace Soundcloud {
             return lQuery(
                 groupPlaylistsUrl(group_id),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -117,7 +117,7 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("tracks/" % audio_uid, query);
         }
-        QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid), wrap_extract); }
+        QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 
         QUrl audioUrl(QStringList & audio_uids) {
@@ -138,7 +138,7 @@ namespace Soundcloud {
             return lQuery(
                 userAudioUrl(uid),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -151,7 +151,7 @@ namespace Soundcloud {
             return lQuery(
                 userPlaylistsUrl(uid),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -164,7 +164,7 @@ namespace Soundcloud {
             return lQuery(
                 userFollowingsUrl(uid),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -177,7 +177,7 @@ namespace Soundcloud {
             return lQuery(
                 userFollowersUrl(uid),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 
@@ -190,7 +190,7 @@ namespace Soundcloud {
             return lQuery(
                 userGroupsUrl(uid),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                wrap_extract, 0, manager
+                none, 0, manager
             );
         }
 

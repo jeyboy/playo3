@@ -20,13 +20,13 @@ QNetworkReply * WebManager::postSync(const QNetworkRequest & request, const QByt
     return ret;
 }
 
-QJsonObject WebManager::getToJson(const QNetworkRequest & request, bool wrap) {
+QJsonObject WebManager::getJson(const QNetworkRequest & request, bool wrap) {
     QNetworkReply * reply = getSync(request);
     QJsonObject res = replyToJson(reply, wrap);
     reply -> deleteLater();
     return res;
 }
-QJsonObject WebManager::postToJson(const QNetworkRequest & request, const QByteArray & data, bool wrap) {
+QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap) {
     QNetworkReply * reply = postSync(request, data);
     QJsonObject res = replyToJson(reply, wrap);
     reply -> deleteLater();

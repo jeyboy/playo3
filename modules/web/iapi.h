@@ -32,7 +32,7 @@ class IApi {
 public:
     static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
 protected:
-    enum JsonPostProc { none = 0, wrap = 1, extract = 2, wrap_extract = wrap | extract };
+    enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
 
     virtual QString baseUrlStr(QString & predicate) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
@@ -61,7 +61,7 @@ protected:
 
     bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
         bool isNew = !manager ? WebManager::valid(manager) : false;
-        response = manager -> getToJson(QNetworkRequest(url), post_proc & wrap);
+        response = manager -> getJson(url, post_proc & wrap);
         if (isNew) delete manager;
 
         bool status = extractStatus(url, response, code, message);

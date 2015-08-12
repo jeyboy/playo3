@@ -25,8 +25,10 @@ public:
     QNetworkReply * getSync(const QNetworkRequest & request);
     QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data);
 
-    QJsonObject getToJson(const QNetworkRequest & request, bool wrap = false);
-    QJsonObject postToJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
+    inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
+    inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
+    QJsonObject getJson(const QNetworkRequest & request, bool wrap = false);
+    QJsonObject postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
     QNetworkReply * openUrl(QUrl & url);
     QPixmap openImage(QUrl & url);

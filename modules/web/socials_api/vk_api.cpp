@@ -92,6 +92,6 @@ namespace Vk {
 
         url.setQuery(query);
 
-        return sQuery(url, response, wrap_extract);
+        return sQuery(url, response);
     }
 }
