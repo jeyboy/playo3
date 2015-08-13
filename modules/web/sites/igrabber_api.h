@@ -95,7 +95,7 @@ namespace Grabber {
         QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1) {
             while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
                 if (start++ >= count) break;
-                QThread::msleep(REQUEST_DELAY);
+                QThread::msleep(GRAB_DELAY);
             }
 
             return result;

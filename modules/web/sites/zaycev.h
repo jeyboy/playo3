@@ -42,7 +42,7 @@ namespace Grabber {
             genre = genres.toString(genre_id);
             if (genre.isEmpty()) return json;
 
-            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key);
+            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
             lQuery(url_str, json, songs1, MAX_PAGE);
 
             return json;
