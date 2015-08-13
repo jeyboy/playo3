@@ -16,4 +16,6 @@ namespace Grabber {
     extern const QString skip_info_key = QStringLiteral("skip");
 
     extern const QString default_extension = QStringLiteral("mp3");
+
+    extern const QString page_offset_key = QStringLiteral("%1");
 }

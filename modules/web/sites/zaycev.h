@@ -13,32 +13,6 @@ namespace Grabber {
         static Zaycev * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool /*by_artist*/, int count) {
-            QUrl url;
-
-            if (!predicate.isEmpty()) {
-                url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
-                url.setQuery(QStringLiteral("query_search=") % predicate); // &page=7
-            } else if (!genre.isEmpty())
-                return byGenre(genre, genre_id);
-            else if (popular_items)
-                return popular();
-
-            if (url.isEmpty()) return QJsonArray();
-
-            QJsonArray json;
-
-            // need to loop by pagination
-
-            QNetworkReply * response = WebManager::manager() -> getSync(url);
-            toJson(response, json, true);
-
-            while(json.size() > count)
-                json.removeLast();
-
-            return json;
-        }
-
         TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
                 genres.addGenre(QStringLiteral("pop"), 13);
@@ -68,13 +42,8 @@ namespace Grabber {
             genre = genres.toString(genre_id);
             if (genre.isEmpty()) return json;
 
-            WebManager * manager = WebManager::manager();
-
-            for(int page = 1; page < MAX_PAGE; page++) { // add pagination end check
-                QUrl url(baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, QString::number(page))));
-                toJson(manager -> getSync(url), json, true);
-                QThread::msleep(GRAB_DELAY); // extra pause
-            }
+            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key);
+            lQuery(url_str, json, songs1, MAX_PAGE);
 
             return json;
         }
@@ -98,41 +67,63 @@ namespace Grabber {
 //            //TODO: stop if result not contains elements
 //        }
 
-        QJsonArray popular() {
-            QJsonArray res;
-            toJson(WebManager::manager() -> getSync(QUrl(baseUrlStr())), res, true);
-            return res;
-        }
+        QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
 
-        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+
+        bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
+            bool result = false;
 
-            Html::Set songs = parser.find(".musicset-track-list__items .musicset-track[class!'track-is-banned']"); //.track-is-banned // banned track is not playable for some countries
+            switch(jtype) {
+                case songs1: {
+                    Html::Set songs = parser.find(".musicset-track-list__items .musicset-track[class!'track-is-banned']"); //.track-is-banned // banned track is not playable for some countries
 
-            for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                QJsonObject song_obj;
+                    for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                        QJsonObject song_obj;
 
-                song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
-                song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
+                        song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
+                        song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
 
-                QString artist = (*song) -> find(".musicset-track__artist a").text();
-                QString title = (*song) -> find(".musicset-track__track-name a").text();
-                title = artist % QStringLiteral(" - ") % title;
-                song_obj.insert(title_key, title);
+                        QString artist = (*song) -> find(".musicset-track__artist a").text();
+                        QString title = (*song) -> find(".musicset-track__track-name a").text();
+                        title = artist % QStringLiteral(" - ") % title;
+                        song_obj.insert(title_key, title);
 
-                json << song_obj;
+                        json << song_obj;
+                    }
+
+                    result = !songs.isEmpty();
+                }
+
+                default: ;
             }
 
             if (removeReply) delete reply;
-            return !songs.isEmpty();
+            return result;
         }
 
         // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
         inline QString refresh_postprocess(QNetworkReply * reply) {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
+        }
+
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, int count) {
+            // this part is to ugly
+            QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
+            url.setQuery(QStringLiteral("query_search=") % predicate);
+            QString url_str = url.toString() % QStringLiteral("&page=") % page_offset_key;
+
+            QJsonArray json;
+
+            lQuery(url_str, json, songs1, 3/*MAX_PAGE*/); // 3 pages at this time // if pagination overlimited - 302 status received
+
+            while(json.size() > count)
+                json.removeLast();
+
+            return json;
         }
     private:
         inline Zaycev() : IGrabberApi() {}

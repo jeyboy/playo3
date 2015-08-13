@@ -46,12 +46,10 @@ private:
 
 class WebManagerController : public QObject {
     Q_OBJECT
-public:
-    inline WebManagerController(QThread * parent) : QObject(parent) {}
 protected slots:
     inline void disconnectThread() {
-        qDebug() << "SOSOSOSO";
         WebManager * tmanager = WebManager::managers.take(sender());
+        qDebug() << "!!!!!!!!!!!!!!!!!!!! UNTE MANAGER" << tmanager;
         Logger::instance() -> writeToStream(QStringLiteral("WebManager"), QStringLiteral("disconnection"));
         if (tmanager) tmanager -> deleteLater();
         deleteLater();

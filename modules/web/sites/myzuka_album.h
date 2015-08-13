@@ -15,105 +15,9 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
-        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
-            QUrl url;
-
-            if (!predicate.isEmpty()) {
-                url = QUrl(baseUrlStr(search_path_token));
-                url.setQuery(search_predicate_token % predicate);
-            } else if (!genre.isEmpty())
-                return byGenre(genre, genre_id);
-            else if (popular_items)
-                return popular();
-
-            if (url.isEmpty()) return QJsonArray();
-
-            WebManager * manager = WebManager::manager();
-            QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
-
-            QJsonArray json;
-            Html::Document parser(response);
-
-            Html::Set tables = parser.find(&searchTablesSelector);
-
-            if (!tables.isEmpty()) { // at this time table with albums is ignored (second table in the list)
-                Html::Tag * artists_table = 0;
-                Html::Tag * songs_table = 0;
-
-                for(int i = 0; i < tables.count(); i++) {
-                    Html::Set columns = tables[i] -> find(&table_columns_selector);
-                    if (columns.count() == 3) {
-                        if (columns[0] -> text().isEmpty())
-                            artists_table = tables[i];
-                        else
-                            songs_table = tables[i];
-                    }
-                }
-
-                if (by_artist && artists_table) {
-                    QHash<QString, QString> artistLinks;
-                    artistsToJson(manager, artists_table -> findLinks(&artistSelector, artistLinks), json);
-                }
-
-                if (!by_artist && songs_table) {
-                    Html::Set songs = songs_table -> find(&songTrSelector);
-
-                    if (count < ITEMS_PER_PAGE)
-                        while(songs.size() > count)
-                            songs.removeLast();
-
-                    for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                        QJsonObject track_obj;
-
-                        Html::Tag * artist_tag = (*song) -> find(&artistSelector).first();
-                        Html::Tag * track_tag = (*song) -> find(&songSelector).first();
-                        Html::Tag * size_tag = (*song) -> childTag("td", 2);
-
-                        if (!size_tag) {
-                            Logger::instance() -> writeToStream(
-                                QStringLiteral("Myzuka grabber"),
-                                QStringLiteral("Search: parsing of songs"),
-                                QStringLiteral("Some shit happened"), true
-                            );
-                            return json;
-                        }
-
-                        QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
-                        track_obj.insert(title_key, title);
-                        track_obj.insert(size_key, prepareSize(size_tag -> text()));
-                        track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
-
-                        json << track_obj;
-                    }
-                }
-            }
-
-            delete response;
-            return json;
-        }
-
         TargetGenres genresList() {
-            if (genres.isEmpty()) {
-                QString genresPath = baseUrlStr(QStringLiteral("/Genre/Page"));
-                WebManager * manager = WebManager::manager();
-
-                for(int page = 1; page < STYLES_MAX_PAGE; page++) {
-                    QUrl url(genresPath % QString::number(page));
-                    QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
-
-                    Html::Document parser(response);
-                    Html::Set links = parser.find(&linksSelector);
-
-                    for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
-                        QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
-                        genres.addGenre(list[2], list[1].toInt());
-                    }
-
-                    delete response;
-                    if (links.isEmpty()) break;
-                    QThread::msleep(GRAB_DELAY);
-                }
-            }
+            if (genres.isEmpty())
+                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);
 
             return genres;
         }
@@ -132,7 +36,7 @@ namespace Grabber {
 
             for(int page = 1; page < MAX_PAGE; page++) {
                 QUrl url(genrePath % QString::number(page));
-                QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
+                QNetworkReply * response = manager -> getSync(url);
                 Html::Document doc(response);
 
                 doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
@@ -141,7 +45,7 @@ namespace Grabber {
                 delete response;
             }
 
-            artistsToJson(manager, artistLinks, json);
+            artistsToJson(artistLinks, json);
             return json;
         }
 
@@ -174,68 +78,27 @@ namespace Grabber {
 //            //TODO: stop if result not contains elements
 //        }
 
-        QJsonArray popular() {
-            QJsonArray res;
-            toJson(WebManager::manager() -> getSync(QNetworkRequest(QUrl(baseUrlStr()))), res, true);
-            return res;
-        }
+        inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
+        void prepareTables(Html::Set & tables, Html::Tag *& artists_table, Html::Tag *& songs_table) {
+            for(int i = 0; i < tables.count(); i++) {
+                Html::Set columns = tables[i] -> find(&table_columns_selector);
+                if (columns.count() == 3) {
+                    if (columns[0] -> text().isEmpty())
+                        artists_table = tables[i];
+                    else
+                        songs_table = tables[i];
+                }
+            }
+        }
+
         inline QString prepareSize(QString size) {
             return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
         }
 
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
-        void artistsToJson(WebManager * manager, QHash<QString, QString> & artists, QJsonArray & json) {
-            for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-                QString artistPage = artist.key() % QStringLiteral("/Songs/Page");
 
-                for(int page = 1; page < MAX_PAGES_PER_ARTIST; page++) {
-                    if (!toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr(artistPage % QString::number(page))))), json, true))
-                        break;
-                    QThread::msleep(GRAB_DELAY);
-                }
-            }
-        }
-
-        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            Html::Document parser(reply);
-
-            Html::Set set;
-            Html::Tag * tag;
-            Html::Set tracks = parser.find("div[itemprop='tracks']");
-            Html::Selector urlSelector("span[data-url^'/Song']");
-            Html::Selector infoSelector(".data>text");
-            Html::Selector detailsSelector(".details>.time>text");
-            Html::Selector refreshSelector(".details a[href^'/Song']");
-
-            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-                QJsonObject track_obj;
-
-                tag = (*track) -> find(&urlSelector).first();
-                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
-                track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
-
-                set = (*track) -> find(&infoSelector);
-                if (!set.isEmpty()) {
-                    track_obj.insert(duration_key, set.first() -> text().section(' ', 0, 0));
-                    track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
-                }
-
-                set = (*track) -> find(&detailsSelector);
-                if (!set.isEmpty())
-                    track_obj.insert(size_key, prepareSize(set.first() -> text()));
-
-                set = (*track) -> find(&refreshSelector);
-                if (!set.isEmpty())
-                    track_obj.insert(refresh_key, baseUrlStr(set.first() -> link()));
-
-                json << track_obj;
-            }
-
-            if (removeReply) delete reply;
-            return !tracks.isEmpty();
-        }
 
         QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);
@@ -246,7 +109,128 @@ namespace Grabber {
             if (tracks.isEmpty())
                 return QString();
             else
-                return baseUrlStr(tracks.first() -> link());
+                return baseUrlStr(tracks.link());
+        }
+        QJsonArray search_postprocess(QString & predicate, bool by_artist, int count) {
+            QUrl url = QUrl(baseUrlStr(search_path_token));
+            url.setQuery(search_predicate_token % predicate);
+
+            QNetworkReply * response = WebManager::manager() -> getSync(QNetworkRequest(url));
+
+            QJsonArray json;
+            Html::Document parser(response);
+            response -> deleteLater();
+
+            Html::Set tables = parser.find(&searchTablesSelector);
+            Html::Tag * artists_table = 0, * songs_table = 0;
+            prepareTables(tables, artists_table, songs_table);
+
+            if (by_artist && artists_table) {
+                QHash<QString, QString> artistLinks;
+                artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
+            }
+
+            if (!by_artist && songs_table) {
+                Html::Set songs = songs_table -> find(&songTrSelector);
+
+                if (count < ITEMS_PER_PAGE)
+                    while(songs.size() > count)
+                        songs.removeLast();
+
+                for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                    QJsonObject track_obj;
+
+                    Html::Tag * artist_tag = (*song) -> find(&artistSelector).first();
+                    Html::Tag * track_tag = (*song) -> find(&songSelector).first();
+                    Html::Tag * size_tag = (*song) -> childTag("td", 2);
+
+                    if (!size_tag) {
+                        Logger::instance() -> writeToStream(
+                            QStringLiteral("Myzuka grabber"),
+                            QStringLiteral("Search: parsing of songs"),
+                            QStringLiteral("Some shit happened"), true
+                        );
+                        return json;
+                    }
+
+                    QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
+                    track_obj.insert(title_key, title);
+                    track_obj.insert(size_key, prepareSize(size_tag -> text()));
+                    track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
+
+                    json << track_obj;
+                }
+            }
+
+            return json;
+        }
+
+
+
+        void artistsToJson(QHash<QString, QString> & artists, QJsonArray & json) {
+            for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % page_offset_key;
+
+                lQuery(baseUrlStr(artistPage), json, songs1, MAX_PAGES_PER_ARTIST);
+            }
+        }
+
+        bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+            Html::Document parser(reply);
+            bool result = false;
+
+            switch(jtype) {
+                case songs1: {
+                    Html::Set set;
+                    Html::Tag * tag;
+                    Html::Set tracks = parser.find("div[itemprop='tracks']");
+                    Html::Selector urlSelector("span[data-url^'/Song']");
+                    Html::Selector infoSelector(".data>text");
+                    Html::Selector detailsSelector(".details>.time>text");
+                    Html::Selector refreshSelector(".details a[href^'/Song']");
+
+                    for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                        QJsonObject track_obj;
+
+                        tag = (*track) -> find(&urlSelector).first();
+                        track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
+                        track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+
+                        set = (*track) -> find(&infoSelector);
+                        if (!set.isEmpty()) {
+                            track_obj.insert(duration_key, set.text().section(' ', 0, 0));
+                            track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
+                        }
+
+                        set = (*track) -> find(&detailsSelector);
+                        if (!set.isEmpty())
+                            track_obj.insert(size_key, prepareSize(set.text()));
+
+                        set = (*track) -> find(&refreshSelector);
+                        if (!set.isEmpty())
+                            track_obj.insert(refresh_key, baseUrlStr(set.link()));
+
+                        json << track_obj;
+                    }
+
+                    result = !tracks.isEmpty();
+                }
+
+                case genres1: {
+                    Html::Set links = parser.find(&linksSelector);
+
+                    for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
+                        QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
+                        genres.addGenre(list[2], list[1].toInt());
+                    }
+                    result = !links.isEmpty();
+                }
+
+                default: ;
+            }
+
+            if (removeReply) delete reply;
+            return result;
         }
     private:
         inline MyzukaAlbum() : IGrabberApi(), data_url_token(QStringLiteral("data-url")),

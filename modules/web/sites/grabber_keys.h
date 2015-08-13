@@ -19,6 +19,8 @@ namespace Grabber {
     extern const QString skip_info_key;
 
     extern const QString default_extension;
+
+    extern const QString page_offset_key;
 }
 
 #endif // GRABBER_KEYS

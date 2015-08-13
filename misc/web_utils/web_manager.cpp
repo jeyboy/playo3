@@ -5,12 +5,13 @@ QHash<QObject *, WebManager *> WebManager::managers = QHash<QObject *, WebManage
 WebManager * WebManager::manager() {
     QThread * thread = QThread::currentThread();
     if (!managers.contains(thread)) {
+        qDebug() << "!!!!!!!!!!!!!!!!!!!! REGISTRATE MANAGER";
         managers.insert(thread, new WebManager());
 
         //QApplication::instance() -> thread()
 
         if (QThread::currentThread() != QApplication::instance() -> thread())
-            connect(thread, SIGNAL(destroyed()), new WebManagerController(QThread::currentThread()), SLOT(disconnectThread()));
+            connect(thread, SIGNAL(finished()), new WebManagerController(), SLOT(disconnectThread()));
     }
     return managers[thread];
 }

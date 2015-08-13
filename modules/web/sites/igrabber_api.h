@@ -23,138 +23,84 @@
 #define MAX_PAGE 999
 #define STYLES_MAX_PAGE 50
 
-class IGrabberApi {
-public:
-    enum ByTypeArg {
-        sets,
-        charts,
-        soundtracks,
-        by_genres,
-        by_years,
-        other,
-        hits,
-        fresh
+namespace Grabber {
+    class IGrabberApi {
+    public:
+        enum toJsonType { songs1, songs2, artists1, artists2, genres1 };
+        enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
+
+        virtual QJsonArray search(QString & predicate, QString & genre, int genre_id, bool is_popular, bool by_artist, int count) {
+            if (!predicate.isEmpty()) {
+                return search_postprocess(predicate, by_artist, count);
+            } else if (!genre.isEmpty())
+                return byGenre(genre, genre_id);
+            else if (is_popular)
+                return popular();
+            else return QJsonArray();
+        }
+
+        virtual TargetGenres genresList() const { return genres; }
+
+        virtual QJsonArray byGenre(QString /*genre*/, int /*genre_id*/) { return QJsonArray(); }
+
+        virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
+
+        virtual QJsonArray byType(ByTypeArg /*target_type*/) { return QJsonArray(); }
+
+        virtual QJsonArray popular() { return QJsonArray(); }
+
+        QString refresh(QString refresh_page) {
+            if (refresh_page.isEmpty()) return QString();
+
+            QNetworkReply * response = WebManager::manager() -> getSync(QUrl(refresh_page));
+            QString res = refresh_postprocess(response);
+            delete response;
+            return res;
+        }
+
+    //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
+    protected:
+        TargetGenres genres;
+
+        virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
+        QUrl baseUrl(QString predicate, QUrlQuery & query) {
+            QUrl url(baseUrlStr(predicate));
+            url.setQuery(query);
+            return url;
+        }
+
+        virtual QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
+        virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
+        virtual QJsonArray search_postprocess(QString & /*url*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
+
+        virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
+
+        inline QJsonArray sQuery(QUrl url, toJsonType jtype) {
+            QJsonArray items; sQuery(url, items, jtype);  return items;
+        }
+
+        bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
+            Logger::instance() -> startMark();
+            QNetworkReply * response = WebManager::manager() -> getSync(url);
+            bool res = toJson(jtype, response, items, true);
+            Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
+            return res;
+        }
+
+        inline QJsonArray lQuery(QString url, toJsonType jtype, int count, int start = 1) {
+            QJsonArray items; return lQuery(url, items, jtype, count, start);
+        }
+
+        QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1) {
+            while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
+                if (start++ >= count) break;
+                QThread::msleep(REQUEST_DELAY);
+            }
+
+            return result;
+        }
     };
-
-    virtual QJsonArray search(QString & /*predicate*/, QString & /*genre*/, int /*genre_id*/, bool /*popular*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
-
-    virtual TargetGenres genresList() const { return genres; }
-
-    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_id*/) { return QJsonArray(); }
-
-    virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
-
-    virtual QJsonArray byType(ByTypeArg /*target_type*/) { return QJsonArray(); }
-
-    virtual QJsonArray popular() { return QJsonArray(); }
-
-    QString refresh(QString refresh_page) {
-        if (refresh_page.isEmpty()) return QString();
-
-        QNetworkReply * response = WebManager::manager() -> getSync(QUrl(refresh_page));
-        QString res = refresh_postprocess(response);
-        delete response;
-        return res;
-    }
-
-//    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
-protected:
-    TargetGenres genres;
-
-    virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
-    QUrl baseUrl(QString predicate, QUrlQuery & query) {
-        QUrl url(baseUrlStr(predicate));
-        url.setQuery(query);
-        return url;
-    }
-
-    virtual QUrlQuery genDefaultParams() { return QUrlQuery(); }
-
-//    virtual bool endReached(QJsonObject & response, int offset) = 0;
-////    virtual int requestLimit() const = 0;
-////    inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
-
-//    virtual QString offsetKey() const = 0;
-//    virtual QString limitKey() const = 0;
-
-    virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
-
-    virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
-
-    bool sQuery(QUrl url, QJsonArray & items) {
-        Logger::instance() -> startMark();
-        QNetworkReply * response = WebManager::manager() -> getSync(url);
-        bool res = toJson(response, items, true);
-        Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
-        return res;
-    }
-
-//    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, Web * manager = 0) {
-//        QJsonArray res;
-//        return lQuery(url, rules, res, post_proc, errorReceiver, manager);
-//    }
-
-//    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, Web * manager = 0) {
-//        bool isNew = !manager ? Web::validManager(manager) : false;
-
-//        QJsonObject response;
-
-//        while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver, manager)) {
-//            QJsonValue val = response.value(rules.field);
-//            bool invalid = val.isArray();
-
-//            if (invalid) {
-//                QJsonArray ar = val.toArray();
-//                invalid = ar.isEmpty();
-//                rules.fact_count += ar.size();
-//            }
-
-//            if (!invalid) result.append(val);
-
-//            iterateOffset(rules.offset, response, url);
-//            if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
-//            QThread::msleep(REQUEST_DELAY);
-//        }
-
-//        if (isNew) delete manager;
-//        setCount(result, rules.fact_count);
-
-//        return result;
-//    }
-
-//    inline void setCount(QJsonArray & ar, int count) {
-//        QJsonObject countObj;
-//        countObj.insert("count", count);
-//        ar.prepend(countObj);
-//    }
-
-//    inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
-//        if (errorReceiver)
-//            QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
-//        else qDebug() << message;
-//    }
-
-//    void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-//        if (offset > 0) setParam(query, offsetKey(), QString::number(offset));
-//        setParam(query, limitKey(), QString::number(limit));
-//    }
-
-//    inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }
-//    inline void setParam(QUrlQuery & query, QString name, float value) { query.addQueryItem(name, QString::number(value)); }
-//    inline void setParam(QUrlQuery & query, QString name, QString value) { query.addQueryItem(name, value); }
-//    inline void setParam(QUrlQuery & query, QString name, QStringList values) {
-//        if (values.isEmpty()) return;
-//        for(QStringList::Iterator val = values.begin(); val != values.end(); val++)
-//            query.addQueryItem(name, *val);
-//    }
-
-//    virtual QUrl buildUrl(QUrl tUrl, int offset, int limit) {
-//        QUrl url(tUrl);
-//        QUrlQuery query = QUrlQuery(url);
-//        setLimit(query, limit, offset);
-//        url.setQuery(query);
-//        return url;
-//    }
-};
+}
 
 #endif // IGRABBER_API
