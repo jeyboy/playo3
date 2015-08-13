@@ -43,28 +43,20 @@ namespace Fourshared {
         QString refresh(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            WebManager * manager = 0;
-            bool is_new = WebManager::valid(manager);
-
-            QNetworkReply * response = manager -> getSync(refresh_page);
+            QNetworkReply * response = WebManager::manager() -> getSync(refresh_page);
             QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
 
             delete response;
-            if (is_new) manager -> deleteLater();
             return res;
         }
 
         QString downloadLink(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            WebManager * manager = 0;
-            bool is_new = WebManager::valid(manager);
-
-            QNetworkReply * response = manager -> getSync(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12));
+            QNetworkReply * response = WebManager::manager() -> getSync(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12));
             QString res = Html::Document(response).find("a[href~'/download/']").link();
 
             delete response;
-            if (is_new) manager -> deleteLater();
             return res;
         }
 
@@ -77,8 +69,7 @@ namespace Fourshared {
             Html::Selector durSelector("input.jsD1Duration");
             Html::Selector tagsSelector(".generalID3tags .id3tag");
 
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
+            WebManager * manager = WebManager::manager();
 
             QJsonArray ar;
             QString ext, title, path, song_path;
@@ -142,7 +133,6 @@ namespace Fourshared {
                 }
             }
 
-            if (isNew) manager -> deleteLater();
             return ar;
         }
     };       

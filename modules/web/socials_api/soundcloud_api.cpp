@@ -49,28 +49,18 @@ namespace Soundcloud {
 
     void Api::getGroupInfo(QString uid, QJsonObject & object) {
     //    uid = "101";
-        WebManager * manager;
-        bool isNew = WebManager::valid(manager);
-
-        object.insert(Soundcloud::audio_list_key, groupAudio(uid, manager));
-        object.insert(Soundcloud::playlist_key, groupPlaylists(uid, manager));
-
-        if (isNew) delete manager;
+        object.insert(Soundcloud::audio_list_key, groupAudio(uid));
+        object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
     }
 
     void Api::getUserInfo(QString & uid, QJsonObject & object) {
-        WebManager * manager;
-        bool isNew = WebManager::valid(manager);
-
-        object.insert(Soundcloud::audio_list_key, userAudio(uid, manager));
-        object.insert(Soundcloud::playlist_key, userPlaylists(uid, manager));
+        object.insert(Soundcloud::audio_list_key, userAudio(uid));
+        object.insert(Soundcloud::playlist_key, userPlaylists(uid));
         QThread::msleep(REQUEST_DELAY);
-        object.insert(Soundcloud::followings_key, userFollowings(uid, manager));
-        object.insert(Soundcloud::followers_key, userFollowers(uid, manager));
+        object.insert(Soundcloud::followings_key, userFollowings(uid));
+        object.insert(Soundcloud::followers_key, userFollowers(uid));
         QThread::msleep(REQUEST_DELAY);
-        object.insert(Soundcloud::groups_key, userGroups(uid, manager));
-
-        if (isNew) delete manager;
+        object.insert(Soundcloud::groups_key, userGroups(uid));
     }
 
 
@@ -97,11 +87,11 @@ namespace Soundcloud {
         } else if (query.hasQueryItem(QStringLiteral("code"))) {
             QNetworkRequest request(authTokenUrl());
             request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-            QJsonObject doc = WebManager::stock() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
+            QJsonObject doc = WebManager::manager() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
 
             if (doc.contains(QStringLiteral("access_token"))) {
                 QString newToken = doc.value(QStringLiteral("access_token")).toString();
-                doc = WebManager::stock() -> getJson(confirmAuthUrl(newToken));
+                doc = WebManager::manager() -> getJson(confirmAuthUrl(newToken));
 
                 setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
                 emit authorized();

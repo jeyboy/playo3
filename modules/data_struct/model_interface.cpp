@@ -666,7 +666,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             if (!Vk::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
                 if (loadWebDialogPlugin(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, WebManager::stock(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
+                    QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
                     dInt -> registerActions(Vk::Api::instance());
                     dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
                     delete dInt;
@@ -681,7 +681,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             if (!Soundcloud::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
                 if (loadWebDialogPlugin(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, WebManager::stock(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
+                    QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
                     dInt -> registerActions(Soundcloud::Api::instance());
                     dialog -> exec();
                     delete dInt;

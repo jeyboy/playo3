@@ -28,8 +28,7 @@ namespace Grabber {
 
             if (url.isEmpty()) return QJsonArray();
 
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
+            WebManager * manager = WebManager::manager();
             QNetworkReply * response = manager -> getSync(QNetworkRequest(url));
 
             QJsonArray json;
@@ -90,15 +89,13 @@ namespace Grabber {
             }
 
             delete response;
-            if (isNew) delete manager;
             return json;
         }
 
         TargetGenres genresList() {
             if (genres.isEmpty()) {
                 QString genresPath = baseUrlStr(QStringLiteral("/Genre/Page"));
-                WebManager * manager = 0;
-                bool isNew = WebManager::valid(manager);
+                WebManager * manager = WebManager::manager();
 
                 for(int page = 1; page < STYLES_MAX_PAGE; page++) {
                     QUrl url(genresPath % QString::number(page));
@@ -116,8 +113,6 @@ namespace Grabber {
                     if (links.isEmpty()) break;
                     QThread::msleep(GRAB_DELAY);
                 }
-
-                if (isNew) delete manager;
             }
 
             return genres;
@@ -131,8 +126,7 @@ namespace Grabber {
             genre_id = genres.toInt(genre);
             if (genre_id == genres.defaultInt()) return json;
 
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
+            WebManager * manager = WebManager::manager();
             QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
             QHash<QString, QString> artistLinks;
 
@@ -148,8 +142,6 @@ namespace Grabber {
             }
 
             artistsToJson(manager, artistLinks, json);
-
-            if (isNew) delete manager;
             return json;
         }
 
@@ -183,11 +175,8 @@ namespace Grabber {
 //        }
 
         QJsonArray popular() {
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
             QJsonArray res;
-            toJson(manager -> getSync(QNetworkRequest(QUrl(baseUrlStr()))), res, true);
-            if (isNew) delete manager;
+            toJson(WebManager::manager() -> getSync(QNetworkRequest(QUrl(baseUrlStr()))), res, true);
             return res;
         }
 

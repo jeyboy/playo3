@@ -53,16 +53,14 @@ protected:
     virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
     virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
-    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
+    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
         QJsonObject res;
-        sQuery(url, res, post_proc, errorReceiver, manager);
+        sQuery(url, res, post_proc, errorReceiver);
         return res;
     }
 
-    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
-        bool isNew = !manager ? WebManager::valid(manager) : false;
-        response = manager -> getJson(url, post_proc & wrap);
-        if (isNew) delete manager;
+    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+        response = WebManager::manager() -> getJson(url, post_proc & wrap);
 
         bool status = extractStatus(url, response, code, message);
         if (!status) {
@@ -75,17 +73,15 @@ protected:
         return status;
     }
 
-    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
+    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
         QJsonArray res;
-        return lQuery(url, rules, res, post_proc, errorReceiver, manager);
+        return lQuery(url, rules, res, post_proc, errorReceiver);
     }
 
-    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0, WebManager * manager = 0) {
-        bool isNew = !manager ? WebManager::valid(manager) : false;
-
+    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
         QJsonObject response;
 
-        while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver, manager)) {
+        while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
             QJsonValue val = response.value(rules.field);
             bool invalid = val.isArray();
 
@@ -102,9 +98,7 @@ protected:
             QThread::msleep(REQUEST_DELAY);
         }
 
-        if (isNew) delete manager;
         setCount(result, rules.fact_count);
-
         return result;
     }
 

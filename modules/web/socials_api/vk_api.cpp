@@ -73,11 +73,8 @@ namespace Vk {
         QJsonObject stat_obj = response.value(error_key).toObject();
         QUrl image_url(stat_obj.value(captcha_img_key).toString());
 
-        WebManager * manager = 0;
-        bool isNew = WebManager::valid(manager);
-        captchaDialog -> setImage(manager -> openImage(image_url));
+        captchaDialog -> setImage(WebManager::manager() -> openImage(image_url));
         emit showCaptcha();
-        if (isNew) delete manager;
 
         QString captchaText = captchaDialog -> captchaText();
         if (captchaText.isEmpty())

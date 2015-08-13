@@ -89,12 +89,11 @@ namespace Soundcloud {
             setAudioTypesParam(query);
             return baseUrl("groups/" % uid % "/tracks", query);
         }
-        QJsonArray groupAudio(QString & group_id, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray groupAudio(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         //    group_id = "101";
             return lQuery(
                 groupAudioUrl(group_id),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -103,12 +102,11 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("groups/" % uid % "/playlists", query);
         }
-        QJsonArray groupPlaylists(QString & group_id, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
         //    group_id = "101";
             return lQuery(
                 groupPlaylistsUrl(group_id),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -134,11 +132,10 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("users/" % uid % "/tracks", query);
         }
-        QJsonArray userAudio(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray userAudio(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
             return lQuery(
                 userAudioUrl(uid),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -147,11 +144,10 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("users/" % uid % "/playlists", query);
         }
-        QJsonArray userPlaylists(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray userPlaylists(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
             return lQuery(
                 userPlaylistsUrl(uid),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -160,11 +156,10 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("users/" % uid % "/followings", query);
         }
-        QJsonArray userFollowings(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray userFollowings(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
             return lQuery(
                 userFollowingsUrl(uid),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -173,11 +168,10 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("users/" % uid % "/followers", query);
         }
-        QJsonArray userFollowers(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray userFollowers(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
             return lQuery(
                 userFollowersUrl(uid),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 
@@ -186,11 +180,10 @@ namespace Soundcloud {
             QUrlQuery query = genDefaultParams();
             return baseUrl("users/" % uid % "/groups", query);
         }
-        QJsonArray userGroups(QString & uid, WebManager * manager = 0, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+        QJsonArray userGroups(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
             return lQuery(
                 userGroupsUrl(uid),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
-                none, 0, manager
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
             );
         }
 

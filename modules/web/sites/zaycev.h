@@ -27,18 +27,15 @@ namespace Grabber {
             if (url.isEmpty()) return QJsonArray();
 
             QJsonArray json;
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
 
             // need to loop by pagination
 
-            QNetworkReply * response = manager -> getSync(url);
+            QNetworkReply * response = WebManager::manager() -> getSync(url);
             toJson(response, json, true);
 
             while(json.size() > count)
                 json.removeLast();
 
-            if (isNew) delete manager;
             return json;
         }
 
@@ -71,8 +68,7 @@ namespace Grabber {
             genre = genres.toString(genre_id);
             if (genre.isEmpty()) return json;
 
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
+            WebManager * manager = WebManager::manager();
 
             for(int page = 1; page < MAX_PAGE; page++) { // add pagination end check
                 QUrl url(baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, QString::number(page))));
@@ -80,7 +76,6 @@ namespace Grabber {
                 QThread::msleep(GRAB_DELAY); // extra pause
             }
 
-            if (isNew) delete manager;
             return json;
         }
 
@@ -104,11 +99,8 @@ namespace Grabber {
 //        }
 
         QJsonArray popular() {
-            WebManager * manager = 0;
-            bool isNew = WebManager::valid(manager);
             QJsonArray res;
-            toJson(manager -> getSync(QUrl(baseUrlStr())), res, true);
-            if (isNew) delete manager;
+            toJson(WebManager::manager() -> getSync(QUrl(baseUrlStr())), res, true);
             return res;
         }
 

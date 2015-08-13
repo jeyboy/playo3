@@ -4,26 +4,21 @@
 #include <QtNetwork>
 #include <qapplication.h>
 #include <qpixmap.h>
+#include "misc/logger.h"
+
+class WebManagerController;
 
 class WebManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
-    inline static WebManager * stock() {
-        if (!default_manager) default_manager = new WebManager(QApplication::instance());
-        return default_manager;
-    }
-    static bool valid(WebManager *& webManager) {
-        bool new_manager = QThread::currentThread() != QApplication::instance() -> thread();
-        webManager = new_manager ? new WebManager(/*QThread::currentThread()*/) : stock();
-        return new_manager;
-    }
+    static WebManager * manager();
 
     WebManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
     inline QNetworkReply * getSync(QString path) { return getSync(QUrl(path)); }
     inline QNetworkReply * getSync(QUrl url) { return getSync(QNetworkRequest(url)); }
-    QNetworkReply * getSync(const QNetworkRequest & request);
-    QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data);
+    inline QNetworkReply * getSync(const QNetworkRequest & request) { return synchronizeRequest(WebManager::get(request)); }
+    inline QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) { return synchronizeRequest(WebManager::post(request, data)); }
 
     inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
     inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
@@ -39,13 +34,29 @@ public:
         return QJsonDocument::fromJson(ar).object();
     }
 protected:
-    void synchronizeRequest(QNetworkReply * m_http);
+    QNetworkReply * synchronizeRequest(QNetworkReply * m_http);
     QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0);
 private:
     QSsl::SslProtocol protocol;
     QSslSocket::PeerVerifyMode mode;
 
-    static WebManager * default_manager;
+    static QHash<QObject *, WebManager *> managers;
+    friend class WebManagerController;
 };
+
+class WebManagerController : public QObject {
+    Q_OBJECT
+public:
+    inline WebManagerController(QThread * parent) : QObject(parent) {}
+protected slots:
+    inline void disconnectThread() {
+        qDebug() << "SOSOSOSO";
+        WebManager * tmanager = WebManager::managers.take(sender());
+        Logger::instance() -> writeToStream(QStringLiteral("WebManager"), QStringLiteral("disconnection"));
+        if (tmanager) tmanager -> deleteLater();
+        deleteLater();
+    }
+};
+
 
 #endif // WEB_MANAGER_H

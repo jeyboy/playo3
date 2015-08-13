@@ -51,12 +51,9 @@ public:
     QString refresh(QString refresh_page) {
         if (refresh_page.isEmpty()) return QString();
 
-        WebManager * manager = 0;
-        bool isNew = WebManager::valid(manager);
-        QNetworkReply * response = manager -> getSync(QUrl(refresh_page));
+        QNetworkReply * response = WebManager::manager() -> getSync(QUrl(refresh_page));
         QString res = refresh_postprocess(response);
         delete response;
-        if (isNew) delete manager;
         return res;
     }
 
@@ -84,15 +81,12 @@ protected:
 
     virtual bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
-    void sQuery(QUrl url, QJsonArray & res, WebManager * manager = 0) {
-        bool isNew = !manager ? WebManager::valid(manager) : false;
-        QNetworkReply * response = manager -> getSync(url);
-
+    bool sQuery(QUrl url, QJsonArray & items) {
         Logger::instance() -> startMark();
-        toJson(response, res);
+        QNetworkReply * response = WebManager::manager() -> getSync(url);
+        bool res = toJson(response, items, true);
         Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
-        delete response;
-        if (isNew) delete manager;
+        return res;
     }
 
 //    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0, Web * manager = 0) {

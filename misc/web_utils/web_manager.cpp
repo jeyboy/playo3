@@ -1,23 +1,24 @@
 #include "web_manager.h"
 
-WebManager * WebManager::default_manager = 0;
+QHash<QObject *, WebManager *> WebManager::managers = QHash<QObject *, WebManager *>();
+
+WebManager * WebManager::manager() {
+    QThread * thread = QThread::currentThread();
+    if (!managers.contains(thread)) {
+        managers.insert(thread, new WebManager());
+
+        //QApplication::instance() -> thread()
+
+        if (QThread::currentThread() != QApplication::instance() -> thread())
+            connect(thread, SIGNAL(destroyed()), new WebManagerController(QThread::currentThread()), SLOT(disconnectThread()));
+    }
+    return managers[thread];
+}
 
 WebManager::WebManager(QObject * parent, QSsl::SslProtocol protocol, QSslSocket::PeerVerifyMode mode)
     : QNetworkAccessManager(parent) {
     this -> protocol = protocol;
     this -> mode = mode;
-}
-
-QNetworkReply * WebManager::getSync(const QNetworkRequest & request) {
-    QNetworkReply * ret = WebManager::get(request);
-    synchronizeRequest(ret);
-    return ret;
-}
-
-QNetworkReply * WebManager::postSync(const QNetworkRequest & request, const QByteArray & data) {
-    QNetworkReply * ret = WebManager::post(request, data);
-    synchronizeRequest(ret);
-    return ret;
 }
 
 QJsonObject WebManager::getJson(const QNetworkRequest & request, bool wrap) {
@@ -54,10 +55,11 @@ QPixmap WebManager::openImage(QUrl & url) {
     return QPixmap::fromImage(image);
 }
 
-void WebManager::synchronizeRequest(QNetworkReply * m_http) {
+QNetworkReply * WebManager::synchronizeRequest(QNetworkReply * m_http) {
     QEventLoop loop;
     connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
+    return m_http;
 }
 
 QNetworkReply * WebManager::createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData) {
