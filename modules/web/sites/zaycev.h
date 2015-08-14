@@ -75,7 +75,6 @@ namespace Grabber {
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
-            parser.output();
             bool result = false;
 
             switch(jtype) {

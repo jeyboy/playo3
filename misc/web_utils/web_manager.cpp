@@ -41,15 +41,8 @@ QNetworkReply * WebManager::openUrl(QUrl & url) { // TODO: need to prevent from 
     QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (possibleRedirectUrl.isValid()) {
         QUrl new_url = possibleRedirectUrl.toUrl();
-        if (new_url.host().isEmpty()) {
+        if (new_url.isRelative()) {
             new_url = url.resolved(new_url); // need to check this
-
-//            new_url.setHost(url.host());
-//            new_url.setScheme(url.scheme());
-//            new_url.setPort(url.port());
-//            new_url.setUserName(url.userName());
-//            new_url.setPassword(url.password());
-//            new_url.setFragment(url.fragment());
         }
 
         m_http -> deleteLater();

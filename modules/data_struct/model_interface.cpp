@@ -28,6 +28,11 @@ bool IModel::restoreUrl(IItem * itm) {
                     newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
 //                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
                 break;}
+
+                case Playo3::zaycev: {
+                    newUrl = Grabber::Zaycev::instance() -> refresh(itm -> refresh_path());
+                break;}
+
                 default: return false;
             }
 
