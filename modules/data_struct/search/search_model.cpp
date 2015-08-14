@@ -97,23 +97,25 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
     if (!request.predicates.isEmpty()) { // search by predicates
         for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
-            if (request.inFourshared) requests.append(SearchRequest(SearchRequest::request_4shared, *it, QString(), 0, request.popular));
+            QString predicate = (*it).replace(QRegularExpression("'\""), " ");
+
+            if (request.inFourshared) requests.append(SearchRequest(SearchRequest::request_4shared, predicate, QString(), 0, request.popular));
 
             if (!request.genres.isEmpty()) {
-                if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, *it, QString(), 0, request.popular));
+                if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, predicate, QString(), 0, request.popular));
 
                 for(QHash<int, QString>::Iterator genre_it = request.genres.begin(); genre_it != request.genres.end(); genre_it++) {
-                    if (request.inSc) requests.append(SearchRequest(SearchRequest::request_sc, *it, genre_it.value(), genre_it.key(), request.popular));
-                    if (request.inOther) requests.append(SearchRequest(SearchRequest::request_other, *it, genre_it.value(), genre_it.key(), request.popular));
-                    if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, *it, genre_it.value(), genre_it.key(), request.popular));
-                    if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, *it, genre_it.value(), genre_it.key(), request.popular));
+                    if (request.inSc) requests.append(SearchRequest(SearchRequest::request_sc, predicate, genre_it.value(), genre_it.key(), request.popular));
+                    if (request.inOther) requests.append(SearchRequest(SearchRequest::request_other, predicate, genre_it.value(), genre_it.key(), request.popular));
+                    if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, predicate, genre_it.value(), genre_it.key(), request.popular));
+                    if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, predicate, genre_it.value(), genre_it.key(), request.popular));
                 }
             } else {
-                if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, *it, QString(), -1, request.popular));
-                if (request.inSc) requests.append(SearchRequest(SearchRequest::request_sc, *it, QString(), -1, request.popular));
-                if (request.inOther) requests.append(SearchRequest(SearchRequest::request_other, *it, QString(), -1, request.popular));
-                if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, *it, QString(), -1, request.popular));
-                if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, *it, QString(), -1, request.popular));
+                if (request.inVk) requests.append(SearchRequest(SearchRequest::request_vk, predicate, QString(), -1, request.popular));
+                if (request.inSc) requests.append(SearchRequest(SearchRequest::request_sc, predicate, QString(), -1, request.popular));
+                if (request.inOther) requests.append(SearchRequest(SearchRequest::request_other, predicate, QString(), -1, request.popular));
+                if (request.inTabs) requests.append(SearchRequest(SearchRequest::request_tabs, predicate, QString(), -1, request.popular));
+                if (request.inComputer) requests.append(SearchRequest(SearchRequest::request_computer, predicate, QString(), -1, request.popular));
             }
         }
     } else if (!request.genres.isEmpty()) {
