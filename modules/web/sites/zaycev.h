@@ -88,6 +88,7 @@ namespace Grabber {
 
                         song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
                         song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
+                        song_obj.insert(skip_info_key, true);
 
                         QString artist = (*song) -> find(".musicset-track__artist a").text();
                         QString title = (*song) -> find(".musicset-track__track-name a").text();
