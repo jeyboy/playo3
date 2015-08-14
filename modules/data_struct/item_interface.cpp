@@ -135,7 +135,14 @@ QVariant IItem::data(int column) const {
                 params.insert(Key::proccessing, is(proccessing));
 
                 int iType = itemType();
-                if (iType == WEB_ITEM && subtipe() == fourshared) iType = FOURSHARED_ITEM;
+                if (iType == WEB_ITEM) {
+                    switch(subtipe()) {
+                        case fourshared: {iType = FOURSHARED_ITEM; break;}
+                        case zaycev: {iType = ZAYCEV_ITEM; break;}
+                        default:;
+                    }
+                }
+
                 params.insert(Key::type, iType);
             }
             return params;

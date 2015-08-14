@@ -82,7 +82,7 @@ namespace Grabber {
 
         bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
             Logger::instance() -> startMark();
-            QNetworkReply * response = WebManager::manager() -> getSync(url);
+            QNetworkReply * response = WebManager::manager() -> openUrl(url); // some sites may redirect
             bool res = toJson(jtype, response, items, true);
             Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
             return res;

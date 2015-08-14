@@ -35,18 +35,18 @@ namespace Grabber {
             return genres;
         }
 
-        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
-            QJsonArray json;
-            if (genresList().isEmpty()) genresList();
+//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//            QJsonArray json;
+//            if (genresList().isEmpty()) genresList();
 
-            genre = genres.toString(genre_id);
-            if (genre.isEmpty()) return json;
+//            genre = genres.toString(genre_id);
+//            if (genre.isEmpty()) return json;
 
-            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-            lQuery(url_str, json, songs1, MAX_PAGE);
+//            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
+//            lQuery(url_str, json, songs1, MAX_PAGE);
 
-            return json;
-        }
+//            return json;
+//        }
 
         // rus letters has specific presentation
 //        QJsonArray byChar(QChar /*target_char*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
@@ -75,13 +75,16 @@ namespace Grabber {
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
+            parser.output();
             bool result = false;
 
             switch(jtype) {
                 case songs1: {
-                    Html::Set songs = parser.find(".musicset-track-list__items .musicset-track[class!'track-is-banned']"); //.track-is-banned // banned track is not playable for some countries
+                    Html::Set songs = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                        if ((*song) -> hasClass(QStringLiteral("track-is-banned"))) continue;
+
                         QJsonObject song_obj;
 
                         song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
@@ -110,7 +113,7 @@ namespace Grabber {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, int count) { // 47 items per page
             // this part is to ugly
             QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
             url.setQuery(QStringLiteral("query_search=") % predicate);
@@ -118,7 +121,7 @@ namespace Grabber {
 
             QJsonArray json;
 
-            lQuery(url_str, json, songs1, 3/*MAX_PAGE*/); // 3 pages at this time // if pagination overlimited - 302 status received
+            lQuery(url_str, json, songs1, 2/*MAX_PAGE*/); // 2 pages at this time // if pagination overlimited - 302 status received
 
             while(json.size() > count)
                 json.removeLast();

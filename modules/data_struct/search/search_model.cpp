@@ -176,6 +176,9 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::request_other: {
                 QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
+
+                items = Grabber::Zaycev::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::zaycev, items, parent));
             break;}
         }
     }

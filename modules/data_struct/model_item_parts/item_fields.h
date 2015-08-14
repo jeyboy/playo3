@@ -36,7 +36,8 @@ namespace Playo3 {
     enum WebSubType {
         none = 0,
         myzuka,
-        fourshared
+        fourshared,
+        zaycev
     };
 
     class ItemFields : public ItemState {

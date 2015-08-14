@@ -150,6 +150,10 @@ namespace Html {
             newTag -> addAttr(nm, val); val.clear();
         }
 
+        inline bool hasClass(QString class_name) {
+            return attrs[class_token].split(split_token, QString::SkipEmptyParts).contains(class_name);
+        }
+
         bool validTo(const Selector * selector);
         Set & backwardFind(Selector * selector, Set & set);
         QHash<QString, QString> & backwardFindLinks(Selector * selector, QHash<QString, QString> & links);
