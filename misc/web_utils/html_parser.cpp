@@ -247,9 +247,12 @@ namespace Html {
 
                     case content: {
                         switch(*ch) {
-                            case open_tag: { // if current tag is javascript - acts as default
-                                if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
-                                state = tag;
+                            case open_tag: {
+                                if (last == close_tag_predicate) curr.append(*ch); // javascript comments
+                                else {
+                                    if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
+                                    state = tag;
+                                }
                             break;}
                             case code_start: { curr.append(parseCode(device, ch)); break; }
                             case space: if (curr.isEmpty()) continue;

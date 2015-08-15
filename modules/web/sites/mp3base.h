@@ -201,10 +201,9 @@ namespace Grabber {
 
         inline QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);
-            parser.output();
 
-
-//            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
+            QString url = parser.find("#player_content script").text();
+            return url.section("mp3:\"", 1).section("\"", 0, 0);
         }
 
         QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, int count) {
