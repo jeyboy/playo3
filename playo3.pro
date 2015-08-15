@@ -149,7 +149,8 @@ SOURCES += main.cpp\
     modules/web/storages/fourshared/fourshared_api.cpp \
     modules/web/storages/fourshared/fourshared_api_keys.cpp \
     modules/web/sites/exua.cpp \
-    modules/web/sites/zaycev.cpp
+    modules/web/sites/zaycev.cpp \
+    modules/web/sites/mp3base.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -303,7 +304,8 @@ HEADERS  += playo.h \
     modules/web/storages/fourshared/fourshared_request_api.h \
     modules/web/storages/fourshared/fourshared_api_keys.h \
     modules/web/sites/exua.h \
-    modules/web/sites/zaycev.h
+    modules/web/sites/zaycev.h \
+    modules/web/sites/mp3base.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

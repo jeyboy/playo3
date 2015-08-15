@@ -103,6 +103,22 @@ namespace Html {
             const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
             return text ? text -> attrs.value(text_block_token) : QString();
         }
+        inline QString toText() const {
+            if (_name == text_block_token)
+                return attrs.value(text_block_token);
+            else {
+                QString result;
+
+                for(Set::ConstIterator tag = tags.cbegin(); tag != tags.cend(); tag++)
+                    result += (*tag) -> toText();
+
+                return result;
+            }
+
+            const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
+            return text ? text -> attrs.value(text_block_token) : QString();
+        }
+
         inline QString link() const { return attrs.value(href_token); }
 
         inline bool is_link() { return _name == QStringLiteral("a"); }
