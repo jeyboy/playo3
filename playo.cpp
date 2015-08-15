@@ -79,20 +79,15 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    qDebug() << set;
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
-//    QFile f("F:/test_page/home.htm");
-//    if (f.open(QFile::ReadOnly)) {
-//        QElapsedTimer t2;
-//        t2.start();
-//        Html::Document p(&f);
-//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-//        p.output();
-//        QElapsedTimer t8;
-//        t8.start();
-//        Html::Set set = p.find(QStringLiteral("div[itemprop='tracks']"));
-//        qDebug() << set << t8.nsecsElapsed() << t8.elapsed() << "ms";
-
-//        f.close();
-//    }
+    QFile f("F:/test_page/Player - So sehr dabei - Clueso - MP3base.htm");
+    if (f.open(QFile::ReadOnly)) {
+        QElapsedTimer t2;
+        t2.start();
+        Html::Document p(&f);
+        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
+        p.output();
+        f.close();
+    }
 }
 
 Playo::~Playo() {

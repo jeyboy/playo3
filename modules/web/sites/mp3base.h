@@ -163,14 +163,16 @@ namespace Grabber {
                         QJsonObject song_obj;
 
                         QString link = (*song) -> find(".download_icon").link();
-                        link = link.split(QRegularExpression("\(\)"))[1]; // need to test this
+                        if (link.isEmpty()) continue;
 
-                        song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/download/?song=") % link));
-                        song_obj.insert(duration_key, (*song) -> childTag("td", 4) -> toText(););
+                        link = link.section('(', 1).section(')', 0, 0);
+
+                        song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
+                        song_obj.insert(duration_key, (*song) -> childTag("td", 5) -> toText());
                         song_obj.insert(skip_info_key, true);
 
-                        QString artist = (*song) -> childTag("td", 1) -> toText();
-                        QString title = (*song) -> childTag("td", 0) -> toText();
+                        QString artist = (*song) -> childTag(QStringLiteral("td"), 2) -> toText();
+                        QString title = (*song) -> childTag(QStringLiteral("td"), 1) -> toText();
                         title = artist % QStringLiteral(" - ") % title;
                         song_obj.insert(title_key, title);
 
@@ -198,6 +200,10 @@ namespace Grabber {
         }
 
         inline QString refresh_postprocess(QNetworkReply * reply) {
+            Html::Document parser(reply);
+            parser.output();
+
+
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
 

@@ -247,7 +247,7 @@ namespace Html {
 
                     case content: {
                         switch(*ch) {
-                            case open_tag: {
+                            case open_tag: { // if current tag is javascript - acts as default
                                 if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
                                 state = tag;
                             break;}

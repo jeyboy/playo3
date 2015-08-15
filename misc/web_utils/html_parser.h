@@ -128,10 +128,8 @@ namespace Html {
         inline Tag * childTag(QString name_predicate, int pos = 0) const {
             Set::ConstIterator tag = tags.cbegin();
             for(int i = 0; tag != tags.cend(); tag++) {
-                if ((*tag) -> name() == name_predicate) {
-                    if (i == pos) return (*tag);
-                    i++;
-                }
+                if ((*tag) -> name() == name_predicate)
+                    if (i++ == pos) return (*tag);
             }
 
             return 0;

@@ -37,7 +37,8 @@ namespace Playo3 {
         none = 0,
         myzuka,
         fourshared,
-        zaycev
+        zaycev,
+        mp3base
     };
 
     class ItemFields : public ItemState {
