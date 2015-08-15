@@ -219,7 +219,7 @@ namespace Html {
 
     public:
         inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags) { parse(device); }
-        inline Document(QString & str, Flags parse_flags = skip_comment) : flags(parse_flags) {
+        inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags) {
             QByteArray ar = str.toUtf8();
             QBuffer stream(&ar);
             stream.open(QIODevice::ReadOnly);

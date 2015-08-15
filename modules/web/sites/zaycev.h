@@ -3,7 +3,7 @@
 
 #include "igrabber_api.h"
 
-#define ITEMS_PER_PAGE 50
+#define ITEMS_PER_PAGE 47
 #define MAX_PAGES_PER_ARTIST 2
 
 // store all selectors in global variables
