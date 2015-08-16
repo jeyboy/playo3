@@ -184,6 +184,9 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
                 items = Grabber::Mp3Base::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::mp3base, items, parent));
+
+                items = Grabber::PromoDj::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::promodj, items, parent));
             break;}
         }
     }

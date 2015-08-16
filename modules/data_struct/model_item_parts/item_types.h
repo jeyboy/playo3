@@ -13,6 +13,7 @@ namespace Playo3 {
         #define WEB_ITEM 800
         #define FOURSHARED_ITEM 801
         #define ZAYCEV_ITEM 802
+        #define PROMODJ_ITEM 803
     }
 
     #define SHARE_TYPE_VK QStringLiteral("vk")

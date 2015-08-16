@@ -62,6 +62,9 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(FOURSHARED_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/fourshared_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     icons.insert(ZAYCEV_ITEM, QPixmap(QStringLiteral(":/items/zaycev_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     icons.insert(ZAYCEV_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/zaycev_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(PROMODJ_ITEM, QPixmap(QStringLiteral(":/items/promodj_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(PROMODJ_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/promodj_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {

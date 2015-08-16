@@ -14,8 +14,8 @@ namespace Grabber {
         inline static void close() { delete self; }
 
         TargetGenres genresList() {
-//            if (genres.isEmpty())
-//                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
+            if (genres.isEmpty())
+                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
 
             return genres;
         }
@@ -58,47 +58,45 @@ namespace Grabber {
         QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+            Html::Document parser(reply);
             bool result = false;
 
             switch(jtype) {
                 case songs1: {
-                    QJsonObject jobj = WebManager::replyToJson(reply);
-                    //jobj.value("perpage") // 10
-                    //jobj.value("total") // 500
+                    // http://promodj.com/Iololo/remixes/5502646/Molchish_qaz
+                    // http://promodj.com/prelisten/5502646/Molchish_qaz.mp3
 
-                    QJsonArray results = jobj.value(QStringLiteral("results")).toArray();
+                    Html::Set songs = parser.find("#content .track2");
 
-                    for(QJsonArray::Iterator item = results.begin(); item != results.end(); item++) {
+                    for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject song_obj;
 
-                        Html::Document parser((*item).value(QStringLiteral("html")).toString());
-                        QString link = parser.find("a.playerr_bigdownloadbutton").link();
+                        Html::Tag * title = (*song) -> find(".title a").first();
+                        QString link = (*song) -> find(".playerr_bigdownloadbutton a").link();
+                        if (link.isEmpty()) {
+                            link = title -> link();
+                            link = link.section('/', 0, 2) % QStringLiteral("/prelisten/") % link.section('/', 5);
+                        }
 
-                        if (link.endsWith(QStringLiteral("buy=1")))
-                            song_obj.insert(refresh_key, link);
-                        else
-                            song_obj.insert(url_key, link);
-
+                        song_obj.insert(url_key, link);
+                        song_obj.insert(title_key, title -> text());
                         song_obj.insert(skip_info_key, true);
 
-                        song_obj.insert(title_key, parser.find(".title a").text());
-
-                        qDebug() << song_obj;
                         json << song_obj;
                     }
 
-                    result = !results.isEmpty();
+                    result = !songs.isEmpty();
                 }
 
                 case genres1: {
-//                    Html::Document parser(reply);
-//                    Html::Set links = parser.find("a.genre");
+                    Html::Set links = parser.find(".styles_tagcloud a");
 
-//                    for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
-//                        QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
-//                        genres.addGenre((*link) -> text(), list[1]); // need to using alias as a part of link
-//                    }
-//                    result = !links.isEmpty();
+                    for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
+                        QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
+                        if (list.length() > 1)
+                            genres.addGenre((*link) -> text(), list[1]);
+                    }
+                    result = !links.isEmpty();
                 }
 
                 default: ;
@@ -109,18 +107,22 @@ namespace Grabber {
         }
 
 //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
-        inline QString refresh_postprocess(QNetworkReply * reply) {
-            Html::Document parser(reply);
+//        inline QString refresh_postprocess(QNetworkReply * reply) {
+//            Html::Document parser(reply);
 
-            QString url = parser.find("#flash_prelisten script").text();
-            return url.section("URL\":\"", 1).section("\"", 0, 0);
-        }
+//            QString url = parser.find("#flash_prelisten script").text();
+//            return url.section("URL\":\"", 1).section("\"", 0, 0);
+//        }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, int count) {
-            QString url_str = baseUrlStr(QStringLiteral("/search?searchfor=%1&mode=audio&sortby=relevance&period=all&results=1&page=%2")).arg(QUrl::toPercentEncoding(predicate), page_offset_key);
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, QString & genre, int /*genre_id*/, int count) {
+            // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
+
+            QString alias = genresList().toAlias(genre);
+            QString url_str = baseUrlStr(QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
+                        (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, QUrl::toPercentEncoding(predicate), page_offset_key);
 
             QJsonArray json;
-            lQuery(url_str, json, songs1, 10); // ten page at this time ~ 100 items
+            lQuery(url_str, json, songs1, 10); // ten page at this time
 
             while(json.size() > count)
                 json.removeLast();

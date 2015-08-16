@@ -31,7 +31,7 @@ namespace Grabber {
 
         virtual QJsonArray search(QString & predicate, QString & genre, int genre_id, bool is_popular, bool by_artist, int count) {
             if (!predicate.isEmpty()) {
-                return search_postprocess(predicate, by_artist, count);
+                return search_postprocess(predicate, by_artist, genre, genre_id, count);
             } else if (!genre.isEmpty())
                 return byGenre(genre, genre_id);
             else if (is_popular)
@@ -72,7 +72,7 @@ namespace Grabber {
         virtual QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
         virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
-        virtual QJsonArray search_postprocess(QString & /*url*/, bool /*by_artist*/, int /*count*/) { return QJsonArray(); }
+        virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, QString & /*genre*/, int /*genre_id*/, int /*count*/) { return QJsonArray(); }
 
         virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 

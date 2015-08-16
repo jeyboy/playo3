@@ -38,7 +38,8 @@ namespace Playo3 {
         myzuka,
         fourshared,
         zaycev,
-        mp3base
+        mp3base,
+        promodj
     };
 
     class ItemFields : public ItemState {

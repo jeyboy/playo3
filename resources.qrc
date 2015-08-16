@@ -56,6 +56,8 @@
         <file alias="process">images/items/process.png</file>
         <file alias="zaycev_item">images/items/zayc.png</file>
         <file alias="zaycev_item_on">images/items/zayc_on.png</file>
+        <file alias="promodj_item">images/items/promodj.png</file>
+        <file alias="promodj_item_on">images/items/promodj_on.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

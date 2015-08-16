@@ -139,6 +139,7 @@ QVariant IItem::data(int column) const {
                     switch(subtipe()) {
                         case fourshared: {iType = FOURSHARED_ITEM; break;}
                         case zaycev: {iType = ZAYCEV_ITEM; break;}
+                        case promodj: {iType = PROMODJ_ITEM; break;}
                         default:;
                     }
                 }
