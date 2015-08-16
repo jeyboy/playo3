@@ -88,8 +88,8 @@ namespace Grabber {
             switch(jtype) {
                 case songs1: {
                     Html::Set songs = parser.find(".mp3list .cplayer-sound-item");
-                    Html::Selector author_selector("i.cplayer-data-sound-author");
-                    Html::Selector title_selector("i.cplayer-data-sound-author");
+                    Html::Selector author_selector(".cplayer-data-sound-author");
+                    Html::Selector title_selector(".cplayer-data-sound-title");
                     Html::Selector duration_selector(".cplayer-data-sound-time");
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
@@ -104,7 +104,6 @@ namespace Grabber {
                         title = author % QStringLiteral(" - ") % title;
                         song_obj.insert(title_key, title);
 
-                        qDebug() << song_obj;
                         json << song_obj;
                     }
 
