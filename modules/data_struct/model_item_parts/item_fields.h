@@ -40,7 +40,9 @@ namespace Playo3 {
         zaycev,
         mp3base,
         promodj,
-        mp3cc
+        mp3cc,
+        mp3pm,
+        shmidt
     };
 
     class ItemFields : public ItemState {

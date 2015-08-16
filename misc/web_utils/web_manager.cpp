@@ -35,6 +35,12 @@ QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArr
     return res;
 }
 
+QNetworkReply * WebManager::postForm(QUrl url) {
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
+    return postSync(request, url.query(QUrl::FullyEncoded).toUtf8());
+}
+
 QNetworkReply * WebManager::openUrl(QUrl & url) { // TODO: need to prevent from url cicling
     QNetworkReply * m_http = getSync(QNetworkRequest(url));
 

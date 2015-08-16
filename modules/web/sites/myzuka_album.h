@@ -102,9 +102,7 @@ namespace Grabber {
 
         QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);
-
-            Html::Selector trackSelector(".options a[itemprop='audio']");
-            Html::Set tracks = parser.find(&trackSelector);
+            Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
             if (tracks.isEmpty())
                 return QString();

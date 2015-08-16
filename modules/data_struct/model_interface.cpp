@@ -37,6 +37,10 @@ bool IModel::restoreUrl(IItem * itm) {
                     newUrl = Grabber::Mp3Base::instance() -> refresh(itm -> refresh_path());
                 break;}
 
+                case Playo3::shmidt: {
+                    newUrl = Grabber::Shmidt::instance() -> refresh(itm -> refresh_path());
+                break;}
+
                 default: return false;
             }
 

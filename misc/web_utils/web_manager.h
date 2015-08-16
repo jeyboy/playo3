@@ -19,6 +19,7 @@ public:
     inline QNetworkReply * getSync(QUrl url) { return getSync(QNetworkRequest(url)); }
     inline QNetworkReply * getSync(const QNetworkRequest & request) { return synchronizeRequest(WebManager::get(request)); }
     inline QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) { return synchronizeRequest(WebManager::post(request, data)); }
+    QNetworkReply * postForm(QUrl url);
 
     inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
     inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
