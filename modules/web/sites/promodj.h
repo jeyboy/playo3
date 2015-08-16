@@ -69,7 +69,7 @@ namespace Grabber {
                         QJsonObject song_obj;
 
                         Html::Tag * title = (*song) -> find(".title a").first();
-                        QString link = (*song) -> find("a.playerr_bigdownloadbutton").link();
+                        QString link = (*song) -> find(".downloads_count a").link();
                         if (link.isEmpty()) {
                             link = title -> link();
                             link = link.section('/', 0, 2) % QStringLiteral("/prelisten/") % link.section('/', 5);
