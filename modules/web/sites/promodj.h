@@ -63,16 +63,13 @@ namespace Grabber {
 
             switch(jtype) {
                 case songs1: {
-                    // http://promodj.com/Iololo/remixes/5502646/Molchish_qaz
-                    // http://promodj.com/prelisten/5502646/Molchish_qaz.mp3
-
                     Html::Set songs = parser.find("#content .track2");
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject song_obj;
 
                         Html::Tag * title = (*song) -> find(".title a").first();
-                        QString link = (*song) -> find(".playerr_bigdownloadbutton a").link();
+                        QString link = (*song) -> find("a.playerr_bigdownloadbutton").link();
                         if (link.isEmpty()) {
                             link = title -> link();
                             link = link.section('/', 0, 2) % QStringLiteral("/prelisten/") % link.section('/', 5);
