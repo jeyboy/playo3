@@ -120,10 +120,14 @@ namespace Grabber {
         }
 
         QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) { // 47 items per page
-            // this part is to ugly
-            QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
-            url.setQuery(QStringLiteral("query_search=") % predicate);
-            QString url_str = url.toString() % QStringLiteral("&page=") % page_offset_key;
+//            // this part is to ugly
+//            QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
+//            url.setQuery(QStringLiteral("query_search=") % predicate);
+//            QString url_str = url.toString() % QStringLiteral("&page=") % page_offset_key;
+            QString url_str = baseUrlStr(QStringLiteral("/search.html?query_search=%1&page=%2").arg(
+                QUrl::toPercentEncoding(predicate),
+                page_offset_key
+            ));
 
             QJsonArray json;
 

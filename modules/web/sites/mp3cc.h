@@ -98,7 +98,6 @@ namespace Grabber {
                         QString title = titles.first() -> text() % QStringLiteral(" - ") % titles.last() -> text();
                         song_obj.insert(title_key, title);
 
-                        qDebug() << song_obj;
                         json << song_obj;
                     }
 

@@ -152,7 +152,8 @@ SOURCES += main.cpp\
     modules/web/sites/zaycev.cpp \
     modules/web/sites/mp3base.cpp \
     modules/web/sites/promodj.cpp \
-    modules/web/sites/mp3cc.cpp
+    modules/web/sites/mp3cc.cpp \
+    modules/web/sites/mp3pm.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -309,7 +310,8 @@ HEADERS  += playo.h \
     modules/web/sites/zaycev.h \
     modules/web/sites/mp3base.h \
     modules/web/sites/promodj.h \
-    modules/web/sites/mp3cc.h
+    modules/web/sites/mp3cc.h \
+    modules/web/sites/mp3pm.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
