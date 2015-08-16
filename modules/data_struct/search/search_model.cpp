@@ -176,17 +176,20 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 parent -> backPropagateItemsCountInBranch(proceedTabs(r, parent));
             break;}
             case SearchRequest::request_other: {
-                QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                QJsonArray items = Grabber::MyzukaAlbum::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::myzuka, items, parent));
 
-                items = Grabber::Zaycev::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                items = Grabber::Zaycev::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::zaycev, items, parent));
 
-                items = Grabber::Mp3Base::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                items = Grabber::Mp3Base::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::mp3base, items, parent));
 
-                items = Grabber::PromoDj::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.limit(DEFAULT_LIMIT_AMOUNT));
+                items = Grabber::PromoDj::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
                 parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::promodj, items, parent));
+
+                items = Grabber::Mp3cc::instance() -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
+                parent -> backPropagateItemsCountInBranch(proceedGrabberList(Playo3::mp3cc, items, parent));
             break;}
         }
     }

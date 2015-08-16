@@ -111,7 +111,7 @@ namespace Grabber {
 //            return url.section("URL\":\"", 1).section("\"", 0, 0);
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, QString & genre, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & genre, int /*genre_id*/, int count) {
             // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
             QString alias = genresList().toAlias(genre);

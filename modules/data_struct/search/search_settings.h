@@ -64,6 +64,7 @@ struct SearchRequest {
         switch(obj) {
             case request_vk: return QStringLiteral("VK");
             case request_sc: return QStringLiteral("SC");
+            case request_4shared: return QStringLiteral("4shared");
             case request_computer: return QStringLiteral("Computer");
             case request_tabs: return QStringLiteral("Tabs");
             default: return QStringLiteral("Other");

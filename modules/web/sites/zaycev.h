@@ -81,17 +81,23 @@ namespace Grabber {
                 case songs1: {
                     Html::Set songs = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
 
+                    QString ban_class = QStringLiteral("track-is-banned");
+                    QString data_url = QStringLiteral("data-url");
+
+                    Html::Selector artist_selector(".musicset-track__artist a");
+                    Html::Selector title_selector(".musicset-track__track-name a");
+
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                        if ((*song) -> hasClass(QStringLiteral("track-is-banned"))) continue;
+                        if ((*song) -> hasClass(ban_class)) continue;
 
                         QJsonObject song_obj;
 
-                        song_obj.insert(refresh_key, baseUrlStr((*song) -> value(QStringLiteral("data-url"))));
+                        song_obj.insert(refresh_key, baseUrlStr((*song) -> value(data_url)));
                         song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
                         song_obj.insert(skip_info_key, true);
 
-                        QString artist = (*song) -> find(".musicset-track__artist a").text();
-                        QString title = (*song) -> find(".musicset-track__track-name a").text();
+                        QString artist = (*song) -> find(&artist_selector).text();
+                        QString title = (*song) -> find(&title_selector).text();
                         title = artist % QStringLiteral(" - ") % title;
                         song_obj.insert(title_key, title);
 
@@ -113,7 +119,7 @@ namespace Grabber {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, QString & /*genre*/, int /*genre_id*/, int count) { // 47 items per page
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) { // 47 items per page
             // this part is to ugly
             QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
             url.setQuery(QStringLiteral("query_search=") % predicate);
