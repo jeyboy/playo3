@@ -10,15 +10,12 @@
 namespace Grabber {
     class Jetune : public IGrabberApi {
     public:
+        inline QString name() { return QStringLiteral("Jetune"); }
+
         static Jetune * instance();
         inline static void close() { delete self; }
 
-        TargetGenres genresList() {
-            if (genres.isEmpty())
-                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
-
-            return genres;
-        }
+        void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
 //        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
@@ -52,14 +49,15 @@ namespace Grabber {
 //            //TODO: stop if result not contains elements
 //        }
 
-        QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+        inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
+        inline QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             qDebug() << "HTML--------------------------------------------";
             Html::Document parser(reply);
+            parser.output();
             bool result = false;
 
             switch(jtype) {

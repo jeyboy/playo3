@@ -107,6 +107,8 @@ namespace Grabber {
         static Mp3Base * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("Mp3Base"); }
+
         TargetGenres genresList() {
             if (genres.isEmpty())
                 sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);

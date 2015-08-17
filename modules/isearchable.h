@@ -1,0 +1,68 @@
+#ifndef ISEARCHABLE
+#define ISEARCHABLE
+
+#include <qdebug.h>
+#include <qurl.h>
+#include <qstringlist.h>
+#include <qjsonobject.h>
+#include <qjsonarray.h>
+
+#include "misc/logger.h"
+#include "misc/web_utils/web_manager.h"
+#include "media/genres/web/target_genres.h"
+
+#define DEFAULT_PREDICATE_NAME QString()
+#define REQUEST_DELAY 200 // ms
+#define MAX_PAGE 999
+#define STYLES_MAX_PAGE 50
+
+class ISearchable {
+public:
+    QString encodeStr(QString & str) { return QUrl::toPercentEncoding(str); }
+
+    enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
+
+    virtual QString name() const = 0;
+
+    virtual QJsonArray search(QString & predicate, QString & genre, int genre_id, bool is_popular, bool by_artist, bool by_song, int count) {
+        if (!predicate.isEmpty()) {
+            return search_postprocess(predicate, by_artist, by_song, genre, genre_id, count);
+        } else if (!genre.isEmpty())
+            return byGenre(genre, genre_id);
+        else if (is_popular)
+            return popular();
+        else return QJsonArray();
+    }
+
+    inline TargetGenres genresList() const {
+        if (genres.isEmpty()) genres_prepocessing();
+        return genres;
+    }
+
+    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_id*/) { return QJsonArray(); }
+
+    virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
+
+    virtual QJsonArray byType(ByTypeArg /*target_type*/) { return QJsonArray(); }
+
+    virtual QJsonArray popular() { return QJsonArray(); }
+
+    //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
+
+    virtual QString refresh(QString refresh_page) = 0;
+protected:
+    virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
+    QUrl baseUrl(QString predicate, QUrlQuery & query) {
+        QUrl url(baseUrlStr(predicate));
+        url.setQuery(query);
+        return url;
+    }
+    virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
+    virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int /*count*/) { return QJsonArray(); }
+    virtual genres_prepocessing() {}
+
+    TargetGenres genres;
+};
+
+#endif // ISEARCHABLE

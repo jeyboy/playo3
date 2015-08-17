@@ -15,6 +15,8 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("Myzuka"); }
+
         TargetGenres genresList() {
             if (genres.isEmpty())
                 lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);

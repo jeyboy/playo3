@@ -3,6 +3,7 @@
 #include "dockbars.h"
 
 #include <qfileinfo.h>
+#include "modules/web/sites/site_apis.h"
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
@@ -10,9 +11,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
     ui -> setupUi(this);
 
     QList<DockBar *> bars = Dockbars::instance() -> dockbars();
-    QList<DockBar *>::Iterator it = bars.begin();
-
-    for(; it != bars.end(); it++) {
+    for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
         IView * v = Dockbars::instance() -> view(*it);
         if (v) {
             IModel * mdl = (IModel *)v -> model();
@@ -25,6 +24,16 @@ SearchDialog::SearchDialog(QWidget * parent) :
             }
         }
     }
+
+    QList<Grabber::IGrabberApi *> sites = Grabber::Apis::list();
+    for(QList<IGrabberApi *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+        QListWidgetItem * item = new QListWidgetItem((*it) -> name(), ui -> sitesList);
+        item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+        item -> setCheckState(Qt::Unchecked);
+        item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) (*it)));
+        ui -> sitesList -> addItem(item);
+    }
+
 
     QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
@@ -43,8 +52,7 @@ SearchDialog::~SearchDialog() {
 }
 
 SearchSettings SearchDialog::params() {
-    SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inFourshared -> isChecked(),
-                       ui -> inOther -> isChecked(), ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
+    SearchSettings res(ui -> inSites -> isChecked(), ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
 
     int count = ui -> textPredicates -> count();
     for(int i = 0; i < count; i++)
@@ -65,6 +73,16 @@ SearchSettings SearchDialog::params() {
 
     res.popular = ui -> byPopular -> isChecked();
     res.search_in_own = ui -> byOwns -> isChecked();
+
+    if (res.inSites) {
+        int count = ui -> sitesList -> count();
+
+        for(int i = 0; i < count; i++) {
+            QListWidgetItem * item = ui -> sitesList -> item(i);
+            if (item -> checkState() == Qt::Checked)
+                res.sites.append(item -> data(Qt::UserRole + 1).value<void *>());
+        }
+    }
 
     if (res.inTabs) {
         int count = ui -> tabsList -> count();

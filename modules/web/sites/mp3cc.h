@@ -13,6 +13,8 @@ namespace Grabber {
         static Mp3cc * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("Mp3cc"); }
+
         TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
                 genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));

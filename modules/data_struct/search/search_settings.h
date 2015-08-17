@@ -10,9 +10,7 @@
 enum PredicateType { title, artist, song, tag };
 
 struct SearchSettings {   
-    inline SearchSettings(bool vk = false, bool sc = false, bool fourshared = false, bool other = false, bool tabs = false, bool comp = false)
-        : inVk(vk), inSc(sc), inFourshared(fourshared), inOther(other), inTabs(tabs), inComputer(comp), onlyOne(false)
-    {
+    inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) {
         search_in_own = false;
     }
 
@@ -28,10 +26,7 @@ struct SearchSettings {
 
     inline int limit(int def) { return onlyOne ? 1 : def; }
 
-    bool inVk;
-    bool inSc;
-    bool inFourshared;
-    bool inOther;
+    bool inSites;
     bool inTabs;
     bool inComputer;
 
@@ -41,6 +36,7 @@ struct SearchSettings {
     QHash<int, QString> vkGenres;
 
     QStringList drives;
+    QList<void *> sites;
     QList<void *> tabs;
     QStringList predicates;
     PredicateType type;

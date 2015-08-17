@@ -13,6 +13,8 @@ namespace Grabber {
         static PromoDj * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("PromoDJ"); }
+
         TargetGenres genresList() {
             if (genres.isEmpty())
                 sQuery(baseUrlStr(QStringLiteral("/music")), genres1);

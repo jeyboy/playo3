@@ -13,6 +13,8 @@ namespace Grabber {
         static Zaycev * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("Zaycev"); }
+
         TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
                 genres.addGenre(QStringLiteral("pop"), 13);

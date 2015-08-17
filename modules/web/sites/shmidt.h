@@ -13,6 +13,8 @@ namespace Grabber {
         static Shmidt * instance();
         inline static void close() { delete self; }
 
+        inline QString name() { return QStringLiteral("Shmidt"); }
+
         TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
 //                genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
