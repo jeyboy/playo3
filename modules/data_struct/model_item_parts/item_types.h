@@ -14,6 +14,7 @@ namespace Playo3 {
         #define FOURSHARED_ITEM 801
         #define ZAYCEV_ITEM 802
         #define PROMODJ_ITEM 803
+        #define JETUNE_ITEM 804
     }
 
     #define SHARE_TYPE_VK QStringLiteral("vk")

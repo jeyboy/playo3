@@ -58,6 +58,8 @@
         <file alias="zaycev_item_on">images/items/zayc_on.png</file>
         <file alias="promodj_item">images/items/promodj.png</file>
         <file alias="promodj_item_on">images/items/promodj_on.png</file>
+        <file alias="jetune_item">images/items/jetune.png</file>
+        <file alias="jetune_item_on">images/items/jetune_on.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

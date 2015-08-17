@@ -96,7 +96,6 @@ namespace Grabber {
                         song_obj.insert(skip_info_key, true);
                         song_obj.insert(title_key, (*song) -> text());
 
-                        qDebug() << song_obj;
                         json << song_obj;
                     }
 

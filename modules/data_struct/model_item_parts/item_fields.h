@@ -42,7 +42,8 @@ namespace Playo3 {
         promodj,
         mp3cc,
         mp3pm,
-        shmidt
+        shmidt,
+        jetune
     };
 
     class ItemFields : public ItemState {

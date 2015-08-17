@@ -11,6 +11,7 @@
 #include "sites/mp3cc.h"
 #include "sites/mp3pm.h"
 #include "sites/shmidt.h"
+#include "sites/jetune.h"
 
 #endif // WEB_APIS
 

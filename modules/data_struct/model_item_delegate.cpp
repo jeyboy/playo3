@@ -64,6 +64,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(ZAYCEV_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/zaycev_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     icons.insert(PROMODJ_ITEM, QPixmap(QStringLiteral(":/items/promodj_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     icons.insert(PROMODJ_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/promodj_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(JETUNE_ITEM, QPixmap(QStringLiteral(":/items/jetune_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(JETUNE_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/jetune_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
 }
 

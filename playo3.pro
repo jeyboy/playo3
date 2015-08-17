@@ -154,7 +154,8 @@ SOURCES += main.cpp\
     modules/web/sites/promodj.cpp \
     modules/web/sites/mp3cc.cpp \
     modules/web/sites/mp3pm.cpp \
-    modules/web/sites/shmidt.cpp
+    modules/web/sites/shmidt.cpp \
+    modules/web/sites/jetune.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -313,7 +314,8 @@ HEADERS  += playo.h \
     modules/web/sites/promodj.h \
     modules/web/sites/mp3cc.h \
     modules/web/sites/mp3pm.h \
-    modules/web/sites/shmidt.h
+    modules/web/sites/shmidt.h \
+    modules/web/sites/jetune.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
