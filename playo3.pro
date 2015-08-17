@@ -156,7 +156,7 @@ SOURCES += main.cpp\
     modules/web/sites/mp3pm.cpp \
     modules/web/sites/shmidt.cpp \
     modules/web/sites/jetune.cpp \
-    modules/web/sites/site_apis.cpp
+    modules/web/web_apis.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -318,7 +318,8 @@ HEADERS  += playo.h \
     modules/web/sites/shmidt.h \
     modules/web/sites/jetune.h \
     modules/web/sites/site_apis.h \
-    modules/isearchable.h
+    modules/isearchable.h \
+    modules/web/web_sub_types.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

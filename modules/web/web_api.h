@@ -8,7 +8,6 @@
 #include <QJsonArray>
 
 #include <qurl.h>
-#include <qpixmap.h>
 
 #include "dialogs/captchadialog.h"
 

@@ -13,12 +13,12 @@
 namespace Grabber {
     class Apis {
     public:
-        static QList<IGrabberApi *> list() const;
+        static QList<ISearchable *> list();
         inline static void close() {
             qDeleteAll(sites);
         }
     private:
-        static QList<IGrabberApi *> sites;
+        static QList<ISearchable *> sites;
     };
 }
 

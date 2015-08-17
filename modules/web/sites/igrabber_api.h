@@ -7,7 +7,7 @@
 #include "modules/isearchable.h"
 
 namespace Grabber {
-    class IGrabberApi : ISearchable {
+    class IGrabberApi : public ISearchable {
     public:
         enum toJsonType { songs1, songs2, artists1, artists2, genres1 };
 

@@ -3,6 +3,7 @@
 
 #include <qhash.h>
 #include <qstringlist.h>
+#include <qregularexpression.h>
 
 class IGenres {
 public:

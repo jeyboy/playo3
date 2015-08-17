@@ -6,5 +6,16 @@
 #include "socials_api/soundcloud_api.h"
 #include "sites/site_apis.h"
 
-#endif // WEB_APIS
+namespace Web {
+    class Apis {
+    public:
+        static QList<ISearchable *> list();
+        inline static void close() {
+            qDeleteAll(sites);
+        }
+    private:
+        static QList<ISearchable *> sites;
+    };
+}
 
+#endif // WEB_APIS

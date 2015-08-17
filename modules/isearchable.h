@@ -11,6 +11,8 @@
 #include "misc/web_utils/web_manager.h"
 #include "media/genres/web/target_genres.h"
 
+#include "modules/web/web_sub_types.h"
+
 #define DEFAULT_PREDICATE_NAME QString()
 #define REQUEST_DELAY 200 // ms
 #define MAX_PAGE 999
@@ -24,6 +26,8 @@ public:
 
     virtual QString name() const = 0;
 
+    virtual Playo3::WebSubType siteType() = 0;
+
     virtual QJsonArray search(QString & predicate, QString & genre, int genre_id, bool is_popular, bool by_artist, bool by_song, int count) {
         if (!predicate.isEmpty()) {
             return search_postprocess(predicate, by_artist, by_song, genre, genre_id, count);
@@ -34,7 +38,7 @@ public:
         else return QJsonArray();
     }
 
-    inline TargetGenres genresList() const {
+    inline TargetGenres genresList() {
         if (genres.isEmpty()) genres_prepocessing();
         return genres;
     }
@@ -60,7 +64,7 @@ protected:
     virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
     virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int /*count*/) { return QJsonArray(); }
-    virtual genres_prepocessing() {}
+    virtual void genres_prepocessing() {}
 
     TargetGenres genres;
 };

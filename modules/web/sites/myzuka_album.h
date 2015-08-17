@@ -43,7 +43,7 @@ namespace Grabber {
 
                 doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
 
-                QThread::msleep(GRAB_DELAY); // extra pause
+                QThread::msleep(REQUEST_DELAY); // extra pause
                 delete response;
             }
 
