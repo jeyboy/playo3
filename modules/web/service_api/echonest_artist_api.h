@@ -27,7 +27,7 @@
 //id:Taste-Profile-ID 	returns personal catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
 
 
-class EchonestArtistApi : public IApi {
+class EchonestArtistApi : virtual public IApi {
     public:
         inline virtual ~EchonestArtistApi() {}
 

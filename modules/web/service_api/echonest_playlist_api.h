@@ -5,7 +5,7 @@
 
 #define DEFAULT_PLAYLIST_LIMIT_AMOUNT 100
 
-class EchonestPlaylistApi : public IApi {
+class EchonestPlaylistApi : virtual public IApi {
     public:
         inline virtual ~EchonestPlaylistApi() {}
 

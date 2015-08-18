@@ -13,7 +13,7 @@ namespace Grabber {
         static Shmidt * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Shmidt"); }
+        inline QString name() const { return QStringLiteral("Shmidt"); }
         inline Playo3::WebSubType siteType() { return Playo3::shmidt_site; }
 
         TargetGenres genresList() { // manual init at this time

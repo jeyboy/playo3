@@ -13,7 +13,7 @@ namespace Grabber {
         static PromoDj * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("PromoDJ"); }
+        inline QString name() const { return QStringLiteral("PromoDJ"); }
         inline Playo3::WebSubType siteType() { return Playo3::promodj_site; }
 
         TargetGenres genresList() {

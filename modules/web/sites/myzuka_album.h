@@ -15,7 +15,7 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Myzuka"); }
+        inline QString name() const { return QStringLiteral("Myzuka"); }
         inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
 
         TargetGenres genresList() {

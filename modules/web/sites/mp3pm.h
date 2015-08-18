@@ -13,7 +13,7 @@ namespace Grabber {
         static Mp3pm * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Mp3pm"); }
+        inline QString name() const { return QStringLiteral("Mp3pm"); }
         inline Playo3::WebSubType siteType() { return Playo3::mp3pm_site; }
 
         TargetGenres genresList() { // manual init at this time

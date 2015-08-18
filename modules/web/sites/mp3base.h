@@ -107,7 +107,7 @@ namespace Grabber {
         static Mp3Base * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Mp3Base"); }
+        inline QString name() const { return QStringLiteral("Mp3Base"); }
         inline Playo3::WebSubType siteType() { return Playo3::mp3base_site; }
 
         TargetGenres genresList() {

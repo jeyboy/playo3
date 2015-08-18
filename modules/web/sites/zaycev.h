@@ -13,7 +13,7 @@ namespace Grabber {
         static Zaycev * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Zaycev"); }
+        inline QString name() const { return QStringLiteral("Zaycev"); }
         inline Playo3::WebSubType siteType() { return Playo3::zaycev_site; }
 
         TargetGenres genresList() { // manual init at this time

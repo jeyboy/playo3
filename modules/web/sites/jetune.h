@@ -10,7 +10,7 @@
 namespace Grabber {
     class Jetune : public IGrabberApi {
     public:
-        inline QString name() { return QStringLiteral("Jetune"); }
+        inline QString name() const { return QStringLiteral("Jetune"); }
         inline Playo3::WebSubType siteType() { return Playo3::jetune_site; }
 
         static Jetune * instance();

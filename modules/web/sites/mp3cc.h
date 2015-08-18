@@ -13,7 +13,7 @@ namespace Grabber {
         static Mp3cc * instance();
         inline static void close() { delete self; }
 
-        inline QString name() { return QStringLiteral("Mp3cc"); }
+        inline QString name() const { return QStringLiteral("Mp3cc"); }
         inline Playo3::WebSubType siteType() { return Playo3::mp3cc_site; }
 
         TargetGenres genresList() { // manual init at this time

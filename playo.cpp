@@ -102,8 +102,7 @@ Playo::~Playo() {
         Settings::close();
 //        Genre::close();
 
-        Vk::Api::close();
-        Soundcloud::Api::close();
+        Web::Apis::close();
     ///////////////////////////////////////////////
 
     delete settings;
@@ -212,7 +211,6 @@ void Playo::closeEvent(QCloseEvent * e) {
     Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
 
     MusicGenres::close();
-    Web::Apis::close();
     MainWindow::closeEvent(e);
 }
 

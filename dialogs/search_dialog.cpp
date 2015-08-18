@@ -25,15 +25,26 @@ SearchDialog::SearchDialog(QWidget * parent) :
         }
     }
 
-    QList<ISearchable *> sites = Web::Apis::list().values();
-    for(QList<ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
-        QListWidgetItem * item = new QListWidgetItem((*it) -> name(), ui -> sitesList);
+    QHash<Playo3::WebSubType, ISearchable *> sites = Web::Apis::list();
+    QListWidgetItem * item = new QListWidgetItem(QString(""));
+    item -> setFlags(Qt::NoItemFlags);
+    ui -> sitesList -> addItem(item);
+
+    for(QHash<Playo3::WebSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+        QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
         item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
         item -> setCheckState(Qt::Unchecked);
-        item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) (*it)));
-        ui -> sitesList -> addItem(item);
-    }
+        item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
 
+        switch(it.key()) {
+            case Playo3::vk_site:
+            case Playo3::sc_site:
+            case Playo3::fourshared_site: {
+                ui -> sitesList -> insertItem(0, item);
+            break;}
+            default: ui -> sitesList -> addItem(item);
+        }
+    }
 
     QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
@@ -195,4 +206,31 @@ void SearchDialog::on_tabsList_itemClicked(QListWidgetItem * item) {
     ui -> inTabs -> blockSignals(true);
     ui -> inTabs -> setChecked(st);
     ui -> inTabs -> blockSignals(false);
+}
+
+void SearchDialog::on_inSites_toggled(bool checked) {
+    int count = ui -> sitesList -> count();
+
+    Qt::CheckState st = checked ? Qt::Checked : Qt::Unchecked;
+
+    for(int i = 0; i < count; i++) {
+        QListWidgetItem * item = ui -> sitesList -> item(i);
+        if (item -> flags() & Qt::ItemIsUserCheckable)
+            item -> setCheckState(st);
+    }
+}
+
+void SearchDialog::on_sitesList_itemClicked(QListWidgetItem * item) {
+    bool st = item -> checkState() == Qt::Checked;
+
+    if (!st) {
+        int count = ui -> sitesList -> count();
+
+        for(int i = 0; i < count; i++)
+            st |= ui -> sitesList -> item(i) -> checkState() == Qt::Checked;
+    }
+
+    ui -> inSites -> blockSignals(true);
+    ui -> inSites -> setChecked(st);
+    ui -> inSites -> blockSignals(false);
 }

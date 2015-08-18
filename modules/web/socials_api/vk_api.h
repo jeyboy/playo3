@@ -11,7 +11,7 @@ namespace Vk {
     class Api : public WebApi, public TeuAuth, public RequestApi {
         Q_OBJECT
     public:
-        inline QString name() const { return QStringLiteral("vk"); }
+        inline QString name() const { return QStringLiteral("Vk"); }
         inline Playo3::WebSubType siteType() { return Playo3::vk_site; }
         inline QUrlQuery genDefaultParams() {
             QUrlQuery query = QUrlQuery();

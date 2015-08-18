@@ -15,7 +15,7 @@
 //        static Exua * instance();
 //        inline static void close() { delete self; }
 
-//        inline QString name() { return QStringLiteral("EXua"); }
+//        inline QString name() const { return QStringLiteral("EXua"); }
 //        inline Playo3::WebSubType siteType() { return Playo3::exua_site; }
 
 //        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
