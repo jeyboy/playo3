@@ -5,6 +5,7 @@
 
 class TargetGenres : public IGenres {
 public:
+    inline void addGenre(QString name) { addGenre(name, genres.size()); }
     inline void addGenre(QString name, int code) { genres.insert(name, code); }
     inline void addGenre(QString name, int code, QString alias) { addGenre(name, code); aliases.insert(code, alias); }
     inline void addGenre(QString name, QString alias) {

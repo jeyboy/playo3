@@ -114,11 +114,11 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
 
-                switch (r.search_interface -> siteType()) { // unificate vk and sc search requests
+                switch (iface -> siteType()) { // unificate vk and sc search requests
                     case Playo3::vk_site: {
                         QJsonArray items;
                         if (r.spredicate.isEmpty() && r.popular) {
-                            items = Vk::Api::instance() -> audioPopular(true, r.sgenre_id);
+                            items = Vk::Api::instance() -> audioPopular(true, r.sgenre);
                         } else
                             items = Vk::Api::instance() -> audioSearch(
                                 r.spredicate, request.type == artist, request.search_in_own, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT)

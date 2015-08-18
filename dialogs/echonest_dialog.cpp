@@ -296,12 +296,7 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
 
 QStringList EchonestDialog::genresList() {
     QStringList styles; styles << QStringLiteral("");
-
-    QJsonArray genres = EchonestApi::instance() -> genresList();
-
-    for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
-        styles.append((*genre).toObject().value(QStringLiteral("name")).toString());
-
+    styles.append(EchonestApi::instance() -> genresList().genresList());
     return styles;
 }
 

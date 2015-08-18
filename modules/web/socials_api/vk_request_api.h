@@ -319,7 +319,6 @@ namespace Vk {
         QUrl audioPopularUrl(bool onlyEng, int genreId) {
             QUrlQuery query = genDefaultParams();
 
-
             setParam(query, code_key,
                QString(
                    "var recomendations = API.audio.getPopular({"
@@ -332,8 +331,8 @@ namespace Vk {
 
             return baseUrl(execute_key, query);
         }
-        QJsonArray audioPopular(bool onlyEng, int genreId) {
-            return sQuery(audioPopularUrl(onlyEng, genreId), extract).value(QStringLiteral("audio_list")).toArray();
+        QJsonArray audioPopular(bool onlyEng, const QString genre) {
+            return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).value(QStringLiteral("audio_list")).toArray();
         }
 
         QUrl audioRefreshUrl(QStringList & uids) {

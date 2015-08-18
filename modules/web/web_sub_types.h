@@ -3,6 +3,7 @@
 
 namespace Playo3 {
     enum WebSubType {
+        echonest_site = -3,
         vk_site = -2,
         sc_site = -1,
         none = 0,
