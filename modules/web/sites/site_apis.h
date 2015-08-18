@@ -10,16 +10,4 @@
 #include "shmidt.h"
 #include "jetune.h"
 
-namespace Grabber {
-    class Apis {
-    public:
-        static QList<ISearchable *> list();
-        inline static void close() {
-            qDeleteAll(sites);
-        }
-    private:
-        static QList<ISearchable *> sites;
-    };
-}
-
 #endif // SITE_APIS

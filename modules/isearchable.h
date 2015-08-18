@@ -4,6 +4,7 @@
 #include <qdebug.h>
 #include <qurl.h>
 #include <qstringlist.h>
+#include <qstringbuilder.h>
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
@@ -14,12 +15,14 @@
 #include "modules/web/web_sub_types.h"
 
 #define DEFAULT_PREDICATE_NAME QString()
-#define REQUEST_DELAY 200 // ms
+#define REQUEST_DELAY 260 // ms
 #define MAX_PAGE 999
 #define STYLES_MAX_PAGE 50
 
 class ISearchable {
 public:
+    inline virtual ~ISearchable() {}
+
     QString encodeStr(QString & str) { return QUrl::toPercentEncoding(str); }
 
     enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };

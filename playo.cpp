@@ -212,7 +212,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
 
     MusicGenres::close();
-    Grabber::Apis::close();
+    Web::Apis::close();
     MainWindow::closeEvent(e);
 }
 

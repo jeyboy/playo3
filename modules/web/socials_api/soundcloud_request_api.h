@@ -19,7 +19,7 @@ namespace Soundcloud {
         inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, QStringLiteral("genres"), genre); }
         inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, QStringLiteral("order"), hottest ? QStringLiteral("hotness") : QStringLiteral("created_at")); }
     public:
-    //    inline ~SoundcloudRequestApi() {}
+        inline virtual ~RequestApi() {}
 
         /////////////////
         /// AUTH

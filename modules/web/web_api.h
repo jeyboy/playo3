@@ -25,7 +25,6 @@ public:
 
     inline QString getError() { return error; }
 
-    virtual QString name() const = 0;
     virtual QString authUrl() = 0;
 
     virtual bool isConnected() = 0;

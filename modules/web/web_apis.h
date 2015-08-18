@@ -9,12 +9,13 @@
 namespace Web {
     class Apis {
     public:
-        static QList<ISearchable *> list();
+        static QHash<Playo3::WebSubType, ISearchable *> list();
+        inline static ISearchable * engine(Playo3::WebSubType item_type) { return sites.value(item_type); }
         inline static void close() {
             qDeleteAll(sites);
         }
     private:
-        static QList<ISearchable *> sites;
+        static QHash<Playo3::WebSubType, ISearchable *> sites;
     };
 }
 

@@ -66,7 +66,7 @@ struct SearchRequest {
             else
                 return spredicate;
         } else if (has_genre) return sgenre;
-        else if (popular && request_type == remote) return QStringLiteral("Popular");
+        else if (popular && search_type == remote) return QStringLiteral("Popular");
         else return QStringLiteral("All");
     }
 };

@@ -3,22 +3,11 @@
 
 //http://musicmachinery.com/music-apis/
 
-#include "misc/logger.h"
-#include "misc/web_utils/web_manager.h"
-
-#include <qstringbuilder.h>
-
-#include <qurl.h>
-#include <qurlquery.h>
-#include <qstringlist.h>
-
-#include <qjsonobject.h>
-#include <qjsonarray.h>
+#include "modules/isearchable.h"
 
 //#include "misc/web_utils/json.h"
 
 #define DEFAULT_LIMIT_AMOUNT 99999
-#define REQUEST_DELAY 260 // ms // 250
 
 struct QueryRules {
     QueryRules(QString _field, int _limit = 5, int _count = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
@@ -28,20 +17,12 @@ struct QueryRules {
     int count, offset, limit, fact_count;
 };
 
-class IApi {
+class IApi : public ISearchable {
 public:
     static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
+    inline virtual ~IApi() {}
 protected:
     enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
-
-    virtual QString baseUrlStr(QString & predicate) = 0;
-    QUrl baseUrl(QString predicate, QUrlQuery & query) {
-        QUrl url(baseUrlStr(predicate));
-        url.setQuery(query);
-        return url;
-    }
-
-    virtual QUrlQuery genDefaultParams() = 0;
 
     virtual bool endReached(QJsonObject & response, int offset) = 0;
     virtual int requestLimit() const = 0;
