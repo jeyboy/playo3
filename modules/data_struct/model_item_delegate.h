@@ -10,7 +10,9 @@
 #include "model_item_parts/item_fields.h"
 #include "model_item_parts/item_types.h"
 
-#define SELECTION_ITER 9
+#define SELECTION_ITER 99
+#define PIXMAP(path, size) \
+    QPixmap(path).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation)
 
 class ModelItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
