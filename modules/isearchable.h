@@ -66,7 +66,7 @@ protected:
     }
     virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
-    virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*count*/) { return QJsonArray(); }
+    virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*count*/) = 0;
     virtual void genres_prepocessing() {}
 
     TargetGenres genres;

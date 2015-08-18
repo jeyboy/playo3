@@ -115,7 +115,7 @@ namespace Grabber {
 //            return url.section("mp3:\"", 1).section("\"", 0, 0);
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int count) {
             QString url_str = baseUrlStr(
                 QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                     QUrl::toPercentEncoding(predicate),

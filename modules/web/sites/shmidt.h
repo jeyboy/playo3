@@ -122,7 +122,7 @@ namespace Grabber {
                 return baseUrlStr(tracks.link());
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool by_song, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool by_song, QString & /*genre*/, int count) {
             QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                 QUrl::toPercentEncoding(predicate),
                 (by_artist ? QStringLiteral("entire") : by_song ? QStringLiteral("songtitle") : QStringLiteral("artistname"))

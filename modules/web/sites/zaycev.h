@@ -122,7 +122,7 @@ namespace Grabber {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) { // 47 items per page
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int count) { // 47 items per page
 //            // this part is to ugly
 //            QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
 //            url.setQuery(QStringLiteral("query_search=") % predicate);

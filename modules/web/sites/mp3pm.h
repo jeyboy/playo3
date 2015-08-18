@@ -124,7 +124,7 @@ namespace Grabber {
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int count) {
             QString url_str = baseUrlStr(QStringLiteral("/s/f/%1/page/%2/")).arg(
                 QUrl::toPercentEncoding(predicate),
                 page_offset_key

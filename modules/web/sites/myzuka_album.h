@@ -112,7 +112,7 @@ namespace Grabber {
             else
                 return baseUrlStr(tracks.link());
         }
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int count) {
             QUrl url = QUrl(baseUrlStr(search_path_token));
             url.setQuery(search_predicate_token % predicate);
 

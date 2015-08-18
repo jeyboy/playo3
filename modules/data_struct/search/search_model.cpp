@@ -113,7 +113,6 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
-
                 switch (iface -> siteType()) { // unificate vk and sc search requests
                     case Playo3::vk_site: {
                         QJsonArray items;
