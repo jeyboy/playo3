@@ -16,6 +16,7 @@ namespace Grabber {
         inline static void close() { delete self; }
 
         inline QString name() { return QStringLiteral("Myzuka"); }
+        inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
 
         TargetGenres genresList() {
             if (genres.isEmpty())
@@ -99,7 +100,7 @@ namespace Grabber {
             return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
         }
 
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
+        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
 
 
         QString refresh_postprocess(QNetworkReply * reply) {

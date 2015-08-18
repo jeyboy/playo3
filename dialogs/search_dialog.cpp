@@ -25,7 +25,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
         }
     }
 
-    QList<ISearchable *> sites = Grabber::Apis::list();
+    QList<ISearchable *> sites = Web::Apis::list().values();
     for(QList<ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         QListWidgetItem * item = new QListWidgetItem((*it) -> name(), ui -> sitesList);
         item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);

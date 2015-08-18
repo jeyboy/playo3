@@ -15,6 +15,7 @@ namespace Soundcloud {
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("soundcloud"); }
+        inline Playo3::WebSubType siteType() { return Playo3::sc_site; }
         inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
         QString authUrl();
 
@@ -37,7 +38,8 @@ namespace Soundcloud {
         void proceedAuthResponse(const QUrl & url);
 
     protected:
-        inline QString baseUrlStr(QString & predicate) { return base_url % predicate % ".json"; }
+        inline QString refresh(QString path) { return path; }
+        inline QString baseUrlStr(const QString & predicate) { return base_url % predicate % ".json"; }
 
         inline QString offsetKey() const { return offset_key; }
         inline QString limitKey() const { return limit_key; }

@@ -31,11 +31,11 @@ public:
 
     virtual Playo3::WebSubType siteType() = 0;
 
-    virtual QJsonArray search(QString & predicate, QString & genre, int genre_id, bool is_popular, bool by_artist, bool by_song, int count) {
+    virtual QJsonArray search(QString & predicate, QString & genre, bool is_popular, bool by_artist, bool by_song, int count) {
         if (!predicate.isEmpty()) {
-            return search_postprocess(predicate, by_artist, by_song, genre, genre_id, count);
+            return search_postprocess(predicate, by_artist, by_song, genre, count);
         } else if (!genre.isEmpty())
-            return byGenre(genre, genre_id);
+            return byGenre(genre);
         else if (is_popular)
             return popular();
         else return QJsonArray();
@@ -46,7 +46,7 @@ public:
         return genres;
     }
 
-    virtual QJsonArray byGenre(QString /*genre*/, int /*genre_id*/) { return QJsonArray(); }
+    virtual QJsonArray byGenre(const QString & /*genre*/) { return QJsonArray(); }
 
     virtual QJsonArray byChar(QChar /*target_char*/) { return QJsonArray(); }
 
@@ -58,7 +58,7 @@ public:
 
     virtual QString refresh(QString refresh_page) = 0;
 protected:
-    virtual QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) = 0;
+    virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
     QUrl baseUrl(QString predicate, QUrlQuery & query) {
         QUrl url(baseUrlStr(predicate));
         url.setQuery(query);
@@ -66,7 +66,7 @@ protected:
     }
     virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
-    virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int /*count*/) { return QJsonArray(); }
+    virtual QJsonArray search_postprocess(QString & /*predicate*/, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*count*/) { return QJsonArray(); }
     virtual void genres_prepocessing() {}
 
     TargetGenres genres;

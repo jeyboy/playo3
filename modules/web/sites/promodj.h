@@ -14,6 +14,7 @@ namespace Grabber {
         inline static void close() { delete self; }
 
         inline QString name() { return QStringLiteral("PromoDJ"); }
+        inline Playo3::WebSubType siteType() { return Playo3::promodj_site; }
 
         TargetGenres genresList() {
             if (genres.isEmpty())
@@ -57,7 +58,7 @@ namespace Grabber {
         QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
+        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);

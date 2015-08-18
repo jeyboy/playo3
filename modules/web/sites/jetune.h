@@ -11,6 +11,7 @@ namespace Grabber {
     class Jetune : public IGrabberApi {
     public:
         inline QString name() { return QStringLiteral("Jetune"); }
+        inline Playo3::WebSubType siteType() { return Playo3::jetune_site; }
 
         static Jetune * instance();
         inline static void close() { delete self; }
@@ -52,7 +53,7 @@ namespace Grabber {
         inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
-        inline QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
+        inline QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             qDebug() << "HTML--------------------------------------------";

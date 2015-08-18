@@ -31,7 +31,7 @@ public:
 protected:
     inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
 
-    inline QString baseUrlStr(QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
+    inline QString baseUrlStr(const QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
 
     inline QString offsetKey() const { return QStringLiteral("start"); }
     inline QString limitKey() const { return QStringLiteral("results"); }

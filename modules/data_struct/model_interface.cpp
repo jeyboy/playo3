@@ -8,9 +8,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
     switch(itm -> itemType()) {
         case VK_ITEM: {
-            newUrl = Vk::Api::instance() -> refreshAudioItemUrl(
-                itm -> toUid().toString()
-            ).section('?', 0, 0);
+            newUrl = Vk::Api::instance() -> refresh(itm -> toUid().toString()).section('?', 0, 0);
         break;}
 
         case WEB_ITEM: {

@@ -42,16 +42,16 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
 
     //System.Music.Artist:(Beethoven OR Mozart)
 
-    QDirIterator dir_it(*params.search_interface, filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
+    QDirIterator dir_it(*(QString *)(params.search_interface), filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
 
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
-        bool valid = params.sgenre_id == -1;
+        bool valid = true; //params.sgenre_id == -1;
 
-        if (!valid) {
-            MediaInfo m(QUrl::fromLocalFile(path), true, true);
-            valid = m.getGenre() == params.sgenre_id;
-        }
+//        if (!valid) {
+//            MediaInfo m(QUrl::fromLocalFile(path), true, true);
+//            valid = m.getGenre() == params.sgenre_id;
+//        }
 
         if (valid) {
             QFileInfo file = dir_it.fileInfo();
@@ -60,6 +60,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
         }
     }
 
+    delete params.search_interface;
     return amount;
 }
 
@@ -131,7 +132,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                     break;}
 
                     default: {
-                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, r.sgenre_id, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
+                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, r.popular, request.type == artist, request.type == song, request.limit(DEFAULT_LIMIT_AMOUNT));
                         propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                     }
                 }
@@ -217,8 +218,8 @@ void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
                     requests.append(SearchRequest(SearchRequest::inner, (*tab), predicate, (*genre_it), request.popular));
 
             if (request.inComputer)
-                for(QList<void *>::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)
-                    requests.append(SearchRequest(SearchRequest::local, drive, predicate, (*genre_it), request.popular));
+                for(QStringList::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)
+                    requests.append(SearchRequest(SearchRequest::local, new QString(*drive), predicate, (*genre_it), request.popular));
         }
     }
 

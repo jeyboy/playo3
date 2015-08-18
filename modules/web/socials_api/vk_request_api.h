@@ -354,7 +354,7 @@ namespace Vk {
             return ret;
         }
 
-        QString refreshAudioItemUrl(QString audio_uid) {
+        QString refresh(QString audio_uid) {
             return getAudioInfo(audio_uid).value(url_key).toString();
         }
 

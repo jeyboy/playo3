@@ -12,6 +12,7 @@ namespace Vk {
         Q_OBJECT
     public:
         inline QString name() const { return QStringLiteral("vk"); }
+        inline Playo3::WebSubType siteType() { return Playo3::vk_site; }
         inline QUrlQuery genDefaultParams() {
             QUrlQuery query = QUrlQuery();
 
@@ -57,7 +58,7 @@ namespace Vk {
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
     protected:
-        inline QString baseUrlStr(QString & predicate) { return base_url % predicate; }
+        inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
         inline QString offsetKey() const { return offset_key; }
         inline QString limitKey() const { return limit_key; }
