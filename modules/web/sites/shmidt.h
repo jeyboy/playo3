@@ -47,7 +47,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -122,10 +122,10 @@ namespace Grabber {
                 return baseUrlStr(tracks.link());
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool by_song, QString & /*genre*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, PredicateType ptype, QString & /*genre*/, bool /*popular*/, int count) {
             QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                 QUrl::toPercentEncoding(predicate),
-                (by_artist ? QStringLiteral("entire") : by_song ? QStringLiteral("songtitle") : QStringLiteral("artistname"))
+                (ptype & artist ? QStringLiteral("artistname") : ptype & song ? QStringLiteral("songtitle") : QStringLiteral("entire"))
             );
 
             QJsonArray json;

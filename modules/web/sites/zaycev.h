@@ -38,7 +38,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -122,11 +122,7 @@ namespace Grabber {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int count) { // 47 items per page
-//            // this part is to ugly
-//            QUrl url = QUrl(baseUrlStr(QStringLiteral("/search.html")));
-//            url.setQuery(QStringLiteral("query_search=") % predicate);
-//            QString url_str = url.toString() % QStringLiteral("&page=") % page_offset_key;
+        QJsonArray search_postprocess(QString & predicate, PredicateType /*ptype*/, QString & /*genre*/, bool /*popular*/, int count) {
             QString url_str = baseUrlStr(QStringLiteral("/search.html?query_search=%1&page=%2").arg(
                 QUrl::toPercentEncoding(predicate),
                 page_offset_key

@@ -8,8 +8,6 @@
 
 #include "media/genres/web/vk_genres.h"
 
-enum PredicateType { title, artist, song, tag };
-
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) {
         search_in_own = false;
@@ -39,7 +37,7 @@ struct SearchSettings {
     QList<void *> sites;
     QList<void *> tabs;
     QStringList predicates;
-    PredicateType type;
+    ISearchable::PredicateType type;
     bool popular;
     bool search_in_own;
 };

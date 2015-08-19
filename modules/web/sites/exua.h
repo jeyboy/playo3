@@ -26,7 +26,7 @@
 //                    (by_artist ? search_predicate_artist_token : search_predicate_song_token) % predicate
 //                ));
 //            } else if (!genre.isEmpty())
-//                return byGenre(genre, genre_id);
+//                return byGenre(genre, popular_items);
 //            else if (popular_items)
 //                return popular();
 

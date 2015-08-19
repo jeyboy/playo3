@@ -23,7 +23,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -114,7 +114,7 @@ namespace Grabber {
 //            return url.section("URL\":\"", 1).section("\"", 0, 0);
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & genre, int count) {
+        QJsonArray search_postprocess(QString & predicate, PredicateType /*ptype*/, QString & genre, bool /*popular*/, int count) {
             // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
             QString alias = genresList().toAlias(genre);

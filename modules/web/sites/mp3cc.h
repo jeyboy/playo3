@@ -43,7 +43,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -118,9 +118,9 @@ namespace Grabber {
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool by_song, QString & /*genre*/, int count) { // 47 items per page
+        QJsonArray search_postprocess(QString & predicate, PredicateType ptype, QString & /*genre*/, bool /*popular*/, int count) {
             QString url_str = baseUrlStr(QStringLiteral("/search/%1/%2/page/%3/")).arg(
-                QString(by_artist ? 'a' : (by_song ? 't' : 'f')),
+                QString(ptype & artist ? 'a' : (ptype & song ? 't' : 'f')),
                 QUrl::toPercentEncoding(predicate),
                 page_offset_key
             );

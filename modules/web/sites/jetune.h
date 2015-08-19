@@ -18,7 +18,7 @@ namespace Grabber {
 
         void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -108,26 +108,28 @@ namespace Grabber {
             return result;
         }
 
-        inline QString refresh_postprocess(QNetworkReply * reply) {
+        inline QString refresh_postprocess(QNetworkReply * /*reply*/) {
 //            Html::Document parser(reply);
 
 //            QString url = parser.find("#player_content script").text();
 //            return url.section("mp3:\"", 1).section("\"", 0, 0);
+
+            return QString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(
                 QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                     QUrl::toPercentEncoding(predicate),
-                    by_artist ? QStringLiteral("artist") : QStringLiteral("track"),
+                    limitations.predicate_type & artist ? QStringLiteral("artist") : QStringLiteral("track"),
                     page_offset_key
                 )
             );
 
             QJsonArray json;
-            lQuery(url_str, json, songs1, MAX_PAGE);
+            lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-            while(json.size() > count)
+            while(json.size() > limitations.count)
                 json.removeLast();
 
             return json;
