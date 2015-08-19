@@ -18,7 +18,7 @@ namespace Grabber {
 
         void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -32,12 +32,12 @@ namespace Grabber {
 //        }
 
         // rus letters has specific presentation
-//        QJsonArray byChar(QChar /*target_char*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
 //            //TODO: realize later
 //        }
 
 //        // one page contains 30 albums
-//        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
 //            switch (target_type) { // need to modify grab processing of folder support in model
 //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
 //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2

@@ -26,7 +26,7 @@ namespace Grabber {
         }
 
         // artists by genre
-        QJsonArray byGenre(QString /*genre*/, bool /*is_popular*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+        QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
             QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -54,11 +54,11 @@ namespace Grabber {
 
         // byChar and byType has too many items - parse it all at once is not good idea ?
 
-//        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(ByTypeArg target_type) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
 //            QList<QUrl> urls;
 
 //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -112,7 +112,7 @@ namespace Grabber {
             else
                 return baseUrlStr(tracks.link());
         }
-        QJsonArray search_postprocess(QString & predicate, PredicateType ptype, QString & /*genre*/, bool /*popular*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QUrl url = QUrl(baseUrlStr(search_path_token));
             url.setQuery(search_predicate_token % predicate);
 
@@ -126,15 +126,15 @@ namespace Grabber {
             Html::Tag * artists_table = 0, * songs_table = 0;
             prepareTables(tables, artists_table, songs_table);
 
-            if (ptype & artist && artists_table) {
+            if (limitations.predicate_type & artist && artists_table) {
                 QHash<QString, QString> artistLinks;
                 artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
             }
 
-            if (ptype & song && songs_table) {
+            if (limitations.predicate_type & song && songs_table) {
                 Html::Set songs = songs_table -> find(&songTrSelector);
 
-                if (count < ITEMS_PER_PAGE)
+                if (limitations.count < ITEMS_PER_PAGE)
                     while(songs.size() > count)
                         songs.removeLast();
 

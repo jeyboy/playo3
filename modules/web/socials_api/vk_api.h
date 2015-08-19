@@ -52,6 +52,13 @@ namespace Vk {
             );
         }
 
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
+            if (predicate.isEmpty() && limitations.popular)
+                return audioPopular(true, genre);
+            else
+                audioSearch(predicate, limitations.predicate_type & artist, limitations.search_in_own, limitations.popular, limitations.count);
+        }
+
     signals:
         void showCaptcha();
     public slots:

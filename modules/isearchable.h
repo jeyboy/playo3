@@ -21,7 +21,7 @@
 
 class ISearchable {
 public:
-    enum PredicateType { title, artist, song, tag };
+    enum PredicateType { title = 1, artist = 2, song = 4, tag = 8, owns = 16, originals = 32, foreign = 64 };
 
     struct SearchLimit {
         SearchLimit(PredicateType predicate_type, int limit, bool popular = true, int start_page = 1, int page_amount = MAX_PAGE) :

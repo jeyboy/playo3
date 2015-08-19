@@ -23,7 +23,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, bool is_popular) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -37,12 +37,12 @@ namespace Grabber {
 //        }
 
         // rus letters has specific presentation
-//        QJsonArray byChar(QChar /*target_char*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
 //            //TODO: realize later
 //        }
 
 //        // one page contains 30 albums
-//        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
 //            switch (target_type) { // need to modify grab processing of folder support in model
 //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
 //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
@@ -114,7 +114,7 @@ namespace Grabber {
 //            return url.section("URL\":\"", 1).section("\"", 0, 0);
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, PredicateType /*ptype*/, QString & genre, bool /*popular*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
             // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
             QString alias = genresList().toAlias(genre);
@@ -122,9 +122,9 @@ namespace Grabber {
                         (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, QUrl::toPercentEncoding(predicate), page_offset_key);
 
             QJsonArray json;
-            lQuery(url_str, json, songs1, 10); // ten page at this time
+            lQuery(url_str, json, songs1, /*limitations.cpage*/ 10); // ten page at this time
 
-            while(json.size() > count)
+            while(json.size() > limitations.count)
                 json.removeLast();
 
             return json;
