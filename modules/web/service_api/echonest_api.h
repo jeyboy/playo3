@@ -30,6 +30,8 @@ public:
     static EchonestApi * instance();
     inline static void close() { delete self; }
 protected:
+    inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
+
     inline QString refresh(QString path) { return path; }
     inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
 
