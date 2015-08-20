@@ -56,7 +56,7 @@ namespace Vk {
             if (predicate.isEmpty() && limitations.by_popularity())
                 return audioPopular(true, genre);
             else
-                audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
+                return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
         }
 
     signals:

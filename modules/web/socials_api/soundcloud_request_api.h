@@ -76,8 +76,7 @@ namespace Soundcloud {
             return baseUrl(QStringLiteral("tracks"), query);
         }
 
-        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-        //QJsonArray audioSearch(QString & predicate, QString & genre, bool popular, int count = 5) {
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
             return lQuery(
                 audioSearchUrl(predicate, genre, limitations.by_popularity()),
                 QueryRules(QStringLiteral("response"), requestLimit(), qMin(limitations.count, SOUNDCLOUD_OFFSET_LIMIT)),
