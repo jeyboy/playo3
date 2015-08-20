@@ -90,7 +90,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
     emit moveInBackgroundProcess();
     prepareRequests(requests);
-    ISearchable::SearchLimit limitation(request.type, request.limit(DEFAULT_LIMIT_AMOUNT), r.popular);
+    ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
 
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
@@ -116,17 +116,18 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 ISearchable * iface = (ISearchable *) r.search_interface;
                 switch (iface -> siteType()) { // unificate vk and sc search requests
                     case Playo3::vk_site: {
-                        QJsonArray items;
-                        if (r.spredicate.isEmpty() && r.popular) {
-                            items = Vk::Api::instance() -> audioPopular(true, r.sgenre);
-                        } else
-                            items = Vk::Api::instance() -> audioSearch(
-                                r.spredicate, request.type == artist, request.search_in_own, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT)
-                            );
+                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
+//                        if (r.spredicate.isEmpty() && r.popular) {
+//                            items = Vk::Api::instance() -> audioPopular(true, r.sgenre);
+//                        } else
+//                            items = Vk::Api::instance() -> audioSearch(
+//                                r.spredicate, request.type == artist, request.search_in_own, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT)
+//                            );
                         propagate_count = proceedVkList(items, parent);
                     break;}
                     case Playo3::sc_site: {
-                        QJsonArray items = Soundcloud::Api::instance() -> search(r.spredicate, r.sgenre, limitation);
+//                        QJsonArray items = Soundcloud::Api::instance() -> search(r.spredicate, r.sgenre, limitation);
+                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
                         if (Soundcloud::Api::extractCount(items) > 0)
                             parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
                     break;}

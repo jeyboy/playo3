@@ -121,7 +121,7 @@ namespace Grabber {
             QString url_str = baseUrlStr(
                 QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                     QUrl::toPercentEncoding(predicate),
-                    limitations.predicate_type & artist ? QStringLiteral("artist") : QStringLiteral("track"),
+                    limitations.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),
                     page_offset_key
                 )
             );

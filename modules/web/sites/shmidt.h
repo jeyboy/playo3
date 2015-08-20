@@ -125,7 +125,7 @@ namespace Grabber {
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                 QUrl::toPercentEncoding(predicate),
-                (limitations.predicate_type & artist ? QStringLiteral("artistname") : limitations.predicate_type & song ? QStringLiteral("songtitle") : QStringLiteral("entire"))
+                (limitations.by_artists() ? QStringLiteral("artistname") : limitations.by_songs() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
             );
 
             QJsonArray json;

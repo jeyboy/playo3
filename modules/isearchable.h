@@ -21,17 +21,25 @@
 
 class ISearchable {
 public:
-    enum PredicateType { title = 1, artist = 2, song = 4, tag = 8, owns = 16, originals = 32, foreign = 64 };
+    enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
 
     struct SearchLimit {
-        SearchLimit(PredicateType predicate_type, int limit, bool popular = true, int start_page = 1, int page_amount = MAX_PAGE) :
-            count(limit), spage(start_page), cpage(page_amount), predicate_type(predicate_type), popular(popular) {}
+        SearchLimit(PredicateType predicate_type, int limit, int start_page = 1, int page_amount = MAX_PAGE) :
+            count(limit), spage(start_page), cpage(page_amount), predicate_type(predicate_type) {}
 
         int count;
         int spage;
         int cpage;
         PredicateType predicate_type;
-        bool popular;
+
+        inline bool by_artists() const { return predicate_type & in_artist; }
+        inline bool by_songs() const { return predicate_type & in_song; }
+        inline bool by_tags() const { return predicate_type & in_tag; }
+
+        inline bool by_popularity() const { return predicate_type & in_popular; }
+        inline bool by_owns() const { return predicate_type & in_owns; }
+        inline bool by_originals() const { return predicate_type & in_originals; }
+        inline bool by_foreign() const { return predicate_type & in_foreign; }
     };
 
     inline virtual ~ISearchable() {}
@@ -49,7 +57,7 @@ public:
             return search_postprocess(predicate, genre, limitations);
         } else if (!genre.isEmpty())
             return byGenre(genre, limitations);
-        else if (limitations.popular)
+        else if (limitations.by_popularity())
             return popular();
         else return QJsonArray();
     }

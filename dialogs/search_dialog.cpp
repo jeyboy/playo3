@@ -74,16 +74,19 @@ SearchSettings SearchDialog::params() {
         res.addGenre(ui -> stylePredicates -> item(i) -> text());
 
     if (ui -> byTitle -> isChecked())
-        res.type = ::title;
+        res.type = ISearchable::in_title;
     else if (ui -> byArtist -> isChecked())
-        res.type = ::artist;
+        res.type = ISearchable::in_artist;
     else if (ui -> bySong -> isChecked())
-        res.type = ::song;
+        res.type = ISearchable::in_song;
     else
-        res.type = ::tag;
+        res.type = ISearchable::in_tag;
 
-    res.popular = ui -> byPopular -> isChecked();
-    res.search_in_own = ui -> byOwns -> isChecked();
+    if (ui -> byPopular -> isChecked()) res.type |= ISearchable::in_popular;
+    if (ui -> byOwns -> isChecked()) res.type |= ISearchable::in_owns;
+    if (ui -> byForeign -> isChecked()) res.type |= ISearchable::in_foreign;
+    if (ui -> byOrigins -> isChecked()) res.type |= ISearchable::in_originals;
+
 
     if (res.inSites) {
         int count = ui -> sitesList -> count();

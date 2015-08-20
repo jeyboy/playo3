@@ -53,10 +53,10 @@ namespace Vk {
         }
 
         QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-            if (predicate.isEmpty() && limitations.popular)
+            if (predicate.isEmpty() && limitations.by_popularity())
                 return audioPopular(true, genre);
             else
-                audioSearch(predicate, limitations.predicate_type & artist, limitations.search_in_own, limitations.popular, limitations.count);
+                audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
         }
 
     signals:

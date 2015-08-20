@@ -126,16 +126,16 @@ namespace Grabber {
             Html::Tag * artists_table = 0, * songs_table = 0;
             prepareTables(tables, artists_table, songs_table);
 
-            if (limitations.predicate_type & artist && artists_table) {
+            if (limitations.by_artists() && artists_table) {
                 QHash<QString, QString> artistLinks;
                 artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
             }
 
-            if (limitations.predicate_type & song && songs_table) {
+            if (limitations.by_songs() && songs_table) {
                 Html::Set songs = songs_table -> find(&songTrSelector);
 
                 if (limitations.count < ITEMS_PER_PAGE)
-                    while(songs.size() > count)
+                    while(songs.size() > limitations.count)
                         songs.removeLast();
 
                 for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {

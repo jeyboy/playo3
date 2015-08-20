@@ -120,7 +120,7 @@ namespace Grabber {
 
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search/%1/%2/page/%3/")).arg(
-                QString(limitations.predicate_type & artist ? 'a' : (limitations.predicate_type & song ? 't' : 'f')),
+                QString(limitations.by_artists() ? 'a' : (limitations.by_songs() ? 't' : 'f')),
                 QUrl::toPercentEncoding(predicate),
                 page_offset_key
             );
