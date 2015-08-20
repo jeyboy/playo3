@@ -30,10 +30,12 @@ namespace Fourshared {
 
             return IApi::baseUrl(QStringLiteral("files"), query);
         }
-        QJsonArray audioSearch(QString & predicate, int count = 5, bool initInfo = false) {
+
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+            bool initInfo = false;
             QJsonArray res = lQuery(
                 audioSearchUrl(predicate),
-                QueryRules(QStringLiteral("files"), requestLimit(), qMin(count, FOURSHARED_OFFSET_LIMIT)),
+                QueryRules(QStringLiteral("files"), requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
                 none
             );
 

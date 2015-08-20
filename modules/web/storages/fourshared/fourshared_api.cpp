@@ -43,7 +43,7 @@ namespace Fourshared { // for auth required oauth 1
     ///////////////////////////////////////////////////////////
     /// AUTH
     ///////////////////////////////////////////////////////////
-    void Api::proceedAuthResponse(const QUrl & url) {
+    void Api::proceedAuthResponse(const QUrl & /*url*/) {
 //        QUrlQuery query(url.query());
 
 //        if (query.hasQueryItem(QStringLiteral("error"))) {
