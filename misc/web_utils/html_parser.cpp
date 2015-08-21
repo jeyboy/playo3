@@ -248,7 +248,8 @@ namespace Html {
                     case content: {
                         switch(*ch) {
                             case open_tag: {
-                                if (last == close_tag_predicate) curr.append(*ch); // javascript comments
+                                if (last == close_tag_predicate && elem -> is_script())
+                                    curr.append(*ch); // javascript comments
                                 else {
                                     if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
                                     state = tag;

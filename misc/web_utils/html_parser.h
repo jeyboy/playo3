@@ -122,7 +122,7 @@ namespace Html {
         inline QString link() const { return attrs.value(href_token); }
 
         inline bool is_link() { return _name == QStringLiteral("a"); }
-//        inline bool is_script() { return _name == QStringLiteral("script"); }
+        inline bool is_script() { return _name == QStringLiteral("script"); }
 
         inline Tag * parentTag() { return parent; }
         inline Tag * childTag(int pos) const { return tags[pos]; }

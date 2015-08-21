@@ -10,7 +10,7 @@ namespace Web {
     class Apis {
     public:
         static QHash<Playo3::WebSubType, ISearchable *> list();
-        inline static ISearchable * engine(Playo3::WebSubType item_type) { return sites.value(item_type); }
+        inline static ISearchable * engine(Playo3::WebSubType item_type) { return list().value(item_type); }
         inline static void close() {
             qDeleteAll(sites);
         }
