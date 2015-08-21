@@ -212,7 +212,7 @@ namespace Html {
     void Document::parse(QIODevice * device) {
         initSoloTags();
         PState state = content;
-        char * ch = new char[2](), last = 0;
+        char * ch = new char[2](), last = 0, del = 0;
         QString curr, value; curr.reserve(1024); value.reserve(1024);
         Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
@@ -228,10 +228,13 @@ namespace Html {
                             case content_del1:
                             case content_del2: {
                                 switch(state) {
-                                    case val: { state = in_val; break;}
+                                    case val: { state = in_val; del = *ch; break;}
                                     case in_val: {
-                                        elem -> addAttr(curr, value);
-                                        state = attr;
+                                        if (del == *ch) {
+                                            elem -> addAttr(curr, value);
+                                            state = attr;
+                                        }
+                                        else value.append(*ch);
                                     break;}
                                     default: { qDebug() << "WRONG STATE" << state; return; }
                                 }
@@ -241,7 +244,7 @@ namespace Html {
                                 if (*ch > 0)
                                     value.append(*ch);
                                 else
-                                    scanUtf8Char(device, value, ch[0]);
+                                    toUtf8(charset, device, value, ch[0]);
                         }
                     break;}
 
@@ -261,7 +264,7 @@ namespace Html {
                                 if ((last = *ch) > 0)
                                     curr.append(*ch);
                                 else
-                                    scanUtf8Char(device, curr, ch[0]);
+                                    toUtf8(charset, device, curr, ch[0]);
                         }
                     break;}
 
@@ -277,7 +280,7 @@ namespace Html {
                                 if (*ch > 0)
                                     curr.append(*ch);
                                 else
-                                    scanUtf8Char(device, curr, ch[0]);
+                                    toUtf8(charset, device, curr, ch[0]);
                         }
                     break;}
 
@@ -306,6 +309,12 @@ namespace Html {
                             if (!curr.isEmpty()) {
                                 if (state & attr_val) {
                                     elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+                                    if (!(charset_finded || using_default_charset)) {
+                                        if (elem -> is_meta())
+                                            proceedCharset(elem);
+                                        else if (elem -> is_head())
+                                            using_default_charset = true;
+                                    }
                                     if (isSolo(elem)) elem = elem -> parentTag();
                                 } else {
                                     if (is_closed) {
