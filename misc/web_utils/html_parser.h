@@ -268,6 +268,15 @@ namespace Html {
             }
         }
 
+        inline void checkCharset(Tag * tag) {
+            if (!(charset_finded || using_default_charset)) {
+                if (tag -> is_meta())
+                    proceedCharset(tag);
+                else if (tag -> is_head())
+                    using_default_charset = true;
+            }
+        }
+
         inline void proceedCharset(Tag * tag) {
             QString meta = tag -> value(QStringLiteral("charset"));
             if (meta.isEmpty()) {

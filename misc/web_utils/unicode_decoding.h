@@ -12,7 +12,7 @@ protected:
         cp1251
     };
 
-    static const int cp1251_table[128] = {
+    const int cp1251_table[128] = {
             0x82D0,0x83D0,0x9A80E2,0x93D1,0x9E80E2,0xA680E2,0xA080E2,0xA180E2,
             0xAC82E2,0xB080E2,0x89D0,0xB980E2,0x8AD0,0x8CD0,0x8BD0,0x8FD0,
             0x92D1,0x9880E2,0x9980E2,0x9C80E2,0x9D80E2,0xA280E2,0x9380E2,0x9480E2,
@@ -45,7 +45,7 @@ protected:
     inline CharsetType toCharsetType(const QString & ch_name) {
         if (ch_name == QStringLiteral("utf-8"))
             return utf8;
-        else if (ch_name == QStringLiteral("utf-8"))
+        else if (ch_name == QStringLiteral("windows-1251"))
             return cp1251;
 
         return unknown;
@@ -59,7 +59,7 @@ protected:
         }
     }
 
-    inline void scanRuChar(QIODevice * io, QString & result, char & in) {
+    inline void scanRuChar(QIODevice * /*io*/, QString & result, char & in) {
         int uc = cp1251_table[(int)(0x7f & in)];
 
         if (QChar::requiresSurrogates(uc)) { result.append(QChar::highSurrogate(uc)); result.append(QChar::lowSurrogate(uc)); }

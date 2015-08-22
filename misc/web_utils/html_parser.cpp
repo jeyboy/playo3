@@ -309,14 +309,10 @@ namespace Html {
                             if (!curr.isEmpty()) {
                                 if (state & attr_val) {
                                     elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
-                                    if (!(charset_finded || using_default_charset)) {
-                                        if (elem -> is_meta())
-                                            proceedCharset(elem);
-                                        else if (elem -> is_head())
-                                            using_default_charset = true;
-                                    }
+                                    checkCharset(elem);
                                     if (isSolo(elem)) elem = elem -> parentTag();
                                 } else {
+                                    checkCharset(elem);
                                     if (is_closed) {
                                         if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
                                         curr.clear(); is_closed = false;
@@ -325,7 +321,10 @@ namespace Html {
                                         else elem -> appendTag(curr);
                                     }
                                 }
-                            } else if (isSolo(elem)) elem = elem -> parentTag();
+                            } else {
+                                checkCharset(elem);
+                                if (isSolo(elem)) elem = elem -> parentTag();
+                            }
 
                             state = content;
                         break;}
