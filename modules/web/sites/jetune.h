@@ -56,9 +56,7 @@ namespace Grabber {
         inline QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            qDebug() << "HTML--------------------------------------------";
             Html::Document parser(reply);
-            parser.output();
             bool result = false;
 
             switch(jtype) {

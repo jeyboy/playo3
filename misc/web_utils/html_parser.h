@@ -288,7 +288,7 @@ namespace Html {
 
             if (!meta.isEmpty()) {
                 qDebug() << meta;
-                charset = toCharsetType(meta);
+                charset = toCharsetType(meta.toLower());
                 charset_finded = true;
             }
         }

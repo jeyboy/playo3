@@ -114,35 +114,23 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
-                switch (iface -> siteType()) { // unificate vk and sc search requests
-                    case Playo3::vk_site: {
-                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-//                        if (r.spredicate.isEmpty() && r.popular) {
-//                            items = Vk::Api::instance() -> audioPopular(true, r.sgenre);
-//                        } else
-//                            items = Vk::Api::instance() -> audioSearch(
-//                                r.spredicate, request.type == artist, request.search_in_own, r.popular, request.limit(DEFAULT_LIMIT_AMOUNT)
-//                            );
-                        propagate_count = proceedVkList(items, parent);
-                    break;}
-                    case Playo3::sc_site: {
-//                        QJsonArray items = Soundcloud::Api::instance() -> search(r.spredicate, r.sgenre, limitation);
-                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-                        if (Soundcloud::Api::extractCount(items) > 0)
-                            parent -> backPropagateItemsCountInBranch(proceedScList(items, parent));
-                    break;}
+                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
-                    default: {
-                        QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-                        propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
-                    }
+                switch (iface -> siteType()) {
+                    case Playo3::vk_site: { propagate_count = proceedVkList(items, parent); break; }
+                    case Playo3::sc_site: {
+                        if (Soundcloud::Api::extractCount(items) > 0)
+                            propagate_count = proceedScList(items, parent);
+                    break;}
+                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
             break;}
 
             default:;
         }
 
-        parent -> backPropagateItemsCountInBranch(propagate_count);
+        if (propagate_count > 0)
+            parent -> backPropagateItemsCountInBranch(propagate_count);
     }
 
     emit moveOutBackgroundProcess();
