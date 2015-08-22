@@ -67,6 +67,7 @@ namespace Html {
         QString token; token.reserve(128);
         char rel;
         const char * it = predicate;
+        bool in_attr = false;
 
         while(*it) {
             switch(*it) {
@@ -74,12 +75,17 @@ namespace Html {
                 case type_token:
                 case class_token:
                 case id_token: {
-                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    state = (SState)*it;
-                break;}         
+                    in_attr = !(attr_token_end == *it);
+
+                    if (!in_attr) {
+                        if (!token.isEmpty()) selector -> addToken(state, token, rel);
+                        state = (SState)*it;
+                    }
+                break;}
 
                 case attr_token:
                 case attr_separator: {
+                    in_attr = attr_token == *it;
                     selector -> addToken(state, token, rel);
                     state = Selector::attr;
                 break;}

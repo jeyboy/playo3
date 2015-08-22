@@ -1,5 +1,5 @@
-#ifndef FILENAME_CONVERSIONS
-#define FILENAME_CONVERSIONS
+#ifndef FILENAME_CONVERSIONS_TEST
+#define FILENAME_CONVERSIONS_TEST
 
 #include <qtest.h>
 #include "../misc/file_utils/filename_conversions.h"
@@ -19,4 +19,4 @@ private slots:
     void downloadTitleTest();
 };
 
-#endif // FILENAME_CONVERSIONS
+#endif // FILENAME_CONVERSIONS_TEST
