@@ -124,6 +124,8 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                     break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
+
+                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
             break;}
 
             default:;

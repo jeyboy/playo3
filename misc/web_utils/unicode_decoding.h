@@ -54,7 +54,7 @@ protected:
         int uc = in < 0 ? in + 256 : in;
 
         if (uc < 192)
-            uc = cp1251_table[uc + 896];
+            uc = cp1251_table[uc - 128];
         else
             uc = uc + 848;
 

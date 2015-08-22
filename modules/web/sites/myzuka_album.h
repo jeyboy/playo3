@@ -131,7 +131,7 @@ namespace Grabber {
                 artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
             }
 
-            if (limitations.by_songs() && songs_table) {
+            if (!limitations.by_artists() && songs_table) {
                 Html::Set songs = songs_table -> find(&songTrSelector);
 
                 if (limitations.count < ITEMS_PER_PAGE)
