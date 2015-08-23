@@ -75,17 +75,17 @@ namespace Html {
                 case type_token:
                 case class_token:
                 case id_token: {
-                    in_attr = !(attr_token_end == *it);
+                    in_attr &= !(attr_token_end == *it);
 
                     if (!in_attr) {
                         if (!token.isEmpty()) selector -> addToken(state, token, rel);
                         state = (SState)*it;
-                    }
+                    } else token.append(*it);
                 break;}
 
                 case attr_token:
                 case attr_separator: {
-                    in_attr = attr_token == *it;
+                    in_attr |= attr_token == *it;
                     selector -> addToken(state, token, rel);
                     state = Selector::attr;
                 break;}
