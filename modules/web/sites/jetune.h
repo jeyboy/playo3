@@ -123,11 +123,7 @@ namespace Grabber {
             );
 
             QJsonArray json;
-<<<<<<< HEAD
-            lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
-=======
             lQuery(url_str, json, songs1, 1/*limitations.cpage*/, limitations.spage);
->>>>>>> 0d46f1e2aec02380c5ab92f21ce44d70238504e2
 
             while(json.size() > limitations.count)
                 json.removeLast();
