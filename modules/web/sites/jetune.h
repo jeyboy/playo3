@@ -63,11 +63,6 @@ namespace Grabber {
                 case songs1: {
                     Html::Set songs = parser.find("img[src='/images/download.png']<tr");
 
-                    //http://www.jetune.ru/freedownload.php?id=2886006
-                    //http://www.jetune.ru/myplayer.php?id=2886006
-
-
-
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject song_obj;
 
@@ -85,7 +80,6 @@ namespace Grabber {
                             QString title = links[1] -> text() % QStringLiteral(" - ") % links[0] -> text();
                             song_obj.insert(title_key, title);
 
-                            qDebug() << song_obj;
                             json << song_obj;
                         } else Logger::instance() -> writeToStream(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
                     }
