@@ -63,27 +63,25 @@ namespace Grabber {
                 case songs1: {
                     Html::Set songs = parser.find("img[src='/images/download.png']<tr");
 
-                    //http://www.jetune.ru/freedownload.php?id=2886006
-                    //http://www.jetune.ru/myplayer.php?id=2886006
-
-
-
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject song_obj;
 
-                        QString link = (*song) -> childTag("td", 6) -> childTag("a") -> link();
-                        link = link.section('/', 2, 2);
+                        Html::Tag * link_tag = (*song) -> childTag("td", 4);
 
-                        song_obj.insert(url_key, baseUrlStr(QStringLiteral("/freedownload.php?id=") % link));
-                        song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/myplayer.php?id=") % link));
-                        song_obj.insert(skip_info_key, true);
+                        if (link_tag) {
+                            QString link = link_tag -> childTag("a") -> link();
+                            link = link.section('/', 2, 2);
 
-                        Html::Set links = (*song) -> childTag("td", 0) -> find("a");
-                        QString title = links[1] -> text() % QStringLiteral(" - ") % links[0] -> text();
-                        song_obj.insert(title_key, title);
+                            song_obj.insert(url_key, baseUrlStr(QStringLiteral("/freedownload.php?id=") % link));
+                            song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/myplayer.php?id=") % link));
+                            song_obj.insert(skip_info_key, true);
 
-                        qDebug() << song_obj;
-                        json << song_obj;
+                            Html::Set links = (*song) -> childTag("td", 0) -> find("a");
+                            QString title = links[1] -> text() % QStringLiteral(" - ") % links[0] -> text();
+                            song_obj.insert(title_key, title);
+
+                            json << song_obj;
+                        } else Logger::instance() -> writeToStream(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
                     }
 
                     result = !songs.isEmpty();
@@ -125,7 +123,11 @@ namespace Grabber {
             );
 
             QJsonArray json;
+<<<<<<< HEAD
             lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
+=======
+            lQuery(url_str, json, songs1, 1/*limitations.cpage*/, limitations.spage);
+>>>>>>> 0d46f1e2aec02380c5ab92f21ce44d70238504e2
 
             while(json.size() > limitations.count)
                 json.removeLast();

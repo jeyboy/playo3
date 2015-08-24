@@ -46,26 +46,26 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     int size = icon_size - state_width * 2;
 
-    icons.insert(-2, QPixmap(QStringLiteral(":/items/process")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(-1, QPixmap(QStringLiteral(":/items/err")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(VK_ITEM, QPixmap(QStringLiteral(":/items/vk_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(VK_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/vk_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(SOUNDCLOUD_ITEM, QPixmap(QStringLiteral(":/items/sc_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/sc_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(WEB_ITEM, QPixmap(QStringLiteral(":/items/web_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(WEB_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/web_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(ITEM, QPixmap(QStringLiteral(":/items/local_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/local_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(-2,                                                    PIXMAP(QStringLiteral(":/items/process"), size));
+    icons.insert(-1,                                                    PIXMAP(QStringLiteral(":/items/err"), size));
+    icons.insert(VK_ITEM,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
+    icons.insert(VK_ITEM + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
+    icons.insert(SOUNDCLOUD_ITEM,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
+    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
+    icons.insert(WEB_ITEM,                                              PIXMAP(QStringLiteral(":/items/web_item"), size));
+    icons.insert(WEB_ITEM + SELECTION_ITER,                             PIXMAP(QStringLiteral(":/items/web_item_on"), size));
+    icons.insert(ITEM,                                                  PIXMAP(QStringLiteral(":/items/local_item"), size));
+    icons.insert(ITEM + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/local_item_on"), size));
     icons.insert(CUE_ITEM, icons[ITEM]);
     icons.insert(CUE_ITEM + SELECTION_ITER, icons[ITEM + SELECTION_ITER]);
-    icons.insert(FOURSHARED_ITEM, QPixmap(QStringLiteral(":/items/fourshared_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(FOURSHARED_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/fourshared_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(ZAYCEV_ITEM, QPixmap(QStringLiteral(":/items/zaycev_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(ZAYCEV_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/zaycev_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(PROMODJ_ITEM, QPixmap(QStringLiteral(":/items/promodj_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(PROMODJ_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/promodj_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(JETUNE_ITEM, QPixmap(QStringLiteral(":/items/jetune_item")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    icons.insert(JETUNE_ITEM + SELECTION_ITER, QPixmap(QStringLiteral(":/items/jetune_item_on")).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    icons.insert(WEB_ITEM + Playo3::fourshared_site,                    PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
+    icons.insert(WEB_ITEM + Playo3::fourshared_site + SELECTION_ITER,   PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
+    icons.insert(WEB_ITEM + Playo3::zaycev_site,                        PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
+    icons.insert(WEB_ITEM + Playo3::zaycev_site + SELECTION_ITER,       PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
+    icons.insert(WEB_ITEM + Playo3::promodj_site,                       PIXMAP(QStringLiteral(":/items/promodj_item"), size));
+    icons.insert(WEB_ITEM + Playo3::promodj_site + SELECTION_ITER,      PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
+    icons.insert(WEB_ITEM + Playo3::jetune_site,                        PIXMAP(QStringLiteral(":/items/jetune_item"), size));
+    icons.insert(WEB_ITEM + Playo3::jetune_site + SELECTION_ITER,       PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
 
 }
 
@@ -356,8 +356,10 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                         painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
                     }
                 } else {
-                    if (icon_size > 24)
-                        painter -> drawPixmap(rect, icons[attrs[Key::type].toInt() + (is_selected ? SELECTION_ITER : 0)]);
+                    if (icon_size > 24) {
+                        int selection = (is_selected ? SELECTION_ITER : 0);
+                        painter -> drawPixmap(rect, icons.value(attrs[Key::type].toInt() + selection, icons[WEB_ITEM + selection]));
+                    }
                 }
             }
         }
