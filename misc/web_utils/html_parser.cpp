@@ -67,6 +67,7 @@ namespace Html {
         QString token; token.reserve(128);
         char rel;
         const char * it = predicate;
+        bool in_attr = false;
 
         while(*it) {
             switch(*it) {
@@ -74,12 +75,17 @@ namespace Html {
                 case type_token:
                 case class_token:
                 case id_token: {
-                    if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    state = (SState)*it;
-                break;}         
+                    in_attr &= !(attr_token_end == *it);
+
+                    if (!in_attr) {
+                        if (!token.isEmpty()) selector -> addToken(state, token, rel);
+                        state = (SState)*it;
+                    } else token.append(*it);
+                break;}
 
                 case attr_token:
                 case attr_separator: {
+                    in_attr |= attr_token == *it;
                     selector -> addToken(state, token, rel);
                     state = Selector::attr;
                 break;}
@@ -212,7 +218,7 @@ namespace Html {
     void Document::parse(QIODevice * device) {
         initSoloTags();
         PState state = content;
-        char * ch = new char[2](), last = 0;
+        char * ch = new char[2](), last = 0, del = 0;
         QString curr, value; curr.reserve(1024); value.reserve(1024);
         Tag * elem = (root = new Tag(any_elem_token));
         bool is_closed = false;
@@ -228,10 +234,13 @@ namespace Html {
                             case content_del1:
                             case content_del2: {
                                 switch(state) {
-                                    case val: { state = in_val; break;}
+                                    case val: { state = in_val; del = *ch; break;}
                                     case in_val: {
-                                        elem -> addAttr(curr, value);
-                                        state = attr;
+                                        if (del == *ch) {
+                                            elem -> addAttr(curr, value);
+                                            state = attr;
+                                        }
+                                        else value.append(*ch);
                                     break;}
                                     default: { qDebug() << "WRONG STATE" << state; return; }
                                 }
@@ -241,14 +250,15 @@ namespace Html {
                                 if (*ch > 0)
                                     value.append(*ch);
                                 else
-                                    scanUtf8Char(device, value, ch[0]);
+                                    toUtf8(charset, device, value, ch[0]);
                         }
                     break;}
 
                     case content: {
                         switch(*ch) {
                             case open_tag: {
-                                if (last == close_tag_predicate) curr.append(*ch); // javascript comments
+                                if (last == close_tag_predicate && elem -> is_script())
+                                    curr.append(*ch); // javascript comments
                                 else {
                                     if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
                                     state = tag;
@@ -260,7 +270,7 @@ namespace Html {
                                 if ((last = *ch) > 0)
                                     curr.append(*ch);
                                 else
-                                    scanUtf8Char(device, curr, ch[0]);
+                                    toUtf8(charset, device, curr, ch[0]);
                         }
                     break;}
 
@@ -276,7 +286,7 @@ namespace Html {
                                 if (*ch > 0)
                                     curr.append(*ch);
                                 else
-                                    scanUtf8Char(device, curr, ch[0]);
+                                    toUtf8(charset, device, curr, ch[0]);
                         }
                     break;}
 
@@ -305,8 +315,10 @@ namespace Html {
                             if (!curr.isEmpty()) {
                                 if (state & attr_val) {
                                     elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+                                    checkCharset(elem);
                                     if (isSolo(elem)) elem = elem -> parentTag();
                                 } else {
+                                    checkCharset(elem);
                                     if (is_closed) {
                                         if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
                                         curr.clear(); is_closed = false;
@@ -315,7 +327,10 @@ namespace Html {
                                         else elem -> appendTag(curr);
                                     }
                                 }
-                            } else if (isSolo(elem)) elem = elem -> parentTag();
+                            } else {
+                                checkCharset(elem);
+                                if (isSolo(elem)) elem = elem -> parentTag();
+                            }
 
                             state = content;
                         break;}

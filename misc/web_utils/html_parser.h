@@ -122,7 +122,9 @@ namespace Html {
         inline QString link() const { return attrs.value(href_token); }
 
         inline bool is_link() { return _name == QStringLiteral("a"); }
-//        inline bool is_script() { return _name == QStringLiteral("script"); }
+        inline bool is_script() { return _name == QStringLiteral("script"); }
+        inline bool is_head() { return _name == QStringLiteral("head"); }
+        inline bool is_meta() { return _name == QStringLiteral("meta"); }
 
         inline Tag * parentTag() { return parent; }
         inline Tag * childTag(int pos) const { return tags[pos]; }
@@ -180,7 +182,10 @@ namespace Html {
             for (QHash<QString, QString>::iterator it = vals.begin(); it != vals.end(); ++it)
                 attrStr.append("(" + it.key() + " : " + (it.value().size() > DEBUG_LIMIT_OUTPUT ? (it.value().mid(0, DEBUG_LIMIT_OUTPUT / 2) % "..." % it.value().mid(it.value().size() - DEBUG_LIMIT_OUTPUT / 2, DEBUG_LIMIT_OUTPUT / 2)) : it.value()) + ")");
 
-            qDebug("%s%s%s%s%s", QString(c.level() * 3, ' ').toUtf8().constData(), c.name().toUtf8().constData(), " ||| [", attrStr.toUtf8().constData(), "]");
+            if (attrStr.isEmpty())
+                qDebug("%s%s", QString(c.level() * 3, ' ').toUtf8().constData(), c.name().toUtf8().constData());
+            else
+                qDebug("%s%s%s%s%s", QString(c.level() * 3, ' ').toUtf8().constData(), c.name().toUtf8().constData(), " ||| [", attrStr.toUtf8().constData(), "]");
 
             foreach(Tag * it, c.children())
                 qDebug() << (*it);
@@ -218,8 +223,8 @@ namespace Html {
         };
 
     public:
-        inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags) { parse(device); }
-        inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags) {
+        inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) { parse(device); }
+        inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) {
             QByteArray ar = str.toUtf8();
             QBuffer stream(&ar);
             stream.open(QIODevice::ReadOnly);
@@ -263,10 +268,37 @@ namespace Html {
             }
         }
 
+        inline void checkCharset(Tag * tag) {
+            if (!(charset_finded || using_default_charset)) {
+                if (tag -> is_meta())
+                    proceedCharset(tag);
+                else if (tag -> is_head())
+                    using_default_charset = true;
+            }
+        }
+
+        inline void proceedCharset(Tag * tag) {
+            QString meta = tag -> value(QStringLiteral("charset"));
+            if (meta.isEmpty()) {
+                if (tag -> value(QStringLiteral("http-equiv")) == QStringLiteral("Content-Type")) {
+                    meta = tag -> value(QStringLiteral("content"));
+                    meta = meta.section(QStringLiteral("charset="), 1).section(' ', 0);
+                }
+            }
+
+            if (!meta.isEmpty()) {
+                qDebug() << meta;
+                charset = toCharsetType(meta.toLower());
+                charset_finded = true;
+            }
+        }
+
         QHash<QString, bool> solo;
         QHash<QString, QChar> html_entities;
         Tag * root;
         Flags flags;
+        CharsetType charset;
+        bool charset_finded, using_default_charset;
     };
 }
 

@@ -4,58 +4,41 @@ using namespace Playo3;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
+    QString newUrl;
 
     switch(itm -> itemType()) {
         case VK_ITEM: {
-            QString newUrl = Vk::Api::instance() -> refreshAudioItemUrl(
-                itm -> toUid().toString()
-            ).section('?', 0, 0);
-
-            if (itm -> path().toString() != newUrl) {
-                itm -> setPath(newUrl);
-                return true;
-            }
+            newUrl = Vk::Api::instance() -> refresh(itm -> toUid().toString()).section('?', 0, 0);
         break;}
 
         case WEB_ITEM: {
-            QString newUrl;
             switch(itm -> subtipe()) {
-                case Playo3::myzuka: {
-                    newUrl = Grabber::MyzukaAlbum::instance() -> refresh(itm -> refresh_path());
-                break;}
+//                case Playo3::fourshared_site: {
+//                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
+////                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
+//                break;}
 
-                case Playo3::fourshared: {
-                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
-//                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
-                break;}
-
-                case Playo3::zaycev: {
-                    newUrl = Grabber::Zaycev::instance() -> refresh(itm -> refresh_path());
-                break;}
-
-                case Playo3::mp3base: {
-                    newUrl = Grabber::Mp3Base::instance() -> refresh(itm -> refresh_path());
-                break;}
-
-                case Playo3::shmidt: {
-                    newUrl = Grabber::Shmidt::instance() -> refresh(itm -> refresh_path());
-                break;}
-
-                case Playo3::jetune: {
+                case Playo3::jetune_site: {
                     newUrl = itm -> refresh_path();
                 break;}
 
-                default: return false;
-            }
-
-            qDebug() << itm -> refresh_path() << newUrl;
-            if (itm -> path().toString() != newUrl) {
-                itm -> setPath(newUrl);
-                return true;
+                default: {
+                    ISearchable * engine = Web::Apis::engine(itm -> subtipe());
+                    if (engine == 0)
+                        return false;
+                    else
+                        newUrl = engine -> refresh(itm -> refresh_path());
+                }
             }
         break;}
         default: return false;
     };
+
+    qDebug() << itm -> refresh_path() << newUrl;
+    if (itm -> path().toString() != newUrl) {
+        itm -> setPath(newUrl);
+        return true;
+    }
 
     return false;
 }
@@ -932,9 +915,9 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
             bool is_valid = has_empty_predicate || (*it) -> respondTo(params.spredicate);
 
             if (is_valid) {
-                if (!params.sgenre_id != -1) {
+                if (!params.sgenre.isEmpty()) {
                     int genre_id = (*it) -> genreID().toInt();
-                    is_valid |= params.sgenre_id == genre_id;
+//                    is_valid |= params.sgenre_id == genre_id;
                 }
 
                 if (is_valid) {

@@ -37,6 +37,10 @@ private slots:
 
     void on_tabsList_itemClicked(QListWidgetItem *item);
 
+    void on_inSites_toggled(bool checked);
+
+    void on_sitesList_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::SearchDialog * ui;
 };

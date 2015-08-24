@@ -3,6 +3,7 @@
 #include "dockbars.h"
 
 #include <qfileinfo.h>
+#include "modules/web/sites/site_apis.h"
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
@@ -10,9 +11,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
     ui -> setupUi(this);
 
     QList<DockBar *> bars = Dockbars::instance() -> dockbars();
-    QList<DockBar *>::Iterator it = bars.begin();
-
-    for(; it != bars.end(); it++) {
+    for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
         IView * v = Dockbars::instance() -> view(*it);
         if (v) {
             IModel * mdl = (IModel *)v -> model();
@@ -23,6 +22,27 @@ SearchDialog::SearchDialog(QWidget * parent) :
                 item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) mdl));
                 ui -> tabsList -> addItem(item);
             }
+        }
+    }
+
+    QHash<Playo3::WebSubType, ISearchable *> sites = Web::Apis::list();
+    QListWidgetItem * item = new QListWidgetItem(QString(""));
+    item -> setFlags(Qt::NoItemFlags);
+    ui -> sitesList -> addItem(item);
+
+    for(QHash<Playo3::WebSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+        QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
+        item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+        item -> setCheckState(Qt::Unchecked);
+        item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
+
+        switch(it.key()) {
+            case Playo3::vk_site:
+            case Playo3::sc_site:
+            case Playo3::fourshared_site: {
+                ui -> sitesList -> insertItem(0, item);
+            break;}
+            default: ui -> sitesList -> addItem(item);
         }
     }
 
@@ -43,8 +63,7 @@ SearchDialog::~SearchDialog() {
 }
 
 SearchSettings SearchDialog::params() {
-    SearchSettings res(ui -> inVk -> isChecked(), ui -> inSc -> isChecked(), ui -> inFourshared -> isChecked(),
-                       ui -> inOther -> isChecked(), ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
+    SearchSettings res(ui -> inSites -> isChecked(), ui -> inTabs -> isChecked(), ui -> inComputer -> isChecked());
 
     int count = ui -> textPredicates -> count();
     for(int i = 0; i < count; i++)
@@ -55,16 +74,29 @@ SearchSettings SearchDialog::params() {
         res.addGenre(ui -> stylePredicates -> item(i) -> text());
 
     if (ui -> byTitle -> isChecked())
-        res.type = ::title;
+        res.type = ISearchable::in_title;
     else if (ui -> byArtist -> isChecked())
-        res.type = ::artist;
+        res.type = ISearchable::in_artist;
     else if (ui -> bySong -> isChecked())
-        res.type = ::song;
+        res.type = ISearchable::in_song;
     else
-        res.type = ::tag;
+        res.type = ISearchable::in_tag;
 
-    res.popular = ui -> byPopular -> isChecked();
-    res.search_in_own = ui -> byOwns -> isChecked();
+    if (ui -> byPopular -> isChecked()) res.type |= ISearchable::in_popular;
+    if (ui -> byOwns -> isChecked()) res.type |= ISearchable::in_owns;
+    if (ui -> byForeign -> isChecked()) res.type |= ISearchable::in_foreign;
+    if (ui -> byOrigins -> isChecked()) res.type |= ISearchable::in_originals;
+
+
+    if (res.inSites) {
+        int count = ui -> sitesList -> count();
+
+        for(int i = 0; i < count; i++) {
+            QListWidgetItem * item = ui -> sitesList -> item(i);
+            if (item -> checkState() == Qt::Checked)
+                res.sites.append(item -> data(Qt::UserRole + 1).value<void *>());
+        }
+    }
 
     if (res.inTabs) {
         int count = ui -> tabsList -> count();
@@ -177,4 +209,31 @@ void SearchDialog::on_tabsList_itemClicked(QListWidgetItem * item) {
     ui -> inTabs -> blockSignals(true);
     ui -> inTabs -> setChecked(st);
     ui -> inTabs -> blockSignals(false);
+}
+
+void SearchDialog::on_inSites_toggled(bool checked) {
+    int count = ui -> sitesList -> count();
+
+    Qt::CheckState st = checked ? Qt::Checked : Qt::Unchecked;
+
+    for(int i = 0; i < count; i++) {
+        QListWidgetItem * item = ui -> sitesList -> item(i);
+        if (item -> flags() & Qt::ItemIsUserCheckable)
+            item -> setCheckState(st);
+    }
+}
+
+void SearchDialog::on_sitesList_itemClicked(QListWidgetItem * item) {
+    bool st = item -> checkState() == Qt::Checked;
+
+    if (!st) {
+        int count = ui -> sitesList -> count();
+
+        for(int i = 0; i < count; i++)
+            st |= ui -> sitesList -> item(i) -> checkState() == Qt::Checked;
+    }
+
+    ui -> inSites -> blockSignals(true);
+    ui -> inSites -> setChecked(st);
+    ui -> inSites -> blockSignals(false);
 }

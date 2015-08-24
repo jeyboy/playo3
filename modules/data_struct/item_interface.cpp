@@ -133,19 +133,7 @@ QVariant IItem::data(int column) const {
                 params.insert(Key::played, is(played));
                 params.insert(Key::not_exist, is(not_exist));
                 params.insert(Key::proccessing, is(proccessing));
-
-                int iType = itemType();
-                if (iType == WEB_ITEM) {
-                    switch(subtipe()) {
-                        case fourshared: {iType = FOURSHARED_ITEM; break;}
-                        case zaycev: {iType = ZAYCEV_ITEM; break;}
-                        case promodj: {iType = PROMODJ_ITEM; break;}
-                        case jetune: {iType = JETUNE_ITEM; break;}
-                        default:;
-                    }
-                }
-
-                params.insert(Key::type, iType);
+                params.insert(Key::type, itemType() + subtipe());
             }
             return params;
         }
