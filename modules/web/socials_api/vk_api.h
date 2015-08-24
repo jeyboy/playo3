@@ -11,7 +11,8 @@ namespace Vk {
     class Api : public WebApi, public TeuAuth, public RequestApi {
         Q_OBJECT
     public:
-        inline QString name() const { return QStringLiteral("vk"); }
+        inline QString name() const { return QStringLiteral("Vk"); }
+        inline Playo3::WebSubType siteType() { return Playo3::vk_site; }
         inline QUrlQuery genDefaultParams() {
             QUrlQuery query = QUrlQuery();
 
@@ -51,13 +52,20 @@ namespace Vk {
             );
         }
 
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
+            if (predicate.isEmpty() && limitations.by_popularity())
+                return audioPopular(true, genre);
+            else
+                return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
+        }
+
     signals:
         void showCaptcha();
     public slots:
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
     protected:
-        inline QString baseUrlStr(QString & predicate) { return base_url % predicate; }
+        inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
         inline QString offsetKey() const { return offset_key; }
         inline QString limitKey() const { return limit_key; }

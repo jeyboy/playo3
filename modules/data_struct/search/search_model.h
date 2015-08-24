@@ -24,6 +24,7 @@ namespace Playo3 {
         void searchFinished();
     private:
         FolderItem * searchRoutine(QFutureWatcher<FolderItem *> * watcher);
+        void prepareRequests(QList<SearchRequest> & requests);
 
         SearchSettings request;
         QFutureWatcher<FolderItem *> * initiator;

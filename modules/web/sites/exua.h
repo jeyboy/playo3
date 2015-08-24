@@ -15,6 +15,9 @@
 //        static Exua * instance();
 //        inline static void close() { delete self; }
 
+//        inline QString name() const { return QStringLiteral("EXua"); }
+//        inline Playo3::WebSubType siteType() { return Playo3::exua_site; }
+
 //        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
 //            QUrl url;
 
@@ -23,7 +26,7 @@
 //                    (by_artist ? search_predicate_artist_token : search_predicate_song_token) % predicate
 //                ));
 //            } else if (!genre.isEmpty())
-//                return byGenre(genre, genre_id);
+//                return byGenre(genre, popular_items);
 //            else if (popular_items)
 //                return popular();
 
@@ -106,7 +109,7 @@
 ////            return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
 ////        }
 
-//        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua") % predicate; }
+//        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua") % predicate; }
 
 //        bool indexToJson(WebManager * manager, QJsonArray & json, QUrl baseUrl) {
 //            QNetworkReply * reply = manager -> getSync(url);

@@ -7,6 +7,7 @@
 #include "json_fields.h"
 #include "misc/settings.h"
 #include "misc/file_utils/filename_conversions.h"
+#include "modules/web/web_sub_types.h"
 
 #include "media/genres/music_genres.h"
 
@@ -22,7 +23,6 @@ namespace Playo3 {
     #define IUID ISTATERESTORE + 1
     #define ITYPE IUID + 1
 
-
     #define ITITLE Qt::DisplayRole
     #define IEXTENSION Qt::UserRole - 1
     #define IPATH IEXTENSION - 1
@@ -32,19 +32,6 @@ namespace Playo3 {
     #define ITITLESCACHE IINFO - 1
     #define IADDFONT ITITLESCACHE - 1
     #define IREMOTE IADDFONT - 1
-
-    enum WebSubType {
-        none = 0,
-        myzuka,
-        fourshared,
-        zaycev,
-        mp3base,
-        promodj,
-        mp3cc,
-        mp3pm,
-        shmidt,
-        jetune
-    };
 
     class ItemFields : public ItemState {
     public:

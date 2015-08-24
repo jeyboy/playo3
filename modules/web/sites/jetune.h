@@ -10,17 +10,15 @@
 namespace Grabber {
     class Jetune : public IGrabberApi {
     public:
+        inline QString name() const { return QStringLiteral("Jetune"); }
+        inline Playo3::WebSubType siteType() { return Playo3::jetune_site; }
+
         static Jetune * instance();
         inline static void close() { delete self; }
 
-        TargetGenres genresList() {
-            if (genres.isEmpty())
-                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
+        void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-            return genres;
-        }
-
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -34,12 +32,12 @@ namespace Grabber {
 //        }
 
         // rus letters has specific presentation
-//        QJsonArray byChar(QChar /*target_char*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
 //            //TODO: realize later
 //        }
 
 //        // one page contains 30 albums
-//        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
 //            switch (target_type) { // need to modify grab processing of folder support in model
 //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
 //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
@@ -52,13 +50,12 @@ namespace Grabber {
 //            //TODO: stop if result not contains elements
 //        }
 
-        QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+        inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
+        inline QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            qDebug() << "HTML--------------------------------------------";
             Html::Document parser(reply);
             bool result = false;
 
@@ -109,26 +106,28 @@ namespace Grabber {
             return result;
         }
 
-        inline QString refresh_postprocess(QNetworkReply * reply) {
+        inline QString refresh_postprocess(QNetworkReply * /*reply*/) {
 //            Html::Document parser(reply);
 
 //            QString url = parser.find("#player_content script").text();
 //            return url.section("mp3:\"", 1).section("\"", 0, 0);
+
+            return QString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(
                 QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                     QUrl::toPercentEncoding(predicate),
-                    by_artist ? QStringLiteral("artist") : QStringLiteral("track"),
+                    limitations.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),
                     page_offset_key
                 )
             );
 
             QJsonArray json;
-            lQuery(url_str, json, songs1, MAX_PAGE);
+            lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-            while(json.size() > count)
+            while(json.size() > limitations.count)
                 json.removeLast();
 
             return json;

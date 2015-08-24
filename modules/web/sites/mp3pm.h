@@ -13,6 +13,9 @@ namespace Grabber {
         static Mp3pm * instance();
         inline static void close() { delete self; }
 
+        inline QString name() const { return QStringLiteral("Mp3pm"); }
+        inline Playo3::WebSubType siteType() { return Playo3::mp3pm_site; }
+
         TargetGenres genresList() { // manual init at this time
             if (genres.isEmpty()) {
 //                genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
@@ -44,7 +47,7 @@ namespace Grabber {
             return genres;
         }
 
-//        QJsonArray byGenre(QString genre, int genre_id) { // http://zaycev.net/genres/shanson/index.html
+//        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
 
@@ -58,12 +61,12 @@ namespace Grabber {
 //        }
 
         // rus letters has specific presentation
-//        QJsonArray byChar(QChar /*target_char*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
 //            //TODO: realize later
 //        }
 
 //        // one page contains 30 albums
-//        QJsonArray byType(ByTypeArg target_type) { //http://zaycev.net/musicset/more.html?page=1
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
 //            switch (target_type) { // need to modify grab processing of folder support in model
 //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
 //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
@@ -79,7 +82,7 @@ namespace Grabber {
         QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
+        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
             Html::Document parser(reply);
@@ -121,16 +124,16 @@ namespace Grabber {
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
 //        }
 
-        QJsonArray search_postprocess(QString & predicate, bool /*by_artist*/, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/s/f/%1/page/%2/")).arg(
                 QUrl::toPercentEncoding(predicate),
                 page_offset_key
             );
 
             QJsonArray json;
-            lQuery(url_str, json, songs1, MAX_PAGE);
+            lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-            while(json.size() > count)
+            while(json.size() > limitations.count)
                 json.removeLast();
 
             return json;

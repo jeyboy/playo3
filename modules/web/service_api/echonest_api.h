@@ -24,14 +24,18 @@ class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArti
     Q_OBJECT
 public:
     inline QString name() const { return QStringLiteral("echonest"); }
+    inline Playo3::WebSubType siteType() { return Playo3::echonest_site; }
     virtual ~EchonestApi() { }
 
     static EchonestApi * instance();
     inline static void close() { delete self; }
 protected:
+    inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
+
+    inline QString refresh(QString path) { return path; }
     inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
 
-    inline QString baseUrlStr(QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
+    inline QString baseUrlStr(const QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
 
     inline QString offsetKey() const { return QStringLiteral("start"); }
     inline QString limitKey() const { return QStringLiteral("results"); }

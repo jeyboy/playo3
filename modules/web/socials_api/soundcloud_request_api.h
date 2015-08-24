@@ -19,7 +19,7 @@ namespace Soundcloud {
         inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, QStringLiteral("genres"), genre); }
         inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, QStringLiteral("order"), hottest ? QStringLiteral("hotness") : QStringLiteral("created_at")); }
     public:
-    //    inline ~SoundcloudRequestApi() {}
+        inline virtual ~RequestApi() {}
 
         /////////////////
         /// AUTH
@@ -75,10 +75,11 @@ namespace Soundcloud {
 
             return baseUrl(QStringLiteral("tracks"), query);
         }
-        QJsonArray audioSearch(QString & predicate, QString & genre, bool popular, int count = 5) {
+
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
             return lQuery(
-                audioSearchUrl(predicate, genre, popular),
-                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT)),
+                audioSearchUrl(predicate, genre, limitations.by_popularity()),
+                QueryRules(QStringLiteral("response"), requestLimit(), qMin(limitations.count, SOUNDCLOUD_OFFSET_LIMIT)),
                 wrap
             );
         }

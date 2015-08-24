@@ -27,7 +27,7 @@
 //id:Taste-Profile-ID 	returns personal catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
 
 
-class EchonestGenreApi : public IApi {
+class EchonestGenreApi : virtual public IApi {
     public:
         inline virtual ~EchonestGenreApi() {}
 
@@ -72,13 +72,15 @@ class EchonestGenreApi : public IApi {
             return baseUrl(QStringLiteral("genre/list"), query);
         }
 
-        QJsonArray genresList() {
+        void genres_prepocessing() {
             QJsonObject response;
 
-            if (sQuery(genresListUrl(), response))
-                return response.value(QStringLiteral("genres")).toArray();
-
-            return QJsonArray();
+            if (sQuery(genresListUrl(), response)) {
+                QString field_key = QStringLiteral("name");
+                QJsonArray styles = response.value(QStringLiteral("genres")).toArray();
+                for(QJsonArray::Iterator genre = styles.begin(); genre != styles.end(); genre++)
+                    genres.addGenre((*genre).toObject().value(field_key).toString());
+            }
         }
 
         inline QUrl genreInfoUrl(QString & genre) {

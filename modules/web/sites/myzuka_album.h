@@ -15,6 +15,9 @@ namespace Grabber {
         static MyzukaAlbum * instance();
         inline static void close() { delete self; }
 
+        inline QString name() const { return QStringLiteral("Myzuka"); }
+        inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
+
         TargetGenres genresList() {
             if (genres.isEmpty())
                 lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);
@@ -23,39 +26,39 @@ namespace Grabber {
         }
 
         // artists by genre
-        QJsonArray byGenre(QString genre, int genre_id) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+        QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
             QJsonArray json;
-            if (genresList().isEmpty()) genresList();
+//            if (genresList().isEmpty()) genresList();
 
-            genre_id = genres.toInt(genre);
-            if (genre_id == genres.defaultInt()) return json;
+//            genre_id = genres.toInt(genre);
+//            if (genre_id == genres.defaultInt()) return json;
 
-            WebManager * manager = WebManager::manager();
-            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
-            QHash<QString, QString> artistLinks;
+//            WebManager * manager = WebManager::manager();
+//            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
+//            QHash<QString, QString> artistLinks;
 
-            for(int page = 1; page < MAX_PAGE; page++) {
-                QUrl url(genrePath % QString::number(page));
-                QNetworkReply * response = manager -> getSync(url);
-                Html::Document doc(response);
+//            for(int page = 1; page < MAX_PAGE; page++) {
+//                QUrl url(genrePath % QString::number(page));
+//                QNetworkReply * response = manager -> getSync(url);
+//                Html::Document doc(response);
 
-                doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
+//                doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
 
-                QThread::msleep(GRAB_DELAY); // extra pause
-                delete response;
-            }
+//                QThread::msleep(REQUEST_DELAY); // extra pause
+//                delete response;
+//            }
 
-            artistsToJson(artistLinks, json);
+//            artistsToJson(artistLinks, json);
             return json;
         }
 
         // byChar and byType has too many items - parse it all at once is not good idea ?
 
-//        QJsonArray byChar(QChar /*target_char*/) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(ByTypeArg target_type) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
 //            QList<QUrl> urls;
 
 //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -97,7 +100,7 @@ namespace Grabber {
             return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
         }
 
-        QString baseUrlStr(QString predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
+        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
 
 
         QString refresh_postprocess(QNetworkReply * reply) {
@@ -109,7 +112,7 @@ namespace Grabber {
             else
                 return baseUrlStr(tracks.link());
         }
-        QJsonArray search_postprocess(QString & predicate, bool by_artist, bool /*by_song*/, QString & /*genre*/, int /*genre_id*/, int count) {
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QUrl url = QUrl(baseUrlStr(search_path_token));
             url.setQuery(search_predicate_token % predicate);
 
@@ -123,16 +126,16 @@ namespace Grabber {
             Html::Tag * artists_table = 0, * songs_table = 0;
             prepareTables(tables, artists_table, songs_table);
 
-            if (by_artist && artists_table) {
+            if (limitations.by_artists() && artists_table) {
                 QHash<QString, QString> artistLinks;
                 artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
             }
 
-            if (!by_artist && songs_table) {
+            if (!limitations.by_artists() && songs_table) {
                 Html::Set songs = songs_table -> find(&songTrSelector);
 
-                if (count < ITEMS_PER_PAGE)
-                    while(songs.size() > count)
+                if (limitations.count < ITEMS_PER_PAGE)
+                    while(songs.size() > limitations.count)
                         songs.removeLast();
 
                 for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {

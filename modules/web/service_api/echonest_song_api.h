@@ -25,7 +25,7 @@
 //id:Personal-Catalog-ID 	returns personal catalog specific information about the song for the given catalog. See Project Rosetta Stone for details.
 
 
-class EchonestSongApi : public IApi {
+class EchonestSongApi : virtual public IApi {
     public:
         inline virtual ~EchonestSongApi() {}
 

@@ -14,6 +14,7 @@ namespace Fourshared {
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("4shared"); }
+        inline Playo3::WebSubType siteType() { return Playo3::fourshared_site; }
         inline QUrlQuery genDefaultParams() {
             return QUrlQuery(
                 QStringLiteral("oauth_consumer_key=") %
@@ -33,7 +34,7 @@ namespace Fourshared {
         void proceedAuthResponse(const QUrl & url);
 
     protected:
-        inline QString baseUrlStr(QString & predicate) { return base_url % predicate % ".json"; }
+        inline QString baseUrlStr(const QString & predicate) { return base_url % predicate % ".json"; }
 
         inline QString offsetKey() const { return offset_key; }
         inline QString limitKey() const { return limit_key; }

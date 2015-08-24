@@ -8,6 +8,7 @@ class TeuAuth {
 public:
     inline TeuAuth() {}
     inline TeuAuth(QJsonObject & hash) { fromJson(hash); }
+    inline virtual ~TeuAuth() {}
 
     void setParams(QString accessToken, QString userID, QString expiresIn);
 
