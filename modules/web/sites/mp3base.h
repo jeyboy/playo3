@@ -110,13 +110,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("Mp3Base"); }
         inline Playo3::WebSubType siteType() { return Playo3::mp3base_site; }
 
-        TargetGenres genresList() {
-            if (genres.isEmpty())
-                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
-
-            return genres;
-        }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -202,6 +195,8 @@ namespace Grabber {
             return result;
         }
 
+        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
+
         inline QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);
 
@@ -210,7 +205,7 @@ namespace Grabber {
         }
 
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-            QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(QUrl::toPercentEncoding(predicate), page_offset_key);
+            QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(encodeStr(predicate), page_offset_key);
 
             QJsonArray json;
             lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);

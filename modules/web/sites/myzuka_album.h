@@ -18,13 +18,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("Myzuka"); }
         inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
 
-        TargetGenres genresList() {
-            if (genres.isEmpty())
-                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);
-
-            return genres;
-        }
-
         // artists by genre
         QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
             QJsonArray json;
@@ -102,6 +95,8 @@ namespace Grabber {
 
         QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
 
+
+        inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
 
         QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);

@@ -16,37 +16,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("Shmidt"); }
         inline Playo3::WebSubType siteType() { return Playo3::shmidt_site; }
 
-        TargetGenres genresList() { // manual init at this time
-            if (genres.isEmpty()) {
-//                genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
-//                genres.addGenre(QStringLiteral("rap"), 15);
-//                genres.addGenre(QStringLiteral("HipHop"), QStringLiteral("rap"));
-//                genres.addGenre(QStringLiteral("Easy Listening"), QStringLiteral("relax"));
-//                genres.addGenre(QStringLiteral("Dance"), QStringLiteral("dance_house"));
-//                genres.addGenre(QStringLiteral("House"), QStringLiteral("dance_house"));
-//                genres.addGenre(QStringLiteral("House"), QStringLiteral("instrumental"));
-
-//                genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
-//                genres.addGenre(QStringLiteral("Alternative"), QStringLiteral("alternative"));
-//                genres.addGenre(QStringLiteral("Rhythm and Blues"), QStringLiteral("rnb"));
-//                genres.addGenre(QStringLiteral("Rhythm & Blues"), QStringLiteral("rnb"));
-//                genres.addGenre(QStringLiteral("Metal"), QStringLiteral("metal"));
-//                genres.addGenre(QStringLiteral("Reggae"), QStringLiteral("reggae"));
-//                genres.addGenre(QStringLiteral("Jazz"), QStringLiteral("jazz"));
-//                genres.addGenre(QStringLiteral("Country"), QStringLiteral("country"));
-//                genres.addGenre(QStringLiteral("Chanson"), QStringLiteral("chanson"));
-//                genres.addGenre(QStringLiteral("Blues"), QStringLiteral("blues"));
-//                genres.addGenre(QStringLiteral("Estrada"), QStringLiteral("estrada"));
-//                genres.addGenre(QStringLiteral("Folk"), QStringLiteral("folk"));
-//                genres.addGenre(QStringLiteral("Electronic"), QStringLiteral("electronic"));
-//                genres.addGenre(QStringLiteral("Drum & Bass"), QStringLiteral("dnb"));
-//                genres.addGenre(QStringLiteral("Soundtrack"), QStringLiteral("soundtrack"));
-//                genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
-            }
-
-            return genres;
-        }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -112,6 +81,8 @@ namespace Grabber {
             return result;
         }
 
+//        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
+
         inline QString refresh_postprocess(QNetworkReply * reply) {
             Html::Document parser(reply);
             Html::Set tracks = parser.find(".download p a");
@@ -124,7 +95,7 @@ namespace Grabber {
 
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
-                QUrl::toPercentEncoding(predicate),
+                encodeStr(predicate),
                 (limitations.by_artists() ? QStringLiteral("artistname") : limitations.by_songs() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
             );
 

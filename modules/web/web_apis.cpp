@@ -17,6 +17,7 @@ namespace Web {
             sites.insert(Grabber::Mp3pm::instance() -> siteType(), Grabber::Mp3pm::instance());
             sites.insert(Grabber::Shmidt::instance() -> siteType(), Grabber::Shmidt::instance());
             sites.insert(Grabber::Jetune::instance() -> siteType(), Grabber::Jetune::instance());
+            sites.insert(Grabber::MusicShara::instance() -> siteType(), Grabber::MusicShara::instance());
         }
 
         return sites;

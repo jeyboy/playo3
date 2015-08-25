@@ -16,28 +16,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("Zaycev"); }
         inline Playo3::WebSubType siteType() { return Playo3::zaycev_site; }
 
-        TargetGenres genresList() { // manual init at this time
-            if (genres.isEmpty()) {
-                genres.addGenre(QStringLiteral("pop"), 13);
-                genres.addGenre(QStringLiteral("rock"), 17);
-                genres.addGenre(QStringLiteral("rap"), 15);
-                genres.addGenre(QStringLiteral("alternative"), 20);
-                genres.addGenre(QStringLiteral("electronic"), 52);
-                genres.addGenre(QStringLiteral("shanson"), 102);
-                genres.addGenre(QStringLiteral("soundtrack"), 24);
-                genres.addGenre(QStringLiteral("metal"), 9);
-                genres.addGenre(QStringLiteral("classical"), 32);
-                genres.addGenre(QStringLiteral("dance"), 3);
-                genres.addGenre(QStringLiteral("easy"), 98);
-                genres.addGenre(QStringLiteral("rnb"), 14);
-                genres.addGenre(QStringLiteral("jazz"), 8);
-                genres.addGenre(QStringLiteral("reggae"), 16);
-                genres.addGenre(QStringLiteral("other"), 12);
-            }
-
-            return genres;
-        }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -116,6 +94,24 @@ namespace Grabber {
             return result;
         }
 
+        void genres_prepocessing() { // manual init at this time
+            genres.addGenre(QStringLiteral("pop"), 13);
+            genres.addGenre(QStringLiteral("rock"), 17);
+            genres.addGenre(QStringLiteral("rap"), 15);
+            genres.addGenre(QStringLiteral("alternative"), 20);
+            genres.addGenre(QStringLiteral("electronic"), 52);
+            genres.addGenre(QStringLiteral("shanson"), 102);
+            genres.addGenre(QStringLiteral("soundtrack"), 24);
+            genres.addGenre(QStringLiteral("metal"), 9);
+            genres.addGenre(QStringLiteral("classical"), 32);
+            genres.addGenre(QStringLiteral("dance"), 3);
+            genres.addGenre(QStringLiteral("easy"), 98);
+            genres.addGenre(QStringLiteral("rnb"), 14);
+            genres.addGenre(QStringLiteral("jazz"), 8);
+            genres.addGenre(QStringLiteral("reggae"), 16);
+            genres.addGenre(QStringLiteral("other"), 12);
+        }
+
         // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
         inline QString refresh_postprocess(QNetworkReply * reply) {
             return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
@@ -123,7 +119,7 @@ namespace Grabber {
 
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search.html?query_search=%1&page=%2").arg(
-                QUrl::toPercentEncoding(predicate),
+                encodeStr(predicate),
                 page_offset_key
             ));
 

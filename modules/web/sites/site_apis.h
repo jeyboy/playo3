@@ -9,5 +9,6 @@
 #include "mp3pm.h"
 #include "shmidt.h"
 #include "jetune.h"
+#include "musicshara.h"
 
 #endif // SITE_APIS

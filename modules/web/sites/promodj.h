@@ -16,13 +16,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("PromoDJ"); }
         inline Playo3::WebSubType siteType() { return Playo3::promodj_site; }
 
-        TargetGenres genresList() {
-            if (genres.isEmpty())
-                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
-
-            return genres;
-        }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -106,6 +99,8 @@ namespace Grabber {
             return result;
         }
 
+        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
+
 //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
 //        inline QString refresh_postprocess(QNetworkReply * reply) {
 //            Html::Document parser(reply);
@@ -119,7 +114,7 @@ namespace Grabber {
 
             QString alias = genresList().toAlias(genre);
             QString url_str = baseUrlStr(QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
-                        (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, QUrl::toPercentEncoding(predicate), page_offset_key);
+                        (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(predicate), page_offset_key);
 
             QJsonArray json;
             lQuery(url_str, json, songs1, /*limitations.cpage*/ 10); // ten page at this time

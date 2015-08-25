@@ -16,8 +16,6 @@ namespace Grabber {
         static Jetune * instance();
         inline static void close() { delete self; }
 
-        void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -104,6 +102,8 @@ namespace Grabber {
             return result;
         }
 
+        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
+
         inline QString refresh_postprocess(QNetworkReply * /*reply*/) {
 //            Html::Document parser(reply);
 
@@ -116,7 +116,7 @@ namespace Grabber {
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(
                 QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
-                    QUrl::toPercentEncoding(predicate),
+                    encodeStr(predicate),
                     limitations.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),
                     page_offset_key
                 )

@@ -16,33 +16,6 @@ namespace Grabber {
         inline QString name() const { return QStringLiteral("Mp3cc"); }
         inline Playo3::WebSubType siteType() { return Playo3::mp3cc_site; }
 
-        TargetGenres genresList() { // manual init at this time
-            if (genres.isEmpty()) {
-                genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
-                genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
-                genres.addGenre(QStringLiteral("Rap"), QStringLiteral("rap"));
-                genres.addGenre(QStringLiteral("Alternative"), QStringLiteral("alternative"));
-                genres.addGenre(QStringLiteral("Rhythm and Blues"), QStringLiteral("rnb"));
-                genres.addGenre(QStringLiteral("Rhythm & Blues"), QStringLiteral("rnb"));
-                genres.addGenre(QStringLiteral("Metal"), QStringLiteral("metal"));
-                genres.addGenre(QStringLiteral("Reggae"), QStringLiteral("reggae"));
-                genres.addGenre(QStringLiteral("Jazz"), QStringLiteral("jazz"));
-                genres.addGenre(QStringLiteral("Country"), QStringLiteral("country"));
-                genres.addGenre(QStringLiteral("Chanson"), QStringLiteral("chanson"));
-                genres.addGenre(QStringLiteral("Blues"), QStringLiteral("blues"));
-                genres.addGenre(QStringLiteral("Dance"), QStringLiteral("dance"));
-                genres.addGenre(QStringLiteral("Estrada"), QStringLiteral("estrada"));
-                genres.addGenre(QStringLiteral("Easy Listening"), QStringLiteral("relax"));
-                genres.addGenre(QStringLiteral("Folk"), QStringLiteral("folk"));
-                genres.addGenre(QStringLiteral("Electronic"), QStringLiteral("electronic"));
-                genres.addGenre(QStringLiteral("Drum & Bass"), QStringLiteral("dnb"));
-                genres.addGenre(QStringLiteral("Soundtrack"), QStringLiteral("soundtrack"));
-                genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
-            }
-
-            return genres;
-        }
-
 //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
 //            QJsonArray json;
 //            if (genresList().isEmpty()) genresList();
@@ -118,10 +91,33 @@ namespace Grabber {
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
 //        }
 
+        inline void genres_prepocessing() {
+            genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
+            genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
+            genres.addGenre(QStringLiteral("Rap"), QStringLiteral("rap"));
+            genres.addGenre(QStringLiteral("Alternative"), QStringLiteral("alternative"));
+            genres.addGenre(QStringLiteral("Rhythm and Blues"), QStringLiteral("rnb"));
+            genres.addGenre(QStringLiteral("Rhythm & Blues"), QStringLiteral("rnb"));
+            genres.addGenre(QStringLiteral("Metal"), QStringLiteral("metal"));
+            genres.addGenre(QStringLiteral("Reggae"), QStringLiteral("reggae"));
+            genres.addGenre(QStringLiteral("Jazz"), QStringLiteral("jazz"));
+            genres.addGenre(QStringLiteral("Country"), QStringLiteral("country"));
+            genres.addGenre(QStringLiteral("Chanson"), QStringLiteral("chanson"));
+            genres.addGenre(QStringLiteral("Blues"), QStringLiteral("blues"));
+            genres.addGenre(QStringLiteral("Dance"), QStringLiteral("dance"));
+            genres.addGenre(QStringLiteral("Estrada"), QStringLiteral("estrada"));
+            genres.addGenre(QStringLiteral("Easy Listening"), QStringLiteral("relax"));
+            genres.addGenre(QStringLiteral("Folk"), QStringLiteral("folk"));
+            genres.addGenre(QStringLiteral("Electronic"), QStringLiteral("electronic"));
+            genres.addGenre(QStringLiteral("Drum & Bass"), QStringLiteral("dnb"));
+            genres.addGenre(QStringLiteral("Soundtrack"), QStringLiteral("soundtrack"));
+            genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
+        }
+
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search/%1/%2/page/%3/")).arg(
                 QString(limitations.by_artists() ? 'a' : (limitations.by_songs() ? 't' : 'f')),
-                QUrl::toPercentEncoding(predicate),
+                encodeStr(predicate),
                 page_offset_key
             );
 

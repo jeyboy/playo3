@@ -15,7 +15,8 @@ namespace Playo3 {
         mp3cc_site,
         mp3pm_site,
         shmidt_site,
-        jetune_site
+        jetune_site,
+        music_shara
     };
 }
 
