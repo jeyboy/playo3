@@ -110,7 +110,7 @@ SOURCES += main.cpp\
     media/mediainfo.cpp \
     media/genres/genres_interface.cpp \
     media/genres/music_genres.cpp \
-    media/genres/web/vk_genres.cpp \
+    media/genres/vk_genres.cpp \
     misc/settings/library_settings.cpp \
     modules/web/auth_chemas/teu_auth.cpp \
     modules/web/socials_api/soundcloud_api.cpp \
@@ -159,7 +159,8 @@ SOURCES += main.cpp\
     modules/web/sites/jetune.cpp \
     modules/web/web_apis.cpp \
     modules/web/sites/musicshara.cpp \
-    modules/plugins/plugins.cpp
+    modules/plugins/plugins.cpp \
+    media/genres/id3_music_genres.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -249,7 +250,7 @@ HEADERS  += playo.h \
     modules/data_struct/item_drop_formats.h \
     media/library.h \
     media/mediainfo.h \
-    media/genres/web/vk_genres.h \
+    media/genres/vk_genres.h \
     media/genres/genres_interface.h \
     media/genres/music_genres.h \
     misc/settings/library_settings.h \
@@ -299,7 +300,7 @@ HEADERS  += playo.h \
     modules/web/socials_api/vk_request_api.h \
     modules/web/sites/igrabber_api.h \
     modules/web/sites/myzuka_album.h \
-    media/genres/web/target_genres.h \
+    media/genres/target_genres.h \
     misc/web_utils/html_parser.h \
     misc/web_utils/web_manager.h \
     external_keys.h \
@@ -323,7 +324,8 @@ HEADERS  += playo.h \
     modules/isearchable.h \
     modules/web/web_sub_types.h \
     modules/web/sites/musicshara.h \
-    modules/plugins/plugins.h
+    modules/plugins/plugins.h \
+    media/genres/id3_music_genres.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

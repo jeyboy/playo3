@@ -16,7 +16,7 @@ public:
 
     virtual int defaultInt() const { return -1; }
 protected:
-    inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression(QStringLiteral("(\\W|[_])")), QString()).toLower()); }
+    inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression(QStringLiteral("(\\W|[_])")), QStringLiteral(" ")).toLower()); } // check & on replace
 
     QHash<QString, int> genres;
 };

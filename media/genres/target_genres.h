@@ -1,7 +1,7 @@
 #ifndef TARGET_GENRES
 #define TARGET_GENRES
 
-#include "../genres_interface.h"
+#include "genres_interface.h"
 
 class TargetGenres : public IGenres {
 public:

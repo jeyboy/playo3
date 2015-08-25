@@ -28,7 +28,7 @@ public:
     inline void setTitle(QString newTitle) { title = newTitle; }
     inline void setAlbum(QString newAlbum) { album = newAlbum; }
     inline void setGenre(QString newGenre) { genre = newGenre; }
-    inline void setGenre(int newGenre) { genre = MusicGenres::instance() -> toString(newGenre); }
+    inline void setGenre(int newGenre) { genre = MusicGenres::instance() -> toString(newGenre); } // need to update on global list init
 
     inline qint64 getSize() const { return size; }
     inline int getYear() const { return year; }

@@ -1,7 +1,7 @@
 #ifndef VK_GENRES
 #define VK_GENRES
 
-#include "../genres_interface.h"
+#include "genres_interface.h"
 
 class VkGenres : public IGenres {
 public:
