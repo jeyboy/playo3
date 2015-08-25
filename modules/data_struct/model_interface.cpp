@@ -665,7 +665,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         if (map_it.key() == SHARE_TYPE_VK) {
             if (!Vk::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
-                if (loadWebDialogPlugin(dInt)) {
+                if (Plugins::loadWebDialog(dInt)) {
                     QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
                     dInt -> registerActions(Vk::Api::instance());
                     dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
@@ -680,7 +680,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
             if (!Soundcloud::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
-                if (loadWebDialogPlugin(dInt)) {
+                if (Plugins::loadWebDialog(dInt)) {
                     QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
                     dInt -> registerActions(Soundcloud::Api::instance());
                     dialog -> exec();
@@ -916,7 +916,7 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
 
             if (is_valid) {
                 if (!params.sgenre.isEmpty()) {
-                    int genre_id = (*it) -> genreID().toInt();
+//                    int genre_id = (*it) -> genreID().toInt();
 //                    is_valid |= params.sgenre_id == genre_id;
                 }
 

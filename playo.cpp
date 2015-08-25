@@ -312,7 +312,7 @@ void Playo::openVKRecomendations() {
 
 void Playo::openVKTabDialog() {
     WebDialogInterface * dInt;
-    if (loadWebDialogPlugin(dInt)) {
+    if (Plugins::loadWebDialog(dInt)) {
         QDialog * dialog = dInt -> createDialog(this, WebManager::manager(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
         dInt -> registerActions(Vk::Api::instance());
 
@@ -348,7 +348,7 @@ void Playo::showSoundcloudRelTabDialog() {
 
 void Playo::openSoundcloudTabDialog() {
     WebDialogInterface * dInt;
-    if (loadWebDialogPlugin(dInt)) {
+    if (Plugins::loadWebDialog(dInt)) {
         QDialog * dialog = dInt -> createDialog(this, WebManager::manager(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
         dInt -> registerActions(Soundcloud::Api::instance());
 

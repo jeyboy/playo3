@@ -723,7 +723,7 @@ void IView::markListenedAsChecked() {
     checkByPredicate(IItem::listened);
 }
 
-void IView::moveCheckedToNewTab(FolderItem * root) {
+void IView::moveCheckedToNewTab(FolderItem * /*root*/) {
     //TODO: realisation needed
 }
 

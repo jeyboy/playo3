@@ -42,16 +42,17 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
 
     //System.Music.Artist:(Beethoven OR Mozart)
 
+    int genre_id = MusicGenres::instance() -> toInt()
     QDirIterator dir_it(*(QString *)(params.search_interface), filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
 
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
         bool valid = true; //params.sgenre_id == -1;
 
-//        if (!valid) {
-//            MediaInfo m(QUrl::fromLocalFile(path), true, true);
-//            valid = m.getGenre() == params.sgenre_id;
-//        }
+        if (!valid) {
+            MediaInfo m(QUrl::fromLocalFile(path), true, true);
+            valid = m.getGenre() == params.sgenre_id;
+        }
 
         if (valid) {
             QFileInfo file = dir_it.fileInfo();
@@ -60,7 +61,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
         }
     }
 
-    delete params.search_interface;
+    delete (QString *)params.search_interface;
     return amount;
 }
 

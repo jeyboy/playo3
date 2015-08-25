@@ -20,7 +20,7 @@
 #include "dialogs/relations_dialog.h"
 #include "dialogs/echonest_dialog.h"
 
-#include "modules/plugins/loader.h"
+#include "modules/plugins/plugins.h"
 
 using namespace Playo3;
 

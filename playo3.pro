@@ -6,6 +6,7 @@
 
 VERSION = 0.5.8.0
 
+CONFIG += c++11
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES *= QT_USE_QSTRINGBUILDER
 
@@ -157,7 +158,8 @@ SOURCES += main.cpp\
     modules/web/sites/shmidt.cpp \
     modules/web/sites/jetune.cpp \
     modules/web/web_apis.cpp \
-    modules/web/sites/musicshara.cpp
+    modules/web/sites/musicshara.cpp \
+    modules/plugins/plugins.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -285,7 +287,6 @@ HEADERS  += playo.h \
     modules/web/service_api/echonest_artist_api.h \
     modules/web/service_api/echonest_song_api.h \
     modules/plugins/web_dialog_interface.h \
-    modules/plugins/loader.h \
     modules/web/service_api/echonest_playlist_api.h \
     dialogs/echonest_dialog.h \
     modules/controls/accordion.h \
@@ -321,7 +322,8 @@ HEADERS  += playo.h \
     modules/web/sites/site_apis.h \
     modules/isearchable.h \
     modules/web/web_sub_types.h \
-    modules/web/sites/musicshara.h
+    modules/web/sites/musicshara.h \
+    modules/plugins/plugins.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

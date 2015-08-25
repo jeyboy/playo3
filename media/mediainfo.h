@@ -27,8 +27,8 @@ public:
     inline void setArtist(QString newArtist) { artist = newArtist; }
     inline void setTitle(QString newTitle) { title = newTitle; }
     inline void setAlbum(QString newAlbum) { album = newAlbum; }
-    inline void setGenre(QString newGenre) { genre = MusicGenres::instance() -> toInt(newGenre); }
-    inline void setGenre(int newGenre) { genre = newGenre; }
+    inline void setGenre(QString newGenre) { genre = newGenre; }
+    inline void setGenre(int newGenre) { genre = MusicGenres::instance() -> toString(newGenre); }
 
     inline qint64 getSize() const { return size; }
     inline int getYear() const { return year; }
@@ -55,8 +55,8 @@ private:
     QString artist;
     QString title;
     QString album;
+    QString genre;
 
-    int genre;
     int year;
     int track;
 

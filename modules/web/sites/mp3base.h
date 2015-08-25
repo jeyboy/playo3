@@ -95,11 +95,6 @@
 //	openURL(url);
 //}
 
-
-
-#define ITEMS_PER_PAGE 50
-#define MAX_PAGES_PER_ARTIST 2
-
 // store all selectors in global variables
 namespace Grabber {
     class Mp3Base : public IGrabberApi {

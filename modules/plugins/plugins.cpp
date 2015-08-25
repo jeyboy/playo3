@@ -1,14 +1,6 @@
-#ifndef LOADER
-#define LOADER
+#include "plugins.h"
 
-#include <qdir.h>
-#include <qapplication.h>
-#include <qpluginloader.h>
-
-#include "misc/logger.h"
-#include "web_dialog_interface.h"
-
-static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
+bool Plugins::loadWebDialog(WebDialogInterface *& wdi) {
     QDir pluginsDir(QApplication::instance() -> applicationDirPath());
     QStringList filters;
 
@@ -33,5 +25,3 @@ static bool loadWebDialogPlugin(WebDialogInterface *& wdi) {
 
     return false;
 }
-
-#endif // LOADER
