@@ -1,4 +1,4 @@
-#include "music_genres.h"
+#include "id3_music_genres.h"
 
 Id3MusicGenres * Id3MusicGenres::self = 0;
 
@@ -8,7 +8,7 @@ Id3MusicGenres * Id3MusicGenres::instance() {
     return self;
 }
 
-void MusicGenres::initDefault() {
+void Id3MusicGenres::initDefault() {
     genres.insert(QStringLiteral("blues"), 0);
     genres.insert(QStringLiteral("classic rock"), 1);
     genres.insert(QStringLiteral("country"), 2);

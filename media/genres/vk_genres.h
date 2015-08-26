@@ -1,9 +1,9 @@
 #ifndef VK_GENRES
 #define VK_GENRES
 
-#include "genres_interface.h"
+#include "target_genres.h"
 
-class VkGenres : public IGenres {
+class VkGenres : public TargetGenres {
 public:
     static VkGenres * instance();
     inline static void close() { delete self; }
@@ -17,7 +17,7 @@ protected:
     void initDefault();
 
 private:
-    inline VkGenres() : IGenres() {
+    inline VkGenres() : TargetGenres() {
         initDefault();
     }
 

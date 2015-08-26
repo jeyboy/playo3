@@ -6,18 +6,11 @@
 
 #include "modules/isearchable.h"
 
-#include "media/genres/web/vk_genres.h"
-
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) { }
 
     inline void addGenre(QString genreName) {
         genres << genreName;
-
-//        if (inVk) {
-//            int vkId = VkGenres::instance() -> fromStandartId(id);
-//            vkGenres.insert(vkId, VkGenres::instance() -> toString(vkId));
-//        }
     }
 
     inline int limit(int def) { return onlyOne ? 1 : def; }
@@ -29,7 +22,6 @@ struct SearchSettings {
     bool onlyOne;
 
     QList<QString> genres;
-//    QHash<int, QString> vkGenres;
 
     QStringList drives;
     QList<void *> sites;

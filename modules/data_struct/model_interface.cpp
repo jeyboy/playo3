@@ -295,8 +295,9 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
 
                 newItem -> setOwner(owner);
                 newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::duration_key).toInt(0)));
-                if (itm.contains(Vk::genre_id_key))
-                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
+
+//                if (itm.contains(Vk::genre_id_key))
+//                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
             } else {
                 QList<IItem *>::Iterator it_it = items.begin();
 

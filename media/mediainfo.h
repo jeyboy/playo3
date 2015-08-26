@@ -21,7 +21,7 @@ public:
     inline QString getArtist() const { return artist; }
     inline QString getTitle() const { return title; }
     inline QString getAlbum() const { return album; }
-    inline int getGenre() const { return genre; }
+    inline int getGenre() const { return -1; /*genre*/; } //
     inline QString getExtension() const { return ext; }
 
     inline void setArtist(QString newArtist) { artist = newArtist; }

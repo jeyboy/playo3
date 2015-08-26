@@ -10,7 +10,7 @@
 
 #include "misc/logger.h"
 #include "misc/web_utils/web_manager.h"
-#include "media/genres/web/target_genres.h"
+#include "media/genres/target_genres.h"
 
 #include "modules/web/web_sub_types.h"
 
