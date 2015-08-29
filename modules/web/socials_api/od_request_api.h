@@ -4,6 +4,7 @@
 #include "../iapi.h"
 #include "misc/settings.h"
 #include "misc/web_utils/html_parser.h"
+#include "od_api_keys.h"
 
 #define OD_OFFSET_LIMIT 100
 
@@ -24,18 +25,35 @@ namespace Od {
         inline virtual ~RequestApi() {}
 
         inline QUrl authRequestUrl() const {
-            QUrl url("https://www.ok.ru/https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
+            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
             qDebug() << url;
             return url;
         }
 
-        inline QUrl authSidUrl() const { return QUrl(QStringLiteral("http://ok.ru/web-api/music/conf")); }
+        inline QUrl authSidUrl() const { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
+
+        inline QUrl audioUrl(const QString func) const { return QUrl(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString() % token()); }
+
+        inline QUrl searchAudioUrl() { return audioUrl(QStringLiteral("relevant")); } // params : (q: predicate) and pagination attrs
+        inline QUrl myAudioUrl() { return audioUrl(QStringLiteral("my")); } // params: (uid: sets for friend request) and pagination attrs
+        inline QUrl collectionsAudioUrl() { return audioUrl(QStringLiteral("collections")); }
+        inline QUrl downloadedAudioUrl() { return audioUrl(QStringLiteral("downloaded")); }
+        inline QUrl radioUrl() { return audioUrl(QStringLiteral("myTuners")); }
+        inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
+        inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
+//        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // has param ids ? // maybe this is info request per ids for items (track / album / artist / chunk)
+        inline QUrl playAudioUrl() { return audioUrl(QStringLiteral("play")); } // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
+        inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
 
         inline QString grabUserId(QNetworkReply * reply) {
             Html::Document doc(reply);
             doc.output();
-//            Html::Set results = doc.find("a.u-menu_a.tdn[href='/profile']");
-//            return results.link().section('/', 2);
+            Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");
+            if (results.isEmpty()) {
+                Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");
+                return results.link().section("st.uid=", 1).section('&', 0, 0);
+            } else
+                return results.link().section('/', 2);
             return QString();
         }
 

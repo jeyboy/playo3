@@ -15,7 +15,7 @@ namespace Od {
 
         inline QString name() const { return QStringLiteral("Od"); }
         inline Playo3::WebSubType siteType() { return Playo3::od_site; }
-        inline QUrlQuery genDefaultParams() { return QUrlQuery(/*QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")*/); }
+        inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") %  token()); }
         QString authUrl();
 
         void fromJson(QJsonObject hash);
@@ -46,10 +46,10 @@ namespace Od {
         QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
         inline QString refresh(QString path) { return path; }
-        inline QString baseUrlStr(const QString & predicate) { /*return base_url % predicate % ".json";*/ }
+        inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
-        inline QString offsetKey() const { /*return offset_key;*/ }
-        inline QString limitKey() const { /*return limit_key;*/ }
+        inline QString offsetKey() const { return offset_key; }
+        inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 100; }
 
         inline QJsonObject & extractBody(QJsonObject & response) { return response; }

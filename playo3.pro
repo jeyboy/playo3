@@ -161,7 +161,8 @@ SOURCES += main.cpp\
     modules/web/sites/musicshara.cpp \
     modules/plugins/plugins.cpp \
     media/genres/id3_music_genres.cpp \
-    modules/web/socials_api/od_api.cpp
+    modules/web/socials_api/od_api.cpp \
+    modules/web/socials_api/od_api_keys.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -328,7 +329,8 @@ HEADERS  += playo.h \
     modules/plugins/plugins.h \
     media/genres/id3_music_genres.h \
     modules/web/socials_api/od_api.h \
-    modules/web/socials_api/od_request_api.h
+    modules/web/socials_api/od_request_api.h \
+    modules/web/socials_api/od_api_keys.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
