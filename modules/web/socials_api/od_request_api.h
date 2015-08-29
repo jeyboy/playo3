@@ -30,9 +30,9 @@ namespace Od {
             return url;
         }
 
-        inline QUrl authSidUrl() const { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
+        inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
 
-        inline QUrl audioUrl(const QString func) const { return QUrl(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString() % token()); }
+        inline QUrl audioUrl(const QString func) { return QUrl(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString()); }
 
         inline QUrl searchAudioUrl() { return audioUrl(QStringLiteral("relevant")); } // params : (q: predicate) and pagination attrs
         inline QUrl myAudioUrl() { return audioUrl(QStringLiteral("my")); } // params: (uid: sets for friend request) and pagination attrs
@@ -45,9 +45,8 @@ namespace Od {
         inline QUrl playAudioUrl() { return audioUrl(QStringLiteral("play")); } // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
         inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
 
-        inline QString grabUserId(QNetworkReply * reply) {
+        inline QString grabUserId(QNetworkReply * reply) { // this did not used anywhere at this time
             Html::Document doc(reply);
-            doc.output();
             Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");
             if (results.isEmpty()) {
                 Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");
@@ -57,7 +56,7 @@ namespace Od {
             return QString();
         }
 
-        inline QString grabSID() const {
+        inline QString grabSID() {
             QJsonObject obj = WebManager::manager() -> postJson(QNetworkRequest(authSidUrl()), QByteArray()); // registrate sid for requests
             if (obj.contains(QStringLiteral("sid")))
                 return obj.value(QStringLiteral("sid")).toString();
