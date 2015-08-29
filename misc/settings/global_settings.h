@@ -16,6 +16,9 @@
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
 
+#define SETTINGS_OD_KEY QStringLiteral("od_key")
+#define SETTINGS_OD_VAL_KEY QStringLiteral("od_val")
+
 class GlobalSettings {
 public:
     void fromJson(QJsonObject & settings);
@@ -45,6 +48,9 @@ public:
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
 
+    inline QString od_key() { return _od_key;}
+    inline QString od_val() { return _od_val;}
+
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
@@ -55,6 +61,8 @@ protected:
     bool _openDropPointInTab;
     Playo3::ContainerType _openDropPointInTabType;
     int _tabPosition;
+
+    QString _od_key, _od_val;
 };
 
 #endif // GLOBAL_SETTINGS

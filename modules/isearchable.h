@@ -44,7 +44,7 @@ public:
 
     inline virtual ~ISearchable() {}
 
-    inline QString encodeStr(const QString & str) { return QUrl::toPercentEncoding(str); }
+    inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
 
     enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 

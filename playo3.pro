@@ -327,7 +327,8 @@ HEADERS  += playo.h \
     modules/web/sites/musicshara.h \
     modules/plugins/plugins.h \
     media/genres/id3_music_genres.h \
-    modules/web/socials_api/od_api.h
+    modules/web/socials_api/od_api.h \
+    modules/web/socials_api/od_request_api.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

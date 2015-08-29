@@ -3,11 +3,10 @@
 
 #include "../web_api.h"
 #include "../auth_chemas/teu_auth.h"
-#include "../iapi.h"
-#include "misc/web_utils/html_parser.h"
+#include "od_request_api.h"
 
 namespace Od {
-    class Api : public WebApi, public TeuAuth, public IApi {
+    class Api : public WebApi, public TeuAuth, public RequestApi {
         Q_OBJECT
     public:
         static Api * instance();
@@ -29,20 +28,15 @@ namespace Od {
 
 //        QJsonObject objectInfo(QString & uid);
 //        inline void objectInfo(QString & uid, Func func) {
-//            registerAsync(
-//                QtConcurrent::run(this, &Api::objectInfo, uid), func
-//            );
+//              registerAsync(
+//                  QtConcurrent::run(this, &Api::objectInfo, uid), func
+//              );
 //        }
     public slots:
         void connection() {
-            QUrl url("https://www.ok.ru/https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=jeyboy%40bigmir.net&st.password=jeyboy12201985&st.remember=on&st.iscode=false");
-            QNetworkReply * reply = WebManager::manager() -> postForm(url);
-            Html::Document doc(reply);
-            doc.output();
-            Html::Set results = doc.find("a.u-menu_a.tdn[href='/profile']");
-            QString uid = results.link().section('/', 2);
-            delete reply;
-            setParams(WebManager::cookie(QStringLiteral("JSESSIONID")), uid, QString());
+            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl());
+            setParams(grabSID(), grabUserId(reply), QString()); // QStringLiteral("JSESSIONID")
+            grabUserId(reply);
             qDebug() << token() << userID();
         }
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
@@ -66,8 +60,8 @@ namespace Od {
             return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
         }
     private:
-        inline Api(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
-        inline Api() : WebApi(), TeuAuth() { }
+        inline Api(QJsonObject hash) : WebApi(), TeuAuth(), RequestApi() { fromJson(hash); }
+        inline Api() : WebApi(), TeuAuth(), RequestApi() { }
         inline virtual ~Api() {}
 
         static Api * self;
