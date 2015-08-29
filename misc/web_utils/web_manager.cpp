@@ -1,7 +1,7 @@
 #include "web_manager.h"
 
 QHash<QObject *, WebManager *> WebManager::managers = QHash<QObject *, WebManager *>();
-QNetworkCookieJar * WebManager::cookies = new QNetworkCookieJar(QApplication::instance());
+Cookies * WebManager::cookies = new Cookies(QApplication::instance());
 
 WebManager * WebManager::manager() {
     QThread * thread = QThread::currentThread();
@@ -37,11 +37,16 @@ QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArr
     return res;
 }
 
-QNetworkReply * WebManager::postForm(QUrl url) {
+QNetworkReply * WebManager::postForm(QUrl url, QHash<QString, QString> headers) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-    return proceedReply(postSync(request, url.query(QUrl::FullyEncoded).toUtf8()));
+    if (!headers.contains(QStringLiteral("Referer")))
+        headers.insert(QStringLiteral("Referer"), url.path());
 
+    for(QHash<QString, QString>::Iterator header = headers.begin(); header != headers.end(); header++)
+        request.setRawHeader(header.key().toUtf8(), header.value().toUtf8());
+
+    return proceedReply(postSync(request, url.query(QUrl::FullyEncoded).toUtf8()));
 }
 
 QPixmap WebManager::openImage(QUrl & url) {

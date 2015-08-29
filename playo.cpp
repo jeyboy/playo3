@@ -2,7 +2,6 @@
 #include "ui_playo.h"
 
 #include "misc/stylesheets.h"
-#include "modules/web/socials_api/od_api.h"
 
 using namespace Playo3;
 
@@ -18,8 +17,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
 
     initialization();
-
-    Od::Api::instance() -> connecting();
 
 //    qDebug() << "LAL" << QByteArray::fromPercentEncoding("/Artist/85834/%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B8-%D0%96%D1%83%D0%BA%D0%BE%D0%B2");
 //    ba = QByteArray::fromPercentEncoding(ba);

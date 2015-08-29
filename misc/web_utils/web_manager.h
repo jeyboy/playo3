@@ -7,6 +7,11 @@
 #include "misc/logger.h"
 
 class WebManagerController;
+class Cookies : public QNetworkCookieJar {
+public:
+    inline explicit Cookies(QObject * parent = 0) : QNetworkCookieJar(parent) {}
+    inline QList<QNetworkCookie> allCookies() const { return QNetworkCookieJar::allCookies(); }
+};
 
 class WebManager : public QNetworkAccessManager {
     Q_OBJECT
@@ -15,18 +20,28 @@ public:
 
     WebManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
+    inline void printCookies() { qDebug() << "COOKIE" << cookies -> allCookies(); }
+    static inline QString cookie(const QString & name, QUrl url = QUrl()) {
+        const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
+        for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++)
+            if ((*cookie).name() == name)
+                return QString((*cookie).value());
+
+        return QString();
+    }
+
     inline QNetworkReply * getSync(QString path) { return getSync(QUrl(path)); }
     inline QNetworkReply * getSync(QUrl url) { return getSync(QNetworkRequest(url)); }
     inline QNetworkReply * getSync(const QNetworkRequest & request) { return synchronizeRequest(WebManager::get(request)); }
     inline QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) { return synchronizeRequest(WebManager::post(request, data)); }
-    QNetworkReply * postForm(QUrl url);
+    QNetworkReply * postForm(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>());
 
     inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
     inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
     QJsonObject getJson(const QNetworkRequest & request, bool wrap = false);
     QJsonObject postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
-    inline QNetworkReply * openUrl(QUrl & url) { return proceedReply(getSync(QNetworkRequest(url))); }
+    inline QNetworkReply * openUrl(const QUrl & url) { return proceedReply(getSync(QNetworkRequest(url))); }
     QPixmap openImage(QUrl & url);
 
     static inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
@@ -35,6 +50,7 @@ public:
         return QJsonDocument::fromJson(ar).object();
     }
     QNetworkReply * proceedReply(QNetworkReply * m_http) { // TODO: need to prevent from url cicling
+        qDebug() << "STATUS:" << m_http -> attribute(QNetworkRequest::HttpStatusCodeAttribute);
         QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
         if (possibleRedirectUrl.isValid()) {
             QUrl new_url = possibleRedirectUrl.toUrl();
@@ -54,7 +70,7 @@ private:
     QSsl::SslProtocol protocol;
     QSslSocket::PeerVerifyMode mode;
 
-    static QNetworkCookieJar * cookies;
+    static Cookies * cookies;
     static QHash<QObject *, WebManager *> managers;
     friend class WebManagerController;
 };

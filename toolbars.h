@@ -9,6 +9,7 @@
 
 #include "modules/web/socials_api/vk_api.h"
 #include "modules/web/socials_api/soundcloud_api.h"
+#include "modules/web/socials_api/od_api.h"
 
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
@@ -68,6 +69,7 @@ namespace Playo3 {
         QToolButton * initiateEchonestButton();
         QToolButton * initiateVkButton();
         QToolButton * initiateSoundcloudButton();
+        QToolButton * initiateOdButton();
 
     protected slots:
         void onFolderDrop(QString name, QString path);
@@ -100,7 +102,7 @@ namespace Playo3 {
         QToolBar * createEqualizerButtonBar();
 
         inline ToolBars(QObject * parent) : QObject(parent),
-            vkToolButton(0), soundcloudToolButton(0), highlighted(0), equalizer(0), spectrum(0),
+            vkToolButton(0), soundcloudToolButton(0), odToolButton(0), highlighted(0), equalizer(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
             connect(Vk::Api::instance(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
@@ -109,6 +111,7 @@ namespace Playo3 {
 
         QToolButton * vkToolButton;
         QToolButton * soundcloudToolButton;
+        QToolButton * odToolButton;
 
         QToolBar * highlighted;
         MetricSlider * slider;

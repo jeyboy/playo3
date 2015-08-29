@@ -8,7 +8,7 @@
 
 #include "unicode_decoding.h"
 
-#define DEBUG_LIMIT_OUTPUT 100
+#define DEBUG_LIMIT_OUTPUT 10000
 
 namespace Html {
     const QString any_elem_token = QStringLiteral("*");

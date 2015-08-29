@@ -347,6 +347,7 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), Dockbars::instance(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
+    ptb -> addWidget(initiateOdButton());
     ptb -> addSeparator();
     ptb -> addWidget(initiateEchonestButton());
     ptb -> addSeparator();
@@ -470,6 +471,34 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
     }
 
     return soundcloudToolButton;
+}
+
+QToolButton * ToolBars::initiateOdButton() {
+    if (odToolButton == 0)
+        odToolButton = new QToolButton();
+    else {
+        odToolButton -> setMenu(0);
+        disconnect(odToolButton, SIGNAL(clicked()), Od::Api::instance(), SLOT(connection()));
+    }
+
+    if (Od::Api::instance() -> isConnected()) {
+        odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
+        odToolButton -> setToolTip(QStringLiteral("Od()"));
+        odToolButton -> setPopupMode(QToolButton::InstantPopup);
+
+        QMenu * vkMenu = new QMenu(odToolButton);
+//        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
+//        vkMenu -> addAction(QStringLiteral("Reconect"), parent(), SLOT(openSoundcloudTabDialog()));
+//        vkMenu -> addAction(QStringLiteral("Open your tab"), parent(), SLOT(showSoundcloudTabDialog()));
+//        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), parent(), SLOT(showSoundcloudRelTabDialog()));
+        odToolButton -> setMenu(vkMenu);
+    } else {
+        odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od")));
+        odToolButton -> setToolTip(QStringLiteral("Connect to Od"));
+        connect(odToolButton, SIGNAL(clicked()), Od::Api::instance(), SLOT(connection()));
+    }
+
+    return odToolButton;
 }
 
 void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
