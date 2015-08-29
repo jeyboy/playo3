@@ -26,13 +26,26 @@ public:
     QJsonObject getJson(const QNetworkRequest & request, bool wrap = false);
     QJsonObject postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
-    QNetworkReply * openUrl(QUrl & url);
+    inline QNetworkReply * openUrl(QUrl & url) { return proceedReply(getSync(QNetworkRequest(url))); }
     QPixmap openImage(QUrl & url);
 
     static inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
         QByteArray ar = reply -> readAll();
         if (wrap) { ar.prepend("{\"response\":"); ar.append("}"); }
         return QJsonDocument::fromJson(ar).object();
+    }
+    QNetworkReply * proceedReply(QNetworkReply * m_http) { // TODO: need to prevent from url cicling
+        QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
+        if (possibleRedirectUrl.isValid()) {
+            QUrl new_url = possibleRedirectUrl.toUrl();
+            if (new_url.isRelative())
+                new_url = m_http -> url().resolved(new_url); // need to check this
+
+            m_http -> deleteLater();
+            return openUrl(new_url);
+        }
+
+        return m_http;
     }
 protected:
     QNetworkReply * synchronizeRequest(QNetworkReply * m_http);
@@ -41,6 +54,7 @@ private:
     QSsl::SslProtocol protocol;
     QSslSocket::PeerVerifyMode mode;
 
+    static QNetworkCookieJar * cookies;
     static QHash<QObject *, WebManager *> managers;
     friend class WebManagerController;
 };

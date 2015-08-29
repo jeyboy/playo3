@@ -1,6 +1,7 @@
 #include "web_manager.h"
 
 QHash<QObject *, WebManager *> WebManager::managers = QHash<QObject *, WebManager *>();
+QNetworkCookieJar * WebManager::cookies = new QNetworkCookieJar(QApplication::instance());
 
 WebManager * WebManager::manager() {
     QThread * thread = QThread::currentThread();
@@ -20,6 +21,7 @@ WebManager::WebManager(QObject * parent, QSsl::SslProtocol protocol, QSslSocket:
     : QNetworkAccessManager(parent) {
     this -> protocol = protocol;
     this -> mode = mode;
+    this -> setCookieJar(WebManager::cookies);
 }
 
 QJsonObject WebManager::getJson(const QNetworkRequest & request, bool wrap) {
@@ -38,24 +40,8 @@ QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArr
 QNetworkReply * WebManager::postForm(QUrl url) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-    return postSync(request, url.query(QUrl::FullyEncoded).toUtf8());
-}
+    return proceedReply(postSync(request, url.query(QUrl::FullyEncoded).toUtf8()));
 
-QNetworkReply * WebManager::openUrl(QUrl & url) { // TODO: need to prevent from url cicling
-    QNetworkReply * m_http = getSync(QNetworkRequest(url));
-
-    QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
-    if (possibleRedirectUrl.isValid()) {
-        QUrl new_url = possibleRedirectUrl.toUrl();
-        if (new_url.isRelative()) {
-            new_url = url.resolved(new_url); // need to check this
-        }
-
-        m_http -> deleteLater();
-        return openUrl(new_url);
-    }
-
-    return m_http;
 }
 
 QPixmap WebManager::openImage(QUrl & url) {
