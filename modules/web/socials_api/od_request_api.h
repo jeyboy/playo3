@@ -12,7 +12,7 @@ namespace Od {
     class RequestApi : public IApi {
     protected:
         inline QUrl authRequestUrl() const {
-            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=" + base_url + "dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
+            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
             qDebug() << url;
             return url;
         }
@@ -25,7 +25,7 @@ namespace Od {
             return url;
         }
 
-
+        inline QUrl initAudioUrl() { return audioUrl(QStringLiteral("init")); }
 
         inline QUrl addPlaylistUrl() { return audioUrl(QStringLiteral("playlistsAdd")); } // params : (name: '') (publicPlaylist: 'true')
         inline QUrl removePlaylistUrl() { return audioUrl(QStringLiteral("playlistsRemove")); } // params : (pid: '' (id of playlist))
@@ -46,10 +46,11 @@ namespace Od {
         inline QUrl isDownloadedAudioUrl() { return audioUrl(QStringLiteral("isDownloaded")); } // params : (tid: track id)
         inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
         inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
+        inline QUrl popAudioUrl() { return audioUrl(QStringLiteral("pop")); } // (locale: 'ru') and pagination attrs
 //        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma (need to check)) ? // maybe this is info request per ids for items
 //        inline QUrl formaddplUrl() { return audioUrl(QStringLiteral("formaddpl")); } // params: (tid: track id) // used for adding new item to playlist
 
-        // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19'
+        // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
         inline QUrl playAudioUrl(QString tid, int item_type = 5) { return audioUrl(QStringLiteral("play"), QUrlQuery(QStringLiteral("type=%1&tid=%2").arg(QString::number(item_type), tid))); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
         inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: type as name val) (position: position in list (0))
 
@@ -77,6 +78,7 @@ namespace Od {
 
         inline QString grabUserId(QNetworkReply * reply) { // this did not used anywhere at this time
             Html::Document doc(reply);
+            doc.output();
             Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");
             if (results.isEmpty()) {
                 Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");

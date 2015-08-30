@@ -38,6 +38,10 @@ QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArr
 }
 
 QNetworkReply * WebManager::postForm(QUrl url, QHash<QString, QString> headers) {
+    return postForm(url, url.query(QUrl::FullyEncoded), headers);
+}
+
+QNetworkReply * WebManager::postForm(QUrl url, const QString & body, QHash<QString, QString> headers) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     if (!headers.contains(QStringLiteral("Referer")))
@@ -46,7 +50,7 @@ QNetworkReply * WebManager::postForm(QUrl url, QHash<QString, QString> headers) 
     for(QHash<QString, QString>::Iterator header = headers.begin(); header != headers.end(); header++)
         request.setRawHeader(header.key().toUtf8(), header.value().toUtf8());
 
-    return proceedReply(postSync(request, url.query(QUrl::FullyEncoded).toUtf8()));
+    return proceedReply(postSync(request, body.toUtf8()));
 }
 
 QPixmap WebManager::openImage(QUrl & url) {

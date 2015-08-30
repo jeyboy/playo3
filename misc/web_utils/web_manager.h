@@ -20,7 +20,7 @@ public:
 
     WebManager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
-    inline void printCookies() { qDebug() << "COOKIE" << cookies -> allCookies(); }
+    static inline void printCookies() { qDebug() << "COOKIE" << cookies -> allCookies(); }
     static inline QString cookie(const QString & name, QUrl url = QUrl()) {
         const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
         for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++)
@@ -35,6 +35,7 @@ public:
     inline QNetworkReply * getSync(const QNetworkRequest & request) { return synchronizeRequest(WebManager::get(request)); }
     inline QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) { return synchronizeRequest(WebManager::post(request, data)); }
     QNetworkReply * postForm(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>());
+    QNetworkReply * postForm(QUrl url, const QString & body, QHash<QString, QString> headers = QHash<QString, QString>());
 
     inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
     inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
