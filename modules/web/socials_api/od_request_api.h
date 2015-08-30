@@ -10,7 +10,52 @@
 
 namespace Od {
     class RequestApi : public IApi {
-    private:
+    protected:
+        inline QUrl authRequestUrl() const {
+            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=" + base_url + "dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
+            qDebug() << url;
+            return url;
+        }
+
+        inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
+
+        inline QUrl audioUrl(const QString func, const QUrlQuery & query = QUrlQuery()) {
+            QUrl url(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString());
+            url.setQuery(query);
+            return url;
+        }
+
+
+
+        inline QUrl addPlaylistUrl() { return audioUrl(QStringLiteral("playlistsAdd")); } // params : (name: '') (publicPlaylist: 'true')
+        inline QUrl removePlaylistUrl() { return audioUrl(QStringLiteral("playlistsRemove")); } // params : (pid: '' (id of playlist))
+        inline QUrl getPlaylistsUrl() { return audioUrl(QStringLiteral("playlistsGet")); } // params: maybe has uid param ? need to check
+        inline QUrl addToPlaylistsUrl() { return audioUrl(QStringLiteral("like")); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
+        inline QUrl removeFromPlaylistsUrl() { return audioUrl(QStringLiteral("dislike")); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
+
+        inline QUrl searchUrl() { return audioUrl(QStringLiteral("relevant")); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchTracksUrl() { return audioUrl(QStringLiteral("tracks")); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchAlbumsUrl() { return audioUrl(QStringLiteral("albums")); } // params : (q: predicate) and pagination attrs
+
+        inline QUrl albumAudiosUrl() { return audioUrl(QStringLiteral("album")); } // params : (albumId: album id)
+        inline QUrl artistAudiosUrl() { return audioUrl(QStringLiteral("artist")); } // params : (artistId: artist id)
+
+        inline QUrl myAudioUrl() { return audioUrl(QStringLiteral("my")); } // params: (uid: sets for friend request) and pagination attrs
+        inline QUrl collectionsAudioUrl() { return audioUrl(QStringLiteral("collections")); } // params: (collectionId: not used for index of collections) and pagination attrs
+        inline QUrl downloadedAudioUrl() { return audioUrl(QStringLiteral("downloaded")); } // params : pagination attrs
+        inline QUrl isDownloadedAudioUrl() { return audioUrl(QStringLiteral("isDownloaded")); } // params : (tid: track id)
+        inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
+        inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
+//        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma (need to check)) ? // maybe this is info request per ids for items
+//        inline QUrl formaddplUrl() { return audioUrl(QStringLiteral("formaddpl")); } // params: (tid: track id) // used for adding new item to playlist
+
+        // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19'
+        inline QUrl playAudioUrl(QString tid, int item_type = 5) { return audioUrl(QStringLiteral("play"), QUrlQuery(QStringLiteral("type=%1&tid=%2").arg(QString::number(item_type), tid))); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
+        inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: type as name val) (position: position in list (0))
+
+        inline QUrl tunersUrl() { return audioUrl(QStringLiteral("myTuners")); } // params: (locale: 'ru')  need to check pagination
+        inline QUrl radioUrl(QString /*tuner*/) { return audioUrl(QStringLiteral("myRadio")); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
+
 //        inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("original,remix,live,podcast")); }
 
 //        // add to search
@@ -24,40 +69,11 @@ namespace Od {
     public:
         inline virtual ~RequestApi() {}
 
-        inline QUrl authRequestUrl() const {
-            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&st.fJS=on&st.st.screenSize=1920x1080&st.st.browserSize=621&st.st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
-            qDebug() << url;
-            return url;
+        inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
+            QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+            qDebug() << "OD PLAY" << obj;
+            return obj.value(QStringLiteral("play")).toString();
         }
-
-        inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
-
-        inline QUrl audioUrl(const QString func) { return QUrl(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString()); }
-
-
-
-        inline QUrl addPlaylistUrl() { return audioUrl(QStringLiteral("playlistsAdd")); } // params : (name: '') (publicPlaylist: 'true')
-        inline QUrl removePlaylistUrl() { return audioUrl(QStringLiteral("playlistsRemove")); } // params : (pid: '' (id of playlist))
-        inline QUrl getPlaylistsUrl() { return audioUrl(QStringLiteral("playlistsGet")); } // params: maybe has uid param ? need to check
-        inline QUrl addToPlaylistsUrl() { return audioUrl(QStringLiteral("like")); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
-        inline QUrl removeFromPlaylistsUrl() { return audioUrl(QStringLiteral("dislike")); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
-
-
-        inline QUrl searchAudioUrl() { return audioUrl(QStringLiteral("relevant")); } // params : (q: predicate) and pagination attrs
-        inline QUrl tracksSearchUrl() { return audioUrl(QStringLiteral("tracks")); } // params : (q: predicate) and pagination attrs
-
-        inline QUrl myAudioUrl() { return audioUrl(QStringLiteral("my")); } // params: (uid: sets for friend request) and pagination attrs
-        inline QUrl collectionsAudioUrl() { return audioUrl(QStringLiteral("collections")); } // params: (collectionId: not used for index of collections) and pagination attrs
-        inline QUrl downloadedAudioUrl() { return audioUrl(QStringLiteral("downloaded")); } // params : pagination attrs
-        inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
-        inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
-//        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma (need to check)) ? // maybe this is info request per ids for items
-
-        inline QUrl playAudioUrl() { return audioUrl(QStringLiteral("play")); } // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
-        inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: genre_id or genre name maybe ('8')) (position: position in list (0))
-
-        inline QUrl tunersUrl() { return audioUrl(QStringLiteral("myTuners")); } // params: (locale: 'ru')  need to check pagination
-        inline QUrl radioUrl(QString tuner) { return audioUrl(QStringLiteral("myRadio")); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
         inline QString grabUserId(QNetworkReply * reply) { // this did not used anywhere at this time
             Html::Document doc(reply);

@@ -23,21 +23,15 @@ namespace Od {
 
         inline bool isConnected() { return !token().isEmpty(); }
 
-//        void getGroupInfo(QString uid, QJsonObject & object);
-//        void getUserInfo(QString & uid, QJsonObject & object);
-
-//        QJsonObject objectInfo(QString & uid);
-//        inline void objectInfo(QString & uid, Func func) {
-//              registerAsync(
-//                  QtConcurrent::run(this, &Api::objectInfo, uid), func
-//              );
-//        }
     public slots:
         void connection() {
             QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl());
-            setParams(grabSID(), grabUserId(reply), QString()); // QStringLiteral("JSESSIONID")
+            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
+            setParams(grabSID(), grabUserId(reply), QString());
             grabUserId(reply);
             qDebug() << token() << userID();
+
+            qDebug() << "LOL" << refresh("82297702323201");
         }
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
@@ -45,7 +39,6 @@ namespace Od {
     protected:
         QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        inline QString refresh(QString path) { return path; }
         inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
         inline QString offsetKey() const { return offset_key; }
