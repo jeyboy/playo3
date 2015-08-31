@@ -76,9 +76,7 @@ namespace Od {
             return obj.value(QStringLiteral("play")).toString();
         }
 
-        inline QString grabUserId(QNetworkReply * reply) { // this did not used anywhere at this time
-            Html::Document doc(reply);
-            doc.output();
+        inline QString grabUserId(Html::Document & doc) { // this did not used anywhere at this time
             Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");
             if (results.isEmpty()) {
                 Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");

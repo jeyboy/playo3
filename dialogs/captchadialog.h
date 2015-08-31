@@ -9,10 +9,11 @@ class WebApi;
 
 class CaptchaDialog : public QDialog {
     Q_OBJECT
-
 public:
     explicit CaptchaDialog(QWidget * parent = 0);
     ~CaptchaDialog();
+    void setDescription(const QString & text);
+    void setActionText(const QString & text, QObject * receiver, const char * slot);
     void setImage(QPixmap pixmap);
     void clearText();
     QString captchaText() const;

@@ -30,21 +30,28 @@ SearchDialog::SearchDialog(QWidget * parent) :
     item -> setFlags(Qt::NoItemFlags);
     ui -> sitesList -> addItem(item);
 
-    for(QHash<Playo3::WebSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
-        QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
-        item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
-        item -> setCheckState(Qt::Unchecked);
-        item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
+    bool has_not_connected = false;
 
-        switch(it.key()) {
-            case Playo3::vk_site:
-            case Playo3::sc_site:
-            case Playo3::fourshared_site: {
-                ui -> sitesList -> insertItem(0, item);
-            break;}
-            default: ui -> sitesList -> addItem(item);
-        }
+    for(QHash<Playo3::WebSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+        if ((*it) -> isConnected()) {
+            QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
+            item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
+            item -> setCheckState(Qt::Unchecked);
+            item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
+
+            switch(it.key()) {
+                case Playo3::vk_site:
+                case Playo3::sc_site:
+                case Playo3::fourshared_site: {
+                    ui -> sitesList -> insertItem(0, item);
+                break;}
+                default: ui -> sitesList -> addItem(item);
+            }
+        } else has_not_connected = true;
     }
+
+    if (has_not_connected)
+         setWindowTitle(windowTitle() % QStringLiteral(" (some search services is not connected)"));
 
     QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
