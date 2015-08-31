@@ -30,10 +30,24 @@ public:
         return QString();
     }
 
-    inline QNetworkReply * getSync(QString path) { return getSync(QUrl(path)); }
-    inline QNetworkReply * getSync(QUrl url) { return getSync(QNetworkRequest(url)); }
-    inline QNetworkReply * getSync(const QNetworkRequest & request) { return synchronizeRequest(WebManager::get(request)); }
-    inline QNetworkReply * postSync(const QNetworkRequest & request, const QByteArray & data) { return synchronizeRequest(WebManager::post(request, data)); }
+    inline void setHeaders(QNetworkRequest & request, QHash<QString, QString> headers) {
+        if (!headers.contains(QStringLiteral("Referer")))
+            headers.insert(QStringLiteral("Referer"), request.url().path());
+
+        for(QHash<QString, QString>::Iterator header = headers.begin(); header != headers.end(); header++)
+            request.setRawHeader(header.key().toUtf8(), header.value().toUtf8());
+    }
+
+    inline QNetworkReply * getSync(QString path, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QUrl(path), headers); }
+    inline QNetworkReply * getSync(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QNetworkRequest(url), headers); }
+    inline QNetworkReply * getSync(QNetworkRequest request, QHash<QString, QString> headers = QHash<QString, QString>()) {
+        setHeaders(request, headers);
+        return synchronizeRequest(WebManager::get(request));
+    }
+    inline QNetworkReply * postSync(QNetworkRequest request, const QByteArray & data, QHash<QString, QString> headers = QHash<QString, QString>()) {
+        setHeaders(request, headers);
+        return synchronizeRequest(WebManager::post(request, data));
+    }
     QNetworkReply * postForm(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>());
     QNetworkReply * postForm(QUrl url, const QString & body, QHash<QString, QString> headers = QHash<QString, QString>());
 

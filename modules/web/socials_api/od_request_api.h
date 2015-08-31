@@ -11,10 +11,21 @@
 namespace Od {
     class RequestApi : public IApi {
     protected:
-        inline QUrl authRequestUrl() const {
-            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
-            qDebug() << url;
+//        inline QUrl authRequestUrl() const {
+//            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
+//            qDebug() << url;
+//            return url;
+//        }
+
+        inline QUrl initUrl() const {
+            QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m");
             return url;
+        }
+
+        inline QHash<QString, QString> & initHeaders() const {
+            QHash<QString, QString> headers;
+            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));
+            return headers;
         }
 
         inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
@@ -95,6 +106,10 @@ namespace Od {
                 return QString();
             }
         }
+
+//        inline void checkPreservation(Html::Document & doc) {
+//            Html::Set elems = doc.find("");
+//        }
 
 //        /////////////////
 //        /// AUTH

@@ -25,16 +25,23 @@ namespace Od {
 
     public slots:
         void connection() {
-            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl());
-            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
-            Html::Document doc(reply);
-//            doc.output();
-            setParams(grabSID(), grabUserId(doc), QString());
-            qDebug() << token() << userID();
-            reply -> deleteLater();
+//            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl());
+//            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
+//            Html::Document doc(reply);
+////            doc.output();
+//            setParams(grabSID(), grabUserId(doc), QString());
+//            qDebug() << token() << userID();
+//            reply -> deleteLater();
+
+                        QNetworkReply * reply = WebManager::manager() -> postForm(initUrl());
+                        qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
+                        Html::Document doc(reply);
+            //            doc.output();
+                        setParams(grabSID(), grabUserId(doc), QString());
+                        qDebug() << token() << userID();
+                        reply -> deleteLater();
 
 
-//            doc
 
 //            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
 //            qDebug() << "OD INIT" << obj;

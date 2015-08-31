@@ -44,11 +44,7 @@ QNetworkReply * WebManager::postForm(QUrl url, QHash<QString, QString> headers) 
 QNetworkReply * WebManager::postForm(QUrl url, const QString & body, QHash<QString, QString> headers) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-    if (!headers.contains(QStringLiteral("Referer")))
-        headers.insert(QStringLiteral("Referer"), url.path());
-
-    for(QHash<QString, QString>::Iterator header = headers.begin(); header != headers.end(); header++)
-        request.setRawHeader(header.key().toUtf8(), header.value().toUtf8());
+    setHeaders(request, headers);
 
     return proceedReply(postSync(request, body.toUtf8()));
 }
