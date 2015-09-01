@@ -6,6 +6,8 @@
 #include <qdir.h>
 #include <qvector.h>
 
+#include "math.h"
+
 #include "bass.h"
 #include "bass_fx.h"
 #include "bassmix.h"
@@ -69,7 +71,10 @@ public:
     inline int getVolume() const { return volumeVal * 10000; }
     inline int getChannelsCount() const { return channelsCount; }
     inline float getSize() const { return size; }
-    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
+    inline void finishRemoteFileDownloading() {
+        prevDownloadPos = 1;
+        initDuration();
+    }
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
 
@@ -78,10 +83,11 @@ public:
 
     virtual inline void startProccessing() {}
 
-    inline void setMedia(QUrl mediaPath, uint start_pos = 0) {
+    inline void setMedia(QUrl mediaPath, uint start_pos = 0, int length = -1) {
         mediaUri = mediaPath;
         currentState = InitState;
         startPos = start_pos;
+        duration = length;
     }
     void setSpectrumBandsCount(int bandsCount);
     inline int spectrumBandsCount() const { return _spectrumBandsCount; }
@@ -140,6 +146,13 @@ public slots:
     void setVolume(int val);
 protected:
     int duration;
+
+    inline void initDuration() {
+        if (duration == -1) {
+            duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * 1000;
+            durationChanged(duration);
+        }
+    }
 
     inline void setStartPosition() {
         if (startPos == 0) return;

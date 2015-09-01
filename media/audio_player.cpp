@@ -1,6 +1,5 @@
 #include "audio_player.h"
 #include "misc/settings.h"
-#include "math.h"
 #include <qdebug.h>
 
 //Get the percentage downloaded of an internet file stream, or the buffer level when streaming in blocks.
@@ -476,8 +475,7 @@ void AudioPlayer::play() {
 
             if (chan) {
                 BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
-                duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * 1000;
-                durationChanged(duration);
+                initDuration();
 
                 BASS_CHANNELINFO info;
                 if (BASS_ChannelGetInfo(chan, &info))

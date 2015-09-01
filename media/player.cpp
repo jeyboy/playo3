@@ -100,15 +100,15 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
 
         setMedia(current_item -> toUrl(), start);
 
+        if (!paused)
+            play();
+
         if (isPlayed()) {
             updateItemState(true);
         } else {
-            retVal = false;
+            retVal = paused || false;
             setItemState(ItemState::played);
         }
-
-        if (!paused)
-            play();
     } else {
         current_model = 0;
         current_item = 0;
