@@ -18,6 +18,7 @@ void ItemState::setStates(int flags) {
         if (bitIsSet(-flags, played))    unset(played);
         if (bitIsSet(-flags, liked))     unsetLiked();
         if (bitIsSet(-flags, not_exist)) unset(not_exist);
+        if (bitIsSet(-flags, not_supported)) unset(not_supported);
     } else {
         if (bitIsSet(flags, listened))  {
             setListened();

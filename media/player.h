@@ -83,7 +83,7 @@ private slots:
     void onMediaStatusChanged(MediaStatus status);
 protected:
     inline void startProccessing() { setItemState(ItemState::proccessing); }
-    inline void endProccessing() { setItemState(-ItemState::proccessing); }
+    inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }
 private:
     Player(QWidget * parent);
 
