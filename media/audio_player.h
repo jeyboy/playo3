@@ -149,6 +149,7 @@ public slots:
     void setVolume(int val);
 protected:
     int duration;
+    uint startPos;
 
     inline void initDuration() {
         if (duration == -1)
@@ -193,7 +194,6 @@ private:
 
     MediaState currentState;
 
-    uint startPos;
     unsigned long chan;
     HSYNC syncHandle, syncDownloadHandle;
     NotifyTimer * notifyTimer;

@@ -102,6 +102,7 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start, int duration) 
 
         if (!paused)
             play();
+        else onStateChanged(PausedState);
 
         if (isPlayed()) {
             updateItemState(true);
@@ -277,6 +278,7 @@ void Player::setTrackbarMax(int duration) {
         extended_format = Duration::hasHours(duration);
 //        slider -> setDisabled(!isSeekable());
         slider -> setMaximum(duration);
+        positionChanged(startPos);
 
         #ifdef Q_OS_WIN
             stateProgress -> setVisible(true);

@@ -207,23 +207,27 @@ void AudioPlayer::setEQBand(int band, float gain) {
 int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
 
-    #ifdef Q_OS_WIN
-        chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
-    #else
-        chan = BASS_StreamCreateURL(path.toStdString().c_str(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
-    #endif
-
+//    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
+    chan = BASS_StreamCreateURL(
+            #ifdef Q_OS_WIN
+                path.toStdWString().data()
+            #else
+                path.toStdString().c_str()
+            #endif
+        , 0, BASS_SAMPLE_FLOAT, NULL, 0);
     return chan;
 }
 
 int AudioPlayer::openChannel(QString path) {
     BASS_ChannelStop(chan);
 
-    #ifdef Q_OS_WIN
-        chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
-    #else
-        chan = BASS_StreamCreateFile(false, path.toStdString().c_str(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
-    #endif
+    chan = BASS_StreamCreateFile(false,
+            #ifdef Q_OS_WIN
+                 path.toStdWString().data()
+            #else
+                path.toStdString().c_str()
+            #endif
+        , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
 
     if (!chan)
 //    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
