@@ -21,16 +21,11 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     emit player -> downloadEnded();
 }
 
-AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), notifyInterval(100),
-    channelsCount(2), prevChannelsCount(0), volumeVal(1.0), spectrumHeight(0), defaultSpectrumLevel(0),
-    currentState(StoppedState), _fxEQ(0), useEQ(false) {
-    qRegisterMetaType<AudioPlayer::MediaStatus>("MediaStatus");
-    qRegisterMetaType<AudioPlayer::MediaState>("MediaState");
+AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), AudioPlayerEqualizer(this), AudioPlayerSpectrum(this),
+    notifyInterval(100), currentState(StoppedState) {
 
     // cheat for cross treadhing
     connect(this, SIGNAL(playbackEnded()), this, SLOT(endOfPlayback()));
-
-    setSpectrumBandsCount(28);
 
     if (HIWORD(BASS_GetVersion()) != BASSVERSION) {
         throw "An incorrect version of BASS.DLL was loaded";
@@ -49,28 +44,6 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
         qDebug() << "Init error: " << BASS_ErrorGetCode();
 //        throw "Cannot initialize device";
     #endif
-
-    eqBands.insert(20, QStringLiteral("20"));
-    eqBands.insert(32, QStringLiteral("32"));
-    eqBands.insert(64, QStringLiteral("64"));
-    eqBands.insert(90, QStringLiteral("90"));
-    eqBands.insert(125, QStringLiteral("125"));
-    eqBands.insert(160, QStringLiteral("160"));
-    eqBands.insert(200, QStringLiteral("200"));
-
-    eqBands.insert(250, QStringLiteral("250"));
-    eqBands.insert(375, QStringLiteral("375"));
-    eqBands.insert(500, QStringLiteral("500"));
-    eqBands.insert(750, QStringLiteral("750"));
-    eqBands.insert(1000, QStringLiteral("1k"));
-    eqBands.insert(1500, QStringLiteral("1.5k"));
-
-    eqBands.insert(2000, QStringLiteral("2k"));
-    eqBands.insert(3000, QStringLiteral("3k"));
-    eqBands.insert(4000, QStringLiteral("4k"));
-    eqBands.insert(8000, QStringLiteral("8k"));
-    eqBands.insert(12000, QStringLiteral("12k"));
-    eqBands.insert(16000, QStringLiteral("16k"));
 
     ///////////////////////////////////////////////
     /// load plugins
@@ -91,6 +64,12 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), duration(-1), noti
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, 15000);  // 15 sec
     //    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, DWORD timeoutMili); // default is no timeout
+
+    // TODO: add proxy realization
+    //if (MESS(41,BM_GETCHECK,0,0))
+    //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,NULL); // disable proxy
+    //else
+    //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,proxy); // enable proxy
 
     //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
 
@@ -194,7 +173,7 @@ void AudioPlayer::unregisterEQ() {
 void AudioPlayer::setEQBand(int band, float gain) {
     BASS_BFX_PEAKEQ eq;
     eq.lBand = band;
-    BASS_FXGetParameters(_fxEQ, &eq);
+//    BASS_FXGetParameters(_fxEQ, &eq);
     eq.fGain = gain;
     BASS_FXSetParameters(_fxEQ, &eq);
     eqBandsGain.insert(band, gain);
@@ -206,6 +185,8 @@ void AudioPlayer::setEQBand(int band, float gain) {
 
 int AudioPlayer::openRemoteChannel(QString path) {
     BASS_ChannelStop(chan);
+
+    size = -1;
 
 //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
     chan = BASS_StreamCreateURL(
@@ -221,6 +202,9 @@ int AudioPlayer::openRemoteChannel(QString path) {
 int AudioPlayer::openChannel(QString path) {
     BASS_ChannelStop(chan);
 
+    size = 0;
+    prevDownloadPos = 1;
+
     chan = BASS_StreamCreateFile(false,
             #ifdef Q_OS_WIN
                  path.toStdWString().data()
@@ -230,33 +214,9 @@ int AudioPlayer::openChannel(QString path) {
         , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
 
     if (!chan)
-//    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
-//        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
         qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
     return chan;
 }
-
-//int AudioPlayer::openRemoteChannel(QString path) {
-//    BASS_ChannelStop(chan);
-//    chan = BASS_StreamCreateURL(path.toStdWString().data(), 0, BASS_SAMPLE_FLOAT, NULL, 0);
-
-////    if (!chan) {
-////        int status = BASS_ErrorGetCode();
-////        if (chan == -1 || status == BASS_ERROR_FILEOPEN)// || status == BASS_ERROR_NONET)
-////            emit remoteUnprocessed();
-////        qDebug() << "Can't play stream" <<  BASS_ErrorGetCode() << path.toUtf8();
-////    }
-//    return chan;
-//}
-
-//int AudioPlayer::openChannel(QString path) {
-//    BASS_ChannelStop(chan);
-//    if (!(chan = BASS_StreamCreateFile(false, path.toStdWString().data(), 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE)))
-////    if (!(stream = BASS_StreamCreateFile(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP))
-////        && !(chan = BASS_MusicLoad(false, path.toStdWString().c_str(), 0, 0, BASS_SAMPLE_LOOP | BASS_MUSIC_RAMP | BASS_MUSIC_POSRESET | BASS_MUSIC_STOPBACK | BASS_STREAM_PRESCAN | BASS_MUSIC_AUTOFREE, 1)))
-//        qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
-//    return chan;
-//}
 
 void AudioPlayer::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
@@ -274,11 +234,6 @@ void AudioPlayer::closeChannel() {
 void AudioPlayer::started() {
     currentState = PlayingState;
     emit stateChanged(PlayingState);
-}
-
-void AudioPlayer::signalUpdate() {
-    int curr_pos = BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * 1000;
-    emit positionChanged(curr_pos);
 }
 
 void AudioPlayer::calcSpectrum() { 
@@ -299,14 +254,14 @@ void AudioPlayer::calcSpectrum() {
 void AudioPlayer::slidePosForward() {
     if (currentState == PlayingState || currentState == PausedState) {
         int dur = getDuration();
-        int pos = getPosition() + dur / 10;
+        int pos = getPosition() + dur / SLIDE_DURATION_PERCENT;
         if (pos < dur)
             setPosition(pos);
     }
 }
 void AudioPlayer::slidePosBackward() {
     if (currentState == PlayingState || currentState == PausedState) {
-        int pos = getPosition() - (getDuration() / 10);
+        int pos = getPosition() - (getDuration() / SLIDE_DURATION_PERCENT);
         if (pos < 0) pos = 0;
         setPosition(pos);
     }
@@ -314,18 +269,18 @@ void AudioPlayer::slidePosBackward() {
 
 //0 to 10000
 void AudioPlayer::setChannelVolume(int val) {
-    volumeVal = val > 0 ? (val / 10000.0) : 0;
+    volumeVal = val > 0 ? (val / VOLUME_MULTIPLIER) : 0;
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
     emit volumeChanged(val);
 }
 
 void AudioPlayer::slideVolForward() {
-    int newVolLevel = getVolume() + 1000;
-    if (newVolLevel > 10000) newVolLevel = 10000;
+    int newVolLevel = getVolume() + SLIDE_VOLUME_OFFSET;
+    if (newVolLevel > VOLUME_MULTIPLIER) newVolLevel = VOLUME_MULTIPLIER;
     setChannelVolume(newVolLevel);
 }
 void AudioPlayer::slideVolBackward() {
-    int newVolLevel = getVolume() - 1000;
+    int newVolLevel = getVolume() - SLIDE_VOLUME_OFFSET;
     if (newVolLevel < 0) newVolLevel = 0;
     setChannelVolume(newVolLevel);
 }
@@ -468,14 +423,10 @@ void AudioPlayer::play() {
             startProccessing();
             qDebug() << mediaUri.toString();
 
-            if (mediaUri.isLocalFile()) {
+            if (mediaUri.isLocalFile())
                 openChannel(mediaUri.toLocalFile());
-                size = 0;
-                prevDownloadPos = 1;
-            } else {
+            else
                 openRemoteChannel(mediaUri.toString());
-                size = -1;
-            }
 
             if (chan) {
                 BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
@@ -491,9 +442,9 @@ void AudioPlayer::play() {
 
                 emit mediaStatusChanged(LoadedMedia);
 
+                notifyTimer -> start(notifyInterval);
                 BASS_ChannelPlay(chan, true);
                 spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
-                notifyTimer -> start(notifyInterval);
 
                 syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
                 syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);

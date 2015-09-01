@@ -162,7 +162,11 @@ SOURCES += main.cpp\
     modules/plugins/plugins.cpp \
     media/genres/id3_music_genres.cpp \
     modules/web/socials_api/od_api.cpp \
-    modules/web/socials_api/od_api_keys.cpp
+    modules/web/socials_api/od_api_keys.cpp \
+    media/audio_player/audio_player_equalizer.cpp \
+    media/audio_player/audio_player_panel.cpp \
+    media/audio_player/audio_player_spectrum.cpp \
+    media/audio_player/audio_player_state.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -330,7 +334,11 @@ HEADERS  += playo.h \
     media/genres/id3_music_genres.h \
     modules/web/socials_api/od_api.h \
     modules/web/socials_api/od_request_api.h \
-    modules/web/socials_api/od_api_keys.h
+    modules/web/socials_api/od_api_keys.h \
+    media/audio_player/audio_player_equalizer.h \
+    media/audio_player/audio_player_spectrum.h \
+    media/audio_player/audio_player_panel.h \
+    media/audio_player/audio_player_state.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
