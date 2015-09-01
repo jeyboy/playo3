@@ -47,7 +47,7 @@ void Dockbars::load(QJsonArray & bars) {
                 if (v) {
                     QString path = obj.value(QStringLiteral("played_item")).toString();
                     if (!path.isEmpty())
-                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt());
+                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt(), obj.value(QStringLiteral("played_duration")).toInt());
                 }
             }
         }
@@ -105,6 +105,7 @@ void Dockbars::save(DataStore * settings) {
                     if (Player::instance() -> playedIndex().isValid()) {
                         curr_bar.insert(QStringLiteral("played_item"), Player::instance() -> playedIndex().data(ITREEPATH).toString());
                         curr_bar.insert(QStringLiteral("played_time"), Player::instance() -> getPosition());
+                        curr_bar.insert(QStringLiteral("played_duration"), Player::instance() -> getDuration());
                     }
                 }
 
@@ -336,20 +337,23 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     IView * v = view(played);
 
     if (v) {
+        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist())) {
+            v -> execNextIndex();
+            return;
+        }
+
         if (reason == Player::refreshNeed) {
             if (v -> isRequiredOnUpdate()) {
                 ((IModel *)v -> model()) -> refresh(true);
-                return;
             } else {
                 if (IModel::restoreUrl(Player::instance() -> playedItem()))
                     Player::instance() -> playIndex(Player::instance() -> playedIndex());
-                else
+                else {
                     Player::instance() -> stop();
+                    Player::instance() -> playedIndexIsInvalid();
+                }
             }
         }
-
-        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist()))
-            v -> execNextIndex();
     }
 }
 

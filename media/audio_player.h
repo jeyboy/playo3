@@ -6,6 +6,8 @@
 #include <qdir.h>
 #include <qvector.h>
 
+#include "math.h"
+
 #include "bass.h"
 #include "bass_fx.h"
 #include "bassmix.h"
@@ -39,6 +41,7 @@ class AudioPlayer : public QObject {
     void closeChannel();
 public:
     enum MediaStateFlags {
+        InitState,
         StoppedState,
         PlayingState,
         PausedState,
@@ -68,14 +71,27 @@ public:
     inline int getVolume() const { return volumeVal * 10000; }
     inline int getChannelsCount() const { return channelsCount; }
     inline float getSize() const { return size; }
-    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
+    inline void finishRemoteFileDownloading() {
+        prevDownloadPos = 1;
+        initDuration();
+    }
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
 
     inline int getNotifyInterval() { return notifyInterval; }
     void setNotifyInterval(signed int milis);
 
-    inline void setMedia(QUrl mediaPath) { mediaUri = mediaPath; }
+    virtual inline void startProccessing() {}
+
+    inline void setMedia(QUrl mediaPath, uint start_pos = 0, int length = -1) {
+        mediaUri = mediaPath;
+        currentState = InitState;
+        startPos = start_pos;
+        if ((duration = length) > 0) {
+            initDuration();
+            setStartPosition();
+        }
+    }
     void setSpectrumBandsCount(int bandsCount);
     inline int spectrumBandsCount() const { return _spectrumBandsCount; }
     inline void setSpectrumHeight(int newHeight) { spectrumHeight = newHeight; }
@@ -125,7 +141,7 @@ public slots:
 
     void slidePosForward();
     void slidePosBackward();
-    inline void setPosition(int position) { BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / 1000.0), BASS_POS_BYTE); }
+    inline bool setPosition(int position) { return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / 1000.0), BASS_POS_BYTE); }
 
     void slideVolForward();
     void slideVolBackward();
@@ -133,6 +149,18 @@ public slots:
     void setVolume(int val);
 protected:
     int duration;
+
+    inline void initDuration() {
+        if (duration == -1)
+            duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * 1000;
+        durationChanged(duration);
+    }
+
+    inline void setStartPosition() {
+        if (startPos == 0) return;
+        if (setPosition(startPos))
+            emit positionChanged(startPos);
+    }
 
 private:
     HFX _fxEQ;
@@ -165,6 +193,7 @@ private:
 
     MediaState currentState;
 
+    uint startPos;
     unsigned long chan;
     HSYNC syncHandle, syncDownloadHandle;
     NotifyTimer * notifyTimer;

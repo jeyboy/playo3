@@ -115,16 +115,16 @@ void IView::execNextIndex(bool deleteCurrent) {
 //    }
 //}
 
-bool IView::execPath(const QString path, bool paused, uint start) {
+bool IView::execPath(const QString path, bool paused, uint start, int duration) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();
-        return execIndex(ind, paused, start);
+        return execIndex(ind, paused, start, duration);
     } else
         return false;
 }
 
-bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
+bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {
     if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
         qDebug() << "PLAYED " << node.data();
         Dockbars::instance() -> setPlayed((DockBar *)parent());
@@ -136,7 +136,7 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start) {
             Player::instance() -> playPause();
             return true;
         } else
-            return Player::instance() -> playIndex(node, paused, start);
+            return Player::instance() -> playIndex(node, paused, start, duration);
     }
 
     return false;

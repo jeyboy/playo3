@@ -1,6 +1,7 @@
 #include "item_interface.h"
 #include "folder_item.h"
 #include "external_keys.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 

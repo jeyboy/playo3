@@ -1,6 +1,5 @@
 #include "audio_player.h"
 #include "misc/settings.h"
-#include "math.h"
 #include <qdebug.h>
 
 //Get the percentage downloaded of an internet file stream, or the buffer level when streaming in blocks.
@@ -462,6 +461,7 @@ void AudioPlayer::play() {
         if (mediaUri.isEmpty()) {
             emit mediaStatusChanged(NoMedia);
         } else {
+            startProccessing();
             qDebug() << mediaUri.toString();
 
             if (mediaUri.isLocalFile()) {
@@ -475,8 +475,7 @@ void AudioPlayer::play() {
 
             if (chan) {
                 BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
-                duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * 1000;
-                durationChanged(duration);
+                initDuration();
 
                 BASS_CHANNELINFO info;
                 if (BASS_ChannelGetInfo(chan, &info))
@@ -487,12 +486,15 @@ void AudioPlayer::play() {
                 if (useEQ) registerEQ();
 
                 emit mediaStatusChanged(LoadedMedia);
+
                 BASS_ChannelPlay(chan, true);
                 spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
                 notifyTimer -> start(notifyInterval);
 
                 syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
                 syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
+
+                setStartPosition();
             } else {
                 currentState = UnknowState;
                 switch(BASS_ErrorGetCode()) {
@@ -518,12 +520,16 @@ void AudioPlayer::pause() {
 }
 
 void AudioPlayer::resume() {
-    if (!BASS_ChannelPlay(chan, false)) {
-        emit mediaStatusChanged(StalledMedia);
-        qDebug() << "Error resuming";
-    } else {
-        notifyTimer -> start(notifyInterval);
-        spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+    if (currentState == InitState)
+        play();
+    else {
+        if (!BASS_ChannelPlay(chan, false)) {
+            emit mediaStatusChanged(StalledMedia);
+            qDebug() << "Error resuming";
+        } else {
+            notifyTimer -> start(notifyInterval);
+            spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+        }
     }
 }
 
