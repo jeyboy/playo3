@@ -56,8 +56,8 @@ namespace Playo3 {
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
-        bool execIndex(const QModelIndex & node, bool paused = false, uint start = 0);
-        bool execPath(const QString path, bool paused = false, uint start = 0);
+        bool execIndex(const QModelIndex & node, bool paused = false, uint start = 0, int duration = -1);
+        bool execPath(const QString path, bool paused = false, uint start = 0, int duration = -1);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 

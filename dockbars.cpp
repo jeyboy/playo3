@@ -47,7 +47,7 @@ void Dockbars::load(QJsonArray & bars) {
                 if (v) {
                     QString path = obj.value(QStringLiteral("played_item")).toString();
                     if (!path.isEmpty())
-                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt());
+                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt(), obj.value(QStringLiteral("played_duration")).toInt());
                 }
             }
         }
@@ -105,6 +105,7 @@ void Dockbars::save(DataStore * settings) {
                     if (Player::instance() -> playedIndex().isValid()) {
                         curr_bar.insert(QStringLiteral("played_item"), Player::instance() -> playedIndex().data(ITREEPATH).toString());
                         curr_bar.insert(QStringLiteral("played_time"), Player::instance() -> getPosition());
+                        curr_bar.insert(QStringLiteral("played_duration"), Player::instance() -> getDuration());
                     }
                 }
 

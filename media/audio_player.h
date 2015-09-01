@@ -87,7 +87,10 @@ public:
         mediaUri = mediaPath;
         currentState = InitState;
         startPos = start_pos;
-        duration = length;
+        if ((duration = length) > 0) {
+            initDuration();
+            setStartPosition();
+        }
     }
     void setSpectrumBandsCount(int bandsCount);
     inline int spectrumBandsCount() const { return _spectrumBandsCount; }
@@ -148,10 +151,9 @@ protected:
     int duration;
 
     inline void initDuration() {
-        if (duration == -1) {
+        if (duration == -1)
             duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * 1000;
-            durationChanged(duration);
-        }
+        durationChanged(duration);
     }
 
     inline void setStartPosition() {

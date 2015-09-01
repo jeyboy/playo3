@@ -78,7 +78,7 @@ void Player::eject(bool updateState) {
     playIndex(QModelIndex());
 }
 
-bool Player::playIndex(QModelIndex item, bool paused, uint start) {
+bool Player::playIndex(QModelIndex item, bool paused, uint start, int duration) {
     bool retVal = true;
     switch(state()) {
         case StoppedState: { break; }
@@ -98,7 +98,7 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
 
         likeButton -> setChecked(current_item -> is(ItemState::liked));
 
-        setMedia(current_item -> toUrl(), start);
+        setMedia(current_item -> toUrl(), start, duration);
 
         if (!paused)
             play();
