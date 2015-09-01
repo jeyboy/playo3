@@ -1,6 +1,7 @@
 #include "item_interface.h"
 #include "folder_item.h"
 #include "external_keys.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -131,8 +132,8 @@ QVariant IItem::data(int column) const {
                 params.insert(Key::ext, extension());
                 params.insert(Key::state, visualStates());
                 params.insert(Key::played, is(played));
-                params.insert(Key::not_exist, is(not_exist));
-                params.insert(Key::proccessing, is(proccessing));
+                params.insert(Key::not_exist, is(not_exist)); qDebug() << "EX" << is(not_exist);
+                params.insert(Key::proccessing, is(proccessing)); qDebug() << "PC" << is(proccessing);
                 params.insert(Key::type, itemType() + subtipe());
             }
             return params;

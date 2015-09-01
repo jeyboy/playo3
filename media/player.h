@@ -38,7 +38,6 @@ public:
 
     void eject(bool updateState = true);
     bool playIndex(QModelIndex item, bool paused = false, uint start = 0);
-    void setStartPosition(int position);
 
     void setPlayButton(QAction * playAction);
     void setPauseButton(QAction * pauseAction);
@@ -58,6 +57,7 @@ public:
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
     bool getFileInfo(QUrl uri, MediaInfo * info);
+    void playedIndexIsInvalid();
 
 signals:
     void nextItemNeeded(Player::Reason);
@@ -81,10 +81,13 @@ private slots:
 
     void onStateChanged(MediaState newState);
     void onMediaStatusChanged(MediaStatus status);
-
+protected:
+    inline void startProccessing() { setItemState(ItemState::proccessing); }
+    inline void endProccessing() { setItemState(-ItemState::proccessing); }
 private:
     Player(QWidget * parent);
 
+    void setStartPosition();
     void setItemState(int state);
     void updateItemState(bool isPlayed);
     void updateControls(bool played, bool paused, bool stopped);

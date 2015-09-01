@@ -95,15 +95,10 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
     if (item.isValid()) {
         current_model = (IModel *)item.model();
         current_item = current_model -> item(item);
-        setItemState(ItemState::proccessing);
 
         likeButton -> setChecked(current_item -> is(ItemState::liked));
 
-        setMedia(current_item -> toUrl());
-        play();
-
-        if (start > 0)
-            setStartPosition(start);
+        setMedia(current_item -> toUrl(), start);
 
         if (isPlayed()) {
             updateItemState(true);
@@ -112,8 +107,8 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
             setItemState(ItemState::played);
         }
 
-        if (paused)
-            pause();
+        if (!paused)
+            play();
     } else {
         current_model = 0;
         current_item = 0;
@@ -123,11 +118,6 @@ bool Player::playIndex(QModelIndex item, bool paused, uint start) {
     }
 
     return retVal;
-}
-
-void Player::setStartPosition(int position) {
-    setPosition(position);
-    emit positionChanged(position);
 }
 
 void Player::setTrackBar(QSlider * trackBar) {
@@ -253,6 +243,11 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     return true;
 }
 
+void Player::playedIndexIsInvalid() {
+    if (current_model)
+        current_model -> itemError(playedIndex());
+}
+
 //////////////////////SLOTS/////////////////////////
 
 void Player::invertTimeCountdown() {
@@ -371,19 +366,17 @@ void Player::onMediaStatusChanged(MediaStatus status) {
     switch (status) {
         case UnknownMediaStatus: {
 //            qDebug() << "PLAYER: " << "UNKNOWN";
-            setItemState(-ItemState::proccessing);
+            endProccessing();
             emit nextItemNeeded(error);
         break; }
 
         case StalledMedia: {
 //            qDebug() << "PLAYER: " << "STALLED";
-//            emit itemExecError(playedIndex());
-            current_model -> itemError(playedIndex());
-
             if (current_item -> isRemote()) {
                 emit nextItemNeeded(refreshNeed);
             } else {
-                setItemState(-ItemState::proccessing);
+                endProccessing();
+                playedIndexIsInvalid();
                 emit nextItemNeeded(stalled);
             }
         break; }
@@ -398,26 +391,26 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case LoadedMedia: {
-            setItemState(-ItemState::proccessing);
+            endProccessing();
         break;}
 
         case InvalidMedia: {
 //            qDebug() << "PLAYER: " << "INVALID";
 //            emit itemNotSupported(playedIndex());
             current_model -> itemNotSupported(playedIndex());
-            setItemState(-ItemState::proccessing);
+            endProccessing();
             emit nextItemNeeded(error);
         break;}
 
         case NoMedia: {
 //            qDebug() << "PLAYER: " << "NO MEDIA";
 //            emit itemNotExisted(playedIndex());
-            current_model -> itemNotExist(playedIndex());
 
             if (current_item -> isRemote()) {
                 emit nextItemNeeded(refreshNeed);
             } else {
-                setItemState(-ItemState::proccessing);
+                endProccessing();
+                current_model -> itemNotExist(playedIndex());
                 emit nextItemNeeded(noMedia);
             }
         break;}

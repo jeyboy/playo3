@@ -1,4 +1,5 @@
 #include "item_state.h"
+#include <qdebug.h>
 
 using namespace Playo3;
 
@@ -24,7 +25,7 @@ void ItemState::setStates(int flags) {
         }
         if (bitIsSet(flags, liked))     setLiked();
         if (bitIsSet(flags, played))    setBit(item_state, played);
-        if (bitIsSet(flags, not_exist)) setBit(item_state, not_exist);
+        if (bitIsSet(flags, not_exist)) { setBit(item_state, not_exist); qDebug() << "NOT";}
         if (bitIsSet(flags, proceeded)) setBit(item_state, proceeded);
         if (bitIsSet(flags, mark_on_removing)) setBit(item_state, mark_on_removing);
         if (bitIsSet(flags, proccessing)) setBit(item_state, proccessing);

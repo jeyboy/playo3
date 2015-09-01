@@ -336,20 +336,23 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     IView * v = view(played);
 
     if (v) {
+        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist())) {
+            v -> execNextIndex();
+            return;
+        }
+
         if (reason == Player::refreshNeed) {
             if (v -> isRequiredOnUpdate()) {
                 ((IModel *)v -> model()) -> refresh(true);
-                return;
             } else {
                 if (IModel::restoreUrl(Player::instance() -> playedItem()))
                     Player::instance() -> playIndex(Player::instance() -> playedIndex());
-                else
+                else {
                     Player::instance() -> stop();
+                    Player::instance() -> playedIndexIsInvalid();
+                }
             }
         }
-
-        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist()))
-            v -> execNextIndex();
     }
 }
 

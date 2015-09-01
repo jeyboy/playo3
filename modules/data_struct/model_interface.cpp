@@ -90,8 +90,10 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
         node -> setStates(iState);
         result = iState != -ItemState::proceeded && iState != -ItemState::mark_on_removing;
     } else if (role == ISTATE) {
+        qDebug() << "STATE" << node -> states() << value;
         Library::instance() -> setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
+        qDebug() << "STATE" << node -> states() << value;
         result = true;
     } else if (role == Qt::EditRole)
         result = node -> setData(model_index.column(), value);
