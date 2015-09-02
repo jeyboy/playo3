@@ -55,7 +55,7 @@ private slots:
     void signalUpdate() { emit positionChanged(BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chId(), BASS_POS_BYTE)) * POSITION_MULTIPLIER); }
 
 protected:
-    AudioPlayerPanel() : duration(-1), volumeVal(1.0), channelsCount(2), prevChannelsCount(0) {
+    AudioPlayerPanel() : notifyInterval(100), duration(-1), volumeVal(1.0), channelsCount(2), prevChannelsCount(0) {
 
     }
 

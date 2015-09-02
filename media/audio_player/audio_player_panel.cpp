@@ -1,5 +1,11 @@
 #include "audio_player_panel.h"
 
+void AudioPlayerPanel::setNotifyInterval(signed int milis) {
+    notifyInterval = milis;
+    if (notifyTimer -> isActive())
+        notifyTimer -> setInterval(notifyInterval);
+}
+
 void AudioPlayerPanel::slidePosForward() {
     if (currentState == PlayingState || currentState == PausedState) {
         int dur = getDuration();

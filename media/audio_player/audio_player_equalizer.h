@@ -1,8 +1,6 @@
 #ifndef AUDIO_PLAYER_EQUALIZER
 #define AUDIO_PLAYER_EQUALIZER
 
-#include <qobject.h>
-
 #include "bass.h"
 #include "bass_fx.h"
 //#include "bassmix.h"

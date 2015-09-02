@@ -46,7 +46,7 @@ void AudioPlayer::init() {
     //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
 }
 
-AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), AudioPlayerEqualizer(this), AudioPlayerSpectrum(this), notifyInterval(100) {
+AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
     init();
 
     // cheat for cross treadhing
@@ -66,7 +66,7 @@ AudioPlayer::~AudioPlayer() {
     BASS_Free();
 }
 
-void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1) {
+void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) {
     mediaUri = mediaPath;
     currentState = InitState;
     startPos = start_pos;
@@ -74,12 +74,6 @@ void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos = 0, int media
         initDuration();
         setStartPosition();
     }
-}
-
-void AudioPlayer::setNotifyInterval(signed int milis) {
-    notifyInterval = milis;
-    if (notifyTimer -> isActive())
-        notifyTimer -> setInterval(notifyInterval);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -182,7 +176,7 @@ void AudioPlayer::startTimers() {
     emit stateChanged(currentState = PlayingState);
 }
 
-void AudioPlayer::stopTimers(bool paused = false) {
+void AudioPlayer::stopTimers(bool paused) {
     notifyTimer -> stop();
     spectrumTimer -> stop();
 

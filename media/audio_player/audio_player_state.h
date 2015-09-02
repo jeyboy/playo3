@@ -1,8 +1,6 @@
 #ifndef AUDIO_PLAYER_STATE
 #define AUDIO_PLAYER_STATE
 
-#include <qobject.h>
-
 #include "bass.h"
 
 void
@@ -16,8 +14,7 @@ void
     #endif
         endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
-class AudioPlayerState : public QObject {
-    Q_OBJECT
+class AudioPlayerState {
     //    Q_ENUMS(MediaStateFlags)
     //    Q_ENUMS(MediaStatusFlags)
 public:
@@ -56,7 +53,7 @@ signals:
     void downloadEnded();
 
 protected:
-    AudioPlayerState(QObject * parent = 0) : QObject(parent), currentState(StoppedState) {
+    AudioPlayerState() : currentState(StoppedState) {
         qRegisterMetaType<AudioPlayerState::MediaStatus>("MediaStatus");
         qRegisterMetaType<AudioPlayerState::MediaState>("MediaState");
     }
