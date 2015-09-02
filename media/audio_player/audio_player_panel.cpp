@@ -48,20 +48,6 @@ void Panel::setVolume(int val) {
     emit volumeChanged(val);
 }
 
-//from 0 to 1
-float Panel::getRemoteFileDownloadPosition() {
-    if (size == -1) {
-        prevDownloadPos = 0;
-        DWORD len = BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_END);
-        size = len + BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_START);
-    }
-
-    if (prevDownloadPos != 1) {
-        prevDownloadPos = ((BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_DOWNLOAD)) / size);
-    }
-    return prevDownloadPos;
-}
-
 float Panel::getBpmValue(QUrl uri) {
     int cochan;
 

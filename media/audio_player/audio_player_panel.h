@@ -29,15 +29,11 @@ namespace AudioPlayer {
         inline int getDuration() const { return duration; }
         inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
 
-        inline float getSize() const { return size; }
-        float getRemoteFileDownloadPosition();
         float getBpmValue(QUrl uri);
         int getBitrate() const;
 
         inline int getNotifyInterval() { return notifyInterval; }
         void setNotifyInterval(signed int milis);
-
-        inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
 
         virtual MediaState state() const = 0;
     signals:
@@ -80,9 +76,6 @@ namespace AudioPlayer {
         int notifyInterval;
         int duration;
         uint startPos;
-
-        float size;
-        float prevDownloadPos;
 
         QUrl mediaUri;
 

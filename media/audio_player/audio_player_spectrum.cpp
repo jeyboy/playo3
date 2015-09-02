@@ -61,7 +61,7 @@ void Spectrum::setSpectrumBandsCount(int bandsCount) {
 
 void Spectrum::calcSpectrum() {
     if (spectrumHeight > 0) {
-        if (currentState == StoppedState) {
+        if (state() == StoppedState) {
             emit spectrumChanged(defaultSpectrum);
         } else {
             if (Settings::instance() -> spectrumType() == Playo3::bars) {
@@ -110,7 +110,7 @@ QList<QVector<int> > Spectrum::getComplexSpectrum() {
     int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
     float fft[gLimit];
-    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
+    BASS_ChannelGetData(chId(), fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
 
     QVector<float> peaks;
     int b0 = 0, x, y, z, peakNum;

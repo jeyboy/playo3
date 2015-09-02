@@ -26,6 +26,12 @@ namespace AudioPlayer {
         inline bool isPlayed() const { return currentState == PlayingState; }
         inline bool isPaused() const { return currentState == PausedState; }
         inline bool isStoped() const { return currentState == StoppedState; }
+
+        inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
+
+        //from 0 to 1
+        float getRemoteFileDownloadPosition();
+        inline float getSize() const { return size; }
     signals:
         void stateChanged(MediaState);
         void mediaStatusChanged(MediaStatus);
@@ -55,6 +61,8 @@ namespace AudioPlayer {
 
         MediaState currentState;
         HSYNC syncHandle, syncDownloadHandle;
+        float prevDownloadPos;
+        float size;
     };
 }
 
