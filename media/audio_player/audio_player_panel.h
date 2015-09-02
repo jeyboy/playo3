@@ -13,16 +13,16 @@
 #define POSITION_MULTIPLIER 1000.0
 #define SLIDE_DURATION_PERCENT 10
 
-class AudioPlayerPanel : public QObject {
-    Q_OBJECT
+class AudioPlayerPanel {
 public:
     virtual ~AudioPlayerPanel() {}
 
-    inline int getPosition() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
-    inline int getFilePosition() const { return BASS_ChannelGetPosition(chan, BASS_POS_BYTE); } // need to check
+    inline int getPosition() const { return BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chId(), BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
+    inline int getFilePosition() const { return BASS_ChannelGetPosition(chId(), BASS_POS_BYTE); } // need to check
     inline int getDuration() const { return duration; }
     inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
     inline int getChannelsCount() const { return channelsCount; }
+
     inline float getSize() const { return size; }
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
@@ -30,6 +30,8 @@ public:
 
     inline int getNotifyInterval() { return notifyInterval; }
     void setNotifyInterval(signed int milis);
+
+    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
 
 signals:
     void volumeChanged(int);
@@ -42,7 +44,7 @@ signals:
 public slots:
     void slidePosForward();
     void slidePosBackward();
-    inline bool setPosition(int position) { return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
+    inline bool setPosition(int position) { return BASS_ChannelSetPosition(chId(), BASS_ChannelSeconds2Bytes(chId(), position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
 
     void slideVolForward();
     void slideVolBackward();
@@ -50,18 +52,18 @@ public slots:
     void setVolume(int val);
 
 private slots:
-    void signalUpdate() { emit positionChanged(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER); }
+    void signalUpdate() { emit positionChanged(BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chId(), BASS_POS_BYTE)) * POSITION_MULTIPLIER); }
 
 protected:
     AudioPlayerPanel() : duration(-1), volumeVal(1.0), channelsCount(2), prevChannelsCount(0) {
 
     }
 
-    unsigned long currentChannel() = 0;
+    virtual unsigned long chId() const = 0;
 
     inline void initDuration() {
         if (duration == -1)
-            duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER;
+            duration = round(BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetLength(chId(), BASS_POS_BYTE))) * POSITION_MULTIPLIER;
         durationChanged(duration);
     }
 

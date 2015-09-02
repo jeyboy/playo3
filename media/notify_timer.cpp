@@ -1,6 +1,6 @@
 #include "notify_timer.h"
 
-NotifyTimer::NotifyTimer(QObject * parent): QTimer(parent) {}
+NotifyTimer::NotifyTimer(QObject * parent) : QTimer(parent) {}
 
 void NotifyTimer::start(int msec) {
     emit started();

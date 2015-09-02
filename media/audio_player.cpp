@@ -62,14 +62,11 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent), AudioPlayerEqualiz
 
 AudioPlayer::~AudioPlayer() {
     stopTimers();
-    delete notifyTimer;
-    delete spectrumTimer;
-
     BASS_PluginFree(0);
     BASS_Free();
 }
 
-void AudioPlayer::setMedia(QUrl mediaPath, uint start_pos = 0, int media_duration = -1) {
+void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1) {
     mediaUri = mediaPath;
     currentState = InitState;
     startPos = start_pos;
@@ -89,38 +86,37 @@ void AudioPlayer::setNotifyInterval(signed int milis) {
 /// PRIVATE
 ////////////////////////////////////////////////////////////////////////
 
-int AudioPlayer::openRemoteChannel(QString path) {
+int AudioPlayer::openChannel(const QUrl & url) {
     BASS_ChannelStop(chan);
+    QString path;
 
-    size = -1;
+    if (url.isLocalFile()) {
+        size = 0;
+        prevDownloadPos = 1;
+        path = url.toLocalFile();
 
-//    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-    chan = BASS_StreamCreateURL(
-            #ifdef Q_OS_WIN
-                path.toStdWString().data()
-            #else
-                path.toStdString().c_str()
-            #endif
-        , 0, BASS_SAMPLE_FLOAT, NULL, 0);
-    return chan;
-}
+        chan = BASS_StreamCreateFile(false,
+                #ifdef Q_OS_WIN
+                    path.toStdWString().data()
+                #else
+                    path.toStdString().c_str()
+                #endif
+            , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
+    } else {
+        size = -1;
+        path = url.toString();
 
-int AudioPlayer::openChannel(QString path) {
-    BASS_ChannelStop(chan);
+        //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
+        chan = BASS_StreamCreateURL(
+                #ifdef Q_OS_WIN
+                    path.toStdWString().data()
+                #else
+                    path.toStdString().c_str()
+                #endif
+            , 0, BASS_SAMPLE_FLOAT, NULL, 0);
+    }
 
-    size = 0;
-    prevDownloadPos = 1;
 
-    chan = BASS_StreamCreateFile(false,
-            #ifdef Q_OS_WIN
-                 path.toStdWString().data()
-            #else
-                path.toStdString().c_str()
-            #endif
-        , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
-
-    if (!chan)
-        qDebug() << "Can't play file " <<  BASS_ErrorGetCode() << path.toUtf8().data();
     return chan;
 }
 
@@ -135,43 +131,18 @@ void AudioPlayer::closeChannel() {
 }
 
 void AudioPlayer::play() {
-    if (currentState == PausedState) {
+    if (currentState == PausedState)
         resume();
-    } else {
-        emit mediaStatusChanged(LoadingMedia);
+    else {
         closeChannel();
-        if (mediaUri.isEmpty()) {
+        emit mediaStatusChanged(LoadingMedia);
+        if (mediaUri.isEmpty())
             emit mediaStatusChanged(NoMedia);
-        } else {
+        else {
             startProccessing();
+            openChannel(mediaUri);
 
-            if (mediaUri.isLocalFile())
-                openChannel(mediaUri.toLocalFile());
-            else
-                openRemoteChannel(mediaUri.toString());
-
-            if (chan) {
-                BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
-                initDuration();
-
-                BASS_CHANNELINFO info;
-                if (BASS_ChannelGetInfo(chan, &info))
-                    channelsCount = info.chans;
-                else
-                    channelsCount = 2;
-
-                if (useEQ) registerEQ();
-
-                emit mediaStatusChanged(LoadedMedia);
-
-                BASS_ChannelPlay(chan, true);
-                startTimers();
-
-                syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
-                syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
-
-                setStartPosition();
-            }
+            if (chan) aroundProccessing();
             else proceedErrorState();
         }
     }
@@ -203,4 +174,43 @@ void AudioPlayer::endOfPlayback() {
     setPosition(0);
     pause();
     emit mediaStatusChanged(EndOfMedia);
+}
+
+void AudioPlayer::startTimers() {
+    notifyTimer -> start(notifyInterval);
+    spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+    emit stateChanged(currentState = PlayingState);
+}
+
+void AudioPlayer::stopTimers(bool paused = false) {
+    notifyTimer -> stop();
+    spectrumTimer -> stop();
+
+    if (paused)
+        emit stateChanged(currentState = PausedState);
+    else
+        emit stateChanged(currentState = StoppedState);
+}
+
+void AudioPlayer::aroundProccessing() {
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+    initDuration();
+
+    BASS_CHANNELINFO info;
+    if (BASS_ChannelGetInfo(chan, &info))
+        channelsCount = info.chans;
+    else
+        channelsCount = 2;
+
+    if (useEQ) registerEQ();
+
+    emit mediaStatusChanged(LoadedMedia);
+
+    startTimers();
+    BASS_ChannelPlay(chan, true);
+
+    syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
+    syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
+
+    setStartPosition();
 }

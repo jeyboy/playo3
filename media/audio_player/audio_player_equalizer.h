@@ -7,14 +7,13 @@
 #include "bass_fx.h"
 //#include "bassmix.h"
 
-class AudioPlayerEqualizer : QObject {
-    Q_OBJECT
+class AudioPlayerEqualizer {
 public:
     virtual ~AudioPlayerEqualizer() {}
 public slots:
     void registerEQ(bool registrate);
 protected:
-    AudioPlayerEqualizer(QObject * parent = 0) : QObject(parent), _fxEQ(0), useEQ(false) {
+    AudioPlayerEqualizer() : _fxEQ(0), useEQ(false) {
         eqBands.insert(20, QStringLiteral("20"));
         eqBands.insert(32, QStringLiteral("32"));
         eqBands.insert(64, QStringLiteral("64"));
@@ -37,6 +36,8 @@ protected:
         eqBands.insert(12000, QStringLiteral("12k"));
         eqBands.insert(16000, QStringLiteral("16k"));
     }
+
+    virtual unsigned long chId() const = 0;
 
     void registerEQ();
     void unregisterEQ();

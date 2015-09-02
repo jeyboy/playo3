@@ -49,8 +49,6 @@ public:
     inline bool isPlayed() const { return currentState == PlayingState; }
     inline bool isPaused() const { return currentState == PausedState; }
     inline bool isStoped() const { return currentState == StoppedState; }
-
-    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
 signals:
     void stateChanged(MediaState);
     void mediaStatusChanged(MediaStatus);
@@ -62,6 +60,8 @@ protected:
         qRegisterMetaType<AudioPlayerState::MediaStatus>("MediaStatus");
         qRegisterMetaType<AudioPlayerState::MediaState>("MediaState");
     }
+
+    virtual unsigned long chId() const = 0;
 
     void proceedErrorState() {
         currentState = UnknowState;

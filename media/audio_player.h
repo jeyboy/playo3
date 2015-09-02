@@ -12,8 +12,6 @@
 #include "bass_fx.h"
 #include "bassmix.h"
 
-#include "media/notify_timer.h"
-
 #include "misc/settings.h"
 
 #include "audio_player/audio_player_spectrum.h"
@@ -25,14 +23,13 @@ class AudioPlayer : public QObject, public AudioPlayerEqualizer, public AudioPla
         public AudioPlayerPanel, public AudioPlayerState {
     Q_OBJECT
 
-    int openChannel(QString path);
-    int openRemoteChannel(QString path);
+    int openChannel(const QUrl & url);
     void closeChannel();
 public:
     explicit AudioPlayer(QObject * parent = 0);
     ~AudioPlayer();
 
-    void setMedia(QUrl mediaPath, uint start_pos = 0, int media_duration = -1);
+    void setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1);
 public slots:
     void play();
     void pause();
@@ -41,6 +38,8 @@ public slots:
     void endOfPlayback();
 
 protected:
+    inline unsigned long chId() const { return chan; }
+
     inline int default_device() {
         #ifdef Q_OS_WIN
             return -1;
@@ -51,26 +50,13 @@ protected:
 
     void init();
 
-    inline void startTimers() {
-        notifyTimer -> start(notifyInterval);
-        spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
-        emit stateChanged(currentState = PlayingState);
-    }
-
-    inline void stopTimers(bool paused = false) {
-        notifyTimer -> stop();
-        spectrumTimer -> stop();
-
-        if (paused)
-            emit stateChanged(currentState = PausedState);
-        else
-            emit stateChanged(currentState = StoppedState);
-    }
+    void startTimers();
+    void stopTimers(bool paused = false);
 
     virtual inline void startProccessing() {}
+    void aroundProccessing();
 private:
     NotifyTimer * notifyTimer;
-    NotifyTimer * spectrumTimer;
 
     unsigned long chan;
 };

@@ -1,12 +1,10 @@
 #ifndef AUDIO_PLAYER_SPECTRUM
 #define AUDIO_PLAYER_SPECTRUM
 
-#include <qobject.h>
-
+#include "media/notify_timer.h"
 #include "bass.h"
 
-class AudioPlayerSpectrum : public QObject {
-    Q_OBJECT
+class AudioPlayerSpectrum {
 public:
     virtual ~AudioPlayerSpectrum() {}
 public:
@@ -22,9 +20,11 @@ signals:
 protected slots:
     void calcSpectrum();
 protected:
-    inline AudioPlayerSpectrum(QObject * parent = 0) : QObject(parent), spectrumHeight(0), defaultSpectrumLevel(0) {
+    inline AudioPlayerSpectrum() : spectrumHeight(0), defaultSpectrumLevel(0) {
         setSpectrumBandsCount(28);
     }
+
+    virtual unsigned long chId() const = 0;
 
     float fastSqrt(float x);
 
@@ -38,6 +38,8 @@ protected:
     int spectrumHeight;
     int defaultSpectrumLevel;
     QList<QVector<int> > defaultSpectrum;
+
+    NotifyTimer * spectrumTimer;
 };
 
 #endif // AUDIO_PLAYER_SPECTRUM
