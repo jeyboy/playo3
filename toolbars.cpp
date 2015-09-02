@@ -362,7 +362,7 @@ QToolBar * ToolBars::createControlToolBar() {
 QToolBar * ToolBars::createEqualizerToolBar() {
     QToolBar * ptb = precreateToolBar(toolbar_equalizer_key);
 
-    equalizer = new Equalizer(ptb);
+    equalizer = new EqualizerView(ptb);
     ptb -> addWidget(equalizer);
     ptb -> adjustSize();
 
@@ -383,9 +383,9 @@ QToolBar * ToolBars::createEqualizerButtonBar() {
     return ptb;
 }
 
-Spectrum * ToolBars::getSpectrum() {
+SpectrumView * ToolBars::getSpectrum() {
     if (spectrum == 0) {
-        spectrum = new Spectrum(toolbar_spectrum_key, (QWidget *)parent());
+        spectrum = new SpectrumView(toolbar_spectrum_key, (QWidget *)parent());
         spectrum -> setProperty(toolbar_service_mark, true);
 
         connect(spectrum, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));

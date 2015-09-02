@@ -1,5 +1,5 @@
-#ifndef EQUALIZER_H
-#define EQUALIZER_H
+#ifndef EQUALIZER_VIEW
+#define EQUALIZER_VIEW
 
 #include <qwidget.h>
 #include <qgridlayout.h>
@@ -14,11 +14,11 @@
 namespace Playo3 {
     #define DEFAULT_PRESET QStringLiteral("Manual")
 
-    class Equalizer : public QWidget {
+    class EqualizerView : public QWidget {
         Q_OBJECT
     public:
-        Equalizer(QWidget * parent = 0);
-        ~Equalizer();
+        EqualizerView(QWidget * parent = 0);
+        ~EqualizerView();
 
         QJsonObject settings();
         void setSettings(QJsonObject settings);
@@ -42,4 +42,4 @@ namespace Playo3 {
     };
 }
 
-#endif // EQUALIZER_H
+#endif // EQUALIZER_VIEW

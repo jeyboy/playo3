@@ -1,10 +1,10 @@
-#include "spectrum.h"
+#include "spectrum_view.h"
 #include "media/player.h"
 #include <qelapsedtimer.h>
 
 using namespace Playo3;
 
-Spectrum::Spectrum(const QString & objName, QWidget * parent) : QToolBar(objName, parent), last_pairs_count(0), type(split_bars) {
+SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar(objName, parent), last_pairs_count(0), type(split_bars) {
     setObjectName(QStringLiteral("tool_Spectrum"));
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
@@ -24,9 +24,9 @@ Spectrum::Spectrum(const QString & objName, QWidget * parent) : QToolBar(objName
     onMovableChanged(isMovable());
 }
 
-Spectrum::~Spectrum() {}
+SpectrumView::~SpectrumView() {}
 
-void Spectrum::generateContextMenu(QMenu * parent) {
+void SpectrumView::generateContextMenu(QMenu * parent) {
     QAction * act;
     QMenu * spectrMenu = parent -> addMenu(QStringLiteral("Spectrum"));
     spectrMenu -> addAction(toggleViewAction());
@@ -45,7 +45,7 @@ void Spectrum::generateContextMenu(QMenu * parent) {
     act -> setChecked(type == Playo3::waves);
 }
 
-void Spectrum::updateColors() {
+void SpectrumView::updateColors() {
     QColor c1, c2, c3;
     if (Settings::instance() -> isCustomColorSpectrum()) {
         c3 = Settings::instance() -> spectrumColor3();
@@ -68,25 +68,25 @@ void Spectrum::updateColors() {
     g.setColorAt(1, c1);
 }
 
-void Spectrum::changeType(SpectrumType newType) {
+void SpectrumView::changeType(SpectrumType newType) {
     Settings::instance() -> setSpectrumType(newType);
     type = newType;
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
-void Spectrum::changeBandCount() {
+void SpectrumView::changeBandCount() {
     Player::instance() -> setSpectrumBandsCount(calcBarCount());
     dataUpdated(Player::instance() -> getDefaultSpectrum());
 }
 
-void Spectrum::changeHeight(int newHeight) {
+void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
-void Spectrum::dataUpdated(QList<QVector<int> > data) {
+void SpectrumView::dataUpdated(QList<QVector<int> > data) {
     peaks = data;
     pairs = (peaks.length() + 1) / 2;
 
@@ -103,22 +103,22 @@ void Spectrum::dataUpdated(QList<QVector<int> > data) {
     }
 }
 
-void Spectrum::onMovableChanged(bool movable) {
+void SpectrumView::onMovableChanged(bool movable) {
      offset = movable ? 10 : 2;
      start_h_offset = paddWidth() + offset;
      recalcAttrs();
 }
-void Spectrum::onOrientationChanged(Qt::Orientation /*orientation*/) {
+void SpectrumView::onOrientationChanged(Qt::Orientation /*orientation*/) {
     //TODO: add calculation for vertical orientation
 }
 
-void Spectrum::resizeEvent(QResizeEvent * e) {
+void SpectrumView::resizeEvent(QResizeEvent * e) {
     QToolBar::resizeEvent(e);
     changeBandCount();
     recalcAttrs();
 }
 
-void Spectrum::paintEvent(QPaintEvent * event) {
+void SpectrumView::paintEvent(QPaintEvent * event) {
     QToolBar::paintEvent(event);
 
     switch(type) {
@@ -132,7 +132,7 @@ void Spectrum::paintEvent(QPaintEvent * event) {
     }
 }
 
-void Spectrum::recalcAttrs() {
+void SpectrumView::recalcAttrs() {
     switch(type) {
         case bars:
             bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();
@@ -146,14 +146,14 @@ void Spectrum::recalcAttrs() {
     update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - verticalPadd());
 }
 
-int Spectrum::calcBarCount() {
+int SpectrumView::calcBarCount() {
     if (Settings::instance() -> isAutoBarsAmount())
         return (width() - start_h_offset) / Settings::instance() -> autoBarWidth();
     else
         return Settings::instance() -> spectrumBarsCount();
 }
 
-int Spectrum::peakDimension() {
+int SpectrumView::peakDimension() {
     int h;
     int halfBarWidth = bar_width / 2;
 
@@ -179,7 +179,7 @@ int Spectrum::peakDimension() {
     }
 }
 
-void Spectrum::paintWaves() {
+void SpectrumView::paintWaves() {
     QPainter painter(this);
     painter.save();
 
@@ -245,7 +245,7 @@ void Spectrum::paintWaves() {
     painter.restore();
 }
 
-void Spectrum::paintCombo() {
+void SpectrumView::paintCombo() {
     QPainter painter(this);
     painter.save();
 
@@ -265,7 +265,7 @@ void Spectrum::paintCombo() {
     painter.restore();
 }
 
-void Spectrum::paintDuo() {
+void SpectrumView::paintDuo() {
     QPainter painter(this);
     painter.save();
 

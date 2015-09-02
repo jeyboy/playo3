@@ -21,7 +21,7 @@ class MediaInfo;
 
 namespace Playo3 { class IModel; }
 
-class Player : public AudioPlayer {
+class Player : public AudioPlayer::Base {
     Q_OBJECT
 public:
     enum Reason {
@@ -79,8 +79,8 @@ private slots:
 
     void invertTimeCountdown();
 
-    void onStateChanged(MediaState newState);
-    void onMediaStatusChanged(MediaStatus status);
+    void onStateChanged(AudioPlayer::MediaState newState);
+    void onMediaStatusChanged(AudioPlayer::MediaStatus status);
 protected:
     inline void startProccessing() { setItemState(ItemState::proccessing); }
     inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }

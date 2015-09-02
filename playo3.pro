@@ -58,7 +58,6 @@ SOURCES += main.cpp\
     media/format.cpp \
     media/notify_timer.cpp \
     globalshortcut/qxtglobalshortcut.cpp \
-    modules/controls/spectrum.cpp \
     modules/controls/dockbar.cpp \
     modules/controls/window_title.cpp \
     modules/controls/window.cpp \
@@ -134,7 +133,6 @@ SOURCES += main.cpp\
     modules/controls/search_bar.cpp \
     dialogs/export_dialog.cpp \
     media/cue/cue.cpp \
-    modules/controls/equalizer.cpp \
     modules/web/service_api/echonest_api.cpp \
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
@@ -166,7 +164,9 @@ SOURCES += main.cpp\
     media/audio_player/audio_player_equalizer.cpp \
     media/audio_player/audio_player_panel.cpp \
     media/audio_player/audio_player_spectrum.cpp \
-    media/audio_player/audio_player_state.cpp
+    media/audio_player/audio_player_state.cpp \
+    modules/controls/equalizer_view.cpp \
+    modules/controls/spectrum_view.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -198,7 +198,6 @@ HEADERS  += playo.h \
     globalshortcut/qxtglobalshortcut.h \
     globalshortcut/qxtglobalshortcut_p.h \
     modules/controls/slider_style.h \
-    modules/controls/spectrum.h \
     modules/controls/dockbar.h \
     modules/controls/title_layout.h \
     modules/controls/clickable_slider.h \
@@ -290,7 +289,6 @@ HEADERS  += playo.h \
     media/cue/cue.h \
     modules/web/service_api/echonest_api.h \
     modules/web/service_api/echonest_genre_api.h \
-    modules/controls/equalizer.h \
     modules/web/service_api/echonest_artist_api.h \
     modules/web/service_api/echonest_song_api.h \
     modules/plugins/web_dialog_interface.h \
@@ -338,7 +336,10 @@ HEADERS  += playo.h \
     media/audio_player/audio_player_equalizer.h \
     media/audio_player/audio_player_spectrum.h \
     media/audio_player/audio_player_panel.h \
-    media/audio_player/audio_player_state.h
+    media/audio_player/audio_player_state.h \
+    media/audio_player/audio_player_states.h \
+    modules/controls/equalizer_view.h \
+    modules/controls/spectrum_view.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

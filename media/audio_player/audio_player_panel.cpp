@@ -1,21 +1,23 @@
 #include "audio_player_panel.h"
 
-void AudioPlayerPanel::setNotifyInterval(signed int milis) {
+using namespace AudioPlayer;
+
+void Panel::setNotifyInterval(signed int milis) {
     notifyInterval = milis;
     if (notifyTimer -> isActive())
         notifyTimer -> setInterval(notifyInterval);
 }
 
-void AudioPlayerPanel::slidePosForward() {
-    if (currentState == PlayingState || currentState == PausedState) {
+void Panel::slidePosForward() {
+    if (state() == PlayingState || state() == PausedState) {
         int dur = getDuration();
         int pos = getPosition() + dur / SLIDE_DURATION_PERCENT;
         if (pos < dur)
             setPosition(pos);
     }
 }
-void AudioPlayerPanel::slidePosBackward() {
-    if (currentState == PlayingState || currentState == PausedState) {
+void Panel::slidePosBackward() {
+    if (state() == PlayingState || state() == PausedState) {
         int pos = getPosition() - (getDuration() / SLIDE_DURATION_PERCENT);
         if (pos < 0) pos = 0;
         setPosition(pos);
@@ -23,44 +25,44 @@ void AudioPlayerPanel::slidePosBackward() {
 }
 
 //0 to 10000
-void AudioPlayerPanel::setChannelVolume(int val) {
+void Panel::setChannelVolume(int val) {
     volumeVal = val > 0 ? (val / VOLUME_MULTIPLIER) : 0;
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+    BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_VOL, volumeVal);
     emit volumeChanged(val);
 }
 
-void AudioPlayerPanel::slideVolForward() {
+void Panel::slideVolForward() {
     int newVolLevel = getVolume() + SLIDE_VOLUME_OFFSET;
     if (newVolLevel > VOLUME_MULTIPLIER) newVolLevel = VOLUME_MULTIPLIER;
     setChannelVolume(newVolLevel);
 }
-void AudioPlayerPanel::slideVolBackward() {
+void Panel::slideVolBackward() {
     int newVolLevel = getVolume() - SLIDE_VOLUME_OFFSET;
     if (newVolLevel < 0) newVolLevel = 0;
     setChannelVolume(newVolLevel);
 }
 
 // 0 to 10000
-void AudioPlayerPanel::setVolume(int val) {
+void Panel::setVolume(int val) {
     BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, val);
     emit volumeChanged(val);
 }
 
 //from 0 to 1
-float AudioPlayerPanel::getRemoteFileDownloadPosition() {
+float Panel::getRemoteFileDownloadPosition() {
     if (size == -1) {
         prevDownloadPos = 0;
-        DWORD len = BASS_StreamGetFilePosition(chan, BASS_FILEPOS_END);
-        size = len + BASS_StreamGetFilePosition(chan, BASS_FILEPOS_START);
+        DWORD len = BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_END);
+        size = len + BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_START);
     }
 
     if (prevDownloadPos != 1) {
-        prevDownloadPos = ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / size);
+        prevDownloadPos = ((BASS_StreamGetFilePosition(chId(), BASS_FILEPOS_DOWNLOAD)) / size);
     }
     return prevDownloadPos;
 }
 
-float AudioPlayerPanel::getBpmValue(QUrl uri) {
+float Panel::getBpmValue(QUrl uri) {
     int cochan;
 
     if (uri.isLocalFile())

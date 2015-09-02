@@ -1,12 +1,14 @@
 #include "audio_player.h"
 #include <qdebug.h>
 
+using namespace AudioPlayer;
+
 //Get the percentage downloaded of an internet file stream, or the buffer level when streaming in blocks.
 //QWORD len=BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END); // file/buffer length
 //QWORD buf=BASS_StreamGetFilePosition(stream, BASS_FILEPOS_BUFFER); // buffer level
 //float progress=buf*100.0/len; // percentage of buffer filled
 
-void AudioPlayer::init() {
+void Base::init() {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
@@ -46,7 +48,7 @@ void AudioPlayer::init() {
     //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
 }
 
-AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
+Base::Base(QObject * parent) : QObject(parent) {
     init();
 
     // cheat for cross treadhing
@@ -60,13 +62,13 @@ AudioPlayer::AudioPlayer(QObject * parent) : QObject(parent) {
     connect(notifyTimer, SIGNAL(stoped()), this, SLOT(calcSpectrum()));
 }
 
-AudioPlayer::~AudioPlayer() {
+Base::~Base() {
     stopTimers();
     BASS_PluginFree(0);
     BASS_Free();
 }
 
-void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) {
+void Base::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) {
     mediaUri = mediaPath;
     currentState = InitState;
     startPos = start_pos;
@@ -80,7 +82,7 @@ void AudioPlayer::setMedia(const QUrl & mediaPath, uint start_pos, int media_dur
 /// PRIVATE
 ////////////////////////////////////////////////////////////////////////
 
-int AudioPlayer::openChannel(const QUrl & url) {
+int Base::openChannel(const QUrl & url) {
     BASS_ChannelStop(chan);
     QString path;
 
@@ -114,7 +116,7 @@ int AudioPlayer::openChannel(const QUrl & url) {
     return chan;
 }
 
-void AudioPlayer::closeChannel() {
+void Base::closeChannel() {
 //    BASS_ChannelSlideAttribute(chan, BASS_ATTRIB_VOL, 0, 1000);
     unregisterEQ();
     BASS_ChannelStop(chan);
@@ -124,7 +126,7 @@ void AudioPlayer::closeChannel() {
     channelsCount = 2;
 }
 
-void AudioPlayer::play() {
+void Base::play() {
     if (currentState == PausedState)
         resume();
     else {
@@ -142,12 +144,12 @@ void AudioPlayer::play() {
     }
 }
 
-void AudioPlayer::pause() {
+void Base::pause() {
     stopTimers(true);
     BASS_ChannelPause(chan);
 }
 
-void AudioPlayer::resume() {
+void Base::resume() {
     if (currentState == InitState)
         play();
     else {
@@ -159,24 +161,24 @@ void AudioPlayer::resume() {
     }
 }
 
-void AudioPlayer::stop() {
+void Base::stop() {
     closeChannel();
     stopTimers();
 }
 
-void AudioPlayer::endOfPlayback() {
+void Base::endOfPlayback() {
     setPosition(0);
     pause();
     emit mediaStatusChanged(EndOfMedia);
 }
 
-void AudioPlayer::startTimers() {
+void Base::startTimers() {
     notifyTimer -> start(notifyInterval);
     spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
     emit stateChanged(currentState = PlayingState);
 }
 
-void AudioPlayer::stopTimers(bool paused) {
+void Base::stopTimers(bool paused) {
     notifyTimer -> stop();
     spectrumTimer -> stop();
 
@@ -186,7 +188,7 @@ void AudioPlayer::stopTimers(bool paused) {
         emit stateChanged(currentState = StoppedState);
 }
 
-void AudioPlayer::aroundProccessing() {
+void Base::aroundProccessing() {
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
     initDuration();
 

@@ -14,8 +14,8 @@
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
-#include "modules/controls/spectrum.h"
-#include "modules/controls/equalizer.h"
+#include "modules/controls/spectrum_view.h"
+#include "modules/controls/equalizer_view.h"
 
 #include "dialogs/toolbarbuttondialog.h"
 #include "misc/stylesheets.h"
@@ -43,7 +43,7 @@ namespace Playo3 {
         void addPanelButton(QString name, QString path, QToolBar * bar);
 
         inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
-        Spectrum * getSpectrum();
+        SpectrumView * getSpectrum();
         inline void updateMetricSliders() { slider -> updateMetric(); }
 
         inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
@@ -116,8 +116,8 @@ namespace Playo3 {
         QToolBar * highlighted;
         MetricSlider * slider;
 
-        Equalizer * equalizer;
-        Spectrum * spectrum;
+        EqualizerView * equalizer;
+        SpectrumView * spectrum;
         QToolBar * underMouseBar;
         ToolbarButton * underMouseButton;
 

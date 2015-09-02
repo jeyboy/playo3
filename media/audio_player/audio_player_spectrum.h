@@ -1,45 +1,59 @@
 #ifndef AUDIO_PLAYER_SPECTRUM
 #define AUDIO_PLAYER_SPECTRUM
 
+#include "misc/settings.h"
+
 #include "media/notify_timer.h"
+#include "audio_player_states.h"
 #include "bass.h"
 
-class AudioPlayerSpectrum {
-public:
-    virtual ~AudioPlayerSpectrum() {}
-public:
-    inline QList<QVector<int> > & getDefaultSpectrum() { return defaultSpectrum; }
-    int getCalcSpectrumBandsCount();
+#include <qobject.h>
+#include <qvector.h>
 
-    void setSpectrumBandsCount(int bandsCount);
-    inline int spectrumBandsCount() const { return _spectrumBandsCount; }
-    inline void setSpectrumHeight(int newHeight) { spectrumHeight = newHeight; }
-    inline void setSpectrumFreq(int millis) { spectrumTimer -> setInterval(millis); }
-signals:
-    void spectrumChanged(QList<QVector<int> >);
-protected slots:
-    void calcSpectrum();
-protected:
-    inline AudioPlayerSpectrum() : spectrumHeight(0), defaultSpectrumLevel(0) {
-        setSpectrumBandsCount(28);
-    }
+namespace AudioPlayer {
+    class Spectrum : virtual public QObject {
+    public:
+        virtual ~Spectrum() {}
+    public:
+        inline QList<QVector<int> > & getDefaultSpectrum() { return defaultSpectrum; }
+        int getCalcSpectrumBandsCount();
 
-    virtual unsigned long chId() const = 0;
+        void setSpectrumBandsCount(int bandsCount);
+        inline int spectrumBandsCount() const { return _spectrumBandsCount; }
+        inline void setSpectrumHeight(int newHeight) { spectrumHeight = newHeight; }
+        inline void setSpectrumFreq(int millis) { spectrumTimer -> setInterval(millis); }
 
-    float fastSqrt(float x);
+        inline int getChannelsCount() const { return channelsCount; }
+    signals:
+        void spectrumChanged(QList<QVector<int> >);
+        void channelsCountChanged();
+    protected slots:
+        void calcSpectrum();
+    protected:
+        inline Spectrum() : spectrumHeight(0), defaultSpectrumLevel(0), channelsCount(2), prevChannelsCount(0) {
+            setSpectrumBandsCount(28);
+        }
 
-    QVector<int> spectrumPoints;
-    QVector<int> spectrumComplexPoints;
+        virtual unsigned long chId() const = 0;
+        virtual MediaState state() const = 0;
 
-    QVector<int> getSpectrum();
-    QList<QVector<int> > getComplexSpectrum();
+        float fastSqrt(float x);
 
-    int _spectrumBandsCount;
-    int spectrumHeight;
-    int defaultSpectrumLevel;
-    QList<QVector<int> > defaultSpectrum;
+        QVector<int> spectrumPoints;
+        QVector<int> spectrumComplexPoints;
 
-    NotifyTimer * spectrumTimer;
-};
+        QVector<int> getSpectrum();
+        QList<QVector<int> > getComplexSpectrum();
+
+        int _spectrumBandsCount;
+        int spectrumHeight;
+        int defaultSpectrumLevel;
+        QList<QVector<int> > defaultSpectrum;
+
+        int channelsCount, prevChannelsCount;
+
+        NotifyTimer * spectrumTimer;
+    };
+}
 
 #endif // AUDIO_PLAYER_SPECTRUM

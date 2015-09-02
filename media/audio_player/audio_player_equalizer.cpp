@@ -1,14 +1,16 @@
 #include "audio_player_equalizer.h"
 
-void AudioPlayerEqualizer::registerEQ(bool registrate) {
+using namespace AudioPlayer;
+
+void Equalizer::registerEQ(bool registrate) {
     if (useEQ = registrate) registerEQ();
     else unregisterEQ();
 }
 
-void AudioPlayerEqualizer::registerEQ() {
+void Equalizer::registerEQ() {
     if (_fxEQ) unregisterEQ();
 
-    _fxEQ = BASS_ChannelSetFX(chan, BASS_FX_BFX_PEAKEQ, 0);
+    _fxEQ = BASS_ChannelSetFX(chId(), BASS_FX_BFX_PEAKEQ, 0);
 
     BASS_BFX_PEAKEQ eq;
     eq.fQ = 0;
@@ -22,13 +24,13 @@ void AudioPlayerEqualizer::registerEQ() {
     }
 }
 
-void AudioPlayerEqualizer::unregisterEQ() {
+void Equalizer::unregisterEQ() {
     if (!_fxEQ) return;
-    BASS_ChannelRemoveFX(chan, _fxEQ);
+    BASS_ChannelRemoveFX(chId(), _fxEQ);
     _fxEQ = 0;
 }
 
-void AudioPlayerEqualizer::setEQBand(int band, float gain) {
+void Equalizer::setEQBand(int band, float gain) {
     BASS_BFX_PEAKEQ eq;
     eq.lBand = band;
 //    BASS_FXGetParameters(_fxEQ, &eq);

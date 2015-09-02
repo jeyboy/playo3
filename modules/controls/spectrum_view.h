@@ -1,5 +1,5 @@
-#ifndef SPECTRUM_H
-#define SPECTRUM_H
+#ifndef SPECTRUM_VIEW
+#define SPECTRUM_VIEW
 
 #include <qtoolbar.h>
 #include <qpainter.h>
@@ -12,11 +12,11 @@
 //FIXME: on visibility changed need to stop/start spec calc in player
 
 namespace Playo3  {
-    class Spectrum : public QToolBar {
+    class SpectrumView : public QToolBar {
         Q_OBJECT
     public:
-        Spectrum(const QString & objName, QWidget * parent = 0);
-        ~Spectrum();
+        SpectrumView(const QString & objName, QWidget * parent = 0);
+        ~SpectrumView();
 
         inline SpectrumType viewType() const { return type; }
         void generateContextMenu(QMenu * parent);
@@ -65,4 +65,4 @@ namespace Playo3  {
     };
 }
 
-#endif // SPECTRUM_H
+#endif // SPECTRUM_VIEW

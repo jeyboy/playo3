@@ -1,6 +1,8 @@
 #include "audio_player_spectrum.h"
 
-float AudioPlayerSpectrum::fastSqrt(float x) {
+using namespace AudioPlayer;
+
+float Spectrum::fastSqrt(float x) {
   unsigned int i = *(unsigned int*) &x;
 
   // adjust bias
@@ -11,7 +13,7 @@ float AudioPlayerSpectrum::fastSqrt(float x) {
   return *(float*) &i;
 }
 
-int AudioPlayerSpectrum::getCalcSpectrumBandsCount() {
+int Spectrum::getCalcSpectrumBandsCount() {
     if (channelsCount != prevChannelsCount) {
         prevChannelsCount = channelsCount;
         emit channelsCountChanged();
@@ -20,7 +22,7 @@ int AudioPlayerSpectrum::getCalcSpectrumBandsCount() {
     return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
 }
 
-void AudioPlayerSpectrum::setSpectrumBandsCount(int bandsCount) {
+void Spectrum::setSpectrumBandsCount(int bandsCount) {
     _spectrumBandsCount = bandsCount;
     defaultSpectrum.clear();
     QVector<int> l;
@@ -57,7 +59,7 @@ void AudioPlayerSpectrum::setSpectrumBandsCount(int bandsCount) {
     }
 }
 
-void AudioPlayerSpectrum::calcSpectrum() {
+void Spectrum::calcSpectrum() {
     if (spectrumHeight > 0) {
         if (currentState == StoppedState) {
             emit spectrumChanged(defaultSpectrum);
@@ -72,9 +74,9 @@ void AudioPlayerSpectrum::calcSpectrum() {
     }
 }
 
-QVector<int> AudioPlayerSpectrum::getSpectrum() {
+QVector<int> Spectrum::getSpectrum() {
     float fft[1024];
-    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048);
+    BASS_ChannelGetData(chId(), fft, BASS_DATA_FFT2048);
     QVector<int> res;
     int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
 
@@ -96,7 +98,7 @@ QVector<int> AudioPlayerSpectrum::getSpectrum() {
     return res;
 }
 
-QList<QVector<int> > AudioPlayerSpectrum::getComplexSpectrum() {
+QList<QVector<int> > Spectrum::getComplexSpectrum() {
     QList<QVector<int> > res;
 
     if (channelsCount == 1) {

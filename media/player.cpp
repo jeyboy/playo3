@@ -1,5 +1,7 @@
 #include "player.h"
 
+using namespace AudioPlayer;
+
 Player * Player::self = 0;
 
 Player * Player::instance(QWidget * parent) {
@@ -8,7 +10,7 @@ Player * Player::instance(QWidget * parent) {
     return self;
 }
 
-Player::Player(QWidget * parent) : AudioPlayer(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
+Player::Player(QWidget * parent) : AudioPlayer::Base(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
     stopButton(0), likeButton(0), muteButton(0), prevVolumeVal(0), time_forward(true), extended_format(true), current_model(0), current_item(0)
 {
     #ifdef Q_OS_WIN

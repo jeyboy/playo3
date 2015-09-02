@@ -1,8 +1,8 @@
-#include "equalizer.h"
+#include "equalizer_view.h"
 
 using namespace Playo3;
 
-Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) {
+EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging(false) {
     setObjectName(QStringLiteral("tool_equalizer"));
 
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -60,9 +60,9 @@ Equalizer::Equalizer(QWidget * parent) : QWidget(parent), presetChanging(false) 
     l -> addWidget(remove, 0, 16, 1, 3, Qt::AlignCenter);
 }
 
-Equalizer::~Equalizer() {}
+EqualizerView::~EqualizerView() {}
 
-QJsonObject Equalizer::settings() {
+QJsonObject EqualizerView::settings() {
     QJsonObject res;
     QJsonObject presetsNode;
 
@@ -83,7 +83,7 @@ QJsonObject Equalizer::settings() {
 
     return res;
 }
-void Equalizer::setSettings(QJsonObject settings) {
+void EqualizerView::setSettings(QJsonObject settings) {
     QJsonObject presetsNode = settings.value(QStringLiteral("presets")).toObject();
 
     foreach(QString key, presetsNode.keys()) {
@@ -105,7 +105,7 @@ void Equalizer::setSettings(QJsonObject settings) {
     enabled -> setChecked(settings.value(QStringLiteral("enabled")).toBool());
 }
 
-void Equalizer::createPreset() {
+void EqualizerView::createPreset() {
     ToolbarDialog dialog(QStringLiteral("New preset name"), this);
 
     if (dialog.exec() == QDialog::Accepted) {
@@ -125,14 +125,14 @@ void Equalizer::createPreset() {
     }
 }
 
-void Equalizer::removePreset() {
+void EqualizerView::removePreset() {
     if (presetsList -> currentText() != DEFAULT_PRESET) {
         presets.remove(presetsList -> currentText());
         presetsList -> removeItem(presetsList -> currentIndex());
     }
 }
 
-void Equalizer::presetChanged(QString name) {
+void EqualizerView::presetChanged(QString name) {
     presetChanging = true;
     QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
     QList<ClickableSlider *>::Iterator slider = sliders.begin();
@@ -143,7 +143,7 @@ void Equalizer::presetChanged(QString name) {
     presetChanging = false;
 }
 
-void Equalizer::eqValueChanged(int val) {
+void EqualizerView::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
     Player::instance() -> setEQBand(pos, val / 15.0);
@@ -162,7 +162,7 @@ void Equalizer::eqValueChanged(int val) {
     presets[presetsList -> currentText()].insert(pos, val);
 }
 
-void Equalizer::reset() {
+void EqualizerView::reset() {
     if (presetsList -> currentText() == DEFAULT_PRESET) {
         QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
         QList<ClickableSlider *>::Iterator slider = sliders.begin();
