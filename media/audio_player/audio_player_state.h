@@ -3,13 +3,18 @@
 
 #include <qobject.h>
 
-#ifdef Q_OS_WIN
-    void __stdcall endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
-    void __stdcall endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
-#else
-    void endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
-    void endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
-#endif
+#include "bass.h"
+
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
 class AudioPlayerState : public QObject {
     Q_OBJECT
@@ -44,20 +49,31 @@ public:
     inline bool isPlayed() const { return currentState == PlayingState; }
     inline bool isPaused() const { return currentState == PausedState; }
     inline bool isStoped() const { return currentState == StoppedState; }
+
+    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
 signals:
     void stateChanged(MediaState);
     void mediaStatusChanged(MediaStatus);
     void playbackEnded();
     void downloadEnded();
 
-protected slots:
-    void started();
-    inline void stoped() { currentState = StoppedState; }
-
 protected:
-    AudioPlayerState(QObject * parent = 0) : QObject(parent) {
+    AudioPlayerState(QObject * parent = 0) : QObject(parent), currentState(StoppedState) {
         qRegisterMetaType<AudioPlayerState::MediaStatus>("MediaStatus");
         qRegisterMetaType<AudioPlayerState::MediaState>("MediaState");
+    }
+
+    void proceedErrorState() {
+        currentState = UnknowState;
+        switch(BASS_ErrorGetCode()) {
+            case BASS_ERROR_FILEFORM: {
+                emit mediaStatusChanged(InvalidMedia);
+            break;}
+            case BASS_ERROR_FILEOPEN: {
+                emit mediaStatusChanged(NoMedia);
+            break;}
+            default: emit mediaStatusChanged(StalledMedia);
+        }
     }
 
     MediaState currentState;

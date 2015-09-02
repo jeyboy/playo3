@@ -14,6 +14,8 @@
 
 #include "media/notify_timer.h"
 
+#include "misc/settings.h"
+
 #include "audio_player/audio_player_spectrum.h"
 #include "audio_player/audio_player_equalizer.h"
 #include "audio_player/audio_player_panel.h"
@@ -47,6 +49,32 @@ public slots:
     void endOfPlayback();
 
 protected:
+    inline int default_device() {
+        #ifdef Q_OS_WIN
+            return -1;
+        #else
+            return BASS_DEVICE_DEFAULT;
+        #endif
+    }
+
+    void init();
+
+    inline void startTimers() {
+        notifyTimer -> start(notifyInterval);
+        spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+        emit stateChanged(currentState = PlayingState);
+    }
+
+    inline void stopTimers(bool paused = false) {
+        notifyTimer -> stop();
+        spectrumTimer -> stop();
+
+        if (paused)
+            emit stateChanged(currentState = PausedState);
+        else
+            emit stateChanged(currentState = StoppedState);
+    }
+
     virtual inline void startProccessing() {}
 private:
     NotifyTimer * notifyTimer;

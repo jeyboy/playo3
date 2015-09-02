@@ -24,7 +24,6 @@ public:
     inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
     inline int getChannelsCount() const { return channelsCount; }
     inline float getSize() const { return size; }
-    inline void finishRemoteFileDownloading() { prevDownloadPos = 1; }
     float getRemoteFileDownloadPosition();
     float getBpmValue(QUrl uri);
     int getBitrate() const;
