@@ -32,15 +32,7 @@ public:
     explicit AudioPlayer(QObject * parent = 0);
     ~AudioPlayer();
 
-    inline void setMedia(QUrl mediaPath, uint start_pos = 0, int length = -1) {
-        mediaUri = mediaPath;
-        currentState = InitState;
-        startPos = start_pos;
-        if ((duration = length) > 0) {
-            initDuration();
-            setStartPosition();
-        }
-    }
+    void setMedia(QUrl mediaPath, uint start_pos = 0, int media_duration = -1);
 public slots:
     void play();
     void pause();

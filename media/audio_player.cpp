@@ -7,13 +7,11 @@
 //float progress=buf*100.0/len; // percentage of buffer filled
 
 void AudioPlayer::init() {
-    if (HIWORD(BASS_GetVersion()) != BASSVERSION) {
+    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
-    }
 
-    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION) {
+    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS_FX.DLL was loaded";
-    }
 
     if (!BASS_Init(default_device(), 44100, 0, NULL, NULL))
         qDebug() << "Init error: " << BASS_ErrorGetCode();
@@ -71,6 +69,16 @@ AudioPlayer::~AudioPlayer() {
     BASS_Free();
 }
 
+void AudioPlayer::setMedia(QUrl mediaPath, uint start_pos = 0, int media_duration = -1) {
+    mediaUri = mediaPath;
+    currentState = InitState;
+    startPos = start_pos;
+    if ((duration = media_duration) > 0) {
+        initDuration();
+        setStartPosition();
+    }
+}
+
 void AudioPlayer::setNotifyInterval(signed int milis) {
     notifyInterval = milis;
     if (notifyTimer -> isActive())
@@ -125,87 +133,6 @@ void AudioPlayer::closeChannel() {
     BASS_StreamFree(chan);
     channelsCount = 2;
 }
-
-////////////////////////////////////////////////////////////////////////
-/// SLOTS
-////////////////////////////////////////////////////////////////////////
-
-void AudioPlayer::slidePosForward() {
-    if (currentState == PlayingState || currentState == PausedState) {
-        int dur = getDuration();
-        int pos = getPosition() + dur / SLIDE_DURATION_PERCENT;
-        if (pos < dur)
-            setPosition(pos);
-    }
-}
-void AudioPlayer::slidePosBackward() {
-    if (currentState == PlayingState || currentState == PausedState) {
-        int pos = getPosition() - (getDuration() / SLIDE_DURATION_PERCENT);
-        if (pos < 0) pos = 0;
-        setPosition(pos);
-    }
-}
-
-//0 to 10000
-void AudioPlayer::setChannelVolume(int val) {
-    volumeVal = val > 0 ? (val / VOLUME_MULTIPLIER) : 0;
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
-    emit volumeChanged(val);
-}
-
-void AudioPlayer::slideVolForward() {
-    int newVolLevel = getVolume() + SLIDE_VOLUME_OFFSET;
-    if (newVolLevel > VOLUME_MULTIPLIER) newVolLevel = VOLUME_MULTIPLIER;
-    setChannelVolume(newVolLevel);
-}
-void AudioPlayer::slideVolBackward() {
-    int newVolLevel = getVolume() - SLIDE_VOLUME_OFFSET;
-    if (newVolLevel < 0) newVolLevel = 0;
-    setChannelVolume(newVolLevel);
-}
-
-// 0 to 10000
-void AudioPlayer::setVolume(int val) {
-    BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, val);
-    emit volumeChanged(val);
-}
-
-//from 0 to 1
-float AudioPlayer::getRemoteFileDownloadPosition() {
-    if (size == -1) {
-        prevDownloadPos = 0;
-        DWORD len = BASS_StreamGetFilePosition(chan, BASS_FILEPOS_END);
-        size = len + BASS_StreamGetFilePosition(chan, BASS_FILEPOS_START);
-    }
-
-    if (prevDownloadPos != 1) {
-        prevDownloadPos = ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / size);
-    }
-    return prevDownloadPos;
-}
-
-float AudioPlayer::getBpmValue(QUrl uri) {
-    int cochan;
-
-    if (uri.isLocalFile())
-        cochan = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO);
-    else
-        cochan = BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO, NULL, 0);
-
-    if (cochan) {
-        int playBackDuration = BASS_ChannelBytes2Seconds(cochan, BASS_ChannelGetLength(cochan, BASS_POS_BYTE));
-
-        return BASS_FX_BPM_DecodeGet(cochan,
-            0,
-            playBackDuration,
-            MAKEWORD(20, 180),
-            BASS_FX_FREESOURCE, //BASS_FX_BPM_BKGRND // BASS_FX_BPM_MULT2
-            NULL, NULL
-        );
-    } else return 0;
-}
-
-////////////////////////////////////////////////////////////////////////
 
 void AudioPlayer::play() {
     if (currentState == PausedState) {

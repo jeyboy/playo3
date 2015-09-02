@@ -13,5 +13,3 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     player -> finishRemoteFileDownloading();
     emit player -> downloadEnded();
 }
-
-

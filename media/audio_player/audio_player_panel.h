@@ -40,12 +40,6 @@ signals:
 //    void volumeChanged(int);
 
 public slots:
-    void play();
-    void pause();
-    void resume();
-    void stop();
-    void endOfPlayback();
-
     void slidePosForward();
     void slidePosBackward();
     inline bool setPosition(int position) { return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
