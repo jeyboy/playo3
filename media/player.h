@@ -25,14 +25,7 @@ namespace Playo3 { class IModel; }
 class Player : public AudioPlayer::Base {
     Q_OBJECT
 public:
-    enum Reason {
-        init,
-        endMedia,
-        noMedia,
-        stalled,
-        error,
-        refreshNeed
-    };
+    enum Reason { init, endMedia, noMedia, stalled, error, refreshNeed };
 
     static Player * instance(QWidget * parent = 0);
     inline static void close() { delete self; }

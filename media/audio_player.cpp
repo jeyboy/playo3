@@ -99,33 +99,14 @@ void Base::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) 
 ////////////////////////////////////////////////////////////////////////
 
 int Base::openChannel(const QUrl & url) {
-    BASS_ChannelStop(chan);
-    QString path;
-
     if (url.isLocalFile()) {
         size = 0;
         prevDownloadPos = 1;
-        path = url.toLocalFile();
-
-        chan = BASS_StreamCreateFile(false,
-                #ifdef Q_OS_WIN
-                    path.toStdWString().data()
-                #else
-                    path.toStdString().c_str()
-                #endif
-            , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
+        chan = open(url.toLocalFile());
     } else {
         size = -1;
-        path = url.toString();
-
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        chan = BASS_StreamCreateURL(
-                #ifdef Q_OS_WIN
-                    path.toStdWString().data()
-                #else
-                    path.toStdString().c_str()
-                #endif
-            , 0, BASS_SAMPLE_FLOAT, NULL, 0);
+        chan = openRemote(url.toString());
     }
 
     return chan;

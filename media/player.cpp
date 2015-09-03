@@ -163,10 +163,10 @@ void Player::setTimePanelVal(int millis) {
 
         if (time_forward) {
             val = Duration::fromMillis(millis, extended_format);
-            timePanel -> setText(val + "\n" + total);
+            timePanel -> setText(val % QStringLiteral("\n") % total);
         } else {
             val = Duration::fromMillis(getDuration() - millis, extended_format);
-            timePanel -> setText(total + "\n" + val);
+            timePanel -> setText(total % QStringLiteral("\n") % val);
         }
     }
 }
@@ -179,7 +179,7 @@ void Player::updateControls(bool played, bool paused, bool stopped) {
             stateButton -> setOverlayIcon(QIcon());
         else
             stateButton -> setOverlayIcon(QIcon(
-                !played ? ":task_play" : ":task_pause"
+                !played ? QStringLiteral(":task_play") : QStringLiteral(":task_pause")
             ));
 
         if (!played) {
@@ -202,29 +202,24 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
     if (uri.isLocalFile()) {
-        chUID = BASS_StreamCreateFile(false,
+        chUID = open(uri.toLocalFile()); /*BASS_StreamCreateFile(false,
             uri.toLocalFile()
               #ifdef Q_OS_WIN
                 .toStdWString().data()
               #else
                 .toStdString().c_str()
               #endif
-            , 0, 0, 0);
+            , 0, 0, 0);*/
     } else {
-        chUID = BASS_StreamCreateURL(
+        chUID = openRemote(uri.toString()); /*BASS_StreamCreateURL(
             uri.toString()
                 #ifdef Q_OS_WIN
                     .toStdWString().data()
                 #else
                     .toStdString().c_str()
                 #endif
-            , 0, 0, NULL, 0);
+            , 0, 0, NULL, 0);*/
     }
-
-//    if (uri.isLocalFile())
-//        chUID = BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, 0);
-//    else
-//        chUID = BASS_StreamCreateURL(uri.toString().toStdWString().data(), 0, 0, NULL, 0);
 
     if (!chUID) return false;
 

@@ -30,7 +30,6 @@ namespace AudioPlayer {
         inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
 
         float getBpmValue(QUrl uri);
-        int getBitrate() const;
 
         inline int getNotifyInterval() { return notifyInterval; }
         void setNotifyInterval(signed int milis);
