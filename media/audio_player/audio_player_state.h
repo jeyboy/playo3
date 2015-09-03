@@ -4,23 +4,33 @@
 #include <qobject.h>
 
 #include "bass.h"
-#include "audio_player_states.h"
 
 namespace AudioPlayer {
-    void
-        #ifdef Q_OS_WIN
-            __stdcall
-        #endif
-            endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
-    void
-        #ifdef Q_OS_WIN
-            __stdcall
-        #endif
-            endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
+    enum MediaStateFlags {
+        InitState,
+        StoppedState,
+        PlayingState,
+        PausedState,
+        UnknowState
+    };
+    typedef QFlags<MediaStateFlags> MediaState;
 
+    enum MediaStatusFlags {
+        UnknownMediaStatus,
+        NoMedia,
+        NoRemoteMedia,
+        LoadingMedia,
+        LoadedMedia,
+        StalledMedia,
+        EndOfMedia,
+        InvalidMedia
+    };
+    typedef QFlags<MediaStatusFlags> MediaStatus;
 
-    class State : virtual public QObject {
+    class State : public QObject {
+        Q_OBJECT
     public:
+        inline State(QObject * parent = 0) : QObject(parent) {}
         virtual ~State() {}
 
         inline bool isPlayed() const { return currentState == PlayingState; }
@@ -32,11 +42,12 @@ namespace AudioPlayer {
         //from 0 to 1
         float getRemoteFileDownloadPosition();
         inline float getSize() const { return size; }
+
+        inline MediaState state() const { return currentState; }
+
     signals:
         void stateChanged(MediaState);
         void mediaStatusChanged(MediaStatus);
-        void playbackEnded();
-        void downloadEnded();
 
     protected:
         State() : currentState(StoppedState) {
@@ -44,20 +55,9 @@ namespace AudioPlayer {
             qRegisterMetaType<MediaState>("MediaState");
         }
 
-        virtual unsigned long chId() const = 0;
+        void proceedErrorState();
 
-        void proceedErrorState() {
-            currentState = UnknowState;
-            switch(BASS_ErrorGetCode()) {
-                case BASS_ERROR_FILEFORM: {
-                    emit mediaStatusChanged(InvalidMedia);
-                break;}
-                case BASS_ERROR_FILEOPEN: {
-                    emit mediaStatusChanged(NoMedia);
-                break;}
-                default: emit mediaStatusChanged(StalledMedia);
-            }
-        }
+        virtual unsigned long chId() const = 0;
 
         MediaState currentState;
         HSYNC syncHandle, syncDownloadHandle;

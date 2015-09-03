@@ -13,13 +13,19 @@ float Spectrum::fastSqrt(float x) {
   return *(float*) &i;
 }
 
-int Spectrum::getCalcSpectrumBandsCount() {
-    if (channelsCount != prevChannelsCount) {
-        prevChannelsCount = channelsCount;
-        emit channelsCountChanged();
+void Spectrum::calcSpectrum() {
+    if (spectrumHeight > 0) {
+        if (state() == StoppedState) {
+            emit spectrumChanged(defaultSpectrum);
+        } else {
+            if (Settings::instance() -> spectrumType() == Playo3::bars) {
+                QList<QVector<int> > res;
+                res.append(getSpectrum());
+                emit spectrumChanged(res);
+            }
+            else emit spectrumChanged(getComplexSpectrum());
+        }
     }
-
-    return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
 }
 
 void Spectrum::setSpectrumBandsCount(int bandsCount) {
@@ -56,21 +62,6 @@ void Spectrum::setSpectrumBandsCount(int bandsCount) {
         spectrumComplexPoints.append(b1);
 
         b0 = b1;
-    }
-}
-
-void Spectrum::calcSpectrum() {
-    if (spectrumHeight > 0) {
-        if (state() == StoppedState) {
-            emit spectrumChanged(defaultSpectrum);
-        } else {
-            if (Settings::instance() -> spectrumType() == Playo3::bars) {
-                QList<QVector<int> > res;
-                res.append(getSpectrum());
-                emit spectrumChanged(res);
-            }
-            else emit spectrumChanged(getComplexSpectrum());
-        }
     }
 }
 

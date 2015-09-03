@@ -22,7 +22,7 @@ namespace Od {
             return url;
         }
 
-        inline QHash<QString, QString> & initHeaders() const {
+        inline QHash<QString, QString> initHeaders() {
             QHash<QString, QString> headers;
             headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));
             return headers;

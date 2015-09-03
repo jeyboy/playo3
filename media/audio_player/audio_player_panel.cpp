@@ -24,13 +24,6 @@ void Panel::slidePosBackward() {
     }
 }
 
-//0 to 10000
-void Panel::setChannelVolume(int val) {
-    volumeVal = val > 0 ? (val / VOLUME_MULTIPLIER) : 0;
-    BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_VOL, volumeVal);
-    emit volumeChanged(val);
-}
-
 void Panel::slideVolForward() {
     int newVolLevel = getVolume() + SLIDE_VOLUME_OFFSET;
     if (newVolLevel > VOLUME_MULTIPLIER) newVolLevel = VOLUME_MULTIPLIER;
@@ -40,12 +33,6 @@ void Panel::slideVolBackward() {
     int newVolLevel = getVolume() - SLIDE_VOLUME_OFFSET;
     if (newVolLevel < 0) newVolLevel = 0;
     setChannelVolume(newVolLevel);
-}
-
-// 0 to 10000
-void Panel::setVolume(int val) {
-    BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, val);
-    emit volumeChanged(val);
 }
 
 float Panel::getBpmValue(QUrl uri) {

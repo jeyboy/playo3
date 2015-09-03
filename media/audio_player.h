@@ -13,14 +13,21 @@
 
 //#include "misc/settings.h"
 
-#include "audio_player/audio_player_spectrum.h"
-#include "audio_player/audio_player_equalizer.h"
 #include "audio_player/audio_player_panel.h"
-#include "audio_player/audio_player_state.h"
+
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
 namespace AudioPlayer {
-    class Base : public Equalizer, public Spectrum,
-            public Panel, public State {
+    class Base : public Panel {
         Q_OBJECT
 
         int openChannel(const QUrl & url);
@@ -31,7 +38,10 @@ namespace AudioPlayer {
 
         void setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1);
 
-        inline MediaState state() const { return currentState; }
+    signals:
+        void playbackEnded();
+        void downloadEnded();
+
     public slots:
         void play();
         void pause();

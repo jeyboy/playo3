@@ -16,6 +16,7 @@
 #include "modules/data_struct/model_interface.h"
 
 using namespace Playo3;
+using namespace AudioPlayer;
 
 class MediaInfo;
 
@@ -79,8 +80,8 @@ private slots:
 
     void invertTimeCountdown();
 
-    void onStateChanged(AudioPlayer::MediaState newState);
-    void onMediaStatusChanged(AudioPlayer::MediaStatus status);
+    void onStateChanged(MediaState newState);
+    void onMediaStatusChanged(MediaStatus status);
 protected:
     inline void startProccessing() { setItemState(ItemState::proccessing); }
     inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }

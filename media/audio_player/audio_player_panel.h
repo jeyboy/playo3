@@ -9,9 +9,8 @@
 
 #include "media/notify_timer.h"
 
-#include "audio_player_states.h"
+#include "audio_player_equalizer.h"
 
-#include <qobject.h>
 #include <qurl.h>
 
 #define SLIDE_VOLUME_OFFSET 1000
@@ -20,7 +19,8 @@
 #define SLIDE_DURATION_PERCENT 10
 
 namespace AudioPlayer {
-    class Panel : virtual public QObject {
+    class Panel : public Equalizer {
+        Q_OBJECT
     public:
         virtual ~Panel() {}
 
@@ -35,29 +35,37 @@ namespace AudioPlayer {
         inline int getNotifyInterval() { return notifyInterval; }
         void setNotifyInterval(signed int milis);
 
-        virtual MediaState state() const = 0;
     signals:
         void volumeChanged(int);
-
         void positionChanged(int);
         void durationChanged(int);
-    //    void volumeChanged(int);
 
     public slots:
+        // 0 to 10000
+        void setVolume(int val) {
+            BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, val);
+            emit volumeChanged(val);
+        }
+
+        //0 to 10000
+        inline void setChannelVolume(int val) {
+            volumeVal = val > 0 ? (val / VOLUME_MULTIPLIER) : 0;
+            BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_VOL, volumeVal);
+            emit volumeChanged(val);
+        }
+
         void slidePosForward();
         void slidePosBackward();
         inline bool setPosition(int position) { return BASS_ChannelSetPosition(chId(), BASS_ChannelSeconds2Bytes(chId(), position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
 
         void slideVolForward();
         void slideVolBackward();
-        void setChannelVolume(int val);
-        void setVolume(int val);
 
-    private slots:
+    protected slots:
         void signalUpdate() { emit positionChanged(BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chId(), BASS_POS_BYTE)) * POSITION_MULTIPLIER); }
 
     protected:
-        Panel() : notifyInterval(100), duration(-1), volumeVal(1.0) {}
+        inline Panel(QObject * parent = 0) : Equalizer(parent), notifyInterval(100), duration(-1), volumeVal(1.0) {}
 
         virtual unsigned long chId() const = 0;
 

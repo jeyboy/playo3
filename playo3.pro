@@ -337,7 +337,6 @@ HEADERS  += playo.h \
     media/audio_player/audio_player_spectrum.h \
     media/audio_player/audio_player_panel.h \
     media/audio_player/audio_player_state.h \
-    media/audio_player/audio_player_states.h \
     modules/controls/equalizer_view.h \
     modules/controls/spectrum_view.h
 

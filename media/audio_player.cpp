@@ -1,6 +1,20 @@
 #include "audio_player.h"
 #include <qdebug.h>
 
+//void endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user)
+void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
+//    BASS_ChannelStop(channel);
+//    BASS_ChannelRemoveSync(channel, handle);
+    AudioPlayer::Base * player = static_cast<AudioPlayer::Base *>(user);
+    emit player -> playbackEnded();
+}
+
+void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
+    AudioPlayer::Base * player = static_cast<AudioPlayer::Base *>(user);
+    player -> finishRemoteFileDownloading();
+    emit player -> downloadEnded();
+}
+
 using namespace AudioPlayer;
 
 //Get the percentage downloaded of an internet file stream, or the buffer level when streaming in blocks.
@@ -48,7 +62,7 @@ void Base::init() {
     //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
 }
 
-Base::Base(QObject * parent) : QObject(parent) {
+Base::Base(QObject * parent) : Panel(parent) {
     init();
 
     // cheat for cross treadhing
@@ -205,7 +219,7 @@ void Base::aroundProccessing() {
     startTimers();
     BASS_ChannelPlay(chan, true);
 
-    syncHandle = BASS_ChannelSetSync(chan, BASS_SYNC_END, 0, &endTrackSync, this);
+    syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
     setStartPosition();

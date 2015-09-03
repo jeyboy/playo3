@@ -4,19 +4,18 @@
 #include "misc/settings.h"
 
 #include "media/notify_timer.h"
-#include "audio_player_states.h"
+#include "audio_player_state.h"
 #include "bass.h"
 
-#include <qobject.h>
 #include <qvector.h>
 
 namespace AudioPlayer {
-    class Spectrum : virtual public QObject {
+    class Spectrum : public State {
+        Q_OBJECT
     public:
         virtual ~Spectrum() {}
     public:
         inline QList<QVector<int> > & getDefaultSpectrum() { return defaultSpectrum; }
-        int getCalcSpectrumBandsCount();
 
         void setSpectrumBandsCount(int bandsCount);
         inline int spectrumBandsCount() const { return _spectrumBandsCount; }
@@ -24,18 +23,26 @@ namespace AudioPlayer {
         inline void setSpectrumFreq(int millis) { spectrumTimer -> setInterval(millis); }
 
         inline int getChannelsCount() const { return channelsCount; }
+
+        int getCalcSpectrumBandsCount() {
+            if (channelsCount != prevChannelsCount) {
+                prevChannelsCount = channelsCount;
+                emit channelsCountChanged();
+            }
+
+            return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
+        }
     signals:
         void spectrumChanged(QList<QVector<int> >);
         void channelsCountChanged();
     protected slots:
         void calcSpectrum();
     protected:
-        inline Spectrum() : spectrumHeight(0), defaultSpectrumLevel(0), channelsCount(2), prevChannelsCount(0) {
+        inline Spectrum(QObject * parent) : State(parent), spectrumHeight(0), defaultSpectrumLevel(0), channelsCount(2), prevChannelsCount(0) {
             setSpectrumBandsCount(28);
         }
 
         virtual unsigned long chId() const = 0;
-        virtual MediaState state() const = 0;
 
         float fastSqrt(float x);
 

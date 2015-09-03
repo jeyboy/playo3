@@ -84,7 +84,7 @@ namespace Od {
     ///////////////////////////////////////////////////////////
     /// AUTH
     ///////////////////////////////////////////////////////////
-    void Api::proceedAuthResponse(const QUrl & url) {
+    void Api::proceedAuthResponse(const QUrl & /*url*/) {
 //        QUrlQuery query(url.query());
 
 //        if (query.hasQueryItem(QStringLiteral("error"))) {

@@ -331,7 +331,7 @@ void Player::changeTrackbarValue(int pos) {
     emit setPosition(pos);
 }
 
-void Player::onStateChanged(MediaState newState) {   
+void Player::onStateChanged(MediaState newState) {
     switch(newState) {
         case StoppedState: {
             slider -> blockSignals(true);
