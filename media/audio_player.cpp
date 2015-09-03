@@ -85,10 +85,12 @@ Base::~Base() {
 void Base::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) {
     mediaUri = mediaPath;
     currentState = InitState;
-    startPos = start_pos;
+    bool is_local = mediaPath.isLocalFile();
+    startPos = is_local ? start_pos : 0;
     if ((duration = media_duration) > 0) {
         initDuration();
-        setStartPosition();
+
+        if (is_local) setStartPosition();
     }
 }
 
@@ -125,7 +127,6 @@ int Base::openChannel(const QUrl & url) {
                 #endif
             , 0, BASS_SAMPLE_FLOAT, NULL, 0);
     }
-
 
     return chan;
 }
