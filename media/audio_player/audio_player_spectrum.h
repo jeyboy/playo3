@@ -35,7 +35,7 @@ namespace AudioPlayer {
             return _spectrumBandsCount / (channelsCount == 1 ? channelsCount : (channelsCount / 2));
         }
     signals:
-        void spectrumChanged(QList<QVector<int> >);
+        void spectrumChanged(const QList<QVector<int> > &);
         void channelsCountChanged();
     protected slots:
         void calcSpectrum();

@@ -12,7 +12,7 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    connect(Player::instance(), SIGNAL(spectrumChanged(QList<QVector<int> >)), this, SLOT(dataUpdated(QList<QVector<int> >)));
+    connect(Player::instance(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
     connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
@@ -86,7 +86,7 @@ void SpectrumView::changeHeight(int newHeight) {
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
 
-void SpectrumView::dataUpdated(QList<QVector<int> > data) {
+void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
     peaks = data;
     pairs = (peaks.length() + 1) / 2;
 

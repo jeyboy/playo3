@@ -32,7 +32,7 @@ namespace Playo3  {
         void changeHeight(int newHeight);
 
     protected slots:
-        void dataUpdated(QList<QVector<int> >);
+        void dataUpdated(const QList<QVector<int> > &);
         void onMovableChanged(bool movable);
         void onOrientationChanged(Qt::Orientation orientation);
         void recalcAttrs();
