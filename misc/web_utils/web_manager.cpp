@@ -37,19 +37,22 @@ QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArr
     return res;
 }
 
-QNetworkReply * WebManager::postForm(QUrl url, QHash<QString, QString> headers) {
-    return postForm(url, url.query(QUrl::FullyEncoded), headers);
+QNetworkReply * WebManager::postForm(const QUrl & url, bool redirect_follow, QHash<QString, QString> headers) {
+    return postForm(url, url.query(QUrl::FullyEncoded), redirect_follow, headers);
 }
 
-QNetworkReply * WebManager::postForm(QUrl url, const QString & body, QHash<QString, QString> headers) {
+QNetworkReply * WebManager::postForm(const QUrl & url, const QString & body, bool redirect_follow, QHash<QString, QString> headers) {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     setHeaders(request, headers);
 
-    return proceedReply(postSync(request, body.toUtf8()));
+    if (redirect_follow)
+        return proceedReply(postSync(request, body.toUtf8()));
+    else
+        return postSync(request, body.toUtf8());
 }
 
-QPixmap WebManager::openImage(QUrl & url) {
+QPixmap WebManager::openImage(const QUrl & url) {
     QImage image;
     QNetworkReply * reply = openUrl(url);
     image.loadFromData(reply -> readAll());

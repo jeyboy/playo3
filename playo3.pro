@@ -166,7 +166,8 @@ SOURCES += main.cpp\
     media/audio_player/audio_player_spectrum.cpp \
     media/audio_player/audio_player_state.cpp \
     modules/controls/equalizer_view.cpp \
-    modules/controls/spectrum_view.cpp
+    modules/controls/spectrum_view.cpp \
+    dialogs/user_action_dialog.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -338,7 +339,8 @@ HEADERS  += playo.h \
     media/audio_player/audio_player_panel.h \
     media/audio_player/audio_player_state.h \
     modules/controls/equalizer_view.h \
-    modules/controls/spectrum_view.h
+    modules/controls/spectrum_view.h \
+    dialogs/user_action_dialog.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \
@@ -350,7 +352,8 @@ FORMS    += playo.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
     dialogs/export_dialog.ui \
-    dialogs/echonest_dialog.ui
+    dialogs/echonest_dialog.ui \
+    dialogs/user_action_dialog.ui
 
 RESOURCES += \
     resources.qrc

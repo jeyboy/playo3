@@ -5,6 +5,8 @@
 #include "../auth_chemas/teu_auth.h"
 #include "od_request_api.h"
 
+#define HASH_KEY QStringLiteral("hash")
+
 namespace Od {
     class Api : public WebApi, public TeuAuth, public RequestApi {
         Q_OBJECT
@@ -33,14 +35,6 @@ namespace Od {
 //            qDebug() << token() << userID();
 //            reply -> deleteLater();
 
-                        QNetworkReply * reply = WebManager::manager() -> postForm(initUrl());
-                        qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
-                        Html::Document doc(reply);
-            //            doc.output();
-                        setParams(grabSID(), grabUserId(doc), QString());
-                        qDebug() << token() << userID();
-                        reply -> deleteLater();
-
 
 
 //            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
@@ -48,10 +42,37 @@ namespace Od {
 
             qDebug() << "LOL" << refresh("82297702323201");
         }
-        inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
+        inline void disconnect() {
+            WebApi::disconnect(); setParams(QString(), QString(), QString());
+            hash_key = QString();
+        }
         void proceedAuthResponse(const QUrl & url);
 
     protected:
+        bool sessionIsValid() {
+            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
+            return !obj.contains(QStringLiteral("error"));
+        }
+
+        void hashConnection() {
+            QNetworkReply * reply = WebManager::manager() -> getSync(initUrl(), initHeaders());
+            reply -> deleteLater();
+
+            if (!sessionIsValid()) {
+
+                formConnection();
+            }
+        }
+
+        void formConnection() {
+            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl(), initHeaders());
+            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
+            Html::Document doc(reply);
+            setParams(grabSID(), grabUserId(doc), QString());
+            qDebug() << token() << userID();
+            reply -> deleteLater();
+        }
+
         QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
         inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }

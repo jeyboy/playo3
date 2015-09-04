@@ -30,6 +30,9 @@ public:
         return QString();
     }
 
+    static inline int status(QNetworkReply * reply) { return reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
+    static inline QVariant redirectUrl(QNetworkReply * reply) { return reply -> attribute(QNetworkRequest::RedirectionTargetAttribute); }
+
     inline void setHeaders(QNetworkRequest & request, QHash<QString, QString> headers) {
         if (!headers.contains(QStringLiteral("Referer")))
             headers.insert(QStringLiteral("Referer"), request.url().path());
@@ -48,16 +51,16 @@ public:
         setHeaders(request, headers);
         return synchronizeRequest(WebManager::post(request, data));
     }
-    QNetworkReply * postForm(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>());
-    QNetworkReply * postForm(QUrl url, const QString & body, QHash<QString, QString> headers = QHash<QString, QString>());
+    QNetworkReply * postForm(const QUrl & url, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>());
+    QNetworkReply * postForm(const QUrl & url, const QString & body, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>());
 
-    inline QJsonObject getJson(QString url, bool wrap = false) { return getJson(QUrl(url), wrap); }
-    inline QJsonObject getJson(QUrl url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
+    inline QJsonObject getJson(const QString & url, bool wrap = false) { return getJson(QUrl(url), wrap); }
+    inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return getJson(QNetworkRequest(url), wrap); }
     QJsonObject getJson(const QNetworkRequest & request, bool wrap = false);
     QJsonObject postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
     inline QNetworkReply * openUrl(const QUrl & url) { return proceedReply(getSync(QNetworkRequest(url))); }
-    QPixmap openImage(QUrl & url);
+    QPixmap openImage(const QUrl & url);
 
     static inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
         QByteArray ar = reply -> readAll();
@@ -65,8 +68,8 @@ public:
         return QJsonDocument::fromJson(ar).object();
     }
     QNetworkReply * proceedReply(QNetworkReply * m_http) { // TODO: need to prevent from url cicling
-        qDebug() << "STATUS:" << m_http -> attribute(QNetworkRequest::HttpStatusCodeAttribute);
-        QVariant possibleRedirectUrl = m_http -> attribute(QNetworkRequest::RedirectionTargetAttribute);
+        qDebug() << "STATUS:" << status(m_http);
+        QVariant possibleRedirectUrl = redirectUrl(m_http);
         if (possibleRedirectUrl.isValid()) {
             QUrl new_url = possibleRedirectUrl.toUrl();
             if (new_url.isRelative())

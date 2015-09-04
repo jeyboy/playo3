@@ -23,7 +23,7 @@ void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
     layout -> addWidget(remove, 1, Qt::AlignCenter);
 }
-void EqualizerView::initBottomLayout(QGridLayout * layout) {
+void EqualizerView::initBottomLayout(QGridLayout * layout) { // TODO: // need to add chooice between n line equalizers and reinitialization
     QMap<int, QString> bands = Player::instance() -> bands();
 
     QMap<int, QString>::Iterator band = bands.begin();
