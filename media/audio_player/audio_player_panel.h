@@ -18,6 +18,12 @@
 #define POSITION_MULTIPLIER 1000.0
 #define SLIDE_DURATION_PERCENT 10
 
+#define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE
+#define REMOTE_PLAY_ATTRS BASS_SAMPLE_FLOAT
+
+#define LOCAL_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO
+#define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO
+
 namespace AudioPlayer {
     class Panel : public Equalizer {
         Q_OBJECT
@@ -29,7 +35,7 @@ namespace AudioPlayer {
         inline int getDuration() const { return duration; }
         inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
 
-        float getBpmValue(QUrl uri);
+        float calcBpm(const QUrl & uri);
 
         inline int getNotifyInterval() { return notifyInterval; }
         void setNotifyInterval(signed int milis);
@@ -67,6 +73,25 @@ namespace AudioPlayer {
         inline Panel(QObject * parent = 0) : Equalizer(parent), notifyInterval(100), duration(-1), volumeVal(1.0) {}
 
         virtual unsigned long chId() const = 0;
+
+        inline unsigned long open(const QString & path, DWORD flags) {
+            return BASS_StreamCreateFile(false,
+                    #ifdef Q_OS_WIN
+                        path.toStdWString().data()
+                    #else
+                        path.toStdString().c_str()
+                    #endif
+                , 0, 0, flags);
+        }
+        inline unsigned long openRemote(const QString & path, DWORD flags) {
+            return BASS_StreamCreateURL(
+                    #ifdef Q_OS_WIN
+                        path.toStdWString().data()
+                    #else
+                        path.toStdString().c_str()
+                    #endif
+                , 0, flags, NULL, 0);
+        }
 
         inline void initDuration() {
             if (duration == -1)

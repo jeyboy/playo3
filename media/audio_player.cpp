@@ -102,11 +102,11 @@ int Base::openChannel(const QUrl & url) {
     if (url.isLocalFile()) {
         size = 0;
         prevDownloadPos = 1;
-        chan = open(url.toLocalFile());
+        chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
     } else {
         size = -1;
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        chan = openRemote(url.toString());
+        chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
 
     return chan;

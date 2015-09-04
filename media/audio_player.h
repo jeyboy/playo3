@@ -60,25 +60,6 @@ namespace AudioPlayer {
             #endif
         }
 
-        inline unsigned long open(const QString & path) {
-            return BASS_StreamCreateFile(false,
-                    #ifdef Q_OS_WIN
-                        path.toStdWString().data()
-                    #else
-                        path.toStdString().c_str()
-                    #endif
-                , 0, 0, BASS_SAMPLE_FLOAT | BASS_ASYNCFILE);
-        }
-        inline unsigned long openRemote(const QString & path) {
-            return BASS_StreamCreateURL(
-                    #ifdef Q_OS_WIN
-                        path.toStdWString().data()
-                    #else
-                        path.toStdString().c_str()
-                    #endif
-                , 0, BASS_SAMPLE_FLOAT, NULL, 0);
-        }
-
         void init();
 
         void startTimers();

@@ -202,7 +202,7 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
     if (uri.isLocalFile()) {
-        chUID = open(uri.toLocalFile()); /*BASS_StreamCreateFile(false,
+        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS); /*BASS_StreamCreateFile(false,
             uri.toLocalFile()
               #ifdef Q_OS_WIN
                 .toStdWString().data()
@@ -211,7 +211,7 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
               #endif
             , 0, 0, 0);*/
     } else {
-        chUID = openRemote(uri.toString()); /*BASS_StreamCreateURL(
+        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS); /*BASS_StreamCreateURL(
             uri.toString()
                 #ifdef Q_OS_WIN
                     .toStdWString().data()
