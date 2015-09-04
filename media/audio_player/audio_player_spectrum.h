@@ -9,6 +9,8 @@
 
 #include <qvector.h>
 
+#define DEFAULT_CHANNELS_COUNT 2
+
 namespace AudioPlayer {
     class Spectrum : public State {
         Q_OBJECT
@@ -38,7 +40,7 @@ namespace AudioPlayer {
     protected slots:
         void calcSpectrum();
     protected:
-        inline Spectrum(QObject * parent) : State(parent), spectrumHeight(0), defaultSpectrumLevel(0), channelsCount(2), prevChannelsCount(0) {
+        inline Spectrum(QObject * parent) : State(parent), spectrumHeight(0), defaultSpectrumLevel(0), channelsCount(DEFAULT_CHANNELS_COUNT), prevChannelsCount(0) {
             setSpectrumBandsCount(28);
         }
 

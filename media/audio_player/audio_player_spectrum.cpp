@@ -16,7 +16,7 @@ float Spectrum::fastSqrt(float x) {
 void Spectrum::calcSpectrum() {
     if (spectrumHeight > 0) {
         if (state() == StoppedState) {
-            channelsCount = 2;
+            channelsCount = DEFAULT_CHANNELS_COUNT;
             emit spectrumChanged(defaultSpectrum);
         } else {
             if (Settings::instance() -> spectrumType() == Playo3::bars) {
@@ -35,8 +35,8 @@ void Spectrum::setSpectrumBandsCount(int bandsCount) {
     QVector<int> l;
     l.fill(defaultSpectrumLevel, _spectrumBandsCount);
 
-    defaultSpectrum.append(l);
-    defaultSpectrum.append(l);
+    while(defaultSpectrum.size() < DEFAULT_CHANNELS_COUNT)
+        defaultSpectrum.append(l);
 
 //////////////////  calculate predefined points  ///////////////////////////
 
