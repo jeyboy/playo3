@@ -16,6 +16,7 @@ float Spectrum::fastSqrt(float x) {
 void Spectrum::calcSpectrum() {
     if (spectrumHeight > 0) {
         if (state() == StoppedState) {
+            channelsCount = 2;
             emit spectrumChanged(defaultSpectrum);
         } else {
             if (Settings::instance() -> spectrumType() == Playo3::bars) {

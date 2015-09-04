@@ -119,7 +119,8 @@ void Base::closeChannel() {
     BASS_ChannelRemoveSync(chan, syncHandle);
     BASS_ChannelRemoveSync(chan, syncDownloadHandle);
     BASS_StreamFree(chan);
-    channelsCount = 2;
+    emit stateChanged(currentState = StoppedState);
+    calcSpectrum();
 }
 
 void Base::play() {
