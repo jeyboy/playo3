@@ -2,6 +2,53 @@
 
 using namespace Playo3;
 
+void EqualizerView::initTopLayout(QHBoxLayout * layout) {
+    enabled = new QCheckBox(QStringLiteral("On"), this);
+    connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
+    layout -> addWidget(enabled, 0, Qt::AlignCenter);
+
+    QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
+    connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
+    layout -> addWidget(reset, 1, Qt::AlignCenter);
+
+    presetsList = new QComboBox(this);
+    connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
+    layout -> addWidget(presetsList, 3, Qt::AlignCenter);
+
+    QPushButton * save = new QPushButton(QStringLiteral("save"), this);
+    connect(save, SIGNAL(clicked()), this, SLOT(createPreset()));
+    layout -> addWidget(save, 1, Qt::AlignCenter);
+
+    QPushButton * remove = new QPushButton(QStringLiteral("remove"), this);
+    connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
+    layout -> addWidget(remove, 1, Qt::AlignCenter);
+}
+void EqualizerView::initBottomLayout(QGridLayout * layout) {
+    QMap<int, QString> bands = Player::instance() -> bands();
+
+    QMap<int, QString>::Iterator band = bands.begin();
+    for(int num = 0; band != bands.end(); band++, num++) {
+        QLabel * dbLabel = new QLabel("0");
+        dbLabel -> setAlignment(Qt::AlignCenter);
+        layout -> addWidget(dbLabel, 0, num, Qt::AlignCenter);
+        dbOutput << dbLabel;
+
+        ClickableSlider * slider = new ClickableSlider(this);
+        slider -> setOrientation(Qt::Vertical);
+        slider -> setMinimum(-150); slider -> setMaximum(150);
+        slider -> setProperty("num", num);
+        connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
+        layout -> addWidget(slider, 1, num, Qt::AlignCenter);
+
+
+        QLabel * label = new QLabel(band.value());
+        label -> setAlignment(Qt::AlignCenter);
+        layout -> addWidget(label, 2, num, Qt::AlignCenter);
+
+        layout -> setColumnStretch(num, 1);
+    }
+}
+
 EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging(false) {
     setObjectName(QStringLiteral("tool_equalizer"));
 
@@ -9,55 +56,24 @@ EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setFixedHeight(200);
-    setMinimumWidth(240);
+    setMinimumWidth(50);
 
-    QGridLayout * l = new QGridLayout(this);
+    QVBoxLayout * vLayout = new QVBoxLayout(this);
+    QHBoxLayout * topLayout = new QHBoxLayout();
+    initTopLayout(topLayout);
 
-    QMap<int, QString> bands = Player::instance() -> bands();
+    QWidget * scroll_panel = new QWidget(this);
+    scroll_panel -> setStyleSheet("background-color: transparent;");
+    QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
+    initBottomLayout(bottomLayout);
 
-    QMap<int, QString>::Iterator band = bands.begin();
-    for(int num = 0; band != bands.end(); band++, num++) {
-        QLabel * dbLabel = new QLabel("0");
-        dbLabel -> setAlignment(Qt::AlignCenter);
-        l -> addWidget(dbLabel, 1, num, Qt::AlignCenter);
-        dbOutput << dbLabel;
+    QScrollArea * scrollArea = new QScrollArea(this);
+    scrollArea -> setWidgetResizable(true);
+    scrollArea -> setWidget(scroll_panel);
+    scrollArea -> setStyleSheet("background-color: transparent; border: none;");
 
-
-        ClickableSlider * slider = new ClickableSlider(this);
-        slider -> setOrientation(Qt::Vertical);
-        slider -> setMinimum(-150); slider -> setMaximum(150);
-        slider -> setProperty("num", num);
-        connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
-        l -> addWidget(slider, 2, num, Qt::AlignCenter);
-
-
-        QLabel * label = new QLabel(band.value());
-        label -> setAlignment(Qt::AlignCenter);
-        l -> addWidget(label, 3, num, Qt::AlignCenter);
-
-        l -> setColumnStretch(num, 1);
-    }
-
-    enabled = new QCheckBox(QStringLiteral("On"), this);
-    connect(enabled, SIGNAL(toggled(bool)), Player::instance(), SLOT(registerEQ(bool)));
-    l -> addWidget(enabled, 0, 0, 1, 3, Qt::AlignCenter);
-
-
-    QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
-    connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
-    l -> addWidget(reset, 0, 3, 1, 3, Qt::AlignCenter);
-
-    presetsList = new QComboBox(this);
-    connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
-    l -> addWidget(presetsList, 0, 6, 1, 7, Qt::AlignCenter);
-
-    QPushButton * save = new QPushButton(QStringLiteral("save"), this);
-    connect(save, SIGNAL(clicked()), this, SLOT(createPreset()));
-    l -> addWidget(save, 0, 13, 1, 3, Qt::AlignCenter);
-
-    QPushButton * remove = new QPushButton(QStringLiteral("remove"), this);
-    connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
-    l -> addWidget(remove, 0, 16, 1, 3, Qt::AlignCenter);
+    vLayout -> addLayout(topLayout);
+    vLayout -> addWidget(scrollArea);
 }
 
 EqualizerView::~EqualizerView() {}

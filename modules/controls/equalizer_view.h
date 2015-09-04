@@ -2,10 +2,13 @@
 #define EQUALIZER_VIEW
 
 #include <qwidget.h>
-#include <qgridlayout.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qpushbutton.h>
+#include <qscrollarea.h>
+
+#include <qgridlayout.h>
+#include <qboxlayout.h>
 
 #include "clickable_slider.h"
 #include "media/player.h"
@@ -32,6 +35,9 @@ namespace Playo3 {
         void reset();
 
     private:
+        void initTopLayout(QHBoxLayout * layout);
+        void initBottomLayout(QGridLayout * layout);
+
         bool presetChanging;
 
         QList<QLabel *> dbOutput;
