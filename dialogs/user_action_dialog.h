@@ -9,12 +9,14 @@ namespace Ui { class UserActionDialog; }
 enum FormInputType { image, text };
 
 struct FormInput {
-    FormInput(FormInputType ftype, const QString & name, const QString & label, const QString & value) :
-        label(label), name(name), value(value), ftype(ftype) {}
+    FormInput(const QString & name, const QString & label, const QString & value) :
+        label(label), name(name), value(value), ftype(text) {}
+
+    FormInput(const QPixmap & value) : value(value), ftype(image) {}
 
     QString label;
     QString name;
-    QString value;
+    QVariant value;
     FormInputType ftype;
 };
 
@@ -25,13 +27,21 @@ public:
     ~UserActionDialog();
 
     void buildLoginForm(const QString & login_name = QStringLiteral("Login"), const QString & password_name = QStringLiteral("Password"));
-    void buildCaptchaForm();
-    void buildForm(QList<const FormInput &> inputs);
-    void extendForm(QList<const FormInput &> inputs);
+    void buildCaptchaForm(const QPixmap & captcha_img);
+    void buildForm(const QList<const FormInput &> & inputs);
+    void extendForm(const QList<const FormInput &> & inputs);
 
     QString getValue(const QString & name);
+
+public slots:
+    void approved();
+    void canceled();
 private:
+    void proceedInputs(const QList<const FormInput &> & inputs);
+    void insertButtons();
+
     Ui::UserActionDialog * ui;
+    QHash<QString, QWidget *> elements;
 };
 
 #endif // USER_ACTION_DIALOG_H
