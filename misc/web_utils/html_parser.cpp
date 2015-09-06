@@ -132,7 +132,7 @@ namespace Html {
         QString action = value(QStringLiteral("action"));
         QString val;
 
-        Set inputs = find("input,select");
+        Set inputs = find("input") << find("select");
         for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
             QString inp_name = (*input) -> value(QStringLiteral("name"));
             QString inp_val = vals.value(inp_name, (*input) -> value());

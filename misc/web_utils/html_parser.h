@@ -78,6 +78,7 @@ namespace Html {
     };
 
     class Tag;
+
     class Set : public QList<Tag *> {
     public:
         QString link();
@@ -93,6 +94,7 @@ namespace Html {
             return find(&selector);
         }
         QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
+        inline Set & operator <<(const Set & l) { *this += l; return *this; }
     private:
         Set & find(const Selector * selector, Set & set);
     };
