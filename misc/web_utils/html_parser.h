@@ -10,6 +10,14 @@
 
 #define DEBUG_LIMIT_OUTPUT 10000
 
+//#define ATTR_BEGIN(attr, val) \
+//    char * res = (char *) malloc(strlen(attr) + strlen(val) + 2), \
+//    strcpy(res, attr), \
+//    strcat(res, &((char)Html::Selector::attr_rel_begin)), \
+//    strcat(res, val), \
+//    res \
+
+
 namespace Html {
     const QString any_elem_token = QStringLiteral("*");
     const QString text_block_token = QStringLiteral("text");
@@ -80,8 +88,8 @@ namespace Html {
             Set set;
             return find(selector, set);
         }
-        inline Set find(QString predicate) {
-            Selector selector(predicate.toUtf8().data());
+        inline Set find(const char * predicate) {
+            Selector selector(predicate);
             return find(&selector);
         }
         QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
@@ -98,26 +106,20 @@ namespace Html {
         inline int level() const { return _level; }
         inline QHash<QString, QString> attributes() const { return attrs; }
         inline Set children() const { return tags; }
-        inline QString value(QString name = def_value_key) { return attrs.value(name); }
+        inline QString value(QString name = def_value_key) {
+            if (name != def_value_key || (name == def_value_key && _name != QStringLiteral("select")))
+                return attrs.value(name);
+            else {
+                return find("option[selected]").value(); // need to test
+            }
+        }
         inline QString text() const {
             const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
             return text ? text -> attrs.value(text_block_token) : QString();
         }
-        inline QString toText() const {
-            if (_name == text_block_token)
-                return attrs.value(text_block_token);
-            else {
-                QString result;
 
-                for(Set::ConstIterator tag = tags.cbegin(); tag != tags.cend(); tag++)
-                    result += (*tag) -> toText();
-
-                return result;
-            }
-
-            const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
-            return text ? text -> attrs.value(text_block_token) : QString();
-        }
+        QString toFormSubmit(const QHash<QString, QString> & vals = QHash<QString, QString>());
+        QString toText() const;
 
         inline QString link() const { return attrs.value(href_token); }
 

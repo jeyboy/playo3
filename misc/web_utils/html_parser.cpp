@@ -128,6 +128,39 @@ namespace Html {
 
     ////////  Tag //////////
 
+    QString Tag::toFormSubmit(const QHash<QString, QString> & vals) { // not full support of inputs
+        QString action = value(QStringLiteral("action"));
+        QString val;
+
+        Set inputs = find("input,select");
+        for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
+            QString inp_name = (*input) -> value(QStringLiteral("name"));
+            QString inp_val = vals.value(inp_name, (*input) -> value());
+
+            val = val % inp_name % '=' % inp_val;
+        }
+
+        if (!val.isEmpty())
+            action = action % (action.indexOf('?') == -1 ? '?' : '&') % val;
+
+        return action;
+    }
+    QString Tag::toText() const {
+        if (_name == text_block_token)
+            return attrs.value(text_block_token);
+        else {
+            QString result;
+
+            for(Set::ConstIterator tag = tags.cbegin(); tag != tags.cend(); tag++)
+                result += (*tag) -> toText();
+
+            return result;
+        }
+
+        const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
+        return text ? text -> attrs.value(text_block_token) : QString();
+    }
+
     bool Tag::validTo(const Selector * selector) {
         for(QHash<Selector::SState, QString>::ConstIterator it = selector -> _tokens.cbegin(); it != selector -> _tokens.cend(); it++) {
             switch(it.key()) {

@@ -2,6 +2,7 @@
 #define OD_REQUEST_API
 
 #include "../iapi.h"
+#include "../web_api.h"
 #include "misc/settings.h"
 #include "misc/web_utils/html_parser.h"
 #include "od_api_keys.h"
@@ -9,7 +10,7 @@
 #define OD_OFFSET_LIMIT 100
 
 namespace Od {
-    class RequestApi : public IApi {
+    class RequestApi : public WebApi, public IApi {
     protected:
         QString hash_key;
         QString authE, uathP; //TODO: remove settings and use this vars
@@ -111,7 +112,14 @@ namespace Od {
         }
 
         inline void checkSecurity(Html::Document & doc) {
-            Html::Set elems = doc.find("");
+            Html::Set forms = doc.find("[id^'hook_Form'] form");
+
+            if (!forms.isEmpty()) {
+                QString resendLink = forms.find("#accRcvrSent").link();
+                QString formLink = forms.first() -> value(QStringLiteral("action"));
+
+                QString formAttrs = QStringLiteral("fr.posted=set&st.hasEmail=&st.recStep");
+            }
         }
 
 //        /////////////////

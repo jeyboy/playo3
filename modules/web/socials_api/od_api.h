@@ -1,14 +1,13 @@
 #ifndef OD_API_H
 #define OD_API_H
 
-#include "../web_api.h"
 #include "../auth_chemas/teu_auth.h"
 #include "od_request_api.h"
 
 #define HASH_KEY QStringLiteral("hash")
 
 namespace Od {
-    class Api : public WebApi, public TeuAuth, public RequestApi {
+    class Api : public RequestApi, public TeuAuth {
         Q_OBJECT
     public:
         static Api * instance();
@@ -55,7 +54,7 @@ namespace Od {
         }
 
         void hashConnection() {
-            QNetworkReply * reply = WebManager::manager() -> getSync(initUrl(), initHeaders());
+            QNetworkReply * reply = WebManager::manager() -> getSync(initUrl(), true, initHeaders());
             reply -> deleteLater();
 
             if (!sessionIsValid())
@@ -100,8 +99,8 @@ namespace Od {
             return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
         }
     private:
-        inline Api(QJsonObject hash) : WebApi(), TeuAuth(), RequestApi() { fromJson(hash); }
-        inline Api() : WebApi(), TeuAuth(), RequestApi() { }
+        inline Api(QJsonObject hash) : TeuAuth(), RequestApi() { fromJson(hash); }
+        inline Api() : TeuAuth(), RequestApi() { }
         inline virtual ~Api() {}
 
         static Api * self;

@@ -78,16 +78,17 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    qDebug() << set;
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
-//    QFile f("F:/test_page/bug.htm");
-//    if (f.open(QFile::ReadOnly)) {
-//        QElapsedTimer t2;
-//        t2.start();
-//        Html::Document p(&f);
-//        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << t2.elapsed() << "ms";
-//        p.output();
-////        qDebug() << p.find("#player_content script").text();
-//        f.close();
-//    }
+    QFile f("F:/test_page/bug.htm");
+    if (f.open(QFile::ReadOnly)) {
+        QElapsedTimer t2;
+        t2.start();
+        Html::Document p(&f);
+
+        QHash<QString, QString> hash;
+        hash.insert("st.mobileCaptcha", "hudo");
+        qDebug() << "PARSE HTML" << t2.nsecsElapsed() << p.find("form").first() -> toFormSubmit(hash);
+        f.close();
+    }
 }
 
 Playo::~Playo() {

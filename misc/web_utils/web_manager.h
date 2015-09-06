@@ -51,7 +51,7 @@ public:
         else
             return synchronizeRequest(WebManager::get(request));
     }
-    inline QNetworkReply * postSync(QNetworkRequest request, const QByteArray & data, bool c = true, QHash<QString, QString> headers = QHash<QString, QString>()) {
+    inline QNetworkReply * postSync(QNetworkRequest request, const QByteArray & data, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>()) {
         setHeaders(request, headers);
 
         if (redirect_follow)

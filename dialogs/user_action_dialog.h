@@ -5,13 +5,14 @@
 #include <qgridlayout.h>
 #include <qlineedit.h>
 #include <qlabel.h>
+#include <qpushbutton.h>
 
 namespace Ui { class UserActionDialog; }
 
 enum FormInputType { image, text };
 
 struct FormInput {
-    FormInput(const QString & name, const QString & label, const QString & value) :
+    FormInput(const QString & name, const QString & label, const QString & value = QString()) :
         label(label), name(name), value(value), ftype(text) {}
 
     FormInput(const QPixmap & value) : pict(value), ftype(image) {}
@@ -31,20 +32,17 @@ public:
 
     void buildLoginForm(const QString & login_name = QStringLiteral("Login"), const QString & password_name = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
-    void buildForm(const QList<const FormInput &> & inputs);
-    void extendForm(const QList<const FormInput &> & inputs);
+    void buildForm(const QList<FormInput> & inputs);
+    void extendForm(const QList<FormInput> & inputs);
 
     QString getValue(const QString & name);
 
-public slots:
-    void approved();
-    void canceled();
 private:
     QLineEdit * registerItem(QGridLayout * l, QString & name, QString & value);
-    void createText(const FormInput & input, QGridLayout * l);
-    void createImage(const FormInput & input, QGridLayout * l);
+    void createText(FormInput input, QGridLayout * l);
+    void createImage(FormInput input, QGridLayout * l);
 
-    void proceedInputs(const QList<const FormInput &> & inputs);
+    void proceedInputs(const QList<FormInput> & inputs);
     void insertButtons();
 
     Ui::UserActionDialog * ui;
