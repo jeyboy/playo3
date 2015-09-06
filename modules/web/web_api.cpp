@@ -2,10 +2,12 @@
 
 WebApi::WebApi(QObject * parent) : Async(parent) {
     captchaDialog = new CaptchaDialog((QWidget *)parent);
+    actionDialog = new UserActionDialog((QWidget *)parent);
 }
 
 WebApi::~WebApi() {
     delete captchaDialog;
+    delete actionDialog;
 }
 
 void WebApi::clearData() {

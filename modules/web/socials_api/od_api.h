@@ -58,16 +58,27 @@ namespace Od {
             QNetworkReply * reply = WebManager::manager() -> getSync(initUrl(), initHeaders());
             reply -> deleteLater();
 
-            if (!sessionIsValid()) {
-
+            if (!sessionIsValid())
                 formConnection();
-            }
+
+            setParams(grabSID(), userID()/*grabUserId(doc)*/, QString());
         }
 
         void formConnection() {
-            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl(), initHeaders());
-            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
+            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl(), false, initHeaders());
+
+            QUrl url = WebManager::redirectUrl(reply).toUrl();
+            QUrlQuery query(url.query());
+
+            hash_key = query.queryItemValue(QStringLiteral("httpsdata"));
+            reply -> deleteLater();
+
+
+            reply = WebManager::manager() -> getSync(url, true, initHeaders());
             Html::Document doc(reply);
+
+            checkSecurity(doc);
+
             setParams(grabSID(), grabUserId(doc), QString());
             qDebug() << token() << userID();
             reply -> deleteLater();

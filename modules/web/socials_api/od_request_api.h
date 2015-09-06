@@ -110,9 +110,9 @@ namespace Od {
             }
         }
 
-//        inline void checkPreservation(Html::Document & doc) {
-//            Html::Set elems = doc.find("");
-//        }
+        inline void checkSecurity(Html::Document & doc) {
+            Html::Set elems = doc.find("");
+        }
 
 //        /////////////////
 //        /// AUTH

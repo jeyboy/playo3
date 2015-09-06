@@ -9,7 +9,8 @@
 
 #include <qurl.h>
 
-#include "dialogs/captchadialog.h"
+#include "dialogs/captchadialog.h" // TODO: remove later
+#include "dialogs/user_action_dialog.h"
 
 #include "misc/web_utils/web_manager.h"
 
@@ -58,6 +59,7 @@ public slots:
 
 protected:
     CaptchaDialog * captchaDialog;
+    UserActionDialog * actionDialog;
 
     QHash<QString, QString> friends;
     QHash<QString, QString> groups;

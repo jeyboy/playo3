@@ -37,15 +37,39 @@ void UserActionDialog::extendForm(const QList<const FormInput &> & inputs) {
 }
 
 QString UserActionDialog::getValue(const QString & name) {
-    QWidget * w = elements.value(name);
-//    if (w) return
+    QLineEdit * w = elements.value(name);
+    if (w) return w -> text();
+}
+
+QLineEdit * UserActionDialog::registerItem(QGridLayout * l, QString & name, QString & value) {
+    QLineEdit * line = new QLineEdit(value, l);
+    elements.insert(name, line);
+
+    return line;
+}
+
+void UserActionDialog::createText(const FormInput & input, QGridLayout * l) {
+    if (input.label.isEmpty())
+        l -> addWidget(registerItem(l, input.name, input.value), elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
+    else {
+        l -> addWidget(new QLabel(input.label, f), elements.size(), 0, Qt::AlignCenter);
+        l -> addWidget(registerItem(l, input.name, input.value), elements.size() - 1, 1, Qt::AlignCenter);
+    }
+}
+void UserActionDialog::createImage(const FormInput & input, QGridLayout * l) {
+    QLabel * pict = new QLabel(l);
+    pict -> setPixmap(input.pict);
+
+    l -> addWidget(pict, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
 }
 
 void UserActionDialog::proceedInputs(const QList<const FormInput &> & inputs) {
+    QGridLayout * l = (QGridLayout *)layout();
+
     for(QList<const FormInput &>::ConstIterator input = inputs.cbegin(); input != inputs.cend(); input++) {
         switch((*input).ftype) {
-            case text: createText(); break;
-            case image: break;
+            case text: createText(*input, l); break;
+            case image: createImage(*input, l); break;
         }
     }
 }

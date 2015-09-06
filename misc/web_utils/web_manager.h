@@ -41,15 +41,23 @@ public:
             request.setRawHeader(header.key().toUtf8(), header.value().toUtf8());
     }
 
-    inline QNetworkReply * getSync(QString path, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QUrl(path), headers); }
-    inline QNetworkReply * getSync(QUrl url, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QNetworkRequest(url), headers); }
-    inline QNetworkReply * getSync(QNetworkRequest request, QHash<QString, QString> headers = QHash<QString, QString>()) {
+    inline QNetworkReply * getSync(QString path, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QUrl(path), redirect_follow, headers); }
+    inline QNetworkReply * getSync(QUrl url, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>()) { return getSync(QNetworkRequest(url), redirect_follow, headers); }
+    inline QNetworkReply * getSync(QNetworkRequest request, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>()) {
         setHeaders(request, headers);
-        return synchronizeRequest(WebManager::get(request));
+
+        if (redirect_follow)
+            return proceedReply(synchronizeRequest(WebManager::get(request)));
+        else
+            return synchronizeRequest(WebManager::get(request));
     }
-    inline QNetworkReply * postSync(QNetworkRequest request, const QByteArray & data, QHash<QString, QString> headers = QHash<QString, QString>()) {
+    inline QNetworkReply * postSync(QNetworkRequest request, const QByteArray & data, bool c = true, QHash<QString, QString> headers = QHash<QString, QString>()) {
         setHeaders(request, headers);
-        return synchronizeRequest(WebManager::post(request, data));
+
+        if (redirect_follow)
+            return proceedReply(synchronizeRequest(WebManager::post(request, data)));
+        else
+            return synchronizeRequest(WebManager::post(request, data));
     }
     QNetworkReply * postForm(const QUrl & url, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>());
     QNetworkReply * postForm(const QUrl & url, const QString & body, bool redirect_follow = true, QHash<QString, QString> headers = QHash<QString, QString>());

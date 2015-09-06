@@ -3,6 +3,8 @@
 
 #include <qdialog.h>
 #include <qgridlayout.h>
+#include <qlineedit.h>
+#include <qlabel.h>
 
 namespace Ui { class UserActionDialog; }
 
@@ -12,11 +14,12 @@ struct FormInput {
     FormInput(const QString & name, const QString & label, const QString & value) :
         label(label), name(name), value(value), ftype(text) {}
 
-    FormInput(const QPixmap & value) : value(value), ftype(image) {}
+    FormInput(const QPixmap & value) : pict(value), ftype(image) {}
 
     QString label;
     QString name;
-    QVariant value;
+    QString value;
+    QPixmap pict;
     FormInputType ftype;
 };
 
@@ -37,11 +40,15 @@ public slots:
     void approved();
     void canceled();
 private:
+    QLineEdit * registerItem(QGridLayout * l, QString & name, QString & value);
+    void createText(const FormInput & input, QGridLayout * l);
+    void createImage(const FormInput & input, QGridLayout * l);
+
     void proceedInputs(const QList<const FormInput &> & inputs);
     void insertButtons();
 
     Ui::UserActionDialog * ui;
-    QHash<QString, QWidget *> elements;
+    QHash<QString, QLineEdit *> elements;
 };
 
 #endif // USER_ACTION_DIALOG_H
