@@ -67,7 +67,7 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
 
 void UserActionDialog::createAction(FormInput input, QGridLayout * l) {
     QPushButton * button = new QPushButton(input.label, (QWidget *)l);
-    actions.insert(button, input.value);
+    actions.insert(button, input);
     connect(button, SIGNAL(clicked()), this, SLOT(actionRequired()));
     l -> addWidget(button, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
 }
