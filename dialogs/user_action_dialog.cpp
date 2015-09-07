@@ -28,6 +28,7 @@ void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
 void UserActionDialog::buildForm(const QList<FormInput> & inputs) {
     delete layout();
     elements.clear();
+    actions.clear();
     new QGridLayout(this);
     proceedInputs(inputs);
 }
@@ -64,6 +65,13 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
     l -> addWidget(pict, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
 }
 
+void UserActionDialog::createAction(FormInput input, QGridLayout * l) {
+    QPushButton * button = new QPushButton(input.label, (QWidget *)l);
+    actions.insert(button, input.value);
+    connect(button, SIGNAL(clicked()), this, SLOT(actionRequired()));
+    l -> addWidget(button, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
+}
+
 void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
     QGridLayout * l = (QGridLayout *)layout();
 
@@ -71,6 +79,7 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
         switch((*input).ftype) {
             case text: createText(*input, l); break;
             case image: createImage(*input, l); break;
+            case action: createAction(*input, l); break;
         }
     }
 }

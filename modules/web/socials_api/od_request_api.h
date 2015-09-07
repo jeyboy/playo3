@@ -116,9 +116,15 @@ namespace Od {
 
             if (!forms.isEmpty()) {
                 QString resendLink = forms.find("#accRcvrSent").link();
-                QString formLink = forms.first() -> value(QStringLiteral("action"));
 
-                QString formAttrs = QStringLiteral("fr.posted=set&st.hasEmail=&st.recStep");
+                QList<FormInput> inputs;
+                inputs << FormInput(QStringLiteral("code"), QStringLiteral("Code from sms"));
+                actionDialog -> buildForm(inputs);
+
+                QHash<QString, QString> attrs;
+                attrs.insert("st.mobileCaptcha", QString());
+                QUrl url = forms.first() -> toFormSubmit(attrs);
+                WebMa
             }
         }
 

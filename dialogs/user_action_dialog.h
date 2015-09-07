@@ -9,18 +9,25 @@
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, text };
+enum FormInputType { image, text, action };
 
 struct FormInput {
-    FormInput(const QString & name, const QString & label, const QString & value = QString()) :
+    FormInput(const QString & name, const QString & label, const QVariant & value = QString()) :
         label(label), name(name), value(value), ftype(text) {}
 
     FormInput(const QPixmap & value) : pict(value), ftype(image) {}
 
+    FormInput(const QString & text, const QVariant & value, QObject * receiver, const char * slot) : label(text),
+        value(value), obj(receiver), slot(slot), ftype(action) {}
+
     QString label;
     QString name;
-    QString value;
+    QVariant value;
     QPixmap pict;
+
+    QObject * obj;
+    const char * slot;
+
     FormInputType ftype;
 };
 
@@ -37,16 +44,24 @@ public:
 
     QString getValue(const QString & name);
 
+protected slots:
+    inline void actionRequired() {
+        FormInput input = actions.value(sender());
+        QMetaObject::invokeMethod(input.obj, input.slot, Qt::AutoConnection, Q_ARG(QVariant &, input.value));
+    }
+
 private:
     QLineEdit * registerItem(QGridLayout * l, QString & name, QString & value);
     void createText(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);
+    void createAction(FormInput input, QGridLayout * l);
 
     void proceedInputs(const QList<FormInput> & inputs);
     void insertButtons();
 
     Ui::UserActionDialog * ui;
     QHash<QString, QLineEdit *> elements;
+    QHash<QPushButton *, FormInput> actions;
 };
 
 #endif // USER_ACTION_DIALOG_H
