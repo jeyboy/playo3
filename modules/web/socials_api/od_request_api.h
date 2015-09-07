@@ -115,16 +115,23 @@ namespace Od {
             Html::Set forms = doc.find("[id^'hook_Form'] form");
 
             if (!forms.isEmpty()) {
-                QString resendLink = forms.find("#accRcvrSent").link();
-
                 QList<FormInput> inputs;
                 inputs << FormInput(QStringLiteral("code"), QStringLiteral("Code from sms"));
                 actionDialog -> buildForm(inputs);
 
-                QHash<QString, QString> attrs;
-                attrs.insert("st.mobileCaptcha", QString());
-                QUrl url = forms.first() -> toFormSubmit(attrs);
-                WebMa
+                QString resendLink = forms.find("#accRcvrSent").link();
+                QList<FormInput> extra_inputs;
+                extra_inputs << FormInput(QStringLiteral("Resend sms"), resendLink, WebManager::manager(), SLOT(sendGet(QString&)));
+                actionDialog -> extendForm(extra_inputs);
+
+                if (actionDialog -> exec() == QDialog::Accepted) {
+                    QHash<QString, QString> attrs;
+                    attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
+                    QUrl url = forms.first() -> toFormSubmit(attrs);
+                    QNetworkReply * reply = WebManager::manager() -> postForm(url, true, initHeaders());
+                    //TODO: check session
+                    reply -> deleteLater();
+                }
             }
         }
 

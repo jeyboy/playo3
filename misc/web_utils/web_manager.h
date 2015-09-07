@@ -89,6 +89,9 @@ public:
 
         return m_http;
     }
+
+public slots:
+    inline void sendGet(QString & url) { getSync(url) -> deleteLater(); }
 protected:
     QNetworkReply * synchronizeRequest(QNetworkReply * m_http);
     QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0);

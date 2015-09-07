@@ -12,17 +12,19 @@ namespace Ui { class UserActionDialog; }
 enum FormInputType { image, text, action };
 
 struct FormInput {
-    FormInput(const QString & name, const QString & label, const QVariant & value = QString()) :
+    inline FormInput() {}
+
+    inline FormInput(const QString & name, const QString & label, const QString & value = QString()) :
         label(label), name(name), value(value), ftype(text) {}
 
-    FormInput(const QPixmap & value) : pict(value), ftype(image) {}
+    inline FormInput(const QPixmap & value) : pict(value), ftype(image) {}
 
-    FormInput(const QString & text, const QVariant & value, QObject * receiver, const char * slot) : label(text),
+    inline FormInput(const QString & text, const QString & value, QObject * receiver, const char * slot) : label(text),
         value(value), obj(receiver), slot(slot), ftype(action) {}
 
     QString label;
     QString name;
-    QVariant value;
+    QString value;
     QPixmap pict;
 
     QObject * obj;
@@ -47,7 +49,7 @@ public:
 protected slots:
     inline void actionRequired() {
         FormInput input = actions.value(sender());
-        QMetaObject::invokeMethod(input.obj, input.slot, Qt::AutoConnection, Q_ARG(QVariant &, input.value));
+        QMetaObject::invokeMethod(input.obj, input.slot, Qt::AutoConnection, Q_ARG(QString &, input.value));
     }
 
 private:
@@ -61,7 +63,7 @@ private:
 
     Ui::UserActionDialog * ui;
     QHash<QString, QLineEdit *> elements;
-    QHash<QPushButton *, FormInput> actions;
+    QHash<QObject *, FormInput> actions;
 };
 
 #endif // USER_ACTION_DIALOG_H
