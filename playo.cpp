@@ -83,6 +83,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
         QElapsedTimer t2;
         t2.start();
         Html::Document p(&f);
+        p.output();
 
         QHash<QString, QString> hash;
         hash.insert("st.mobileCaptcha", "hudo");

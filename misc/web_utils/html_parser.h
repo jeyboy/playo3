@@ -5,6 +5,8 @@
 #include <qhash.h>
 #include <qbuffer.h>
 #include <qpair.h>
+#include <qurl.h>
+#include <qurlquery.h>
 
 #include "unicode_decoding.h"
 
@@ -120,7 +122,7 @@ namespace Html {
             return text ? text -> attrs.value(text_block_token) : QString();
         }
 
-        QString toFormSubmit(const QHash<QString, QString> & vals = QHash<QString, QString>());
+        QUrl toFormSubmit(const QHash<QString, QString> & vals = QHash<QString, QString>());
         QString toText() const;
 
         inline QString link() const { return attrs.value(href_token); }

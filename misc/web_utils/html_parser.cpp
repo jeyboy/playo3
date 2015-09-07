@@ -128,22 +128,24 @@ namespace Html {
 
     ////////  Tag //////////
 
-    QString Tag::toFormSubmit(const QHash<QString, QString> & vals) { // not full support of inputs
-        QString action = value(QStringLiteral("action"));
-        QString val;
-
+    QUrl Tag::toFormSubmit(const QHash<QString, QString> & vals) { // not full support of inputs
+        QUrl url = QUrl(value(QStringLiteral("action")));
         Set inputs = find("input") << find("select");
-        for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
-            QString inp_name = (*input) -> value(QStringLiteral("name"));
-            QString inp_val = vals.value(inp_name, (*input) -> value());
 
-            val = val % inp_name % '=' % inp_val;
+        if (!inputs.isEmpty()) {
+            QUrlQuery query = QUrlQuery(url.query());
+
+            for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
+                QString inp_name = (*input) -> value(QStringLiteral("name"));
+                QString inp_val = vals.value(inp_name, (*input) -> value());
+
+                query.addQueryItem(inp_name, inp_val);
+            }
+
+            url.setQuery(query);
         }
 
-        if (!val.isEmpty())
-            action = action % (action.indexOf('?') == -1 ? '?' : '&') % val;
-
-        return action;
+        return url;
     }
     QString Tag::toText() const {
         if (_name == text_block_token)
@@ -245,6 +247,7 @@ namespace Html {
         solo.insert(QStringLiteral("link"), true);
         solo.insert(QStringLiteral("img"), true);
         solo.insert(QStringLiteral("!DOCTYPE"), true);
+        solo.insert(QStringLiteral("input"), true);
     }
 
 
