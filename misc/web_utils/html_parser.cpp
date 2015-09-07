@@ -48,11 +48,14 @@ namespace Html {
         switch(tType) {
             case attr: {
                 QStringList parts = token.split(rel, QString::SkipEmptyParts);
-                QPair<char, QString> newAttr(rel, parts.length() > 1 ? parts.last() : any_elem_token);
-                _attrs.insert(parts.first(), newAttr); rel = attr_rel_eq;
+                if (parts.length() > 1)
+                    _attrs.insert(parts.first(), QPair<char, QString>(rel, parts.last()));
+                else
+                    _attrs.insert(parts.first(), QPair<char, QString>(attr_rel_eq, any_elem_token));
+                rel = attr_rel_eq;
             break;}
             case klass: {
-                klasses.append(token.split(" ", QString::SkipEmptyParts));
+                klasses.append(token.split(QStringLiteral(" "), QString::SkipEmptyParts));
             break;}
             default:;
         }
@@ -170,11 +173,26 @@ namespace Html {
                 case Selector::attr: {
                     for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++)
                         switch(it.value().first) {
-                            case Selector::attr_rel_eq: { if (!(it.value().second == any_elem_token || attrs.value(it.key()) == it.value().second)) return false;  break;}
-                            case Selector::attr_rel_begin: { if (!attrs.value(it.key()).startsWith(it.value().second)) return false;  break;}
-                            case Selector::attr_rel_end: { if (!attrs.value(it.key()).endsWith(it.value().second)) return false;  break;}
-                            case Selector::attr_rel_match: { if (attrs.value(it.key()).indexOf(it.value().second) == -1) return false;  break;}
-                            case Selector::attr_rel_not: { if (attrs.value(it.key()).indexOf(it.value().second) != -1) return false;  break;}
+                            case Selector::attr_rel_eq: {
+                                if (!(attrs.contains(it.key()) && (it.value().second == any_elem_token || attrs.value(it.key()) == it.value().second)))
+                                    return false;
+                                break;}
+                            case Selector::attr_rel_begin: {
+                                if (!attrs.value(it.key()).startsWith(it.value().second))
+                                    return false;
+                                break;}
+                            case Selector::attr_rel_end: {
+                                if (!attrs.value(it.key()).endsWith(it.value().second))
+                                    return false;
+                                break;}
+                            case Selector::attr_rel_match: {
+                                if (attrs.value(it.key()).indexOf(it.value().second) == -1)
+                                    return false;
+                                break;}
+                            case Selector::attr_rel_not: {
+                                if (attrs.value(it.key()).indexOf(it.value().second) != -1)
+                                    return false;
+                                break;}
 
                             default: qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
                         };

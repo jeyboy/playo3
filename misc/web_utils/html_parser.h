@@ -114,7 +114,8 @@ namespace Html {
             if (name != def_value_key || (name == def_value_key && _name != QStringLiteral("select")))
                 return attrs.value(name);
             else {
-                return find("option[selected]").value(); // need to test
+                Html::Set options = find("option[selected]");
+                return options.value();
             }
         }
         inline QString text() const {

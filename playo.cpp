@@ -78,6 +78,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    qDebug() << set;
 
 //    QNetworkReply * response = CustomNetworkAccessManager::manager() -> getSync(QNetworkRequest(QUrl(QStringLiteral("https://myzuka.org/"))));
+
     QFile f("F:/test_page/bug.htm");
     if (f.open(QFile::ReadOnly)) {
         QElapsedTimer t2;
