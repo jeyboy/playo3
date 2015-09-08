@@ -86,7 +86,7 @@ namespace Grabber {
             return result;
         }
 
-//        inline QString refresh_postprocess(QNetworkReply * reply) {
+//        inline QString refresh_postprocess(WebResponse * reply) {
 //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
 //        }
 

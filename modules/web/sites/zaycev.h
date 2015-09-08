@@ -110,8 +110,8 @@ namespace Grabber {
         }
 
         // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
-        inline QString refresh_postprocess(QNetworkReply * reply) {
-            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
+        inline QString refresh_postprocess(WebResponse * reply) {
+            return reply -> toJson().value(QStringLiteral("url")).toString();
         }
 
         QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {

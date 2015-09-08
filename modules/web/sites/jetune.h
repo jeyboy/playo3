@@ -101,7 +101,7 @@ namespace Grabber {
 
         inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-        inline QString refresh_postprocess(QNetworkReply * /*reply*/) {
+        inline QString refresh_postprocess(WebResponse * /*reply*/) {
 //            Html::Document parser(reply);
 
 //            QString url = parser.find("#player_content script").text();

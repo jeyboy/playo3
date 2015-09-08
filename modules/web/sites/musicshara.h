@@ -74,7 +74,7 @@ namespace Grabber {
     protected:
         QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
 
-        QString refresh_postprocess(QNetworkReply * reply) {
+        QString refresh_postprocess(WebResponse * reply) {
             Html::Document parser(reply);
             Html::Set tracks = parser.find(".options a[itemprop='audio']");
 

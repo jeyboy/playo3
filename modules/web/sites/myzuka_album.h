@@ -98,7 +98,7 @@ namespace Grabber {
 
         inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
 
-        QString refresh_postprocess(QNetworkReply * reply) {
+        QString refresh_postprocess(WebResponse * reply) {
             Html::Document parser(reply);
             Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
@@ -111,7 +111,7 @@ namespace Grabber {
             QUrl url = QUrl(baseUrlStr(search_path_token));
             url.setQuery(search_predicate_token % predicate);
 
-            QNetworkReply * response = WebManager::manager() -> getSync(QNetworkRequest(url));
+            QNetworkReply * response = WebManager::manager() -> followedGet(url);
 
             QJsonArray json;
             Html::Document parser(response);

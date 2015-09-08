@@ -14,14 +14,14 @@ namespace Grabber {
         QString refresh(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            QNetworkReply * response = WebManager::manager() -> getSync(QUrl(refresh_page));
+            WebResponse * response = WebManager::manager() -> followedGet(QUrl(refresh_page));
             QString res = refresh_postprocess(response);
             delete response;
             return res;
         }
 
     protected:
-        virtual QString refresh_postprocess(QNetworkReply * /*response*/) { return QString(); }
+        virtual QString refresh_postprocess(WebResponse * /*response*/) { return QString(); }
 
         virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
@@ -31,7 +31,7 @@ namespace Grabber {
 
         bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
             Logger::instance() -> startMark();
-            QNetworkReply * response = WebManager::manager() -> openUrl(url); // some sites may redirect
+            WebResponse * response = WebManager::manager() -> followedGet(url);
             bool res = toJson(jtype, response, items, true);
             Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
             return res;

@@ -45,7 +45,7 @@ namespace Fourshared {
         QString refresh(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            QNetworkReply * response = WebManager::manager() -> getSync(refresh_page);
+            QNetworkReply * response = WebManager::manager() -> followedGet(refresh_page);
             QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
 
             delete response;
@@ -55,7 +55,7 @@ namespace Fourshared {
         QString downloadLink(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            QNetworkReply * response = WebManager::manager() -> getSync(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12));
+            QNetworkReply * response = WebManager::manager() -> followedGet(QUrl(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12)));
             QString res = Html::Document(response).find("a[href~'/download/']").link();
 
             delete response;
@@ -84,7 +84,7 @@ namespace Fourshared {
                     path = item_obj.value("downloadPage").toString();
 
                     if (initInfo) {
-                        QNetworkReply * reply = manager -> getSync(path);
+                        QNetworkReply * reply = manager -> followedGet(QUrl(path));
                         Html::Document doc(reply);
                         reply -> deleteLater();
 

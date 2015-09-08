@@ -80,7 +80,7 @@ namespace Grabber {
 
 //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
-        inline QString refresh_postprocess(QNetworkReply * reply) {
+        inline QString refresh_postprocess(WebResponse * reply) {
             Html::Document parser(reply);
             Html::Set tracks = parser.find(".download p a");
 
@@ -97,7 +97,7 @@ namespace Grabber {
             );
 
             QJsonArray json;
-            toJson(songs1, WebManager::manager() -> postForm(QUrl(url_str)), json, true);
+            toJson(songs1, WebManager::manager() -> followedForm(QUrl(url_str)), json, true);
 
             while(json.size() > limitations.count)
                 json.removeLast();
