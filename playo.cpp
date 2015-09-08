@@ -18,6 +18,33 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     initialization();
 
+
+    UserActionDialog * actionDialog = new UserActionDialog(this);
+    QList<FormInput> inputs;
+    inputs << FormInput(QStringLiteral("code"), QStringLiteral("Code from sms"));
+    actionDialog -> buildForm(inputs);
+
+    QString resendLink = QStringLiteral("http://ok.ru/dk?cmd=AnonymAccountRecovery2&amp;st.cmd=anonymAccountRecoveryNew&amp;st.recStep=PhoneCaptcha&amp;st.uid=511343312018&amp;st.ust=Active&amp;st.sms=on&amp;st._aid=AnonymPhoneCheck_ResendSms");
+    QList<FormInput> extra_inputs;
+    extra_inputs << FormInput(QStringLiteral("Resend sms"), resendLink, WebManager::manager(), SLOT(sendGet(QString&)));
+    actionDialog -> extendForm(extra_inputs);
+
+    if (actionDialog -> exec() == QDialog::Accepted) {
+        QHash<QString, QString> attrs;
+        attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
+        qDebug() << "PATH" << attrs;
+    }
+
+    actionDialog -> buildCaptchaForm(WebManager::manager() -> openImage(QUrl("http://c22blog.files.wordpress.com/2010/10/input-black.gif")));
+    if (actionDialog -> exec() == QDialog::Accepted) {
+        QHash<QString, QString> attrs;
+        attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("captcha")));
+        qDebug() << "PATH" << attrs;
+    }
+
+
+
+
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );
 

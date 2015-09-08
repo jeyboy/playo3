@@ -127,7 +127,7 @@ namespace Od {
                 if (actionDialog -> exec() == QDialog::Accepted) {
                     QHash<QString, QString> attrs;
                     attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
-                    QUrl url = forms.first() -> toFormSubmit(attrs);
+                    QUrl url = QUrl(base_url).resolved(forms.first() -> toFormSubmit(attrs));
                     QNetworkReply * reply = WebManager::manager() -> postForm(url, true, initHeaders());
                     //TODO: check session
                     reply -> deleteLater();

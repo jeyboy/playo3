@@ -7,6 +7,8 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 
+#include <qdebug.h>
+
 namespace Ui { class UserActionDialog; }
 
 enum FormInputType { image, text, action };
@@ -33,6 +35,8 @@ struct FormInput {
     FormInputType ftype;
 };
 
+#define MAX_PIXMAP_WIDTH 370
+
 class UserActionDialog : public QDialog {
     Q_OBJECT
 public:
@@ -46,6 +50,15 @@ public:
 
     QString getValue(const QString & name);
 
+public slots:
+    inline int exec() {
+        if (!finalized) {
+            adjustSize();
+            insertButtons();
+        }
+        return QDialog::exec();
+    }
+
 protected slots:
     inline void actionRequired() {
         FormInput input = actions.value(sender());
@@ -53,7 +66,31 @@ protected slots:
     }
 
 private:
-    QLineEdit * registerItem(QGridLayout * l, QString & name, QString & value);
+    void insertElem(QGridLayout * l, QWidget * w) {
+        l -> addWidget(w, l -> rowCount(), 0, 1, 2);
+    }
+
+    void insertPair(QGridLayout * l, QWidget * w1, QWidget * w2) {
+        int row = l -> rowCount();
+        l -> addWidget(w1, row, 0);
+        l -> addWidget(w2, row, 1);
+    }
+
+    inline void createLayer() {
+        QHBoxLayout * l = (QHBoxLayout *)layout();
+        l -> addWidget((layer = new QWidget(this)), 1);
+        new QGridLayout(layer);
+        layout() -> setContentsMargins(0,0,0,0);
+    }
+    inline void recreateLayer() {
+        delete layer;
+        elements.clear();
+        actions.clear();
+        finalized = false;
+        createLayer();
+    }
+
+    QLineEdit * registerItem(QString & name, QString & value);
     void createText(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);
     void createAction(FormInput input, QGridLayout * l);
@@ -64,6 +101,8 @@ private:
     Ui::UserActionDialog * ui;
     QHash<QString, QLineEdit *> elements;
     QHash<QObject *, FormInput> actions;
+    QWidget * layer;
+    bool finalized;
 };
 
 #endif // USER_ACTION_DIALOG_H

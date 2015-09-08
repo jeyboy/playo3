@@ -1,10 +1,10 @@
 #include "user_action_dialog.h"
 #include "ui_user_action_dialog.h"
 
-UserActionDialog::UserActionDialog(QWidget * parent) : QDialog(parent), ui(new Ui::UserActionDialog) {
+UserActionDialog::UserActionDialog(QWidget * parent) : QDialog(parent), ui(new Ui::UserActionDialog), finalized(false) {
     ui -> setupUi(this);
-
-    new QGridLayout(this);
+    new QHBoxLayout(this);
+    createLayer();
 }
 
 UserActionDialog::~UserActionDialog() {
@@ -26,14 +26,12 @@ void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
 }
 
 void UserActionDialog::buildForm(const QList<FormInput> & inputs) {
-    delete layout();
-    elements.clear();
-    actions.clear();
-    new QGridLayout(this);
+    recreateLayer();
     proceedInputs(inputs);
 }
 
 void UserActionDialog::extendForm(const QList<FormInput> & inputs) {
+    // need to check finalized and move buttons to the end of layout somehow on true state
     proceedInputs(inputs);
 }
 
@@ -43,8 +41,8 @@ QString UserActionDialog::getValue(const QString & name) {
     return QString();
 }
 
-QLineEdit * UserActionDialog::registerItem(QGridLayout * l, QString & name, QString & value) {
-    QLineEdit * line = new QLineEdit(value, (QWidget *)l);
+QLineEdit * UserActionDialog::registerItem(QString & name, QString & value) {
+    QLineEdit * line = new QLineEdit(value, layer);
     elements.insert(name, line);
 
     return line;
@@ -52,28 +50,35 @@ QLineEdit * UserActionDialog::registerItem(QGridLayout * l, QString & name, QStr
 
 void UserActionDialog::createText(FormInput input, QGridLayout * l) {
     if (input.label.isEmpty())
-        l -> addWidget(registerItem(l, input.name, input.value), elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
-    else {
-        l -> addWidget(new QLabel(input.label, (QWidget *)l), elements.size(), 0, Qt::AlignCenter);
-        l -> addWidget(registerItem(l, input.name, input.value), elements.size() - 1, 1, Qt::AlignCenter);
-    }
+        insertElem(l, registerItem(input.name, input.value));
+    else
+        insertPair(l, new QLabel(input.label, layer), registerItem(input.name, input.value));
 }
 void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
-    QLabel * pict = new QLabel((QWidget *)l);
-    pict -> setPixmap(input.pict);
+    QLabel * pict = new QLabel(layer);
+    QPixmap pixmap = input.pict;
 
-    l -> addWidget(pict, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
+    if (pixmap.width() > MAX_PIXMAP_WIDTH) {
+        int new_height = (MAX_PIXMAP_WIDTH / (float)pixmap.width()) * pixmap.height();
+        pixmap = pixmap.scaled(MAX_PIXMAP_WIDTH, new_height, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    }
+
+    pict -> setPixmap(pixmap);
+//    pict -> setMinimumHeight(pixmap.height() / 4);
+
+    insertElem(l, pict);
+    l -> setRowMinimumHeight(l -> rowCount(), pixmap.height() / 4);
 }
 
 void UserActionDialog::createAction(FormInput input, QGridLayout * l) {
-    QPushButton * button = new QPushButton(input.label, (QWidget *)l);
+    QPushButton * button = new QPushButton(input.label, layer);
     actions.insert(button, input);
     connect(button, SIGNAL(clicked()), this, SLOT(actionRequired()));
-    l -> addWidget(button, elements.size() - 1, 0, 0, 1, Qt::AlignCenter);
+    insertElem(l, button);
 }
 
 void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
-    QGridLayout * l = (QGridLayout *)layout();
+    QGridLayout * l = (QGridLayout *)layer -> layout();
 
     for(QList<FormInput>::ConstIterator input = inputs.cbegin(); input != inputs.cend(); input++) {
         switch((*input).ftype) {
@@ -85,13 +90,14 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
 }
 
 void UserActionDialog::insertButtons() {
-    QGridLayout * l = (QGridLayout *)layout();
+    QGridLayout * l = (QGridLayout *)layer -> layout();
 
-    QPushButton * cancelButton = new QPushButton((QWidget *)l);
+    QPushButton * cancelButton = new QPushButton(QStringLiteral("Cancel"), layer);
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-    l -> addWidget(cancelButton, elements.size(), 0);
 
-    QPushButton * acceptButton = new QPushButton((QWidget *)l);
+    QPushButton * acceptButton = new QPushButton(QStringLiteral("Proceed"), layer);
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
-    l -> addWidget(acceptButton, elements.size(), 1);
+
+    insertPair(l, cancelButton, acceptButton);
+    finalized = true;
 }
