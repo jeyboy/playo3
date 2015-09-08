@@ -102,7 +102,7 @@ namespace Od {
         }
 
         inline QString grabSID() {
-            QJsonObject obj = WebManager::manager() -> postJson(QNetworkRequest(authSidUrl()), QByteArray()); // registrate sid for requests
+            QJsonObject obj = WebManager::manager() -> postJson(authSidUrl()); // registrate sid for requests
             if (obj.contains(QStringLiteral("sid")))
                 return obj.value(QStringLiteral("sid")).toString();
             else {
@@ -129,7 +129,7 @@ namespace Od {
                     QHash<QString, QString> attrs;
                     attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
                     QUrl url = QUrl(base_url).resolved(forms.first() -> toFormSubmit(attrs));
-                    QNetworkReply * reply = WebManager::manager() -> postForm(url, true, initHeaders());
+                    QNetworkReply * reply = WebManager::manager() -> followedForm(url, initHeaders());
                     //TODO: check session
                     reply -> deleteLater();
                 }

@@ -42,7 +42,7 @@ namespace Od {
         }
 
         void hashConnection() {
-            QNetworkReply * reply = WebManager::manager() -> getSync(initUrl(), true, initHeaders());
+            QNetworkReply * reply = WebManager::manager() -> followedGet(initUrl(), initHeaders());
             reply -> deleteLater();
 
             if (!sessionIsValid())
@@ -52,16 +52,16 @@ namespace Od {
         }
 
         void formConnection() {
-            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl(), false, initHeaders());
+            WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
 
-            QUrl url = WebManager::redirectUrl(reply).toUrl();
+            QUrl url = reply -> redirectUrl().toUrl();
             QUrlQuery query(url.query());
 
             hash_key = query.queryItemValue(QStringLiteral("httpsdata"));
             reply -> deleteLater();
 
 
-            reply = WebManager::manager() -> getSync(url, true, initHeaders());
+            reply = WebManager::manager() -> followedGet(url, initHeaders());
             Html::Document doc(reply);
 
             checkSecurity(doc);
