@@ -64,10 +64,12 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
     }
 
     pict -> setPixmap(pixmap);
-//    pict -> setMinimumHeight(pixmap.height() / 4);
+    pict -> setMinimumHeight(pixmap.height());
+    pict -> setMaximumHeight(pixmap.height());
 
     insertElem(l, pict);
-    l -> setRowMinimumHeight(l -> rowCount(), pixmap.height() / 4);
+    if (pixmap.height() > 90)
+        l -> setRowMinimumHeight(l -> rowCount(), 35);
 }
 
 void UserActionDialog::createAction(FormInput input, QGridLayout * l) {

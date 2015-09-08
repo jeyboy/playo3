@@ -67,7 +67,7 @@ protected slots:
 
 private:
     void insertElem(QGridLayout * l, QWidget * w) {
-        l -> addWidget(w, l -> rowCount(), 0, 1, 2);
+        l -> addWidget(w, l -> rowCount(), 0, 1, 2, Qt::AlignCenter);
     }
 
     void insertPair(QGridLayout * l, QWidget * w1, QWidget * w2) {
