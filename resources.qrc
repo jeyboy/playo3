@@ -40,6 +40,7 @@
         <file alias="cycling">images/elements/cycling.png</file>
         <file alias="echonest">images/elements/echonest.png</file>
         <file alias="equalizer">images/elements/equalizer.png</file>
+        <file alias="add_od">images/elements/add_od.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>
@@ -60,6 +61,8 @@
         <file alias="promodj_item_on">images/items/promodj_on.png</file>
         <file alias="jetune_item">images/items/jetune.png</file>
         <file alias="jetune_item_on">images/items/jetune_on.png</file>
+        <file alias="od">images/items/od.png</file>
+        <file alias="od_on">images/items/od_on.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

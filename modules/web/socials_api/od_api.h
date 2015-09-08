@@ -26,19 +26,7 @@ namespace Od {
 
     public slots:
         void connection() {
-//            QNetworkReply * reply = WebManager::manager() -> postForm(authRequestUrl());
-//            qDebug() << "SESSION" << WebManager::cookie(QStringLiteral("JSESSIONID"));
-//            Html::Document doc(reply);
-////            doc.output();
-//            setParams(grabSID(), grabUserId(doc), QString());
-//            qDebug() << token() << userID();
-//            reply -> deleteLater();
-
-
-
-//            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
-//            qDebug() << "OD INIT" << obj;
-
+            formConnection();
             qDebug() << "LOL" << refresh("82297702323201");
         }
         inline void disconnect() {
@@ -77,6 +65,7 @@ namespace Od {
             Html::Document doc(reply);
 
             checkSecurity(doc);
+            WebManager::printCookies();
 
             setParams(grabSID(), grabUserId(doc), QString());
             qDebug() << token() << userID();

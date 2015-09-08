@@ -1,5 +1,9 @@
 #include "web_manager.h"
 
+WebRequest * WebRequest::withHeaders(QHash<QString, QString> headers) {
+    
+}
+
 QHash<QObject *, WebManager *> WebManager::managers = QHash<QObject *, WebManager *>();
 Cookies * WebManager::cookies = new Cookies(QApplication::instance());
 

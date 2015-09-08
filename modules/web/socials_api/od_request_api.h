@@ -97,7 +97,7 @@ namespace Od {
                 Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");
                 return results.link().section("st.uid=", 1).section('&', 0, 0);
             } else
-                return results.link().section('/', 2);
+                return results.link().section('/', 2).section('?', 0);
             return QString();
         }
 
@@ -113,6 +113,7 @@ namespace Od {
 
         inline void checkSecurity(Html::Document & doc) {
             Html::Set forms = doc.find("[id^'hook_Form'] form");
+            doc.output();
 
             if (!forms.isEmpty()) {
                 QList<FormInput> inputs;
@@ -121,7 +122,7 @@ namespace Od {
 
                 QString resendLink = forms.find("#accRcvrSent").link();
                 QList<FormInput> extra_inputs;
-                extra_inputs << FormInput(QStringLiteral("Resend sms"), resendLink, WebManager::manager(), SLOT(sendGet(QString&)));
+                extra_inputs << FormInput(QStringLiteral("Resend sms"), resendLink, WebManager::manager(), "sendGet");
                 actionDialog -> extendForm(extra_inputs);
 
                 if (actionDialog -> exec() == QDialog::Accepted) {

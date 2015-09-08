@@ -13,6 +13,15 @@ public:
     inline QList<QNetworkCookie> allCookies() const { return QNetworkCookieJar::allCookies(); }
 };
 
+//class WebRequest : public QNetworkRequest {
+//public:
+//    inline WebRequest(const QString & url_str) : QNetworkRequest(QUrl(url_str)) {}
+//    inline WebRequest(const QUrl & url = QUrl()) : QNetworkRequest(url) {}
+
+//    inline WebRequest * asForm() { setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded")); return this; }
+//    inline WebRequest * withHeaders(QHash<QString, QString> headers);
+//};
+
 class WebManager : public QNetworkAccessManager {
     Q_OBJECT
 public:
@@ -67,7 +76,7 @@ public:
     QJsonObject getJson(const QNetworkRequest & request, bool wrap = false);
     QJsonObject postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap = false);
 
-    inline QNetworkReply * openUrl(const QUrl & url) { return proceedReply(getSync(QNetworkRequest(url))); }
+    inline QNetworkReply * openUrl(const QUrl & url) { return proceedReply(getSync(url)); }
     QPixmap openImage(const QUrl & url);
 
     static inline QJsonObject replyToJson(QNetworkReply * reply, bool wrap = false) {
