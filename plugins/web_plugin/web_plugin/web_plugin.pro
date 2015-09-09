@@ -10,7 +10,7 @@ QT       -= gui
 
 TARGET = web_plugin
 TEMPLATE = lib
-CONFIG += release
+CONFIG += debug_and_release
 
 DEFINES += WEB_PLUGIN_LIBRARY
 
