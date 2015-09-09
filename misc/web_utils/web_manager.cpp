@@ -14,9 +14,9 @@ WebResponse * WebResponse::followByRedirect() {
 
     return this;
 }
-QJsonObject WebResponse::toJson(const QString & wrap = QString) {
+QJsonObject WebResponse::toJson(const QString & wrap) {
     QByteArray ar = readAll();
-    if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap)); ar.append("}"); }
+    if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
     deleteLater();
     return QJsonDocument::fromJson(ar).object();
 }
@@ -40,16 +40,16 @@ WebRequest * WebRequest::withHeaders(const QHash<QString, QString> & headers) {
 }
 
 WebResponse * WebRequest::viaGet() {
-    return manager -> get(this);
+    return manager -> get(*this);
 }
 
 WebResponse * WebRequest::viaPost(const QByteArray & data) {
-    return manager -> post(this, data);
+    return manager -> post(*this, data);
 }
 
 WebResponse * WebRequest::viaForm(const QByteArray & data) {
     setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-    return manager -> post(this, data);
+    return manager -> post(*this, data);
 }
 
 

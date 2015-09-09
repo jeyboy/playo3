@@ -32,7 +32,7 @@ public:
     inline WebRequest(WebManager * manager, const QString & url_str) : QNetworkRequest(QUrl(url_str)), manager(manager) {}
     inline WebRequest(WebManager * manager, const QUrl & url = QUrl()) : QNetworkRequest(url), manager(manager) {}
 
-    WebRequest * withHeaders(QHash<QString, QString> headers);
+    WebRequest * withHeaders(const QHash<QString, QString> & headers);
     WebResponse * viaGet();
     WebResponse * viaPost(const QByteArray & data = QByteArray());
     WebResponse * viaForm(const QByteArray & data = QByteArray());
