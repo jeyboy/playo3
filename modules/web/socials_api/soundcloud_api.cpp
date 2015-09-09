@@ -85,9 +85,7 @@ namespace Soundcloud {
             error = query.queryItemValue(QStringLiteral("error_description"));
             emit responseReady(QStringLiteral("reject"));
         } else if (query.hasQueryItem(QStringLiteral("code"))) {
-            QNetworkRequest request(authTokenUrl());
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-            QJsonObject doc = WebManager::manager() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
+            QJsonObject doc = WebManager::manager() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
 
             if (doc.contains(QStringLiteral("access_token"))) {
                 QString newToken = doc.value(QStringLiteral("access_token")).toString();

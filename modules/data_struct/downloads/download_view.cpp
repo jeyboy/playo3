@@ -293,7 +293,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
 
         if (isRemote) {
-            source = networkManager -> openUrl(from);
+            source = networkManager -> followedGet(from);
             int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); // vk monkey patch
             if (status == 404) {
                 source -> close();
@@ -304,7 +304,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 if (itm -> data(DOWNLOAD_TYPE).toString() == QStringLiteral("vk")) {
                     QUrl newFrom = QUrl(Vk::Api::instance() -> refresh(itm -> data(DOWNLOAD_ID).toString()));
                     if (newFrom != from) {
-                        source = networkManager -> openUrl(newFrom);
+                        source = networkManager -> followedGet(newFrom);
                         invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
                     }
                 }

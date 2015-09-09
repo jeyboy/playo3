@@ -77,6 +77,7 @@ public:
     inline WebResponse * unfollowedForm(const QUrl & url) { return requestTo(url) -> viaForm(); }
     inline WebResponse * unfollowedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaForm(); }
     inline WebResponse * followedForm(const QUrl & url) { return requestTo(url) -> viaForm() -> followByRedirect(); }
+    inline WebResponse * followedForm(const QUrl & url, const QByteArray & data) { return requestTo(url) -> viaForm(data) -> followByRedirect(); }
     inline WebResponse * followedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaForm() -> followByRedirect(); }
 
 //    static inline int status(QNetworkReply * reply) { return reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
