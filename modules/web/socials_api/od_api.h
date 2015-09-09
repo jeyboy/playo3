@@ -52,6 +52,7 @@ namespace Od {
         }
 
         void formConnection() {
+            qDebug() << authRequestUrl();
             WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
 
             QUrl url = reply -> redirectUrl().toUrl();

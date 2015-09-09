@@ -121,7 +121,6 @@ namespace Grabber {
                         song_obj.insert(duration_key, (*song) -> find(&durationSelector).text());
 //                        song_obj.insert(bitrate_key, (*song) -> find(&bitrateSelector) -> text());
 
-                        qDebug() << song_obj;
                         json << song_obj;
                     }
 
