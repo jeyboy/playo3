@@ -478,24 +478,24 @@ QToolButton * ToolBars::initiateOdButton() {
         odToolButton = new QToolButton();
     else {
         odToolButton -> setMenu(0);
-        disconnect(odToolButton, SIGNAL(clicked()), Od::Api::instance(), SLOT(connection()));
+        disconnect(odToolButton, SIGNAL(clicked()), parent(), SLOT(openOdTabDialog()));
     }
 
     if (Od::Api::instance() -> isConnected()) {
         odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
-        odToolButton -> setToolTip(QStringLiteral("Od()"));
+        odToolButton -> setToolTip(QStringLiteral("Od(ok.ru)"));
         odToolButton -> setPopupMode(QToolButton::InstantPopup);
 
-        QMenu * vkMenu = new QMenu(odToolButton);
-//        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
+        QMenu * odMenu = new QMenu(odToolButton);
+        odMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
 //        vkMenu -> addAction(QStringLiteral("Reconect"), parent(), SLOT(openSoundcloudTabDialog()));
 //        vkMenu -> addAction(QStringLiteral("Open your tab"), parent(), SLOT(showSoundcloudTabDialog()));
 //        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), parent(), SLOT(showSoundcloudRelTabDialog()));
-        odToolButton -> setMenu(vkMenu);
+        odToolButton -> setMenu(odMenu);
     } else {
         odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od")));
-        odToolButton -> setToolTip(QStringLiteral("Connect to Od"));
-        connect(odToolButton, SIGNAL(clicked()), Od::Api::instance(), SLOT(connection()));
+        odToolButton -> setToolTip(QStringLiteral("Connect to Od(ok.ru)"));
+        connect(odToolButton, SIGNAL(clicked()), parent(), SLOT(openOdTabDialog()));
     }
 
     return odToolButton;

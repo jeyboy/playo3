@@ -137,6 +137,7 @@ void Playo::initialization() {
     Vk::Api::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
     Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
     Fourshared::Api::instance(settings -> read(SETTINGS_FOURSHARED_SET_KEY).toObject());
+    Od::Api::instance(this, settings -> read(SETTINGS_OD_SET_KEY).toObject());
 
     Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
@@ -205,6 +206,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> write(SETTINGS_VK_SET_KEY, Vk::Api::instance() -> toJson());
     settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::instance() -> toJson());
     settings -> write(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::instance() -> toJson());
+    settings -> write(SETTINGS_OD_SET_KEY, Od::Api::instance() -> toJson());
 
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);
@@ -308,6 +310,13 @@ void Playo::showSettingsDialog() {
 void Playo::showEchonestDialog() {
     EchonestDialog d(this);
     d.exec();
+}
+
+void Playo::openOdTabDialog() {
+    if (Od::Api::instance() -> connection()) {
+        ViewSettings settings(od, false, false, false, true, Od::Api::instance() -> userID());
+        Dockbars::instance() -> createDocBar(QStringLiteral("OD [YOU]"), settings, 0, true, true);
+    }
 }
 
 void Playo::openVKRecomendations() {

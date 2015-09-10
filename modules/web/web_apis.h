@@ -4,6 +4,7 @@
 #include "storages/fourshared/fourshared_api.h"
 #include "socials_api/vk_api.h"
 #include "socials_api/soundcloud_api.h"
+#include "socials_api/od_api.h"
 #include "sites/site_apis.h"
 
 namespace Web {

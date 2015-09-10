@@ -7,7 +7,7 @@ namespace Vk {
         return self;
     }
 
-    Api * Api::instance(QObject * parent, QJsonObject obj) {
+    Api * Api::instance(QObject * parent, const QJsonObject & obj) {
         if(!self)
             self = new Api(parent, obj);
         else
@@ -15,7 +15,7 @@ namespace Vk {
         return self;
     }
 
-    void Api::fromJson(QJsonObject hash) {
+    void Api::fromJson(const QJsonObject & hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
     }

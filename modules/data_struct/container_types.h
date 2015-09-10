@@ -10,7 +10,8 @@ namespace Playo3 {
         soundcloud = 5,
         search = 6,
         vk_rel = 7,
-        echo = 8
+        echo = 8,
+        od = 9
     };
 }
 

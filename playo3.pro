@@ -166,7 +166,11 @@ SOURCES += main.cpp\
     media/audio_player/audio_player_state.cpp \
     modules/controls/equalizer_view.cpp \
     modules/controls/spectrum_view.cpp \
-    dialogs/user_action_dialog.cpp
+    dialogs/user_action_dialog.cpp \
+    modules/data_struct/web/od/od_folder.cpp \
+    modules/data_struct/web/od/od_item.cpp \
+    modules/data_struct/web/od/od_model.cpp \
+    modules/data_struct/web/od/od_view.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -338,7 +342,11 @@ HEADERS  += playo.h \
     media/audio_player/audio_player_state.h \
     modules/controls/equalizer_view.h \
     modules/controls/spectrum_view.h \
-    dialogs/user_action_dialog.h
+    dialogs/user_action_dialog.h \
+    modules/data_struct/web/od/od_folder.h \
+    modules/data_struct/web/od/od_item.h \
+    modules/data_struct/web/od/od_model.h \
+    modules/data_struct/web/od/od_view.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

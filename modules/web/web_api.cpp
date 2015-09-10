@@ -45,7 +45,7 @@ void WebApi::clearData() {
 //    hash.insert("groups", groupsJson);
 //}
 
-void WebApi::fromJson(QJsonObject & hash) { //TODO: replace foreach with for
+void WebApi::fromJson(const QJsonObject & hash) { //TODO: replace foreach with for
     QJsonObject ar = hash.value(QStringLiteral("friends")).toObject();
     foreach(QString key, ar.keys())
         addFriend(key, ar.value(key).toString());

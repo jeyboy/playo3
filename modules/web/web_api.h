@@ -41,7 +41,7 @@ public:
     inline QHash<QString, QString> friendsList() const { return friends; }
     inline QHash<QString, QString> groupsList() const { return groups; }
 
-    void fromJson(QJsonObject & hash);
+    void fromJson(const QJsonObject & hash);
     void toJson(QJsonObject & hash);
 
 signals:

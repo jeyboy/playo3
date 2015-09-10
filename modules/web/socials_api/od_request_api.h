@@ -14,6 +14,13 @@ namespace Od {
         QString hash_key;
         QString authE, authP;
 
+        RequestApi(QObject * obj = 0) : WebApi(obj) {}
+
+        bool sessionIsValid() {
+            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
+            return !obj.contains(QStringLiteral("error"));
+        }
+
         inline void nullifyCredentials() {
             authE.clear();
             authP.clear();
@@ -37,7 +44,8 @@ namespace Od {
 
         inline QHash<QString, QString> initHeaders() {
             QHash<QString, QString> headers;
-            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));
+//            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));
+            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0"));
             return headers;
         }
 

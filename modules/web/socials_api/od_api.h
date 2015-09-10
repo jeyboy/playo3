@@ -11,12 +11,12 @@ namespace Od {
         Q_OBJECT
     public:
         static Api * instance();
-        static Api * instance(QJsonObject obj);
+        static Api * instance(QObject * parent, const QJsonObject & obj);
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("Od"); }
         inline Playo3::WebSubType siteType() { return Playo3::od_site; }
-        inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") %  token()); }
+        inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
         QString authUrl();
 
         void fromJson(QJsonObject hash);
@@ -25,14 +25,14 @@ namespace Od {
         inline bool isConnected() { return !token().isEmpty(); }
 
     public slots:
-        void connection() {
-            formConnection();
+        bool connection(bool onlyAuto = false) {
+            return hashConnection(onlyAuto);
 
-            setParams(grabSID(), userID(), QString());
-            qDebug() << "SID" << token();
+//            setParams(grabSID(), userID(), QString());
+//            qDebug() << "SID" << token();
 
-            if (!token().isEmpty())
-                qDebug() << "LOL" << refresh("82297702323201");
+//            if (!token().isEmpty())
+//                qDebug() << "LOL" << refresh("82297702323201");
         }
         inline void disconnect() {
             WebApi::disconnect(); setParams(QString(), QString(), QString());
@@ -41,20 +41,16 @@ namespace Od {
         void proceedAuthResponse(const QUrl & url);
 
     protected:
-        bool sessionIsValid() {
-            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
-            return !obj.contains(QStringLiteral("error"));
-        }
-
-        void hashConnection() {
+        bool hashConnection(bool onlyAuto) {
             QNetworkReply * reply = WebManager::manager() -> followedGet(initUrl(), initHeaders());
             reply -> deleteLater();
 
-//            if (!sessionIsValid())
-                if (!formConnection())
-                    return;
+            if (!sessionIsValid())
+                if (!onlyAuto && !formConnection())
+                    return false;
 
             setParams(grabSID(), userID(), QString());
+            return true;
         }
 
         bool formConnection() {
@@ -75,9 +71,7 @@ namespace Od {
             }
 
             Html::Document doc(reply);
-
             checkSecurity(doc);
-            WebManager::printCookies();
 
             setParams(QString(), grabUserId(doc), QString());
             reply -> deleteLater();
@@ -100,7 +94,11 @@ namespace Od {
             return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
         }
     private:
-        inline Api(QJsonObject hash) : RequestApi(), TeuAuth() { fromJson(hash); }
+        inline Api(QObject * parent, QJsonObject hash) : RequestApi(parent), TeuAuth() {
+            fromJson(hash);
+            if (!sessionIsValid())
+               connection(true);
+        }
         inline Api() : RequestApi(), TeuAuth() { }
         inline virtual ~Api() {}
 

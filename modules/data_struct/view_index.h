@@ -13,5 +13,6 @@
 #include "web/vk/vk_view.h"
 #include "web/vk/vk_rel_view.h"
 #include "web/soundcloud/soundcloud_view.h"
+#include "web/od/od_view.h"
 
 #endif // VIEWS_INDEX_H

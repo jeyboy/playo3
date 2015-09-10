@@ -12,9 +12,9 @@ namespace Od {
         return self;
     }
 
-    Api * Api::instance(QJsonObject obj) {
+    Api * Api::instance(QObject * parent, const QJsonObject & obj) {
         if(!self)
-            self = new Api(obj);
+            self = new Api(parent, obj);
         else
             Api::instance() -> fromJson(obj);
         return self;

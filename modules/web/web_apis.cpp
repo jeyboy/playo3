@@ -8,6 +8,7 @@ namespace Web {
             sites.insert(Vk::Api::instance() -> siteType(), Vk::Api::instance());
             sites.insert(Soundcloud::Api::instance() -> siteType(), Soundcloud::Api::instance());
             sites.insert(Fourshared::Api::instance() -> siteType(), Fourshared::Api::instance());
+            sites.insert(Od::Api::instance() -> siteType(), Od::Api::instance());
 
             sites.insert(Grabber::MyzukaAlbum::instance() -> siteType(), Grabber::MyzukaAlbum::instance());
             sites.insert(Grabber::Zaycev::instance() -> siteType(), Grabber::Zaycev::instance());

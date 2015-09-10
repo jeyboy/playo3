@@ -189,6 +189,9 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObjec
         case search: {
             view = new SearchView(bar, settings, attrs);
         break;}
+        case od: {
+            view = new OdView(bar, settings, attrs);
+        break;}
 
         default: view = 0;
     }

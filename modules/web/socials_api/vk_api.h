@@ -27,10 +27,10 @@ namespace Vk {
         inline ~Api() {}
 
         static Api * instance();
-        static Api * instance(QObject * parent, QJsonObject obj);
+        static Api * instance(QObject * parent, const QJsonObject & obj);
         inline static void close() { delete self; }
 
-        void fromJson(QJsonObject hash);
+        void fromJson(const QJsonObject & hash);
         QJsonObject toJson();
 
         inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }

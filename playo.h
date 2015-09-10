@@ -32,6 +32,7 @@ namespace Ui { class Playo; }
 #define SETTINGS_VK_SET_KEY QStringLiteral("vk")
 #define SETTINGS_SOUNDCLOUD_SET_KEY QStringLiteral("soundcloud")
 #define SETTINGS_FOURSHARED_SET_KEY QStringLiteral("fourshared")
+#define SETTINGS_OD_SET_KEY QStringLiteral("od")
 #define SETTINGS_SET_KEY QStringLiteral("settings")
 #define SETTINGS_GEOMETRY_SET_KEY QStringLiteral("geometry")
 #define SETTINGS_EQUALIZER_SET_KEY QStringLiteral("equalizer")
@@ -55,6 +56,8 @@ private slots:
     void showSettingsDialog();
 
     void showEchonestDialog();
+
+    void openOdTabDialog();
 
     void openVKRecomendations();
     void openVKTabDialog();

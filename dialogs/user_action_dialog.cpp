@@ -12,6 +12,7 @@ UserActionDialog::~UserActionDialog() {
 }
 
 void UserActionDialog::buildLoginForm(const QString & login_name, const QString & password_name) {
+    setWindowTitle(QStringLiteral("Auth form"));
     QList<FormInput> inputs;
     inputs << FormInput(login_key, login_name);
     inputs << FormInput(pass_key, password_name);
@@ -19,6 +20,7 @@ void UserActionDialog::buildLoginForm(const QString & login_name, const QString 
 }
 
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
+    setWindowTitle(QStringLiteral("Captcha form"));
     QList<FormInput> inputs;
     inputs << FormInput(captcha_img);
     inputs << FormInput(captcha_key, QStringLiteral("Captcha value"));
@@ -26,6 +28,7 @@ void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
 }
 
 void UserActionDialog::buildForm(const QList<FormInput> & inputs) {
+    setWindowTitle(QStringLiteral("Some form"));
     recreateLayer();
     proceedInputs(inputs);
 }

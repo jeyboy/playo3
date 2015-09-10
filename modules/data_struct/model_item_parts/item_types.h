@@ -11,6 +11,8 @@ namespace Playo3 {
         #define SOUNDCLOUD_PLAYLIST 600
         #define SOUNDCLOUD_ITEM 700
         #define WEB_ITEM 800
+        #define OD_PLAYLIST 900
+        #define OD_ITEM 1000
     }
 
     #define SHARE_TYPE_VK QStringLiteral("vk")
