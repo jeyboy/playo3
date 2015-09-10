@@ -2,7 +2,6 @@
 
 WebApi::WebApi(QObject * parent) : Async(parent) {
     actionDialog = new UserActionDialog((QWidget *)parent);
-    connect(this, SIGNAL(execDialog()), this, SLOT(executingDialog()), Qt::BlockingQueuedConnection);
 }
 
 WebApi::~WebApi() {
@@ -71,13 +70,13 @@ void WebApi::toJson(QJsonObject & root) {
 
 void WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
     actionDialog -> buildCaptchaForm(WebManager::manager() -> getImage(pict_url));
-    emit execDialog();
+    executingDialog();
     result = actionDialog -> getValue(actionDialog -> captcha_key);
 }
 
 void WebApi::showingLogin(QString & login, QString & pass) {
     actionDialog -> buildLoginForm();
-    emit execDialog();
+    executingDialog();
 
     login = actionDialog -> getValue(actionDialog -> login_key);
     pass = actionDialog -> getValue(actionDialog -> pass_key);

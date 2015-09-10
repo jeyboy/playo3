@@ -45,7 +45,6 @@ public:
     void toJson(QJsonObject & hash);
 
 signals:
-    void execDialog();
     void responseReady(QString);
     void errorReceived(int, QString);
     void authorized();
@@ -58,7 +57,13 @@ public slots:
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 
 private slots:
-    inline int executingDialog() { return actionDialog -> exec(); }
+    inline int executingDialog() {
+        if (QThread::currentThread() != QApplication::instance() -> thread()) {
+            QMetaObject::invokeMethod(actionDialog, "exec", Qt::BlockingQueuedConnection);
+            return actionDialog -> result();
+        } else
+            return actionDialog -> exec();
+    }
 
 protected:
     UserActionDialog * actionDialog;

@@ -27,7 +27,12 @@ namespace Od {
     public slots:
         void connection() {
             formConnection();
-            qDebug() << "LOL" << refresh("82297702323201");
+
+            setParams(grabSID(), userID(), QString());
+            qDebug() << "SID" << token();
+
+            if (!token().isEmpty())
+                qDebug() << "LOL" << refresh("82297702323201");
         }
         inline void disconnect() {
             WebApi::disconnect(); setParams(QString(), QString(), QString());
@@ -45,7 +50,7 @@ namespace Od {
             QNetworkReply * reply = WebManager::manager() -> followedGet(initUrl(), initHeaders());
             reply -> deleteLater();
 
-            if (!sessionIsValid())
+//            if (!sessionIsValid())
                 if (!formConnection())
                     return;
 
@@ -53,35 +58,30 @@ namespace Od {
         }
 
         bool formConnection() {
-            qDebug() << "SOSO" << authRequestUrl();
-
+            WebManager::printCookies();
             checkCredentials();
 
             WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
-
-            // need to check - if credentials is wrong - nullify it
-
-            QUrl url = reply -> redirectUrl().toUrl();
-            QUrlQuery query(url.query());
-
-            hash_key = query.queryItemValue(QStringLiteral("httpsdata"));
+            QUrl url = reply -> redirectUrl().toUrl();           
+            hash_key = WebManager::paramVal(url, QStringLiteral("httpsdata"));
             reply -> deleteLater();
 
-
-            if (hash_key.isEmpty()) {
+            reply = WebManager::manager() -> followedGet(url, initHeaders());
+            QString error = reply -> paramVal(QStringLiteral("st.error"));
+            if (!error.isEmpty()) {
                 nullifyCredentials();
-                return;
+                reply -> deleteLater();
+                return false;
             }
 
-            reply = WebManager::manager() -> followedGet(url, initHeaders());
             Html::Document doc(reply);
 
             checkSecurity(doc);
             WebManager::printCookies();
 
-            setParams(grabSID(), grabUserId(doc), QString());
-            qDebug() << token() << userID();
+            setParams(QString(), grabUserId(doc), QString());
             reply -> deleteLater();
+            return !WebManager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
         }
 
         QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
@@ -100,8 +100,8 @@ namespace Od {
             return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
         }
     private:
-        inline Api(QJsonObject hash) : TeuAuth(), RequestApi() { fromJson(hash); }
-        inline Api() : TeuAuth(), RequestApi() { }
+        inline Api(QJsonObject hash) : RequestApi(), TeuAuth() { fromJson(hash); }
+        inline Api() : RequestApi(), TeuAuth() { }
         inline virtual ~Api() {}
 
         static Api * self;

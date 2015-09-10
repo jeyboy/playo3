@@ -68,7 +68,7 @@ WebManager * WebManager::manager() {
 
         //QApplication::instance() -> thread()
 
-        if (QThread::currentThread() != QApplication::instance() -> thread())
+        if (/*QThread::currentThread()*/ thread != QApplication::instance() -> thread())
             connect(thread, SIGNAL(finished()), new WebManagerController(), SLOT(disconnectThread()));
     }
     return managers[thread];

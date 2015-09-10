@@ -105,13 +105,14 @@ namespace Od {
             if (results.isEmpty()) {
                 Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");
                 return results.link().section("st.uid=", 1).section('&', 0, 0);
-            } else
-                return results.link().section('/', 2).section('?', 0);
+            }
+            else return results.link().section('/', 2).section('?', 0, 0);
+
             return QString();
         }
 
         inline QString grabSID() {
-            QJsonObject obj = WebManager::manager() -> postJson(authSidUrl()); // registrate sid for requests
+            QJsonObject obj = WebManager::manager() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
             if (obj.contains(QStringLiteral("sid")))
                 return obj.value(QStringLiteral("sid")).toString();
             else {
@@ -122,17 +123,13 @@ namespace Od {
 
         inline void checkSecurity(Html::Document & doc) {
             Html::Set forms = doc.find("[id^'hook_Form'] form");
-            doc.output();
+//            doc.output();
 
             if (!forms.isEmpty()) {
                 QList<FormInput> inputs;
                 inputs << FormInput(QStringLiteral("code"), QStringLiteral("Code from sms"));
+                inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), WebManager::manager(), "sendGet");
                 actionDialog -> buildForm(inputs);
-
-                QString resendLink = forms.find("#accRcvrSent").link();
-                QList<FormInput> extra_inputs;
-                extra_inputs << FormInput(QStringLiteral("Resend sms"), resendLink, WebManager::manager(), "sendGet");
-                actionDialog -> extendForm(extra_inputs);
 
                 if (actionDialog -> exec() == QDialog::Accepted) {
                     QHash<QString, QString> attrs;
