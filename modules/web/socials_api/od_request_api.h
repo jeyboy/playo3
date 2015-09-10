@@ -3,7 +3,6 @@
 
 #include "../iapi.h"
 #include "../web_api.h"
-#include "misc/settings.h"
 #include "misc/web_utils/html_parser.h"
 #include "od_api_keys.h"
 
@@ -13,10 +12,15 @@ namespace Od {
     class RequestApi : public WebApi, public IApi {
     protected:
         QString hash_key;
-        QString authE, uathP; //TODO: remove settings and use this vars
+        QString authE, authP;
+
+        inline void checkCredentials() {
+            if (authE.isEmpty() || authP.isEmpty())
+                showingLogin(authE, authP);
+        }
 
         inline QUrl authRequestUrl() const {
-            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(Settings::instance() -> od_key()) + "&st.password=" + encodeStr(Settings::instance() -> od_val()) + "&st.remember=on&st.iscode=false");
+            QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(authE) + "&st.password=" + encodeStr(authP) + "&st.remember=on&st.iscode=false");
             qDebug() << url;
             return url;
         }

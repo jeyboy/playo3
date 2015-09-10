@@ -90,7 +90,6 @@ SOURCES += main.cpp\
     misc/file_utils/extensions.cpp \
     misc/file_utils/icon_provider.cpp \
     modules/data_struct/model_item_parts/item_fields.cpp \
-    dialogs/captchadialog.cpp \
     dialogs/extension_dialog.cpp \
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
@@ -236,7 +235,6 @@ HEADERS  += playo.h \
     misc/file_utils/extensions.h \
     misc/file_utils/filename_conversions.h \
     misc/file_utils/icon_provider.h \
-    dialogs/captchadialog.h \
     dialogs/extension_dialog.h \
     modules/controls/simple_list_view.h \
     modules/data_struct/model_item_delegate.h \
@@ -347,7 +345,6 @@ FORMS    += playo.ui \
     dialogs/toolbardialog.ui \
     dialogs/settings_dialog.ui \
     dialogs/tabdialog.ui \
-    dialogs/captchadialog.ui \
     dialogs/extension_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \

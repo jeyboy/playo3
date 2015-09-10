@@ -9,14 +9,11 @@
 
 #include <qurl.h>
 
-#include "dialogs/captchadialog.h" // TODO: remove later
 #include "dialogs/user_action_dialog.h"
 
 #include "misc/web_utils/web_manager.h"
 
 #include "utils/async.h"
-
-class CaptchaDialog;
 
 class WebApi : public Async {
     Q_OBJECT
@@ -48,17 +45,22 @@ public:
     void toJson(QJsonObject & hash);
 
 signals:
+    void execDialog();
     void responseReady(QString);
     void errorReceived(int, QString);
     void authorized();
 
 public slots:
     virtual inline void disconnect() { clearData(); }
-    void showingCaptcha();
+
+    void showingCaptcha(const QUrl & pict_url, QString & result);
+    void showingLogin(QString & login, QString & pass);
     virtual void proceedAuthResponse(const QUrl & url) = 0;
 
+private slots:
+    inline int executingDialog() { return actionDialog -> exec(); }
+
 protected:
-    CaptchaDialog * captchaDialog;
     UserActionDialog * actionDialog;
 
     QHash<QString, QString> friends;

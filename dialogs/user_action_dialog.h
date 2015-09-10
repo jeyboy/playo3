@@ -40,6 +40,11 @@ struct FormInput {
 class UserActionDialog : public QDialog {
     Q_OBJECT
 public:
+    const QString captcha_key = QStringLiteral("captcha");
+
+    const QString login_key = QStringLiteral("login");
+    const QString pass_key = QStringLiteral("password");
+
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
 

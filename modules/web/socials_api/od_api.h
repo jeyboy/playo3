@@ -52,8 +52,13 @@ namespace Od {
         }
 
         void formConnection() {
-            qDebug() << authRequestUrl();
+            qDebug() << "SOSO" << authRequestUrl();
+
+            checkCredentials();
+
             WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
+
+            // need to check - if credentials is wrong - nullify it
 
             QUrl url = reply -> redirectUrl().toUrl();
             QUrlQuery query(url.query());

@@ -1,12 +1,11 @@
 #include "web_api.h"
 
 WebApi::WebApi(QObject * parent) : Async(parent) {
-    captchaDialog = new CaptchaDialog((QWidget *)parent);
     actionDialog = new UserActionDialog((QWidget *)parent);
+    connect(this, SIGNAL(execDialog()), this, SLOT(executingDialog()), Qt::BlockingQueuedConnection);
 }
 
 WebApi::~WebApi() {
-    delete captchaDialog;
     delete actionDialog;
 }
 
@@ -47,7 +46,7 @@ void WebApi::clearData() {
 //    hash.insert("groups", groupsJson);
 //}
 
-void WebApi::fromJson(QJsonObject & hash) {
+void WebApi::fromJson(QJsonObject & hash) { //TODO: replace foreach with for
     QJsonObject ar = hash.value(QStringLiteral("friends")).toObject();
     foreach(QString key, ar.keys())
         addFriend(key, ar.value(key).toString());
@@ -70,7 +69,16 @@ void WebApi::toJson(QJsonObject & root) {
     root.insert(QStringLiteral("groups"), groupsJson);
 }
 
-void WebApi::showingCaptcha() {
-    captchaDialog -> clearText();
-    captchaDialog -> exec();
+void WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
+    actionDialog -> buildCaptchaForm(WebManager::manager() -> getImage(pict_url));
+    emit execDialog();
+    result = actionDialog -> getValue(actionDialog -> captcha_key);
+}
+
+void WebApi::showingLogin(QString & login, QString & pass) {
+    actionDialog -> buildLoginForm();
+    emit execDialog();
+
+    login = actionDialog -> getValue(actionDialog -> login_key);
+    pass = actionDialog -> getValue(actionDialog -> pass_key);
 }

@@ -58,8 +58,6 @@ namespace Vk {
                 return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
         }
 
-    signals:
-        void showCaptcha();
     public slots:
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);
@@ -82,7 +80,6 @@ namespace Vk {
     private:
         inline Api(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth(), RequestApi() {
             fromJson(hash);
-            connect(this, SIGNAL(showCaptcha()), this, SLOT(showingCaptcha()), Qt::BlockingQueuedConnection);
         }
 
         inline Api() : WebApi(), TeuAuth() {}

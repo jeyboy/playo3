@@ -13,15 +13,15 @@ UserActionDialog::~UserActionDialog() {
 
 void UserActionDialog::buildLoginForm(const QString & login_name, const QString & password_name) {
     QList<FormInput> inputs;
-    inputs << FormInput(QStringLiteral("login"), login_name);
-    inputs << FormInput(QStringLiteral("password"), password_name);
+    inputs << FormInput(login_key, login_name);
+    inputs << FormInput(pass_key, password_name);
     buildForm(inputs);
 }
 
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
     QList<FormInput> inputs;
     inputs << FormInput(captcha_img);
-    inputs << FormInput(QStringLiteral("captcha"), QStringLiteral("Captcha value"));
+    inputs << FormInput(captcha_key, QStringLiteral("Captcha value"));
     buildForm(inputs);
 }
 
