@@ -46,12 +46,13 @@ namespace Od {
             reply -> deleteLater();
 
             if (!sessionIsValid())
-                formConnection();
+                if (!formConnection())
+                    return;
 
-            setParams(grabSID(), userID()/*grabUserId(doc)*/, QString());
+            setParams(grabSID(), userID(), QString());
         }
 
-        void formConnection() {
+        bool formConnection() {
             qDebug() << "SOSO" << authRequestUrl();
 
             checkCredentials();
@@ -66,6 +67,11 @@ namespace Od {
             hash_key = query.queryItemValue(QStringLiteral("httpsdata"));
             reply -> deleteLater();
 
+
+            if (hash_key.isEmpty()) {
+                nullifyCredentials();
+                return;
+            }
 
             reply = WebManager::manager() -> followedGet(url, initHeaders());
             Html::Document doc(reply);

@@ -14,6 +14,11 @@ namespace Od {
         QString hash_key;
         QString authE, authP;
 
+        inline void nullifyCredentials() {
+            authE.clear();
+            authP.clear();
+        }
+
         inline void checkCredentials() {
             if (authE.isEmpty() || authP.isEmpty())
                 showingLogin(authE, authP);
