@@ -32,7 +32,9 @@ namespace Od {
 
     public slots:
         bool connection(bool onlyAuto = false) {
-            return hashConnection(onlyAuto);
+            bool res = hashConnection(onlyAuto);
+            if (res) emit authorized();
+            return res;
 
 //            setParams(grabSID(), userID(), QString());
 //            qDebug() << "SID" << token();
