@@ -403,6 +403,10 @@ void ToolBars::disconnectSoundcloud() {
     Soundcloud::Api::instance() -> disconnect();
     initiateSoundcloudButton();
 }
+void ToolBars::disconnectOd() {
+    Od::Api::instance() -> disconnect();
+    initiateOdButton();
+}
 
 QToolButton * ToolBars::initiateEchonestButton() {
     QToolButton * echoToolButton = new QToolButton((QWidget *)parent());
@@ -487,7 +491,7 @@ QToolButton * ToolBars::initiateOdButton() {
         odToolButton -> setPopupMode(QToolButton::InstantPopup);
 
         QMenu * odMenu = new QMenu(odToolButton);
-        odMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
+        odMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectOd()));
 //        vkMenu -> addAction(QStringLiteral("Reconect"), parent(), SLOT(openSoundcloudTabDialog()));
         odMenu -> addAction(QStringLiteral("Open your tab"), parent(), SLOT(openOdTabDialog()));
 //        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), parent(), SLOT(showSoundcloudRelTabDialog()));

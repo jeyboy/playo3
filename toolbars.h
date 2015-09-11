@@ -65,6 +65,7 @@ namespace Playo3 {
 
         void disconnectVk();
         void disconnectSoundcloud();
+        void disconnectOd();
 
         QToolButton * initiateEchonestButton();
         QToolButton * initiateVkButton();

@@ -57,7 +57,7 @@ namespace Soundcloud {
         object.insert(Soundcloud::audio_list_key, userAudio(uid));
         object.insert(Soundcloud::playlist_key, userPlaylists(uid));
         QThread::msleep(REQUEST_DELAY);
-        object.insert(Soundcloud::followings_key, userFollowings(uid));
+        object.insert(Soundcloud::followings_key, userFollowings(uid)); // return bad request error
         object.insert(Soundcloud::followers_key, userFollowers(uid));
         QThread::msleep(REQUEST_DELAY);
         object.insert(Soundcloud::groups_key, userGroups(uid));
