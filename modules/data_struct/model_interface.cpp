@@ -12,7 +12,7 @@ bool IModel::restoreUrl(IItem * itm) {
         break;}
 
         case OD_ITEM: {
-            newUrl = Od::Api::instance() -> refresh(itm -> toUid().toString());
+            newUrl = Od::Api::instance() -> refresh(itm -> refresh_path());
         break;}
 
         case WEB_ITEM: {
@@ -467,7 +467,8 @@ int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(Soundcloud::id_key).toInt());
+            QVariant v = itm.value(QStringLiteral("id"));
+            id = QString::number(v.toInt());
             if (ignoreListContainUid(id)) continue;
 
             items = store.values(id);

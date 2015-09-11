@@ -32,8 +32,12 @@ namespace Od {
 
     public slots:
         bool connection(bool onlyAuto = false) {
-            bool res = hashConnection(onlyAuto);
-            if (res) emit authorized();
+            bool res = !onlyAuto || (onlyAuto && !token().isEmpty());
+
+            if (res) {
+                res |= hashConnection(onlyAuto);
+                if (res) emit authorized();
+            }
             return res;
 
 //            setParams(grabSID(), userID(), QString());
