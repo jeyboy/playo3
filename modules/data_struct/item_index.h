@@ -9,6 +9,8 @@
 #include "web/vk/vk_folder.h"
 #include "web/soundcloud/soundcloud_item.h"
 #include "web/soundcloud/soundcloud_folder.h"
+#include "web/od/od_item.h"
+#include "web/od/od_folder.h"
 
 #endif // ITEM_INDEX
 

@@ -5,12 +5,14 @@ using namespace Playo3;
 /////////////////////////////////////////////////////////////
 
 void OdModel::refresh(bool retryPlaing) {
-//    emit moveInProcess();
-//    QApplication::processEvents();
-//    Od::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    emit moveInProcess();
+    QApplication::processEvents();
+    Od::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {
+    qDebug() << "OD HASH";
+    qDebug() << hash;
 //    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
 //    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
 //    int itemsAmount = 0, albums_count = Soundcloud::Api::extractCount(albums), audios_count = Soundcloud::Api::extractCount(audios);
@@ -114,6 +116,6 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 }
 
 void OdModel::proceedAudioListAndRetry(QJsonObject & hash) {
-//    proceedAudioList(hash);
-//    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+    proceedAudioList(hash);
+    Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }

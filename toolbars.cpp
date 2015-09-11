@@ -489,7 +489,7 @@ QToolButton * ToolBars::initiateOdButton() {
         QMenu * odMenu = new QMenu(odToolButton);
         odMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
 //        vkMenu -> addAction(QStringLiteral("Reconect"), parent(), SLOT(openSoundcloudTabDialog()));
-//        vkMenu -> addAction(QStringLiteral("Open your tab"), parent(), SLOT(showSoundcloudTabDialog()));
+        odMenu -> addAction(QStringLiteral("Open your tab"), parent(), SLOT(openOdTabDialog()));
 //        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), parent(), SLOT(showSoundcloudRelTabDialog()));
         odToolButton -> setMenu(odMenu);
     } else {

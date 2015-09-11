@@ -72,14 +72,14 @@ namespace Od {
         inline QUrl albumAudiosUrl() { return audioUrl(QStringLiteral("album")); } // params : (albumId: album id)
         inline QUrl artistAudiosUrl() { return audioUrl(QStringLiteral("artist")); } // params : (artistId: artist id)
 
-        inline QUrl myAudioUrl() { return audioUrl(QStringLiteral("my")); } // params: (uid: sets for friend request) and pagination attrs
+        inline QUrl myAudioUrl(const QString & uid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("uid=") % uid)); } // params: (uid: sets for friend request) and pagination attrs
         inline QUrl collectionsAudioUrl() { return audioUrl(QStringLiteral("collections")); } // params: (collectionId: not used for index of collections) and pagination attrs
         inline QUrl downloadedAudioUrl() { return audioUrl(QStringLiteral("downloaded")); } // params : pagination attrs
         inline QUrl isDownloadedAudioUrl() { return audioUrl(QStringLiteral("isDownloaded")); } // params : (tid: track id)
         inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
         inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
         inline QUrl popAudioUrl() { return audioUrl(QStringLiteral("pop")); } // (locale: 'ru') and pagination attrs
-//        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma (need to check)) ? // maybe this is info request per ids for items
+        inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
 //        inline QUrl formaddplUrl() { return audioUrl(QStringLiteral("formaddpl")); } // params: (tid: track id) // used for adding new item to playlist
 
         // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
@@ -101,6 +101,13 @@ namespace Od {
 //        inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, QStringLiteral("order"), hottest ? QStringLiteral("hotness") : QStringLiteral("created_at")); }
     public:
         inline virtual ~RequestApi() {}
+
+        QJsonObject userInfo(QString & uid) {
+            if (uid.isEmpty())
+                return WebManager::manager() -> getJson(initAudioUrl());
+            else
+                return WebManager::manager() -> getJson(myAudioUrl(uid));
+        }
 
         inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
             QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
@@ -191,55 +198,6 @@ namespace Od {
 //        /////////////////
 //        /// API
 //        ////////////////
-//        QUrl audioSearchUrl(QString & predicate, QString & genre, bool hottest = false) {
-//            QUrlQuery query = genDefaultParams();
-//            setAudioTypesParam(query);
-//            setOrder(query, hottest);
-
-//            if (!genre.isEmpty())
-//                setGenreLimitation(query, genre);
-
-//            if (!predicate.isEmpty())
-//                setSearchPredicate(query, predicate);
-
-//            return baseUrl(QStringLiteral("tracks"), query);
-//        }
-
-//        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
-//            return lQuery(
-//                audioSearchUrl(predicate, genre, limitations.by_popularity()),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(limitations.count, SOUNDCLOUD_OFFSET_LIMIT)),
-//                wrap
-//            );
-//        }
-
-
-//        QUrl groupAudioUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            setAudioTypesParam(query);
-//            return baseUrl("groups/" % uid % "/tracks", query);
-//        }
-//        QJsonArray groupAudio(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//        //    group_id = "101";
-//            return lQuery(
-//                groupAudioUrl(group_id),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
-
-//        QUrl groupPlaylistsUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("groups/" % uid % "/playlists", query);
-//        }
-//        QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//        //    group_id = "101";
-//            return lQuery(
-//                groupPlaylistsUrl(group_id),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
 
 //        QUrl audioInfoUrl(QString & audio_uid) {
 //            QUrlQuery query = genDefaultParams();
@@ -258,64 +216,6 @@ namespace Od {
 //        QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(QStringLiteral("response")).toArray(); }
 
 
-//        QUrl userAudioUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("users/" % uid % "/tracks", query);
-//        }
-//        QJsonArray userAudio(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//            return lQuery(
-//                userAudioUrl(uid),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
-
-//        QUrl userPlaylistsUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("users/" % uid % "/playlists", query);
-//        }
-//        QJsonArray userPlaylists(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//            return lQuery(
-//                userPlaylistsUrl(uid),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
-
-//        QUrl userFollowingsUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("users/" % uid % "/followings", query);
-//        }
-//        QJsonArray userFollowings(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//            return lQuery(
-//                userFollowingsUrl(uid),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
-
-//        QUrl userFollowersUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("users/" % uid % "/followers", query);
-//        }
-//        QJsonArray userFollowers(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//            return lQuery(
-//                userFollowersUrl(uid),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
-
-
-//        QUrl userGroupsUrl(QString & uid) {
-//            QUrlQuery query = genDefaultParams();
-//            return baseUrl("users/" % uid % "/groups", query);
-//        }
-//        QJsonArray userGroups(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
-//            return lQuery(
-//                userGroupsUrl(uid),
-//                QueryRules(QStringLiteral("response"), requestLimit(), qMin(count, SOUNDCLOUD_OFFSET_LIMIT))
-//            );
-//        }
 
     //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
     //        QJsonObject obj = Web::replyToJson(reply, true);

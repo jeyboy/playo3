@@ -62,6 +62,13 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
                 case SOUNDCLOUD_PLAYLIST: {
                     new SoundcloudFolder(&iterObj, this);
                 break;}
+                case OD_ITEM: {
+                    new OdItem(&iterObj, this);
+                break;}
+                case OD_PLAYLIST: {
+                    new OdFolder(&iterObj, this);
+                break;}
+
                 // case CUE_ITEM: {
                 // new CueItem(&iter_obj, this); // ?
                 // break;}

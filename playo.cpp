@@ -313,7 +313,7 @@ void Playo::showEchonestDialog() {
 }
 
 void Playo::openOdTabDialog() {
-    if (Od::Api::instance() -> connection()) {
+    if (Od::Api::instance() -> isConnected() || Od::Api::instance() -> connection()) {
         ViewSettings settings(od, false, false, false, true, Od::Api::instance() -> userID());
         Dockbars::instance() -> createDocBar(QStringLiteral("OD [YOU]"), settings, 0, true, true);
     }
