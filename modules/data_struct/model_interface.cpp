@@ -11,6 +11,10 @@ bool IModel::restoreUrl(IItem * itm) {
             newUrl = Vk::Api::instance() -> refresh(itm -> toUid().toString()).section('?', 0, 0);
         break;}
 
+        case OD_ITEM: {
+            newUrl = Od::Api::instance() -> refresh(itm -> toUid().toString());
+        break;}
+
         case WEB_ITEM: {
             switch(itm -> subtipe()) {
 //                case Playo3::fourshared_site: {
@@ -431,6 +435,63 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
 
                 for(; it_it != items.end(); it_it++)
                     (*it_it) -> setPath(uri);
+            }
+        }
+    }
+
+    return itemsAmount;
+}
+
+int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
+    // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
+
+    int itemsAmount = 0;
+    QJsonObject itm;
+    OdItem * newItem;
+    QString id;
+    QList<IItem *> items;
+
+    if (!collection.at(0).isArray()) {
+        QJsonArray ar;
+        ar.append(collection);
+        collection = ar;
+    }
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
+    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        QJsonArray part = (*parts_it).toArray();
+        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+            itm = (*it).toObject();
+
+            if (itm.isEmpty()) continue;
+
+            id = QString::number(itm.value(Soundcloud::id_key).toInt());
+            if (ignoreListContainUid(id)) continue;
+
+            items = store.values(id);
+
+            if (items.isEmpty()) {
+                itemsAmount++;
+                newItem = new OdItem(
+                    id,
+                    QString(),
+                    itm.value(QStringLiteral("ensemble")).toString() % QStringLiteral(" - ") % itm.value(QStringLiteral("name")).toString(),
+                    parent
+                );
+
+                newItem -> setRefreshPath(id);
+
+                newItem -> setExtension(QStringLiteral("mp3"));
+                newItem -> setDuration(Duration::fromSeconds(itm.value(QStringLiteral("duration")).toInt(0)));
+                newItem -> setSize(itm.value(QStringLiteral("size")).toInt(0));
+
+            } else {
+                QList<IItem *>::Iterator it_it = items.begin();
+
+                for(; it_it != items.end(); it_it++)
+                    (*it_it) -> setRefreshPath(id);
             }
         }
     }

@@ -52,6 +52,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(VK_ITEM + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
     icons.insert(SOUNDCLOUD_ITEM,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
     icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
+    icons.insert(OD_ITEM,                                               PIXMAP(QStringLiteral(":/items/od_item"), size));
+    icons.insert(OD_ITEM + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/od_item_on"), size));
     icons.insert(WEB_ITEM,                                              PIXMAP(QStringLiteral(":/items/web_item"), size));
     icons.insert(WEB_ITEM + SELECTION_ITER,                             PIXMAP(QStringLiteral(":/items/web_item_on"), size));
     icons.insert(ITEM,                                                  PIXMAP(QStringLiteral(":/items/local_item"), size));

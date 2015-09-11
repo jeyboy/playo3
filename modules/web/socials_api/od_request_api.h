@@ -111,7 +111,7 @@ namespace Od {
 
         inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
             QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
-            qDebug() << "OD PLAY" << obj;
+            qDebug() << "OD PLAY" << refresh_page << obj;
             return obj.value(QStringLiteral("play")).toString();
         }
 

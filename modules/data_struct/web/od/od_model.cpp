@@ -11,13 +11,15 @@ void OdModel::refresh(bool retryPlaing) {
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {
-    qDebug() << "OD HASH";
-    qDebug() << hash;
+    //{"albums":[{"ensemble":"","id":82297694950393,"name":"Другие песни"}],"artists":[{"id":82297693897464,"name":"Kaka 47"}],"chunk":{"count":10},"friends":[{"fullName":"Юрий Бойко","gender":1,"id":"511343312018","name":"Юрий","surname":"Бойко"}],"totalTracks":1,"tracks":[{"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}]}
+
+    QJsonArray audios = hash.value(QStringLiteral("tracks")).toArray();
+
 //    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
 //    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
-//    int itemsAmount = 0, albums_count = Soundcloud::Api::extractCount(albums), audios_count = Soundcloud::Api::extractCount(audios);
+    int itemsAmount = 0, albums_count = 0/*Soundcloud::Api::extractCount(albums)*/, audios_count = audios.size();//Soundcloud::Api::extractCount(audios);
 
-//    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
 //    {
 //        if (albums_count > 0) {
 //            SoundcloudFolder * folder;
@@ -45,11 +47,11 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
 //    /////////////////////////////////////////////////////////////////////
 
-//        if (audios_count > 0)
-//            itemsAmount += proceedScList(audios, rootItem);
+        if (audios.size() > 0)
+            itemsAmount += proceedOdList(audios, rootItem);
 //    }
-//    rootItem -> updateItemsCountInBranch(itemsAmount);
-//    endInsertRows();
+    rootItem -> updateItemsCountInBranch(itemsAmount);
+    endInsertRows();
 //    /////////////////////////////////////////////////////////////////////
 
 //    {
@@ -112,7 +114,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 //        }
 //    }
 
-//    emit moveOutProcess();
+    emit moveOutProcess();
 }
 
 void OdModel::proceedAudioListAndRetry(QJsonObject & hash) {
