@@ -467,8 +467,7 @@ int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
 
             if (itm.isEmpty()) continue;
 
-            QVariant v = itm.value(QStringLiteral("id"));
-            id = QString::number(v.toInt());
+            id = QString::number(((qint64)itm.value(QStringLiteral("id")).toDouble()));
             if (ignoreListContainUid(id)) continue;
 
             items = store.values(id);

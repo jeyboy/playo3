@@ -1,6 +1,8 @@
 #ifndef OD_REQUEST_API
 #define OD_REQUEST_API
 
+#include <qcryptographichash.h>
+
 #include "../iapi.h"
 #include "../web_api.h"
 #include "misc/web_utils/html_parser.h"
@@ -10,6 +12,7 @@
 
 namespace Od {
     class RequestApi : public WebApi, public IApi {
+        int magic [33] = { 4, 3, 5, 6, 1, 2, 8, 7, 2, 9, 3, 5, 7, 1, 4, 8, 8, 3, 4, 3, 1, 7, 3, 5, 9, 8, 1, 4, 3, 7, 2, 8 };
     protected:
         QString hash_key;
         QString authE, authP;
@@ -99,7 +102,30 @@ namespace Od {
 //        inline void setIdsFilter(QUrlQuery & query, QStringList & uids) { setParam(query, QStringLiteral("ids"), uids.join(",")); }
 //        inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, QStringLiteral("genres"), genre); }
 //        inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, QStringLiteral("order"), hottest ? QStringLiteral("hotness") : QStringLiteral("created_at")); }
+
     public:
+        QString calcMagicNumber(const QString & md5) {
+            QCryptographicHash hash(QCryptographicHash::Md5);
+            hash.addData((md5 % QStringLiteral("secret")).toLatin1());
+            QByteArray src = md5.toLatin1();//hash.result().toHex().toLower();
+
+            QList<int> newSrc; newSrc.reserve(src.size() + 1);
+            for(QByteArray::Iterator chr = src.begin(); chr != src.end(); chr++)
+                newSrc << ((*chr) - ((*chr) < 58 ? 48 : 87));
+
+            int sum = 0;
+            for(QList<int>::Iterator num = newSrc.begin(); num != newSrc.end(); num++)
+                sum += (*num);
+
+            newSrc << newSrc.last();
+
+            QString res;
+            for (int x = 0; x < 32; x++)
+                res.append(QString::number(qAbs(sum - newSrc[x + 1] * newSrc[x] * magic[x])));
+
+            return res;
+        }
+
         inline virtual ~RequestApi() {}
 
         QJsonObject userInfo(QString & uid) {
@@ -111,8 +137,14 @@ namespace Od {
 
         inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
             QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
-            qDebug() << "OD PLAY" << refresh_page << obj;
-            return obj.value(QStringLiteral("play")).toString();
+            QUrl url(obj.value(QStringLiteral("play")).toString());
+            QUrlQuery query = QUrlQuery(url.query());
+            query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
+            url.setQuery(query);
+
+            qDebug() << "OD" << url;
+
+            return url.toString();
         }
 
         inline QString grabUserId(Html::Document & doc) { // this did not used anywhere at this time
