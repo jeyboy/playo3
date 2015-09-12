@@ -7,7 +7,7 @@ using namespace Playo3;
 void OdModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
-    Od::Api::instance() -> objectInfo(tab_uid == Od::Api::instance() -> userID() ? QString() : tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Od::Api::instance() -> objectInfo((tab_uid == Od::Api::instance() -> userID() ? QString() : tab_uid), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {
@@ -39,7 +39,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
                 int items_amount = playlist.value(QStringLiteral("count")).toInt();
                 if (items_amount > 0) {
-                    QString pid = playlist.value(QStringLiteral("id")).toString();
+                    QString pid = QString::number((qint64)playlist.value(QStringLiteral("id")).toDouble());
 
                     folder = rootItem -> createFolder<OdFolder>(
                         pid,
@@ -50,6 +50,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
                     QJsonArray tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
 
+                    Od::Api::extractCount(tracks);
                     int folderItemsAmount = proceedOdList(tracks, folder);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;

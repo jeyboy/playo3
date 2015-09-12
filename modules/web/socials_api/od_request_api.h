@@ -89,7 +89,7 @@ namespace Od {
 
         inline QUrl initAudioUrl() { return audioUrl(QStringLiteral("init")); }
         inline QUrl myAudioUrl(const QString & uid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("uid=") % uid)); } // params: (uid: sets for friend request) and pagination attrs
-        QJsonObject userInfo(QString & uid) {
+        QJsonObject userInfo(const QString & uid) {
             if (uid.isEmpty()) {
                 qDebug() << initAudioUrl();
                 return WebManager::manager() -> getJson(initAudioUrl());

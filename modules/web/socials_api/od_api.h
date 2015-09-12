@@ -24,7 +24,7 @@ namespace Od {
 
         inline bool isConnected() { return !token().isEmpty(); }
 
-        void objectInfo(QString & uid, Func func) {
+        void objectInfo(const QString & uid, Func func) {
             registerAsync(
                 QtConcurrent::run((RequestApi *)this, &RequestApi::userInfo, uid), func
             );
