@@ -346,7 +346,8 @@ HEADERS  += playo.h \
     modules/data_struct/web/od/od_folder.h \
     modules/data_struct/web/od/od_item.h \
     modules/data_struct/web/od/od_model.h \
-    modules/data_struct/web/od/od_view.h
+    modules/data_struct/web/od/od_view.h \
+    modules/web/socials_api/od_api_misc.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

@@ -7,7 +7,7 @@ using namespace Playo3;
 void OdModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
-    Od::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Od::Api::instance() -> objectInfo(tab_uid == Od::Api::instance() -> userID() ? QString() : tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {
@@ -15,35 +15,60 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
     QJsonArray audios = hash.value(QStringLiteral("tracks")).toArray();
 
+    if (audios.isEmpty()) {
+        int totalTracks = hash.value(QStringLiteral("totalTracks")).toInt();
+        if (totalTracks > 0) {
+            audios = Od::Api::instance() -> userInfo(QString::number((qint64)hash.value(QStringLiteral("me")).toDouble())).value(QStringLiteral("tracks")).toArray();
+        }
+    }
+
+    QJsonArray playlists = hash.value(QStringLiteral("playlists")).toArray();
+
 //    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
 //    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
-    int itemsAmount = 0, albums_count = 0/*Soundcloud::Api::extractCount(albums)*/, audios_count = audios.size();//Soundcloud::Api::extractCount(audios);
+    int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size()/*Soundcloud::Api::extractCount(albums)*/, audios_count = audios.size();//Soundcloud::Api::extractCount(audios);
 
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
-//    {
-//        if (albums_count > 0) {
-//            SoundcloudFolder * folder;
-//            QJsonObject album;
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count + playlists_count); // refresh all indexes // maybe this its not good idea
 
-//            for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
-//                QJsonArray part_arr = (*album_part).toArray();
-//                for(QJsonArray::Iterator it = part_arr.begin(); it != part_arr.end(); it++) {
-//                    album = (*it).toObject();
+        if (playlists_count > 0) {
+            OdFolder * folder;
+            QJsonObject playlist;
 
-//                    QJsonArray albumItems = album.value(Soundcloud::tracks_key).toArray();
-//                    if (albumItems.size() > 0) {
-//                        folder = rootItem -> createFolder<SoundcloudFolder>(
-//                            album.value(Soundcloud::id_key).toString(),
-//                            album.value(Soundcloud::title_key).toString()
-//                        );
+            for(QJsonArray::Iterator it = playlists.begin(); it != playlists.end(); it++) {
+                playlist = (*it).toObject();
 
-//                        int folderItemsAmount = proceedScList(albumItems, folder);
-//                        folder -> updateItemsCountInBranch(folderItemsAmount);
-//                        itemsAmount += folderItemsAmount;
-//                    }
+                int items_amount = playlist.value(QStringLiteral("count")).toInt();
+                if (items_amount > 0) {
+                    QString pid = playlist.value(QStringLiteral("id")).toString();
+
+                    folder = rootItem -> createFolder<OdFolder>(
+                        pid,
+                        playlist.value(QStringLiteral("name")).toString()
+                    );
+
+                    folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
+
+                    QJsonArray tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
+
+                    int folderItemsAmount = proceedOdList(tracks, folder);
+                    folder -> updateItemsCountInBranch(folderItemsAmount);
+                    itemsAmount += folderItemsAmount;
+                }
+
+
+//                QJsonArray albumItems = album.value(Soundcloud::tracks_key).toArray();
+//                if (albumItems.size() > 0) {
+//                    folder = rootItem -> createFolder<SoundcloudFolder>(
+//                        album.value(Soundcloud::id_key).toString(),
+//                        album.value(Soundcloud::title_key).toString()
+//                    );
+
+//                    int folderItemsAmount = proceedScList(albumItems, folder);
+//                    folder -> updateItemsCountInBranch(folderItemsAmount);
+//                    itemsAmount += folderItemsAmount;
 //                }
-//            }
-//        }
+            }
+        }
 
 //    /////////////////////////////////////////////////////////////////////
 
@@ -74,45 +99,18 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 //    QJsonObject frend;
 //    QString name;
 
-//    {
-//        QJsonArray friends = hash.value(Soundcloud::followings_key).toArray();
+    {
+        QJsonArray friends = hash.value(QStringLiteral("friends")).toArray();
 
-//        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-//            QJsonArray friend_part = (*friend_it).toArray();
-//            for(QJsonArray::Iterator it = friend_part.begin(); it != friend_part.end(); it++) {
-//                frend = (*it).toObject();
+        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
+            QJsonObject frend = (*friend_it).toObject();
 
-//                name = frend.value(Soundcloud::full_name_key).toString();
-//                if (name.isEmpty())
-//                    name = frend.value(Soundcloud::username_key).toString();
-
-//                Soundcloud::Api::instance() -> addFriend(
-//                    QString::number(frend.value(Soundcloud::id_key).toInt()),
-//                    name
-//                );
-//            }
-//        }
-//    }
-
-//    {
-//        QJsonArray friends = hash.value(Soundcloud::followers_key).toArray();
-
-//        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-//            QJsonArray friend_part = (*friend_it).toArray();
-//            for(QJsonArray::Iterator it = friend_part.begin(); it != friend_part.end(); it++) {
-//                frend = (*it).toObject();
-
-//                name = frend.value(Soundcloud::full_name_key).toString();
-//                if (name.isEmpty())
-//                    name = frend.value(Soundcloud::username_key).toString();
-
-//                Soundcloud::Api::instance() -> addFriend(
-//                    QString::number(frend.value(Soundcloud::id_key).toInt()),
-//                    name
-//                );
-//            }
-//        }
-//    }
+            Od::Api::instance() -> addFriend(
+                frend.value(QStringLiteral("id")).toString(),
+                frend.value(QStringLiteral("fullName")).toString()
+            );
+        }
+    }
 
     emit moveOutProcess();
 }

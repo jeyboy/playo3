@@ -444,6 +444,7 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
 
 int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
+    qDebug() << "COL" << collection;
 
     int itemsAmount = 0;
     QJsonObject itm;
