@@ -107,7 +107,7 @@ namespace Od {
         QString calcMagicNumber(const QString & md5) {
             QCryptographicHash hash(QCryptographicHash::Md5);
             hash.addData((md5 % QStringLiteral("secret")).toLatin1());
-            QByteArray src = md5.toLatin1();//hash.result().toHex().toLower();
+            QByteArray src = hash.result().toHex().toLower();
 
             QList<int> newSrc; newSrc.reserve(src.size() + 1);
             for(QByteArray::Iterator chr = src.begin(); chr != src.end(); chr++)
@@ -141,9 +141,6 @@ namespace Od {
             QUrlQuery query = QUrlQuery(url.query());
             query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
             url.setQuery(query);
-
-            qDebug() << "OD" << url;
-
             return url.toString();
         }
 
