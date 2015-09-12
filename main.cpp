@@ -6,8 +6,8 @@
 
 int main(int argc, char * argv[]) {
     qRegisterMetaType<QVector <int> >("QVector<int>");
-//    qRegisterMetaType<QTextBlock>("QTextBlock");
-//    qRegisterMetaType<QTextCursor>("QTextCursor");
+    qRegisterMetaType<QTextBlock>("QTextBlock");
+    qRegisterMetaType<QTextCursor>("QTextCursor");
 
     qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 

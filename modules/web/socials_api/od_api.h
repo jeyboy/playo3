@@ -99,7 +99,7 @@ namespace Od {
         inline int requestLimit() const { return 100; }
 
         inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-        inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("response")).toArray().isEmpty(); }
+        inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(QStringLiteral("response")).toArray().isEmpty();*/ }
         inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
 //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
 //            message = stat_obj.value(QStringLiteral("error_message")).toString();
