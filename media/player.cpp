@@ -84,10 +84,8 @@ bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
     bool retVal = true;
     switch(state()) {
         case StoppedState: {
-            if (isTryingToOpenMedia()) {
-                qDebug() << "PIZA";
+            if (isTryingToOpenMedia())
                 endProccessing();
-            }
         break; }
 
         case PausedState:
@@ -111,6 +109,8 @@ bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
             play();
         else onStateChanged(PausedState);
 
+
+        // this block is not worked noe because playing is not started at this point yet
         if (isPlayed()) {
             updateItemState(true);
         } else {
