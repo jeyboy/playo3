@@ -102,19 +102,23 @@ void Base::setMedia(const QUrl & mediaPath, uint start_pos, int media_duration) 
 /// PRIVATE
 ////////////////////////////////////////////////////////////////////////
 
-int Base::openChannel(const QUrl & url) {
+int Base::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
+    int new_chan;
+
     if (url.isLocalFile()) {
         size = 0;
         prevDownloadPos = 1;
-        chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
+        new_chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
     } else {
         size = -1;
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
+        new_chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
 
-    qDebug() << "POST IN" << chan;
-    return chan;
+    if (watcher -> isCanceled())
+        BASS_StreamFree(new_chan);
+
+    return new_chan;
 }
 
 void Base::closeChannel() {
@@ -139,14 +143,12 @@ void Base::play() {
         else {
             startProccessing();
 
-            if (openChannelWatcher) {
+            if (openChannelWatcher)
                 openChannelWatcher -> cancel();
-                openChannelWatcher -> deleteLater();
-            }
 
             openChannelWatcher = new QFutureWatcher<int>();
             connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(postProccessing()));
-            openChannelWatcher -> setFuture(QtConcurrent::run(this, &Base::openChannel, mediaUri));
+            openChannelWatcher -> setFuture(QtConcurrent::run(this, &Base::openChannel, mediaUri, openChannelWatcher));
         }
     }
 }
@@ -196,15 +198,18 @@ void Base::stopTimers(bool paused) {
 }
 
 void Base::postProccessing() {
-    qDebug() << "POST" << chan;
-    chan = openChannelWatcher -> result();
-    if (openChannelWatcher -> isCanceled())
-        BASS_StreamFree(chan);
-    else {
+    emit mediaStatusChanged(LoadedMedia);
+    QFutureWatcher<int> * watcher = (QFutureWatcher<int> *)sender();
+
+    if (!watcher -> isCanceled()) {
+        chan = watcher -> result();
         if (chan) aroundProccessing();
         else proceedErrorState();
     }
-    openChannelWatcher = 0;
+
+    watcher -> deleteLater();
+    if (watcher == openChannelWatcher)
+        openChannelWatcher = 0;
 }
 
 void Base::aroundProccessing() {
@@ -218,8 +223,6 @@ void Base::aroundProccessing() {
         channelsCount = 2;
 
     if (useEQ) registerEQ();
-
-    emit mediaStatusChanged(LoadedMedia);
 
     startTimers();
     BASS_ChannelPlay(chan, true);

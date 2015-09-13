@@ -83,7 +83,12 @@ void Player::eject(bool updateState) {
 bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
     bool retVal = true;
     switch(state()) {
-        case StoppedState: { break; }
+        case StoppedState: {
+            if (isTryingToOpenMedia()) {
+                qDebug() << "PIZA";
+                endProccessing();
+            }
+        break; }
 
         case PausedState:
         case PlayingState: {

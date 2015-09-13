@@ -33,14 +33,14 @@ namespace AudioPlayer {
     class Base : public Panel {
         Q_OBJECT
 
-        int openChannel(const QUrl & url);
+        int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
         void closeChannel();
     public:
         explicit Base(QObject * parent = 0);
         virtual ~Base();
 
         void setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1);
-
+        inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
     signals:
         void playbackEnded();
         void downloadEnded();
