@@ -5,6 +5,9 @@
 #include <qurl.h>
 #include <qdir.h>
 
+#include <QtConcurrent/qtconcurrentrun.h>
+#include <qfuturewatcher.h>
+
 #include "math.h"
 
 #include "bass.h"
@@ -48,6 +51,8 @@ namespace AudioPlayer {
         void resume();
         void stop();
         void endOfPlayback();
+    private slots:
+        void postProccessing();
 
     protected:
         inline unsigned long chId() const { return chan; }
@@ -69,6 +74,7 @@ namespace AudioPlayer {
         void aroundProccessing();
     private:
         unsigned long chan;
+        QFutureWatcher<int> * openChannelWatcher;
     };
 }
 

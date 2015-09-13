@@ -62,7 +62,7 @@ void Base::init() {
     //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
 }
 
-Base::Base(QObject * parent) : Panel(parent) {
+Base::Base(QObject * parent) : Panel(parent), openChannelWatcher(0) {
     init();
 
     // cheat for cross treadhing
@@ -77,6 +77,10 @@ Base::Base(QObject * parent) : Panel(parent) {
 }
 
 Base::~Base() {
+    if (openChannelWatcher)
+        openChannelWatcher -> cancel();
+    delete openChannelWatcher;
+
     stopTimers();
     BASS_PluginFree(0);
     BASS_Free();
@@ -109,6 +113,7 @@ int Base::openChannel(const QUrl & url) {
         chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
 
+    qDebug() << "POST IN" << chan;
     return chan;
 }
 
@@ -133,10 +138,15 @@ void Base::play() {
             emit mediaStatusChanged(NoMedia);
         else {
             startProccessing();
-            openChannel(mediaUri);
 
-            if (chan) aroundProccessing();
-            else proceedErrorState();
+            if (openChannelWatcher) {
+                openChannelWatcher -> cancel();
+                openChannelWatcher -> deleteLater();
+            }
+
+            openChannelWatcher = new QFutureWatcher<int>();
+            connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(postProccessing()));
+            openChannelWatcher -> setFuture(QtConcurrent::run(this, &Base::openChannel, mediaUri));
         }
     }
 }
@@ -183,6 +193,18 @@ void Base::stopTimers(bool paused) {
         emit stateChanged(currentState = PausedState);
     else
         emit stateChanged(currentState = StoppedState);
+}
+
+void Base::postProccessing() {
+    qDebug() << "POST" << chan;
+    chan = openChannelWatcher -> result();
+    if (openChannelWatcher -> isCanceled())
+        BASS_StreamFree(chan);
+    else {
+        if (chan) aroundProccessing();
+        else proceedErrorState();
+    }
+    openChannelWatcher = 0;
 }
 
 void Base::aroundProccessing() {

@@ -80,7 +80,7 @@ void Player::eject(bool updateState) {
     playIndex(QModelIndex());
 }
 
-bool Player::playIndex(QModelIndex item, bool paused, uint start, int duration) {
+bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
     bool retVal = true;
     switch(state()) {
         case StoppedState: { break; }

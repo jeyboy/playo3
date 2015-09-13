@@ -31,7 +31,7 @@ public:
     inline static void close() { delete self; }
 
     void eject(bool updateState = true);
-    bool playIndex(QModelIndex item, bool paused = false, uint start = 0, int duration = -1);
+    bool playIndex(const QModelIndex & item, bool paused = false, uint start = 0, int duration = -1);
 
     void setPlayButton(QAction * playAction);
     void setPauseButton(QAction * pauseAction);

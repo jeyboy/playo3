@@ -4,7 +4,7 @@
 #include <qmimedata.h>
 #include <qclipboard.h>
 #include <QtConcurrent/QtConcurrent>
-#include <QFutureWatcher>
+#include <qfuturewatcher.h>
 #include <qdesktopservices.h>
 
 #include "modules/web/web_apis.h"
