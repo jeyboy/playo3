@@ -4,6 +4,7 @@
 #include "od_api_misc.h"
 
 #define OD_OFFSET_LIMIT 2000
+#define OD_SEARCH_LIMIT 200
 
 namespace Od {
     class RequestApi : public Misc {
@@ -40,9 +41,10 @@ namespace Od {
         inline QUrl addToPlaylistsUrl() { return audioUrl(QStringLiteral("like")); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
         inline QUrl removeFromPlaylistsUrl() { return audioUrl(QStringLiteral("dislike")); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
 
-        inline QUrl searchUrl() { return audioUrl(QStringLiteral("relevant")); } // params : (q: predicate) and pagination attrs
-        inline QUrl searchTracksUrl() { return audioUrl(QStringLiteral("tracks")); } // params : (q: predicate) and pagination attrs
-        inline QUrl searchAlbumsUrl() { return audioUrl(QStringLiteral("albums")); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchUrl(const QString & predicate) { return audioUrl(QStringLiteral("relevant"), QUrlQuery(QStringLiteral("q=%1").arg(predicate))); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchTracksUrl(const QString & predicate) { return audioUrl(QStringLiteral("tracks"), QUrlQuery(QStringLiteral("q=%1").arg(predicate))); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchAlbumsUrl(const QString & predicate) { return audioUrl(QStringLiteral("albums"), QUrlQuery(QStringLiteral("q=%1").arg(predicate))); } // params : (q: predicate) and pagination attrs
+        inline QUrl searchArtistsUrl(const QString & predicate) { return audioUrl(QStringLiteral("artists"), QUrlQuery(QStringLiteral("q=%1").arg(predicate))); } // params : (q: predicate) and pagination attrs
 
         inline QUrl albumAudiosUrl() { return audioUrl(QStringLiteral("album")); } // params : (albumId: album id)
         inline QUrl artistAudiosUrl() { return audioUrl(QStringLiteral("artist")); } // params : (artistId: artist id)
@@ -53,6 +55,8 @@ namespace Od {
         inline QUrl isDownloadedAudioUrl() { return audioUrl(QStringLiteral("isDownloaded")); } // params : (tid: track id)
         inline QUrl listenedAudioUrl() { return audioUrl(QStringLiteral("history")); } // params : pagination attrs
         inline QUrl popularAudioUrl() { return audioUrl(QStringLiteral("popTracks")); }
+
+        // artists // tracks // tuners // collections // albums
         inline QUrl popAudioUrl() { return audioUrl(QStringLiteral("pop")); } // (locale: 'ru') and pagination attrs
         inline QUrl customAudioUrl() { return audioUrl(QStringLiteral("custom")); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
 //        inline QUrl formaddplUrl() { return audioUrl(QStringLiteral("formaddpl")); } // params: (tid: track id) // used for adding new item to playlist
@@ -64,22 +68,24 @@ namespace Od {
         inline QUrl tunersUrl() { return audioUrl(QStringLiteral("myTuners")); } // params: (locale: 'ru')  need to check pagination
         inline QUrl radioUrl(QString /*tuner*/) { return audioUrl(QStringLiteral("myRadio")); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
-//        inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("original,remix,live,podcast")); }
-
-//        // add to search
-//        inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("original,live")); }
-//        inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("remix")); }
-
-//        inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, QStringLiteral("q"), predicate); }
-//        inline void setIdsFilter(QUrlQuery & query, QStringList & uids) { setParam(query, QStringLiteral("ids"), uids.join(",")); }
-//        inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, QStringLiteral("genres"), genre); }
-//        inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, QStringLiteral("order"), hottest ? QStringLiteral("hotness") : QStringLiteral("created_at")); }
-
+        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+            if (predicate.isEmpty() || limitations.by_popularity())
+                return lQuery(popAudioUrl(), QueryRules(QStringLiteral("tracks"), requestLimit()));
+            else {
+                if (limitations.by_artists())
+                    return lQuery(searchArtistsUrl(predicate), QueryRules(QStringLiteral("artists"), requestLimit(), OD_SEARCH_LIMIT));
+                else if (limitations.by_songs())
+                    return lQuery(searchTracksUrl(predicate), QueryRules(QStringLiteral("tracks"), requestLimit(), OD_SEARCH_LIMIT));
+                else
+                    return lQuery(searchUrl(predicate), QueryRules(QStringLiteral("tracks"), requestLimit(), OD_SEARCH_LIMIT));
+            }
+        }
     public:
         inline virtual ~RequestApi() {}
 
         inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
             QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+            qDebug() << "REFRESH OD" << obj;
             QUrl url(obj.value(QStringLiteral("play")).toString());
             QUrlQuery query = QUrlQuery(url.query());
             query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));

@@ -51,13 +51,6 @@ namespace Vk {
             );
         }
 
-        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-            if (predicate.isEmpty() && limitations.by_popularity())
-                return audioPopular(true, genre);
-            else
-                return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
-        }
-
     public slots:
         inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
         void proceedAuthResponse(const QUrl & url);

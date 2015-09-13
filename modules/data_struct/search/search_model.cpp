@@ -123,6 +123,10 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                         if (Soundcloud::Api::extractCount(items) > 0)
                             propagate_count = proceedScList(items, parent);
                     break;}
+                    case Playo3::od_site: {
+                        if (Od::Api::extractCount(items) > 0)
+                            propagate_count = proceedOdList(items, parent);
+                    break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 

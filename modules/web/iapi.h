@@ -10,8 +10,8 @@
 #define DEFAULT_LIMIT_AMOUNT 99999
 
 struct QueryRules {
-    QueryRules(QString _field, int _limit = 5, int _count = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-        : field(_field), count(_count), offset(_offset), limit(_limit) , fact_count(0) {}
+    QueryRules(QString _field, int _limit_per_request = 5, int _total_limit = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
+        : field(_field), count(_total_limit), offset(_offset), limit(_limit_per_request) , fact_count(0) {}
 
     QString field;
     int count, offset, limit, fact_count;
@@ -45,11 +45,11 @@ protected:
 
         bool status = extractStatus(url, response, code, message);
         if (!status) {
-            Logger::instance() -> writeToStream(QStringLiteral("sQuery"), url.toString(), message, true);
+            emit Logger::instance() -> write(QStringLiteral("sQuery"), url.toString(), message, true);
             sendError(errorReceiver, message, code);
         } else {
             if (post_proc & extract) extractBody(response);
-            Logger::instance() -> writeToStream(QStringLiteral("sQuery"), url.toString(), response.keys());
+            emit Logger::instance() -> write(QStringLiteral("sQuery"), url.toString(), response.keys());
         }
         return status;
     }
@@ -63,7 +63,7 @@ protected:
         QJsonObject response;
 
         while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
-            QJsonValue val = response.value(rules.field);
+            QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
             bool invalid = val.isArray();
 
             if (invalid) {

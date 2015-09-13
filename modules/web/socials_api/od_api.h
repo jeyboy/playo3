@@ -39,12 +39,6 @@ namespace Od {
                 if (res) emit authorized();
             }
             return res;
-
-//            setParams(grabSID(), userID(), QString());
-//            qDebug() << "SID" << token();
-
-//            if (!token().isEmpty())
-//                qDebug() << "LOL" << refresh("82297702323201");
         }
         inline void disconnect() {
             WebApi::disconnect(); setParams(QString(), QString(), QString());
@@ -90,8 +84,6 @@ namespace Od {
             return !WebManager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
         }
 
-        QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
-
         inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
         inline QString offsetKey() const { return offset_key; }
@@ -99,7 +91,11 @@ namespace Od {
         inline int requestLimit() const { return 100; }
 
         inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-        inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(QStringLiteral("response")).toArray().isEmpty();*/ }
+        inline bool endReached(QJsonObject & response, int /*offset*/) {
+            QJsonObject chunk_obj = response.value(QStringLiteral("chunk")).toObject();
+            if (chunk_obj.isEmpty()) return false;
+            return chunk_obj.value(QStringLiteral("count")).toInt() < requestLimit();
+        }
         inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
 //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
 //            message = stat_obj.value(QStringLiteral("error_message")).toString();

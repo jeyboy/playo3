@@ -26,7 +26,7 @@ namespace Od {
 
         QUrlQuery query = genDefaultParams();
 
-        setParam(query, QStringLiteral("cliend_id"), QStringLiteral("1152123904"));
+        setParam(query, QStringLiteral("cliend_id"), hash_key/*QStringLiteral("1152123904")*/);
         setParam(query, QStringLiteral("response_type"), QStringLiteral("token")); // code
         setParam(query, QStringLiteral("scope"), QStringLiteral("VALUABLE_ACCESS"));
         setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));

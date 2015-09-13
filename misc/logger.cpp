@@ -9,8 +9,9 @@ Logger * Logger::instance(QObject * parent) {
 }
 
 Logger::Logger(QObject * parent) : QObject(parent), out(0), file(0), m_showDate(true)  {
-    connect(this, SIGNAL(write(QString,QString)), this, SLOT(writeToStream(QString,QString)));
-    connect(this, SIGNAL(write(QString,QString,QString)), this, SLOT(writeToStream(QString,QString,QString)));
+    connect(this, SIGNAL(write(const QString &,const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, bool)));
+    connect(this, SIGNAL(write(const QString &,const QString &, const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QString &, bool)));
+    connect(this, SIGNAL(write(const QString &,const QString &, const QStringList &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QStringList &, bool)));
 }
 
 Logger::~Logger() {
@@ -66,16 +67,15 @@ void Logger::toEditor(QString initiator, QString value) {
     }
 }
 
-void Logger::writeToStream(QString initiator, QString value) {
-    toEditor(initiator, value);
-    toFile(initiator, value);
+void Logger::writeToStream(const QString & initiator, const QString & value, bool error) {
+    writeToStream(initiator, value, QString(), error);
 }
 
-void Logger::writeToStream(QString initiator, QString value, QStringList attrs, bool error) {
+void Logger::writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, bool error) {
     writeToStream(initiator, value, attrs.join(" , "), error);
 }
 
-void Logger::writeToStream(QString initiator, QString value, QString attr, bool error) {
+void Logger::writeToStream(const QString & initiator, const QString & value, const QString & attr, bool error) {
     toFile(initiator, QString("%1   :::   %2").arg(value, attr));
     toEditor(initiator,
         QString("<span style='color: " % QString(error ? QStringLiteral("red") : QStringLiteral("green")) % "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)

@@ -46,13 +46,14 @@ private:
     static Logger * self;
 
 signals:
-    void write(QString initiator, QString value);
-    void write(QString initiator, QString value, QString attr);
+    void write(const QString & initiator, const QString & value, bool error = false);
+    void write(const QString & initiator, const QString & value, const QString & attr, bool error = false);
+    void write(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
 
-public slots:
-    void writeToStream(QString initiator, QString value);
-    void writeToStream(QString initiator, QString value, QStringList attrs, bool error = false);
-    void writeToStream(QString initiator, QString value, QString attr, bool error = false);
+private slots:
+    void writeToStream(const QString & initiator, const QString & value, bool error = false);
+    void writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
+    void writeToStream(const QString & initiator, const QString & value, const QString & attr, bool error = false);
 };
 
 #endif // LOGGER

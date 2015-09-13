@@ -42,6 +42,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
             switch(it.key()) {
                 case Playo3::vk_site:
                 case Playo3::sc_site:
+                case Playo3::od_site:
                 case Playo3::fourshared_site: {
                     ui -> sitesList -> insertItem(0, item);
                 break;}

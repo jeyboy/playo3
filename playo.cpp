@@ -333,7 +333,7 @@ void Playo::openVKTabDialog() {
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(Vk::Api::instance() -> userID()), 0, true, true);
 
-        Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
+        emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -350,7 +350,7 @@ void Playo::showVKRelTabDialog() {
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), ViewSettings::vk(dialog.getId()), 0, true, true);
 
-    Logger::instance() -> writeToStream(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
+    emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
@@ -369,7 +369,7 @@ void Playo::openSoundcloudTabDialog() {
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(Soundcloud::Api::instance() -> userID()), 0, true, true);
 
-        Logger::instance() -> writeToStream(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
+        emit Logger::instance() -> write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
         delete dInt;
     }
 }

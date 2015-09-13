@@ -33,6 +33,7 @@ public:
         PredicateType predicate_type;
 
         inline bool by_artists() const { return predicate_type & in_artist; }
+        inline bool by_titles() const { return predicate_type & in_title; }
         inline bool by_songs() const { return predicate_type & in_song; }
         inline bool by_tags() const { return predicate_type & in_tag; }
 

@@ -105,7 +105,7 @@ protected slots:
     inline void disconnectThread() {
         qDebug() << "!!!!!!!!!!!!!!!!!!!! UNREGISTRATE MANAGER";
         WebManager * tmanager = WebManager::managers.take(sender());
-        Logger::instance() -> writeToStream(QStringLiteral("WebManager"), QStringLiteral("disconnection"));
+        emit Logger::instance() -> write(QStringLiteral("WebManager"), QStringLiteral("disconnection"));
         if (tmanager) tmanager -> deleteLater();
         deleteLater();
     }

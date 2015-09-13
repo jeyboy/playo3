@@ -141,7 +141,7 @@ namespace Grabber {
                     Html::Tag * size_tag = (*song) -> childTag("td", 2);
 
                     if (!size_tag) {
-                        Logger::instance() -> writeToStream(
+                        emit Logger::instance() -> write(
                             QStringLiteral("Myzuka grabber"),
                             QStringLiteral("Search: parsing of songs"),
                             QStringLiteral("Some shit happened"), true

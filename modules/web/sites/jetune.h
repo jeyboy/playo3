@@ -76,7 +76,7 @@ namespace Grabber {
                             song_obj.insert(title_key, title);
 
                             json << song_obj;
-                        } else Logger::instance() -> writeToStream(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
+                        } else emit Logger::instance() -> write(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
                     }
 
                     result = !songs.isEmpty();

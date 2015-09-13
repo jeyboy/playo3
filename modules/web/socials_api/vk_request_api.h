@@ -28,6 +28,12 @@ namespace Vk {
             return url.toString();
         }
 
+        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
+            if (predicate.isEmpty() && limitations.by_popularity())
+                return audioPopular(true, genre);
+            else
+                return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
+        }
     public:
     //    QUrl wallUrl(QString & uid) {
     //        QUrlQuery query = genDefaultParams();
