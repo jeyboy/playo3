@@ -13,10 +13,7 @@ namespace Od {
 
         RequestApi(QObject * obj = 0) : Misc(obj) {}
 
-        bool sessionIsValid() {
-            QJsonObject obj = WebManager::manager() -> getJson(initAudioUrl());
-            return !obj.contains(QStringLiteral("error"));
-        }
+        bool sessionIsValid() { return !hasError(WebManager::manager() -> getJson(initAudioUrl())); }
 
         inline QUrl authRequestUrl() const {
             QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(authE) + "&st.password=" + encodeStr(authP) + "&st.remember=on&st.iscode=false");
@@ -62,7 +59,7 @@ namespace Od {
 //        inline QUrl formaddplUrl() { return audioUrl(QStringLiteral("formaddpl")); } // params: (tid: track id) // used for adding new item to playlist
 
         // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
-        inline QUrl playAudioUrl(QString tid, int item_type = 5) { return audioUrl(QStringLiteral("play"), QUrlQuery(QStringLiteral("type=%1&tid=%2").arg(QString::number(item_type), tid))); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
+        inline QUrl playAudioUrl(QString tid/*, int item_type = 5*/) { return audioUrl(QStringLiteral("play"), QUrlQuery(QStringLiteral("tid=%2").arg(tid))); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
         inline QUrl play30AudioUrl() { return audioUrl(QStringLiteral("play30")); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: type as name val) (position: position in list (0))
 
         inline QUrl tunersUrl() { return audioUrl(QStringLiteral("myTuners")); } // params: (locale: 'ru')  need to check pagination
@@ -82,16 +79,6 @@ namespace Od {
         }
     public:
         inline virtual ~RequestApi() {}
-
-        inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
-            QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
-            qDebug() << "REFRESH OD" << obj;
-            QUrl url(obj.value(QStringLiteral("play")).toString());
-            QUrlQuery query = QUrlQuery(url.query());
-            query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
-            url.setQuery(query);
-            return url.toString();
-        }
 
         inline QUrl initAudioUrl() { return audioUrl(QStringLiteral("init")); }
         inline QUrl myAudioUrl(const QString & uid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("uid=") % uid)); } // params: (uid: sets for friend request) and pagination attrs

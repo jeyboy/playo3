@@ -29,6 +29,10 @@ namespace Od {
                     showingLogin(authE, authP);
             }
 
+            inline bool hasError(const QJsonObject & obj) {
+                return obj.contains(QStringLiteral("error"));
+            }
+
             inline QHash<QString, QString> initHeaders() {
                 QHash<QString, QString> headers;
     //            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));

@@ -30,6 +30,20 @@ namespace Od {
             );
         }
 
+        inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
+            QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+            if (hasError(obj)) {
+                connection(true);
+                obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+                qDebug() << "RECONECTION";
+            }
+            QUrl url(obj.value(QStringLiteral("play")).toString());
+            QUrlQuery query = QUrlQuery(url.query());
+            query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
+            url.setQuery(query);
+            return url.toString();
+        }
+
     public slots:
         bool connection(bool onlyAuto = false) {
             bool res = !onlyAuto || (onlyAuto && !token().isEmpty());
