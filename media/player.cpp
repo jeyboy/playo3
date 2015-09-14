@@ -142,8 +142,9 @@ void Player::setPanTrackBar(QSlider * trackBar) {
     connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
     connect(this, SIGNAL(panChanged(int)), this, SLOT(setPanTrackbarValue(int)));
 
-    panSlider -> setMaximum(2000);
-    panSlider -> setValue(1000);
+    panSlider -> setMinimum(-1000);
+    panSlider -> setMaximum(1000);
+    panSlider -> setValue(0);
 }
 
 void Player::setVolumeTrackBar(QSlider * trackBar) {

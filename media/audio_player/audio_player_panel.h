@@ -71,12 +71,12 @@ namespace AudioPlayer {
         void slidePosForward();
         void slidePosBackward();
         inline bool setPosition(int position) { return BASS_ChannelSetPosition(chId(), BASS_ChannelSeconds2Bytes(chId(), position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
-        // 0 .. 2000
+        // -1000 .. 1000
         inline bool setPan(int pan) {
-            panVal = pan - PAN_MULTIPLIER / PAN_MULTIPLIER;
-            qDebug() << "PAN" << panVal;
-            BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_PAN, panVal);
-            emit panChanged(pan);
+            panVal = pan / PAN_MULTIPLIER;
+            bool res = BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_PAN, panVal);
+            if (res) emit panChanged(pan);
+            return res;
         } // -1 (full left) to +1 (full right), 0 = centre.
 
         void slideVolForward();
