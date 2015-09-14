@@ -95,7 +95,7 @@ namespace Playo3 {
             setData(node, ItemState::not_supported, ISTATE);
             QDesktopServices::openUrl(node.data(IURL).toUrl());
         }
-        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported, ISTATE); }
+        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported | ItemState::not_exist, ISTATE); }
 
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);

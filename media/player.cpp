@@ -237,6 +237,11 @@ bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     return true;
 }
 
+void Player::playedIndexIsNotExist() {
+    if (current_model)
+        current_model -> itemNotExist(playedIndex());
+}
+
 void Player::playedIndexIsInvalid() {
     if (current_model)
         current_model -> itemError(playedIndex());
@@ -400,7 +405,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case InvalidMedia: {
-//            qDebug() << "PLAYER: " << "INVALID";
+            qDebug() << "PLAYER: " << "INVALID";
 //            emit itemNotSupported(playedIndex());
             current_model -> itemNotSupported(playedIndex());
             endProccessing();

@@ -52,6 +52,7 @@ public:
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
     bool getFileInfo(QUrl uri, MediaInfo * info);
+    void playedIndexIsNotExist();
     void playedIndexIsInvalid();
 
 signals:

@@ -353,7 +353,7 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
                     Player::instance() -> playIndex(Player::instance() -> playedIndex());
                 else {
                     Player::instance() -> stop();
-                    Player::instance() -> playedIndexIsInvalid();
+                    Player::instance() -> playedIndexIsNotExist();
                 }
             }
 
