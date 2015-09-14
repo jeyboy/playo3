@@ -87,7 +87,7 @@ void ToolBars::load(QJsonArray & bars) {
 
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key
+        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key << toolbar_media_pan_key
             << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
         QJsonObject obj, actionObj;
@@ -213,6 +213,7 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     else if (barName == toolbar_controls_key)           return createControlToolBar();
     else if (barName == toolbar_spectrum_key)           return getSpectrum();
     else if (barName == toolbar_equalizer_key)          return createEqualizerToolBar();
+    else if (barName == toolbar_media_pan_key)          return createPanMediaBar();
     else                                                return createToolBar(barName);
 }
 
@@ -301,6 +302,25 @@ QToolBar * ToolBars::createPositionMediaBar() {
 
     return ptb;
 }
+
+QToolBar * ToolBars::createPanMediaBar() {
+    QToolBar * ptb = precreateToolBar(toolbar_media_pan_key, true);
+
+    ClickableSlider * pslider = new ClickableSlider(ptb);
+    pslider -> setOrientation(Qt::Horizontal);
+    pslider -> setMinimumSize(30, 30);
+    pslider -> setProperty("pan", true);
+    pslider -> style() -> unpolish(pslider);
+    pslider -> style() -> polish(pslider);
+
+    Player::instance() -> setPanTrackBar(pslider);
+
+    ptb -> addWidget(pslider);
+    ptb -> adjustSize();
+
+    return ptb;
+}
+
 
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_time_key);

@@ -135,6 +135,10 @@ QString Stylesheets::sliderStyles() {
                     "image: url(:/controls/pos_btn);"
                 "}"
 
+                "QSlider::handle[pan=\"true\"] {"
+                    "image: url(:/controls/pan_btn);"
+                "}"
+
                 "QSlider::handle:hover {"
                   "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #fff, stop:1 #ddd);"
                   "border: 1px solid #444;"

@@ -137,6 +137,15 @@ void Player::setTrackBar(QSlider * trackBar) {
     connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(changeTrackbarValue(int)));
 }
 
+void Player::setPanTrackBar(QSlider * trackBar) {
+    panSlider = trackBar;
+    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
+    connect(this, SIGNAL(panChanged(int)), this, SLOT(setPanTrackbarValue(int)));
+
+    panSlider -> setMaximum(2000);
+    panSlider -> setValue(1000);
+}
+
 void Player::setVolumeTrackBar(QSlider * trackBar) {
     volumeSlider = trackBar;
     connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
@@ -256,6 +265,12 @@ void Player::setVolTrackbarValue(int pos) {
     volumeSlider -> blockSignals(true);
     volumeSlider -> setValue(pos);
     volumeSlider -> blockSignals(false);
+}
+
+void Player::setPanTrackbarValue(int pos) {
+    panSlider -> blockSignals(true);
+    panSlider -> setValue(pos);
+    panSlider -> blockSignals(false);
 }
 
 void Player::setTrackbarMax(int duration) {

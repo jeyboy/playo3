@@ -50,16 +50,9 @@ void Base::init() {
     ///////////////////////////////////////////////
 
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
-    BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, 15000);  // 15 sec
-    //    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, DWORD timeoutMili); // default is no timeout
+    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
-    // TODO: add proxy realization
-    //if (MESS(41,BM_GETCHECK,0,0))
-    //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,NULL); // disable proxy
-    //else
-    //    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,proxy); // enable proxy
-
-    //BASS_ChannelSetAttribute(int handle, BASSAttribute attrib, float value))//    BASS_ATTRIB_PAN	The panning/balance position, -1 (full left) to +1 (full right), 0 = centre.
+    setOpenTimeOut(Settings::instance() -> openTimeOut());
 }
 
 Base::Base(QObject * parent) : Panel(parent), openChannelWatcher(0) {

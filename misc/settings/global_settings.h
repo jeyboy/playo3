@@ -19,6 +19,8 @@
 #define SETTINGS_OD_KEY QStringLiteral("od_key")
 #define SETTINGS_OD_VAL_KEY QStringLiteral("od_val")
 
+#define SETTINGS_OPEN_TIMEOUT QStringLiteral("open_time_out_key")
+
 class GlobalSettings {
 public:
     void fromJson(QJsonObject & settings);
@@ -48,6 +50,9 @@ public:
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
 
+    inline float openTimeOut() { return _openTimeOut; }
+    inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
+
     inline QString od_key() { return _od_key;}
     inline QString od_val() { return _od_val;}
 
@@ -61,6 +66,8 @@ protected:
     bool _openDropPointInTab;
     Playo3::ContainerType _openDropPointInTabType;
     int _tabPosition;
+
+    float _openTimeOut;
 
     QString _od_key, _od_val;
 };

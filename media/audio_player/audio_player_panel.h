@@ -16,6 +16,7 @@
 #define SLIDE_VOLUME_OFFSET 1000
 #define VOLUME_MULTIPLIER 10000.0
 #define POSITION_MULTIPLIER 1000.0
+#define PAN_MULTIPLIER 1000.0
 #define SLIDE_DURATION_PERCENT 10
 
 #define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE
@@ -23,6 +24,12 @@
 
 #define LOCAL_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO
 #define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO
+
+#ifdef Q_OS_WIN
+    #define QSTRING_TO_STR(str) str.toStdWString().data()
+#else
+    #define QSTRING_TO_STR(str) str.toStdString().c_str()
+#endif
 
 namespace AudioPlayer {
     class Panel : public Equalizer {
@@ -41,6 +48,7 @@ namespace AudioPlayer {
         void setNotifyInterval(signed int milis);
 
     signals:
+        void panChanged(int);
         void volumeChanged(int);
         void positionChanged(int);
         void durationChanged(int);
@@ -62,6 +70,11 @@ namespace AudioPlayer {
         void slidePosForward();
         void slidePosBackward();
         inline bool setPosition(int position) { return BASS_ChannelSetPosition(chId(), BASS_ChannelSeconds2Bytes(chId(), position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
+        // 0 .. 2000
+        inline bool setPan(int pan) {
+            BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_PAN, pan - PAN_MULTIPLIER / PAN_MULTIPLIER);
+            emit panChanged(pan);
+        } // -1 (full left) to +1 (full right), 0 = centre.
 
         void slideVolForward();
         void slideVolBackward();
@@ -75,22 +88,10 @@ namespace AudioPlayer {
         virtual unsigned long chId() const = 0;
 
         inline unsigned long open(const QString & path, DWORD flags) {
-            return BASS_StreamCreateFile(false,
-                    #ifdef Q_OS_WIN
-                        path.toStdWString().data()
-                    #else
-                        path.toStdString().c_str()
-                    #endif
-                , 0, 0, flags);
+            return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
         }
         inline unsigned long openRemote(const QString & path, DWORD flags) {
-            return BASS_StreamCreateURL(
-                    #ifdef Q_OS_WIN
-                        path.toStdWString().data()
-                    #else
-                        path.toStdString().c_str()
-                    #endif
-                , 0, flags, NULL, 0);
+            return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
         }
 
         inline void initDuration() {

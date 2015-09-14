@@ -6,6 +6,7 @@ void GlobalSettings::fromJson(QJsonObject & settings) {
 
     _defaultDownloadPath = settings.value(SETTINGS_DOWNLOAD_PATH_KEY).toString(QCoreApplication::applicationDirPath() % QStringLiteral("/downloads/"));
     _tabPosition = settings.value(SETTINGS_TAB_POSITION_KEY).toInt(0);
+    _openTimeOut = settings.value(SETTINGS_OPEN_TIMEOUT).toInt(15);
 
     _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
     _openDropPointInTab = settings.value(SETTINGS_OPEN_DROP_IN_TAB_KEY).toBool(false);
@@ -31,4 +32,6 @@ void GlobalSettings::toJson(QJsonObject & settings) {
 
     settings.insert(SETTINGS_OD_KEY, QJsonValue::fromVariant(_od_key));
     settings.insert(SETTINGS_OD_VAL_KEY, QJsonValue::fromVariant(_od_val));
+
+    settings.insert(SETTINGS_OPEN_TIMEOUT, QJsonValue::fromVariant(_openTimeOut));
 }

@@ -93,5 +93,6 @@
         <file alias="tree_opened_hover">images/controls/tree/tree_opened_hover.png</file>
         <file alias="volume_btn">images/elements/volume_small.png</file>
         <file alias="pos_btn">images/elements/pos_small.png</file>
+        <file alias="pan_btn">images/elements/pan_small.png</file>
     </qresource>
 </RCC>

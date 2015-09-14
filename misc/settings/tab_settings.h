@@ -10,6 +10,7 @@
 #define SETTINGS_HEIGHT_UNIFICATION_KEY QStringLiteral("height_unification")
 #define SETTINGS_TREE_IDENTATION_KEY QStringLiteral("tree_indentation")
 #define SETTINGS_ITEM_PRESENTATION_TYPE_KEY QStringLiteral("item_present_type")
+#define SETTINGS_FIND_VALID_KEY QStringLiteral("find_valid")
 
 class TabSettings {
 public:
@@ -36,6 +37,9 @@ public:
 
     inline int itemPresentType() const { return _item_present_type; }
     inline void setItemPresentType(int newType) { _item_present_type = newType; }
+
+    inline bool isFindValid() const { return _findValidOnFailure; }
+    inline void setFindValid(bool find) { _findValidOnFailure = find; }
 protected:
     int _treeIndentation;
     int _item_present_type;
@@ -45,6 +49,7 @@ protected:
     bool _showCheckbox;
     bool _spoilOnActivation;
     bool _alertOnFolderDeletion;
+    bool _findValidOnFailure;
 };
 
 #endif // TAB_SETTINGS

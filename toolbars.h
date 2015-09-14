@@ -96,6 +96,7 @@ namespace Playo3 {
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();
         QToolBar * createPositionMediaBar();
+        QToolBar * createPanMediaBar();
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
@@ -130,6 +131,7 @@ namespace Playo3 {
         const QString toolbar_media_key = QStringLiteral("Media");
         const QString toolbar_media_plus_key = QStringLiteral("Media+");
         const QString toolbar_media_pos_key = QStringLiteral("Media+Position");
+        const QString toolbar_media_pan_key = QStringLiteral("Media+Pan");
         const QString toolbar_media_time_key = QStringLiteral("Media+Time");
         const QString toolbar_media_volume_key = QStringLiteral("Media+Volume");
         const QString toolbar_controls_key = QStringLiteral("Controls");

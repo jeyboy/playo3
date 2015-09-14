@@ -41,6 +41,7 @@ public:
     void setLikeButton(QAction * likeAction);
     void setMuteButton(QAction * likeAction);
 
+    void setPanTrackBar(QSlider * trackBar);
     void setVolumeTrackBar(QSlider * trackBar);
     void setTrackBar(QSlider * trackBar);
     void setTimePanel(ClickableLabel * timePanel);
@@ -66,6 +67,7 @@ private slots:
 
     void unmuteCheck(int);
     void setVolTrackbarValue(int pos);
+    void setPanTrackbarValue(int pos);
 
     void changeTrackbarValue(int);
     void setTrackbarValue(int);
@@ -90,7 +92,7 @@ private:
 
     static Player * self;
     Playo3::MetricSlider * slider;
-    QSlider * volumeSlider;
+    QSlider * volumeSlider, * panSlider;
     ClickableLabel * timePanel;
 
     QAction * playButton;

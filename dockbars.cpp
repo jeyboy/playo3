@@ -360,8 +360,8 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             return;
         }
 
-        // add settings try to find next playable
-        v -> execNextIndex();
+        if (Settings::instance() -> isFindValid())
+            v -> execNextIndex();
     }
 }
 

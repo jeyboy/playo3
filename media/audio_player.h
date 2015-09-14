@@ -41,6 +41,10 @@ namespace AudioPlayer {
 
         void setMedia(const QUrl & mediaPath, uint start_pos = 0, int media_duration = -1);
         inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
+        inline void setOpenTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMin(500, (int)(secLimit * 1000))); }
+        inline void setReadTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMin(500, (int)(secLimit * 1000))); }
+        inline void setUserAgent(const QString & userAgent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, userAgent.isEmpty() ? NULL : QSTRING_TO_STR(userAgent)); }
+        inline void setProxy(const QString & proxyStr = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxyStr.isEmpty() ? NULL : QSTRING_TO_STR(proxyStr)); }
     signals:
         void playbackEnded();
         void downloadEnded();
