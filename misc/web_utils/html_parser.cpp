@@ -252,9 +252,9 @@ namespace Html {
         return links;
     }
 
-    ////////  Document //////////
+    ////////  Doc //////////
 
-    void Document::initSoloTags() {
+    void Doc::initSoloTags() {
         html_entities.insert("nbsp", ' ');
         html_entities.insert("amp", '&');
         html_entities.insert("lt", '<');
@@ -269,7 +269,7 @@ namespace Html {
     }
 
 
-    void Document::parse(QIODevice * device) {
+    void Doc::parse(QIODevice * device) {
         initSoloTags();
         PState state = content;
         char * ch = new char[2](), last = 0, del = 0;

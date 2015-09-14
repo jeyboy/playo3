@@ -90,7 +90,7 @@ namespace Od {
                 return false;
             }
 
-            Html::Document doc(reply);
+            Html::Doc doc(reply);
             checkSecurity(doc);
 
             setParams(QString(), grabUserId(doc), QString());

@@ -40,7 +40,7 @@ namespace Od {
                 return headers;
             }
 
-            inline QString grabUserId(Html::Document & doc) {
+            inline QString grabUserId(Html::Doc & doc) {
                 Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");
                 if (results.isEmpty()) {
                     Html::Set results = doc.find(".ff_links_li a[href~'st.uid=']]");
@@ -61,7 +61,7 @@ namespace Od {
                 }
             }
 
-            inline void checkSecurity(Html::Document & doc) {
+            inline void checkSecurity(Html::Doc & doc) {
                 Html::Set forms = doc.find("[id^'hook_Form'] form");
     //            doc.output();
 

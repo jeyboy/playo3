@@ -99,7 +99,7 @@ namespace Grabber {
         inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
 
         QString refresh_postprocess(WebResponse * reply) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
             if (tracks.isEmpty())
@@ -114,7 +114,7 @@ namespace Grabber {
             QNetworkReply * response = WebManager::manager() -> followedGet(url);
 
             QJsonArray json;
-            Html::Document parser(response);
+            Html::Doc parser(response);
             response -> deleteLater();
 
             Html::Set tables = parser.find(&searchTablesSelector);
@@ -172,7 +172,7 @@ namespace Grabber {
         }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             bool result = false;
 
             switch(jtype) {

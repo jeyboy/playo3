@@ -208,7 +208,7 @@ namespace Html {
         Tag * parent;
     };
 
-    class Document : public UnicodeDecoding {
+    class Doc : public UnicodeDecoding {
         enum Flags { none, skip_text = 1, skip_comment = 2};
 
         enum PState { content = 1, tag = 2, attr = 4, val = 8, in_val = 16, comment = 32, attr_val = attr | val };
@@ -230,8 +230,8 @@ namespace Html {
         };
 
     public:
-        inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) { parse(device); }
-        inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) {
+        inline Doc(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) { parse(device); }
+        inline Doc(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) {
             QByteArray ar = str.toUtf8();
             QBuffer stream(&ar);
             stream.open(QIODevice::ReadOnly);
@@ -239,7 +239,7 @@ namespace Html {
             stream.close();
         }
 
-        inline ~Document() { delete root; }
+        inline ~Doc() { delete root; }
 
         inline Set find(const Selector * selector) {
             return root -> children().find(selector);

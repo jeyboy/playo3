@@ -51,7 +51,7 @@ namespace Grabber {
         QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3.shmidt.net") % predicate; }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             bool result = false;
 
             switch(jtype) {
@@ -81,7 +81,7 @@ namespace Grabber {
 //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
         inline QString refresh_postprocess(WebResponse * reply) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             Html::Set tracks = parser.find(".download p a");
 
             if (tracks.isEmpty())

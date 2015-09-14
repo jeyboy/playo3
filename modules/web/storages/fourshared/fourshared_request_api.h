@@ -46,7 +46,7 @@ namespace Fourshared {
             if (refresh_page.isEmpty()) return QString();
 
             QNetworkReply * response = WebManager::manager() -> followedGet(refresh_page);
-            QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
+            QString res = Html::Doc(response).find("input.jsD1PreviewUrl").value();
 
             delete response;
             return res;
@@ -56,7 +56,7 @@ namespace Fourshared {
             if (refresh_page.isEmpty()) return QString();
 
             QNetworkReply * response = WebManager::manager() -> followedGet(QUrl(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12)));
-            QString res = Html::Document(response).find("a[href~'/download/']").link();
+            QString res = Html::Doc(response).find("a[href~'/download/']").link();
 
             delete response;
             return res;
@@ -85,7 +85,7 @@ namespace Fourshared {
 
                     if (initInfo) {
                         QNetworkReply * reply = manager -> followedGet(QUrl(path));
-                        Html::Document doc(reply);
+                        Html::Doc doc(reply);
                         reply -> deleteLater();
 
                         song_path = doc.find(&prevSelector).value();

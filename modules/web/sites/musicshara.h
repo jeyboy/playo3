@@ -75,7 +75,7 @@ namespace Grabber {
         QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
 
         QString refresh_postprocess(WebResponse * reply) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
             if (tracks.isEmpty())
@@ -96,7 +96,7 @@ namespace Grabber {
         }
 
         bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-            Html::Document parser(reply);
+            Html::Doc parser(reply);
             bool result = false;
 
             switch(jtype) {

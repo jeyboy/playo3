@@ -348,16 +348,16 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
         if (reason == Player::refreshNeed) {
             if (v -> isRequiredOnUpdate()) {
                 ((IModel *)v -> model()) -> refresh(true);
+                return;
             } else {
-                if (IModel::restoreUrl(Player::instance() -> playedItem()))
+                if (IModel::restoreUrl(Player::instance() -> playedItem())) {
                     Player::instance() -> playIndex(Player::instance() -> playedIndex());
-                else {
+                    return;
+                } else {
                     Player::instance() -> stop();
                     Player::instance() -> playedIndexIsNotExist();
                 }
             }
-
-            return;
         }
 
         if (Settings::instance() -> isFindValid())
