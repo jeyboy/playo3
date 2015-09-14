@@ -72,7 +72,7 @@ Base::Base(QObject * parent) : Panel(parent), openChannelWatcher(0) {
 Base::~Base() {
     if (openChannelWatcher)
         openChannelWatcher -> cancel();
-    delete openChannelWatcher;
+    openChannelWatcher -> deleteLater();
 
     stopTimers();
     BASS_PluginFree(0);
@@ -107,6 +107,9 @@ int Base::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
         new_chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
+
+    if (!new_chan)
+        qDebug() << "OPEN ERROR" << BASS_ErrorGetCode();
 
     if (watcher -> isCanceled())
         BASS_StreamFree(new_chan);

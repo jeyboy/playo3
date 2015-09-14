@@ -378,7 +378,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break; }
 
         case StalledMedia: {
-//            qDebug() << "PLAYER: " << "STALLED";
+            qDebug() << "PLAYER: " << "STALLED";
             if (current_item -> isRemote()) {
                 emit nextItemNeeded(refreshNeed);
             } else {
@@ -410,7 +410,7 @@ void Player::onMediaStatusChanged(MediaStatus status) {
         break;}
 
         case NoMedia: {
-//            qDebug() << "PLAYER: " << "NO MEDIA";
+            qDebug() << "PLAYER: " << "NO MEDIA";
 //            emit itemNotExisted(playedIndex());
 
             if (current_item -> isRemote()) {
