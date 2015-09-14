@@ -114,6 +114,9 @@ int Base::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     if (watcher -> isCanceled())
         BASS_StreamFree(new_chan);
 
+
+    //TODO: need to realise proc of situation when timeout is to short - because now this is fired refresh many times
+
     return new_chan;
 }
 
