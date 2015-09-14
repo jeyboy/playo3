@@ -138,8 +138,8 @@
           <widget class="QComboBox" name="tabPositionSelect">
            <property name="geometry">
             <rect>
-             <x>97</x>
-             <y>100</y>
+             <x>100</x>
+             <y>95</y>
              <width>231</width>
              <height>22</height>
             </rect>
@@ -149,7 +149,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>100</y>
+             <y>95</y>
              <width>71</width>
              <height>21</height>
             </rect>
@@ -162,7 +162,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>140</y>
+             <y>130</y>
              <width>111</width>
              <height>17</height>
             </rect>
@@ -175,8 +175,8 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>170</y>
-             <width>311</width>
+             <y>160</y>
+             <width>141</width>
              <height>17</height>
             </rect>
            </property>
@@ -187,8 +187,8 @@
           <widget class="QLabel" name="label_dropPointTabType">
            <property name="geometry">
             <rect>
-             <x>13</x>
-             <y>200</y>
+             <x>10</x>
+             <y>185</y>
              <width>101</width>
              <height>21</height>
             </rect>
@@ -201,7 +201,7 @@
            <property name="geometry">
             <rect>
              <x>120</x>
-             <y>200</y>
+             <y>185</y>
              <width>211</width>
              <height>22</height>
             </rect>
@@ -224,7 +224,7 @@
            <property name="geometry">
             <rect>
              <x>190</x>
-             <y>140</y>
+             <y>130</y>
              <width>111</width>
              <height>17</height>
             </rect>
@@ -234,6 +234,57 @@
            </property>
            <property name="text">
             <string>Start on system start up</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_remoteProcMetric_2">
+           <property name="geometry">
+            <rect>
+             <x>210</x>
+             <y>215</y>
+             <width>21</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>secs</string>
+           </property>
+          </widget>
+          <widget class="QDoubleSpinBox" name="openTimeOut">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>215</y>
+             <width>81</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="minimum">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>25000.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_remoteItemDelay_2">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>215</y>
+             <width>101</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: red; text-width: bold;</string>
+           </property>
+           <property name="text">
+            <string>Open item timeout</string>
            </property>
           </widget>
          </widget>
@@ -285,7 +336,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>120</y>
+             <y>130</y>
              <width>311</width>
              <height>17</height>
             </rect>
@@ -417,6 +468,19 @@ font-weight: bold;</string>
              <string>Partially filled</string>
             </property>
            </widget>
+          </widget>
+          <widget class="QCheckBox" name="findValid">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>100</y>
+             <width>251</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Find valid item on failure</string>
+           </property>
           </widget>
          </widget>
         </widget>

@@ -12,6 +12,7 @@
 #include "audio_player_equalizer.h"
 
 #include <qurl.h>
+#include <qdebug.h>
 
 #define SLIDE_VOLUME_OFFSET 1000
 #define VOLUME_MULTIPLIER 10000.0
@@ -72,7 +73,9 @@ namespace AudioPlayer {
         inline bool setPosition(int position) { return BASS_ChannelSetPosition(chId(), BASS_ChannelSeconds2Bytes(chId(), position / POSITION_MULTIPLIER), BASS_POS_BYTE); }
         // 0 .. 2000
         inline bool setPan(int pan) {
-            BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_PAN, pan - PAN_MULTIPLIER / PAN_MULTIPLIER);
+            panVal = pan - PAN_MULTIPLIER / PAN_MULTIPLIER;
+            qDebug() << "PAN" << panVal;
+            BASS_ChannelSetAttribute(chId(), BASS_ATTRIB_PAN, panVal);
             emit panChanged(pan);
         } // -1 (full left) to +1 (full right), 0 = centre.
 
@@ -112,7 +115,7 @@ namespace AudioPlayer {
 
         QUrl mediaUri;
 
-        float volumeVal;
+        float volumeVal, panVal;
 
         NotifyTimer * notifyTimer;
     };

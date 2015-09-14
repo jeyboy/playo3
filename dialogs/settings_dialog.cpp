@@ -234,6 +234,8 @@ void SettingsDialog::initGlobalSettings() {
 
     ui -> dropPointTabTypeSelect -> insertItems(0, tab_types);
     ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::instance() -> openDropPointInTabType() - 1);
+
+    ui -> openTimeOut -> setValue(Settings::instance() -> openTimeOut());
 }
 
 void SettingsDialog::initItemsSettings() {
@@ -292,6 +294,8 @@ void SettingsDialog::initViewSettings() {
 
     ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
     ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
+
+    ui -> findValid -> setChecked(Settings::instance() -> isFindValid());
 
     if (Settings::instance() -> itemPresentType() == 1)
         ui -> fullyFilledItem -> setChecked(true);
@@ -360,6 +364,8 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::instance() -> setSaveCommonTab(ui -> saveCommonTab -> isChecked());
     Settings::instance() -> setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
     Settings::instance() -> setOpenDropPointInTabType((Playo3::ContainerType)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
+
+    Settings::instance() -> setOpenTimeOut(ui -> openTimeOut -> value());
 }
 
 void SettingsDialog::saveItemsSettings() {
@@ -402,6 +408,8 @@ void SettingsDialog::saveViewSettings() {
     Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
 
     Settings::instance() -> setItemPresentType(ui -> fullyFilledItem -> isChecked() ? 1 : 2);
+
+    Settings::instance() -> setFindValid(ui -> findValid -> isChecked());
 }
 
 void SettingsDialog::saveHotkeysSettings() {

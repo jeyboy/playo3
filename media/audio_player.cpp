@@ -207,6 +207,8 @@ void Base::postProccessing() {
 
 void Base::aroundProccessing() {
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
+
     initDuration();
 
     BASS_CHANNELINFO info;
