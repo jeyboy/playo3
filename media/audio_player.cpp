@@ -197,14 +197,13 @@ void Base::stopTimers(bool paused) {
 }
 
 void Base::postProccessing() {
-    emit mediaStatusChanged(LoadedMedia);
     QFutureWatcher<int> * watcher = (QFutureWatcher<int> *)sender();
 
     if (!watcher -> isCanceled()) {
         chan = watcher -> result();
         if (chan) aroundProccessing();
         else proceedErrorState();
-    }
+    } else emit mediaStatusChanged(LoadedMedia);
 
     watcher -> deleteLater();
     if (watcher == openChannelWatcher)
@@ -212,6 +211,7 @@ void Base::postProccessing() {
 }
 
 void Base::aroundProccessing() {
+    emit mediaStatusChanged(LoadedMedia);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
 

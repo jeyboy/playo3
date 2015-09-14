@@ -81,24 +81,30 @@ void Player::eject(bool updateState) {
 }
 
 void Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
-    switch(state()) {
-        case StoppedState: {
-            if (isTryingToOpenMedia())
-                endProccessing();
-        break; }
+    IModel * new_model = (IModel *)item.model();
+    IItem * new_item = new_model -> item(item);
+    bool refresh = current_item && new_item == current_item;
 
-        case PausedState:
-        case PlayingState: {
-            stop();
-            break;
+    if (!refresh) { // prevent from glitches on item refresh - maybe need to improve this part later
+        switch(state()) {
+            case StoppedState: {
+                if (isTryingToOpenMedia())
+                    endProccessing();
+            break; }
+
+            case PausedState:
+            case PlayingState: {
+                stop();
+                break;
+            }
         }
+
+        updateItemState(false);
     }
 
-    updateItemState(false);
-
     if (item.isValid()) {
-        current_model = (IModel *)item.model();
-        current_item = current_model -> item(item);
+        current_model = new_model;
+        current_item = new_item;
 
         likeButton -> setChecked(current_item -> is(ItemState::liked));
 
@@ -109,14 +115,6 @@ void Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
         else onStateChanged(PausedState);
 
         setItemState(ItemState::played);
-
-//        // this block is not worked noe because playing is not started at this point yet
-//        if (isPlayed()) {
-//            updateItemState(true);
-//        } else {
-//            retVal = paused || false;
-//            setItemState(ItemState::played);
-//        }
     } else {
         current_model = 0;
         current_item = 0;

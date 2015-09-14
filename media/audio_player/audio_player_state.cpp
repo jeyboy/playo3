@@ -24,6 +24,9 @@ namespace AudioPlayer {
             case BASS_ERROR_FILEOPEN: {
                 emit mediaStatusChanged(NoMedia);
             break;}
+
+            // BASS_ERROR_TIMEOUT
+
             default: emit mediaStatusChanged(StalledMedia);
         }
     }
