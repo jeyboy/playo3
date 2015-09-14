@@ -21,6 +21,7 @@ namespace AudioPlayer {
         NoRemoteMedia,
         LoadingMedia,
         LoadedMedia,
+        StartPlayingMedia,
         StalledMedia,
         EndOfMedia,
         InvalidMedia

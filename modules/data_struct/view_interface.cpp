@@ -119,7 +119,8 @@ bool IView::execPath(const QString path, bool paused, uint start, int duration) 
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();
-        return execIndex(ind, paused, start, duration);
+        execIndex(ind, paused, start, duration);
+        return true;
     } else
         return false;
 }
@@ -135,8 +136,10 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int dur
         if (Player::instance() -> playedIndex() == node) {
             Player::instance() -> playPause();
             return true;
-        } else
-            return Player::instance() -> playIndex(node, paused, start, duration);
+        } else {
+            Player::instance() -> playIndex(node, paused, start, duration);
+            return true;
+        }
     }
 
     return false;

@@ -356,7 +356,12 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
                     Player::instance() -> playedIndexIsInvalid();
                 }
             }
+
+            return;
         }
+
+        // add settings try to find next playable
+        v -> execNextIndex();
     }
 }
 

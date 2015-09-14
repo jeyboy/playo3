@@ -225,7 +225,8 @@ void Base::aroundProccessing() {
     if (useEQ) registerEQ();
 
     startTimers();
-    BASS_ChannelPlay(chan, true);
+    if (BASS_ChannelPlay(chan, true))
+        emit mediaStatusChanged(StartPlayingMedia);
 
     syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);

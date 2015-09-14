@@ -80,8 +80,7 @@ void Player::eject(bool updateState) {
     playIndex(QModelIndex());
 }
 
-bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
-    bool retVal = true;
+void Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
     switch(state()) {
         case StoppedState: {
             if (isTryingToOpenMedia())
@@ -109,14 +108,15 @@ bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
             play();
         else onStateChanged(PausedState);
 
+        setItemState(ItemState::played);
 
-        // this block is not worked noe because playing is not started at this point yet
-        if (isPlayed()) {
-            updateItemState(true);
-        } else {
-            retVal = paused || false;
-            setItemState(ItemState::played);
-        }
+//        // this block is not worked noe because playing is not started at this point yet
+//        if (isPlayed()) {
+//            updateItemState(true);
+//        } else {
+//            retVal = paused || false;
+//            setItemState(ItemState::played);
+//        }
     } else {
         current_model = 0;
         current_item = 0;
@@ -124,8 +124,6 @@ bool Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
         duration = 0;
         setTimePanelVal(0);
     }
-
-    return retVal;
 }
 
 void Player::setTrackBar(QSlider * trackBar) {
@@ -206,25 +204,10 @@ void Player::updateControls(bool played, bool paused, bool stopped) {
 bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
     int chUID;
 
-    if (uri.isLocalFile()) {
-        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS); /*BASS_StreamCreateFile(false,
-            uri.toLocalFile()
-              #ifdef Q_OS_WIN
-                .toStdWString().data()
-              #else
-                .toStdString().c_str()
-              #endif
-            , 0, 0, 0);*/
-    } else {
-        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS); /*BASS_StreamCreateURL(
-            uri.toString()
-                #ifdef Q_OS_WIN
-                    .toStdWString().data()
-                #else
-                    .toStdString().c_str()
-                #endif
-            , 0, 0, NULL, 0);*/
-    }
+    if (uri.isLocalFile())
+        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS);
+    else
+        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS);
 
     if (!chUID) return false;
 
@@ -368,6 +351,10 @@ void Player::onMediaStatusChanged(MediaStatus status) {
 
 
     switch (status) {
+        case StartPlayingMedia: {
+            updateItemState(true);
+        break;}
+
         case UnknownMediaStatus: {
 //            qDebug() << "PLAYER: " << "UNKNOWN";
             endProccessing();
