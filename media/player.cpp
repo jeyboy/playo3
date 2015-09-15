@@ -81,8 +81,8 @@ void Player::eject(bool updateState) {
 }
 
 void Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
-    IModel * new_model = (IModel *)item.model();
-    IItem * new_item = new_model -> item(item);
+    IModel * new_model = item.isValid() ? (IModel *)item.model() : 0;
+    IItem * new_item = new_model ? new_model -> item(item) : 0;
     bool refresh = current_item && new_item == current_item;
 
     if (!refresh) { // prevent from glitches on item refresh - maybe need to improve this part later
