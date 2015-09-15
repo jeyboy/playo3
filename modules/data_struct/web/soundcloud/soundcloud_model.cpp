@@ -14,8 +14,8 @@ void SoundcloudModel::refresh(bool retryPlaing) {
 }
 
 void SoundcloudModel::proceedAudioList(Json::Obj & hash) {
-    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
-    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
+    Json::Arr albums = hash.arr(Soundcloud::playlist_key);
+    Json::Arr audios = hash.arr(Soundcloud::audio_list_key);
     int itemsAmount = 0, albums_count = Soundcloud::Api::extractCount(albums), audios_count = Soundcloud::Api::extractCount(audios);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea

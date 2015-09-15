@@ -19,7 +19,7 @@ struct QueryRules {
 
 class IApi : public ISearchable {
 public:
-    static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
+    static inline int extractCount(Json::Arr & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
     inline virtual ~IApi() {}
 protected:
     enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
@@ -54,12 +54,12 @@ protected:
         return status;
     }
 
-    QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-        QJsonArray res;
+    Json::Arr lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+        Json::Arr res;
         return lQuery(url, rules, res, post_proc, errorReceiver);
     }
 
-    QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+    Json::Arr & lQuery(QUrl url, QueryRules rules, Json::Arr & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
         Json::Obj response;
 
         while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
@@ -67,7 +67,7 @@ protected:
             bool invalid = val.isArray();
 
             if (invalid) {
-                QJsonArray ar = val.toArray();
+                Json::Arr ar = val.toArray();
                 invalid = ar.isEmpty();
                 rules.fact_count += ar.size();
             }
@@ -83,7 +83,7 @@ protected:
         return result;
     }
 
-    inline void setCount(QJsonArray & ar, int count) {
+    inline void setCount(Json::Arr & ar, int count) {
         Json::Obj countObj;
         countObj.insert("count", count);
         ar.prepend(countObj);

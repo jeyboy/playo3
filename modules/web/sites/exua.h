@@ -18,7 +18,7 @@
 //        inline QString name() const { return QStringLiteral("EXua"); }
 //        inline Playo3::WebSubType siteType() { return Playo3::exua_site; }
 
-//        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
+//        Json::Arr search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
 //            QUrl url;
 
 //            if (!predicate.isEmpty()) {
@@ -30,11 +30,11 @@
 //            else if (popular_items)
 //                return popular();
 
-//            if (url.isEmpty()) return QJsonArray();
+//            if (url.isEmpty()) return Json::Arr();
 
 //            WebManager * manager = 0;
 //            bool isNew = WebManager::valid(manager);
-//            QJsonArray json;
+//            Json::Arr json;
 
 //            if (by_artist)
 //                artistsToJson()
@@ -74,7 +74,7 @@
 ////                            songs.removeLast();
 
 ////                    for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-////                        QJsonObject track_obj;
+////                        Json::Obj track_obj;
 
 ////                        Html::Tag * artist_tag = (*song) -> find(&artistSelector).first();
 ////                        Html::Tag * track_tag = (*song) -> find(&songSelector).first();
@@ -111,7 +111,7 @@
 
 //        QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.ex.ua") % predicate; }
 
-//        bool indexToJson(WebManager * manager, QJsonArray & json, QUrl baseUrl) {
+//        bool indexToJson(WebManager * manager, Json::Arr & json, QUrl baseUrl) {
 //            QNetworkReply * reply = manager -> getSync(url);
 //            Html::Document parser(reply);
 //            Html::Set positions = parser.find(&searchIndexSelector);
@@ -127,7 +127,7 @@
 ////            Html::Selector refreshSelector(".details a[href^'/Song']");
 
 ////            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-////                QJsonObject track_obj;
+////                Json::Obj track_obj;
 
 ////                tag = (*track) -> find(&urlSelector).first();
 ////                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
@@ -154,7 +154,7 @@
 ////            return !tracks.isEmpty();
 //        }
 
-//        bool toJson(QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+//        bool toJson(QNetworkReply * reply, Json::Arr & json, bool removeReply = false) {
 //            Html::Document parser(reply);
 //            Html::Set positions = parser.find(&searchIndexSelector);
 
@@ -192,7 +192,7 @@
 ////            Html::Selector refreshSelector(".details a[href^'/Song']");
 
 ////            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-////                QJsonObject track_obj;
+////                Json::Obj track_obj;
 
 ////                tag = (*track) -> find(&urlSelector).first();
 ////                track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));

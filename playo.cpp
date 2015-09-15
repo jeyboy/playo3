@@ -159,11 +159,11 @@ void Playo::initialization() {
     /// toolbars
     ///////////////////////////////////////////////////////////
 
-    QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
+    Json::Arr bars = settings -> read(ToolBars::settingsName()).toArray();
     ToolBars::instance() -> load(bars);
     ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
 
-    QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
+    Json::Arr docks = settings -> read(Dockbars::settingsName()).toArray();
     Dockbars::instance() -> load(docks);
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);

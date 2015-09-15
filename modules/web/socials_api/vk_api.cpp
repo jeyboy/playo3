@@ -7,7 +7,7 @@ namespace Vk {
         return self;
     }
 
-    Api * Api::instance(QObject * parent, const QJsonObject & obj) {
+    Api * Api::instance(QObject * parent, const Json::Obj & obj) {
         if(!self)
             self = new Api(parent, obj);
         else
@@ -15,12 +15,12 @@ namespace Vk {
         return self;
     }
 
-    void Api::fromJson(const QJsonObject & hash) {
+    void Api::fromJson(const Json::Obj & hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
     }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+    Json::Obj Api::toJson() {
+        Json::Obj root;
 
         TeuAuth::toJson(root);
         WebApi::toJson(root);
@@ -53,10 +53,10 @@ namespace Vk {
     /// PROTECTED
     ///////////////////////////////////////////////////////////
 
-    bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = response.value(error_key).toObject();
-        message = stat_obj.value(error_msg_key).toString();
-        code = stat_obj.value(error_code_key).toInt();
+    bool Api::extractStatus(QUrl & url, Json::Obj & response, int & code, QString & message) {
+        Json::Obj stat_obj = response.obj(error_key);
+        message = stat_obj.str(error_msg_key);
+        code = stat_obj.intVal(error_code_key);
 
         if (code == 14)
             return captchaProcessing(response, url);
@@ -69,8 +69,8 @@ namespace Vk {
         return QUrl(urlStr);
     }
 
-    bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {
-        QJsonObject stat_obj = response.value(error_key).toObject();
+    bool Api::captchaProcessing(Json::Obj & response, QUrl & url) {
+        Json::Obj stat_obj = response.value(error_key).toObject();
 
         QString captchaText;
         showingCaptcha(QUrl(stat_obj.value(captcha_img_key).toString()), captchaText);

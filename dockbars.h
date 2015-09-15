@@ -27,7 +27,7 @@ namespace Playo3 {
 
         static inline QString settingsName() { return QStringLiteral("docks"); }
 
-        void load(QJsonArray & bars);
+        void load(Json::Arr & bars);
         void save(DataStore * settings);
         QDockWidget * linkNameToToolbars(QString barName, ViewSettings settings, Json::Obj attrs);
 

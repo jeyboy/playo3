@@ -62,10 +62,10 @@ namespace Playo3 {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        int proceedVkList(QJsonArray & collection, FolderItem * parent);
-        int proceedScList(QJsonArray & collection, FolderItem * parent);
-        int proceedOdList(QJsonArray & collection, FolderItem * parent);
-        int proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent);
+        int proceedVkList(Json::Arr & collection, FolderItem * parent);
+        int proceedScList(Json::Arr & collection, FolderItem * parent);
+        int proceedOdList(Json::Arr & collection, FolderItem * parent);
+        int proceedGrabberList(WebSubType wType, Json::Arr & collection, FolderItem * parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());

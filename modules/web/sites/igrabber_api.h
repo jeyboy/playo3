@@ -23,13 +23,13 @@ namespace Grabber {
     protected:
         virtual QString refresh_postprocess(WebResponse * /*response*/) { return QString(); }
 
-        virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
+        virtual bool toJson(toJsonType, QNetworkReply * reply, Json::Arr & json, bool removeReply = false) = 0;
 
-        inline QJsonArray sQuery(QUrl url, toJsonType jtype) {
-            QJsonArray items; sQuery(url, items, jtype);  return items;
+        inline Json::Arr sQuery(QUrl url, toJsonType jtype) {
+            Json::Arr items; sQuery(url, items, jtype);  return items;
         }
 
-        bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
+        bool sQuery(QUrl url, Json::Arr & items, toJsonType jtype) {
             Logger::instance() -> startMark();
             WebResponse * response = WebManager::manager() -> followedGet(url);
             bool res = toJson(jtype, response, items, true);
@@ -37,11 +37,11 @@ namespace Grabber {
             return res;
         }
 
-        inline QJsonArray lQuery(QString url, toJsonType jtype, int count, int start = 1) {
-            QJsonArray items; return lQuery(url, items, jtype, count, start);
+        inline Json::Arr lQuery(QString url, toJsonType jtype, int count, int start = 1) {
+            Json::Arr items; return lQuery(url, items, jtype, count, start);
         }
 
-        QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1) {
+        Json::Arr & lQuery(QString url, Json::Arr & result, toJsonType jtype, int count, int start = 1) {
             while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
                 if (start++ >= count) break;
                 QThread::msleep(REQUEST_DELAY);

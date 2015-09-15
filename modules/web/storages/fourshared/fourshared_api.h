@@ -10,7 +10,7 @@ namespace Fourshared {
         Q_OBJECT
     public:
         static Api * instance();
-        static Api * instance(QJsonObject obj);
+        static Api * instance(const Json::Obj & obj);
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("4shared"); }
@@ -23,8 +23,8 @@ namespace Fourshared {
         }
         QString authUrl();
 
-        void fromJson(QJsonObject hash);
-        QJsonObject toJson();
+        void fromJson(const Json::Obj & hash);
+        Json::Obj toJson();
 
         inline bool isConnected() { return !token().isEmpty(); }
 //        QString downloadLink();
@@ -40,16 +40,16 @@ namespace Fourshared {
         inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 100; }
 
-        inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-        inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("files")).toArray().isEmpty(); }
-        inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
-//            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
+        inline Json::Obj & extractBody(Json::Obj & response) { return response; }
+        inline bool endReached(Json::Obj & response, int /*offset*/) { return response.value(QStringLiteral("files")).toArray().isEmpty(); }
+        inline bool extractStatus(QUrl & /*url*/, Json::Obj & /*response*/, int & /*code*/, QString & /*message*/) {
+//            Json::Obj stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
 //            message = stat_obj.value(QStringLiteral("error_message")).toString();
 //            return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
             return true;
         }
     private:
-        inline Api(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
+        inline Api(const Json::Obj & hash) : WebApi(), TeuAuth() { fromJson(hash); }
         inline Api() : WebApi(), TeuAuth() { }
         inline virtual ~Api() {}
 

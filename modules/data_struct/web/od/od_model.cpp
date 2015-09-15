@@ -24,8 +24,8 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
 
     Json::Arr playlists = hash.arr(QStringLiteral("playlists"));
 
-//    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
-//    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
+//    Json::Arr albums = hash.value(Soundcloud::playlist_key).toArray();
+//    Json::Arr audios = hash.value(Soundcloud::audio_list_key).toArray();
     int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size()/*Soundcloud::Api::extractCount(albums)*/, audios_count = audios.size();//Soundcloud::Api::extractCount(audios);
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count + playlists_count); // refresh all indexes // maybe this its not good idea
@@ -48,7 +48,7 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
 
                     folder -> setOwner(playlist.str(QStringLiteral("owner")));
 
-                    QJsonArray tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
+                    Json::Arr tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
 
                     Od::Api::extractCount(tracks);
                     int folderItemsAmount = proceedOdList(tracks, folder);
@@ -57,7 +57,7 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
                 }
 
 
-//                QJsonArray albumItems = album.value(Soundcloud::tracks_key).toArray();
+//                Json::Arr albumItems = album.value(Soundcloud::tracks_key).toArray();
 //                if (albumItems.size() > 0) {
 //                    folder = rootItem -> createFolder<SoundcloudFolder>(
 //                        album.value(Soundcloud::id_key).toString(),
@@ -82,11 +82,11 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
 
 //    {
 //        Json::Obj group;
-//        QJsonArray groups = hash.value(Soundcloud::groups_key).toArray();
+//        Json::Arr groups = hash.value(Soundcloud::groups_key).toArray();
 
-//        for(QJsonArray::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
-//            QJsonArray group_part = (*group_it).toArray();
-//            for(QJsonArray::Iterator it = group_part.begin(); it != group_part.end(); it++) {
+//        for(Json::Arr::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
+//            Json::Arr group_part = (*group_it).toArray();
+//            for(Json::Arr::Iterator it = group_part.begin(); it != group_part.end(); it++) {
 //                group = (*it).toObject();
 
 //                Soundcloud::Api::instance() -> addGroup(

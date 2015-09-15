@@ -115,7 +115,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
 
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
-                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
+                Json::Arr items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
                     case Playo3::vk_site: { propagate_count = proceedVkList(items, parent); break; }

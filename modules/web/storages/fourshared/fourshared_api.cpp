@@ -8,7 +8,7 @@ namespace Fourshared { // for auth required oauth 1
         return self;
     }
 
-    Api * Api::instance(QJsonObject obj) {
+    Api * Api::instance(const Json::Obj & obj) {
         if(!self) self = new Api(obj);
         else Api::instance() -> fromJson(obj);
         return self;
@@ -27,12 +27,12 @@ namespace Fourshared { // for auth required oauth 1
         return url.toString();
     }
 
-    void Api::fromJson(QJsonObject hash) {
+    void Api::fromJson(const Json::Obj & hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
     }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+    Json::Obj Api::toJson() {
+        Json::Obj root;
 
         TeuAuth::toJson(root);
         WebApi::toJson(root);
@@ -52,7 +52,7 @@ namespace Fourshared { // for auth required oauth 1
 //        } else if (query.hasQueryItem(QStringLiteral("code"))) {
 //            QNetworkRequest request(authTokenUrl());
 //            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-//            QJsonObject doc = WebManager::stock() -> postToJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
+//            Json::Obj doc = WebManager::stock() -> postToJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
 
 //            if (doc.contains(QStringLiteral("access_token"))) {
 //                QString newToken = doc.value(QStringLiteral("access_token")).toString();

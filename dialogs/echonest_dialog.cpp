@@ -32,8 +32,8 @@ void EchonestDialog::onArtistInfoButtonClicked() {
         artistAccordion -> clear();
 
         if (!info.isEmpty()) {
-            QJsonArray biographies = info.value(QStringLiteral("biographies")).toArray();
-            QJsonArray::Iterator biographie = biographies.begin();
+            Json::Arr biographies = info.value(QStringLiteral("biographies")).toArray();
+            Json::Arr::Iterator biographie = biographies.begin();
 
             for(int i = 1; biographie != biographies.end(); biographie++, i++) {
                 QLabel * biographie_label = new QLabel((*biographie).toObject().value(QStringLiteral("text")).toString(), artistAccordion);
@@ -60,23 +60,23 @@ void EchonestDialog::onArtistInfoButtonClicked() {
             );
 
 
-            QJsonArray genres = info.value(QStringLiteral("genres")).toArray();
+            Json::Arr genres = info.arr(QStringLiteral("genres"));
 
             if (!genres.isEmpty()) {
                 QStringList genresList;
 
-                for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
+                for(Json::Arr::Iterator genre = genres.begin(); genre != genres.end(); genre++)
                     genresList << (*genre).toObject().value(QStringLiteral("name")).toString();
 
                 l -> addWidget(new QLabel(QStringLiteral("Genres: \n\t") % genresList.join(QStringLiteral("\n\t")), statistic));
             }
 
-            QJsonArray terms = info.value(QStringLiteral("terms")).toArray();
+            Json::Arr terms = info.arr(QStringLiteral("terms"));
 
             if (!terms.isEmpty()) {
                 QStringList termsList;
 
-                for(QJsonArray::Iterator term = terms.begin(); term != terms.end(); term++) {
+                for(Json::Arr::Iterator term = terms.begin(); term != terms.end(); term++) {
                     Json::Obj obj = (*term).toObject();
                     termsList <<
                         (
@@ -94,14 +94,13 @@ void EchonestDialog::onArtistInfoButtonClicked() {
             artistAccordion -> addItem(QStringLiteral("Statistic"), statistic);
 
 
-
-            QJsonArray news = info.value(QStringLiteral("news")).toArray();
+            Json::Arr news = info.arr(QStringLiteral("news"));
 
             if (!news.isEmpty()) {
                 QWidget * newsBlock = new QWidget(artistAccordion);
                 QVBoxLayout * il = new QVBoxLayout(newsBlock);
 
-                for(QJsonArray::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
+                for(Json::Arr::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
                     Json::Obj obj = (*news_item).toObject();
                     QLabel * newsLabel = new QLabel(
                                 obj.value(QStringLiteral("date_found")).toString() % QStringLiteral("\n") % obj.value(QStringLiteral("name")).toString() % QStringLiteral("\n\n") % obj.value(QStringLiteral("summary")).toString()
@@ -113,14 +112,14 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 artistAccordion -> addItem(QStringLiteral("News"), newsBlock);
             }
 
-            QJsonArray songs = info.value(QStringLiteral("songs")).toArray();
+            Json::Arr songs = info.arr(QStringLiteral("songs"));
 
             if (!songs.isEmpty()) {
                 QWidget * songsBlock = new QWidget(artistAccordion);
                 QVBoxLayout * il = new QVBoxLayout(songsBlock);
                 QHash<QString, bool> songsHash;
 
-                for(QJsonArray::Iterator song = songs.begin(); song != songs.end(); song++) {
+                for(Json::Arr::Iterator song = songs.begin(); song != songs.end(); song++) {
                     Json::Obj obj = (*song).toObject();
 
                     QString str = obj.value(QStringLiteral("title")).toString();
@@ -136,13 +135,13 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 artistAccordion -> addItem(QStringLiteral("Songs"), songsBlock);
             }
 
-            QJsonArray images = info.value(QStringLiteral("images")).toArray();
+            Json::Arr images = info.arr(QStringLiteral("images"));
 
             if (!images.isEmpty()) {
                 QWidget * imagesBlock = new QWidget(artistAccordion);
                 QVBoxLayout * il = new QVBoxLayout(imagesBlock);
 
-                for(QJsonArray::Iterator image = images.begin(); image != images.end(); image++) {
+                for(Json::Arr::Iterator image = images.begin(); image != images.end(); image++) {
                     QLabel * imageLabel = new QLabel(imagesBlock);
                     QUrl url((*image).toObject().value(QStringLiteral("url")).toString());
                     QPixmap pixma = WebManager::manager() -> getImage(url);
@@ -159,7 +158,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
 }
 
 void EchonestDialog::onBasicPlaylistGenerateClicked() {
-    QJsonArray results;
+    Json::Arr results;
 
     if (artistTypeCheck -> isChecked()) {
         QStringList artists;
@@ -303,8 +302,8 @@ QStringList EchonestDialog::genresList() {
 QStringList EchonestDialog::stylesList() {
     QStringList styles; styles << QStringLiteral("");
 
-    QJsonArray genres = EchonestApi::instance() -> artistStylesForSearch();
-    for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
+    Json::Arr genres = EchonestApi::instance() -> artistStylesForSearch();
+    for(Json::Arr::Iterator genre = genres.begin(); genre != genres.end(); genre++)
         styles.append((*genre).toObject().value(QStringLiteral("name")).toString());
 
     return styles;
@@ -313,8 +312,8 @@ QStringList EchonestDialog::stylesList() {
 QStringList EchonestDialog::moodsList() {
     QStringList moodsList;
 
-    QJsonArray moods = EchonestApi::instance() -> artistMoodsForSearch();
-    for(QJsonArray::Iterator mood = moods.begin(); mood != moods.end(); mood++)
+    Json::Arr moods = EchonestApi::instance() -> artistMoodsForSearch();
+    for(Json::Arr::Iterator mood = moods.begin(); mood != moods.end(); mood++)
         moodsList.append((*mood).toObject().value(QStringLiteral("name")).toString());
 
     return moodsList;

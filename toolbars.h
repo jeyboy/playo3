@@ -37,7 +37,7 @@ namespace Playo3 {
 
         QMenu * createPopupMenu(QMainWindow * window);
 
-        void load(QJsonArray & bars);
+        void load(Json::Arr & bars);
         void save(DataStore * settings);
         void createToolbars(QMainWindow * window);
         void addPanelButton(QString name, QString path, QToolBar * bar);
@@ -46,8 +46,8 @@ namespace Playo3 {
         SpectrumView * getSpectrum();
         inline void updateMetricSliders() { slider -> updateMetric(); }
 
-        inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
-        inline void setEqualizerSettings(QJsonObject settings) { equalizer -> setSettings(settings); }
+        inline Json::Obj getEqualizerSettings() { return equalizer -> settings(); }
+        inline void setEqualizerSettings(const Json::Obj & settings) { equalizer -> setSettings(settings); }
 
     public slots:
         void hideAll();

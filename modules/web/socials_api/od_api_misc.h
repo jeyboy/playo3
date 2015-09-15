@@ -29,7 +29,7 @@ namespace Od {
                     showingLogin(authE, authP);
             }
 
-            inline bool hasError(const QJsonObject & obj) {
+            inline bool hasError(const Json::Obj & obj) {
                 return obj.contains(QStringLiteral("error"));
             }
 
@@ -52,9 +52,9 @@ namespace Od {
             }
 
             inline QString grabSID() {
-                QJsonObject obj = WebManager::manager() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
+                Json::Obj obj = WebManager::manager() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
                 if (obj.contains(QStringLiteral("sid")))
-                    return obj.value(QStringLiteral("sid")).toString();
+                    return obj.str(QStringLiteral("sid"));
                 else {
                     qDebug() << "SID ERROR" << obj;
                     return QString();

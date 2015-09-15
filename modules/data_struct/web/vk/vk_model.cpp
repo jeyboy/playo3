@@ -62,13 +62,13 @@ void VkModel::proceedAudioList(Json::Obj & hash) {
             VkFolder * folder;
             Json::Obj album;
 
-            for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
-                QJsonArray part_arr = (*album_part).toArray();
-                QJsonArray::Iterator it = part_arr.begin();
+            for(Json::Arr::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
+                Json::Arr part_arr = (*album_part).toArray();
+                Json::Arr::Iterator it = part_arr.begin();
                 for(int pos = 0; it != part_arr.end(); it++, pos++) {
                     album = (*it).toObject();
 
-                    QJsonArray albumItems = album.value(QStringLiteral("items")).toArray();
+                    Json::Arr albumItems = album.arr(QStringLiteral("items"));
                     if (albumItems.size() > 0) {
                         folder = rootItem -> createFolder<VkFolder>(
                             album.value(QStringLiteral("folder_id")).toString(),

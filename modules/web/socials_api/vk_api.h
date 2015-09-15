@@ -27,11 +27,11 @@ namespace Vk {
         inline ~Api() {}
 
         static Api * instance();
-        static Api * instance(QObject * parent, const QJsonObject & obj);
+        static Api * instance(QObject * parent, const Json::Obj & obj);
         inline static void close() { delete self; }
 
-        void fromJson(const QJsonObject & hash);
-        QJsonObject toJson();
+        void fromJson(const Json::Obj & hash);
+        Json::Obj toJson();
 
         inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
@@ -60,18 +60,18 @@ namespace Vk {
         inline QString offsetKey() const { return offset_key; }
         inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 200; }
-        inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
+        inline void iterateOffset(int & offset, Json::Obj & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-        inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(response_key).toObject()); }
-        inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(finished_key).toBool(); }
-        bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
+        inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.value(response_key).toObject()); }
+        inline bool endReached(Json::Obj & response, int /*offset*/) { return response.value(finished_key).toBool(); }
+        bool extractStatus(QUrl & url, Json::Obj & response, int & code, QString & message);
 
         QUrl buildUrl(QUrl tUrl, int offset, int limit);
-        bool captchaProcessing(QJsonObject & response, QUrl & url);
+        bool captchaProcessing(Json::Obj & response, QUrl & url);
     //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
     private:
-        inline Api(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth(), RequestApi() {
+        inline Api(QObject * parent, const Json::Obj & hash) : WebApi(parent), TeuAuth(), RequestApi() {
             fromJson(hash);
         }
 

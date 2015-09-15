@@ -65,7 +65,7 @@ namespace Od {
         inline QUrl tunersUrl() { return audioUrl(QStringLiteral("myTuners")); } // params: (locale: 'ru')  need to check pagination
         inline QUrl radioUrl(QString /*tuner*/) { return audioUrl(QStringLiteral("myRadio")); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
-        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+        Json::Arr search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             if (predicate.isEmpty() || limitations.by_popularity())
                 return lQuery(popAudioUrl(), QueryRules(QStringLiteral("tracks"), requestLimit()));
             else {
@@ -82,7 +82,7 @@ namespace Od {
 
         inline QUrl initAudioUrl() { return audioUrl(QStringLiteral("init")); }
         inline QUrl myAudioUrl(const QString & uid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("uid=") % uid)); } // params: (uid: sets for friend request) and pagination attrs
-        QJsonObject userInfo(const QString & uid) {
+        Json::Obj userInfo(const QString & uid) {
             if (uid.isEmpty()) {
                 qDebug() << initAudioUrl();
                 return WebManager::manager() -> getJson(initAudioUrl());
@@ -91,7 +91,7 @@ namespace Od {
         }
 
         inline QUrl playlistAudioUrl(const QString & pid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("pid=") % pid)); } // params: (pid: playlist id) and pagination attrs
-        QJsonArray playlistInfo(QString & pid, int count) {
+        Json::Arr playlistInfo(QString & pid, int count) {
             return lQuery(
                 playlistAudioUrl(pid),
                 QueryRules(QStringLiteral("tracks"), requestLimit(), qMin(count, OD_OFFSET_LIMIT))
@@ -148,7 +148,7 @@ namespace Od {
 //            QUrlQuery query = genDefaultParams();
 //            return baseUrl("tracks/" % audio_uid, query);
 //        }
-//        QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
+//        Json::Obj audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 
 //        QUrl audioUrl(QStringList & audio_uids) {
@@ -158,12 +158,12 @@ namespace Od {
 //        }
 //        //"id": 142370360,
 //        //"permalink": "sam-smith-stay-with-me",
-//        QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(QStringLiteral("response")).toArray(); }
+//        Json::Arr audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(QStringLiteral("response")).toArray(); }
 
 
 
     //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-    //        QJsonObject obj = Web::replyToJson(reply, true);
+    //        Json::Obj obj = Web::replyToJson(reply, true);
 
     //        reply -> deleteLater();
 
@@ -181,7 +181,7 @@ namespace Od {
     //                    QVariantList ar = func -> result.value(fieldName).toArray().toVariantList();
     //                    ar.append(n_ar);
 
-    //                    func -> result.insert(fieldName, QJsonArray::fromVariantList(ar));
+    //                    func -> result.insert(fieldName, Json::Arr::fromVariantList(ar));
     //                }
     //            } else
     //                func -> result.insert(fieldName, obj.value("response").toArray());

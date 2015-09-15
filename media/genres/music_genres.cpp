@@ -11,12 +11,12 @@ MusicGenres * MusicGenres::instance() {
 void MusicGenres::load() {
     settings = new Playo3::DataStore(GENRES_PATH);
 
-    QJsonArray ar = settings -> read(ROOT_VAL_NAME).toArray();
+    Json::Arr ar = settings -> read(ROOT_VAL_NAME).toArray();
 
     if (ar.isEmpty())
         prepare();
     else {
-        for(QJsonArray::Iterator genre_obj = ar.begin(); genre_obj != ar.end(); genre_obj++) {
+        for(Json::Arr::Iterator genre_obj = ar.begin(); genre_obj != ar.end(); genre_obj++) {
             Json::Obj genre = (*genre_obj).toObject();
             genres.insert(genre.value(GENRE_VAL_NAME).toString(), genre.value(GENRE_NUM_NAME).toInt());
         }
@@ -26,7 +26,7 @@ void MusicGenres::load() {
 void MusicGenres::save() {
     settings -> clear();
 
-    QJsonArray ar;
+    Json::Arr ar;
 
     for(QHash<QString, int>::Iterator genre = genres.begin(); genre != genres.end(); genre++) {
         Json::Obj obj;

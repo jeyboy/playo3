@@ -12,7 +12,7 @@ namespace Od {
         return self;
     }
 
-    Api * Api::instance(QObject * parent, const QJsonObject & obj) {
+    Api * Api::instance(QObject * parent, const Json::Obj & obj) {
         if(!self)
             self = new Api(parent, obj);
         else
@@ -36,13 +36,13 @@ namespace Od {
         return url.toString();
     }
 
-    void Api::fromJson(QJsonObject hash) {
+    void Api::fromJson(const Json::Obj & hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
         hash_key = hash.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
     }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+    Json::Obj Api::toJson() {
+        Json::Obj root;
 
         TeuAuth::toJson(root);
         WebApi::toJson(root);
@@ -56,13 +56,13 @@ namespace Od {
     /// COMMON
     //////////////////////////////////////////////////////////
 
-//    void Api::getGroupInfo(QString uid, QJsonObject & object) {
+//    void Api::getGroupInfo(QString uid, Json::Obj & object) {
 //    //    uid = "101";
 //        object.insert(Soundcloud::audio_list_key, groupAudio(uid));
 //        object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
 //    }
 
-//    void Api::getUserInfo(QString & uid, QJsonObject & object) {
+//    void Api::getUserInfo(QString & uid, Json::Obj & object) {
 //        object.insert(Soundcloud::audio_list_key, userAudio(uid));
 //        object.insert(Soundcloud::playlist_key, userPlaylists(uid));
 //        QThread::msleep(REQUEST_DELAY);
@@ -73,8 +73,8 @@ namespace Od {
 //    }
 
 
-//    QJsonObject Api::objectInfo(QString & uid) {
-//        QJsonObject res;
+//    Json::Obj Api::objectInfo(QString & uid) {
+//        Json::Obj res;
 
 //        if (uid[0] == '-')
 //            getGroupInfo(uid.mid(1), res);
@@ -96,7 +96,7 @@ namespace Od {
 //        } else if (query.hasQueryItem(QStringLiteral("code"))) {
 //            QNetworkRequest request(authTokenUrl());
 //            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-//            QJsonObject doc = WebManager::manager() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
+//            Json::Obj doc = WebManager::manager() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
 
 //            if (doc.contains(QStringLiteral("access_token"))) {
 //                QString newToken = doc.value(QStringLiteral("access_token")).toString();

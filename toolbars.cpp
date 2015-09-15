@@ -82,7 +82,7 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
     return menu;
 }
 
-void ToolBars::load(QJsonArray & bars) {
+void ToolBars::load(Json::Arr & bars) {
     QMainWindow * window = (QMainWindow *)parent();
 
     if (bars.count() > 0) {
@@ -90,11 +90,11 @@ void ToolBars::load(QJsonArray & bars) {
         barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key << toolbar_media_pan_key
             << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
-        QJsonObject obj, actionObj;
+        Json::Obj obj, actionObj;
         QString barName;
         QToolBar * curr_bar;
 
-        for(QJsonArray::Iterator bar = bars.begin(); bar != bars.end(); bar++) { // rewrite on for
+        for(Json::Arr::Iterator bar = bars.begin(); bar != bars.end(); bar++) { // rewrite on for
             obj = (*bar).toObject();
             barName = obj.value(Key::title).toString();
             barsList.removeOne(barName);
@@ -105,7 +105,7 @@ void ToolBars::load(QJsonArray & bars) {
             window -> addToolBar(Qt::BottomToolBarArea, curr_bar);
 
             if (obj.contains(Key::actions)) {
-                QJsonArray actions = obj.value(Key::actions).toArray();
+                Json::Arr actions = obj.arr(Key::actions);
 
                 foreach(QJsonValue act, actions) { // rewrite on for
                     actionObj = act.toObject();
@@ -124,13 +124,13 @@ void ToolBars::save(DataStore * settings) {
     QList<QToolBar *> bars = toolbars();
 
     if (bars.length() > 0) {
-        QJsonArray toolbar_array = QJsonArray();
-        QJsonObject curr_tab;
+        Json::Arr toolbar_array = Json::Arr();
+        Json::Obj curr_tab;
         QList<QAction*> actions;
         ToolbarButton* button;
 
         foreach(QToolBar * bar, bars) { // rewrite on for
-            curr_tab = QJsonObject();
+            curr_tab = Json::Obj();
 
             curr_tab.insert(Key::title, bar -> windowTitle());
             curr_tab.insert(Key::name, bar -> objectName());
@@ -139,12 +139,12 @@ void ToolBars::save(DataStore * settings) {
             if (!bar -> property(toolbar_service_mark).toBool()) {
                 actions = bar -> actions();
                 if (actions.length() > 0) {
-                    QJsonArray action_array = QJsonArray();
-                    QJsonObject curr_act;
+                    Json::Arr action_array = Json::Arr();
+                    Json::Obj curr_act;
 
                     foreach(QAction * act, actions) { // rewrite on for
                         if (act -> objectName() != QStringLiteral("*Title") && QString(act -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
-                            curr_act = QJsonObject();
+                            curr_act = Json::Obj();
                             button = (ToolbarButton*) bar -> widgetForAction(act);
 
                             curr_act.insert(Key::path, button -> mainPath());

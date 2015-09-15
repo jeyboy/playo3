@@ -55,14 +55,14 @@ public:
 
     virtual Playo3::WebSubType siteType() = 0;
 
-    virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
+    virtual Json::Arr search(QString & predicate, QString & genre, const SearchLimit & limitations) {
         if (!predicate.isEmpty()) {
             return search_postprocess(predicate, genre, limitations);
         } else if (!genre.isEmpty())
             return byGenre(genre, limitations);
         else if (limitations.by_popularity())
             return popular();
-        else return QJsonArray();
+        else return Json::Arr();
     }
 
     inline TargetGenres genresList() {
@@ -70,15 +70,15 @@ public:
         return genres;
     }
 
-    virtual QJsonArray byGenre(const QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+    virtual Json::Arr byGenre(const QString & /*genre*/, const SearchLimit & /*limitations*/) { return Json::Arr(); }
 
-    virtual QJsonArray byChar(QChar /*target_char*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+    virtual Json::Arr byChar(QChar /*target_char*/, const SearchLimit & /*limitations*/) { return Json::Arr(); }
 
-    virtual QJsonArray byType(ByTypeArg /*target_type*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+    virtual Json::Arr byType(ByTypeArg /*target_type*/, const SearchLimit & /*limitations*/) { return Json::Arr(); }
 
-    virtual QJsonArray popular() { return QJsonArray(); }
+    virtual Json::Arr popular() { return Json::Arr(); }
 
-    //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
+    //    virtual Json::Arr related(QUrl /*target_page*/) { return Json::Arr(); }
 
     virtual QString refresh(QString refresh_page) = 0;
 protected:
@@ -90,7 +90,7 @@ protected:
     }
     virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
-    virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
+    virtual Json::Arr search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
     virtual void genres_prepocessing() {}
 
     TargetGenres genres;

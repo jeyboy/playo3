@@ -19,8 +19,8 @@ namespace Grabber {
         inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
 
         // artists by genre
-        QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
-            QJsonArray json;
+        Json::Arr byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            Json::Arr json;
 //            if (genresList().isEmpty()) genresList();
 
 //            genre_id = genres.toInt(genre);
@@ -47,11 +47,11 @@ namespace Grabber {
 
         // byChar and byType has too many items - parse it all at once is not good idea ?
 
-//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+//        Json::Arr byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//        Json::Arr byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
 //            QList<QUrl> urls;
 
 //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -69,12 +69,12 @@ namespace Grabber {
 
 //                break;}
 //                case hits: break; // http://zaycev.net/musicset/other/more.html?page=2
-//                default: return QJsonArray();
+//                default: return Json::Arr();
 //            }
 //            //TODO: stop if result not contains elements
 //        }
 
-        inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+        inline Json::Arr popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
         void prepareTables(Html::Set & tables, Html::Tag *& artists_table, Html::Tag *& songs_table) {
@@ -107,13 +107,13 @@ namespace Grabber {
             else
                 return baseUrlStr(tracks.link());
         }
-        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+        Json::Arr search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QUrl url = QUrl(baseUrlStr(search_path_token));
             url.setQuery(search_predicate_token % predicate);
 
             QNetworkReply * response = WebManager::manager() -> followedGet(url);
 
-            QJsonArray json;
+            Json::Arr json;
             Html::Doc parser(response);
             response -> deleteLater();
 
@@ -134,7 +134,7 @@ namespace Grabber {
                         songs.removeLast();
 
                 for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                    QJsonObject track_obj;
+                    Json::Obj track_obj;
 
                     Html::Tag * artist_tag = (*song) -> find(&artistSelector).first();
                     Html::Tag * track_tag = (*song) -> find(&songSelector).first();
@@ -163,7 +163,7 @@ namespace Grabber {
 
 
 
-        void artistsToJson(QHash<QString, QString> & artists, QJsonArray & json) {
+        void artistsToJson(QHash<QString, QString> & artists, Json::Arr & json) {
             for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
                 QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % page_offset_key;
 
@@ -171,7 +171,7 @@ namespace Grabber {
             }
         }
 
-        bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+        bool toJson(toJsonType jtype, QNetworkReply * reply, Json::Arr & json, bool removeReply = false) {
             Html::Doc parser(reply);
             bool result = false;
 
@@ -186,7 +186,7 @@ namespace Grabber {
                     Html::Selector refreshSelector(".details a[href^'/Song']");
 
                     for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-                        QJsonObject track_obj;
+                        Json::Obj track_obj;
 
                         tag = (*track) -> find(&urlSelector).first();
                         track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));

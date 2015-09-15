@@ -9,7 +9,7 @@ namespace Soundcloud {
         return self;
     }
 
-    Api * Api::instance(QJsonObject obj) {
+    Api * Api::instance(Json::Obj obj) {
         if(!self)
             self = new Api(obj);
         else
@@ -30,12 +30,12 @@ namespace Soundcloud {
         return url.toString();
     }
 
-    void Api::fromJson(QJsonObject hash) {
+    void Api::fromJson(Json::Obj hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
     }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+    Json::Obj Api::toJson() {
+        Json::Obj root;
 
         TeuAuth::toJson(root);
         WebApi::toJson(root);
@@ -47,13 +47,13 @@ namespace Soundcloud {
     /// COMMON
     //////////////////////////////////////////////////////////
 
-    void Api::getGroupInfo(QString uid, QJsonObject & object) {
+    void Api::getGroupInfo(QString uid, Json::Obj & object) {
     //    uid = "101";
         object.insert(Soundcloud::audio_list_key, groupAudio(uid));
         object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
     }
 
-    void Api::getUserInfo(QString & uid, QJsonObject & object) {
+    void Api::getUserInfo(QString & uid, Json::Obj & object) {
         object.insert(Soundcloud::audio_list_key, userAudio(uid));
         object.insert(Soundcloud::playlist_key, userPlaylists(uid));
         QThread::msleep(REQUEST_DELAY);
@@ -64,8 +64,8 @@ namespace Soundcloud {
     }
 
 
-    QJsonObject Api::objectInfo(QString & uid) {
-        QJsonObject res;
+    Json::Obj Api::objectInfo(QString & uid) {
+        Json::Obj res;
 
         if (uid[0] == '-')
             getGroupInfo(uid.mid(1), res);
@@ -85,7 +85,7 @@ namespace Soundcloud {
             error = query.queryItemValue(QStringLiteral("error_description"));
             emit responseReady(QStringLiteral("reject"));
         } else if (query.hasQueryItem(QStringLiteral("code"))) {
-            QJsonObject doc = WebManager::manager() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
+            Json::Obj doc = WebManager::manager() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
 
             if (doc.contains(QStringLiteral("access_token"))) {
                 QString newToken = doc.value(QStringLiteral("access_token")).toString();

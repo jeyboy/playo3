@@ -14,8 +14,8 @@ namespace Grabber {
         inline Playo3::WebSubType siteType() { return Playo3::music_shara; }
 
         // artists by genre
-        QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
-            QJsonArray json;
+        Json::Arr byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            Json::Arr json;
 //            if (genresList().isEmpty()) genresList();
 
 //            genre_id = genres.toInt(genre);
@@ -42,11 +42,11 @@ namespace Grabber {
 
         // byChar and byType has too many items - parse it all at once is not good idea ?
 
-//        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+//        Json::Arr byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
 //            //TODO: realize later
 //        }
 
-//        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+//        Json::Arr byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
 //            QList<QUrl> urls;
 
 //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -64,12 +64,12 @@ namespace Grabber {
 
 //                break;}
 //                case hits: break; // http://zaycev.net/musicset/other/more.html?page=2
-//                default: return QJsonArray();
+//                default: return Json::Arr();
 //            }
 //            //TODO: stop if result not contains elements
 //        }
 
-        inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+        inline Json::Arr popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
     protected:
         QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
@@ -83,10 +83,10 @@ namespace Grabber {
             else
                 return baseUrlStr(tracks.link());
         }
-        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {           
+        Json::Arr search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             QString url_str = baseUrlStr(QStringLiteral("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(predicate), page_offset_key);
 
-            QJsonArray json;
+            Json::Arr json;
             lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
             while(json.size() > limitations.count)
@@ -95,7 +95,7 @@ namespace Grabber {
             return json;
         }
 
-        bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+        bool toJson(toJsonType jtype, QNetworkReply * reply, Json::Arr & json, bool removeReply = false) {
             Html::Doc parser(reply);
             bool result = false;
 
@@ -109,7 +109,7 @@ namespace Grabber {
                     Html::Selector durationSelector(".info .duration");
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                        QJsonObject song_obj;
+                        Json::Obj song_obj;
 
                         song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-src")));
 

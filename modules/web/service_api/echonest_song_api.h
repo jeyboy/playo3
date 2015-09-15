@@ -92,7 +92,7 @@ class EchonestSongApi : virtual public IApi {
             return baseUrl(QStringLiteral("song/search"), query);
         }
 
-        QJsonArray songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
+        Json::Arr songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
                               QStringList styles = QStringList(), QStringList moods = QStringList(), int count = DEFAULT_LIMIT_AMOUNT) {
 
             return lQuery(

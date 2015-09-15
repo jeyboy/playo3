@@ -28,7 +28,7 @@ namespace Vk {
             return url.toString();
         }
 
-        QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
+        Json::Arr search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
             if (predicate.isEmpty() && limitations.by_popularity())
                 return audioPopular(true, genre);
             else
@@ -66,7 +66,7 @@ namespace Vk {
 
     //        return baseUrl(execute_key, query);
     //    }
-    //    QJsonArray wallAudio(QString & uid) {
+    //    Json::Arr wallAudio(QString & uid) {
     //        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
     //    }
 
@@ -104,14 +104,14 @@ namespace Vk {
 
             return baseUrl(execute_key, query);
         }
-        QJsonArray audioAlbums(QString & uid, int offset = 0) {
+        Json::Arr audioAlbums(QString & uid, int offset = 0) {
             return lQuery(
                 audioAlbumsUrl(uid),
                 QueryRules(albums_key, 5, DEFAULT_LIMIT_AMOUNT, offset),
                 extract
             );
         }
-        void audioAlbums(QString & uid, QJsonArray & arr, int offset = 0) {
+        void audioAlbums(QString & uid, Json::Arr & arr, int offset = 0) {
             lQuery(
                 audioAlbumsUrl(uid),
                 QueryRules(albums_key, 5, DEFAULT_LIMIT_AMOUNT, offset),
@@ -228,11 +228,11 @@ namespace Vk {
         }
 
 
-        QJsonObject userInfo(QString & uid, bool fullInfo = true) {
+        Json::Obj userInfo(QString & uid, bool fullInfo = true) {
             QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
-            QJsonObject ret = sQuery(url, extract);
+            Json::Obj ret = sQuery(url, extract);
 
-            QJsonArray ar = ret.value(albums_key).toArray();
+            Json::Arr ar = ret.arr(albums_key);
 
             if (!ret.value(albums_finished_key).toBool())
                 audioAlbums(uid, ar, ret.value(albums_offset_key).toInt());
@@ -242,7 +242,7 @@ namespace Vk {
             return ret;
         }
 
-        QJsonObject userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
+        Json::Obj userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
             QUrlQuery query;
             setParam(query, QStringLiteral("fields"), QStringLiteral("counters"));
             setParam(query, QStringLiteral("user_ids"), uid);
@@ -267,7 +267,7 @@ namespace Vk {
             return baseUrl(execute_key, query);
         }
 
-        QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
+        Json::Obj audioRecomendations(QString & uid, bool byUser, bool randomize) {
             return sQuery(audioRecomendationsUrl(uid, byUser, randomize), extract);
         }
 
@@ -299,10 +299,10 @@ namespace Vk {
 
             return baseUrl(execute_key, query);
         }
-        QJsonArray audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
+        Json::Arr audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
             return sQuery(
                 audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)), extract
-            ).value(audio_list_key).toArray();
+            ).arr(audio_list_key);
         }
 
         QUrl audioSearchLimitedUrl(QString & searchStr, int limit) {
@@ -318,7 +318,7 @@ namespace Vk {
             return baseUrl(execute_key, query);
         }
 
-        QJsonObject audioSearchLimited(QString & predicate, int limitation) {
+        Json::Obj audioSearchLimited(QString & predicate, int limitation) {
             return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
         }
 
@@ -337,7 +337,7 @@ namespace Vk {
 
             return baseUrl(execute_key, query);
         }
-        QJsonArray audioPopular(bool onlyEng, const QString genre) {
+        Json::Arr audioPopular(bool onlyEng, const QString genre) {
             return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).value(QStringLiteral("audio_list")).toArray();
         }
 
@@ -350,25 +350,25 @@ namespace Vk {
 
             return baseUrl(execute_key, query);
         }
-        QJsonArray getAudiosInfo(QStringList & audio_uids) {
-            return sQuery(audioRefreshUrl(audio_uids)).value(response_key).toArray();
+        Json::Arr getAudiosInfo(QStringList & audio_uids) {
+            return sQuery(audioRefreshUrl(audio_uids)).arr(response_key);
         }
-        QJsonObject getAudioInfo(QString & audio_uid) {
+        Json::Obj getAudioInfo(QString & audio_uid) {
             QStringList uids; uids << audio_uid;
-            QJsonObject ret = getAudiosInfo(uids)[0].toObject();
+            Json::Obj ret = getAudiosInfo(uids)[0].toObject();
             return ret;
         }
 
         QString refresh(QString audio_uid) {
-            return getAudioInfo(audio_uid).value(url_key).toString();
+            return getAudioInfo(audio_uid).str(url_key);
         }
 
         void nameToId(QString name, QString & id, QString & id_type) {
             QUrlQuery query;
             setParam(query, QStringLiteral("screen_name"), name);
-            QJsonObject ret = sQuery(baseUrl(QStringLiteral("utils.resolveScreenName"), query)).value(response_key).toObject();
-            id = QString::number(ret.value(QStringLiteral("object_id")).toInt());
-            id_type = ret.value(QStringLiteral("type")).toString();
+            Json::Obj ret = sQuery(baseUrl(QStringLiteral("utils.resolveScreenName"), query)).obj(response_key);
+            id = ret.numStr(QStringLiteral("object_id"));
+            id_type = ret.str(QStringLiteral("type"));
         }
 
         QUrl audioLyricsUrl(QString & lyrics_id) {

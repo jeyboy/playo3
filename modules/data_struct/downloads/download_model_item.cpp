@@ -16,7 +16,7 @@ DownloadModelItem::DownloadModelItem(const Json::Obj & data, DownloadModelItem *
              Json::Arr ar = data -> take(QStringLiteral("childs")).toArray();
              Json::Obj iterObj;
 
-             for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
+             for(Json::Arr::Iterator it = ar.begin(); it!= ar.end(); it++) {
                  iterObj = (*it).toObject();
                  new DownloadModelItem(&iterObj, this);
              }

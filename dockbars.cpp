@@ -11,7 +11,7 @@ Dockbars * Dockbars::instance(QWidget * parent) {
     return self;
 }
 
-void Dockbars::load(QJsonArray & bars) {
+void Dockbars::load(Json::Arr & bars) {
     int userTabsAmount = 0;
     MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;

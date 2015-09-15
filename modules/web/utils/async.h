@@ -1,12 +1,11 @@
 #ifndef ASYNC_H
 #define ASYNC_H
 
-#include <qjsonobject.h>
-#include <qjsonarray.h>
 #include <qhash.h>
-
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <qfuturewatcher.h>
+
+#include "misc/web_utils/json.h"
 
 struct Func {
     inline Func() { }
@@ -28,32 +27,32 @@ public:
     inline Async(QObject * parent = 0) : QObject(parent) {}
     virtual ~Async() {}
 
-    void registerAsync(QFuture<QJsonObject> feature, Func func) {
-        QFutureWatcher<QJsonObject> * initiator = new QFutureWatcher<QJsonObject>();
+    void registerAsync(QFuture<Json::Obj> feature, Func func) {
+        QFutureWatcher<Json::Obj> * initiator = new QFutureWatcher<Json::Obj>();
         connect(initiator, SIGNAL(finished()), this, SLOT(asyncFinished()));
         initiator -> setFuture(feature);
         requests.insert(initiator, func);
     }
 
-    void registerAsync(QFuture<QJsonArray> feature, Func func) {
-        QFutureWatcher<QJsonArray> * initiator = new QFutureWatcher<QJsonArray>();
+    void registerAsync(QFuture<Json::Arr> feature, Func func) {
+        QFutureWatcher<Json::Arr> * initiator = new QFutureWatcher<Json::Arr>();
         connect(initiator, SIGNAL(finished()), this, SLOT(asyncFinished2()));
         initiator -> setFuture(feature);
         requests.insert(initiator, func);
     }
 protected slots:
     void asyncFinished() {
-        QFutureWatcher<QJsonObject> * initiator = (QFutureWatcher<QJsonObject> *)sender();
+        QFutureWatcher<Json::Obj> * initiator = (QFutureWatcher<Json::Obj> *)sender();
         Func func = requests.take(initiator);
-        QJsonObject res = initiator -> result();
-        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonObject&, res));
+        Json::Obj res = initiator -> result();
+        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(Json::Obj&, res));
         delete initiator;
     }
     void asyncFinished2() {
-        QFutureWatcher<QJsonArray> * initiator = (QFutureWatcher<QJsonArray> *)sender();
+        QFutureWatcher<Json::Arr> * initiator = (QFutureWatcher<Json::Arr> *)sender();
         Func func = requests.take(initiator);
-        QJsonArray res = initiator -> result();
-        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(QJsonArray&, res));
+        Json::Arr res = initiator -> result();
+        QMetaObject::invokeMethod(func.obj, func.slot, Qt::AutoConnection, Q_ARG(Json::Arr&, res));
         delete initiator;
     }
 

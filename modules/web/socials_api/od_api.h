@@ -11,7 +11,7 @@ namespace Od {
         Q_OBJECT
     public:
         static Api * instance();
-        static Api * instance(QObject * parent, const QJsonObject & obj);
+        static Api * instance(QObject * parent, const Json::Obj & obj);
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("Od"); }
@@ -19,8 +19,8 @@ namespace Od {
         inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
         QString authUrl();
 
-        void fromJson(QJsonObject hash);
-        QJsonObject toJson();
+        void fromJson(const Json::Obj & hash);
+        Json::Obj toJson();
 
         inline bool isConnected() { return !token().isEmpty(); }
 
@@ -31,7 +31,7 @@ namespace Od {
         }
 
         inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
-            QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+            Json::Obj obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
             if (hasError(obj)) {
                 connection(true);
                 obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
@@ -104,19 +104,19 @@ namespace Od {
         inline QString limitKey() const { return limit_key; }
         inline int requestLimit() const { return 100; }
 
-        inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-        inline bool endReached(QJsonObject & response, int /*offset*/) {
-            QJsonObject chunk_obj = response.value(QStringLiteral("chunk")).toObject();
+        inline Json::Obj & extractBody(Json::Obj & response) { return response; }
+        inline bool endReached(Json::Obj & response, int /*offset*/) {
+            Json::Obj chunk_obj = response.value(QStringLiteral("chunk")).toObject();
             if (chunk_obj.isEmpty()) return false;
             return chunk_obj.value(QStringLiteral("count")).toInt() < requestLimit();
         }
-        inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
-//            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
+        inline bool extractStatus(QUrl & /*url*/, Json::Obj & /*response*/, int & /*code*/, QString & /*message*/) {
+//            Json::Obj stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
 //            message = stat_obj.value(QStringLiteral("error_message")).toString();
             return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
         }
     private:
-        inline Api(QObject * parent, QJsonObject hash) : RequestApi(parent), TeuAuth() {
+        inline Api(QObject * parent, const Json::Obj & hash) : RequestApi(parent), TeuAuth() {
             fromJson(hash);
             if (!sessionIsValid())
                connection(true);

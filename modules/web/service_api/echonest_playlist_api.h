@@ -41,41 +41,41 @@ class EchonestPlaylistApi : virtual public IApi {
             return baseUrl(QStringLiteral("playlist/basic"), query);
         }
 
-//        QJsonArray playlistBasic(QString type = QString(), QStringList artists = QStringList(),
+//        Json::Arr playlistBasic(QString type = QString(), QStringList artists = QStringList(),
 //                                 QStringList genres = QStringList(), QStringList songs_ids = QStringList(), int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-//            QJsonObject response;
+//            Json::Obj response;
 
 //            if (proceedQuery(playlistBasicUrl(type, artists, genres, songs_ids, limit), response))
-//                return response.value("response").toObject().value("songs").toArray();
+//                return response.obj("response").arr("songs");
 
-//            return QJsonArray();
+//            return Json::Arr();
 //        }
 
-        QJsonArray playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QJsonObject response;
+        Json::Arr playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+            Json::Obj response;
 
             if (sQuery(playlistBasicUrl(QStringLiteral("artist-radio"), artists, QStringList(), QStringList(), limit), response))
-                return response.value(QStringLiteral("songs")).toArray();
+                return response.arr(QStringLiteral("songs"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
-        QJsonArray playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QJsonObject response;
+        Json::Arr playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+            Json::Obj response;
 
             if (sQuery(playlistBasicUrl(QStringLiteral("genre-radio"), QStringList(), genres, QStringList(), limit), response))
-                return response.value(QStringLiteral("songs")).toArray();
+                return response.arr(QStringLiteral("songs"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
-        QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QJsonObject response;
+        Json::Arr playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+            Json::Obj response;
 
             if (sQuery(playlistBasicUrl(QStringLiteral("song-radio"), QStringList(), QStringList(), songs_ids, limit), response))
-                return response.value(QStringLiteral("songs")).toArray();
+                return response.arr(QStringLiteral("songs"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -180,18 +180,18 @@ class EchonestPlaylistApi : virtual public IApi {
             return baseUrl(QStringLiteral("playlist/static"), query);
         }
 
-        QJsonArray playlistStatic(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5,
+        Json::Arr playlistStatic(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5,
                                   QString distribution = QString(), float adventurousness = .2,
                                   QString seed_catalog = QString(), QStringList artists = QStringList(),
                                   QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
                                   QStringList song_types = QStringList(), int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
-            QJsonObject response;
+            Json::Obj response;
 
             if (sQuery(playlistStaticUrl(type, song_selection_creteria, variety, distribution, adventurousness,
                                                seed_catalog, artists, genres, songs_ids, song_types, limit), response))
-                return response.value(QStringLiteral("songs")).toArray();
+                return response.arr(QStringLiteral("songs"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -334,7 +334,7 @@ class EchonestPlaylistApi : virtual public IApi {
             return baseUrl(QStringLiteral("playlist/static"), query);
         }
 
-        QJsonArray playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
+        Json::Arr playlistStaticEx(QString type = QString(), QString song_selection_creteria = QString(), float variety = .5, QString distribution = QString(), float adventurousness = .2,
                                     QString seed_catalog = QString(), QStringList artists = QStringList(), QStringList genres = QStringList(), QStringList songs_ids = QStringList(),
                                     QStringList song_types = QStringList(), QString sort = QString(), QString genre_preset = QString(),
                                     QString artist_start_year_before = QString(), QString artist_start_year_after = QString(),
@@ -345,7 +345,7 @@ class EchonestPlaylistApi : virtual public IApi {
                                     float min_speechiness = 0, float max_speechiness = 1, float min_acousticness = 0, float max_acousticness = 1,
                                     float song_min_hotttnesss = 0, float song_max_hotttnesss = 1, float min_duration = 0, float max_duration = 3600,
                                     float artist_min_familiarity = 0, float artist_max_familiarity = 1, float artist_min_hotttnesss = 0, float artist_max_hotttnesss = 1) {
-            QJsonObject response;
+            Json::Obj response;
 
             if (sQuery(playlistStaticExUrl(type, song_selection_creteria, variety, distribution, adventurousness,
                                                  seed_catalog, artists, genres, songs_ids, song_types, sort, genre_preset,
@@ -355,9 +355,9 @@ class EchonestPlaylistApi : virtual public IApi {
                                                  min_speechiness, max_speechiness, min_acousticness, max_acousticness,
                                                  song_min_hotttnesss, song_max_hotttnesss, min_duration, max_duration,
                                                  artist_min_familiarity, artist_max_familiarity, artist_min_hotttnesss, artist_max_hotttnesss), response))
-                return response.value(QStringLiteral("songs")).toArray();
+                return response.arr(QStringLiteral("songs"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 };
 

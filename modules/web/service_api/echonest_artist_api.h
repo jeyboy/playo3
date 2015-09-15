@@ -465,7 +465,7 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/songs"), query);
         }
 
-        QJsonArray artistSongs(QString name, QString id = QString(), int count = DEFAULT_LIMIT_AMOUNT) {
+        Json::Arr artistSongs(QString name, QString id = QString(), int count = DEFAULT_LIMIT_AMOUNT) {
             return lQuery(
                 artistSongsUrl(name, id),
                 QueryRules(QStringLiteral("songs"), requestLimit(), count)
@@ -532,7 +532,7 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/similar"), query);
         }
 
-        QJsonArray artistSimilars(QStringList names, QStringList ids = QStringList(), int count = DEFAULT_LIMIT_AMOUNT) {
+        Json::Arr artistSimilars(QStringList names, QStringList ids = QStringList(), int count = DEFAULT_LIMIT_AMOUNT) {
             return lQuery(
                 artistSimilarsUrl(names, ids, count),
                 QueryRules(QStringLiteral("artists"), requestLimit(), count)

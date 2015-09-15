@@ -252,7 +252,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedVkList(Json::Arr & collection, FolderItem * parent) {
     int itemsAmount = 0;
     Json::Obj itm;
     VkItem * newItem;
@@ -316,7 +316,7 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedGrabberList(WebSubType wType, Json::Arr & collection, FolderItem * parent) {
     int itemsAmount = 0;
     Json::Obj itm;
     WebItem * newItem;
@@ -374,7 +374,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
     return itemsAmount;
 }
 
-int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedScList(Json::Arr & collection, FolderItem * parent) {
     int itemsAmount = 0;
     Json::Obj itm;
     SoundcloudItem * newItem;
@@ -442,7 +442,7 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedOdList(Json::Arr & collection, FolderItem * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
 
     int itemsAmount = 0;
@@ -737,7 +737,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             }
 
             if (Vk::Api::instance() -> isConnected()) {
-                QJsonArray obj = Vk::Api::instance() -> getAudiosInfo(map_it.value());
+                Json::Arr obj = Vk::Api::instance() -> getAudiosInfo(map_it.value());
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
@@ -752,7 +752,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             }
 
             if (Soundcloud::Api::instance() -> isConnected()) {
-                QJsonArray obj = Soundcloud::Api::instance() -> audioInfo(map_it.value());
+                Json::Arr obj = Soundcloud::Api::instance() -> audioInfo(map_it.value());
                 proceedScList(obj, parentNode);
             }
         }

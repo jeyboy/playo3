@@ -36,7 +36,7 @@ FolderItem::FolderItem(Json::Obj & hash, FolderItem * parent)
         Json::Arr ar = hash -> take(JSON_TYPE_CHILDS).toArray();
         Json::Obj iterObj;
 
-        for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
+        for(Json::Arr::Iterator it = ar.begin(); it!= ar.end(); it++) {
             iterObj = (*it).toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
                 case ITEM: {
@@ -192,10 +192,9 @@ Json::Obj FolderItem::toJson() {
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
 
-        Json::Arr ar = QJsonArray();
-        QList<IItem *>::Iterator it = children.begin();
+        Json::Arr ar = Json::Arr();
 
-        for( ;it != children.end(); it++)
+        for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
             ar.append((*it) -> toJson());
 
         root[JSON_TYPE_CHILDS] = ar;

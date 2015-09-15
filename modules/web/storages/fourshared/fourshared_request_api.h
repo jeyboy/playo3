@@ -31,9 +31,9 @@ namespace Fourshared {
             return IApi::baseUrl(QStringLiteral("files"), query);
         }
 
-        QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+        Json::Arr search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
             bool initInfo = false;
-            QJsonArray res = lQuery(
+            Json::Arr res = lQuery(
                 audioSearchUrl(predicate),
                 QueryRules(QStringLiteral("files"), requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
                 none
@@ -63,7 +63,7 @@ namespace Fourshared {
         }
 
     private:
-        QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
+        Json::Arr prepareAudios(Json::Arr & items, bool initInfo) {
             if (extractCount(items) == 0)
                 return items;
 
@@ -73,15 +73,15 @@ namespace Fourshared {
 
             WebManager * manager = WebManager::manager();
 
-            QJsonArray ar;
+            Json::Arr ar;
             QString ext, title, path, song_path;
 
-            for(QJsonArray::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
-                QJsonArray part = (*parts_it).toArray();
-                for(QJsonArray::Iterator item = part.begin(); item != part.end(); item++) {
+            for(Json::Arr::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
+                Json::Arr part = (*parts_it).toArray();
+                for(Json::Arr::Iterator item = part.begin(); item != part.end(); item++) {
 
-                    QJsonObject obj, item_obj = (*item).toObject();
-                    path = item_obj.value("downloadPage").toString();
+                    Json::Obj obj, item_obj = (*item).toObject();
+                    path = item_obj.str("downloadPage");
 
                     if (initInfo) {
                         QNetworkReply * reply = manager -> followedGet(QUrl(path));

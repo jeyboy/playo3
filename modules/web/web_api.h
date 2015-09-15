@@ -2,11 +2,6 @@
 #define WEB_API_H
 
 #include <qapplication.h>
-
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-
 #include <qurl.h>
 
 #include "dialogs/user_action_dialog.h"
@@ -41,8 +36,8 @@ public:
     inline QHash<QString, QString> friendsList() const { return friends; }
     inline QHash<QString, QString> groupsList() const { return groups; }
 
-    void fromJson(const QJsonObject & hash);
-    void toJson(QJsonObject & hash);
+    void fromJson(const Json::Obj & hash);
+    void toJson(Json::Obj & hash);
 
 signals:
     void responseReady(QString);
