@@ -63,11 +63,11 @@ protected:
         Json::Obj response;
 
         while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
-            QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
+            Json::Val val = rules.field.isEmpty() ? Json::Val(response) : response.val(rules.field);
             bool invalid = val.isArray();
 
             if (invalid) {
-                Json::Arr ar = val.toArray();
+                Json::Arr ar = val.arr();
                 invalid = ar.isEmpty();
                 rules.fact_count += ar.size();
             }

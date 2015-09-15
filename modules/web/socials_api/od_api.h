@@ -106,7 +106,7 @@ namespace Od {
 
         inline Json::Obj & extractBody(Json::Obj & response) { return response; }
         inline bool endReached(Json::Obj & response, int /*offset*/) {
-            Json::Obj chunk_obj = response.value(QStringLiteral("chunk")).toObject();
+            Json::Obj chunk_obj = response.obj(QStringLiteral("chunk"));
             if (chunk_obj.isEmpty()) return false;
             return chunk_obj.value(QStringLiteral("count")).toInt() < requestLimit();
         }

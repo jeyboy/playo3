@@ -199,6 +199,13 @@ namespace Json {
 //        }
 //    }
 
+    Arr Val::arr() {
+        return *(Arr *)(this);
+    }
+
+    Obj Obj::takeObj(const QString & key) { return take(key).toObject(); }
+    Arr Obj::takeArr(const QString & key) { return take(key).toArray(); }
+
     Obj Obj::toObj(const QString & key) {
         QJsonObject obj = value(key).toObject();
         return *(Obj *)(&obj);
@@ -206,5 +213,10 @@ namespace Json {
     Arr Obj::toArr(const QString & key) {
         QJsonArray obj = value(key).toArray();
         return *(Arr *)(&obj);
+    }
+
+    Val Obj::val(const QString & key) {
+        QJsonValue obj = value(key);
+        return *(Val *)(&obj);
     }
 }

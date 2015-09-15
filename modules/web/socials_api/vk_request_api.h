@@ -247,7 +247,7 @@ namespace Vk {
             setParam(query, QStringLiteral("fields"), QStringLiteral("counters"));
             setParam(query, QStringLiteral("user_ids"), uid);
 
-            return sQuery(baseUrl(QStringLiteral("users.get"), query)).value(QStringLiteral("response")).toArray().first().toObject();
+            return sQuery(baseUrl(QStringLiteral("users.get"), query)).arr(QStringLiteral("response"))[0].obj();
         }
 
         QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
@@ -338,7 +338,7 @@ namespace Vk {
             return baseUrl(execute_key, query);
         }
         Json::Arr audioPopular(bool onlyEng, const QString genre) {
-            return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).value(QStringLiteral("audio_list")).toArray();
+            return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).arr(QStringLiteral("audio_list"));
         }
 
         QUrl audioRefreshUrl(QStringList & uids) {
@@ -355,7 +355,7 @@ namespace Vk {
         }
         Json::Obj getAudioInfo(QString & audio_uid) {
             QStringList uids; uids << audio_uid;
-            Json::Obj ret = getAudiosInfo(uids)[0].toObject();
+            Json::Obj ret = getAudiosInfo(uids)[0].obj();
             return ret;
         }
 

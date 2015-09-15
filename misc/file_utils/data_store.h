@@ -18,13 +18,13 @@ namespace Playo3 {
 
 
             void append(const QString & key, const QString & subkey, const QString & value);
-            inline Json::Cell read(const QString & key) { return json.value(key); } // need override
+            inline Json::Val read(const QString & key) { return json.val(key); }
             inline void write(const QString & key, const auto & value) { json[key] = value; }
             inline void write(const QString & key, const QVariant & value) { json.insert(key, QJsonValue::fromVariant(value)); }
             inline void clear() { json = Json::Obj(); }
             inline QStringList keys() { return json.keys(); }
 
-            inline bool state() const { return state; }
+            inline bool state() const { return _state; }
         private:
             bool _state;
             QString filename;

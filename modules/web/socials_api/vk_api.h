@@ -62,7 +62,7 @@ namespace Vk {
         inline int requestLimit() const { return 200; }
         inline void iterateOffset(int & offset, Json::Obj & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-        inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.value(response_key).toObject()); }
+        inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.obj(response_key)); }
         inline bool endReached(Json::Obj & response, int /*offset*/) { return response.value(finished_key).toBool(); }
         bool extractStatus(QUrl & url, Json::Obj & response, int & code, QString & message);
 

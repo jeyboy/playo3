@@ -1,6 +1,7 @@
 #ifndef JSON_PARSER
 #define JSON_PARSER
 
+#include <qjsondocument.h>
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 #include <qvariant.h>
@@ -161,11 +162,17 @@ namespace Json {
 //        Cell * root;
 //    };
 
+    class Obj;
+    class Arr;
     class Val : public QJsonValue {
+        public:
+            static inline Val fromQVal(QJsonValue obj) { return *(Val *)(&obj); }
+            inline Val(const Obj & o) : QJsonValue((QJsonObject &)o) {}
 
+            Arr arr();
+            Obj obj();
     };
 
-    class Arr;
     class Obj : public QJsonObject {
         public:
             static inline Obj fromData(const QByteArray & data) {
@@ -174,13 +181,14 @@ namespace Json {
             }
             static inline Obj fromQJsonObj(QJsonObject obj) { return *(Obj *)(&obj); }
 
-            Obj takeObj(const QString & key)                { return take(key).toObject(); }
-            Arr takeArr(const QString & key)                { return take(key).toArray(); }
-            Arr takeInt(const QString & key)                { return take(key).toInt(); }
+            Obj takeObj(const QString & key);
+            Arr takeArr(const QString & key);
+            int takeInt(const QString & key)                { return take(key).toInt(); }
 
             Obj obj(const QString & key);
             Arr arr(const QString & key);
             inline QVariant var(const QString & key)        { return value(key).toVariant(); }
+            Val val(const QString & key);
 
             inline bool boolVal(const QString & key)        { return value(key).toBool(); }
             inline QString str(const QString & key)         { return value(key).toString(); }
@@ -190,7 +198,8 @@ namespace Json {
     };
 
     class Arr : public QJsonArray {
-
+        public:
+            inline Val operator[](int j) const { return Val::fromQVal(at(j)); }
     };
 }
 

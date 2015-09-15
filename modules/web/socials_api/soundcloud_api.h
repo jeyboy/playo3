@@ -48,7 +48,7 @@ namespace Soundcloud {
         inline Json::Obj & extractBody(Json::Obj & response) { return response; }
         inline bool endReached(Json::Obj & response, int /*offset*/) { return response.value(QStringLiteral("response")).toArray().isEmpty(); }
         inline bool extractStatus(QUrl & /*url*/, Json::Obj & response, int & code, QString & message) {
-            Json::Obj stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
+            Json::Obj stat_obj = response.obj(QStringLiteral("response")).arr(QStringLiteral("errors"))[0].obj();
             message = stat_obj.value(QStringLiteral("error_message")).toString();
             return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
         }
