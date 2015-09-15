@@ -17,18 +17,18 @@ public:
     static Settings * instance();
     inline static void close() { delete self; }
 
-    void fromJson(QJsonObject settingsObj = QJsonObject());
-    QJsonObject toJson();
+    void fromJson(const Json::Obj & settingsObj = Json::Obj());
+    Json::Obj toJson();
 
     inline int totalItemHeight() { return itemHeight() + (isShowInfo() ? itemInfoFontSize() * 2 : 0); }
     inline int iconHeight() { return totalItemHeight() - 1; }
 
-    inline void resetGlobalSettings()   { QJsonObject obj; GlobalSettings::fromJson(obj); }
-    inline void resetHotkeySettings()   { QJsonObject obj; HotkeySettings::fromJson(obj); }
-    inline void resetItemSettings()     { QJsonObject obj; ItemSettings::fromJson(obj); }
-    inline void resetSpectrumSettings() { QJsonObject obj; SpectrumSettings::fromJson(obj); }
-    inline void resetTabSettings()      { QJsonObject obj; TabSettings::fromJson(obj); }
-    inline void resetLibrarySettings()  { QJsonObject obj; LibrarySettings::fromJson(obj); }
+    inline void resetGlobalSettings()   { GlobalSettings::fromJson(); }
+    inline void resetHotkeySettings()   { HotkeySettings::fromJson(); }
+    inline void resetItemSettings()     { ItemSettings::fromJson(); }
+    inline void resetSpectrumSettings() { SpectrumSettings::fromJson(); }
+    inline void resetTabSettings()      { TabSettings::fromJson(); }
+    inline void resetLibrarySettings()  { LibrarySettings::fromJson(); }
 
 private:
     Settings() : GlobalSettings(), HotkeySettings(),

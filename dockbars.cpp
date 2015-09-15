@@ -18,13 +18,11 @@ void Dockbars::load(QJsonArray & bars) {
     barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
 
     if (bars.count() > 0) {
-        QJsonObject obj;
+        Json::Obj obj;
         QString barName;
         QDockWidget * curr_bar;
 
-        QJsonArray::iterator it = bars.begin();
-
-        for(;it != bars.end(); it++) {
+        for(Json::Arr::Iterator it = bars.begin(); it != bars.end(); it++) {
             obj = (*it).toObject();
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
@@ -59,7 +57,7 @@ void Dockbars::load(QJsonArray & bars) {
             commonBar() -> hide();
     }
 
-    QJsonObject def;
+    Json::Obj def;
     ViewSettings defSettings;
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
@@ -72,12 +70,10 @@ void Dockbars::save(DataStore * settings) {
     QList<DockBar *> bars = dockbars();
 
     if (bars.length() > 0) {
-        QJsonArray bar_array = QJsonArray();
-        QJsonObject curr_bar;
+        Json::Arr bar_array = Json::Arr();
+        Json::Obj curr_bar;
 
-        QList<DockBar *>::Iterator it = bars.begin();
-
-        for(; it != bars.end(); it++) {
+        for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == COMMON_TAB) {
@@ -85,7 +81,7 @@ void Dockbars::save(DataStore * settings) {
                     continue;
             }
 
-            curr_bar = QJsonObject();
+            curr_bar = Json::Obj();
             curr_bar.insert(QStringLiteral("title"), (*it) -> windowTitle());
             curr_bar.insert(QStringLiteral("name"), (*it) -> objectName());
             curr_bar.insert(QStringLiteral("stick"), (*it) -> isSticked());
@@ -122,7 +118,7 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, Json::Obj attrs) {
     if (barName == SCREEN_TAB) {
         return 0; // stub
     } else if (barName == COMMON_TAB) {
@@ -163,7 +159,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, Json::Obj * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 

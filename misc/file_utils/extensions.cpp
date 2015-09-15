@@ -15,7 +15,7 @@ Extensions::Extensions() {
 
     if (ext -> state) {
         activeFilter = ext -> read(QStringLiteral("active")).toString(QStringLiteral("all"));
-        QJsonObject obj = ext -> read(QStringLiteral("filters")).toObject();
+        Json::Obj obj = ext -> read(QStringLiteral("filters")).toObject();
 
         foreach (QString key, obj.keys())
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());

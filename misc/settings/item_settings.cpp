@@ -1,6 +1,6 @@
 #include "item_settings.h"
 
-void ItemSettings::fromJson(QJsonObject & settings) {
+void ItemSettings::fromJson(const Json::Obj & settings) {
     _useGradient = settings.value(SETTINGS_USE_GRADIENT_KEY).toBool(true);
     _itemHeight = settings.value(SETTINGS_ITEM_HEIGHT_KEY).toInt(18);
 
@@ -37,7 +37,7 @@ void ItemSettings::fromJson(QJsonObject & settings) {
     __info.selectedTextColor = colorVar.isValid() ? colorVar.value<QColor>() : QColor(255, 255, 255);
 }
 
-void ItemSettings::toJson(QJsonObject & settings) {
+void ItemSettings::toJson(Json::Obj & settings) {
     settings.insert(SETTINGS_USE_GRADIENT_KEY, QJsonValue::fromVariant(_useGradient));
     settings.insert(SETTINGS_ITEM_HEIGHT_KEY, QJsonValue::fromVariant(_itemHeight));
 
@@ -59,7 +59,7 @@ void ItemSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_SELECTED_ITEM_INFO_TEXT_COLOR_KEY, QJsonValue::fromVariant(__info.selectedTextColor));
 }
 
-QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {
+QBrush & ItemSettings::buildGradient(const QRect & rect, const QColor & color, bool dark) const {
     QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
 
     grad.setColorAt(0, color);
@@ -71,7 +71,7 @@ QBrush ItemSettings::buildGradient(QRect rect, QColor color, bool dark) {
     return grad;
 }
 
-QBrush ItemSettings::unprocessedState(QRect rect, bool dark) {
+QBrush & ItemSettings::unprocessedState(const QRect & rect, bool dark) const {
     if (dark) {
         QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
         grad.setColorAt(0, _folderItemColor);

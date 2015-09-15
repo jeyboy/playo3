@@ -1,10 +1,10 @@
 #ifndef ITEM_SETTINGS
 #define ITEM_SETTINGS
 
-#include <qvariant.h>
+#include "misc/web_utils/json.h"
+
 #include <qfont.h>
 #include <qbrush.h>
-#include <qjsonobject.h>
 
 #define SETTINGS_USE_GRADIENT_KEY QStringLiteral("use_gradient")
 #define SETTINGS_ITEM_HEIGHT_KEY QStringLiteral("item_height")
@@ -32,76 +32,72 @@ struct ItemTextAttrs {
 
 class ItemSettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & settings = Json::Obj());
+    void toJson(Json::Obj & settings);
 
-    QBrush buildGradient(QRect rect, QColor color, bool dark);
+    QBrush & buildGradient(const QRect & rect, const QColor & color, bool dark) const;
 
-    inline QColor defaultState() { return _defaultItemColor; }
-    inline QColor listenedState() { return _listenedItemColor; }
-    inline QColor likedState() { return _likedItemColor; }
-    inline QColor playedState() { return _playedItemColor; }
+    //TODO: need to caching brush for rect for some speed up
+    inline QBrush & defaultState(const QRect & rect, bool dark) const { return buildGradient(rect, _defaultItemColor, dark); }
+    inline QBrush & listenedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _listenedItemColor, dark); }
+    inline QBrush & likedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _likedItemColor, dark); }
+    inline QBrush & playedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _playedItemColor, dark); }
+    inline QBrush & itemState(const QRect &  rect, bool dark) const { return buildGradient(rect, _itemColor, dark); }
 
-    inline QBrush defaultState(QRect rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
-    inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
-    inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
-    inline QBrush playedState(QRect rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
-    inline QBrush itemState(QRect rect, bool dark) { return buildGradient(rect, _itemColor, dark); }
-
-    QBrush unprocessedState(QRect rect, bool dark);
+    QBrush unprocessedState(const QRect & rect, bool dark);
 
     inline bool isUseGradient() const { return _useGradient; }
     inline void setUseGradient(bool use) { _useGradient = use; }
 
-    inline QColor defaultItemColor() const { return _defaultItemColor; }
-    inline void setDefaultItemColor(QColor newColor) { _defaultItemColor = newColor; }
+    inline QColor & defaultItemColor() const { return _defaultItemColor; }
+    inline void setDefaultItemColor(const QColor & newColor) { _defaultItemColor = newColor; }
 
-    inline QColor listenedItemColor() const { return _listenedItemColor; }
-    inline void setListenedItemColor(QColor newColor) { _listenedItemColor = newColor; }
+    inline QColor & listenedItemColor() const { return _listenedItemColor; }
+    inline void setListenedItemColor(const QColor & newColor) { _listenedItemColor = newColor; }
 
-    inline QColor likedItemColor() const { return _likedItemColor; }
-    inline void setLikedItemColor(QColor newColor) { _likedItemColor = newColor; }
+    inline QColor & likedItemColor() const { return _likedItemColor; }
+    inline void setLikedItemColor(const QColor & newColor) { _likedItemColor = newColor; }
 
-    inline QColor playedItemColor() const { return _playedItemColor; }
-    inline void setPlayedItemColor(QColor newColor) { _playedItemColor = newColor; }
+    inline QColor & playedItemColor() const { return _playedItemColor; }
+    inline void setPlayedItemColor(const QColor & newColor) { _playedItemColor = newColor; }
 
-    inline QColor folderItemColor() const { return _folderItemColor; }
-    inline void setFolderItemColor(QColor newColor) { _folderItemColor = newColor; }
+    inline QColor & folderItemColor() const { return _folderItemColor; }
+    inline void setFolderItemColor(const QColor & newColor) { _folderItemColor = newColor; }
 
-    inline QColor itemColor() const { return _itemColor; }
-    inline void setItemColor(QColor newColor) { _itemColor = newColor; }
+    inline QColor & itemColor() const { return _itemColor; }
+    inline void setItemColor(const QColor & newColor) { _itemColor = newColor; }
 
     inline int itemHeight() { return _itemHeight; }
     inline void setItemHeight(int newHeight) { _itemHeight = newHeight; }
 
 
-    inline QString itemFontName() { return __title.fontName; }
-    inline void setItemFontName(QString newFontName) { __title.fontName = newFontName; }
+    inline QString & itemFontName() const { return __title.fontName; }
+    inline void setItemFontName(const QString & newFontName) { __title.fontName = newFontName; }
 
     inline int itemFontSize() { return __title.fontSize; }
     inline void setItemFontSize(int newFontSize) { __title.fontSize = newFontSize; }
 
-    inline QColor itemTextColor() { return __title.textColor; }
-    inline void setItemTextColor(QColor newColor) { __title.textColor = newColor; }
+    inline QColor & itemTextColor() const { return __title.textColor; }
+    inline void setItemTextColor(const QColor & newColor) { __title.textColor = newColor; }
 
-    inline QColor selectedItemTextColor() { return __title.selectedTextColor; }
-    inline void setSelectedItemTextColor(QColor newColor) { __title.selectedTextColor = newColor; }
+    inline QColor & selectedItemTextColor() const { return __title.selectedTextColor; }
+    inline void setSelectedItemTextColor(const QColor & newColor) { __title.selectedTextColor = newColor; }
 
 
-    inline QString itemInfoFontName() { return __info.fontName; }
-    inline void setItemInfoFontName(QString newFontName) { __info.fontName = newFontName; }
+    inline QString & itemInfoFontName() const { return __info.fontName; }
+    inline void setItemInfoFontName(const QString & newFontName) { __info.fontName = newFontName; }
 
     inline int itemInfoFontSize() { return __info.fontSize; }
     inline void setItemInfoFontSize(int newFontSize) { __info.fontSize = newFontSize; }
 
-    inline QColor itemInfoTextColor() { return __info.textColor; }
-    inline void setItemInfoTextColor(QColor newColor) { __info.textColor = newColor; }
+    inline QColor & itemInfoTextColor() const { return __info.textColor; }
+    inline void setItemInfoTextColor(const QColor & newColor) { __info.textColor = newColor; }
 
-    inline QColor selectedItemInfoTextColor() { return __info.selectedTextColor; }
-    inline void setSelectedItemInfoTextColor(QColor newColor) { __info.selectedTextColor = newColor; }
+    inline QColor & selectedItemInfoTextColor() const { return __info.selectedTextColor; }
+    inline void setSelectedItemInfoTextColor(const QColor & newColor) { __info.selectedTextColor = newColor; }
 
-    inline QFont itemFont() { return QFont(itemFontName(), itemFontSize(), QFont::Normal); }
-    inline QFont itemInfoFont() { return QFont(itemInfoFontName(), itemInfoFontSize(), QFont::Bold); }
+    inline QFont & itemFont() const { return QFont(itemFontName(), itemFontSize(), QFont::Normal); }
+    inline QFont & itemInfoFont() const { return QFont(itemInfoFontName(), itemInfoFontSize(), QFont::Bold); }
 protected:
     bool _useGradient;
     int _itemHeight;

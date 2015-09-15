@@ -2,10 +2,7 @@
 
 using namespace Playo3;
 
-DataStore::DataStore(QString name) {
-    filename = name;
-    state = load();
-}
+DataStore::DataStore(QString name) : filename(name), _state(load()) { }
 DataStore::~DataStore() {
 //    save();
 }
@@ -20,7 +17,7 @@ bool DataStore::load() {
 
     QByteArray saveData = qUncompress(loadFile.readAll());
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-    json = loadDoc.object();
+    json = Json::Obj::fromQJsonObj(loadDoc.object());
 
     return true;
 }
@@ -38,40 +35,8 @@ bool DataStore::save() {
     return true;
 }
 
-void DataStore::clear() {
-    json = QJsonObject();
-}
-
-QStringList DataStore::keys() {
-    return json.keys();
-}
-
-QJsonValue DataStore::read(QString key) {
-    return json.value(key);
-}
-
-void DataStore::write(QString key, double value) {
-    json[key] = value;
-}
-
-void DataStore::write(QString key, QJsonArray value) {
-    json[key] = value;
-}
-void DataStore::write(QString key, QJsonObject value) {
-    json[key] = value;
-}
-void DataStore::write(QString key, QString value) {
-    json[key] = value;
-}
-void DataStore::write(QString key, int value) {
-    json[key] = value;
-}
-void DataStore::write(QString key, QVariant value) {
-    json.insert(key, QJsonValue::fromVariant(value));
-}
-
-void DataStore::append(QString key, QString subkey, QString value) {
-    QJsonObject subObj;
+void DataStore::append(const QString & key, const QString & subkey, const QString & value) {
+    Json::Obj subObj;
     subObj[subkey] = value;
-    json[key].toArray().append(subObj);
+    json.toArr(key).append(subObj);
 }

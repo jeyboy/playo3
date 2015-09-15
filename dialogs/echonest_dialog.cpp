@@ -77,7 +77,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QStringList termsList;
 
                 for(QJsonArray::Iterator term = terms.begin(); term != terms.end(); term++) {
-                    QJsonObject obj = (*term).toObject();
+                    Json::Obj obj = (*term).toObject();
                     termsList <<
                         (
                             obj.value(QStringLiteral("name")).toString() % QStringLiteral("\n") %
@@ -102,7 +102,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QVBoxLayout * il = new QVBoxLayout(newsBlock);
 
                 for(QJsonArray::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
-                    QJsonObject obj = (*news_item).toObject();
+                    Json::Obj obj = (*news_item).toObject();
                     QLabel * newsLabel = new QLabel(
                                 obj.value(QStringLiteral("date_found")).toString() % QStringLiteral("\n") % obj.value(QStringLiteral("name")).toString() % QStringLiteral("\n\n") % obj.value(QStringLiteral("summary")).toString()
                                 , newsBlock);
@@ -121,7 +121,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QHash<QString, bool> songsHash;
 
                 for(QJsonArray::Iterator song = songs.begin(); song != songs.end(); song++) {
-                    QJsonObject obj = (*song).toObject();
+                    Json::Obj obj = (*song).toObject();
 
                     QString str = obj.value(QStringLiteral("title")).toString();
 
@@ -212,8 +212,8 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
 
       qDebug() << results;
 
-      for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
-          QJsonObject obj = (*song).toObject();
+      for(Json::Arr::Iterator song = results.begin(); song != results.end(); song++) {
+          Json::Obj obj = (*song).toObject();
           predicates << (obj.value(QStringLiteral("artist_name")).toString() + " - " + obj.value(QStringLiteral("title")).toString());
 //          new WebItem(
 //              obj.value("id").toString(),

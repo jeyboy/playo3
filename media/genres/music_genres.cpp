@@ -17,7 +17,7 @@ void MusicGenres::load() {
         prepare();
     else {
         for(QJsonArray::Iterator genre_obj = ar.begin(); genre_obj != ar.end(); genre_obj++) {
-            QJsonObject genre = (*genre_obj).toObject();
+            Json::Obj genre = (*genre_obj).toObject();
             genres.insert(genre.value(GENRE_VAL_NAME).toString(), genre.value(GENRE_NUM_NAME).toInt());
         }
     }
@@ -29,7 +29,7 @@ void MusicGenres::save() {
     QJsonArray ar;
 
     for(QHash<QString, int>::Iterator genre = genres.begin(); genre != genres.end(); genre++) {
-        QJsonObject obj;
+        Json::Obj obj;
         obj.insert(GENRE_VAL_NAME, genre.key());
         obj.insert(GENRE_NUM_NAME, genre.value());
         ar << obj;

@@ -13,12 +13,12 @@ HotkeySettings::HotkeySettings() {
     _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_BACKWARD, QStringLiteral("Move volume slider at 10 % backward"));
 }
 
-void HotkeySettings::fromJson(QJsonObject & settings) {
-    setHotKeys(settings.value(QStringLiteral("hotkeys")).toObject());
+void HotkeySettings::fromJson(const Json::Obj & json) {
+    setHotKeys(json.obj(JSON_KEY));
 }
 
 void HotkeySettings::toJson(QJsonObject & settings) {
-    settings.insert(QStringLiteral("hotkeys"), _hotkeys);
+    settings.insert(JSON_KEY, _hotkeys);
 }
 
 QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage
@@ -43,19 +43,19 @@ void HotkeySettings::setHotKeys(QList<HotkeyModelItem *> hotkeyList) { //TODO: r
         _hotkeys.insert(QString::number(item -> data(2).toInt()), QJsonValue::fromVariant(item -> data(1)));
 }
 
-void HotkeySettings::setHotKeys(QJsonObject hotkeysHash) {
+void HotkeySettings::setHotKeys(const Json::Obj & hotkeysHash) {
     if (hotkeysHash.empty()) {
-        _hotkeys.insert(QString::number(HOTKEY_NEXT), QJsonValue::fromVariant("Ctrl+Down"));
-        _hotkeys.insert(QString::number(HOTKEY_NEXT_AND_DELETE), QJsonValue::fromVariant("Ctrl+Delete"));
-        _hotkeys.insert(QString::number(HOTKEY_PREV), QJsonValue::fromVariant("Ctrl+Up"));
-        _hotkeys.insert(QString::number(HOTKEY_PLAY), QJsonValue::fromVariant("Media Play"));
-        _hotkeys.insert(QString::number(HOTKEY_STOP), QJsonValue::fromVariant("Media Stop"));
-        _hotkeys.insert(QString::number(HOTKEY_OPEN_SETTINGS), QJsonValue::fromVariant("Ctrl+Q"));
+        _hotkeys.insert(QString::number(HOTKEY_NEXT), Json::Val::fromVariant("Ctrl+Down"));
+        _hotkeys.insert(QString::number(HOTKEY_NEXT_AND_DELETE), Json::Val::fromVariant("Ctrl+Delete"));
+        _hotkeys.insert(QString::number(HOTKEY_PREV), Json::Val::fromVariant("Ctrl+Up"));
+        _hotkeys.insert(QString::number(HOTKEY_PLAY), Json::Val::fromVariant("Media Play"));
+        _hotkeys.insert(QString::number(HOTKEY_STOP), Json::Val::fromVariant("Media Stop"));
+        _hotkeys.insert(QString::number(HOTKEY_OPEN_SETTINGS), Json::Val::fromVariant("Ctrl+Q"));
 
-        _hotkeys.insert(QString::number(HOTKEY_POS_SLIDE_FORWARD), QJsonValue::fromVariant("Ctrl+Alt+Right"));
-        _hotkeys.insert(QString::number(HOTKEY_POS_SLIDE_BACKWARD), QJsonValue::fromVariant("Ctrl+Alt+Left"));
-        _hotkeys.insert(QString::number(HOTKEY_VOL_SLIDE_FORWARD), QJsonValue::fromVariant("Ctrl+Shift+Right"));
-        _hotkeys.insert(QString::number(HOTKEY_VOL_SLIDE_BACKWARD), QJsonValue::fromVariant("Ctrl+Shift+Left"));
+        _hotkeys.insert(QString::number(HOTKEY_POS_SLIDE_FORWARD), Json::Val::fromVariant("Ctrl+Alt+Right"));
+        _hotkeys.insert(QString::number(HOTKEY_POS_SLIDE_BACKWARD), Json::Val::fromVariant("Ctrl+Alt+Left"));
+        _hotkeys.insert(QString::number(HOTKEY_VOL_SLIDE_FORWARD), Json::Val::fromVariant("Ctrl+Shift+Right"));
+        _hotkeys.insert(QString::number(HOTKEY_VOL_SLIDE_BACKWARD), Json::Val::fromVariant("Ctrl+Shift+Left"));
     }
     else _hotkeys = hotkeysHash;
 }

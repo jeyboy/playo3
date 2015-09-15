@@ -3,8 +3,8 @@
 
 #include <qstringbuilder.h>
 #include <qapplication.h>
-#include <qjsonobject.h>
 
+#include "misc/web_utils/json.h"
 #include "modules/data_struct/container_types.h"
 
 #define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
@@ -15,19 +15,15 @@
 #define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
-
-#define SETTINGS_OD_KEY QStringLiteral("od_key")
-#define SETTINGS_OD_VAL_KEY QStringLiteral("od_val")
-
 #define SETTINGS_OPEN_TIMEOUT QStringLiteral("open_time_out_key")
 
 class GlobalSettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & settings = Json::Obj());
+    void toJson(Json::Obj & settings);
 
     inline QString defaultDownloadPath() const { return _defaultDownloadPath; }
-    inline void setDefaultDownloadPath(QString newPath) { _defaultDownloadPath = newPath; }
+    inline void setDefaultDownloadPath(const QString & newPath) { _defaultDownloadPath = newPath; }
 
     inline bool isMetricShow() const { return _showMetric; }
     inline void setMetricShow(bool show) { _showMetric = show; }
@@ -53,9 +49,6 @@ public:
     inline float openTimeOut() { return _openTimeOut; }
     inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
 
-    inline QString od_key() { return _od_key;}
-    inline QString od_val() { return _od_val;}
-
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
@@ -68,8 +61,6 @@ protected:
     int _tabPosition;
 
     float _openTimeOut;
-
-    QString _od_key, _od_val;
 };
 
 #endif // GLOBAL_SETTINGS

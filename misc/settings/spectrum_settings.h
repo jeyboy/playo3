@@ -1,11 +1,10 @@
 #ifndef SPECTRUM_SETTINGS
 #define SPECTRUM_SETTINGS
 
-#include <qvariant.h>
 #include <qcolor.h>
-#include <qjsonobject.h>
 
 #include "misc/spectrum_types.h"
+#include "misc/web_utils/json.h"
 
 #define SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY QStringLiteral("customcolor_spectrum")
 #define SETTINGS_AUTO_BARS_AMOUNT_KEY QStringLiteral("auto_bars_amount")
@@ -21,8 +20,8 @@
 
 class SpectrumSettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & json);
+    void toJson(Json::Obj & json);
 
     inline bool isCustomColorSpectrum() { return _customColorSpectrum; }
     inline void setCustomColorSpectrum(bool use) { _customColorSpectrum = use; }
@@ -33,14 +32,14 @@ public:
     inline int autoBarWidth() { return _autoBarWidth; }
     inline void setAutoBarWidth(int newWidth) { _autoBarWidth = newWidth; }
 
-    inline QColor spectrumColor() { return _spectrumColor; }
-    inline void setSpectrumColor(QColor newColor) { _spectrumColor = newColor; }
+    inline QColor & spectrumColor() const { return _spectrumColor; }
+    inline void setSpectrumColor(const QColor & newColor) { _spectrumColor = newColor; }
 
-    inline QColor spectrumColor2() { return _spectrumColor2; }
-    inline void setSpectrumColor2(QColor newColor) { _spectrumColor2 = newColor; }
+    inline QColor & spectrumColor2() const { return _spectrumColor2; }
+    inline void setSpectrumColor2(const QColor & newColor) { _spectrumColor2 = newColor; }
 
-    inline QColor spectrumColor3() { return _spectrumColor3; }
-    inline void setSpectrumColor3(QColor newColor) { _spectrumColor3 = newColor; }
+    inline QColor & spectrumColor3() const { return _spectrumColor3; }
+    inline void setSpectrumColor3(const QColor & newColor) { _spectrumColor3 = newColor; }
 
     inline int spectrumFreqRate() { return _spectrumFreqRate; }
     inline void setSpectrumFreqRate(int newRate) { _spectrumFreqRate = newRate; }

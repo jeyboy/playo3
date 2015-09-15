@@ -1,27 +1,25 @@
 #ifndef HOTKEY_SETTINGS
 #define HOTKEY_SETTINGS
 
-#include <qjsonarray.h>
-#include <qjsonobject.h>
-
 #include "modules/data_struct/hotkeys/hotkey_model_item.h"
 #include "misc/hotkey_types.h"
+#include "misc/web_utils/json.h"
+
+#define JSON_KEY QStringLiteral("hotkeys")
 
 class HotkeySettings {
 public:
     HotkeySettings();
 
-    void fromJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & json = Json::Obj());
     void toJson(QJsonObject & settings);
 
     QList<HotkeyModelItem *> * hotKeys() const;
     void setHotKeys(QList<HotkeyModelItem *>);
-    void setHotKeys(QJsonObject hotkeysHash = QJsonObject());
+    void setHotKeys(const Json::Obj & hotkeysHash = Json::Obj());
 
 protected:
-//    inline QJsonObject hotkeysJson() const { return _hotkeys; }
-
-    QJsonObject _hotkeys;
+    Json::Obj _hotkeys;
     QHash<int, QString> _humanizeHotkeyText;
 };
 

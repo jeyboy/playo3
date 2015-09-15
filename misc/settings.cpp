@@ -8,7 +8,7 @@ Settings * Settings::instance() {
     return self;
 }
 
-void Settings::fromJson(QJsonObject settings) {
+void Settings::fromJson(const Json::Obj & settings) {
     GlobalSettings::fromJson(settings);
     HotkeySettings::fromJson(settings);
     ItemSettings::fromJson(settings);
@@ -17,15 +17,15 @@ void Settings::fromJson(QJsonObject settings) {
     LibrarySettings::fromJson(settings);
 }
 
-QJsonObject Settings::toJson() {
-    QJsonObject settings = QJsonObject();
+Json::Obj Settings::toJson() {
+    Json::Obj json = Json::Obj();
 
-    GlobalSettings::toJson(settings);
-    HotkeySettings::toJson(settings);
-    ItemSettings::toJson(settings);
-    SpectrumSettings::toJson(settings);
-    TabSettings::toJson(settings);
-    LibrarySettings::toJson(settings);
+    GlobalSettings::toJson(json);
+    HotkeySettings::toJson(json);
+    ItemSettings::toJson(json);
+    SpectrumSettings::toJson(json);
+    TabSettings::toJson(json);
+    LibrarySettings::toJson(json);
 
-    return settings;
+    return json;
 }

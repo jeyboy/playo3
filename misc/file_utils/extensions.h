@@ -16,10 +16,9 @@ namespace Playo3 {
             ext -> clear();
             ext -> write(QStringLiteral("active"), activeFilterName());
 
-            QJsonObject filtersObj;
-            foreach(QString key, filters.keys()) {
-                filtersObj.insert(key, QJsonValue::fromVariant(filters.value(key)));
-            }
+            Json::Obj filtersObj;
+            for(QHash<QString, QStringList>::Iterator it = filters.begin(); it != filters.end(); it++)
+                filtersObj.insert(it.key(), QJsonValue::fromVariant(it.value()));
 
             ext -> write(QStringLiteral("filters"), filtersObj);
             ext -> save();

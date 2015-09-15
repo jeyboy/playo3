@@ -3,6 +3,7 @@
 
 #include <qjsonobject.h>
 #include <qjsonarray.h>
+#include <qvariant.h>
 
 //NOT USING // NOT FINISHED
 
@@ -160,19 +161,24 @@ namespace Json {
 //        Cell * root;
 //    };
 
+    class Val : public QJsonValue {
+
+    };
 
     class Arr;
     class Obj : public QJsonObject {
         public:
-            Obj toObj(const QString & key);
-            Arr toArr(const QString & key);
-            inline QVariant toVar(const QString & key)      { return value(key).toVariant(); }
+            static inline Obj fromQJsonObj(QJsonObject obj) { return *(Obj *)(&obj); }
 
-            inline bool toBool(const QString & key)         { return value(key).toBool(); }
-            inline QString toStr(const QString & key)       { return value(key).toString(); }
-            inline QString toNumStr(const QString & key)    { return QString::number((qint64)value(key).toDouble()); }
-            inline int toInt(const QString & key)           { return value(key).toInt(); }
-            inline double toDouble(const QString & key)     { return value(key).toDouble(); }
+            Obj obj(const QString & key);
+            Arr arr(const QString & key);
+            inline QVariant var(const QString & key)      { return value(key).toVariant(); }
+
+            inline bool boolVal(const QString & key)        { return value(key).toBool(); }
+            inline QString str(const QString & key)         { return value(key).toString(); }
+            inline QString numStr(const QString & key)      { return QString::number((qint64)value(key).toDouble()); }
+            inline int intVal(const QString & key)          { return value(key).toInt(); }
+            inline double doubleVal(const QString & key)    { return value(key).toDouble(); }
     };
 
     class Arr : public QJsonArray {
