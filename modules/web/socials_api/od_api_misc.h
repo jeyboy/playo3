@@ -6,7 +6,7 @@
 
 #include "../iapi.h"
 #include "../web_api.h"
-#include "misc/web_utils/html_parser.h"
+#include "misc/web_utils/html.h"
 #include "od_api_keys.h"
 
 namespace Od {

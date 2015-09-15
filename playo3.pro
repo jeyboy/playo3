@@ -136,14 +136,12 @@ SOURCES += main.cpp\
     dialogs/echonest_dialog.cpp \
     modules/controls/accordion.cpp \
     double_slider/qxtspanslider.cpp \
-    misc/web_utils/html_parser.cpp \
     modules/web/sites/myzuka_album.cpp \
     misc/web_utils/web_manager.cpp \
     external_keys.cpp \
     modules/web/socials_api/soundcloud_api_keys.cpp \
     modules/web/socials_api/vk_api_keys.cpp \
     modules/web/sites/grabber_keys.cpp \
-    misc/web_utils/json_parser.cpp \
     modules/web/storages/fourshared/fourshared_api.cpp \
     modules/web/storages/fourshared/fourshared_api_keys.cpp \
     modules/web/sites/exua.cpp \
@@ -170,7 +168,9 @@ SOURCES += main.cpp\
     modules/data_struct/web/od/od_folder.cpp \
     modules/data_struct/web/od/od_item.cpp \
     modules/data_struct/web/od/od_model.cpp \
-    modules/data_struct/web/od/od_view.cpp
+    modules/data_struct/web/od/od_view.cpp \
+    misc/web_utils/json.cpp \
+    misc/web_utils/html.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -308,13 +308,11 @@ HEADERS  += playo.h \
     modules/web/sites/igrabber_api.h \
     modules/web/sites/myzuka_album.h \
     media/genres/target_genres.h \
-    misc/web_utils/html_parser.h \
     misc/web_utils/web_manager.h \
     external_keys.h \
     modules/web/socials_api/soundcloud_api_keys.h \
     modules/web/socials_api/vk_api_keys.h \
     modules/web/sites/grabber_keys.h \
-    misc/web_utils/json_parser.h \
     misc/web_utils/unicode_decoding.h \
     modules/web/storages/fourshared/fourshared_api.h \
     modules/web/storages/fourshared/fourshared_request_api.h \
@@ -347,7 +345,9 @@ HEADERS  += playo.h \
     modules/data_struct/web/od/od_item.h \
     modules/data_struct/web/od/od_model.h \
     modules/data_struct/web/od/od_view.h \
-    modules/web/socials_api/od_api_misc.h
+    modules/web/socials_api/od_api_misc.h \
+    misc/web_utils/json.h \
+    misc/web_utils/html.h
 
 FORMS    += playo.ui \
     dialogs/toolbarbuttondialog.ui \

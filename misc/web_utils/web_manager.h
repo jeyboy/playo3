@@ -5,6 +5,7 @@
 #include <qapplication.h>
 #include <qpixmap.h>
 
+#include "misc/web_utils/json.h"
 #include "misc/logger.h"
 
 class WebManagerController;
@@ -23,7 +24,7 @@ public:
     inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
 
     WebResponse * followByRedirect();
-    QJsonObject toJson(const QString & wrap = QString());
+    Json::Obj toJson(const QString & wrap = QString());
     QPixmap toImage();
 };
 
@@ -68,10 +69,10 @@ public:
     inline WebRequest * requestTo(const QUrl & url) { return new WebRequest(this, url); }
 
     inline QPixmap getImage(const QUrl & url) { return followedGet(url) -> toImage(); }
-    inline QJsonObject getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
-    inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
-    inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
-    inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
+    inline Json::Obj getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
+    inline Json::Obj getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
+    inline Json::Obj postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
+    inline Json::Obj postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
 
     inline WebResponse * followedGet(const QUrl & url) { return requestTo(url) -> viaGet() -> followByRedirect(); }
     inline WebResponse * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaGet() -> followByRedirect(); }

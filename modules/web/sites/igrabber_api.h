@@ -1,7 +1,7 @@
 #ifndef IGRABBER_API
 #define IGRABBER_API
 
-#include "misc/web_utils/html_parser.h"
+#include "misc/web_utils/html.h"
 #include "media/duration.h"
 #include "grabber_keys.h"
 #include "modules/isearchable.h"

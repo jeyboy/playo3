@@ -14,11 +14,12 @@ WebResponse * WebResponse::followByRedirect() {
 
     return this;
 }
-QJsonObject WebResponse::toJson(const QString & wrap) {
+Json::Obj WebResponse::toJson(const QString & wrap) {
     QByteArray ar = readAll();
     if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
     deleteLater();
-    return QJsonDocument::fromJson(ar).object();
+    QJsonObject obj = QJsonDocument::fromJson(ar).object();
+    return *(Json::Obj *)(&obj) ;
 }
 QPixmap WebResponse::toImage() {
     QImage image;

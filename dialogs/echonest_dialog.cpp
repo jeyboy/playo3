@@ -27,7 +27,7 @@ EchonestDialog::~EchonestDialog() {
 
 void EchonestDialog::onArtistInfoButtonClicked() {
     if (!artistName -> text().isEmpty()) {
-        QJsonObject info = EchonestApi::instance() -> artistProfile(artistName -> text());
+        Json::Obj info = EchonestApi::instance() -> artistProfile(artistName -> text());
 
         artistAccordion -> clear();
 
