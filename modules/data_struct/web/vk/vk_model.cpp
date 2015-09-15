@@ -19,23 +19,23 @@ void VkModel::refresh(bool retryPlaing) {
 //    VkApi::instance() -> wallAudio(tab_uid, Func(this, "proceedWallList"));
 //}
 
-void VkModel::proceedWallList(QJsonArray & posts) {
+void VkModel::proceedWallList(Json::Arr & posts) {
     if (posts.count() > 0) {
-        QJsonArray audios;
-        QJsonObject post;
+        Json::Arr audios;
+        Json::Obj post;
         QString title;
         FolderItem * folder, * rootFolder = rootItem -> createFolder(QStringLiteral("!!!WALL!!!"));
         int index = rootItem -> childRow(rootFolder);
 
         beginInsertRows(QModelIndex(), index, index);
 
-        QJsonArray::Iterator it = posts.begin();
+        Json::Arr::Iterator it = posts.begin();
 
         for(; it != posts.end(); it++) {
             post = (*it).toObject();
-            audios = post.value(QStringLiteral("audios")).toArray();
+            audios = post.arr(QStringLiteral("audios"));
 
-            title = post.value(QStringLiteral("title")).toString();
+            title = post.str(QStringLiteral("title"));
             title = QDateTime::fromTime_t(post.value(QStringLiteral("date")).toInt()).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
 
             folder = rootFolder -> createFolder(title);
@@ -50,9 +50,9 @@ void VkModel::proceedWallList(QJsonArray & posts) {
     emit moveOutProcess();
 }
 
-void VkModel::proceedAudioList(QJsonObject & hash) {
-    QJsonArray albums = hash.value(QStringLiteral("albums")).toArray();
-    QJsonArray audios = hash.value(QStringLiteral("audio_list")).toObject().value(QStringLiteral("items")).toArray();
+void VkModel::proceedAudioList(Json::Obj & hash) {
+    Json::Arr albums = hash.arr(QStringLiteral("albums"));
+    Json::Arr audios = hash.obj(QStringLiteral("audio_list")).arr(QStringLiteral("items"));
     int itemsAmount = 0, albums_count = Vk::Api::extractCount(albums);
 
 //    beginResetModel();
@@ -60,7 +60,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     {
         if (albums_count > 0) {
             VkFolder * folder;
-            QJsonObject album;
+            Json::Obj album;
 
             for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
                 QJsonArray part_arr = (*album_part).toArray();
@@ -94,31 +94,30 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 //    endResetModel();
     /////////////////////////////////////////////////////////////////////
     {
-        QJsonObject group;
-        QJsonArray groups = hash.value(QStringLiteral("groups")).toArray();
-        QJsonArray::Iterator it = groups.begin();
+        Json::Obj group;
+        Json::Arr groups = hash.arr(QStringLiteral("groups"));
+        Json::Arr::Iterator it = groups.begin();
 
         for(; it != groups.end(); it++) {
             group = (*it).toObject();
 
             Vk::Api::instance() -> addGroup(
-                QString::number(group.value(QStringLiteral("id")).toInt()),
-                group.value(QStringLiteral("title")).toString()
+                group.numStr(QStringLiteral("id")),
+                group.str(QStringLiteral("title"))
             );
         }
     }
 /////////////////////////////////////////////////////////////////////
     {
-        QJsonObject frend;
-        QJsonArray friends = hash.value(QStringLiteral("friends")).toArray();
-        QJsonArray::Iterator it = friends.begin();
+        Json::Obj frend;
+        Json::Arr friends = hash.arr(QStringLiteral("friends"));
 
-        for(; it != friends.end(); it++) {
+        for(Json::Arr::Iterator it = friends.begin(); it != friends.end(); it++) {
             frend = (*it).toObject();
 
             Vk::Api::instance() -> addFriend(
-                QString::number(frend.value(QStringLiteral("id")).toInt()),
-                frend.value(QStringLiteral("title")).toString()
+                frend.numStr(QStringLiteral("id")),
+                frend.str(QStringLiteral("title"))
             );
         }
     }
@@ -126,7 +125,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     emit moveOutProcess();
 }
 
-void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
+void VkModel::proceedAudioListAndRetry(Json::Obj & hash) {
     proceedAudioList(hash);
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }

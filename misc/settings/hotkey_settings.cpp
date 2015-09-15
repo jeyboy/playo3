@@ -17,7 +17,7 @@ void HotkeySettings::fromJson(const Json::Obj & json) {
     setHotKeys(json.obj(JSON_KEY));
 }
 
-void HotkeySettings::toJson(QJsonObject & settings) {
+void HotkeySettings::toJson(Json::Obj & settings) {
     settings.insert(JSON_KEY, _hotkeys);
 }
 

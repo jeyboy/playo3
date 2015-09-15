@@ -18,8 +18,7 @@ Json::Obj WebResponse::toJson(const QString & wrap) {
     QByteArray ar = readAll();
     if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
     deleteLater();
-    QJsonObject obj = QJsonDocument::fromJson(ar).object();
-    return *(Json::Obj *)(&obj) ;
+    return Json::Obj::fromData(ar);
 }
 QPixmap WebResponse::toImage() {
     QImage image;
@@ -53,8 +52,6 @@ WebResponse * WebRequest::viaForm(const QByteArray & data) {
     return manager -> post(*this, data);
 }
 
-
-
 //////////////////////////     WEB_MANAGER     /////////////////////////////
 
 
@@ -66,8 +63,6 @@ WebManager * WebManager::manager() {
     if (!managers.contains(thread)) {
         qDebug() << "!!!!!!!!!!!!!!!!!!!! REGISTRATE MANAGER";
         managers.insert(thread, new WebManager());
-
-        //QApplication::instance() -> thread()
 
         if (/*QThread::currentThread()*/ thread != QApplication::instance() -> thread())
             connect(thread, SIGNAL(finished()), new WebManagerController(), SLOT(disconnectThread()));
@@ -81,37 +76,6 @@ WebManager::WebManager(QObject * parent, QSsl::SslProtocol protocol, QSslSocket:
     this -> mode = mode;
     this -> setCookieJar(WebManager::cookies);
 }
-
-//QJsonObject WebManager::getJson(const QNetworkRequest & request, bool wrap) {
-//    QNetworkReply * reply = getSync(request);
-//    QJsonObject res = replyToJson(reply, wrap);
-//    reply -> deleteLater();
-//    return res;
-//}
-//QJsonObject WebManager::postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap) {
-//    QNetworkReply * reply = postSync(request, data);
-//    QJsonObject res = replyToJson(reply, wrap);
-//    reply -> deleteLater();
-//    return res;
-//}
-
-//QNetworkReply * WebManager::postForm(const QUrl & url, bool redirect_follow, QHash<QString, QString> headers) {
-//    return postForm(url, url.query(QUrl::FullyEncoded), redirect_follow, headers);
-//}
-
-//QNetworkReply * WebManager::postForm(const QUrl & url, const QString & body, bool redirect_follow, QHash<QString, QString> headers) {
-//    QNetworkRequest request(url);
-//    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-//    return postSync(request, body.toUtf8(), redirect_follow, headers);
-//}
-
-//QPixmap WebManager::openImage(const QUrl & url) {
-//    QImage image;
-//    QNetworkReply * reply = openUrl(url);
-//    image.loadFromData(reply -> readAll());
-//    reply -> deleteLater();
-//    return QPixmap::fromImage(image);
-//}
 
 WebResponse * WebManager::synchronizeRequest(QNetworkReply * m_http) {
     QEventLoop loop;

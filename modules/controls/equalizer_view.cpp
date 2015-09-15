@@ -63,14 +63,14 @@ EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging
     initTopLayout(topLayout);
 
     QWidget * scroll_panel = new QWidget(this);
-    scroll_panel -> setStyleSheet("background-color: transparent;");
+    scroll_panel -> setStyleSheet(QStringLiteral("background-color: transparent;"));
     QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
     initBottomLayout(bottomLayout);
 
     QScrollArea * scrollArea = new QScrollArea(this);
     scrollArea -> setWidgetResizable(true);
     scrollArea -> setWidget(scroll_panel);
-    scrollArea -> setStyleSheet("background-color: transparent; border: none;");
+    scrollArea -> setStyleSheet(QStringLiteral("background-color: transparent; border: none;"));
 
     vLayout -> addLayout(topLayout);
     vLayout -> addWidget(scrollArea);
@@ -78,14 +78,14 @@ EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging
 
 EqualizerView::~EqualizerView() {}
 
-QJsonObject EqualizerView::settings() {
-    QJsonObject res;
-    QJsonObject presetsNode;
+Json::Obj EqualizerView::settings() {
+    Json::Obj res;
+    Json::Obj presetsNode;
 
     QMap<QString, QMap<int, int> >::Iterator preset = presets.begin();
 
     for(; preset != presets.end(); preset++) {
-        QJsonObject curr_preset;
+        Json::Obj curr_preset;
 
         for(QMap<int, int>::Iterator gain = preset.value().begin(); gain != preset.value().end(); gain++)
             curr_preset.insert(QString::number(gain.key()), gain.value());
@@ -99,15 +99,15 @@ QJsonObject EqualizerView::settings() {
 
     return res;
 }
-void EqualizerView::setSettings(QJsonObject settings) {
-    QJsonObject presetsNode = settings.value(QStringLiteral("presets")).toObject();
+void EqualizerView::setSettings(const Json::Obj & settings) {
+    Json::Obj presetsNode = settings.value(QStringLiteral("presets")).toObject();
 
-    foreach(QString key, presetsNode.keys()) {
-        QJsonObject presetVals = presetsNode.value(key).toObject();
+    foreach(QString key, presetsNode.keys()) { // TODO: rewrite on for
+        Json::Obj presetVals = presetsNode.obj(key);
         QMap<int, int> gains;
 
-        foreach(QString gKey, presetVals.keys())
-            gains.insert(gKey.toInt(), presetVals.value(gKey).toInt());
+        foreach(QString gKey, presetVals.keys()) // TODO: rewrite on for
+            gains.insert(gKey.toInt(), presetVals.intVal(gKey));
 
         presets.insert(key, gains);
     }

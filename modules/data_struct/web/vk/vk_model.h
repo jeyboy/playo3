@@ -8,7 +8,7 @@ namespace Playo3 {
     class VkModel : public WebModel {
         Q_OBJECT
     public:
-        inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
+        inline VkModel(const QString & uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return vk; }
         inline WebApi * api() { return Vk::Api::instance(); }
@@ -17,10 +17,10 @@ namespace Playo3 {
 //        virtual void refreshWall();
 
     protected slots:
-        void proceedWallList(QJsonArray &);
+        void proceedWallList(Json::Arr &);
 
-        void proceedAudioList(QJsonObject &);
-        void proceedAudioListAndRetry(QJsonObject &);
+        void proceedAudioList(Json::Obj &);
+        void proceedAudioListAndRetry(Json::Obj &);
     };
 }
 

@@ -7,9 +7,9 @@
 namespace Playo3 {
     class OdItem : public WebItem {
     public:
-        inline OdItem(QJsonObject * hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
+        inline OdItem(Json::Obj & hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
         inline OdItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
-        inline OdItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+        inline OdItem(const QVariant & uid, const QString & filePath, const QString & fileName, FolderItem * parent = 0, int pos = -1)
             : WebItem(uid, filePath, fileName, parent, pos) {
             //    setExtension("mp3");
             //    setBpm(itemBpm);

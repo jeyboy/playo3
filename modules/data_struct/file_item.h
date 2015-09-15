@@ -11,7 +11,7 @@ namespace Playo3 {
     class FileItem : public IItem {
     public:
         inline FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
-        inline FileItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
+        inline FileItem(Json::Obj & hash, FolderItem * parent = 0) : IItem(parent, hash) {}
         inline FileItem(QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
             QString ext;
             if (FilenameConversions::extractExtension(fileName, ext))

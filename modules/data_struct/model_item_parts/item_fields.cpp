@@ -2,12 +2,12 @@
 
 using namespace Playo3;
 
-ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
+ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.takeInt(JSON_TYPE_STATE)) {
     attrs = QVariantMap(hash);
 }
 
-ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_STATE).toInt()) {
-    attrs = hash -> toVariantMap();
+ItemFields::ItemFields(Json::Obj & hash) : ItemState(hash.takeInt(JSON_TYPE_STATE)) {
+    attrs = hash.toVariantMap();
 }
 
 ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
@@ -30,8 +30,8 @@ QStringList ItemFields::info() const {
     return list;
 }
 
-QJsonObject ItemFields::toJson() {
-    QJsonObject root = QJsonObject::fromVariantMap(attrs);
+Json::Obj ItemFields::toJson() {
+    Json::Obj root = Json::Obj::fromVariantMap(attrs);
     root[JSON_TYPE_STATE] = saveStates();
     return root;
 }

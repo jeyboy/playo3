@@ -1,6 +1,6 @@
 #include "global_settings.h"
 
-void GlobalSettings::fromJson(QJsonObject & settings) {
+void GlobalSettings::fromJson(const Json::Obj & settings) {
     _showMetric = settings.value(SETTINGS_SHOW_METRICS_KEY).toBool(true);
     _showMetricNumero = settings.value(SETTINGS_SHOW_METRICS_NUMERO_KEY).toBool(false);
 
@@ -18,7 +18,7 @@ void GlobalSettings::fromJson(QJsonObject & settings) {
     _od_val = settings.value(SETTINGS_OD_VAL_KEY).toString();
 }
 
-void GlobalSettings::toJson(QJsonObject & settings) {   
+void GlobalSettings::toJson(Json::Obj & settings) {
     settings.insert(SETTINGS_AUTORUNNED_KEY, QJsonValue::fromVariant(_isAutorunned));
 
     settings.insert(SETTINGS_SHOW_METRICS_KEY, QJsonValue::fromVariant(_showMetric));

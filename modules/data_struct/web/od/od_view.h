@@ -7,7 +7,7 @@
 class OdView : public IView {
   Q_OBJECT
 public:
-    inline OdView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
+    inline OdView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
         : IView(dynamic_cast<IModel *>(new OdModel(settings.uid, hash)), parent, settings) {}
     inline OdView(WebModel * newModel, QWidget * parent, ViewSettings settings)
         : IView(newModel, parent, settings) {}

@@ -1,14 +1,12 @@
 #ifndef IGNORE_LIST_H
 #define IGNORE_LIST_H
 
-#include <qvariant.h>
-#include <qjsonobject.h>
-#include <qjsonarray.h>
+#include "misc/web_utils/json.h"
 
 namespace Playo3 {
     class IgnoreList {
     public:
-        IgnoreList(QJsonObject * obj = 0);
+        IgnoreList(Json::Obj & obj = Json::Obj());
         inline virtual ~IgnoreList() {}
 
         void ignoreListAddUid(QVariant uid);
@@ -16,8 +14,8 @@ namespace Playo3 {
         void ignoreListRemoveUid(QVariant uid);
         bool ignoreListContainUid(QVariant uid);
 
-        QJsonObject & ignoreListToJson(QJsonObject & obj);
-        void ignoreListFromJson(QJsonArray);
+        Json::Obj & ignoreListToJson(Json::Obj & obj);
+        void ignoreListFromJson(Json::Arr & arr);
     private:
         inline QString jsonName() const { return QStringLiteral("deleted"); }
 

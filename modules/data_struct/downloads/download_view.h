@@ -25,11 +25,11 @@ namespace Playo3 {
     class DownloadView : public QListView {
       Q_OBJECT
     public:
-        static DownloadView * instance(QJsonObject * hash = 0, QWidget * parent = 0);
+        static DownloadView * instance(Json::Obj * hash = 0, QWidget * parent = 0);
 
         ~DownloadView();
 
-        QJsonObject toJson();
+        Json::Obj toJson();
 
         inline void scrollToActive() { scrollTo(currentIndex()); }
 
@@ -72,7 +72,7 @@ namespace Playo3 {
     private:
         bool paused;
 
-        DownloadView(QJsonObject * hash, QWidget * parent);
+        DownloadView(Json::Obj & hash, QWidget * parent);
         QList<QFutureWatcher<QModelIndex> *> watchers;
         QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
 

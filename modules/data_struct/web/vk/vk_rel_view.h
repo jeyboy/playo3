@@ -7,7 +7,7 @@
 class VkRelView : public VkView {
   Q_OBJECT
 public:   
-    inline VkRelView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
+    inline VkRelView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
         : VkView(dynamic_cast<VkModel *>(new VkRelModel(settings.rel_type, settings.uid, hash)), parent, settings) {}
 };
 

@@ -8,7 +8,7 @@ namespace Playo3 {
     class LevelTreeView : public IView {
       Q_OBJECT
     public:
-        inline LevelTreeView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
+        inline LevelTreeView(QWidget * parent, const ViewSettings & settings, Json::Obj & hash = Json::Obj())
             : IView(dynamic_cast<IModel *>(new LevelTreeModel(hash)), parent, settings) {}
     };
 }

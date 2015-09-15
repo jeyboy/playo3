@@ -7,7 +7,7 @@
 class TeuAuth {
 public:
     inline TeuAuth() {}
-    inline TeuAuth(const QJsonObject & hash) { fromJson(hash); }
+    inline TeuAuth(const Json::Obj & hash) { fromJson(hash); }
     inline virtual ~TeuAuth() {}
 
     void setParams(QString accessToken, QString userID, QString expiresIn);
@@ -16,8 +16,8 @@ public:
     inline QString expire() const { return _expires_in; }
     inline QString userID() const { return _user_id; }
 
-    void fromJson(const QJsonObject & hash);
-    void toJson(QJsonObject & hash);
+    void fromJson(const Json::Obj & hash);
+    void toJson(Json::Obj & hash);
 
 private:
     QString _token;

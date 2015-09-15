@@ -21,7 +21,7 @@ IItem::IItem(FolderItem * parent, QVariantMap & hash, int pos)
             _parent -> declareChild(pos, this);
     }
 }
-IItem::IItem(FolderItem * parent, QJsonObject * hash)
+IItem::IItem(FolderItem * parent, Json::Obj & hash)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent)
@@ -38,11 +38,9 @@ IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
     }
 }
 
-QJsonObject IItem::toJson() {
-    QJsonObject root = ItemFields::toJson();
-
+Json::Obj IItem::toJson() {
+    Json::Obj root = ItemFields::toJson();
     root[JSON_TYPE_ITEM_TYPE] = itemType();
-
     return root;
 }
 

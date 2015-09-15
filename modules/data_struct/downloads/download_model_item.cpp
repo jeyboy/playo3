@@ -8,13 +8,13 @@ DownloadModelItem::DownloadModelItem(const QVariantMap & data, DownloadModelItem
         parent -> childItems.append(this);
 }
 
-DownloadModelItem::DownloadModelItem(QJsonObject * data, DownloadModelItem * parent) {
+DownloadModelItem::DownloadModelItem(const Json::Obj & data, DownloadModelItem * parent) {
      parentItem = parent;
 
-     if (data) {
+     if (!data.isEmpty()) {
          if (data -> contains(QStringLiteral("childs"))) {
-             QJsonArray ar = data -> take(QStringLiteral("childs")).toArray();
-             QJsonObject iterObj;
+             Json::Arr ar = data -> take(QStringLiteral("childs")).toArray();
+             Json::Obj iterObj;
 
              for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
                  iterObj = (*it).toObject();
@@ -33,11 +33,11 @@ DownloadModelItem::~DownloadModelItem() {
     qDeleteAll(childItems);
 }
 
-QJsonObject DownloadModelItem::toJson() {
-    QJsonObject root = QJsonObject::fromVariantMap(itemData);
+Json::Obj DownloadModelItem::toJson() {
+    Json::Obj root = Json::Obj::fromVariantMap(itemData);
 
     if (childItems.length() > 0) {
-        QJsonArray ar = QJsonArray();
+        Json::Arr ar = Json::Arr();
         for(int i = 0; i < childItems.length(); i++)
             ar.append(childItems.at(i) -> toJson());
 

@@ -11,7 +11,7 @@ namespace Playo3 {
     class WebModel : public IModel, public IgnoreList {
         Q_OBJECT
     public:
-        inline WebModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) :
+        inline WebModel(QString uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) :
             IModel(hash, parent), IgnoreList(hash), tab_uid(uid)
         { lastRefresh = QDateTime::currentMSecsSinceEpoch() - UPDATE_INTERVAL; }
         inline virtual ~WebModel() {}
@@ -21,7 +21,7 @@ namespace Playo3 {
         inline QString tabUid() const { return tab_uid; }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);
-        QJsonObject toJson();
+        Json::Obj toJson();
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

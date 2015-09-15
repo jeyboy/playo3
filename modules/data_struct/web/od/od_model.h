@@ -8,7 +8,7 @@ namespace Playo3 {
     class OdModel : public WebModel {
         Q_OBJECT
     public:       
-        inline OdModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
+        inline OdModel(const QString & uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return od; }
         inline WebApi * api() { return Od::Api::instance(); }
@@ -16,8 +16,8 @@ namespace Playo3 {
         void refresh(bool retryPlaing = false);
 
     protected slots:
-        void proceedAudioList(QJsonObject &);
-        void proceedAudioListAndRetry(QJsonObject &);
+        void proceedAudioList(Json::Obj &);
+        void proceedAudioListAndRetry(Json::Obj &);
 //        int proceedAudioList(QJsonArray &, FolderItem *);
     };
 }

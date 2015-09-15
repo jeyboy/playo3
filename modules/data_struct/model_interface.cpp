@@ -47,7 +47,7 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
+IModel::IModel(Json::Obj & hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
     if (hash != 0) {
         rootItem = new FolderItem(hash);
@@ -254,14 +254,14 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
 
 int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
-    QJsonObject itm;
+    Json::Obj itm;
     VkItem * newItem;
     QString uri, id, owner;
     QVariant uid;
     QList<IItem *> items;
 
     if (!collection.at(0).isArray()) {
-        QJsonArray ar;
+        Json::Arr ar;
         ar.append(collection);
         collection = ar;
     }
@@ -270,9 +270,9 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     parent -> accumulateUids(store);
 
     int pos = parent -> foldersAmount();
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+    for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        Json::Arr part = (*parts_it).toArray();
+        for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
             itm = (*it).toObject();
 
             if (itm.isEmpty()) continue;
@@ -318,11 +318,11 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
 
 int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
-    QJsonObject itm;
+    Json::Obj itm;
     WebItem * newItem;
     QString uri, refresh_url, id;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(Json::Arr::Iterator it = collection.begin(); it != collection.end(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -376,7 +376,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
 
 int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     int itemsAmount = 0;
-    QJsonObject itm;
+    Json::Obj itm;
     SoundcloudItem * newItem;
     QString uri, id, owner;
     QVariant uid;
@@ -384,7 +384,7 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     bool original;
 
     if (!collection.at(0).isArray()) {
-        QJsonArray ar;
+        Json::Arr ar;
         ar.append(collection);
         collection = ar;
     }
@@ -392,9 +392,9 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+    for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        Json::Arr part = (*parts_it).toArray();
+        for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
             itm = (*it).toObject();
 
             if (itm.isEmpty()) continue;
@@ -446,13 +446,13 @@ int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
 
     int itemsAmount = 0;
-    QJsonObject itm;
+    Json::Obj itm;
     OdItem * newItem;
     QString id;
     QList<IItem *> items;
 
     if (!collection.at(0).isArray()) {
-        QJsonArray ar;
+        Json::Arr ar;
         ar.append(collection);
         collection = ar;
     }
@@ -460,9 +460,9 @@ int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
+    for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
+        Json::Arr part = (*parts_it).toArray();
+        for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
             itm = (*it).toObject();
 
             if (itm.isEmpty()) continue;

@@ -168,11 +168,19 @@ namespace Json {
     class Arr;
     class Obj : public QJsonObject {
         public:
+            static inline Obj fromData(const QByteArray & data) {
+                QJsonObject obj = QJsonDocument::fromJson(data).object();
+                return *(Json::Obj *)(&obj);
+            }
             static inline Obj fromQJsonObj(QJsonObject obj) { return *(Obj *)(&obj); }
+
+            Obj takeObj(const QString & key)                { return take(key).toObject(); }
+            Arr takeArr(const QString & key)                { return take(key).toArray(); }
+            Arr takeInt(const QString & key)                { return take(key).toInt(); }
 
             Obj obj(const QString & key);
             Arr arr(const QString & key);
-            inline QVariant var(const QString & key)      { return value(key).toVariant(); }
+            inline QVariant var(const QString & key)        { return value(key).toVariant(); }
 
             inline bool boolVal(const QString & key)        { return value(key).toBool(); }
             inline QString str(const QString & key)         { return value(key).toString(); }

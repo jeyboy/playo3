@@ -7,8 +7,8 @@ namespace Playo3 {
     class OdFolder : public WebFolderItem {
     public:
         inline OdFolder(int initState) : WebFolderItem(initState) {}
-        inline OdFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
-        inline OdFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+        inline OdFolder(const Json::Obj & hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
+        inline OdFolder(const QString & uid, const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
             : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return OD_PLAYLIST; }

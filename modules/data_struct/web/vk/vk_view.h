@@ -7,7 +7,7 @@
 class VkView : public IView {
   Q_OBJECT
 public:   
-    inline VkView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
+    inline VkView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
         : IView(dynamic_cast<IModel *>(new VkModel(settings.uid, hash)), parent, settings) {}
     inline VkView(WebModel * newModel, QWidget * parent, ViewSettings settings)
         : IView(newModel, parent, settings) {}

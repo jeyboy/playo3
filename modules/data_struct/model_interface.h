@@ -32,7 +32,7 @@ namespace Playo3 {
 
         static bool restoreUrl(IItem * itm);
 
-        IModel(QJsonObject * hash, QObject * parent);
+        IModel(const Json::Obj & hash, QObject * parent);
         virtual ~IModel();
 
         inline FolderItem * root() { return rootItem; }
@@ -74,7 +74,7 @@ namespace Playo3 {
         template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(item(index)); }
 
         void shuffle();
-        virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
+        virtual inline Json::Obj toJson() { return rootItem -> toJson(); }
 
         QModelIndex fromPath(QString path, Direction direction = none);
 

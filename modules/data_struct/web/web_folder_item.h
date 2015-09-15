@@ -7,8 +7,8 @@ namespace Playo3 {
     class WebFolderItem : public FolderItem {
     public:
         inline WebFolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : FolderItem(initState) {}
-        inline WebFolderItem(QJsonObject * hash, FolderItem * parent = 0) : FolderItem(hash, parent) {}
-        inline WebFolderItem(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+        inline WebFolderItem(Json::Obj & hash, FolderItem * parent = 0) : FolderItem(hash, parent) {}
+        inline WebFolderItem(const QString & uid, const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
             : FolderItem(folderTitle, parent, uid, pos, initState) {}
 
         inline virtual ~WebFolderItem() {}

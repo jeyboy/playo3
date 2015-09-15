@@ -28,13 +28,13 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 }
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
+FolderItem::FolderItem(Json::Obj & hash, FolderItem * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
       inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
-        QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
-        QJsonObject iterObj;
+        Json::Arr ar = hash -> take(JSON_TYPE_CHILDS).toArray();
+        Json::Obj iterObj;
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
             iterObj = (*it).toObject();
@@ -186,13 +186,13 @@ bool FolderItem::removePhysicalObject() { // this is a little dangerous (
     return false;
 }
 
-QJsonObject FolderItem::toJson() {
-    QJsonObject root = IItem::toJson();
+Json::Obj FolderItem::toJson() {
+    Json::Obj root = IItem::toJson();
 
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
 
-        QJsonArray ar = QJsonArray();
+        Json::Arr ar = QJsonArray();
         QList<IItem *>::Iterator it = children.begin();
 
         for( ;it != children.end(); it++)

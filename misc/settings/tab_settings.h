@@ -1,7 +1,7 @@
 #ifndef TAB_SETTINGS
 #define TAB_SETTINGS
 
-#include <qjsonobject.h>
+#include "misc/web_utils/json.h"
 
 #define SETTINGS_SHOW_CHECKBOX_KEY QStringLiteral("show_checkboxes")
 #define SETTINGS_SPOIL_ON_ACTIVATION_KEY QStringLiteral("spoil_on_activation")
@@ -14,8 +14,8 @@
 
 class TabSettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & json);
+    void toJson(Json::Obj & json);
 
     inline bool isShowSystemIcons() const { return _showSystemIcons; }
     inline void setShowSystemIcons(bool show) { _showSystemIcons = show; }

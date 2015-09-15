@@ -14,8 +14,8 @@ bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     return res;
 }
 
-QJsonObject WebModel::toJson() {
-    QJsonObject res = IModel::toJson();
+Json::Obj WebModel::toJson() {
+    Json::Obj res = IModel::toJson();
     return ignoreListToJson(res);
 }
 

@@ -3,7 +3,7 @@
 
 #include "modules/data_struct/container_types.h"
 #include "modules/data_struct/web/vk/vk_rel_types.h"
-#include <qjsonobject.h>
+#include "misc/web_utils/json.h"
 
 namespace Playo3 {
     struct ViewSettings {
@@ -15,18 +15,18 @@ namespace Playo3 {
             bool isPlaylist = false, QString uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        ViewSettings(QJsonObject obj) {
-            deleteFile = obj[QStringLiteral("del")].toBool();
-            playlist = obj[QStringLiteral("play")].toBool();
-            interactive = obj[QStringLiteral("int")].toBool();
-            common = obj[QStringLiteral("common")].toBool();
-            type = (ContainerType)obj[QStringLiteral("type")].toInt();
-            uid = obj[QStringLiteral("uid")].toString();
-            rel_type = (RelType)obj[QStringLiteral("rel_type")].toInt();
+        ViewSettings(const Json::Obj & obj) {
+            deleteFile = obj.boolVal(QStringLiteral("del"));
+            playlist = obj.boolVal(QStringLiteral("play"));
+            interactive = obj.boolVal(QStringLiteral("int"));
+            common = obj.boolVal(QStringLiteral("common"));
+            type = (ContainerType)obj.intVal(QStringLiteral("type"));
+            uid = obj.str(QStringLiteral("uid"));
+            rel_type = (RelType)obj.intVal(QStringLiteral("rel_type"));
         }
 
-        QJsonObject toJson() {
-            QJsonObject obj;
+        Json::Obj toJson() {
+            Json::Obj obj;
 
             obj[QStringLiteral("del")] = deleteFile;
             obj[QStringLiteral("play")] = playlist;

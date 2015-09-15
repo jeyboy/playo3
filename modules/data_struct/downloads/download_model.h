@@ -9,10 +9,10 @@
 class DownloadModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    inline DownloadModel(QJsonObject * hash = 0, QObject * parent = 0) : QAbstractItemModel(parent) { rootItem = new DownloadModelItem(hash); }
+    inline DownloadModel(Json::Obj * hash = 0, QObject * parent = 0) : QAbstractItemModel(parent) { rootItem = new DownloadModelItem(hash); }
     inline ~DownloadModel() { delete rootItem; }
 
-    inline QJsonObject toJson() { return rootItem -> toJson(); }
+    inline Json::Obj toJson() { return rootItem -> toJson(); }
 
     QVariant data(const QModelIndex & index, int role) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);

@@ -1,7 +1,7 @@
 #ifndef LIBRARY_SETTINGS
 #define LIBRARY_SETTINGS
 
-#include <qjsonobject.h>
+#include "misc/web_utils/json.h"
 
 #define SETTINGS_REMOTE_LIB_PROC_DELAY_KEY QStringLiteral("remote_lib_proc_delay")
 #define SETTINGS_SAVE_LIB_DELAY_KEY QStringLiteral("save_lib_delay")
@@ -10,8 +10,8 @@
 
 class LibrarySettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(const Json::Obj & settings);
+    void toJson(Json::Obj & settings);
 
     inline bool isShowInfo() const { return _showInfo; }
     inline void setShowInfo(bool show) { _showInfo = show; }

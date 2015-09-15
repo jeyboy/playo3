@@ -23,8 +23,8 @@ namespace Playo3 {
         EqualizerView(QWidget * parent = 0);
         ~EqualizerView();
 
-        QJsonObject settings();
-        void setSettings(QJsonObject settings);
+        Json::Obj settings();
+        void setSettings(const Json::Obj & settings);
 
     protected slots:
         void createPreset();

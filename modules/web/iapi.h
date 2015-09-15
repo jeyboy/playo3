@@ -24,23 +24,23 @@ public:
 protected:
     enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
 
-    virtual bool endReached(QJsonObject & response, int offset) = 0;
+    virtual bool endReached(Json::Obj & response, int offset) = 0;
     virtual int requestLimit() const = 0;
-    inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
+    inline virtual void iterateOffset(int & offset, Json::Obj & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
 
     virtual QString offsetKey() const = 0;
     virtual QString limitKey() const = 0;
 
-    virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
-    virtual QJsonObject & extractBody(QJsonObject & response) = 0;
+    virtual bool extractStatus(QUrl & url, Json::Obj & response, int & code, QString & message) = 0;
+    virtual Json::Obj & extractBody(Json::Obj & response) = 0;
 
-    QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-        QJsonObject res;
+    Json::Obj sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+        Json::Obj res;
         sQuery(url, res, post_proc, errorReceiver);
         return res;
     }
 
-    bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+    bool sQuery(QUrl url, Json::Obj & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
         response = WebManager::manager() -> getJson(url, post_proc & wrap);
 
         bool status = extractStatus(url, response, code, message);
@@ -60,7 +60,7 @@ protected:
     }
 
     QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-        QJsonObject response;
+        Json::Obj response;
 
         while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
             QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
@@ -84,7 +84,7 @@ protected:
     }
 
     inline void setCount(QJsonArray & ar, int count) {
-        QJsonObject countObj;
+        Json::Obj countObj;
         countObj.insert("count", count);
         ar.prepend(countObj);
     }

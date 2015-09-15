@@ -12,7 +12,7 @@ public:
     HotkeySettings();
 
     void fromJson(const Json::Obj & json = Json::Obj());
-    void toJson(QJsonObject & settings);
+    void toJson(Json::Obj & settings);
 
     QList<HotkeyModelItem *> * hotKeys() const;
     void setHotKeys(QList<HotkeyModelItem *>);

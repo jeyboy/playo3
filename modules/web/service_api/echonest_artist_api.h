@@ -42,13 +42,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/biographies"), query);
         }
 
-        QJsonArray artistBiographie(QString artist, QString id = QString(), int limit = 1) {
-            QJsonObject response;
+        Json::Arr artistBiographie(QString artist, QString id = QString(), int limit = 1) {
+            Json::Obj response;
 
             if (sQuery(artistBiographiesUrl(artist, id, limit), response))
                 return response.value(QStringLiteral("biographies")).toArray();
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -86,13 +86,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/familiarity"), query);
         }
 
-        QJsonObject artistFamiliarity(QString artist, QString id = QString()) {
-            QJsonObject response;
+        Json::Obj artistFamiliarity(QString artist, QString id = QString()) {
+            Json::Obj response;
 
             if (sQuery(artistFamiliarityUrl(artist, id), response))
-                return response.value(QStringLiteral("artist")).toObject();
+                return response.obj(QStringLiteral("artist"));
 
-            return QJsonObject();
+            return Json::Obj();
         }
 
         //{
@@ -124,13 +124,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/hotttnesss"), query);
         }
 
-        QJsonObject artistHotttnesss(QString artist, QString id = QString()) {
-            QJsonObject response;
+        Json::Obj artistHotttnesss(QString artist, QString id = QString()) {
+            Json::Obj response;
 
             if (sQuery(artistHotttnesssUrl(artist, id), response))
-                return response.value(QStringLiteral("artist")).toObject();
+                return response.obj(QStringLiteral("artist"));
 
-            return QJsonObject();
+            return Json::Obj();
         }
 
         //{
@@ -161,7 +161,7 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/images"), query);
         }
 
-        QJsonArray artistImages(QString name, QString id = QString(), int count = 1) {
+        Json::Arr artistImages(QString name, QString id = QString(), int count = 1) {
             return lQuery(
                 artistImagesUrl(name, id),
                 QueryRules(QStringLiteral("images"), requestLimit(), count)
@@ -204,7 +204,7 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/news"), query);
         }
 
-        QJsonArray artistNews(QString name, QString id = QString(), int count = 1) {
+        Json::Arr artistNews(QString name, QString id = QString(), int count = 1) {
             return lQuery(
                 artistNewsUrl(name, id),
                 QueryRules(QStringLiteral("news"), requestLimit(), count)
@@ -252,8 +252,8 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/profile"), query);
         }
 
-        QJsonObject artistProfile(QString name, QString id = QString()) {
-            QJsonObject response;
+        Json::Obj artistProfile(QString name, QString id = QString()) {
+            Json::Obj response;
 
             QStringList buckets;
             buckets << QStringLiteral("biographies") << QStringLiteral("familiarity") << QStringLiteral("familiarity_rank")
@@ -262,9 +262,9 @@ class EchonestArtistApi : virtual public IApi {
                     << QStringLiteral("news") << QStringLiteral("terms");
 
             if (sQuery(artistProfileUrl(name, buckets, id), response))
-                return response.value(QStringLiteral("artist")).toObject();
+                return response.obj(QStringLiteral("artist"));
 
-            return QJsonObject();
+            return Json::Obj();
         }
 
         //{
@@ -316,13 +316,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/list_terms"), query);
         }
 
-        QJsonArray artistStylesForSearch() {
-            QJsonObject response;
+        Json::Arr artistStylesForSearch() {
+            Json::Obj response;
 
             if (sQuery(artistStylesUrl(), response))
-                return response.value(QStringLiteral("terms")).toArray();
+                return response.arr(QStringLiteral("terms"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -344,13 +344,13 @@ class EchonestArtistApi : virtual public IApi {
         //}
 
 
-        QJsonArray artistMoodsForSearch() {
-            QJsonObject response;
+        Json::Arr artistMoodsForSearch() {
+            Json::Obj response;
 
             if (sQuery(artistStylesUrl(QStringLiteral("mood")), response))
-                return response.value(QStringLiteral("terms")).toArray();
+                return response.arr(QStringLiteral("terms"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -412,7 +412,7 @@ class EchonestArtistApi : virtual public IApi {
         }
 
         // need to check
-        QJsonArray artistSearch(int count = DEFAULT_LIMIT_AMOUNT, QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
+        Json::Arr artistSearch(int count = DEFAULT_LIMIT_AMOUNT, QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
                                 QStringList moods = QStringList(), QString artistLocation = QString(),
                                 QStringList genres = QStringList(), QStringList styles = QStringList())
         {
@@ -564,13 +564,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/suggest"), query);
         }
 
-        QJsonArray artistSuggests(QString name_part, int limit = 15) {
-            QJsonObject response;
+        Json::Arr artistSuggests(QString name_part, int limit = 15) {
+            Json::Obj response;
 
             if (sQuery(artistSuggestUrl(name_part, limit), response))
-                return response.value(QStringLiteral("artists")).toObject().value(QStringLiteral("artist")).toArray();
+                return response.obj(QStringLiteral("artists")).arr(QStringLiteral("artist"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -623,13 +623,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/terms"), query);
         }
 
-        QJsonArray artistTerms(QString name, QString id = QString()) {
-            QJsonObject response;
+        Json::Arr artistTerms(QString name, QString id = QString()) {
+            Json::Obj response;
 
             if (sQuery(artistTermsUrl(name, id), response))
-                return response.value(QStringLiteral("terms")).toArray();
+                return response.arr(QStringLiteral("terms"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 
         //{
@@ -663,7 +663,7 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/top_hottt"), query);
         }
 
-        QJsonArray artistTop(QStringList names, int count = DEFAULT_LIMIT_AMOUNT) {
+        Json::Arr artistTop(QStringList names, int count = DEFAULT_LIMIT_AMOUNT) {
             return lQuery(
                 artistTopUrl(names),
                 QueryRules(QStringLiteral("artists"), requestLimit(), count)
@@ -696,13 +696,13 @@ class EchonestArtistApi : virtual public IApi {
             return baseUrl(QStringLiteral("artist/top_terms"), query);
         }
 
-        QJsonArray artistTopTerms(int limit = 999) {
-            QJsonObject response;
+        Json::Arr artistTopTerms(int limit = 999) {
+            Json::Obj response;
 
             if (sQuery(artistTopTermsUrl(limit), response))
-                return response.value(QStringLiteral("terms")).toArray();
+                return response.arr(QStringLiteral("terms"));
 
-            return QJsonArray();
+            return Json::Arr();
         }
 };
 

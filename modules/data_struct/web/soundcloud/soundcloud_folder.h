@@ -7,8 +7,8 @@ namespace Playo3 {
     class SoundcloudFolder : public WebFolderItem {
     public:
         inline SoundcloudFolder(int initState) : WebFolderItem(initState) {}
-        inline SoundcloudFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
-        inline SoundcloudFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
+        inline SoundcloudFolder(Json::Obj & hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
+        inline SoundcloudFolder(const QString & uid, const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
             : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return SOUNDCLOUD_PLAYLIST; }

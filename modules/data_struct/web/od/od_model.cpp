@@ -10,19 +10,19 @@ void OdModel::refresh(bool retryPlaing) {
     Od::Api::instance() -> objectInfo((tab_uid == Od::Api::instance() -> userID() ? QString() : tab_uid), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
 }
 
-void OdModel::proceedAudioList(QJsonObject & hash) {
+void OdModel::proceedAudioList(Json::Obj & hash) {
     //{"albums":[{"ensemble":"","id":82297694950393,"name":"Другие песни"}],"artists":[{"id":82297693897464,"name":"Kaka 47"}],"chunk":{"count":10},"friends":[{"fullName":"Юрий Бойко","gender":1,"id":"511343312018","name":"Юрий","surname":"Бойко"}],"totalTracks":1,"tracks":[{"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}]}
 
-    QJsonArray audios = hash.value(QStringLiteral("tracks")).toArray();
+    Json::Arr audios = hash.arr(QStringLiteral("tracks"));
 
     if (audios.isEmpty()) {
-        int totalTracks = hash.value(QStringLiteral("totalTracks")).toInt();
+        int totalTracks = hash.intVal(QStringLiteral("totalTracks"));
         if (totalTracks > 0) {
-            audios = Od::Api::instance() -> userInfo(QString::number((qint64)hash.value(QStringLiteral("me")).toDouble())).value(QStringLiteral("tracks")).toArray();
+            audios = Od::Api::instance() -> userInfo(hash.numStr(QStringLiteral("me"))).arr(QStringLiteral("tracks"));
         }
     }
 
-    QJsonArray playlists = hash.value(QStringLiteral("playlists")).toArray();
+    Json::Arr playlists = hash.arr(QStringLiteral("playlists"));
 
 //    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
 //    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
@@ -32,21 +32,21 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
         if (playlists_count > 0) {
             OdFolder * folder;
-            QJsonObject playlist;
+            Json::Obj playlist;
 
-            for(QJsonArray::Iterator it = playlists.begin(); it != playlists.end(); it++) {
+            for(Json::Arr::Iterator it = playlists.begin(); it != playlists.end(); it++) {
                 playlist = (*it).toObject();
 
-                int items_amount = playlist.value(QStringLiteral("count")).toInt();
+                int items_amount = playlist.intVal(QStringLiteral("count"));
                 if (items_amount > 0) {
-                    QString pid = QString::number((qint64)playlist.value(QStringLiteral("id")).toDouble());
+                    QString pid = playlist.numStr(QStringLiteral("id"));
 
                     folder = rootItem -> createFolder<OdFolder>(
                         pid,
-                        playlist.value(QStringLiteral("name")).toString()
+                        playlist.str(QStringLiteral("name"))
                     );
 
-                    folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
+                    folder -> setOwner(playlist.str(QStringLiteral("owner")));
 
                     QJsonArray tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
 
@@ -81,7 +81,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 //    /////////////////////////////////////////////////////////////////////
 
 //    {
-//        QJsonObject group;
+//        Json::Obj group;
 //        QJsonArray groups = hash.value(Soundcloud::groups_key).toArray();
 
 //        for(QJsonArray::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
@@ -97,18 +97,18 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 //        }
 //    }
 //    /////////////////////////////////////////////////////////////////////
-//    QJsonObject frend;
+//    Json::Obj frend;
 //    QString name;
 
     {
-        QJsonArray friends = hash.value(QStringLiteral("friends")).toArray();
+        Json::Arr friends = hash.arr(QStringLiteral("friends"));
 
-        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            QJsonObject frend = (*friend_it).toObject();
+        for(Json::Arr::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
+            Json::Obj frend = (*friend_it).toObject();
 
             Od::Api::instance() -> addFriend(
-                frend.value(QStringLiteral("id")).toString(),
-                frend.value(QStringLiteral("fullName")).toString()
+                frend.str(QStringLiteral("id")),
+                frend.str(QStringLiteral("fullName"))
             );
         }
     }
@@ -116,7 +116,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
     emit moveOutProcess();
 }
 
-void OdModel::proceedAudioListAndRetry(QJsonObject & hash) {
+void OdModel::proceedAudioListAndRetry(Json::Obj & hash) {
     proceedAudioList(hash);
     Player::instance() -> playIndex(Player::instance() -> playedIndex());
 }

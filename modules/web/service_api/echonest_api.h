@@ -41,12 +41,12 @@ protected:
     inline QString limitKey() const { return QStringLiteral("results"); }
     inline int requestLimit() const { return 100; }
 
-    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
-    inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
-    inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = extractBody(response).value(QStringLiteral("status")).toObject();
-        message = stat_obj.value(QStringLiteral("message")).toString();
-        return (code = stat_obj.value(QStringLiteral("code")).toInt()) == 0;
+    inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
+    inline bool endReached(Json::Obj & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
+    inline bool extractStatus(QUrl & /*url*/, Json::Obj & response, int & code, QString & message) {
+        Json::Obj stat_obj = extractBody(response).obj(QStringLiteral("status"));
+        message = stat_obj.str(QStringLiteral("message"));
+        return (code = stat_obj.intVal(QStringLiteral("code"))) == 0;
     }
 private:
     inline EchonestApi() : QObject() { }

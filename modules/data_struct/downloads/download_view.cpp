@@ -4,14 +4,14 @@ using namespace Playo3;
 
 DownloadView * DownloadView::self = 0;
 
-DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
+DownloadView * DownloadView::instance(const Json::Obj * hash, QWidget * parent) {
     if(!self)
         self = new DownloadView(hash, parent);
     return self;
 }
 
-DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
-    paused(false), mdl(new DownloadModel(hash, this)) {
+DownloadView::DownloadView(const Json::Obj * hash, QWidget * parent) : QListView(parent),
+    mdl(new DownloadModel(hash, this)), paused(false) {
 
     setModel(mdl);
 
@@ -46,18 +46,16 @@ DownloadView::~DownloadView() {
     delete mdl;
 }
 
-QJsonObject DownloadView::toJson() {
+Json::Obj DownloadView::toJson() {
     paused = true;
-    QFutureWatcher<QModelIndex> * watcher;
 
-    foreach(QModelIndex ind, bussyWatchers.keys()) {
-        watcher = bussyWatchers.take(ind);
-        disconnect(watcher, SIGNAL(finished()), this, SLOT(downloadCompleted()));
-        watcher -> cancel();
-        watcher -> waitForFinished();
+    for(QHash<QModelIndex, QFutureWatcher<QModelIndex> *>::Iterator it = bussyWatchers.begin(); it != bussyWatchers.end(); it++) {
+        disconnect(it.value(), SIGNAL(finished()), this, SLOT(downloadCompleted()));
+        it.value() -> cancel();
+        it.value() -> waitForFinished();
 
-        watchers.append(watcher);
-        mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
+        watchers.append(it.value());
+        mdl -> setData(it.key(), -1, DOWNLOAD_PROGRESS);
     }
 
     proceedDownload();
@@ -185,8 +183,6 @@ void DownloadView::reproceedDownload() {
 
 void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
-    QModelIndex ind;
-
     QList<DownloadModelItem *>::Iterator it = items.begin();
 
     for(int i = 0; it != items.end(); it++, i++) {
@@ -195,8 +191,7 @@ void DownloadView::proceedDownload() {
                 mdl -> removeRow(i--, QModelIndex());
         } else {
             if (!paused && (*it) -> data(DOWNLOAD_PROGRESS).toInt() == -1) {
-                ind = mdl -> index((*it));
-                if (!proceedDownload(ind))
+                if (!proceedDownload(mdl -> index((*it))))
                     return;
             }
         }

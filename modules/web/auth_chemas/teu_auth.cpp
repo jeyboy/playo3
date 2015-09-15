@@ -6,12 +6,12 @@ void TeuAuth::setParams(QString accessToken, QString userID, QString expiresIn) 
     _expires_in = expiresIn;
 }
 
-void TeuAuth::fromJson(const QJsonObject & hash) {
+void TeuAuth::fromJson(const Json::Obj & hash) {
     _user_id = hash.value(QStringLiteral("_u_")).toString();
     _token = hash.value(QStringLiteral("_t_")).toString();
     _expires_in = hash.value(QStringLiteral("_e_")).toString();
 }
-void TeuAuth::toJson(QJsonObject & hash) {
+void TeuAuth::toJson(Json::Obj & hash) {
     hash[QStringLiteral("_u_")] = _user_id;
     hash[QStringLiteral("_t_")] = _token;
     hash[QStringLiteral("_e_")] = _expires_in;
