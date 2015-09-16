@@ -25,7 +25,7 @@ namespace Playo3 {
     class DownloadView : public QListView {
       Q_OBJECT
     public:
-        static DownloadView * instance(const Json::Obj & hash = Json::Obj(), QWidget * parent = 0);
+        static DownloadView * instance(Json::Obj * hash = 0, QWidget * parent = 0);
 
         ~DownloadView();
 

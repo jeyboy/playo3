@@ -12,14 +12,14 @@ namespace Playo3 {
     public:
         inline FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline FileItem(Json::Obj * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
-        inline FileItem(QString & fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
+        inline FileItem(QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
             QString ext;
             if (FilenameConversions::extractExtension(fileName, ext))
                 setExtension(ext);
 
             setTitle(fileName);
         }
-        inline FileItem(const QString & filePath, QString & fileName, FolderItem * parent = 0, int pos = -1)
+        inline FileItem(const QString & filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
             : IItem(parent, DEFAULT_TITLE, pos) {
 
             QString ext;

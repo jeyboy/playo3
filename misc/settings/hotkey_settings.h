@@ -11,7 +11,7 @@ class HotkeySettings {
 public:
     HotkeySettings();
 
-    void fromJson(const Json::Obj & json = Json::Obj());
+    void fromJson(Json::Obj json = Json::Obj());
     void toJson(Json::Obj & settings);
 
     QList<HotkeyModelItem *> * hotKeys() const;

@@ -26,26 +26,27 @@ void Dockbars::load(Json::Arr & bars) {
             obj = Json::Val::fromQVal(*it).obj();
             barName = obj.str(QStringLiteral("title"));
             userTabsAmount += (!barsList.removeOne(barName));
-            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.obj(QStringLiteral("set"))), obj.obj(QStringLiteral("cont")));
-            curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
+            Json::Obj content = obj.obj(QStringLiteral("cont"));
+            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.obj(QStringLiteral("set"))), &content);
+            curr_bar -> setObjectName(obj.str(QStringLiteral("name"), curr_bar -> objectName()));
 
-            if (obj.value(QStringLiteral("stick")).toBool())
+            if (obj.boolean(QStringLiteral("stick")))
                 ((DockBar *)curr_bar) -> markAsSticked();
 
-            QString link = obj.value(QStringLiteral("link")).toString();
+            QString link = obj.str(QStringLiteral("link"));
             if (!link.isEmpty())
                 linkedTabs.insert(link, (DockBar *)curr_bar);
 
-            ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
+            ((DockBar *)curr_bar) -> useVerticalTitles(obj.boolean(QStringLiteral("vertical")));
 
             window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
-            if (obj.value(QStringLiteral("played")).toBool()) {
+            if (obj.boolean(QStringLiteral("played"))) {
                 IView * v = view(qobject_cast<DockBar *>(curr_bar));
                 if (v) {
-                    QString path = obj.value(QStringLiteral("played_item")).toString();
+                    QString path = obj.str(QStringLiteral("played_item"));
                     if (!path.isEmpty())
-                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt(), obj.value(QStringLiteral("played_duration")).toInt());
+                        v -> execPath(path, true, obj.num(QStringLiteral("played_time")), obj.num(QStringLiteral("played_duration")));
                 }
             }
         }
@@ -60,7 +61,7 @@ void Dockbars::load(Json::Arr & bars) {
     Json::Obj def;
     ViewSettings defSettings;
     while(barsList.length() > 0) {
-        QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
+        QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, &def);
         widg -> hide();
         window -> addDockWidget(Qt::TopDockWidgetArea, widg);
     }
@@ -118,7 +119,7 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const ViewSettings & settings, const Json::Obj & attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const ViewSettings & settings, Json::Obj * attrs) {
     if (barName == SCREEN_TAB) {
         return 0; // stub
     } else if (barName == COMMON_TAB) {
@@ -138,7 +139,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const ViewSe
 DockBar * Dockbars::commonBar() {
     if (!common) {
         ViewSettings defSettings(list, true, false, false, true);
-        common = createDocBar(COMMON_TAB, defSettings, Json::Obj(), false);
+        common = createDocBar(COMMON_TAB, defSettings, 0, false);
     }
 
     return common;
@@ -148,7 +149,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     DockBar * bar = linkedTabs.value(path, 0);
 
     if (!bar) {
-        DockBar * bar = createDocBar(text, settings, Json::Obj(), true, true);
+        DockBar * bar = createDocBar(text, settings, 0, true, true);
         QList<QUrl> urls;
         urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash
         view(bar) -> appendRows(urls);
@@ -159,7 +160,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const QString & name, const ViewSettings & settings, const Json::Obj & attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(const QString & name, const ViewSettings & settings, Json::Obj * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 
@@ -194,7 +195,7 @@ DockBar * Dockbars::createDocBar(const QString & name, const ViewSettings & sett
     bar -> setWidget(view);
     bar -> initiateSearch();
 
-    if (attrs.isEmpty()) {
+    if (!attrs) {
         if (settings.type != search)
             ((IModel *)view -> model()) -> refresh();
         else

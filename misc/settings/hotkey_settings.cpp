@@ -13,7 +13,7 @@ HotkeySettings::HotkeySettings() {
     _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_BACKWARD, QStringLiteral("Move volume slider at 10 % backward"));
 }
 
-void HotkeySettings::fromJson(const Json::Obj & json) {
+void HotkeySettings::fromJson(Json::Obj json) {
     setHotKeys(json.obj(JSON_KEY));
 }
 

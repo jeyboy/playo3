@@ -203,6 +203,13 @@ namespace Json {
         return *(Arr *)(this);
     }
 
+    Obj Obj::fromVariantMap(const QVariantMap & map) {
+        return fromQJson(QJsonObject::fromVariantMap(map));
+    }
+    QVariantMap Obj::toVariantMap() const {
+        return QJsonObject::toVariantMap();
+    }
+
     Obj Obj::takeObj(const QString & key) { return take(key).toObject(); }
     Arr Obj::takeArr(const QString & key) { return take(key).toArray(); }
 

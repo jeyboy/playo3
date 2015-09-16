@@ -67,7 +67,7 @@ FolderItem::FolderItem(Json::Obj * hash, FolderItem * parent)
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString & folderPath, QString & folderTitle, FolderItem * parent, int pos, int initState)
+FolderItem::FolderItem(const QString & folderPath, const QString & folderTitle, FolderItem * parent, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setPath(folderPath);
@@ -76,14 +76,14 @@ FolderItem::FolderItem(QString & folderPath, QString & folderTitle, FolderItem *
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString & folderTitle, FolderItem * parent, int pos, int initState)
+FolderItem::FolderItem(const QString & folderTitle, FolderItem * parent, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     if (parent != 0)
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString & folderTitle, FolderItem * parent, QString uid, int pos, int initState)
+FolderItem::FolderItem(const QString & folderTitle, FolderItem * parent, const QString & uid, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setUid(uid);

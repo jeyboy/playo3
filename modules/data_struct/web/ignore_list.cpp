@@ -2,12 +2,12 @@
 
 using namespace Playo3;
 
-IgnoreList::IgnoreList(Json::Obj & obj) {
-    if (obj)
-        ignoreListFromJson(obj -> take(jsonName()).toArray());
+IgnoreList::IgnoreList(Json::Obj * json) {
+    if (json)
+        ignoreListFromJson(json -> takeArr(jsonName()));
 }
 
-void IgnoreList::ignoreListAddUid(QVariant uid) {
+void IgnoreList::ignoreListAddUid(const QVariant & uid) {
     list.append(uid);
 }
 
@@ -15,10 +15,10 @@ void IgnoreList::ignoreListAddUids(QVariantList & uids) {
     list.append(uids);
 }
 
-void IgnoreList::ignoreListRemoveUid(QVariant uid) {
+void IgnoreList::ignoreListRemoveUid(const QVariant & uid) {
     list.removeAll(uid);
 }
-bool IgnoreList::ignoreListContainUid(QVariant uid) {
+bool IgnoreList::ignoreListContainUid(const QVariant & uid) {
     return list.contains(uid);
 }
 

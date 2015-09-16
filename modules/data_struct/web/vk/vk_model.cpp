@@ -36,7 +36,7 @@ void VkModel::proceedWallList(Json::Arr & posts) {
             audios = post.arr(QStringLiteral("audios"));
 
             title = post.str(QStringLiteral("title"));
-            title = QDateTime::fromTime_t(post.intVal(QStringLiteral("date"))).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
+            title = QDateTime::fromTime_t(post.num(QStringLiteral("date"))).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
 
             folder = rootFolder -> createFolder(title);
             proceedVkList(audios, folder);

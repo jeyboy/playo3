@@ -175,11 +175,14 @@ namespace Json {
 
     class Obj : public QJsonObject {
         public:
+            static Obj fromVariantMap(const QVariantMap & map);
+            QVariantMap toVariantMap() const;
+
             static inline Obj fromData(const QByteArray & data) {
                 QJsonObject obj = QJsonDocument::fromJson(data).object();
                 return *(Json::Obj *)(&obj);
             }
-            static inline Obj fromQJsonObj(QJsonObject obj) { return *(Obj *)(&obj); }
+            static inline Obj fromQJson(QJsonObject obj) { return *(Obj *)(&obj); }
 
             Obj takeObj(const QString & key);
             Arr takeArr(const QString & key);
@@ -190,11 +193,15 @@ namespace Json {
             inline QVariant var(const QString & key)        { return value(key).toVariant(); }
             Val val(const QString & key);
 
-            inline bool boolVal(const QString & key) const  { return value(key).toBool(); }
-            inline QString str(const QString & key) const   { return value(key).toString(); }
-            inline QString numStr(const QString & key)      { return QString::number((qint64)value(key).toDouble()); }
-            inline int intVal(const QString & key) const    { return value(key).toInt(); }
-            inline double doubleVal(const QString & key)    { return value(key).toDouble(); }
+            inline bool boolean(const QString & key, bool default_val) const                { return value(key).toBool(default_val); }
+            inline bool boolean(const QString & key) const                                  { return value(key).toBool(); }
+            inline QString str(const QString & key, QString default_val) const              { return value(key).toString(default_val); }
+            inline QString str(const QString & key) const                                   { return value(key).toString(); }
+            inline QString numStr(const QString & key)                                      { return QString::number((qint64)value(key).toDouble()); }
+            inline int num(const QString & key, int default_val) const                      { return value(key).toInt(default_val); }
+            inline int num(const QString & key) const                                       { return value(key).toInt(); }
+            inline double decimal(const QString & key, double default_val)                  { return value(key).toDouble(default_val); }
+            inline double decimal(const QString & key)                                      { return value(key).toDouble(); }
     };
 
     class Arr : public QJsonArray {

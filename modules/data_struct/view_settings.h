@@ -16,13 +16,13 @@ namespace Playo3 {
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
         ViewSettings(const Json::Obj & obj) {
-            deleteFile = obj.boolVal(QStringLiteral("del"));
-            playlist = obj.boolVal(QStringLiteral("play"));
-            interactive = obj.boolVal(QStringLiteral("int"));
-            common = obj.boolVal(QStringLiteral("common"));
-            type = (ContainerType)obj.intVal(QStringLiteral("type"));
+            deleteFile = obj.boolean(QStringLiteral("del"));
+            playlist = obj.boolean(QStringLiteral("play"));
+            interactive = obj.boolean(QStringLiteral("int"));
+            common = obj.boolean(QStringLiteral("common"));
+            type = (ContainerType)obj.num(QStringLiteral("type"));
             uid = obj.str(QStringLiteral("uid"));
-            rel_type = (RelType)obj.intVal(QStringLiteral("rel_type"));
+            rel_type = (RelType)obj.num(QStringLiteral("rel_type"));
         }
 
         Json::Obj toJson() {

@@ -29,7 +29,7 @@ namespace Playo3 {
 
         void load(Json::Arr & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(const QString & barName, const ViewSettings & settings, const Json::Obj & attrs);
+        QDockWidget * linkNameToToolbars(const QString & barName, const ViewSettings & settings, Json::Obj * attrs);
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
 
@@ -51,7 +51,7 @@ namespace Playo3 {
         }
 
         DockBar * commonBar();
-        DockBar * createDocBar(const QString & name, const ViewSettings & settings, const Json::Obj & attrs = Json::Obj(), bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
+        DockBar * createDocBar(const QString & name, const ViewSettings & settings, Json::Obj * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(const QString & name, bool closable = true, QWidget * content = 0);
         DockBar * createLinkedDocBar(QString text, QString path, ViewSettings settings);
 

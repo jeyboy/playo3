@@ -46,7 +46,7 @@ protected:
     inline bool extractStatus(QUrl & /*url*/, Json::Obj & response, int & code, QString & message) {
         Json::Obj stat_obj = extractBody(response).obj(QStringLiteral("status"));
         message = stat_obj.str(QStringLiteral("message"));
-        return (code = stat_obj.intVal(QStringLiteral("code"))) == 0;
+        return (code = stat_obj.num(QStringLiteral("code"))) == 0;
     }
 private:
     inline EchonestApi() : QObject() { }

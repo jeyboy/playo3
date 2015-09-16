@@ -7,7 +7,7 @@ ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE
 }
 
 ItemFields::ItemFields(Json::Obj * hash) : ItemState(hash -> takeInt(JSON_TYPE_STATE)) {
-    attrs = hash.toVariantMap();
+    attrs = hash -> toVariantMap();
 }
 
 ItemFields::ItemFields(const QString & title, int initState) : ItemState(initState) {

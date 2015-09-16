@@ -59,7 +59,7 @@ void ItemSettings::toJson(Json::Obj & settings) {
     settings.insert(SETTINGS_SELECTED_ITEM_INFO_TEXT_COLOR_KEY, QJsonValue::fromVariant(__info.selectedTextColor));
 }
 
-QBrush & ItemSettings::buildGradient(const QRect & rect, const QColor & color, bool dark) const {
+QBrush ItemSettings::buildGradient(const QRect & rect, const QColor & color, bool dark) const {
     QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
 
     grad.setColorAt(0, color);
@@ -71,7 +71,7 @@ QBrush & ItemSettings::buildGradient(const QRect & rect, const QColor & color, b
     return grad;
 }
 
-QBrush & ItemSettings::unprocessedState(const QRect & rect, bool dark) const {
+QBrush ItemSettings::unprocessedState(const QRect & rect, bool dark) const {
     if (dark) {
         QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
         grad.setColorAt(0, _folderItemColor);

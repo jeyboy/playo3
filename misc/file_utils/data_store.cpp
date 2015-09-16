@@ -17,7 +17,7 @@ bool DataStore::load() {
 
     QByteArray saveData = qUncompress(loadFile.readAll());
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-    json = Json::Obj::fromQJsonObj(loadDoc.object());
+    json = Json::Obj::fromQJson(loadDoc.object());
 
     return true;
 }

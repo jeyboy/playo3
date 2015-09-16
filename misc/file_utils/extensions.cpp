@@ -13,9 +13,9 @@ Extensions * Extensions::instance() {
 Extensions::Extensions() {
     ext = new DataStore(QStringLiteral("extensions.json"));
 
-    if (ext -> state) {
+    if (ext -> state()) {
         activeFilter = ext -> read(QStringLiteral("active")).toString(QStringLiteral("all"));
-        Json::Obj obj = ext -> read(QStringLiteral("filters")).toObject();
+        Json::Obj obj = Json::Val::fromQVal(ext -> read(QStringLiteral("filters"))).obj();
 
         foreach (QString key, obj.keys())
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());

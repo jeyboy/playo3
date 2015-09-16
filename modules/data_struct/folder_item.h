@@ -12,9 +12,9 @@ namespace Playo3 {
 
         inline FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : IItem(0, initState), inBranchCount(0) {}
         FolderItem(Json::Obj * hash, FolderItem * parent = 0);
-        FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(const QString & folderPath, const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        FolderItem(const QString & folderTitle, FolderItem * parent, const QString & uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         virtual ~FolderItem();
 
         void linkNode(FolderItem * node);

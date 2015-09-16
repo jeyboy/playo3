@@ -10,7 +10,7 @@ DownloadView * DownloadView::instance(const Json::Obj & hash, QWidget * parent) 
     return self;
 }
 
-DownloadView::DownloadView(const Json::Obj * hash, QWidget * parent) : QListView(parent),
+DownloadView::DownloadView(Json::Obj * hash, QWidget * parent) : QListView(parent),
     mdl(new DownloadModel(hash, this)), paused(false) {
 
     setModel(mdl);

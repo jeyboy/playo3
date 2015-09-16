@@ -35,16 +35,16 @@ public:
     void fromJson(const Json::Obj & settings = Json::Obj());
     void toJson(Json::Obj & settings);
 
-    QBrush & buildGradient(const QRect & rect, const QColor & color, bool dark) const;
+    QBrush buildGradient(const QRect & rect, const QColor & color, bool dark) const;
 
     //TODO: need to caching brush for rect for some speed up
-    inline QBrush & defaultState(const QRect & rect, bool dark) const { return buildGradient(rect, _defaultItemColor, dark); }
-    inline QBrush & listenedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _listenedItemColor, dark); }
-    inline QBrush & likedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _likedItemColor, dark); }
-    inline QBrush & playedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _playedItemColor, dark); }
-    inline QBrush & itemState(const QRect &  rect, bool dark) const { return buildGradient(rect, _itemColor, dark); }
+    inline QBrush defaultState(const QRect & rect, bool dark) const { return buildGradient(rect, _defaultItemColor, dark); }
+    inline QBrush listenedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _listenedItemColor, dark); }
+    inline QBrush likedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _likedItemColor, dark); }
+    inline QBrush playedState(const QRect &  rect, bool dark) const { return buildGradient(rect, _playedItemColor, dark); }
+    inline QBrush itemState(const QRect &  rect, bool dark) const { return buildGradient(rect, _itemColor, dark); }
 
-    QBrush unprocessedState(const QRect & rect, bool dark);
+    QBrush unprocessedState(const QRect & rect, bool dark) const;
 
     inline bool isUseGradient() const { return _useGradient; }
     inline void setUseGradient(bool use) { _useGradient = use; }
