@@ -190,10 +190,10 @@ namespace Json {
             inline QVariant var(const QString & key)        { return value(key).toVariant(); }
             Val val(const QString & key);
 
-            inline bool boolVal(const QString & key)        { return value(key).toBool(); }
-            inline QString str(const QString & key)         { return value(key).toString(); }
+            inline bool boolVal(const QString & key) const  { return value(key).toBool(); }
+            inline QString str(const QString & key) const   { return value(key).toString(); }
             inline QString numStr(const QString & key)      { return QString::number((qint64)value(key).toDouble()); }
-            inline int intVal(const QString & key)          { return value(key).toInt(); }
+            inline int intVal(const QString & key) const    { return value(key).toInt(); }
             inline double doubleVal(const QString & key)    { return value(key).toDouble(); }
     };
 

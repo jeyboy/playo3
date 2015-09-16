@@ -20,7 +20,7 @@
 
 class SpectrumSettings {
 public:
-    void fromJson(const Json::Obj & json);
+    void fromJson(const Json::Obj & json = Json::Obj());
     void toJson(Json::Obj & json);
 
     inline bool isCustomColorSpectrum() { return _customColorSpectrum; }

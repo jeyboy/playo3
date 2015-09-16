@@ -11,7 +11,7 @@ namespace Playo3 {
         }
 
         inline WebItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
-        inline WebItem(Json::Obj & hash, FolderItem * parent = 0) : IItem(parent, hash) {}
+        inline WebItem(const Json::Obj & hash, FolderItem * parent = 0) : IItem(parent, hash) {}
         inline WebItem(const QVariant & uid, const QString & filePath, const QString & fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, fileName, pos) {
             setUid(uid);
             setPath(filePath);

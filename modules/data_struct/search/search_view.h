@@ -8,7 +8,7 @@ namespace Playo3 {
     class SearchView : public IView {
       Q_OBJECT
     public:
-        inline SearchView(QWidget * parent, const ViewSettings & settings, Json::Obj & hash = Json::Obj())
+        inline SearchView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
             : IView(dynamic_cast<IModel *>(new SearchModel(hash)), parent, settings) {}
 
         inline void search(SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }

@@ -1,10 +1,7 @@
 #ifndef DOWNLOAD_MODEL_ITEM_H
 #define DOWNLOAD_MODEL_ITEM_H
 
-#include <qjsonobject.h>
-#include <qjsonarray.h>
-
-#include <qvariant.h>
+#include "misc/web_utils/json.h"
 #include <qvector.h>
 
 #define DOWNLOAD_TITLE 0

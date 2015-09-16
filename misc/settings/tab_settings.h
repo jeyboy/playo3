@@ -14,7 +14,7 @@
 
 class TabSettings {
 public:
-    void fromJson(const Json::Obj & json);
+    void fromJson(const Json::Obj & json = Json::Obj());
     void toJson(Json::Obj & json);
 
     inline bool isShowSystemIcons() const { return _showSystemIcons; }

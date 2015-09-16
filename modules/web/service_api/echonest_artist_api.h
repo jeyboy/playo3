@@ -46,7 +46,7 @@ class EchonestArtistApi : virtual public IApi {
             Json::Obj response;
 
             if (sQuery(artistBiographiesUrl(artist, id, limit), response))
-                return response.value(QStringLiteral("biographies")).toArray();
+                return response.arr(QStringLiteral("biographies"));
 
             return Json::Arr();
         }

@@ -6,7 +6,7 @@
 namespace Playo3 {
     class IgnoreList {
     public:
-        IgnoreList(Json::Obj & obj = Json::Obj());
+        IgnoreList(const Json::Obj & obj = Json::Obj());
         inline virtual ~IgnoreList() {}
 
         void ignoreListAddUid(QVariant uid);

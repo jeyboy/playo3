@@ -10,8 +10,8 @@
 
 class LibrarySettings {
 public:
-    void fromJson(const Json::Obj & settings);
-    void toJson(Json::Obj & settings);
+    void fromJson(const Json::Obj & json = Json::Obj());
+    void toJson(Json::Obj & json);
 
     inline bool isShowInfo() const { return _showInfo; }
     inline void setShowInfo(bool show) { _showInfo = show; }

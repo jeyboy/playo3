@@ -77,10 +77,10 @@ namespace Fourshared {
             QString ext, title, path, song_path;
 
             for(Json::Arr::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
-                Json::Arr part = (*parts_it).toArray();
+                Json::Arr part = Json::Val::fromQVal(*parts_it).arr();
                 for(Json::Arr::Iterator item = part.begin(); item != part.end(); item++) {
 
-                    Json::Obj obj, item_obj = (*item).toObject();
+                    Json::Obj obj, item_obj = Json::Val::fromQVal(*item).obj();
                     path = item_obj.str("downloadPage");
 
                     if (initInfo) {

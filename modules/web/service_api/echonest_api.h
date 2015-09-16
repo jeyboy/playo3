@@ -41,7 +41,7 @@ protected:
     inline QString limitKey() const { return QStringLiteral("results"); }
     inline int requestLimit() const { return 100; }
 
-    inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
+    inline Json::Obj & extractBody(Json::Obj & response) { return (response = response.obj(QStringLiteral("response"))); }
     inline bool endReached(Json::Obj & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
     inline bool extractStatus(QUrl & /*url*/, Json::Obj & response, int & code, QString & message) {
         Json::Obj stat_obj = extractBody(response).obj(QStringLiteral("status"));

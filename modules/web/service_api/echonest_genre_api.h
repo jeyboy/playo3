@@ -79,7 +79,7 @@ class EchonestGenreApi : virtual public IApi {
                 QString field_key = QStringLiteral("name");
                 Json::Arr styles = response.arr(QStringLiteral("genres"));
                 for(Json::Arr::Iterator genre = styles.begin(); genre != styles.end(); genre++)
-                    genres.addGenre((*genre).toObject().str(field_key));
+                    genres.addGenre(Json::Val::fromQVal(*genre).obj().str(field_key));
             }
         }
 

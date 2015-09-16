@@ -17,8 +17,8 @@ void HotkeySettings::fromJson(const Json::Obj & json) {
     setHotKeys(json.obj(JSON_KEY));
 }
 
-void HotkeySettings::toJson(Json::Obj & settings) {
-    settings.insert(JSON_KEY, _hotkeys);
+void HotkeySettings::toJson(Json::Obj & json) {
+    json.insert(JSON_KEY, _hotkeys);
 }
 
 QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage
