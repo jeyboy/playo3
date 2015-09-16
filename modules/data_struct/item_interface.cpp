@@ -21,7 +21,7 @@ IItem::IItem(FolderItem * parent, QVariantMap & hash, int pos)
             _parent -> declareChild(pos, this);
     }
 }
-IItem::IItem(FolderItem * parent, const Json::Obj & hash)
+IItem::IItem(FolderItem * parent, Json::Obj * hash)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent)

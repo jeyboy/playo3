@@ -47,9 +47,9 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(const Json::Obj & hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
+IModel::IModel(Json::Obj * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
-    if (!hash.isEmpty()) {
+    if (hash) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
     } else {

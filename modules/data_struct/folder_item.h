@@ -11,7 +11,7 @@ namespace Playo3 {
         static int restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs);
 
         inline FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : IItem(0, initState), inBranchCount(0) {}
-        FolderItem(const Json::Obj & hash, FolderItem * parent = 0);
+        FolderItem(Json::Obj * hash, FolderItem * parent = 0);
         FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
         FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);

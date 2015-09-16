@@ -7,7 +7,7 @@ namespace Playo3 {
     class VkFolder : public WebFolderItem {
     public:
         inline VkFolder(int initState) : WebFolderItem(initState) {}
-        inline VkFolder(Json::Obj & hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
+        inline VkFolder(Json::Obj * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
         inline VkFolder(const QString & uid, const QString & folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
             : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
 

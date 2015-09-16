@@ -19,7 +19,7 @@ namespace Playo3 {
     public:       
         IItem(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
         IItem(FolderItem * parent, QVariantMap & hash, int pos = -1);
-        IItem(FolderItem * parent, const Json::Obj & hash);
+        IItem(FolderItem * parent, Json::Obj * hash);
         IItem(FolderItem * parent, const QString & title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         inline virtual ~IItem() {}

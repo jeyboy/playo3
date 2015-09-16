@@ -8,9 +8,9 @@ namespace Playo3 {
     class TreeView : public IView {
       Q_OBJECT
     public:
-        inline TreeView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
+        inline TreeView(QWidget * parent, const ViewSettings & settings, Json::Obj * hash = 0)
             : IView(dynamic_cast<IModel *>(new TreeModel(hash)), parent, settings) {}
-        inline TreeView(IModel * newModel, QWidget * parent, ViewSettings settings)
+        inline TreeView(IModel * newModel, QWidget * parent, const ViewSettings & settings)
             : IView(newModel, parent, settings) {}
     };
 }

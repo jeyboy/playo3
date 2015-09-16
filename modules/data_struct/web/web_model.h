@@ -11,7 +11,7 @@ namespace Playo3 {
     class WebModel : public IModel, public IgnoreList {
         Q_OBJECT
     public:
-        inline WebModel(QString uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) :
+        inline WebModel(const QString & uid, Json::Obj * hash = 0, QObject * parent = 0) :
             IModel(hash, parent), IgnoreList(hash), tab_uid(uid)
         { lastRefresh = QDateTime::currentMSecsSinceEpoch() - UPDATE_INTERVAL; }
         inline virtual ~WebModel() {}

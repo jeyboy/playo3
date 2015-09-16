@@ -7,7 +7,7 @@
 namespace Playo3 {
     class SoundcloudItem : public WebItem {
     public:
-        inline SoundcloudItem(const Json::Obj & hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
+        inline SoundcloudItem(Json::Obj * hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
         inline SoundcloudItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
         inline SoundcloudItem(const QVariant & uid, const QString & filePath, const QString & fileName, FolderItem * parent = 0, int pos = -1)
             : WebItem(uid, filePath, fileName, parent, pos) {

@@ -8,7 +8,7 @@ namespace Playo3 {
     class OdModel : public WebModel {
         Q_OBJECT
     public:       
-        inline OdModel(const QString & uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) : WebModel(uid, hash, parent) {}
+        inline OdModel(const QString & uid, Json::Obj * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return od; }
         inline WebApi * api() { return Od::Api::instance(); }

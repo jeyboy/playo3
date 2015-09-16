@@ -7,7 +7,7 @@
 class SoundcloudView : public IView {
   Q_OBJECT
 public:
-    inline SoundcloudView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
+    inline SoundcloudView(QWidget * parent, const ViewSettings & settings, Json::Obj * hash = 0)
         : IView(dynamic_cast<IModel *>(new SoundcloudModel(settings.uid, hash)), parent, settings) {}
     inline SoundcloudView(WebModel * newModel, QWidget * parent, ViewSettings settings)
         : IView(newModel, parent, settings) {}

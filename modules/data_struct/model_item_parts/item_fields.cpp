@@ -2,15 +2,15 @@
 
 using namespace Playo3;
 
-ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.takeInt(JSON_TYPE_STATE)) {
+ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
     attrs = QVariantMap(hash);
 }
 
-ItemFields::ItemFields(Json::Obj & hash) : ItemState(hash.takeInt(JSON_TYPE_STATE)) {
+ItemFields::ItemFields(Json::Obj * hash) : ItemState(hash -> takeInt(JSON_TYPE_STATE)) {
     attrs = hash.toVariantMap();
 }
 
-ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
+ItemFields::ItemFields(const QString & title, int initState) : ItemState(initState) {
     attrs[JSON_TYPE_TITLE] = title;
 }
 

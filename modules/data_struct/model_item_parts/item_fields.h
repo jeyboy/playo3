@@ -39,8 +39,8 @@ namespace Playo3 {
         inline virtual ~ItemFields() {}
 
         ItemFields(QVariantMap & hash);
-        ItemFields(const Json::Obj & hash);
-        ItemFields(QString title, int initState = DEFAULT_MODEL_ITEM_STATE);
+        ItemFields(Json::Obj * hash);
+        ItemFields(const QString & title, int initState = DEFAULT_MODEL_ITEM_STATE);
         ItemFields(int state = DEFAULT_MODEL_ITEM_STATE);
 
         inline QVariant uid() const         { return attrs.value(JSON_TYPE_UID); }

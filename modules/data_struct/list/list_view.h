@@ -8,7 +8,7 @@ namespace Playo3 {
     class ListView : public IView {
       Q_OBJECT
     public:
-        inline ListView(QWidget * parent, const ViewSettings & settings, const Json::Obj & hash = Json::Obj())
+        inline ListView(QWidget * parent, const ViewSettings & settings, Json::Obj * hash = 0)
             : IView(dynamic_cast<IModel *>(new ListModel(hash)), parent, settings) {
             setIndentation(4);
         }

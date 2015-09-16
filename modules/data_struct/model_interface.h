@@ -32,7 +32,7 @@ namespace Playo3 {
 
         static bool restoreUrl(IItem * itm);
 
-        IModel(const Json::Obj & hash, QObject * parent);
+        IModel(Json::Obj * hash, QObject * parent);
         virtual ~IModel();
 
         inline FolderItem * root() { return rootItem; }

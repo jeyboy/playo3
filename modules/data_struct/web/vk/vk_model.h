@@ -8,7 +8,7 @@ namespace Playo3 {
     class VkModel : public WebModel {
         Q_OBJECT
     public:
-        inline VkModel(const QString & uid, const Json::Obj & hash = Json::Obj(), QObject * parent = 0) : WebModel(uid, hash, parent) {}
+        inline VkModel(const QString & uid, Json::Obj * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline ContainerType containerType() const { return vk; }
         inline WebApi * api() { return Vk::Api::instance(); }

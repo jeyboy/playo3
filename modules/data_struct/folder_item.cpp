@@ -28,37 +28,23 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 }
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(const Json::Obj & hash, FolderItem * parent)
-    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
-      inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+FolderItem::FolderItem(Json::Obj * hash, FolderItem * parent)
+    : IItem(parent, hash -> takeInt(JSON_TYPE_STATE)),
+      inBranchCount(hash -> takeInt(JSON_TYPE_CONTAINER_ITEMS_COUNT)) {
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
-        Json::Arr ar = hash -> take(JSON_TYPE_CHILDS).toArray();
+        Json::Arr ar = hash -> takeArr(JSON_TYPE_CHILDS);
         Json::Obj iterObj;
 
         for(Json::Arr::Iterator it = ar.begin(); it!= ar.end(); it++) {
-            iterObj = (*it).toObject();
+            iterObj = Json::Val::fromQVal(*it).obj();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case ITEM: {
-                    new FileItem(&iterObj, this);
-                break;}
-                case PLAYLIST: {
-                    new FolderItem(&iterObj, this);
-                break;}
-
-                case WEB_ITEM: {
-                    new WebItem(&iterObj, this);
-                break;}
-
-                case VK_ITEM: {
-                    new VkItem(&iterObj, this);
-                break;}
-                case VK_PLAYLIST: {
-                    new VkFolder(&iterObj, this);
-                break;}
-                case SOUNDCLOUD_ITEM: {
-                    new SoundcloudItem(&iterObj, this);
-                break;}
+                case ITEM: { new FileItem(&iterObj, this);  break; }
+                case PLAYLIST: { new FolderItem(&iterObj, this); break; }
+                case WEB_ITEM: { new WebItem(&iterObj, this); break; }
+                case VK_ITEM: { new VkItem(&iterObj, this); break; }
+                case VK_PLAYLIST: { new VkFolder(&iterObj, this); break; }
+                case SOUNDCLOUD_ITEM: { new SoundcloudItem(&iterObj, this); break;}
                 case SOUNDCLOUD_PLAYLIST: {
                     new SoundcloudFolder(&iterObj, this);
                 break;}
@@ -70,7 +56,7 @@ FolderItem::FolderItem(const Json::Obj & hash, FolderItem * parent)
                 break;}
 
                 // case CUE_ITEM: {
-                // new CueItem(&iter_obj, this); // ?
+                // new CueItem(iter_obj, this); // ?
                 // break;}
             }
         }
@@ -81,7 +67,7 @@ FolderItem::FolderItem(const Json::Obj & hash, FolderItem * parent)
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
+FolderItem::FolderItem(QString & folderPath, QString & folderTitle, FolderItem * parent, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setPath(folderPath);
@@ -90,14 +76,14 @@ FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * par
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
+FolderItem::FolderItem(QString & folderTitle, FolderItem * parent, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     if (parent != 0)
         parent -> declareFolder(folderUid(), this);
 }
 
-FolderItem::FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos, int initState)
+FolderItem::FolderItem(QString & folderTitle, FolderItem * parent, QString uid, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
 
     setUid(uid);

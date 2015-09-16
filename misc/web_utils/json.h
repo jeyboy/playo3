@@ -183,7 +183,7 @@ namespace Json {
 
             Obj takeObj(const QString & key);
             Arr takeArr(const QString & key);
-            int takeInt(const QString & key)                { return take(key).toInt(); }
+            inline int takeInt(const QString & key)         { return take(key).toInt(); }
 
             Obj obj(const QString & key);
             Arr arr(const QString & key);
