@@ -29,7 +29,7 @@ namespace Playo3 {
 
         void load(Json::Arr & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(QString barName, ViewSettings settings, Json::Obj attrs);
+        QDockWidget * linkNameToToolbars(const QString & barName, const ViewSettings & settings, const Json::Obj & attrs);
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
 

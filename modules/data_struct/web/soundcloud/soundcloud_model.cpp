@@ -25,9 +25,9 @@ void SoundcloudModel::proceedAudioList(Json::Obj & hash) {
             Json::Obj album;
 
             for(Json::Arr::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
-                Json::Arr part_arr = (*album_part).toArray();
+                Json::Arr part_arr = Json::Val::fromQVal(*album_part).arr();
                 for(Json::Arr::Iterator it = part_arr.begin(); it != part_arr.end(); it++) {
-                    album = (*it).toObject();
+                    album = Json::Val::fromQVal(*it).obj();
 
                     Json::Arr albumItems = album.arr(Soundcloud::tracks_key);
                     if (albumItems.size() > 0) {
@@ -58,9 +58,9 @@ void SoundcloudModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr groups = hash.arr(Soundcloud::groups_key);
 
         for(Json::Arr::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
-            Json::Arr group_part = (*group_it).toArray();
+            Json::Arr group_part = Json::Val::fromQVal(*group_it).arr();
             for(Json::Arr::Iterator it = group_part.begin(); it != group_part.end(); it++) {
-                group = (*it).toObject();
+                group = Json::Val::fromQVal(*it).obj();
 
                 Soundcloud::Api::instance() -> addGroup(
                     group.numStr(Soundcloud::id_key),
@@ -77,9 +77,9 @@ void SoundcloudModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr friends = hash.arr(Soundcloud::followings_key);
 
         for(Json::Arr::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            Json::Arr friend_part = (*friend_it).toArray();
+            Json::Arr friend_part = Json::Val::fromQVal(*friend_it).arr();
             for(Json::Arr::Iterator it = friend_part.begin(); it != friend_part.end(); it++) {
-                frend = (*it).toObject();
+                frend = Json::Val::fromQVal(*it).obj();
 
                 name = frend.str(Soundcloud::full_name_key);
                 if (name.isEmpty())
@@ -97,9 +97,9 @@ void SoundcloudModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr friends = hash.arr(Soundcloud::followers_key);
 
         for(Json::Arr::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            Json::Arr friend_part = (*friend_it).toArray();
+            Json::Arr friend_part = Json::Val::fromQVal(*friend_it).arr();
             for(Json::Arr::Iterator it = friend_part.begin(); it != friend_part.end(); it++) {
-                frend = (*it).toObject();
+                frend = Json::Val::fromQVal(*it).obj();
 
                 name = frend.str(Soundcloud::full_name_key);
                 if (name.isEmpty())

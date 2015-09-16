@@ -4,7 +4,7 @@ using namespace Playo3;
 
 DownloadView * DownloadView::self = 0;
 
-DownloadView * DownloadView::instance(const Json::Obj * hash, QWidget * parent) {
+DownloadView * DownloadView::instance(const Json::Obj & hash, QWidget * parent) {
     if(!self)
         self = new DownloadView(hash, parent);
     return self;

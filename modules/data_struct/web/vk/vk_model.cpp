@@ -32,11 +32,11 @@ void VkModel::proceedWallList(Json::Arr & posts) {
         Json::Arr::Iterator it = posts.begin();
 
         for(; it != posts.end(); it++) {
-            post = (*it).toObject();
+            post = Json::Val::fromQVal(*it).obj();
             audios = post.arr(QStringLiteral("audios"));
 
             title = post.str(QStringLiteral("title"));
-            title = QDateTime::fromTime_t(post.value(QStringLiteral("date")).toInt()).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
+            title = QDateTime::fromTime_t(post.intVal(QStringLiteral("date"))).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
 
             folder = rootFolder -> createFolder(title);
             proceedVkList(audios, folder);
@@ -63,10 +63,10 @@ void VkModel::proceedAudioList(Json::Obj & hash) {
             Json::Obj album;
 
             for(Json::Arr::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
-                Json::Arr part_arr = (*album_part).toArray();
+                Json::Arr part_arr = Json::Val::fromQVal(*album_part).arr();
                 Json::Arr::Iterator it = part_arr.begin();
                 for(int pos = 0; it != part_arr.end(); it++, pos++) {
-                    album = (*it).toObject();
+                    album = Json::Val::fromQVal(*it).obj();
 
                     Json::Arr albumItems = album.arr(QStringLiteral("items"));
                     if (albumItems.size() > 0) {
@@ -99,7 +99,7 @@ void VkModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr::Iterator it = groups.begin();
 
         for(; it != groups.end(); it++) {
-            group = (*it).toObject();
+            group = Json::Val::fromQVal(*it).obj();
 
             Vk::Api::instance() -> addGroup(
                 group.numStr(QStringLiteral("id")),
@@ -113,7 +113,7 @@ void VkModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr friends = hash.arr(QStringLiteral("friends"));
 
         for(Json::Arr::Iterator it = friends.begin(); it != friends.end(); it++) {
-            frend = (*it).toObject();
+            frend = Json::Val::fromQVal(*it).obj();
 
             Vk::Api::instance() -> addFriend(
                 frend.numStr(QStringLiteral("id")),

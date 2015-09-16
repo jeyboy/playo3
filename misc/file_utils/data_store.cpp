@@ -2,7 +2,7 @@
 
 using namespace Playo3;
 
-DataStore::DataStore(QString name) : filename(name), _state(load()) { }
+DataStore::DataStore(const QString & name) : filename(name), _state(load()) { }
 DataStore::~DataStore() {
 //    save();
 }
@@ -38,5 +38,5 @@ bool DataStore::save() {
 void DataStore::append(const QString & key, const QString & subkey, const QString & value) {
     Json::Obj subObj;
     subObj[subkey] = value;
-    json.toArr(key).append(subObj);
+    json.arr(key).append(subObj);
 }

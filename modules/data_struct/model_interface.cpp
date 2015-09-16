@@ -47,9 +47,9 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(Json::Obj & hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
+IModel::IModel(const Json::Obj & hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
-    if (hash != 0) {
+    if (!hash.isEmpty()) {
         rootItem = new FolderItem(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
     } else {
@@ -271,9 +271,9 @@ int IModel::proceedVkList(Json::Arr & collection, FolderItem * parent) {
 
     int pos = parent -> foldersAmount();
     for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        Json::Arr part = (*parts_it).toArray();
+        Json::Arr part = Json::Val::fromQVal(*parts_it).arr();
         for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+            itm = Json::Val::fromQVal(*it).obj();
 
             if (itm.isEmpty()) continue;
 
@@ -323,7 +323,7 @@ int IModel::proceedGrabberList(WebSubType wType, Json::Arr & collection, FolderI
     QString uri, refresh_url, id;
 
     for(Json::Arr::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+        itm = Json::Val::fromQVal(*it).obj();
 
         if (itm.isEmpty()) continue;
 
@@ -393,9 +393,9 @@ int IModel::proceedScList(Json::Arr & collection, FolderItem * parent) {
     parent -> accumulateUids(store);
 
     for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        Json::Arr part = (*parts_it).toArray();
+        Json::Arr part = Json::Val::fromQVal(*parts_it).arr();
         for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+            itm = Json::Val::fromQVal(*it).obj();
 
             if (itm.isEmpty()) continue;
 
@@ -461,9 +461,9 @@ int IModel::proceedOdList(Json::Arr & collection, FolderItem * parent) {
     parent -> accumulateUids(store);
 
     for(Json::Arr::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        Json::Arr part = (*parts_it).toArray();
+        Json::Arr part = Json::Val::fromQVal(*parts_it).arr();
         for(Json::Arr::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+            itm = Json::Val::fromQVal(*it).obj();
 
             if (itm.isEmpty()) continue;
 

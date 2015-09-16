@@ -28,7 +28,7 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 }
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(Json::Obj & hash, FolderItem * parent)
+FolderItem::FolderItem(const Json::Obj & hash, FolderItem * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
       inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 

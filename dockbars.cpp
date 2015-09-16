@@ -118,27 +118,27 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, Json::Obj attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const ViewSettings & settings, const Json::Obj & attrs) {
     if (barName == SCREEN_TAB) {
         return 0; // stub
     } else if (barName == COMMON_TAB) {
-        return createDocBar(barName, settings, &attrs, false);
+        return createDocBar(barName, settings, attrs, false);
     } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
+        bar -> setWidget(DownloadView::instance(attrs, parentWidget()));
         connect(DownloadView::instance(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
         return bar;
     } else if (barName == LOGS_TAB) {
         DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(Logger::instance() -> getEditor());
         return bar;
-    } else return createDocBar(barName, settings, &attrs);
+    } else return createDocBar(barName, settings, attrs);
 }
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
         ViewSettings defSettings(list, true, false, false, true);
-        common = createDocBar(COMMON_TAB, defSettings, 0, false);
+        common = createDocBar(COMMON_TAB, defSettings, Json::Obj(), false);
     }
 
     return common;
@@ -148,7 +148,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     DockBar * bar = linkedTabs.value(path, 0);
 
     if (!bar) {
-        DockBar * bar = createDocBar(text, settings, 0, true, true);
+        DockBar * bar = createDocBar(text, settings, Json::Obj(), true, true);
         QList<QUrl> urls;
         urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash
         view(bar) -> appendRows(urls);
@@ -194,7 +194,7 @@ DockBar * Dockbars::createDocBar(const QString & name, const ViewSettings & sett
     bar -> setWidget(view);
     bar -> initiateSearch();
 
-    if (!attrs) {
+    if (attrs.isEmpty()) {
         if (settings.type != search)
             ((IModel *)view -> model()) -> refresh();
         else

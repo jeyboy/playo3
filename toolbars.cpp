@@ -95,7 +95,7 @@ void ToolBars::load(Json::Arr & bars) {
         QToolBar * curr_bar;
 
         for(Json::Arr::Iterator bar = bars.begin(); bar != bars.end(); bar++) { // rewrite on for
-            obj = (*bar).toObject();
+            obj = Json::Val::fromQVal(*bar).obj();
             barName = obj.value(Key::title).toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
@@ -108,7 +108,7 @@ void ToolBars::load(Json::Arr & bars) {
                 Json::Arr actions = obj.arr(Key::actions);
 
                 foreach(QJsonValue act, actions) { // rewrite on for
-                    actionObj = act.toObject();
+                    actionObj = Json::Val::fromQVal(act).obj();
                     addPanelButton(actionObj.value(Key::name).toString(), actionObj.value(Key::path).toString(), curr_bar);
                 }
             }

@@ -226,20 +226,20 @@ void IView::copyIdsToClipboard() {
 
 void IView::openRecomendationsforUser() {
     ViewSettings settings(vk_rel, false, false, false, true, sttngs.uid, user_rel);
-    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
+    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, Json::Obj(), true, true);
 }
 void IView::openRecomendationsforItemUser() {
     WebItem * it = mdl -> item<WebItem>(currentIndex());
     if (it -> owner().isValid()) {
         ViewSettings settings(vk_rel, false, false, false, true, it -> owner().toString(), user_rel);
-        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
+        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, Json::Obj(), true, true);
     }
 }
 void IView::openRecomendationsforItem() {
     WebItem * it = mdl -> item<WebItem>(currentIndex());
     if (it -> uid().isValid()) {
         ViewSettings settings(vk_rel, false, false, false, true, it -> toUid().toString(), song_rel);
-        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
+        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, Json::Obj(), true, true);
     }
 }
 
