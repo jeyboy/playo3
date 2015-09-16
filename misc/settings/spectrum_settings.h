@@ -32,13 +32,13 @@ public:
     inline int autoBarWidth() { return _autoBarWidth; }
     inline void setAutoBarWidth(int newWidth) { _autoBarWidth = newWidth; }
 
-    inline QColor & spectrumColor() const { return _spectrumColor; }
+    const inline QColor & spectrumColor() const { return _spectrumColor; }
     inline void setSpectrumColor(const QColor & newColor) { _spectrumColor = newColor; }
 
-    inline QColor & spectrumColor2() const { return _spectrumColor2; }
+    const inline QColor & spectrumColor2() const { return _spectrumColor2; }
     inline void setSpectrumColor2(const QColor & newColor) { _spectrumColor2 = newColor; }
 
-    inline QColor & spectrumColor3() const { return _spectrumColor3; }
+    const inline QColor & spectrumColor3() const { return _spectrumColor3; }
     inline void setSpectrumColor3(const QColor & newColor) { _spectrumColor3 = newColor; }
 
     inline int spectrumFreqRate() { return _spectrumFreqRate; }
