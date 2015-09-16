@@ -3,7 +3,7 @@
 
 using namespace Playo3;
 
-IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
+IView::IView(IModel * newModel, QWidget * parent, const ViewSettings & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
     setIndentation(Settings::instance() -> treeIndentation());

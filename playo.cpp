@@ -134,12 +134,12 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    Vk::Api::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
-    Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
-    Fourshared::Api::instance(settings -> read(SETTINGS_FOURSHARED_SET_KEY).toObject());
-    Od::Api::instance(this, settings -> read(SETTINGS_OD_SET_KEY).toObject());
+    Vk::Api::instance(this, settings -> read(SETTINGS_VK_SET_KEY).obj());
+    Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).obj());
+    Fourshared::Api::instance(settings -> read(SETTINGS_FOURSHARED_SET_KEY).obj());
+    Od::Api::instance(this, settings -> read(SETTINGS_OD_SET_KEY).obj());
 
-    Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
+    Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).obj());
 
     activation();
 
@@ -159,11 +159,11 @@ void Playo::initialization() {
     /// toolbars
     ///////////////////////////////////////////////////////////
 
-    Json::Arr bars = settings -> read(ToolBars::settingsName()).toArray();
+    Json::Arr bars = settings -> read(ToolBars::settingsName()).arr();
     ToolBars::instance() -> load(bars);
-    ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
+    ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).obj());
 
-    Json::Arr docks = settings -> read(Dockbars::settingsName()).toArray();
+    Json::Arr docks = settings -> read(Dockbars::settingsName()).arr();
     Dockbars::instance() -> load(docks);
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
@@ -289,7 +289,7 @@ void Playo::showSearchDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         ViewSettings settings(search, false, false, false, true);
         SearchSettings prms = dialog.params();
-        Dockbars::instance() -> createDocBar("Search", settings, 0, true, true, &prms);
+        Dockbars::instance() -> createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
     }
 }
 

@@ -51,8 +51,8 @@ namespace Playo3 {
         }
 
         DockBar * commonBar();
-        DockBar * createDocBar(QString name, ViewSettings settings, Json::Obj * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
-        DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
+        DockBar * createDocBar(const QString & name, const ViewSettings & settings, const Json::Obj & attrs = Json::Obj(), bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
+        DockBar * createDocBar(const QString & name, bool closable = true, QWidget * content = 0);
         DockBar * createLinkedDocBar(QString text, QString path, ViewSettings settings);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }

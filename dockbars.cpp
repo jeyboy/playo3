@@ -23,10 +23,10 @@ void Dockbars::load(Json::Arr & bars) {
         QDockWidget * curr_bar;
 
         for(Json::Arr::Iterator it = bars.begin(); it != bars.end(); it++) {
-            obj = (*it).toObject();
-            barName = obj.value(QStringLiteral("title")).toString();
+            obj = Json::Val::fromQVal(*it).obj();
+            barName = obj.str(QStringLiteral("title"));
             userTabsAmount += (!barsList.removeOne(barName));
-            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
+            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.obj(QStringLiteral("set"))), obj.obj(QStringLiteral("cont")));
             curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
 
             if (obj.value(QStringLiteral("stick")).toBool())
@@ -159,7 +159,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, Json::Obj * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(const QString & name, const ViewSettings & settings, const Json::Obj & attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 
@@ -207,7 +207,7 @@ DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, Json::Obj 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {
+DockBar * Dockbars::createDocBar(const QString & name, bool closable, QWidget * content) {
     DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));

@@ -33,7 +33,7 @@ namespace Playo3 {
     class IView : public QTreeView {
       Q_OBJECT
     public:
-        IView(IModel * model, QWidget * parent, ViewSettings & settins);
+        IView(IModel * model, QWidget * parent, const ViewSettings & settins);
         virtual ~IView();
 
         inline Json::Obj toJson() { return mdl -> toJson(); }
