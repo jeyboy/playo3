@@ -13,9 +13,6 @@ void GlobalSettings::fromJson(const Json::Obj & json) {
     _openDropPointInTabType = (Playo3::ContainerType)json.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Playo3::tree);
 
     _isAutorunned = json.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
-
-    _od_key = json.value(SETTINGS_OD_KEY).toString();
-    _od_val = json.value(SETTINGS_OD_VAL_KEY).toString();
 }
 
 void GlobalSettings::toJson(Json::Obj & json) {
@@ -29,9 +26,6 @@ void GlobalSettings::toJson(Json::Obj & json) {
     json.insert(SETTINGS_SAVE_COMMON_TAB_KEY, QJsonValue::fromVariant(_saveCommonTab));
     json.insert(SETTINGS_OPEN_DROP_IN_TAB_KEY, QJsonValue::fromVariant(_openDropPointInTab));
     json.insert(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY, QJsonValue::fromVariant(_openDropPointInTabType));
-
-    json.insert(SETTINGS_OD_KEY, QJsonValue::fromVariant(_od_key));
-    json.insert(SETTINGS_OD_VAL_KEY, QJsonValue::fromVariant(_od_val));
 
     json.insert(SETTINGS_OPEN_TIMEOUT, QJsonValue::fromVariant(_openTimeOut));
 }

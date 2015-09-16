@@ -46,13 +46,13 @@ void WebApi::clearData() {
 //}
 
 void WebApi::fromJson(const Json::Obj & hash) { //TODO: replace foreach with for
-    Json::Obj ar = hash.obj(QStringLiteral("friends"));
+    Json::Obj ar = hash.cobj(QStringLiteral("friends"));
     foreach(QString key, ar.keys())
-        addFriend(key, ar.value(key).toString());
+        addFriend(key, ar.str(key));
 
-    ar = hash.value(QStringLiteral("groups")).toObject();
+    ar = hash.cobj(QStringLiteral("groups"));
     foreach(QString key, ar.keys())
-        addGroup(key, ar.value(key).toString());
+        addGroup(key, ar.str(key));
 }
 void WebApi::toJson(Json::Obj & root) {
     Json::Obj friendsJson;

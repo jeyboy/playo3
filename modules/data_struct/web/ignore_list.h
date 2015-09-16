@@ -15,7 +15,7 @@ namespace Playo3 {
         bool ignoreListContainUid(const QVariant & uid);
 
         Json::Obj & ignoreListToJson(Json::Obj & obj);
-        void ignoreListFromJson(Json::Arr & arr);
+        void ignoreListFromJson(const Json::Arr & arr);
     private:
         inline QString jsonName() const { return QStringLiteral("deleted"); }
 

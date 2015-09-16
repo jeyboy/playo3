@@ -32,7 +32,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
         artistAccordion -> clear();
 
         if (!info.isEmpty()) {
-            Json::Arr biographies = info.value(QStringLiteral("biographies")).toArray();
+            Json::Arr biographies = info.arr(QStringLiteral("biographies"));
             Json::Arr::Iterator biographie = biographies.begin();
 
             for(int i = 1; biographie != biographies.end(); biographie++, i++) {
@@ -77,7 +77,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QStringList termsList;
 
                 for(Json::Arr::Iterator term = terms.begin(); term != terms.end(); term++) {
-                    Json::Obj obj = (*term).toObject();
+                    Json::Obj obj = Json::Val::fromQVal(*term).obj();
                     termsList <<
                         (
                             obj.value(QStringLiteral("name")).toString() % QStringLiteral("\n") %
@@ -101,7 +101,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QVBoxLayout * il = new QVBoxLayout(newsBlock);
 
                 for(Json::Arr::Iterator news_item = news.begin(); news_item != news.end(); news_item++) {
-                    Json::Obj obj = (*news_item).toObject();
+                    Json::Obj obj = Json::Val::fromQVal(*news_item).obj();
                     QLabel * newsLabel = new QLabel(
                                 obj.value(QStringLiteral("date_found")).toString() % QStringLiteral("\n") % obj.value(QStringLiteral("name")).toString() % QStringLiteral("\n\n") % obj.value(QStringLiteral("summary")).toString()
                                 , newsBlock);
@@ -120,9 +120,9 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 QHash<QString, bool> songsHash;
 
                 for(Json::Arr::Iterator song = songs.begin(); song != songs.end(); song++) {
-                    Json::Obj obj = (*song).toObject();
+                    Json::Obj obj = Json::Val::fromQVal(*song).obj();
 
-                    QString str = obj.value(QStringLiteral("title")).toString();
+                    QString str = obj.str(QStringLiteral("title"));
 
                     if (!songsHash.contains(str)) {
                         QLabel * newsLabel = new QLabel(str, songsBlock);
@@ -212,8 +212,8 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
       qDebug() << results;
 
       for(Json::Arr::Iterator song = results.begin(); song != results.end(); song++) {
-          Json::Obj obj = (*song).toObject();
-          predicates << (obj.value(QStringLiteral("artist_name")).toString() + " - " + obj.value(QStringLiteral("title")).toString());
+          Json::Obj obj = Json::Val::fromQVal(*song).obj();
+          predicates << (obj.str(QStringLiteral("artist_name")) + " - " + obj.str(QStringLiteral("title")));
 //          new WebItem(
 //              obj.value("id").toString(),
 //              obj.value("artist_id").toString(),

@@ -2,7 +2,7 @@
 #define TEU_H
 
 #include <qstring.h>
-#include <qjsonobject.h>
+#include "misc/web_utils/json.h"
 
 class TeuAuth {
 public:

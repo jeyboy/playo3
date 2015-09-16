@@ -11,13 +11,13 @@ MusicGenres * MusicGenres::instance() {
 void MusicGenres::load() {
     settings = new Playo3::DataStore(GENRES_PATH);
 
-    Json::Arr ar = settings -> read(ROOT_VAL_NAME).toArray();
+    Json::Arr ar = settings -> read(ROOT_VAL_NAME).arr();
 
     if (ar.isEmpty())
         prepare();
     else {
         for(Json::Arr::Iterator genre_obj = ar.begin(); genre_obj != ar.end(); genre_obj++) {
-            Json::Obj genre = (*genre_obj).toObject();
+            Json::Obj genre = Json::Val::fromQVal(*genre_obj).obj();
             genres.insert(genre.value(GENRE_VAL_NAME).toString(), genre.value(GENRE_NUM_NAME).toInt());
         }
     }

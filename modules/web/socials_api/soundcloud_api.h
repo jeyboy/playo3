@@ -19,7 +19,7 @@ namespace Soundcloud {
         inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
         QString authUrl();
 
-        void fromJson(const Json::Obj & hash);
+        void fromJson(Json::Obj & hash);
         Json::Obj toJson();
 
         inline bool isConnected() { return !token().isEmpty(); }
@@ -49,11 +49,11 @@ namespace Soundcloud {
         inline bool endReached(Json::Obj & response, int /*offset*/) { return response.value(QStringLiteral("response")).toArray().isEmpty(); }
         inline bool extractStatus(QUrl & /*url*/, Json::Obj & response, int & code, QString & message) {
             Json::Obj stat_obj = response.obj(QStringLiteral("response")).arr(QStringLiteral("errors"))[0].obj();
-            message = stat_obj.value(QStringLiteral("error_message")).toString();
-            return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
+            message = stat_obj.str(QStringLiteral("error_message"));
+            return (code = stat_obj.num(QStringLiteral("error_code"))) == 0;
         }
     private:
-        inline Api(const Json::Obj & hash) : WebApi(), TeuAuth() { fromJson(hash); }
+        inline Api(Json::Obj & hash) : WebApi(), TeuAuth() { fromJson(hash); }
         inline Api() : WebApi(), TeuAuth() { }
         inline virtual ~Api() {}
 

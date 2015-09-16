@@ -16,7 +16,7 @@
 class DownloadModelItem {
 public:
     DownloadModelItem(const QVariantMap & data, DownloadModelItem * parent = 0);
-    DownloadModelItem(const Json::Obj & data = Json::Obj(), DownloadModelItem * parent = 0);
+    DownloadModelItem(Json::Obj * data = 0, DownloadModelItem * parent = 0);
     ~DownloadModelItem();
 
     DownloadModelItem * child(int number);

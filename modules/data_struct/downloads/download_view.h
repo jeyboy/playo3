@@ -33,7 +33,7 @@ namespace Playo3 {
 
         inline void scrollToActive() { scrollTo(currentIndex()); }
 
-        bool proceedDownload(QModelIndex & ind);
+        bool proceedDownload(const QModelIndex & ind);
         void proceedDrop(QDropEvent * event, QString path);
     signals:
         void updateRequired(const QModelIndex & topLeft, const QModelIndex & bottomRight, const QVector<int> & roles = QVector<int>());
@@ -72,7 +72,7 @@ namespace Playo3 {
     private:
         bool paused;
 
-        DownloadView(Json::Obj & hash, QWidget * parent);
+        DownloadView(Json::Obj * hash, QWidget * parent);
         QList<QFutureWatcher<QModelIndex> *> watchers;
         QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
 

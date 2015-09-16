@@ -30,7 +30,7 @@ namespace Soundcloud {
         return url.toString();
     }
 
-    void Api::fromJson(Json::Obj hash) {
+    void Api::fromJson(Json::Obj & hash) {
         TeuAuth::fromJson(hash);
         WebApi::fromJson(hash);
     }

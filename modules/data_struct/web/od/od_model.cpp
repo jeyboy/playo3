@@ -16,7 +16,7 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
     Json::Arr audios = hash.arr(QStringLiteral("tracks"));
 
     if (audios.isEmpty()) {
-        int totalTracks = hash.intVal(QStringLiteral("totalTracks"));
+        int totalTracks = hash.num(QStringLiteral("totalTracks"));
         if (totalTracks > 0) {
             audios = Od::Api::instance() -> userInfo(hash.numStr(QStringLiteral("me"))).arr(QStringLiteral("tracks"));
         }
@@ -35,9 +35,9 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
             Json::Obj playlist;
 
             for(Json::Arr::Iterator it = playlists.begin(); it != playlists.end(); it++) {
-                playlist = (*it).toObject();
+                playlist = Json::Val::fromQVal(*it).obj();
 
-                int items_amount = playlist.intVal(QStringLiteral("count"));
+                int items_amount = playlist.num(QStringLiteral("count"));
                 if (items_amount > 0) {
                     QString pid = playlist.numStr(QStringLiteral("id"));
 
@@ -104,7 +104,7 @@ void OdModel::proceedAudioList(Json::Obj & hash) {
         Json::Arr friends = hash.arr(QStringLiteral("friends"));
 
         for(Json::Arr::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            Json::Obj frend = (*friend_it).toObject();
+            Json::Obj frend = Json::Val::fromQVal(*friend_it).obj();
 
             Od::Api::instance() -> addFriend(
                 frend.str(QStringLiteral("id")),

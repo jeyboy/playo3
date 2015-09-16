@@ -4,7 +4,7 @@ using namespace Playo3;
 
 DownloadView * DownloadView::self = 0;
 
-DownloadView * DownloadView::instance(const Json::Obj & hash, QWidget * parent) {
+DownloadView * DownloadView::instance(Json::Obj * hash, QWidget * parent) {
     if(!self)
         self = new DownloadView(hash, parent);
     return self;
@@ -63,7 +63,7 @@ Json::Obj DownloadView::toJson() {
     return mdl -> toJson();
 }
 
-bool DownloadView::proceedDownload(QModelIndex & ind) {
+bool DownloadView::proceedDownload(const QModelIndex & ind) {
     QFutureWatcher<QModelIndex> * newItem = 0;
 
     if (watchers.isEmpty()) {

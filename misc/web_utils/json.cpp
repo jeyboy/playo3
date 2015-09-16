@@ -203,6 +203,10 @@ namespace Json {
         return *(Arr *)(this);
     }
 
+    Obj Val::obj() {
+        return *(Obj *)(this);
+    }
+
     Obj Obj::fromVariantMap(const QVariantMap & map) {
         return fromQJson(QJsonObject::fromVariantMap(map));
     }
@@ -210,14 +214,19 @@ namespace Json {
         return QJsonObject::toVariantMap();
     }
 
-    Obj Obj::takeObj(const QString & key) { return take(key).toObject(); }
-    Arr Obj::takeArr(const QString & key) { return take(key).toArray(); }
+    Obj Obj::takeObj(const QString & key) { return Json::Val::fromQVal(take(key)).obj(); }
+    Arr Obj::takeArr(const QString & key) { return Json::Val::fromQVal(take(key)).arr(); }
 
-    Obj Obj::toObj(const QString & key) {
+    Obj Obj::cobj(const QString & key) const {
         QJsonObject obj = value(key).toObject();
         return *(Obj *)(&obj);
     }
-    Arr Obj::toArr(const QString & key) {
+
+    Obj Obj::obj(const QString & key) {
+        QJsonObject obj = value(key).toObject();
+        return *(Obj *)(&obj);
+    }
+    Arr Obj::arr(const QString & key) {
         QJsonArray obj = value(key).toArray();
         return *(Arr *)(&obj);
     }

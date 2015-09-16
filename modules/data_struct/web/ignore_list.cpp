@@ -26,6 +26,6 @@ Json::Obj & IgnoreList::ignoreListToJson(Json::Obj & obj) {
     obj.insert(jsonName(), Json::Arr::fromVariantList(list));
     return obj;
 }
-void IgnoreList::ignoreListFromJson(Json::Arr & arr) {
+void IgnoreList::ignoreListFromJson(const Json::Arr & arr) {
     list = arr.toVariantList();
 }

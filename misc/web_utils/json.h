@@ -188,6 +188,7 @@ namespace Json {
             Arr takeArr(const QString & key);
             inline int takeInt(const QString & key)         { return take(key).toInt(); }
 
+            Obj cobj(const QString & key) const;
             Obj obj(const QString & key);
             Arr arr(const QString & key);
             inline QVariant var(const QString & key)        { return value(key).toVariant(); }

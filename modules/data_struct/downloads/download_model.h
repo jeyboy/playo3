@@ -9,7 +9,7 @@
 class DownloadModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    inline DownloadModel(const Json::Obj & hash = Json::Obj(), QObject * parent = 0) : QAbstractItemModel(parent) { rootItem = new DownloadModelItem(hash); }
+    inline DownloadModel(Json::Obj * json = 0, QObject * parent = 0) : QAbstractItemModel(parent) { rootItem = new DownloadModelItem(json); }
     inline ~DownloadModel() { delete rootItem; }
 
     inline Json::Obj toJson() { return rootItem -> toJson(); }

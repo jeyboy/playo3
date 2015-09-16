@@ -26,7 +26,7 @@ void SpectrumSettings::fromJson(const Json::Obj & json) {
     _autoBarWidth = json.value(SETTINGS_AUTO_BARS_WIDTH_KEY).toInt(10);
 }
 
-void SpectrumSettings::toJson(const Json::Obj & json) {
+void SpectrumSettings::toJson(Json::Obj & json) {
     json.insert(SETTINGS_AUTO_BARS_WIDTH_KEY, QJsonValue::fromVariant(_autoBarWidth));
     json.insert(SETTINGS_AUTO_BARS_AMOUNT_KEY, QJsonValue::fromVariant(_autoBarsAmount));
     json.insert(SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY, QJsonValue::fromVariant(_customColorSpectrum));

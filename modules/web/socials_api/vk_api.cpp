@@ -56,7 +56,7 @@ namespace Vk {
     bool Api::extractStatus(QUrl & url, Json::Obj & response, int & code, QString & message) {
         Json::Obj stat_obj = response.obj(error_key);
         message = stat_obj.str(error_msg_key);
-        code = stat_obj.intVal(error_code_key);
+        code = stat_obj.num(error_code_key);
 
         if (code == 14)
             return captchaProcessing(response, url);
@@ -70,7 +70,7 @@ namespace Vk {
     }
 
     bool Api::captchaProcessing(Json::Obj & response, QUrl & url) {
-        Json::Obj stat_obj = response.value(error_key).toObject();
+        Json::Obj stat_obj = response.obj(error_key);
 
         QString captchaText;
         showingCaptcha(QUrl(stat_obj.value(captcha_img_key).toString()), captchaText);

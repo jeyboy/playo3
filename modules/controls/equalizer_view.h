@@ -24,7 +24,7 @@ namespace Playo3 {
         ~EqualizerView();
 
         Json::Obj settings();
-        void setSettings(const Json::Obj & settings);
+        void setSettings(const Json::Obj & json);
 
     protected slots:
         void createPreset();
