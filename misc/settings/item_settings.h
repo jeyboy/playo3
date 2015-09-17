@@ -32,23 +32,18 @@ struct ItemTextAttrs {
 
 class ItemSettings {
 public:
-    void fromJson(QJsonObject & settings);
-    void toJson(QJsonObject & settings);
+    void fromJson(QJsonObject & json);
+    void toJson(QJsonObject & json);
 
-    QBrush buildGradient(QRect rect, QColor color, bool dark);
+    QBrush buildGradient(const QRect & rect, const QColor & color, bool dark);
 
-    inline QColor defaultState() { return _defaultItemColor; }
-    inline QColor listenedState() { return _listenedItemColor; }
-    inline QColor likedState() { return _likedItemColor; }
-    inline QColor playedState() { return _playedItemColor; }
+    inline QBrush defaultState(const QRect & rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
+    inline QBrush listenedState(const QRect & rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
+    inline QBrush likedState(const QRect & rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
+    inline QBrush playedState(const QRect & rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
+    inline QBrush itemState(const QRect & rect, bool dark) { return buildGradient(rect, _itemColor, dark); }
 
-    inline QBrush defaultState(QRect rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
-    inline QBrush listenedState(QRect rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
-    inline QBrush likedState(QRect rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
-    inline QBrush playedState(QRect rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
-    inline QBrush itemState(QRect rect, bool dark) { return buildGradient(rect, _itemColor, dark); }
-
-    QBrush unprocessedState(QRect rect, bool dark);
+    QBrush unprocessedState(const QRect & rect, bool dark);
 
     inline bool isUseGradient() const { return _useGradient; }
     inline void setUseGradient(bool use) { _useGradient = use; }

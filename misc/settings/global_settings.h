@@ -16,9 +16,6 @@
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
 
-#define SETTINGS_OD_KEY QStringLiteral("od_key")
-#define SETTINGS_OD_VAL_KEY QStringLiteral("od_val")
-
 #define SETTINGS_OPEN_TIMEOUT QStringLiteral("open_time_out_key")
 
 class GlobalSettings {
@@ -53,9 +50,6 @@ public:
     inline float openTimeOut() { return _openTimeOut; }
     inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
 
-    inline QString od_key() { return _od_key;}
-    inline QString od_val() { return _od_val;}
-
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
@@ -68,8 +62,6 @@ protected:
     int _tabPosition;
 
     float _openTimeOut;
-
-    QString _od_key, _od_val;
 };
 
 #endif // GLOBAL_SETTINGS
