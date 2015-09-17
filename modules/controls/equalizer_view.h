@@ -16,6 +16,7 @@
 
 namespace Playo3 {
     #define DEFAULT_PRESET QStringLiteral("Manual")
+    #define JSON_KEY QStringLiteral("presets")
 
     class EqualizerView : public QWidget {
         Q_OBJECT
@@ -24,7 +25,7 @@ namespace Playo3 {
         ~EqualizerView();
 
         QJsonObject settings();
-        void setSettings(QJsonObject settings);
+        void setSettings(const QJsonObject & json);
 
     protected slots:
         void createPreset();

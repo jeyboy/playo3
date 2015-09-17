@@ -93,14 +93,14 @@ QJsonObject EqualizerView::settings() {
         presetsNode.insert(preset.key(), curr_preset);
     }
 
-    res.insert(QStringLiteral("presets"), presetsNode);
+    res.insert(JSON_KEY, presetsNode);
     res.insert(QStringLiteral("active"), presetsList -> currentText());
     res.insert(QStringLiteral("enabled"), enabled -> isChecked());
 
     return res;
 }
-void EqualizerView::setSettings(QJsonObject settings) {
-    QJsonObject presetsNode = settings.value(QStringLiteral("presets")).toObject();
+void EqualizerView::setSettings(const QJsonObject & json) {
+    QJsonObject presetsNode = json.value(JSON_KEY).toObject();
 
     foreach(QString key, presetsNode.keys()) {
         QJsonObject presetVals = presetsNode.value(key).toObject();
@@ -117,8 +117,8 @@ void EqualizerView::setSettings(QJsonObject settings) {
 
     presetsList -> insertItems(0, presets.keys());
 
-    presetsList -> setCurrentText(settings.value(QStringLiteral("active")).toString());
-    enabled -> setChecked(settings.value(QStringLiteral("enabled")).toBool());
+    presetsList -> setCurrentText(json.value(QStringLiteral("active")).toString());
+    enabled -> setChecked(json.value(QStringLiteral("enabled")).toBool());
 }
 
 void EqualizerView::createPreset() {

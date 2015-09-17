@@ -14,8 +14,8 @@ Extensions::Extensions() {
     ext = new DataStore(QStringLiteral("extensions.json"));
 
     if (ext -> state) {
-        activeFilter = ext -> read(QStringLiteral("active")).toString(QStringLiteral("all"));
-        QJsonObject obj = ext -> read(QStringLiteral("filters")).toObject();
+        activeFilter = ext -> read(JSON_ACTIVE_KEY).toString(DEFAULT_ACTIVE);
+        QJsonObject obj = ext -> read(JSON_KEY).toObject();
 
         foreach (QString key, obj.keys())
             filters.insert(key, obj.value(key).toVariant().value<QStringList>());
@@ -23,13 +23,26 @@ Extensions::Extensions() {
     } else {
         QStringList commonfiltersList;
         commonfiltersList << QStringLiteral("*");
-        filters.insert(QStringLiteral("all"), commonfiltersList);
-        activeFilter = QStringLiteral("all");
+        filters.insert(DEFAULT_ACTIVE, commonfiltersList);
+        activeFilter = DEFAULT_ACTIVE;
 
         initMusicExtensions();
     }
 
     initSignatures();
+}
+
+Extensions::~Extensions() {
+    ext -> clear();
+    ext -> write(JSON_ACTIVE_KEY, activeFilterName());
+
+    QJsonObject filtersObj;
+    for(QHash<QString, QStringList>::Iterator it = filters.begin(); it != filters.end(); it++)
+        filtersObj.insert(it.key(), QJsonValue::fromVariant(it.value()));
+
+    ext -> write(JSON_KEY, filtersObj);
+    ext -> save();
+    delete ext;
 }
 
 void Extensions::initSignatures() {

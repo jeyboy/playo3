@@ -7,24 +7,16 @@
 #include "data_store.h"
 #include "dialogs/extension_dialog.h"
 
+#define JSON_KEY QStringLiteral("filters")
+#define JSON_ACTIVE_KEY QStringLiteral("active")
+#define DEFAULT_ACTIVE QStringLiteral("all")
+
 namespace Playo3 {
     class Extensions {
     public:
         static QString folderName(QFileInfo & info);
 
-        ~Extensions() {
-            ext -> clear();
-            ext -> write(QStringLiteral("active"), activeFilterName());
-
-            QJsonObject filtersObj;
-            foreach(QString key, filters.keys()) {
-                filtersObj.insert(key, QJsonValue::fromVariant(filters.value(key)));
-            }
-
-            ext -> write(QStringLiteral("filters"), filtersObj);
-            ext -> save();
-            delete ext;
-        }
+        ~Extensions();
 
         static Extensions * instance();
         inline static void close() { delete self; }

@@ -1,5 +1,6 @@
 #include "single_application.h"
 #include <typeinfo>
+#include <qdebug.h>
 
 SingleApplication::SingleApplication(int & argc, char * argv[], const QString uniqueKey) : QApplication(argc, argv) {
     // fix for linux crashed app memory clear
