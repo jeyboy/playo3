@@ -129,23 +129,23 @@ void ToolBars::save(DataStore * settings) {
         QList<QAction*> actions;
         ToolbarButton* button;
 
-        foreach(QToolBar * bar, bars) { // rewrite on for
+        for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
             curr_tab = QJsonObject();
 
-            curr_tab.insert(Key::title, bar -> windowTitle());
-            curr_tab.insert(Key::name, bar -> objectName());
-            curr_tab.insert(Key::movable, bar -> isMovable());
+            curr_tab.insert(Key::title, (*bar) -> windowTitle());
+            curr_tab.insert(Key::name, (*bar) -> objectName());
+            curr_tab.insert(Key::movable, (*bar) -> isMovable());
 
-            if (!bar -> property(toolbar_service_mark).toBool()) {
-                actions = bar -> actions();
+            if (!(*bar) -> property(toolbar_service_mark).toBool()) {
+                actions = (*bar) -> actions();
                 if (actions.length() > 0) {
                     QJsonArray action_array = QJsonArray();
                     QJsonObject curr_act;
 
-                    foreach(QAction * act, actions) { // rewrite on for
-                        if (act -> objectName() != QStringLiteral("*Title") && QString(act -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
+                    for(QList<QAction*>::Iterator act = actions.begin(); act != actions.end(); act++) {
+                        if ((*act) -> objectName() != QStringLiteral("*Title") && QString((*act) -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
                             curr_act = QJsonObject();
-                            button = (ToolbarButton*) bar -> widgetForAction(act);
+                            button = (ToolbarButton*) (*bar) -> widgetForAction((*act));
 
                             curr_act.insert(Key::path, button -> mainPath());
                             curr_act.insert(Key::name, button -> text());

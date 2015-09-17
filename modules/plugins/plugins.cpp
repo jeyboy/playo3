@@ -12,7 +12,7 @@ bool Plugins::loadWebDialog(WebDialogInterface *& wdi) {
             << QStringLiteral("libweb_plugin.so") << QStringLiteral("libweb_plugin.so.1") << QStringLiteral("libweb_plugin.so.1.0") << QStringLiteral("libweb_plugin.so.1.0.0");
         #endif
 
-    foreach (QString fileName, pluginsDir.entryList(filters, QDir::Files)) {
+    foreach(QString fileName, pluginsDir.entryList(filters, QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject * plugin = pluginLoader.instance();
         if (plugin) {
