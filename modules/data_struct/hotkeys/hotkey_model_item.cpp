@@ -45,11 +45,11 @@ bool HotkeyModelItem::insertColumns(int position, int columns) {
     if (position < 0 || position > itemData.size())
         return false;
 
-    for (int column = 0; column < columns; ++column)
+    for(int column = 0; column < columns; ++column)
         itemData.insert(position, QVariant());
 
-    foreach (HotkeyModelItem * child, childItems)
-        child -> insertColumns(position, columns);
+    for(QList<HotkeyModelItem *>::Iterator child = childItems.begin(); child != childItems.end(); child++)
+        (*child) -> insertColumns(position, columns);
 
     return true;
 }
@@ -76,11 +76,11 @@ bool HotkeyModelItem::removeColumns(int position, int columns) {
     if (position < 0 || position + columns > itemData.size())
         return false;
 
-    for (int column = 0; column < columns; ++column)
+    for(int column = 0; column < columns; ++column)
         itemData.remove(position);
 
-    foreach (HotkeyModelItem * child, childItems)
-        child -> removeColumns(position, columns);
+    for(QList<HotkeyModelItem *>::Iterator child = childItems.begin(); child != childItems.end(); child++)
+        (*child) ->  removeColumns(position, columns);
 
     return true;
 }

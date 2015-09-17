@@ -48,18 +48,17 @@ DownloadView::~DownloadView() {
 
 QJsonObject DownloadView::toJson() {
     paused = true;
-    QFutureWatcher<QModelIndex> * watcher;
 
-    foreach(QModelIndex ind, bussyWatchers.keys()) {
-        watcher = bussyWatchers.take(ind);
-        disconnect(watcher, SIGNAL(finished()), this, SLOT(downloadCompleted()));
-        watcher -> cancel();
-        watcher -> waitForFinished();
+    for(QHash<QModelIndex, QFutureWatcher<QModelIndex> *>::Iterator it = bussyWatchers.begin(); it != bussyWatchers.end(); it++) {
+        disconnect(it.value(), SIGNAL(finished()), this, SLOT(downloadCompleted()));
+        it.value() -> cancel();
+        it.value() -> waitForFinished();
 
-        watchers.append(watcher);
-        mdl -> setData(ind, -1, DOWNLOAD_PROGRESS);
+        watchers.append(it.value());
+        mdl -> setData(it.key(), -1, DOWNLOAD_PROGRESS);
     }
 
+    bussyWatchers.clear();
     proceedDownload();
 
     return mdl -> toJson();
