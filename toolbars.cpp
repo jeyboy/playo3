@@ -591,19 +591,21 @@ void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {
 
     QList<QSlider *> orientables = bar -> findChildren<QSlider *>();
 
-    foreach(QSlider * orientable, orientables) {  //TODO: use iterator
-        orientable -> setOrientation(orientation);
-//        orientable -> setInvertedAppearance(orientation == Qt::Vertical);
+    for(QList<QSlider *>::Iterator slider = orientables.begin(); slider != orientables.end(); slider++) {
+        (*slider) -> setOrientation(orientation);
+//        (*orientable) -> setInvertedAppearance(orientation == Qt::Vertical);
     }
 }
 
 void ToolBars::hideAll() {
-    foreach(QToolBar * bar, toolbars()) //TODO: use iterator
-        bar -> setHidden(true);
+    QList<QToolBar *> bars = toolbars();
+    for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
+        (*bar) -> setHidden(true);
 }
 void ToolBars::showAll() {
-    foreach(QToolBar * bar, toolbars()) //TODO: use iterator
-        bar -> setHidden(false);
+    QList<QToolBar *> bars = toolbars();
+    for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
+        (*bar) -> setHidden(false);
 }
 
 void ToolBars::changeToolbarMovable() {
@@ -614,9 +616,11 @@ void ToolBars::changeToolbarMovable() {
 void ToolBars::changeToolbarsMovable() {
     if (!underMouseBar) return;
     bool movable = !underMouseBar -> isMovable();
-    foreach(QToolBar * bar, toolbars())  //TODO: use iterator
-        if (movable || (!movable && !bar -> isFloating()))
-            bar -> setMovable(movable);
+    QList<QToolBar *> bars = toolbars();
+
+    for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
+        if (movable || (!movable && !(*bar) -> isFloating()))
+            (*bar) -> setMovable(movable);
 }
 
 void ToolBars::onFolderDrop(QString name, QString path) {
