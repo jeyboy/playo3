@@ -12,23 +12,21 @@ UserActionDialog::~UserActionDialog() {
 }
 
 void UserActionDialog::buildLoginForm(const QString & login_name, const QString & password_name) {
-    setWindowTitle(QStringLiteral("Auth form"));
     QList<FormInput> inputs;
-    inputs << FormInput(login_key, login_name);
-    inputs << FormInput(pass_key, password_name);
-    buildForm(inputs);
+    inputs << FormInput(login_key, true, login_name);
+    inputs << FormInput(pass_key, true, password_name);
+    buildForm(inputs, QStringLiteral("Auth form"));
 }
 
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
-    setWindowTitle(QStringLiteral("Captcha form"));
     QList<FormInput> inputs;
     inputs << FormInput(captcha_img);
-    inputs << FormInput(captcha_key, QStringLiteral("Captcha value"));
-    buildForm(inputs);
+    inputs << FormInput(captcha_key, true, QStringLiteral("Captcha value"));
+    buildForm(inputs, QStringLiteral("Captcha form"));
 }
 
-void UserActionDialog::buildForm(const QList<FormInput> & inputs) {
-    setWindowTitle(QStringLiteral("Some form"));
+void UserActionDialog::buildForm(const QList<FormInput> & inputs, const QString & title) {
+    setWindowTitle(title);
     recreateLayer();
     proceedInputs(inputs);
 }
@@ -39,23 +37,38 @@ void UserActionDialog::extendForm(const QList<FormInput> & inputs) {
 }
 
 QString UserActionDialog::getValue(const QString & name) {
-    QLineEdit * w = elements.value(name);
-    if (w) return w -> text();
-    return QString();
+    QPair<FormInputType, QWidget *> elem = elements.value(name);
+    switch(elem.first) {
+        case string: return ((QLineEdit *)elem.second) -> text();
+        case text: return ((QPlainTextEdit *)elem.second) -> toPlainText();
+        default: return QString();
+    }
 }
 
-QLineEdit * UserActionDialog::registerItem(QString & name, QString & value) {
-    QLineEdit * line = new QLineEdit(value, layer);
-    elements.insert(name, line);
+QWidget * UserActionDialog::registerItem(FormInput & input) {
+    QWidget * res;
 
-    return line;
+    switch(input.ftype) {
+        case string: res = new QLineEdit(input.value, layer);
+        case text: res = new QPlainTextEdit(input.value, layer);
+    }
+    elements.insert(input.name, QPair<FormInputType, QWidget *>(input.ftype, res));
+
+    return res;
+}
+
+void UserActionDialog::createString(FormInput input, QGridLayout * l) {
+    if (input.label.isEmpty())
+        insertElem(l, registerItem(input));
+    else
+        insertPair(l, new QLabel(input.label, layer), registerItem(input));
 }
 
 void UserActionDialog::createText(FormInput input, QGridLayout * l) {
     if (input.label.isEmpty())
-        insertElem(l, registerItem(input.name, input.value));
+        insertElem(l, registerItem(input));
     else
-        insertPair(l, new QLabel(input.label, layer), registerItem(input.name, input.value));
+        insertPair(l, new QLabel(input.label, layer), registerItem(input));
 }
 void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
     QLabel * pict = new QLabel(layer);
@@ -87,6 +100,7 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
 
     for(QList<FormInput>::ConstIterator input = inputs.cbegin(); input != inputs.cend(); input++) {
         switch((*input).ftype) {
+            case string: createString(*input, l); break;
             case text: createText(*input, l); break;
             case image: createImage(*input, l); break;
             case action: createAction(*input, l); break;

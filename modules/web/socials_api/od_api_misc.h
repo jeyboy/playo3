@@ -67,7 +67,7 @@ namespace Od {
 
                 if (!forms.isEmpty()) {
                     QList<FormInput> inputs;
-                    inputs << FormInput(QStringLiteral("code"), QStringLiteral("Code from sms"));
+                    inputs << FormInput(QStringLiteral("code"), true, QStringLiteral("Code from sms"));
                     inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), WebManager::manager(), "sendGet");
                     actionDialog -> buildForm(inputs);
 

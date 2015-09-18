@@ -309,6 +309,9 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
     if (isFloating) return;
     if (!played) return;
 
+    if (lastTabData.index != -1)
+        lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
+
     TabifyParams tabData = played -> tabIndex();
 
     if (tabData.index != -1) {
@@ -316,12 +319,21 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
         tabData.tabbar -> setIconSize(QSize(14, 14));
     }
 
-    if (tabData == lastTabData) return;
-
-    if (lastTabData.index != -1)
-        lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
-
     lastTabData = tabData;
+
+//    TabifyParams tabData = played -> tabIndex();
+
+//    if (tabData.index != -1) {
+//        tabData.tabbar -> setTabIcon(tabData.index, QIcon(QStringLiteral(":played_tab")));
+//        tabData.tabbar -> setIconSize(QSize(14, 14));
+//    }
+
+//    if (tabData == lastTabData) return;
+
+//    if (lastTabData.index != -1)
+//        lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
+
+//    lastTabData = tabData;
 }
 
 void Dockbars::updateAllViews() { // update for item height

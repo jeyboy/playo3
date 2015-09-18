@@ -6,18 +6,18 @@
 #include <qlineedit.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-
-#include <qdebug.h>
+#include <qplaintextedit.h>
+#include <qpair.h>
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, text, action };
+enum FormInputType { image, string, text, action };
 
 struct FormInput {
     inline FormInput() {}
 
-    inline FormInput(const QString & name, const QString & label, const QString & value = QString()) :
-        label(label), name(name), value(value), ftype(text) {}
+    inline FormInput(const QString & name, bool one_line, const QString & label, const QString & value = QString()) :
+        label(label), name(name), value(value), ftype(one_line ? string : text) {}
 
     inline FormInput(const QPixmap & value) : pict(value), ftype(image) {}
 
@@ -50,7 +50,7 @@ public:
 
     void buildLoginForm(const QString & login_name = QStringLiteral("Login"), const QString & password_name = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
-    void buildForm(const QList<FormInput> & inputs);
+    void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
     void extendForm(const QList<FormInput> & inputs);
 
     QString getValue(const QString & name);
@@ -95,7 +95,8 @@ private:
         createLayer();
     }
 
-    QLineEdit * registerItem(QString & name, QString & value);
+    QWidget * registerItem(FormInput & input);
+    void createString(FormInput input, QGridLayout * l);
     void createText(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);
     void createAction(FormInput input, QGridLayout * l);
@@ -104,7 +105,7 @@ private:
     void insertButtons();
 
     Ui::UserActionDialog * ui;
-    QHash<QString, QLineEdit *> elements;
+    QHash<QString, QPair<FormInputType, QWidget *> > elements;
     QHash<QObject *, FormInput> actions;
     QWidget * layer;
     bool finalized;
