@@ -1,6 +1,9 @@
 #ifndef USER_ACTION_DIALOG_H
 #define USER_ACTION_DIALOG_H
 
+#include <qthread.h>
+#include <qapplication.h>
+
 #include <qdialog.h>
 #include <qgridlayout.h>
 #include <qlineedit.h>
@@ -58,10 +61,15 @@ public:
 public slots:
     inline int exec() {
         if (!finalized) {
-            adjustSize();
             insertButtons();
+            adjustSize();
         }
-        return QDialog::exec();
+
+        if (QThread::currentThread() != QApplication::instance() -> thread()) {
+            QMetaObject::invokeMethod((QDialog *)(this), "exec", Qt::BlockingQueuedConnection);
+            return result();
+        }
+        else return QDialog::exec();
     }
 
 protected slots:

@@ -52,18 +52,9 @@ signals:
 public slots:
     virtual inline void disconnect() { clearData(); }
 
-    void showingCaptcha(const QUrl & pict_url, QString & result);
-    void showingLogin(QString & login, QString & pass);
+    bool showingCaptcha(const QUrl & pict_url, QString & result);
+    bool showingLogin(QString & login, QString & pass);
     virtual void proceedAuthResponse(const QUrl & url) = 0;
-
-private slots:
-    inline int executingDialog() {
-        if (QThread::currentThread() != QApplication::instance() -> thread()) {
-            QMetaObject::invokeMethod(actionDialog, "exec", Qt::BlockingQueuedConnection);
-            return actionDialog -> result();
-        } else
-            return actionDialog -> exec();
-    }
 
 protected:
     UserActionDialog * actionDialog;

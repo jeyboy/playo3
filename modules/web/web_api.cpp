@@ -68,16 +68,19 @@ void WebApi::toJson(QJsonObject & root) {
     root.insert(QStringLiteral("groups"), groupsJson);
 }
 
-void WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
+bool WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
     actionDialog -> buildCaptchaForm(WebManager::manager() -> getImage(pict_url));
-    executingDialog();
+    bool res = actionDialog -> exec();
     result = actionDialog -> getValue(actionDialog -> captcha_key);
+    return res;
 }
 
-void WebApi::showingLogin(QString & login, QString & pass) {
+bool WebApi::showingLogin(QString & login, QString & pass) {
     actionDialog -> buildLoginForm();
-    executingDialog();
+    bool res = actionDialog -> exec();
 
     login = actionDialog -> getValue(actionDialog -> login_key);
     pass = actionDialog -> getValue(actionDialog -> pass_key);
+
+    return res;
 }

@@ -49,8 +49,8 @@ QWidget * UserActionDialog::registerItem(FormInput & input) {
     QWidget * res;
 
     switch(input.ftype) {
-        case string: res = new QLineEdit(input.value, layer);
-        case text: res = new QPlainTextEdit(input.value, layer);
+        case text: {res = new QPlainTextEdit(input.value, layer); break;}
+        default: res = new QLineEdit(input.value, layer);
     }
     elements.insert(input.name, QPair<FormInputType, QWidget *>(input.ftype, res));
 
