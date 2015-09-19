@@ -49,9 +49,10 @@ namespace Od {
             bool res = !onlyAuto || (onlyAuto && !token().isEmpty());
 
             if (res) {
-                res |= hashConnection(onlyAuto);
+                res &= hashConnection(onlyAuto);
                 if (res) emit authorized();
             }
+
             return res;
         }
         inline void disconnect() {
@@ -75,7 +76,7 @@ namespace Od {
 
         bool formConnection() {
             WebManager::printCookies();
-            checkCredentials();
+            if (!checkCredentials()) return false;
 
             WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
             QUrl url = reply -> redirectUrl().toUrl();           

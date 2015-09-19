@@ -24,9 +24,11 @@ namespace Od {
                 authP.clear();
             }
 
-            inline void checkCredentials() {
+            inline bool checkCredentials() {
                 if (authE.isEmpty() || authP.isEmpty())
-                    showingLogin(authE, authP);
+                    return showingLogin(authE, authP);
+
+                return true;
             }
 
             inline bool hasError(const QJsonObject & obj) {
