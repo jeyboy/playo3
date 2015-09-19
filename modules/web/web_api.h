@@ -1,8 +1,6 @@
 #ifndef WEB_API_H
 #define WEB_API_H
 
-#include <qapplication.h>
-
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
