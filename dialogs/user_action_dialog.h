@@ -4,6 +4,8 @@
 #include <qthread.h>
 #include <qapplication.h>
 
+#include <qfiledialog.h>
+
 #include <qdialog.h>
 #include <qgridlayout.h>
 #include <qlineedit.h>
@@ -14,10 +16,13 @@
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, string, text, action };
+enum FormInputType { image, string, text, action, url };
 
 struct FormInput {
     inline FormInput() {}
+
+    inline FormInput(const QString & name, const QString & label, const QString & value = QString()) :
+        label(label), name(name), value(value), ftype(url) {}
 
     inline FormInput(const QString & name, bool one_line, const QString & label, const QString & value = QString()) :
         label(label), name(name), value(value), ftype(one_line ? string : text) {}
@@ -43,6 +48,9 @@ struct FormInput {
 class UserActionDialog : public QDialog {
     Q_OBJECT
 public:
+    const QString name_key = QStringLiteral("name");
+    const QString path_key = QStringLiteral("path");
+
     const QString captcha_key = QStringLiteral("captcha");
 
     const QString login_key = QStringLiteral("login");
@@ -51,8 +59,9 @@ public:
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
 
-    void buildLoginForm(const QString & login_name = QStringLiteral("Login"), const QString & password_name = QStringLiteral("Password"));
+    void buildLoginForm(const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
+    void buildToolbarButtonForm(const QString & name, const QString & path);
     void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
     void extendForm(const QList<FormInput> & inputs);
 
@@ -78,15 +87,29 @@ protected slots:
         QMetaObject::invokeMethod(input.obj, input.slot, Qt::AutoConnection, Q_ARG(QString &, input.value));
     }
 
+    inline void browseClicked() {
+        QString path = QFileDialog::getExistingDirectory(this, tr("Choose path"));
+        QString key = sender() -> property("owner_key").toString();
+        ((QLineEdit*)elements.value(key).second) -> setText(path);
+    }
+
+
 private:
     void insertElem(QGridLayout * l, QWidget * w) {
-        l -> addWidget(w, l -> rowCount(), 0, 1, 2, Qt::AlignCenter);
+        l -> addWidget(w, l -> rowCount(), 0, 1, 3, Qt::AlignCenter);
     }
 
     void insertPair(QGridLayout * l, QWidget * w1, QWidget * w2) {
         int row = l -> rowCount();
         l -> addWidget(w1, row, 0);
+        l -> addWidget(w2, row, 1, 1, 2);
+    }
+
+    void insertPairPlus(QGridLayout * l, QWidget * w1, QWidget * w2, QWidget * w3) {
+        int row = l -> rowCount();
+        l -> addWidget(w1, row, 0);
         l -> addWidget(w2, row, 1);
+        l -> addWidget(w3, row, 2);
     }
 
     inline void createLayer() {
@@ -104,6 +127,7 @@ private:
     }
 
     QWidget * registerItem(FormInput & input);
+    void createUrl(FormInput input, QGridLayout * l);
     void createString(FormInput input, QGridLayout * l);
     void createText(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);

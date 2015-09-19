@@ -11,10 +11,10 @@ UserActionDialog::~UserActionDialog() {
     delete ui;
 }
 
-void UserActionDialog::buildLoginForm(const QString & login_name, const QString & password_name) {
+void UserActionDialog::buildLoginForm(const QString & login_label, const QString & password_label) {
     QList<FormInput> inputs;
-    inputs << FormInput(login_key, true, login_name);
-    inputs << FormInput(pass_key, true, password_name);
+    inputs << FormInput(login_key, true, login_label);
+    inputs << FormInput(pass_key, true, password_label);
     buildForm(inputs, QStringLiteral("Auth form"));
 }
 
@@ -23,6 +23,13 @@ void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
     inputs << FormInput(captcha_img);
     inputs << FormInput(captcha_key, true, QStringLiteral("Captcha value"));
     buildForm(inputs, QStringLiteral("Captcha form"));
+}
+
+void UserActionDialog::buildToolbarButtonForm(const QString & name, const QString & path) {
+    QList<FormInput> inputs;
+    inputs << FormInput(name_key, true, QStringLiteral("Name"), name);
+    inputs << FormInput(path_key, QStringLiteral("Path"), path);
+    buildForm(inputs, QStringLiteral("Toolbar Button form"));
 }
 
 void UserActionDialog::buildForm(const QList<FormInput> & inputs, const QString & title) {
@@ -55,6 +62,17 @@ QWidget * UserActionDialog::registerItem(FormInput & input) {
     elements.insert(input.name, QPair<FormInputType, QWidget *>(input.ftype, res));
 
     return res;
+}
+
+void UserActionDialog::createUrl(FormInput input, QGridLayout * l) {
+    QPushButton * button = new QPushButton(QStringLiteral("Browse"), layer);
+    button -> setProperty("owner_key", input.name);
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(browseClicked()));
+
+    if (input.label.isEmpty())
+        insertPair(l, button, registerItem(input));
+    else
+        insertPairPlus(l, new QLabel(input.label, layer), registerItem(input), button);
 }
 
 void UserActionDialog::createString(FormInput input, QGridLayout * l) {
@@ -101,9 +119,10 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
     for(QList<FormInput>::ConstIterator input = inputs.cbegin(); input != inputs.cend(); input++) {
         switch((*input).ftype) {
             case string: createString(*input, l); break;
+            case action: createAction(*input, l); break;
             case text: createText(*input, l); break;
             case image: createImage(*input, l); break;
-            case action: createAction(*input, l); break;
+            case url: createUrl(*input, l); break;
         }
     }
 }
