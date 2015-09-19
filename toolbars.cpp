@@ -575,10 +575,13 @@ void ToolBars::removePanelTriggered() {
 }
 
 void ToolBars::addPanelButtonTriggered() {
-    ToolbarButtonDialog dialog((QWidget *)parent());
+    UserActionDialog dialog((QWidget *)parent());
+    dialog.buildToolbarButtonForm();
 
-    if (dialog.exec() == QDialog::Accepted)
-        addPanelButton(dialog.getName(), dialog.getPath(), underMouseBar);
+    if (dialog.exec() == QDialog::Accepted) {
+        qDebug() << "PIDO" << dialog.getValue(dialog.name_key) << dialog.getValue(dialog.path_key);
+        addPanelButton(dialog.getValue(dialog.name_key), dialog.getValue(dialog.path_key), underMouseBar);
+    }
 }
 
 void ToolBars::removePanelButtonTriggered() {

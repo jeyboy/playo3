@@ -17,7 +17,6 @@
 #include "modules/controls/spectrum_view.h"
 #include "modules/controls/equalizer_view.h"
 
-#include "dialogs/toolbarbuttondialog.h"
 #include "misc/stylesheets.h"
 
 namespace Playo3 {

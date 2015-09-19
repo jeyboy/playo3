@@ -61,7 +61,7 @@ public:
 
     void buildLoginForm(const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
-    void buildToolbarButtonForm(const QString & name, const QString & path);
+    void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
     void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
     void extendForm(const QList<FormInput> & inputs);
 

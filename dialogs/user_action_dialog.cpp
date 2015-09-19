@@ -46,6 +46,7 @@ void UserActionDialog::extendForm(const QList<FormInput> & inputs) {
 QString UserActionDialog::getValue(const QString & name) {
     QPair<FormInputType, QWidget *> elem = elements.value(name);
     switch(elem.first) {
+        case url:
         case string: return ((QLineEdit *)elem.second) -> text();
         case text: return ((QPlainTextEdit *)elem.second) -> toPlainText();
         default: return QString();
