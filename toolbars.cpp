@@ -557,11 +557,13 @@ void ToolBars::removePanelHighlight() {
 }
 
 void ToolBars::addPanelTriggered() {
-    ToolbarDialog dialog(QStringLiteral("Toolbar settings"), (QWidget *)parent());
+    UserActionDialog dialog((QWidget *)parent());
+    dialog.buildToolbarForm();
 
     if (dialog.exec() == QDialog::Accepted) {
-        QToolBar * bar = createToolBar(dialog.getName());
-        bar -> setObjectName(dialog.getName() + QString::number(QDateTime::currentMSecsSinceEpoch()));
+        QString name = dialog.getValue(dialog.name_key);
+        QToolBar * bar = createToolBar(name);
+        bar -> setObjectName(name + QString::number(QDateTime::currentMSecsSinceEpoch()));
         QMainWindow * window = (QMainWindow *)parent();
         Qt::ToolBarArea area = underMouseBar ? window -> toolBarArea(underMouseBar) : Qt::BottomToolBarArea;
         window -> addToolBar(area, bar);

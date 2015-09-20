@@ -122,10 +122,11 @@ void EqualizerView::setSettings(const QJsonObject & json) {
 }
 
 void EqualizerView::createPreset() {
-    ToolbarDialog dialog(QStringLiteral("New preset name"), this);
+    UserActionDialog dialog(this);
+    dialog.buildPresetForm();
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString name = dialog.getName();
+        QString name = dialog.getValue(dialog.name_key);
 
         if (name.isEmpty()) return; // TODO: output error
         bool isNew = !presets.contains(name);

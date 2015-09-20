@@ -44,7 +44,6 @@ SOURCES += main.cpp\
     toolbars.cpp \
     modules/controls/toolbar.cpp \
     modules/controls/toolbarbutton.cpp \
-    dialogs/toolbardialog.cpp \
     modules/controls/clickable_label.cpp \
     modules/controls/hoverable_label.cpp \
     dialogs/settings_dialog.cpp \
@@ -181,7 +180,6 @@ HEADERS  += playo.h \
     modules/controls/json_fields.h \
     modules/controls/toolbar.h \
     modules/controls/toolbarbutton.h \
-    dialogs/toolbardialog.h \
     modules/controls/clickable_label.h \
     modules/controls/hoverable_label.h \
     misc/screen.h \
@@ -348,7 +346,6 @@ HEADERS  += playo.h \
     modules/web/socials_api/od_api_misc.h
 
 FORMS    += playo.ui \
-    dialogs/toolbardialog.ui \
     dialogs/settings_dialog.ui \
     dialogs/tabdialog.ui \
     dialogs/extension_dialog.ui \

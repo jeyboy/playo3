@@ -12,20 +12,42 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qplaintextedit.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
 #include <qpair.h>
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, string, text, action, url };
+enum FormInputType { image, string, text, action, url, list, checkbox };
 
 struct FormInput {
     inline FormInput() {}
 
-    inline FormInput(const QString & name, const QString & label, const QString & value = QString()) :
-        label(label), name(name), value(value), ftype(url) {}
+    static inline FormInput createUrl(const QString & name, const QString & label, const QString & value = QString()) {
+        return FormInput(url, name, label, value);
+    }
 
-    inline FormInput(const QString & name, bool one_line, const QString & label, const QString & value = QString()) :
-        label(label), name(name), value(value), ftype(one_line ? string : text) {}
+    static inline FormInput createStr(const QString & name, const QString & label, const QString & value = QString()) {
+        return FormInput(string, name, label, value);
+    }
+
+    static inline FormInput createTxt(const QString & name, const QString & label, const QString & value = QString()) {
+        return FormInput(text, name, label, value);
+    }
+
+    static inline FormInput createSelect(const QString & name, const QString & label, const QStringList & options, const QString & value = QString()) {
+        return FormInput(list, name, label, options, value);
+    }
+
+    static inline FormInput createCheckbox(const QString & name, const QString & label, const QString & value = QString()) {
+        return FormInput(checkbox, name, label, value);
+    }
+
+    inline FormInput(FormInputType etype, const QString & name, const QString & label, const QString & value = QString()) :
+        label(label), name(name), value(value), ftype(etype) {}
+
+    inline FormInput(FormInputType etype, const QString & name, const QString & label, const QStringList & options, const QString & value) :
+        label(label), name(name), value(value), opts(options), ftype(etype) {}
 
     inline FormInput(const QPixmap & value) : pict(value), ftype(image) {}
 
@@ -36,6 +58,7 @@ struct FormInput {
     QString name;
     QString value;
     QPixmap pict;
+    QStringList opts;
 
     QObject * obj;
     const char * slot;
@@ -62,6 +85,8 @@ public:
     void buildLoginForm(const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
+    void buildToolbarForm(const QString & name = QString());
+    void buildPresetForm(const QString & name = QString());
     void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
     void extendForm(const QList<FormInput> & inputs);
 
@@ -127,9 +152,8 @@ private:
     }
 
     QWidget * registerItem(FormInput & input);
+    void createElement(FormInput input, QGridLayout * l);
     void createUrl(FormInput input, QGridLayout * l);
-    void createString(FormInput input, QGridLayout * l);
-    void createText(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);
     void createAction(FormInput input, QGridLayout * l);
 

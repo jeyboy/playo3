@@ -12,7 +12,6 @@
 
 #include "clickable_slider.h"
 #include "media/player.h"
-#include "dialogs/toolbardialog.h"
 
 namespace Playo3 {
     #define DEFAULT_PRESET QStringLiteral("Manual")
