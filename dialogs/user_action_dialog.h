@@ -13,6 +13,7 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qplaintextedit.h>
+#include <QTextBlock>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qpair.h>
