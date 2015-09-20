@@ -5,6 +5,7 @@
 #include <qapplication.h>
 
 #include <qfiledialog.h>
+//#include <qsyntaxhighlighter.h>
 
 #include <qdialog.h>
 #include <qgridlayout.h>
@@ -19,6 +20,35 @@
 namespace Ui { class UserActionDialog; }
 
 enum FormInputType { image, string, text, action, url, list, checkbox };
+
+//class IdHighlighter : public QSyntaxHighlighter {
+//    Q_OBJECT
+//public:
+//    IdHighlighter(QTextDocument * parent) : QSyntaxHighlighter(parent) {}
+
+//    void highlightBlock(const QString & text) {
+//        QTextCharFormat sep;
+//        sep.setFontWeight(QFont::Bold);
+//        sep.setForeground(Qt::darkRed);
+//        setFormat(0, text.length(), sep);
+
+//        QTextCharFormat socialId;
+//        socialId.setForeground(Qt::darkBlue);
+//        QString pattern = QStringLiteral("\\b(vk|sc)[\\d\\-_]+\\b");
+
+//        QRegExp expression2(pattern);
+//        int index = text.indexOf(expression2);
+//        while (index >= 0) {
+//            int length = expression2.matchedLength();
+//            setFormat(index, length, socialId);
+//            index = text.indexOf(expression2, index + length);
+//        }
+//    }
+//};
+
+// highlighter = new IdHighlighter(ui -> uids -> document());
+//return ui -> uids -> toPlainText().split(QRegularExpression(QStringLiteral("\\W")), QString::SkipEmptyParts);
+
 
 struct FormInput {
     inline FormInput() {}
@@ -74,6 +104,8 @@ public:
     const QString name_key = QStringLiteral("name");
     const QString path_key = QStringLiteral("path");
 
+    const QString text_key = QStringLiteral("text");
+
     const QString captcha_key = QStringLiteral("captcha");
 
     const QString login_key = QStringLiteral("login");
@@ -87,6 +119,7 @@ public:
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
     void buildToolbarForm(const QString & name = QString());
     void buildPresetForm(const QString & name = QString());
+    void buildImportForm(const QString & text = QString());
     void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
     void extendForm(const QList<FormInput> & inputs);
 

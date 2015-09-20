@@ -1,16 +1,15 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <QTreeView>
-#include <QHeaderView>
-#include <QMenu>
-#include <QDrag>
-
+#include <qtreeview.h>
+#include <qheaderview.h>
+#include <qmenu.h>
+#include <qdrag.h>
 #include <qevent.h>
 
 #include "model_interface.h"
 #include "dialogs/tabdialog.h"
-#include "dialogs/export_dialog.h"
+#include "dialogs/user_action_dialog.h"
 
 #include "view_settings.h"
 #include "misc/settings.h"

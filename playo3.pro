@@ -128,7 +128,6 @@ SOURCES += main.cpp\
     modules/data_struct/web/vk/vk_rel_model.cpp \
     modules/data_struct/web/vk/vk_rel_view.cpp \
     modules/controls/search_bar.cpp \
-    dialogs/export_dialog.cpp \
     media/cue/cue.cpp \
     modules/web/service_api/echonest_api.cpp \
     dialogs/echonest_dialog.cpp \
@@ -282,7 +281,6 @@ HEADERS  += playo.h \
     modules/data_struct/web/vk/vk_rel_types.h \
     modules/controls/search_bar.h \
     misc/autorun.h \
-    dialogs/export_dialog.h \
     modules/web/web_apis.h \
     media/cue/cue_structs.h \
     media/cue/cue.h \
@@ -351,7 +349,6 @@ FORMS    += playo.ui \
     dialogs/extension_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
-    dialogs/export_dialog.ui \
     dialogs/echonest_dialog.ui \
     dialogs/user_action_dialog.ui
 

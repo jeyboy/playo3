@@ -44,6 +44,12 @@ void UserActionDialog::buildPresetForm(const QString & name) {
     buildForm(inputs, QStringLiteral("New preset form"));
 }
 
+void UserActionDialog::buildImportForm(const QString & text) {
+    QList<FormInput> inputs;
+    inputs << FormInput::createTxt(text_key, QStringLiteral("Ids"), text);
+    buildForm(inputs, QStringLiteral("Import od IDs"));
+}
+
 void UserActionDialog::buildForm(const QList<FormInput> & inputs, const QString & title) {
     setWindowTitle(title);
     recreateLayer();
