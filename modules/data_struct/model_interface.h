@@ -7,11 +7,17 @@
 #include <qfuturewatcher.h>
 #include <qdesktopservices.h>
 
+#include "modules/core/core_parts_index.h"
+
+
+
+
+
 #include "modules/web/web_apis.h"
 
 #include "modules/data_struct/search/search_settings.h"
 #include "misc/file_utils/extensions.h"
-#include "item_index.h"
+
 #include "container_types.h"
 
 #include "item_drop_formats.h"

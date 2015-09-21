@@ -2,24 +2,25 @@
 #define FILE_ITEM_H
 
 #include <qfile.h>
+
 #include "item_interface.h"
-#include "folder_item.h"
+#include "playlist.h"
 
 #define DEFAULT_TITLE QString()
 
 namespace Playo3 {
-    class FileItem : public IItem {
+    class File : public IItem {
     public:
-        inline FileItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
-        inline FileItem(QJsonObject * hash, FolderItem * parent = 0) : IItem(parent, hash) {}
-        inline FileItem(QString fileName, FolderItem * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
+        inline File(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
+        inline File(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
+        inline File(QString fileName, Playlist * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
             QString ext;
             if (FilenameConversions::extractExtension(fileName, ext))
                 setExtension(ext);
 
             setTitle(fileName);
         }
-        inline FileItem(QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+        inline File(QString filePath, QString fileName, Playlist * parent = 0, int pos = -1)
             : IItem(parent, DEFAULT_TITLE, pos) {
 
             QString ext;
@@ -30,7 +31,7 @@ namespace Playo3 {
             setPath(filePath);
         }
 
-        inline virtual ~FileItem() {
+        inline virtual ~File() {
             if (is(mark_on_removing))
                 removePhysicalObject();
         }

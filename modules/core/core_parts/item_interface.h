@@ -7,20 +7,20 @@
 #include <qstringbuilder.h>
 
 #include "misc/file_utils/icon_provider.h"
-#include "model_item_parts/item_types.h"
-#include "model_item_parts/item_fields.h"
+#include "core_part_types.h"
+#include "part_mixes/item_fields.h"
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 
 namespace Playo3 {
-    class FolderItem;
+    class Playlist;
 
     class IItem : public ItemFields {
     public:       
-        IItem(FolderItem * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
-        IItem(FolderItem * parent, QVariantMap & hash, int pos = -1);
-        IItem(FolderItem * parent, QJsonObject * hash);
-        IItem(FolderItem * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(Playlist * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
+        IItem(Playlist * parent, QJsonObject * hash);
+        IItem(Playlist * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
 
         inline virtual ~IItem() {}
 
@@ -53,7 +53,7 @@ namespace Playo3 {
         virtual QVariant data(int column) const;
         bool setData(int column, const QVariant & value);
 
-        inline FolderItem * parent() { return _parent; }
+        inline Playlist * parent() { return _parent; }
 
         inline virtual int columnCount() const { return 1; }
 
@@ -69,13 +69,13 @@ namespace Playo3 {
 
         virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
 
-        inline bool respondTo(QString & predicate) {
-//            QRegularExpression regex(predicate, QRegularExpression::CaseInsensitiveOption);
-//            QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
-//            return m.hasMatch();
+//        inline bool respondTo(QString & predicate) {
+////            QRegularExpression regex(predicate, QRegularExpression::CaseInsensitiveOption);
+////            QRegularExpressionMatch m = regex.match(it.data().toString(), 0, QRegularExpression::PartialPreferFirstMatch);
+////            return m.hasMatch();
 
-            return /*predicate.isEmpty() ||*/ title().toString().contains(predicate, Qt::CaseInsensitive);
-        }
+//            return /*predicate.isEmpty() ||*/ title().toString().contains(predicate, Qt::CaseInsensitive);
+//        }
 
         inline void setParent(FolderItem * pNode) {
 //            if (_parent != 0) qDebug() << "Parent already setted";

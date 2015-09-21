@@ -74,17 +74,13 @@ SOURCES += main.cpp\
     modules/data_struct/tree/tree_view.cpp \
     modules/data_struct/web/soundcloud/soundcloud_model.cpp \
     modules/data_struct/web/soundcloud/soundcloud_view.cpp \
-    modules/data_struct/web/vk/vk_folder.cpp \
     modules/data_struct/web/vk/vk_model.cpp \
     modules/data_struct/web/vk/vk_view.cpp \
     modules/data_struct/web/web_model.cpp \
     modules/data_struct/model_interface.cpp \
     modules/data_struct/view_interface.cpp \
     modules/data_struct/model_item_parts/item_state.cpp \
-    modules/data_struct/item_interface.cpp \
     misc/file_utils/data_store.cpp \
-    modules/data_struct/file_item.cpp \
-    modules/data_struct/folder_item.cpp \
     misc/file_utils/extensions.cpp \
     misc/file_utils/icon_provider.cpp \
     modules/data_struct/model_item_parts/item_fields.cpp \
@@ -114,14 +110,11 @@ SOURCES += main.cpp\
     modules/web/web_api.cpp \
     modules/data_struct/web/web_item.cpp \
     modules/data_struct/web/web_folder_item.cpp \
-    modules/data_struct/web/soundcloud/soundcloud_item.cpp \
-    modules/data_struct/web/vk/vk_item.cpp \
     dialogs/relations_dialog.cpp \
     modules/data_struct/web/ignore_list.cpp \
     modules/controls/drop_button.cpp \
     modules/controls/rotate_label.cpp \
     misc/logger.cpp \
-    modules/data_struct/web/soundcloud/soundcloud_folder.cpp \
     dialogs/search_dialog.cpp \
     modules/data_struct/search/search_model.cpp \
     modules/data_struct/search/search_view.cpp \
@@ -167,7 +160,18 @@ SOURCES += main.cpp\
     modules/data_struct/web/od/od_folder.cpp \
     modules/data_struct/web/od/od_item.cpp \
     modules/data_struct/web/od/od_model.cpp \
-    modules/data_struct/web/od/od_view.cpp
+    modules/data_struct/web/od/od_view.cpp \
+    modules/core/core_parts/file_item.cpp \
+    modules/core/core_parts/folder_item.cpp \
+    modules/core/core_parts/item_interface.cpp \
+    modules/core/core_parts/od_folder.cpp \
+    modules/core/core_parts/od_item.cpp \
+    modules/core/core_parts/soundcloud_folder.cpp \
+    modules/core/core_parts/soundcloud_item.cpp \
+    modules/core/core_parts/vk_folder.cpp \
+    modules/core/core_parts/vk_item.cpp \
+    modules/core/core_parts/part_mixes/item_fields.cpp \
+    modules/core/core_parts/part_mixes/item_state.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -213,7 +217,6 @@ HEADERS  += playo.h \
     modules/data_struct/tree/tree_view.h \
     modules/data_struct/web/soundcloud/soundcloud_model.h \
     modules/data_struct/web/soundcloud/soundcloud_view.h \
-    modules/data_struct/web/vk/vk_folder.h \
     modules/data_struct/web/vk/vk_model.h \
     modules/data_struct/web/vk/vk_view.h \
     modules/data_struct/web/web_model.h \
@@ -223,12 +226,9 @@ HEADERS  += playo.h \
     modules/data_struct/model_item_parts/item_state.h \
     modules/data_struct/model_item_parts/item_types.h \
     modules/data_struct/model_item_parts/json_fields.h \
-    modules/data_struct/item_interface.h \
     modules/data_struct/tree_view_style.h \
     misc/file_utils/data_store.h \
     modules/data_struct/view_settings.h \
-    modules/data_struct/file_item.h \
-    modules/data_struct/folder_item.h \
     modules/data_struct/view_index.h \
     modules/data_struct/item_index.h \
     misc/file_utils/extensions.h \
@@ -263,15 +263,12 @@ HEADERS  += playo.h \
     modules/web/web_api.h \
     modules/data_struct/web/web_item.h \
     modules/data_struct/web/web_folder_item.h \
-    modules/data_struct/web/vk/vk_item.h \
-    modules/data_struct/web/soundcloud/soundcloud_item.h \
     dialogs/relations_dialog.h \
     modules/data_struct/web/ignore_list.h \
     modules/controls/drop_button.h \
     modules/controls/hoverable_menu.h \
     modules/controls/rotate_label.h \
     misc/logger.h \
-    modules/data_struct/web/soundcloud/soundcloud_folder.h \
     dialogs/search_dialog.h \
     modules/data_struct/search/search_model.h \
     modules/data_struct/search/search_settings.h \
@@ -341,7 +338,24 @@ HEADERS  += playo.h \
     modules/data_struct/web/od/od_item.h \
     modules/data_struct/web/od/od_model.h \
     modules/data_struct/web/od/od_view.h \
-    modules/web/socials_api/od_api_misc.h
+    modules/web/socials_api/od_api_misc.h \
+    modules/core/core_parts/item_interface.h \
+    modules/core/data_core.h \
+    modules/core/core_parts/file.h \
+    modules/core/core_parts/od_playlist.h \
+    modules/core/core_parts/od_file.h \
+    modules/core/core_parts/playlist.h \
+    modules/core/core_parts/soundcloud_playlist.h \
+    modules/core/core_parts/soundcloud_file.h \
+    modules/core/core_parts/vk_playlist.h \
+    modules/core/core_parts/vk_file.h \
+    modules/core/core_part_types.h \
+    modules/core/core_parts_index.h \
+    modules/core/core_parts/core_part_types.h \
+    modules/core/core_parts/part_mixes/item_fields.h \
+    modules/core/core_parts/part_mixes/item_state.h \
+    modules/core/core_parts/part_mixes/item_types.h \
+    modules/core/core_parts/part_mixes/json_fields.h
 
 FORMS    += playo.ui \
     dialogs/settings_dialog.ui \

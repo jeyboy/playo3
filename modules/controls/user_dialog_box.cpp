@@ -13,13 +13,3 @@ UserDialogBox * UserDialogBox::instance(QWidget * parent) {
 void UserDialogBox::alert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
     last_answer = QMessageBox::warning(parentWidget(), title, text, buttons);
 }
-
-void UserDialogBox::files() { //TODO: test needed - not used
-    QFileDialog dialog;
-    dialog.setFileMode(QFileDialog::Directory);
-//    dialog.setOption(QFileDialog::ShowDirsOnly);
-    if (dialog.exec())
-        selectedFiles = dialog.selectedUrls();
-    else
-        selectedFiles.clear();
-}

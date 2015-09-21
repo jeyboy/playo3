@@ -6,18 +6,18 @@
 #include <qdatetime.h>
 
 namespace Playo3 {
-    class FolderItem : public IItem {
+    class PlaylistItem : public IItem {
     public:
-        static int restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs);
+        static int restoreItem(int item_type, PlaylistItem * parentFolder, int pos, QVariantMap & attrs);
 
-        inline FolderItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : IItem(0, initState), inBranchCount(0) {}
-        FolderItem(QJsonObject * hash, FolderItem * parent = 0);
-        FolderItem(QString folderPath, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        FolderItem(QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
-        virtual ~FolderItem();
+        inline PlaylistItem(int initState = DEFAULT_MODEL_CONTAINER_STATE) : IItem(0, initState), inBranchCount(0) {}
+        PlaylistItem(QJsonObject * hash, PlaylistItem * parent = 0);
+        PlaylistItem(QString folderPath, QString folderTitle, PlaylistItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        PlaylistItem(QString folderTitle, PlaylistItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        PlaylistItem(QString folderTitle, PlaylistItem * parent, QString uid, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE);
+        virtual ~PlaylistItem();
 
-        void linkNode(FolderItem * node);
+        void linkNode(PlaylistItem * node);
 
         void accumulateUids(QHash<QString, IItem *> & store);
         QVariantList childrenUids(int position, int count);
@@ -55,7 +55,7 @@ namespace Playo3 {
         void updateCheckedState(bool checked);
         bool updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
-        FolderItem * createFolderPath(QString path);
+        PlaylistItem * createFolderPath(QString path);
         template<class T> T * createFolder(QString uid, QString name, int pos = -1) {
             T * curr = reinterpret_cast<T *>(folders.value(folderUid(name, uid), 0));
 
@@ -63,21 +63,21 @@ namespace Playo3 {
                 curr = new T(uid, name, this, pos);
             return curr;
         }
-        FolderItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
-        FolderItem * findNearestFolder(QStringList * list);
-        inline void declareFolder(QString name, FolderItem * folder) { folders.insert(name, folder); }
+        PlaylistItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
+        PlaylistItem * findNearestFolder(QStringList * list);
+        inline void declareFolder(QString name, PlaylistItem * folder) { folders.insert(name, folder); }
         inline int undeclareFolder(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
-        inline FolderItem * folderItem(QString name) { return folders.value(name); }
+        inline PlaylistItem * PlaylistItem(QString name) { return folders.value(name); }
         inline int foldersAmount() const { return folders.size(); }
-        inline QList<FolderItem *> folderChildren() const { return folders.values(); }
+        inline QList<PlaylistItem *> folderChildren() const { return folders.values(); }
 
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:
         inline QString folderUid() const { return folderUid(title().toString(), uid().toString()); }
         inline QString folderUid(QString name, QString uid) const { return name + (uid.isEmpty() ? "" : ("*" + uid)); }
 
-        QHash<QString, FolderItem *> folders;
+        QHash<QString, PlaylistItem *> folders;
         QList<IItem *> children;
         int inBranchCount; // executable items count
     };
