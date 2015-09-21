@@ -138,20 +138,9 @@ QVariant IItem::data(int column) const {
             }
             return params;
         }
-        case Qt::DisplayRole:   return title();
-        case Qt::DecorationRole: {
-           if (is(not_exist))
-               return IconProvider::missedIcon();
-
-           if (isContainer())
-               return QVariant(); // IconProvider::fileIcon("", "");
-           else
-               return IconProvider::fileIcon(fullPath(), extension().toString());
-        }
 
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
-//        case IINNERCOPYURL:    return isRemote() ? QVariant() : toUrl();
         case IFOLDER:          return isContainer();
         case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
@@ -172,7 +161,6 @@ QVariant IItem::data(int column) const {
             else
                 return Qt::AlignLeft;
 
-//        case IINFO:            return info();
         case Qt::CheckStateRole: {
             if (Settings::instance() -> isCheckboxShow()) {
                 return is(checked);

@@ -14,10 +14,8 @@ namespace Playo3 {
         inline ~IconProvider() {}
 
         static IconProvider * instance();
-        static QIcon fileIcon(const QString filename, QString extension);
+        static QIcon fileIcon(const QString & filename, QString extension);
         static QIcon dirIcon();
-        static QIcon remoteIcon();
-        static QIcon missedIcon();
         inline static void close() { delete self; }
     private:
         inline IconProvider() {}
