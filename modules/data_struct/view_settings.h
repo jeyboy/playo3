@@ -7,9 +7,8 @@
 
 namespace Playo3 {
     struct ViewSettings {
-        static ViewSettings vk(QString id) { return ViewSettings(Playo3::vk, false, false, false, true, id); }
-        static ViewSettings soundcloud(QString id) { return ViewSettings(Playo3::soundcloud, false, false, false, true, id); }
-        static ViewSettings echo() { return ViewSettings(Playo3::echo, false, false, false, true); }
+        ViewSettings(ContainerType cType, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(false), playlist(true),
+            interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
         ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
             bool isPlaylist = false, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),

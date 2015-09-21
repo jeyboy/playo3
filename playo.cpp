@@ -249,15 +249,12 @@ void Playo::showEchonestDialog() {
 }
 
 void Playo::openOdTabDialog() {
-    if (Od::Api::instance() -> isConnected() || Od::Api::instance() -> connection()) {
-        ViewSettings settings(od, false, false, false, true, Od::Api::instance() -> userID());
-        Dockbars::instance() -> createDocBar(QStringLiteral("OD [YOU]"), settings, 0, true, true);
-    }
+    if (Od::Api::instance() -> isConnected() || Od::Api::instance() -> connection())
+        Dockbars::instance() -> createDocBar(QStringLiteral("OD [YOU]"), ViewSettings(od, Od::Api::instance() -> userID()), 0, true, true);
 }
 
 void Playo::openVKRecomendations() {
-    ViewSettings settings(vk_rel, false, false, false, true, Vk::Api::instance() -> userID(), user_rel);
-    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for YOU"), settings, 0, true, true);
+    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for YOU"), ViewSettings(vk_rel, Vk::Api::instance() -> userID(), user_rel), 0, true, true);
 }
 
 void Playo::openVKTabDialog() {
@@ -267,7 +264,7 @@ void Playo::openVKTabDialog() {
         dInt -> registerActions(Vk::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(Vk::Api::instance() -> userID()), 0, true, true);
+            Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings(vk, Vk::Api::instance() -> userID()), 0, true, true);
 
         emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
         delete dInt;
@@ -277,14 +274,14 @@ void Playo::openVKTabDialog() {
 
 void Playo::showVKTabDialog() {
     if (Vk::Api::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings::vk(Vk::Api::instance() -> userID()), 0, true, true);
+        Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), ViewSettings(vk, Vk::Api::instance() -> userID()), 0, true, true);
     else openVKTabDialog();
 }
 
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(Vk::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
-       Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), ViewSettings::vk(dialog.getId()), 0, true, true);
+       Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), ViewSettings(vk_rel, dialog.getId(), user_rel), 0, true, true);
 
     emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
 }
@@ -292,7 +289,7 @@ void Playo::showVKRelTabDialog() {
 void Playo::showSoundcloudRelTabDialog() {
     RelationsDialog dialog(Soundcloud::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
-        Dockbars::instance() -> createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), ViewSettings::soundcloud(dialog.getId()), 0, true, true);
+        Dockbars::instance() -> createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), ViewSettings(soundcloud, dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
 
@@ -303,7 +300,7 @@ void Playo::openSoundcloudTabDialog() {
         dInt -> registerActions(Soundcloud::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(Soundcloud::Api::instance() -> userID()), 0, true, true);
+            Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
 
         emit Logger::instance() -> write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
         delete dInt;
@@ -312,7 +309,7 @@ void Playo::openSoundcloudTabDialog() {
 
 void Playo::showSoundcloudTabDialog() {
     if (Soundcloud::Api::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings::soundcloud(Soundcloud::Api::instance() -> userID()), 0, true, true);
+        Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), ViewSettings(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 
