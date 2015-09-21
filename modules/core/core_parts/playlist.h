@@ -61,19 +61,19 @@ namespace Core {
             if (curr) return curr;
             return new T(uid, name, this, pos);
         }
-        PlaylistItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
-        PlaylistItem * findNearestFolder(QStringList * list);
-        inline void declareFolder(QString name, PlaylistItem * folder) { folders.insert(name, folder); }
-        inline int undeclareFolder(QString name) { return folders.remove(name); }
+        Playlist * createPlaylist(const QString & name, QStringList * list = 0, int pos = -1);
+        Playlist * findCompatblePlaylist(QStringList * list);
+        inline void declarePlaylist(const QString & name, Playlist * playlist) { playlists.insert(name, playlist); }
+        inline int undeclarePlaylist(const QString & name) { return playlists.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
-        inline PlaylistItem * PlaylistItem(QString name) { return folders.value(name); }
-        inline int foldersAmount() const { return folders.size(); }
-        inline QList<PlaylistItem *> folderChildren() const { return folders.values(); }
+        inline Playlist * findPlaylist(const QString & name) { return playlists.value(name); }
+        inline int playlistsAmount() const { return playlists.size(); }
+        inline QList<Playlist *> playlistsList() const { return playlists.values(); }
 
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
     protected:
-        inline QString folderUid() const { return folderUid(title().toString(), uid().toString()); }
-        inline QString folderUid(QString name, QString uid) const { return name + (uid.isEmpty() ? "" : ("*" + uid)); }
+        inline QString playlistUid() const { return playlistUid(title().toString(), uid().toString()); }
+        inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QStringLiteral("*") % uid)); }
 
         QHash<QString, Playlist *> playlists;
         QList<IItem *> children;

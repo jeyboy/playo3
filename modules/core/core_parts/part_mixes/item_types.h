@@ -1,7 +1,7 @@
 #ifndef MODEL_ITEM_TYPES_H
 #define MODEL_ITEM_TYPES_H
 
-namespace Playo3 {
+namespace Core {
     namespace Type {
         #define ITEM 100
         #define PLAYLIST 200

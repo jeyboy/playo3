@@ -53,7 +53,7 @@ public:
 
     virtual QString name() const = 0;
 
-    virtual Playo3::WebSubType siteType() = 0;
+    virtual Core::WebSubType siteType() = 0;
 
     virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
         if (!predicate.isEmpty()) {

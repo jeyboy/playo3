@@ -78,12 +78,12 @@ namespace Core {
 //            return /*predicate.isEmpty() ||*/ title().toString().contains(predicate, Qt::CaseInsensitive);
 //        }
 
-        inline void setParent(FolderItem * pNode) {
+        inline void setParent(Playlist * pNode) {
 //            if (_parent != 0) qDebug() << "Parent already setted";
             _parent = pNode;
         }
     protected:
-        FolderItem * _parent;
+        Playlist * _parent;
     };
 }
 

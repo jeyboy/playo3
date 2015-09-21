@@ -7,8 +7,8 @@
 #include <qtreeview.h>
 #include <qcheckbox.h>
 
-#include "model_item_parts/item_fields.h"
-#include "model_item_parts/item_types.h"
+#include "modules/core/core_parts/part_mixes/item_fields.h"
+#include "modules/core/core_parts/core_part_types.h"
 
 #define SELECTION_ITER 99
 #define PIXMAP(path, size) \

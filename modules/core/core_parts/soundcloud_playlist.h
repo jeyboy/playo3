@@ -1,15 +1,15 @@
 #ifndef SOUNDCLOUD_FOLDER_H
 #define SOUNDCLOUD_FOLDER_H
 
-#include "../web_folder_item.h"
+#include "web_playlist.h"
 
-namespace Playo3 {
-    class SoundcloudFolder : public WebFolderItem {
+namespace Core {
+    class SoundcloudPlaylist : public WebPlaylist {
     public:
-        inline SoundcloudFolder(int initState) : WebFolderItem(initState) {}
-        inline SoundcloudFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
-        inline SoundcloudFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
-            : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
+        inline SoundcloudPlaylist(int initState) : WebPlaylist(initState) {}
+        inline SoundcloudPlaylist(QJsonObject * hash, Playlist * parent = 0) : WebPlaylist(hash, parent) {}
+        inline SoundcloudPlaylist(QString uid, QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
+            : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return SOUNDCLOUD_PLAYLIST; }
 

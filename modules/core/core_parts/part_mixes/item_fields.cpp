@@ -1,6 +1,6 @@
 #include "item_fields.h"
 
-using namespace Playo3;
+using namespace Core;
 
 ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
     attrs = QVariantMap(hash);

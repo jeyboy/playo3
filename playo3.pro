@@ -173,7 +173,8 @@ SOURCES += main.cpp\
     modules/core/core_parts/part_mixes/item_fields.cpp \
     modules/core/core_parts/part_mixes/item_state.cpp \
     modules/core/core_parts/web_folder_item.cpp \
-    modules/core/core_parts/web_item.cpp
+    modules/core/core_parts/web_item.cpp \
+    modules/core/data_core.cpp
 
 HEADERS  += playo.h \
     single_application.h \

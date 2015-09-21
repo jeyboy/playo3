@@ -1,7 +1,7 @@
 #ifndef WEB_SUB_TYPES
 #define WEB_SUB_TYPES
 
-namespace Playo3 {
+namespace Core {
     enum WebSubType {
         od_site = -4,
         echonest_site = -3,

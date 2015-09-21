@@ -1,6 +1,8 @@
 #ifndef CORE_PART_TYPES_H
 #define CORE_PART_TYPES_H
 
+#include <qstringbuilder.h>
+
 #define FILE 100
 #define PLAYLIST 200
 #define CUE_FILE 300

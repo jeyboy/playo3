@@ -3,7 +3,7 @@
 
 #include <qstringbuilder.h>
 
-namespace Playo3 {
+namespace Core {
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");

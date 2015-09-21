@@ -1,15 +1,15 @@
 #ifndef VK_FOLDER_H
 #define VK_FOLDER_H
 
-#include "../web_folder_item.h"
+#include "web_playlist.h"
 
-namespace Playo3 {
-    class VkFolder : public WebFolderItem {
+namespace Core {
+    class VkPlaylist : public WebPlaylist {
     public:
-        inline VkFolder(int initState) : WebFolderItem(initState) {}
-        inline VkFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
-        inline VkFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
-            : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
+        inline VkPlaylist(int initState) : WebPlaylist(initState) {}
+        inline VkPlaylist(QJsonObject * hash, Playlist * parent = 0) : WebPlaylist(hash, parent) {}
+        inline VkPlaylist(const QString & uid, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
+            : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return VK_PLAYLIST; }
         inline bool removePhysicalObject() {

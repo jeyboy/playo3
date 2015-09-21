@@ -1,15 +1,15 @@
 #ifndef SOUNDCLOUD_ITEM_H
 #define SOUNDCLOUD_ITEM_H
 
-#include "../web_item.h"
+#include "web_file.h"
 #include "modules/web/socials_api/soundcloud_api.h"
 
-namespace Playo3 {
+namespace Core {
     class SoundcloudItem : public WebItem {
     public:
-        inline SoundcloudItem(QJsonObject * hash, FolderItem * parent = 0) : WebItem(hash, parent) {}
-        inline SoundcloudItem(QVariantMap & hash, FolderItem * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
-        inline SoundcloudItem(QVariant uid, QString filePath, QString fileName, FolderItem * parent = 0, int pos = -1)
+        inline SoundcloudItem(QJsonObject * hash, Playlist * parent = 0) : WebItem(hash, parent) {}
+        inline SoundcloudItem(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebItem(hash, parent, pos) {}
+        inline SoundcloudItem(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1)
             : WebItem(uid, filePath, fileName, parent, pos) {
             //    setExtension("mp3");
             //    setBpm(itemBpm);
@@ -22,7 +22,7 @@ namespace Playo3 {
         }
 
         inline QVariant toUid() { return uid(); }
-        inline int itemType() const { return SOUNDCLOUD_ITEM; }
+        inline int itemType() const { return SOUNDCLOUD_FILE; }
     };
 }
 
