@@ -12,10 +12,10 @@ namespace Playo3 {
         static ViewSettings echo() { return ViewSettings(Playo3::echo, false, false, false, true); }
 
         ViewSettings(ContainerType cType = tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, QString uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
+            bool isPlaylist = false, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        ViewSettings(QJsonObject obj) {
+        ViewSettings(const QJsonObject & obj) {
             deleteFile = obj[QStringLiteral("del")].toBool();
             playlist = obj[QStringLiteral("play")].toBool();
             interactive = obj[QStringLiteral("int")].toBool();
