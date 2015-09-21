@@ -6,21 +6,22 @@
 #include <qurl.h>
 #include <qstringbuilder.h>
 
-#include "misc/file_utils/icon_provider.h"
 #include "core_part_types.h"
 #include "part_mixes/item_fields.h"
 
+#include "misc/file_utils/icon_provider.h"
+
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 
-namespace Playo3 {
+namespace Core {
     class Playlist;
 
     class IItem : public ItemFields {
     public:       
-        IItem(Playlist * parent = 0, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(Playlist * parent = 0, int initState = DEFAULT_FILE_STATE);
         IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
         IItem(Playlist * parent, QJsonObject * hash);
-        IItem(Playlist * parent, QString title, int pos = -1, int initState = DEFAULT_MODEL_ITEM_STATE);
+        IItem(Playlist * parent, QString title, int pos = -1, int initState = DEFAULT_FILE_STATE);
 
         inline virtual ~IItem() {}
 

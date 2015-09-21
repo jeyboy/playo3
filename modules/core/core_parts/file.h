@@ -8,7 +8,7 @@
 
 #define DEFAULT_TITLE QString()
 
-namespace Playo3 {
+namespace Core {
     class File : public IItem {
     public:
         inline File(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}

@@ -61,10 +61,10 @@ namespace Core {
             if (curr) return curr;
             return new T(uid, name, this, pos);
         }
-        PlaylistItem * createFolder(QString name, QStringList * list = 0, int pos = -1);
-        PlaylistItem * findNearestFolder(QStringList * list);
-        inline void declareFolder(QString name, PlaylistItem * folder) { folders.insert(name, folder); }
-        inline int undeclareFolder(QString name) { return folders.remove(name); }
+        Playlist * createPlaylist(const QString & name, QStringList * list = 0, int pos = -1);
+        Playlist * findCompatblePlaylist(QStringList * list);
+        inline void declarePlaylist(QString name, Playlist * folder) { playlists.insert(name, playlist); }
+        inline int undeclarePlaylist(QString name) { return folders.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
         inline PlaylistItem * PlaylistItem(QString name) { return folders.value(name); }
         inline int foldersAmount() const { return folders.size(); }

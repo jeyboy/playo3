@@ -9,9 +9,7 @@
 #include "misc/file_utils/filename_conversions.h"
 #include "modules/web/web_sub_types.h"
 
-#include "media/genres/music_genres.h"
-
-namespace Playo3 {
+namespace Core {
     #define IURL Qt::UserRole + 1
     #define IFULLPATH IURL + 1
     #define IPLAYABLE IFULLPATH + 1
@@ -58,7 +56,7 @@ namespace Playo3 {
         inline QVariant _info() const       { return attrs.value(JSON_TYPE_INFO); }
 
         inline QVariant size() const        { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
-        inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, MusicGenres::instance() -> defaultInt()); }
+        inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
 
         inline WebSubType subtipe() const   { return (WebSubType)attrs.value(JSON_TYPE_SUB_TYPE, none).toInt(); }

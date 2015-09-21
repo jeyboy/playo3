@@ -171,7 +171,9 @@ SOURCES += main.cpp\
     modules/core/core_parts/vk_folder.cpp \
     modules/core/core_parts/vk_item.cpp \
     modules/core/core_parts/part_mixes/item_fields.cpp \
-    modules/core/core_parts/part_mixes/item_state.cpp
+    modules/core/core_parts/part_mixes/item_state.cpp \
+    modules/core/core_parts/web_folder_item.cpp \
+    modules/core/core_parts/web_item.cpp
 
 HEADERS  += playo.h \
     single_application.h \
@@ -355,7 +357,9 @@ HEADERS  += playo.h \
     modules/core/core_parts/part_mixes/item_fields.h \
     modules/core/core_parts/part_mixes/item_state.h \
     modules/core/core_parts/part_mixes/item_types.h \
-    modules/core/core_parts/part_mixes/json_fields.h
+    modules/core/core_parts/part_mixes/json_fields.h \
+    modules/core/core_parts/web_file.h \
+    modules/core/core_parts/web_playlist.h
 
 FORMS    += playo.ui \
     dialogs/settings_dialog.ui \

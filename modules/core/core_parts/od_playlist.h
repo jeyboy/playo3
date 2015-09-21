@@ -1,15 +1,15 @@
 #ifndef OD_FOLDER_H
 #define OD_FOLDER_H
 
-#include "../web_folder_item.h"
+#include "web_playlist.h"
 
-namespace Playo3 {
-    class OdFolder : public WebFolderItem {
+namespace Core {
+    class OdPlaylist : public WebPlaylist {
     public:
-        inline OdFolder(int initState) : WebFolderItem(initState) {}
-        inline OdFolder(QJsonObject * hash, FolderItem * parent = 0) : WebFolderItem(hash, parent) {}
-        inline OdFolder(QString uid, QString folderTitle, FolderItem * parent = 0, int pos = -1, int initState = DEFAULT_MODEL_CONTAINER_STATE)
-            : WebFolderItem(uid, folderTitle, parent, pos, initState) {}
+        inline OdPlaylist(int initState) : WebPlaylist(initState) {}
+        inline OdPlaylist(QJsonObject * hash, Playlist * parent = 0) : WebPlaylist(hash, parent) {}
+        inline OdPlaylist(QString uid, QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
+            : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return OD_PLAYLIST; }
 

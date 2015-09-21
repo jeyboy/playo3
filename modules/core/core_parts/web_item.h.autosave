@@ -3,7 +3,7 @@
 
 #include "web_folder_item.h"
 
-namespace Playo3 {
+namespace Co {
     class WebItem : public IItem {
     public:
         static inline QVariant toUid(QVariant owner, QVariant id) {
