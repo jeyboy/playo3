@@ -15,7 +15,7 @@ namespace Soundcloud {
         inline static void close() { delete self; }
 
         inline QString name() const { return QStringLiteral("Soundcloud"); }
-        inline Playo3::WebSubType siteType() { return Playo3::sc_site; }
+        inline Core::WebSubType siteType() { return Playo3::sc_site; }
         inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
         QString authUrl();
 

@@ -79,11 +79,9 @@ SOURCES += main.cpp\
     modules/data_struct/web/web_model.cpp \
     modules/data_struct/model_interface.cpp \
     modules/data_struct/view_interface.cpp \
-    modules/data_struct/model_item_parts/item_state.cpp \
     misc/file_utils/data_store.cpp \
     misc/file_utils/extensions.cpp \
     misc/file_utils/icon_provider.cpp \
-    modules/data_struct/model_item_parts/item_fields.cpp \
     dialogs/extension_dialog.cpp \
     modules/controls/simple_list_view.cpp \
     modules/data_struct/model_item_delegate.cpp \
@@ -157,23 +155,11 @@ SOURCES += main.cpp\
     modules/controls/equalizer_view.cpp \
     modules/controls/spectrum_view.cpp \
     dialogs/user_action_dialog.cpp \
-    modules/data_struct/web/od/od_folder.cpp \
-    modules/data_struct/web/od/od_item.cpp \
     modules/data_struct/web/od/od_model.cpp \
     modules/data_struct/web/od/od_view.cpp \
-    modules/core/core_parts/file_item.cpp \
-    modules/core/core_parts/folder_item.cpp \
     modules/core/core_parts/item_interface.cpp \
-    modules/core/core_parts/od_folder.cpp \
-    modules/core/core_parts/od_item.cpp \
-    modules/core/core_parts/soundcloud_folder.cpp \
-    modules/core/core_parts/soundcloud_item.cpp \
-    modules/core/core_parts/vk_folder.cpp \
-    modules/core/core_parts/vk_item.cpp \
     modules/core/core_parts/part_mixes/item_fields.cpp \
     modules/core/core_parts/part_mixes/item_state.cpp \
-    modules/core/core_parts/web_folder_item.cpp \
-    modules/core/core_parts/web_item.cpp \
     modules/core/data_core.cpp
 
 HEADERS  += playo.h \
@@ -337,8 +323,6 @@ HEADERS  += playo.h \
     modules/controls/equalizer_view.h \
     modules/controls/spectrum_view.h \
     dialogs/user_action_dialog.h \
-    modules/data_struct/web/od/od_folder.h \
-    modules/data_struct/web/od/od_item.h \
     modules/data_struct/web/od/od_model.h \
     modules/data_struct/web/od/od_view.h \
     modules/web/socials_api/od_api_misc.h \
