@@ -5,7 +5,7 @@
 #include <qjsonobject.h>
 
 #include "modules/models/service/hotkeys/hotkey_model_item.h"
-#include "misc/hotkey_types.h"
+#include "modules/models/service/hotkeys/hotkey_types.h"
 
 class HotkeySettings {
 public:

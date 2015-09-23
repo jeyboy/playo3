@@ -1,7 +1,7 @@
 #ifndef ECHONEST_GENRE_API
 #define ECHONEST_GENRE_API
 
-#include "../iapi.h"
+#include "modules/core/interfaces/iapi.h"
 
 //POSSIBLE BUCKETS
 
@@ -26,164 +26,165 @@
 //id:rosetta-catalog 	returns catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
 //id:Taste-Profile-ID 	returns personal catalog specific information about the artist for the given catalog. See Project Rosetta Stone for details.
 
+namespace Echonest {
+    class GenreApi : virtual public IApi {
+        public:
+            inline virtual ~GenreApi() {}
 
-class EchonestGenreApi : virtual public IApi {
-    public:
-        inline virtual ~EchonestGenreApi() {}
-
-        inline QUrl genreArtistsUrl(QString & genre) {
-            QUrlQuery query = genDefaultParams();
-            setParam(query, QStringLiteral("bucket"), QStringLiteral("hotttnesss"));
-            setParam(query, QStringLiteral("name"), genre);
-            return baseUrl(QStringLiteral("genre/artists"), query);
-        }
-
-        QJsonArray genreArtists(QString genre, int offset = 0, int count = DEFAULT_LIMIT_AMOUNT) {
-            return lQuery(
-                genreArtistsUrl(genre),
-                QueryRules(QStringLiteral("artists"), requestLimit(), count, offset)
-            );
-        }
-
-        //{
-        //    "response": {
-        //        "artists": [
-        //            {
-        //                "hotttnesss": 0.601159,
-        //                "id": "AR9PLH11187FB58A87",
-        //                "name": "Thelonious Monk"
-        //            },
-        //            {
-        //                "hotttnesss": 0.598763,
-        //                "id": "ARIOZCU1187FB3A3DC",
-        //                "name": "John Coltrane"
-        //            }
-        //        ],
-        //        "status": {
-        //            "code": 0,
-        //            "message": "Success",
-        //            "version": "4.2"
-        //        }
-        //    }
-        //}
-
-        inline QUrl genresListUrl() {
-            QUrlQuery query = genDefaultParams();
-            return baseUrl(QStringLiteral("genre/list"), query);
-        }
-
-        void genres_prepocessing() {
-            QJsonObject response;
-
-            if (sQuery(genresListUrl(), response)) {
-                QString field_key = QStringLiteral("name");
-                QJsonArray styles = response.value(QStringLiteral("genres")).toArray();
-                for(QJsonArray::Iterator genre = styles.begin(); genre != styles.end(); genre++)
-                    genres.addGenre((*genre).toObject().value(field_key).toString());
+            inline QUrl genreArtistsUrl(QString & genre) {
+                QUrlQuery query = genDefaultParams();
+                setParam(query, QStringLiteral("bucket"), QStringLiteral("hotttnesss"));
+                setParam(query, QStringLiteral("name"), genre);
+                return baseUrl(QStringLiteral("genre/artists"), query);
             }
-        }
 
-        inline QUrl genreInfoUrl(QString & genre) {
-            QUrlQuery query = genDefaultParams();
-            setParam(query, QStringLiteral("bucket"), QStringLiteral("description"));
-            setParam(query, QStringLiteral("name"), genre);
-            return baseUrl(QStringLiteral("genre/profile"), query);
-        }
+            QJsonArray genreArtists(QString genre, int offset = 0, int count = DEFAULT_LIMIT_AMOUNT) {
+                return lQuery(
+                    genreArtistsUrl(genre),
+                    QueryRules(QStringLiteral("artists"), requestLimit(), count, offset)
+                );
+            }
 
+            //{
+            //    "response": {
+            //        "artists": [
+            //            {
+            //                "hotttnesss": 0.601159,
+            //                "id": "AR9PLH11187FB58A87",
+            //                "name": "Thelonious Monk"
+            //            },
+            //            {
+            //                "hotttnesss": 0.598763,
+            //                "id": "ARIOZCU1187FB3A3DC",
+            //                "name": "John Coltrane"
+            //            }
+            //        ],
+            //        "status": {
+            //            "code": 0,
+            //            "message": "Success",
+            //            "version": "4.2"
+            //        }
+            //    }
+            //}
 
-        QJsonArray genreInfo(QString genre) {
-            QJsonObject response;
+            inline QUrl genresListUrl() {
+                QUrlQuery query = genDefaultParams();
+                return baseUrl(QStringLiteral("genre/list"), query);
+            }
 
-            if (sQuery(genreInfoUrl(genre), response))
-                return response.value(QStringLiteral("genres")).toArray();
+            void genres_prepocessing() {
+                QJsonObject response;
 
-            return QJsonArray();
-        }
-        //{
-        //    "response": {
-        //        "genres": [
-        //            {
-        //                "description": "Acid jazz, also called club jazz, is a style of jazz that takes cues from a number of genres, including funk,
-        //hip-hop, house, and soul.",
-        //                "name": "acid jazz"
-        //            }
-        //        ],
-        //        "status": {
-        //            "code": 0,
-        //            "message": "Success",
-        //            "version": "4.2"
-        //        }
-        //    }
-        //}
+                if (sQuery(genresListUrl(), response)) {
+                    QString field_key = QStringLiteral("name");
+                    QJsonArray styles = response.value(QStringLiteral("genres")).toArray();
+                    for(QJsonArray::Iterator genre = styles.begin(); genre != styles.end(); genre++)
+                        genres.addGenre((*genre).toObject().value(field_key).toString());
+                }
+            }
 
-        inline QUrl genresSerachUrl(QString & genre) {
-            QUrlQuery query = genDefaultParams();
-            setParam(query, QStringLiteral("name"), genre);
-            return baseUrl(QStringLiteral("genre/search"), query);
-        }
-
-        QJsonArray genresSerach(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
-            return lQuery(
-                genresSerachUrl(genre),
-                QueryRules(QStringLiteral("genres"), requestLimit(), count)
-            );
-        }
-
-        //{
-        //    "response": {
-        //        "genres": [
-        //            {
-        //                "name": "a cappella"
-        //            },
-        //            {
-        //                "name": "abstract hip hop"
-        //            }
-        //        ],
-        //        "start": 0,
-        //        "status": {
-        //            "code": 0,
-        //            "message": "Success",
-        //            "version": "4.2"
-        //        },
-        //        "total": 777
-        //    }
-        //}
+            inline QUrl genreInfoUrl(QString & genre) {
+                QUrlQuery query = genDefaultParams();
+                setParam(query, QStringLiteral("bucket"), QStringLiteral("description"));
+                setParam(query, QStringLiteral("name"), genre);
+                return baseUrl(QStringLiteral("genre/profile"), query);
+            }
 
 
-        inline QUrl genreSimilarUrl(QString & genre) {
-            QUrlQuery query = genDefaultParams();
-            setParam(query, QStringLiteral("name"), genre);
-            return baseUrl(QStringLiteral("genre/similar"), query);
-        }
+            QJsonArray genreInfo(QString genre) {
+                QJsonObject response;
 
-        QJsonArray genreSimilar(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
-            return lQuery(
-                genreSimilarUrl(genre),
-                QueryRules(QStringLiteral("genres"), requestLimit(), count)
-            );
-        }
+                if (sQuery(genreInfoUrl(genre), response))
+                    return response.value(QStringLiteral("genres")).toArray();
 
-        //{
-        //    "response": {
-        //        "genres": [
-        //            {
-        //                "name": "rock",
-        //                "similarity": 0.768293
-        //            },
-        //            {
-        //                "name": "hard rock",
-        //                "similarity": 0.539634
-        //            }
-        //        ],
-        //        "start": 0,
-        //        "status": {
-        //            "code": 0,
-        //            "message": "Success",
-        //            "version": "4.2"
-        //        },
-        //        "total": 19
-        //    }
-        //}
-};
+                return QJsonArray();
+            }
+            //{
+            //    "response": {
+            //        "genres": [
+            //            {
+            //                "description": "Acid jazz, also called club jazz, is a style of jazz that takes cues from a number of genres, including funk,
+            //hip-hop, house, and soul.",
+            //                "name": "acid jazz"
+            //            }
+            //        ],
+            //        "status": {
+            //            "code": 0,
+            //            "message": "Success",
+            //            "version": "4.2"
+            //        }
+            //    }
+            //}
+
+            inline QUrl genresSerachUrl(QString & genre) {
+                QUrlQuery query = genDefaultParams();
+                setParam(query, QStringLiteral("name"), genre);
+                return baseUrl(QStringLiteral("genre/search"), query);
+            }
+
+            QJsonArray genresSerach(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+                return lQuery(
+                    genresSerachUrl(genre),
+                    QueryRules(QStringLiteral("genres"), requestLimit(), count)
+                );
+            }
+
+            //{
+            //    "response": {
+            //        "genres": [
+            //            {
+            //                "name": "a cappella"
+            //            },
+            //            {
+            //                "name": "abstract hip hop"
+            //            }
+            //        ],
+            //        "start": 0,
+            //        "status": {
+            //            "code": 0,
+            //            "message": "Success",
+            //            "version": "4.2"
+            //        },
+            //        "total": 777
+            //    }
+            //}
+
+
+            inline QUrl genreSimilarUrl(QString & genre) {
+                QUrlQuery query = genDefaultParams();
+                setParam(query, QStringLiteral("name"), genre);
+                return baseUrl(QStringLiteral("genre/similar"), query);
+            }
+
+            QJsonArray genreSimilar(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+                return lQuery(
+                    genreSimilarUrl(genre),
+                    QueryRules(QStringLiteral("genres"), requestLimit(), count)
+                );
+            }
+
+            //{
+            //    "response": {
+            //        "genres": [
+            //            {
+            //                "name": "rock",
+            //                "similarity": 0.768293
+            //            },
+            //            {
+            //                "name": "hard rock",
+            //                "similarity": 0.539634
+            //            }
+            //        ],
+            //        "start": 0,
+            //        "status": {
+            //            "code": 0,
+            //            "message": "Success",
+            //            "version": "4.2"
+            //        },
+            //        "total": 19
+            //    }
+            //}
+    };
+}
 
 #endif // ECHONEST_GENRE_API

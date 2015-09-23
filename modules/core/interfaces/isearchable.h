@@ -8,11 +8,10 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#include "misc/logger.h"
-#include "misc/web_utils/web_manager.h"
-#include "media/genres/target_genres.h"
-
-#include "modules/web/web_sub_types.h"
+#include "modules/core/misc/logger.h"
+#include "modules/core/misc/web_utils/web_manager.h"
+#include "modules/core/media/genres/target_genres.h"
+#include "modules/core/web/apis/web_sub_types.h"
 
 #define DEFAULT_PREDICATE_NAME QString()
 #define REQUEST_DELAY 260 // ms

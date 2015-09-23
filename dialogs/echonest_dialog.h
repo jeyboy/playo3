@@ -12,11 +12,11 @@
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 
-#include "modules/web/service_api/echonest_api.h"
-#include "misc/web_utils/web_manager.h"
+#include "modules/core/web/apis/service/echonest_api.h"
+#include "modules/core/misc/web_utils/web_manager.h"
 #include "modules/controls/accordion.h"
 
-#include "modules/data_struct/search/search_view.h"
+#include "modules/models/service/search/search_view.h"
 
 namespace Ui { class EchonestDialog; }
 

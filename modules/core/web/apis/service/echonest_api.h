@@ -19,39 +19,40 @@
 #include "echonest_song_api.h"
 #include "echonest_playlist_api.h"
 
-class EchonestApi : public QObject, public EchonestGenreApi, public EchonestArtistApi,
-        public EchonestSongApi, public EchonestPlaylistApi {
-    Q_OBJECT
-public:
-    inline QString name() const { return QStringLiteral("echonest"); }
-    inline Playo3::WebSubType siteType() { return Playo3::echonest_site; }
-    virtual ~EchonestApi() { }
+namespace Echonest {
+    class Api : public QObject, public GenreApi, public ArtistApi, public SongApi, public PlaylistApi {
+        Q_OBJECT
+    public:
+        inline QString name() const { return QStringLiteral("echonest"); }
+        inline Core::WebSubType siteType() { return Core::echonest_site; }
+        virtual ~Api() { }
 
-    static EchonestApi * instance();
-    inline static void close() { delete self; }
-protected:
-    inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
+        static Api * instance();
+        inline static void close() { delete self; }
+    protected:
+        inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
 
-    inline QString refresh(QString path) { return path; }
-    inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
+        inline QString refresh(QString path) { return path; }
+        inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
 
-    inline QString baseUrlStr(const QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
+        inline QString baseUrlStr(const QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }
 
-    inline QString offsetKey() const { return QStringLiteral("start"); }
-    inline QString limitKey() const { return QStringLiteral("results"); }
-    inline int requestLimit() const { return 100; }
+        inline QString offsetKey() const { return QStringLiteral("start"); }
+        inline QString limitKey() const { return QStringLiteral("results"); }
+        inline int requestLimit() const { return 100; }
 
-    inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
-    inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
-    inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
-        QJsonObject stat_obj = extractBody(response).value(QStringLiteral("status")).toObject();
-        message = stat_obj.value(QStringLiteral("message")).toString();
-        return (code = stat_obj.value(QStringLiteral("code")).toInt()) == 0;
-    }
-private:
-    inline EchonestApi() : QObject() { }
+        inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
+        inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
+        inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
+            QJsonObject stat_obj = extractBody(response).value(QStringLiteral("status")).toObject();
+            message = stat_obj.value(QStringLiteral("message")).toString();
+            return (code = stat_obj.value(QStringLiteral("code")).toInt()) == 0;
+        }
+    private:
+        inline Api() : QObject() { }
 
-    static EchonestApi * self;
-};
+        static Api * self;
+    };
+}
 
 #endif // ECHONEST_API_H
