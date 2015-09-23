@@ -1,7 +1,7 @@
 #ifndef LIST_MODEL_H
 #define LIST_MODEL_H
 
-#include "../model_interface.h"
+#include "model_interface.h"
 
 namespace Playo3 {
     class ListModel : public IModel {

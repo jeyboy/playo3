@@ -3,30 +3,26 @@
 
 #include <qmimedata.h>
 #include <qclipboard.h>
-#include <QtConcurrent/QtConcurrent>
-#include <qfuturewatcher.h>
+#include <QtConcurrent/QtConcurrent> // include async
+#include <qfuturewatcher.h> // include async
 #include <qdesktopservices.h>
 
 #include "modules/core/core_parts_index.h"
+#include "modules/core/web/web_apis.h"
+#include "modules/core/misc/file_utils/extensions.h"
+#include "modules/models/service/search/search_settings.h"
 
-
-
-
-
-#include "modules/web/web_apis.h"
-
-#include "modules/data_struct/search/search_settings.h"
-#include "misc/file_utils/extensions.h"
-
-#include "container_types.h"
+#include "model_types.h"
 
 #include "item_drop_formats.h"
-#include "media/library.h"
+#include "modules/core/media/library.h"
 
 #include "modules/controls/user_dialog_box.h"
 #include "modules/plugins/plugins.h"
 
-namespace Playo3 {
+namespace Model {
+    using namespace Core;
+
     class IModel : public QAbstractItemModel {
         Q_OBJECT
     public:
@@ -41,7 +37,7 @@ namespace Playo3 {
         IModel(QJsonObject * hash, QObject * parent);
         virtual ~IModel();
 
-        inline FolderItem * root() { return rootItem; }
+        inline Playlist * root() { return rootItem; }
 
         virtual ContainerType containerType() const = 0;
         virtual bool isRelative() const = 0;
@@ -68,10 +64,10 @@ namespace Playo3 {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        int proceedVkList(QJsonArray & collection, FolderItem * parent);
-        int proceedScList(QJsonArray & collection, FolderItem * parent);
-        int proceedOdList(QJsonArray & collection, FolderItem * parent);
-        int proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent);
+        int proceedVkList(QJsonArray & collection, Playlist * parent);
+        int proceedScList(QJsonArray & collection, Playlist * parent);
+        int proceedOdList(QJsonArray & collection, Playlist * parent);
+        int proceedGrabberList(WebSubType wType, QJsonArray & collection, Playlist * parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
@@ -92,7 +88,7 @@ namespace Playo3 {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
         inline QMutex * syncMutex() { return sync; }
 
-        int initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source = 0);
+        int initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source = 0);
 
         inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
     public slots:
@@ -137,11 +133,11 @@ namespace Playo3 {
     protected:
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
-//        virtual void parseCue(FolderItem * parent, QUrl curUri, QUrl cueTargetUri = QUrl()) = 0;
+//        virtual void parseCue(Playlist * parent, QUrl curUri, QUrl cueTargetUri = QUrl()) = 0;
 
         Qt::KeyboardModifiers dropKeyModifiers;
         QMutex * sync;
-        FolderItem * rootItem;
+        Playlist * rootItem;
     private:
         QFutureWatcher<DropData *> * addWatcher;
     };
@@ -151,9 +147,6 @@ namespace Playo3 {
             return a.data(ITREESTR).toString() < b.data(ITREESTR).toString();
         }
     };
-
-    //    signals:
-    ////        void showMessage(QString);
 }
 
 #endif // MODEL_INTERFACE

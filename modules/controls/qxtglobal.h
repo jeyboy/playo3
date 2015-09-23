@@ -1,7 +1,7 @@
 #ifndef QXTGLOBAL_H
 #define QXTGLOBAL_H
 
-#include <QtGlobal>
+#include <qglobal.h>
 
 #define QXT_DECLARE_PRIVATE(PUB) friend class PUB##Private; QxtPrivateInterface<PUB, PUB##Private> qxt_d;
 #define QXT_DECLARE_PUBLIC(PUB) friend class PUB;
