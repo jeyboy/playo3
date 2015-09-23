@@ -1,33 +1,21 @@
 #include "ignore_list.h"
-#include <qdebug.h>
 
-using namespace Playo3;
+using namespace Model;
 
 IgnoreList::IgnoreList(QJsonObject * obj) {
     if (obj)
         ignoreListFromJson(obj -> take(jsonName()).toArray());
 }
 
-void IgnoreList::ignoreListAddUid(QVariant uid) {
-    list.append(uid);
-}
+void IgnoreList::ignoreListAddUid(const QVariant & uid) { list.append(uid); }
 
-void IgnoreList::ignoreListAddUids(QVariantList & uids) {
-    list.append(uids);
-}
+void IgnoreList::ignoreListAddUids(QVariantList & uids) { list.append(uids); }
 
-void IgnoreList::ignoreListRemoveUid(QVariant uid) {
-    list.removeAll(uid);
-}
-bool IgnoreList::ignoreListContainUid(QVariant uid) {
-    qDebug() << "IN IGNORE";
-    return list.contains(uid);
-}
+void IgnoreList::ignoreListRemoveUid(const QVariant & uid) { list.removeAll(uid); }
+bool IgnoreList::ignoreListContainUid(const QVariant & uid) { return list.contains(uid); }
 
 QJsonObject & IgnoreList::ignoreListToJson(QJsonObject & obj) {
     obj.insert(jsonName(), QJsonArray::fromVariantList(list));
     return obj;
 }
-void IgnoreList::ignoreListFromJson(QJsonArray array) {
-    list = array.toVariantList();
-}
+void IgnoreList::ignoreListFromJson(const QJsonArray & array) { list = array.toVariantList(); }

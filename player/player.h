@@ -2,25 +2,24 @@
 #define PLAYER_H
 
 #include <qaction.h>
-#include <qabstractitemmodel.h>
 
 #ifdef Q_OS_WIN
-    #include <QWinTaskbarButton>
-    #include <QWinTaskbarProgress>
+    #include <qwintaskbarbutton.h>
+    #include <qwintaskbarprogress.h>
 #endif
 
-#include "mediainfo.h"
 #include "audio_player.h"
 #include "modules/controls/clickable_label.h"
 #include "modules/controls/metric_slider.h"
-#include "modules/data_struct/model_interface.h"
+#include "modules/models/model_interface.h"
+#include "modules/core/media/mediainfo.h"
 
-using namespace Playo3;
+using namespace Model;
 using namespace AudioPlayer;
 
 class MediaInfo;
 
-namespace Playo3 { class IModel; }
+namespace Model { class IModel; }
 
 class Player : public AudioPlayer::Base {
     Q_OBJECT

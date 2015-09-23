@@ -4,15 +4,12 @@
 #include "bass.h"
 #include "bass_fx.h"
 
-#include "media/format.h"
-#include "media/duration.h"
-
-#include "media/notify_timer.h"
+#include "modules/core/misc/format/format.h"
+#include "modules/core/misc/format/duration.h"
 
 #include "audio_player_equalizer.h"
 
 #include <qurl.h>
-#include <qdebug.h>
 
 #define SLIDE_VOLUME_OFFSET 1000
 #define VOLUME_MULTIPLIER 10000.0

@@ -57,10 +57,10 @@ unix:!mac {
         PKGCONFIG += x11
         LDFLAGS =- lX11
         DEFINES += HAVE_X11
-        SOURCES += globalshortcut/qxtglobalshortcut_x11.cpp
+        SOURCES += modules/controls/qxtglobalshortcut_x11.cpp
 }
-win32: { SOURCES += globalshortcut/qxtglobalshortcut_win.cpp }
-mac: {   SOURCES += globalshortcut/qxtglobalshortcut_mac.cpp }
+win32: { SOURCES += modules/controls/qxtglobalshortcut_win.cpp }
+mac: {   SOURCES += modules/controls/qxtglobalshortcut_mac.cpp }
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
 #else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
@@ -133,8 +133,11 @@ HEADERS += \
     modules/core/core_parts/vk_playlist.h \
     modules/core/core_parts/web_file.h \
     modules/core/core_parts/web_playlist.h \
+    modules/core/interfaces/grabber_keys.h \
     modules/core/interfaces/iapi.h \
+    modules/core/interfaces/igrabber_api.h \
     modules/core/interfaces/isearchable.h \
+    modules/core/interfaces/web_api.h \
     modules/core/media/cue/cue.h \
     modules/core/media/cue/cue_structs.h \
     modules/core/media/genres/genres_interface.h \
@@ -157,8 +160,6 @@ HEADERS += \
     modules/core/misc/web_utils/web_manager.h \
     modules/core/misc/async.h \
     modules/core/misc/autorun.h \
-    modules/core/misc/hotkey_manager.h \
-    modules/core/misc/hotkey_types.h \
     modules/core/misc/logger.h \
     modules/core/misc/screen.h \
     modules/core/web/apis/api/od_api.h \
@@ -192,9 +193,6 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_request_api.h \
     modules/core/web/apis/web_sub_types.h \
     modules/core/web/auth_chemas/teu_auth.h \
-    modules/core/web/instruments/grabber_keys.h \
-    modules/core/web/instruments/igrabber_api.h \
-    modules/core/web/instruments/web_api.h \
     modules/core/web/web_apis.h \
     modules/core/core_parts_index.h \
     modules/core/data_core.h \
@@ -204,8 +202,10 @@ HEADERS += \
     modules/models/service/downloads/download_view.h \
     modules/models/service/hotkeys/hotkey_delegate.h \
     modules/models/service/hotkeys/hotkey_editor.h \
+    modules/models/service/hotkeys/hotkey_manager.h \
     modules/models/service/hotkeys/hotkey_model.h \
     modules/models/service/hotkeys/hotkey_model_item.h \
+    modules/models/service/hotkeys/hotkey_types.h \
     modules/models/service/search/search_model.h \
     modules/models/service/search/search_settings.h \
     modules/models/service/search/search_view.h \
@@ -274,9 +274,6 @@ SOURCES += \
     modules/controls/hoverable_label.cpp \
     modules/controls/metric_slider.cpp \
     modules/controls/qxtglobalshortcut.cpp \
-    modules/controls/qxtglobalshortcut_mac.cpp \
-    modules/controls/qxtglobalshortcut_win.cpp \
-    modules/controls/qxtglobalshortcut_x11.cpp \
     modules/controls/qxtspanslider.cpp \
     modules/controls/rotate_label.cpp \
     modules/controls/search_bar.cpp \
@@ -301,6 +298,8 @@ SOURCES += \
     modules/core/core_parts/vk_playlist.cpp \
     modules/core/core_parts/web_file.cpp \
     modules/core/core_parts/web_playlist.cpp \
+    modules/core/interfaces/grabber_keys.cpp \
+    modules/core/interfaces/web_api.cpp \
     modules/core/media/cue/cue.cpp \
     modules/core/media/genres/genres_interface.cpp \
     modules/core/media/genres/id3_music_genres.cpp \
@@ -316,7 +315,6 @@ SOURCES += \
     modules/core/misc/web_utils/html_parser.cpp \
     modules/core/misc/web_utils/json_parser.cpp \
     modules/core/misc/web_utils/web_manager.cpp \
-    modules/core/misc/hotkey_manager.cpp \
     modules/core/misc/logger.cpp \
     modules/core/web/apis/api/od_api.cpp \
     modules/core/web/apis/api/od_api_keys.cpp \
@@ -338,8 +336,6 @@ SOURCES += \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/auth_chemas/teu_auth.cpp \
-    modules/core/web/instruments/grabber_keys.cpp \
-    modules/core/web/instruments/web_api.cpp \
     modules/core/web/web_apis.cpp \
     modules/core/data_core.cpp \
     modules/models/service/downloads/download_delegate.cpp \
@@ -348,6 +344,7 @@ SOURCES += \
     modules/models/service/downloads/download_view.cpp \
     modules/models/service/hotkeys/hotkey_delegate.cpp \
     modules/models/service/hotkeys/hotkey_editor.cpp \
+    modules/models/service/hotkeys/hotkey_manager.cpp \
     modules/models/service/hotkeys/hotkey_model.cpp \
     modules/models/service/hotkeys/hotkey_model_item.cpp \
     modules/models/service/search/search_model.cpp \

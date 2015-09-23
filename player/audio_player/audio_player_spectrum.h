@@ -1,9 +1,8 @@
 #ifndef AUDIO_PLAYER_SPECTRUM
 #define AUDIO_PLAYER_SPECTRUM
 
-#include "misc/settings.h"
+//#include "misc/settings.h"
 
-#include "media/notify_timer.h"
 #include "audio_player_state.h"
 #include "bass.h"
 

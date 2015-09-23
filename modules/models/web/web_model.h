@@ -1,19 +1,17 @@
 #ifndef WEB_MODEL_H
 #define WEB_MODEL_H
 
-#include "modules/data_struct/model_interface.h"
+#include "../model_interface.h"
 #include "ignore_list.h"
 
 #define UPDATE_INTERVAL 10000
 
-class WebApi;
-namespace Playo3 {
+namespace Model {
     class WebModel : public IModel, public IgnoreList {
         Q_OBJECT
     public:
-        inline WebModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) :
-            IModel(hash, parent), IgnoreList(hash), tab_uid(uid)
-        { lastRefresh = QDateTime::currentMSecsSinceEpoch() - UPDATE_INTERVAL; }
+        inline WebModel(QString & uid, QJsonObject * hash = 0, QObject * parent = 0) :
+            IModel(hash, parent), IgnoreList(hash), tab_uid(uid) {  }
         inline virtual ~WebModel() {}
 
         inline bool isRelative() const { return false; }
@@ -35,7 +33,6 @@ namespace Playo3 {
             void errorReceived(int, QString);
     protected:
         QString tab_uid;
-        qint64 lastRefresh;
     };
 }
 

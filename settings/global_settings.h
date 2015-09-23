@@ -5,7 +5,7 @@
 #include <qapplication.h>
 #include <qjsonobject.h>
 
-#include "modules/data_struct/container_types.h"
+#include "modules/models/model_types.h"
 
 #define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
 #define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")
@@ -41,8 +41,8 @@ public:
     inline bool isOpenDropPointInTab() const { return _openDropPointInTab; }
     inline void setOpenDropPointInTab(bool open) { _openDropPointInTab = open; }
 
-    inline Playo3::ContainerType openDropPointInTabType() const { return _openDropPointInTabType; }
-    inline void setOpenDropPointInTabType(Playo3::ContainerType type) { _openDropPointInTabType = type; }
+    inline Model::Type openDropPointInTabType() const { return _openDropPointInTabType; }
+    inline void setOpenDropPointInTabType(const Model::Type & type) { _openDropPointInTabType = type; }
 
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }

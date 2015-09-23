@@ -2,8 +2,9 @@
 #define HOTKEY_MANAGER_H
 
 #include <qhash.h>
-#include "globalshortcut/qxtglobalshortcut.h"
-#include "misc/hotkey_types.h"
+
+#include "modules/controls/qxtglobalshortcut.h"
+#include "hotkey_types.h"
 
 struct HotkeySlot {
     const QObject * obj;
@@ -24,7 +25,7 @@ public:
 
     inline static void close() { delete self; }
 
-    bool registerSequence(int hotkeyType, QString sequence, QObject * receiver = 0, const char * slot = 0);
+    bool registerSequence(int hotkeyType, const QString & sequence, QObject * receiver = 0, const char * slot = 0);
     void clear();
 
 private:

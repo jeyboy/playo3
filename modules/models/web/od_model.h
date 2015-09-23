@@ -1,10 +1,10 @@
 #ifndef OD_MODEL_H
 #define OD_MODEL_H
 
-#include "modules/data_struct/web/web_model.h"
+#include "web_model.h"
 #include "media/duration.h"
 
-namespace Playo3 {
+namespace Model {
     class OdModel : public WebModel {
         Q_OBJECT
     public:       
