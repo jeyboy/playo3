@@ -1,9 +1,9 @@
 #ifndef AUDIO_PLAYER_H
 #define AUDIO_PLAYER_H
 
-#include <qapplication.h>
-#include <qurl.h>
-#include <qdir.h>
+//#include <qapplication.h>
+//#include <qurl.h>
+//#include <qdir.h>
 
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <qfuturewatcher.h>

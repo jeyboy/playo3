@@ -2,10 +2,35 @@
 #define AUDIO_PLAYER_STATE
 
 #include <qobject.h>
+#include <qtimer.h>
 
 #include "bass.h"
 
 namespace AudioPlayer {
+    class NotifyTimer : public QTimer {
+        Q_OBJECT
+    public:
+        NotifyTimer(QObject * parent) : QTimer(parent) {}
+
+    public slots:
+        void start(int msec) {
+            emit started();
+            QTimer::start(msec);
+        }
+        void start() {
+            emit started();
+            QTimer::start();
+        }
+        void stop()  {
+            emit stoped();
+            QTimer::stop();
+        }
+
+    signals:
+        void started();
+        void stoped();
+    };
+
     enum MediaStateFlags {
         InitState,
         StoppedState,
