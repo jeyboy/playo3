@@ -5,20 +5,24 @@
 #include <qstringlist.h>
 #include <qregularexpression.h>
 
-class IGenres {
-public:
-    inline IGenres() {}
-    inline virtual ~IGenres() {}
+namespace Core {
+    namespace Media {
+        class IGenres {
+        public:
+            inline IGenres() {}
+            inline virtual ~IGenres() {}
 
-    int toInt(QString name) const;
-    virtual QString toString(int id) const;
-    inline QStringList genresList() { return genres.keys(); }
+            int toInt(QString name) const;
+            virtual QString toString(int id) const;
+            inline QStringList genresList() { return genres.keys(); }
 
-    virtual int defaultInt() const { return -1; }
-protected:
-    inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression(QStringLiteral("(\\W|[_])")), QStringLiteral(" ")).toLower()); } // check & on replace
+            virtual int defaultInt() const { return -1; }
+        protected:
+            inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression(QStringLiteral("(\\W|[_])")), QStringLiteral(" ")).toLower()); } // check & on replace
 
-    QHash<QString, int> genres;
-};
+            QHash<QString, int> genres;
+        };
+    }
+}
 
 #endif // GENRES_INTERFACE

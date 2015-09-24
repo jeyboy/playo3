@@ -1,7 +1,7 @@
 #ifndef MP3BASE
 #define MP3BASE
 
-#include "igrabber_api.h"
+#include "modules/core/interfaces/igrabber_api.h"
 
 //function playSong(id)
 //{
