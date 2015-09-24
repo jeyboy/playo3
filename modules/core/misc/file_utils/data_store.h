@@ -9,7 +9,7 @@
 #include <qstringlist.h>
 #include <qvariant.h>
 
-namespace Playo3 {
+namespace Core {
     class DataStore {
         public:
             DataStore(QString name);

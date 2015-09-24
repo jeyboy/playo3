@@ -11,7 +11,7 @@
 #define JSON_ACTIVE_KEY QStringLiteral("active")
 #define DEFAULT_ACTIVE QStringLiteral("all")
 
-namespace Playo3 {
+namespace Core {
     class Extensions {
     public:
         static QString folderName(QFileInfo & info);

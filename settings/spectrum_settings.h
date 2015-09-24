@@ -5,8 +5,6 @@
 #include <qcolor.h>
 #include <qjsonobject.h>
 
-#include "misc/spectrum_types.h"
-
 #define SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY QStringLiteral("customcolor_spectrum")
 #define SETTINGS_AUTO_BARS_AMOUNT_KEY QStringLiteral("auto_bars_amount")
 #define SETTINGS_AUTO_BARS_WIDTH_KEY QStringLiteral("auto_bar_width")
@@ -21,6 +19,12 @@
 
 class SpectrumSettings {
 public:
+    enum SpectrumType {
+        bars,
+        split_bars,
+        waves
+    };
+
     void fromJson(QJsonObject & settings);
     void toJson(QJsonObject & settings);
 

@@ -1,7 +1,7 @@
 #ifndef SEARCH_VIEW_H
 #define SEARCH_VIEW_H
 
-#include "../view_interface.h"
+#include "modules/views/view_interface.h"
 #include "search_model.h"
 
 namespace Playo3 {

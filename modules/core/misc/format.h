@@ -4,7 +4,7 @@
 #include <qstringbuilder.h>
 #include <qstringlist.h>
 
-class Format {
+class Info {
     static QString unitList[];
 public:
     static inline QString toInfo(QString size, QString ext) { return size % " :: " % ext.toLower(); }
@@ -12,7 +12,18 @@ public:
     static QString toInfo(QString size, QString ext, int bitrate, int freq, int channelsCount);
     static QString toUnits(long long val);
     static long long fromUnits(QString val);
+
+    static QString paddedNumber(qint64 time);
 };
 
+class Duration {
+public:
+    static QString fromHMS(int h, int m, int s, bool forciblyIncludeHours);
+    static QString fromSeconds(int seconds, bool includeHours = false);
+    static QString fromMillis(int millis, bool includeHours = false);
+
+    static bool hasHours(int millis);
+    static int toSeconds(QString str);
+};
 
 #endif // FORMAT_H

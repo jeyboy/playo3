@@ -9,7 +9,7 @@
 #include "core_part_types.h"
 #include "part_mixes/item_fields.h"
 
-#include "misc/file_utils/icon_provider.h"
+#include "modules/core/misc/file_utils/icon_provider.h"
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 

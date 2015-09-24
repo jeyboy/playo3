@@ -4,63 +4,62 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-
 #include <qurl.h>
 
 #include "dialogs/user_action_dialog.h"
+#include "modules/core/misc/web_utils/web_manager.h"
+#include "modules/core/misc/async.h"
 
-#include "misc/web_utils/web_manager.h"
+namespace Core {
+    class WebApi : public Async {
+        Q_OBJECT
+    public:
+        WebApi(QObject * parent = 0);
+        virtual ~WebApi();
 
-#include "utils/async.h"
+        inline QString getError() { return error; }
 
-class WebApi : public Async {
-    Q_OBJECT
-public:
-    WebApi(QObject * parent = 0);
-    virtual ~WebApi();
+        virtual QString authUrl() = 0;
 
-    inline QString getError() { return error; }
+        virtual bool isConnected() = 0;
 
-    virtual QString authUrl() = 0;
+        void clearData();
 
-    virtual bool isConnected() = 0;
+        inline void addFriend(QString uid, QString name) {
+            if (!uid.isEmpty() && !name.isEmpty())
+                friends.insert(uid, name);
+        }
+        inline void addGroup(QString uid, QString name) {
+            if (!uid.isEmpty() && !name.isEmpty())
+                groups.insert(uid, name);
+        }
 
-    void clearData();
+        inline QHash<QString, QString> friendsList() const { return friends; }
+        inline QHash<QString, QString> groupsList() const { return groups; }
 
-    inline void addFriend(QString uid, QString name) {
-        if (!uid.isEmpty() && !name.isEmpty())
-            friends.insert(uid, name);
-    }
-    inline void addGroup(QString uid, QString name) {
-        if (!uid.isEmpty() && !name.isEmpty())
-            groups.insert(uid, name);
-    }
+        void fromJson(const QJsonObject & hash);
+        void toJson(QJsonObject & hash);
 
-    inline QHash<QString, QString> friendsList() const { return friends; }
-    inline QHash<QString, QString> groupsList() const { return groups; }
+    signals:
+        void responseReady(QString);
+        void errorReceived(int, QString);
+        void authorized();
 
-    void fromJson(const QJsonObject & hash);
-    void toJson(QJsonObject & hash);
+    public slots:
+        virtual inline void disconnect() { clearData(); }
 
-signals:
-    void responseReady(QString);
-    void errorReceived(int, QString);
-    void authorized();
+        bool showingCaptcha(const QUrl & pict_url, QString & result);
+        bool showingLogin(QString & login, QString & pass);
+        virtual void proceedAuthResponse(const QUrl & url) = 0;
 
-public slots:
-    virtual inline void disconnect() { clearData(); }
+    protected:
+        UserActionDialog * actionDialog;
 
-    bool showingCaptcha(const QUrl & pict_url, QString & result);
-    bool showingLogin(QString & login, QString & pass);
-    virtual void proceedAuthResponse(const QUrl & url) = 0;
+        QHash<QString, QString> friends;
+        QHash<QString, QString> groups;
 
-protected:
-    UserActionDialog * actionDialog;
-
-    QHash<QString, QString> friends;
-    QHash<QString, QString> groups;
-
-    QString error;
-};
+        QString error;
+    };
+}
 
 #endif // WEB_API_H

@@ -1,7 +1,7 @@
 #ifndef REL_TYPES
 #define REL_TYPES
 
-namespace Playo3 {
+namespace View {
     enum RelType { none_rel, user_rel, song_rel };
 }
 

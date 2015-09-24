@@ -5,7 +5,7 @@
 #include <qapplication.h>
 #include <qjsonobject.h>
 
-#include "modules/models/model_types.h"
+#include "modules/views/view_types.h"
 
 #define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
 #define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")

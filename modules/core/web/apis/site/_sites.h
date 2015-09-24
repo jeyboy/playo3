@@ -1,5 +1,5 @@
-#ifndef SITE_APIS
-#define SITE_APIS
+#ifndef SITES
+#define SITES
 
 #include "myzuka_album.h"
 #include "zaycev.h"
@@ -11,4 +11,4 @@
 #include "jetune.h"
 #include "musicshara.h"
 
-#endif // SITE_APIS
+#endif // SITES

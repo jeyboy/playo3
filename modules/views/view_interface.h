@@ -7,21 +7,20 @@
 #include <qdrag.h>
 #include <qevent.h>
 
-#include "model_interface.h"
 #include "dialogs/tabdialog.h"
 #include "dialogs/user_action_dialog.h"
 
 #include "view_settings.h"
-#include "misc/settings.h"
-#include "misc/stylesheets.h"
-
-#include "downloads/download_view.h"
+#include "settings.h"
+#include "stylesheets.h"
 
 #include "tree_view_style.h"
 
-#include "model_item_delegate.h"
+#include "modules/models/model_item_delegate.h"
+#include "modules/models/model_interface.h"
+#include "modules/models/service/downloads/download_view.h"
 
-#include "media/player.h"
+//#include "player/player.h"
 
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want

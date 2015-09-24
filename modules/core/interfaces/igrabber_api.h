@@ -1,12 +1,11 @@
 #ifndef IGRABBER_API
 #define IGRABBER_API
 
-#include "misc/web_utils/html_parser.h"
-#include "media/duration.h"
+//#include "misc/web_utils/html_parser.h"
 #include "grabber_keys.h"
-#include "modules/isearchable.h"
+#include "isearchable.h"
 
-namespace Grabber {
+namespace Core {
     class IGrabberApi : public ISearchable {
     public:
         enum toJsonType { songs1, songs2, artists1, artists2, genres1 };

@@ -1,8 +1,9 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
-#include "../web_api.h"
-#include "../auth_chemas/teu_auth.h"
+#include "modules/core/interfaces/web_api.h"
+#include "modules/core/web/auth_chemas/teu_auth.h"
+
 #include "soundcloud_request_api.h"
 #include "soundcloud_api_keys.h"
 

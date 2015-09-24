@@ -1,7 +1,7 @@
 #ifndef CONTAINER_TYPES
 #define CONTAINER_TYPES
 
-namespace Model {
+namespace View {
     enum Type {
         list = 1,
         level_tree = 2,

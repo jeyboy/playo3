@@ -2,7 +2,7 @@
 #define SOUNDCLOUD_ITEM_H
 
 #include "web_file.h"
-#include "modules/web/socials_api/soundcloud_api.h"
+#include "modules/core/web/apis/social/soundcloud_api.h"
 
 namespace Core {
     class SoundcloudItem : public WebItem {

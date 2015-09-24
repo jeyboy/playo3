@@ -1,7 +1,7 @@
 #ifndef MUSICSHARA
 #define MUSICSHARA
 
-#include "igrabber_api.h"
+#include "modules/core/interfaces/igrabber_api.h"
 
 // store all selectors in global variables
 namespace Grabber {

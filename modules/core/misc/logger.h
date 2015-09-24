@@ -9,7 +9,7 @@
 #include <qscrollbar.h>
 #include <qstringbuilder.h>
 
-#include "misc/conversions.h"
+#include "modules/core/misc/format.h"
 
 class Logger : public QObject {
     Q_OBJECT

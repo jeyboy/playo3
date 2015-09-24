@@ -8,7 +8,7 @@
 #include <qstyle.h>
 #include <qapplication.h>
 
-namespace Playo3 {
+namespace Core {
     class IconProvider {
     public:
         inline ~IconProvider() {}

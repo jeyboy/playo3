@@ -1,7 +1,7 @@
 #ifndef MYZUKA_ALBUM
 #define MYZUKA_ALBUM
 
-#include "igrabber_api.h"
+#include "modules/core/interfaces/igrabber_api.h"
 
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2

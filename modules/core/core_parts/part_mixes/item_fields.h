@@ -5,9 +5,9 @@
 
 #include "item_state.h"
 #include "json_fields.h"
-#include "misc/settings.h"
-#include "misc/file_utils/filename_conversions.h"
-#include "modules/web/web_sub_types.h"
+#include "settings.h"
+#include "modules/core/misc/file_utils/filename_conversions.h"
+#include "modules/core/web/web_sub_types.h"
 
 namespace Core {
     #define IURL Qt::UserRole + 1
