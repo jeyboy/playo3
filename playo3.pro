@@ -151,10 +151,6 @@ HEADERS += \
     modules/core/misc/file_utils/extensions.h \
     modules/core/misc/file_utils/filename_conversions.h \
     modules/core/misc/file_utils/icon_provider.h \
-    modules/core/misc/web_utils/html_parser.h \
-    modules/core/misc/web_utils/json_parser.h \
-    modules/core/misc/web_utils/unicode_decoding.h \
-    modules/core/misc/web_utils/web_manager.h \
     modules/core/misc/async.h \
     modules/core/misc/autorun.h \
     modules/core/misc/format.h \
@@ -193,6 +189,10 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_api_keys.h \
     modules/core/web/apis/storage/fourshared_request_api.h \
     modules/core/web/auth_chemas/teu_auth.h \
+    modules/core/web/utils/html_parser.h \
+    modules/core/web/utils/json_parser.h \
+    modules/core/web/utils/unicode_decoding.h \
+    modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
     modules/core/web/web_sub_types.h \
     modules/core/core_parts_index.h \
@@ -310,9 +310,6 @@ SOURCES += \
     modules/core/misc/file_utils/data_store.cpp \
     modules/core/misc/file_utils/extensions.cpp \
     modules/core/misc/file_utils/icon_provider.cpp \
-    modules/core/misc/web_utils/html_parser.cpp \
-    modules/core/misc/web_utils/json_parser.cpp \
-    modules/core/misc/web_utils/web_manager.cpp \
     modules/core/misc/format.cpp \
     modules/core/misc/logger.cpp \
     modules/core/web/apis/service/echonest_api.cpp \
@@ -335,6 +332,9 @@ SOURCES += \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/auth_chemas/teu_auth.cpp \
+    modules/core/web/utils/html_parser.cpp \
+    modules/core/web/utils/json_parser.cpp \
+    modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \
     modules/core/data_core.cpp \
     modules/models/service/downloads/download_delegate.cpp \

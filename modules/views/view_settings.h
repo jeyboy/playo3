@@ -7,10 +7,10 @@
 
 namespace View {
     struct Settings {
-        Settings(Playlist::Type cType, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(false), playlist(true),
+        Settings(Data::Type cType, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Settings(Playlist::Type cType = Playlist::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+        Settings(Data::Type cType = Playlist::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
             bool isPlaylist = false, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
@@ -19,7 +19,7 @@ namespace View {
             playlist = obj[QStringLiteral("play")].toBool();
             interactive = obj[QStringLiteral("int")].toBool();
             common = obj[QStringLiteral("common")].toBool();
-            type = (Playlist::Type)obj[QStringLiteral("type")].toInt();
+            type = (Data::Type)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
             rel_type = (RelType)obj[QStringLiteral("rel_type")].toInt();
         }
@@ -47,7 +47,7 @@ namespace View {
         QString uid;
         RelType rel_type;
 
-        Playlist::Type type;
+        Data::Type type;
     };
 }
 

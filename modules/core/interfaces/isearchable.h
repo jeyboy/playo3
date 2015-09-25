@@ -10,7 +10,7 @@
 
 #include "modules/core/misc/format.h"
 #include "modules/core/misc/logger.h"
-#include "modules/core/misc/web_utils/web_manager.h"
+#include "modules/core/web/utils/web_manager.h"
 #include "modules/core/media/genres/target_genres.h"
 #include "modules/core/web/web_sub_types.h"
 

@@ -14,20 +14,20 @@ namespace Model {
         ~SearchModel();
 
         inline bool isRelative() const { return false; }
-        inline ContainerType containerType() const { return search; }
+        inline Data::Type playlistType() const { return Data::search; }
 
         void initiateSearch(SearchSettings & params);
         void initiateSearch(QStringList & predicates);
     protected slots:
-        int proceedTabs(SearchRequest & params, FolderItem * parent);
-        int proceedMyComputer(SearchRequest & params, FolderItem * parent);
+        int proceedTabs(SearchRequest & params, Playlist * parent);
+        int proceedMyComputer(SearchRequest & params, Playlist * parent);
         void searchFinished();
     private:
-        FolderItem * searchRoutine(QFutureWatcher<FolderItem *> * watcher);
+        Playlist * searchRoutine(QFutureWatcher<Playlist *> * watcher);
         void prepareRequests(QList<SearchRequest> & requests);
 
         SearchSettings request;
-        QFutureWatcher<FolderItem *> * initiator;
+        QFutureWatcher<Playlist *> * initiator;
     };
 }
 

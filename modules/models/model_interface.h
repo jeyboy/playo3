@@ -39,7 +39,7 @@ namespace Model {
 
         inline Playlist * root() { return rootItem; }
 
-        virtual ContainerType containerType() const = 0;
+        virtual Data::Type playlistType() const = 0;
         virtual bool isRelative() const = 0;
 
         QVariant data(const QModelIndex & index, int role) const;
@@ -67,7 +67,7 @@ namespace Model {
         int proceedVkList(QJsonArray & collection, Playlist * parent);
         int proceedScList(QJsonArray & collection, Playlist * parent);
         int proceedOdList(QJsonArray & collection, Playlist * parent);
-        int proceedGrabberList(WebSubType wType, QJsonArray & collection, Playlist * parent);
+        int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());

@@ -13,7 +13,7 @@ namespace Core {
                 Q_OBJECT
             public:
                 inline QString name() const { return QStringLiteral("Vk"); }
-                inline Core::WebSubType siteType() { return Core::vk_site; }
+                inline Web::SubType siteType() { return vk_site; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query = QUrlQuery();
 

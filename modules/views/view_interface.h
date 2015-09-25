@@ -25,13 +25,15 @@
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
 
+using namespace Model;
+
 namespace View {
 //    class Dockbars;
 
     class IView : public QTreeView {
       Q_OBJECT
     public:
-        IView(IModel * model, QWidget * parent, ViewSettings & settins);
+        IView(IModel * model, QWidget * parent, View::Settings & settins);
         virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
@@ -44,13 +46,13 @@ namespace View {
         inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
         inline bool isPlaylist() const { return sttngs.playlist; }
         inline bool isCommon() const { return sttngs.common; }
-        inline bool isEditable() const { return sttngs.type < vk && !isCommon(); }
-        inline bool isRequiredOnUpdate() const { return sttngs.type == vk; }
+        inline bool isEditable() const { return sttngs.type < Data::vk && !isCommon(); }
+        inline bool isRequiredOnUpdate() const { return sttngs.type == Data::vk; }
 
 //        inline IModel * model() const { return mdl; }
 
-        inline ViewSettings settings() const { return sttngs; }
-        inline void setSettings(ViewSettings newSettings) { sttngs = newSettings; }
+        inline View::Settings settings() const { return sttngs; }
+        inline void setSettings(View::Settings newSettings) { sttngs = newSettings; }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
@@ -99,13 +101,13 @@ namespace View {
         bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, bool usePrevAction = false);
 
         void downloadSelected();
-        void downloadChecked(QString & path, FolderItem * root = 0);
+        void downloadChecked(QString & path, Playlist * root = 0);
         void downloadAll();
 
         void markLikedAsChecked();
         void markNewAsChecked();
         void markListenedAsChecked();
-        void moveCheckedToNewTab(FolderItem * root = 0);
+        void moveCheckedToNewTab(Playlist * root = 0);
 
     protected:
         void checkByPredicate(IItem::ItemStateFlag flag);
@@ -135,7 +137,7 @@ namespace View {
         void mouseMoveEvent(QMouseEvent *);
 
         IModel * mdl;
-        ViewSettings sttngs;
+        View::Settings sttngs;
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;

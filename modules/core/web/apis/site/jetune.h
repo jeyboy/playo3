@@ -10,7 +10,7 @@ namespace Core {
             class Jetune : public IGrabberApi {
             public:
                 inline QString name() const { return QStringLiteral("Jetune"); }
-                inline Playo3::WebSubType siteType() { return Playo3::jetune_site; }
+                inline Web::SubType siteType() { return jetune_site; }
 
                 static Jetune * instance();
                 inline static void close() { delete self; }

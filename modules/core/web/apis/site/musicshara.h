@@ -13,7 +13,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("MusicShara"); }
-                inline Playo3::WebSubType siteType() { return Playo3::music_shara; }
+                inline Web::SubType siteType() { return music_shara; }
 
                 // artists by genre
                 QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2

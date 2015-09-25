@@ -17,7 +17,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("Od"); }
-                inline Playo3::WebSubType siteType() { return Playo3::od_site; }
+                inline Web::SubType siteType() { return od_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
                 QString authUrl();
 

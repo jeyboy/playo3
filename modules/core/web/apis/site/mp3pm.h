@@ -13,7 +13,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("Mp3pm"); }
-                inline Playo3::WebSubType siteType() { return Playo3::mp3pm_site; }
+                inline Web::SubType siteType() { return mp3pm_site; }
 
         //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
         //            QJsonArray json;

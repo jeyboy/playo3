@@ -1,7 +1,7 @@
-#ifndef MODEL_TYPES
-#define MODEL_TYPES
+#ifndef DATA_TYPES
+#define DATA_TYPES
 
-namespace Playlist {
+namespace Data {
     enum Type {
         list = 1,
         level_tree = 2,
@@ -15,4 +15,4 @@ namespace Playlist {
     };
 }
 
-#endif // MODEL_TYPES
+#endif // DATA_TYPES

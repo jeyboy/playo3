@@ -5,7 +5,7 @@
 #include "tag.h"
 #include "fileref.h"
 
-//#include "media/genres/music_genres.h"
+#include "modules/core/media/genres/music_genres.h"
 //#include "media/player.h"
 
 namespace Core {

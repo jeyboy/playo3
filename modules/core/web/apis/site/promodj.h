@@ -16,7 +16,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("PromoDJ"); }
-                inline Playo3::WebSubType siteType() { return Playo3::promodj_site; }
+                inline Web::SubType siteType() { return promodj_site; }
 
         //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
         //            QJsonArray json;
