@@ -1,10 +1,10 @@
 #ifndef SEARCH_MODEL_H
 #define SEARCH_MODEL_H
 
-#include "../level_tree/level_tree_model.h"
+#include "modules/models/level_tree_model.h"
 #include "search_settings.h"
 
-namespace Playo3 {
+namespace Model {
     class SearchModel : public LevelTreeModel {
         Q_OBJECT
     public:

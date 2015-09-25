@@ -1,7 +1,7 @@
-#ifndef CONTAINER_TYPES
-#define CONTAINER_TYPES
+#ifndef MODEL_TYPES
+#define MODEL_TYPES
 
-namespace View {
+namespace Playlist {
     enum Type {
         list = 1,
         level_tree = 2,
@@ -15,4 +15,4 @@ namespace View {
     };
 }
 
-#endif // CONTAINER_TYPES
+#endif // MODEL_TYPES

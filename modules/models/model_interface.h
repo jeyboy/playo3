@@ -12,9 +12,9 @@
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/models/service/search/search_settings.h"
 
-#include "model_types.h"
+//#include "model_types.h"
 
-#include "item_drop_formats.h"
+#include "modules/core/core_parts/item_drop_formats.h"
 #include "modules/core/media/library.h"
 
 #include "modules/controls/user_dialog_box.h"

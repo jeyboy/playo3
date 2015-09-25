@@ -58,8 +58,8 @@ public:
     inline int spectrumMultiplier() { return _spectrumMultiplier; }
     inline void setSpectrumMultiplier(int newMultiplier) { _spectrumMultiplier = newMultiplier; }
 
-    inline Playo3::SpectrumType spectrumType() { return _spectrumType; }
-    inline void setSpectrumType(Playo3::SpectrumType newSpectrumType) { _spectrumType = newSpectrumType; }
+    inline SpectrumType spectrumType() { return _spectrumType; }
+    inline void setSpectrumType(SpectrumType newSpectrumType) { _spectrumType = newSpectrumType; }
 
 protected:
     QColor _spectrumColor;
@@ -71,7 +71,7 @@ protected:
     int _spectrumBarsCount;
     int _spectrumHeight;
     int _autoBarWidth;
-    Playo3::SpectrumType _spectrumType;
+    SpectrumType _spectrumType;
 
     bool _customColorSpectrum;
     bool _autoBarsAmount;

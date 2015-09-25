@@ -16,7 +16,7 @@ public:
   void setName(QString name);
 
   View::Settings getSettings();
-  void setSettings(Playo3::ViewSettings hash);
+  void setSettings(View::Settings hash);
 
 private:
   Ui::TabDialog * ui;

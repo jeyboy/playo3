@@ -26,7 +26,7 @@ public:
 
     inline void startMark() { timer.start(); }
     inline void endMark(QString initiator, QString value) {
-        emit write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Conversion::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
+        emit write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Info::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
     }
 
 private:

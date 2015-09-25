@@ -2,7 +2,7 @@
 #include "ui_echonest_dialog.h"
 #include <qdebug.h>
 
-#include "double_slider/qxtspanslider.h"
+#include "modules/controls/qxtspanslider.h"
 
 EchonestDialog::EchonestDialog(QWidget * parent) :
     QDialog(parent),

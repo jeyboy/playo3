@@ -5,7 +5,7 @@
 #include <qapplication.h>
 #include <qjsonobject.h>
 
-#include "modules/views/view_types.h"
+#include "modules/core/playlist_types.h"
 
 #define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
 #define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")
@@ -41,8 +41,8 @@ public:
     inline bool isOpenDropPointInTab() const { return _openDropPointInTab; }
     inline void setOpenDropPointInTab(bool open) { _openDropPointInTab = open; }
 
-    inline Model::Type openDropPointInTabType() const { return _openDropPointInTabType; }
-    inline void setOpenDropPointInTabType(const Model::Type & type) { _openDropPointInTabType = type; }
+    inline Playlist::Type openDropPointInTabType() const { return _openDropPointInTabType; }
+    inline void setOpenDropPointInTabType(const Playlist::Type & type) { _openDropPointInTabType = type; }
 
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
@@ -58,7 +58,7 @@ protected:
 
     bool _saveCommonTab;
     bool _openDropPointInTab;
-    Playo3::ContainerType _openDropPointInTabType;
+    Playlist::Type _openDropPointInTabType;
     int _tabPosition;
 
     float _openTimeOut;

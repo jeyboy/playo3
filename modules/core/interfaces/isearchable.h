@@ -20,6 +20,8 @@
 #define STYLES_MAX_PAGE 50
 
 namespace Core {
+    using namespace Media;
+
     class ISearchable {
     public:
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
@@ -54,7 +56,7 @@ namespace Core {
 
         virtual QString name() const = 0;
 
-        virtual Core::WebSubType siteType() = 0;
+        virtual Web::SubType siteType() = 0;
 
         virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
             if (!predicate.isEmpty()) {

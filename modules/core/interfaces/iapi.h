@@ -3,7 +3,7 @@
 
 //http://musicmachinery.com/music-apis/
 
-#include "modules/core/interfaces//isearchable.h"
+#include "modules/core/interfaces/isearchable.h"
 
 //#include "misc/web_utils/json.h"
 

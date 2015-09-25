@@ -12,12 +12,12 @@
 #include "download_model.h"
 #include "download_delegate.h"
 
-#include "misc/settings.h"
-#include "misc/file_utils/filename_conversions.h"
-#include "modules/data_struct/item_drop_formats.h"
+//#include "misc/settings.h"
+#include "modules/core/misc/file_utils/filename_conversions.h"
+#include "modules/core/core_parts/item_drop_formats.h"
 #include "modules/core/core_parts/core_part_types.h"
 
-#include "modules/web/socials_api/vk_api.h"
+#include "modules/core/web/apis/social/vk_api.h"
 
 namespace Playo3 {
     class Dockbars;

@@ -57,7 +57,7 @@ namespace Core {
 
         Playlist * createPlaylistPath(QString path);
         template<class T> T * createPlaylist(const QString & uid, const QString & name, int pos = -1) {
-            T * curr = reinterpret_cast<T *>(playlists.value(palylistUid(name, uid), 0));
+            T * curr = reinterpret_cast<T *>(playlists.value(playlistUid(name, uid), 0));
             if (curr) return curr;
             return new T(uid, name, this, pos);
         }

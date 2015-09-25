@@ -5,7 +5,7 @@
 #include <qapplication.h>
 #include <qpluginloader.h>
 
-#include "misc/logger.h"
+#include "modules/core/misc/logger.h"
 #include "web_dialog_interface.h"
 
 class Plugins {

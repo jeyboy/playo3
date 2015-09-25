@@ -3,7 +3,8 @@
 
 #include <qdialog.h>
 #include <qstringlistmodel.h>
-#include "misc/file_utils/extensions.h"
+
+#include "modules/core/misc/file_utils/extensions.h"
 
 namespace Ui { class ExtensionDialog; }
 

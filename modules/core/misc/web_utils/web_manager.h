@@ -6,6 +6,7 @@
 #include <qpixmap.h>
 
 #include "modules/core/misc/logger.h"
+#include "modules/core/misc/web_utils/html_parser.h"
 
 namespace Core {
     class WebManagerController;
@@ -26,6 +27,7 @@ namespace Core {
         WebResponse * followByRedirect();
         QJsonObject toJson(const QString & wrap = QString());
         QPixmap toImage();
+        Html::Document toHtml();
     };
 
     class WebManager;

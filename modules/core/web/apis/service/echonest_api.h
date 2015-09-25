@@ -26,7 +26,7 @@ namespace Core {
                 Q_OBJECT
             public:
                 inline QString name() const { return QStringLiteral("echonest"); }
-                inline Core::WebSubType siteType() { return Core::echonest_site; }
+                inline SubType siteType() { return echonest_site; }
                 virtual ~Api() { }
 
                 static Api * instance();

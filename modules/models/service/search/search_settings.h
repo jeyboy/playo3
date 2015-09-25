@@ -4,15 +4,12 @@
 #include <qstringlist.h>
 #include <qstringbuilder.h>
 
-#include "modules/isearchable.h"
+//#include "modules/isearchable.h"
 
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) { }
 
-    inline void addGenre(QString genreName) {
-        genres << genreName;
-    }
-
+    inline void addGenre(QString genreName) { genres << genreName; }
     inline int limit(int def) { return onlyOne ? 1 : def; }
 
     bool inSites;

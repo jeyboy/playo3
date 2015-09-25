@@ -122,6 +122,7 @@ HEADERS += \
     modules/core/core_parts/part_mixes/json_fields.h \
     modules/core/core_parts/core_part_types.h \
     modules/core/core_parts/file.h \
+    modules/core/core_parts/item_drop_formats.h \
     modules/core/core_parts/item_interface.h \
     modules/core/core_parts/od_file.h \
     modules/core/core_parts/od_playlist.h \
@@ -159,21 +160,13 @@ HEADERS += \
     modules/core/misc/format.h \
     modules/core/misc/logger.h \
     modules/core/misc/screen.h \
-    modules/core/web/apis/social/od_api.h \
-    modules/core/web/apis/social/od_api_keys.h \
-    modules/core/web/apis/social/od_api_misc.h \
-    modules/core/web/apis/social/od_request_api.h \
-    modules/core/web/apis/social/soundcloud_api.h \
-    modules/core/web/apis/social/soundcloud_api_keys.h \
-    modules/core/web/apis/social/soundcloud_request_api.h \
-    modules/core/web/apis/social/vk_api.h \
-    modules/core/web/apis/social/vk_api_keys.h \
-    modules/core/web/apis/social/vk_request_api.h \
+    modules/core/web/apis/service/_services.h \
     modules/core/web/apis/service/echonest_api.h \
     modules/core/web/apis/service/echonest_artist_api.h \
     modules/core/web/apis/service/echonest_genre_api.h \
     modules/core/web/apis/service/echonest_playlist_api.h \
     modules/core/web/apis/service/echonest_song_api.h \
+    modules/core/web/apis/site/_sites.h \
     modules/core/web/apis/site/exua.h \
     modules/core/web/apis/site/jetune.h \
     modules/core/web/apis/site/mp3base.h \
@@ -184,14 +177,27 @@ HEADERS += \
     modules/core/web/apis/site/promodj.h \
     modules/core/web/apis/site/shmidt.h \
     modules/core/web/apis/site/zaycev.h \
+    modules/core/web/apis/social/_socials.h \
+    modules/core/web/apis/social/od_api.h \
+    modules/core/web/apis/social/od_api_keys.h \
+    modules/core/web/apis/social/od_api_misc.h \
+    modules/core/web/apis/social/od_request_api.h \
+    modules/core/web/apis/social/soundcloud_api.h \
+    modules/core/web/apis/social/soundcloud_api_keys.h \
+    modules/core/web/apis/social/soundcloud_request_api.h \
+    modules/core/web/apis/social/vk_api.h \
+    modules/core/web/apis/social/vk_api_keys.h \
+    modules/core/web/apis/social/vk_request_api.h \
+    modules/core/web/apis/storage/_storages.h \
     modules/core/web/apis/storage/fourshared_api.h \
     modules/core/web/apis/storage/fourshared_api_keys.h \
     modules/core/web/apis/storage/fourshared_request_api.h \
-    modules/core/web/web_sub_types.h \
     modules/core/web/auth_chemas/teu_auth.h \
     modules/core/web/web_apis.h \
+    modules/core/web/web_sub_types.h \
     modules/core/core_parts_index.h \
     modules/core/data_core.h \
+    modules/core/playlist_types.h \
     modules/models/service/downloads/download_delegate.h \
     modules/models/service/downloads/download_model.h \
     modules/models/service/downloads/download_model_item.h \
@@ -207,17 +213,14 @@ HEADERS += \
     modules/models/service/search/search_view.h \
     modules/models/web/ignore_list.h \
     modules/models/web/od_model.h \
-    modules/views/rel_types.h \
     modules/models/web/soundcloud_model.h \
     modules/models/web/vk_model.h \
     modules/models/web/vk_rel_model.h \
     modules/models/web/web_model.h \
-    modules/models/item_drop_formats.h \
     modules/models/level_tree_model.h \
     modules/models/list_model.h \
     modules/models/model_interface.h \
     modules/models/model_item_delegate.h \
-    modules/view/view_types.h \
     modules/models/tree_model.h \
     modules/plugins/plugins.h \
     modules/plugins/web_dialog_interface.h \
@@ -227,6 +230,7 @@ HEADERS += \
     modules/views/web/vk_view.h \
     modules/views/level_tree_view.h \
     modules/views/list_view.h \
+    modules/views/rel_types.h \
     modules/views/tree_view.h \
     modules/views/tree_view_style.h \
     modules/views/view_index.h \
@@ -250,11 +254,7 @@ HEADERS += \
     settings.h \
     single_application.h \
     stylesheets.h \
-    toolbars.h \
-    modules/core/web/apis/service/_services.h \
-    modules/core/web/apis/site/_sites.h \
-    modules/core/web/apis/social/_socials.h \
-    modules/core/web/apis/storage/_storages.h
+    toolbars.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -315,12 +315,6 @@ SOURCES += \
     modules/core/misc/web_utils/web_manager.cpp \
     modules/core/misc/format.cpp \
     modules/core/misc/logger.cpp \
-    modules/core/web/apis/api/od_api.cpp \
-    modules/core/web/apis/api/od_api_keys.cpp \
-    modules/core/web/apis/api/soundcloud_api.cpp \
-    modules/core/web/apis/api/soundcloud_api_keys.cpp \
-    modules/core/web/apis/api/vk_api.cpp \
-    modules/core/web/apis/api/vk_api_keys.cpp \
     modules/core/web/apis/service/echonest_api.cpp \
     modules/core/web/apis/site/exua.cpp \
     modules/core/web/apis/site/jetune.cpp \
@@ -332,6 +326,12 @@ SOURCES += \
     modules/core/web/apis/site/promodj.cpp \
     modules/core/web/apis/site/shmidt.cpp \
     modules/core/web/apis/site/zaycev.cpp \
+    modules/core/web/apis/social/od_api.cpp \
+    modules/core/web/apis/social/od_api_keys.cpp \
+    modules/core/web/apis/social/soundcloud_api.cpp \
+    modules/core/web/apis/social/soundcloud_api_keys.cpp \
+    modules/core/web/apis/social/vk_api.cpp \
+    modules/core/web/apis/social/vk_api_keys.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/auth_chemas/teu_auth.cpp \

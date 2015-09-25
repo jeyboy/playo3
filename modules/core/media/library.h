@@ -10,11 +10,9 @@
 #include <QtConcurrent/QtConcurrent>
 #include <qdebug.h>
 
-#include "mediainfo.h"
-#include "misc/file_utils/filename_conversions.h"
-#include "media/format.h"
-#include "media/duration.h"
-#include "modules/data_struct/model_interface.h"
+#include "modules/core/media/mediainfo.h"
+#include "modules/core/misc/format.h"
+#include "modules/models/model_interface.h"
 
 #define INPROC_LIMIT 5
 #define TIMER_TICK 500
