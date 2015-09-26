@@ -1,8 +1,8 @@
 #ifndef VK_MODEL_H
 #define VK_MODEL_H
 
-#include "modules/data_struct/web/web_model.h"
-#include "media/duration.h"
+#include "modules/models/web/web_model.h"
+#include "modules/core/misc/format.h"
 
 namespace Playo3 {
     class VkModel : public WebModel {

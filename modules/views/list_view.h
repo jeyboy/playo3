@@ -1,8 +1,8 @@
 #ifndef LIST_VIEW_H
 #define LIST_VIEW_H
 
-#include "../view_interface.h"
-#include "list_model.h"
+#include "view_interface.h"
+#include "modules/models/list_model.h"
 
 namespace Playo3 {
     class ListView : public IView {

@@ -1,8 +1,8 @@
 #ifndef LEVEL_TREE_VIEW_H
 #define LEVEL_TREE_VIEW_H
 
-#include "../view_interface.h"
-#include "level_tree_model.h"
+#include "view_interface.h"
+#include "modules/models/level_tree_model.h"
 
 namespace Playo3 {
     class LevelTreeView : public IView {

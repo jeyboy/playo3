@@ -1,8 +1,8 @@
 #ifndef VK_VIEW_H
 #define VK_VIEW_H
 
-#include "modules/data_struct/view_interface.h"
-#include "vk_model.h"
+#include "modules/views/view_interface.h"
+#include "modules/models/web/vk_model.h"
 
 class VkView : public IView {
   Q_OBJECT

@@ -1,8 +1,8 @@
 #ifndef TREE_VIEW_H
 #define TREE_VIEW_H
 
-#include "../view_interface.h"
-#include "tree_model.h"
+#include "view_interface.h"
+#include "modules/models/tree_model.h"
 
 namespace Playo3 {
     class TreeView : public IView {
