@@ -9,8 +9,8 @@
 #include <QtConcurrent/QtConcurrent>
 #include <qfuturewatcher.h>
 
-#include "download_model.h"
-#include "download_delegate.h"
+#include "modules/models/service/download_model.h"
+#include "modules/models/service/download_delegate.h"
 
 //#include "misc/settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"

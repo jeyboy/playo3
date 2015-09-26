@@ -4,7 +4,7 @@
 #include <qdialog.h>
 #include <qlistwidget.h>
 
-#include "modules/data_struct/search/search_settings.h"
+#include "modules/models/service/search_settings.h"
 
 namespace Ui { class SearchDialog; }
 

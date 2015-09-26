@@ -1,5 +1,7 @@
 #include "vk_genres.h"
 
+using namespace Core::Media;
+
 VkGenres * VkGenres::self = 0;
 
 VkGenres * VkGenres::instance() {

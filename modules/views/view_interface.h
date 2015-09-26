@@ -18,7 +18,7 @@
 
 #include "modules/models/model_item_delegate.h"
 #include "modules/models/model_interface.h"
-#include "modules/models/service/downloads/download_view.h"
+#include "service/download_view.h"
 
 //#include "player/player.h"
 
@@ -84,7 +84,7 @@ namespace View {
     protected slots:
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
-                if (Settings::instance() -> isCheckboxShow()) {
+                if (::Settings::instance() -> isCheckboxShow()) {
                     QModelIndex node = QModelIndex();
                     findExecutable(node);
                     execIndex(node);

@@ -5,11 +5,13 @@
 #include <QDockWidget>
 #include <QBoxLayout>
 
-#include "misc/logger.h"
-#include "misc/file_utils/data_store.h"
-#include "modules/controls/dockbar.h"
-#include "modules/data_struct/view_index.h"
+#include "modules/core/misc/logger.h"
+#include "modules/core/misc/file_utils/data_store.h"
+
+#include "modules/views/view_index.h"
+
 #include "modules/controls/window.h"
+#include "modules/controls/dockbar.h"
 
 #include "dialogs/tabdialog.h"
 
@@ -19,6 +21,8 @@
 #define LOGS_TAB "Logs"
 
 namespace Playo3 {
+    using namespace View;
+
     class Dockbars : public QWidget {
         Q_OBJECT
     public:
@@ -51,7 +55,7 @@ namespace Playo3 {
         }
 
         DockBar * commonBar();
-        DockBar * createDocBar(QString name, ViewSettings settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
+        DockBar * createDocBar(QString name, View::Settings settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
         DockBar * createLinkedDocBar(QString text, QString path, ViewSettings settings);
 

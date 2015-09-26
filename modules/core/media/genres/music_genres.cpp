@@ -1,5 +1,7 @@
 #include "music_genres.h"
 
+using namespace Core::Media;
+
 MusicGenres * MusicGenres::self = 0;
 
 MusicGenres * MusicGenres::instance() {

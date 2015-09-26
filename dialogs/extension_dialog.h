@@ -8,7 +8,7 @@
 
 namespace Ui { class ExtensionDialog; }
 
-namespace Playo3 {
+namespace Dialogs {
     class ExtensionDialog : public QDialog {
         Q_OBJECT
 

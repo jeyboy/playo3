@@ -198,19 +198,17 @@ HEADERS += \
     modules/core/core_parts_index.h \
     modules/core/data_core.h \
     modules/core/playlist_types.h \
-    modules/models/service/downloads/download_delegate.h \
-    modules/models/service/downloads/download_model.h \
-    modules/models/service/downloads/download_model_item.h \
-    modules/models/service/downloads/download_view.h \
-    modules/models/service/hotkeys/hotkey_delegate.h \
-    modules/models/service/hotkeys/hotkey_editor.h \
-    modules/models/service/hotkeys/hotkey_manager.h \
-    modules/models/service/hotkeys/hotkey_model.h \
-    modules/models/service/hotkeys/hotkey_model_item.h \
-    modules/models/service/hotkeys/hotkey_types.h \
-    modules/models/service/search/search_model.h \
-    modules/models/service/search/search_settings.h \
-    modules/models/service/search/search_view.h \
+    modules/models/service/download_delegate.h \
+    modules/models/service/download_model.h \
+    modules/models/service/download_model_item.h \
+    modules/models/service/hotkey_delegate.h \
+    modules/models/service/hotkey_editor.h \
+    modules/models/service/hotkey_manager.h \
+    modules/models/service/hotkey_model.h \
+    modules/models/service/hotkey_model_item.h \
+    modules/models/service/hotkey_types.h \
+    modules/models/service/search_model.h \
+    modules/models/service/search_settings.h \
     modules/models/web/ignore_list.h \
     modules/models/web/od_model.h \
     modules/models/web/soundcloud_model.h \
@@ -236,6 +234,8 @@ HEADERS += \
     modules/views/view_index.h \
     modules/views/view_interface.h \
     modules/views/view_settings.h \
+    modules/views/service/download_view.h \
+    modules/views/service/search_view.h \
     player/audio_player/audio_player_equalizer.h \
     player/audio_player/audio_player_panel.h \
     player/audio_player/audio_player_spectrum.h \
@@ -337,17 +337,15 @@ SOURCES += \
     modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \
     modules/core/data_core.cpp \
-    modules/models/service/downloads/download_delegate.cpp \
-    modules/models/service/downloads/download_model.cpp \
-    modules/models/service/downloads/download_model_item.cpp \
-    modules/models/service/downloads/download_view.cpp \
-    modules/models/service/hotkeys/hotkey_delegate.cpp \
-    modules/models/service/hotkeys/hotkey_editor.cpp \
-    modules/models/service/hotkeys/hotkey_manager.cpp \
-    modules/models/service/hotkeys/hotkey_model.cpp \
-    modules/models/service/hotkeys/hotkey_model_item.cpp \
-    modules/models/service/search/search_model.cpp \
-    modules/models/service/search/search_view.cpp \
+    modules/models/service/download_delegate.cpp \
+    modules/models/service/download_model.cpp \
+    modules/models/service/download_model_item.cpp \
+    modules/models/service/hotkey_delegate.cpp \
+    modules/models/service/hotkey_editor.cpp \
+    modules/models/service/hotkey_manager.cpp \
+    modules/models/service/hotkey_model.cpp \
+    modules/models/service/hotkey_model_item.cpp \
+    modules/models/service/search_model.cpp \
     modules/models/web/ignore_list.cpp \
     modules/models/web/od_model.cpp \
     modules/models/web/soundcloud_model.cpp \
@@ -368,6 +366,8 @@ SOURCES += \
     modules/views/list_view.cpp \
     modules/views/tree_view.cpp \
     modules/views/view_interface.cpp \
+    modules/views/service/download_view.cpp \
+    modules/views/service/search_view.cpp \
     player/audio_player/audio_player_equalizer.cpp \
     player/audio_player/audio_player_panel.cpp \
     player/audio_player/audio_player_spectrum.cpp \

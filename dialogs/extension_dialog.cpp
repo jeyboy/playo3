@@ -1,7 +1,8 @@
 #include "extension_dialog.h"
 #include "ui_extension_dialog.h"
 
-using namespace Playo3;
+using namespace Dialogs;
+using namespace Core;
 
 ExtensionDialog::ExtensionDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::ExtensionDialog) {

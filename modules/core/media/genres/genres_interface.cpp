@@ -1,5 +1,7 @@
 #include "genres_interface.h"
 
+using namespace Core::Media;
+
 int IGenres::toInt(QString name) const {
     return genres.value(name, defaultInt());
 }

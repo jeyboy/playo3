@@ -2,7 +2,7 @@
 #define SEARCH_VIEW_H
 
 #include "modules/views/view_interface.h"
-#include "search_model.h"
+#include "modules/models/service/search_model.h"
 
 namespace View {
     class SearchView : public IView {

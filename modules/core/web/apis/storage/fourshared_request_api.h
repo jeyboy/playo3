@@ -7,12 +7,14 @@
 //#include "misc/file_utils/filename_conversions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
-//#include "media/genres/music_genres.h"
+#include "modules/core/media/genres/music_genres.h"
 
 #define FOURSHARED_OFFSET_LIMIT 1000
 
 namespace Core {
     namespace Web {
+        using namespace Grabber;
+
         namespace Fourshared {
             class RequestApi : public IApi {
                 enum CategoryTypes {
@@ -91,7 +93,7 @@ namespace Core {
 
                                 song_path = doc.find(&prevSelector).value();
 
-                                obj.insert(Grabber::duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
+                                obj.insert(duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
 
                                 Html::Set tags = doc.find(&tagsSelector);
                                 for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
@@ -100,34 +102,34 @@ namespace Core {
                                         QString tag_title = span -> text();
 
                                         if (tag_title == filetype_tag || tag_title == filetype_tag2)
-                                            obj.insert(Grabber::extension_key, (*tag) -> text());
+                                            obj.insert(extension_key, (*tag) -> text());
                                         else if (tag_title == bitrate_tag || tag_title == bitrate_tag2)
-                                            obj.insert(Grabber::bitrate_key, (*tag) -> text());
+                                            obj.insert(bitrate_key, (*tag) -> text());
                                         else if (tag_title == discretion_rate_tag || tag_title == discretion_rate_tag2)
-                                            obj.insert(Grabber::discretion_rate_key, (*tag) -> text());
+                                            obj.insert(discretion_rate_key, (*tag) -> text());
                                         else if (tag_title == genre_tag || tag_title == genre_tag2) {
                                             int genre_id = Media::MusicGenres::instance() -> toInt((*tag) -> text().trimmed());
                                             if (Media::MusicGenres::instance() -> defaultInt() != genre_id)
-                                                obj.insert(Grabber::genre_id_key, genre_id);
+                                                obj.insert(genre_id_key, genre_id);
                                         }
 
                                         // year ignored at this time
                                     }
                                 }
 
-                                obj.insert(Grabber::url_key, song_path);
-                            } else obj.insert(Grabber::skip_info_key, true);
+                                obj.insert(url_key, song_path);
+                            } else obj.insert(skip_info_key, true);
 
                             if (!initInfo || !song_path.isEmpty()) {
                                 title = item_obj.value("name").toString();
 
                                 if (FilenameConversions::extractExtension(title, ext))
-                                    obj.insert(Grabber::extension_key, ext);
+                                    obj.insert(extension_key, ext);
 
-                                obj.insert(Grabber::title_key, title);
+                                obj.insert(title_key, title);
 
-                                obj.insert(Grabber::size_key, Info::toUnits(item_obj.value("size").toInt()));
-                                obj.insert(Grabber::refresh_key, path);
+                                obj.insert(size_key, Info::toUnits(item_obj.value("size").toInt()));
+                                obj.insert(refresh_key, path);
 
                                 ar << obj;
                             }

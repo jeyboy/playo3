@@ -1,5 +1,7 @@
 #include "id3_music_genres.h"
 
+using namespace Core::Media;
+
 Id3MusicGenres * Id3MusicGenres::self = 0;
 
 Id3MusicGenres * Id3MusicGenres::instance() {
