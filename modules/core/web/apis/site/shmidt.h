@@ -13,7 +13,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("Shmidt"); }
-                inline Web::SubType siteType() { return shmidt_site; }
+                inline SubType siteType() { return shmidt_site; }
 
         //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
         //            QJsonArray json;
@@ -82,7 +82,7 @@ namespace Core {
 
         //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
-                inline QString refresh_postprocess(WebResponse * reply) {
+                inline QString refresh_postprocess(Response * reply) {
                     Html::Document parser(reply);
                     Html::Set tracks = parser.find(".download p a");
 
@@ -99,7 +99,7 @@ namespace Core {
                     );
 
                     QJsonArray json;
-                    toJson(songs1, WebManager::manager() -> followedForm(QUrl(url_str)), json, true);
+                    toJson(songs1, Manager::prepare() -> followedForm(QUrl(url_str)), json, true);
 
                     while(json.size() > limitations.count)
                         json.removeLast();

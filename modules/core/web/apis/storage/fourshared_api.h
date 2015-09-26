@@ -16,7 +16,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("4shared"); }
-                inline Playo3::WebSubType siteType() { return Playo3::fourshared_site; }
+                inline Web::SubType siteType() { return fourshared_site; }
                 inline QUrlQuery genDefaultParams() {
                     return QUrlQuery(
                         QStringLiteral("oauth_consumer_key=") %

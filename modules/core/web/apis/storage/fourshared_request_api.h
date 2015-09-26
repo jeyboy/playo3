@@ -46,7 +46,7 @@ namespace Core {
                 QString refresh(QString refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
-                    QNetworkReply * response = WebManager::manager() -> followedGet(refresh_page);
+                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(refresh_page);
                     QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
 
                     delete response;
@@ -56,7 +56,7 @@ namespace Core {
                 QString downloadLink(QString refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
-                    QNetworkReply * response = WebManager::manager() -> followedGet(QUrl(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12)));
+                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(QUrl(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12)));
                     QString res = Html::Document(response).find("a[href~'/download/']").link();
 
                     delete response;
@@ -72,7 +72,7 @@ namespace Core {
                     Html::Selector durSelector("input.jsD1Duration");
                     Html::Selector tagsSelector(".generalID3tags .id3tag");
 
-                    WebManager * manager = WebManager::manager();
+                    Web::Manager * manager = Web::Manager::prepare();
 
                     QJsonArray ar;
                     QString ext, title, path, song_path;
@@ -106,8 +106,8 @@ namespace Core {
                                         else if (tag_title == discretion_rate_tag || tag_title == discretion_rate_tag2)
                                             obj.insert(Grabber::discretion_rate_key, (*tag) -> text());
                                         else if (tag_title == genre_tag || tag_title == genre_tag2) {
-                                            int genre_id = MusicGenres::instance() -> toInt((*tag) -> text().trimmed());
-                                            if (MusicGenres::instance() -> defaultInt() != genre_id)
+                                            int genre_id = Media::MusicGenres::instance() -> toInt((*tag) -> text().trimmed());
+                                            if (Media::MusicGenres::instance() -> defaultInt() != genre_id)
                                                 obj.insert(Grabber::genre_id_key, genre_id);
                                         }
 
@@ -126,7 +126,7 @@ namespace Core {
 
                                 obj.insert(Grabber::title_key, title);
 
-                                obj.insert(Grabber::size_key, Format::toUnits(item_obj.value("size").toInt()));
+                                obj.insert(Grabber::size_key, Info::toUnits(item_obj.value("size").toInt()));
                                 obj.insert(Grabber::refresh_key, path);
 
                                 ar << obj;

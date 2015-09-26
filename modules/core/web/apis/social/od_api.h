@@ -33,10 +33,10 @@ namespace Core {
                 }
 
                 inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
-                    QJsonObject obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+                    QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
                     if (hasError(obj)) {
                         connection(true);
-                        obj = WebManager::manager() -> getJson(playAudioUrl(refresh_page));
+                        obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
                         qDebug() << "RECONECTION";
                     }
                     QUrl url(obj.value(QStringLiteral("play")).toString());
@@ -65,7 +65,7 @@ namespace Core {
 
             protected:
                 bool hashConnection(bool onlyAuto) {
-                    QNetworkReply * reply = WebManager::manager() -> followedGet(initUrl(), initHeaders());
+                    QNetworkReply * reply = Manager::prepare() -> followedGet(initUrl(), initHeaders());
                     reply -> deleteLater();
 
                     if (!sessionIsValid())
@@ -77,15 +77,15 @@ namespace Core {
                 }
 
                 bool formConnection() {
-                    WebManager::printCookies();
+                    Manager::printCookies();
                     if (!checkCredentials()) return false;
 
-                    WebResponse * reply = WebManager::manager() -> unfollowedForm(authRequestUrl(), initHeaders());
+                    Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
                     QUrl url = reply -> redirectUrl().toUrl();
-                    hash_key = WebManager::paramVal(url, QStringLiteral("httpsdata"));
+                    hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
                     reply -> deleteLater();
 
-                    reply = WebManager::manager() -> followedGet(url, initHeaders());
+                    reply = Manager::prepare() -> followedGet(url, initHeaders());
                     QString error = reply -> paramVal(QStringLiteral("st.error"));
                     if (!error.isEmpty()) {
                         nullifyCredentials();
@@ -98,7 +98,7 @@ namespace Core {
 
                     setParams(QString(), grabUserId(doc), QString());
                     reply -> deleteLater();
-                    return !WebManager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
+                    return !Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
                 }
 
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }

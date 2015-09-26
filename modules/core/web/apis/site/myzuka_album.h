@@ -18,7 +18,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("Myzuka"); }
-                inline Playo3::WebSubType siteType() { return Playo3::myzuka_site; }
+                inline SubType siteType() { return myzuka_site; }
 
                 // artists by genre
                 QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
@@ -100,7 +100,7 @@ namespace Core {
 
                 inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
 
-                QString refresh_postprocess(WebResponse * reply) {
+                QString refresh_postprocess(Response * reply) {
                     Html::Document parser(reply);
                     Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
@@ -113,7 +113,7 @@ namespace Core {
                     QUrl url = QUrl(baseUrlStr(search_path_token));
                     url.setQuery(search_predicate_token % predicate);
 
-                    QNetworkReply * response = WebManager::manager() -> followedGet(url);
+                    Response * response = Manager::prepare() -> followedGet(url);
 
                     QJsonArray json;
                     Html::Document parser(response);

@@ -13,7 +13,7 @@ namespace Core {
                 inline static void close() { delete self; }
 
                 inline QString name() const { return QStringLiteral("Zaycev"); }
-                inline Web::SubType siteType() { return zaycev_site; }
+                inline SubType siteType() { return zaycev_site; }
 
         //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
         //            QJsonArray json;
@@ -112,7 +112,7 @@ namespace Core {
                 }
 
                 // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
-                inline QString refresh_postprocess(WebResponse * reply) {
+                inline QString refresh_postprocess(Response * reply) {
                     return reply -> toJson().value(QStringLiteral("url")).toString();
                 }
 

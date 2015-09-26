@@ -42,7 +42,7 @@ namespace Core {
         }
 
         bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-            response = WebManager::manager() -> getJson(url, post_proc & wrap);
+            response = Web::Manager::prepare() -> getJson(url, post_proc & wrap);
 
             bool status = extractStatus(url, response, code, message);
             if (!status) {

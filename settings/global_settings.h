@@ -41,8 +41,8 @@ public:
     inline bool isOpenDropPointInTab() const { return _openDropPointInTab; }
     inline void setOpenDropPointInTab(bool open) { _openDropPointInTab = open; }
 
-    inline Playlist::Type openDropPointInTabType() const { return _openDropPointInTabType; }
-    inline void setOpenDropPointInTabType(const Playlist::Type & type) { _openDropPointInTabType = type; }
+    inline Data::Type openDropPointInTabType() const { return _openDropPointInTabType; }
+    inline void setOpenDropPointInTabType(const Data::Type & type) { _openDropPointInTabType = type; }
 
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
@@ -58,7 +58,7 @@ protected:
 
     bool _saveCommonTab;
     bool _openDropPointInTab;
-    Playlist::Type _openDropPointInTabType;
+    Data::Type _openDropPointInTabType;
     int _tabPosition;
 
     float _openTimeOut;

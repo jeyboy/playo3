@@ -23,7 +23,7 @@ namespace Core {
         protected:
             void initDefault();
         private:
-            Playo3::DataStore * settings;
+            DataStore * settings;
 
             inline MusicGenres() : TargetGenres() { load(); }
 

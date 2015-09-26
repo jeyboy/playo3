@@ -7,7 +7,7 @@
 #include <qurl.h>
 
 #include "dialogs/user_action_dialog.h"
-#include "modules/core/misc/web_utils/web_manager.h"
+#include "modules/core/web/utils/web_manager.h"
 #include "modules/core/misc/async.h"
 
 namespace Core {

@@ -6,7 +6,6 @@
 
 #include "modules/core/interfaces/iapi.h"
 #include "modules/core/interfaces/web_api.h"
-#include "modules/core/misc/web_utils/html_parser.h"
 #include "od_api_keys.h"
 
 namespace Core {
@@ -56,7 +55,7 @@ namespace Core {
                     }
 
                     inline QString grabSID() {
-                        QJsonObject obj = WebManager::manager() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
+                        QJsonObject obj = Manager::prepare() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
                         if (obj.contains(QStringLiteral("sid")))
                             return obj.value(QStringLiteral("sid")).toString();
                         else {
@@ -72,14 +71,14 @@ namespace Core {
                         if (!forms.isEmpty()) {
                             QList<FormInput> inputs;
                             inputs << FormInput::createStr(QStringLiteral("code"), QStringLiteral("Code from sms"));
-                            inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), WebManager::manager(), "sendGet");
+                            inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
                             actionDialog -> buildForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
                                 QHash<QString, QString> attrs;
                                 attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
                                 QUrl url = QUrl(base_url).resolved(forms.first() -> toFormSubmit(attrs));
-                                QNetworkReply * reply = WebManager::manager() -> followedForm(url, initHeaders());
+                                QNetworkReply * reply = Manager::prepare() -> followedForm(url, initHeaders());
                                 //TODO: check session
                                 reply -> deleteLater();
                             }

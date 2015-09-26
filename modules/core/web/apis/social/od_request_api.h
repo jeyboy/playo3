@@ -15,7 +15,7 @@ namespace Core {
 
                 RequestApi(QObject * obj = 0) : Misc(obj) {}
 
-                bool sessionIsValid() { return !hasError(WebManager::manager() -> getJson(initAudioUrl())); }
+                bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
 
                 inline QUrl authRequestUrl() const {
                     QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(authE) + "&st.password=" + encodeStr(authP) + "&st.remember=on&st.iscode=false");
@@ -87,9 +87,9 @@ namespace Core {
                 QJsonObject userInfo(const QString & uid) {
                     if (uid.isEmpty()) {
                         qDebug() << initAudioUrl();
-                        return WebManager::manager() -> getJson(initAudioUrl());
+                        return Manager::prepare() -> getJson(initAudioUrl());
                     } else
-                        return WebManager::manager() -> getJson(myAudioUrl(uid));
+                        return Manager::prepare() -> getJson(myAudioUrl(uid));
                 }
 
                 inline QUrl playlistAudioUrl(const QString & pid) { return audioUrl(QStringLiteral("my"), QUrlQuery(QStringLiteral("pid=") % pid)); } // params: (pid: playlist id) and pagination attrs

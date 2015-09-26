@@ -10,7 +10,7 @@ namespace View {
         Settings(Data::Type cType, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Settings(Data::Type cType = Playlist::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+        Settings(Data::Type cType = Data::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
             bool isPlaylist = false, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 

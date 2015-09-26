@@ -13,14 +13,14 @@ namespace Core {
         QString refresh(QString refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
-            WebResponse * response = WebManager::manager() -> followedGet(QUrl(refresh_page));
+            Web::Response * response = Web::Manager::prepare() -> followedGet(QUrl(refresh_page));
             QString res = refresh_postprocess(response);
             delete response;
             return res;
         }
 
     protected:
-        virtual QString refresh_postprocess(WebResponse * /*response*/) { return QString(); }
+        virtual QString refresh_postprocess(Web::Response * /*response*/) { return QString(); }
 
         virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
@@ -30,7 +30,7 @@ namespace Core {
 
         bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
             Logger::instance() -> startMark();
-            WebResponse * response = WebManager::manager() -> followedGet(url);
+            Web::Response * response = Web::Manager::prepare -> followedGet(url);
             bool res = toJson(jtype, response, items, true);
             Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
             return res;
