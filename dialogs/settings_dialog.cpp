@@ -3,6 +3,8 @@
 #include <QFontDatabase>
 #include "player/player.h"
 
+using namespace Dialogs;
+
 SettingsDialog::SettingsDialog(QWidget * parent) :
   QDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {
   ui -> setupUi(this);
@@ -348,7 +350,7 @@ void SettingsDialog::initLibrarySettings() {
 }
 
 void SettingsDialog::initExtensions() {
-    extDialog = new Playo3::ExtensionDialog(this);
+    extDialog = new ExtensionDialog(this);
     extDialog -> setWindowFlags(Qt::Widget);
     ui -> settingsTabs -> addTab(extDialog, "Extension filters");
 }
@@ -363,7 +365,7 @@ void SettingsDialog::saveGlobalSettings() {
 
     Settings::instance() -> setSaveCommonTab(ui -> saveCommonTab -> isChecked());
     Settings::instance() -> setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
-    Settings::instance() -> setOpenDropPointInTabType((Playo3::ContainerType)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
+    Settings::instance() -> setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
     Settings::instance() -> setOpenTimeOut(ui -> openTimeOut -> value());
 }
@@ -439,7 +441,7 @@ void SettingsDialog::saveSpectrumSettings() {
 
     Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
     Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
-    Settings::instance() -> setSpectrumType((Playo3::SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
+    Settings::instance() -> setSpectrumType((SpectrumSettings::SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
 }
 
 void SettingsDialog::saveLibrarySettings() {
