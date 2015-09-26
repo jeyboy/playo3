@@ -15,13 +15,16 @@
 
 #include "dialogs/tabdialog.h"
 
+#include "player/player.h"
+
 #define SCREEN_TAB "Screen"
 #define COMMON_TAB "Common"
 #define DOWNLOADS_TAB "Downloads"
 #define LOGS_TAB "Logs"
 
-namespace Playo3 {
+namespace Presentation {
     using namespace View;
+    using namespace Controls;
 
     class Dockbars : public QWidget {
         Q_OBJECT
@@ -33,7 +36,7 @@ namespace Playo3 {
 
         void load(QJsonArray & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs);
+        QDockWidget * linkNameToToolbars(QString barName, Params settings, QJsonObject attrs);
 
         inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
 
@@ -55,9 +58,9 @@ namespace Playo3 {
         }
 
         DockBar * commonBar();
-        DockBar * createDocBar(QString name, View::Settings settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
+        DockBar * createDocBar(QString name, Params settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
-        DockBar * createLinkedDocBar(QString text, QString path, ViewSettings settings);
+        DockBar * createLinkedDocBar(QString text, QString path, Params settings);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);

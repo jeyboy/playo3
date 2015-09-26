@@ -4,13 +4,13 @@
 #include "modules/models/web/web_model.h"
 #include "modules/core/misc/format.h"
 
-namespace Playo3 {
+namespace Model {
     class VkModel : public WebModel {
         Q_OBJECT
     public:
         inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
-        inline ContainerType containerType() const { return vk; }
+        inline Data::Type playlistType() const { return Data::vk; }
         inline WebApi * api() { return Vk::Api::instance(); }
     public slots:
         virtual void refresh(bool retryPlaing = false);

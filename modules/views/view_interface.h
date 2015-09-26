@@ -33,7 +33,7 @@ namespace View {
     class IView : public QTreeView {
       Q_OBJECT
     public:
-        IView(IModel * model, QWidget * parent, View::Settings & settins);
+        IView(IModel * model, QWidget * parent, View::Params & settins);
         virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
@@ -51,8 +51,8 @@ namespace View {
 
 //        inline IModel * model() const { return mdl; }
 
-        inline View::Settings settings() const { return sttngs; }
-        inline void setSettings(View::Settings newSettings) { sttngs = newSettings; }
+        inline View::Params settings() const { return sttngs; }
+        inline void setSettings(View::Params newSettings) { sttngs = newSettings; }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
@@ -137,7 +137,7 @@ namespace View {
         void mouseMoveEvent(QMouseEvent *);
 
         IModel * mdl;
-        View::Settings sttngs;
+        View::Params sttngs;
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;

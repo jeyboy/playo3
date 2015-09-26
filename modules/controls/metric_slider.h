@@ -7,9 +7,9 @@
 #include <qbrush.h>
 #include <qstyleoption.h>
 
-#include "misc/settings.h"
+#include "settings.h"
 
-namespace Playo3 {
+namespace Controls {
     class MetricSlider : public ClickableSlider {
         Q_OBJECT
     public:

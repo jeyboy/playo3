@@ -2,26 +2,25 @@
 #define VIEW_SETTINGS
 
 #include "modules/core/playlist_types.h"
-#include "modules/views/rel_types.h"
 #include <qjsonobject.h>
 
 namespace View {
-    struct Settings {
-        Settings(Data::Type cType, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(false), playlist(true),
+    struct Params {
+        Params(Data::Type cType, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Settings(Data::Type cType = Data::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, const QString & uniq_id = QString(), RelType rel = none_rel) : deleteFile(delFile), playlist(isPlaylist),
+        Params(Data::Type cType = Data::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+            bool isPlaylist = false, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Settings(const QJsonObject & obj) {
+        Params(const QJsonObject & obj) {
             deleteFile = obj[QStringLiteral("del")].toBool();
             playlist = obj[QStringLiteral("play")].toBool();
             interactive = obj[QStringLiteral("int")].toBool();
             common = obj[QStringLiteral("common")].toBool();
             type = (Data::Type)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
-            rel_type = (RelType)obj[QStringLiteral("rel_type")].toInt();
+            rel_type = (Data::RelType)obj[QStringLiteral("rel_type")].toInt();
         }
 
         QJsonObject toJson() {
@@ -45,7 +44,7 @@ namespace View {
         bool interactive;
         bool common;
         QString uid;
-        RelType rel_type;
+        Data::RelType rel_type;
 
         Data::Type type;
     };

@@ -4,14 +4,16 @@
 #include <qlistview.h>
 #include <qevent.h>
 
-class SimpleListView : public QListView {
-    Q_OBJECT
-public:
-    explicit SimpleListView(QWidget * parent = 0);
-    void removeSelected();
+namespace Controls {
+    class SimpleListView : public QListView {
+        Q_OBJECT
+    public:
+        explicit SimpleListView(QWidget * parent = 0);
+        void removeSelected();
 
-protected:
-    void keyPressEvent(QKeyEvent *);
-};
+    protected:
+        void keyPressEvent(QKeyEvent *);
+    };
+}
 
 #endif // SIMPLE_LIST_VIEW_H

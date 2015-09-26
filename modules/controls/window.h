@@ -6,7 +6,7 @@
 
 #include "modules/controls/window_title.h"
 
-namespace Playo3 {
+namespace Controls {
     class MainWindow : public QMainWindow {
         Q_OBJECT
     public:

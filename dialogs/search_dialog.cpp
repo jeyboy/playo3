@@ -3,7 +3,9 @@
 #include "dockbars.h"
 
 #include <qfileinfo.h>
-#include "modules/web/sites/site_apis.h"
+#include "modules/core/web/web_apis.h"
+
+using namespace Presentation;
 
 SearchDialog::SearchDialog(QWidget * parent) :
     QDialog(parent), ui(new Ui::SearchDialog)
@@ -15,7 +17,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
         IView * v = Dockbars::instance() -> view(*it);
         if (v) {
             IModel * mdl = (IModel *)v -> model();
-            if (mdl -> containerType() != search) {
+            if (mdl -> playlistType() != Data::search) {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), ui -> tabsList);
                 item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
                 item -> setCheckState(Qt::Unchecked);
@@ -25,14 +27,14 @@ SearchDialog::SearchDialog(QWidget * parent) :
         }
     }
 
-    QHash<Playo3::WebSubType, ISearchable *> sites = Web::Apis::list();
+    QHash<Web::SubType, ISearchable *> sites = Web::Apis::list();
     QListWidgetItem * item = new QListWidgetItem(QString(""));
     item -> setFlags(Qt::NoItemFlags);
     ui -> sitesList -> addItem(item);
 
     bool has_not_connected = false;
 
-    for(QHash<Playo3::WebSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+    for(QHash<Web::SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         if ((*it) -> isConnected()) {
             QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
@@ -40,10 +42,10 @@ SearchDialog::SearchDialog(QWidget * parent) :
             item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
 
             switch(it.key()) {
-                case Playo3::vk_site:
-                case Playo3::sc_site:
-                case Playo3::od_site:
-                case Playo3::fourshared_site: {
+                case Web::SubType::vk_site:
+                case Web::SubType::sc_site:
+                case Web::SubType::od_site:
+                case Web::SubType::fourshared_site: {
                     ui -> sitesList -> insertItem(0, item);
                 break;}
                 default: ui -> sitesList -> addItem(item);

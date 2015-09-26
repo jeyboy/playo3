@@ -4,13 +4,13 @@
 #include "modules/views/view_interface.h"
 #include "modules/models/web/od_model.h"
 
-interface View {
+namespace View {
     class OdView : public IView {
       Q_OBJECT
     public:
-        inline OdView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
-            : IView(dynamic_cast<IModel *>(new OdModel(settings.uid, hash)), parent, settings) {}
-        inline OdView(WebModel * newModel, QWidget * parent, ViewSettings settings)
+        inline OdView(QWidget * parent, Params settings, QJsonObject * hash = 0)
+            : IView(new OdModel(settings.uid, hash), parent, settings) {}
+        inline OdView(WebModel * newModel, QWidget * parent, Params settings)
             : IView(newModel, parent, settings) {}
     };
 }

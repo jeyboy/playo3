@@ -4,12 +4,12 @@
 #include "view_interface.h"
 #include "modules/models/list_model.h"
 
-namespace Playo3 {
+namespace View {
     class ListView : public IView {
       Q_OBJECT
     public:
-        inline ListView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
-            : IView(dynamic_cast<IModel *>(new ListModel(hash)), parent, settings) {
+        inline ListView(QWidget * parent, Params settings, QJsonObject * hash = 0)
+            : IView(new ListModel(hash), parent, settings) {
             setIndentation(4); // -2
         }
     };

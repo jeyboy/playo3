@@ -5,7 +5,7 @@
 #include <qevent.h>
 #include <qpainter.h>
 
-namespace Playo3 {
+namespace Controls {
     class RotateLabel : public QLabel {
     public:
         inline RotateLabel(QString text, QWidget * parent) : QLabel(text, parent), is_vertical(false) {

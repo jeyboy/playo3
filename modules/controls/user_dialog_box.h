@@ -4,7 +4,7 @@
 #include <qmessagebox.h>
 #include <qfiledialog.h>
 
-namespace Playo3 {
+namespace Controls {
     class UserDialogBox : public QWidget {
         Q_OBJECT
     public:

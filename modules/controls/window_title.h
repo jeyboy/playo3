@@ -7,16 +7,16 @@
 #include <qdatetime.h>
 #include <qstringbuilder.h>
 
+#include "modules/core/misc/screen.h"
 #include "modules/controls/spinner.h"
 
 #include "hoverable_label.h"
 #include "drop_button.h"
 #include "title_layout.h"
 #include "rotate_label.h"
-#include "misc/screen.h"
 #include "search_bar.h"
 
-namespace Playo3 {
+namespace Controls {
     class WindowTitle : public QWidget {
         Q_OBJECT
     public:

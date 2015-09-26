@@ -1,7 +1,7 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 #include <QFontDatabase>
-#include "media/player.h"
+#include "player/player.h"
 
 SettingsDialog::SettingsDialog(QWidget * parent) :
   QDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {

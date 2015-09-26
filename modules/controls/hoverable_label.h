@@ -3,7 +3,7 @@
 
 #include "clickable_label.h"
 
-namespace Playo3 {
+namespace Controls {
     class HoverableLabel : public ClickableLabel {
       Q_OBJECT
     public:

@@ -4,7 +4,7 @@
 #include <qlabel.h>
 #include <qevent.h>
 
-namespace Playo3 {
+namespace Controls {
     class ClickableLabel : public QLabel {
       Q_OBJECT
     public:

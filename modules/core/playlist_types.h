@@ -13,6 +13,12 @@ namespace Data {
         echo = 8,
         od = 9
     };
+
+    enum RelType {
+        none_rel,
+        user_rel,
+        song_rel
+    };
 }
 
 #endif // DATA_TYPES

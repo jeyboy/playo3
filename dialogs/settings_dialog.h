@@ -6,13 +6,13 @@
 
 #include "extension_dialog.h"
 
-#include "misc/settings.h"
-#include "misc/hotkey_manager.h"
-#include "misc/autorun.h"
+#include "settings.h"
+#include "modules/models/service/hotkey_manager.h"
+#include "modules/core/misc/autorun.h"
 
-#include "modules/data_struct/hotkeys/hotkey_model.h"
-#include "modules/data_struct/hotkeys/hotkey_model_item.h"
-#include "modules/data_struct/hotkeys/hotkey_delegate.h"
+#include "modules/models/service/hotkey_model.h"
+#include "modules/models/service/hotkey_model_item.h"
+#include "modules/models/service/hotkey_delegate.h"
 
 namespace Ui { class SettingsDialog; }
 
@@ -86,7 +86,7 @@ protected:
 private:
     bool execColorDialog(QColor & color);
 
-    Playo3::ExtensionDialog * extDialog;
+    ExtensionDialog * extDialog;
 
     Ui::SettingsDialog * ui;
     bool iconSizeChanged;

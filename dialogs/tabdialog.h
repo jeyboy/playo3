@@ -15,8 +15,8 @@ public:
   QString getName();
   void setName(QString name);
 
-  View::Settings getSettings();
-  void setSettings(View::Settings hash);
+  View::Params getSettings();
+  void setSettings(View::Params hash);
 
 private:
   Ui::TabDialog * ui;

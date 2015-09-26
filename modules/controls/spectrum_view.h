@@ -7,11 +7,11 @@
 #include <qevent.h>
 #include <qmenu.h>
 
-#include "misc/settings.h"
+#include "settings.h"
 
 //FIXME: on visibility changed need to stop/start spec calc in player
 
-namespace Playo3  {
+namespace Controls  {
     class SpectrumView : public QToolBar {
         Q_OBJECT
     public:

@@ -4,7 +4,7 @@
 #include <qkeysequenceedit.h>
 #include <qevent.h>
 
-#include "misc/hotkey_manager.h"
+#include "modules/models/service/hotkey_manager.h"
 
 class HotkeyEditor : public QKeySequenceEdit  {
     Q_OBJECT

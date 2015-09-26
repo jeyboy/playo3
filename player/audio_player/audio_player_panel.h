@@ -4,8 +4,7 @@
 #include "bass.h"
 #include "bass_fx.h"
 
-#include "modules/core/misc/format/format.h"
-#include "modules/core/misc/format/duration.h"
+#include "modules/core/misc/format.h"
 
 #include "audio_player_equalizer.h"
 

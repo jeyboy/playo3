@@ -4,9 +4,9 @@
 #include <qdockwidget.h>
 
 #include "modules/controls/window.h"
-#include "misc/stylesheets.h"
+#include "stylesheets.h"
 
-namespace Playo3 {
+namespace Controls {
     struct TabifyParams {
         TabifyParams() : tabbar(0), index(-1) {}
         TabifyParams(QTabBar * bar, int ind) : tabbar(bar), index(ind) {}

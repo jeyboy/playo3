@@ -43,14 +43,14 @@ public:
     void setPanTrackBar(QSlider * trackBar);
     void setVolumeTrackBar(QSlider * trackBar);
     void setTrackBar(QSlider * trackBar);
-    void setTimePanel(ClickableLabel * timePanel);
+    void setTimePanel(Controls::ClickableLabel * timePanel);
 
     QModelIndex playedIndex();
     inline IModel * currentPlaylist() const { return current_model; }
     inline IItem * playedItem() { return current_item; }
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-    bool getFileInfo(QUrl uri, MediaInfo * info);
+    bool getFileInfo(QUrl uri, Core::Media::MediaInfo * info);
     void playedIndexIsNotExist();
     void playedIndexIsInvalid();
 
@@ -91,9 +91,9 @@ private:
     void setTimePanelVal(int millis);
 
     static Player * self;
-    Playo3::MetricSlider * slider;
+    Controls::MetricSlider * slider;
     QSlider * volumeSlider, * panSlider;
-    ClickableLabel * timePanel;
+    Controls::ClickableLabel * timePanel;
 
     QAction * playButton;
     QAction * pauseButton;

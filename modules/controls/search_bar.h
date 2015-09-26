@@ -8,7 +8,7 @@
 #include <qpixmap.h>
 #include <qboxlayout.h>
 
-namespace Playo3 {
+namespace Controls {
     class SearchBar : public QWidget {
         Q_OBJECT
     public:

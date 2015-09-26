@@ -124,9 +124,9 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert(Key::name, title());
-            params.insert(Key::checkable, Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Key::checkable, AppSettings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
-                if (Settings::instance() -> isShowSystemIcons())
+                if (AppSettings::instance() -> isShowSystemIcons())
                     params.insert(Key::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
                 params.insert(Key::info, info());
                 params.insert(Key::ext, extension());
@@ -142,27 +142,27 @@ QVariant IItem::data(int column) const {
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
         case IFOLDER:          return isContainer();
-        case Qt::FontRole:     return Settings::instance() -> itemFont();
+        case Qt::FontRole:     return AppSettings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
         case ITREESTR:         return buildTreeStr();
 //        case IUID:             return uid();
 
-//        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
+//        case IADDFONT:         return AppSettings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole: { // scrollTo work wrongly with different item heights
-                if (!Settings::instance() -> isHeightUnificate() && isContainer())
-                    return QSize(0, Settings::instance() -> itemHeight() + 6);
+                if (!AppSettings::instance() -> isHeightUnificate() && isContainer())
+                    return QSize(0, AppSettings::instance() -> itemHeight() + 6);
                 else
-                    return QSize(0, Settings::instance() -> totalItemHeight() + 6);
+                    return QSize(0, AppSettings::instance() -> totalItemHeight() + 6);
         }
         case Qt::TextAlignmentRole:
-            if (isContainer() || !Settings::instance() -> isShowInfo())
+            if (isContainer() || !AppSettings::instance() -> isShowInfo())
                 return Qt::AlignVCenter;
             else
                 return Qt::AlignLeft;
 
         case Qt::CheckStateRole: {
-            if (Settings::instance() -> isCheckboxShow()) {
+            if (AppSettings::instance() -> isCheckboxShow()) {
                 return is(checked);
             } else return QVariant();
         }

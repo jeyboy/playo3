@@ -1,16 +1,20 @@
 #ifndef SOUNDCLOUD_VIEW_H
 #define SOUNDCLOUD_VIEW_H
 
-#include "modules/data_struct/view_interface.h"
-#include "soundcloud_model.h"
+#include "modules/views/view_interface.h"
+#include "modules/models/web/soundcloud_model.h"
 
-class SoundcloudView : public IView {
-  Q_OBJECT
-public:
-    inline SoundcloudView(QWidget * parent, ViewSettings settings, QJsonObject * hash = 0)
-        : IView(dynamic_cast<IModel *>(new SoundcloudModel(settings.uid, hash)), parent, settings) {}
-    inline SoundcloudView(WebModel * newModel, QWidget * parent, ViewSettings settings)
-        : IView(newModel, parent, settings) {}
-};
+namespace View {
+    using namespace Model;
+
+    class SoundcloudView : public IView {
+      Q_OBJECT
+    public:
+        inline SoundcloudView(QWidget * parent, Params settings, QJsonObject * hash = 0)
+            : IView(new SoundcloudModel(settings.uid, hash), parent, settings) {}
+        inline SoundcloudView(WebModel * newModel, QWidget * parent, Params settings)
+            : IView(newModel, parent, settings) {}
+    };
+}
 
 #endif // SOUNDCLOUD_VIEW_H

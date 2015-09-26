@@ -3,10 +3,12 @@
 
 #include <qslider.h>
 
-class ClickableSlider : public QSlider {
-    Q_OBJECT
-public:
-    ClickableSlider(QWidget * parent = 0);
-};
+namespace Controls {
+    class ClickableSlider : public QSlider {
+        Q_OBJECT
+    public:
+        ClickableSlider(QWidget * parent = 0);
+    };
+}
 
 #endif // CLICKABLE_SLIDER_H

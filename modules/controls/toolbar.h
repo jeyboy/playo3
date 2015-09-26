@@ -7,7 +7,7 @@
 #include <qfileinfo.h>
 #include <qstringbuilder.h>
 
-namespace Playo3 {
+namespace Controls {
     class ToolBar : public QToolBar {
         Q_OBJECT
     public:

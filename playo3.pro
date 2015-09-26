@@ -228,7 +228,6 @@ HEADERS += \
     modules/views/web/vk_view.h \
     modules/views/level_tree_view.h \
     modules/views/list_view.h \
-    modules/views/rel_types.h \
     modules/views/tree_view.h \
     modules/views/tree_view_style.h \
     modules/views/view_index.h \
@@ -251,10 +250,10 @@ HEADERS += \
     dockbars.h \
     external_keys.h \
     playo.h \
-    settings.h \
     single_application.h \
     stylesheets.h \
-    toolbars.h
+    toolbars.h \
+    settings.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -384,7 +383,7 @@ SOURCES += \
     external_keys.cpp \
     main.cpp \
     playo.cpp \
-    settings.cpp \
     single_application.cpp \
     stylesheets.cpp \
-    toolbars.cpp
+    toolbars.cpp \
+    settings.cpp

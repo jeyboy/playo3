@@ -15,8 +15,7 @@
 #include "modules/core/web/apis/service/echonest_api.h"
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/controls/accordion.h"
-
-#include "modules/models/service/search/search_view.h"
+#include "modules/views/service/search_view.h"
 
 namespace Ui { class EchonestDialog; }
 
@@ -49,7 +48,7 @@ private:
     QRadioButton * artistTypeCheck, * genreTypeCheck;
 
     Ui::EchonestDialog * ui;
-    Accordion * artistAccordion;
+    Controls::Accordion * artistAccordion;
 };
 
 #endif // ECHONEST_DIALOG_H

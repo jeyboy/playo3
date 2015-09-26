@@ -9,7 +9,7 @@ EchonestDialog::EchonestDialog(QWidget * parent) :
     ui(new Ui::EchonestDialog) {
     ui -> setupUi(this);
 
-    Accordion * accordion = new Accordion(this);
+    Controls::Accordion * accordion = new Controls::Accordion(this);
 
     QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
     slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
@@ -207,7 +207,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
-      View::SearchView * view = new View::SearchView(this, View::Settings(Data::echo, QString()));
+      View::SearchView * view = new View::SearchView(this, View::Params(Data::echo, QString()));
       QStringList predicates;
 
       for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
@@ -240,7 +240,7 @@ void EchonestDialog::artistInfoGeneration(QWidget * base) {
     connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
     gl -> addWidget(artistInfoButton, 0, 1);
 
-    artistAccordion = new Accordion(base);
+    artistAccordion = new Controls::Accordion(base);
     gl -> addWidget(artistAccordion, 1, 0, 10, 2);
 
     base -> setLayout(gl);

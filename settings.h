@@ -1,5 +1,5 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef APP_SETTINGS_H
+#define APP_SETTINGS_H
 
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"
@@ -39,4 +39,4 @@ private:
     static Settings * self;
 };
 
-#endif // SETTINGS_H
+#endif // APP_SETTINGS_H

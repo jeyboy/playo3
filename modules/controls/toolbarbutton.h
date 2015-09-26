@@ -6,10 +6,10 @@
 #include <qevent.h>
 #include <qfileinfo.h>
 
-#include "modules/data_struct/downloads/download_view.h"
-#include "modules/data_struct/view_interface.h"
+#include "modules/views/service/download_view.h"
+#include "modules/views/view_interface.h"
 
-namespace Playo3 {
+namespace Controls {
     class ToolbarButton : public QToolButton {
         Q_OBJECT
     public:

@@ -13,7 +13,7 @@
 #include "clickable_slider.h"
 #include "media/player.h"
 
-namespace Playo3 {
+namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")
     #define JSON_KEY QStringLiteral("presets")
 

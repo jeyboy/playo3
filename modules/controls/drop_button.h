@@ -7,7 +7,7 @@
 #include <qmenu.h>
 #include <qwidgetaction.h>
 
-namespace Playo3 {
+namespace Controls {
     class DropButton : public HoverableLabel {
         Q_OBJECT
     public:

@@ -3,12 +3,10 @@
 
 #include <qstringbuilder.h>
 
-namespace Playo3 {
-    #define JSON_TYPE_TAB_ITEM_COUNT QStringLiteral("l")
-    #define JSON_TYPE_TAB_NAME QStringLiteral("n")
-    #define JSON_TYPE_TAB_SETTINGS QStringLiteral("set")
-    #define JSON_TYPE_VK_TAB_SETTINGS QStringLiteral("vk")
-}
+#define JSON_TYPE_TAB_ITEM_COUNT QStringLiteral("l")
+#define JSON_TYPE_TAB_NAME QStringLiteral("n")
+#define JSON_TYPE_TAB_SETTINGS QStringLiteral("set")
+#define JSON_TYPE_VK_TAB_SETTINGS QStringLiteral("vk")
 
 /// a - item info
 /// b - item bytes size

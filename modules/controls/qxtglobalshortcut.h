@@ -31,7 +31,7 @@
 
 #define QXTGLOBALSHORTCUT_H
 
-#include "../double_slider/qxtglobal.h"
+#include "qxtglobal.h"
 #include <QObject>
 #include <QKeySequence>
 class QxtGlobalShortcutPrivate;
