@@ -12,9 +12,9 @@ namespace Core {
 
         inline Playlist(int initState = DEFAULT_PLAYLIST_STATE) : IItem(0, initState), filesCount(0) {}
         Playlist(QJsonObject * hash, Playlist * parent = 0);
-        Playlist(QString folderPath, QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
-        Playlist(QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
-        Playlist(QString folderTitle, Playlist * parent, QString uid, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
+        Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
+        Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
+        Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
         virtual ~Playlist();
 
         void linkNode(Playlist * node);

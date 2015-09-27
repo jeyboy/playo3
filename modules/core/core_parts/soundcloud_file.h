@@ -5,11 +5,11 @@
 #include "modules/core/web/apis/social/soundcloud_api.h"
 
 namespace Core {
-    class SoundcloudItem : public WebFile {
+    class SoundcloudFile : public WebFile {
     public:
-        inline SoundcloudItem(QJsonObject * hash, Playlist * parent = 0) : WebFile(hash, parent) {}
-        inline SoundcloudItem(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebFile(hash, parent, pos) {}
-        inline SoundcloudItem(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1)
+        inline SoundcloudFile(QJsonObject * hash, Playlist * parent = 0) : WebFile(hash, parent) {}
+        inline SoundcloudFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebFile(hash, parent, pos) {}
+        inline SoundcloudFile(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1)
             : WebFile(uid, filePath, fileName, parent, pos) {
             //    setExtension("mp3");
             //    setBpm(itemBpm);

@@ -36,7 +36,7 @@ namespace Core {
                 removePhysicalObject();
         }
 
-        inline int itemType() const { return FILE; }
+        inline int itemType() const { return SIMPLE_FILE; }
         inline bool removePhysicalObject() { return QFile::remove(fullPath()); }
 
         inline bool isExist() const { return QFile::exists(fullPath()); }

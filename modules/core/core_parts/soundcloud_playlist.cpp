@@ -1,3 +1,3 @@
 #include "soundcloud_playlist.h"
 
-using namespace Playo3;
+using namespace Core;

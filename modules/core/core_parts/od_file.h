@@ -5,11 +5,11 @@
 //#include "modules/web/socials_api/od_api.h"
 
 namespace Core {
-    class OdItem : public WebFile {
+    class OdFile : public WebFile {
     public:
-        inline OdItem(QJsonObject * hash, Playlist * parent = 0) : WebFile(hash, parent) {}
-        inline OdItem(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebFile(hash, parent, pos) {}
-        inline OdItem(QVariant uid, QString filePath, QString fileName, Playlist * parent = 0, int pos = -1)
+        inline OdFile(QJsonObject * hash, Playlist * parent = 0) : WebFile(hash, parent) {}
+        inline OdFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebFile(hash, parent, pos) {}
+        inline OdFile(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1)
             : WebFile(uid, filePath, fileName, parent, pos) {
             //    setExtension("mp3");
             //    setBpm(itemBpm);

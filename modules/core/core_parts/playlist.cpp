@@ -1,23 +1,23 @@
-#include "item_index.h"
+#include "modules/core/core_parts_index.h"
 
-using namespace Playo3;
+using namespace Core;
 
-int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, QVariantMap & attrs) {
+int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
     switch(item_type) {
-        case ITEM: {
-            new FileItem(attrs, parentFolder, pos);
+        case SIMPLE_FILE: {
+            new File(attrs, parent, pos);
             return 1;
         }
-        case VK_ITEM: {
-            new VkItem(attrs, parentFolder, pos);
+        case VK_FILE: {
+            new VkFile(attrs, parent, pos);
             return 1;
         }
-        case SOUNDCLOUD_ITEM: {
-            new SoundcloudItem(attrs, parentFolder, pos);
+        case SOUNDCLOUD_FILE: {
+            new SoundcloudFile(attrs, parent, pos);
             return 1;
         }
-//                case CUE_ITEM: {
-//                    new CueItem(data -> attrs, parentFolder, pos);
+//                case CUE_FILE: {
+//                    new CueFile(data -> attrs, parent, pos);
 //                    return 1;
 //                }
 
@@ -28,9 +28,9 @@ int FolderItem::restoreItem(int item_type, FolderItem * parentFolder, int pos, Q
 }
 
 ///////////////////////////////////////////////////////////
-FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
+Playlist::Playlist(QJsonObject * hash, Playlist * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
-      inBranchCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+      filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
@@ -39,38 +39,38 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
             iterObj = (*it).toObject();
             switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case ITEM: {
-                    new FileItem(&iterObj, this);
+                case SIMPLE_FILE: {
+                    new File(&iterObj, this);
                 break;}
                 case PLAYLIST: {
-                    new FolderItem(&iterObj, this);
+                    new Playlist(&iterObj, this);
                 break;}
 
-                case WEB_ITEM: {
-                    new WebItem(&iterObj, this);
+                case WEB_FILE: {
+                    new WebFile(&iterObj, this);
                 break;}
 
-                case VK_ITEM: {
-                    new VkItem(&iterObj, this);
+                case VK_FILE: {
+                    new VkFile(&iterObj, this);
                 break;}
                 case VK_PLAYLIST: {
-                    new VkFolder(&iterObj, this);
+                    new VkPlaylist(&iterObj, this);
                 break;}
-                case SOUNDCLOUD_ITEM: {
-                    new SoundcloudItem(&iterObj, this);
+                case SOUNDCLOUD_FILE: {
+                    new SoundcloudFile(&iterObj, this);
                 break;}
                 case SOUNDCLOUD_PLAYLIST: {
-                    new SoundcloudFolder(&iterObj, this);
+                    new SoundcloudPlaylist(&iterObj, this);
                 break;}
-                case OD_ITEM: {
-                    new OdItem(&iterObj, this);
+                case OD_FILE: {
+                    new OdFile(&iterObj, this);
                 break;}
                 case OD_PLAYLIST: {
-                    new OdFolder(&iterObj, this);
+                    new OdPlaylist(&iterObj, this);
                 break;}
 
-                // case CUE_ITEM: {
-                // new CueItem(&iter_obj, this); // ?
+                // case CUE_FILE: {
+                // new CueFile(&iter_obj, this); // ?
                 // break;}
             }
         }
@@ -78,37 +78,37 @@ FolderItem::FolderItem(QJsonObject * hash, FolderItem * parent)
 
     attrs = hash -> toVariantMap();
     if (parent != 0)
-        parent -> declareFolder(folderUid(), this);
+        parent -> declarePlaylist(playlistUid(), this);
 }
 
-FolderItem::FolderItem(QString folderPath, QString folderTitle, FolderItem * parent, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
+Playlist::Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent, int pos, int initState)
+    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
 
     setPath(folderPath);
 
     if (parent != 0)
-        parent -> declareFolder(folderUid(), this);
+        parent -> declarePlaylist(playlistUid(), this);
 }
 
-FolderItem::FolderItem(QString folderTitle, FolderItem * parent, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
+Playlist::Playlist(const QString & folderTitle, Playlist * parent, int pos, int initState)
+    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
 
     if (parent != 0)
-        parent -> declareFolder(folderUid(), this);
+        parent -> declarePlaylist(playlistUid(), this);
 }
 
-FolderItem::FolderItem(QString folderTitle, FolderItem * parent, QString uid, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), inBranchCount(0) {
+Playlist::Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos, int initState)
+    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
 
     setUid(uid);
 
     if (parent != 0)
-        parent -> declareFolder(folderUid(), this);
+        parent -> declarePlaylist(playlistUid(), this);
 }
 
-FolderItem::~FolderItem() {
+Playlist::~Playlist() {
     if (_parent)
-        _parent -> undeclareFolder(folderUid());
+        _parent -> undeclarePlaylist(playlistUid());
 
     bool remove_marked = is(mark_on_removing);
 
@@ -123,14 +123,14 @@ FolderItem::~FolderItem() {
         removePhysicalObject();
 }
 
-void FolderItem::linkNode(FolderItem * node) {
+void Playlist::linkNode(Playlist * node) {
     node -> setParent(this);
-    declareFolder(node -> folderUid(), node);
+    declarePlaylist(node -> playlistUid(), node);
     declareChild(node);
-    node -> backPropagateItemsCountInBranch(node -> childCount() - node -> foldersAmount());
+    node -> backPropagateItemsCountInBranch(node -> childCount() - node -> playlistsAmount());
 }
 
-void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
+void Playlist::accumulateUids(QHash<QString, IItem *> & store) {
     QVariant item_uid;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
@@ -144,7 +144,7 @@ void FolderItem::accumulateUids(QHash<QString, IItem *> & store) {
     }
 }
 
-QVariantList FolderItem::childrenUids(int position, int count) {
+QVariantList Playlist::childrenUids(int position, int count) {
     QVariantList uids;
 
     if (position < 0 || position + count > children.size())
@@ -164,33 +164,33 @@ QVariantList FolderItem::childrenUids(int position, int count) {
     return uids;
 }
 
-void FolderItem::backPropagateItemsCountInBranch(int offset) {
-    inBranchCount += offset;
+void Playlist::backPropagateItemsCountInBranch(int offset) {
+    filesCount += offset;
 
     if (_parent)
         _parent -> backPropagateItemsCountInBranch(offset);
 }
 
-QVariant FolderItem::data(int column) const {
+QVariant Playlist::data(int column) const {
     switch(column) {
-        case Qt::ToolTipRole:  return QVariant(title().toString() % QStringLiteral("(") % QString::number(inBranchCount) % QStringLiteral(" items)"));
-        case IEXECCOUNTS:      return inBranchCount;
+        case Qt::ToolTipRole:  return QVariant(title().toString() % QStringLiteral("(") % QString::number(filesCount) % QStringLiteral(" items)"));
+        case IEXECCOUNTS:      return filesCount;
         default:               return IItem::data(column);
     }
 }
 
-bool FolderItem::removePhysicalObject() { // this is a little dangerous (
+bool Playlist::removePhysicalObject() { // this is a little dangerous (
 //    QDir delDir(fullPath());
 //    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
 //        return delDir.removeRecursively();
     return false;
 }
 
-QJsonObject FolderItem::toJson() {
+QJsonObject Playlist::toJson() {
     QJsonObject root = IItem::toJson();
 
     if (children.length() > 0) {
-        root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = inBranchCount;
+        root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = filesCount;
 
         QJsonArray ar = QJsonArray();
         QList<IItem *>::Iterator it = children.begin();
@@ -204,31 +204,31 @@ QJsonObject FolderItem::toJson() {
     return root;
 }
 
-FolderItem * FolderItem::createFolderPath(QString path) { // usable only for tree
+Playlist * Playlist::createPlaylistPath(QString path) { // usable only for tree
     QStringList list = path.split('/', QString::SkipEmptyParts);
     if (list.isEmpty())
         return this;
-    return createFolder(list.takeFirst(), &list);
+    return createPlaylist(list.takeFirst(), &list);
 }
 
-FolderItem * FolderItem::createFolder(QString name, QStringList * list, int pos) {
-    FolderItem * curr = folders.value(name, 0);
+Playlist * Playlist::createPlaylist(const QString & name, QStringList * list, int pos) {
+    Playlist * curr = playlists.value(name, 0);
 
     if (!curr)
-        curr = new FolderItem(name, this, pos);
+        curr = new Playlist(name, this, pos);
 
     if (list && !list -> isEmpty())
-        return curr -> createFolder(list -> takeFirst(), list, pos);
+        return curr -> createPlaylist(list -> takeFirst(), list, pos);
     else
         return curr;
 }
 
-FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last exist folder in the path
+Playlist * Playlist::findCompatblePlaylist(QStringList * list) { // find last exist folder in the path
     if (list -> isEmpty()) return this;
-    FolderItem * curr = folders.value(list -> at(0), 0);
+    Playlist * curr = playlists.value(list -> at(0), 0);
     if (!curr) return this;
     list -> removeFirst();
-    return curr -> findNearestFolder(list);
+    return curr -> findCompatblePlaylist(list);
 }
 
 ////    int ret = 0;
@@ -242,7 +242,7 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 //    return ret;
 //}
 
-//bool FolderItem::insertChildren(int position, int count, int columns) {
+//bool Playlist::insertChildren(int position, int count, int columns) {
 //    if (position < 0 || position > childItems.size())
 //        return false;
 
@@ -255,7 +255,7 @@ FolderItem * FolderItem::findNearestFolder(QStringList * list) { // find last ex
 //    return true;
 //}
 
-int FolderItem::removeChildren(int position, int count) {
+int Playlist::removeChildren(int position, int count) {
     if (position < 0 || position + count > children.size())
         return 1;
 
@@ -272,25 +272,25 @@ int FolderItem::removeChildren(int position, int count) {
     return totalItems;
 }
 
-void FolderItem::propagateFolderSetFlag(ItemStateFlag flag) {
+void Playlist::propagatePlaylistSetFlag(ItemStateFlag flag) {
     set(flag);
-    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
-        it.value() -> propagateFolderSetFlag(flag);
+    for(QHash<QString, Playlist *>::Iterator it = playlists.begin(); it!= playlists.end(); it++)
+        it.value() -> propagatePlaylistSetFlag(flag);
 }
-void FolderItem::propagateFolderUnsetFlag(ItemStateFlag flag) {
+void Playlist::propagatePlaylistUnsetFlag(ItemStateFlag flag) {
     unset(flag);
-    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
-        it.value() -> propagateFolderUnsetFlag(flag);
+    for(QHash<QString, Playlist *>::Iterator it = playlists.begin(); it!= playlists.end(); it++)
+        it.value() -> propagatePlaylistUnsetFlag(flag);
 }
 
-void FolderItem::updateCheckedState(bool checked) {
+void Playlist::updateCheckedState(bool checked) {
     IItem::updateCheckedState(checked);
 
     for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
         (*it) -> updateCheckedState(checked);
 }
 
-bool FolderItem::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
+bool Playlist::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
     bool valid = false;
 
     for(QList<IItem *>::Iterator it = children.begin(); it!= children.end(); it++)
@@ -299,18 +299,18 @@ bool FolderItem::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
     IItem::updateCheckedState(valid);
 }
 
-void FolderItem::shuffle() {
+void Playlist::shuffle() {
     qsrand((uint)QTime::currentTime().msec());
     int n = children.count() - 1;
 
     for (int i = 0; i < n; ++i)
         children.swap(i, qrand() % n);/*((n + 1) - i) + i)*/;
 
-    for(QHash<QString, FolderItem *>::Iterator it = folders.begin(); it!= folders.end(); it++)
+    for(QHash<QString, Playlist *>::Iterator it = playlists.begin(); it!= playlists.end(); it++)
         it.value() -> shuffle();
 }
 
-void FolderItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
+void Playlist::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
     QList<IItem *>::Iterator child = children.begin();
 
     for(; child != children.end(); child++)
