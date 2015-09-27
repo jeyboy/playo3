@@ -1,5 +1,7 @@
 #include "spinner.h"
 
+using namespace Controls;
+
 Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent, bool fixed_size)
     : QWidget(parent), img_text(0), spineWidth(spinner_width < 30 ? 4 : 10), spinePad(spinner_width < 30 ? 0 : 2),
       borderWidth(2), continiousLen((15 / 100.0) * -5760), w(spinner_width), h(spinner_height), clearPen(0), spinePen(0)

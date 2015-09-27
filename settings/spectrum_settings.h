@@ -17,14 +17,14 @@
 #define SETTINGS_SPECTRUM_TYPE_KEY QStringLiteral("spectrum_type")
 #define SETTINGS_SPECTRUM_MULTIPLIER_KEY QStringLiteral("spectrum_multiplier")
 
+enum SpectrumType {
+    bars,
+    split_bars,
+    waves
+};
+
 class SpectrumSettings {
 public:
-    enum SpectrumType {
-        bars,
-        split_bars,
-        waves
-    };
-
     void fromJson(QJsonObject & settings);
     void toJson(QJsonObject & settings);
 

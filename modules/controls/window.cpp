@@ -1,8 +1,8 @@
 #include "window.h"
-#include "misc/stylesheets.h"
+#include "stylesheets.h"
 #include "dockbar.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),

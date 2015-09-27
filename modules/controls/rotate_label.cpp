@@ -1,6 +1,6 @@
 #include "rotate_label.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 void RotateLabel::paintEvent(QPaintEvent * event) {
     if (is_vertical) {

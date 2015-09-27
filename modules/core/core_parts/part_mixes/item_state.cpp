@@ -1,7 +1,7 @@
 #include "item_state.h"
 #include <qdebug.h>
 
-using namespace Playo3;
+using namespace Core;
 
 bool ItemState::set(enum ItemStateFlag flag) {
     switch(flag) {
@@ -34,7 +34,7 @@ void ItemState::setStates(int flags) {
 }
 
 bool ItemState::reset() {
-    item_state = DEFAULT_MODEL_ITEM_STATE;
+    item_state = DEFAULT_FILE_STATE;
     return true;
 }
 
@@ -50,5 +50,5 @@ bool ItemState::setLiked() {
 }
 bool ItemState::unsetLiked() {
     unset(liked);
-    setBit(item_state, listened);
+    return setBit(item_state, listened) == listened;
 }

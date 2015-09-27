@@ -6,20 +6,22 @@
 
 namespace Ui { class TabDialog; }
 
-class TabDialog : public QDialog {
-  Q_OBJECT
-public:
-  explicit TabDialog(QWidget * parent = 0);
-  ~TabDialog();
+namespace Dialogs {
+    class TabDialog : public QDialog {
+      Q_OBJECT
+    public:
+      explicit TabDialog(QWidget * parent = 0);
+      ~TabDialog();
 
-  QString getName();
-  void setName(QString name);
+      QString getName();
+      void setName(QString name);
 
-  View::Params getSettings();
-  void setSettings(View::Params hash);
+      View::Params getSettings();
+      void setSettings(View::Params hash);
 
-private:
-  Ui::TabDialog * ui;
-};
+    private:
+      Ui::TabDialog * ui;
+    };
+}
 
 #endif // TABDIALOG_H

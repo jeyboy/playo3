@@ -19,9 +19,7 @@
 
 #include "modules/core/web/apis/social/vk_api.h"
 
-namespace Playo3 {
-    class Dockbars;
-
+namespace View {
     class DownloadView : public QListView {
       Q_OBJECT
     public:

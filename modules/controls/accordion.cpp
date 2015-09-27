@@ -1,5 +1,7 @@
 #include "accordion.h"
 
+using namespace Controls;
+
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent), currentCell(0) {
     topButton = new AccordionButton(QStringLiteral("*"), this);
     topButton -> setFixedSize(16, 16);

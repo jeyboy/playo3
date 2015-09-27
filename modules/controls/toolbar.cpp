@@ -2,7 +2,7 @@
 #include <qlabel.h>
 #include <qaction.h>
 
-using namespace Playo3;
+using namespace Controls;
 
 ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, parent) {
     setAcceptDrops(true);

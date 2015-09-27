@@ -22,9 +22,9 @@ namespace Controls  {
         void generateContextMenu(QMenu * parent);
 
     public slots:
-        inline void setBarsView()      { changeType(Playo3::bars); }
-        inline void setSplitBarsView() { changeType(Playo3::split_bars); }
-        inline void setWavesView()     { changeType(Playo3::waves); }
+        inline void setBarsView()      { changeType(bars); }
+        inline void setSplitBarsView() { changeType(split_bars); }
+        inline void setWavesView()     { changeType(waves); }
 
         void updateColors();
         void changeType(SpectrumType);

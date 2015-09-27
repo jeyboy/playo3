@@ -1,7 +1,7 @@
 #include "tabdialog.h"
 #include "ui_tabdialog.h"
 
-using namespace Playo3;
+using namespace Dialogs;
 
 TabDialog::TabDialog(QWidget * parent) :
   QDialog(parent), ui(new Ui::TabDialog) {
@@ -25,37 +25,37 @@ void TabDialog::setName(QString name) {
   ui -> tabName -> setText(name);
 }
 
-ViewSettings TabDialog::getSettings() {
-    ViewSettings settings;
+View::Params TabDialog::getSettings() {
+    View::Params settings;
 
     settings.deleteFile = ui -> deleteFile -> isChecked();
     settings.interactive = ui -> interactive -> isChecked(); //checkState() == Qt::Checked
     settings.playlist = ui -> playlist -> isChecked();
 
     if (ui -> isListRadio -> isChecked())
-        settings.type = Playo3::list;
+        settings.type = Data::list;
     else if (ui -> isOneLevelTreeRadio -> isChecked())
-        settings.type = Playo3::level_tree;
+        settings.type = Data::level_tree;
     else if (ui -> isTreeRadio -> isChecked())
-        settings.type = Playo3::tree;
+        settings.type = Data::tree;
     else if (ui -> isVkRadio -> isChecked())
-        settings.type = Playo3::vk;
+        settings.type = Data::vk;
     else if (ui -> isSoundcloudRadio -> isChecked())
-        settings.type = Playo3::soundcloud;
+        settings.type = Data::soundcloud;
 
     return settings;
 }
 
-void TabDialog::setSettings(ViewSettings settings) {
+void TabDialog::setSettings(View::Params settings) {
   ui -> deleteFile -> setChecked(settings.deleteFile);
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);
 
-  ui -> isListRadio -> setChecked(settings.type == Playo3::list);
-  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Playo3::level_tree);
-  ui -> isTreeRadio -> setChecked(settings.type == Playo3::tree);
-  ui -> isVkRadio -> setChecked(settings.type == Playo3::vk);
-  ui -> isSoundcloudRadio -> setChecked(settings.type == Playo3::soundcloud);
+  ui -> isListRadio -> setChecked(settings.type == Data::list);
+  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Data::level_tree);
+  ui -> isTreeRadio -> setChecked(settings.type == Data::tree);
+  ui -> isVkRadio -> setChecked(settings.type == Data::vk);
+  ui -> isSoundcloudRadio -> setChecked(settings.type == Data::soundcloud);
 
   ui -> isListRadio -> setEnabled(false);
   ui -> isTreeRadio -> setEnabled(false);

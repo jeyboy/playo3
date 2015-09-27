@@ -1,6 +1,6 @@
 #include "clickable_label.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel(text, parent, f) {

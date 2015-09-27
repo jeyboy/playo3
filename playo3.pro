@@ -263,7 +263,6 @@ SOURCES += \
     dialogs/settings_dialog.cpp \
     dialogs/tabdialog.cpp \
     dialogs/user_action_dialog.cpp \
-    dialogs/web_dialog.cpp \
     modules/controls/accordion.cpp \
     modules/controls/clickable_label.cpp \
     modules/controls/clickable_slider.cpp \

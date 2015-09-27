@@ -1,6 +1,6 @@
 #include "user_dialog_box.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 UserDialogBox * UserDialogBox::self = 0;
 

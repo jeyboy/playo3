@@ -2,7 +2,7 @@
 
 #include <qdatetime.h>
 
-using namespace Playo3;
+using namespace Controls;
 
 DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::WindowFlags flags)
     : QDockWidget(title, parent, flags), sticked(false), inProcess(false), mWidget(0), spinner(0) {

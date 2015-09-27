@@ -1,9 +1,9 @@
 #include "playo.h"
 #include "ui_playo.h"
 
-#include "misc/stylesheets.h"
+#include "stylesheets.h"
 
-using namespace Playo3;
+using namespace Presentation;
 
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);

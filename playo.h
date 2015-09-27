@@ -11,9 +11,9 @@
 #include <qsettings.h>
 
 //#include "media/cue/cue.h"
-#include "media/library.h"
-#include "media/genres/music_genres.h"
-#include "misc/file_utils/data_store.h"
+//#include "media/library.h"
+//#include "media/genres/music_genres.h"
+#include "modules/core/misc/file_utils/data_store.h"
 
 #include "dialogs/search_dialog.h"
 #include "dialogs/settings_dialog.h"
@@ -21,8 +21,6 @@
 #include "dialogs/echonest_dialog.h"
 
 #include "modules/plugins/plugins.h"
-
-using namespace Playo3;
 
 namespace Ui { class Playo; }
 
@@ -39,7 +37,9 @@ namespace Ui { class Playo; }
 #define SETTINGS_WINDOW_STATE_SET_KEY QStringLiteral("windowState")
 #define SETTINGS_WINDOW_MAXIMIZED_KEY QStringLiteral("maximized")
 
-class Playo : public Playo3::MainWindow {
+using namespace Controls;
+
+class Playo : public MainWindow {
     Q_OBJECT
 public:
     explicit Playo(QWidget * parent = 0);

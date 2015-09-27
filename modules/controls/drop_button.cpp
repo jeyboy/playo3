@@ -1,7 +1,7 @@
 #include "drop_button.h"
 #include <qapplication.h>
 
-using namespace Playo3;
+using namespace Controls;
 
 DropButton::DropButton(int button_height, QWidget * parent) :
     HoverableLabel(

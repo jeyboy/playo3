@@ -1,6 +1,6 @@
 #include "equalizer_view.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     enabled = new QCheckBox(QStringLiteral("On"), this);

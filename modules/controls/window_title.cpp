@@ -1,6 +1,6 @@
 #include "window_title.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins,
             int left_padding, int right_padding, bool showMini, bool showMaxi, bool showClose)

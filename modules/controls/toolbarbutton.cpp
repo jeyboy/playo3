@@ -1,7 +1,8 @@
 #include "toolbarbutton.h"
-#include "misc/stylesheets.h"
+#include "stylesheets.h"
 
-using namespace Playo3;
+using namespace Controls;
+using namespace View;
 
 ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent) : QToolButton(parent) {
     path = folderPath;

@@ -1,7 +1,7 @@
 #include "dockbars.h"
 #include <qdebug.h>
 
-using namespace Playo3;
+using namespace Presentation;
 
 Dockbars * Dockbars::self = 0;
 

@@ -1,6 +1,6 @@
 #include "search_bar.h"
 
-using namespace Playo3;
+using namespace Controls;
 
 SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, const char * search_end_signal,
                      const QObject * closeReceiver, const char * close_slot, QWidget * parent) : QWidget(parent)

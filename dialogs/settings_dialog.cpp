@@ -441,7 +441,7 @@ void SettingsDialog::saveSpectrumSettings() {
 
     Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
     Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
-    Settings::instance() -> setSpectrumType((SpectrumSettings::SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
+    Settings::instance() -> setSpectrumType((SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
 }
 
 void SettingsDialog::saveLibrarySettings() {

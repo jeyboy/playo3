@@ -1,3 +1,3 @@
 #include "file.h"
 
-using namespace Playo3;
+using namespace Core;

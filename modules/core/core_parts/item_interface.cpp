@@ -3,15 +3,15 @@
 #include "external_keys.h"
 #include <qdebug.h>
 
-using namespace Playo3;
+using namespace Core;
 
-IItem::IItem(FolderItem * parent, int initState)
+IItem::IItem(Playlist * parent, int initState)
     : ItemFields(initState), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
-IItem::IItem(FolderItem * parent, QVariantMap & hash, int pos)
+IItem::IItem(Playlist * parent, QVariantMap & hash, int pos)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent) {
@@ -21,13 +21,13 @@ IItem::IItem(FolderItem * parent, QVariantMap & hash, int pos)
             _parent -> declareChild(pos, this);
     }
 }
-IItem::IItem(FolderItem * parent, QJsonObject * hash)
+IItem::IItem(Playlist * parent, QJsonObject * hash)
     : ItemFields(hash), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
-IItem::IItem(FolderItem * parent, QString title, int pos, int initState)
+IItem::IItem(Playlist * parent, QString title, int pos, int initState)
     : ItemFields(title, initState), _parent(parent) {
 
     if (_parent) {
@@ -47,7 +47,7 @@ QJsonObject IItem::toJson() {
 }
 
 QString IItem::fullPath() const {
-    FolderItem * curr = _parent;
+    Playlist * curr = _parent;
 
     QString path_buff;
 
@@ -124,9 +124,9 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert(Key::name, title());
-            params.insert(Key::checkable, AppSettings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Key::checkable, Settings::instance() -> isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
-                if (AppSettings::instance() -> isShowSystemIcons())
+                if (Settings::instance() -> isShowSystemIcons())
                     params.insert(Key::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
                 params.insert(Key::info, info());
                 params.insert(Key::ext, extension());
@@ -142,27 +142,27 @@ QVariant IItem::data(int column) const {
         case IPLAYABLE:        return isPlayable();
         case IURL:             return toUrl();
         case IFOLDER:          return isContainer();
-        case Qt::FontRole:     return AppSettings::instance() -> itemFont();
+        case Qt::FontRole:     return Settings::instance() -> itemFont();
         case ITREEPATH:        return buildTreePath();
         case ITREESTR:         return buildTreeStr();
 //        case IUID:             return uid();
 
-//        case IADDFONT:         return AppSettings::instance() -> getItemInfoFont();
+//        case IADDFONT:         return Settings::instance() -> getItemInfoFont();
 
         case Qt::SizeHintRole: { // scrollTo work wrongly with different item heights
-                if (!AppSettings::instance() -> isHeightUnificate() && isContainer())
-                    return QSize(0, AppSettings::instance() -> itemHeight() + 6);
+                if (!Settings::instance() -> isHeightUnificate() && isContainer())
+                    return QSize(0, Settings::instance() -> itemHeight() + 6);
                 else
-                    return QSize(0, AppSettings::instance() -> totalItemHeight() + 6);
+                    return QSize(0, Settings::instance() -> totalItemHeight() + 6);
         }
         case Qt::TextAlignmentRole:
-            if (isContainer() || !AppSettings::instance() -> isShowInfo())
+            if (isContainer() || !Settings::instance() -> isShowInfo())
                 return Qt::AlignVCenter;
             else
                 return Qt::AlignLeft;
 
         case Qt::CheckStateRole: {
-            if (AppSettings::instance() -> isCheckboxShow()) {
+            if (Settings::instance() -> isCheckboxShow()) {
                 return is(checked);
             } else return QVariant();
         }

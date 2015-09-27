@@ -1,6 +1,6 @@
 #include "download_view.h"
 
-using namespace Playo3;
+using namespace View;
 
 DownloadView * DownloadView::self = 0;
 
