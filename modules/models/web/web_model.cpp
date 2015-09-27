@@ -1,6 +1,6 @@
 #include "web_model.h"
 
-using namespace Playo3;
+using namespace Models;
 ///////////////////////////////////////////////////////////
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     FolderItem * parentItem = item<FolderItem>(parent);

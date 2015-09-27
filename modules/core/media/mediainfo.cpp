@@ -1,5 +1,7 @@
 #include "mediainfo.h"
 
+using namespace Core::Media;
+
 MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
     year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
     sampleRate(-1), size(0), error(false), readed(false), remote(!uri.isLocalFile()) {

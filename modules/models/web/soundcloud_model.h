@@ -3,7 +3,7 @@
 
 #include "modules/models/web/web_model.h"
 
-namespace Model {
+namespace Models {
     class SoundcloudModel : public WebModel {
         Q_OBJECT
     public:       

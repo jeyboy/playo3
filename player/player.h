@@ -14,12 +14,12 @@
 #include "modules/models/model_interface.h"
 #include "modules/core/media/mediainfo.h"
 
-using namespace Model;
 using namespace AudioPlayer;
 
 class MediaInfo;
 
-namespace Model { class IModel; }
+namespace Models { class IModel; }
+using namespace Models;
 
 class Player : public AudioPlayer::Base {
     Q_OBJECT
@@ -50,7 +50,7 @@ public:
     inline IItem * playedItem() { return current_item; }
     inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-    bool getFileInfo(QUrl uri, Core::Media::MediaInfo * info);
+    bool getFileInfo(QUrl uri, MediaInfo * info);
     void playedIndexIsNotExist();
     void playedIndexIsInvalid();
 

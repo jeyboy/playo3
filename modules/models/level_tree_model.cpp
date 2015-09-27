@@ -1,6 +1,6 @@
 #include "level_tree_model.h"
 
-using namespace Playo3;
+using namespace Models;
 
 void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
     QFileInfo file = QFileInfo(url.toLocalFile());

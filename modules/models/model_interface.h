@@ -20,7 +20,7 @@
 #include "modules/controls/user_dialog_box.h"
 #include "modules/plugins/plugins.h"
 
-namespace Model {
+namespace Models {
     using namespace Core;
 
     class IModel : public QAbstractItemModel {

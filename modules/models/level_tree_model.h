@@ -3,7 +3,7 @@
 
 #include "model_interface.h"
 
-namespace Model {
+namespace Models {
     class LevelTreeModel : public IModel {
         Q_OBJECT
     public:

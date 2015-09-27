@@ -1,6 +1,6 @@
 #include "list_model.h"
 
-using namespace Playo3;
+using namespace Models;
 
 void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
     exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);

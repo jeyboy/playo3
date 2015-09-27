@@ -1,6 +1,6 @@
 #include "tree_model.h"
 
-using namespace Playo3;
+using namespace Models;
 ///////////////////////////////////////////////////////////
 
 void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {

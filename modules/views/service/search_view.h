@@ -9,7 +9,7 @@ namespace View {
       Q_OBJECT
     public:
         inline SearchView(QWidget * parent, View::Params settings, QJsonObject * hash = 0)
-            : IView(dynamic_cast<IModel *>(new SearchModel(hash)), parent, settings) {}
+            : IView(new SearchModel(hash), parent, settings) {}
 
         inline void search(SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
         inline void search(QStringList & predicates) { ((SearchModel *)mdl) -> initiateSearch(predicates); }

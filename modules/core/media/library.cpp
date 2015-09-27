@@ -1,7 +1,9 @@
 #include "library.h"
-#include "misc/logger.h"
+#include "modules/core/misc/logger.h"
 
-using namespace Playo3;
+using namespace Core;
+using namespace Media;
+using namespace Model;
 
 Library * Library::self = 0;
 
@@ -70,7 +72,7 @@ void Library::restoreItemState(const QModelIndex & ind) {
             itm -> unset(ItemFields::proceeded);
         }
 
-        if (AppSettings::instance() -> isUsedDelayForRemote())
+        if (Settings::instance() -> isUsedDelayForRemote())
             if (ind.data(IREMOTE).toBool()) {
                 remote_list.append(ind);
 
@@ -312,12 +314,12 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
 void Library::clockTick() {
     if ((timeAmount += TIMER_TICK) > 999999999) timeAmount = 0;
 
-    int saveLibDelay = AppSettings::instance() -> saveLibDelay();
+    int saveLibDelay = Settings::instance() -> saveLibDelay();
 
     if (saveLibDelay != 0 && timeAmount % saveLibDelay == 0)
         saveCatalogs();
 
-    int procDelay = AppSettings::instance() -> remoteItemsProcDelay();
+    int procDelay = Settings::instance() -> remoteItemsProcDelay();
     if (procDelay == 0 || timeAmount % procDelay == 0)
         initRemoteItemInfo();
 }
@@ -403,9 +405,9 @@ void Library::initItemData(IItem * itm) {
 void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     itm -> setSize(info -> getSize());
     if (info -> isReaded())
-        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+        itm -> setInfo(Info::toInfo(Info::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
     else
-        itm -> setInfo(Format::toInfo(Format::toUnits(info -> getSize()), info -> getExtension()));
+        itm -> setInfo(Info::toInfo(Info::toUnits(info -> getSize()), info -> getExtension()));
     if (info -> getDuration() > 0)
         itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
     itm -> setGenre(info -> getGenre());

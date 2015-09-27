@@ -3,7 +3,7 @@
 
 #include "vk_model.h"
 
-namespace Model {
+namespace Models {
     class VkRelModel : public VkModel {
         Q_OBJECT
     public:       

@@ -3,7 +3,7 @@
 
 #include "model_interface.h"
 
-namespace Model {
+namespace Models {
     class ListModel : public IModel {
         Q_OBJECT
     public:

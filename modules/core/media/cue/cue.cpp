@@ -1,6 +1,8 @@
 #include "cue.h"
 #include <qdebug.h>
 
+using namespace Core::Media;
+
 Cue::Cue(QIODevice & obj) : level(0) {
     QTextStream in(&obj);
 

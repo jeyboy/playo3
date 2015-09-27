@@ -3,7 +3,7 @@
 
 #include "web_model.h"
 
-namespace Model {
+namespace Models {
     class OdModel : public WebModel {
         Q_OBJECT
     public:       

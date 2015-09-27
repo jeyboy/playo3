@@ -1,6 +1,6 @@
 #include "ignore_list.h"
 
-using namespace Model;
+using namespace Models;
 
 IgnoreList::IgnoreList(QJsonObject * obj) {
     if (obj)

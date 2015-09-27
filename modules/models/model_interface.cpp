@@ -1,6 +1,6 @@
 #include "model_interface.h"
 
-using namespace Playo3;
+using namespace Models;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();

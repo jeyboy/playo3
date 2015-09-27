@@ -1,7 +1,7 @@
 #include "vk_model.h"
-#include "media/player.h"
+#include "player/player.h"
 
-using namespace Playo3;
+using namespace Models;
 /////////////////////////////////////////////////////////////
 void VkModel::refresh(bool retryPlaing) {
     if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;

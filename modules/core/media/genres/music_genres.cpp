@@ -11,7 +11,7 @@ MusicGenres * MusicGenres::instance() {
 }
 
 void MusicGenres::load() {
-    settings = new Playo3::DataStore(GENRES_PATH);
+    settings = new DataStore(GENRES_PATH);
 
     QJsonArray ar = settings -> read(ROOT_VAL_NAME).toArray();
 

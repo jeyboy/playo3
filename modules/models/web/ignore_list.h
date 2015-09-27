@@ -5,7 +5,7 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-namespace Model {
+namespace Models {
     class IgnoreList {
     public:
         IgnoreList(QJsonObject * obj = 0);

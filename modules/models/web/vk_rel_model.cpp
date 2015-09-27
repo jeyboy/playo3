@@ -1,6 +1,6 @@
 #include "vk_rel_model.h"
 
-using namespace Playo3;
+using namespace Models;
 /////////////////////////////////////////////////////////////
 void VkRelModel::refresh(bool /*retryPlaing*/) {
     if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;

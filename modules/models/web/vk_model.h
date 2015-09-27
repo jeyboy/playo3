@@ -4,7 +4,7 @@
 #include "modules/models/web/web_model.h"
 #include "modules/core/misc/format.h"
 
-namespace Model {
+namespace Models {
     class VkModel : public WebModel {
         Q_OBJECT
     public:

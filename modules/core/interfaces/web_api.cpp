@@ -1,5 +1,7 @@
 #include "web_api.h"
 
+using namespace Core;
+
 WebApi::WebApi(QObject * parent) : Async(parent) {
     actionDialog = new UserActionDialog((QWidget *)parent);
 }
@@ -69,7 +71,7 @@ void WebApi::toJson(QJsonObject & root) {
 }
 
 bool WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
-    actionDialog -> buildCaptchaForm(WebManager::manager() -> getImage(pict_url));
+    actionDialog -> buildCaptchaForm(Web::Manager::prepare() -> getImage(pict_url));
     bool res = actionDialog -> exec();
     result = actionDialog -> getValue(actionDialog -> captcha_key);
     return res;

@@ -1,7 +1,7 @@
 #include "soundcloud_model.h"
-#include "media/player.h"
+#include "player/player.h"
 
-using namespace Playo3;
+using namespace Models;
 /////////////////////////////////////////////////////////////
 
 void SoundcloudModel::refresh(bool retryPlaing) {

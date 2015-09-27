@@ -1,7 +1,7 @@
 #include "od_model.h"
-#include "media/player.h"
+#include "player/player.h"
 
-using namespace Playo3;
+using namespace Models;
 /////////////////////////////////////////////////////////////
 
 void OdModel::refresh(bool retryPlaing) {

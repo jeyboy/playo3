@@ -4,7 +4,7 @@
 #include "modules/models/level_tree_model.h"
 #include "search_settings.h"
 
-namespace Model {
+namespace Models {
     class SearchModel : public LevelTreeModel {
         Q_OBJECT
     public:

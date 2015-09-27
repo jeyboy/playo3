@@ -6,7 +6,7 @@
 
 #define UPDATE_INTERVAL 10000
 
-namespace Model {
+namespace Models {
     using namespace Core::Web;
 
     class WebModel : public IModel, public IgnoreList {
