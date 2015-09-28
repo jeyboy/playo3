@@ -1,9 +1,10 @@
 #include "view_interface.h"
 #include "dockbars.h"
 
-using namespace Playo3;
+using namespace View;
+using namespace Controls;
 
-IView::IView(IModel * newModel, QWidget * parent, ViewSettings & settings)
+IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
     setIndentation(Settings::instance() -> treeIndentation());
@@ -128,7 +129,7 @@ bool IView::execPath(const QString path, bool paused, uint start, int duration) 
 bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {
     if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
         qDebug() << "PLAYED " << node.data();
-        Dockbars::instance() -> setPlayed((DockBar *)parent());
+        Presentation::Dockbars::instance() -> setPlayed((DockBar *)parent());
 
         if (Settings::instance() -> isSpoilOnActivation())
             scrollTo(node, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
@@ -229,21 +230,21 @@ void IView::copyIdsToClipboard() {
 }
 
 void IView::openRecomendationsforUser() {
-    ViewSettings settings(vk_rel, false, false, false, true, sttngs.uid, user_rel);
-    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
+    Params settings(Data::vk_rel, false, false, false, true, sttngs.uid, Data::user_rel);
+    Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
-    WebItem * it = mdl -> item<WebItem>(currentIndex());
+    WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> owner().isValid()) {
-        ViewSettings settings(vk_rel, false, false, false, true, it -> owner().toString(), user_rel);
-        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
+        Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
+        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
-    WebItem * it = mdl -> item<WebItem>(currentIndex());
+    WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
-        ViewSettings settings(vk_rel, false, false, false, true, it -> toUid().toString(), song_rel);
-        Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
+        Params settings(Data::vk_rel, false, false, false, true, it -> toUid().toString(), Data::song_rel);
+        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
     }
 }
 
@@ -285,7 +286,7 @@ void IView::resizeEvent(QResizeEvent * event) {
 }
 
 void IView::focusInEvent(QFocusEvent *) {
-    Dockbars::instance() -> setActive((DockBar *)parent());
+    Presentation::Dockbars::instance() -> setActive((DockBar *)parent());
 }
 
 void IView::contextMenuEvent(QContextMenuEvent * event) {
@@ -296,7 +297,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (isEditable()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), this)));
-        connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(editActiveBar()));
+        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(editActiveBar()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);
@@ -318,13 +319,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
-        connect(act, SIGNAL(triggered(bool)), Dockbars::instance(), SLOT(scrollToActive()));
+        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(scrollToActive()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);
     }
 
-    if (mdl -> containerType() == vk) {
+    if (mdl -> playlistType() == Data::vk) {
         actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for user"), this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforUser()));
 
@@ -335,7 +336,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
-        if (ind.data(ITYPE).toInt() == VK_ITEM) {
+        if (ind.data(ITYPE).toInt() == VK_FILE) {
             actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item user"), this)));
             connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforItemUser()));
             actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item"), this)));
@@ -436,7 +437,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
-        if (mdl -> containerType() != list) {
+        if (mdl -> playlistType() != Data::list) {
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
 
@@ -582,7 +583,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     _deleteFolderAnswer = QMessageBox::No;
 
-    if (mdl -> containerType() == list) {
+    if (mdl -> playlistType() == Data::list) {
         qSort(index_list.begin(), index_list.end());
     } else {
         qSort(index_list.begin(), index_list.end(), modelIndexComparator());
@@ -612,7 +613,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     QModelIndexList::Iterator eit = --index_list.end();
     total /= 100.0;
 
-    if (mdl -> containerType() == list || !inProcess) {
+    if (mdl -> playlistType() == Data::list || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), remove, IModel::none, true);
 
@@ -673,7 +674,7 @@ void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
 }
 
 void IView::downloadBranch(const QModelIndex & node, QString savePath) {
-    FolderItem * curr = mdl -> item<FolderItem>(node);
+    Playlist * curr = mdl -> item<Playlist>(node);
     IItem * item;
     QModelIndexList list;
 
@@ -704,15 +705,15 @@ void IView::downloadSelected() {
     }
 }
 
-void IView::downloadChecked(QString & path, FolderItem * root) {
-    if (!root) root = mdl -> item<FolderItem>(QModelIndex());
+void IView::downloadChecked(QString & path, Playlist * root) {
+    if (!root) root = mdl -> item<Playlist>(QModelIndex());
     QList<IItem *> children = root -> childrenList();
     QModelIndexList list;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
         if ((*it) -> is(IItem::checked)) {
             if ((*it) -> isContainer())
-                downloadChecked(path, (FolderItem *)*it);
+                downloadChecked(path, (Playlist *)*it);
             else
                 list << mdl -> index(*it);
         }
@@ -730,7 +731,7 @@ void IView::markListenedAsChecked() {
     checkByPredicate(IItem::listened);
 }
 
-void IView::moveCheckedToNewTab(FolderItem * /*root*/) {
+void IView::moveCheckedToNewTab(Playlist * /*root*/) {
     //TODO: realisation needed
 }
 

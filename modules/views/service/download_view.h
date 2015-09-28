@@ -12,10 +12,11 @@
 #include "modules/models/service/download_model.h"
 #include "modules/models/service/download_delegate.h"
 
-//#include "misc/settings.h"
+#include "settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/core_parts/item_drop_formats.h"
 #include "modules/core/core_parts/core_part_types.h"
+#include "modules/core/core_parts/part_mixes/item_fields.h"
 
 #include "modules/core/web/apis/social/vk_api.h"
 

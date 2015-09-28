@@ -1,6 +1,8 @@
 #include "download_view.h"
 
 using namespace View;
+using namespace Core;
+using namespace Web;
 
 DownloadView * DownloadView::self = 0;
 
@@ -94,7 +96,7 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             InnerData data;
             stream >> data.url >> isRemote >> data.attrs;
 
-            bool is_vk = data.attrs.take(JSON_TYPE_ITEM_TYPE).toInt() == VK_ITEM; // vk monkey patch
+            bool is_vk = data.attrs.take(JSON_TYPE_ITEM_TYPE).toInt() == VK_FILE; // vk monkey patch
             // need to add patch for 4shared // need to prepare download link before row creation
 
             addRow(
@@ -265,7 +267,7 @@ QString DownloadView::ioError(QNetworkReply * reply) {
 
 QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIndex> * watcher) {
     DownloadModelItem * itm = mdl -> item(ind);
-    WebManager * networkManager = new WebManager();
+    Manager * networkManager = Manager::prepare();
 
     QString to;
     QVariant toVar = itm -> data(DOWNLOAD_TO);

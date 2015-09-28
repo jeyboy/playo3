@@ -1,3 +1,3 @@
 #include "vk_view.h"
 
-using namespace Playo3;
+using namespace View;
