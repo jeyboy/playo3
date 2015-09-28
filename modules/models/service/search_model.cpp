@@ -1,6 +1,7 @@
 #include "search_model.h"
 
-using namespace Playo3;
+using namespace Models;
+using namespace Core::Web;
 
 SearchModel::~SearchModel() {
     if (initiator)
@@ -12,7 +13,7 @@ SearchModel::~SearchModel() {
 void SearchModel::initiateSearch(SearchSettings & params) {
     request = params;
 
-    initiator = new QFutureWatcher<FolderItem *>();
+    initiator = new QFutureWatcher<Playlist *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
 }
@@ -24,11 +25,11 @@ void SearchModel::initiateSearch(QStringList & predicates) {
     initiateSearch(settings);
 }
 
-int SearchModel::proceedTabs(SearchRequest & params, FolderItem * parent) {
+int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
     return ((IModel *) params.search_interface) -> initiateSearch(params, parent);
 }
 
-int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) {
+int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
     int amount = 0;
     QStringList filters;
 
@@ -56,7 +57,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, FolderItem * parent) 
 
         if (valid) {
             QFileInfo file = dir_it.fileInfo();
-            new FileItem(file.path(), file.fileName(), parent);
+            new File(file.path(), file.fileName(), parent);
             amount++;
         }
     }
@@ -84,10 +85,10 @@ void SearchModel::searchFinished() {
     initiator = 0;
 }
 
-FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) {
+Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
     emit moveInProcess();
     QList<SearchRequest> requests;
-    FolderItem * res = rootItem;
+    Playlist * res = rootItem;
 
     emit moveInBackgroundProcess();
     prepareRequests(requests);
@@ -101,7 +102,7 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
         SearchRequest r = requests.takeFirst();
 
         emit setProgress(requests.size() / total);
-        FolderItem * parent = res -> createFolder(r.token());
+        Playlist * parent = res -> createPlaylist(r.token());
         int propagate_count = 0;
 
         switch(r.search_type) {
@@ -118,12 +119,12 @@ FolderItem * SearchModel::searchRoutine(QFutureWatcher<FolderItem *> * watcher) 
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
-                    case Playo3::vk_site: { propagate_count = proceedVkList(items, parent); break; }
-                    case Playo3::sc_site: {
+                    case vk_site: { propagate_count = proceedVkList(items, parent); break; }
+                    case sc_site: {
                         if (Soundcloud::Api::extractCount(items) > 0)
                             propagate_count = proceedScList(items, parent);
                     break;}
-                    case Playo3::od_site: {
+                    case od_site: {
                         if (Od::Api::extractCount(items) > 0)
                             propagate_count = proceedOdList(items, parent);
                     break;}

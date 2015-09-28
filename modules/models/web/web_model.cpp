@@ -3,7 +3,7 @@
 using namespace Models;
 ///////////////////////////////////////////////////////////
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
-    FolderItem * parentItem = item<FolderItem>(parent);
+    Playlist * parentItem = item<Playlist>(parent);
     QVariantList uids = parentItem -> childrenUids(position, rows);
 
     bool res = IModel::removeRows(position, rows, parent);
@@ -28,14 +28,14 @@ void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelI
 }
 
 void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
-    FolderItem * node = item<FolderItem>(ind);
+    Playlist * node = item<Playlist>(ind);
     int count = filesRoutine(list, node, row);
 
     node -> backPropagateItemsCountInBranch(count);
     if (count > 0) emit itemsCountChanged(count);
 }
 
-int WebModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
+int WebModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
 
     QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
@@ -43,7 +43,7 @@ int WebModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
         QFileInfoList::Iterator it = folderList.begin();
 
         for(; it != folderList.end(); it++)
-            res += filesRoutine((*it), node -> createFolder((*it).fileName()));
+            res += filesRoutine((*it), node -> createPlaylist((*it).fileName()));
     }
 
     QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
@@ -51,24 +51,24 @@ int WebModel::filesRoutine(QFileInfo & currFile, FolderItem * node) {
 
     res += fileList.size();
     for(; it != fileList.end(); it++)
-        new FileItem((*it).path(), (*it).fileName(), node);
+        new File((*it).path(), (*it).fileName(), node);
 
     node -> updateItemsCountInBranch(res);
     return res;
 }
 
-int WebModel::filesRoutine(const QList<QUrl> & list, FolderItem * node, int pos) {
+int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
     QList<QUrl>::ConstIterator it = list.begin();
 
     for(; it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file, node -> createFolder(file.fileName(), 0, pos));
+            res += filesRoutine(file, node -> createPlaylist(file.fileName(), 0, pos));
         else {
             if (Extensions::instance() -> respondToExtension(file.suffix())) {
                 res++;
-                new FileItem(file.path(), file.fileName(), node, pos);
+                new File(file.path(), file.fileName(), node, pos);
             }
         }
     }

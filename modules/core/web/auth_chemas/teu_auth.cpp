@@ -1,5 +1,7 @@
 #include "teu_auth.h"
 
+using namespace Core::Web;
+
 void TeuAuth::setParams(QString accessToken, QString userID, QString expiresIn) {
     _token = accessToken;
     _user_id = userID;

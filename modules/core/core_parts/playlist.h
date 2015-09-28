@@ -66,7 +66,7 @@ namespace Core {
         inline void declarePlaylist(const QString & name, Playlist * playlist) { playlists.insert(name, playlist); }
         inline int undeclarePlaylist(const QString & name) { return playlists.remove(name); }
 //        inline bool isContainsFolder(QString name) { return folders.contains(name); }
-        inline Playlist * findPlaylist(const QString & name) { return playlists.value(name); }
+        inline Playlist * playlist(const QString & name) { return playlists.value(name); }
         inline int playlistsAmount() const { return playlists.size(); }
         inline QList<Playlist *> playlistsList() const { return playlists.values(); }
 

@@ -62,7 +62,7 @@ namespace Core {
         QHash<QObject *, Manager *> Manager::managers = QHash<QObject *, Manager *>();
         Cookies * Manager::cookies = new Cookies(QApplication::instance());
 
-        Manager * Manager::manager() {
+        Manager * Manager::prepare() {
             QThread * thread = QThread::currentThread();
             if (!managers.contains(thread)) {
                 qDebug() << "!!!!!!!!!!!!!!!!!!!! REGISTRATE MANAGER";

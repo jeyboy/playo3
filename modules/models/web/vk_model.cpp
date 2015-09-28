@@ -4,9 +4,9 @@
 using namespace Models;
 /////////////////////////////////////////////////////////////
 void VkModel::refresh(bool retryPlaing) {
-    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
+//    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 
-    lastRefresh = QDateTime::currentMSecsSinceEpoch();
+//    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
 
@@ -24,7 +24,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
         QJsonArray audios;
         QJsonObject post;
         QString title;
-        FolderItem * folder, * rootFolder = rootItem -> createFolder(QStringLiteral("!!!WALL!!!"));
+        Playlist * folder, * rootFolder = rootItem -> createPlaylist(QStringLiteral("!!!WALL!!!"));
         int index = rootItem -> childRow(rootFolder);
 
         beginInsertRows(QModelIndex(), index, index);
@@ -38,7 +38,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
             title = post.value(QStringLiteral("title")).toString();
             title = QDateTime::fromTime_t(post.value(QStringLiteral("date")).toInt()).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
 
-            folder = rootFolder -> createFolder(title);
+            folder = rootFolder -> createPlaylist(title);
             proceedVkList(audios, folder);
 //            if (folder -> childCount() == 0)
 //                removeFolderPrebuild(folder);
@@ -59,7 +59,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
     {
         if (albums_count > 0) {
-            VkFolder * folder;
+            VkPlaylist * folder;
             QJsonObject album;
 
             for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
@@ -70,7 +70,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
                     QJsonArray albumItems = album.value(QStringLiteral("items")).toArray();
                     if (albumItems.size() > 0) {
-                        folder = rootItem -> createFolder<VkFolder>(
+                        folder = rootItem -> createPlaylist<VkPlaylist>(
                             album.value(QStringLiteral("folder_id")).toString(),
                             album.value(QStringLiteral("title")).toString(),
                             pos

@@ -1,6 +1,8 @@
 #include "model_item_delegate.h"
 #include "external_keys.h"
 
+using namespace Core::Web;
+
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
     ico_mini(30), state_width(6) {
@@ -48,26 +50,26 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     icons.insert(-2,                                                    PIXMAP(QStringLiteral(":/items/process"), size));
     icons.insert(-1,                                                    PIXMAP(QStringLiteral(":/items/err"), size));
-    icons.insert(VK_ITEM,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
-    icons.insert(VK_ITEM + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
-    icons.insert(SOUNDCLOUD_ITEM,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
-    icons.insert(SOUNDCLOUD_ITEM + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
-    icons.insert(OD_ITEM,                                               PIXMAP(QStringLiteral(":/items/od_item"), size));
-    icons.insert(OD_ITEM + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/od_item_on"), size));
-    icons.insert(WEB_ITEM,                                              PIXMAP(QStringLiteral(":/items/web_item"), size));
-    icons.insert(WEB_ITEM + SELECTION_ITER,                             PIXMAP(QStringLiteral(":/items/web_item_on"), size));
-    icons.insert(ITEM,                                                  PIXMAP(QStringLiteral(":/items/local_item"), size));
-    icons.insert(ITEM + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/local_item_on"), size));
-    icons.insert(CUE_ITEM, icons[ITEM]);
-    icons.insert(CUE_ITEM + SELECTION_ITER, icons[ITEM + SELECTION_ITER]);
-    icons.insert(WEB_ITEM + Playo3::fourshared_site,                    PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
-    icons.insert(WEB_ITEM + Playo3::fourshared_site + SELECTION_ITER,   PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
-    icons.insert(WEB_ITEM + Playo3::zaycev_site,                        PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
-    icons.insert(WEB_ITEM + Playo3::zaycev_site + SELECTION_ITER,       PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
-    icons.insert(WEB_ITEM + Playo3::promodj_site,                       PIXMAP(QStringLiteral(":/items/promodj_item"), size));
-    icons.insert(WEB_ITEM + Playo3::promodj_site + SELECTION_ITER,      PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
-    icons.insert(WEB_ITEM + Playo3::jetune_site,                        PIXMAP(QStringLiteral(":/items/jetune_item"), size));
-    icons.insert(WEB_ITEM + Playo3::jetune_site + SELECTION_ITER,       PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
+    icons.insert(VK_FILE,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
+    icons.insert(VK_FILE + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
+    icons.insert(SOUNDCLOUD_FILE,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
+    icons.insert(SOUNDCLOUD_FILE + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
+    icons.insert(OD_FILE,                                               PIXMAP(QStringLiteral(":/items/od_item"), size));
+    icons.insert(OD_FILE + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/od_item_on"), size));
+    icons.insert(WEB_FILE,                                              PIXMAP(QStringLiteral(":/items/web_item"), size));
+    icons.insert(WEB_FILE + SELECTION_ITER,                             PIXMAP(QStringLiteral(":/items/web_item_on"), size));
+    icons.insert(SIMPLE_FILE,                                           PIXMAP(QStringLiteral(":/items/local_item"), size));
+    icons.insert(SIMPLE_FILE + SELECTION_ITER,                          PIXMAP(QStringLiteral(":/items/local_item_on"), size));
+    icons.insert(CUE_FILE, icons[SIMPLE_FILE]);
+    icons.insert(CUE_FILE + SELECTION_ITER, icons[SIMPLE_FILE + SELECTION_ITER]);
+    icons.insert(WEB_FILE + fourshared_site,                            PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
+    icons.insert(WEB_FILE + fourshared_site + SELECTION_ITER,           PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
+    icons.insert(WEB_FILE + zaycev_site,                                PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
+    icons.insert(WEB_FILE + zaycev_site + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
+    icons.insert(WEB_FILE + promodj_site,                               PIXMAP(QStringLiteral(":/items/promodj_item"), size));
+    icons.insert(WEB_FILE + promodj_site + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
+    icons.insert(WEB_FILE + jetune_site,                                PIXMAP(QStringLiteral(":/items/jetune_item"), size));
+    icons.insert(WEB_FILE + jetune_site + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
 
 }
 
@@ -105,13 +107,13 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         fill_color = Settings::instance() -> playedState(bodyRect, is_selected);
     else {
         switch (background_state) {
-            case Playo3::ItemState::new_item:
+            case Core::ItemState::new_item:
                 fill_color = Settings::instance() -> defaultState(bodyRect, is_selected);
                 break;
-            case Playo3::ItemState::listened:
+            case Core::ItemState::listened:
                 fill_color = Settings::instance() -> listenedState(bodyRect, is_selected);
                 break;
-            case Playo3::ItemState::liked:
+            case Core::ItemState::liked:
                 fill_color = Settings::instance() -> likedState(bodyRect, is_selected);
                 break;
             default:
@@ -205,7 +207,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                                 ext
                             );
 
-                    if (attrs[Key::type] == VK_ITEM || attrs[Key::type] == SOUNDCLOUD_ITEM) {
+                    if (attrs[Key::type] == VK_FILE || attrs[Key::type] == SOUNDCLOUD_FILE) {
                         font.setPixelSize(extra_font_size);
                         painter -> setFont(font);
 
@@ -297,13 +299,13 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QBrush state_color;
 
     switch (background_state) {
-        case Playo3::ItemState::new_item:
+        case Core::ItemState::new_item:
             state_color = Settings::instance() -> defaultState(bodyRect, !is_selected);
             break;
-        case Playo3::ItemState::listened:
+        case Core::ItemState::listened:
             state_color = Settings::instance() -> listenedState(bodyRect, !is_selected);
             break;
-        case Playo3::ItemState::liked:
+        case Core::ItemState::liked:
             state_color = Settings::instance() -> likedState(bodyRect, !is_selected);
             break;
         default: is_folder = true;
@@ -339,7 +341,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     //    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
-        bool is_vk = attrs[Key::type] == VK_ITEM, is_sc = attrs[Key::type] == SOUNDCLOUD_ITEM;
+        bool is_vk = attrs[Key::type] == VK_FILE, is_sc = attrs[Key::type] == SOUNDCLOUD_FILE;
 
         QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
@@ -360,7 +362,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                 } else {
                     if (icon_size > 24) {
                         int selection = (is_selected ? SELECTION_ITER : 0);
-                        painter -> drawPixmap(rect, icons.value(attrs[Key::type].toInt() + selection, icons[WEB_ITEM + selection]));
+                        painter -> drawPixmap(rect, icons.value(attrs[Key::type].toInt() + selection, icons[WEB_FILE + selection]));
                     }
                 }
             }

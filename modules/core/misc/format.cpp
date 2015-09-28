@@ -2,12 +2,12 @@
 
 QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
 
-QString Info::toInfo(QString size, QString ext, QString bitrate, QString freq, QString channelsCount) {
-    return toInfo(size, ext) % " :: " % channelsCount % " ch :: " % bitrate % " kbps :: " % freq % " kHz";
+QString Info::str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount) {
+    return str(size, ext) % " :: " % channelsCount % " ch :: " % bitrate % " kbps :: " % freq % " kHz";
 }
 
-QString Info::toInfo(QString size, QString ext, int bitrate, int freq, int channelsCount) {
-    return toInfo(size, ext) % " :: " % QString::number(channelsCount) % " ch :: " % QString::number(bitrate) % " kbps :: " % QString::number(freq) % " kHz";
+QString Info::str(const QString & size, const QString & ext, int bitrate, int freq, int channelsCount) {
+    return str(size, ext) % " :: " % QString::number(channelsCount) % " ch :: " % QString::number(bitrate) % " kbps :: " % QString::number(freq) % " kHz";
 }
 
 QString Info::toUnits(long long val) {

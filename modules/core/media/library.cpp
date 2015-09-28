@@ -405,9 +405,9 @@ void Library::initItemData(IItem * itm) {
 void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     itm -> setSize(info -> getSize());
     if (info -> isReaded())
-        itm -> setInfo(Info::toInfo(Info::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+        itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
     else
-        itm -> setInfo(Info::toInfo(Info::toUnits(info -> getSize()), info -> getExtension()));
+        itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension()));
     if (info -> getDuration() > 0)
         itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
     itm -> setGenre(info -> getGenre());

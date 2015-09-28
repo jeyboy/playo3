@@ -5,9 +5,9 @@ using namespace Models;
 /////////////////////////////////////////////////////////////
 
 void SoundcloudModel::refresh(bool retryPlaing) {
-    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
+//    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
 
-    lastRefresh = QDateTime::currentMSecsSinceEpoch();
+//    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
     Soundcloud::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
@@ -21,7 +21,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
     {
         if (albums_count > 0) {
-            SoundcloudFolder * folder;
+            SoundcloudPlaylist * folder;
             QJsonObject album;
 
             for(QJsonArray::Iterator album_part = albums.begin(); album_part != albums.end(); album_part++) {
@@ -31,7 +31,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 
                     QJsonArray albumItems = album.value(Soundcloud::tracks_key).toArray();
                     if (albumItems.size() > 0) {
-                        folder = rootItem -> createFolder<SoundcloudFolder>(
+                        folder = rootItem -> createPlaylist<SoundcloudPlaylist>(
                             album.value(Soundcloud::id_key).toString(),
                             album.value(Soundcloud::title_key).toString()
                         );

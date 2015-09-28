@@ -3,58 +3,59 @@
 //https://apiok.ru/wiki/pages/viewpage.action?pageId=81822117
 //https://apiok.ru/wiki/pages/viewpage.action?pageId=75989046
 
-namespace Od {
-    Api * Api::self = 0;
+using namespace Core::Web::Od;
 
-    Api * Api::instance() {
-        if(!self)
-            self = new Api();
-        return self;
-    }
+Api * Api::self = 0;
 
-    Api * Api::instance(QObject * parent, const QJsonObject & obj) {
-        if(!self)
-            self = new Api(parent, obj);
-        else
-            Api::instance() -> fromJson(obj);
-        return self;
-    }
+Api * Api::instance() {
+    if(!self)
+        self = new Api();
+    return self;
+}
 
-    //https://connect.ok.ru/oauth/authorize?client_id={clientId}&scope={scope}&response_type={responseType}&redirect_uri={redirectUri}&layout={layout
-    QString Api::authUrl() {
-        QUrl url(QStringLiteral("https://connect.ok.ru/oauth/authorize"));
+Api * Api::instance(QObject * parent, const QJsonObject & obj) {
+    if(!self)
+        self = new Api(parent, obj);
+    else
+        Api::instance() -> fromJson(obj);
+    return self;
+}
 
-        QUrlQuery query = genDefaultParams();
+//https://connect.ok.ru/oauth/authorize?client_id={clientId}&scope={scope}&response_type={responseType}&redirect_uri={redirectUri}&layout={layout
+QString Api::authUrl() {
+    QUrl url(QStringLiteral("https://connect.ok.ru/oauth/authorize"));
 
-        setParam(query, QStringLiteral("cliend_id"), hash_key/*QStringLiteral("1152123904")*/);
-        setParam(query, QStringLiteral("response_type"), QStringLiteral("token")); // code
-        setParam(query, QStringLiteral("scope"), QStringLiteral("VALUABLE_ACCESS"));
-        setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
-        setParam(query, QStringLiteral("layout"), QStringLiteral("a"));
+    QUrlQuery query = genDefaultParams();
 
-        url.setQuery(query);
-        return url.toString();
-    }
+    setParam(query, QStringLiteral("cliend_id"), hash_key/*QStringLiteral("1152123904")*/);
+    setParam(query, QStringLiteral("response_type"), QStringLiteral("token")); // code
+    setParam(query, QStringLiteral("scope"), QStringLiteral("VALUABLE_ACCESS"));
+    setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
+    setParam(query, QStringLiteral("layout"), QStringLiteral("a"));
 
-    void Api::fromJson(QJsonObject hash) {
-        TeuAuth::fromJson(hash);
-        WebApi::fromJson(hash);
-        hash_key = hash.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
-    }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+    url.setQuery(query);
+    return url.toString();
+}
 
-        TeuAuth::toJson(root);
-        WebApi::toJson(root);
+void Api::fromJson(QJsonObject hash) {
+    TeuAuth::fromJson(hash);
+    WebApi::fromJson(hash);
+    hash_key = hash.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
+}
+QJsonObject Api::toJson() {
+    QJsonObject root;
 
-        root.insert(HASH_KEY, hash_key);
+    TeuAuth::toJson(root);
+    WebApi::toJson(root);
 
-        return root;
-    }
+    root.insert(HASH_KEY, hash_key);
 
-    //////////////////////////////////////////////////////////
-    /// COMMON
-    //////////////////////////////////////////////////////////
+    return root;
+}
+
+//////////////////////////////////////////////////////////
+/// COMMON
+//////////////////////////////////////////////////////////
 
 //    void Api::getGroupInfo(QString uid, QJsonObject & object) {
 //    //    uid = "101";
@@ -84,10 +85,10 @@ namespace Od {
 //        return res;
 //    }
 
-    ///////////////////////////////////////////////////////////
-    /// AUTH
-    ///////////////////////////////////////////////////////////
-    void Api::proceedAuthResponse(const QUrl & /*url*/) {
+///////////////////////////////////////////////////////////
+/// AUTH
+///////////////////////////////////////////////////////////
+void Api::proceedAuthResponse(const QUrl & /*url*/) {
 //        QUrlQuery query(url.query());
 
 //        if (query.hasQueryItem(QStringLiteral("error"))) {
@@ -109,5 +110,4 @@ namespace Od {
 //            else emit responseReady(QStringLiteral("reject"));
 //        }
 //        else emit responseReady("");
-    }
 }

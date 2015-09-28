@@ -4,7 +4,7 @@
 #include "fourshared_api_keys.h"
 
 #include "modules/core/interfaces/iapi.h"
-//#include "misc/file_utils/filename_conversions.h"
+#include "modules/core/misc/file_utils/filename_conversions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
 #include "modules/core/media/genres/music_genres.h"

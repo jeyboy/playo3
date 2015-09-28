@@ -1,28 +1,29 @@
 #include "model_interface.h"
 
 using namespace Models;
+using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
     QString newUrl;
 
     switch(itm -> itemType()) {
-        case VK_ITEM: {
+        case VK_FILE: {
             newUrl = Vk::Api::instance() -> refresh(itm -> toUid().toString()).section('?', 0, 0);
         break;}
 
-        case OD_ITEM: {
+        case OD_FILE: {
             newUrl = Od::Api::instance() -> refresh(itm -> refresh_path());
         break;}
 
-        case WEB_ITEM: {
+        case WEB_FILE: {
             switch(itm -> subtipe()) {
 //                case Playo3::fourshared_site: {
 //                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
 ////                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
 //                break;}
 
-                case Playo3::jetune_site: {
+                case jetune_site: {
                     newUrl = itm -> refresh_path();
                 break;}
 
@@ -50,10 +51,10 @@ bool IModel::restoreUrl(IItem * itm) {
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
     if (hash != 0) {
-        rootItem = new FolderItem(hash);
+        rootItem = new Playlist(hash);
 //        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
     } else {
-        rootItem = new FolderItem();
+        rootItem = new Playlist();
 //        items_count = 0;
     }
 
@@ -83,7 +84,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
         node -> updateCheckedState(checked);
 
         if (node -> isContainer()) {
-            FolderItem * it = dynamic_cast<FolderItem *>(node);
+            Playlist * it = dynamic_cast<Playlist *>(node);
             emit dataChanged(model_index, index(it -> child(it -> childCount() - 1)));
             return true;
         }
@@ -161,7 +162,7 @@ QModelIndex IModel::index(int row, int column, const QModelIndex & parent, bool 
     if (parent.isValid() && parent.column() != 0)
         return QModelIndex();
 
-    FolderItem * parentItem = item<FolderItem>(parent);
+    Playlist * parentItem = item<Playlist>(parent);
     IItem * childItem = parentItem -> child(row);
     if (orLastChild && !childItem)
         childItem = parentItem -> child(parentItem -> childCount() - 1);
@@ -252,10 +253,10 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
-    VkItem * newItem;
+    VkFile * newItem;
     QString uri, id, owner;
     QVariant uid;
     QList<IItem *> items;
@@ -269,7 +270,7 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    int pos = parent -> foldersAmount();
+    int pos = parent -> playlistsAmount();
     for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
         QJsonArray part = (*parts_it).toArray();
         for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
@@ -279,7 +280,7 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
 
             id = QString::number(itm.value(Vk::id_key).toInt());
             owner = QString::number(itm.value(Vk::owner_id_key).toInt());
-            uid = WebItem::toUid(owner, id);
+            uid = WebFile::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
             uri = itm.value(Vk::url_key).toString();
@@ -289,7 +290,7 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
 
             if (items.isEmpty()) {
                 itemsAmount++;
-                newItem = new VkItem(
+                newItem = new VkFile(
                     id,
                     uri,
                     itm.value(Vk::artist_key).toString() % QStringLiteral(" - ") % itm.value(Vk::title_key).toString(),
@@ -316,10 +317,10 @@ int IModel::proceedVkList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
-    WebItem * newItem;
+    WebFile * newItem;
     QString uri, refresh_url, id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
@@ -333,7 +334,7 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
         refresh_url = itm.value(Grabber::refresh_key).toString();
 
         itemsAmount++;
-        newItem = new WebItem(
+        newItem = new WebFile(
             id,
             uri,
             itm.value(Grabber::title_key).toString(),
@@ -358,10 +359,10 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
             newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
 
         if (itm.contains(Grabber::size_key))
-            newItem -> setSize(Format::fromUnits(itm.value(Grabber::size_key).toString()));
+            newItem -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
 
         if (!itm.contains(Grabber::skip_info_key))
-            newItem -> setInfo(Format::toInfo(
+            newItem -> setInfo(Info::str(
                     itm.value(Grabber::size_key).toString("?"),
                     newItem -> extension().toString(),
                     itm.value(Grabber::bitrate_key).toString("?"),
@@ -374,10 +375,10 @@ int IModel::proceedGrabberList(WebSubType wType, QJsonArray & collection, Folder
     return itemsAmount;
 }
 
-int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
-    SoundcloudItem * newItem;
+    SoundcloudFile * newItem;
     QString uri, id, owner;
     QVariant uid;
     QList<IItem *> items;
@@ -401,7 +402,7 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
 
             id = QString::number(itm.value(Soundcloud::id_key).toInt());
             owner = QString::number(itm.value(Soundcloud::user_id_key).toInt());
-            uid = WebItem::toUid(owner, id);
+            uid = WebFile::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
             uri = itm.value(Soundcloud::download_url_key).toString();
@@ -415,7 +416,7 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
 
             if (items.isEmpty()) {
                 itemsAmount++;
-                newItem = new SoundcloudItem(
+                newItem = new SoundcloudFile(
                     id,
                     uri,
                     itm.value(Soundcloud::title_key).toString(),
@@ -442,12 +443,12 @@ int IModel::proceedScList(QJsonArray & collection, FolderItem * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
+int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
 
     int itemsAmount = 0;
     QJsonObject itm;
-    OdItem * newItem;
+    OdFile * newItem;
     QString id;
     QList<IItem *> items;
 
@@ -475,7 +476,7 @@ int IModel::proceedOdList(QJsonArray & collection, FolderItem * parent) {
 
             if (items.isEmpty()) {
                 itemsAmount++;
-                newItem = new OdItem(
+                newItem = new OdFile(
                     id,
                     QString(),
                     itm.value(QStringLiteral("ensemble")).toString() % QStringLiteral(" - ") % itm.value(QStringLiteral("name")).toString(),
@@ -515,7 +516,7 @@ bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & p
 }
 
 bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
-    FolderItem * parentItem = item<FolderItem>(parent);
+    Playlist * parentItem = item<Playlist>(parent);
     bool success = parentItem != 0;
     int deleted;
 
@@ -553,7 +554,7 @@ int IModel::rowCount(const QModelIndex & parent) const {
     //        if (parent.column() > 0)
     //            return 0;
 
-    FolderItem * parentItem = item<FolderItem>(parent);
+    Playlist * parentItem = item<Playlist>(parent);
     return parentItem ? parentItem -> childCount() : 0;
 }
 
@@ -666,8 +667,8 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         QString ident;
 
         switch(itm -> itemType()) {
-            case VK_ITEM: { ident = SHARE_TYPE_VK; break;}
-            case SOUNDCLOUD_ITEM: { ident = SHARE_TYPE_SOUNDCLOUD; break;}
+            case VK_FILE: { ident = SHARE_TYPE_VK; break;}
+            case SOUNDCLOUD_FILE: { ident = SHARE_TYPE_SOUNDCLOUD; break;}
         }
 
         if (!ident.isEmpty()) {
@@ -684,6 +685,8 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
 }
 
 void IModel::importIds(QWidget * parent, QStringList ids) {
+    using namespace Data;
+
     emit moveInBackgroundProcess();
     QHash<QString, QStringList> uidsMap;
 
@@ -691,25 +694,23 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         uidsMap[(*it).mid(0, 2)].append((*it).mid(2));
     }
 
-    FolderItem * parentNode = 0;
+    Playlist * parentNode = 0;
     bool is_new = false;
 
-    switch(containerType()) {
+    switch(playlistType()) {
         case soundcloud:
         case vk:
         case vk_rel:
-        case list: {
-            parentNode = rootItem;
-        break;}
+        case Data::list: { parentNode = rootItem; break; }
         case search:
         case tree:
         case level_tree: {
             QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
             QString path = file.path();
             if (path.isEmpty()) path = Extensions::folderName(file);
-            parentNode = rootItem -> folderItem(path);
+            parentNode = rootItem -> playlist(path);
             is_new = !parentNode;
-            if (is_new) parentNode = rootItem -> createFolder(path);
+            if (is_new) parentNode = rootItem -> createPlaylist(path);
         break;}
     }
 
@@ -725,11 +726,11 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
     }
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
-        if (map_it.key() == SHARE_TYPE_VK) {
+        if (map_it.key() == SHARE_TYPE_VK) { // TODO: move this to usual connection
             if (!Vk::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
                 if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
+                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
                     dInt -> registerActions(Vk::Api::instance());
                     dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
                     delete dInt;
@@ -740,11 +741,11 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
                 QJsonArray obj = Vk::Api::instance() -> getAudiosInfo(map_it.value());
                 proceedVkList(obj, parentNode);
             }
-        } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) {
+        } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) { // TODO: move this to usual connection
             if (!Soundcloud::Api::instance() -> isConnected()) {
                 WebDialogInterface * dInt;
                 if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, WebManager::manager(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
+                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
                     dInt -> registerActions(Soundcloud::Api::instance());
                     dialog -> exec();
                     delete dInt;
@@ -780,7 +781,7 @@ void IModel::markAllAsUnchecked() {
 
 
 void IModel::expandeAll() {
-    rootItem -> propagateFolderSetFlag(ItemState::expanded);
+    rootItem -> propagatePlaylistSetFlag(ItemState::expanded);
 }
 
 void IModel::expanded(const QModelIndex & index) {
@@ -789,7 +790,7 @@ void IModel::expanded(const QModelIndex & index) {
 }
 
 void IModel::collapseAll() {
-    rootItem -> propagateFolderUnsetFlag(ItemState::expanded);
+    rootItem -> propagatePlaylistUnsetFlag(ItemState::expanded);
 }
 
 void IModel::collapsed(const QModelIndex & index) {
@@ -824,10 +825,10 @@ QModelIndex IModel::fromPath(QString path, Direction direction) {
     if (parts.isEmpty())
         return QModelIndex();
 
-    FolderItem * curr = rootItem;
+    Playlist * curr = rootItem;
 
     while(parts.length() > 1) {
-        curr = dynamic_cast<FolderItem *>(curr -> child(parts.takeFirst().toInt()));
+        curr = dynamic_cast<Playlist *>(curr -> child(parts.takeFirst().toInt()));
         if (curr == 0) return QModelIndex(); // while not fixed correct played item removing
     }
 
@@ -867,8 +868,8 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     int totalAdded = 0;
     QModelIndex dIndex;
     InnerData * data;
-    FolderItem * parentFolder;
-    QHash<FolderItem *, int> counts;
+    Playlist * parentFolder;
+    QHash<Playlist *, int> counts;
     bool containPath, isRemote, requirePath = !isRelative();
 
     while (!stream.atEnd()) {
@@ -893,15 +894,15 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 
         recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
 
-        parentFolder = item<FolderItem>(dIndex);
+        parentFolder = item<Playlist>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-            counts[parentFolder] += FolderItem::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
+            counts[parentFolder] += Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
         endInsertRows();
         delete data;
     }
 
-    QHash<FolderItem *, int>::Iterator it = counts.begin();
+    QHash<Playlist *, int>::Iterator it = counts.begin();
 
     for(; it != counts.end(); it++) {
         it.key() -> backPropagateItemsCountInBranch(it.value());
@@ -951,7 +952,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     if (row > row_count) row = -1;
 
     if (dropKeyModifiers & Qt::ControlModifier)
-        ExtensionDialog(QApplication::activeWindow()).exec();
+        Dialogs::ExtensionDialog(QApplication::activeWindow()).exec();
 
     if (data -> hasFormat(DROP_INNER_FORMAT)) {
         QByteArray encoded = data -> data(DROP_INNER_FORMAT);
@@ -963,7 +964,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     return false;
 }
 
-int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, FolderItem * search_source) {
+int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source) {
     int amount = 0;
     if (search_source == 0)
         search_source = rootItem;
@@ -973,9 +974,9 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
 
     for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
         if ((*it) -> isContainer()) {
-            initiateSearch(params, destination, (FolderItem *) *it);
+            initiateSearch(params, destination, (Playlist *) *it);
         } else {
-            bool is_valid = has_empty_predicate || (*it) -> respondTo(params.spredicate);
+            bool is_valid = has_empty_predicate || (*it) -> title().toString().contains(params.spredicate, Qt::CaseInsensitive);
 
             if (is_valid) {
                 if (!params.sgenre.isEmpty()) {
@@ -988,7 +989,7 @@ int IModel::initiateSearch(SearchRequest & params, FolderItem * destination, Fol
                     if (!attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                    amount += FolderItem::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+                    amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
                 }
             }
         }

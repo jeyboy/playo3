@@ -30,7 +30,7 @@ void HotkeyManager::clear() {
     shortcuts.clear();
 }
 
-bool HotkeyManager::registerSequence(int hotkeyType, QString sequence, QObject * receiver, const char * slot) {
+bool HotkeyManager::registerSequence(int hotkeyType, const QString & sequence, QObject * receiver, const char * slot) {
     if (receiver != 0 && slot != 0)
         relations.insert(hotkeyType, HotkeySlot(receiver, slot));
 

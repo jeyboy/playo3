@@ -1,21 +1,22 @@
 #include "fourshared_api.h"
 
-namespace Fourshared { // for auth required oauth 1
-    Api * Api::self = 0;
+using namespace Core::Web::Fourshared; // for auth required oauth 1
 
-    Api * Api::instance() {
-        if(!self) self = new Api();
-        return self;
-    }
+Api * Api::self = 0;
 
-    Api * Api::instance(QJsonObject obj) {
-        if(!self) self = new Api(obj);
-        else Api::instance() -> fromJson(obj);
-        return self;
-    }
+Api * Api::instance() {
+    if(!self) self = new Api();
+    return self;
+}
 
-    QString Api::authUrl() {
-        QUrl url(base_url % QStringLiteral("oauth/initiate"));
+Api * Api::instance(QJsonObject obj) {
+    if(!self) self = new Api(obj);
+    else Api::instance() -> fromJson(obj);
+    return self;
+}
+
+QString Api::authUrl() {
+    QUrl url(base_url % QStringLiteral("oauth/initiate"));
 
 //        QUrlQuery query = genDefaultParams();
 //        setParam(query, QStringLiteral("response_type"), QStringLiteral("code"));
@@ -24,26 +25,26 @@ namespace Fourshared { // for auth required oauth 1
 //        setParam(query, QStringLiteral("display"), QStringLiteral("popup"));
 
 //        url.setQuery(query);
-        return url.toString();
-    }
+    return url.toString();
+}
 
-    void Api::fromJson(QJsonObject hash) {
-        TeuAuth::fromJson(hash);
-        WebApi::fromJson(hash);
-    }
-    QJsonObject Api::toJson() {
-        QJsonObject root;
+void Api::fromJson(QJsonObject hash) {
+    TeuAuth::fromJson(hash);
+    WebApi::fromJson(hash);
+}
+QJsonObject Api::toJson() {
+    QJsonObject root;
 
-        TeuAuth::toJson(root);
-        WebApi::toJson(root);
+    TeuAuth::toJson(root);
+    WebApi::toJson(root);
 
-        return root;
-    }
+    return root;
+}
 
-    ///////////////////////////////////////////////////////////
-    /// AUTH
-    ///////////////////////////////////////////////////////////
-    void Api::proceedAuthResponse(const QUrl & /*url*/) {
+///////////////////////////////////////////////////////////
+/// AUTH
+///////////////////////////////////////////////////////////
+void Api::proceedAuthResponse(const QUrl & /*url*/) {
 //        QUrlQuery query(url.query());
 
 //        if (query.hasQueryItem(QStringLiteral("error"))) {
@@ -67,6 +68,4 @@ namespace Fourshared { // for auth required oauth 1
 //            else emit responseReady(QStringLiteral("reject"));
 //        }
 //        else emit responseReady("");
-    }
 }
-

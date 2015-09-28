@@ -1,7 +1,7 @@
 #ifndef IGNORE_LIST_H
 #define IGNORE_LIST_H
 
-//#include <qvariant.h>
+#include <qvariant.h>
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 

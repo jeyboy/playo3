@@ -1,26 +1,28 @@
 #include "web_apis.h"
 
-namespace Web {
-    QHash<Playo3::WebSubType, ISearchable *> Apis::sites = QHash<Playo3::WebSubType, ISearchable *>();
+namespace Core {
+    namespace Web {
+        QHash<SubType, ISearchable *> Apis::sites = QHash<SubType, ISearchable *>();
 
-    QHash<Playo3::WebSubType, ISearchable *> Apis::list() {
-        if (sites.isEmpty()) {
-            sites.insert(Vk::Api::instance() -> siteType(), Vk::Api::instance());
-            sites.insert(Soundcloud::Api::instance() -> siteType(), Soundcloud::Api::instance());
-            sites.insert(Fourshared::Api::instance() -> siteType(), Fourshared::Api::instance());
-            sites.insert(Od::Api::instance() -> siteType(), Od::Api::instance());
+        QHash<SubType, ISearchable *> Apis::list() {
+            if (sites.isEmpty()) {
+                sites.insert(Vk::Api::instance() -> siteType(), Vk::Api::instance());
+                sites.insert(Soundcloud::Api::instance() -> siteType(), Soundcloud::Api::instance());
+                sites.insert(Fourshared::Api::instance() -> siteType(), Fourshared::Api::instance());
+                sites.insert(Od::Api::instance() -> siteType(), Od::Api::instance());
 
-            sites.insert(Grabber::MyzukaAlbum::instance() -> siteType(), Grabber::MyzukaAlbum::instance());
-            sites.insert(Grabber::Zaycev::instance() -> siteType(), Grabber::Zaycev::instance());
-            sites.insert(Grabber::Mp3Base::instance() -> siteType(), Grabber::Mp3Base::instance());
-            sites.insert(Grabber::PromoDj::instance() -> siteType(), Grabber::PromoDj::instance());
-            sites.insert(Grabber::Mp3cc::instance() -> siteType(), Grabber::Mp3cc::instance());
-            sites.insert(Grabber::Mp3pm::instance() -> siteType(), Grabber::Mp3pm::instance());
-            sites.insert(Grabber::Shmidt::instance() -> siteType(), Grabber::Shmidt::instance());
-            sites.insert(Grabber::Jetune::instance() -> siteType(), Grabber::Jetune::instance());
-            sites.insert(Grabber::MusicShara::instance() -> siteType(), Grabber::MusicShara::instance());
+                sites.insert(MyzukaAlbum::instance() -> siteType(), MyzukaAlbum::instance());
+                sites.insert(Zaycev::instance() -> siteType(), Zaycev::instance());
+                sites.insert(Mp3Base::instance() -> siteType(), Mp3Base::instance());
+                sites.insert(PromoDj::instance() -> siteType(), PromoDj::instance());
+                sites.insert(Mp3cc::instance() -> siteType(), Mp3cc::instance());
+                sites.insert(Mp3pm::instance() -> siteType(), Mp3pm::instance());
+                sites.insert(Shmidt::instance() -> siteType(), Shmidt::instance());
+                sites.insert(Jetune::instance() -> siteType(), Jetune::instance());
+                sites.insert(MusicShara::instance() -> siteType(), MusicShara::instance());
+            }
+
+            return sites;
         }
-
-        return sites;
     }
 }

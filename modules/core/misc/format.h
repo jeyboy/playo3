@@ -7,9 +7,9 @@
 class Info {
     static QString unitList[];
 public:
-    static inline QString toInfo(QString size, QString ext) { return size % " :: " % ext.toLower(); }
-    static QString toInfo(QString size, QString ext, QString bitrate, QString freq, QString channelsCount);
-    static QString toInfo(QString size, QString ext, int bitrate, int freq, int channelsCount);
+    static inline QString str(const QString & size, const QString & ext) { return size % " :: " % ext.toLower(); }
+    static QString str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount);
+    static QString str(const QString & size, const QString & ext, int bitrate, int freq, int channelsCount);
     static QString toUnits(long long val);
     static long long fromUnits(QString val);
 
