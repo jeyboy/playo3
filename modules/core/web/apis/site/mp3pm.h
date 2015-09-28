@@ -6,115 +6,116 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        namespace Grabber {
-            class Mp3pm : public IGrabberApi {
-            public:
-                static Mp3pm * instance();
-                inline static void close() { delete self; }
 
-                inline QString name() const { return QStringLiteral("Mp3pm"); }
-                inline Web::SubType siteType() { return mp3pm_site; }
+        using namespace Grabber;
 
-        //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
-        //            QJsonArray json;
-        //            if (genresList().isEmpty()) genresList();
+        class Mp3pm : public IGrabberApi {
+        public:
+            static Mp3pm * instance();
+            inline static void close() { delete self; }
 
-        //            genre = genres.toString(genre_id);
-        //            if (genre.isEmpty()) return json;
+            inline QString name() const { return QStringLiteral("Mp3pm"); }
+            inline Web::SubType siteType() { return mp3pm_site; }
 
-        //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-        //            lQuery(url_str, json, songs1, MAX_PAGE);
+    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
+    //            QJsonArray json;
+    //            if (genresList().isEmpty()) genresList();
 
-        //            return json;
-        //        }
+    //            genre = genres.toString(genre_id);
+    //            if (genre.isEmpty()) return json;
 
-                // rus letters has specific presentation
-        //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-        //            //TODO: realize later
-        //        }
+    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
+    //            lQuery(url_str, json, songs1, MAX_PAGE);
 
-        //        // one page contains 30 albums
-        //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
-        //            switch (target_type) { // need to modify grab processing of folder support in model
-        //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-        //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-        //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-        //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-        //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-        //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-        //                default: return QJsonArray();
-        //            }
-        //            //TODO: stop if result not contains elements
-        //        }
+    //            return json;
+    //        }
 
-                QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+            // rus letters has specific presentation
+    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+    //            //TODO: realize later
+    //        }
 
-            protected:
-                QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
+    //        // one page contains 30 albums
+    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
+    //            switch (target_type) { // need to modify grab processing of folder support in model
+    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
+    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
+    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
+    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
+    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
+    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
+    //                default: return QJsonArray();
+    //            }
+    //            //TODO: stop if result not contains elements
+    //        }
 
-                bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                    Html::Document parser(reply);
-                    bool result = false;
+            QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
-                    switch(jtype) {
-                        case songs1: {
-                            Html::Set songs = parser.find(".mp3list .cplayer-sound-item");
-                            Html::Selector author_selector(".cplayer-data-sound-author");
-                            Html::Selector title_selector(".cplayer-data-sound-title");
-                            Html::Selector duration_selector(".cplayer-data-sound-time");
+        protected:
+            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
 
-                            for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                                QJsonObject song_obj;
+            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                Html::Document parser(reply);
+                bool result = false;
 
-                                song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-download-url")));
-                                song_obj.insert(duration_key, (*song) -> find(&duration_selector).text());
-                                song_obj.insert(skip_info_key, true);
+                switch(jtype) {
+                    case songs1: {
+                        Html::Set songs = parser.find(".mp3list .cplayer-sound-item");
+                        Html::Selector author_selector(".cplayer-data-sound-author");
+                        Html::Selector title_selector(".cplayer-data-sound-title");
+                        Html::Selector duration_selector(".cplayer-data-sound-time");
 
-                                QString author = (*song) -> find(&author_selector).text();
-                                QString title = (*song) -> find(&title_selector).text();
-                                title = author % QStringLiteral(" - ") % title;
-                                song_obj.insert(title_key, title);
+                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                            QJsonObject song_obj;
 
-                                json << song_obj;
-                            }
+                            song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-download-url")));
+                            song_obj.insert(duration_key, (*song) -> find(&duration_selector).text());
+                            song_obj.insert(skip_info_key, true);
 
-                            result = !songs.isEmpty();
+                            QString author = (*song) -> find(&author_selector).text();
+                            QString title = (*song) -> find(&title_selector).text();
+                            title = author % QStringLiteral(" - ") % title;
+                            song_obj.insert(title_key, title);
+
+                            json << song_obj;
                         }
 
-                        default: ;
+                        result = !songs.isEmpty();
                     }
 
-                    if (removeReply) delete reply;
-                    return result;
+                    default: ;
                 }
 
-        //        inline QString refresh_postprocess(WebResponse * reply) {
-        //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
-        //        }
+                if (removeReply) delete reply;
+                return result;
+            }
 
-        //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
+    //        inline QString refresh_postprocess(WebResponse * reply) {
+    //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
+    //        }
 
-                QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                    QString url_str = baseUrlStr(QStringLiteral("/s/f/%1/page/%2/")).arg(
-                        encodeStr(predicate),
-                        page_offset_key
-                    );
+    //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-                    QJsonArray json;
-                    lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
+            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+                QString url_str = baseUrlStr(QStringLiteral("/s/f/%1/page/%2/")).arg(
+                    encodeStr(predicate),
+                    page_offset_key
+                );
 
-                    while(json.size() > limitations.count)
-                        json.removeLast();
+                QJsonArray json;
+                lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-                    return json;
-                }
-            private:
-                inline Mp3pm() : IGrabberApi() {}
-                inline virtual ~Mp3pm() {}
+                while(json.size() > limitations.count)
+                    json.removeLast();
 
-                static Mp3pm * self;
-            };
-        }
+                return json;
+            }
+        private:
+            inline Mp3pm() : IGrabberApi() {}
+            inline virtual ~Mp3pm() {}
+
+            static Mp3pm * self;
+        };
     }
 }
 

@@ -1,6 +1,6 @@
 #include "icon_provider.h"
 
-using namespace Playo3;
+using namespace Core;
 
 IconProvider * IconProvider::self = 0;
 

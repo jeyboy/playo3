@@ -1,8 +1,10 @@
 #include "echonest_api.h"
 
-EchonestApi * EchonestApi::self = 0;
+using namespace Core::Web::Echonest;
 
-EchonestApi * EchonestApi::instance() {
-    if (!self) self = new EchonestApi();
+Api * Api::self = 0;
+
+Api * Api::instance() {
+    if (!self) self = new Api();
     return self;
 }

@@ -98,127 +98,127 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        namespace Grabber {
-            class Mp3Base : public IGrabberApi {
-            public:
-                static Mp3Base * instance();
-                inline static void close() { delete self; }
+        using namespace Grabber;
 
-                inline QString name() const { return QStringLiteral("Mp3Base"); }
-                inline Web::SubType siteType() { return mp3base_site; }
+        class Mp3Base : public IGrabberApi {
+        public:
+            static Mp3Base * instance();
+            inline static void close() { delete self; }
 
-        //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
-        //            QJsonArray json;
-        //            if (genresList().isEmpty()) genresList();
+            inline QString name() const { return QStringLiteral("Mp3Base"); }
+            inline Web::SubType siteType() { return mp3base_site; }
 
-        //            genre = genres.toString(genre_id);
-        //            if (genre.isEmpty()) return json;
+    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
+    //            QJsonArray json;
+    //            if (genresList().isEmpty()) genresList();
 
-        //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-        //            lQuery(url_str, json, songs1, MAX_PAGE);
+    //            genre = genres.toString(genre_id);
+    //            if (genre.isEmpty()) return json;
 
-        //            return json;
-        //        }
+    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
+    //            lQuery(url_str, json, songs1, MAX_PAGE);
 
-                // rus letters has specific presentation
-        //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-        //            //TODO: realize later
-        //        }
+    //            return json;
+    //        }
 
-        //        // one page contains 30 albums
-        //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
-        //            switch (target_type) { // need to modify grab processing of folder support in model
-        //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-        //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-        //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-        //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-        //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-        //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-        //                default: return QJsonArray();
-        //            }
-        //            //TODO: stop if result not contains elements
-        //        }
+            // rus letters has specific presentation
+    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+    //            //TODO: realize later
+    //        }
 
-                QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+    //        // one page contains 30 albums
+    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
+    //            switch (target_type) { // need to modify grab processing of folder support in model
+    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
+    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
+    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
+    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
+    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
+    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
+    //                default: return QJsonArray();
+    //            }
+    //            //TODO: stop if result not contains elements
+    //        }
 
-            protected:
-                QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3base.cc") % predicate; }
+            QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
-                bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                    Html::Document parser(reply);
-                    bool result = false;
+        protected:
+            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3base.cc") % predicate; }
 
-                    switch(jtype) {
-                        case songs1: {
-                            Html::Set songs = parser.find("table.files tr");
+            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                Html::Document parser(reply);
+                bool result = false;
 
-                            for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                                QJsonObject song_obj;
+                switch(jtype) {
+                    case songs1: {
+                        Html::Set songs = parser.find("table.files tr");
 
-                                QString link = (*song) -> find(".download_icon").link();
-                                if (link.isEmpty()) continue;
+                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                            QJsonObject song_obj;
 
-                                link = link.section('(', 1).section(')', 0, 0);
+                            QString link = (*song) -> find(".download_icon").link();
+                            if (link.isEmpty()) continue;
 
-                                song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
-                                song_obj.insert(duration_key, (*song) -> childTag("td", 5) -> toText());
-                                song_obj.insert(skip_info_key, true);
+                            link = link.section('(', 1).section(')', 0, 0);
 
-                                QString artist = (*song) -> childTag(QStringLiteral("td"), 2) -> toText();
-                                QString title = (*song) -> childTag(QStringLiteral("td"), 1) -> toText();
-                                title = artist % QStringLiteral(" - ") % title;
-                                song_obj.insert(title_key, title);
+                            song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
+                            song_obj.insert(duration_key, (*song) -> childTag("td", 5) -> toText());
+                            song_obj.insert(skip_info_key, true);
 
-                                json << song_obj;
-                            }
+                            QString artist = (*song) -> childTag(QStringLiteral("td"), 2) -> toText();
+                            QString title = (*song) -> childTag(QStringLiteral("td"), 1) -> toText();
+                            title = artist % QStringLiteral(" - ") % title;
+                            song_obj.insert(title_key, title);
 
-                            result = !songs.isEmpty();
+                            json << song_obj;
                         }
 
-                        case genres1: {
-                            Html::Set links = parser.find("a.genre");
-
-                            for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
-                                QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
-                                genres.addGenre((*link) -> text(), list[1]); // need to using alias as a part of link
-                            }
-                            result = !links.isEmpty();
-                        }
-
-                        default: ;
+                        result = !songs.isEmpty();
                     }
 
-                    if (removeReply) delete reply;
-                    return result;
+                    case genres1: {
+                        Html::Set links = parser.find("a.genre");
+
+                        for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
+                            QStringList list = (*link) -> link().split('/', QString::SkipEmptyParts);
+                            genres.addGenre((*link) -> text(), list[1]); // need to using alias as a part of link
+                        }
+                        result = !links.isEmpty();
+                    }
+
+                    default: ;
                 }
 
-                inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
+                if (removeReply) delete reply;
+                return result;
+            }
 
-                inline QString refresh_postprocess(Response * reply) {
-                    Html::Document parser(reply);
+            inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
 
-                    QString url = parser.find("#player_content script").text();
-                    return url.section("mp3:\"", 1).section("\"", 0, 0);
-                }
+            inline QString refresh_postprocess(Response * reply) {
+                Html::Document parser(reply);
 
-                QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                    QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(encodeStr(predicate), page_offset_key);
+                QString url = parser.find("#player_content script").text();
+                return url.section("mp3:\"", 1).section("\"", 0, 0);
+            }
 
-                    QJsonArray json;
-                    lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
+            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+                QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(encodeStr(predicate), page_offset_key);
 
-                    while(json.size() > limitations.count)
-                        json.removeLast();
+                QJsonArray json;
+                lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-                    return json;
-                }
-            private:
-                inline Mp3Base() : IGrabberApi() {}
-                inline virtual ~Mp3Base() {}
+                while(json.size() > limitations.count)
+                    json.removeLast();
 
-                static Mp3Base * self;
-            };
-        }
+                return json;
+            }
+        private:
+            inline Mp3Base() : IGrabberApi() {}
+            inline virtual ~Mp3Base() {}
+
+            static Mp3Base * self;
+        };
     }
 }
 

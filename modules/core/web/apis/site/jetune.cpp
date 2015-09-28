@@ -1,10 +1,10 @@
 #include "jetune.h"
 
-namespace Grabber {
-    Jetune * Jetune::self = 0;
+using namespace Core::Web;
 
-    Jetune * Jetune::instance() {
-        if(!self) self = new Jetune();
-        return self;
-    }
+Jetune * Jetune::self = 0;
+
+Jetune * Jetune::instance() {
+    if(!self) self = new Jetune();
+    return self;
 }

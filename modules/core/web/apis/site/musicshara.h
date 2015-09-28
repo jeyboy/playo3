@@ -6,143 +6,143 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        namespace Grabber {
-            class MusicShara : public IGrabberApi {
-            public:
-                static MusicShara * instance();
-                inline static void close() { delete self; }
+        using namespace Grabber;
 
-                inline QString name() const { return QStringLiteral("MusicShara"); }
-                inline Web::SubType siteType() { return music_shara; }
+        class MusicShara : public IGrabberApi {
+        public:
+            static MusicShara * instance();
+            inline static void close() { delete self; }
 
-                // artists by genre
-                QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
-                    QJsonArray json;
-        //            if (genresList().isEmpty()) genresList();
+            inline QString name() const { return QStringLiteral("MusicShara"); }
+            inline Web::SubType siteType() { return music_shara; }
 
-        //            genre_id = genres.toInt(genre);
-        //            if (genre_id == genres.defaultInt()) return json;
+            // artists by genre
+            QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+                QJsonArray json;
+    //            if (genresList().isEmpty()) genresList();
 
-        //            WebManager * manager = WebManager::manager();
-        //            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
-        //            QHash<QString, QString> artistLinks;
+    //            genre_id = genres.toInt(genre);
+    //            if (genre_id == genres.defaultInt()) return json;
 
-        //            for(int page = 1; page < MAX_PAGE; page++) {
-        //                QUrl url(genrePath % QString::number(page));
-        //                QNetworkReply * response = manager -> getSync(url);
-        //                Html::Document doc(response);
+    //            WebManager * manager = WebManager::manager();
+    //            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
+    //            QHash<QString, QString> artistLinks;
 
-        //                doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
+    //            for(int page = 1; page < MAX_PAGE; page++) {
+    //                QUrl url(genrePath % QString::number(page));
+    //                QNetworkReply * response = manager -> getSync(url);
+    //                Html::Document doc(response);
 
-        //                QThread::msleep(REQUEST_DELAY); // extra pause
-        //                delete response;
-        //            }
+    //                doc.find(&searchTablesSelector).findLinks(&artistSelector, artistLinks);
 
-        //            artistsToJson(artistLinks, json);
-                    return json;
-                }
+    //                QThread::msleep(REQUEST_DELAY); // extra pause
+    //                delete response;
+    //            }
 
-                // byChar and byType has too many items - parse it all at once is not good idea ?
+    //            artistsToJson(artistLinks, json);
+                return json;
+            }
 
-        //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
-        //            //TODO: realize later
-        //        }
+            // byChar and byType has too many items - parse it all at once is not good idea ?
 
-        //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
-        //            QList<QUrl> urls;
+    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+    //            //TODO: realize later
+    //        }
 
-        //            switch (target_type) { // need to modify grab processing of folder support in model
-        //                case sets:
-        //                case hits: {
-        //                    urls << QUrl();
-        //                break;}
-        //                case soundtracks: { // https://myzuka.org/Soundtracks/Page2 https://myzuka.org/Soundtracks/2014/Page6
-        //                    // has too many pages - more than 270
-        //                break;}
-        //                case charts: {
+    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+    //            QList<QUrl> urls;
 
-        //                break;}
-        //                case by_years: {
+    //            switch (target_type) { // need to modify grab processing of folder support in model
+    //                case sets:
+    //                case hits: {
+    //                    urls << QUrl();
+    //                break;}
+    //                case soundtracks: { // https://myzuka.org/Soundtracks/Page2 https://myzuka.org/Soundtracks/2014/Page6
+    //                    // has too many pages - more than 270
+    //                break;}
+    //                case charts: {
 
-        //                break;}
-        //                case hits: break; // http://zaycev.net/musicset/other/more.html?page=2
-        //                default: return QJsonArray();
-        //            }
-        //            //TODO: stop if result not contains elements
-        //        }
+    //                break;}
+    //                case by_years: {
 
-                inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+    //                break;}
+    //                case hits: break; // http://zaycev.net/musicset/other/more.html?page=2
+    //                default: return QJsonArray();
+    //            }
+    //            //TODO: stop if result not contains elements
+    //        }
 
-            protected:
-                QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
+            inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
 
-                QString refresh_postprocess(Response * reply) {
-                    Html::Document parser(reply);
-                    Html::Set tracks = parser.find(".options a[itemprop='audio']");
+        protected:
+            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
 
-                    if (tracks.isEmpty())
-                        return QString();
-                    else
-                        return baseUrlStr(tracks.link());
-                }
-                QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                    QString url_str = baseUrlStr(QStringLiteral("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(predicate), page_offset_key);
+            QString refresh_postprocess(Response * reply) {
+                Html::Document parser(reply);
+                Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
-                    QJsonArray json;
-                    lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
+                if (tracks.isEmpty())
+                    return QString();
+                else
+                    return baseUrlStr(tracks.link());
+            }
+            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+                QString url_str = baseUrlStr(QStringLiteral("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(predicate), page_offset_key);
 
-                    while(json.size() > limitations.count)
-                        json.removeLast();
+                QJsonArray json;
+                lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
 
-                    return json;
-                }
+                while(json.size() > limitations.count)
+                    json.removeLast();
 
-                bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                    Html::Document parser(reply);
-                    bool result = false;
+                return json;
+            }
 
-                    switch(jtype) {
-                        case songs1: {
-                            Html::Set songs = parser.find(".track");
+            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                Html::Document parser(reply);
+                bool result = false;
 
-                            Html::Selector artistSelector(".info .artist");
-                            Html::Selector titleSelector(".info .title");
-        //                    Html::Selector bitrateSelector(".info .bitrate");
-                            Html::Selector durationSelector(".info .duration");
+                switch(jtype) {
+                    case songs1: {
+                        Html::Set songs = parser.find(".track");
 
-                            for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                                QJsonObject song_obj;
+                        Html::Selector artistSelector(".info .artist");
+                        Html::Selector titleSelector(".info .title");
+    //                    Html::Selector bitrateSelector(".info .bitrate");
+                        Html::Selector durationSelector(".info .duration");
 
-                                song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-src")));
+                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                            QJsonObject song_obj;
 
-                                QString artist = (*song) -> find(&artistSelector).text();
-                                QString title = (*song) -> find(&titleSelector).text();
-                                title = artist % QStringLiteral(" - ") % title;
-                                song_obj.insert(title_key, title);
+                            song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-src")));
 
-                                song_obj.insert(duration_key, (*song) -> find(&durationSelector).text());
-        //                        song_obj.insert(bitrate_key, (*song) -> find(&bitrateSelector) -> text());
+                            QString artist = (*song) -> find(&artistSelector).text();
+                            QString title = (*song) -> find(&titleSelector).text();
+                            title = artist % QStringLiteral(" - ") % title;
+                            song_obj.insert(title_key, title);
 
-                                json << song_obj;
-                            }
+                            song_obj.insert(duration_key, (*song) -> find(&durationSelector).text());
+    //                        song_obj.insert(bitrate_key, (*song) -> find(&bitrateSelector) -> text());
 
-                            result = !songs.isEmpty();
+                            json << song_obj;
                         }
 
-                        default: ;
+                        result = !songs.isEmpty();
                     }
 
-                    if (removeReply) delete reply;
-                    return result;
+                    default: ;
                 }
-            private:
-                inline MusicShara() : IGrabberApi() { }
 
-                inline virtual ~MusicShara() {}
+                if (removeReply) delete reply;
+                return result;
+            }
+        private:
+            inline MusicShara() : IGrabberApi() { }
 
-                static MusicShara * self;
-            };
-        }
+            inline virtual ~MusicShara() {}
+
+            static MusicShara * self;
+        };
     }
 }
 

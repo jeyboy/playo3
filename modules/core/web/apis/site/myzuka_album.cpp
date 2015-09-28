@@ -1,10 +1,10 @@
 #include "myzuka_album.h"
 
-namespace Grabber {
-    MyzukaAlbum * MyzukaAlbum::self = 0;
+using namespace Core::Web;
 
-    MyzukaAlbum * MyzukaAlbum::instance() {
-        if(!self) self = new MyzukaAlbum();
-        return self;
-    }
+MyzukaAlbum * MyzukaAlbum::self = 0;
+
+MyzukaAlbum * MyzukaAlbum::instance() {
+    if(!self) self = new MyzukaAlbum();
+    return self;
 }

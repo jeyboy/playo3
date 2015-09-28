@@ -1,10 +1,10 @@
 #include "musicshara.h"
 
-namespace Grabber {
-    MusicShara * MusicShara::self = 0;
+using namespace Core::Web;
 
-    MusicShara * MusicShara::instance() {
-        if(!self) self = new MusicShara();
-        return self;
-    }
+MusicShara * MusicShara::self = 0;
+
+MusicShara * MusicShara::instance() {
+    if(!self) self = new MusicShara();
+    return self;
 }

@@ -1,10 +1,10 @@
 #include "mp3base.h"
 
-namespace Grabber {
-    Mp3Base * Mp3Base::self = 0;
+using namespace Core::Web;
 
-    Mp3Base * Mp3Base::instance() {
-        if(!self) self = new Mp3Base();
-        return self;
-    }
+Mp3Base * Mp3Base::self = 0;
+
+Mp3Base * Mp3Base::instance() {
+    if(!self) self = new Mp3Base();
+    return self;
 }

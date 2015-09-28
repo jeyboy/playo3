@@ -1,6 +1,6 @@
 #include "extensions.h"
 
-using namespace Playo3;
+using namespace Core;
 
 Extensions * Extensions::self = 0;
 

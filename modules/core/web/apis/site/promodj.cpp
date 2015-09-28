@@ -1,10 +1,10 @@
 #include "promodj.h"
 
-namespace Grabber {
-    PromoDj * PromoDj::self = 0;
+using namespace Core::Web;
 
-    PromoDj * PromoDj::instance() {
-        if(!self) self = new PromoDj();
-        return self;
-    }
+PromoDj * PromoDj::self = 0;
+
+PromoDj * PromoDj::instance() {
+    if(!self) self = new PromoDj();
+    return self;
 }
