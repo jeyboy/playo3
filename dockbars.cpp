@@ -2,6 +2,8 @@
 #include <qdebug.h>
 
 using namespace Presentation;
+using namespace Dialogs;
+using namespace Data;
 
 Dockbars * Dockbars::self = 0;
 
@@ -28,7 +30,7 @@ void Dockbars::load(QJsonArray & bars) {
             obj = (*it).toObject();
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
-            curr_bar = linkNameToToolbars(barName, ViewSettings(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
+            curr_bar = linkNameToToolbars(barName, View::Params(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
             curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
 
             if (obj.value(QStringLiteral("stick")).toBool())
@@ -60,7 +62,7 @@ void Dockbars::load(QJsonArray & bars) {
     }
 
     QJsonObject def;
-    ViewSettings defSettings;
+    View::Params defSettings;
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
         widg -> hide();
@@ -122,7 +124,7 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params settings, QJsonObject attrs) {
     if (barName == SCREEN_TAB) {
         return 0; // stub
     } else if (barName == COMMON_TAB) {
@@ -141,14 +143,14 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, ViewSettings setting
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
-        ViewSettings defSettings(list, true, false, false, true);
+        View::Params defSettings(Data::list, true, false, false, true);
         common = createDocBar(COMMON_TAB, defSettings, 0, false);
     }
 
     return common;
 }
 
-DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings settings) {
+DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params settings) {
     DockBar * bar = linkedTabs.value(path, 0);
 
     if (!bar) {
@@ -163,12 +165,12 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, ViewSettings 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(QString name, ViewSettings settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     IView * view;
     DockBar * bar = createDocBar(name, closable);
 
     switch(settings.type) {
-        case list: {
+        case Data::list: {
             view = new ListView(bar, settings, attrs);
         break;}
         case level_tree: {

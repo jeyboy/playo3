@@ -4,7 +4,7 @@
 
 #include <qdatetime.h>
 
-using namespace Playo3;
+using namespace Presentation;
 
 ToolBars * ToolBars::self = 0;
 

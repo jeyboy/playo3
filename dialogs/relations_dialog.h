@@ -5,9 +5,10 @@
 #include <qstringlistmodel.h>
 #include <qhash.h>
 
-#include "modules/web/web_api.h"
+#include "modules/core/interfaces/web_api.h"
 
 namespace Ui { class RelationsDialog; }
+using namespace Core;
 
 class RelationsDialog : public QDialog {
     Q_OBJECT

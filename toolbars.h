@@ -5,11 +5,9 @@
 #include <qmainwindow.h>
 #include <qmenu.h>
 
-#include "misc/file_utils/data_store.h"
+#include "modules/core/misc/file_utils/data_store.h"
 
-#include "modules/web/socials_api/vk_api.h"
-#include "modules/web/socials_api/soundcloud_api.h"
-#include "modules/web/socials_api/od_api.h"
+#include "modules/core/web/apis/social/_socials.h"
 
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
@@ -17,9 +15,12 @@
 #include "modules/controls/spectrum_view.h"
 #include "modules/controls/equalizer_view.h"
 
-#include "misc/stylesheets.h"
+#include "stylesheets.h"
 
-namespace Playo3 {
+namespace Presentation {
+    using namespace Controls;
+    using namespace Core::Web;
+
     class ToolBars : public QObject {
         Q_OBJECT
     public:

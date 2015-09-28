@@ -1,6 +1,6 @@
 #include "playo.h"
 #include "single_application.h"
-#include "misc/logger.h"
+#include "modules/core/misc/logger.h"
 
 #include <qapplication.h>
 
