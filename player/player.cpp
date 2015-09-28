@@ -1,6 +1,7 @@
 #include "player.h"
 
 using namespace AudioPlayer;
+using namespace Controls;
 
 Player * Player::self = 0;
 
@@ -125,7 +126,7 @@ void Player::playIndex(const QModelIndex & item, bool paused, uint start, int du
 }
 
 void Player::setTrackBar(QSlider * trackBar) {
-    slider = qobject_cast<Playo3::MetricSlider *>(trackBar);
+    slider = qobject_cast<MetricSlider *>(trackBar);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 

@@ -3,7 +3,7 @@
 
 //#include <qapplication.h>
 //#include <qurl.h>
-//#include <qdir.h>
+#include <qdir.h>
 
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <qfuturewatcher.h>

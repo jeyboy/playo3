@@ -10,7 +10,7 @@ void GlobalSettings::fromJson(QJsonObject & settings) {
 
     _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
     _openDropPointInTab = settings.value(SETTINGS_OPEN_DROP_IN_TAB_KEY).toBool(false);
-    _openDropPointInTabType = (Playo3::ContainerType)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Playo3::tree);
+    _openDropPointInTabType = (Data::Type)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Data::tree);
 
     _isAutorunned = settings.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
 }

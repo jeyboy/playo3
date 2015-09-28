@@ -19,7 +19,7 @@ void Spectrum::calcSpectrum() {
             channelsCount = DEFAULT_CHANNELS_COUNT;
             emit spectrumChanged(defaultSpectrum);
         } else {
-            if (Settings::instance() -> spectrumType() == Playo3::bars) {
+            if (Settings::instance() -> spectrumType() == bars) {
                 QList<QVector<int> > res;
                 res.append(getSpectrum());
                 emit spectrumChanged(res);

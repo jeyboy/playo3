@@ -19,7 +19,7 @@ void SpectrumSettings::fromJson(QJsonObject & settings) {
     _spectrumBarsCount = settings.value(SETTINGS_SPECTRUM_BARS_COUNT_KEY).toInt(30);
 
     _spectrumHeight = settings.value(SETTINGS_SPECTRUM_HEIGHT_KEY).toInt(60);
-    _spectrumType = (Playo3::SpectrumType)settings.value(SETTINGS_SPECTRUM_TYPE_KEY).toInt(1);
+    _spectrumType = (SpectrumType)settings.value(SETTINGS_SPECTRUM_TYPE_KEY).toInt(1);
 
     _spectrumMultiplier = settings.value(SETTINGS_SPECTRUM_MULTIPLIER_KEY).toInt(3);
 
