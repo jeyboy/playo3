@@ -3,7 +3,7 @@
 
 using namespace Core;
 using namespace Media;
-using namespace Model;
+using namespace Models;
 
 Library * Library::self = 0;
 

@@ -18,10 +18,10 @@
 #define TIMER_TICK 500
 #define WAIT_LIMIT 10
 
-class MediaInfo;
-
 namespace Core {
     namespace Media {
+        class MediaInfo;
+
         class Library : public QObject {
             Q_OBJECT
         public:

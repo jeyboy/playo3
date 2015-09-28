@@ -5,7 +5,7 @@
 #include "modules/models/web/soundcloud_model.h"
 
 namespace View {
-    using namespace Model;
+    using namespace Models;
 
     class SoundcloudView : public IView {
       Q_OBJECT

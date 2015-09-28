@@ -15,11 +15,13 @@
 #include "modules/core/media/mediainfo.h"
 
 using namespace AudioPlayer;
-
-class MediaInfo;
-
+///////////// remove later
 namespace Models { class IModel; }
 using namespace Models;
+using namespace Core;
+
+namespace Core { namespace Media { class MediaInfo; } }
+///////////////////////////////
 
 class Player : public AudioPlayer::Base {
     Q_OBJECT
