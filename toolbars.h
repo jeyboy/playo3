@@ -37,7 +37,7 @@ namespace Presentation {
 
         QMenu * createPopupMenu(QMainWindow * window);
 
-        void load(QJsonArray & bars);
+        void load(const QJsonArray & bars);
         void save(DataStore * settings);
         void createToolbars(QMainWindow * window);
         void addPanelButton(QString name, QString path, QToolBar * bar);

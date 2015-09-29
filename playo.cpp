@@ -45,7 +45,7 @@ Playo::~Playo() {
         Settings::close();
 //        Genre::close();
 
-        Web::Apis::close();
+        Web::Apis::close(settings -> obj());
     ///////////////////////////////////////////////
 
     delete settings;
@@ -72,11 +72,7 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    Vk::Api::instance(this, settings -> read(SETTINGS_VK_SET_KEY).toObject());
-    Soundcloud::Api::instance(settings -> read(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
-    Fourshared::Api::instance(settings -> read(SETTINGS_FOURSHARED_SET_KEY).toObject());
-    Od::Api::instance(this, settings -> read(SETTINGS_OD_SET_KEY).toObject());
-
+    Web::Apis::initiate(this, settings -> obj());
     Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
     activation();
@@ -97,12 +93,9 @@ void Playo::initialization() {
     /// toolbars
     ///////////////////////////////////////////////////////////
 
-    QJsonArray bars = settings -> read(ToolBars::settingsName()).toArray();
-    ToolBars::instance() -> load(bars);
+    ToolBars::instance() -> load(settings -> read(ToolBars::settingsName()).toArray());
     ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
-
-    QJsonArray docks = settings -> read(Dockbars::settingsName()).toArray();
-    Dockbars::instance() -> load(docks);
+    Dockbars::instance() -> load(settings -> read(Dockbars::settingsName()).toArray());
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
     if (objState.isValid())
@@ -140,11 +133,6 @@ void Playo::closeEvent(QCloseEvent * e) {
     Player::instance() -> pause();
 
     settings -> clear();
-
-    settings -> write(SETTINGS_VK_SET_KEY, Vk::Api::instance() -> toJson());
-    settings -> write(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::instance() -> toJson());
-    settings -> write(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::instance() -> toJson());
-    settings -> write(SETTINGS_OD_SET_KEY, Od::Api::instance() -> toJson());
 
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
     ToolBars::instance() -> save(settings);

@@ -13,7 +13,7 @@ Dockbars * Dockbars::instance(QWidget * parent) {
     return self;
 }
 
-void Dockbars::load(QJsonArray & bars) {
+void Dockbars::load(const QJsonArray & bars) {
     int userTabsAmount = 0;
     MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
@@ -24,9 +24,7 @@ void Dockbars::load(QJsonArray & bars) {
         QString barName;
         QDockWidget * curr_bar;
 
-        QJsonArray::iterator it = bars.begin();
-
-        for(;it != bars.end(); it++) {
+        for(QJsonArray::ConstIterator it = bars.constBegin(); it != bars.constEnd(); it++) {
             obj = (*it).toObject();
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
@@ -379,26 +377,33 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
     }
 }
 
-void Dockbars::nextExecTriggering() {
+void Dockbars::playNext() {
     initPlayed();
     IView * v = view(played);
     if (v) v -> execNextIndex();
 }
-void Dockbars::nextExecWithDelTriggering() {
+void Dockbars::playNextWithDel() {
     initPlayed();
     IView * v = view(played);
     if (v) v -> execNextIndex(true);
 }
-void Dockbars::prevExecWithDelTriggering() {
+void Dockbars::playPrevWithDel() {
     initPlayed();
     IView * v = view(played);
     if (v) v -> execPrevIndex(true);
 }
-void Dockbars::prevExecTriggering() {
+void Dockbars::playPrev() {
     initPlayed();
     IView * v = view(played);
     if (v) v -> execPrevIndex();
 }
+
+void Dockbars::stop() { Player::instance() -> stop(); }
+void Dockbars::playPause() { Player::instance() -> playPause(); }
+void Dockbars::slidePosForward() { Player::instance() -> slidePosForward(); }
+void Dockbars::slidePosBackward() { Player::instance() -> slidePosBackward(); }
+void Dockbars::slideVolForward() { Player::instance() -> slideVolForward(); }
+void Dockbars::slideVolBackward() { Player::instance() -> slideVolBackward(); }
 
 void Dockbars::onDownloadProceeded(QString to) {
     for(QHash<QString, DockBar *>::Iterator it = linkedTabs.begin(); it != linkedTabs.end(); it++) {

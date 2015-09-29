@@ -15,6 +15,8 @@ namespace Core {
             DataStore(QString name);
             ~DataStore();
 
+            inline QJsonObject & obj() { return json; }
+
             bool load();
             bool save();
 

@@ -1,7 +1,6 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 #include <QFontDatabase>
-#include "player/player.h"
 
 using namespace Dialogs;
 
@@ -34,39 +33,38 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
     for(; it != list.end(); it++) {
         switch((*it) -> data(2).toInt()) {
             case HOTKEY_NEXT: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(nextExecTriggering()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
             break;}
             case HOTKEY_NEXT_AND_DELETE: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(nextExecWithDelTriggering())); /*onNextItemRequiring*/
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNextWithDel()));
             break;}
             case HOTKEY_PREV: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(prevExecTriggering()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPrev()));
             break;}
             case HOTKEY_PLAY: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(playPause()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPause()));
             break;}
             case HOTKEY_STOP: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(stop()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(stop()));
             break;}
             case HOTKEY_OPEN_SETTINGS: {
                 HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(editActiveBar()));
             break;}
 
-
             case HOTKEY_POS_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(slidePosForward()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosForward()));
             break;}
 
             case HOTKEY_POS_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(slidePosBackward()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosBackward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(slideVolForward()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolForward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), Player::instance(), SLOT(slideVolBackward()));
+                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolBackward()));
             break;}
         }
     }

@@ -82,7 +82,7 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
     return menu;
 }
 
-void ToolBars::load(QJsonArray & bars) {
+void ToolBars::load(const QJsonArray & bars) {
     QMainWindow * window = (QMainWindow *)parent();
 
     if (bars.count() > 0) {
@@ -94,7 +94,7 @@ void ToolBars::load(QJsonArray & bars) {
         QString barName;
         QToolBar * curr_bar;
 
-        for(QJsonArray::Iterator bar = bars.begin(); bar != bars.end(); bar++) { // rewrite on for
+        for(QJsonArray::ConstIterator bar = bars.constBegin(); bar != bars.constEnd(); bar++) {
             obj = (*bar).toObject();
             barName = obj.value(Key::title).toString();
             barsList.removeOne(barName);
@@ -268,7 +268,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_plus_key);
 
     //TODO: add del versions od buttons
-    ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), Dockbars::instance(), SLOT(prevExecTriggering()));
+    ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), Dockbars::instance(), SLOT(playPrev()));
 
     QIcon ico;
     ico.addPixmap(QPixmap(QStringLiteral(":/like")), QIcon::Normal);
@@ -279,7 +279,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 
     Player::instance() -> setLikeButton(act);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), Dockbars::instance(), SLOT(nextExecTriggering()));
+    ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), Dockbars::instance(), SLOT(playNext()));
     ptb -> adjustSize();
 
     return ptb;

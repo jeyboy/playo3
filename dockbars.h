@@ -34,7 +34,7 @@ namespace Presentation {
 
         static inline QString settingsName() { return QStringLiteral("docks"); }
 
-        void load(QJsonArray & bars);
+        void load(const QJsonArray & bars);
         void save(DataStore * settings);
         QDockWidget * linkNameToToolbars(QString barName, Params settings, QJsonObject attrs);
 
@@ -82,10 +82,16 @@ namespace Presentation {
 
         void onNextItemNeeded(Player::Reason);
 
-        void nextExecTriggering();
-        void nextExecWithDelTriggering();
-        void prevExecWithDelTriggering();
-        void prevExecTriggering();
+        void playNext();
+        void playNextWithDel();
+        void playPrevWithDel();
+        void playPrev();
+        void stop();
+        void playPause();
+        void slidePosForward();
+        void slidePosBackward();
+        void slideVolForward();
+        void slideVolBackward();
 
     protected:
         void changeBarsVisibility(bool hide);
