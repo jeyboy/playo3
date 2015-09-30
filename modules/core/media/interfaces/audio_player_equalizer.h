@@ -5,7 +5,7 @@
 #include "bass_fx.h"
 //#include "bassmix.h"
 
-#include "audio_player_spectrum.h"
+#include "ispectrumable.h"
 
 #include <qmap.h>
 #include <qstringbuilder.h>

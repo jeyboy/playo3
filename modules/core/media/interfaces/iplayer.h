@@ -3,24 +3,18 @@
 
 #include <qobject.h>
 #include "itrackable.h"
-
-enum PlayerStateFlags {
-    InitState,
-    StoppedState,
-    PlayingState,
-    PausedState,
-    UnknowState
-};
-typedef QFlags<PlayerStateFlags> PlayerState;
+#include "player_states.h"
 
 class IPlayer : ITrackable {
 public:
-    inline explicit IPlayer(QObject * parent) : ITrackable(parent) {}
+    inline explicit IPlayer(QObject * parent) : ITrackable(parent) {
+        qRegisterMetaType<PlayerState>("PlayerState");
+    }
     virtual ~IPlayer();
 
     inline void setMedia(const QUrl & url) {
         media_url = url;
-        state = InitState;
+        pstate = InitState;
     }
 
     void play();
@@ -29,10 +23,12 @@ public:
     void setProgress(uint pos);
     void setMaxProgress(uint maxPos);
 
-    inline bool isInitiating() { return state == InitState; }
-    inline bool isPlayed() { return state == PlayingState; }
-    inline bool isPaused() { return state == PausedState; }
-    inline bool isStopped() { return state == StoppedState; }
+    inline bool isInitiating() { return pstate == InitState; }
+    inline bool isPlayed() { return pstate == PlayingState; }
+    inline bool isPaused() { return pstate == PausedState; }
+    inline bool isStopped() { return pstate == StoppedState; }
+
+    inline PlayerState state() const { return pstate; }
 
 protected:
     virtual void playProcessing() = 0;
@@ -46,11 +42,11 @@ protected:
     uint max_pos;
 private:
     void updateState(PlayerState new_state) {
-        state = new_state;
+        pstate = new_state;
         ITrackable::updateState(isPlayed(), isPaused(), isStopped());
     }
 
-    PlayerState state;
+    PlayerState pstate;
 };
 
 #endif // IPLAYER
