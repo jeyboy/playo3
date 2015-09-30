@@ -392,9 +392,9 @@ SOURCES += \
     stylesheets.cpp \
     toolbars.cpp \
     settings.cpp \
-    modules/core/media/interfaces/audio_player.cpp \
     modules/core/media/interfaces/audio_player_equalizer.cpp \
     modules/core/media/interfaces/audio_player_panel.cpp \
     modules/core/media/interfaces/audio_player_spectrum.cpp \
     modules/core/media/interfaces/audio_player_state.cpp \
-    modules/core/media/interfaces/itrackable.cpp
+    modules/core/media/interfaces/itrackable.cpp \
+    modules/core/media/interfaces/iplayer.cpp

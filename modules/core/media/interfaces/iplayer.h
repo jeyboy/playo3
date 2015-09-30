@@ -23,37 +23,16 @@ public:
         state = InitState;
     }
 
-    void play() {
-        if (isPaused())
-            resumeProcessing();
-        else
-            playProcessing();
-        updateState(PlayingState);
-    }
-    void pause() {
-        pauseProcessing();
-        updateState(PausedState);
-    }
+    void play();
+    void pause();
+    void stop();
+    void setProgress(uint pos);
+    void setMaxProgress(uint maxPos);
 
-    void stop() {
-        stopProcessing();
-        updateState(StoppedState);
-    }
-
-    void setProgress(uint pos) {
-        setProgressProcessing(pos);
-        ITrackable::setProgress(pos);
-    }
-
-    void setMaxProgress(uint maxPos) {
-        setMaxProgressProcessing(maxPos);
-        ITrackable::setMaxProgress(maxPos);
-    }
-
-    bool isInitiating() { return state == InitState; }
-    bool isPlayed() { return state == PlayingState; }
-    bool isPaused() { return state == PausedState; }
-    bool isStopped() { return state == StoppedState; }
+    inline bool isInitiating() { return state == InitState; }
+    inline bool isPlayed() { return state == PlayingState; }
+    inline bool isPaused() { return state == PausedState; }
+    inline bool isStopped() { return state == StoppedState; }
 
 protected:
     virtual void playProcessing() = 0;
