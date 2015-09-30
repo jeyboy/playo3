@@ -253,7 +253,13 @@ HEADERS += \
     single_application.h \
     stylesheets.h \
     toolbars.h \
-    settings.h
+    settings.h \
+    modules/core/media/interfaces/audio_player_equalizer.h \
+    modules/core/media/interfaces/audio_player_panel.h \
+    modules/core/media/interfaces/audio_player_spectrum.h \
+    modules/core/media/interfaces/audio_player_state.h \
+    modules/core/media/interfaces/itrackable.h \
+    modules/core/media/interfaces/iplayer.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -385,4 +391,10 @@ SOURCES += \
     single_application.cpp \
     stylesheets.cpp \
     toolbars.cpp \
-    settings.cpp
+    settings.cpp \
+    modules/core/media/interfaces/audio_player.cpp \
+    modules/core/media/interfaces/audio_player_equalizer.cpp \
+    modules/core/media/interfaces/audio_player_panel.cpp \
+    modules/core/media/interfaces/audio_player_spectrum.cpp \
+    modules/core/media/interfaces/audio_player_state.cpp \
+    modules/core/media/interfaces/itrackable.cpp
