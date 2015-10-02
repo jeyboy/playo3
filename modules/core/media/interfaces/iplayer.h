@@ -8,6 +8,7 @@
 #include "player_states.h"
 
 class IPlayer : public QTimer, public ITrackable {
+    Q_OBJECT
 public:
     inline IPlayer(QWidget * parent) : ITrackable(parent), max_duration(0) {
         qRegisterMetaType<PlayerState>("PlayerState");
