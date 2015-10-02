@@ -12,7 +12,7 @@ class ISpectrumable : public QTimer {
 public:
     virtual ~ISpectrumable() {}
 
-    inline QList<QVector<int> > & defaultSpectrum() const { return sdefault; }
+    inline QList<QVector<int> > defaultSpectrum() const { return sdefault; }
 
     void spectrumBandsCount(int bandsCount);
     inline int spectrumBandsCount() const { return sbands_count; }
@@ -28,7 +28,7 @@ signals:
 protected slots:
     void calcSpectrum();
 protected:
-    inline ISpectrumable(QObject * parent) : QObject(parent), sheight(0), sdefault_level(0), channelsCount(2) { spectrumBandsCount(12); }
+    inline ISpectrumable(QObject * parent) : QTimer(parent), sheight(0), sdefault_level(0), channels_count(2) { spectrumBandsCount(12); }
 
     inline void spectrumStartCalc() { start(); }
     inline void spectrumStopCalc() { stop(); }

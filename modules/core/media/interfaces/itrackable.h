@@ -1,7 +1,7 @@
 #ifndef ITRACKABLE
 #define ITRACKABLE
 
-#include <qobject.h>
+#include <qwidget.h>
 
 #ifdef Q_OS_WIN
     #include <qwintaskbarbutton.h>
@@ -10,20 +10,16 @@
 
 class ITrackable {
 public:
-    static ITrackable * instance(QWidget * parent = 0);
-    inline static void close() { delete self; }
     virtual ~ITrackable() {}
 
-    virtual QString title() = 0;
+    virtual QString title() const = 0;
 protected:
+    ITrackable(QWidget * parent);
+
     void updateState(bool played, bool paused, bool stopped);
     void setProgress(int pos);
     void setMaxProgress(int maxPos);
 private:
-    ITrackable(QWidget * parent);
-
-    static ITrackable * self;
-
     #ifdef Q_OS_WIN
         QWinTaskbarButton * stateButton;
         QWinTaskbarProgress * stateProgress;

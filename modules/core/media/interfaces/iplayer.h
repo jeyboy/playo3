@@ -2,12 +2,14 @@
 #define IPLAYER
 
 #include <qtimer.h>
+#include <qurl.h>
+
 #include "itrackable.h"
 #include "player_states.h"
 
 class IPlayer : public QTimer, public ITrackable {
 public:
-    inline explicit IPlayer(QObject * parent) : ITrackable(parent), max_duration(0) {
+    inline IPlayer(QWidget * parent) : ITrackable(parent), max_duration(0) {
         qRegisterMetaType<PlayerState>("PlayerState");
         setInterval(1000);
     }
@@ -26,10 +28,10 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
-    uint position() const = 0;
+    virtual uint position() const = 0;
     uint duration() const { return max_duration; }
-    uint volume() const = 0;
-    int pan() const = 0;
+    virtual uint volume() const = 0;
+    virtual int pan() const = 0;
 
 signals:
     void panChanged(int);
@@ -49,7 +51,7 @@ public slots:
 
     inline void position(uint newPos) {
         newPosProcessing(newPos);
-        ITrackable::setProgress(pos);
+        ITrackable::setProgress(newPos);
         emit positionChanged(newPos);
     }
     inline void volume(uint newVol) {
@@ -62,7 +64,10 @@ public slots:
     }
 
 protected:
+    virtual QString title() const { return media_url.toString(); }
+
     virtual void playProcessing(uint startMili) = 0;
+    virtual void resumeProcessing() = 0;
     virtual void pauseProcessing() = 0;
     virtual void stopProcessing() = 0;
 
@@ -78,7 +83,7 @@ protected:
     inline virtual uint slidePercentage() const { return 10; }
 
     virtual inline bool seekingBlocked() { return false; }
-    inline bool seekable() const { seekingBlocked() || max_duration > 0 && state() == PlayingState || state() == PausedState; }
+    inline bool seekable() { seekingBlocked() || max_duration > 0 && state() == PlayingState || state() == PausedState; }
 
     QUrl media_url;
     uint max_pos, max_duration;

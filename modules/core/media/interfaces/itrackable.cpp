@@ -1,13 +1,5 @@
 #include "itrackable.h"
 
-ITrackable * ITrackable::self = 0;
-
-ITrackable * ITrackable::instance(QWidget * parent) {
-    if(!self)
-        self = new ITrackable(parent);
-    return self;
-}
-
 ITrackable::ITrackable(QWidget * parent) {
     #ifdef Q_OS_WIN
         stateButton = new QWinTaskbarButton(parent);

@@ -5,13 +5,13 @@ void ISpectrumable::calcSpectrum() {
         QList<QVector<int> > res;
 
         if (state() == StoppedState)
-            res = defaultSpectrum;
+            res = sdefault;
         else {
             if (respondToMultichannelSpectrumCalc())
-                getComplexSpectrum(res);
+                calcSpectrum(res);
             else {
                 QVector<int> layer;
-                getSpectrum(layer);
+                calcSpectrum(layer);
                 res.append(layer);
             }
         }
@@ -34,7 +34,7 @@ void ISpectrumable::spectrumBandsCount(int bandsCount) {
     l.fill(sdefault_level, (sbands_count = bandsCount));
 
     while(sdefault.size() < channels_count)
-        defaultSpectrum.append(l);
+        sdefault.append(l);
 
 //////////////////  calculate predefined points  ///////////////////////////
 
@@ -55,7 +55,7 @@ void ISpectrumable::spectrumBandsCount(int bandsCount) {
     spectrumComplexPoints.clear();
     for (int x = 0, b0 = 0; x < bandGroupsAmount; x++) {
         int b1 = pow(2, x * 10.0 / (bandGroupsAmount - 1)) * channels_count;
-        if (b1 - channels_count <= b0) b1 = b0 + channelsCount * 2; // make sure it uses at least 2 FFT bin
+        if (b1 - channels_count <= b0) b1 = b0 + channels_count * 2; // make sure it uses at least 2 FFT bin
         if (b1 > gLimit - 1) b1 = gLimit - 1; // prevent index overflow
 
         spectrumComplexPoints.append(b1);

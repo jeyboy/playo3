@@ -22,6 +22,8 @@ public:
             res *= octaveOffset;
         }
     }
+
+    QMap<float, QString> bandsList() const { return bands; }
 };
 
 class IEqualizable : public QObject {
@@ -29,9 +31,9 @@ class IEqualizable : public QObject {
 public:
     virtual ~IEqualizable() {}
 
-    inline QMap<int, float> eqGains() const { return eqBandsGains; }
+    inline QMap<int, int> eqGains() const { return eqBandsGains; }
     inline void eqGains(QMap<int, int> gains) { eqBandsGains = gains; }
-    inline QMap<float, QString> bands() const { return presets[current_preset]; }
+    inline QMap<float, QString> bands() const { return presets[current_preset].bandsList(); }
 public slots:
     inline void activateEQ(bool activate) {
         if ((eqInUse = activate)) registerEQ();

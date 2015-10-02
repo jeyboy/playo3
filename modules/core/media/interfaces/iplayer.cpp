@@ -23,14 +23,14 @@ void IPlayer::slidePosForward() {
 }
 void IPlayer::slidePosBackward() {
     if (seekable())
-        position(qMax(0, position() - max_duration / slidePercentage()));
+        position(qMax(uint(0), position() - max_duration / slidePercentage()));
 }
 
 void IPlayer::slideVolForward() {
-    int max = maxVolume();
+    uint max = maxVolume();
     if (max == 0) return;
     volume(qMin(max, volume() + maxVolume() / slidePercentage()));
 }
 void IPlayer::slideVolBackward() {
-    volume(qMax(0, volume() - maxVolume() / slidePercentage()));
+    volume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
 }
