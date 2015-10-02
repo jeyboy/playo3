@@ -255,8 +255,6 @@ HEADERS += \
     toolbars.h \
     settings.h \
     modules/core/media/interfaces/audio_player_equalizer.h \
-    modules/core/media/interfaces/audio_player_panel.h \
-    modules/core/media/interfaces/audio_player_state.h \
     modules/core/media/interfaces/itrackable.h \
     modules/core/media/interfaces/iplayer.h \
     modules/core/media/interfaces/ispectrumable.h \
@@ -394,8 +392,6 @@ SOURCES += \
     toolbars.cpp \
     settings.cpp \
     modules/core/media/interfaces/audio_player_equalizer.cpp \
-    modules/core/media/interfaces/audio_player_panel.cpp \
-    modules/core/media/interfaces/audio_player_state.cpp \
     modules/core/media/interfaces/itrackable.cpp \
     modules/core/media/interfaces/iplayer.cpp \
     modules/core/media/interfaces/ispectrumable.cpp

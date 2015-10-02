@@ -1,27 +1,23 @@
 #ifndef IPLAYER
 #define IPLAYER
 
-#include <qobject.h>
+#include <qtimer.h>
 #include "itrackable.h"
 #include "player_states.h"
 
-class IPlayer : ITrackable {
+class IPlayer : public QTimer, public ITrackable {
 public:
-    inline explicit IPlayer(QObject * parent) : ITrackable(parent) {
+    inline explicit IPlayer(QObject * parent) : ITrackable(parent), max_duration(0) {
         qRegisterMetaType<PlayerState>("PlayerState");
+        setInterval(1000);
     }
     virtual ~IPlayer();
 
     inline void setMedia(const QUrl & url) {
         media_url = url;
         pstate = InitState;
+        max_duration = 0;
     }
-
-    void play();
-    void pause();
-    void stop();
-    void setProgress(uint pos);
-    void setMaxProgress(uint maxPos);
 
     inline bool isInitiating() { return pstate == InitState; }
     inline bool isPlayed() { return pstate == PlayingState; }
@@ -30,16 +26,62 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
+    uint position() const = 0;
+    uint duration() const { return max_duration; }
+    uint volume() const = 0;
+    int pan() const = 0;
+
+signals:
+    void panChanged(int);
+    void volumeChanged(uint);
+    void positionChanged(uint);
+    void durationChanged(uint);
+
+public slots:
+    void play(uint startMili = 0);
+    void pause();
+    void stop();
+
+    void slidePosForward();
+    void slidePosBackward();
+    void slideVolForward();
+    void slideVolBackward();
+
+    inline void position(uint newPos) {
+        newPosProcessing(newPos);
+        ITrackable::setProgress(pos);
+        emit positionChanged(newPos);
+    }
+    inline void volume(uint newVol) {
+        newVolumeProcessing(newVol);
+        emit volumeChanged(newVol);
+    }
+    inline void pan(int newPan) {
+        newPanProcessing(newPan);
+        emit panChanged(newPan);
+    }
+
 protected:
-    virtual void playProcessing() = 0;
+    virtual void playProcessing(uint startMili) = 0;
     virtual void pauseProcessing() = 0;
     virtual void stopProcessing() = 0;
 
-    virtual void setProgressProcessing(uint pos) = 0;
-    virtual void setMaxProgressProcessing(uint max) = 0;
+    virtual void newPosProcessing(uint newPos) = 0;
+    virtual void newVolumeProcessing(uint newVol) = 0;
+    virtual void newPanProcessing(int newPan) = 0;
+
+    inline void duration(uint newDuration) {
+        ITrackable::setMaxProgress(newDuration);
+        emit durationChanged((max_duration = newDuration));
+    }
+    virtual uint maxVolume() const = 0;
+    inline virtual uint slidePercentage() const { return 10; }
+
+    virtual inline bool seekingBlocked() { return false; }
+    inline bool seekable() const { seekingBlocked() || max_duration > 0 && state() == PlayingState || state() == PausedState; }
 
     QUrl media_url;
-    uint max_pos;
+    uint max_pos, max_duration;
 private:
     void updateState(PlayerState new_state) {
         pstate = new_state;

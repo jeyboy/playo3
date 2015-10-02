@@ -1,10 +1,10 @@
 #include "iplayer.h"
 
-void IPlayer::play() {
+void IPlayer::play(uint startMili) {
     if (isPaused())
         resumeProcessing();
     else
-        playProcessing();
+        playProcessing(startMili);
     updateState(PlayingState);
 }
 void IPlayer::pause() {
@@ -17,12 +17,20 @@ void IPlayer::stop() {
     updateState(StoppedState);
 }
 
-void IPlayer::setProgress(uint pos) {
-    setProgressProcessing(pos);
-    ITrackable::setProgress(pos);
+void IPlayer::slidePosForward() {
+    if (seekable())
+        position(qMin(max_duration, position() + max_duration / slidePercentage()));
+}
+void IPlayer::slidePosBackward() {
+    if (seekable())
+        position(qMax(0, position() - max_duration / slidePercentage()));
 }
 
-void IPlayer::setMaxProgress(uint maxPos) {
-    setMaxProgressProcessing(maxPos);
-    ITrackable::setMaxProgress(maxPos);
+void IPlayer::slideVolForward() {
+    int max = maxVolume();
+    if (max == 0) return;
+    volume(qMin(max, volume() + maxVolume() / slidePercentage()));
+}
+void IPlayer::slideVolBackward() {
+    volume(qMax(0, volume() - maxVolume() / slidePercentage()));
 }
