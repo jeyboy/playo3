@@ -10,6 +10,8 @@
 class ISpectrumable : public QTimer {
     Q_OBJECT
 public:
+    virtual ~ISpectrumable() {}
+
     inline QList<QVector<int> > & defaultSpectrum() const { return sdefault; }
 
     void spectrumBandsCount(int bandsCount);
@@ -18,14 +20,7 @@ public:
     inline void spectrumHeight(int newHeight) { sheight = newHeight; }
     inline void spectrumFreq(int millis) { setInterval(millis); }
 
-    inline void channelsCount(int newChannelsCount) {
-        if (channels_count == newChannelsCount) return;
-
-        channels_count = newChannelsCount;
-        spectrumBandsCount(sbands_count); // recalc predefines
-        emit channelsCountChanged();
-    }
-    inline int channelsCount() const { return channelsCount; }
+    inline int channelsCount() const { return channels_count; }
     inline int calcSpectrumBandsGroupCount() { return sbands_count / (respondToMultichannelSpectrumCalc() ? (channels_count / 2) : channels_count); }
 signals:
     void spectrumChanged(const QList<QVector<int> > &);
@@ -35,8 +30,10 @@ protected slots:
 protected:
     inline ISpectrumable(QObject * parent) : QObject(parent), sheight(0), sdefault_level(0), channelsCount(2) { spectrumBandsCount(12); }
 
-    void spectrumStartCalc() { start(); }
-    void spectrumStopCalc() { stop(); }
+    inline void spectrumStartCalc() { start(); }
+    inline void spectrumStopCalc() { stop(); }
+
+    void channelsCount(int newChannelsCount);
 
     virtual PlayerState state() const = 0;
     virtual void calcSpectrum(QVector<int> & result) = 0;

@@ -20,6 +20,14 @@ void ISpectrumable::calcSpectrum() {
     }
 }
 
+void ISpectrumable::channelsCount(int newChannelsCount) {
+    if (channels_count == newChannelsCount) return;
+
+    channels_count = newChannelsCount;
+    spectrumBandsCount(sbands_count); // recalc predefines
+    emit channelsCountChanged();
+}
+
 void ISpectrumable::spectrumBandsCount(int bandsCount) {
     sdefault.clear();
     QVector<int> l;

@@ -12,6 +12,7 @@ class ITrackable {
 public:
     static ITrackable * instance(QWidget * parent = 0);
     inline static void close() { delete self; }
+    virtual ~ITrackable() {}
 
     virtual QString title() = 0;
 protected:
