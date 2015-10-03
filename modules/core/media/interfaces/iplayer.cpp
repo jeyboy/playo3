@@ -1,20 +1,31 @@
 #include "iplayer.h"
 
+IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), max_duration(0) {
+//        qRegisterMetaType<PlayerState>("PlayerState");
+//        qRegisterMetaType<PlayerStatus>("PlayerStatus");
+
+    itimer = new QTimer(parent);
+    connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
+    itimer -> setInterval(500);
+}
+
 void IPlayer::play(uint startMili) {
+    bool res;
     if (isPaused())
-        resumeProcessing();
+        res = resumeProcessing();
     else
-        playProcessing(startMili);
-    updateState(PlayingState);
+        res = playProcessing(startMili);
+
+    if (res) playPostprocessing();
 }
 void IPlayer::pause() {
-    pauseProcessing();
-    updateState(PausedState);
+   if (pauseProcessing())
+        updateState(PausedState);
 }
 
 void IPlayer::stop() {
-    stopProcessing();
-    updateState(StoppedState);
+    if (stopProcessing())
+        updateState(StoppedState);
 }
 
 void IPlayer::slidePosForward() {

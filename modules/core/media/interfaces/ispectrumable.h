@@ -9,24 +9,9 @@
 
 class ISpectrumable : public QObject {
     Q_OBJECT
-public:
-    virtual ~ISpectrumable() {}
 
-    inline QList<QVector<int> > defaultSpectrum() const { return sdefault; }
-
-    void spectrumBandsCount(int bandsCount);
-    inline int spectrumBandsCount() const { return sbands_count; }
-
-    inline void spectrumHeight(int newHeight) { sheight = newHeight; }
-    inline void spectrumFreq(int millis) { itimer -> setInterval(millis); }
-
-    inline int channelsCount() const { return channels_count; }
-    inline int calcSpectrumBandsGroupCount() { return sbands_count / (respondToMultichannelSpectrumCalc() ? (channels_count / 2) : channels_count); }
-signals:
-    void spectrumChanged(const QList<QVector<int> > &);
-    void channelsCountChanged();
-protected slots:
-    void calcSpectrum();
+    QTimer * itimer;
+    QList<QVector<int> > sdefault;
 protected:
     inline ISpectrumable(QObject * parent) : QObject(parent), sheight(0), sdefault_level(0), channels_count(2) {
         itimer = new QTimer(parent);
@@ -34,8 +19,8 @@ protected:
         connect(this, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
     }
 
-    inline void spectrumStartCalc() { if (spectrumable()) itimer -> start(); }
-    inline void spectrumStopCalc() {
+    inline void spectrumCalcStart() { if (spectrumable()) itimer -> start(); }
+    inline void spectrumCalcStop() {
         if (!spectrumable()) return;
         itimer -> stop();
         calcSpectrum(); // emit default spectrum level
@@ -66,10 +51,24 @@ protected:
     int sheight;
     int sdefault_level;
     int channels_count;
+public:
+    virtual ~ISpectrumable() {}
 
-private:
-    QTimer * itimer;
-    QList<QVector<int> > sdefault;
+    inline QList<QVector<int> > defaultSpectrum() const { return sdefault; }
+
+    void spectrumBandsCount(int bandsCount);
+    inline int spectrumBandsCount() const { return sbands_count; }
+
+    inline void spectrumHeight(int newHeight) { sheight = newHeight; }
+    inline void spectrumFreq(int millis) { itimer -> setInterval(millis); }
+
+    inline int channelsCount() const { return channels_count; }
+    inline int calcSpectrumBandsGroupCount() { return sbands_count / (respondToMultichannelSpectrumCalc() ? (channels_count / 2) : channels_count); }
+signals:
+    void spectrumChanged(const QList<QVector<int> > &);
+    void channelsCountChanged();
+protected slots:
+    void calcSpectrum();
 };
 
 #endif // ISPECTRUMABLE

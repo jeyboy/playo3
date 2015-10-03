@@ -1,5 +1,5 @@
 #include "metric_slider.h"
-#include "player/player.h"
+#include "player/player_old.h"
 #include <qdebug.h>
 
 //TODO: recalc did not called on changeTicks

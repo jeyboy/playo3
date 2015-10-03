@@ -1,430 +1,193 @@
 #include "player.h"
 
-using namespace AudioPlayer;
-using namespace Controls;
-
-Player * Player::self = 0;
-
-Player * Player::instance(QWidget * parent) {
-    if(!self)
-        self = new Player(parent);
-    return self;
+void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
+//    BASS_ChannelStop(channel);
+//    BASS_ChannelRemoveSync(channel, handle);
+    BassPlayer * player = static_cast<BassPlayer *>(user);
+    emit player -> playbackEnded();
 }
 
-Player::Player(QWidget * parent) : AudioPlayer::Base(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
-    stopButton(0), likeButton(0), muteButton(0), prevVolumeVal(0), time_forward(true), extended_format(true), current_model(0), current_item(0)
-{
-    #ifdef Q_OS_WIN
-        stateButton = new QWinTaskbarButton(parent);
-        parent -> winId(); // generate native object for windowHandle()
-        stateButton -> setWindow(parent -> windowHandle());
-        stateProgress = stateButton -> progress();
-        stateProgress -> setMinimum(0);
-    #endif
-
-    setNotifyInterval(500);
-    connect(this, SIGNAL(stateChanged(MediaState)), this, SLOT(onStateChanged(MediaState)));
-    connect(this, SIGNAL(mediaStatusChanged(MediaStatus)), this, SLOT(onMediaStatusChanged(MediaStatus)));
-    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(unmuteCheck(int)));
+void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
+    BassPlayer * player = static_cast<BassPlayer *>(user);
+    player -> finishRemoteFileDownloading();
 }
 
-void Player::setPlayButton(QAction * playAction) {
-    playButton = playAction;
-    playButton -> setVisible(true);
-    connect(playAction, SIGNAL(triggered(bool)), this, SLOT(start()));
-}
-void Player::setPauseButton(QAction * pauseAction) {
-    pauseButton = pauseAction;
-    pauseButton -> setVisible(false);
-    connect(pauseAction, SIGNAL(triggered(bool)), this, SLOT(pause()));
-}
-void Player::setStopButton(QAction * stopAction) {
-    stopButton = stopAction;
-    stopButton -> setVisible(false);
-    connect(stopAction, SIGNAL(triggered(bool)), this, SLOT(stop()));
-}
-void Player::setCyclingButton(QAction * cycleAction) {
-    cycleButton = cycleAction;
-    cycleButton -> setCheckable(true);
-//    connect(cycleButton, SIGNAL(triggered(bool)), this, SLOT(stop()));
-}
-
-
-void Player::setLikeButton(QAction * likeAction) {
-    likeButton = likeAction;
-    likeButton -> setVisible(false);
-    connect(likeAction, SIGNAL(triggered(bool)), this, SLOT(like()));
-}
-
-void Player::setMuteButton(QAction * muteAction) {
-    muteButton = muteAction;
-    connect(muteButton, SIGNAL(triggered(bool)), this, SLOT(mute()));
-}
-
-void Player::setItemState(int state) {
-    QModelIndex ind = playedIndex();
-    if (ind.isValid()) {
-        QAbstractItemModel * mdl = const_cast<QAbstractItemModel *>(ind.model());
-        mdl -> setData(ind, state, ISTATE);
+void BassPlayer::proceedErrorState() {
+    updateState(UnknowState);
+    switch(BASS_ErrorGetCode()) {
+        case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
+        case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
+        // BASS_ERROR_TIMEOUT
+        default: emit mediaStatusChanged(StalledMedia);
     }
 }
 
-void Player::updateItemState(bool isPlayed) {
-    setItemState(isPlayed ? (ItemState::listened | ItemState::played) : -ItemState::played);
-}
+int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
+    int new_chan;
 
-void Player::eject(bool updateState) {
-    if (!updateState) {
-        current_model = 0;
-        current_item = 0;
-    }
-    playIndex(QModelIndex());
-}
-
-void Player::playIndex(const QModelIndex & item, bool paused, uint start, int duration) {
-    IModel * new_model = item.isValid() ? (IModel *)item.model() : 0;
-    IItem * new_item = new_model ? new_model -> item(item) : 0;
-    bool refresh = current_item && new_item == current_item;
-
-    if (!refresh) { // prevent from glitches on item refresh - maybe need to improve this part later
-        switch(state()) {
-            case StoppedState: {
-                if (isTryingToOpenMedia())
-                    endProccessing();
-            break; }
-
-            case PausedState:
-            case PlayingState: {
-                stop();
-                break;
-            }
-        }
-
-        updateItemState(false);
-    }
-
-    if (item.isValid()) {
-        current_model = new_model;
-        current_item = new_item;
-
-        likeButton -> setChecked(current_item -> is(ItemState::liked));
-
-        setMedia(current_item -> toUrl(), start, duration);
-
-        if (!paused)
-            play();
-        else onStateChanged(PausedState);
-
-        setItemState(ItemState::played);
+    if (url.isLocalFile()) {
+//        size = 0;
+        new_chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
+        prebufferingChanged(1);
     } else {
-        current_model = 0;
-        current_item = 0;
-
-        duration = 0;
-        setTimePanelVal(0);
+//        size = -1;
+        //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
+        new_chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
+
+    if (!new_chan)
+        qDebug() << "OPEN ERROR" << BASS_ErrorGetCode();
+
+    if (watcher -> isCanceled())
+        BASS_StreamFree(new_chan);
+
+
+    //TODO: need to realise proc of situation when timeout is to short - because now this is fired refresh many times
+
+    return new_chan;
 }
 
-void Player::setTrackBar(QSlider * trackBar) {
-    slider = qobject_cast<MetricSlider *>(trackBar);
-    slider -> setMinimum(0);
-    slider -> setMaximum(0);
+void BassPlayer::afterSourceOpening() {
+    QFutureWatcher<int> * watcher = (QFutureWatcher<int> *)sender();
 
-    connect(this, SIGNAL(positionChanged(int)), this, SLOT(setTrackbarValue(int)));
-    connect(this, SIGNAL(durationChanged(int)), this, SLOT(setTrackbarMax(int)));
+    if (!watcher -> isCanceled()) {
+        chan = watcher -> result();
+        if (chan) playPreproccessing();
+        else proceedErrorState();
+    } else emit mediaStatusChanged(LoadedMedia);
 
-    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(changeTrackbarValue(int)));
+    watcher -> deleteLater();
+    if (watcher == openChannelWatcher)
+        openChannelWatcher = 0;
 }
 
-void Player::setPanTrackBar(QSlider * trackBar) {
-    panSlider = trackBar;
-    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
-    connect(this, SIGNAL(panChanged(int)), this, SLOT(setPanTrackbarValue(int)));
+void BassPlayer::playPreproccessing() {
+    emit mediaStatusChanged(LoadedMedia);
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
 
-    panSlider -> setMinimum(-1000);
-    panSlider -> setMaximum(1000);
-    panSlider -> setValue(0);
-}
+    initDuration();
 
-void Player::setVolumeTrackBar(QSlider * trackBar) {
-    volumeSlider = trackBar;
-    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
-    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
-
-    volumeSlider -> setMaximum(10000);
-    volumeSlider -> setValue(10000);
-}
-
-void Player::setTimePanel(ClickableLabel * newTimePanel) {
-    timePanel = newTimePanel;
-    connect(timePanel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
-}
-
-QModelIndex Player::playedIndex() {
-    return current_model ? current_model -> index(current_item) : QModelIndex();
-}
-
-//void Player::setVideoOutput(QVideoWidget * container) {
-//    setVideoOutput(container);
-//}
-
-void Player::setTimePanelVal(int millis) {
-    if (timePanel) {
-        QString val, total;
-        total = Duration::fromMillis(getDuration(), extended_format);
-
-        if (time_forward) {
-            val = Duration::fromMillis(millis, extended_format);
-            timePanel -> setText(val % QStringLiteral("\n") % total);
-        } else {
-            val = Duration::fromMillis(getDuration() - millis, extended_format);
-            timePanel -> setText(total % QStringLiteral("\n") % val);
-        }
-    }
-}
-
-void Player::updateControls(bool played, bool paused, bool stopped) {
-    #ifdef Q_OS_WIN
-        stateProgress -> setVisible(stopped);
-
-        if (!stopped)
-            stateButton -> setOverlayIcon(QIcon());
-        else
-            stateButton -> setOverlayIcon(QIcon(
-                !played ? QStringLiteral(":task_play") : QStringLiteral(":task_pause")
-            ));
-
-        if (!played) {
-            stateProgress -> resume();
-            stateButton -> setOverlayAccessibleDescription(current_item -> title().toString());
-        }
-
-        if (!paused)
-            stateProgress -> pause();
-    #endif
-
-
-    playButton -> setVisible(played);
-    pauseButton -> setVisible(paused);
-    stopButton -> setVisible(stopped);
-    likeButton -> setVisible(!(played && !stopped && !paused));
-}
-
-bool Player::getFileInfo(QUrl uri, MediaInfo * info) {
-    int chUID;
-
-    if (uri.isLocalFile())
-        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS);
+    BASS_CHANNELINFO info;
+    if (BASS_ChannelGetInfo(chan, &info))
+        channelsCount = info.chans;
     else
-        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS);
+        channelsCount = 2;
 
-    if (!chUID) return false;
+    if (useEQ) registerEQ();
 
-    float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
-    DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
+    startTimers();
+    if (BASS_ChannelPlay(chan, true))
+        emit mediaStatusChanged(StartPlayingMedia);
 
-    info -> setDuration(time);
-    info -> setBitrate((len / (125 * time) + 0.5));
+    syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
+    syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
-    BASS_CHANNELINFO media_info;
-    if (BASS_ChannelGetInfo(chUID, &media_info)) {
-        info -> setSize(len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START));
-//        ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
-        info -> setSampleRate(media_info.freq);
-        info -> setChannels(media_info.chans);
+    setStartPosition();
+}
+
+
+
+bool BassPlayer::playProcessing(uint startMili) {
+    startPos = startMili;
+
+    stop();
+
+    if (media_url.isEmpty())
+        emit statusChanged(NoMedia);
+    else {
+        emit statusChanged(LoadingMedia);
+
+        if (openChannelWatcher)
+            openChannelWatcher -> cancel();
+
+        openChannelWatcher = new QFutureWatcher<int>();
+        connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(afterSourceOpening()));
+        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, openChannelWatcher));
     }
 
-    BASS_StreamFree(chUID);
+    return false; // skip inherited actions
+}
+bool BassPlayer::resumeProcessing() {
+    if (!BASS_ChannelPlay(chan, false)) {
+        emit mediaStatusChanged(StalledMedia);
+        qDebug() << "Error resuming";
+        return false;
+    }
+
     return true;
 }
-
-void Player::playedIndexIsNotExist() {
-    if (current_model)
-        current_model -> itemNotExist(playedIndex());
-}
-
-void Player::playedIndexIsInvalid() {
-    if (current_model)
-        current_model -> itemError(playedIndex());
-}
-
-//////////////////////SLOTS/////////////////////////
-
-void Player::invertTimeCountdown() {
-    time_forward = !time_forward;
-}
-
-void Player::setTrackbarValue(int pos) {
-    #ifdef Q_OS_WIN
-        stateProgress -> setValue(pos);
-    #endif
-
-    setTimePanelVal(pos);
-
-    slider -> blockSignals(true);
-    slider -> setValue(pos);
-    slider -> blockSignals(false);
-}
-
-void Player::setVolTrackbarValue(int pos) {
-    volumeSlider -> blockSignals(true);
-    volumeSlider -> setValue(pos);
-    volumeSlider -> blockSignals(false);
-}
-
-void Player::setPanTrackbarValue(int pos) {
-    panSlider -> blockSignals(true);
-    panSlider -> setValue(pos);
-    panSlider -> blockSignals(false);
-}
-
-void Player::setTrackbarMax(int duration) {
-    if (slider) {
-        extended_format = Duration::hasHours(duration);
-//        slider -> setDisabled(!isSeekable());
-        slider -> setMaximum(duration);
-        positionChanged(startPos);
-
-        #ifdef Q_OS_WIN
-            stateProgress -> setVisible(true);
-            stateProgress -> setMaximum(duration);
-        #endif
+bool BassPlayer::pauseProcessing() { return BASS_ChannelPause(chan); }
+bool BassPlayer::stopProcessing() {
+    if (BASS_ChannelStop(chan)) {
+        unregisterEQ();
+        BASS_ChannelRemoveSync(chan, syncHandle);
+        BASS_ChannelRemoveSync(chan, syncDownloadHandle);
+        BASS_StreamFree(chan);
+        return true;
+    } else {
+        qDebug() << "Error while stopping";
+        return false;
     }
 }
 
-void Player::playPause() {
-    if (state() == PlayingState)
-        pause();
-    else
-        start();
-}
+uint BassPlayer::recalcCurrentPosProcessing() {}
+bool BassPlayer::newPosProcessing(uint newPos) {}
+bool BassPlayer::newVolumeProcessing(uint newVol) {}
+bool BassPlayer::newPanProcessing(int newPan) {}
 
-void Player::start() {
-    if (!current_item)
-        emit nextItemNeeded(init);
-    else play();
-}
 
-void Player::like() {
-    if (current_item -> is(ItemState::liked))
-        setItemState(-ItemState::liked);
-    else
-        setItemState(ItemState::liked);
-}
+bool BassPlayer::registerEQ() {}
+bool BassPlayer::unregisterEQ() {}
 
-void Player::mute() {
-    int curr = getVolume();
-    setChannelVolume(prevVolumeVal);
+void BassPlayer::calcSpectrum(QVector<int> & result) {}
+void BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}
 
-    if (muteButton == 0) return;
-    prevVolumeVal = curr;
-}
+BassPlayer::BassPlayer(QWidget * parent, uint open_time_out_sec) : IPlayer(parent) {
+    #include <qapplication.h>
 
-void Player::unmuteCheck(int val) {
-    if (val != 0)
-        muteButton -> setChecked(false);
-    prevVolumeVal = 0;
-}
+    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
+        throw "An incorrect version of BASS.DLL was loaded";
 
-void Player::changeTrackbarValue(int pos) {
-    #ifdef Q_OS_WIN
-        stateProgress -> setValue(pos);
-    #endif
+    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
+        throw "An incorrect version of BASS_FX.DLL was loaded";
 
-    emit setPosition(pos);
-}
+    if (!BASS_Init(default_device(), 44100, 0, NULL, NULL))
+        qDebug() << "Init error: " << BASS_ErrorGetCode();
+//        throw "Cannot initialize device";
 
-void Player::onStateChanged(MediaState newState) {
-    switch(newState) {
-        case StoppedState: {
-            slider -> blockSignals(true);
-            slider -> setMaximum(0);
-            setTimePanelVal(0);
-            slider -> blockSignals(false);
-            updateControls(true, false, false);
+    ///////////////////////////////////////////////
+    /// load plugins
+    ///////////////////////////////////////////////
+    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QStringLiteral("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+    QFileInfoList::Iterator it = list.begin();
 
-            if (current_item && current_item -> is(ItemState::proccessing))
-                emit mediaStatusChanged(LoadedMedia);
-            break;
-        }
+    for(; it != list.end(); it++) {
+        /*int res = */BASS_PluginLoad((*it).filePath().toLatin1(), 0);
 
-        case PlayingState: {
-            if (getDuration() != -1)
-                slider -> setMaximum(getDuration());
-
-            updateControls(false, true, true);
-            break;
-        }
-
-        case PausedState: {
-            updateControls(true, false, true);
-            break;
-        }
+//        if (res == 0)
+//            qDebug() << file.filePath() << BASS_ErrorGetCode();
+//        else
+//            qDebug() << file.filePath() << res;
     }
+    ///////////////////////////////////////////////
+
+    BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
+    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
+
+    openTimeOut(open_time_out_sec);
 }
 
-void Player::onMediaStatusChanged(MediaStatus status) {
-//    connect(Player::instance(), SIGNAL(itemExecError(QModelIndex)), this, SLOT(itemError(QModelIndex)));
-//    connect(Player::instance(), SIGNAL(itemNotSupported(QModelIndex)), this, SLOT(itemNotSupported(QModelIndex)));
-//    connect(Player::instance(), SIGNAL(itemNotAccessable(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
-//    connect(Player::instance(), SIGNAL(itemNotExisted(QModelIndex)), this, SLOT(itemNotExist(QModelIndex)));
+BassPlayer::~BassPlayer() {
+    if (openChannelWatcher)
+        openChannelWatcher -> cancel();
+    openChannelWatcher -> deleteLater();
 
-
-    switch (status) {
-        case StartPlayingMedia: {
-            updateItemState(true);
-        break;}
-
-        case UnknownMediaStatus: {
-//            qDebug() << "PLAYER: " << "UNKNOWN";
-            endProccessing();
-            emit nextItemNeeded(error);
-        break; }
-
-        case StalledMedia: {
-            qDebug() << "PLAYER: " << "STALLED";
-            if (current_item -> isRemote()) {
-                emit nextItemNeeded(refreshNeed);
-            } else {
-                endProccessing();
-                playedIndexIsInvalid();
-                emit nextItemNeeded(stalled);
-            }
-        break; }
-
-        case EndOfMedia: {
-            setTrackbarValue(0);
-//            qDebug() << "PLAYER: " << "END";
-            if (cycleButton -> isChecked())
-                play();
-            else
-                emit nextItemNeeded(endMedia);
-        break;}
-
-        case LoadedMedia: {
-            endProccessing();
-        break;}
-
-        case InvalidMedia: {
-            qDebug() << "PLAYER: " << "INVALID";
-//            emit itemNotSupported(playedIndex());
-            current_model -> itemNotSupported(playedIndex());
-            endProccessing();
-            emit nextItemNeeded(error);
-        break;}
-
-        case NoMedia: {
-            qDebug() << "PLAYER: " << "NO MEDIA";
-//            emit itemNotExisted(playedIndex());
-
-            if (current_item -> isRemote()) {
-                emit nextItemNeeded(refreshNeed);
-            } else {
-                endProccessing();
-                current_model -> itemNotExist(playedIndex());
-                emit nextItemNeeded(noMedia);
-            }
-        break;}
-        default: {  }
-    }
+    stop();
+    BASS_PluginFree(0);
+    BASS_Free();
 }
+
+uint BassPlayer::position() const {}
+uint BassPlayer::volume() const {}
+int BassPlayer::pan() const {}

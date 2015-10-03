@@ -1,5 +1,5 @@
 #include "spectrum_view.h"
-#include "player/player.h"
+#include "player/player_old.h"
 #include <qelapsedtimer.h>
 
 using namespace Controls;

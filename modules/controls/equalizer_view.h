@@ -11,7 +11,7 @@
 #include <qboxlayout.h>
 
 #include "clickable_slider.h"
-#include "player/player.h"
+#include "player/player_old.h"
 
 namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")

@@ -14,7 +14,7 @@ class EqualizablePreset {
 
     QString toStr(float val) { return QString::number(roundf(val)); }
 public:
-    EqualizablePreset(float octaveOffset = 1.33) {
+    EqualizablePreset(float octaveOffset = 1.33) { // 1/3 octave offset
         Q_ASSERT(octaveOffset > 1);
 
         float res = LOW_INTERVAL;
@@ -29,6 +29,17 @@ public:
 
 class IEqualizable : public ISpectrumable {
     Q_OBJECT
+protected:
+    IEqualizable(QObject * parent = 0);
+
+    virtual bool registerEQ() = 0;
+    virtual bool unregisterEQ() = 0;
+    virtual bool equalizable() { return true; }
+
+    bool eqInUse;
+    QString current_preset;
+    QMap<QString, EqualizablePreset> presets;
+    QMap<int, int> eqBandsGains;
 public:
     virtual ~IEqualizable() {}
 
@@ -40,17 +51,6 @@ public slots:
         if ((eqInUse = activate)) registerEQ();
         else unregisterEQ();
     }
-protected:
-    IEqualizable(QObject * parent = 0);
-
-    virtual void registerEQ() = 0;
-    virtual void unregisterEQ() = 0;
-    virtual bool equalizable() { return true; }
-
-    bool eqInUse;
-    QString current_preset;
-    QMap<QString, EqualizablePreset> presets;
-    QMap<int, int> eqBandsGains;
 };
 
 #endif // I_EQUALIZABLE

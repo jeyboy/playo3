@@ -240,7 +240,6 @@ HEADERS += \
     player/audio_player/audio_player_spectrum.h \
     player/audio_player/audio_player_state.h \
     player/audio_player.h \
-    player/player.h \
     settings/global_settings.h \
     settings/hotkey_settings.h \
     settings/item_settings.h \
@@ -259,7 +258,9 @@ HEADERS += \
     modules/core/media/interfaces/ispectrumable.h \
     modules/core/media/interfaces/player_states.h \
     modules/core/media/interfaces/iequalizable.h \
-    modules/core/media/interfaces/player_statuses.h
+    modules/core/media/interfaces/player_statuses.h \
+    player/player_old.h \
+    player/player.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -377,7 +378,6 @@ SOURCES += \
     player/audio_player/audio_player_spectrum.cpp \
     player/audio_player/audio_player_state.cpp \
     player/audio_player.cpp \
-    player/player.cpp \
     settings/global_settings.cpp \
     settings/hotkey_settings.cpp \
     settings/item_settings.cpp \
@@ -395,4 +395,6 @@ SOURCES += \
     modules/core/media/interfaces/itrackable.cpp \
     modules/core/media/interfaces/iplayer.cpp \
     modules/core/media/interfaces/ispectrumable.cpp \
-    modules/core/media/interfaces/iequalizable.cpp
+    modules/core/media/interfaces/iequalizable.cpp \
+    player/player_old.cpp \
+    player/player.cpp

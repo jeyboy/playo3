@@ -15,7 +15,7 @@
 
 #include "dialogs/tabdialog.h"
 
-#include "player/player.h"
+#include "player/player_old.h"
 
 #define SCREEN_TAB "Screen"
 #define COMMON_TAB "Common"

@@ -1,121 +1,82 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYER
+#define PLAYER
 
-#include <qaction.h>
+#include <qdir.h>
+
+#include <QtConcurrent/qtconcurrentrun.h>
+#include <qfuturewatcher.h>
+
+//#include "math.h"
+#include "bass.h"
+#include "bass_fx.h"
+#include "bassmix.h"
+
+#include "modules/core/media/interfaces/iplayer.h"
+
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackSync(HSYNC handle, DWORD channel, DWORD data, void * user);
+void
+    #ifdef Q_OS_WIN
+        __stdcall
+    #endif
+        endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
 #ifdef Q_OS_WIN
-    #include <qwintaskbarbutton.h>
-    #include <qwintaskbarprogress.h>
+    #define QSTRING_TO_STR(str) str.toStdWString().data()
+#else
+    #define QSTRING_TO_STR(str) str.toStdString().c_str()
 #endif
 
-#include "audio_player.h"
-#include "modules/controls/clickable_label.h"
-#include "modules/controls/metric_slider.h"
-#include "modules/models/model_interface.h"
-#include "modules/core/media/mediainfo.h"
+class BassPlayer : public IPlayer {
+    unsigned long startPos;
+    unsigned long chan;
+    QFutureWatcher<int> * openChannelWatcher;
 
-using namespace AudioPlayer;
-///////////// remove later
-namespace Models { class IModel; }
-using namespace Models;
-using namespace Core;
+    inline int default_device() {
+        #ifdef Q_OS_WIN
+            return -1;
+        #else
+            return BASS_DEVICE_DEFAULT;
+        #endif
+    }
+    int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
 
-namespace Core { namespace Media { class MediaInfo; } }
-///////////////////////////////
-
-class Player : public AudioPlayer::Base {
-    Q_OBJECT
-public:
-    enum Reason { init, endMedia, noMedia, stalled, error, refreshNeed };
-
-    static Player * instance(QWidget * parent = 0);
-    inline static void close() { delete self; }
-
-    void eject(bool updateState = true);
-    void playIndex(const QModelIndex & item, bool paused = false, uint start = 0, int duration = -1);
-
-    void setPlayButton(QAction * playAction);
-    void setPauseButton(QAction * pauseAction);
-    void setStopButton(QAction * stopAction);
-    void setCyclingButton(QAction * cycleAction);
-
-    void setLikeButton(QAction * likeAction);
-    void setMuteButton(QAction * likeAction);
-
-    void setPanTrackBar(QSlider * trackBar);
-    void setVolumeTrackBar(QSlider * trackBar);
-    void setTrackBar(QSlider * trackBar);
-    void setTimePanel(Controls::ClickableLabel * timePanel);
-
-    QModelIndex playedIndex();
-    inline IModel * currentPlaylist() const { return current_model; }
-    inline IItem * playedItem() { return current_item; }
-    inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
-
-    bool getFileInfo(QUrl uri, MediaInfo * info);
-    void playedIndexIsNotExist();
-    void playedIndexIsInvalid();
-
-signals:
-    void nextItemNeeded(Player::Reason);
-
-public slots:
-    void playPause();
-
-private slots:
-    void start();
-    void like();
-    void mute();
-
-    void unmuteCheck(int);
-    void setVolTrackbarValue(int pos);
-    void setPanTrackbarValue(int pos);
-
-    void changeTrackbarValue(int);
-    void setTrackbarValue(int);
-    void setTrackbarMax(int);
-
-    void invertTimeCountdown();
-
-    void onStateChanged(MediaState newState);
-    void onMediaStatusChanged(MediaStatus status);
+    void afterSourceOpening();
+    void playPreproccessing();
 protected:
-    inline void startProccessing() { setItemState(ItemState::proccessing); }
-    inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }
-private:
-    Player(QWidget * parent);
+    bool playProcessing(uint startMili);
+    bool resumeProcessing();
+    bool pauseProcessing();
+    bool stopProcessing();
 
-    void setStartPosition();
-    void setItemState(int state);
-    void updateItemState(bool isPlayed);
-    void updateControls(bool played, bool paused, bool stopped);
+    uint recalcCurrentPosProcessing();
+    bool newPosProcessing(uint newPos);
+    bool newVolumeProcessing(uint newVol);
+    bool newPanProcessing(int newPan);
 
-    void setTimePanelVal(int millis);
+    inline uint maxVolume() const { return 10000; }
 
-    static Player * self;
-    Controls::MetricSlider * slider;
-    QSlider * volumeSlider, * panSlider;
-    Controls::ClickableLabel * timePanel;
+    bool registerEQ();
+    bool unregisterEQ();
 
-    QAction * playButton;
-    QAction * pauseButton;
-    QAction * stopButton;
-    QAction * cycleButton;
+    void calcSpectrum(QVector<int> & result);
+    void calcSpectrum(QList<QVector<int> > & result);
+public:
+    explicit BassPlayer(QWidget * parent, uint open_time_out_sec = 10);
+    ~BassPlayer();
 
-    QAction * likeButton;
-    QAction * muteButton;
+    uint position() const;
+    uint volume() const;
+    int pan() const;
 
-    int prevVolumeVal;
-    bool time_forward;
-    bool extended_format;
-
-    IModel * current_model;
-    IItem * current_item;
-
-    #ifdef Q_OS_WIN
-        QWinTaskbarButton * stateButton;
-        QWinTaskbarProgress * stateProgress;
-    #endif
+    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
+    inline void openTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
+    inline void proxy(const QString & proxyStr = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxyStr.isEmpty() ? NULL : QSTRING_TO_STR(proxyStr)); }
+//    inline void readTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
+//    inline void userAgent(const QString & userAgent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, userAgent.isEmpty() ? NULL : QSTRING_TO_STR(userAgent)); }
 };
 
-#endif // PLAYER_H
+#endif // PLAYER
