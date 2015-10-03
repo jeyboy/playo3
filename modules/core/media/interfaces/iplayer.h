@@ -1,18 +1,20 @@
 #ifndef IPLAYER
 #define IPLAYER
 
-#include <qtimer.h>
 #include <qurl.h>
 
 #include "itrackable.h"
+#include "iequalizable.h"
 #include "player_states.h"
 
-class IPlayer : public QTimer, public ITrackable {
+class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 public:
-    inline IPlayer(QWidget * parent) : ITrackable(parent), max_duration(0) {
+    inline IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), max_duration(0) {
         qRegisterMetaType<PlayerState>("PlayerState");
-        setInterval(1000);
+        itimer = new QTimer(parent);
+        connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
+        itimer -> setInterval(500);
     }
     virtual ~IPlayer();
 
@@ -64,6 +66,9 @@ public slots:
         emit panChanged(newPan);
     }
 
+protected slots:
+    void recalcPosition() { position(recalcCurrentPosProcessing()); }
+
 protected:
     virtual QString title() const { return media_url.toString(); }
 
@@ -72,6 +77,7 @@ protected:
     virtual void pauseProcessing() = 0;
     virtual void stopProcessing() = 0;
 
+    virtual uint recalcCurrentPosProcessing() = 0;
     virtual void newPosProcessing(uint newPos) = 0;
     virtual void newVolumeProcessing(uint newVol) = 0;
     virtual void newPanProcessing(int newPan) = 0;
@@ -84,17 +90,24 @@ protected:
     inline virtual uint slidePercentage() const { return 10; }
 
     virtual inline bool seekingBlocked() { return false; }
-    inline bool seekable() { seekingBlocked() || max_duration > 0 && state() == PlayingState || state() == PausedState; }
+    inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
 
     QUrl media_url;
     uint max_pos, max_duration;
 private:
     void updateState(PlayerState new_state) {
-        pstate = new_state;
+        switch (pstate = new_state) {
+            case PlayingState: itimer -> start();
+            case PausedState:
+            case StoppedState:
+                itimer -> stop();
+            default: ;
+        }
         ITrackable::updateState(isPlayed(), isPaused(), isStopped());
     }
 
     PlayerState pstate;
+    QTimer * itimer;
 };
 
 #endif // IPLAYER

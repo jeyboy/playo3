@@ -258,7 +258,8 @@ HEADERS += \
     modules/core/media/interfaces/iplayer.h \
     modules/core/media/interfaces/ispectrumable.h \
     modules/core/media/interfaces/player_states.h \
-    modules/core/media/interfaces/iequalizable.h
+    modules/core/media/interfaces/iequalizable.h \
+    modules/core/media/interfaces/player_statuses.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

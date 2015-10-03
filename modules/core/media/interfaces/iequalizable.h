@@ -1,9 +1,10 @@
 #ifndef I_EQUALIZABLE
 #define I_EQUALIZABLE
 
-#include <qobject>
 #include <qmap.h>
 #include <qstringbuilder.h>
+
+#include "ispectrumable.h"
 
 #define LOW_INTERVAL 16.352
 #define HIGH_INTERVAL 15804
@@ -26,7 +27,7 @@ public:
     QMap<float, QString> bandsList() const { return bands; }
 };
 
-class IEqualizable : public QObject {
+class IEqualizable : public ISpectrumable {
     Q_OBJECT
 public:
     virtual ~IEqualizable() {}
@@ -44,6 +45,7 @@ protected:
 
     virtual void registerEQ() = 0;
     virtual void unregisterEQ() = 0;
+    virtual bool equalizable() { return true; }
 
     bool eqInUse;
     QString current_preset;
