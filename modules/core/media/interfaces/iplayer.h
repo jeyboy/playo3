@@ -5,13 +5,17 @@
 
 #include "itrackable.h"
 #include "iequalizable.h"
+
 #include "player_states.h"
+#include "player_statuses.h"
 
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 public:
     inline IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), max_duration(0) {
         qRegisterMetaType<PlayerState>("PlayerState");
+//        qRegisterMetaType<PlayerStatus>("PlayerStatus");
+
         itimer = new QTimer(parent);
         connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
         itimer -> setInterval(500);
@@ -20,7 +24,7 @@ public:
 
     inline void setMedia(const QUrl & url) {
         media_url = url;
-        pstate = InitState;
+        updateState(InitState);
         max_duration = 0;
     }
 
@@ -37,6 +41,9 @@ public:
     virtual int pan() const = 0;
 
 signals:
+    void stateChanged(const PlayerState &);
+    void statusChanged(const PlayerStatus &);
+
     void panChanged(int);
     void volumeChanged(uint);
     void positionChanged(uint);
@@ -104,6 +111,7 @@ private:
             default: ;
         }
         ITrackable::updateState(isPlayed(), isPaused(), isStopped());
+        emit stateChanged(pstate);
     }
 
     PlayerState pstate;
