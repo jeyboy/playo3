@@ -13,7 +13,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 public:
     inline IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), max_duration(0) {
-        qRegisterMetaType<PlayerState>("PlayerState");
+//        qRegisterMetaType<PlayerState>("PlayerState");
 //        qRegisterMetaType<PlayerStatus>("PlayerStatus");
 
         itimer = new QTimer(parent);
@@ -40,6 +40,7 @@ public:
     virtual uint volume() const = 0;
     virtual int pan() const = 0;
 
+    inline void prebufferingLevel(float level) { emit prebufferingChanged(level); }
 signals:
     void stateChanged(const PlayerState &);
     void statusChanged(const PlayerStatus &);
@@ -48,6 +49,9 @@ signals:
     void volumeChanged(uint);
     void positionChanged(uint);
     void durationChanged(uint);
+
+    // 0 .. 1
+    void prebufferingChanged(float level);
 
 public slots:
     void play(uint startMili = 0);
