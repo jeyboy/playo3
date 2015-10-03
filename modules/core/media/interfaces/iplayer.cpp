@@ -9,12 +9,14 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), m
     itimer -> setInterval(500);
 }
 
-void IPlayer::play(uint startMili) {
+void IPlayer::play(uint startMili, uint maxDuration = 0) {
     bool res;
     if (isPaused())
         res = resumeProcessing();
-    else
+    else {
+        duration(maxDuration);
         res = playProcessing(startMili);
+    }
 
     if (res) playPostprocessing();
 }

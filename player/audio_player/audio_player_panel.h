@@ -35,7 +35,7 @@ namespace AudioPlayer {
         virtual ~Panel() {}
 
         inline int getPosition() const { return BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chId(), BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
-        inline int getFilePosition() const { return BASS_ChannelGetPosition(chId(), BASS_POS_BYTE); } // need to check
+//        inline int getFilePosition() const { return BASS_ChannelGetPosition(chId(), BASS_POS_BYTE); } // need to check
         inline int getDuration() const { return duration; }
         inline int getVolume() const { return volumeVal * VOLUME_MULTIPLIER; }
 

@@ -30,6 +30,7 @@ class IPlayer : public IEqualizable, public ITrackable {
 
     PlayerState pstate;
     QTimer * itimer;
+    uint volumeVal, panVal;
 protected:
     virtual QString title() const { return media_url.toString(); }
 
@@ -95,7 +96,7 @@ signals:
     void prebufferingChanged(float level); // 0 .. 1
 
 public slots:
-    void play(uint startMili = 0);
+    void play(uint startMili = 0, uint maxDuration = 0);
     void pause();
     void stop();
 
@@ -110,11 +111,11 @@ public slots:
         emit positionChanged(newPos);
     }
     inline void volume(uint newVol) {
-        newVolumeProcessing(newVol);
+        newVolumeProcessing(volumeVal = newVol);
         emit volumeChanged(newVol);
     }
     inline void pan(int newPan) {
-        newPanProcessing(newPan);
+        newPanProcessing(panVal = newPan);
         emit panChanged(newPan);
     }
 

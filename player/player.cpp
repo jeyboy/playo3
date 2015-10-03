@@ -54,7 +54,7 @@ void BassPlayer::afterSourceOpening() {
         chan = watcher -> result();
         if (chan) playPreproccessing();
         else proceedErrorState();
-    } else emit mediaStatusChanged(LoadedMedia);
+    } else emit statusChanged(LoadedMedia);
 
     watcher -> deleteLater();
     if (watcher == openChannelWatcher)
@@ -62,11 +62,14 @@ void BassPlayer::afterSourceOpening() {
 }
 
 void BassPlayer::playPreproccessing() {
-    emit mediaStatusChanged(LoadedMedia);
+    emit statusChanged(LoadedMedia);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
 
-    initDuration();
+
+    if (max_duration == 0)
+        duration(round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER);
+
 
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
@@ -110,7 +113,7 @@ bool BassPlayer::playProcessing(uint startMili) {
 }
 bool BassPlayer::resumeProcessing() {
     if (!BASS_ChannelPlay(chan, false)) {
-        emit mediaStatusChanged(StalledMedia);
+        emit statusChanged(StalledMedia);
         qDebug() << "Error resuming";
         return false;
     }
@@ -188,6 +191,6 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
-uint BassPlayer::position() const {}
-uint BassPlayer::volume() const {}
-int BassPlayer::pan() const {}
+uint BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
+uint BassPlayer::volume() const { return volumeVal; }
+int BassPlayer::pan() const { return panVal; }

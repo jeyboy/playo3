@@ -30,7 +30,19 @@ void
     #define QSTRING_TO_STR(str) str.toStdString().c_str()
 #endif
 
+#define SLIDE_VOLUME_OFFSET 1000
+#define VOLUME_MULTIPLIER 10000.0
+#define POSITION_MULTIPLIER 1000.0
+#define PAN_MULTIPLIER 1000.0
+
+#define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE
+#define REMOTE_PLAY_ATTRS BASS_SAMPLE_FLOAT
+
+#define LOCAL_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN | BASS_SAMPLE_MONO
+#define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO
+
 class BassPlayer : public IPlayer {
+    HSYNC syncHandle, syncDownloadHandle;
     unsigned long startPos;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
@@ -42,6 +54,8 @@ class BassPlayer : public IPlayer {
             return BASS_DEVICE_DEFAULT;
         #endif
     }
+
+    void proceedErrorState();
     int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
 
     void afterSourceOpening();
@@ -62,8 +76,8 @@ protected:
     bool registerEQ();
     bool unregisterEQ();
 
-    void calcSpectrum(QVector<int> & result);
-    void calcSpectrum(QList<QVector<int> > & result);
+    bool calcSpectrum(QVector<int> & result);
+    bool calcSpectrum(QList<QVector<int> > & result);
 public:
     explicit BassPlayer(QWidget * parent, uint open_time_out_sec = 10);
     ~BassPlayer();

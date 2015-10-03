@@ -29,8 +29,8 @@ protected:
     void channelsCount(int newChannelsCount);
 
     virtual PlayerState state() const = 0;
-    virtual void calcSpectrum(QVector<int> & result) = 0;
-    virtual void calcSpectrum(QList<QVector<int> > & result) = 0;
+    virtual bool calcSpectrum(QVector<int> & result) = 0;
+    virtual bool calcSpectrum(QList<QVector<int> > & result) = 0;
     virtual bool spectrumable() { return true; }
 
     virtual bool respondToMultichannelSpectrumCalc() { return channels_count != 1; }
