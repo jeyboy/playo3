@@ -95,7 +95,9 @@ void Playo::initialization() {
 
     ToolBars::instance() -> load(settings -> read(ToolBars::settingsName()).toArray());
     ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
+
     Dockbars::instance() -> load(settings -> read(Dockbars::settingsName()).toArray());
+    connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), Dockbars::instance(), SLOT(onNextItemNeeded(Player::Reason)));
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
     if (objState.isValid())

@@ -4,6 +4,19 @@
 using namespace View;
 using namespace Controls;
 
+void IView::registerParent(QWidget * newParent) {
+    setParent(newParent);
+
+    connect(mdl, SIGNAL(moveInBackgroundProcess()), newParent, SLOT(onMoveInBackgroundProcess()));
+    connect(mdl, SIGNAL(moveOutBackgroundProcess()), newParent, SLOT(onMoveOutBackgroundProcess()));
+    connect(mdl, SIGNAL(setBackgroundProgress(int)), newParent, SLOT(onSetBackgroundProgress(int)));
+
+    connect(mdl, SIGNAL(moveInProcess()), newParent, SLOT(onMoveInProcess()));
+    connect(mdl, SIGNAL(moveOutProcess()), newParent, SLOT(onMoveOutProcess()));
+    connect(mdl, SIGNAL(setProgress(int)), newParent, SLOT(onSetProgress(int)));
+    connect(mdl, SIGNAL(setProgress2(int)), newParent, SLOT(onSetProgress2(int)));
+}
+
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
@@ -52,14 +65,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
-    connect(mdl, SIGNAL(moveInBackgroundProcess()), parent, SLOT(onMoveInBackgroundProcess()));
-    connect(mdl, SIGNAL(moveOutBackgroundProcess()), parent, SLOT(onMoveOutBackgroundProcess()));
-    connect(mdl, SIGNAL(setBackgroundProgress(int)), parent, SLOT(onSetBackgroundProgress(int)));
-
-    connect(mdl, SIGNAL(moveInProcess()), parent, SLOT(onMoveInProcess()));
-    connect(mdl, SIGNAL(moveOutProcess()), parent, SLOT(onMoveOutProcess()));
-    connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
-    connect(mdl, SIGNAL(setProgress2(int)), parent, SLOT(onSetProgress2(int)));
+    registerParent(parent);
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showMessage(QString)), this, SLOT(showMessage(QString)));
@@ -437,7 +443,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
-        if (mdl -> playlistType() != Data::list) {
+        if (mdl -> playlistType() != level) {
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
 
@@ -583,7 +589,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     _deleteFolderAnswer = QMessageBox::No;
 
-    if (mdl -> playlistType() == Data::list) {
+    if (mdl -> playlistType() == level) {
         qSort(index_list.begin(), index_list.end());
     } else {
         qSort(index_list.begin(), index_list.end(), modelIndexComparator());
@@ -613,7 +619,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     QModelIndexList::Iterator eit = --index_list.end();
     total /= 100.0;
 
-    if (mdl -> playlistType() == Data::list || !inProcess) {
+    if (mdl -> playlistType() == level || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), remove, IModel::none, true);
 

@@ -138,10 +138,10 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }
+View::Params defSettings(level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
-        View::Params defSettings(Data::list, true, false, false, true);
         common = createDocBar(COMMON_TAB, defSettings, 0, false);
     }
 
@@ -164,37 +164,9 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params 
 }
 
 DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
-    IView * view;
     DockBar * bar = createDocBar(name, closable);
+    IView * view = ViewFactory::build(bar, settings, attrs);
 
-    switch(settings.type) {
-        case Data::list: {
-            view = new ListView(bar, settings, attrs);
-        break;}
-        case level_tree: {
-            view = new LevelTreeView(bar, settings, attrs);
-        break;}
-        case tree: {
-            view = new TreeView(bar, settings, attrs);
-        break;}
-        case vk: {
-            view = new VkView(bar, settings, attrs);
-        break;}
-        case vk_rel: {
-            view = new VkRelView(bar, settings, attrs);
-        break;}
-        case soundcloud: {
-            view = new SoundcloudView(bar, settings, attrs);
-        break;}
-        case search: {
-            view = new SearchView(bar, settings, attrs);
-        break;}
-        case od: {
-            view = new OdView(bar, settings, attrs);
-        break;}
-
-        default: view = 0;
-    }
     bar -> setWidget(view);
     bar -> initiateSearch();
 

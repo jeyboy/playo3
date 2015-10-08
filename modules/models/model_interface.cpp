@@ -701,7 +701,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         case soundcloud:
         case vk:
         case vk_rel:
-        case Data::list: { parentNode = rootItem; break; }
+        case level: { parentNode = rootItem; break; }
         case search:
         case tree:
         case level_tree: {
@@ -712,6 +712,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             is_new = !parentNode;
             if (is_new) parentNode = rootItem -> createPlaylist(path);
         break;}
+        default:;
     }
 
     if (!parentNode)

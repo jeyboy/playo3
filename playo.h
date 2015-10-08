@@ -13,6 +13,8 @@
 //#include "media/cue/cue.h"
 //#include "media/library.h"
 //#include "media/genres/music_genres.h"
+
+#include "player/player.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
 #include "dialogs/search_dialog.h"

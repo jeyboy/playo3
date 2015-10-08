@@ -15,8 +15,6 @@
 
 #include "dialogs/tabdialog.h"
 
-#include "player/player.h"
-
 #define SCREEN_TAB "Screen"
 #define COMMON_TAB "Common"
 #define DOWNLOADS_TAB "Downloads"
@@ -107,9 +105,7 @@ namespace Presentation {
 
         QHash<QString, DockBar *> linkedTabs;
 
-        inline Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
-            connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), this, SLOT(onNextItemNeeded(Player::Reason)));
-        }
+        inline Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {}
 
         inline ~Dockbars() {}
 
