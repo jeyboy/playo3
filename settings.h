@@ -23,12 +23,12 @@ public:
     inline int totalItemHeight() { return itemHeight() + (isShowInfo() ? itemInfoFontSize() * 2 : 0); }
     inline int iconHeight() { return totalItemHeight() - 1; }
 
-    inline void resetGlobalSettings()   { QJsonObject obj; GlobalSettings::fromJson(obj); }
-    inline void resetHotkeySettings()   { QJsonObject obj; HotkeySettings::fromJson(obj); }
-    inline void resetItemSettings()     { QJsonObject obj; ItemSettings::fromJson(obj); }
-    inline void resetSpectrumSettings() { QJsonObject obj; SpectrumSettings::fromJson(obj); }
-    inline void resetTabSettings()      { QJsonObject obj; TabSettings::fromJson(obj); }
-    inline void resetLibrarySettings()  { QJsonObject obj; LibrarySettings::fromJson(obj); }
+    inline void resetGlobalSettings()   { GlobalSettings::fromJson(QJsonObject()); }
+    inline void resetHotkeySettings()   { HotkeySettings::fromJson(QJsonObject()); }
+    inline void resetItemSettings()     { ItemSettings::fromJson(QJsonObject()); }
+    inline void resetSpectrumSettings() { SpectrumSettings::fromJson(QJsonObject()); }
+    inline void resetTabSettings()      { TabSettings::fromJson(QJsonObject()); }
+    inline void resetLibrarySettings()  { LibrarySettings::fromJson(QJsonObject()); }
 
 private:
     Settings() : GlobalSettings(), HotkeySettings(),

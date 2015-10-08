@@ -1,6 +1,6 @@
 #include "item_settings.h"
 
-void ItemSettings::fromJson(QJsonObject & json) {
+void ItemSettings::fromJson(const QJsonObject & json) {
     _useGradient = json.value(SETTINGS_USE_GRADIENT_KEY).toBool(true);
     _itemHeight = json.value(SETTINGS_ITEM_HEIGHT_KEY).toInt(18);
 

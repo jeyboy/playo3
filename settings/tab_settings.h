@@ -14,7 +14,7 @@
 
 class TabSettings {
 public:
-    void fromJson(QJsonObject & settings);
+    void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
     inline bool isShowSystemIcons() const { return _showSystemIcons; }

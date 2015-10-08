@@ -1,6 +1,6 @@
 #include "global_settings.h"
 
-void GlobalSettings::fromJson(QJsonObject & settings) {
+void GlobalSettings::fromJson(const QJsonObject & settings) {
     _showMetric = settings.value(SETTINGS_SHOW_METRICS_KEY).toBool(true);
     _showMetricNumero = settings.value(SETTINGS_SHOW_METRICS_NUMERO_KEY).toBool(false);
 

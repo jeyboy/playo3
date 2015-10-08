@@ -11,12 +11,12 @@ class HotkeySettings {
 public:
     HotkeySettings();
 
-    void fromJson(QJsonObject & settings);
+    void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
     QList<HotkeyModelItem *> * hotKeys() const;
     void setHotKeys(QList<HotkeyModelItem *>);
-    void setHotKeys(QJsonObject hotkeysHash = QJsonObject());
+    void setHotKeys(const QJsonObject & hotkeysHash = QJsonObject());
 
 protected:
 //    inline QJsonObject hotkeysJson() const { return _hotkeys; }

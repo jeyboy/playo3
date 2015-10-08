@@ -27,6 +27,7 @@ namespace Presentation {
         ~ToolBars() {
             delete vkToolButton;
             delete soundcloudToolButton;
+            delete odToolButton;
             delete spectrum;
         }
 

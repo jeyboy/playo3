@@ -1,6 +1,6 @@
 #include "spectrum_settings.h"
 
-void SpectrumSettings::fromJson(QJsonObject & settings) {
+void SpectrumSettings::fromJson(const QJsonObject & settings) {
     _customColorSpectrum = settings.value(SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY).toBool(true);
 
     _autoBarsAmount = settings.value(SETTINGS_AUTO_BARS_AMOUNT_KEY).toBool(true);
