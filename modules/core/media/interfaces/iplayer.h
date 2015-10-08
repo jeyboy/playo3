@@ -11,27 +11,12 @@
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 
-    void updateState(PlayerState new_state) {
-        switch (pstate = new_state) {
-            case PlayingState: {
-                itimer -> start();
-                spectrumCalcStart();
-            break;}
-            case PausedState:
-            case StoppedState: {
-                spectrumCalcStop();
-                itimer -> stop();
-            break;}
-            default: ;
-        }
-        ITrackable::updateState(isPlayed(), isPaused(), isStopped());
-        emit stateChanged(pstate);
-    }
-
     PlayerState pstate;
     QTimer * itimer;
     uint volumeVal, panVal;
 protected:
+    void updateState(PlayerState new_state);
+
     virtual QString title() const { return media_url.toString(); }
 
     virtual bool playProcessing(uint startMili) = 0;
@@ -77,14 +62,16 @@ public:
 
     virtual uint position() const = 0;
     uint duration() const { return max_duration; }
-    virtual uint volume() const = 0;
-    virtual int pan() const = 0;
+    inline uint volume() const { return volumeVal; }
+    inline int pan() const { return panVal; }
 
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
     inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
 
-    inline void prebufferingLevel(float level) { emit prebufferingChanged(level); }
+    inline void prebufferingLevel(float level = 1) { emit prebufferingChanged(level); }
 signals:
+    void playbackEnded();
+
     void stateChanged(const PlayerState &);
     void statusChanged(const PlayerStatus &);
 
@@ -105,11 +92,7 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    inline void position(uint newPos) {
-        newPosProcessing(newPos);
-        ITrackable::setProgress(newPos);
-        emit positionChanged(newPos);
-    }
+    void position(uint newPos);
     inline void volume(uint newVol) {
         newVolumeProcessing(volumeVal = newVol);
         emit volumeChanged(newVol);

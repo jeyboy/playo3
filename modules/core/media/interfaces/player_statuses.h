@@ -1,9 +1,7 @@
 #ifndef PLAYER_STATUSES
 #define PLAYER_STATUSES
 
-#include <qflags.h>
-
-enum MediaStatusFlags {
+enum PlayerStatus {
     UnknownMediaStatus,
     NoMedia,
     NoRemoteMedia,
@@ -14,6 +12,5 @@ enum MediaStatusFlags {
     EndOfMedia,
     InvalidMedia
 };
-typedef QFlags<MediaStatusFlags> PlayerStatus;
 
 #endif // PLAYER_STATUSES

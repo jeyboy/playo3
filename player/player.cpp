@@ -9,7 +9,7 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     BassPlayer * player = static_cast<BassPlayer *>(user);
-    player -> finishRemoteFileDownloading();
+    player -> prebufferingLevel();
 }
 
 void BassPlayer::proceedErrorState() {
@@ -18,7 +18,7 @@ void BassPlayer::proceedErrorState() {
         case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
         case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
         // BASS_ERROR_TIMEOUT
-        default: emit mediaStatusChanged(StalledMedia);
+        default: emit statusChanged(StalledMedia);
     }
 }
 
@@ -63,9 +63,8 @@ void BassPlayer::afterSourceOpening() {
 
 void BassPlayer::playPreproccessing() {
     emit statusChanged(LoadedMedia);
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
-
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume());
+    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());
 
     if (max_duration == 0)
         duration(round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER);
@@ -73,23 +72,22 @@ void BassPlayer::playPreproccessing() {
 
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
-        channelsCount = info.chans;
+        channelsCount(info.chans);
     else
-        channelsCount = 2;
+        channelsCount(2);
 
-    if (useEQ) registerEQ();
+    if (eqInUse) registerEQ();
 
-    startTimers();
     if (BASS_ChannelPlay(chan, true))
-        emit mediaStatusChanged(StartPlayingMedia);
+        emit statusChanged(StartPlayingMedia);
+
+    playPostprocessing();
 
     syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
-    setStartPosition();
+    if (startPos > 0) position(startPos);
 }
-
-
 
 bool BassPlayer::playProcessing(uint startMili) {
     startPos = startMili;
@@ -143,8 +141,8 @@ bool BassPlayer::newPanProcessing(int newPan) {}
 bool BassPlayer::registerEQ() {}
 bool BassPlayer::unregisterEQ() {}
 
-void BassPlayer::calcSpectrum(QVector<int> & result) {}
-void BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}
+bool BassPlayer::calcSpectrum(QVector<int> & result) {}
+bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}
 
 BassPlayer::BassPlayer(QWidget * parent, uint open_time_out_sec) : IPlayer(parent) {
     #include <qapplication.h>
@@ -191,6 +189,4 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
-uint BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chId(), BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
-uint BassPlayer::volume() const { return volumeVal; }
-int BassPlayer::pan() const { return panVal; }
+uint BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }

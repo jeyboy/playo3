@@ -42,6 +42,8 @@ void
 #define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_SAMPLE_MONO
 
 class BassPlayer : public IPlayer {
+    Q_OBJECT
+
     HSYNC syncHandle, syncDownloadHandle;
     unsigned long startPos;
     unsigned long chan;
@@ -61,6 +63,13 @@ class BassPlayer : public IPlayer {
     void afterSourceOpening();
     void playPreproccessing();
 protected:
+    inline unsigned long open(const QString & path, DWORD flags) {
+        return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
+    }
+    inline unsigned long openRemote(const QString & path, DWORD flags) {
+        return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
+    }
+
     bool playProcessing(uint startMili);
     bool resumeProcessing();
     bool pauseProcessing();
@@ -83,8 +92,6 @@ public:
     ~BassPlayer();
 
     uint position() const;
-    uint volume() const;
-    int pan() const;
 
     inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
     inline void openTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(secLimit * 1000))); }

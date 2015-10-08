@@ -1,15 +1,12 @@
 #ifndef PLAYER_STATES
 #define PLAYER_STATES
 
-#include <qflags.h>
-
-enum PlayerStateFlags {
+enum PlayerState {
     InitState,
     StoppedState,
     PlayingState,
     PausedState,
     UnknowState
 };
-typedef QFlags<PlayerStateFlags> PlayerState;
 
 #endif // PLAYER_STATES

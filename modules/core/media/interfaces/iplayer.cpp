@@ -9,7 +9,24 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), m
     itimer -> setInterval(500);
 }
 
-void IPlayer::play(uint startMili, uint maxDuration = 0) {
+void IPlayer::updateState(PlayerState new_state) {
+    switch (pstate = new_state) {
+        case PlayingState: {
+            itimer -> start();
+            spectrumCalcStart();
+        break;}
+        case PausedState:
+        case StoppedState: {
+            spectrumCalcStop();
+            itimer -> stop();
+        break;}
+        default: ;
+    }
+    ITrackable::updateState(isPlayed(), isPaused(), isStopped());
+    emit stateChanged(pstate);
+}
+
+void IPlayer::play(uint startMili, uint maxDuration) {
     bool res;
     if (isPaused())
         res = resumeProcessing();
@@ -46,4 +63,10 @@ void IPlayer::slideVolForward() {
 }
 void IPlayer::slideVolBackward() {
     volume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
+}
+
+void IPlayer::position(uint newPos) {
+    newPosProcessing(newPos);
+    ITrackable::setProgress(newPos);
+    emit positionChanged(newPos);
 }
