@@ -253,7 +253,8 @@ HEADERS += \
     single_application.h \
     stylesheets.h \
     toolbars.h \
-    settings.h
+    settings.h \
+    modules/core/interfaces/singleton.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -385,4 +386,5 @@ SOURCES += \
     single_application.cpp \
     stylesheets.cpp \
     toolbars.cpp \
-    settings.cpp
+    settings.cpp \
+    modules/core/interfaces/singleton.cpp
