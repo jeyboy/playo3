@@ -255,11 +255,10 @@ void IView::openRecomendationsforItem() {
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    IItem * node = mdl -> item(index);
-
-    if (node -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
+    if (mdl -> item(index) -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
+    emit infoInvalidation(index);
     QTreeView::drawRow(painter, options, index);
 }
 

@@ -60,9 +60,9 @@ namespace View {
         void appendRows(QList<QUrl> & urls);
         void markSelectedAsLiked(bool liked);
     signals:
-//        void infoInvalidation(const QModelIndex & node);
+        void infoInvalidation(const QModelIndex & node) const;
         void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
-        void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);
+        void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, bool usePrevAction);
         void searchFinished();
 
     public slots:
