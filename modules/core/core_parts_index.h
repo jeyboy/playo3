@@ -1,8 +1,6 @@
 #ifndef CORE_INDEX_H
 #define CORE_INDEX_H
 
-//#include "core_parts/view_types.h"
-
 #include "core_parts/file.h"
 #include "core_parts/playlist.h"
 #include "core_parts/vk_file.h"

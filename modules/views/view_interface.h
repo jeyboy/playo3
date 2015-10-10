@@ -30,7 +30,7 @@ namespace View {
       Q_OBJECT
     public:
         void registerParent(QWidget * newParent);
-        IView(IModel * model, QWidget * parent, View::Params & settins);
+        IView(IModel * model, QWidget * parent, Params & settins);
         virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
@@ -46,10 +46,8 @@ namespace View {
         inline bool isEditable() const { return sttngs.type < Data::vk && !isCommon(); }
         inline bool isRequiredOnUpdate() const { return sttngs.type == Data::vk; }
 
-//        inline IModel * model() const { return mdl; }
-
-        inline View::Params settings() const { return sttngs; }
-        inline void setSettings(View::Params newSettings) { sttngs = newSettings; }
+        inline Params settings() const { return sttngs; }
+        inline void setSettings(Params newSettings) { sttngs = newSettings; }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
@@ -62,6 +60,7 @@ namespace View {
         void appendRows(QList<QUrl> & urls);
         void markSelectedAsLiked(bool liked);
     signals:
+//        void infoInvalidation(const QModelIndex & node);
         void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);
         void searchFinished();
@@ -134,7 +133,7 @@ namespace View {
         void mouseMoveEvent(QMouseEvent *);
 
         IModel * mdl;
-        View::Params sttngs;
+        Params sttngs;
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;

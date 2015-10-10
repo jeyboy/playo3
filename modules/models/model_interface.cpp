@@ -50,13 +50,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
-    if (hash != 0) {
-        rootItem = new Playlist(hash);
-//        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
-    } else {
-        rootItem = new Playlist();
-//        items_count = 0;
-    }
+    rootItem = hash ? new Playlist(hash) : new Playlist();
 
     qDebug() << this << " " << rootItem -> itemsCountInBranch();
 }
@@ -140,22 +134,6 @@ Qt::ItemFlags IModel::flags(const QModelIndex & index) const {
         fl |= Qt::ItemNeverHasChildren;
 
     return fl;
-}
-
-IItem * IModel::item(const QModelIndex & index) const {
-    if (index.isValid()) {
-        IItem * item = static_cast<IItem *>(index.internalPointer());
-        if (item)
-            return item;
-    }
-    return rootItem;
-}
-
-QModelIndex IModel::index(IItem * item) const {
-    if (item == rootItem)
-        return QModelIndex();
-    else
-        return createIndex(item -> row(), item -> column(), item);
 }
 
 QModelIndex IModel::index(int row, int column, const QModelIndex & parent, bool orLastChild) const {

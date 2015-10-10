@@ -12,8 +12,6 @@
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/models/service/search_settings.h"
 
-//#include "model_types.h"
-
 #include "modules/core/core_parts/item_drop_formats.h"
 #include "modules/core/media/library.h"
 
@@ -48,7 +46,12 @@ namespace Models {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
-        QModelIndex index(IItem * item) const;
+        inline QModelIndex index(IItem * item) const {
+            if (item == rootItem)
+                return QModelIndex();
+            else
+                return createIndex(item -> row(), item -> column(), item);
+        }
         inline QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const { return index(row, column, parent, false); }
         QModelIndex index(int row, int column, const QModelIndex & parent, bool orLastChild) const;
         QModelIndex parent(const QModelIndex & index) const;
@@ -72,7 +75,14 @@ namespace Models {
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
-        IItem * item(const QModelIndex & index) const;
+        inline IItem * item(const QModelIndex & index) const {
+            if (index.isValid()) {
+                IItem * item = static_cast<IItem *>(index.internalPointer());
+                if (item)
+                    return item;
+            }
+            return rootItem;
+        }
         template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(item(index)); }
 
         void shuffle();
