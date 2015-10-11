@@ -386,5 +386,4 @@ SOURCES += \
     single_application.cpp \
     stylesheets.cpp \
     toolbars.cpp \
-    settings.cpp \
-    modules/core/interfaces/singleton.cpp
+    settings.cpp

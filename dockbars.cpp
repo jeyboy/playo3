@@ -6,7 +6,6 @@ using namespace Dialogs;
 using namespace Data;
 
 Dockbars * Dockbars::self = 0;
-
 Dockbars * Dockbars::instance(QWidget * parent) {
     if(!self)
         self = new Dockbars(parent);

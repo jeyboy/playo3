@@ -16,6 +16,7 @@
 
 #include "player/player.h"
 #include "modules/core/misc/file_utils/data_store.h"
+#include "modules/core/data_core.h"
 
 #include "dialogs/search_dialog.h"
 #include "dialogs/settings_dialog.h"
