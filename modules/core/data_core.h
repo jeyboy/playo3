@@ -27,7 +27,7 @@ namespace Core {
                 if (!is_interactive)
                     node -> set(ItemState::proceeded);
                 if (!node -> isContainer())
-                    Library::instance() -> restoreItemState(ind);
+                    Library::obj().restoreItemState(ind);
             }
         }
     };

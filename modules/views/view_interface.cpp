@@ -24,7 +24,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     setStyle(new TreeViewStyle);
 //    setStyleSheet(Stylesheets::treeViewStyles());
 
-    Library::instance() -> registerListSync(mdl, mdl -> syncMutex());
+    Library::obj().registerListSync(mdl, mdl -> syncMutex());
 
     setModel(mdl);
 
@@ -88,7 +88,7 @@ IView::~IView() {
     while (!mdl -> syncMutex() -> tryLock())
         QApplication::processEvents();
 
-    Library::instance() -> unregisterListSync(model());
+    Library::obj().unregisterListSync(model());
     mdl -> syncMutex() -> unlock();
 
     delete mdl;
@@ -271,7 +271,7 @@ void IView::resizeEvent(QResizeEvent * event) {
     if (event -> oldSize().height() != size().height()) {
         if (event -> size().height() > 0) {
             int count = (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2;
-            Library::instance() -> setWaitListLimit(mdl, count);
+            Library::obj().setWaitListLimit(mdl, count);
         }
     }
 
@@ -460,7 +460,7 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         IItem * node = mdl -> item(curr);
         if (!node -> is(ItemState::proceeded))
             if (!node -> isContainer())
-                Library::instance() -> directItemStateRestoration(curr);
+                Library::obj().directItemStateRestoration(curr);
 
         node -> updateCheckedStateByPredicate(flag);
 
@@ -645,7 +645,7 @@ void IView::removeSelectedItems(bool remove) {
         while (!mdl -> syncMutex() -> tryLock())
             QApplication::processEvents();
 
-        Library::instance() -> declineAllItemsRestoration(model());
+        Library::obj().declineAllItemsRestoration(model());
     } else return;
 
     if (list.size() > 200)

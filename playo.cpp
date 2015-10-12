@@ -52,8 +52,6 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Library::instance((QObject *)QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
-
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::instance(this);

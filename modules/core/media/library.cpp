@@ -5,15 +5,7 @@ using namespace Core;
 using namespace Media;
 using namespace Models;
 
-Library * Library::self = 0;
-
-Library * Library::instance(QObject * parent) {
-    if(!self)
-        self = new Library(parent);
-    return self;
-}
-
-Library::Library(QObject * parent) : QObject(parent), timeAmount(0) {
+Library::Library() : QObject(), timeAmount(0) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
