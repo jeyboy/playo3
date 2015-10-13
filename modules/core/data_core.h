@@ -17,7 +17,28 @@ namespace Core {
         inline DataFactory() : QObject() { }
         ~DataFactory() {}
     public slots:
+        void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
+            Library::obj().registerListSync(mdl, mutex);
+        }
+
+        void unregisterSync(QAbstractItemModel * mdl) {
+            Library::obj().unregisterListSync(mdl);
+        }
+
+        void discardSync(QAbstractItemModel * mdl) {
+            Library::obj().unregisterListSync(mdl);
+        }
+
+
+        void changeCadrSize(QAbstractItemModel * mdl, int newCadrSize) {
+            Library::obj().setWaitListLimit(mdl, newCadrSize);
+        }
+
         void proceedInfo(const QModelIndex & ind) {
+            Library::obj().directItemStateRestoration(ind);
+        }
+
+        void proceedInfoAsync(const QModelIndex & ind) {
             IItem * node = static_cast<IItem *>(ind.internalPointer());
 
             bool is_interactive = Settings::instance() -> isInteractiveProc();

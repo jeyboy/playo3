@@ -16,6 +16,7 @@
 
 #include "tree_view_style.h"
 
+#include "modules/core/data_core.h"
 #include "modules/models/model_item_delegate.h"
 #include "modules/models/model_interface.h"
 #include "service/download_view.h"
@@ -29,6 +30,7 @@ namespace View {
     class IView : public QTreeView {
       Q_OBJECT
     public:
+        void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
         IView(IModel * model, QWidget * parent, Params & settins);
         virtual ~IView();
@@ -60,7 +62,13 @@ namespace View {
         void appendRows(QList<QUrl> & urls);
         void markSelectedAsLiked(bool liked);
     signals:
+        void registerSync(QAbstractItemModel * mdl, QMutex * mutex);
+        void unregisterSync(QAbstractItemModel * mdl);
+        void discardSync(QAbstractItemModel * mdl);
+        void changeCadrSize(QAbstractItemModel * mdl, int newSize);
         void infoInvalidation(const QModelIndex & node) const;
+        void infoInvalidationAsync(const QModelIndex & node) const;
+
         void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, bool usePrevAction);
         void searchFinished();

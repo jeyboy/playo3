@@ -164,7 +164,6 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params 
 DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     DockBar * bar = createDocBar(name, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
-    connect(view, SIGNAL(infoInvalidation(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfo(QModelIndex)));
 
     bar -> setWidget(view);
     bar -> initiateSearch();

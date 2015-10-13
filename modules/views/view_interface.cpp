@@ -20,13 +20,19 @@ void IView::registerParent(QWidget * newParent) {
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
+    connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
+    connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(discardSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(discardSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidation(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfo(QModelIndex)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex)));
+    connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataFactory::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
+
+    setModel(mdl);
+    emit registerSync(mdl, mdl -> syncMutex());
+
     setIndentation(Settings::instance() -> treeIndentation());
     setStyle(new TreeViewStyle);
 //    setStyleSheet(Stylesheets::treeViewStyles());
-
-    Library::obj().registerListSync(mdl, mdl -> syncMutex());
-
-    setModel(mdl);
 
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -88,7 +94,7 @@ IView::~IView() {
     while (!mdl -> syncMutex() -> tryLock())
         QApplication::processEvents();
 
-    Library::obj().unregisterListSync(model());
+    emit unregisterSync(mdl);
     mdl -> syncMutex() -> unlock();
 
     delete mdl;
@@ -258,7 +264,7 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
     if (mdl -> item(index) -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
-    emit infoInvalidation(index);
+    emit infoInvalidationAsync(index);
     QTreeView::drawRow(painter, options, index);
 }
 
@@ -267,13 +273,12 @@ void IView::paintEvent(QPaintEvent * event) {
         QTreeView::paintEvent(event);
 }
 
-void IView::resizeEvent(QResizeEvent * event) {
-    if (event -> oldSize().height() != size().height()) {
-        if (event -> size().height() > 0) {
-            int count = (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2;
-            Library::obj().setWaitListLimit(mdl, count);
-        }
-    }
+void IView::resizeEvent(QResizeEvent * event) {   
+    if (event -> size().height() > 0)
+        emit changeCadrSize(
+            mdl,
+            (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2
+        );
 
     QTreeView::resizeEvent(event);
 }
@@ -458,9 +463,8 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> is(ItemState::proceeded))
-            if (!node -> isContainer())
-                Library::obj().directItemStateRestoration(curr);
+        if (!node -> isContainer() && !node -> is(ItemState::proceeded))
+            emit infoInvalidation(curr);
 
         node -> updateCheckedStateByPredicate(flag);
 
@@ -645,7 +649,7 @@ void IView::removeSelectedItems(bool remove) {
         while (!mdl -> syncMutex() -> tryLock())
             QApplication::processEvents();
 
-        Library::obj().declineAllItemsRestoration(model());
+        emit discardSync(mdl);
     } else return;
 
     if (list.size() > 200)

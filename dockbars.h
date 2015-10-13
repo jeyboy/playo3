@@ -5,7 +5,6 @@
 #include <QDockWidget>
 #include <QBoxLayout>
 
-#include "modules/core/data_core.h"
 #include "modules/core/misc/logger.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
