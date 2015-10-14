@@ -40,8 +40,8 @@ ModelItemDelegate::ModelItemDelegate(QObject * parent)
 //                          const QModelIndex &index) const;
 
 void ModelItemDelegate::recalcAttrs(int item_icon_size) {
-    itemFont = Settings::instance() -> itemFont();
-    itemInfoFont = Settings::instance() -> itemInfoFont();
+    itemFont = Settings::obj().itemFont();
+    itemInfoFont = Settings::obj().itemInfoFont();
     fmf = new QFontMetrics(itemFont);
     fmfInfo = new QFontMetrics(itemInfoFont);
     icon_size = item_icon_size - 2;
@@ -104,32 +104,32 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     QBrush fill_color;
 
     if (attrs.value(Key::played).toBool())
-        fill_color = Settings::instance() -> playedState(bodyRect, is_selected);
+        fill_color = Settings::obj().playedState(bodyRect, is_selected);
     else {
         switch (background_state) {
             case Core::ItemState::new_item:
-                fill_color = Settings::instance() -> defaultState(bodyRect, is_selected);
+                fill_color = Settings::obj().defaultState(bodyRect, is_selected);
                 break;
             case Core::ItemState::listened:
-                fill_color = Settings::instance() -> listenedState(bodyRect, is_selected);
+                fill_color = Settings::obj().listenedState(bodyRect, is_selected);
                 break;
             case Core::ItemState::liked:
-                fill_color = Settings::instance() -> likedState(bodyRect, is_selected);
+                fill_color = Settings::obj().likedState(bodyRect, is_selected);
                 break;
             default:
                 is_folder = true;
-                fill_color = Settings::instance() -> unprocessedState(bodyRect, is_selected);
+                fill_color = Settings::obj().unprocessedState(bodyRect, is_selected);
         }
     }
 
-    QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor();
+    QColor textColor = is_selected ? Settings::obj().selectedItemTextColor() : Settings::obj().itemTextColor();
     painter -> setBrush(fill_color);
 
     if (!is_folder) {
-        if (!Settings::instance() -> isShowSystemIcons())
+        if (!Settings::obj().isShowSystemIcons())
             ext = attrs.value(Key::ext).toString();
 
-        if (icon_size < ico_mini && !Settings::instance() -> isShowSystemIcons())
+        if (icon_size < ico_mini && !Settings::obj().isShowSystemIcons())
             ico_offset = 8 * (ext.length() - 1);
 
         left_offset += icon_size + ico_offset;
@@ -161,7 +161,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
             if (attrs[Key::not_exist].toBool())
                 painter -> drawPixmap(rect, icons[-1]);
             else {
-                if (Settings::instance() -> isShowSystemIcons()) {
+                if (Settings::obj().isShowSystemIcons()) {
                     QRect icoRect = QRect(
                                 bodyRect.left() + 4 + (icon_size / 20),
                                 option.rect.top() + (option.rect.height() - icon_size) / 2,
@@ -221,13 +221,13 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         }
     }
 
-    if (!is_folder && Settings::instance() -> isShowInfo()) {
+    if (!is_folder && Settings::obj().isShowInfo()) {
         painter -> setFont(itemInfoFont);
         painter -> setPen(
                     is_selected ?
-                        Settings::instance() -> selectedItemInfoTextColor()
+                        Settings::obj().selectedItemInfoTextColor()
                       :
-                        Settings::instance() -> itemInfoTextColor()
+                        Settings::obj().itemInfoTextColor()
                     );
 
         QStringList infos = attrs.value(Key::info).toStringList();
@@ -300,18 +300,18 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
     switch (background_state) {
         case Core::ItemState::new_item:
-            state_color = Settings::instance() -> defaultState(bodyRect, !is_selected);
+            state_color = Settings::obj().defaultState(bodyRect, !is_selected);
             break;
         case Core::ItemState::listened:
-            state_color = Settings::instance() -> listenedState(bodyRect, !is_selected);
+            state_color = Settings::obj().listenedState(bodyRect, !is_selected);
             break;
         case Core::ItemState::liked:
-            state_color = Settings::instance() -> likedState(bodyRect, !is_selected);
+            state_color = Settings::obj().likedState(bodyRect, !is_selected);
             break;
         default: is_folder = true;
     }
 
-    QColor textColor = is_selected ? Settings::instance() -> selectedItemTextColor() : Settings::instance() -> itemTextColor();
+    QColor textColor = is_selected ? Settings::obj().selectedItemTextColor() : Settings::obj().itemTextColor();
 
     if (!is_folder) {
         left_offset += icon_size;
@@ -327,12 +327,12 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         painter -> setPen(Qt::NoPen);
     painter -> setBrush(
         attrs.value("played").toBool() ?
-            Settings::instance() -> playedState(bodyRect, is_selected)
+            Settings::obj().playedState(bodyRect, is_selected)
         :
             is_folder ?
-                Settings::instance() -> unprocessedState(bodyRect, is_selected)
+                Settings::obj().unprocessedState(bodyRect, is_selected)
             :
-                Settings::instance() -> itemState(bodyRect, is_selected)
+                Settings::obj().itemState(bodyRect, is_selected)
     );
     painter -> drawRoundedRect(bodyRect, angle, angle);
 
@@ -353,7 +353,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             if (attrs[Key::not_exist].toBool()) {
                 painter -> drawPixmap(rect, icons[-1]);
             } else {
-                if (Settings::instance() -> isShowSystemIcons()) {
+                if (Settings::obj().isShowSystemIcons()) {
                     QVariant iconVal = attrs.value(Key::icon);
                     if (iconVal.isValid()) {
                         QIcon icon = qvariant_cast<QIcon>(iconVal);
@@ -390,13 +390,13 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////
 
-        if (Settings::instance() -> isShowInfo()) {
+        if (Settings::obj().isShowInfo()) {
             painter -> setFont(itemInfoFont);
             painter -> setPen(
                         is_selected ?
-                            Settings::instance() -> selectedItemInfoTextColor()
+                            Settings::obj().selectedItemInfoTextColor()
                           :
-                            Settings::instance() -> itemInfoTextColor()
+                            Settings::obj().itemInfoTextColor()
                         );
 
             QStringList infos = attrs.value(Key::info).toStringList();

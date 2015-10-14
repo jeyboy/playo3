@@ -36,15 +36,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
 Playo::~Playo() {
     delete ui;
-
-    ///////////////////////////////////////////////
-    /// close singletons
-    ///////////////////////////////////////////////
-        Extensions::close();
-        IconProvider::close();
-        Settings::close();
-//        Genre::close();
-
         Web::Apis::close(settings -> obj());
     ///////////////////////////////////////////////
 

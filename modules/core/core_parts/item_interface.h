@@ -43,7 +43,7 @@ namespace Core {
 
         virtual bool isExist() const = 0;
         inline bool isPlayable() const {
-            bool showBatch = Settings::instance() -> isCheckboxShow();
+            bool showBatch = Settings::obj().isCheckboxShow();
             return !isContainer() && (!showBatch || (showBatch && is(checked)));
         }
 

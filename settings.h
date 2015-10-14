@@ -1,6 +1,8 @@
 #ifndef APP_SETTINGS_H
 #define APP_SETTINGS_H
 
+#include "modules/core/interfaces/singleton.h"
+
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"
 #include "settings/item_settings.h"
@@ -10,12 +12,11 @@
 
 class Settings : public GlobalSettings, public HotkeySettings,
         public ItemSettings, public SpectrumSettings,
-        public TabSettings, public LibrarySettings {
-public:
-    virtual ~Settings() { }
+        public TabSettings, public LibrarySettings, public Core::Singleton<Settings> {
 
-    static Settings * instance();
-    inline static void close() { delete self; }
+    Settings(); friend class Core::Singleton<Settings>;
+public:
+    virtual ~Settings();
 
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();
@@ -23,20 +24,12 @@ public:
     inline int totalItemHeight() { return itemHeight() + (isShowInfo() ? itemInfoFontSize() * 2 : 0); }
     inline int iconHeight() { return totalItemHeight() - 1; }
 
-    inline void resetGlobalSettings()   { GlobalSettings::fromJson(QJsonObject()); }
-    inline void resetHotkeySettings()   { HotkeySettings::fromJson(QJsonObject()); }
-    inline void resetItemSettings()     { ItemSettings::fromJson(QJsonObject()); }
-    inline void resetSpectrumSettings() { SpectrumSettings::fromJson(QJsonObject()); }
-    inline void resetTabSettings()      { TabSettings::fromJson(QJsonObject()); }
-    inline void resetLibrarySettings()  { LibrarySettings::fromJson(QJsonObject()); }
-
-private:
-    Settings() : GlobalSettings(), HotkeySettings(),
-        ItemSettings(), SpectrumSettings(),
-        TabSettings(), LibrarySettings() {
-    }
-
-    static Settings * self;
+    void resetGlobalSettings();
+    void resetHotkeySettings();
+    void resetItemSettings();
+    void resetSpectrumSettings();
+    void resetTabSettings();
+    void resetLibrarySettings();
 };
 
 #endif // APP_SETTINGS_H

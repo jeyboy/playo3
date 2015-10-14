@@ -41,7 +41,7 @@ void MetricSlider::resizeEvent(QResizeEvent *) {
 void MetricSlider::paintEvent(QPaintEvent * event) {
     QSlider::paintEvent(event);
 
-    if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
+    if (!Settings::obj().isMetricShow() || minimum() == maximum()) return;
 
     QPainter p(this);
 
@@ -143,7 +143,7 @@ void MetricSlider::calcGrid() {
 
         int center = rect().center().y() + point_radius / 2;
         for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos <= bodyRect.width(); pos += step, val += vall_offset) {
-            if (!Settings::instance() -> isMetricNumero()) {
+            if (!Settings::obj().isMetricNumero()) {
                 path.addEllipse(QPoint(pos + point_radius / 2, center), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);
@@ -160,7 +160,7 @@ void MetricSlider::calcGrid() {
         int center = rect().center().x() + point_radius / 2;
 
         for(double pos = bodyRect.bottom() - halfHandle / 2 - step, val = vall_offset; pos > bodyRect.y(); pos -= step, val += vall_offset) {
-            if (!Settings::instance() -> isMetricNumero()) {
+            if (!Settings::obj().isMetricNumero()) {
                 path.addEllipse(QPoint(center, pos), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);

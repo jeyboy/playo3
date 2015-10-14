@@ -41,7 +41,7 @@ namespace Core {
         void proceedInfoAsync(const QModelIndex & ind) {
             IItem * node = static_cast<IItem *>(ind.internalPointer());
 
-            bool is_interactive = Settings::instance() -> isInteractiveProc();
+            bool is_interactive = Settings::obj().isInteractiveProc();
             bool is_proceeded = node -> is(ItemState::proceeded);
 
             if (!is_proceeded) {

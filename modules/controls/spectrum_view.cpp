@@ -19,8 +19,8 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
 
     updateColors();
     changeBandCount();
-    changeHeight(Settings::instance() -> spectrumHeight());
-    changeType(Settings::instance() -> spectrumType());
+    changeHeight(Settings::obj().spectrumHeight());
+    changeType(Settings::obj().spectrumType());
     onMovableChanged(isMovable());
 }
 
@@ -47,10 +47,10 @@ void SpectrumView::generateContextMenu(QMenu * parent) {
 
 void SpectrumView::updateColors() {
     QColor c1, c2, c3;
-    if (Settings::instance() -> isCustomColorSpectrum()) {
-        c3 = Settings::instance() -> spectrumColor3();
-        c2 = Settings::instance() -> spectrumColor2();
-        c1 = Settings::instance() -> spectrumColor();
+    if (Settings::obj().isCustomColorSpectrum()) {
+        c3 = Settings::obj().spectrumColor3();
+        c2 = Settings::obj().spectrumColor2();
+        c1 = Settings::obj().spectrumColor();
     } else {
         c3 = QColor::fromRgb(0, 170, 255);
         c2 = QColor::fromRgb(0, 136, 199);
@@ -69,7 +69,7 @@ void SpectrumView::updateColors() {
 }
 
 void SpectrumView::changeType(SpectrumType newType) {
-    Settings::instance() -> setSpectrumType(newType);
+    Settings::obj().setSpectrumType(newType);
     type = newType;
     Player::instance() -> setSpectrumHeight(peakDimension());
 }
@@ -147,10 +147,10 @@ void SpectrumView::recalcAttrs() {
 }
 
 int SpectrumView::calcBarCount() {
-    if (Settings::instance() -> isAutoBarsAmount())
-        return (width() - start_h_offset) / Settings::instance() -> autoBarWidth();
-    else
-        return Settings::instance() -> spectrumBarsCount();
+    if (Settings::obj().isAutoBarsAmount())
+        return (width() - start_h_offset) / Settings::obj().autoBarWidth();
+
+    return Settings::obj().spectrumBarsCount();
 }
 
 int SpectrumView::peakDimension() {

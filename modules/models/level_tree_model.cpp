@@ -44,7 +44,7 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Pl
     int res = 0;
     rels[node]++;
 
-    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+    QFileInfoList folderList = Extensions::obj().folderDirectories(currFile);
     if (!folderList.isEmpty()) {
         QFileInfoList::Iterator it = folderList.begin();
 
@@ -52,7 +52,7 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Pl
             res += filesRoutine((*it), rootItem -> createPlaylist(Extensions::folderName((*it))), rels);
     }
 
-    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+    QFileInfoList fileList = Extensions::obj().folderFiles(currFile);
 
     if (!fileList.isEmpty()) {
         QFileInfoList::Iterator it = fileList.begin();
@@ -82,7 +82,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
         if (file.isDir())
             res += filesRoutine(file, rootItem -> createPlaylist(Extensions::folderName(file)), relations);
         else {
-            if (Extensions::instance() -> respondToExtension(file.suffix())) {
+            if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
                 new File(file.path(), file.fileName(), node, pos);
             }

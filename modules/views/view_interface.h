@@ -88,7 +88,7 @@ namespace View {
     protected slots:
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
-                if (::Settings::instance() -> isCheckboxShow()) {
+                if (Settings::obj().isCheckboxShow()) {
                     QModelIndex node = QModelIndex();
                     findExecutable(node);
                     execIndex(node);

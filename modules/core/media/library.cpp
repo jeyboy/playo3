@@ -64,7 +64,7 @@ void Library::restoreItemState(const QModelIndex & ind) {
             itm -> unset(ItemFields::proceeded);
         }
 
-        if (Settings::instance() -> isUsedDelayForRemote())
+        if (Settings::obj().isUsedDelayForRemote())
             if (ind.data(IREMOTE).toBool()) {
                 remote_list.append(ind);
 
@@ -306,12 +306,12 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
 void Library::clockTick() {
     if ((timeAmount += TIMER_TICK) > 999999999) timeAmount = 0;
 
-    int saveLibDelay = Settings::instance() -> saveLibDelay();
+    int saveLibDelay = Settings::obj().saveLibDelay();
 
     if (saveLibDelay != 0 && timeAmount % saveLibDelay == 0)
         saveCatalogs();
 
-    int procDelay = Settings::instance() -> remoteItemsProcDelay();
+    int procDelay = Settings::obj().remoteItemsProcDelay();
     if (procDelay == 0 || timeAmount % procDelay == 0)
         initRemoteItemInfo();
 }
@@ -384,7 +384,7 @@ QHash<QString, int> * Library::getCatalog(QString & name) {
 
 void Library::initItemData(IItem * itm) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = (itm -> isRemote() && Settings::instance() -> isUsedDelayForRemote()) || itm -> hasInfo();
+    bool has_info = (itm -> isRemote() && Settings::obj().isUsedDelayForRemote()) || itm -> hasInfo();
 
     if (has_titles && has_info) return;
 

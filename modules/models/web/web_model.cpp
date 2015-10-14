@@ -38,7 +38,7 @@ void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl
 int WebModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
 
-    QFileInfoList folderList = Extensions::instance() -> folderDirectories(currFile);
+    QFileInfoList folderList = Extensions::obj().folderDirectories(currFile);
     {
         QFileInfoList::Iterator it = folderList.begin();
 
@@ -46,7 +46,7 @@ int WebModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
             res += filesRoutine((*it), node -> createPlaylist((*it).fileName()));
     }
 
-    QFileInfoList fileList = Extensions::instance() -> folderFiles(currFile);
+    QFileInfoList fileList = Extensions::obj().folderFiles(currFile);
     QFileInfoList::Iterator it = fileList.begin();
 
     res += fileList.size();
@@ -66,7 +66,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
         if (file.isDir())
             res += filesRoutine(file, node -> createPlaylist(file.fileName(), 0, pos));
         else {
-            if (Extensions::instance() -> respondToExtension(file.suffix())) {
+            if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
                 new File(file.path(), file.fileName(), node, pos);
             }

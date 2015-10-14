@@ -2,14 +2,6 @@
 
 using namespace Core;
 
-Extensions * Extensions::self = 0;
-
-Extensions * Extensions::instance() {
-    if(!self)
-        self = new Extensions();
-    return self;
-}
-
 Extensions::Extensions() {
     ext = new DataStore(QStringLiteral("extensions.json"));
 

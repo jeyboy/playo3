@@ -127,7 +127,7 @@ Qt::ItemFlags IModel::flags(const QModelIndex & index) const {
     Qt::ItemFlags fl = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 
 
-    if (Settings::instance() -> isCheckboxShow())
+    if (Settings::obj().isCheckboxShow())
         fl |= Qt::ItemIsUserCheckable;
 
     if (!index.data(IFOLDER).toBool())

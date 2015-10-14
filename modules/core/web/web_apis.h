@@ -14,6 +14,7 @@
 namespace Core {
     namespace Web {
         class Apis {
+            static QHash<Web::SubType, ISearchable *> sites;
         public:
             static void initiate(QWidget * parent, const QJsonObject & obj);
             static QHash<Web::SubType, ISearchable *> list() { return sites; }
@@ -27,8 +28,7 @@ namespace Core {
 
                 qDeleteAll(sites);
             }
-        private:
-            static QHash<Web::SubType, ISearchable *> sites;
+
         };
     }
 }

@@ -7,19 +7,17 @@
 #include "data_store.h"
 #include "dialogs/extension_dialog.h"
 
+#include "modules/core/interfaces/singleton.h"
+
 #define JSON_KEY QStringLiteral("filters")
 #define JSON_ACTIVE_KEY QStringLiteral("active")
 #define DEFAULT_ACTIVE QStringLiteral("all")
 
 namespace Core {
-    class Extensions {
+    class Extensions : public Singleton<Extensions> {
     public:
         static QString folderName(QFileInfo & info);
-
         ~Extensions();
-
-        static Extensions * instance();
-        inline static void close() { delete self; }
 
         bool restoreExtension(QString & file_path, QString & restoredExt);
         QFileInfoList folderFiles(QFileInfo file);
@@ -37,11 +35,9 @@ namespace Core {
         inline QStringList presetsList() const { return QStringList(filters.keys()); }
 
     private:
-        Extensions();
+        Extensions(); friend class Singleton<Extensions>;
         void initSignatures();
         void initMusicExtensions();
-
-        static Extensions * self;
 
         QString activeFilter;
         QHash<QString, QStringList> filters;
