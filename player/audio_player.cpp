@@ -52,7 +52,7 @@ void Base::init() {
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
-    setOpenTimeOut(Settings::instance() -> openTimeOut());
+    setOpenTimeOut(Settings::obj().openTimeOut());
 }
 
 Base::Base(QObject * parent) : Panel(parent), openChannelWatcher(0) {
@@ -182,7 +182,7 @@ void Base::endOfPlayback() {
 
 void Base::startTimers() {
     notifyTimer -> start(notifyInterval);
-    spectrumTimer -> start(Settings::instance() -> spectrumFreqRate()); // 25 //40 Hz
+    spectrumTimer -> start(Settings::obj().spectrumFreqRate()); // 25 //40 Hz
     emit stateChanged(currentState = PlayingState);
 }
 

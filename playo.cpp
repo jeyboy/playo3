@@ -62,13 +62,13 @@ void Playo::initialization() {
     ///services loading
     ///////////////////////////////////////////////////////////
     Web::Apis::initiate(this, settings -> obj());
-    Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
+    Settings::obj().fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
     activation();
 
     SettingsDialog::registerHotkeys(Dockbars::instance());
 
-    setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
+    setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
 
     QVariant geometryState = stateSettings.value(SETTINGS_GEOMETRY_SET_KEY);
     if (geometryState.isValid())
@@ -129,7 +129,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     ToolBars::instance() -> save(settings);
     Dockbars::instance() -> save(settings);
 
-    settings -> write(SETTINGS_SET_KEY, Settings::instance() -> toJson());
+    settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
     settings -> save();
 
     Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
@@ -190,8 +190,8 @@ void Playo::receiveMessage(QString message) {
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
-    if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::instance() -> isOpenDropPointInTab()) {
-        View::Params settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
+    if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::obj().isOpenDropPointInTab()) {
+        View::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
         Dockbars::instance() -> createLinkedDocBar(button -> text(), button -> mainPath(), settings);
 //        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings, 0, true, true);
 //        QList<QUrl> urls;
@@ -216,10 +216,10 @@ void Playo::showSettingsDialog() {
         ToolBars::instance() -> updateMetricSliders();
         ToolBars::instance() -> getSpectrum() -> updateColors();
         ToolBars::instance() -> getSpectrum() -> changeBandCount();
-        ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
-        ToolBars::instance() -> getSpectrum() -> changeType(Settings::instance() -> spectrumType());
-        Player::instance() -> setSpectrumFreq(Settings::instance() -> spectrumFreqRate());
-        setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
+        ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
+        ToolBars::instance() -> getSpectrum() -> changeType(Settings::obj().spectrumType());
+        Player::instance() -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
+        setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::instance() -> updateAllViews();
     }
 }

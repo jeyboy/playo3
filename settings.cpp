@@ -1,5 +1,7 @@
 #include "settings.h"
 
+Settings::Settings() {}
+
 Settings::~Settings() { }
 
 void Settings::fromJson(QJsonObject settings) {

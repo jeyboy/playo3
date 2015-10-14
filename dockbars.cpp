@@ -51,7 +51,7 @@ void Dockbars::load(const QJsonArray & bars) {
         }
     }
 
-    if (!Settings::instance() -> isSaveCommonTab()) {
+    if (!Settings::obj().isSaveCommonTab()) {
         window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
         if (userTabsAmount != 0)
             commonBar() -> hide();
@@ -79,7 +79,7 @@ void Dockbars::save(DataStore * settings) {
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == COMMON_TAB) {
-                if (v && v -> isCommon() && !Settings::instance() -> isSaveCommonTab())
+                if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
                     continue;
             }
 
@@ -308,11 +308,11 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
 
 void Dockbars::updateAllViews() { // update for item height
     QList<IView *> views = parent() -> findChildren<IView *>();
-    int iconDimension = Settings::instance() -> iconHeight();
+    int iconDimension = Settings::obj().iconHeight();
 
     QList<IView *>::Iterator it = views.begin();
     for(; it != views.end(); it++) {
-        (*it) -> setUniformRowHeights(Settings::instance() -> isHeightUnificate());
+        (*it) -> setUniformRowHeights(Settings::obj().isHeightUnificate());
         (*it) -> setIconSize(QSize(iconDimension, iconDimension));
     }
 }
@@ -342,7 +342,7 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             return;
         }
 
-        if (Settings::instance() -> isFindValid())
+        if (Settings::obj().isFindValid())
             v -> execNextIndex();
     }
 }

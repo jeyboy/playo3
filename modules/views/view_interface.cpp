@@ -30,7 +30,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     setModel(mdl);
     emit registerSync(mdl, mdl -> syncMutex());
 
-    setIndentation(Settings::instance() -> treeIndentation());
+    setIndentation(Settings::obj().treeIndentation());
     setStyle(new TreeViewStyle);
 //    setStyleSheet(Stylesheets::treeViewStyles());
 
@@ -48,13 +48,13 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
 
-    setUniformRowHeights(Settings::instance() -> isHeightUnificate());
+    setUniformRowHeights(Settings::obj().isHeightUnificate());
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     setItemDelegate((item_delegate = new ModelItemDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
-    int iconDimension = Settings::instance() -> iconHeight();
+    int iconDimension = Settings::obj().iconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
     connect(
@@ -143,8 +143,8 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int dur
         qDebug() << "PLAYED " << node.data();
         Presentation::Dockbars::instance() -> setPlayed((DockBar *)parent());
 
-        if (Settings::instance() -> isSpoilOnActivation())
-            scrollTo(node, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+        if (Settings::obj().isSpoilOnActivation())
+            scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
 
         if (Player::instance() -> playedIndex() == node) {
             Player::instance() -> playPause();
@@ -277,7 +277,7 @@ void IView::resizeEvent(QResizeEvent * event) {
     if (event -> size().height() > 0)
         emit changeCadrSize(
             mdl,
-            (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2
+            (event -> size().height() / Settings::obj().totalItemHeight()) + 2
         );
 
     QTreeView::resizeEvent(event);
@@ -395,7 +395,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         }       
 
 
-        if (Settings::instance() -> isCheckboxShow()) {
+        if (Settings::obj().isCheckboxShow()) {
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
 
@@ -470,7 +470,7 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
 
         if (!ensureVisibility && node -> is(flag)) {
             ensureVisibility = true;
-            scrollTo(curr, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+            scrollTo(curr, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
         }
 
         curr = indexBelow(curr);
@@ -513,7 +513,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-    if (Settings::instance() -> isAlertOnFolderDeletion()) {
+    if (Settings::obj().isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
                 return false;
@@ -688,13 +688,13 @@ void IView::downloadBranch(const QModelIndex & node, QString savePath) {
 }
 
 void IView::downloadAll() {
-    downloadBranch(QModelIndex(), Settings::instance() -> defaultDownloadPath());
+    downloadBranch(QModelIndex(), Settings::obj().defaultDownloadPath());
 }
 
 void IView::downloadSelected() {
-    QString path = Settings::instance() -> defaultDownloadPath();
+    QString path = Settings::obj().defaultDownloadPath();
 
-    if (Settings::instance() -> isCheckboxShow())
+    if (Settings::obj().isCheckboxShow())
         downloadChecked(path);
     else {
         QModelIndexList indexes = selectedIndexes();
@@ -736,7 +736,7 @@ void IView::moveCheckedToNewTab(Playlist * /*root*/) {
 
 
 void IView::setIconSize(const QSize & size) {
-    setIndentation(Settings::instance() -> treeIndentation());
+    setIndentation(Settings::obj().treeIndentation());
     QTreeView::setIconSize(size);
     item_delegate -> recalcAttrs(size.width());
 }

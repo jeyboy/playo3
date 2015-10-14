@@ -500,7 +500,7 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void DownloadView::dropEvent(QDropEvent * event) {
-    proceedDrop(event, Settings::instance() -> defaultDownloadPath());
+    proceedDrop(event, Settings::obj().defaultDownloadPath());
 }
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {
