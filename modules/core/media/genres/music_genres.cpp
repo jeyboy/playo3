@@ -2,14 +2,6 @@
 
 using namespace Core::Media;
 
-MusicGenres * MusicGenres::self = 0;
-
-MusicGenres * MusicGenres::instance() {
-    if(!self)
-        self = new MusicGenres();
-    return self;
-}
-
 void MusicGenres::load() {
     settings = new DataStore(GENRES_PATH);
 

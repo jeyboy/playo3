@@ -36,9 +36,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
 Playo::~Playo() {
     delete ui;
-        Web::Apis::close(settings -> obj());
-    ///////////////////////////////////////////////
-
     delete settings;
 }
 
@@ -130,11 +127,11 @@ void Playo::closeEvent(QCloseEvent * e) {
     Dockbars::instance() -> save(settings);
 
     settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
+    Web::Apis::close(settings -> obj());
     settings -> save();
 
     Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
 
-    MusicGenres::close();
     MainWindow::closeEvent(e);
 }
 

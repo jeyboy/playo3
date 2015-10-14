@@ -3,6 +3,7 @@
 
 #include "target_genres.h"
 #include "modules/core/misc/file_utils/data_store.h"
+#include "modules/core/interfaces/singleton.h"
 
 #define GENRES_PATH QStringLiteral("genres_list.json")
 #define ROOT_VAL_NAME QStringLiteral("genres")
@@ -11,27 +12,24 @@
 
 namespace Core {
     namespace Media {
-        class MusicGenres : public TargetGenres { // global genres class // based on spotify genres list
+        class MusicGenres : public TargetGenres, public Singleton<MusicGenres> { // global genres class // based on spotify genres list
         public:
             inline ~MusicGenres() {
                 save();
                 delete settings;
             }
-            static MusicGenres * instance();
-            inline static void close() { delete self; }
             inline int defaultInt() const { return 12; }
         protected:
             void initDefault();
         private:
             DataStore * settings;
 
+            friend class Singleton<MusicGenres>;
             inline MusicGenres() : TargetGenres() { load(); }
 
             void load();
             void save();
             void prepare();
-
-            static MusicGenres * self;
         };
     }
 }

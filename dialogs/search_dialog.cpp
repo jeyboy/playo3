@@ -56,7 +56,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
     if (has_not_connected)
          setWindowTitle(windowTitle() % QStringLiteral(" (some search services is not connected)"));
 
-    QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
+    QStringList genres = MusicGenres::obj().genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
 
     QFileInfoList drives = QDir::drives();
