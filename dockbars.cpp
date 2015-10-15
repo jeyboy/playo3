@@ -4,16 +4,8 @@ using namespace Presentation;
 using namespace Dialogs;
 using namespace Data;
 
-Dockbars * Dockbars::self = 0;
-Dockbars * Dockbars::instance(QWidget * parent) {
-    if(!self)
-        self = new Dockbars(parent);
-    return self;
-}
-
 void Dockbars::load(const QJsonArray & bars) {
     int userTabsAmount = 0;
-    MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
     barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
 
@@ -38,7 +30,7 @@ void Dockbars::load(const QJsonArray & bars) {
 
             ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
 
-            window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
+            container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
             if (obj.value(QStringLiteral("played")).toBool()) {
                 IView * v = view(qobject_cast<DockBar *>(curr_bar));
@@ -52,7 +44,7 @@ void Dockbars::load(const QJsonArray & bars) {
     }
 
     if (!Settings::obj().isSaveCommonTab()) {
-        window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
+        container -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
         if (userTabsAmount != 0)
             commonBar() -> hide();
     }
@@ -62,7 +54,7 @@ void Dockbars::load(const QJsonArray & bars) {
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
         widg -> hide();
-        window -> addDockWidget(Qt::TopDockWidgetArea, widg);
+        container -> addDockWidget(Qt::TopDockWidgetArea, widg);
     }
 }
 
@@ -127,7 +119,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return createDocBar(barName, settings, &attrs, false);
     } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
+        bar -> setWidget(DownloadView::instance(&attrs, container));
         connect(DownloadView::instance(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
         return bar;
     } else if (barName == LOGS_TAB) {
@@ -176,13 +168,13 @@ DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObjec
     }
 
     if (addToView)
-        ((QMainWindow *)parent()) -> addDockWidget(Qt::TopDockWidgetArea, bar);
+        container -> addDockWidget(Qt::TopDockWidgetArea, bar);
 
     return bar;
 }
 
 DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {
-    DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
+    DockBar * dock = new DockBar(name, container, closable, Qt::WindowMinMaxButtonsHint);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
     connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon(bool)));
@@ -194,7 +186,7 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
     }
 
     return dock;
-//    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
+//    container->tabifyDockWidget(dockWidget1,dockWidget2);
 }
 
 void Dockbars::useVeticalTitles(bool vertical) {
@@ -235,7 +227,7 @@ void Dockbars::initPlayed() {
 }
 
 void Dockbars::showViewSettingsDialog(DockBar * bar) {
-    TabDialog dialog(parentWidget());
+    TabDialog dialog(container);
     if (bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
@@ -253,7 +245,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         }
     } else {
         if (dialog.exec() == QDialog::Accepted) {
-            ((QMainWindow *)parentWidget()) -> addDockWidget(
+            container -> addDockWidget(
                 Qt::TopDockWidgetArea,
                 createDocBar(dialog.getName(), dialog.getSettings())
             );
@@ -307,7 +299,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
 }
 
 void Dockbars::updateAllViews() { // update for item height
-    QList<IView *> views = parent() -> findChildren<IView *>();
+    QList<IView *> views = container -> findChildren<IView *>();
     int iconDimension = Settings::obj().iconHeight();
 
     QList<IView *>::Iterator it = views.begin();

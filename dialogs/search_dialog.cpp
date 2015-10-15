@@ -12,9 +12,9 @@ SearchDialog::SearchDialog(QWidget * parent) :
 {
     ui -> setupUi(this);
 
-    QList<DockBar *> bars = Dockbars::instance() -> dockbars();
+    QList<DockBar *> bars = Dockbars::obj().dockbars();
     for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
-        IView * v = Dockbars::instance() -> view(*it);
+        IView * v = Dockbars::obj().view(*it);
         if (v) {
             IModel * mdl = (IModel *)v -> model();
             if (mdl -> playlistType() != Data::search) {

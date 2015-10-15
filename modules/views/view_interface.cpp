@@ -141,7 +141,7 @@ bool IView::execPath(const QString path, bool paused, uint start, int duration) 
 bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {
     if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
         qDebug() << "PLAYED " << node.data();
-        Presentation::Dockbars::instance() -> setPlayed((DockBar *)parent());
+        Presentation::Dockbars::obj().setPlayed((DockBar *)parent());
 
         if (Settings::obj().isSpoilOnActivation())
             scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
@@ -243,20 +243,20 @@ void IView::copyIdsToClipboard() {
 
 void IView::openRecomendationsforUser() {
     Params settings(Data::vk_rel, false, false, false, true, sttngs.uid, Data::user_rel);
-    Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
+    Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> owner().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
-        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> toUid().toString(), Data::song_rel);
-        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
     }
 }
 
@@ -284,7 +284,7 @@ void IView::resizeEvent(QResizeEvent * event) {
 }
 
 void IView::focusInEvent(QFocusEvent *) {
-    Presentation::Dockbars::instance() -> setActive((DockBar *)parent());
+    Presentation::Dockbars::obj().setActive((DockBar *)parent());
 }
 
 void IView::contextMenuEvent(QContextMenuEvent * event) {
@@ -295,7 +295,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (isEditable()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), this)));
-        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(editActiveBar()));
+        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);
@@ -317,7 +317,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     if (Player::instance() -> playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
-        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(scrollToActive()));
+        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(scrollToActive()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);

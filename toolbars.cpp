@@ -43,7 +43,7 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
     menu -> addAction(QIcon(QStringLiteral(":drop_remove")), QStringLiteral("Remove drop point"), this, SLOT(removePanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
 
     QList<QToolBar *> bars = toolbars();
-    QList<DockBar *> docs = Dockbars::instance(window) -> dockbars();
+    QList<DockBar *> docs = Dockbars::obj().dockbars();
     bool hasBars = bars.count() > 0, hasDocs = docs.count() > 0;
 
     if (hasBars || hasDocs)
@@ -70,8 +70,8 @@ QMenu * ToolBars::createPopupMenu(QMainWindow * window) {
     if (hasDocs) {
         QMenu * docsMenu = menu -> addMenu(QStringLiteral("Dock bars"));
 
-        docsMenu -> addAction(QStringLiteral("Show all"), Dockbars::instance(window), SLOT(showAll()));
-        docsMenu -> addAction(QStringLiteral("Hide all"), Dockbars::instance(window), SLOT(hideAll()));
+        docsMenu -> addAction(QStringLiteral("Show all"), &Dockbars::obj(), SLOT(showAll()));
+        docsMenu -> addAction(QStringLiteral("Hide all"), &Dockbars::obj(), SLOT(hideAll()));
         docsMenu -> addSeparator();
 
 
@@ -268,7 +268,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_plus_key);
 
     //TODO: add del versions od buttons
-    ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), Dockbars::instance(), SLOT(playPrev()));
+    ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), &Dockbars::obj(), SLOT(playPrev()));
 
     QIcon ico;
     ico.addPixmap(QPixmap(QStringLiteral(":/like")), QIcon::Normal);
@@ -279,7 +279,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 
     Player::instance() -> setLikeButton(act);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), Dockbars::instance(), SLOT(playNext()));
+    ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> adjustSize();
 
     return ptb;
@@ -364,7 +364,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar(toolbar_controls_key);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), Dockbars::instance(), SLOT(createNewBar()));
+    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addWidget(initiateOdButton());
