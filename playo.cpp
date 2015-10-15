@@ -44,7 +44,7 @@ void Playo::activation() {
     new Tray(this);
     UserDialogBox::instance(this);
     Player::instance(this);
-    ToolBars::instance(this);
+    ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
     HotkeyManager::instance(this);
 }
@@ -79,8 +79,8 @@ void Playo::initialization() {
     /// toolbars
     ///////////////////////////////////////////////////////////
 
-    ToolBars::instance() -> load(settings -> read(ToolBars::settingsName()).toArray());
-    ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
+    ToolBars::obj().load(settings -> read(ToolBars::settingsName()).toArray());
+    ToolBars::obj().setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
 
     Dockbars::obj().load(settings -> read(Dockbars::settingsName()).toArray());
     connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), &Dockbars::obj(), SLOT(onNextItemNeeded(Player::Reason)));
@@ -100,7 +100,7 @@ void Playo::initialization() {
 }
 
 QMenu * Playo::createPopupMenu() {
-    return ToolBars::instance() -> createPopupMenu(this);
+    return ToolBars::obj().createPopupMenu();
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
@@ -122,8 +122,8 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     settings -> clear();
 
-    settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
-    ToolBars::instance() -> save(settings);
+    settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::obj().getEqualizerSettings());
+    ToolBars::obj().save(settings);
     Dockbars::obj().save(settings);
 
     settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
@@ -210,11 +210,11 @@ void Playo::showSearchDialog() {
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        ToolBars::instance() -> updateMetricSliders();
-        ToolBars::instance() -> getSpectrum() -> updateColors();
-        ToolBars::instance() -> getSpectrum() -> changeBandCount();
-        ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
-        ToolBars::instance() -> getSpectrum() -> changeType(Settings::obj().spectrumType());
+        ToolBars::obj().updateMetricSliders();
+        ToolBars::obj().getSpectrum() -> updateColors();
+        ToolBars::obj().getSpectrum() -> changeBandCount();
+        ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
+        ToolBars::obj().getSpectrum() -> changeType(Settings::obj().spectrumType());
         Player::instance() -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::obj().updateAllViews();

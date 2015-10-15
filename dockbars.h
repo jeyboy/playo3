@@ -61,7 +61,7 @@ namespace Presentation {
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);
 
-        inline void setContainer(MainWindow * ct) { container = ct; }
+        inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
         void updateActiveTabIcon(bool isFloating = false);
         void updateAllViews();
@@ -102,7 +102,7 @@ namespace Presentation {
     private:
         TabifyParams lastTabData;
         DockBar * active, * played, * common;
-        MainWindow * container;
+        QMainWindow * container;
 
         QHash<QString, DockBar *> linkedTabs;
 

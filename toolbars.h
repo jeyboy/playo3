@@ -5,6 +5,7 @@
 #include <qmainwindow.h>
 #include <qmenu.h>
 
+#include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
 #include "modules/core/web/apis/social/_socials.h"
@@ -21,35 +22,28 @@ namespace Presentation {
     using namespace Controls;
     using namespace Core::Web;
 
-    class ToolBars : public QObject {
+    class ToolBars : public QObject, public Singleton<ToolBars> {
         Q_OBJECT
     public:
-        ~ToolBars() {
-            delete vkToolButton;
-            delete soundcloudToolButton;
-            delete odToolButton;
-            delete spectrum;
-        }
-
-        static ToolBars * instance(QObject * parent = 0);
-        static void close() { delete self; }
+        ~ToolBars() { }
 
         static inline QString settingsName() { return QStringLiteral("bars"); }
 
-        QMenu * createPopupMenu(QMainWindow * window);
+        QMenu * createPopupMenu();
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);
-        void createToolbars(QMainWindow * window);
+        void createToolbars();
         void addPanelButton(QString name, QString path, QToolBar * bar);
 
-        inline QList<QToolBar *> toolbars() { return parent() -> findChildren<QToolBar *>(); }
+        inline QList<QToolBar *> toolbars() { return container -> findChildren<QToolBar *>(); }
         SpectrumView * getSpectrum();
         inline void updateMetricSliders() { slider -> updateMetric(); }
 
         inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
         inline void setEqualizerSettings(QJsonObject settings) { equalizer -> setSettings(settings); }
 
+        inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
         void hideAll();
         void showAll();
@@ -104,7 +98,8 @@ namespace Presentation {
         QToolBar * createEqualizerToolBar();
         QToolBar * createEqualizerButtonBar();
 
-        inline ToolBars(QObject * parent) : QObject(parent),
+        friend class Singleton<ToolBars>;
+        inline ToolBars() : QObject(),
             vkToolButton(0), soundcloudToolButton(0), odToolButton(0), highlighted(0), equalizer(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
 
@@ -126,8 +121,7 @@ namespace Presentation {
         ToolbarButton * underMouseButton;
 
         QPoint lastClickPoint;
-
-        static ToolBars *self;
+        QMainWindow * container;
 
         const QString toolbar_media_key = QStringLiteral("Media");
         const QString toolbar_media_plus_key = QStringLiteral("Media+");
