@@ -20,7 +20,7 @@ bool Plugins::loadWebDialog(WebDialogInterface *& wdi) {
             if (wdi)
                 return true;
         }
-        else emit Logger::instance() -> write(QStringLiteral("Plugin loader"), pluginLoader.errorString());
+        else emit Logger::obj().write(QStringLiteral("Plugin loader"), pluginLoader.errorString());
     }
 
     return false;

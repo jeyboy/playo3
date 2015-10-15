@@ -10,13 +10,11 @@
 #include <qstringbuilder.h>
 
 #include "modules/core/misc/format.h"
+#include "modules/core/interfaces/singleton.h"
 
-class Logger : public QObject {
+class Logger : public QObject, public Core::Singleton<Logger> {
     Q_OBJECT
 public:
-    static Logger * instance(QObject * parent = 0);
-    inline static void close() { delete self; }
-
     ~Logger();
 
     void initiate(QString fileName = "", QPlainTextEdit * editor = 0);
@@ -33,7 +31,7 @@ private:
     void toFile(QString initiator, QString value);
     void toEditor(QString initiator, QString value);
 
-    explicit Logger(QObject * parent);
+    Logger(); friend class Core::Singleton<Logger>;
 
     QTextStream * out;
     QFile * file;

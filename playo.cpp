@@ -50,7 +50,7 @@ void Playo::activation() {
 }
 
 void Playo::initialization() {
-    Logger::instance() -> startMark();
+    Logger::obj().startMark();
 
     QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
     settings = new DataStore(BACKEND_SETTINGS_FILE_NAME);
@@ -96,7 +96,7 @@ void Playo::initialization() {
         QApplication::processEvents();
         showMaximized();
     }
-    Logger::instance() -> endMark(tr("Main"), tr("Loading"));
+    Logger::obj().endMark(tr("Main"), tr("Loading"));
 }
 
 QMenu * Playo::createPopupMenu() {
@@ -104,7 +104,7 @@ QMenu * Playo::createPopupMenu() {
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
-    Logger::instance() -> unregisterEditor();
+    Logger::obj().unregisterEditor();
     bool is_maximized = isMaximized();
     showNormal();
 
@@ -116,7 +116,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
-    Logger::instance() -> startMark();
+    Logger::obj().startMark();
 
     Player::instance() -> pause();
 
@@ -130,7 +130,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     Web::Apis::close(settings -> obj());
     settings -> save();
 
-    Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
+    Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
 
     MainWindow::closeEvent(e);
 }
@@ -169,7 +169,7 @@ void Playo::dropEvent(QDropEvent * event) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 void Playo::receiveMessage(QString message) {
-    Logger::instance() -> write(QStringLiteral("Main"), QStringLiteral("receiveMessage"));
+    Logger::obj().write(QStringLiteral("Main"), QStringLiteral("receiveMessage"));
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
 
@@ -244,7 +244,7 @@ void Playo::openVKTabDialog() {
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
 
-        emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -261,7 +261,7 @@ void Playo::showVKRelTabDialog() {
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), View::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
 
-    emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
+    emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
@@ -280,7 +280,7 @@ void Playo::openSoundcloudTabDialog() {
         if (dialog -> exec() == QDialog::Accepted)
             Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
 
-        emit Logger::instance() -> write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
         delete dInt;
     }
 }

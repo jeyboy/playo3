@@ -70,9 +70,10 @@ Base::Base(QObject * parent) : Panel(parent), openChannelWatcher(0) {
 }
 
 Base::~Base() {
-    if (openChannelWatcher)
+    if (openChannelWatcher) {
         openChannelWatcher -> cancel();
-    openChannelWatcher -> deleteLater();
+        openChannelWatcher -> deleteLater();
+    }
 
     stopTimers();
     BASS_PluginFree(0);

@@ -132,7 +132,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return bar;
     } else if (barName == LOGS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(Logger::instance() -> getEditor());
+        bar -> setWidget(Logger::obj().getEditor());
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }

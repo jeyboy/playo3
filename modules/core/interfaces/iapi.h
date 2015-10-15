@@ -46,11 +46,11 @@ namespace Core {
 
             bool status = extractStatus(url, response, code, message);
             if (!status) {
-                emit Logger::instance() -> write(QStringLiteral("sQuery"), url.toString(), message, true);
+                emit Logger::obj().write(QStringLiteral("sQuery"), url.toString(), message, true);
                 sendError(errorReceiver, message, code);
             } else {
                 if (post_proc & extract) extractBody(response);
-                emit Logger::instance() -> write(QStringLiteral("sQuery"), url.toString(), response.keys());
+                emit Logger::obj().write(QStringLiteral("sQuery"), url.toString(), response.keys());
             }
             return status;
         }

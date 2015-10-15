@@ -29,10 +29,10 @@ namespace Core {
         }
 
         bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
-            Logger::instance() -> startMark();
+            Logger::obj().startMark();
             Web::Response * response = Web::Manager::prepare() -> followedGet(url);
             bool res = toJson(jtype, response, items, true);
-            Logger::instance() -> endMark(QStringLiteral("Grabber"), url.toString());
+            Logger::obj().endMark(QStringLiteral("Grabber"), url.toString());
             return res;
         }
 
