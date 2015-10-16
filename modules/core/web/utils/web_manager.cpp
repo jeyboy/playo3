@@ -69,9 +69,7 @@ namespace Core {
                 qDebug() << "!!!!!!!!!!!!!!!!!!!! REGISTRATE MANAGER";
                 managers.insert(thread, new Manager());
 
-                //QApplication::instance() -> thread()
-
-                if (/*QThread::currentThread()*/ thread != QApplication::instance() -> thread())
+                if (thread != QApplication::instance() -> thread())
                     connect(thread, SIGNAL(finished()), new ManagerController(), SLOT(disconnectThread()));
             }
             return managers[thread];
@@ -83,37 +81,6 @@ namespace Core {
             this -> mode = mode;
             this -> setCookieJar(Manager::cookies);
         }
-
-        //QJsonObject Manager::getJson(const QNetworkRequest & request, bool wrap) {
-        //    QNetworkReply * reply = getSync(request);
-        //    QJsonObject res = replyToJson(reply, wrap);
-        //    reply -> deleteLater();
-        //    return res;
-        //}
-        //QJsonObject Manager::postJson(const QNetworkRequest & request, const QByteArray & data, bool wrap) {
-        //    QNetworkReply * reply = postSync(request, data);
-        //    QJsonObject res = replyToJson(reply, wrap);
-        //    reply -> deleteLater();
-        //    return res;
-        //}
-
-        //QNetworkReply * Manager::postForm(const QUrl & url, bool redirect_follow, QHash<QString, QString> headers) {
-        //    return postForm(url, url.query(QUrl::FullyEncoded), redirect_follow, headers);
-        //}
-
-        //QNetworkReply * Manager::postForm(const QUrl & url, const QString & body, bool redirect_follow, QHash<QString, QString> headers) {
-        //    QNetworkRequest request(url);
-        //    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-        //    return postSync(request, body.toUtf8(), redirect_follow, headers);
-        //}
-
-        //QPixmap Manager::openImage(const QUrl & url) {
-        //    QImage image;
-        //    QNetworkReply * reply = openUrl(url);
-        //    image.loadFromData(reply -> readAll());
-        //    reply -> deleteLater();
-        //    return QPixmap::fromImage(image);
-        //}
 
         Response * Manager::synchronizeRequest(QNetworkReply * m_http) {
             QEventLoop loop;

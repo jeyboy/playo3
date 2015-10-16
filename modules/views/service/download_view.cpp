@@ -244,7 +244,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 if (invalid) {
                     emit updateAttr(ind, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
                     toFile.remove();
-                    delete networkManager;
                     return ind;
                 }
             }
@@ -258,7 +257,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 source -> close();
                 delete source;
                 toFile.close();
-                delete networkManager;
                 return ind;
             }
 
@@ -272,7 +270,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             source -> close();
             delete source;
             toFile.close();
-            delete networkManager;
             return ind;
         }
 
@@ -302,7 +299,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         source -> close();
         delete source;
-        delete networkManager;
         if (watcher -> isCanceled())
             toFile.remove();
         else
