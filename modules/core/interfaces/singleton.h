@@ -3,12 +3,16 @@
 
 //int(*fooCheck)(int)     = T::foo; // check static method aviability in class while inheriting
 
+#include <qjsonobject.h>
+#include <qwidget.h>
+
 namespace Core {
     template<class T> class SingletonPtr;
 
     template<class T> class SingletonDestroyer {
         T * p_instance;
     public:
+        SingletonDestroyer() : p_instance(0) {}
         ~SingletonDestroyer() { delete p_instance; }
         void initialize(T * p) { p_instance = p; }
     };
@@ -28,11 +32,16 @@ namespace Core {
                 destroyer.initialize((p_instance = new T()));
             return *p_instance;
         }
+
+        static T & linked_obj_with_init(QJsonObject * obj, QWidget * parent) {
+            if(!p_instance)
+                p_instance = new T(obj, parent);
+            return *p_instance;
+        }
     };
 
     template<class T> T * SingletonPtr<T>::p_instance = 0;
     template<class T> SingletonDestroyer<T> SingletonPtr<T>::destroyer;
-
 
 /////////////////////////////////////////////////////////////////////////////
 /// Meyers singleton

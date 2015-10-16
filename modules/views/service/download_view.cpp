@@ -4,14 +4,6 @@ using namespace View;
 using namespace Core;
 using namespace Web;
 
-DownloadView * DownloadView::self = 0;
-
-DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
-    if(!self)
-        self = new DownloadView(hash, parent);
-    return self;
-}
-
 DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
     paused(false), mdl(new DownloadModel(hash, this)) {
 

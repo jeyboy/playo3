@@ -667,7 +667,7 @@ void IView::removeSelectedItems(bool remove) {
 
 void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
     QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
-    DownloadView::instance() -> proceedDrop(event, savePath);
+    DownloadView::obj().proceedDrop(event, savePath);
 }
 
 void IView::downloadBranch(const QModelIndex & node, QString savePath) {

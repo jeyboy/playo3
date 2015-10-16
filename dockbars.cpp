@@ -119,8 +119,8 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return createDocBar(barName, settings, &attrs, false);
     } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(DownloadView::instance(&attrs, container));
-        connect(DownloadView::instance(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
+        bar -> setWidget(&DownloadView::linked_obj_with_init(&attrs, container));
+        connect(&DownloadView::obj(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
         return bar;
     } else if (barName == LOGS_TAB) {
         DockBar * bar = createDocBar(barName, false);
