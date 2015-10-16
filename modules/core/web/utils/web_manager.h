@@ -21,6 +21,7 @@ namespace Core {
         public:
             static inline Response * fromReply(QNetworkReply * reply) { return (Response *)reply; }
 
+            inline bool hasErrors() { return error() != NoError; }
             inline int status() { return attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
             inline QVariant redirectUrl() { return attribute(QNetworkRequest::RedirectionTargetAttribute); }
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }

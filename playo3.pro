@@ -254,7 +254,9 @@ HEADERS += \
     stylesheets.h \
     toolbars.h \
     settings.h \
-    modules/core/interfaces/singleton.h
+    modules/core/interfaces/singleton.h \
+    modules/core/misc/file_utils/file_errors.h \
+    modules/core/web/response_error.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

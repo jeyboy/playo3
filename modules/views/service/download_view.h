@@ -20,9 +20,12 @@
 
 #include "modules/core/web/apis/social/vk_api.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/misc/file_utils/file_errors.h"
+#include "modules/core/web/response_error.h"
 
+// TODO: rewrite on mutex using while deleting items
 namespace View {
-    class DownloadView : public QListView, public Core::SingletonPtr<DownloadView> {
+    class DownloadView : public QListView, public Core::SingletonPtr<DownloadView>, public Core::FileErrors, public Core::ResponseError {
       Q_OBJECT
     public:
         ~DownloadView();
@@ -50,8 +53,6 @@ namespace View {
         void proceedDownload();
 
     protected:
-        QString ioError(QFile * file);
-        QString ioError(QNetworkReply * file);
         QModelIndex downloading(QModelIndex &, QFutureWatcher<QModelIndex> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);

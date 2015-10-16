@@ -3,7 +3,6 @@
 namespace Core {
     namespace Web {
         Response * Response::followByRedirect() {
-            qDebug() << "STATUS:" << status();
             QVariant possibleRedirectUrl = redirectUrl();
             if (possibleRedirectUrl.isValid()) {
                 QUrl new_url = possibleRedirectUrl.toUrl();
@@ -17,12 +16,14 @@ namespace Core {
             return this;
         }
         QJsonObject Response::toJson(const QString & wrap) {
+            qDebug() << "IOERROR" << error();
             QByteArray ar = readAll();
             if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
             deleteLater();
             return QJsonDocument::fromJson(ar).object();
         }
         QPixmap Response::toImage() {
+            qDebug() << "IOERROR" << error();
             QImage image;
             image.loadFromData(readAll());
             deleteLater();
