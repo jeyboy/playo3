@@ -43,7 +43,7 @@ void Playo::activation() {
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::instance(this);
-    Player::instance(this);
+    Player::obj().setContainer(this);
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
     HotkeyManager::instance(this);
@@ -83,7 +83,7 @@ void Playo::initialization() {
     ToolBars::obj().setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
 
     Dockbars::obj().load(settings -> read(Dockbars::settingsName()).toArray());
-    connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), &Dockbars::obj(), SLOT(onNextItemNeeded(Player::Reason)));
+    connect(&Player::obj(), SIGNAL(nextItemNeeded(Player::Reason)), &Dockbars::obj(), SLOT(onNextItemNeeded(Player::Reason)));
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
     if (objState.isValid())
@@ -118,7 +118,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     Logger::obj().startMark();
 
-    Player::instance() -> pause();
+    Player::obj().pause();
 
     settings -> clear();
 
@@ -215,7 +215,7 @@ void Playo::showSettingsDialog() {
         ToolBars::obj().getSpectrum() -> changeBandCount();
         ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
         ToolBars::obj().getSpectrum() -> changeType(Settings::obj().spectrumType());
-        Player::instance() -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
+        Player::obj().setSpectrumFreq(Settings::obj().spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::obj().updateAllViews();
     }

@@ -11,7 +11,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
   , spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
-    connect(Player::instance(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
+    connect(&Player::obj(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
@@ -55,16 +55,16 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
         p.drawPath(path);
 
         if (show_mini_progress) {
-            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < .99)
+            float pos = Player::obj().getRemoteFileDownloadPosition();
+            if (Player::obj().getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().left() + 6, rect().y(), (rect().width() - 8) * pos, 3, 1, 1);
         }
     } else {
         p.drawPath(path);
 
         if (show_mini_progress) {
-            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < .99)
+            float pos = Player::obj().getRemoteFileDownloadPosition();
+            if (Player::obj().getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().x(), rect().bottom() - 6, 3, -(rect().height() - 1) * pos, 1, 1);
         }
     }

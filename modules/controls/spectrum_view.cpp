@@ -12,8 +12,8 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    connect(Player::instance(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
-    connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
+    connect(&Player::obj(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
+    connect(&Player::obj(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
@@ -71,19 +71,19 @@ void SpectrumView::updateColors() {
 void SpectrumView::changeType(SpectrumType newType) {
     Settings::obj().setSpectrumType(newType);
     type = newType;
-    Player::instance() -> setSpectrumHeight(peakDimension());
+    Player::obj().setSpectrumHeight(peakDimension());
 }
 
 void SpectrumView::changeBandCount() {
-    Player::instance() -> setSpectrumBandsCount(calcBarCount());
-    dataUpdated(Player::instance() -> getDefaultSpectrum());
+    Player::obj().setSpectrumBandsCount(calcBarCount());
+    dataUpdated(Player::obj().getDefaultSpectrum());
 }
 
 void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    Player::instance() -> setSpectrumHeight(peakDimension());
+    Player::obj().setSpectrumHeight(peakDimension());
 }
 
 void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
@@ -135,11 +135,11 @@ void SpectrumView::paintEvent(QPaintEvent * event) {
 void SpectrumView::recalcAttrs() {
     switch(type) {
         case bars:
-            bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();
+            bar_width = ((float)width() - start_h_offset - (Player::obj().spectrumBandsCount() + 1) * paddWidth()) / Player::obj().spectrumBandsCount();
             break;
 //case waves:
         default:
-            bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();             
+            bar_width = ((float)width() - start_h_offset - ((Player::obj().getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::obj().getCalcSpectrumBandsCount();
             break;
     }
 

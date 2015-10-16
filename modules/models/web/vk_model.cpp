@@ -128,5 +128,5 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
 void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+    Player::obj().playIndex(Player::obj().playedIndex());
 }

@@ -13,6 +13,7 @@
 #include "modules/controls/metric_slider.h"
 #include "modules/models/model_interface.h"
 #include "modules/core/media/mediainfo.h"
+#include "modules/core/interfaces/singleton.h"
 
 using namespace AudioPlayer;
 ///////////// remove later
@@ -23,13 +24,20 @@ using namespace Core;
 namespace Core { namespace Media { class MediaInfo; } }
 ///////////////////////////////
 
-class Player : public AudioPlayer::Base {
+class Player : public AudioPlayer::Base, public Singleton<Player> {
     Q_OBJECT
 public:
     enum Reason { init, endMedia, noMedia, stalled, error, refreshNeed };
 
-    static Player * instance(QWidget * parent = 0);
-    inline static void close() { delete self; }
+    void setContainer(QWidget * parent) {
+        #ifdef Q_OS_WIN
+            stateButton = new QWinTaskbarButton(parent);
+            parent -> winId(); // generate native object for windowHandle()
+            stateButton -> setWindow(parent -> windowHandle());
+            stateProgress = stateButton -> progress();
+            stateProgress -> setMinimum(0);
+        #endif
+    }
 
     void eject(bool updateState = true);
     void playIndex(const QModelIndex & item, bool paused = false, uint start = 0, int duration = -1);
@@ -83,7 +91,8 @@ protected:
     inline void startProccessing() { setItemState(ItemState::proccessing); }
     inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }
 private:
-    Player(QWidget * parent);
+    friend class Singleton<Player>;
+    Player();
 
     void setStartPosition();
     void setItemState(int state);
@@ -92,7 +101,6 @@ private:
 
     void setTimePanelVal(int millis);
 
-    static Player * self;
     Controls::MetricSlider * slider;
     QSlider * volumeSlider, * panSlider;
     Controls::ClickableLabel * timePanel;

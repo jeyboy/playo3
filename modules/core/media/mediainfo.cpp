@@ -46,7 +46,7 @@ MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
     }
     else if (!onlyTags) {
         readed = true;
-        error = !Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
+        error = !Player::obj().getFileInfo(uri, this); // this method only initiating tech info
     }
 }
 

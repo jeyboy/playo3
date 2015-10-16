@@ -101,8 +101,8 @@ IView::~IView() {
 }
 
 void IView::scrollToActive() {
-    if (Player::instance() -> playedIndex().isValid())
-        scrollTo(Player::instance() -> playedIndex(), QAbstractItemView::PositionAtCenter);
+    if (Player::obj().playedIndex().isValid())
+        scrollTo(Player::obj().playedIndex(), QAbstractItemView::PositionAtCenter);
 }
 
 void IView::execPrevIndex(bool deleteCurrent) {
@@ -146,11 +146,11 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int dur
         if (Settings::obj().isSpoilOnActivation())
             scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
 
-        if (Player::instance() -> playedIndex() == node) {
-            Player::instance() -> playPause();
+        if (Player::obj().playedIndex() == node) {
+            Player::obj().playPause();
             return true;
         } else {
-            Player::instance() -> playIndex(node, paused, start, duration);
+            Player::obj().playIndex(node, paused, start, duration);
             return true;
         }
     }
@@ -314,7 +314,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     actions.append((act = new QAction(this)));
     act -> setSeparator(true);
 
-    if (Player::instance() -> playedIndex().isValid()) {
+    if (Player::obj().playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
         connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(scrollToActive()));
@@ -541,12 +541,12 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         }
     }
 
-    if (Player::instance() -> playedIndex().isValid()) {
-        if (Player::instance() -> currentPlaylist() == mdl &&
-             Player::instance() -> playedItemTreePath().startsWith(
+    if (Player::obj().playedIndex().isValid()) {
+        if (Player::obj().currentPlaylist() == mdl &&
+             Player::obj().playedItemTreePath().startsWith(
             node.data(ITREESTR).toString()
         ))
-            Player::instance() -> eject(false);
+            Player::obj().eject(false);
     }
 
     if (remove_file_with_item)
@@ -759,7 +759,7 @@ void IView::markSelectedAsLiked(bool liked) {
 //////////////////////////////////////////////////////
 
 QModelIndex IView::activeIndex() {
-    QModelIndex ind = Player::instance() -> playedIndex();
+    QModelIndex ind = Player::obj().playedIndex();
 
     if (ind.model() != model())
         ind = QModelIndex();
@@ -778,7 +778,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (!curr.isValid())
         curr = mdl -> index(0, 0);
 
-    if (Player::instance() -> playedIndex() != curr && curr.data(IPLAYABLE).toBool())
+    if (Player::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
     expand(curr.parent());
@@ -830,8 +830,8 @@ void IView::dropEvent(QDropEvent * event) {
 
 void IView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Space) {
-        if (Player::instance() -> playedItem())
-            Player::instance() -> playPause();
+        if (Player::obj().playedItem())
+            Player::obj().playPause();
         else
            execNextIndex();
     } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {

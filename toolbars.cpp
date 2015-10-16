@@ -244,10 +244,10 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
-    Player::instance() -> setPlayButton(ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play")));
-    Player::instance() -> setPauseButton(ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause")));
-    Player::instance() -> setStopButton(ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop")));
-    Player::instance() -> setCyclingButton(ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track")));
+    Player::obj().setPlayButton(ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play")));
+    Player::obj().setPauseButton(ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause")));
+    Player::obj().setStopButton(ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop")));
+    Player::obj().setCyclingButton(ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track")));
 
     ptb -> adjustSize();
 
@@ -267,7 +267,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     QAction * act = ptb -> addAction(ico, QStringLiteral("Liked"));
     act -> setCheckable(true);
 
-    Player::instance() -> setLikeButton(act);
+    Player::obj().setLikeButton(act);
 
     ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> adjustSize();
@@ -285,7 +285,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> style() -> unpolish(slider);
     slider -> style() -> polish(slider);
 
-    Player::instance() -> setTrackBar(slider);
+    Player::obj().setTrackBar(slider);
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();
@@ -303,7 +303,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> style() -> unpolish(pslider);
     pslider -> style() -> polish(pslider);
 
-    Player::instance() -> setPanTrackBar(pslider);
+    Player::obj().setPanTrackBar(pslider);
 
     ptb -> addWidget(pslider);
     ptb -> adjustSize();
@@ -318,7 +318,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
     ClickableLabel * timeLabel = new ClickableLabel(QStringLiteral("After click invert showing time") , QStringLiteral("00:00"), ptb);
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
     ptb -> addWidget(timeLabel);
-    Player::instance() -> setTimePanel(timeLabel);
+    Player::obj().setTimePanel(timeLabel);
     ptb -> adjustSize();
 
     return ptb;
@@ -334,7 +334,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
     act -> setCheckable(true);
 
-    Player::instance() -> setMuteButton(act);
+    Player::obj().setMuteButton(act);
 
     ClickableSlider * slider = new ClickableSlider(ptb);
     slider -> setProperty("volume", true);
@@ -344,7 +344,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
 
-    Player::instance() -> setVolumeTrackBar(slider);
+    Player::obj().setVolumeTrackBar(slider);
     ptb -> addWidget(slider);
     ptb -> adjustSize();
 

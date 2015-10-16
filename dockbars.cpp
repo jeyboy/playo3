@@ -92,10 +92,10 @@ void Dockbars::save(DataStore * settings) {
             } else {
                 if ((*it) == played) {
                     curr_bar.insert(QStringLiteral("played"), true);
-                    if (Player::instance() -> playedIndex().isValid()) {
-                        curr_bar.insert(QStringLiteral("played_item"), Player::instance() -> playedIndex().data(ITREEPATH).toString());
-                        curr_bar.insert(QStringLiteral("played_time"), Player::instance() -> getPosition());
-                        curr_bar.insert(QStringLiteral("played_duration"), Player::instance() -> getDuration());
+                    if (Player::obj().playedIndex().isValid()) {
+                        curr_bar.insert(QStringLiteral("played_item"), Player::obj().playedIndex().data(ITREEPATH).toString());
+                        curr_bar.insert(QStringLiteral("played_time"), Player::obj().getPosition());
+                        curr_bar.insert(QStringLiteral("played_duration"), Player::obj().getDuration());
                     }
                 }
 
@@ -323,11 +323,11 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             if (v -> isRequiredOnUpdate()) {
                 ((IModel *)v -> model()) -> refresh(true);
             } else {
-                if (IModel::restoreUrl(Player::instance() -> playedItem()))
-                    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                if (IModel::restoreUrl(Player::obj().playedItem()))
+                    Player::obj().playIndex(Player::obj().playedIndex());
                 else {
-                    Player::instance() -> stop();
-                    Player::instance() -> playedIndexIsNotExist();
+                    Player::obj().stop();
+                    Player::obj().playedIndexIsNotExist();
                 }
             }
 
@@ -360,12 +360,12 @@ void Dockbars::playPrev() {
     if (v) v -> execPrevIndex();
 }
 
-void Dockbars::stop() { Player::instance() -> stop(); }
-void Dockbars::playPause() { Player::instance() -> playPause(); }
-void Dockbars::slidePosForward() { Player::instance() -> slidePosForward(); }
-void Dockbars::slidePosBackward() { Player::instance() -> slidePosBackward(); }
-void Dockbars::slideVolForward() { Player::instance() -> slideVolForward(); }
-void Dockbars::slideVolBackward() { Player::instance() -> slideVolBackward(); }
+void Dockbars::stop() { Player::obj().stop(); }
+void Dockbars::playPause() { Player::obj().playPause(); }
+void Dockbars::slidePosForward() { Player::obj().slidePosForward(); }
+void Dockbars::slidePosBackward() { Player::obj().slidePosBackward(); }
+void Dockbars::slideVolForward() { Player::obj().slideVolForward(); }
+void Dockbars::slideVolBackward() { Player::obj().slideVolBackward(); }
 
 void Dockbars::onDownloadProceeded(QString to) {
     for(QHash<QString, DockBar *>::Iterator it = linkedTabs.begin(); it != linkedTabs.end(); it++) {
@@ -388,6 +388,6 @@ void Dockbars::barClosed() {
 
     IView * v = view(bar);
 
-    if (v && Player::instance() -> playedIndex().model() == v -> model())
-        Player::instance() -> playIndex(QModelIndex());
+    if (v && Player::obj().playedIndex().model() == v -> model())
+        Player::obj().playIndex(QModelIndex());
 }

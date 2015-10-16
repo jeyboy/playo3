@@ -118,5 +118,5 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
 void OdModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+    Player::obj().playIndex(Player::obj().playedIndex());
 }

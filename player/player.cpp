@@ -3,25 +3,9 @@
 using namespace AudioPlayer;
 using namespace Controls;
 
-Player * Player::self = 0;
-
-Player * Player::instance(QWidget * parent) {
-    if(!self)
-        self = new Player(parent);
-    return self;
-}
-
-Player::Player(QWidget * parent) : AudioPlayer::Base(parent), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
+Player::Player() : AudioPlayer::Base(), slider(0), volumeSlider(0), timePanel(0), playButton(0), pauseButton(0),
     stopButton(0), likeButton(0), muteButton(0), prevVolumeVal(0), time_forward(true), extended_format(true), current_model(0), current_item(0)
 {
-    #ifdef Q_OS_WIN
-        stateButton = new QWinTaskbarButton(parent);
-        parent -> winId(); // generate native object for windowHandle()
-        stateButton -> setWindow(parent -> windowHandle());
-        stateProgress = stateButton -> progress();
-        stateProgress -> setMinimum(0);
-    #endif
-
     setNotifyInterval(500);
     connect(this, SIGNAL(stateChanged(MediaState)), this, SLOT(onStateChanged(MediaState)));
     connect(this, SIGNAL(mediaStatusChanged(MediaStatus)), this, SLOT(onMediaStatusChanged(MediaStatus)));
