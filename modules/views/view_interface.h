@@ -69,7 +69,7 @@ namespace View {
         void infoInvalidation(const QModelIndex & node) const;
         void infoInvalidationAsync(const QModelIndex & node) const;
 
-        void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
+        void showAlert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, bool usePrevAction);
         void searchFinished();
 

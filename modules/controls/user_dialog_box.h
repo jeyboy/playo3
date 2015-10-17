@@ -2,21 +2,38 @@
 #define USER_DIALOG_BOX
 
 #include <qmessagebox.h>
-#include <qfiledialog.h>
+
+#include "modules/core/misc/thread_utils.h"
+#include "modules/core/interfaces/singleton.h"
 
 namespace Controls {
-    class UserDialogBox : public QWidget {
+    class UserDialogBox : public QObject, public Core::Singleton<UserDialogBox> {
         Q_OBJECT
     public:
         inline int lastAnswer() const { return last_answer; }
-        static UserDialogBox * instance(QWidget * parent = 0);
-    public slots:
-        void alert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
+
+        void alert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
+            if (Core::ThreadUtils::inThread()) // TODO: need to test
+                QMetaObject::invokeMethod(
+                    this,
+                    "_alert",
+                    Qt::BlockingQueuedConnection,
+                    Q_ARG(QWidget *, parent),
+                    Q_ARG(QString, title),
+                    Q_ARG(QString, text),
+                    Q_ARG(QMessageBox::StandardButtons, buttons)
+                );
+            else _alert(parent, title, text, buttons);
+        }
+    private slots:
+        inline void _alert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
+            last_answer = QMessageBox::warning(parent, title, text, buttons);
+        }
     private:
-        inline UserDialogBox(QWidget * parent) : QWidget(parent) {}
+        friend class Core::Singleton<UserDialogBox>;
+        UserDialogBox() {}
 
         int last_answer;
-        static UserDialogBox * self;
     };
 }
 
