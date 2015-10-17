@@ -7,8 +7,12 @@
 namespace Core {
     class ThreadUtils {
     public:
-        static bool inThread() {
+        static bool inMainThread() {
             return QThread::currentThread() != QApplication::instance() -> thread();
+        }
+
+        static bool livesInCurrThread(QObject * receiver) {
+            return QThread::currentThread() != receiver -> thread();
         }
     };
 }

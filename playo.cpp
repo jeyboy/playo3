@@ -42,6 +42,7 @@ Playo::~Playo() {
 void Playo::activation() {
     Stylesheets::initPens();
     new Tray(this);
+    UserDialogBox::obj(); // link dialog with current thread
     Player::obj().setContainer(this);
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);

@@ -13,7 +13,7 @@ namespace Controls {
         inline int lastAnswer() const { return last_answer; }
 
         void alert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
-            if (Core::ThreadUtils::inThread()) // TODO: need to test
+            if (Core::ThreadUtils::livesInCurrThread(this)) {
                 QMetaObject::invokeMethod(
                     this,
                     "_alert",
@@ -23,7 +23,7 @@ namespace Controls {
                     Q_ARG(QString, text),
                     Q_ARG(QMessageBox::StandardButtons, buttons)
                 );
-            else _alert(parent, title, text, buttons);
+            } else _alert(parent, title, text, buttons);
         }
     private slots:
         inline void _alert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
