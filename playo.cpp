@@ -46,7 +46,6 @@ void Playo::activation() {
     Player::obj().setContainer(this);
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
-    HotkeyManager::instance(this);
 }
 
 void Playo::initialization() {

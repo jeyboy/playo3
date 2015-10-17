@@ -33,38 +33,38 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
     for(; it != list.end(); it++) {
         switch((*it) -> data(2).toInt()) {
             case HOTKEY_NEXT: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
             break;}
             case HOTKEY_NEXT_AND_DELETE: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNextWithDel()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNextWithDel()));
             break;}
             case HOTKEY_PREV: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPrev()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPrev()));
             break;}
             case HOTKEY_PLAY: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPause()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPause()));
             break;}
             case HOTKEY_STOP: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(stop()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(stop()));
             break;}
             case HOTKEY_OPEN_SETTINGS: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(editActiveBar()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(editActiveBar()));
             break;}
 
             case HOTKEY_POS_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosForward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosForward()));
             break;}
 
             case HOTKEY_POS_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosBackward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosBackward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolForward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolForward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolBackward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolBackward()));
             break;}
         }
     }
@@ -417,11 +417,11 @@ void SettingsDialog::saveHotkeysSettings() {
     QList<HotkeyModelItem *> list = model -> toplevelItems();
     Settings::obj().setHotKeys(list);
 
-    HotkeyManager::instance() -> clear();
+    HotkeyManager::obj().clear();
 
     QList<HotkeyModelItem *>::Iterator it = list.begin();
     for(; it != list.end(); it++)
-        HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
+        HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
 }
 
 void SettingsDialog::saveSpectrumSettings() {

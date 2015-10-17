@@ -4,7 +4,7 @@
 void HotkeyEditor::keyReleaseEvent(QKeyEvent *) {
     emit editingFinished();
 
-    if (!HotkeyManager::instance() -> registerSequence(keyType, keySequence().toString())) {
+    if (!HotkeyManager::obj().registerSequence(keyType, keySequence().toString())) {
         qDebug() << "LOL";
     }
 }
