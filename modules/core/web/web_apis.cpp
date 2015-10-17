@@ -6,7 +6,10 @@ namespace Core {
 
         void Apis::initiate(QWidget * parent, const QJsonObject & obj) {
             sites.insert(Vk::Api::instance() -> siteType(), Vk::Api::instance(parent, obj.value(SETTINGS_VK_SET_KEY).toObject()));
-            sites.insert(Soundcloud::Api::instance() -> siteType(), Soundcloud::Api::instance(obj.value(SETTINGS_SOUNDCLOUD_SET_KEY).toObject()));
+
+            Soundcloud::Api::obj().fromJson(obj.value(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
+            sites.insert(Soundcloud::Api::obj().siteType(), &Soundcloud::Api::obj());
+
             sites.insert(Fourshared::Api::instance() -> siteType(), Fourshared::Api::instance(obj.value(SETTINGS_FOURSHARED_SET_KEY).toObject()));
             sites.insert(Od::Api::instance() -> siteType(), Od::Api::instance(parent, obj.value(SETTINGS_OD_SET_KEY).toObject()));
 

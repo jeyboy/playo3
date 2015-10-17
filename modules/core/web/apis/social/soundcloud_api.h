@@ -1,8 +1,10 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
+
 #include "modules/core/interfaces/web_api.h"
 #include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/interfaces/singleton.h"
 
 #include "soundcloud_request_api.h"
 #include "soundcloud_api_keys.h"
@@ -10,12 +12,13 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public WebApi, public TeuAuth, public RequestApi {
+            class Api : public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
+
+                friend class Singleton<Api>;
+                inline Api() { }
             public:
-                static Api * instance();
-                static Api * instance(QJsonObject obj);
-                inline static void close() { delete self; }
+                inline virtual ~Api() {}
 
                 inline QString name() const { return QStringLiteral("Soundcloud"); }
                 inline SubType siteType() { return sc_site; }
@@ -54,13 +57,7 @@ namespace Core {
                     QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
                     message = stat_obj.value(QStringLiteral("error_message")).toString();
                     return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
-                }
-            private:
-                inline Api(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
-                inline Api() : WebApi(), TeuAuth() { }
-                inline virtual ~Api() {}
-
-                static Api * self;
+                }                
             };
         }
     }

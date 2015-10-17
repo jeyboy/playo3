@@ -721,18 +721,18 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) { // TODO: move this to usual connection
-            if (!Soundcloud::Api::instance() -> isConnected()) {
+            if (!Soundcloud::Api::obj().isConnected()) {
                 WebDialogInterface * dInt;
                 if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
-                    dInt -> registerActions(Soundcloud::Api::instance());
+                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Soundcloud::Api::obj().authUrl(), QStringLiteral("Soundcloud auth"));
+                    dInt -> registerActions(&Soundcloud::Api::obj());
                     dialog -> exec();
                     delete dInt;
                 }
             }
 
-            if (Soundcloud::Api::instance() -> isConnected()) {
-                QJsonArray obj = Soundcloud::Api::instance() -> audioInfo(map_it.value());
+            if (Soundcloud::Api::obj().isConnected()) {
+                QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
                 proceedScList(obj, parentNode);
             }
         }

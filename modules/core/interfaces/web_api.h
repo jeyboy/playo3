@@ -6,16 +6,16 @@
 #include <QJsonArray>
 #include <qurl.h>
 
+#include "modules/core/misc/async.h"
 #include "dialogs/user_action_dialog.h"
 #include "modules/core/web/utils/web_manager.h"
-#include "modules/core/misc/async.h"
 
 namespace Core {
     class WebApi : public Async {
         Q_OBJECT
     public:
         WebApi(QObject * parent = 0);
-        virtual ~WebApi();
+        virtual ~WebApi() {}
 
         inline QString getError() { return error; }
 

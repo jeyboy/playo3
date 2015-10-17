@@ -257,7 +257,8 @@ HEADERS += \
     modules/core/interfaces/singleton.h \
     modules/core/misc/file_utils/file_errors.h \
     modules/core/web/response_error.h \
-    modules/core/misc/thread_utils.h
+    modules/core/misc/thread_utils.h \
+    modules/core/misc/func.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

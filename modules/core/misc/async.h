@@ -8,24 +8,14 @@
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <qfuturewatcher.h>
 
-struct Func {
-    inline Func() { }
-    inline Func(QObject * receiver, const char * respSlot) {
-        obj = receiver;
-        slot = respSlot;
-    }
-    inline ~Func() {}
-
-    QObject * obj;
-    const char * slot;
-};
+#include "func.h"
 
 //Q_INVOKABLE void test(QString value);
 
-class Async : public QObject { // refactor ?
+class Async : public QObject { // refactor ? //TODO: use qjsonvalue for unification
     Q_OBJECT
 public:
-    inline Async(QObject * parent = 0) : QObject(parent) {}
+    inline Async() {}
     virtual ~Async() {}
 
     void registerAsync(QFuture<QJsonObject> feature, Func func) {

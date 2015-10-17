@@ -264,7 +264,7 @@ void Playo::showVKRelTabDialog() {
 }
 
 void Playo::showSoundcloudRelTabDialog() {
-    RelationsDialog dialog(Soundcloud::Api::instance(), this);
+    RelationsDialog dialog(&Soundcloud::Api::obj(), this);
     if (dialog.exec() == QDialog::Accepted)
         Dockbars::obj().createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), View::Params(soundcloud, dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
@@ -273,20 +273,20 @@ void Playo::showSoundcloudRelTabDialog() {
 void Playo::openSoundcloudTabDialog() {
     WebDialogInterface * dInt;
     if (Plugins::loadWebDialog(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Soundcloud::Api::instance() -> authUrl(), QStringLiteral("Soundcloud auth"));
-        dInt -> registerActions(Soundcloud::Api::instance());
+        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Soundcloud::Api::obj().authUrl(), QStringLiteral("Soundcloud auth"));
+        dInt -> registerActions(&Soundcloud::Api::obj());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
+            Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true);
 
-        emit Logger::obj().write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::obj().isConnected() ? QStringLiteral("true") : Soundcloud::Api::obj().getError());
         delete dInt;
     }
 }
 
 void Playo::showSoundcloudTabDialog() {
-    if (Soundcloud::Api::instance() -> isConnected())
-        Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
+    if (Soundcloud::Api::obj().isConnected())
+        Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

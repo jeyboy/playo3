@@ -17,7 +17,7 @@ namespace Core {
 
         inline QUrl toUrl() const {
             QUrl url = QUrl(fullPath());
-            url.setQuery(Web::Soundcloud::Api::instance() -> genDefaultParams());
+            url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams());
             return url;
         }
 
