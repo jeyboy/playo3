@@ -13,7 +13,7 @@ namespace Controls {
         inline int lastAnswer() const { return last_answer; }
 
         void alert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons) {
-            if (Core::ThreadUtils::livesInCurrThread(this)) {
+            if (!Core::ThreadUtils::livesInCurrThread(this)) {
                 QMetaObject::invokeMethod(
                     this,
                     "_alert",

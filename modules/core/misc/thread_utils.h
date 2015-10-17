@@ -12,7 +12,7 @@ namespace Core {
         }
 
         static bool livesInCurrThread(QObject * receiver) {
-            return QThread::currentThread() != receiver -> thread();
+            return QThread::currentThread() == receiver -> thread();
         }
     };
 }
