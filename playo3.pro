@@ -260,7 +260,10 @@ HEADERS += \
     modules/core/media/interfaces/iequalizable.h \
     modules/core/media/interfaces/player_statuses.h \
     player/player_old.h \
-    player/player.h
+    player/player.h \
+    modules/core/interfaces/singleton.h \
+    modules/core/misc/file_utils/file_errors.h \
+    modules/core/web/response_error.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

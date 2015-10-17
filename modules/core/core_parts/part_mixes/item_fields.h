@@ -82,7 +82,7 @@ namespace Core {
         inline void setVideoPath(QVariant videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
         inline void setSubtype(Web::SubType subType)    { attrs[JSON_TYPE_SUB_TYPE] = subType; }
 
-        inline bool hasInfo() const {return !Settings::instance() -> isShowInfo() || (Settings::instance() -> isShowInfo() && _info().isValid());}
+        inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
         inline virtual QVariant toUid() { return QVariant(); }
         virtual QJsonObject toJson();

@@ -34,9 +34,9 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
     QStringList filters;
 
     if (params.spredicate.isEmpty()) {
-        filters = Extensions::instance() -> filterList("music");
+        filters = Extensions::obj().filterList("music");
     } else {
-        QStringList res = Extensions::instance() -> filterList("music");
+        QStringList res = Extensions::obj().filterList("music");
         for(QStringList::Iterator it = res.begin(); it != res.end(); it++)
             filters.append("*" + params.spredicate + (*it));
     }

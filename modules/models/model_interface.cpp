@@ -50,13 +50,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
     sync = new QMutex(QMutex::NonRecursive);
-    if (hash != 0) {
-        rootItem = new Playlist(hash);
-//        items_count = hash -> value(JSON_TYPE_TAB_ITEMS_COUNT).toInt();
-    } else {
-        rootItem = new Playlist();
-//        items_count = 0;
-    }
+    rootItem = hash ? new Playlist(hash) : new Playlist();
 
     qDebug() << this << " " << rootItem -> itemsCountInBranch();
 }
@@ -95,7 +89,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
         node -> setStates(iState);
         result = iState != -ItemState::proceeded && iState != -ItemState::mark_on_removing;
     } else if (role == ISTATE) {
-        Library::instance() -> setItemState(model_index, value.toInt());
+        Library::obj().setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
         result = true;
     } else if (role == Qt::EditRole)
@@ -133,29 +127,13 @@ Qt::ItemFlags IModel::flags(const QModelIndex & index) const {
     Qt::ItemFlags fl = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 
 
-    if (Settings::instance() -> isCheckboxShow())
+    if (Settings::obj().isCheckboxShow())
         fl |= Qt::ItemIsUserCheckable;
 
     if (!index.data(IFOLDER).toBool())
         fl |= Qt::ItemNeverHasChildren;
 
     return fl;
-}
-
-IItem * IModel::item(const QModelIndex & index) const {
-    if (index.isValid()) {
-        IItem * item = static_cast<IItem *>(index.internalPointer());
-        if (item)
-            return item;
-    }
-    return rootItem;
-}
-
-QModelIndex IModel::index(IItem * item) const {
-    if (item == rootItem)
-        return QModelIndex();
-    else
-        return createIndex(item -> row(), item -> column(), item);
 }
 
 QModelIndex IModel::index(int row, int column, const QModelIndex & parent, bool orLastChild) const {
@@ -701,7 +679,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         case soundcloud:
         case vk:
         case vk_rel:
-        case Data::list: { parentNode = rootItem; break; }
+        case level: { parentNode = rootItem; break; }
         case search:
         case tree:
         case level_tree: {
@@ -712,6 +690,7 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
             is_new = !parentNode;
             if (is_new) parentNode = rootItem -> createPlaylist(path);
         break;}
+        default:;
     }
 
     if (!parentNode)

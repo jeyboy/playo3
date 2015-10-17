@@ -12,15 +12,15 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    connect(Player::instance(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
-    connect(Player::instance(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
+    connect(&Player::obj(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
+    connect(&Player::obj(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
     updateColors();
     changeBandCount();
-    changeHeight(Settings::instance() -> spectrumHeight());
-    changeType(Settings::instance() -> spectrumType());
+    changeHeight(Settings::obj().spectrumHeight());
+    changeType(Settings::obj().spectrumType());
     onMovableChanged(isMovable());
 }
 
@@ -47,10 +47,10 @@ void SpectrumView::generateContextMenu(QMenu * parent) {
 
 void SpectrumView::updateColors() {
     QColor c1, c2, c3;
-    if (Settings::instance() -> isCustomColorSpectrum()) {
-        c3 = Settings::instance() -> spectrumColor3();
-        c2 = Settings::instance() -> spectrumColor2();
-        c1 = Settings::instance() -> spectrumColor();
+    if (Settings::obj().isCustomColorSpectrum()) {
+        c3 = Settings::obj().spectrumColor3();
+        c2 = Settings::obj().spectrumColor2();
+        c1 = Settings::obj().spectrumColor();
     } else {
         c3 = QColor::fromRgb(0, 170, 255);
         c2 = QColor::fromRgb(0, 136, 199);
@@ -69,21 +69,21 @@ void SpectrumView::updateColors() {
 }
 
 void SpectrumView::changeType(SpectrumType newType) {
-    Settings::instance() -> setSpectrumType(newType);
+    Settings::obj().setSpectrumType(newType);
     type = newType;
-    Player::instance() -> setSpectrumHeight(peakDimension());
+    Player::obj().setSpectrumHeight(peakDimension());
 }
 
 void SpectrumView::changeBandCount() {
-    Player::instance() -> setSpectrumBandsCount(calcBarCount());
-    dataUpdated(Player::instance() -> getDefaultSpectrum());
+    Player::obj().setSpectrumBandsCount(calcBarCount());
+    dataUpdated(Player::obj().getDefaultSpectrum());
 }
 
 void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    Player::instance() -> setSpectrumHeight(peakDimension());
+    Player::obj().setSpectrumHeight(peakDimension());
 }
 
 void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
@@ -135,11 +135,11 @@ void SpectrumView::paintEvent(QPaintEvent * event) {
 void SpectrumView::recalcAttrs() {
     switch(type) {
         case bars:
-            bar_width = ((float)width() - start_h_offset - (Player::instance() -> spectrumBandsCount() + 1) * paddWidth()) / Player::instance() -> spectrumBandsCount();
+            bar_width = ((float)width() - start_h_offset - (Player::obj().spectrumBandsCount() + 1) * paddWidth()) / Player::obj().spectrumBandsCount();
             break;
 //case waves:
         default:
-            bar_width = ((float)width() - start_h_offset - ((Player::instance() -> getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::instance() -> getCalcSpectrumBandsCount();             
+            bar_width = ((float)width() - start_h_offset - ((Player::obj().getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::obj().getCalcSpectrumBandsCount();
             break;
     }
 
@@ -147,10 +147,10 @@ void SpectrumView::recalcAttrs() {
 }
 
 int SpectrumView::calcBarCount() {
-    if (Settings::instance() -> isAutoBarsAmount())
-        return (width() - start_h_offset) / Settings::instance() -> autoBarWidth();
-    else
-        return Settings::instance() -> spectrumBarsCount();
+    if (Settings::obj().isAutoBarsAmount())
+        return (width() - start_h_offset) / Settings::obj().autoBarWidth();
+
+    return Settings::obj().spectrumBarsCount();
 }
 
 int SpectrumView::peakDimension() {

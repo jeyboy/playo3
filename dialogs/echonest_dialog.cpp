@@ -3,6 +3,7 @@
 #include <qdebug.h>
 
 #include "modules/controls/qxtspanslider.h"
+#include "modules/core/data_core.h"
 
 EchonestDialog::EchonestDialog(QWidget * parent) :
     QDialog(parent),

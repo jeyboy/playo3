@@ -12,9 +12,9 @@ SearchDialog::SearchDialog(QWidget * parent) :
 {
     ui -> setupUi(this);
 
-    QList<DockBar *> bars = Dockbars::instance() -> dockbars();
+    QList<DockBar *> bars = Dockbars::obj().dockbars();
     for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
-        IView * v = Dockbars::instance() -> view(*it);
+        IView * v = Dockbars::obj().view(*it);
         if (v) {
             IModel * mdl = (IModel *)v -> model();
             if (mdl -> playlistType() != Data::search) {
@@ -56,7 +56,7 @@ SearchDialog::SearchDialog(QWidget * parent) :
     if (has_not_connected)
          setWindowTitle(windowTitle() % QStringLiteral(" (some search services is not connected)"));
 
-    QStringList genres = MusicGenres::instance() -> genresList();   genres.sort();
+    QStringList genres = MusicGenres::obj().genresList();   genres.sort();
     ui -> stylePredicate -> addItems(genres);
 
     QFileInfoList drives = QDir::drives();

@@ -14,7 +14,7 @@ MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
 
         // taglib not worked with files without extensions :(
         if (!extension.isValid())
-            Extensions::instance() -> restoreExtension(file_path, ext);
+            Extensions::obj().restoreExtension(file_path, ext);
 
 //        error = !TagLib::FileRef::defaultFileExtensions.contains(TagLib::String(ext.toLower().toStdWString()));
 
@@ -46,7 +46,7 @@ MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
     }
     else if (!onlyTags) {
         readed = true;
-        error = !Player::instance() -> getFileInfo(uri, this); // this method only initiating tech info
+        error = !Player::obj().getFileInfo(uri, this); // this method only initiating tech info
     }
 }
 

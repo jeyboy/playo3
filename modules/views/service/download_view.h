@@ -19,13 +19,15 @@
 #include "modules/core/core_parts/part_mixes/item_fields.h"
 
 #include "modules/core/web/apis/social/vk_api.h"
+#include "modules/core/interfaces/singleton.h"
+#include "modules/core/misc/file_utils/file_errors.h"
+#include "modules/core/web/response_error.h"
 
+// TODO: rewrite on mutex using while deleting items
 namespace View {
-    class DownloadView : public QListView {
+    class DownloadView : public QListView, public Core::SingletonPtr<DownloadView>, public Core::FileErrors, public Core::ResponseError {
       Q_OBJECT
     public:
-        static DownloadView * instance(QJsonObject * hash = 0, QWidget * parent = 0);
-
         ~DownloadView();
 
         QJsonObject toJson();
@@ -51,8 +53,6 @@ namespace View {
         void proceedDownload();
 
     protected:
-        QString ioError(QFile * file);
-        QString ioError(QNetworkReply * file);
         QModelIndex downloading(QModelIndex &, QFutureWatcher<QModelIndex> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);
@@ -71,11 +71,12 @@ namespace View {
     private:
         bool paused;
 
+        friend class Core::SingletonPtr<DownloadView>;
         DownloadView(QJsonObject * hash, QWidget * parent);
+        DownloadView() {}
+
         QList<QFutureWatcher<QModelIndex> *> watchers;
         QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
-
-        static DownloadView * self;
 
         DownloadDelegate * item_delegate;
     };

@@ -19,7 +19,7 @@ void Spectrum::calcSpectrum() {
             channelsCount = DEFAULT_CHANNELS_COUNT;
             emit spectrumChanged(defaultSpectrum);
         } else {
-            if (Settings::instance() -> spectrumType() == bars) {
+            if (Settings::obj().spectrumType() == bars) {
                 QList<QVector<int> > res;
                 res.append(getSpectrum());
                 emit spectrumChanged(res);
@@ -70,7 +70,7 @@ QVector<int> Spectrum::getSpectrum() {
     float fft[1024];
     BASS_ChannelGetData(chId(), fft, BASS_DATA_FFT2048);
     QVector<int> res;
-    int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
+    int spectrumMultiplicity = Settings::obj().spectrumMultiplier() * spectrumHeight;
 
     int b0 = 0, x, y;
 
@@ -99,7 +99,7 @@ QList<QVector<int> > Spectrum::getComplexSpectrum() {
     }
 
     int layerLimit = 1024, gLimit = layerLimit * channelsCount;
-    int spectrumMultiplicity = Settings::instance() -> spectrumMultiplier() * spectrumHeight;
+    int spectrumMultiplicity = Settings::obj().spectrumMultiplier() * spectrumHeight;
     int workSpectrumBandsCount = getCalcSpectrumBandsCount();
     float fft[gLimit];
     BASS_ChannelGetData(chId(), fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);

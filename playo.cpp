@@ -36,35 +36,20 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
 Playo::~Playo() {
     delete ui;
-
-    ///////////////////////////////////////////////
-    /// close singletons
-    ///////////////////////////////////////////////
-        Extensions::close();
-        IconProvider::close();
-        Settings::close();
-//        Genre::close();
-
-        Web::Apis::close(settings -> obj());
-    ///////////////////////////////////////////////
-
     delete settings;
 }
 
 void Playo::activation() {
-    Library::instance((QObject *)QApplication::allWindows().last()); // maybe better create parent for main window and use it for this purpose ?
-
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::instance(this);
-    Player::instance(this);
-    ToolBars::instance(this);
-    Dockbars::instance(this);
-    HotkeyManager::instance(this);
+    Player::obj().setContainer(this);
+    ToolBars::obj().setContainer(this);
+    Dockbars::obj().setContainer(this);
 }
 
 void Playo::initialization() {
-    Logger::instance() -> startMark();
+    Logger::obj().startMark();
 
     QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
     settings = new DataStore(BACKEND_SETTINGS_FILE_NAME);
@@ -73,13 +58,13 @@ void Playo::initialization() {
     ///services loading
     ///////////////////////////////////////////////////////////
     Web::Apis::initiate(this, settings -> obj());
-    Settings::instance() -> fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
+    Settings::obj().fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
     activation();
 
-    SettingsDialog::registerHotkeys(Dockbars::instance());
+    SettingsDialog::registerHotkeys(&Dockbars::obj());
 
-    setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
+    setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
 
     QVariant geometryState = stateSettings.value(SETTINGS_GEOMETRY_SET_KEY);
     if (geometryState.isValid())
@@ -93,30 +78,32 @@ void Playo::initialization() {
     /// toolbars
     ///////////////////////////////////////////////////////////
 
-    ToolBars::instance() -> load(settings -> read(ToolBars::settingsName()).toArray());
-    ToolBars::instance() -> setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
-    Dockbars::instance() -> load(settings -> read(Dockbars::settingsName()).toArray());
+    ToolBars::obj().load(settings -> read(ToolBars::settingsName()).toArray());
+    ToolBars::obj().setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
+
+    Dockbars::obj().load(settings -> read(Dockbars::settingsName()).toArray());
+    connect(&Player::obj(), SIGNAL(nextItemNeeded(Player::Reason)), &Dockbars::obj(), SLOT(onNextItemNeeded(Player::Reason)));
 
     QVariant objState = stateSettings.value(SETTINGS_WINDOW_STATE_SET_KEY);
     if (objState.isValid())
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
 //    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
-    Dockbars::instance() -> updateActiveTabIcon();
+    Dockbars::obj().updateActiveTabIcon();
 
     if (stateSettings.value(SETTINGS_WINDOW_MAXIMIZED_KEY).toBool()) {
         QApplication::processEvents();
         showMaximized();
     }
-    Logger::instance() -> endMark(tr("Main"), tr("Loading"));
+    Logger::obj().endMark(tr("Main"), tr("Loading"));
 }
 
 QMenu * Playo::createPopupMenu() {
-    return ToolBars::instance() -> createPopupMenu(this);
+    return ToolBars::obj().createPopupMenu();
 }
 
 void Playo::closeEvent(QCloseEvent * e) {
-    Logger::instance() -> unregisterEditor();
+    Logger::obj().unregisterEditor();
     bool is_maximized = isMaximized();
     showNormal();
 
@@ -128,35 +115,35 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     setWindowState(Qt::WindowMinimized); // hiding window while savings going
 
-    Logger::instance() -> startMark();
+    Logger::obj().startMark();
 
-    Player::instance() -> pause();
+    Player::obj().pause();
 
     settings -> clear();
 
-    settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::instance() -> getEqualizerSettings());
-    ToolBars::instance() -> save(settings);
-    Dockbars::instance() -> save(settings);
+    settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::obj().getEqualizerSettings());
+    ToolBars::obj().save(settings);
+    Dockbars::obj().save(settings);
 
-    settings -> write(SETTINGS_SET_KEY, Settings::instance() -> toJson());
+    settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
+    Web::Apis::close(settings -> obj());
     settings -> save();
 
-    Logger::instance() -> endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
+    Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
 
-    MusicGenres::close();
     MainWindow::closeEvent(e);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Playo::putToCommonTab(QList<QUrl> urls) {
-    DockBar * bar = Dockbars::instance() -> commonBar();
-    Dockbars::instance() -> view(bar) -> appendRows(urls);
+    DockBar * bar = Dockbars::obj().commonBar();
+    Dockbars::obj().view(bar) -> appendRows(urls);
 
 //    if (!Player::instance() -> isPlayed())
 
     bar -> show();
-    Dockbars::instance() -> activate(bar);
+    Dockbars::obj().activate(bar);
 }
 
 void Playo::dragEnterEvent(QDragEnterEvent * event) {
@@ -181,7 +168,7 @@ void Playo::dropEvent(QDropEvent * event) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 void Playo::receiveMessage(QString message) {
-    Logger::instance() -> write(QStringLiteral("Main"), QStringLiteral("receiveMessage"));
+    Logger::obj().write(QStringLiteral("Main"), QStringLiteral("receiveMessage"));
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
 
@@ -199,13 +186,13 @@ void Playo::receiveMessage(QString message) {
 
 void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
-    if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::instance() -> isOpenDropPointInTab()) {
-        View::Params settings(Settings::instance() -> openDropPointInTabType(), false, false, false, true);
-        Dockbars::instance() -> createLinkedDocBar(button -> text(), button -> mainPath(), settings);
-//        DockBar * bar = Dockbars::instance() -> createDocBar(button -> text(), settings, 0, true, true);
+    if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::obj().isOpenDropPointInTab()) {
+        View::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
+        Dockbars::obj().createLinkedDocBar(button -> text(), button -> mainPath(), settings);
+//        DockBar * bar = Dockbars::obj().createDocBar(button -> text(), settings, 0, true, true);
 //        QList<QUrl> urls;
 //        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
-//        Dockbars::instance() -> view(bar) -> appendRows(urls);
+//        Dockbars::obj().view(bar) -> appendRows(urls);
     }
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
@@ -215,21 +202,21 @@ void Playo::showSearchDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         View::Params settings(search, false, false, false, true);
         SearchSettings prms = dialog.params();
-        Dockbars::instance() -> createDocBar("Search", settings, 0, true, true, &prms);
+        Dockbars::obj().createDocBar("Search", settings, 0, true, true, &prms);
     }
 }
 
 void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        ToolBars::instance() -> updateMetricSliders();
-        ToolBars::instance() -> getSpectrum() -> updateColors();
-        ToolBars::instance() -> getSpectrum() -> changeBandCount();
-        ToolBars::instance() -> getSpectrum() -> changeHeight(Settings::instance() -> spectrumHeight());
-        ToolBars::instance() -> getSpectrum() -> changeType(Settings::instance() -> spectrumType());
-        Player::instance() -> setSpectrumFreq(Settings::instance() -> spectrumFreqRate());
-        setTabPosition((QTabWidget::TabPosition)Settings::instance() -> tabPosition());
-        Dockbars::instance() -> updateAllViews();
+        ToolBars::obj().updateMetricSliders();
+        ToolBars::obj().getSpectrum() -> updateColors();
+        ToolBars::obj().getSpectrum() -> changeBandCount();
+        ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
+        ToolBars::obj().getSpectrum() -> changeType(Settings::obj().spectrumType());
+        Player::obj().setSpectrumFreq(Settings::obj().spectrumFreqRate());
+        setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
+        Dockbars::obj().updateAllViews();
     }
 }
 
@@ -240,11 +227,11 @@ void Playo::showEchonestDialog() {
 
 void Playo::openOdTabDialog() {
     if (Od::Api::instance() -> isConnected() || Od::Api::instance() -> connection())
-        Dockbars::instance() -> createDocBar(QStringLiteral("OD [YOU]"), View::Params(od, Od::Api::instance() -> userID()), 0, true, true);
+        Dockbars::obj().createDocBar(QStringLiteral("OD [YOU]"), View::Params(od, Od::Api::instance() -> userID()), 0, true, true);
 }
 
 void Playo::openVKRecomendations() {
-    Dockbars::instance() -> createDocBar(QStringLiteral("Rec for YOU"), View::Params(vk_rel, Vk::Api::instance() -> userID(), user_rel), 0, true, true);
+    Dockbars::obj().createDocBar(QStringLiteral("Rec for YOU"), View::Params(vk_rel, Vk::Api::instance() -> userID(), user_rel), 0, true, true);
 }
 
 void Playo::openVKTabDialog() {
@@ -254,9 +241,9 @@ void Playo::openVKTabDialog() {
         dInt -> registerActions(Vk::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
+            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
 
-        emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
@@ -264,22 +251,22 @@ void Playo::openVKTabDialog() {
 
 void Playo::showVKTabDialog() {
     if (Vk::Api::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
+        Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
     else openVKTabDialog();
 }
 
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(Vk::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
-       Dockbars::instance() -> createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), View::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
+       Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), View::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
 
-    emit Logger::instance() -> write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
+    emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {
     RelationsDialog dialog(Soundcloud::Api::instance(), this);
     if (dialog.exec() == QDialog::Accepted)
-        Dockbars::instance() -> createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), View::Params(soundcloud, dialog.getId()), 0, true, true);
+        Dockbars::obj().createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), View::Params(soundcloud, dialog.getId()), 0, true, true);
 //    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
 }
 
@@ -290,16 +277,16 @@ void Playo::openSoundcloudTabDialog() {
         dInt -> registerActions(Soundcloud::Api::instance());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
+            Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
 
-        emit Logger::instance() -> write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("SoundcloudApi"), QStringLiteral("Connection"), Soundcloud::Api::instance() -> isConnected() ? QStringLiteral("true") : Soundcloud::Api::instance() -> getError());
         delete dInt;
     }
 }
 
 void Playo::showSoundcloudTabDialog() {
     if (Soundcloud::Api::instance() -> isConnected())
-        Dockbars::instance() -> createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
+        Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), View::Params(soundcloud, Soundcloud::Api::instance() -> userID()), 0, true, true);
     else openSoundcloudTabDialog();
 }
 

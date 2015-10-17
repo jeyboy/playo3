@@ -16,24 +16,23 @@
 
 #include "tree_view_style.h"
 
+#include "modules/core/data_core.h"
 #include "modules/models/model_item_delegate.h"
 #include "modules/models/model_interface.h"
 #include "service/download_view.h"
-
-//#include "player/player.h"
 
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
 
 namespace View {
-//    class Dockbars;
-
     using namespace Models;
 
     class IView : public QTreeView {
       Q_OBJECT
     public:
-        IView(IModel * model, QWidget * parent, View::Params & settins);
+        void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
+        void registerParent(QWidget * newParent);
+        IView(IModel * model, QWidget * parent, Params & settins);
         virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
@@ -49,10 +48,8 @@ namespace View {
         inline bool isEditable() const { return sttngs.type < Data::vk && !isCommon(); }
         inline bool isRequiredOnUpdate() const { return sttngs.type == Data::vk; }
 
-//        inline IModel * model() const { return mdl; }
-
-        inline View::Params settings() const { return sttngs; }
-        inline void setSettings(View::Params newSettings) { sttngs = newSettings; }
+        inline Params settings() const { return sttngs; }
+        inline void setSettings(Params newSettings) { sttngs = newSettings; }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
@@ -65,8 +62,15 @@ namespace View {
         void appendRows(QList<QUrl> & urls);
         void markSelectedAsLiked(bool liked);
     signals:
+        void registerSync(QAbstractItemModel * mdl, QMutex * mutex);
+        void unregisterSync(QAbstractItemModel * mdl);
+        void discardSync(QAbstractItemModel * mdl);
+        void changeCadrSize(QAbstractItemModel * mdl, int newSize);
+        void infoInvalidation(const QModelIndex & node) const;
+        void infoInvalidationAsync(const QModelIndex & node) const;
+
         void showAlert(const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
-        void threadedRowRemoving(QModelIndex node, bool remove, int selectionUpdate, bool usePrevAction);
+        void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, bool usePrevAction);
         void searchFinished();
 
     public slots:
@@ -84,7 +88,7 @@ namespace View {
     protected slots:
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
-                if (::Settings::instance() -> isCheckboxShow()) {
+                if (Settings::obj().isCheckboxShow()) {
                     QModelIndex node = QModelIndex();
                     findExecutable(node);
                     execIndex(node);
@@ -137,7 +141,7 @@ namespace View {
         void mouseMoveEvent(QMouseEvent *);
 
         IModel * mdl;
-        View::Params sttngs;
+        Params sttngs;
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;

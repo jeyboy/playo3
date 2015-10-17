@@ -5,6 +5,7 @@
 #include <QDockWidget>
 #include <QBoxLayout>
 
+#include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/logger.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
@@ -15,8 +16,6 @@
 
 #include "dialogs/tabdialog.h"
 
-#include "player/player_old.h"
-
 #define SCREEN_TAB "Screen"
 #define COMMON_TAB "Common"
 #define DOWNLOADS_TAB "Downloads"
@@ -26,19 +25,16 @@ namespace Presentation {
     using namespace View;
     using namespace Controls;
 
-    class Dockbars : public QWidget {
+    class Dockbars : public QWidget, public Singleton<Dockbars> {
         Q_OBJECT
     public:
-        static Dockbars * instance(QWidget * parent = 0);
-        inline static void close() { delete self; }
-
         static inline QString settingsName() { return QStringLiteral("docks"); }
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);
         QDockWidget * linkNameToToolbars(QString barName, Params settings, QJsonObject attrs);
 
-        inline QList<DockBar *> dockbars() { return parent() -> findChildren<DockBar *>(); }
+        inline QList<DockBar *> dockbars() { return container -> findChildren<DockBar *>(); }
 
         //        You can check if some part of dock widget is visible using the following code:
         //        bool really_visible = !widget->visibleRegion().isEmpty();
@@ -64,6 +60,8 @@ namespace Presentation {
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);
+
+        inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
         void updateActiveTabIcon(bool isFloating = false);
         void updateAllViews();
@@ -104,12 +102,12 @@ namespace Presentation {
     private:
         TabifyParams lastTabData;
         DockBar * active, * played, * common;
+        QMainWindow * container;
 
         QHash<QString, DockBar *> linkedTabs;
 
-        inline Dockbars(QWidget * parent) : QWidget(parent), active(0), played(0), common(0) {
-            connect(Player::instance(), SIGNAL(nextItemNeeded(Player::Reason)), this, SLOT(onNextItemNeeded(Player::Reason)));
-        }
+        friend class Singleton<Dockbars>;
+        inline Dockbars() : QWidget(), active(0), played(0), common(0) {}
 
         inline ~Dockbars() {}
 

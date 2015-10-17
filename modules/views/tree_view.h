@@ -10,8 +10,8 @@ namespace View {
     public:
         inline TreeView(QWidget * parent, Params settings, QJsonObject * hash = 0)
             : IView(new TreeModel(hash), parent, settings) {}
-        inline TreeView(IModel * newModel, QWidget * parent, Params settings)
-            : IView(newModel, parent, settings) {}
+//        inline TreeView(IModel * newModel, QWidget * parent, Params settings)
+//            : IView(newModel, parent, settings) {}
     };
 }
 

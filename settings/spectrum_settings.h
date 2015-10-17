@@ -25,7 +25,7 @@ enum SpectrumType {
 
 class SpectrumSettings {
 public:
-    void fromJson(QJsonObject & settings);
+    void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
     inline bool isCustomColorSpectrum() { return _customColorSpectrum; }

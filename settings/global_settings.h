@@ -20,7 +20,7 @@
 
 class GlobalSettings {
 public:
-    void fromJson(QJsonObject & settings);
+    void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
     inline QString defaultDownloadPath() const { return _defaultDownloadPath; }

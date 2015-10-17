@@ -27,44 +27,44 @@ SettingsDialog::~SettingsDialog() {
 }
 
 void SettingsDialog::registerHotkeys(QWidget * receiver) {
-    QList<HotkeyModelItem *> list = *Settings::instance() -> hotKeys();
+    QList<HotkeyModelItem *> list = *Settings::obj().hotKeys();
 
     QList<HotkeyModelItem *>::Iterator it = list.begin();
     for(; it != list.end(); it++) {
         switch((*it) -> data(2).toInt()) {
             case HOTKEY_NEXT: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
             break;}
             case HOTKEY_NEXT_AND_DELETE: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNextWithDel()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNextWithDel()));
             break;}
             case HOTKEY_PREV: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPrev()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPrev()));
             break;}
             case HOTKEY_PLAY: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPause()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playPause()));
             break;}
             case HOTKEY_STOP: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(stop()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(stop()));
             break;}
             case HOTKEY_OPEN_SETTINGS: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(editActiveBar()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(editActiveBar()));
             break;}
 
             case HOTKEY_POS_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosForward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosForward()));
             break;}
 
             case HOTKEY_POS_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosBackward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slidePosBackward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_FORWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolForward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolForward()));
             break;}
 
             case HOTKEY_VOL_SLIDE_BACKWARD: {
-                HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolBackward()));
+                HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(slideVolBackward()));
             break;}
         }
     }
@@ -77,32 +77,32 @@ void SettingsDialog::on_cancelButton_clicked() {
 void SettingsDialog::on_resetButton_clicked() {
     switch(ui -> settingsTabs -> currentIndex()) {
         case 0: {
-            Settings::instance() -> resetGlobalSettings();
+            Settings::obj().resetGlobalSettings();
             initGlobalSettings();
         break;}
 
         case 1: {
-            Settings::instance() -> resetTabSettings();
+            Settings::obj().resetTabSettings();
             initViewSettings();
         break;}
 
         case 2: {
-            Settings::instance() -> resetHotkeySettings();
+            Settings::obj().resetHotkeySettings();
             initHotkeysSettings();
         break;}
 
         case 3: {
-            Settings::instance() -> resetItemSettings();
+            Settings::obj().resetItemSettings();
             initItemsSettings();
         break;}
 
         case 4: {
-            Settings::instance() -> resetSpectrumSettings();
+            Settings::obj().resetSpectrumSettings();
             initSpectrumSettings();
         break;}
 
         case 5: {
-            Settings::instance() -> resetLibrarySettings();
+            Settings::obj().resetLibrarySettings();
             initLibrarySettings();
         break;}
     }
@@ -200,15 +200,15 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 void SettingsDialog::initGlobalSettings() {
     ui -> autorunned -> blockSignals(true);
-    ui -> autorunned -> setChecked(Settings::instance() -> isAutorunned());
+    ui -> autorunned -> setChecked(Settings::obj().isAutorunned());
     ui -> autorunned -> blockSignals(false);
 
-    ui -> drawMetrics -> setChecked(Settings::instance() -> isMetricShow());
-    ui -> drawMetricsNumero -> setChecked(Settings::instance() -> isMetricNumero());
+    ui -> drawMetrics -> setChecked(Settings::obj().isMetricShow());
+    ui -> drawMetricsNumero -> setChecked(Settings::obj().isMetricNumero());
 
-    ui -> downloadPath -> setText(Settings::instance() -> defaultDownloadPath());
+    ui -> downloadPath -> setText(Settings::obj().defaultDownloadPath());
 
-    if (!QDir().mkdir(Settings::instance() -> defaultDownloadPath()))
+    if (!QDir().mkdir(Settings::obj().defaultDownloadPath()))
         ui -> downloadPath -> setStyleSheet(QStringLiteral("background-color: red; color: white;"));
 
 
@@ -219,12 +219,12 @@ void SettingsDialog::initGlobalSettings() {
     positions.append(QStringLiteral("Right"));
 
     ui -> tabPositionSelect -> insertItems(0, positions);
-    ui -> tabPositionSelect -> setCurrentIndex(Settings::instance() -> tabPosition());
+    ui -> tabPositionSelect -> setCurrentIndex(Settings::obj().tabPosition());
 
 
-    ui -> saveCommonTab -> setChecked(Settings::instance() -> isSaveCommonTab());
-    ui -> openDropPointInTab -> setChecked(Settings::instance() -> isOpenDropPointInTab());
-    if (!Settings::instance() -> isOpenDropPointInTab())
+    ui -> saveCommonTab -> setChecked(Settings::obj().isSaveCommonTab());
+    ui -> openDropPointInTab -> setChecked(Settings::obj().isOpenDropPointInTab());
+    if (!Settings::obj().isOpenDropPointInTab())
         on_openDropPointInTab_toggled(false);
 
     QStringList tab_types;
@@ -233,71 +233,71 @@ void SettingsDialog::initGlobalSettings() {
     tab_types.append(QStringLiteral("Tree"));
 
     ui -> dropPointTabTypeSelect -> insertItems(0, tab_types);
-    ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::instance() -> openDropPointInTabType() - 1);
+    ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::obj().openDropPointInTabType() - 1);
 
-    ui -> openTimeOut -> setValue(Settings::instance() -> openTimeOut());
+    ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
 }
 
 void SettingsDialog::initItemsSettings() {
-    ui -> useGradientCheck -> setChecked(Settings::instance() -> isUseGradient());
+    ui -> useGradientCheck -> setChecked(Settings::obj().isUseGradient());
 
-    ui -> itemFontSize -> setValue(Settings::instance() -> itemFontSize());
-    ui -> itemInfoFontSize -> setValue(Settings::instance() -> itemInfoFontSize());
+    ui -> itemFontSize -> setValue(Settings::obj().itemFontSize());
+    ui -> itemInfoFontSize -> setValue(Settings::obj().itemInfoFontSize());
 
     QFontDatabase fontDatabase;
 
     ui -> itemFontSelect -> insertItems(0, fontDatabase.families());
-    ui -> itemFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemFontName())));
+    ui -> itemFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::obj().itemFontName())));
     ui -> itemInfoFontSelect -> insertItems(0, fontDatabase.families());
-    ui -> itemInfoFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::instance() -> itemInfoFontName())));
+    ui -> itemInfoFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::obj().itemInfoFontName())));
 
-    defaultColor = Settings::instance() -> defaultItemColor();
+    defaultColor = Settings::obj().defaultItemColor();
     ui -> defaultColorButton -> setStyleSheet(QStringLiteral("background-color: ") % defaultColor.name() % QStringLiteral(";"));
 
-    listenedColor = Settings::instance() -> listenedItemColor();
+    listenedColor = Settings::obj().listenedItemColor();
     ui -> listenedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % listenedColor.name() % QStringLiteral(";"));
 
-    likedColor = Settings::instance() -> likedItemColor();
+    likedColor = Settings::obj().likedItemColor();
     ui -> likedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % likedColor.name() % QStringLiteral(";"));
 
-    playedColor = Settings::instance() -> playedItemColor();
+    playedColor = Settings::obj().playedItemColor();
     ui -> playedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % playedColor.name() % QStringLiteral(";"));
 
-    folderColor = Settings::instance() -> folderItemColor();
+    folderColor = Settings::obj().folderItemColor();
     ui -> folderColorButton -> setStyleSheet(QStringLiteral("background-color: ") % folderColor.name() % QStringLiteral(";"));
 
-    itemColor = Settings::instance() -> itemColor();
+    itemColor = Settings::obj().itemColor();
     ui -> itemColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemColor.name() % QStringLiteral(";"));
 
 
-    itemTextColor = Settings::instance() -> itemTextColor();
+    itemTextColor = Settings::obj().itemTextColor();
     ui -> defaultItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemTextColor.name() % QStringLiteral(";"));
 
-    selectedItemTextColor = Settings::instance() -> selectedItemTextColor();
+    selectedItemTextColor = Settings::obj().selectedItemTextColor();
     ui -> selectedItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemTextColor.name() % QStringLiteral(";"));
 
-    itemInfoTextColor = Settings::instance() -> itemInfoTextColor();
+    itemInfoTextColor = Settings::obj().itemInfoTextColor();
     ui -> defaultItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemInfoTextColor.name() % QStringLiteral(";"));
 
-    selectedItemInfoTextColor = Settings::instance() -> selectedItemInfoTextColor();
+    selectedItemInfoTextColor = Settings::obj().selectedItemInfoTextColor();
     ui -> selectedItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemInfoTextColor.name() % QStringLiteral(";"));
 
-    ui -> itemHeightSize -> setValue(Settings::instance() -> itemHeight());
+    ui -> itemHeightSize -> setValue(Settings::obj().itemHeight());
 }
 void SettingsDialog::initViewSettings() {
-    ui -> showCheckboxes -> setChecked(Settings::instance() -> isCheckboxShow());
+    ui -> showCheckboxes -> setChecked(Settings::obj().isCheckboxShow());
 
-    ui -> alertOnDeletion -> setChecked(Settings::instance() -> isAlertOnFolderDeletion());
-    ui -> spoilOnActivate -> setChecked(Settings::instance() -> isSpoilOnActivation());
+    ui -> alertOnDeletion -> setChecked(Settings::obj().isAlertOnFolderDeletion());
+    ui -> spoilOnActivate -> setChecked(Settings::obj().isSpoilOnActivation());
 
-    ui -> unifyHeight -> setChecked(Settings::instance() -> isHeightUnificate());
+    ui -> unifyHeight -> setChecked(Settings::obj().isHeightUnificate());
 
-    ui -> useSystemIconsCheck -> setChecked(Settings::instance() -> isShowSystemIcons());
-    ui -> indentationStep -> setValue(Settings::instance() -> treeIndentation());
+    ui -> useSystemIconsCheck -> setChecked(Settings::obj().isShowSystemIcons());
+    ui -> indentationStep -> setValue(Settings::obj().treeIndentation());
 
-    ui -> findValid -> setChecked(Settings::instance() -> isFindValid());
+    ui -> findValid -> setChecked(Settings::obj().isFindValid());
 
-    if (Settings::instance() -> itemPresentType() == 1)
+    if (Settings::obj().itemPresentType() == 1)
         ui -> fullyFilledItem -> setChecked(true);
     else
         ui -> partialyFilledItem -> setChecked(true);
@@ -305,31 +305,31 @@ void SettingsDialog::initViewSettings() {
 void SettingsDialog::initHotkeysSettings() {
     ui -> treeView -> setEditTriggers(QTreeView::AllEditTriggers);
     ui -> treeView -> setItemDelegate(new HotkeyDelegate(ui -> treeView));
-    ui -> treeView -> setModel(new HotkeyModel(Settings::instance() -> hotKeys(), this));
+    ui -> treeView -> setModel(new HotkeyModel(Settings::obj().hotKeys(), this));
     ui -> treeView -> hideColumn(2);
     ui -> treeView -> setColumnWidth(0, 230);
 }
 void SettingsDialog::initSpectrumSettings() {
-    ui -> autoBarsAmount -> setChecked(Settings::instance() -> isAutoBarsAmount());
-    ui -> autoBarWidth -> setValue(Settings::instance() -> autoBarWidth());
+    ui -> autoBarsAmount -> setChecked(Settings::obj().isAutoBarsAmount());
+    ui -> autoBarWidth -> setValue(Settings::obj().autoBarWidth());
 
-    spectrumColor = Settings::instance() -> spectrumColor();
+    spectrumColor = Settings::obj().spectrumColor();
     ui -> spectrumColor -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor.name() % QStringLiteral(";"));
 
-    spectrumColor2 = Settings::instance() -> spectrumColor2();
+    spectrumColor2 = Settings::obj().spectrumColor2();
     ui -> spectrumColor2 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor2.name() % QStringLiteral(";"));
 
-    spectrumColor3 = Settings::instance() -> spectrumColor3();
+    spectrumColor3 = Settings::obj().spectrumColor3();
     ui -> spectrumColor3 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor3.name() % QStringLiteral(";"));
 
-    ui -> spectrumCustomColorUse -> setChecked(Settings::instance() -> isCustomColorSpectrum());
+    ui -> spectrumCustomColorUse -> setChecked(Settings::obj().isCustomColorSpectrum());
 
-    ui -> spectrumBarsCount -> setValue(Settings::instance() -> spectrumBarsCount());
-    ui -> spectrumUpdateFrequecy -> setValue(Settings::instance() -> spectrumFreqRate());
+    ui -> spectrumBarsCount -> setValue(Settings::obj().spectrumBarsCount());
+    ui -> spectrumUpdateFrequecy -> setValue(Settings::obj().spectrumFreqRate());
 
-    ui -> spectrumHeight -> setValue(Settings::instance() -> spectrumHeight());
+    ui -> spectrumHeight -> setValue(Settings::obj().spectrumHeight());
 
-    ui -> spectrumMultiplier -> setValue(Settings::instance() -> spectrumMultiplier());
+    ui -> spectrumMultiplier -> setValue(Settings::obj().spectrumMultiplier());
 
     QStringList spectrumTypes;
     spectrumTypes.append(QStringLiteral("Combined"));
@@ -337,14 +337,14 @@ void SettingsDialog::initSpectrumSettings() {
     spectrumTypes.append(QStringLiteral("Curved"));
 
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
-    ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::instance() -> spectrumType());
+    ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::obj().spectrumType());
 }
 
 void SettingsDialog::initLibrarySettings() {
-    ui -> libSaveFreq -> setValue(Settings::instance() -> saveLibDelay() / 1000.0);
-    ui -> remoteItemProcDelay -> setValue(Settings::instance() -> remoteItemsProcDelay() / 1000.0);
-    ui -> interactiveStats -> setChecked(Settings::instance() -> isInteractiveProc());
-    ui -> showInfo -> setChecked(Settings::instance() -> isShowInfo());
+    ui -> libSaveFreq -> setValue(Settings::obj().saveLibDelay() / 1000.0);
+    ui -> remoteItemProcDelay -> setValue(Settings::obj().remoteItemsProcDelay() / 1000.0);
+    ui -> interactiveStats -> setChecked(Settings::obj().isInteractiveProc());
+    ui -> showInfo -> setChecked(Settings::obj().isShowInfo());
 }
 
 void SettingsDialog::initExtensions() {
@@ -354,101 +354,101 @@ void SettingsDialog::initExtensions() {
 }
 
 void SettingsDialog::saveGlobalSettings() {
-    Settings::instance() -> setAutorun(ui -> autorunned -> isChecked());
+    Settings::obj().setAutorun(ui -> autorunned -> isChecked());
 
-    Settings::instance() -> setDefaultDownloadPath(ui -> downloadPath -> text());
-    Settings::instance() -> setMetricShow(ui -> drawMetrics -> isChecked());
-    Settings::instance() -> setMetricNumeroShow(ui -> drawMetricsNumero -> isChecked());
-    Settings::instance() -> setTabPosition(ui -> tabPositionSelect -> currentIndex());
+    Settings::obj().setDefaultDownloadPath(ui -> downloadPath -> text());
+    Settings::obj().setMetricShow(ui -> drawMetrics -> isChecked());
+    Settings::obj().setMetricNumeroShow(ui -> drawMetricsNumero -> isChecked());
+    Settings::obj().setTabPosition(ui -> tabPositionSelect -> currentIndex());
 
-    Settings::instance() -> setSaveCommonTab(ui -> saveCommonTab -> isChecked());
-    Settings::instance() -> setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
-    Settings::instance() -> setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
+    Settings::obj().setSaveCommonTab(ui -> saveCommonTab -> isChecked());
+    Settings::obj().setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
+    Settings::obj().setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
-    Settings::instance() -> setOpenTimeOut(ui -> openTimeOut -> value());
+    Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
 }
 
 void SettingsDialog::saveItemsSettings() {
-    Settings::instance() -> setItemHeight(ui -> itemHeightSize -> value());
+    Settings::obj().setItemHeight(ui -> itemHeightSize -> value());
 
-    Settings::instance() -> setUseGradient(ui -> useGradientCheck -> isChecked());
+    Settings::obj().setUseGradient(ui -> useGradientCheck -> isChecked());
 
-    Settings::instance() -> setDefaultItemColor(defaultColor);
-    Settings::instance() -> setListenedItemColor(listenedColor);
-    Settings::instance() -> setLikedItemColor(likedColor);
-    Settings::instance() -> setPlayedItemColor(playedColor);
-    Settings::instance() -> setFolderItemColor(folderColor);
-    Settings::instance() -> setItemColor(itemColor);
+    Settings::obj().setDefaultItemColor(defaultColor);
+    Settings::obj().setListenedItemColor(listenedColor);
+    Settings::obj().setLikedItemColor(likedColor);
+    Settings::obj().setPlayedItemColor(playedColor);
+    Settings::obj().setFolderItemColor(folderColor);
+    Settings::obj().setItemColor(itemColor);
 
-    Settings::instance() -> setItemFontName(ui -> itemFontSelect -> currentText());
-    Settings::instance() -> setItemFontSize(ui -> itemFontSize -> value());
+    Settings::obj().setItemFontName(ui -> itemFontSelect -> currentText());
+    Settings::obj().setItemFontSize(ui -> itemFontSize -> value());
 
-    Settings::instance() -> setItemInfoFontName(ui -> itemInfoFontSelect -> currentText());
-    Settings::instance() -> setItemInfoFontSize(ui -> itemInfoFontSize -> value());
+    Settings::obj().setItemInfoFontName(ui -> itemInfoFontSelect -> currentText());
+    Settings::obj().setItemInfoFontSize(ui -> itemInfoFontSize -> value());
 
-    Settings::instance() -> setItemTextColor(itemTextColor);
-    Settings::instance() -> setItemInfoTextColor(itemInfoTextColor);
+    Settings::obj().setItemTextColor(itemTextColor);
+    Settings::obj().setItemInfoTextColor(itemInfoTextColor);
 
-    Settings::instance() -> setSelectedItemTextColor(selectedItemTextColor);
-    Settings::instance() -> setSelectedItemInfoTextColor(selectedItemInfoTextColor);
+    Settings::obj().setSelectedItemTextColor(selectedItemTextColor);
+    Settings::obj().setSelectedItemInfoTextColor(selectedItemInfoTextColor);
 }
 
 void SettingsDialog::saveViewSettings() {
-    Settings::instance() -> setAlertOnFolderDeletion(ui -> alertOnDeletion -> isChecked());
-    Settings::instance() -> setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
-    Settings::instance() -> setCheckboxShow(ui -> showCheckboxes -> isChecked());
+    Settings::obj().setAlertOnFolderDeletion(ui -> alertOnDeletion -> isChecked());
+    Settings::obj().setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
+    Settings::obj().setCheckboxShow(ui -> showCheckboxes -> isChecked());
 
-    iconSizeChanged |= Settings::instance() -> itemHeight() != ui -> itemHeightSize -> value();
-    Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
-    iconSizeChanged |= Settings::instance() -> isHeightUnificate() != ui -> unifyHeight -> isChecked();
-    Settings::instance() -> setHeightUnification(ui -> unifyHeight -> isChecked());
+    iconSizeChanged |= Settings::obj().itemHeight() != ui -> itemHeightSize -> value();
+    Settings::obj().setShowInfo(ui -> showInfo -> isChecked());
+    iconSizeChanged |= Settings::obj().isHeightUnificate() != ui -> unifyHeight -> isChecked();
+    Settings::obj().setHeightUnification(ui -> unifyHeight -> isChecked());
 
-    Settings::instance() -> setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
+    Settings::obj().setShowSystemIcons(ui -> useSystemIconsCheck -> isChecked());
 
-    Settings::instance() -> setTreeIndentation(ui -> indentationStep -> value());
+    Settings::obj().setTreeIndentation(ui -> indentationStep -> value());
 
-    Settings::instance() -> setItemPresentType(ui -> fullyFilledItem -> isChecked() ? 1 : 2);
+    Settings::obj().setItemPresentType(ui -> fullyFilledItem -> isChecked() ? 1 : 2);
 
-    Settings::instance() -> setFindValid(ui -> findValid -> isChecked());
+    Settings::obj().setFindValid(ui -> findValid -> isChecked());
 }
 
 void SettingsDialog::saveHotkeysSettings() {
     HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> treeView -> model());
     QList<HotkeyModelItem *> list = model -> toplevelItems();
-    Settings::instance() -> setHotKeys(list);
+    Settings::obj().setHotKeys(list);
 
-    HotkeyManager::instance() -> clear();
+    HotkeyManager::obj().clear();
 
     QList<HotkeyModelItem *>::Iterator it = list.begin();
     for(; it != list.end(); it++)
-        HotkeyManager::instance() -> registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
+        HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
 }
 
 void SettingsDialog::saveSpectrumSettings() {
-    Settings::instance() -> setAutoBarsAmount(ui -> autoBarsAmount -> isChecked());
-    Settings::instance() -> setAutoBarWidth(ui -> autoBarWidth -> value());
+    Settings::obj().setAutoBarsAmount(ui -> autoBarsAmount -> isChecked());
+    Settings::obj().setAutoBarWidth(ui -> autoBarWidth -> value());
 
-    Settings::instance() -> setSpectrumColor(spectrumColor);
-    Settings::instance() -> setSpectrumColor2(spectrumColor2);
-    Settings::instance() -> setSpectrumColor3(spectrumColor3);
+    Settings::obj().setSpectrumColor(spectrumColor);
+    Settings::obj().setSpectrumColor2(spectrumColor2);
+    Settings::obj().setSpectrumColor3(spectrumColor3);
 
-    Settings::instance() -> setCustomColorSpectrum(ui -> spectrumCustomColorUse -> isChecked());
+    Settings::obj().setCustomColorSpectrum(ui -> spectrumCustomColorUse -> isChecked());
 
-    Settings::instance() -> setSpectrumBarsCount(ui -> spectrumBarsCount -> value());
-    Settings::instance() -> setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
+    Settings::obj().setSpectrumBarsCount(ui -> spectrumBarsCount -> value());
+    Settings::obj().setSpectrumFreqRate(ui -> spectrumUpdateFrequecy -> value());
 
-    Settings::instance() -> setSpectrumHeight(ui -> spectrumHeight -> value());
-    Settings::instance() -> setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
-    Settings::instance() -> setSpectrumType((SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
+    Settings::obj().setSpectrumHeight(ui -> spectrumHeight -> value());
+    Settings::obj().setSpectrumMultiplier(ui -> spectrumMultiplier -> value());
+    Settings::obj().setSpectrumType((SpectrumType)ui -> spectrumTypeSelect -> currentIndex());
 }
 
 void SettingsDialog::saveLibrarySettings() {
-    Settings::instance() -> setSaveLibDelay(ui -> libSaveFreq -> value() * 1000);
-    Settings::instance() -> setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value() * 1000);
-    Settings::instance() -> setInteractiveProc(ui -> interactiveStats -> isChecked());
+    Settings::obj().setSaveLibDelay(ui -> libSaveFreq -> value() * 1000);
+    Settings::obj().setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value() * 1000);
+    Settings::obj().setInteractiveProc(ui -> interactiveStats -> isChecked());
 
-    iconSizeChanged |= Settings::instance() -> isShowInfo() != ui -> showInfo -> isChecked();
-    Settings::instance() -> setShowInfo(ui -> showInfo -> isChecked());
+    iconSizeChanged |= Settings::obj().isShowInfo() != ui -> showInfo -> isChecked();
+    Settings::obj().setShowInfo(ui -> showInfo -> isChecked());
 }
 
 bool SettingsDialog::execColorDialog(QColor & color) {

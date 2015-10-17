@@ -1,6 +1,6 @@
 #include "tab_settings.h"
 
-void TabSettings::fromJson(QJsonObject & settings) {
+void TabSettings::fromJson(const QJsonObject & settings) {
     _showCheckbox = settings.value(SETTINGS_SHOW_CHECKBOX_KEY).toBool(true);
 
     _spoilOnActivation = settings.value(SETTINGS_SPOIL_ON_ACTIVATION_KEY).toBool(true);

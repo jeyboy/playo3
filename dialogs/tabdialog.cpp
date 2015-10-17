@@ -33,7 +33,7 @@ View::Params TabDialog::getSettings() {
     settings.playlist = ui -> playlist -> isChecked();
 
     if (ui -> isListRadio -> isChecked())
-        settings.type = Data::list;
+        settings.type = Data::level;
     else if (ui -> isOneLevelTreeRadio -> isChecked())
         settings.type = Data::level_tree;
     else if (ui -> isTreeRadio -> isChecked())
@@ -51,7 +51,7 @@ void TabDialog::setSettings(View::Params settings) {
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);
 
-  ui -> isListRadio -> setChecked(settings.type == Data::list);
+  ui -> isListRadio -> setChecked(settings.type == Data::level);
   ui -> isOneLevelTreeRadio -> setChecked(settings.type == Data::level_tree);
   ui -> isTreeRadio -> setChecked(settings.type == Data::tree);
   ui -> isVkRadio -> setChecked(settings.type == Data::vk);

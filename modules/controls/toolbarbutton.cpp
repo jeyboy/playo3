@@ -33,8 +33,7 @@ void ToolbarButton::dragEnterEvent(QDragEnterEvent * event) {
 }
 
 void ToolbarButton::dropEvent(QDropEvent * event) {
-    DownloadView * dwn = DownloadView::instance();
-    dwn -> proceedDrop(event, path);
+    DownloadView::obj().proceedDrop(event, path);
 
     if (event -> mimeData() -> hasFormat(DROP_INNER_FORMAT))
         ((IView *) event -> source()) -> markSelectedAsLiked(true);

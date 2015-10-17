@@ -3,6 +3,7 @@
 
 #include <qhash.h>
 
+#include "modules/core/interfaces/singleton.h"
 #include "modules/controls/qxtglobalshortcut.h"
 #include "hotkey_types.h"
 
@@ -16,28 +17,22 @@ struct HotkeySlot {
     }
 };
 
-class HotkeyManager : public QObject {
-    Q_OBJECT
-public:
-    inline virtual ~HotkeyManager() { qDeleteAll(shortcuts.values()); }
-
-    static HotkeyManager * instance(QObject * parent = 0);
-
-    inline static void close() { delete self; }
-
-    bool registerSequence(int hotkeyType, const QString & sequence, QObject * receiver = 0, const char * slot = 0);
-    void clear();
-
-private:
-    inline HotkeyManager(QObject * parent) : QObject(parent) { }
+class HotkeyManager : public Core::Singleton<HotkeyManager> {
+    friend class Core::Singleton<HotkeyManager>;
+    HotkeyManager() {}
 
     QxtGlobalShortcut * registerSequence(const HotkeySlot & hotSlot);
     bool updateSequence(QxtGlobalShortcut * shortcut, QKeySequence sequence);
 
-    static HotkeyManager * self;
-
     QHash<int, HotkeySlot> relations;
     QHash<int, QxtGlobalShortcut *> shortcuts;
+public:
+    inline virtual ~HotkeyManager() { qDeleteAll(shortcuts.values()); }
+
+    bool registerSequence(int hotkeyType, const QString & sequence, QObject * receiver = 0, const char * slot = 0);
+    void clear();
+private:
+
 };
 
 #endif // HOTKEY_MANAGER_H

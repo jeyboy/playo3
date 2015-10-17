@@ -118,5 +118,5 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 
 void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+    Player::obj().playIndex(Player::obj().playedIndex());
 }

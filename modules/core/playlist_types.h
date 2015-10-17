@@ -3,7 +3,7 @@
 
 namespace Data {
     enum Type {
-        list = 1,
+        level = 1,
         level_tree = 2,
         tree = 3,
         vk = 4,

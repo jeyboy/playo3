@@ -1,16 +1,8 @@
 #include "hotkey_manager.h"
 
-HotkeyManager * HotkeyManager::self = 0;
-
-HotkeyManager * HotkeyManager::instance(QObject * parent) {
-    if(!self)
-        self = new HotkeyManager(parent);
-    return self;
-}
-
 QxtGlobalShortcut * HotkeyManager::registerSequence(const HotkeySlot & hotSlot) {
     QxtGlobalShortcut * shortcut = new QxtGlobalShortcut();
-    connect(shortcut, SIGNAL(activated()), hotSlot.obj, hotSlot.slot);
+    QObject::connect(shortcut, SIGNAL(activated()), hotSlot.obj, hotSlot.slot);
     return shortcut;
 }
 

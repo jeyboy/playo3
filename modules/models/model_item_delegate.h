@@ -39,7 +39,7 @@ public:
 //                              const QModelIndex & index) const;
 
     inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-        if (Settings::instance() -> itemPresentType() == 1)
+        if (Settings::obj().itemPresentType() == 1)
             paintVar1(painter, option, index);
         else
             paintVar2(painter, option, index);

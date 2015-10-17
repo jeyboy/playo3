@@ -14,6 +14,8 @@
 #include "modules/core/misc/format.h"
 #include "modules/models/model_interface.h"
 
+#include "modules/core/interfaces/singleton.h"
+
 #define INPROC_LIMIT 5
 #define TIMER_TICK 500
 #define WAIT_LIMIT 10
@@ -22,11 +24,10 @@ namespace Core {
     namespace Media {
         class MediaInfo;
 
-        class Library : public QObject {
+        class Library : public QObject, public Singleton<Library> {
             Q_OBJECT
         public:
-            static Library * instance(QObject * parent = 0);
-            inline static void close() { delete self; }
+            ~Library();
 
             void setItemState(const QModelIndex & ind, int state);
 
@@ -53,14 +54,11 @@ namespace Core {
             void clockTick();
             void saveCatalogs();
         private:
+            Library(); friend class Singleton<Library>;
+
             void cancelActiveRestorations();
             IItem * indToItm(const QModelIndex & ind);
             void emitItemAttrChanging(QModelIndex & ind, int state);
-            static Library * self;
-
-            Library(QObject * parent);
-
-            ~Library();
 
             inline QString libraryPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/library/"); }
 

@@ -11,7 +11,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
   , spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
-    connect(Player::instance(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
+    connect(&Player::obj(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
@@ -41,7 +41,7 @@ void MetricSlider::resizeEvent(QResizeEvent *) {
 void MetricSlider::paintEvent(QPaintEvent * event) {
     QSlider::paintEvent(event);
 
-    if (!Settings::instance() -> isMetricShow() || minimum() == maximum()) return;
+    if (!Settings::obj().isMetricShow() || minimum() == maximum()) return;
 
     QPainter p(this);
 
@@ -55,16 +55,16 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
         p.drawPath(path);
 
         if (show_mini_progress) {
-            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < .99)
+            float pos = Player::obj().getRemoteFileDownloadPosition();
+            if (Player::obj().getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().left() + 6, rect().y(), (rect().width() - 8) * pos, 3, 1, 1);
         }
     } else {
         p.drawPath(path);
 
         if (show_mini_progress) {
-            float pos = Player::instance() -> getRemoteFileDownloadPosition();
-            if (Player::instance() -> getSize() > 0 && pos < .99)
+            float pos = Player::obj().getRemoteFileDownloadPosition();
+            if (Player::obj().getSize() > 0 && pos < .99)
                 p.drawRoundedRect(rect().x(), rect().bottom() - 6, 3, -(rect().height() - 1) * pos, 1, 1);
         }
     }
@@ -143,7 +143,7 @@ void MetricSlider::calcGrid() {
 
         int center = rect().center().y() + point_radius / 2;
         for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos <= bodyRect.width(); pos += step, val += vall_offset) {
-            if (!Settings::instance() -> isMetricNumero()) {
+            if (!Settings::obj().isMetricNumero()) {
                 path.addEllipse(QPoint(pos + point_radius / 2, center), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);
@@ -160,7 +160,7 @@ void MetricSlider::calcGrid() {
         int center = rect().center().x() + point_radius / 2;
 
         for(double pos = bodyRect.bottom() - halfHandle / 2 - step, val = vall_offset; pos > bodyRect.y(); pos -= step, val += vall_offset) {
-            if (!Settings::instance() -> isMetricNumero()) {
+            if (!Settings::obj().isMetricNumero()) {
                 path.addEllipse(QPoint(center, pos), point_radius, point_radius);
             } else {
                 strNum = QString::number(val * multiplyer);

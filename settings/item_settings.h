@@ -32,7 +32,7 @@ struct ItemTextAttrs {
 
 class ItemSettings {
 public:
-    void fromJson(QJsonObject & json);
+    void fromJson(const QJsonObject & json);
     void toJson(QJsonObject & json);
 
     QBrush buildGradient(const QRect & rect, const QColor & color, bool dark);

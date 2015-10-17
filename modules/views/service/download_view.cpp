@@ -4,14 +4,6 @@ using namespace View;
 using namespace Core;
 using namespace Web;
 
-DownloadView * DownloadView::self = 0;
-
-DownloadView * DownloadView::instance(QJsonObject * hash, QWidget * parent) {
-    if(!self)
-        self = new DownloadView(hash, parent);
-    return self;
-}
-
 DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
     paused(false), mdl(new DownloadModel(hash, this)) {
 
@@ -204,67 +196,6 @@ void DownloadView::proceedDownload() {
     }
 }
 
-QString DownloadView::ioError(QFile * file) {
-    switch(file -> error()) {
-        case QFile::NoError:            { return "All ok"; }
-        case QFile::ReadError:          { return "Read error"; }
-        case QFile::WriteError:         { return "Write error"; }
-        case QFile::FatalError:         { return "Fatal error"; }
-        case QFile::ResourceError:      { return "Out of resources (free space, etc)"; }
-        case QFile::OpenError:          { return "Open error"; }
-        case QFile::AbortError:         { return "Operation was aborted"; }
-        case QFile::TimeOutError:       { return "Timeout occurred"; }
-        case QFile::UnspecifiedError:   { return "Unspecified error occurred"; }
-        case QFile::RemoveError:        { return "Could not be removed"; }
-        case QFile::RenameError:        { return "Could not be renamed"; }
-        case QFile::PositionError:      { return "Position in the file could not be changed"; }
-        case QFile::ResizeError:        { return "Free space of memory is not enough"; }
-        case QFile::PermissionsError:   { return "Is not accessable"; }
-        case QFile::CopyError:          { return "Could not be copied"; }
-        default: return "Unknow error";
-    }
-}
-QString DownloadView::ioError(QNetworkReply * reply) {
-    switch(reply -> error()) {
-        case QNetworkReply::NoError:                            { return QStringLiteral("All ok"); }
-        case QNetworkReply::ConnectionRefusedError:             { return QStringLiteral("Connection: refused"); }
-        case QNetworkReply::RemoteHostClosedError:              { return QStringLiteral("Connection: host closed"); }
-        case QNetworkReply::HostNotFoundError:                  { return QStringLiteral("Connection: host not found"); }
-        case QNetworkReply::TimeoutError:                       { return QStringLiteral("Connection: timeout"); }
-        case QNetworkReply::OperationCanceledError:             { return QStringLiteral("Connection: operation canceled"); }
-        case QNetworkReply::TemporaryNetworkFailureError:       { return QStringLiteral("Connection: network is not accessible"); }
-        case QNetworkReply::NetworkSessionFailedError:          { return QStringLiteral("Connection: network session is not accessible"); }
-        case QNetworkReply::BackgroundRequestNotAllowedError:   { return QStringLiteral("Connection: background request not allowed"); }
-        case QNetworkReply::UnknownNetworkError:                { return QStringLiteral("Connection: unknow error"); }
-
-        case QNetworkReply::ProxyConnectionRefusedError:        { return QStringLiteral("Proxy: connection refused"); }
-        case QNetworkReply::ProxyConnectionClosedError:         { return QStringLiteral("Proxy: connection closed"); }
-        case QNetworkReply::ProxyNotFoundError:                 { return QStringLiteral("Proxy: not found"); }
-        case QNetworkReply::ProxyTimeoutError:                  { return QStringLiteral("Proxy: timeout"); }
-        case QNetworkReply::ProxyAuthenticationRequiredError:   { return QStringLiteral("Proxy: authentication required"); }
-        case QNetworkReply::UnknownProxyError:                  { return QStringLiteral("Proxy: unknow error"); }
-
-        case QNetworkReply::ContentAccessDenied:                { return QStringLiteral("Content: access denied"); }
-        case QNetworkReply::ContentOperationNotPermittedError:  { return QStringLiteral("Content: operation not permitted"); }
-        case QNetworkReply::ContentNotFoundError:               { return QStringLiteral("Content: not found"); }
-        case QNetworkReply::AuthenticationRequiredError:        { return QStringLiteral("Content: authentication required"); }
-        case QNetworkReply::ContentReSendError:                 { return QStringLiteral("Content: resend required"); } //TODO: maybe auto resend ?
-        case QNetworkReply::ContentConflictError:               { return QStringLiteral("Content: state conflict"); } //TODO: maybe auto resend ?
-        case QNetworkReply::ContentGoneError:                   { return QStringLiteral("Content: is gone"); }
-        case QNetworkReply::UnknownContentError:                { return QStringLiteral("Content: unknow error"); }
-
-        case QNetworkReply::ProtocolUnknownError:               { return QStringLiteral("Protocol: unknow"); }
-        case QNetworkReply::ProtocolInvalidOperationError:      { return QStringLiteral("Protocol: invalid operation"); }
-        case QNetworkReply::ProtocolFailure:                    { return QStringLiteral("Protocol: failure"); }
-
-        case QNetworkReply::InternalServerError:                { return QStringLiteral("Server: internal error"); }
-        case QNetworkReply::OperationNotImplementedError:       { return QStringLiteral("Server: operation not implemented"); }
-        case QNetworkReply::ServiceUnavailableError:            { return QStringLiteral("Server: service unavailable"); }
-        case QNetworkReply::UnknownServerError:                 { return QStringLiteral("Server: unknow error"); }
-        default: return QStringLiteral("Unknow error");
-    }
-}
-
 QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIndex> * watcher) {
     DownloadModelItem * itm = mdl -> item(ind);
     Manager * networkManager = Manager::prepare();
@@ -313,7 +244,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 if (invalid) {
                     emit updateAttr(ind, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
                     toFile.remove();
-                    delete networkManager;
                     return ind;
                 }
             }
@@ -323,11 +253,10 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             source = new QFile(from.toLocalFile());
 
             if (!source -> open(QIODevice::ReadOnly)) {
-                emit updateAttr(ind, DOWNLOAD_ERROR, ioError((QFile *)source));
+                emit updateAttr(ind, DOWNLOAD_ERROR, Core::FileErrors::ioError((QFile *)source));
                 source -> close();
                 delete source;
                 toFile.close();
-                delete networkManager;
                 return ind;
             }
 
@@ -337,11 +266,10 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
         limit = source -> bytesAvailable() / 100;
 
         if (!toFile.resize(source -> bytesAvailable())) {
-            emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
+            emit updateAttr(ind, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
             source -> close();
             delete source;
             toFile.close();
-            delete networkManager;
             return ind;
         }
 
@@ -371,7 +299,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         source -> close();
         delete source;
-        delete networkManager;
         if (watcher -> isCanceled())
             toFile.remove();
         else
@@ -379,7 +306,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         emit downloadProceeded(to);
     }
-    else emit updateAttr(ind, DOWNLOAD_ERROR, ioError(&toFile));
+    else emit updateAttr(ind, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
 
     return ind;
 }
@@ -500,7 +427,7 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
 }
 
 void DownloadView::dropEvent(QDropEvent * event) {
-    proceedDrop(event, Settings::instance() -> defaultDownloadPath());
+    proceedDrop(event, Settings::obj().defaultDownloadPath());
 }
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {

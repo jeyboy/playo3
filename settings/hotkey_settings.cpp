@@ -13,7 +13,7 @@ HotkeySettings::HotkeySettings() {
     _humanizeHotkeyText.insert(HOTKEY_VOL_SLIDE_BACKWARD, QStringLiteral("Move volume slider at 10 % backward"));
 }
 
-void HotkeySettings::fromJson(QJsonObject & settings) {
+void HotkeySettings::fromJson(const QJsonObject & settings) {
     setHotKeys(settings.value(QStringLiteral("hotkeys")).toObject());
 }
 
@@ -43,7 +43,7 @@ void HotkeySettings::setHotKeys(QList<HotkeyModelItem *> hotkeyList) { //TODO: r
         _hotkeys.insert(QString::number(item -> data(2).toInt()), QJsonValue::fromVariant(item -> data(1)));
 }
 
-void HotkeySettings::setHotKeys(QJsonObject hotkeysHash) {
+void HotkeySettings::setHotKeys(const QJsonObject & hotkeysHash) {
     if (hotkeysHash.empty()) {
         _hotkeys.insert(QString::number(HOTKEY_NEXT), QJsonValue::fromVariant("Ctrl+Down"));
         _hotkeys.insert(QString::number(HOTKEY_NEXT_AND_DELETE), QJsonValue::fromVariant("Ctrl+Delete"));

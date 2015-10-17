@@ -21,6 +21,7 @@ namespace Core {
         public:
             static inline Response * fromReply(QNetworkReply * reply) { return (Response *)reply; }
 
+            inline bool hasErrors() { return error() != NoError; }
             inline int status() { return attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
             inline QVariant redirectUrl() { return attribute(QNetworkRequest::RedirectionTargetAttribute); }
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
@@ -65,8 +66,8 @@ namespace Core {
 
             static inline QString paramVal(const QUrl & url, const QString & param) { return QUrlQuery(url).queryItemValue(param); }
 
-            Response * get(const Request & request) { return synchronizeRequest(QNetworkAccessManager::get((const QNetworkRequest &)request)); }
-            Response * post(const Request & request, const QByteArray & data) { return synchronizeRequest(QNetworkAccessManager::post((const QNetworkRequest &)request, data)); }
+            Response * get(const Request & request) { return synchronizeRequest(QNetworkAccessManager::get(request)); }
+            Response * post(const Request & request, const QByteArray & data) { return synchronizeRequest(QNetworkAccessManager::post(request, data)); }
 
             inline Request * requestTo(const QString & url) { return new Request(this, url); }
             inline Request * requestTo(const QUrl & url) { return new Request(this, url); }
@@ -109,7 +110,7 @@ namespace Core {
             inline void disconnectThread() {
                 qDebug() << "!!!!!!!!!!!!!!!!!!!! UNREGISTRATE MANAGER";
                 Manager * tmanager = Manager::managers.take(sender());
-                emit Logger::instance() -> write(QStringLiteral("Manager"), QStringLiteral("disconnection"));
+                emit Logger::obj().write(QStringLiteral("Manager"), QStringLiteral("disconnection"));
                 if (tmanager) tmanager -> deleteLater();
                 deleteLater();
             }

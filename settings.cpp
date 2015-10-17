@@ -1,12 +1,8 @@
 #include "settings.h"
 
-Settings * Settings::self = 0;
+Settings::Settings() {}
 
-Settings * Settings::instance() {
-    if(!self)
-        self = new Settings();
-    return self;
-}
+Settings::~Settings() { }
 
 void Settings::fromJson(QJsonObject settings) {
     GlobalSettings::fromJson(settings);
@@ -29,3 +25,10 @@ QJsonObject Settings::toJson() {
 
     return settings;
 }
+
+void Settings::resetGlobalSettings()   { GlobalSettings::fromJson(QJsonObject()); }
+void Settings::resetHotkeySettings()   { HotkeySettings::fromJson(QJsonObject()); }
+void Settings::resetItemSettings()     { ItemSettings::fromJson(QJsonObject()); }
+void Settings::resetSpectrumSettings() { SpectrumSettings::fromJson(QJsonObject()); }
+void Settings::resetTabSettings()      { TabSettings::fromJson(QJsonObject()); }
+void Settings::resetLibrarySettings()  { LibrarySettings::fromJson(QJsonObject()); }

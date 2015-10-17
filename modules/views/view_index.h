@@ -15,4 +15,26 @@
 #include "web/soundcloud_view.h"
 #include "web/od_view.h"
 
+namespace View {
+    using namespace Data;
+
+    class ViewFactory {
+    public:
+        static IView * build(QWidget * parent, Params & settings, QJsonObject * attrs) {
+            switch(settings.type) {
+                case level: return new ListView(parent, settings, attrs);
+                case level_tree: return new LevelTreeView(parent, settings, attrs);
+                case tree: return new TreeView(parent, settings, attrs);
+                case vk: return new VkView(parent, settings, attrs);
+                case vk_rel: return new VkRelView(parent, settings, attrs);
+                case soundcloud: return new SoundcloudView(parent, settings, attrs);
+                case search: return new SearchView(parent, settings, attrs);
+                case od: return new OdView(parent, settings, attrs);
+
+                default: return 0;
+            }
+        }
+    };
+}
+
 #endif // VIEWS_INDEX_H

@@ -8,22 +8,19 @@
 #include <qstyle.h>
 #include <qapplication.h>
 
+#include "modules/core/interfaces/singleton.h"
+
 namespace Core {
-    class IconProvider {
-    public:
-        inline ~IconProvider() {}
-
-        static IconProvider * instance();
-        static QIcon fileIcon(const QString & filename, QString extension);
-        static QIcon dirIcon();
-        inline static void close() { delete self; }
-    private:
-        inline IconProvider() {}
-
-        static IconProvider * self;
+    class IconProvider : public Singleton<IconProvider> {
+        IconProvider(); friend class Singleton<IconProvider>;
 
         QHash<QString, QIcon> icons;
         QFileIconProvider iconProvider;
+    public:
+        ~IconProvider();
+
+        static QIcon fileIcon(const QString & filename, QString extension);
+        static QIcon dirIcon();
     };
 }
 

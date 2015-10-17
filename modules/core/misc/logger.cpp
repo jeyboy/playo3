@@ -1,14 +1,6 @@
 #include "logger.h"
 
-Logger * Logger::self = 0;
-
-Logger * Logger::instance(QObject * parent) {
-    if(!self)
-        self = new Logger(parent);
-    return self;
-}
-
-Logger::Logger(QObject * parent) : QObject(parent), out(0), file(0), m_showDate(true)  {
+Logger::Logger() : QObject(), out(0), file(0), m_showDate(true)  {
     connect(this, SIGNAL(write(const QString &,const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, bool)));
     connect(this, SIGNAL(write(const QString &,const QString &, const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QString &, bool)));
     connect(this, SIGNAL(write(const QString &,const QString &, const QStringList &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QStringList &, bool)));

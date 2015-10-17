@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 //        return 0; // uncomment later
     }
 
-    Logger::instance(QCoreApplication::instance()) -> initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
+    Logger::obj().initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
 
     Playo w;
 

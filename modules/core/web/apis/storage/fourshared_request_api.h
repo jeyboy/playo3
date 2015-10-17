@@ -108,8 +108,8 @@ namespace Core {
                                         else if (tag_title == discretion_rate_tag || tag_title == discretion_rate_tag2)
                                             obj.insert(discretion_rate_key, (*tag) -> text());
                                         else if (tag_title == genre_tag || tag_title == genre_tag2) {
-                                            int genre_id = Media::MusicGenres::instance() -> toInt((*tag) -> text().trimmed());
-                                            if (Media::MusicGenres::instance() -> defaultInt() != genre_id)
+                                            int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
+                                            if (Media::MusicGenres::obj().defaultInt() != genre_id)
                                                 obj.insert(genre_id_key, genre_id);
                                         }
 

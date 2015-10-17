@@ -145,7 +145,7 @@ namespace Core {
                         Html::Tag * size_tag = (*song) -> childTag("td", 2);
 
                         if (!size_tag) {
-                            emit Logger::instance() -> write(
+                            emit Logger::obj().write(
                                 QStringLiteral("Myzuka grabber"),
                                 QStringLiteral("Search: parsing of songs"),
                                 QStringLiteral("Some shit happened"), true

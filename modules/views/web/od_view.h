@@ -10,8 +10,8 @@ namespace View {
     public:
         inline OdView(QWidget * parent, Params settings, QJsonObject * hash = 0)
             : IView(new OdModel(settings.uid, hash), parent, settings) {}
-        inline OdView(WebModel * newModel, QWidget * parent, Params settings)
-            : IView(newModel, parent, settings) {}
+//        inline OdView(WebModel * newModel, QWidget * parent, Params settings)
+//            : IView(newModel, parent, settings) {}
     };
 }
 

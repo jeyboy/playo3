@@ -4,16 +4,35 @@
 using namespace View;
 using namespace Controls;
 
+void IView::registerParent(QWidget * newParent) {
+    setParent(newParent);
+
+    connect(mdl, SIGNAL(moveInBackgroundProcess()), newParent, SLOT(onMoveInBackgroundProcess()));
+    connect(mdl, SIGNAL(moveOutBackgroundProcess()), newParent, SLOT(onMoveOutBackgroundProcess()));
+    connect(mdl, SIGNAL(setBackgroundProgress(int)), newParent, SLOT(onSetBackgroundProgress(int)));
+
+    connect(mdl, SIGNAL(moveInProcess()), newParent, SLOT(onMoveInProcess()));
+    connect(mdl, SIGNAL(moveOutProcess()), newParent, SLOT(onMoveOutProcess()));
+    connect(mdl, SIGNAL(setProgress(int)), newParent, SLOT(onSetProgress(int)));
+    connect(mdl, SIGNAL(setProgress2(int)), newParent, SLOT(onSetProgress2(int)));
+}
+
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
 
-    setIndentation(Settings::instance() -> treeIndentation());
-    setStyle(new TreeViewStyle);
-//    setStyleSheet(Stylesheets::treeViewStyles());
-
-    Library::instance() -> registerListSync(mdl, mdl -> syncMutex());
+    connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
+    connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(discardSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(discardSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidation(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfo(QModelIndex)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex)));
+    connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataFactory::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
 
     setModel(mdl);
+    emit registerSync(mdl, mdl -> syncMutex());
+
+    setIndentation(Settings::obj().treeIndentation());
+    setStyle(new TreeViewStyle);
+//    setStyleSheet(Stylesheets::treeViewStyles());
 
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -29,13 +48,13 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
 
-    setUniformRowHeights(Settings::instance() -> isHeightUnificate());
+    setUniformRowHeights(Settings::obj().isHeightUnificate());
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     setItemDelegate((item_delegate = new ModelItemDelegate(this)));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
-    int iconDimension = Settings::instance() -> iconHeight();
+    int iconDimension = Settings::obj().iconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
     connect(
@@ -52,14 +71,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
 
-    connect(mdl, SIGNAL(moveInBackgroundProcess()), parent, SLOT(onMoveInBackgroundProcess()));
-    connect(mdl, SIGNAL(moveOutBackgroundProcess()), parent, SLOT(onMoveOutBackgroundProcess()));
-    connect(mdl, SIGNAL(setBackgroundProgress(int)), parent, SLOT(onSetBackgroundProgress(int)));
-
-    connect(mdl, SIGNAL(moveInProcess()), parent, SLOT(onMoveInProcess()));
-    connect(mdl, SIGNAL(moveOutProcess()), parent, SLOT(onMoveOutProcess()));
-    connect(mdl, SIGNAL(setProgress(int)), parent, SLOT(onSetProgress(int)));
-    connect(mdl, SIGNAL(setProgress2(int)), parent, SLOT(onSetProgress2(int)));
+    registerParent(parent);
 
 //    connect(model, SIGNAL(itemsCountChanged(int)), parent, SLOT(updateHeader(int)));
 //    connect(model, SIGNAL(showMessage(QString)), this, SLOT(showMessage(QString)));
@@ -82,15 +94,15 @@ IView::~IView() {
     while (!mdl -> syncMutex() -> tryLock())
         QApplication::processEvents();
 
-    Library::instance() -> unregisterListSync(model());
+    emit unregisterSync(mdl);
     mdl -> syncMutex() -> unlock();
 
     delete mdl;
 }
 
 void IView::scrollToActive() {
-    if (Player::instance() -> playedIndex().isValid())
-        scrollTo(Player::instance() -> playedIndex(), QAbstractItemView::PositionAtCenter);
+    if (Player::obj().playedIndex().isValid())
+        scrollTo(Player::obj().playedIndex(), QAbstractItemView::PositionAtCenter);
 }
 
 void IView::execPrevIndex(bool deleteCurrent) {
@@ -129,16 +141,16 @@ bool IView::execPath(const QString path, bool paused, uint start, int duration) 
 bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {
     if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
         qDebug() << "PLAYED " << node.data();
-        Presentation::Dockbars::instance() -> setPlayed((DockBar *)parent());
+        Presentation::Dockbars::obj().setPlayed((DockBar *)parent());
 
-        if (Settings::instance() -> isSpoilOnActivation())
-            scrollTo(node, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+        if (Settings::obj().isSpoilOnActivation())
+            scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
 
-        if (Player::instance() -> playedIndex() == node) {
-            Player::instance() -> playPause();
+        if (Player::obj().playedIndex() == node) {
+            Player::obj().playPause();
             return true;
         } else {
-            Player::instance() -> playIndex(node, paused, start, duration);
+            Player::obj().playIndex(node, paused, start, duration);
             return true;
         }
     }
@@ -231,41 +243,28 @@ void IView::copyIdsToClipboard() {
 
 void IView::openRecomendationsforUser() {
     Params settings(Data::vk_rel, false, false, false, true, sttngs.uid, Data::user_rel);
-    Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
+    Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> owner().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
-        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> toUid().toString(), Data::song_rel);
-        Presentation::Dockbars::instance() -> createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
     }
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    IItem * node = mdl -> item(index);
-
-    bool is_interactive = Settings::instance() -> isInteractiveProc();
-    bool is_proceeded = node -> is(ItemState::proceeded);
-
-    if (!is_proceeded) {
-        node -> set(ItemState::proceeded);
-        if (!node -> isContainer())
-            Library::instance() -> restoreItemState(index);
-    }
-
-    if (is_interactive && is_proceeded)
-        node -> unset(ItemState::proceeded);
-
-    if (node -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
+    if (mdl -> item(index) -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
+    emit infoInvalidationAsync(index);
     QTreeView::drawRow(painter, options, index);
 }
 
@@ -274,19 +273,18 @@ void IView::paintEvent(QPaintEvent * event) {
         QTreeView::paintEvent(event);
 }
 
-void IView::resizeEvent(QResizeEvent * event) {
-    if (event -> oldSize().height() != size().height()) {
-        if (event -> size().height() > 0) {
-            int count = (event -> size().height() / Settings::instance() -> totalItemHeight()) + 2;
-            Library::instance() -> setWaitListLimit(mdl, count);
-        }
-    }
+void IView::resizeEvent(QResizeEvent * event) {   
+    if (event -> size().height() > 0)
+        emit changeCadrSize(
+            mdl,
+            (event -> size().height() / Settings::obj().totalItemHeight()) + 2
+        );
 
     QTreeView::resizeEvent(event);
 }
 
 void IView::focusInEvent(QFocusEvent *) {
-    Presentation::Dockbars::instance() -> setActive((DockBar *)parent());
+    Presentation::Dockbars::obj().setActive((DockBar *)parent());
 }
 
 void IView::contextMenuEvent(QContextMenuEvent * event) {
@@ -297,7 +295,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 
     if (isEditable()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), this)));
-        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(editActiveBar()));
+        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);
@@ -316,10 +314,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     actions.append((act = new QAction(this)));
     act -> setSeparator(true);
 
-    if (Player::instance() -> playedIndex().isValid()) {
+    if (Player::obj().playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
-        connect(act, SIGNAL(triggered(bool)), Presentation::Dockbars::instance(), SLOT(scrollToActive()));
+        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(scrollToActive()));
 
         actions.append((act = new QAction(this)));
         act -> setSeparator(true);
@@ -397,7 +395,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         }       
 
 
-        if (Settings::instance() -> isCheckboxShow()) {
+        if (Settings::obj().isCheckboxShow()) {
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
 
@@ -437,7 +435,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this)));
         connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
 
-        if (mdl -> playlistType() != Data::list) {
+        if (mdl -> playlistType() != level) {
             actions.append((act = new QAction(this)));
             act -> setSeparator(true);
 
@@ -465,15 +463,14 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> is(ItemState::proceeded))
-            if (!node -> isContainer())
-                Library::instance() -> directItemStateRestoration(curr);
+        if (!node -> isContainer() && !node -> is(ItemState::proceeded))
+            emit infoInvalidation(curr);
 
         node -> updateCheckedStateByPredicate(flag);
 
         if (!ensureVisibility && node -> is(flag)) {
             ensureVisibility = true;
-            scrollTo(curr, (Settings::instance() -> isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+            scrollTo(curr, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
         }
 
         curr = indexBelow(curr);
@@ -516,7 +513,7 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, bool usePrevAction) {
     bool isFolder = false;
 
-    if (Settings::instance() -> isAlertOnFolderDeletion()) {
+    if (Settings::obj().isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
                 return false;
@@ -544,12 +541,12 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         }
     }
 
-    if (Player::instance() -> playedIndex().isValid()) {
-        if (Player::instance() -> currentPlaylist() == mdl &&
-             Player::instance() -> playedItemTreePath().startsWith(
+    if (Player::obj().playedIndex().isValid()) {
+        if (Player::obj().currentPlaylist() == mdl &&
+             Player::obj().playedItemTreePath().startsWith(
             node.data(ITREESTR).toString()
         ))
-            Player::instance() -> eject(false);
+            Player::obj().eject(false);
     }
 
     if (remove_file_with_item)
@@ -583,7 +580,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     _deleteFolderAnswer = QMessageBox::No;
 
-    if (mdl -> playlistType() == Data::list) {
+    if (mdl -> playlistType() == level) {
         qSort(index_list.begin(), index_list.end());
     } else {
         qSort(index_list.begin(), index_list.end(), modelIndexComparator());
@@ -613,7 +610,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     QModelIndexList::Iterator eit = --index_list.end();
     total /= 100.0;
 
-    if (mdl -> playlistType() == Data::list || !inProcess) {
+    if (mdl -> playlistType() == level || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), remove, IModel::none, true);
 
@@ -652,7 +649,7 @@ void IView::removeSelectedItems(bool remove) {
         while (!mdl -> syncMutex() -> tryLock())
             QApplication::processEvents();
 
-        Library::instance() -> declineAllItemsRestoration(model());
+        emit discardSync(mdl);
     } else return;
 
     if (list.size() > 200)
@@ -670,7 +667,7 @@ void IView::removeSelectedItems(bool remove) {
 
 void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
     QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
-    DownloadView::instance() -> proceedDrop(event, savePath);
+    DownloadView::obj().proceedDrop(event, savePath);
 }
 
 void IView::downloadBranch(const QModelIndex & node, QString savePath) {
@@ -691,13 +688,13 @@ void IView::downloadBranch(const QModelIndex & node, QString savePath) {
 }
 
 void IView::downloadAll() {
-    downloadBranch(QModelIndex(), Settings::instance() -> defaultDownloadPath());
+    downloadBranch(QModelIndex(), Settings::obj().defaultDownloadPath());
 }
 
 void IView::downloadSelected() {
-    QString path = Settings::instance() -> defaultDownloadPath();
+    QString path = Settings::obj().defaultDownloadPath();
 
-    if (Settings::instance() -> isCheckboxShow())
+    if (Settings::obj().isCheckboxShow())
         downloadChecked(path);
     else {
         QModelIndexList indexes = selectedIndexes();
@@ -739,7 +736,7 @@ void IView::moveCheckedToNewTab(Playlist * /*root*/) {
 
 
 void IView::setIconSize(const QSize & size) {
-    setIndentation(Settings::instance() -> treeIndentation());
+    setIndentation(Settings::obj().treeIndentation());
     QTreeView::setIconSize(size);
     item_delegate -> recalcAttrs(size.width());
 }
@@ -762,7 +759,7 @@ void IView::markSelectedAsLiked(bool liked) {
 //////////////////////////////////////////////////////
 
 QModelIndex IView::activeIndex() {
-    QModelIndex ind = Player::instance() -> playedIndex();
+    QModelIndex ind = Player::obj().playedIndex();
 
     if (ind.model() != model())
         ind = QModelIndex();
@@ -781,7 +778,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (!curr.isValid())
         curr = mdl -> index(0, 0);
 
-    if (Player::instance() -> playedIndex() != curr && curr.data(IPLAYABLE).toBool())
+    if (Player::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
     expand(curr.parent());
@@ -833,8 +830,8 @@ void IView::dropEvent(QDropEvent * event) {
 
 void IView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Space) {
-        if (Player::instance() -> playedItem())
-            Player::instance() -> playPause();
+        if (Player::obj().playedItem())
+            Player::obj().playPause();
         else
            execNextIndex();
     } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {

@@ -1,21 +1,11 @@
 #include "dockbars.h"
-#include <qdebug.h>
 
 using namespace Presentation;
 using namespace Dialogs;
 using namespace Data;
 
-Dockbars * Dockbars::self = 0;
-
-Dockbars * Dockbars::instance(QWidget * parent) {
-    if(!self)
-        self = new Dockbars(parent);
-    return self;
-}
-
 void Dockbars::load(const QJsonArray & bars) {
     int userTabsAmount = 0;
-    MainWindow * window = (MainWindow *)parent();
     QList<QString> barsList;
     barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
 
@@ -40,7 +30,7 @@ void Dockbars::load(const QJsonArray & bars) {
 
             ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
 
-            window -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
+            container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
             if (obj.value(QStringLiteral("played")).toBool()) {
                 IView * v = view(qobject_cast<DockBar *>(curr_bar));
@@ -53,8 +43,8 @@ void Dockbars::load(const QJsonArray & bars) {
         }
     }
 
-    if (!Settings::instance() -> isSaveCommonTab()) {
-        window -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
+    if (!Settings::obj().isSaveCommonTab()) {
+        container -> addDockWidget(Qt::TopDockWidgetArea, commonBar());
         if (userTabsAmount != 0)
             commonBar() -> hide();
     }
@@ -64,7 +54,7 @@ void Dockbars::load(const QJsonArray & bars) {
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
         widg -> hide();
-        window -> addDockWidget(Qt::TopDockWidgetArea, widg);
+        container -> addDockWidget(Qt::TopDockWidgetArea, widg);
     }
 }
 
@@ -81,7 +71,7 @@ void Dockbars::save(DataStore * settings) {
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == COMMON_TAB) {
-                if (v && v -> isCommon() && !Settings::instance() -> isSaveCommonTab())
+                if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
                     continue;
             }
 
@@ -102,10 +92,10 @@ void Dockbars::save(DataStore * settings) {
             } else {
                 if ((*it) == played) {
                     curr_bar.insert(QStringLiteral("played"), true);
-                    if (Player::instance() -> playedIndex().isValid()) {
-                        curr_bar.insert(QStringLiteral("played_item"), Player::instance() -> playedIndex().data(ITREEPATH).toString());
-                        curr_bar.insert(QStringLiteral("played_time"), Player::instance() -> getPosition());
-                        curr_bar.insert(QStringLiteral("played_duration"), Player::instance() -> getDuration());
+                    if (Player::obj().playedIndex().isValid()) {
+                        curr_bar.insert(QStringLiteral("played_item"), Player::obj().playedIndex().data(ITREEPATH).toString());
+                        curr_bar.insert(QStringLiteral("played_time"), Player::obj().getPosition());
+                        curr_bar.insert(QStringLiteral("played_duration"), Player::obj().getDuration());
                     }
                 }
 
@@ -129,19 +119,19 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return createDocBar(barName, settings, &attrs, false);
     } else if (barName == DOWNLOADS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(DownloadView::instance(&attrs, parentWidget()));
-        connect(DownloadView::instance(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
+        bar -> setWidget(&DownloadView::linked_obj_with_init(&attrs, container));
+        connect(&DownloadView::obj(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
         return bar;
     } else if (barName == LOGS_TAB) {
         DockBar * bar = createDocBar(barName, false);
-        bar -> setWidget(Logger::instance() -> getEditor());
+        bar -> setWidget(Logger::obj().getEditor());
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }
+View::Params defSettings(level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
-        View::Params defSettings(Data::list, true, false, false, true);
         common = createDocBar(COMMON_TAB, defSettings, 0, false);
     }
 
@@ -164,37 +154,9 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params 
 }
 
 DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
-    IView * view;
     DockBar * bar = createDocBar(name, closable);
+    IView * view = ViewFactory::build(bar, settings, attrs);
 
-    switch(settings.type) {
-        case Data::list: {
-            view = new ListView(bar, settings, attrs);
-        break;}
-        case level_tree: {
-            view = new LevelTreeView(bar, settings, attrs);
-        break;}
-        case tree: {
-            view = new TreeView(bar, settings, attrs);
-        break;}
-        case vk: {
-            view = new VkView(bar, settings, attrs);
-        break;}
-        case vk_rel: {
-            view = new VkRelView(bar, settings, attrs);
-        break;}
-        case soundcloud: {
-            view = new SoundcloudView(bar, settings, attrs);
-        break;}
-        case search: {
-            view = new SearchView(bar, settings, attrs);
-        break;}
-        case od: {
-            view = new OdView(bar, settings, attrs);
-        break;}
-
-        default: view = 0;
-    }
     bar -> setWidget(view);
     bar -> initiateSearch();
 
@@ -206,13 +168,13 @@ DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObjec
     }
 
     if (addToView)
-        ((QMainWindow *)parent()) -> addDockWidget(Qt::TopDockWidgetArea, bar);
+        container -> addDockWidget(Qt::TopDockWidgetArea, bar);
 
     return bar;
 }
 
 DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content) {
-    DockBar * dock = new DockBar(name, (QWidget *)parent(), closable, Qt::WindowMinMaxButtonsHint);
+    DockBar * dock = new DockBar(name, container, closable, Qt::WindowMinMaxButtonsHint);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
     connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon(bool)));
@@ -224,7 +186,7 @@ DockBar * Dockbars::createDocBar(QString name, bool closable, QWidget * content)
     }
 
     return dock;
-//    ((QWidget *)parent())->tabifyDockWidget(dockWidget1,dockWidget2);
+//    container->tabifyDockWidget(dockWidget1,dockWidget2);
 }
 
 void Dockbars::useVeticalTitles(bool vertical) {
@@ -265,7 +227,7 @@ void Dockbars::initPlayed() {
 }
 
 void Dockbars::showViewSettingsDialog(DockBar * bar) {
-    TabDialog dialog(parentWidget());
+    TabDialog dialog(container);
     if (bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
@@ -283,7 +245,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         }
     } else {
         if (dialog.exec() == QDialog::Accepted) {
-            ((QMainWindow *)parentWidget()) -> addDockWidget(
+            container -> addDockWidget(
                 Qt::TopDockWidgetArea,
                 createDocBar(dialog.getName(), dialog.getSettings())
             );
@@ -337,12 +299,12 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
 }
 
 void Dockbars::updateAllViews() { // update for item height
-    QList<IView *> views = parent() -> findChildren<IView *>();
-    int iconDimension = Settings::instance() -> iconHeight();
+    QList<IView *> views = container -> findChildren<IView *>();
+    int iconDimension = Settings::obj().iconHeight();
 
     QList<IView *>::Iterator it = views.begin();
     for(; it != views.end(); it++) {
-        (*it) -> setUniformRowHeights(Settings::instance() -> isHeightUnificate());
+        (*it) -> setUniformRowHeights(Settings::obj().isHeightUnificate());
         (*it) -> setIconSize(QSize(iconDimension, iconDimension));
     }
 }
@@ -361,18 +323,18 @@ void Dockbars::onNextItemNeeded(Player::Reason reason) {
             if (v -> isRequiredOnUpdate()) {
                 ((IModel *)v -> model()) -> refresh(true);
             } else {
-                if (IModel::restoreUrl(Player::instance() -> playedItem()))
-                    Player::instance() -> playIndex(Player::instance() -> playedIndex());
+                if (IModel::restoreUrl(Player::obj().playedItem()))
+                    Player::obj().playIndex(Player::obj().playedIndex());
                 else {
-                    Player::instance() -> stop();
-                    Player::instance() -> playedIndexIsNotExist();
+                    Player::obj().stop();
+                    Player::obj().playedIndexIsNotExist();
                 }
             }
 
             return;
         }
 
-        if (Settings::instance() -> isFindValid())
+        if (Settings::obj().isFindValid())
             v -> execNextIndex();
     }
 }
@@ -398,12 +360,12 @@ void Dockbars::playPrev() {
     if (v) v -> execPrevIndex();
 }
 
-void Dockbars::stop() { Player::instance() -> stop(); }
-void Dockbars::playPause() { Player::instance() -> playPause(); }
-void Dockbars::slidePosForward() { Player::instance() -> slidePosForward(); }
-void Dockbars::slidePosBackward() { Player::instance() -> slidePosBackward(); }
-void Dockbars::slideVolForward() { Player::instance() -> slideVolForward(); }
-void Dockbars::slideVolBackward() { Player::instance() -> slideVolBackward(); }
+void Dockbars::stop() { Player::obj().stop(); }
+void Dockbars::playPause() { Player::obj().playPause(); }
+void Dockbars::slidePosForward() { Player::obj().slidePosForward(); }
+void Dockbars::slidePosBackward() { Player::obj().slidePosBackward(); }
+void Dockbars::slideVolForward() { Player::obj().slideVolForward(); }
+void Dockbars::slideVolBackward() { Player::obj().slideVolBackward(); }
 
 void Dockbars::onDownloadProceeded(QString to) {
     for(QHash<QString, DockBar *>::Iterator it = linkedTabs.begin(); it != linkedTabs.end(); it++) {
@@ -426,6 +388,6 @@ void Dockbars::barClosed() {
 
     IView * v = view(bar);
 
-    if (v && Player::instance() -> playedIndex().model() == v -> model())
-        Player::instance() -> playIndex(QModelIndex());
+    if (v && Player::obj().playedIndex().model() == v -> model())
+        Player::obj().playIndex(QModelIndex());
 }
