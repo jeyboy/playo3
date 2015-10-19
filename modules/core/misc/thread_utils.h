@@ -12,50 +12,52 @@
 #include "func.h"
 
 namespace Core {
+class Cell {
+protected:
+    Func * response;
+
+    Cell() : response(0) {}
+    Cell(Func * func) : response(func) {}
+    ~Cell() { delete response; }
+public:
+    virtual void postprocessing(QObject * obj);
+};
+
+template<typename T>
+    struct WatchCell : public Cell {
+
+        WatchCell(Func * func) : Cell(func) {}
+        void postprocessing(QObject * obj);
+    };
+
+    template<typename T> void WatchCell<T>::postprocessing(QObject * obj) {
+        qDebug() << "PIPI";
+        QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
+            if (!initiator -> isCanceled() && response)
+                QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection,
+                    response -> ret_reference ?
+                        Q_ARG(T &, initiator -> result())
+                                            :
+                        Q_ARG(T, initiator -> result())
+                );
+    }
+
+    template<>
+    struct WatchCell<void> : public Cell {
+        WatchCell(Func * func) : Cell(func) {}
+        void postprocessing(QObject * obj) {
+            qDebug() << "PIPI VOID";
+            QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)obj;
+                if (!initiator -> isCanceled() && response)
+                    QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection);
+        }
+    };
+
+
     class ThreadUtils : public QObject, public Singleton<ThreadUtils> {
         Q_OBJECT
 
         friend class Singleton<ThreadUtils>;
-
-        static constexpr bool check_class(QFutureWatcher<void> *) { return true; }
-        static constexpr bool check_class(...) { return false; }
-
-        class Cell {
-        protected:
-            Func * response;
-
-            Cell() : response(0) {}
-            Cell(Func * func) : response(func) {}
-            ~Cell() { delete response; }
-        public:
-            virtual void postprocessing(QObject * obj);
-        };
-
-        template <typename T, bool F = check_class((T*)0)>
-        class WatchCell;
-
-        template<typename T>
-        struct WatchCell<T, false> : public Cell {
-
-            WatchCell(Func * func) : Cell(func) {}
-            void postprocessing(QObject * obj) {
-                qDebug() << "PIPI";
-                QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-                    if (!initiator -> isCanceled() && response)
-                        QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection,
-                            response -> ret_reference ?
-                                Q_ARG(T &, initiator -> result())
-                                                    :
-                                Q_ARG(T, initiator -> result())
-                        );
-            }
-        };
-
-        template<typename T>
-        struct WatchCell<T, true> : public Cell {
-            WatchCell(Func * func) : Cell(func) {}
-            void postprocessing(QObject * /*obj*/) { }
-        };
 
         QHash<QObject *, Cell *> requests;
     protected:
