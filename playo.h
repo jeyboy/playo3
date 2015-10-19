@@ -44,6 +44,35 @@ public:
     explicit Playo(QWidget * parent = 0);
     ~Playo();
 
+    void worksoso(int c) {
+        qDebug() << "In work soso" << c;
+    }
+    QJsonObject worksosoJson() {
+        qDebug() << "In work soso json";
+        QJsonObject o;
+        o.insert("a", "312");
+        o.insert("b", "1");
+        return o;
+    }
+    QJsonArray worksosoJsonArray() {
+        qDebug() << "In work soso json array";
+        QJsonArray o;
+        o.append("312");
+        o.append("b");
+        return o;
+    }
+
+    void soso() {
+        qDebug() << "In soso";
+    }
+    void sosoJson(QJsonObject a) {
+        qDebug() << "In json soso" << a;
+    }
+    void sosoJsonArray(QJsonArray a) {
+        qDebug() << "In json array soso" << a;
+    }
+
+
 public slots:
 //    void outputActiveItem(ModelItem *, ModelItem *);
     void receiveMessage(QString);

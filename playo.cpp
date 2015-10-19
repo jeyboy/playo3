@@ -34,12 +34,53 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //        Cue cue(f);
 }
 
+
+
+
+//void worksoso() {
+//    qDebug() << "In work soso";
+//}
+//QJsonObject worksosoJson() {
+//    qDebug() << "In work soso json";
+//    QJsonObject o;
+//    o.insert("a", "312");
+//    o.insert("b", "1");
+//    return o;
+//}
+//void worksosoJsonArray() {
+//    qDebug() << "In work soso json array";
+//    QJsonArray o;
+//    o.append("312");
+//    o.append("b");
+//    return o;
+//}
+
+//void soso() {
+//    qDebug() << "In soso";
+//}
+//void sosoJson(QJsonObject a) {
+//    qDebug() << "In json soso" << a;
+//}
+//void sosoJsonArray(QJsonArray a) {
+//    qDebug() << "In json array soso" << a;
+//}
+
+
+
+
+
+
 Playo::~Playo() {
     delete ui;
     delete settings;
 }
 
 void Playo::activation() {
+
+    Core::ThreadUtils::obj().run(this, &Playo::worksoso, 8, new Func(this, SLOT(soso())));
+
+
+
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread

@@ -1,6 +1,7 @@
 #ifndef THREAD_UTILS
 #define THREAD_UTILS
 
+#include <typeinfo.h>
 #include <qthread.h>
 #include <qapplication.h>
 
@@ -12,29 +13,63 @@
 
 namespace Core {
     class ThreadUtils : public QObject, public Singleton<ThreadUtils> {
+        Q_OBJECT
+
         friend class Singleton<ThreadUtils>;
 
-        template<typename T>
-        struct WatchCell : public QObject {
+        static constexpr bool check_class(QFutureWatcher<void> *) { return true; }
+        static constexpr bool check_class(...) { return false; }
+
+        class Cell {
+        protected:
             Func * response;
 
-            WatchCell() : response(0) {}
-            WatchCell(Func * func) : response(func) {}
-        public slots:
+            Cell() : response(0) {}
+            Cell(Func * func) : response(func) {}
+            ~Cell() { delete response; }
+        public:
+            virtual void postprocessing(QObject * obj);
+        };
+
+        template <typename T, bool F = check_class((T*)0)>
+        class WatchCell;
+
+        template<typename T>
+        struct WatchCell<T, false> : public Cell {
+
+            WatchCell(Func * func) : Cell(func) {}
             void postprocessing(QObject * obj) {
+                qDebug() << "PIPI";
                 QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-                if (!initiator -> isCanceled() && response)
-                    QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, Q_ARG(T &, initiator -> result()));
-                initiator -> deleteLater();
-                delete response;
+                    if (!initiator -> isCanceled() && response)
+                        QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection,
+                            response -> ret_reference ?
+                                Q_ARG(T &, initiator -> result())
+                                                    :
+                                Q_ARG(T, initiator -> result())
+                        );
             }
         };
+
+        template<typename T>
+        struct WatchCell<T, true> : public Cell {
+            WatchCell(Func * func) : Cell(func) {}
+            void postprocessing(QObject * /*obj*/) { }
+        };
+
+        QHash<QObject *, Cell *> requests;
     protected:
         template<typename T>
         void registerSync(QFuture<T> feature, Func * response) {
             QFutureWatcher<T> * initiator = new QFutureWatcher<T>();
-            connect(initiator, SIGNAL(finished()), new WatchCell<T>(response), SLOT(asyncFinished()));
+            requests.insert(initiator, new WatchCell<T>(response));
+            QObject::connect(initiator, SIGNAL(finished()), this, SLOT(postprocessing()));
             initiator -> setFuture(feature);
+        }
+    protected slots:
+        void postprocessing() {
+            QObject * obj = sender();
+            requests[obj] -> postprocessing(obj);
         }
     public:
         static bool inMainThread() { return QThread::currentThread() != QApplication::instance() -> thread(); }
