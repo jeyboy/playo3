@@ -24,9 +24,6 @@ namespace Core {
                 obj.insert(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::obj().toJson());
                 obj.insert(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::instance() -> toJson());
                 obj.insert(SETTINGS_OD_SET_KEY, Od::Api::instance() -> toJson());
-
-
-                qDeleteAll(sites);
             }
 
         };

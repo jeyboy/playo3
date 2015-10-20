@@ -18,8 +18,6 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() { }
             public:
-                inline virtual ~Api() {}
-
                 inline QString name() const { return QStringLiteral("Soundcloud"); }
                 inline SubType siteType() { return sc_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }

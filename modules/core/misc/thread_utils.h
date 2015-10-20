@@ -6,53 +6,11 @@
 #include <qapplication.h>
 
 #include <QtConcurrent/qtconcurrentrun.h>
-#include <qfuturewatcher.h>
 
 #include "modules/core/interfaces/singleton.h"
-#include "func.h"
+#include "thread_cell.h"
 
 namespace Core {
-    class Cell {
-        protected:
-            Func * response;
-
-            Cell() : response(0) {}
-            Cell(Func * func) : response(func) {}
-            ~Cell() { delete response; }
-        public:
-            virtual void postprocessing(QObject * obj);
-    };
-
-    template<class T>
-    struct WatchCell : public Cell {
-        const char * argName() {
-            if (response -> args.isEmpty())
-                return 0;
-            else
-                return qUtf8Printable(response -> args.at(0));
-        }
-
-        WatchCell(Func * func) : Cell(func) {}
-        void postprocessing(QObject * obj) {
-            QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-                if (!initiator -> isCanceled() && response) {
-                    QGenericArgument arg = QArgument<T>(argName(), initiator -> result());
-                    QMetaObject::invokeMethod(response -> obj, qPrintable(response -> slot), Qt::AutoConnection, arg);
-                }
-        }
-    };
-
-    template<>
-    struct WatchCell<void> : public Cell {
-        WatchCell(Func * func) : Cell(func) {}
-        void postprocessing(QObject * obj) {
-            QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)obj;
-                if (!initiator -> isCanceled() && response)
-                    QMetaObject::invokeMethod(response -> obj, qPrintable(response -> slot), Qt::AutoConnection);
-        }
-    };
-
-
     class ThreadUtils : public QObject, public Singleton<ThreadUtils> {
         Q_OBJECT
 
