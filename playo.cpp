@@ -34,42 +34,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //        Cue cue(f);
 }
 
-
-
-
-//void worksoso() {
-//    qDebug() << "In work soso";
-//}
-//QJsonObject worksosoJson() {
-//    qDebug() << "In work soso json";
-//    QJsonObject o;
-//    o.insert("a", "312");
-//    o.insert("b", "1");
-//    return o;
-//}
-//void worksosoJsonArray() {
-//    qDebug() << "In work soso json array";
-//    QJsonArray o;
-//    o.append("312");
-//    o.append("b");
-//    return o;
-//}
-
-//void soso() {
-//    qDebug() << "In soso";
-//}
-//void sosoJson(QJsonObject a) {
-//    qDebug() << "In json soso" << a;
-//}
-//void sosoJsonArray(QJsonArray a) {
-//    qDebug() << "In json array soso" << a;
-//}
-
-
-
-
-
-
 Playo::~Playo() {
     delete ui;
     delete settings;
@@ -78,6 +42,8 @@ Playo::~Playo() {
 void Playo::activation() {
 
     Core::ThreadUtils::obj().run(this, &Playo::worksoso, 8, new Func(this, SLOT(soso())));
+    Core::ThreadUtils::obj().run(this, &Playo::worksosoJson, new Func(this, SLOT(sosoJson(QJsonObject))));
+    Core::ThreadUtils::obj().run(this, &Playo::worksosoJsonArray, new Func(this, SLOT(sosoJsonArray(QJsonArray &))));
 
 
 

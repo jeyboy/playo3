@@ -10,7 +10,11 @@ void VkModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    Vk::Api::instance() -> userInfo(tab_uid, tab_uid == Vk::Api::instance() -> userID(), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Vk::Api::instance() -> userInfo(
+        tab_uid,
+        tab_uid == Vk::Api::instance() -> userID(),
+        new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
+    );
 }
 
 //void VkModel::refreshWall() {

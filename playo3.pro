@@ -151,7 +151,6 @@ HEADERS += \
     modules/core/misc/file_utils/extensions.h \
     modules/core/misc/file_utils/filename_conversions.h \
     modules/core/misc/file_utils/icon_provider.h \
-    modules/core/misc/async.h \
     modules/core/misc/autorun.h \
     modules/core/misc/format.h \
     modules/core/misc/logger.h \

@@ -62,18 +62,17 @@ public:
         return o;
     }
 
+public slots:
     void soso() {
         qDebug() << "In soso";
     }
     void sosoJson(QJsonObject a) {
         qDebug() << "In json soso" << a;
     }
-    void sosoJsonArray(QJsonArray a) {
+    void sosoJsonArray(QJsonArray & a) {
         qDebug() << "In json array soso" << a;
     }
 
-
-public slots:
 //    void outputActiveItem(ModelItem *, ModelItem *);
     void receiveMessage(QString);
 

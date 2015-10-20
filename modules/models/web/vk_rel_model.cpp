@@ -13,6 +13,6 @@ void VkRelModel::refresh(bool /*retryPlaing*/) {
         tab_uid,
         rel_type == Data::user_rel,
         true,
-        Func(this, "proceedAudioList")
+        new Func(this, SLOT(proceedAudioList(QJsonObject &)))
     );
 }

@@ -10,7 +10,7 @@ void SoundcloudModel::refresh(bool retryPlaing) {
 //    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::obj().objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Soundcloud::Api::obj().objectInfo(tab_uid, new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {

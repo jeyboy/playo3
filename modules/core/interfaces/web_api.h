@@ -6,12 +6,12 @@
 #include <QJsonArray>
 #include <qurl.h>
 
-#include "modules/core/misc/async.h"
 #include "dialogs/user_action_dialog.h"
 #include "modules/core/web/utils/web_manager.h"
+#include "modules/core/misc/thread_utils.h"
 
 namespace Core {
-    class WebApi : public Async {
+    class WebApi : public QObject {
         Q_OBJECT
     public:
         WebApi(QObject * parent = 0);

@@ -2,7 +2,7 @@
 
 using namespace Core;
 
-WebApi::WebApi(QObject * parent) : Async() {
+WebApi::WebApi(QObject * parent) {
     actionDialog = new UserActionDialog((QWidget *)parent);
 }
 

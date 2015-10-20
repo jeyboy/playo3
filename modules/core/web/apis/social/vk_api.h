@@ -37,20 +37,16 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
-                void userInfo(QString & uid, bool fullInfo, Func func) {
-                    registerAsync(
-                        QtConcurrent::run((RequestApi *)this, &RequestApi::userInfo, uid, fullInfo), func
-                    );
+                void userInfo(QString & uid, bool fullInfo, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, fullInfo, func);
                 }
             //    void wallAudio(QString & uid, Func func) {
             //        registerAsync(
             //            QtConcurrent::run((RequestApi *)this, &RequestApi::wallAudio, uid), func
             //        );
             //    }
-                void audioRecomendations(QString & uid, bool byUser, bool randomize, Func func) {
-                    registerAsync(
-                        QtConcurrent::run((RequestApi *)this, &RequestApi::audioRecomendations, uid, byUser, randomize), func
-                    );
+                void audioRecomendations(QString & uid, bool byUser, bool randomize, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::audioRecomendations, uid, byUser, randomize, func);
                 }
 
             public slots:

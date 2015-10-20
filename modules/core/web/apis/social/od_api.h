@@ -27,10 +27,8 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty(); }
 
-                void objectInfo(const QString & uid, Func func) {
-                    registerAsync(
-                        QtConcurrent::run((RequestApi *)this, &RequestApi::userInfo, uid), func
-                    );
+                void objectInfo(const QString & uid, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
 
                 inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id

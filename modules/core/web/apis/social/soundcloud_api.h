@@ -34,10 +34,8 @@ namespace Core {
                 void getUserInfo(QString & uid, QJsonObject & object);
 
                 QJsonObject objectInfo(QString & uid);
-                inline void objectInfo(QString & uid, Func func) {
-                    registerAsync(
-                        QtConcurrent::run(this, &Api::objectInfo, uid), func
-                    );
+                inline void objectInfo(QString & uid, Func * func) {
+                    ThreadUtils::obj().run(this, &Api::objectInfo, uid, func);
                 }
             public slots:
                 inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
