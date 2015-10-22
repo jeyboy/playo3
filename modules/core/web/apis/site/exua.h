@@ -217,7 +217,7 @@
 ////            return !tracks.isEmpty();
 //        }
 //    private:
-//        inline Exua() : IGrabberApi(), search_predicate_song_token("/search?original_id=3&s="), search_predicate_artist_token("/search?original_id=7513588&s="),
+//        inline Exua() : search_predicate_song_token("/search?original_id=3&s="), search_predicate_artist_token("/search?original_id=7513588&s="),
 //            searchIndexSelector(Html::Selector("table.panel tr[id!'ad_block']")), songTrSelector(Html::Selector("table.list tr a[rel='nofollow']"))
 //        {} /*, data_url_token(QStringLiteral("data-url")),
 //            title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),

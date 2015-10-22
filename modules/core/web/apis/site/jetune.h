@@ -130,7 +130,7 @@ namespace Core {
             }
         private:
             friend class Singleton<Jetune>;
-            inline Jetune() : IGrabberApi() {}
+            inline Jetune() {}
             inline virtual ~Jetune() {}
         };
     }

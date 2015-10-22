@@ -2,16 +2,14 @@
 #define ZAYCEV
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
         using namespace Grabber;
-        class Zaycev : public IGrabberApi {
+        class Zaycev : public IGrabberApi, public Singleton<Zaycev> {
         public:
-            static Zaycev * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Zaycev"); }
             inline SubType siteType() { return zaycev_site; }
 
@@ -132,10 +130,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Zaycev() : IGrabberApi() {}
+            friend class Singleton<Zaycev>;
+            inline Zaycev() {}
             inline virtual ~Zaycev() {}
-
-            static Zaycev * self;
         };
     }
 }

@@ -2,17 +2,15 @@
 #define MP3CC
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
         using namespace Grabber;
 
-        class Mp3cc : public IGrabberApi {
+        class Mp3cc : public IGrabberApi, public Singleton<Mp3cc> {
         public:
-            static Mp3cc * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Mp3cc"); }
             inline Web::SubType siteType() { return mp3cc_site; }
 
@@ -130,10 +128,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Mp3cc() : IGrabberApi() {}
+            friend class Singleton<Mp3cc>;
+            inline Mp3cc() {}
             inline virtual ~Mp3cc() {}
-
-            static Mp3cc * self;
         };
     }
 }

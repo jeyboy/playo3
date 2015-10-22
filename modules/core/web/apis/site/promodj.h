@@ -2,6 +2,7 @@
 #define PROMODJ
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2
@@ -12,11 +13,8 @@ namespace Core {
 
         using namespace Grabber;
 
-        class PromoDj : public IGrabberApi {
+        class PromoDj : public IGrabberApi, public Singleton<PromoDj> {
         public:
-            static PromoDj * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("PromoDJ"); }
             inline Web::SubType siteType() { return promodj_site; }
 
@@ -129,10 +127,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline PromoDj() : IGrabberApi() {}
+            friend class Singleton<PromoDj>;
+            inline PromoDj() {}
             inline virtual ~PromoDj() {}
-
-            static PromoDj * self;
         };
     }
 }
