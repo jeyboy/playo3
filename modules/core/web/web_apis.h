@@ -22,7 +22,7 @@ namespace Core {
             inline static void close(QJsonObject & obj) {
                 obj.insert(SETTINGS_VK_SET_KEY, Vk::Api::obj().toJson());
                 obj.insert(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::obj().toJson());
-                obj.insert(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::instance() -> toJson());
+                obj.insert(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::obj().toJson());
                 obj.insert(SETTINGS_OD_SET_KEY, Od::Api::obj().toJson());
             }
 

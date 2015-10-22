@@ -2,19 +2,6 @@
 
 using namespace Core::Web::Fourshared; // for auth required oauth 1
 
-Api * Api::self = 0;
-
-Api * Api::instance() {
-    if(!self) self = new Api();
-    return self;
-}
-
-Api * Api::instance(QJsonObject obj) {
-    if(!self) self = new Api(obj);
-    else Api::instance() -> fromJson(obj);
-    return self;
-}
-
 QString Api::authUrl() {
     QUrl url(base_url % QStringLiteral("oauth/initiate"));
 

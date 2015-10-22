@@ -11,7 +11,8 @@ namespace Core {
             Soundcloud::Api::obj().fromJson(obj.value(SETTINGS_SOUNDCLOUD_SET_KEY).toObject());
             sites.insert(Soundcloud::Api::obj().siteType(), &Soundcloud::Api::obj());
 
-            sites.insert(Fourshared::Api::instance() -> siteType(), Fourshared::Api::instance(obj.value(SETTINGS_FOURSHARED_SET_KEY).toObject()));
+            Fourshared::Api::obj().fromJson(obj.value(SETTINGS_FOURSHARED_SET_KEY).toObject());
+            sites.insert(Fourshared::Api::obj().siteType(), &Fourshared::Api::obj());
 
             Od::Api::obj().fromJson(obj.value(SETTINGS_OD_SET_KEY).toObject());
             sites.insert(Od::Api::obj().siteType(), &Od::Api::obj());
