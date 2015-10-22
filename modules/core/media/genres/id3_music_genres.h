@@ -2,20 +2,18 @@
 #define ID3_MUSIC_GENRES
 
 #include "genres_interface.h"
+#include "modules/core/interfaces/singleton.h"
 
 namespace Core {
     namespace Media {
-        class Id3MusicGenres : public IGenres {
+        class Id3MusicGenres : public IGenres, public Singleton<Id3MusicGenres> {
         public:
-            static Id3MusicGenres * instance();
-            inline static void close() { delete self; }
             inline int defaultInt() const { return 12; }
         protected:
             void initDefault();
         private:
+            friend class Singleton<Id3MusicGenres>;
             inline Id3MusicGenres() : IGenres() { initDefault(); }
-
-            static Id3MusicGenres * self;
         };
     }
 }

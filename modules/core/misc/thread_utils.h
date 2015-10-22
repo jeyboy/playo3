@@ -31,7 +31,7 @@ namespace Core {
             requests[obj] -> postprocessing(obj);
         }
     public:
-        static bool inMainThread() { return QThread::currentThread() != QApplication::instance() -> thread(); }
+        static bool inMainThread() { return QThread::currentThread() == QApplication::instance() -> thread(); }
         static bool livesInCurrThread(QObject * receiver) { return QThread::currentThread() == receiver -> thread(); }
 
         template <typename T, typename Class>

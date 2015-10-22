@@ -40,13 +40,6 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-
-    Core::ThreadUtils::obj().run(this, &Playo::worksoso, 8, new Func(this, SLOT(soso())));
-    Core::ThreadUtils::obj().run(this, &Playo::worksosoJson, new Func(this, SLOT(sosoJson(QJsonObject))));
-    Core::ThreadUtils::obj().run(this, &Playo::worksosoJsonArray, new Func(this, SLOT(sosoJsonArray(QJsonArray &))));
-
-
-
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread

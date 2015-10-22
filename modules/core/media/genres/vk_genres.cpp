@@ -2,14 +2,6 @@
 
 using namespace Core::Media;
 
-VkGenres * VkGenres::self = 0;
-
-VkGenres * VkGenres::instance() {
-    if(!self)
-        self = new VkGenres();
-    return self;
-}
-
 int VkGenres::fromStandartId(int genreId) {
     switch(genreId) {
         case 0: return 9;
