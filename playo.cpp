@@ -46,6 +46,7 @@ void Playo::activation() {
     Player::obj().setContainer(this);
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
+    Settings::obj().anchorWidget(this);
 }
 
 void Playo::initialization() {
@@ -57,7 +58,7 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    Web::Apis::initiate(this, settings -> obj());
+    Web::Apis::initiate(settings -> obj());
     Settings::obj().fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
 
     activation();
@@ -226,41 +227,41 @@ void Playo::showEchonestDialog() {
 }
 
 void Playo::openOdTabDialog() {
-    if (Od::Api::instance() -> isConnected() || Od::Api::instance() -> connection())
-        Dockbars::obj().createDocBar(QStringLiteral("OD [YOU]"), View::Params(od, Od::Api::instance() -> userID()), 0, true, true);
+    if (Od::Api::obj().isConnected() || Od::Api::obj().connection())
+        Dockbars::obj().createDocBar(QStringLiteral("OD [YOU]"), View::Params(od, Od::Api::obj().userID()), 0, true, true);
 }
 
 void Playo::openVKRecomendations() {
-    Dockbars::obj().createDocBar(QStringLiteral("Rec for YOU"), View::Params(vk_rel, Vk::Api::instance() -> userID(), user_rel), 0, true, true);
+    Dockbars::obj().createDocBar(QStringLiteral("Rec for YOU"), View::Params(vk_rel, Vk::Api::obj().userID(), user_rel), 0, true, true);
 }
 
 void Playo::openVKTabDialog() {
     WebDialogInterface * dInt;
     if (Plugins::loadWebDialog(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
-        dInt -> registerActions(Vk::Api::instance());
+        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
+        dInt -> registerActions(&Vk::Api::obj());
 
         if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
+            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::obj().userID()), 0, true, true);
 
-        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::instance() -> isConnected() ? QStringLiteral("true") : Vk::Api::instance() -> getError());
+        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::obj().isConnected() ? QStringLiteral("true") : Vk::Api::obj().getError());
         delete dInt;
     }
 //    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKTabDialog() {
-    if (Vk::Api::instance() -> isConnected())
-        Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::instance() -> userID()), 0, true, true);
+    if (Vk::Api::obj().isConnected())
+        Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), View::Params(vk, Vk::Api::obj().userID()), 0, true, true);
     else openVKTabDialog();
 }
 
 void Playo::showVKRelTabDialog() {
-    RelationsDialog dialog(Vk::Api::instance(), this);
+    RelationsDialog dialog(&Vk::Api::obj(), this);
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), View::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
 
-    emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::instance() -> getError());
+    emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().getError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {

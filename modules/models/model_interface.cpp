@@ -9,11 +9,11 @@ bool IModel::restoreUrl(IItem * itm) {
 
     switch(itm -> itemType()) {
         case VK_FILE: {
-            newUrl = Vk::Api::instance() -> refresh(itm -> toUid().toString()).section('?', 0, 0);
+            newUrl = Vk::Api::obj().refresh(itm -> toUid().toString()).section('?', 0, 0);
         break;}
 
         case OD_FILE: {
-            newUrl = Od::Api::instance() -> refresh(itm -> refresh_path());
+            newUrl = Od::Api::obj().refresh(itm -> refresh_path());
         break;}
 
         case WEB_FILE: {
@@ -706,18 +706,18 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
 
     for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         if (map_it.key() == SHARE_TYPE_VK) { // TODO: move this to usual connection
-            if (!Vk::Api::instance() -> isConnected()) {
+            if (!Vk::Api::obj().isConnected()) {
                 WebDialogInterface * dInt;
                 if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Vk::Api::instance() -> authUrl(), QStringLiteral("VK auth"));
-                    dInt -> registerActions(Vk::Api::instance());
+                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
+                    dInt -> registerActions(&Vk::Api::obj());
                     dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
                     delete dInt;
                 }
             }
 
-            if (Vk::Api::instance() -> isConnected()) {
-                QJsonArray obj = Vk::Api::instance() -> getAudiosInfo(map_it.value());
+            if (Vk::Api::obj().isConnected()) {
+                QJsonArray obj = Vk::Api::obj().getAudiosInfo(map_it.value());
                 proceedVkList(obj, parentNode);
             }
         } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) { // TODO: move this to usual connection

@@ -16,7 +16,7 @@ namespace Core {
                 protected:
                     QString authE, authP;
 
-                    inline Misc(QObject * parent = 0) : WebApi(parent) {}
+                    inline Misc() : WebApi() {}
 
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
 

@@ -7,7 +7,7 @@ using namespace Models;
 void OdModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
-    Od::Api::instance() -> objectInfo((tab_uid == Od::Api::instance() -> userID() ? QString() : tab_uid), new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
+    Od::Api::obj().objectInfo((tab_uid == Od::Api::obj().userID() ? QString() : tab_uid), new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {
@@ -18,7 +18,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
     if (audios.isEmpty()) {
         int totalTracks = hash.value(QStringLiteral("totalTracks")).toInt();
         if (totalTracks > 0) {
-            audios = Od::Api::instance() -> userInfo(QString::number((qint64)hash.value(QStringLiteral("me")).toDouble())).value(QStringLiteral("tracks")).toArray();
+            audios = Od::Api::obj().userInfo(QString::number((qint64)hash.value(QStringLiteral("me")).toDouble())).value(QStringLiteral("tracks")).toArray();
         }
     }
 
@@ -48,7 +48,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
                     folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
 
-                    QJsonArray tracks = Od::Api::instance() -> playlistInfo(pid, items_amount);
+                    QJsonArray tracks = Od::Api::obj().playlistInfo(pid, items_amount);
 
                     Od::Api::extractCount(tracks);
                     int folderItemsAmount = proceedOdList(tracks, folder);
@@ -106,7 +106,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
         for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
             QJsonObject frend = (*friend_it).toObject();
 
-            Od::Api::instance() -> addFriend(
+            Od::Api::obj().addFriend(
                 frend.value(QStringLiteral("id")).toString(),
                 frend.value(QStringLiteral("fullName")).toString()
             );

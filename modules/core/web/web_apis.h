@@ -16,14 +16,14 @@ namespace Core {
         class Apis {
             static QHash<Web::SubType, ISearchable *> sites;
         public:
-            static void initiate(QWidget * parent, const QJsonObject & obj);
+            static void initiate(const QJsonObject & obj);
             static QHash<Web::SubType, ISearchable *> list() { return sites; }
             inline static ISearchable * engine(Web::SubType item_type) { return sites.value(item_type); }
             inline static void close(QJsonObject & obj) {
-                obj.insert(SETTINGS_VK_SET_KEY, Vk::Api::instance() -> toJson());
+                obj.insert(SETTINGS_VK_SET_KEY, Vk::Api::obj().toJson());
                 obj.insert(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::obj().toJson());
                 obj.insert(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::instance() -> toJson());
-                obj.insert(SETTINGS_OD_SET_KEY, Od::Api::instance() -> toJson());
+                obj.insert(SETTINGS_OD_SET_KEY, Od::Api::obj().toJson());
             }
 
         };

@@ -3,13 +3,14 @@
 
 #include "modules/core/interfaces/web_api.h"
 #include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/interfaces/singleton.h"
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public WebApi, public TeuAuth, public RequestApi {
+            class Api : public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
             public:
                 inline QString name() const { return QStringLiteral("Vk"); }
@@ -25,12 +26,6 @@ namespace Core {
                 }
 
                 inline QString authUrl() { return RequestApi::authUrl(); }
-
-                inline ~Api() {}
-
-                static Api * instance();
-                static Api * instance(QObject * parent, const QJsonObject & obj);
-                inline static void close() { delete self; }
 
                 void fromJson(const QJsonObject & hash);
                 QJsonObject toJson();
@@ -69,13 +64,8 @@ namespace Core {
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
             private:
-                inline Api(QObject * parent, QJsonObject hash) : WebApi(parent), TeuAuth(), RequestApi() {
-                    fromJson(hash);
-                }
-
-                inline Api() : WebApi(), TeuAuth() {}
-
-                static Api * self;
+                friend class Singleton<Api>;
+                inline Api() {}
             };
         }
     }

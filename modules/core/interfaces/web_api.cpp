@@ -2,8 +2,8 @@
 
 using namespace Core;
 
-WebApi::WebApi(QObject * parent) {
-    actionDialog = new UserActionDialog((QWidget *)parent);
+WebApi::WebApi() {
+    actionDialog = new UserActionDialog(Settings::obj().anchorWidget());
 }
 
 void WebApi::clearData() {
