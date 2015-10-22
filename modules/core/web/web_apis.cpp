@@ -20,7 +20,7 @@ namespace Core {
             sites.insert(Mp3cc::instance() -> siteType(), Mp3cc::instance());
             sites.insert(Mp3pm::instance() -> siteType(), Mp3pm::instance());
             sites.insert(Shmidt::instance() -> siteType(), Shmidt::instance());
-            sites.insert(Jetune::instance() -> siteType(), Jetune::instance());
+            sites.insert(Jetune::obj().siteType(), &Jetune::obj());
             sites.insert(MusicShara::instance() -> siteType(), MusicShara::instance());
         }
     }
