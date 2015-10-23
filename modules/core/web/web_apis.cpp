@@ -27,5 +27,12 @@ namespace Core {
             sites.insert(Jetune::obj().siteType(), &Jetune::obj());
             sites.insert(MusicShara::obj().siteType(), &MusicShara::obj());
         }
+
+        void Apis::close(QJsonObject & obj) {
+            obj.insert(SETTINGS_VK_SET_KEY, Vk::Api::obj().toJson());
+            obj.insert(SETTINGS_SOUNDCLOUD_SET_KEY, Soundcloud::Api::obj().toJson());
+            obj.insert(SETTINGS_FOURSHARED_SET_KEY, Fourshared::Api::obj().toJson());
+            obj.insert(SETTINGS_OD_SET_KEY, Od::Api::obj().toJson());
+        }
     }
 }
