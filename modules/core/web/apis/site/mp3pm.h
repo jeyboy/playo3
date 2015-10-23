@@ -2,6 +2,7 @@
 #define MP3PM
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
@@ -9,11 +10,8 @@ namespace Core {
 
         using namespace Grabber;
 
-        class Mp3pm : public IGrabberApi {
+        class Mp3pm : public IGrabberApi, public Singleton<Mp3pm> {
         public:
-            static Mp3pm * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Mp3pm"); }
             inline Web::SubType siteType() { return mp3pm_site; }
 
@@ -111,10 +109,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Mp3pm() : IGrabberApi() {}
+            friend class Singleton<Mp3pm>;
+            inline Mp3pm() {}
             inline virtual ~Mp3pm() {}
-
-            static Mp3pm * self;
         };
     }
 }

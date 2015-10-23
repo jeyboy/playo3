@@ -1,9 +1,6 @@
 #ifndef USER_ACTION_DIALOG_H
 #define USER_ACTION_DIALOG_H
 
-#include <qthread.h>
-#include <qapplication.h>
-
 #include <qfiledialog.h>
 //#include <qsyntaxhighlighter.h>
 
@@ -17,6 +14,8 @@
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qpair.h>
+
+#include "modules/core/misc/thread_utils.h"
 
 namespace Ui { class UserActionDialog; }
 
@@ -133,7 +132,7 @@ public slots:
             adjustSize();
         }
 
-        if (QThread::currentThread() != QApplication::instance() -> thread()) {
+        if (!Core::ThreadUtils::livesInCurrThread(this)) {
             QMetaObject::invokeMethod((QDialog *)(this), "exec", Qt::BlockingQueuedConnection);
             return result();
         }

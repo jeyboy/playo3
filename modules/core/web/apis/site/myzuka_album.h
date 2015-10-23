@@ -2,6 +2,7 @@
 #define MYZUKA_ALBUM
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2
@@ -12,13 +13,10 @@ namespace Core {
 
         using namespace Grabber;
 
-        class MyzukaAlbum : public IGrabberApi {
+        class MyzukaAlbum : public IGrabberApi, public Singleton<MyzukaAlbum> {
             const QString data_url_token, title_token, search_path_token, search_predicate_token;
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:
-            static MyzukaAlbum * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Myzuka"); }
             inline SubType siteType() { return myzuka_site; }
 
@@ -233,7 +231,8 @@ namespace Core {
                 return result;
             }
         private:
-            inline MyzukaAlbum() : IGrabberApi(), data_url_token(QStringLiteral("data-url")),
+            friend class Singleton<MyzukaAlbum>;
+            inline MyzukaAlbum() : data_url_token(QStringLiteral("data-url")),
                 title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
                 search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table")),
                 songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
@@ -241,8 +240,6 @@ namespace Core {
                 table_columns_selector("tr th") { }
 
             inline virtual ~MyzukaAlbum() {}
-
-            static MyzukaAlbum * self;
         };
     }
 }

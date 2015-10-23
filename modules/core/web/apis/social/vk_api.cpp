@@ -2,20 +2,6 @@
 
 using namespace Core::Web::Vk;
 
-Api * Api::self = 0;
-
-Api * Api::instance() {
-    return self;
-}
-
-Api * Api::instance(QObject * parent, const QJsonObject & obj) {
-    if(!self)
-        self = new Api(parent, obj);
-    else
-        Api::instance() -> fromJson(obj);
-    return self;
-}
-
 void Api::fromJson(const QJsonObject & hash) {
     TeuAuth::fromJson(hash);
     WebApi::fromJson(hash);

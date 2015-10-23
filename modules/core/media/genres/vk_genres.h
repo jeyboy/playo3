@@ -2,14 +2,12 @@
 #define VK_GENRES
 
 #include "target_genres.h"
+#include "modules/core/interfaces/singleton.h"
 
 namespace Core {
     namespace Media {
-        class VkGenres : public TargetGenres {
+        class VkGenres : public TargetGenres, public Singleton<VkGenres> {
         public:
-            static VkGenres * instance();
-            inline static void close() { delete self; }
-
             int fromStandartId(int genreId);
             int toStandartId(int vkGenreId);
             QList<int> toStandartIds(int vkGenreId);
@@ -19,11 +17,10 @@ namespace Core {
             void initDefault();
 
         private:
+            friend class Singleton<VkGenres>;
             inline VkGenres() : TargetGenres() {
                 initDefault();
             }
-
-            static VkGenres * self;
         };
     }
 }

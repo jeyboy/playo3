@@ -2,14 +2,6 @@
 
 using namespace Core::Media;
 
-Id3MusicGenres * Id3MusicGenres::self = 0;
-
-Id3MusicGenres * Id3MusicGenres::instance() {
-    if(!self)
-        self = new Id3MusicGenres();
-    return self;
-}
-
 void Id3MusicGenres::initDefault() {
     genres.insert(QStringLiteral("blues"), 0);
     genres.insert(QStringLiteral("classic rock"), 1);

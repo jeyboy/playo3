@@ -2,19 +2,17 @@
 //#define EXUA
 
 //#include "modules/core/interfaces/igrabber_api.h"
+//#include "modules/core/interfaces/singleton.h"
 
 //#define ITEMS_PER_PAGE 50
 //#define MAX_PAGES_PER_ARTIST 2
 
 //namespace Grabber {
-//    class Exua : public IGrabberApi {
+//    class Exua : public IGrabberApi, public Singleton<Exua> {
 //        const QString search_predicate_song_token, search_predicate_artist_token;
 ////        const QString data_url_token, title_token, search_path_token, search_predicate_token;
 //        const Html::Selector searchIndexSelector, songTrSelector /*, artistSelector, songSelector, linksSelector, table_columns_selector*/;
 //    public:
-//        static Exua * instance();
-//        inline static void close() { delete self; }
-
 //        inline QString name() const { return QStringLiteral("EXua"); }
 //        inline Playo3::WebSubType siteType() { return Playo3::exua_site; }
 
@@ -219,7 +217,7 @@
 ////            return !tracks.isEmpty();
 //        }
 //    private:
-//        inline Exua() : IGrabberApi(), search_predicate_song_token("/search?original_id=3&s="), search_predicate_artist_token("/search?original_id=7513588&s="),
+//        inline Exua() : search_predicate_song_token("/search?original_id=3&s="), search_predicate_artist_token("/search?original_id=7513588&s="),
 //            searchIndexSelector(Html::Selector("table.panel tr[id!'ad_block']")), songTrSelector(Html::Selector("table.list tr a[rel='nofollow']"))
 //        {} /*, data_url_token(QStringLiteral("data-url")),
 //            title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
@@ -229,8 +227,6 @@
 //            table_columns_selector("tr th") { }*/
 
 //        inline virtual ~Exua() {}
-
-//        static Exua * self;
 //    };
 //}
 

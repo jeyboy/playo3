@@ -1,8 +1,10 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
+
 #include "modules/core/interfaces/web_api.h"
 #include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/interfaces/singleton.h"
 
 #include "soundcloud_request_api.h"
 #include "soundcloud_api_keys.h"
@@ -10,13 +12,12 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public WebApi, public TeuAuth, public RequestApi {
+            class Api : public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
-            public:
-                static Api * instance();
-                static Api * instance(QJsonObject obj);
-                inline static void close() { delete self; }
 
+                friend class Singleton<Api>;
+                inline Api() { }
+            public:
                 inline QString name() const { return QStringLiteral("Soundcloud"); }
                 inline SubType siteType() { return sc_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
@@ -31,10 +32,8 @@ namespace Core {
                 void getUserInfo(QString & uid, QJsonObject & object);
 
                 QJsonObject objectInfo(QString & uid);
-                inline void objectInfo(QString & uid, Func func) {
-                    registerAsync(
-                        QtConcurrent::run(this, &Api::objectInfo, uid), func
-                    );
+                inline void objectInfo(QString & uid, Func * func) {
+                    ThreadUtils::obj().run(this, &Api::objectInfo, uid, func);
                 }
             public slots:
                 inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
@@ -54,13 +53,7 @@ namespace Core {
                     QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
                     message = stat_obj.value(QStringLiteral("error_message")).toString();
                     return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
-                }
-            private:
-                inline Api(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
-                inline Api() : WebApi(), TeuAuth() { }
-                inline virtual ~Api() {}
-
-                static Api * self;
+                }                
             };
         }
     }

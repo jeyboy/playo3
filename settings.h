@@ -15,14 +15,16 @@ class Settings : public GlobalSettings, public HotkeySettings,
         public TabSettings, public LibrarySettings, public Core::Singleton<Settings> {
 
     Settings(); friend class Core::Singleton<Settings>;
+    QWidget * anchor;
 public:
-    virtual ~Settings();
-
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();
 
     inline int totalItemHeight() { return itemHeight() + (isShowInfo() ? itemInfoFontSize() * 2 : 0); }
     inline int iconHeight() { return totalItemHeight() - 1; }
+
+    inline QWidget * anchorWidget() { return anchor; }
+    inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
 
     void resetGlobalSettings();
     void resetHotkeySettings();

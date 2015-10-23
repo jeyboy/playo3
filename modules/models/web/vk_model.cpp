@@ -10,7 +10,11 @@ void VkModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    Vk::Api::instance() -> userInfo(tab_uid, tab_uid == Vk::Api::instance() -> userID(), Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Vk::Api::obj().userInfo(
+        tab_uid,
+        tab_uid == Vk::Api::obj().userID(),
+        new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
+    );
 }
 
 //void VkModel::refreshWall() {
@@ -101,7 +105,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
         for(; it != groups.end(); it++) {
             group = (*it).toObject();
 
-            Vk::Api::instance() -> addGroup(
+            Vk::Api::obj().addGroup(
                 QString::number(group.value(QStringLiteral("id")).toInt()),
                 group.value(QStringLiteral("title")).toString()
             );
@@ -116,7 +120,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
         for(; it != friends.end(); it++) {
             frend = (*it).toObject();
 
-            Vk::Api::instance() -> addFriend(
+            Vk::Api::obj().addFriend(
                 QString::number(frend.value(QStringLiteral("id")).toInt()),
                 frend.value(QStringLiteral("title")).toString()
             );

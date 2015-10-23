@@ -2,17 +2,15 @@
 #define SHMIDT
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
         using namespace Grabber;
 
-        class Shmidt : public IGrabberApi {
+        class Shmidt : public IGrabberApi, public Singleton<Shmidt> {
         public:
-            static Shmidt * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Shmidt"); }
             inline SubType siteType() { return shmidt_site; }
 
@@ -108,10 +106,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Shmidt() : IGrabberApi() {}
+            friend class Singleton<Shmidt>;
+            inline Shmidt() {}
             inline virtual ~Shmidt() {}
-
-            static Shmidt * self;
         };
     }
 }

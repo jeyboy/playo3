@@ -1,6 +1,8 @@
 #ifndef OD_API_H
 #define OD_API_H
 
+#include "modules/core/misc/thread_utils.h"
+#include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/auth_chemas/teu_auth.h"
 #include "od_request_api.h"
 
@@ -9,13 +11,9 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public RequestApi, public TeuAuth {
+            class Api : public RequestApi, public TeuAuth, public Singleton<Api> {
                 Q_OBJECT
             public:
-                static Api * instance();
-                static Api * instance(QObject * parent, const QJsonObject & obj);
-                inline static void close() { delete self; }
-
                 inline QString name() const { return QStringLiteral("Od"); }
                 inline Web::SubType siteType() { return od_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
@@ -26,10 +24,8 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty(); }
 
-                void objectInfo(const QString & uid, Func func) {
-                    registerAsync(
-                        QtConcurrent::run((RequestApi *)this, &RequestApi::userInfo, uid), func
-                    );
+                void objectInfo(const QString & uid, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
 
                 inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
@@ -119,15 +115,8 @@ namespace Core {
                     return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
                 }
             private:
-                inline Api(QObject * parent, QJsonObject hash) : RequestApi(parent), TeuAuth() {
-                    fromJson(hash);
-                    if (!sessionIsValid())
-                       connection(true);
-                }
-                inline Api() : RequestApi(), TeuAuth() { }
-                inline virtual ~Api() {}
-
-                static Api * self;
+                friend class Singleton<Api>;
+                inline Api() { }
             };
         }
     }

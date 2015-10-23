@@ -28,7 +28,7 @@ EchonestDialog::~EchonestDialog() {
 
 void EchonestDialog::onArtistInfoButtonClicked() {
     if (!artistName -> text().isEmpty()) {
-        QJsonObject info = Core::Web::Echonest::Api::instance() -> artistProfile(artistName -> text());
+        QJsonObject info = Core::Web::Echonest::Api::obj().artistProfile(artistName -> text());
 
         artistAccordion -> clear();
 
@@ -170,7 +170,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
                 artists << (*artist) -> text();
         }
 
-        results = Core::Web::Echonest::Api::instance() -> playlistBasicByArtists(artists);
+        results = Core::Web::Echonest::Api::obj().playlistBasicByArtists(artists);
     } else if (genreTypeCheck -> isChecked()) {
         QStringList genres;
 
@@ -179,7 +179,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
                 genres << (*genre) -> currentText();
         }
 
-        results = Core::Web::Echonest::Api::instance() -> playlistBasicByGenres(genres);
+        results = Core::Web::Echonest::Api::obj().playlistBasicByGenres(genres);
     } else {
         return;
         // nothing choosed
@@ -295,14 +295,14 @@ void EchonestDialog::basicPlaylistGeneration(QWidget * base) {
 
 QStringList EchonestDialog::genresList() {
     QStringList styles; styles << QStringLiteral("");
-    styles.append(Core::Web::Echonest::Api::instance() -> genresList().genresList());
+    styles.append(Core::Web::Echonest::Api::obj().genresList().genresList());
     return styles;
 }
 
 QStringList EchonestDialog::stylesList() {
     QStringList styles; styles << QStringLiteral("");
 
-    QJsonArray genres = Core::Web::Echonest::Api::instance() -> artistStylesForSearch();
+    QJsonArray genres = Core::Web::Echonest::Api::obj().artistStylesForSearch();
     for(QJsonArray::Iterator genre = genres.begin(); genre != genres.end(); genre++)
         styles.append((*genre).toObject().value(QStringLiteral("name")).toString());
 
@@ -312,7 +312,7 @@ QStringList EchonestDialog::stylesList() {
 QStringList EchonestDialog::moodsList() {
     QStringList moodsList;
 
-    QJsonArray moods = Core::Web::Echonest::Api::instance() -> artistMoodsForSearch();
+    QJsonArray moods = Core::Web::Echonest::Api::obj().artistMoodsForSearch();
     for(QJsonArray::Iterator mood = moods.begin(); mood != moods.end(); mood++)
         moodsList.append((*mood).toObject().value(QStringLiteral("name")).toString());
 

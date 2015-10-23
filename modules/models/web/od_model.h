@@ -10,7 +10,7 @@ namespace Models {
         inline OdModel(const QString & uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline Data::Type playlistType() const { return Data::od; }
-        inline WebApi * api() { return Od::Api::instance(); }
+        inline WebApi * api() { return &Od::Api::obj(); }
     public slots:
         void refresh(bool retryPlaing = false);
 

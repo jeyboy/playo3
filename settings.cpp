@@ -1,8 +1,6 @@
 #include "settings.h"
 
-Settings::Settings() {}
-
-Settings::~Settings() { }
+Settings::Settings() : anchor(0) {}
 
 void Settings::fromJson(QJsonObject settings) {
     GlobalSettings::fromJson(settings);

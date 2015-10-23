@@ -406,15 +406,15 @@ SpectrumView * ToolBars::getSpectrum() {
 }
 
 void ToolBars::disconnectVk() {
-    Vk::Api::instance() -> disconnect();
+    Vk::Api::obj().disconnect();
     initiateVkButton();
 }
 void ToolBars::disconnectSoundcloud() {
-    Soundcloud::Api::instance() -> disconnect();
+    Soundcloud::Api::obj().disconnect();
     initiateSoundcloudButton();
 }
 void ToolBars::disconnectOd() {
-    Od::Api::instance() -> disconnect();
+    Od::Api::obj().disconnect();
     initiateOdButton();
 }
 
@@ -437,7 +437,7 @@ QToolButton * ToolBars::initiateVkButton() {
         disconnect(vkToolButton, SIGNAL(clicked()), container, SLOT(showVKTabDialog()));
     }
 
-    if (Vk::Api::instance() -> isConnected()) {
+    if (Vk::Api::obj().isConnected()) {
         vkToolButton -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
         vkToolButton -> setPopupMode(QToolButton::InstantPopup);
         vkToolButton -> setToolTip(QStringLiteral("VKontakte(vk.com)"));
@@ -467,7 +467,7 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
         disconnect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(showSoundcloudTabDialog()));
     }
 
-    if (Soundcloud::Api::instance() -> isConnected()) {
+    if (Soundcloud::Api::obj().isConnected()) {
         soundcloudToolButton -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
         soundcloudToolButton -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
         soundcloudToolButton -> setPopupMode(QToolButton::InstantPopup);
@@ -495,7 +495,7 @@ QToolButton * ToolBars::initiateOdButton() {
         disconnect(odToolButton, SIGNAL(clicked()), container, SLOT(openOdTabDialog()));
     }
 
-    if (Od::Api::instance() -> isConnected()) {
+    if (Od::Api::obj().isConnected()) {
         odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
         odToolButton -> setToolTip(QStringLiteral("Od(ok.ru)"));
         odToolButton -> setPopupMode(QToolButton::InstantPopup);

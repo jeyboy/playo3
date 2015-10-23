@@ -2,19 +2,17 @@
 #define JETUNE
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
         using namespace Grabber;
 
-        class Jetune : public IGrabberApi {
+        class Jetune : public IGrabberApi, public Singleton<Jetune> {
         public:
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline Web::SubType siteType() { return jetune_site; }
-
-            static Jetune * instance();
-            inline static void close() { delete self; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;
@@ -131,10 +129,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Jetune() : IGrabberApi() {}
+            friend class Singleton<Jetune>;
+            inline Jetune() {}
             inline virtual ~Jetune() {}
-
-            static Jetune * self;
         };
     }
 }

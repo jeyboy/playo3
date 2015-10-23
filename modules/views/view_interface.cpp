@@ -57,11 +57,6 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     int iconDimension = Settings::obj().iconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
-    connect(
-        this, SIGNAL(showAlert(const QString &, const QString &, QMessageBox::StandardButtons)),
-        UserDialogBox::instance(), SLOT(alert(const QString &, const QString &, QMessageBox::StandardButtons)),
-        Qt::BlockingQueuedConnection
-    );
     connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, int, bool)), this, SLOT(removeRow(const QModelIndex &, bool, int, bool)), Qt::BlockingQueuedConnection);
 
     connect(this, SIGNAL(activated(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
@@ -519,22 +514,14 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
                 return false;
 
             if (!usePrevAction || (usePrevAction && _deleteFolderAnswer != QMessageBox::YesToAll)) {
-                //INFO: need to send signal only in separate thread - Qt: Dead lock detected while activating a BlockingQueuedConnection
-                if (QThread::currentThread() == QApplication::instance() -> thread()) {
-                    UserDialogBox::instance() -> alert(
-                        QStringLiteral("Folder deletion"),
-                        QStringLiteral("Are you sure what you want to remove the not empty folder '") % node.data().toString() % QStringLiteral("' ?"),
-                        QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
-                    );
-                } else {
-                    emit showAlert(
-                        QStringLiteral("Folder deletion"),
-                        QStringLiteral("Are you sure what you want to remove the not empty folder '") % node.data().toString() % QStringLiteral("' ?"),
-                        QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
-                    );
-                }
+                UserDialogBox::obj().alert(
+                    this,
+                    QStringLiteral("Folder deletion"),
+                    QStringLiteral("Are you sure what you want to remove the not empty folder '") % node.data().toString() % QStringLiteral("' ?"),
+                    QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
+                );
 
-                _deleteFolderAnswer = UserDialogBox::instance() -> lastAnswer();
+                _deleteFolderAnswer = UserDialogBox::obj().lastAnswer();
                 if (_deleteFolderAnswer == QMessageBox::No || _deleteFolderAnswer == QMessageBox::NoToAll)
                     return false;
             }

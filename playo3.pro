@@ -151,7 +151,6 @@ HEADERS += \
     modules/core/misc/file_utils/extensions.h \
     modules/core/misc/file_utils/filename_conversions.h \
     modules/core/misc/file_utils/icon_provider.h \
-    modules/core/misc/async.h \
     modules/core/misc/autorun.h \
     modules/core/misc/format.h \
     modules/core/misc/logger.h \
@@ -258,7 +257,10 @@ HEADERS += \
     modules/core/interfaces/singleton.h \
     modules/core/misc/file_utils/file_errors.h \
     modules/core/web/response_error.h \
-    player/bass_player.h
+    player/bass_player.h \
+    modules/core/misc/thread_utils.h \
+    modules/core/misc/func.h \
+    modules/core/misc/thread_cell.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

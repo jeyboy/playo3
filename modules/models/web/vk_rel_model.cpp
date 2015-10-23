@@ -9,10 +9,10 @@ void VkRelModel::refresh(bool /*retryPlaing*/) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    Vk::Api::instance() -> audioRecomendations(
+    Vk::Api::obj().audioRecomendations(
         tab_uid,
         rel_type == Data::user_rel,
         true,
-        Func(this, "proceedAudioList")
+        new Func(this, SLOT(proceedAudioList(QJsonObject &)))
     );
 }

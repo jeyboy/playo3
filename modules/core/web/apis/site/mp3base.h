@@ -2,6 +2,7 @@
 #define MP3BASE
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 //function playSong(id)
 //{
@@ -100,11 +101,8 @@ namespace Core {
     namespace Web {
         using namespace Grabber;
 
-        class Mp3Base : public IGrabberApi {
+        class Mp3Base : public IGrabberApi, public Singleton<Mp3Base> {
         public:
-            static Mp3Base * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("Mp3Base"); }
             inline Web::SubType siteType() { return mp3base_site; }
 
@@ -214,10 +212,9 @@ namespace Core {
                 return json;
             }
         private:
-            inline Mp3Base() : IGrabberApi() {}
+            friend class Singleton<Mp3Base>;
+            inline Mp3Base() {}
             inline virtual ~Mp3Base() {}
-
-            static Mp3Base * self;
         };
     }
 }

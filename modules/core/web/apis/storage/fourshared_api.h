@@ -3,18 +3,15 @@
 
 #include "modules/core/interfaces/web_api.h"
 #include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/interfaces/singleton.h"
 #include "fourshared_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Api: public WebApi, public TeuAuth, public RequestApi {
+            class Api: public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
             public:
-                static Api * instance();
-                static Api * instance(QJsonObject obj);
-                inline static void close() { delete self; }
-
                 inline QString name() const { return QStringLiteral("4shared"); }
                 inline Web::SubType siteType() { return fourshared_site; }
                 inline QUrlQuery genDefaultParams() {
@@ -51,11 +48,8 @@ namespace Core {
                     return true;
                 }
             private:
-                inline Api(QJsonObject hash) : WebApi(), TeuAuth() { fromJson(hash); }
-                inline Api() : WebApi(), TeuAuth() { }
-                inline virtual ~Api() {}
-
-                static Api * self;
+                friend class Singleton<Api>;
+                inline Api() { }
             };
         }
     }

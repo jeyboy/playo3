@@ -19,18 +19,17 @@
 #include "echonest_song_api.h"
 #include "echonest_playlist_api.h"
 
+#include "modules/core/interfaces/singleton.h"
+
 namespace Core {
     namespace Web {
         namespace Echonest {
-            class Api : public QObject, public GenreApi, public ArtistApi, public SongApi, public PlaylistApi {
+            class Api : public QObject, public GenreApi, public ArtistApi, public SongApi, public PlaylistApi, public Singleton<Api> {
                 Q_OBJECT
             public:
                 inline QString name() const { return QStringLiteral("echonest"); }
                 inline SubType siteType() { return echonest_site; }
                 virtual ~Api() { }
-
-                static Api * instance();
-                inline static void close() { delete self; }
             protected:
                 inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
 
@@ -51,9 +50,8 @@ namespace Core {
                     return (code = stat_obj.value(QStringLiteral("code")).toInt()) == 0;
                 }
             private:
-                inline Api() : QObject() { }
-
-                static Api * self;
+                friend class Singleton<Api>;
+                inline Api() { }
             };
         }
     }

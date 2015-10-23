@@ -13,7 +13,7 @@ namespace Core {
             protected:
                 QString hash_key;
 
-                RequestApi(QObject * obj = 0) : Misc(obj) {}
+                RequestApi() {}
 
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
 

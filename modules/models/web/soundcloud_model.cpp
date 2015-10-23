@@ -10,7 +10,7 @@ void SoundcloudModel::refresh(bool retryPlaing) {
 //    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::instance() -> objectInfo(tab_uid, Func(this, retryPlaing ? "proceedAudioListAndRetry" : "proceedAudioList"));
+    Soundcloud::Api::obj().objectInfo(tab_uid, new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
@@ -62,7 +62,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
             for(QJsonArray::Iterator it = group_part.begin(); it != group_part.end(); it++) {
                 group = (*it).toObject();
 
-                Soundcloud::Api::instance() -> addGroup(
+                Soundcloud::Api::obj().addGroup(
                     QString::number(group.value(Soundcloud::id_key).toInt()),
                     group.value(Soundcloud::name_key).toString()
                 );
@@ -85,7 +85,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                 if (name.isEmpty())
                     name = frend.value(Soundcloud::username_key).toString();
 
-                Soundcloud::Api::instance() -> addFriend(
+                Soundcloud::Api::obj().addFriend(
                     QString::number(frend.value(Soundcloud::id_key).toInt()),
                     name
                 );
@@ -105,7 +105,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                 if (name.isEmpty())
                     name = frend.value(Soundcloud::username_key).toString();
 
-                Soundcloud::Api::instance() -> addFriend(
+                Soundcloud::Api::obj().addFriend(
                     QString::number(frend.value(Soundcloud::id_key).toInt()),
                     name
                 );

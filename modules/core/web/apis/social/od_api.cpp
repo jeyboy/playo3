@@ -5,22 +5,6 @@
 
 using namespace Core::Web::Od;
 
-Api * Api::self = 0;
-
-Api * Api::instance() {
-    if(!self)
-        self = new Api();
-    return self;
-}
-
-Api * Api::instance(QObject * parent, const QJsonObject & obj) {
-    if(!self)
-        self = new Api(parent, obj);
-    else
-        Api::instance() -> fromJson(obj);
-    return self;
-}
-
 //https://connect.ok.ru/oauth/authorize?client_id={clientId}&scope={scope}&response_type={responseType}&redirect_uri={redirectUri}&layout={layout
 QString Api::authUrl() {
     QUrl url(QStringLiteral("https://connect.ok.ru/oauth/authorize"));
@@ -41,6 +25,9 @@ void Api::fromJson(QJsonObject hash) {
     TeuAuth::fromJson(hash);
     WebApi::fromJson(hash);
     hash_key = hash.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
+
+    if (!sessionIsValid())
+       connection(true);
 }
 QJsonObject Api::toJson() {
     QJsonObject root;

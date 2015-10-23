@@ -2,17 +2,15 @@
 #define MUSICSHARA
 
 #include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
         using namespace Grabber;
 
-        class MusicShara : public IGrabberApi {
+        class MusicShara : public IGrabberApi, public Singleton<MusicShara> {
         public:
-            static MusicShara * instance();
-            inline static void close() { delete self; }
-
             inline QString name() const { return QStringLiteral("MusicShara"); }
             inline Web::SubType siteType() { return music_shara; }
 
@@ -137,11 +135,10 @@ namespace Core {
                 return result;
             }
         private:
-            inline MusicShara() : IGrabberApi() { }
+            friend class Singleton<MusicShara>;
+            inline MusicShara() { }
 
             inline virtual ~MusicShara() {}
-
-            static MusicShara * self;
         };
     }
 }

@@ -12,14 +12,6 @@
 
 #define DEBUG_LIMIT_OUTPUT 10000
 
-//#define ATTR_BEGIN(attr, val) \
-//    char * res = (char *) malloc(strlen(attr) + strlen(val) + 2), \
-//    strcpy(res, attr), \
-//    strcat(res, &((char)Html::Selector::attr_rel_begin)), \
-//    strcat(res, val), \
-//    res \
-
-
 namespace Core {
     namespace Web {
         namespace Html {

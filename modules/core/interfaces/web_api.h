@@ -8,14 +8,15 @@
 
 #include "dialogs/user_action_dialog.h"
 #include "modules/core/web/utils/web_manager.h"
-#include "modules/core/misc/async.h"
+#include "modules/core/misc/thread_utils.h"
+#include "settings.h"
 
 namespace Core {
-    class WebApi : public Async {
+    class WebApi : public QObject {
         Q_OBJECT
     public:
-        WebApi(QObject * parent = 0);
-        virtual ~WebApi();
+        WebApi();
+        virtual ~WebApi() {}
 
         inline QString getError() { return error; }
 
