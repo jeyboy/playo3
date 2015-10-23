@@ -146,7 +146,7 @@ void EchonestDialog::onArtistInfoButtonClicked() {
                 for(QJsonArray::Iterator image = images.begin(); image != images.end(); image++) {
                     QLabel * imageLabel = new QLabel(imagesBlock);
                     QUrl url((*image).toObject().value(QStringLiteral("url")).toString());
-                    QPixmap pixma = Web::Manager::prepare() -> getImage(url);
+                    QPixmap pixma = Core::Web::Manager::prepare() -> getImage(url);
                     pixma = pixma.scaledToWidth(artistAccordion -> width() - 60, Qt::SmoothTransformation);
 
                     imageLabel -> setPixmap(pixma);

@@ -5,10 +5,10 @@ enum PlayerStatus {
     UnknownMediaStatus,
     NoMedia,
     NoRemoteMedia,
+    StalledMedia,
     LoadingMedia,
     LoadedMedia,
-    StartPlayingMedia,
-    StalledMedia,
+    StartOfMedia,
     EndOfMedia,
     InvalidMedia
 };

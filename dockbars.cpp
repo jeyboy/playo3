@@ -309,34 +309,36 @@ void Dockbars::updateAllViews() { // update for item height
     }
 }
 
-void Dockbars::onNextItemNeeded(Player::Reason reason) {
+void Dockbars::onNextItemNeeded(PlayerStatus reason) {
     initPlayed();
     IView * v = view(played);
 
-    if (v) {
-        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist())) {
-            v -> execNextIndex();
-            return;
-        }
+    // TODO: fix me
 
-        if (reason == Player::refreshNeed) {
-            if (v -> isRequiredOnUpdate()) {
-                ((IModel *)v -> model()) -> refresh(true);
-            } else {
-                if (IModel::restoreUrl(Player::obj().playedItem()))
-                    Player::obj().playIndex(Player::obj().playedIndex());
-                else {
-                    Player::obj().stop();
-                    Player::obj().playedIndexIsNotExist();
-                }
-            }
+//    if (v) {
+//        if (reason == Player::init || (reason == Player::endMedia && v -> isPlaylist())) {
+//            v -> execNextIndex();
+//            return;
+//        }
 
-            return;
-        }
+//        if (reason == Player::refreshNeed) {
+//            if (v -> isRequiredOnUpdate()) {
+//                ((IModel *)v -> model()) -> refresh(true);
+//            } else {
+//                if (IModel::restoreUrl(Player::obj().playedItem()))
+//                    Player::obj().playIndex(Player::obj().playedIndex());
+//                else {
+//                    Player::obj().stop();
+//                    Player::obj().playedIndexIsNotExist();
+//                }
+//            }
 
-        if (Settings::obj().isFindValid())
-            v -> execNextIndex();
-    }
+//            return;
+//        }
+
+//        if (Settings::obj().isFindValid())
+//            v -> execNextIndex();
+//    }
 }
 
 void Dockbars::playNext() {

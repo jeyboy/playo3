@@ -26,12 +26,20 @@ void IPlayer::updateState(PlayerState new_state) {
     emit stateChanged(pstate);
 }
 
+void IPlayer::playPostprocessing() {
+    if (isStopped())
+        emit statusChanged(StartOfMedia);
+    updateState(PlayingState);
+}
+
 void IPlayer::play(uint startMili, uint maxDuration) {
     bool res;
-    if (isPaused())
-        res = resumeProcessing();
-    else {
-        duration(maxDuration);
+    if (isPaused()) {
+        if (!(res = resumeProcessing()))
+            emit statusChanged(StalledMedia);
+    } else {
+        emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
+        duration(maxDuration);       
         res = playProcessing(startMili);
     }
 

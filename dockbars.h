@@ -78,7 +78,7 @@ namespace Presentation {
             }
         }
 
-        void onNextItemNeeded(Player::Reason);
+        void onNextItemNeeded(PlayerStatus);
 
         void playNext();
         void playNextWithDel();

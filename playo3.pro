@@ -260,7 +260,8 @@ HEADERS += \
     player/bass_player.h \
     modules/core/misc/thread_utils.h \
     modules/core/misc/func.h \
-    modules/core/misc/thread_cell.h
+    modules/core/misc/thread_cell.h \
+    player/player_index.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

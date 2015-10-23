@@ -79,9 +79,7 @@ void BassPlayer::playPreproccessing() {
     if (eqInUse) registerEQ();
 
     if (BASS_ChannelPlay(chan, true))
-        emit statusChanged(StartPlayingMedia);
-
-    playPostprocessing();
+        playPostprocessing();
 
     syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
@@ -94,11 +92,7 @@ bool BassPlayer::playProcessing(uint startMili) {
 
     stop();
 
-    if (media_url.isEmpty())
-        emit statusChanged(NoMedia);
-    else {
-        emit statusChanged(LoadingMedia);
-
+    if (!media_url.isEmpty()) {
         if (openChannelWatcher)
             openChannelWatcher -> cancel();
 
@@ -111,7 +105,6 @@ bool BassPlayer::playProcessing(uint startMili) {
 }
 bool BassPlayer::resumeProcessing() {
     if (!BASS_ChannelPlay(chan, false)) {
-        emit statusChanged(StalledMedia);
         qDebug() << "Error resuming";
         return false;
     }

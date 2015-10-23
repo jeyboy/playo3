@@ -2,6 +2,7 @@
 #define APP_SETTINGS_H
 
 #include "modules/core/interfaces/singleton.h"
+#include "player/player_index.h"
 
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"
@@ -16,6 +17,7 @@ class Settings : public GlobalSettings, public HotkeySettings,
 
     Settings(); friend class Core::Singleton<Settings>;
     QWidget * anchor;
+    IPlayer * player;
 public:
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();
@@ -25,6 +27,9 @@ public:
 
     inline QWidget * anchorWidget() { return anchor; }
     inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
+
+    inline IPlayer * currPlayer() { return player; }
+    void currPlayer(const PlayerType &);
 
     void resetGlobalSettings();
     void resetHotkeySettings();

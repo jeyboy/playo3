@@ -20,7 +20,7 @@ protected:
     virtual QString title() const { return media_url.toString(); }
 
     virtual bool playProcessing(uint startMili) = 0;
-    inline void playPostprocessing() { updateState(PlayingState); }
+    void playPostprocessing();
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;

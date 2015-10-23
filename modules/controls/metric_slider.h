@@ -6,6 +6,7 @@
 #include <qtooltip.h>
 #include <qbrush.h>
 #include <qstyleoption.h>
+#include <qevent.h>
 
 #include "settings.h"
 

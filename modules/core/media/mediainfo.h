@@ -6,7 +6,6 @@
 #include "fileref.h"
 
 #include "modules/core/media/genres/music_genres.h"
-#include "player/player_old.h"
 
 namespace Core {
     namespace Media {
