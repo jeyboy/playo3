@@ -235,11 +235,6 @@ HEADERS += \
     modules/views/view_settings.h \
     modules/views/service/download_view.h \
     modules/views/service/search_view.h \
-    player/audio_player/audio_player_equalizer.h \
-    player/audio_player/audio_player_panel.h \
-    player/audio_player/audio_player_spectrum.h \
-    player/audio_player/audio_player_state.h \
-    player/audio_player.h \
     settings/global_settings.h \
     settings/hotkey_settings.h \
     settings/item_settings.h \
@@ -259,11 +254,11 @@ HEADERS += \
     modules/core/media/interfaces/player_states.h \
     modules/core/media/interfaces/iequalizable.h \
     modules/core/media/interfaces/player_statuses.h \
-    player/player_old.h \
     player/player.h \
     modules/core/interfaces/singleton.h \
     modules/core/misc/file_utils/file_errors.h \
-    modules/core/web/response_error.h
+    modules/core/web/response_error.h \
+    player/bass_player.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -376,11 +371,6 @@ SOURCES += \
     modules/views/view_interface.cpp \
     modules/views/service/download_view.cpp \
     modules/views/service/search_view.cpp \
-    player/audio_player/audio_player_equalizer.cpp \
-    player/audio_player/audio_player_panel.cpp \
-    player/audio_player/audio_player_spectrum.cpp \
-    player/audio_player/audio_player_state.cpp \
-    player/audio_player.cpp \
     settings/global_settings.cpp \
     settings/hotkey_settings.cpp \
     settings/item_settings.cpp \
@@ -399,5 +389,5 @@ SOURCES += \
     modules/core/media/interfaces/iplayer.cpp \
     modules/core/media/interfaces/ispectrumable.cpp \
     modules/core/media/interfaces/iequalizable.cpp \
-    player/player_old.cpp \
-    player/player.cpp
+    player/player.cpp \
+    player/bass_player.cpp
