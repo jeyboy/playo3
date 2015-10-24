@@ -1,13 +1,14 @@
 #ifndef METRIC_SLIDER_H
 #define METRIC_SLIDER_H
 
-#include "clickable_slider.h"
 #include <qpainter.h>
 #include <qtooltip.h>
 #include <qbrush.h>
 #include <qstyleoption.h>
 #include <qevent.h>
 
+#include "modules/core/misc/format.h"
+#include "clickable_slider.h"
 #include "settings.h"
 
 namespace Controls {
@@ -31,6 +32,8 @@ namespace Controls {
             repaint();
         }
         inline void updateMetric() { calcGrid(); }
+    protected slots:
+        void prebufferingChanged(float level);
 
     protected:
         int posToVal(int pos) const;
@@ -48,8 +51,8 @@ namespace Controls {
         bool show_position, show_mini_progress;
         int spacing, point_radius;
         int sliderMin, sliderMax;
-        double halfHandle;
-        QRect bodyRect;
+        double halfHandle, progressVal;
+        QRect bodyRect, progressRect;
         QPainterPath path;
     };
 }

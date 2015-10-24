@@ -14,6 +14,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     PlayerState pstate;
     QTimer * itimer;
     uint volumeVal, panVal;
+    float prebuffering_level;
 protected:
     void updateState(PlayerState new_state);
 
@@ -68,7 +69,8 @@ public:
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
     inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
 
-    inline void prebufferingLevel(float level = 1) { emit prebufferingChanged(level); }
+    inline void prebufferingLevel(float level = 1) { emit prebufferingChanged(prebuffering_level = level); }
+    inline float prebufferingLevel() const { return prebuffering_level; }
 signals:
     void playbackEnded();
 

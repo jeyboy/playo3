@@ -1,6 +1,6 @@
 #include "iplayer.h"
 
-IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), max_duration(0) {
+IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), prebuffering_level(0), max_duration(0) {
 //        qRegisterMetaType<PlayerState>("PlayerState");
 //        qRegisterMetaType<PlayerStatus>("PlayerStatus");
 
@@ -38,6 +38,7 @@ void IPlayer::play(uint startMili, uint maxDuration) {
         if (!(res = resumeProcessing()))
             emit statusChanged(StalledMedia);
     } else {
+        prebuffering_level = 0;
         emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
         duration(maxDuration);       
         res = playProcessing(startMili);

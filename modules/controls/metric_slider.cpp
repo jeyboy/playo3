@@ -1,5 +1,4 @@
 #include "metric_slider.h"
-#include <qdebug.h>
 
 //TODO: recalc did not called on changeTicks
 
@@ -10,7 +9,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
   , spacing(30), point_radius(2) {
 
     setMouseTracking(show_position);
-    connect(&Player::obj(), SIGNAL(downloadEnded()), this, SLOT(repaint()));
+    connect(Settings::obj().currPlayer(), SIGNAL(prebufferingChanged(float)), this, SLOT(prebufferingChanged(float)));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
@@ -49,24 +48,10 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
 
     p.setPen(c);
     p.setBrush(QBrush(c)); // temp
+    p.drawPath(path);
 
-    if (orientation() == Qt::Horizontal) {
-        p.drawPath(path);
-
-        if (show_mini_progress) {
-            float pos = Player::obj().getRemoteFileDownloadPosition();
-            if (Player::obj().getSize() > 0 && pos < .99)
-                p.drawRoundedRect(rect().left() + 6, rect().y(), (rect().width() - 8) * pos, 3, 1, 1);
-        }
-    } else {
-        p.drawPath(path);
-
-        if (show_mini_progress) {
-            float pos = Player::obj().getRemoteFileDownloadPosition();
-            if (Player::obj().getSize() > 0 && pos < .99)
-                p.drawRoundedRect(rect().x(), rect().bottom() - 6, 3, -(rect().height() - 1) * pos, 1, 1);
-        }
-    }
+    if (show_mini_progress && !progressRect.isEmpty())
+        p.drawRoundedRect(progressRect, 1, 1);
 
     p.restore();
 }
@@ -95,6 +80,20 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
     }
 
     QSlider::mouseMoveEvent(ev);
+}
+
+void MetricSlider::prebufferingChanged(float level) {
+    if ((progressVal = level) == 1)
+        progressRect = QRect();
+    else {
+        if (orientation() == Qt::Horizontal)
+            progressRect = QRect(rect().left() + 6, rect().y(), (rect().width() - 8) * progressVal, 3);
+        else
+            progressRect = QRect(rect().x(), rect().bottom() - 6, 3, -(rect().height() - 1) * progressVal);
+    }
+
+    if (show_mini_progress)
+        update(/*progressRect*/);
 }
 
 int MetricSlider::posToVal(int pos) const {
