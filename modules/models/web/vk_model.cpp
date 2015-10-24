@@ -1,5 +1,4 @@
 #include "vk_model.h"
-#include "player/player_old.h"
 
 using namespace Models;
 /////////////////////////////////////////////////////////////
@@ -132,5 +131,5 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
 void VkModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::obj().playIndex(Player::obj().playedIndex());
+//    Player::obj().playIndex(Player::obj().playedIndex());
 }

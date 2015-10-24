@@ -1,5 +1,4 @@
 #include "soundcloud_model.h"
-#include "player/player_old.h"
 
 using namespace Models;
 /////////////////////////////////////////////////////////////
@@ -118,5 +117,5 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 
 void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
     proceedAudioList(hash);
-    Player::obj().playIndex(Player::obj().playedIndex());
+//    Player::obj().playIndex(Player::obj().playedIndex());
 }
