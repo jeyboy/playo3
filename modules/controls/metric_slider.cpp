@@ -39,16 +39,17 @@ void MetricSlider::resizeEvent(QResizeEvent *) {
 void MetricSlider::paintEvent(QPaintEvent * event) {
     QSlider::paintEvent(event);
 
-    if (!Settings::obj().isMetricShow() || minimum() == maximum()) return;
+    if (minimum() == maximum()) return;
 
     QPainter p(this);
-
     p.save();
     QColor c = QColor::fromRgb(0, 0, 0, 92);
 
     p.setPen(c);
     p.setBrush(QBrush(c)); // temp
-    p.drawPath(path);
+
+    if (Settings::obj().isMetricShow())
+        p.drawPath(path);
 
     if (show_mini_progress && !progressRect.isEmpty())
         p.drawRoundedRect(progressRect, 1, 1);

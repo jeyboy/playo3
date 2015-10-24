@@ -1,5 +1,4 @@
 #include "spectrum_view.h"
-#include "player/player_old.h"
 #include <qelapsedtimer.h>
 
 using namespace Controls;
@@ -12,8 +11,8 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    connect(&Player::obj(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
-    connect(&Player::obj(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
+    connect(Settings::obj().currPlayer(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
+    connect(Settings::obj().currPlayer(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
@@ -71,19 +70,19 @@ void SpectrumView::updateColors() {
 void SpectrumView::changeType(SpectrumType newType) {
     Settings::obj().setSpectrumType(newType);
     type = newType;
-    Player::obj().setSpectrumHeight(peakDimension());
+    Settings::obj().currPlayer() -> spectrumHeight(peakDimension());
 }
 
 void SpectrumView::changeBandCount() {
-    Player::obj().setSpectrumBandsCount(calcBarCount());
-    dataUpdated(Player::obj().getDefaultSpectrum());
+    Settings::obj().currPlayer() -> spectrumBandsCount(calcBarCount());
+//    dataUpdated(Player::obj().getDefaultSpectrum());
 }
 
 void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    Player::obj().setSpectrumHeight(peakDimension());
+    Settings::obj().currPlayer() -> spectrumHeight(peakDimension());
 }
 
 void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
@@ -134,13 +133,15 @@ void SpectrumView::paintEvent(QPaintEvent * event) {
 
 void SpectrumView::recalcAttrs() {
     switch(type) {
-        case bars:
-            bar_width = ((float)width() - start_h_offset - (Player::obj().spectrumBandsCount() + 1) * paddWidth()) / Player::obj().spectrumBandsCount();
-            break;
+        case bars: {
+            int bands_count = Settings::obj().currPlayer() -> spectrumBandsCount();
+            bar_width = ((float)width() - start_h_offset - (bands_count + 1) * paddWidth()) / bands_count;
+            break;}
 //case waves:
-        default:
-            bar_width = ((float)width() - start_h_offset - ((Player::obj().getCalcSpectrumBandsCount() * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / Player::obj().getCalcSpectrumBandsCount();
-            break;
+        default: {
+            int bands_count = Settings::obj().currPlayer() -> calcSpectrumBandsGroupCount();
+            bar_width = ((float)width() - start_h_offset - ((bands_count * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / bands_count;
+            break;}
     }
 
     update_rect = QRect(start_h_offset, verticalPadd(), width(), height() - verticalPadd());

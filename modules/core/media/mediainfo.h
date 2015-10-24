@@ -1,6 +1,8 @@
 #ifndef MEDIAINFO_H
 #define MEDIAINFO_H
 
+#include <qurl.h>
+
 #include "taglib.h"
 #include "tag.h"
 #include "fileref.h"
