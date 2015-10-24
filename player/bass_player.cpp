@@ -1,4 +1,4 @@
-#include "player.h"
+#include "bass_player.h"
 
 void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 //    BASS_ChannelStop(channel);
@@ -136,6 +136,34 @@ bool BassPlayer::unregisterEQ() {}
 
 bool BassPlayer::calcSpectrum(QVector<int> & result) {}
 bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}
+
+bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
+    int chUID;
+
+    if (uri.isLocalFile())
+        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS);
+    else
+        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS);
+
+    if (!chUID) return false;
+
+    float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
+    DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
+
+    info -> setDuration(time);
+    info -> setBitrate((len / (125 * time) + 0.5));
+
+    BASS_CHANNELINFO media_info;
+    if (BASS_ChannelGetInfo(chUID, &media_info)) {
+        info -> setSize(len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START));
+//        ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
+        info -> setSampleRate(media_info.freq);
+        info -> setChannels(media_info.chans);
+    }
+
+    BASS_StreamFree(chUID);
+    return true;
+}
 
 BassPlayer::BassPlayer(QWidget * parent, uint open_time_out_sec) : IPlayer(parent) {
     #include <qapplication.h>

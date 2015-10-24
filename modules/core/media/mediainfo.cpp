@@ -2,10 +2,7 @@
 
 using namespace Core::Media;
 
-MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
-    year(-1), track(-1), channels(-1), bitrate(-1), duration(0),
-    sampleRate(-1), size(0), error(false), readed(false), remote(!uri.isLocalFile()) {
-
+MediaInfo::MediaInfo(const QUrl & uri, const QVariant & extension, bool onlyTags) : IMediaInfo(!uri.isLocalFile()), fileName(0) {
     if (extension.isValid())
         ext = extension.toString();
 
@@ -46,7 +43,7 @@ MediaInfo::MediaInfo(QUrl uri, QVariant extension, bool onlyTags) : fileName(0),
     }
     else if (!onlyTags) {
         readed = true;
-        error = !Player::obj().getFileInfo(uri, this); // this method only initiating tech info
+        error = Settings::obj().currPlayer() -> fileInfo(uri, this); // this method only initiating tech info
     }
 }
 

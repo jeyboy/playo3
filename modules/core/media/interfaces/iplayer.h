@@ -7,6 +7,7 @@
 #include "iequalizable.h"
 
 #include "player_statuses.h"
+#include "modules/core/media/interfaces/imediainfo.h"
 
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
@@ -71,6 +72,8 @@ public:
 
     inline void prebufferingLevel(float level = 1) { emit prebufferingChanged(prebuffering_level = level); }
     inline float prebufferingLevel() const { return prebuffering_level; }
+
+    virtual bool fileInfo(const QUrl & /*uri*/, IMediaInfo * /*info*/) { return false; }
 signals:
     void playbackEnded();
 
