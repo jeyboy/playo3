@@ -16,8 +16,8 @@ namespace Dialogs {
       QString getName();
       void setName(QString name);
 
-      View::Params getSettings();
-      void setSettings(View::Params hash);
+      Views::Params getSettings();
+      void setSettings(Views::Params hash);
 
     private:
       Ui::TabDialog * ui;

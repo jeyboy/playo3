@@ -315,7 +315,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
     actions.append((act = new QAction(this)));
     act -> setSeparator(true);
 
-    if (Player::obj().playedIndex().isValid()) {
+    if (DataFactory::obj().playedIndex().isValid()) {
         actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
 //        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
         connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(scrollToActive()));
@@ -534,12 +534,12 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         }
     }
 
-    if (Player::obj().playedIndex().isValid()) {
-        if (Player::obj().currentPlaylist() == mdl &&
-             Player::obj().playedItemTreePath().startsWith(
+    if (DataFactory::obj().playedIndex().isValid()) {
+        if (DataFactory::obj().currentPlaylist() == this &&
+             DataFactory::obj().playedItemTreePath().startsWith(
             node.data(ITREESTR).toString()
         ))
-            Player::obj().eject(false);
+            DataFactory::obj().resetPlaying();
     }
 
     if (remove_file_with_item)
@@ -752,7 +752,7 @@ void IView::markSelectedAsLiked(bool liked) {
 //////////////////////////////////////////////////////
 
 QModelIndex IView::activeIndex() {
-    QModelIndex ind = Player::obj().playedIndex();
+    QModelIndex ind = DataFactory::obj().playedIndex();
 
     if (ind.model() != model())
         ind = QModelIndex();
@@ -771,7 +771,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (!curr.isValid())
         curr = mdl -> index(0, 0);
 
-    if (Player::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
+    if (DataFactory::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
     expand(curr.parent());
@@ -823,8 +823,8 @@ void IView::dropEvent(QDropEvent * event) {
 
 void IView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Space) {
-        if (Player::obj().playedItem())
-            Player::obj().playPause();
+        if (DataFactory::obj().playedItem())
+            DataFactory::obj().proceedPauseToggling();
         else
            execNextIndex();
     } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {

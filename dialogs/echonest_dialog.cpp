@@ -208,7 +208,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
-      View::SearchView * view = new View::SearchView(this, View::Params(Data::echo, QString()));
+      Views::SearchView * view = new Views::SearchView(this, Views::Params(Data::echo, QString()));
       QStringList predicates;
 
       for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
