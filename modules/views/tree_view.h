@@ -4,7 +4,7 @@
 #include "view_interface.h"
 #include "modules/models/tree_model.h"
 
-namespace View {
+namespace Views {
     class TreeView : public IView {
       Q_OBJECT
     public:

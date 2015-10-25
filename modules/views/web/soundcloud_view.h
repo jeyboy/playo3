@@ -4,7 +4,7 @@
 #include "modules/views/view_interface.h"
 #include "modules/models/web/soundcloud_model.h"
 
-namespace View {
+namespace Views {
     using namespace Models;
 
     class SoundcloudView : public IView {

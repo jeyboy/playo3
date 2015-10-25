@@ -24,7 +24,7 @@
 #include "modules/core/web/response_error.h"
 
 // TODO: rewrite on mutex using while deleting items
-namespace View {
+namespace Views {
     class DownloadView : public QListView, public Core::SingletonPtr<DownloadView>, public Core::FileErrors, public Core::ResponseError {
       Q_OBJECT
     public:

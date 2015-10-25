@@ -4,18 +4,46 @@
 #include <qdebug.h>
 #include <qobject.h>
 #include <qhash.h>
-#include <qabstractitemmodel.h>
 
 #include "core_parts_index.h"
 #include "modules/core/media/library.h"
 #include "modules/core/interfaces/singleton.h"
 
+#include "modules/views/view_interface.h"
+
+#include "settings.h"
+
 namespace Core {
     class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
         Q_OBJECT
+
+        Views::IView * current_playlist;
+        Models::IModel * current_model;
+        IItem * current_item;
     public:
-        inline DataFactory() : QObject() { }
+        inline DataFactory() : QObject(), current_playlist(0), current_model(0), current_item(0) {}
         ~DataFactory() {}
+
+        inline QModelIndex playedIndex() { return current_model ? current_model -> index(current_item) : QModelIndex(); }
+        inline Views::IView * currentPlaylist() const { return current_playlist; }
+        inline IItem * playedItem() { return current_item; }
+        inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
+
+        void resetPlaying() {
+
+
+            current_playlist = 0;
+            current_item = 0;
+        }
+
+        void proceedPlaying(Views::IView * playlist, IItem * item, bool paused, uint start, int duration) {
+            current_playlist = playlist;
+            current_item = item;
+            current_model = item ? (Models::IModel *)playlist -> model() : 0;
+
+//            bool refresh = current_item && new_item == current_item;
+
+        }
     public slots:
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
             Library::obj().registerListSync(mdl, mutex);

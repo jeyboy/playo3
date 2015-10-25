@@ -4,7 +4,7 @@
 #include "modules/views/view_interface.h"
 #include "modules/models/service/search_model.h"
 
-namespace View {
+namespace Views {
     class SearchView : public IView {
       Q_OBJECT
     public:

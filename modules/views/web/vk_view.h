@@ -4,7 +4,7 @@
 #include "modules/views/view_interface.h"
 #include "modules/models/web/vk_model.h"
 
-namespace View {
+namespace Views {
     class VkView : public IView {
       Q_OBJECT
     public:

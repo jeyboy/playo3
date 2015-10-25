@@ -4,7 +4,7 @@
 #include "modules/views/view_interface.h"
 #include "modules/models/web/od_model.h"
 
-namespace View {
+namespace Views {
     class OdView : public IView {
       Q_OBJECT
     public:

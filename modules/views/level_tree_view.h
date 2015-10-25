@@ -4,7 +4,7 @@
 #include "view_interface.h"
 #include "modules/models/level_tree_model.h"
 
-namespace View {
+namespace Views {
     class LevelTreeView : public IView {
       Q_OBJECT
     public:

@@ -90,6 +90,7 @@ signals:
 public slots:
     void play(uint startMili = 0, uint maxDuration = 0);
     void pause();
+    void playPause() { isPlayed() ? pause() : play(); }
     void stop();
 
     void slidePosForward();

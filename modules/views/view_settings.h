@@ -4,7 +4,7 @@
 #include "modules/core/playlist_types.h"
 #include <qjsonobject.h>
 
-namespace View {
+namespace Views {
     struct Params {
         Params(Data::Type cType, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }

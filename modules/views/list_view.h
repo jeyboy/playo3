@@ -4,7 +4,7 @@
 #include "view_interface.h"
 #include "modules/models/list_model.h"
 
-namespace View {
+namespace Views {
     class ListView : public IView {
       Q_OBJECT
     public:

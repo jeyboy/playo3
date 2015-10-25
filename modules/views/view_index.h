@@ -15,7 +15,7 @@
 #include "web/soundcloud_view.h"
 #include "web/od_view.h"
 
-namespace View {
+namespace Views {
     using namespace Data;
 
     class ViewFactory {

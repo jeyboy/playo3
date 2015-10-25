@@ -4,7 +4,7 @@
 #include "modules/models/web/vk_rel_model.h"
 #include "vk_view.h"
 
-namespace View {
+namespace Views {
     class VkRelView : public VkView {
       Q_OBJECT
     public:
