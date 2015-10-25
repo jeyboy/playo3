@@ -30,20 +30,26 @@ namespace Core {
         inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
         void resetPlaying() {
-
-
             current_playlist = 0;
             current_item = 0;
         }
 
-        void proceedPlaying(Views::IView * playlist, IItem * item, bool paused, uint start, int duration) {
+        void proceedPlaying(Views::IView * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
             current_playlist = playlist;
             current_item = item;
             current_model = item ? (Models::IModel *)playlist -> model() : 0;
 
 //            bool refresh = current_item && new_item == current_item;
 
+            IPlayer * player = Settings::obj().currPlayer();
+            player -> stop();
+            player -> setMedia(current_item -> toUrl());
+            player -> play(startMili, paused, durationMili);
         }
+
+        void proceedStoping() { Settings::obj().currPlayer() -> stop(); }
+        void proceedPausing() { Settings::obj().currPlayer() -> pause(); }
+        void proceedPauseToggling() { Settings::obj().currPlayer() -> playPause(); }
     public slots:
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
             Library::obj().registerListSync(mdl, mutex);

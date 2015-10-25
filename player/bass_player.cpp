@@ -85,10 +85,12 @@ void BassPlayer::playPreproccessing() {
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
     if (startPos > 0) position(startPos);
+    if (is_paused) pause();
 }
 
-bool BassPlayer::playProcessing(uint startMili) {
+bool BassPlayer::playProcessing(uint startMili, bool paused = false) {
     startPos = startMili;
+    is_paused = paused;
 
     stop();
 

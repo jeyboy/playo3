@@ -45,6 +45,7 @@ class BassPlayer : public IPlayer {
     Q_OBJECT
 
     HSYNC syncHandle, syncDownloadHandle;
+    bool is_paused;
     unsigned long startPos;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
@@ -70,7 +71,7 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
-    bool playProcessing(uint startMili);
+    bool playProcessing(uint startMili, bool paused = false);
     bool resumeProcessing();
     bool pauseProcessing();
     bool stopProcessing();

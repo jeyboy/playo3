@@ -32,7 +32,7 @@ void IPlayer::playPostprocessing() {
     updateState(PlayingState);
 }
 
-void IPlayer::play(uint startMili, uint maxDuration) {
+void IPlayer::play(uint startMili, bool paused, uint maxDuration) {
     bool res;
     if (isPaused()) {
         if (!(res = resumeProcessing()))
@@ -41,7 +41,7 @@ void IPlayer::play(uint startMili, uint maxDuration) {
         prebuffering_level = 0;
         emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
         duration(maxDuration);       
-        res = playProcessing(startMili);
+        res = playProcessing(startMili, paused);
     }
 
     if (res) playPostprocessing();

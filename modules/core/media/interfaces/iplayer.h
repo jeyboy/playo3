@@ -21,7 +21,7 @@ protected:
 
     virtual QString title() const { return media_url.toString(); }
 
-    virtual bool playProcessing(uint startMili) = 0;
+    virtual bool playProcessing(uint startMili, bool paused = false) = 0;
     void playPostprocessing();
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
@@ -88,7 +88,7 @@ signals:
     void prebufferingChanged(float level); // 0 .. 1
 
 public slots:
-    void play(uint startMili = 0, uint maxDuration = 0);
+    void play(uint startMili = 0, bool paused = false, uint maxDuration = 0);
     void pause();
     void playPause() { isPlayed() ? pause() : play(); }
     void stop();

@@ -1,7 +1,8 @@
 #include "view_interface.h"
 #include "dockbars.h"
 
-using namespace View;
+using namespace Core;
+using namespace Views;
 using namespace Controls;
 
 void IView::registerParent(QWidget * newParent) {
@@ -96,8 +97,9 @@ IView::~IView() {
 }
 
 void IView::scrollToActive() {
-    if (Player::obj().playedIndex().isValid())
-        scrollTo(Player::obj().playedIndex(), QAbstractItemView::PositionAtCenter);
+    QModelIndex ind = DataFactory::obj().playedIndex();
+    if (ind.isValid())
+        scrollTo(ind, QAbstractItemView::PositionAtCenter);
 }
 
 void IView::execPrevIndex(bool deleteCurrent) {
@@ -133,20 +135,24 @@ bool IView::execPath(const QString path, bool paused, uint start, int duration) 
         return false;
 }
 
-bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {
-    if (node.isValid() && !node.data(IFOLDER).toBool()) { // INFO: play playable and choosed by user
-        qDebug() << "PLAYED " << node.data();
-        Presentation::Dockbars::obj().setPlayed((DockBar *)parent());
+bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {   
+    if (node.isValid()) { // INFO: play playable and choosed by user
+        IItem * itm = mdl -> item(node);
 
-        if (Settings::obj().isSpoilOnActivation())
-            scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+        if (!itm -> isContainer()) {
+            qDebug() << "PLAYED " << itm -> title();
+            Presentation::Dockbars::obj().setPlayed((DockBar *)parent());
 
-        if (Player::obj().playedIndex() == node) {
-            Player::obj().playPause();
-            return true;
-        } else {
-            Player::obj().playIndex(node, paused, start, duration);
-            return true;
+            if (Settings::obj().isSpoilOnActivation())
+                scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+
+            if (DataFactory::obj().playedItem() == itm) {
+                DataFactory::obj().proceedPauseToggling();
+                return true;
+            } else {
+                DataFactory::obj().proceedPlaying(this, itm, start, paused, duration);
+                return true;
+            }
         }
     }
 
