@@ -27,7 +27,7 @@
 namespace Views {
     using namespace Models;
 
-    class IView : public QTreeView {
+    class IView : public QTreeView, public IPlaylistable {
       Q_OBJECT
     public:
         void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
@@ -114,6 +114,8 @@ namespace Views {
         void moveCheckedToNewTab(Playlist * root = 0);
 
     protected:
+        QModelIndex index(IItem * item) const { return mdl -> index(item); }
+
         void checkByPredicate(IItem::ItemStateFlag flag);
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);

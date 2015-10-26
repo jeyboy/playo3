@@ -22,7 +22,7 @@
 #define LOGS_TAB "Logs"
 
 namespace Presentation {
-    using namespace View;
+    using namespace Views;
     using namespace Controls;
 
     class Dockbars : public QWidget, public Singleton<Dockbars> {

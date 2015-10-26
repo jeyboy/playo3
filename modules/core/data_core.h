@@ -8,8 +8,7 @@
 #include "core_parts_index.h"
 #include "modules/core/media/library.h"
 #include "modules/core/interfaces/singleton.h"
-
-#include "modules/views/view_interface.h"
+#include "modules/core/interfaces/iplaylistable.h"
 
 #include "settings.h"
 
@@ -17,15 +16,14 @@ namespace Core {
     class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
         Q_OBJECT
 
-        Views::IView * current_playlist;
-        Models::IModel * current_model;
+        IPlaylistable * current_playlist;
         IItem * current_item;
     public:
-        inline DataFactory() : QObject(), current_playlist(0), current_model(0), current_item(0) {}
+        inline DataFactory() : QObject(), current_playlist(0), current_item(0) {}
         ~DataFactory() {}
 
-        inline QModelIndex playedIndex() { return current_model ? current_model -> index(current_item) : QModelIndex(); }
-        inline Views::IView * currentPlaylist() const { return current_playlist; }
+        inline QModelIndex playedIndex() { return current_playlist ? current_playlist -> index(current_item) : QModelIndex(); }
+        inline IPlaylistable * currentPlaylist() const { return current_playlist; }
         inline IItem * playedItem() { return current_item; }
         inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
@@ -34,10 +32,9 @@ namespace Core {
             current_item = 0;
         }
 
-        void proceedPlaying(Views::IView * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
+        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
             current_playlist = playlist;
             current_item = item;
-            current_model = item ? (Models::IModel *)playlist -> model() : 0;
 
 //            bool refresh = current_item && new_item == current_item;
 

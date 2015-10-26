@@ -25,8 +25,8 @@ void TabDialog::setName(QString name) {
   ui -> tabName -> setText(name);
 }
 
-View::Params TabDialog::getSettings() {
-    View::Params settings;
+Views::Params TabDialog::getSettings() {
+    Views::Params settings;
 
     settings.deleteFile = ui -> deleteFile -> isChecked();
     settings.interactive = ui -> interactive -> isChecked(); //checkState() == Qt::Checked
@@ -46,7 +46,7 @@ View::Params TabDialog::getSettings() {
     return settings;
 }
 
-void TabDialog::setSettings(View::Params settings) {
+void TabDialog::setSettings(Views::Params settings) {
   ui -> deleteFile -> setChecked(settings.deleteFile);
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);

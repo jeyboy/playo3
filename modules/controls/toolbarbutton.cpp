@@ -2,7 +2,7 @@
 #include "stylesheets.h"
 
 using namespace Controls;
-using namespace View;
+using namespace Views;
 
 ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent) : QToolButton(parent) {
     path = folderPath;
