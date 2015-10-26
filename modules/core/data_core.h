@@ -22,15 +22,14 @@ namespace Core {
         inline DataFactory() : QObject(), current_playlist(0), current_item(0) {}
         ~DataFactory() {}
 
+        inline IPlayer * currPlayer() { return Settings::obj().currPlayer(); }
+
         inline QModelIndex playedIndex() { return current_playlist ? current_playlist -> index(current_item) : QModelIndex(); }
         inline IPlaylistable * currentPlaylist() const { return current_playlist; }
         inline IItem * playedItem() { return current_item; }
         inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-        void resetPlaying() {
-            current_playlist = 0;
-            current_item = 0;
-        }
+        void resetPlaying() { proceedPlaying(0, 0); }
 
         void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
             current_playlist = playlist;
@@ -38,15 +37,20 @@ namespace Core {
 
 //            bool refresh = current_item && new_item == current_item;
 
-            IPlayer * player = Settings::obj().currPlayer();
+            IPlayer * player = currPlayer();
             player -> stop();
-            player -> setMedia(current_item -> toUrl());
-            player -> play(startMili, paused, durationMili);
+
+            if (item) {
+                player -> setMedia(current_item -> toUrl());
+                player -> play(startMili, paused, durationMili);
+            }
         }
 
-        void proceedStoping() { Settings::obj().currPlayer() -> stop(); }
-        void proceedPausing() { Settings::obj().currPlayer() -> pause(); }
-        void proceedPauseToggling() { Settings::obj().currPlayer() -> playPause(); }
+        void proceedStoping() { currPlayer() -> stop(); }
+        void proceedPausing() { currPlayer() -> pause(); }
+        void proceedPauseToggling() { currPlayer() -> playPause(); }
+
+
     public slots:
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
             Library::obj().registerListSync(mdl, mutex);

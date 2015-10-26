@@ -85,6 +85,7 @@ protected:
 
     bool registerEQ();
     bool unregisterEQ();
+    void eqBand(int band, float gain);
 
     bool calcSpectrum(QVector<int> & result);
     bool calcSpectrum(QList<QVector<int> > & result);

@@ -135,6 +135,14 @@ bool BassPlayer::newPanProcessing(int newPan) {}
 
 bool BassPlayer::registerEQ() {}
 bool BassPlayer::unregisterEQ() {}
+void BassPlayer::eqBand(int band, float gain) {
+    BASS_BFX_PEAKEQ eq;
+    eq.lBand = band;
+    BASS_FXGetParameters(_fxEQ, &eq);
+    eq.fGain = gain;
+    BASS_FXSetParameters(_fxEQ, &eq);
+    eqBandsGain.insert(band, gain);
+}
 
 bool BassPlayer::calcSpectrum(QVector<int> & result) {}
 bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}

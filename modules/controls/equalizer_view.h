@@ -2,6 +2,7 @@
 #define EQUALIZER_VIEW
 
 #include <qwidget.h>
+#include <qlabel.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qpushbutton.h>
@@ -10,8 +11,11 @@
 #include <qgridlayout.h>
 #include <qboxlayout.h>
 
+#include <settings.h>
+#include <qjsonobject.h>
+
+#include "dialogs/user_action_dialog.h"
 #include "clickable_slider.h"
-#include "player/player_old.h"
 
 namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")

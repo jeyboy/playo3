@@ -43,6 +43,7 @@ protected:
 public:
     virtual ~IEqualizable() {}
 
+    virtual void eqBand(int band, float gain) = 0;
     inline QMap<int, int> eqGains() const { return eqBandsGains; }
     inline void eqGains(QMap<int, int> gains) { eqBandsGains = gains; }
     inline QMap<float, QString> bands() const { return presets[current_preset].bandsList(); }

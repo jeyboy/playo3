@@ -4,7 +4,7 @@ using namespace Controls;
 
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     enabled = new QCheckBox(QStringLiteral("On"), this);
-    connect(enabled, SIGNAL(toggled(bool)), &Player::obj(), SLOT(registerEQ(bool)));
+    connect(enabled, SIGNAL(toggled(bool)), Settings::obj().currPlayer(), SLOT(registerEQ(bool)));
     layout -> addWidget(enabled, 0, Qt::AlignCenter);
 
     QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
@@ -24,9 +24,9 @@ void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     layout -> addWidget(remove, 1, Qt::AlignCenter);
 }
 void EqualizerView::initBottomLayout(QGridLayout * layout) { // TODO: // need to add chooice between n line equalizers and reinitialization
-    QMap<int, QString> bands = Player::obj().bands();
+    QMap<float, QString> bands = Settings::obj().currPlayer() -> bands();
 
-    QMap<int, QString>::Iterator band = bands.begin();
+    QMap<float, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
         QLabel * dbLabel = new QLabel("0");
         dbLabel -> setAlignment(Qt::AlignCenter);
@@ -163,7 +163,7 @@ void EqualizerView::presetChanged(QString name) {
 void EqualizerView::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
-    Player::obj().setEQBand(pos, val / 15.0);
+    Settings::obj().currPlayer() -> eqBand(pos, val / 15.0);
 
     dbOutput[pos] -> setText(QString::number(val));
 
