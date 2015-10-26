@@ -1,3 +1,3 @@
 #include "search_view.h"
 
-using namespace View;
+using namespace Views;

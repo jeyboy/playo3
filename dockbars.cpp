@@ -18,7 +18,7 @@ void Dockbars::load(const QJsonArray & bars) {
             obj = (*it).toObject();
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
-            curr_bar = linkNameToToolbars(barName, View::Params(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
+            curr_bar = linkNameToToolbars(barName, Views::Params(obj.value(QStringLiteral("set")).toObject()), obj.value(QStringLiteral("cont")).toObject());
             curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
 
             if (obj.value(QStringLiteral("stick")).toBool())
@@ -50,7 +50,7 @@ void Dockbars::load(const QJsonArray & bars) {
     }
 
     QJsonObject def;
-    View::Params defSettings;
+    Views::Params defSettings;
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
         widg -> hide();
@@ -92,7 +92,7 @@ void Dockbars::save(DataStore * settings) {
             } else {
                 if ((*it) == played) {
                     curr_bar.insert(QStringLiteral("played"), true);
-                    if (Player::obj().playedIndex().isValid()) {
+                    if (DataFactory::obj().playedIndex().isValid()) {
                         curr_bar.insert(QStringLiteral("played_item"), Player::obj().playedIndex().data(ITREEPATH).toString());
                         curr_bar.insert(QStringLiteral("played_time"), Player::obj().getPosition());
                         curr_bar.insert(QStringLiteral("played_duration"), Player::obj().getDuration());
@@ -112,7 +112,7 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(QString barName, Views::Params settings, QJsonObject attrs) {
     if (barName == SCREEN_TAB) {
         return 0; // stub
     } else if (barName == COMMON_TAB) {
@@ -128,7 +128,7 @@ QDockWidget * Dockbars::linkNameToToolbars(QString barName, View::Params setting
         return bar;
     } else return createDocBar(barName, settings, &attrs);
 }
-View::Params defSettings(level, true, false, false, true);
+Views::Params defSettings(level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
     if (!common) {
@@ -138,7 +138,7 @@ DockBar * Dockbars::commonBar() {
     return common;
 }
 
-DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params settings) {
+DockBar * Dockbars::createLinkedDocBar(QString text, QString path, Views::Params settings) {
     DockBar * bar = linkedTabs.value(path, 0);
 
     if (!bar) {
@@ -153,7 +153,7 @@ DockBar * Dockbars::createLinkedDocBar(QString text, QString path, View::Params 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(QString name, View::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(QString name, Views::Params settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     DockBar * bar = createDocBar(name, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
 

@@ -1,6 +1,6 @@
 #include "download_view.h"
 
-using namespace View;
+using namespace Views;
 using namespace Core;
 using namespace Web;
 
