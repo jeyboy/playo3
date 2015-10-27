@@ -22,7 +22,7 @@ namespace Presentation {
     using namespace Controls;
     using namespace Core::Web;
 
-    class ToolBars : public QObject, public Singleton<ToolBars> {
+    class ToolBars : public QObject, public Core::Singleton<ToolBars> {
         Q_OBJECT
     public:
         ~ToolBars() { }
@@ -32,7 +32,7 @@ namespace Presentation {
         QMenu * createPopupMenu();
 
         void load(const QJsonArray & bars);
-        void save(DataStore * settings);
+        void save(Core::DataStore * settings);
         void createToolbars();
         void addPanelButton(QString name, QString path, QToolBar * bar);
 
@@ -98,7 +98,7 @@ namespace Presentation {
         QToolBar * createEqualizerToolBar();
         QToolBar * createEqualizerButtonBar();
 
-        friend class Singleton<ToolBars>;
+        friend class Core::Singleton<ToolBars>;
         inline ToolBars() : QObject(),
             vkToolButton(0), soundcloudToolButton(0), odToolButton(0), highlighted(0), equalizer(0), spectrum(0),
             underMouseBar(0), underMouseButton(0) {
