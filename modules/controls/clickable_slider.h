@@ -8,6 +8,12 @@ namespace Controls {
         Q_OBJECT
     public:
         ClickableSlider(QWidget * parent = 0);
+    public slots:
+        void setValueSilently(int val) {
+            blockSignals(true);
+            setValue(val);
+            blockSignals(false);
+        }
     };
 }
 

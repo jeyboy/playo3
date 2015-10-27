@@ -244,10 +244,17 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
-    Player::obj().setPlayButton(ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play")));
-    Player::obj().setPauseButton(ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause")));
-    Player::obj().setStopButton(ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop")));
-    Player::obj().setCyclingButton(ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track")));
+    QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(start()));
+
+    act = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(pause()));
+
+    act = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(stop()));
+
+    act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
+    act -> setCheckable(true);
 
     ptb -> adjustSize();
 
@@ -266,8 +273,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Liked"));
     act -> setCheckable(true);
-
-    Player::obj().setLikeButton(act);
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(like()));
 
     ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> adjustSize();
@@ -283,9 +289,18 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMinimumSize(30, 30);
     slider -> setProperty("position", true);
     slider -> style() -> unpolish(slider);
-    slider -> style() -> polish(slider);
+    slider -> style() -> polish(slider);  
+    slider -> setMinimum(0);
+    slider -> setMaximum(0);
 
-    Player::obj().setTrackBar(slider);
+    connect(this, SIGNAL(positionChanged(int)), this, SLOT(setTrackbarValue(int)));
+    connect(this, SIGNAL(durationChanged(int)), this, SLOT(setTrackbarMax(int)));
+
+    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(changeTrackbarValue(int)));
+
+
+
+
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();
@@ -303,7 +318,12 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> style() -> unpolish(pslider);
     pslider -> style() -> polish(pslider);
 
-    Player::obj().setPanTrackBar(pslider);
+    connect(pslider, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
+    connect(this, SIGNAL(panChanged(int)), this, SLOT(setPanTrackbarValue(int)));
+
+    pslider -> setMinimum(-1000);
+    pslider -> setMaximum(1000);
+    pslider -> setValue(0);
 
     ptb -> addWidget(pslider);
     ptb -> adjustSize();
@@ -318,7 +338,9 @@ QToolBar * ToolBars::createTimeMediaBar() {
     ClickableLabel * timeLabel = new ClickableLabel(QStringLiteral("After click invert showing time") , QStringLiteral("00:00"), ptb);
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
     ptb -> addWidget(timeLabel);
-    Player::obj().setTimePanel(timeLabel);
+
+    connect(timeLabel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
+
     ptb -> adjustSize();
 
     return ptb;
@@ -333,8 +355,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
     act -> setCheckable(true);
-
-    Player::obj().setMuteButton(act);
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(mute()));
 
     ClickableSlider * slider = new ClickableSlider(ptb);
     slider -> setProperty("volume", true);
@@ -343,8 +364,12 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
+    slider -> setMaximum(10000);
+    slider -> setValue(10000);
 
-    Player::obj().setVolumeTrackBar(slider);
+    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
+    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
+
     ptb -> addWidget(slider);
     ptb -> adjustSize();
 
