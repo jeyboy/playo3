@@ -293,14 +293,9 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 
-    connect(this, SIGNAL(positionChanged(int)), this, SLOT(setTrackbarValue(int)));
-    connect(this, SIGNAL(durationChanged(int)), this, SLOT(setTrackbarMax(int)));
-
-    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(changeTrackbarValue(int)));
-
-
-
-
+    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
+    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
+    connect(slider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(position(uint)));
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();
@@ -318,8 +313,8 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> style() -> unpolish(pslider);
     pslider -> style() -> polish(pslider);
 
-    connect(pslider, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
-    connect(this, SIGNAL(panChanged(int)), this, SLOT(setPanTrackbarValue(int)));
+    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
+    connect(Settings::obj.currPlayer(), SIGNAL(panChanged(int)), pslider, SLOT(setValueSilently(int)));
 
     pslider -> setMinimum(-1000);
     pslider -> setMaximum(1000);

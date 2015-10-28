@@ -14,6 +14,10 @@ namespace Controls {
             setValue(val);
             blockSignals(false);
         }
+
+        void setMax(int max) {
+            setMaximum(max);
+        }
     };
 }
 
