@@ -335,6 +335,8 @@ QToolBar * ToolBars::createTimeMediaBar() {
     ptb -> addWidget(timeLabel);
 
     connect(timeLabel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
+//    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
+//    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
 
     ptb -> adjustSize();
 

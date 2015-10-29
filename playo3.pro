@@ -263,7 +263,8 @@ HEADERS += \
     modules/core/misc/thread_cell.h \
     player/player_index.h \
     modules/core/media/interfaces/imediainfo.h \
-    modules/core/interfaces/iplaylistable.h
+    modules/core/interfaces/iplaylistable.h \
+    player/player_callback.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
