@@ -6,6 +6,7 @@
 #include <qhash.h>
 
 #include "core_parts_index.h"
+#include "player/player_index.h"
 #include "modules/core/media/library.h"
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/interfaces/iplaylistable.h"
@@ -22,7 +23,7 @@ namespace Core {
         inline DataFactory() : QObject(), current_playlist(0), current_item(0) {}
         ~DataFactory() {}
 
-        inline IPlayer * currPlayer() { return Settings::obj().currPlayer(); }
+        inline IPlayer * currPlayer() { return PlayerFactory::obj().currPlayer(); }
 
         inline QModelIndex playedIndex() { return current_playlist ? current_playlist -> index(current_item) : QModelIndex(); }
         inline IPlaylistable * currentPlaylist() const { return current_playlist; }

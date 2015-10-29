@@ -21,8 +21,8 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
 public:
     inline IPlayer * currPlayer() { return player; }
 
-    void registerCallback(bool input, QObject * obj, const char * signal, const char * slot) {
-        PlayerCallback pl(input, obj, signal, slot);
+    void registerCallback(CallbackTurn turn, QObject * obj, const char * signal, const char * slot) {
+        PlayerCallback pl(turn, obj, signal, slot);
         callbacks << pl;
         if (player) pl.use(player);
     }

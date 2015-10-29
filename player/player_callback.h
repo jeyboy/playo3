@@ -3,15 +3,20 @@
 
 #include <qobject.h>
 
+enum CallbackTurn {
+    in = 0,
+    out
+};
+
 class PlayerCallback {
     const char * _signal;
     const char * _slot;
     QObject * _obj;
-    bool in;
+    CallbackTurn _turn;
 public:
-    PlayerCallback(bool input, QObject * obj, const char * signal, const char * slot) : _signal(signal), _slot(slot), _obj(obj), in(input) {}
+    PlayerCallback(CallbackTurn turn, QObject * obj, const char * signal, const char * slot) : _signal(signal), _slot(slot), _obj(obj), _turn(turn) {}
     void use(QObject * player) {
-        if (in)
+        if (_turn == in)
             QObject::connect(_obj, _signal, player, _slot);
         else
             QObject::connect(player, _signal, _obj, _slot);

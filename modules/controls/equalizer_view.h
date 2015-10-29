@@ -11,9 +11,9 @@
 #include <qgridlayout.h>
 #include <qboxlayout.h>
 
-#include <settings.h>
 #include <qjsonobject.h>
 
+#include "settings.h"
 #include "dialogs/user_action_dialog.h"
 #include "clickable_slider.h"
 
