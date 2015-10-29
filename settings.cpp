@@ -2,18 +2,6 @@
 
 Settings::Settings() : anchor(0), player(0) {}
 
-void Settings::currPlayer(const PlayerType & newPlayerType) {
-    switch(newPlayerType) {
-//        case bass_player: break;
-        default: player = new BassPlayer(anchor);
-    }
-
-    //TODO: correctly remove old player
-    //delete player;
-    player = newPlayer;
-    //TODO: register player events
-}
-
 void Settings::fromJson(QJsonObject settings) {
     GlobalSettings::fromJson(settings);
     HotkeySettings::fromJson(settings);

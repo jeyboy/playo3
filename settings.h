@@ -29,7 +29,7 @@ public:
     inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
 
     inline IPlayer * currPlayer() { return player; }
-    void currPlayer(const PlayerType &);
+    void currPlayer(const PlayerType & ptype) { player = PlayerFactory::obj().build(ptype); }
 
     void resetGlobalSettings();
     void resetHotkeySettings();
