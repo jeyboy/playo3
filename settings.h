@@ -17,7 +17,6 @@ class Settings : public GlobalSettings, public HotkeySettings,
 
     Settings(); friend class Core::Singleton<Settings>;
     QWidget * anchor;
-    IPlayer * player;
 public:
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();
@@ -27,9 +26,6 @@ public:
 
     inline QWidget * anchorWidget() { return anchor; }
     inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
-
-    inline IPlayer * currPlayer() { return player; }
-    void currPlayer(const PlayerType & ptype) { player = PlayerFactory::obj().build(ptype); }
 
     void resetGlobalSettings();
     void resetHotkeySettings();

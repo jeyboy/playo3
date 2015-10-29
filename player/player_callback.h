@@ -9,12 +9,12 @@ class PlayerCallback {
     QObject * _obj;
     bool in;
 public:
-    PlayerCallback(bool input, QObject * obj, const char * signal, const char * slot) : _signal(signal), slot(_slot), _obj(obj), in(input) {}
+    PlayerCallback(bool input, QObject * obj, const char * signal, const char * slot) : _signal(signal), _slot(slot), _obj(obj), in(input) {}
     void use(QObject * player) {
         if (in)
-            QObject::connect(obj, signal, player, slot);
+            QObject::connect(_obj, _signal, player, _slot);
         else
-            QObject::connect(player, signal, obj, slot);
+            QObject::connect(player, _signal, _obj, _slot);
     }
 };
 

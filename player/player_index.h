@@ -15,14 +15,20 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
     QList<PlayerCallback> callbacks;
 
     friend class Core::Singleton<PlayerFactory>;
-    inline PlayerFactory() {}
+    inline PlayerFactory() : player(0) {}
+
+    IPlayer * player;
 public:
+    inline IPlayer * currPlayer() { return player; }
+
     void registerCallback(bool input, QObject * obj, const char * signal, const char * slot) {
-        callbacks << PlayerCallback(input, obj, signal, slot);
+        PlayerCallback pl(input, obj, signal, slot);
+        callbacks << pl;
+        if (player) pl.use(player);
     }
 
-    IPlayer * build(const PlayerType & newPlayerType) {
-        IPlayer * player;
+    IPlayer * build(QWidget * anchor, const PlayerType & newPlayerType) {
+        delete player;
 
         switch(newPlayerType) {
     //        case bass_player: break;
