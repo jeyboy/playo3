@@ -16,6 +16,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     QTimer * itimer;
     uint volumeVal, panVal;
     float prebuffering_level;
+    bool muted;
 protected:
     void updateState(PlayerState new_state);
 
@@ -64,7 +65,7 @@ public:
 
     virtual uint position() const = 0;
     uint duration() const { return max_duration; }
-    inline uint volume() const { return volumeVal; }
+    inline uint volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
 
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
@@ -99,6 +100,14 @@ public slots:
     void slideVolBackward();
 
     void position(uint newPos);
+    inline void mute(bool enable = false) {
+        if (muted = enable) {
+            uint val = volumeVal;
+            volume(0);
+            volumeVal = val;
+        }
+        else volume(volumeVal);
+    }
     inline void volume(uint newVol) {
         newVolumeProcessing(volumeVal = newVol);
         emit volumeChanged(newVol);

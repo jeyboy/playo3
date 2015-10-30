@@ -13,8 +13,11 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
 
 //    PlayerFactory::obj().registerCallback(out, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
 
-    connect(Settings::obj().currPlayer(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
-    connect(Settings::obj().currPlayer(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
+    PlayerFactory::obj().registerCallback(out, this, SIGNAL(spectrumChanged(const QList<QVector<int> > &)), SLOT(dataUpdated(const QList<QVector<int> > &)));
+//    connect(Settings::obj().currPlayer(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
+
+    PlayerFactory::obj().registerCallback(out, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
+//    connect(Settings::obj().currPlayer(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
 
 
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
@@ -74,11 +77,11 @@ void SpectrumView::updateColors() {
 void SpectrumView::changeType(SpectrumType newType) {
     Settings::obj().setSpectrumType(newType);
     type = newType;
-    Settings::obj().currPlayer() -> spectrumHeight(peakDimension());
+    PlayerFactory::obj().currPlayer() -> spectrumHeight(peakDimension());
 }
 
 void SpectrumView::changeBandCount() {
-    Settings::obj().currPlayer() -> spectrumBandsCount(calcBarCount());
+    PlayerFactory::obj().currPlayer() -> spectrumBandsCount(calcBarCount());
 //    dataUpdated(Player::obj().getDefaultSpectrum());
 }
 
@@ -86,7 +89,7 @@ void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    Settings::obj().currPlayer() -> spectrumHeight(peakDimension());
+    PlayerFactory::obj().currPlayer() -> spectrumHeight(peakDimension());
 }
 
 void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
@@ -138,12 +141,12 @@ void SpectrumView::paintEvent(QPaintEvent * event) {
 void SpectrumView::recalcAttrs() {
     switch(type) {
         case bars: {
-            int bands_count = Settings::obj().currPlayer() -> spectrumBandsCount();
+            int bands_count = PlayerFactory::obj().currPlayer() -> spectrumBandsCount();
             bar_width = ((float)width() - start_h_offset - (bands_count + 1) * paddWidth()) / bands_count;
             break;}
 //case waves:
         default: {
-            int bands_count = Settings::obj().currPlayer() -> calcSpectrumBandsGroupCount();
+            int bands_count = PlayerFactory::obj().currPlayer() -> calcSpectrumBandsGroupCount();
             bar_width = ((float)width() - start_h_offset - ((bands_count * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / bands_count;
             break;}
     }

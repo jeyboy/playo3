@@ -255,6 +255,7 @@ QToolBar * ToolBars::createMediaBar() {
 
     act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
     act -> setCheckable(true);
+    // #TODO: need to add logic on player level
 
     ptb -> adjustSize();
 
@@ -273,7 +274,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Liked"));
     act -> setCheckable(true);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(like()));
+    connect(act, SIGNAL(triggered(bool)), this, SLOT(like())); //TODO: not finished
 
     ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> adjustSize();
@@ -293,9 +294,14 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 
-    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
-    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
-    connect(slider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(position(uint)));
+//    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
+
+//    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
+    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
+
+//    connect(slider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(position(uint)));
+    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(position(uint)));
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();
@@ -313,8 +319,11 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> style() -> unpolish(pslider);
     pslider -> style() -> polish(pslider);
 
-    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
-    connect(Settings::obj.currPlayer(), SIGNAL(panChanged(int)), pslider, SLOT(setValueSilently(int)));
+//    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
+    PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(pan(int)));
+
+//    connect(Settings::obj.currPlayer(), SIGNAL(panChanged(int)), pslider, SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
     pslider -> setMinimum(-1000);
     pslider -> setMaximum(1000);
@@ -334,7 +343,10 @@ QToolBar * ToolBars::createTimeMediaBar() {
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
     ptb -> addWidget(timeLabel);
 
-    connect(timeLabel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
+
+//    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
+
+//    connect(timeLabel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
 //    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
 //    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
 
@@ -352,7 +364,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
     act -> setCheckable(true);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(mute()));
+    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
 
     ClickableSlider * slider = new ClickableSlider(ptb);
     slider -> setProperty("volume", true);
@@ -363,6 +375,8 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setMinimumSize(30, 30);
     slider -> setMaximum(10000);
     slider -> setValue(10000);
+
+//    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
     connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
     connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
