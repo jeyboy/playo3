@@ -142,9 +142,10 @@ bool BassPlayer::registerEQ() {
         eq.fBandwidth = currentPresetBase();
         eq.lChannel = BASS_BFX_CHANALL;
 
-        QMap<int, QString>::Iterator band = eqBands.begin();
+        QMap<float, QString> eqBands = bands();
+        QMap<float, QString>::Iterator band = eqBands.begin();
         for(int num = 0; band != eqBands.end(); band++, num++) {
-            eq.fGain = eqBandsGain.value(num, 0);
+            eq.fGain = eqBandsGains.value(num, 0);
             eq.lBand = num; eq.fCenter = band.key(); BASS_FXSetParameters(_fxEQ, &eq);
         }
     }
@@ -152,8 +153,8 @@ bool BassPlayer::registerEQ() {
     return _fxEQ != 0;
 }
 bool BassPlayer::unregisterEQ() {
-    if (!_fxEQ) return;
-    bool res = BASS_ChannelRemoveFX(chId(), _fxEQ);
+    if (!_fxEQ) return false;
+    bool res = BASS_ChannelRemoveFX(chan, _fxEQ);
     _fxEQ = 0;
     return res;
 }
