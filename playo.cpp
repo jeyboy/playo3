@@ -46,6 +46,7 @@ void Playo::activation() {
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
     Settings::obj().anchorWidget(this);
+    PlayerFactory::obj().build(this, bass_player);
 }
 
 void Playo::initialization() {

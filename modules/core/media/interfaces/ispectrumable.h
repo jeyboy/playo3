@@ -16,7 +16,7 @@ protected:
     inline ISpectrumable(QObject * parent) : QObject(parent), sheight(0), sdefault_level(0), channels_count(2) {
         itimer = new QTimer(parent);
         spectrumBandsCount(12);
-        connect(this, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
+        connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
     }
 
     inline void spectrumCalcStart() { if (spectrumable()) itimer -> start(); }
