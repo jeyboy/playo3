@@ -245,17 +245,20 @@ QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
     QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(start()));
+//    connect(act, SIGNAL(triggered(bool)), this, SLOT(start()));
+    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(play()));
 
     act = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(pause()));
+//    connect(act, SIGNAL(triggered(bool)), this, SLOT(pause()));
+    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(pause()));
 
     act = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(stop()));
+//    connect(act, SIGNAL(triggered(bool)), this, SLOT(stop()));
+    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(stop()));
 
     act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
     act -> setCheckable(true);
-    // #TODO: need to add logic on player level
+    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
 
     ptb -> adjustSize();
 
@@ -301,7 +304,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
 
 //    connect(slider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(position(uint)));
-    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(position(uint)));
+    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();
@@ -345,10 +348,10 @@ QToolBar * ToolBars::createTimeMediaBar() {
 
 
 //    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
-    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(uint)), SLOT(setPos(uint)));
+    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
 
 //    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
-    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(uint)), SLOT(setMax(uint)));
+    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
 
     ptb -> adjustSize();
 

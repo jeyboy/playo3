@@ -9,7 +9,7 @@ namespace Controls {
     class TimeLabel : public ClickableLabel {
         Q_OBJECT
 
-        uint total;
+        int total;
         bool forward_turn, extended;
     public:
         TimeLabel(const QString & user_text, const QString & text, QWidget * parent = 0, Qt::WindowFlags f = 0, const QObject * receiver = 0, const char * slot = 0)
@@ -19,15 +19,15 @@ namespace Controls {
         }
     public slots:
         void invertTurn() { forward_turn = !forward_turn; }
-        void setPos(uint pos) {
+        void setPos(int pos) {
             output(pos);
         }
-        void setTotal(uint newTotal) {
+        void setTotal(int newTotal) {
             extended = Duration::hasHours((total = newTotal));
             output(0);
         }
     protected:
-        void output(uint pos) {
+        void output(int pos) {
             QString val, totalStr;
             totalStr = Duration::fromMillis(total, extended);
 

@@ -46,7 +46,7 @@ class BassPlayer : public IPlayer {
     HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
-    quint64 startPos;
+    int startPos;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
 
@@ -71,17 +71,17 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
-    bool playProcessing(uint startMili, bool paused = false);
+    bool playProcessing(int startMili, bool paused = false);
     bool resumeProcessing();
     bool pauseProcessing();
     bool stopProcessing();
 
-    quint64 recalcCurrentPosProcessing();
-    bool newPosProcessing(quint64 newPos);
-    bool newVolumeProcessing(uint newVol);
+    int recalcCurrentPosProcessing();
+    bool newPosProcessing(int newPos);
+    bool newVolumeProcessing(int newVol);
     bool newPanProcessing(int newPan);
 
-    inline uint maxVolume() const { return 10000; }
+    inline int maxVolume() const { return 10000; }
 
     bool registerEQ();
     bool unregisterEQ();
@@ -93,7 +93,7 @@ public:
     explicit BassPlayer(QWidget * parent, float open_time_out_sec = 10);
     ~BassPlayer();
 
-    quint64 position() const;
+    int position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
 

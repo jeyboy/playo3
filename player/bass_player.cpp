@@ -90,7 +90,7 @@ void BassPlayer::playPreproccessing() {
     if (is_paused) pause();
 }
 
-bool BassPlayer::playProcessing(uint startMili, bool paused) {
+bool BassPlayer::playProcessing(int startMili, bool paused) {
     startPos = startMili;
     is_paused = paused;
 
@@ -129,9 +129,9 @@ bool BassPlayer::stopProcessing() {
     }
 }
 
-quint64 BassPlayer::recalcCurrentPosProcessing() {}
-bool BassPlayer::newPosProcessing(quint64 newPos) {}
-bool BassPlayer::newVolumeProcessing(uint newVol) {}
+int BassPlayer::recalcCurrentPosProcessing() {}
+bool BassPlayer::newPosProcessing(int newPos) {}
+bool BassPlayer::newVolumeProcessing(int newVol) {}
 bool BassPlayer::newPanProcessing(int newPan) {}
 
 
@@ -242,4 +242,4 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
-quint64 BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
+int BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
