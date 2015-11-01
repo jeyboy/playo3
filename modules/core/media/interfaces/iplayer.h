@@ -63,7 +63,7 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
-    virtual uint position() const = 0;
+    virtual unsigned long position() const = 0;
     uint duration() const { return max_duration; }
     inline uint volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
@@ -99,7 +99,7 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    void position(uint newPos);
+    void position(unsigned long newPos);
     inline void mute(bool enable = false) {
         if ((muted = enable)) {
             uint val = volumeVal;

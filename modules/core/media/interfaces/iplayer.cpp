@@ -74,7 +74,7 @@ void IPlayer::slideVolBackward() {
     volume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
 }
 
-void IPlayer::position(uint newPos) {
+void IPlayer::position(unsigned long newPos) {
     newPosProcessing(newPos);
     ITrackable::setProgress(newPos);
     emit positionChanged(newPos);

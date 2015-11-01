@@ -94,7 +94,7 @@ public:
     explicit BassPlayer(QWidget * parent, uint open_time_out_sec = 10);
     ~BassPlayer();
 
-    uint position() const;
+    unsigned long position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
 
