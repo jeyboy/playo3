@@ -101,7 +101,7 @@ public slots:
 
     void position(uint newPos);
     inline void mute(bool enable = false) {
-        if (muted = enable) {
+        if ((muted = enable)) {
             uint val = volumeVal;
             volume(0);
             volumeVal = val;

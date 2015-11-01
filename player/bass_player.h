@@ -44,6 +44,7 @@ void
 class BassPlayer : public IPlayer {
     Q_OBJECT
 
+    HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
     unsigned long startPos;
@@ -85,7 +86,7 @@ protected:
 
     bool registerEQ();
     bool unregisterEQ();
-    void eqBand(int band, float gain);
+    bool processEqSetGain(int band, float gain);
 
     bool calcSpectrum(QVector<int> & result);
     bool calcSpectrum(QList<QVector<int> > & result);

@@ -253,7 +253,6 @@ HEADERS += \
     modules/core/media/interfaces/player_states.h \
     modules/core/media/interfaces/iequalizable.h \
     modules/core/media/interfaces/player_statuses.h \
-    player/player.h \
     modules/core/interfaces/singleton.h \
     modules/core/misc/file_utils/file_errors.h \
     modules/core/web/response_error.h \
@@ -264,7 +263,8 @@ HEADERS += \
     player/player_index.h \
     modules/core/media/interfaces/imediainfo.h \
     modules/core/interfaces/iplaylistable.h \
-    player/player_callback.h
+    player/player_callback.h \
+    modules/controls/time_label.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -395,5 +395,4 @@ SOURCES += \
     modules/core/media/interfaces/iplayer.cpp \
     modules/core/media/interfaces/ispectrumable.cpp \
     modules/core/media/interfaces/iequalizable.cpp \
-    player/player.cpp \
     player/bass_player.cpp

@@ -2,7 +2,7 @@
 
 using namespace Controls;
 
-ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
+ClickableLabel::ClickableLabel(const QString & user_text, const QString & text, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel(text, parent, f) {
     setContentsMargins(0,0,0,0);
     if (!user_text.isEmpty())
@@ -11,7 +11,7 @@ ClickableLabel::ClickableLabel(QString user_text, const QString & text, QWidget 
         connect(this, SIGNAL(clicked()), receiver, slot);
 }
 
-ClickableLabel::ClickableLabel(QString user_text, const QPixmap & icon, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
+ClickableLabel::ClickableLabel(const QString & user_text, const QPixmap & icon, QWidget * parent, Qt::WindowFlags f, const QObject * receiver, const char * slot)
     : QLabel("", parent, f) {
     setPixmap(icon);
     setContentsMargins(0,0,0,0);

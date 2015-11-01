@@ -1,6 +1,6 @@
 #include "settings.h"
 
-Settings::Settings() : anchor(0), player(0) {}
+Settings::Settings() : anchor(0) {}
 
 void Settings::fromJson(QJsonObject settings) {
     GlobalSettings::fromJson(settings);

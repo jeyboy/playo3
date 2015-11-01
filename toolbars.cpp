@@ -339,16 +339,16 @@ QToolBar * ToolBars::createPanMediaBar() {
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
 
-    ClickableLabel * timeLabel = new ClickableLabel(QStringLiteral("After click invert showing time") , QStringLiteral("00:00"), ptb);
+    TimeLabel * timeLabel = new TimeLabel(QStringLiteral("After click invert showing time") , QString(), ptb);
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
     ptb -> addWidget(timeLabel);
 
 
-//    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
-
-//    connect(timeLabel, SIGNAL(clicked()), this, SLOT(invertTimeCountdown()));
 //    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(uint)), SLOT(setPos(uint)));
+
 //    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
+    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(uint)), SLOT(setMax(uint)));
 
     ptb -> adjustSize();
 
@@ -378,8 +378,11 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
 //    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
-    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
-    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
+//    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
+    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(volume(int)));
+
+//    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
+    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     ptb -> addWidget(slider);
     ptb -> adjustSize();

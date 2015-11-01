@@ -88,7 +88,7 @@ void BassPlayer::playPreproccessing() {
     if (is_paused) pause();
 }
 
-bool BassPlayer::playProcessing(uint startMili, bool paused = false) {
+bool BassPlayer::playProcessing(uint startMili, bool paused) {
     startPos = startMili;
     is_paused = paused;
 
@@ -133,15 +133,36 @@ bool BassPlayer::newVolumeProcessing(uint newVol) {}
 bool BassPlayer::newPanProcessing(int newPan) {}
 
 
-bool BassPlayer::registerEQ() {}
-bool BassPlayer::unregisterEQ() {}
-void BassPlayer::eqBand(int band, float gain) {
+bool BassPlayer::registerEQ() {
+    if (_fxEQ) unregisterEQ();
+
+    if (_fxEQ = BASS_ChannelSetFX(chan, BASS_FX_BFX_PEAKEQ, 0)) {
+        BASS_BFX_PEAKEQ eq;
+        eq.fQ = 0;
+        eq.fBandwidth = currentPresetBase();
+        eq.lChannel = BASS_BFX_CHANALL;
+
+        QMap<int, QString>::Iterator band = eqBands.begin();
+        for(int num = 0; band != eqBands.end(); band++, num++) {
+            eq.fGain = eqBandsGain.value(num, 0);
+            eq.lBand = num; eq.fCenter = band.key(); BASS_FXSetParameters(_fxEQ, &eq);
+        }
+    }
+
+    return _fxEQ != 0;
+}
+bool BassPlayer::unregisterEQ() {
+    if (!_fxEQ) return;
+    bool res = BASS_ChannelRemoveFX(chId(), _fxEQ);
+    _fxEQ = 0;
+    return res;
+}
+bool BassPlayer::processEqSetGain(int band, float gain) {
     BASS_BFX_PEAKEQ eq;
     eq.lBand = band;
     BASS_FXGetParameters(_fxEQ, &eq);
     eq.fGain = gain;
-    BASS_FXSetParameters(_fxEQ, &eq);
-    eqBandsGain.insert(band, gain);
+    return BASS_FXSetParameters(_fxEQ, &eq);
 }
 
 bool BassPlayer::calcSpectrum(QVector<int> & result) {}

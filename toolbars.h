@@ -10,6 +10,7 @@
 
 #include "modules/core/web/apis/social/_socials.h"
 
+#include "modules/controls/time_label.h"
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
 #include "modules/controls/toolbarbutton.h"
