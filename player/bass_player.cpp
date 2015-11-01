@@ -86,7 +86,7 @@ void BassPlayer::playPreproccessing() {
     syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
-//    if (startPos > 0) position(startPos);
+    if (startPos > 0) setPosition(startPos);
     if (is_paused) pause();
 }
 

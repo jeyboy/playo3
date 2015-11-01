@@ -99,31 +99,24 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    void position(quint64 newPos);
-    inline void mute(bool enable = false) {
-        if ((muted = enable)) {
-            uint val = volumeVal;
-            volume(0);
-            volumeVal = val;
-        }
-        else volume(volumeVal);
-    }
-    inline void volume(uint newVol) {
+    void setPosition(quint64 newPos);
+    void mute(bool enable = false);
+    inline void setVolume(uint newVol) {
         newVolumeProcessing(volumeVal = newVol);
         emit volumeChanged(newVol);
     }
-    inline void pan(int newPan) {
+    inline void setPan(int newPan) {
         newPanProcessing(panVal = newPan);
         emit panChanged(newPan);
     }
 
     void endOfPlayback() {
-        position(0);
+        setPosition(0);
         pause();
         emit statusChanged(EndOfMedia);
     }
 protected slots:
-    void recalcPosition() { position(recalcCurrentPosProcessing()); }
+    void recalcPosition() { setPosition(recalcCurrentPosProcessing()); }
 };
 
 #endif // IPLAYER

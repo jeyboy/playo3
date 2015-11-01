@@ -58,24 +58,33 @@ void IPlayer::stop() {
 
 void IPlayer::slidePosForward() {
     if (seekable())
-        position(qMin(max_duration, position() + max_duration / slidePercentage()));
+        setPosition(qMin(max_duration, position() + max_duration / slidePercentage()));
 }
 void IPlayer::slidePosBackward() {
     if (seekable())
-        position(qMax(quint64(0), position() - max_duration / slidePercentage()));
+        setPosition(qMax(quint64(0), position() - max_duration / slidePercentage()));
 }
 
 void IPlayer::slideVolForward() {
     uint max = maxVolume();
     if (max == 0) return;
-    volume(qMin(max, volume() + maxVolume() / slidePercentage()));
+    setVolume(qMin(max, volume() + maxVolume() / slidePercentage()));
 }
 void IPlayer::slideVolBackward() {
-    volume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
+    setVolume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
 }
 
-void IPlayer::position(quint64 newPos) {
+void IPlayer::setPosition(quint64 newPos) {
     newPosProcessing(newPos);
     ITrackable::setProgress(newPos);
     emit positionChanged(newPos);
+}
+
+void IPlayer::mute(bool enable) {
+    if ((muted = enable)) {
+        uint val = volumeVal;
+        setVolume(0);
+        volumeVal = val;
+    }
+    else setVolume(volumeVal);
 }
