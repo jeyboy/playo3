@@ -6,7 +6,6 @@
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <qfuturewatcher.h>
 
-//#include "math.h"
 #include "bass.h"
 #include "bass_fx.h"
 #include "bassmix.h"
@@ -47,7 +46,7 @@ class BassPlayer : public IPlayer {
     HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
-    unsigned long startPos;
+    quint64 startPos;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
 
@@ -91,7 +90,7 @@ protected:
     bool calcSpectrum(QVector<int> & result);
     bool calcSpectrum(QList<QVector<int> > & result);
 public:
-    explicit BassPlayer(QWidget * parent, uint open_time_out_sec = 10);
+    explicit BassPlayer(QWidget * parent, float open_time_out_sec = 10);
     ~BassPlayer();
 
     quint64 position() const;

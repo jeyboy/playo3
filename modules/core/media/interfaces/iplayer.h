@@ -99,7 +99,7 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    void position(unsigned long newPos);
+    void position(quint64 newPos);
     inline void mute(bool enable = false) {
         if ((muted = enable)) {
             uint val = volumeVal;

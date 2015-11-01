@@ -1,6 +1,6 @@
 #include "iplayer.h"
 
-IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), prebuffering_level(0), max_duration(0), muted(false) {
+IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), prebuffering_level(0), muted(false), max_duration(0) {
 //        qRegisterMetaType<PlayerState>("PlayerState");
 //        qRegisterMetaType<PlayerStatus>("PlayerStatus");
 
@@ -74,7 +74,7 @@ void IPlayer::slideVolBackward() {
     volume(qMax(uint(0), volume() - maxVolume() / slidePercentage()));
 }
 
-void IPlayer::position(unsigned long newPos) {
+void IPlayer::position(quint64 newPos) {
     newPosProcessing(newPos);
     ITrackable::setProgress(newPos);
     emit positionChanged(newPos);

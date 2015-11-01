@@ -1,5 +1,7 @@
 #include "bass_player.h"
 
+#include <qapplication.h>
+
 void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 //    BASS_ChannelStop(channel);
 //    BASS_ChannelRemoveSync(channel, handle);
@@ -84,7 +86,7 @@ void BassPlayer::playPreproccessing() {
     syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
     syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
-    if (startPos > 0) position(startPos);
+//    if (startPos > 0) position(startPos);
     if (is_paused) pause();
 }
 
@@ -197,9 +199,7 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
     return true;
 }
 
-BassPlayer::BassPlayer(QWidget * parent, uint open_time_out_sec) : IPlayer(parent) {
-    #include <qapplication.h>
-
+BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(parent) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 

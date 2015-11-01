@@ -56,6 +56,7 @@ public:
     inline QMap<float, QString> bands() const { return presets[current_preset].bandsList(); }
     inline float currentPresetBase() { return presets[current_preset].presetBase(); }
 public slots:
+    //TODO: add changing of preset
     inline void activateEQ(bool activate) {
         if ((eqInUse = activate)) registerEQ();
         else unregisterEQ();
