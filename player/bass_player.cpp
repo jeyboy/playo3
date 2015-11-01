@@ -199,7 +199,7 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
     return true;
 }
 
-BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(parent) {
+BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(parent), openChannelWatcher(0) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
