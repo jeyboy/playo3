@@ -77,8 +77,8 @@ protected:
     bool pauseProcessing();
     bool stopProcessing();
 
-    uint recalcCurrentPosProcessing();
-    bool newPosProcessing(uint newPos);
+    quint64 recalcCurrentPosProcessing();
+    bool newPosProcessing(quint64 newPos);
     bool newVolumeProcessing(uint newVol);
     bool newPanProcessing(int newPan);
 
@@ -94,7 +94,7 @@ public:
     explicit BassPlayer(QWidget * parent, uint open_time_out_sec = 10);
     ~BassPlayer();
 
-    unsigned long position() const;
+    quint64 position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
 

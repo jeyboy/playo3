@@ -62,7 +62,7 @@ void IPlayer::slidePosForward() {
 }
 void IPlayer::slidePosBackward() {
     if (seekable())
-        position(qMax(uint(0), position() - max_duration / slidePercentage()));
+        position(qMax(quint64(0), position() - max_duration / slidePercentage()));
 }
 
 void IPlayer::slideVolForward() {

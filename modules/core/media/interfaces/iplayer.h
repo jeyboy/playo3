@@ -28,12 +28,12 @@ protected:
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
 
-    virtual uint recalcCurrentPosProcessing() = 0;
-    virtual bool newPosProcessing(uint newPos) = 0;
+    virtual quint64 recalcCurrentPosProcessing() = 0;
+    virtual bool newPosProcessing(quint64 newPos) = 0;
     virtual bool newVolumeProcessing(uint newVol) = 0;
     virtual bool newPanProcessing(int newPan) = 0;
 
-    inline void duration(uint newDuration) {
+    inline void duration(quint64 newDuration) {
         ITrackable::setMaxProgress(newDuration);
         emit durationChanged((max_duration = newDuration));
     }
@@ -44,7 +44,7 @@ protected:
     inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
 
     QUrl media_url;
-    uint max_pos, max_duration;
+    quint64 max_pos, max_duration;
 
 public:
     explicit IPlayer(QWidget * parent);
@@ -63,8 +63,8 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
-    virtual unsigned long position() const = 0;
-    uint duration() const { return max_duration; }
+    virtual quint64 position() const = 0;
+    quint64 duration() const { return max_duration; }
     inline uint volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
 

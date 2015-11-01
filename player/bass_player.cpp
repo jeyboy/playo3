@@ -127,8 +127,8 @@ bool BassPlayer::stopProcessing() {
     }
 }
 
-uint BassPlayer::recalcCurrentPosProcessing() {}
-bool BassPlayer::newPosProcessing(uint newPos) {}
+quint64 BassPlayer::recalcCurrentPosProcessing() {}
+bool BassPlayer::newPosProcessing(quint64 newPos) {}
 bool BassPlayer::newVolumeProcessing(uint newVol) {}
 bool BassPlayer::newPanProcessing(int newPan) {}
 
@@ -242,4 +242,4 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
-unsigned long BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
+quint64 BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
