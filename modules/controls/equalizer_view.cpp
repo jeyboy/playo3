@@ -5,7 +5,7 @@ using namespace Controls;
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     enabled = new QCheckBox(QStringLiteral("On"), this);
 
-    PlayerFactory::obj().registerCallback(in, enabled, SIGNAL(toggled(bool)), SLOT(registerEQ(bool)));
+    PlayerFactory::obj().registerCallback(in, enabled, SIGNAL(toggled(bool)), SLOT(activateEQ(bool)));
 //    connect(enabled, SIGNAL(toggled(bool)), Settings::obj().currPlayer(), SLOT(registerEQ(bool)));
     layout -> addWidget(enabled, 0, Qt::AlignCenter);
 

@@ -323,7 +323,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> style() -> polish(pslider);
 
 //    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
-    PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(pan(int)));
+    PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
 
 //    connect(Settings::obj.currPlayer(), SIGNAL(panChanged(int)), pslider, SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
@@ -382,7 +382,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 //    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
 //    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
-    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(volume(int)));
+    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
 
 //    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
