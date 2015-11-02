@@ -254,6 +254,8 @@ void SpectrumView::paintWaves() {
 }
 
 void SpectrumView::paintCombo() {
+    if (peaks.isEmpty()) return;
+
     QPainter painter(this);
     painter.save();
 
