@@ -61,8 +61,10 @@ class BassPlayer : public IPlayer {
     void proceedErrorState();
     int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
 
-    void afterSourceOpening();
     void playPreproccessing();
+protected slots:
+    void afterSourceOpening();
+
 protected:
     inline unsigned long open(const QString & path, DWORD flags) {
         return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
