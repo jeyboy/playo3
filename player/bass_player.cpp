@@ -38,7 +38,7 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     }
 
     if (!new_chan)
-        qDebug() << "OPEN ERROR" << BASS_ErrorGetCode();
+        qDebug() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
 
     if (watcher -> isCanceled())
         BASS_StreamFree(new_chan);

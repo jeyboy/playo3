@@ -7,28 +7,36 @@
 
 struct Func {
     inline Func() { }
-    inline Func(QObject * receiver, const char * respSlot) : obj(receiver) {
-        QString slt = QString(respSlot).mid(1);
+    inline Func(QObject * receiver, const char * respSlot) : obj(receiver), arg(0) {
+        char * entry = strchr(respSlot, '(');
+        int len =  entry ? (entry - respSlot) : strlen(respSlot);
+        char * substr = new char[len];
+        strncpy(substr, respSlot + 1, len - 1); substr[len - 1] = '\0';
+        slot = substr;
 
-        QStringList parts = slt.split('(', QString::SkipEmptyParts);
+        if (entry) {
+            char * entry2 = strchr(entry, ')');
 
-        if (parts.length() == 1)
-            slot = parts[0];
-        else {
-            slot = parts.at(0);
-            args = parts.at(1).section(')', 0, 0).split(',', QString::SkipEmptyParts);
-
-            for(QStringList::Iterator it = args.begin(); it != args.end(); it++)
-                (*it) = (*it).trimmed();
+            if (entry2) {
+                len = entry2 - entry;
+                char * argstr = new char[len];
+                strncpy(argstr, entry + 1, len - 1); argstr[len - 1] = '\0';
+                arg = argstr;
+            }
         }
+
+        qDebug() << slot << arg << respSlot;
 
         delete [] respSlot;
     }
-    inline ~Func() {}
+    inline ~Func() {
+        delete [] slot;
+        delete [] arg;
+    }
 
     QObject * obj;
-    QString slot;
-    QStringList args;
+    const char * slot;
+    const char * arg;
 };
 
 #endif // FUNC

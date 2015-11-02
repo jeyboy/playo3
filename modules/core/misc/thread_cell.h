@@ -19,20 +19,16 @@ namespace Core {
 
     template<class T>
     struct WatchCell : public Cell {
-        const char * argName() {
-            if (response -> args.isEmpty())
-                return 0;
-            else
-                return qUtf8Printable(response -> args.at(0));
-        }
 
         WatchCell(Func * func) : Cell(func) {}
         void postprocessing(QObject * obj) {
             QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-                if (!initiator -> isCanceled() && response) {
-                    QGenericArgument arg = QArgument<T>(argName(), initiator -> result());
-                    QMetaObject::invokeMethod(response -> obj, qPrintable(response -> slot), Qt::AutoConnection, arg);
-                }
+            qDebug() << "POSTPROCESSING START";
+            if (!initiator -> isCanceled() && response) {
+                QGenericArgument arg = QArgument<T>(response -> arg, initiator -> result());
+                qDebug() << "POSTPROCESSING" << response -> slot;
+                QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
+            }
         }
     };
 
