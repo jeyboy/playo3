@@ -25,7 +25,7 @@ struct Func {
             }
         }
 
-        qDebug() << slot << arg << respSlot;
+        qDebug() << receiver << slot << arg << respSlot;
 
         delete [] respSlot;
     }

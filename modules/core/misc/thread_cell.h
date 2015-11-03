@@ -23,10 +23,8 @@ namespace Core {
         WatchCell(Func * func) : Cell(func) {}
         void postprocessing(QObject * obj) {
             QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-            qDebug() << "POSTPROCESSING START";
             if (!initiator -> isCanceled() && response) {
                 QGenericArgument arg = QArgument<T>(response -> arg, initiator -> result());
-                qDebug() << "POSTPROCESSING" << response -> slot;
                 QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
             }
         }

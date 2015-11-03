@@ -40,7 +40,7 @@ void IPlayer::play(int startMili, bool paused, int maxDuration) {
     } else {
         prebuffering_level = 0;
         emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
-        duration(maxDuration);       
+        setDuration(maxDuration);
         res = playProcessing(startMili, paused);
     }
 

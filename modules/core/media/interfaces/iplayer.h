@@ -33,7 +33,7 @@ protected:
     virtual bool newVolumeProcessing(int newVol) = 0;
     virtual bool newPanProcessing(int newPan) = 0;
 
-    inline void duration(int newDuration) {
+    inline void setDuration(int newDuration) {
         ITrackable::setMaxProgress(newDuration);
         emit durationChanged((max_duration = newDuration));
     }
@@ -75,6 +75,7 @@ public:
     inline float prebufferingLevel() const { return prebuffering_level; }
 
     virtual bool fileInfo(const QUrl & /*uri*/, IMediaInfo * /*info*/) { return false; }
+    virtual float bpmCalc(const QUrl & /*uri*/) { return 0; }
 signals:
     void playbackEnded();
 

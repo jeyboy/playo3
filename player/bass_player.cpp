@@ -69,7 +69,7 @@ void BassPlayer::playPreproccessing() {
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());
 
     if (max_duration == 0)
-        duration(round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER);
+        setDuration(round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER);
 
 
     BASS_CHANNELINFO info;
@@ -129,10 +129,20 @@ bool BassPlayer::stopProcessing() {
     }
 }
 
-int BassPlayer::recalcCurrentPosProcessing() {}
-bool BassPlayer::newPosProcessing(int newPos) {}
-bool BassPlayer::newVolumeProcessing(int newVol) {}
-bool BassPlayer::newPanProcessing(int newPan) {}
+int BassPlayer::recalcCurrentPosProcessing() {
+    return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER;
+}
+bool BassPlayer::newPosProcessing(int newPos) {
+    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, newPos / POSITION_MULTIPLIER), BASS_POS_BYTE);
+}
+bool BassPlayer::newVolumeProcessing(int newVol) {
+    int volumeVal = newVol > 0 ? (newVol / VOLUME_MULTIPLIER) : 0;
+    return  BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+}
+bool BassPlayer::newPanProcessing(int newPan) {
+    int panVal = newPan > 0 ? (newPan / PAN_MULTIPLIER) : 0;
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
+}
 
 
 bool BassPlayer::registerEQ() {
@@ -197,6 +207,27 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
 
     BASS_StreamFree(chUID);
     return true;
+}
+
+float BassPlayer::bpmCalc(const QUrl & uri) {
+    int cochan;
+
+    if (uri.isLocalFile())
+        cochan = open(uri.toLocalFile(), LOCAL_BPM_ATTRS);// BASS_StreamCreateFile(false, uri.toLocalFile().toStdWString().c_str(), 0, 0, LOCAL_BPM_ATTRS);
+    else
+        cochan = openRemote(uri.toString(), REMOTE_BPM_ATTRS); //BASS_StreamCreateURL(uri.toString().toStdString().c_str(), 0, REMOTE_BPM_ATTRS, NULL, 0);
+
+    if (cochan) {
+        int playBackDuration = BASS_ChannelBytes2Seconds(cochan, BASS_ChannelGetLength(cochan, BASS_POS_BYTE));
+
+        return BASS_FX_BPM_DecodeGet(cochan,
+            0,
+            playBackDuration,
+            MAKEWORD(20, 180),
+            BASS_FX_FREESOURCE, //BASS_FX_BPM_BKGRND // BASS_FX_BPM_MULT2
+            NULL, NULL
+        );
+    } else return 0;
 }
 
 BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(parent), openChannelWatcher(0) {

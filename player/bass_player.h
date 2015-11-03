@@ -98,6 +98,7 @@ public:
     int position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
+    float bpmCalc(const QUrl & uri);
 
     inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
     inline void openTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(secLimit * 1000))); }

@@ -1,6 +1,8 @@
 #ifndef TIME_LABEL
 #define TIME_LABEL
 
+#include <qdebug.h>
+
 #include "clickable_label.h"
 
 #include "modules/core/misc/format.h"
@@ -20,9 +22,11 @@ namespace Controls {
     public slots:
         void invertTurn() { forward_turn = !forward_turn; }
         void setPos(int pos) {
+            qDebug() << "TIME LABEL POS" << pos;
             output(pos);
         }
         void setTotal(int newTotal) {
+            qDebug() << "TIME LABEL TOTAL" << newTotal;
             extended = Duration::hasHours((total = newTotal));
             output(0);
         }
