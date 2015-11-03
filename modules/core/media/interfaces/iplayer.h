@@ -19,6 +19,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     bool muted, looped;
 protected:
     void updateState(PlayerState new_state);
+    void updatePosition(int newPos);
 
     virtual QString title() const { return media_url.toString(); }
 
@@ -121,7 +122,7 @@ public slots:
         setPosition(0);
     }
 protected slots:
-    void recalcPosition() { setPosition(recalcCurrentPosProcessing()); }
+    void recalcPosition() { updatePosition(recalcCurrentPosProcessing()); }
 };
 
 #endif // IPLAYER

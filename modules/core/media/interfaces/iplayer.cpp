@@ -26,6 +26,11 @@ void IPlayer::updateState(PlayerState new_state) {
     emit stateChanged(pstate);
 }
 
+void IPlayer::updatePosition(int newPos) {
+    ITrackable::setProgress(newPos);
+    emit positionChanged(newPos);
+}
+
 void IPlayer::playPostprocessing() {
     if (isStopped())
         emit statusChanged(StartOfMedia);
@@ -76,8 +81,7 @@ void IPlayer::slideVolBackward() {
 
 void IPlayer::setPosition(int newPos) {
     newPosProcessing(newPos);
-    ITrackable::setProgress(newPos);
-    emit positionChanged(newPos);
+    updatePosition(newPos);
 }
 
 void IPlayer::mute(bool enable) {
