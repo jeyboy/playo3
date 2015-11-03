@@ -178,8 +178,61 @@ bool BassPlayer::processEqSetGain(int band, float gain) {
     return BASS_FXSetParameters(_fxEQ, &eq);
 }
 
-bool BassPlayer::calcSpectrum(QVector<int> & result) {}
-bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {}
+bool BassPlayer::calcSpectrum(QVector<int> & result) {
+    float fft[1024];
+    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048);
+    int spectrum_multiplicity = smultiplier /*Settings::instance() -> spectrumMultiplier()*/ * sheight;
+
+    int b0 = 0, x, y;
+
+    for (x = 0; x < sbands_count; x++) {
+        float peak = 0;
+        int b1 = spectrumPoints[x];
+        for (; b0 < b1; b0++)
+            if (peak < fft[1 + b0])
+                peak = fft[1 + b0];
+
+        y = fastSqrt(peak) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
+        if (y > sheight) y = sheight; // cap it
+
+        result.append(y);
+    }
+
+    return true;
+}
+bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {
+    int layerLimit = 1024, gLimit = layerLimit * channels_count;
+    int spectrum_multiplicity = smultiplier /*Settings::instance() -> spectrumMultiplier()*/ * sheight;
+    float fft[gLimit];
+    BASS_ChannelGetData(chan, fft, BASS_DATA_FFT2048 | BASS_DATA_FFT_INDIVIDUAL | BASS_DATA_FFT_REMOVEDC);
+
+    QVector<float> peaks;
+    int b0 = 0, x, y, z, peakNum;
+
+    for (x = 0; x < channels_count; x++)
+        result.append(QVector<int>());
+
+    for (x = 0; x < calcSpectrumBandsGroupCount(); x++) {
+        peaks.fill(0, channels_count);
+
+        int b1 = spectrumComplexPoints[x];
+
+        for (; b0 < b1; b0++) {
+            peakNum = b0 % channels_count;
+            if (peaks[peakNum] < fft[b0])
+                peaks[peakNum] = fft[b0];
+        }
+
+        for (z = 0; z < channels_count; z++) {
+            y = fastSqrt(peaks[z]) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
+            if (y > sheight) y = sheight; // cap it
+
+            result[z].append(y);
+        }
+    }
+
+    return true;
+}
 
 bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
     int chUID;

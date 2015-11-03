@@ -13,7 +13,7 @@ class ISpectrumable : public QObject {
     QTimer * itimer;
     QList<QVector<int> > sdefault;
 protected:
-    inline ISpectrumable(QObject * parent) : QObject(parent), sheight(0), sdefault_level(0), channels_count(2) {
+    inline ISpectrumable(QObject * parent) : QObject(parent), smultiplier(3), sheight(0), sdefault_level(0), channels_count(2) {
         itimer = new QTimer(parent);
         spectrumBandsCount(12);
         connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
@@ -47,6 +47,7 @@ protected:
     QVector<int> spectrumPoints;
     QVector<int> spectrumComplexPoints;
 
+    float smultiplier;
     int sbands_count;
     int sheight;
     int sdefault_level;

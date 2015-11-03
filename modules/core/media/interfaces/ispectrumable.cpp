@@ -7,7 +7,7 @@ void ISpectrumable::calcSpectrum() {
         if (state() == StoppedState)
             res = sdefault;
         else {
-            if (respondToMultichannelSpectrumCalc())
+            if (respondToMultichannelSpectrumCalc() && channels_count > 1)
                 calcSpectrum(res);
             else {
                 QVector<int> layer;
