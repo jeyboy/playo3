@@ -21,7 +21,9 @@ namespace Controls {
             ClickableSlider::setMinimum(min);
             calcGrid();
         }
-        inline void setMaximum(int max) {
+        inline void updateMetric() { calcGrid(); }
+    public slots:
+        void setMax(int max) {
             ClickableSlider::setMaximum(max);
             if (max <= 60000)
                 setTickInterval(10000);
@@ -31,7 +33,6 @@ namespace Controls {
             calcGrid();
             repaint();
         }
-        inline void updateMetric() { calcGrid(); }
     protected slots:
         void prebufferingChanged(float level);
 
