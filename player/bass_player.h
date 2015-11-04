@@ -85,8 +85,6 @@ protected:
     float prebufferingLevelCalc();
     int calcFileSize();
 
-    inline int maxVolume() const { return 10000; }
-
     bool registerEQ();
     bool unregisterEQ();
     bool processEqSetGain(int band, float gain);

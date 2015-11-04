@@ -130,11 +130,10 @@ bool BassPlayer::stopProcessing() {
         BASS_ChannelRemoveSync(chan, syncHandle);
         BASS_ChannelRemoveSync(chan, syncDownloadHandle);
         BASS_StreamFree(chan);
-        return true;
-    } else {
-        qDebug() << "Error while stopping";
-        return false;
     }
+    else qDebug() << "Error while stopping";
+
+    return true;
 }
 
 int BassPlayer::recalcCurrentPosProcessing() {

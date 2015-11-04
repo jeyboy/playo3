@@ -10,14 +10,16 @@
 #include "player_statuses.h"
 #include "modules/core/media/interfaces/imediainfo.h"
 
+#define MAX_VOLUME 10000
+
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 
     PlayerState pstate;
     QTimer * itimer;
-    int volumeVal, panVal;
+    int volumeVal, panVal, size;
     float prebuffering_level;
-    bool muted, looped, size;
+    bool muted, looped;
 protected:
     void updateState(PlayerState new_state);
     void updatePosition(int newPos);
@@ -37,13 +39,15 @@ protected:
     virtual float prebufferingLevelCalc() = 0;
     virtual int calcFileSize() = 0;
 
-    void initFileSize() { size = calcFileSize(); }
+    void initFileSize() {
+        size = calcFileSize();
+        qDebug() << "FILESIZE" << size;
+    }
 
     inline void setDuration(int newDuration) {
         ITrackable::setMaxProgress(newDuration);
         emit durationChanged((max_duration = newDuration));
     }
-    virtual int maxVolume() const = 0;
     inline virtual int slidePercentage() const { return 10; }
 
     virtual inline bool seekingBlocked() { return false; }
