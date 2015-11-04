@@ -64,6 +64,8 @@ void BassPlayer::afterSourceOpening() {
 }
 
 void BassPlayer::playPreproccessing() {
+    qDebug() << "PLAY PRE";
+
     emit statusChanged(LoadedMedia);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume());
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());
@@ -91,6 +93,7 @@ void BassPlayer::playPreproccessing() {
 }
 
 bool BassPlayer::playProcessing(int startMili, bool paused) {
+    qDebug() << "PLAY";
     startPos = startMili;
     is_paused = paused;
 
@@ -108,6 +111,7 @@ bool BassPlayer::playProcessing(int startMili, bool paused) {
     return false; // skip inherited actions
 }
 bool BassPlayer::resumeProcessing() {
+    qDebug() << "RESUME";
     if (!BASS_ChannelPlay(chan, false)) {
         qDebug() << "Error resuming";
         return false;
@@ -115,8 +119,12 @@ bool BassPlayer::resumeProcessing() {
 
     return true;
 }
-bool BassPlayer::pauseProcessing() { return BASS_ChannelPause(chan); }
+bool BassPlayer::pauseProcessing() {
+    qDebug() << "PAUSE";
+    return BASS_ChannelPause(chan);
+}
 bool BassPlayer::stopProcessing() {
+    qDebug() << "STOP";
     if (BASS_ChannelStop(chan)) {
         unregisterEQ();
         BASS_ChannelRemoveSync(chan, syncHandle);
@@ -142,6 +150,15 @@ bool BassPlayer::newVolumeProcessing(int newVol) {
 bool BassPlayer::newPanProcessing(int newPan) {
     int panVal = newPan > 0 ? (newPan / PAN_MULTIPLIER) : 0;
     return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
+}
+
+float BassPlayer::prebufferingLevelCalc() {
+    return ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / (float)fileSize());
+}
+
+int BassPlayer::calcFileSize() {
+    DWORD len = BASS_StreamGetFilePosition(chan, BASS_FILEPOS_END);
+    return len + BASS_StreamGetFilePosition(chan, BASS_FILEPOS_START);
 }
 
 

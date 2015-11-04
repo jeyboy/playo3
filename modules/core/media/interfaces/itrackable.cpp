@@ -12,21 +12,21 @@ ITrackable::ITrackable(QWidget * parent) {
 
 void ITrackable::updateState(bool played, bool paused, bool stopped) {
     #ifdef Q_OS_WIN
-        stateProgress -> setVisible(stopped);
+        stateProgress -> setVisible(true/*stopped*/);
 
-        if (!stopped)
+        if (stopped)
             stateButton -> setOverlayIcon(QIcon());
         else
             stateButton -> setOverlayIcon(QIcon(
-                !played ? QStringLiteral(":task_play") : QStringLiteral(":task_pause")
+                played ? QStringLiteral(":task_play") : QStringLiteral(":task_pause")
             ));
 
-        if (!played) {
+        if (played) {
             stateProgress -> resume();
             stateButton -> setOverlayAccessibleDescription(title());
         }
 
-        if (!paused)
+        if (paused)
             stateProgress -> pause();
     #endif
 }

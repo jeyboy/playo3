@@ -2,6 +2,7 @@
 #define IPLAYER
 
 #include <qurl.h>
+#include <qdebug.h>
 
 #include "itrackable.h"
 #include "iequalizable.h"
@@ -16,7 +17,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     QTimer * itimer;
     int volumeVal, panVal;
     float prebuffering_level;
-    bool muted, looped;
+    bool muted, looped, size;
 protected:
     void updateState(PlayerState new_state);
     void updatePosition(int newPos);
@@ -33,6 +34,10 @@ protected:
     virtual bool newPosProcessing(int newPos) = 0;
     virtual bool newVolumeProcessing(int newVol) = 0;
     virtual bool newPanProcessing(int newPan) = 0;
+    virtual float prebufferingLevelCalc() = 0;
+    virtual int calcFileSize() = 0;
+
+    void initFileSize() { size = calcFileSize(); }
 
     inline void setDuration(int newDuration) {
         ITrackable::setMaxProgress(newDuration);
@@ -68,11 +73,15 @@ public:
     int duration() const { return max_duration; }
     inline int volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
+    inline int fileSize() const { return size; }
 
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
     inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
 
-    inline void prebufferingLevel(float level = 1) { emit prebufferingChanged(prebuffering_level = level); }
+    inline void prebufferingLevel(float level = 1) {
+        qDebug() << "PREBUFF" << level;
+        emit prebufferingChanged(prebuffering_level = level);
+    }
     inline float prebufferingLevel() const { return prebuffering_level; }
 
     virtual bool fileInfo(const QUrl & /*uri*/, IMediaInfo * /*info*/) { return false; }
@@ -122,7 +131,12 @@ public slots:
         setPosition(0);
     }
 protected slots:
-    void recalcPosition() { updatePosition(recalcCurrentPosProcessing()); }
+    void recalcPosition() {
+        updatePosition(recalcCurrentPosProcessing());
+
+        if (prebuffering_level < 1 && size > 0)
+            prebufferingLevel(prebufferingLevelCalc());
+    }
 };
 
 #endif // IPLAYER

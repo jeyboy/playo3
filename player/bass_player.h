@@ -82,6 +82,8 @@ protected:
     bool newPosProcessing(int newPos);
     bool newVolumeProcessing(int newVol);
     bool newPanProcessing(int newPan);
+    float prebufferingLevelCalc();
+    int calcFileSize();
 
     inline int maxVolume() const { return 10000; }
 

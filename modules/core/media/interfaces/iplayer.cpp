@@ -32,8 +32,10 @@ void IPlayer::updatePosition(int newPos) {
 }
 
 void IPlayer::playPostprocessing() {
-    if (isStopped())
-        emit statusChanged(StartOfMedia);
+    if (isStopped()) {
+        initFileSize();
+        emit statusChanged(StartOfMedia);       
+    }
     updateState(PlayingState);
 }
 
@@ -43,6 +45,7 @@ void IPlayer::play(int startMili, bool paused, int maxDuration) {
         if (!(res = resumeProcessing()))
             emit statusChanged(StalledMedia);
     } else {
+        size = 0;
         prebuffering_level = 0;
         emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
         setDuration(maxDuration);
