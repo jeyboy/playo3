@@ -61,6 +61,8 @@ public:
     virtual ~IPlayer() {}
 
     inline void setMedia(const QUrl & url) {
+        if (isPlayed()) stop();
+
         media_url = url;
         updateState(InitState);
         max_duration = 0;
@@ -138,7 +140,7 @@ protected slots:
     void recalcPosition() {
         updatePosition(recalcCurrentPosProcessing());
 
-        if (prebuffering_level < 1 && size > 0)
+        if (prebuffering_level < 1)
             prebufferingLevel(prebufferingLevelCalc());
     }
 };

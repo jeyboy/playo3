@@ -97,8 +97,6 @@ bool BassPlayer::playProcessing(int startMili, bool paused) {
     startPos = startMili;
     is_paused = paused;
 
-    stop();
-
     if (!media_url.isEmpty()) {
         if (openChannelWatcher)
             openChannelWatcher -> cancel();
@@ -152,7 +150,9 @@ bool BassPlayer::newPanProcessing(int newPan) {
 }
 
 float BassPlayer::prebufferingLevelCalc() {
-    return ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / (float)fileSize());
+    if (fileSize() > 0)
+        return ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / (float)fileSize());
+    else return 1;
 }
 
 int BassPlayer::calcFileSize() {

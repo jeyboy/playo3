@@ -39,7 +39,6 @@ namespace Core {
 //            bool refresh = current_item && new_item == current_item;
 
             IPlayer * player = currPlayer();
-            player -> stop();
 
             if (item) {
                 player -> setMedia(current_item -> toUrl());

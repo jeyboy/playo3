@@ -32,9 +32,7 @@ void IPlayer::updatePosition(int newPos) {
 }
 
 void IPlayer::playPostprocessing() {
-    qDebug() << "!!!!!!!!!!!";
     if (isStopped()) {
-        qDebug() << "!!!!!!!!!!! STOPPED";
         initFileSize();
         emit statusChanged(StartOfMedia);       
     }
