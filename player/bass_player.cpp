@@ -6,7 +6,7 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 //    BASS_ChannelStop(channel);
 //    BASS_ChannelRemoveSync(channel, handle);
     BassPlayer * player = static_cast<BassPlayer *>(user);
-    emit player -> playbackEnded();
+    player -> endOfPlayback();
 }
 
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
@@ -64,8 +64,6 @@ void BassPlayer::afterSourceOpening() {
 }
 
 void BassPlayer::playPreproccessing() {
-    qDebug() << "PLAY PRE";
-
     emit statusChanged(LoadedMedia);
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume());
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());

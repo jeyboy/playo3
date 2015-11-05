@@ -20,7 +20,7 @@ public:
         preset_base = octaveOffset;
 
         float res = LOW_INTERVAL;
-        while(res < HIGH_INTERVAL) {
+        while(res <= HIGH_INTERVAL) {
             bands.insert(res, toStr(res));
             res *= octaveOffset;
         }

@@ -47,8 +47,8 @@ IEqualizable::IEqualizable(QObject * parent) : ISpectrumable(parent), eqInUse(fa
 //    eqBands.insert(12000, QStringLiteral("12k"));
 //    eqBands.insert(16000, QStringLiteral("16k"));
 
-    presets.insert((current_preset = QStringLiteral("4 octaves")), EqualizablePreset(4));
+    presets.insert(QStringLiteral("4 octaves"), EqualizablePreset(4));
     presets.insert(QStringLiteral("3 octaves"), EqualizablePreset(3));
-    presets.insert(QStringLiteral("2 octaves"), EqualizablePreset(2));
+    presets.insert((current_preset = QStringLiteral("2 octaves")), EqualizablePreset(2));
     presets.insert(QStringLiteral("1/3 octave"), EqualizablePreset(1.0 + 1.0/3));
 }

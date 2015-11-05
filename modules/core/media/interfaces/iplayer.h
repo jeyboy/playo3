@@ -93,8 +93,6 @@ public:
     virtual bool fileInfo(const QUrl & /*uri*/, IMediaInfo * /*info*/) { return false; }
     virtual float bpmCalc(const QUrl & /*uri*/) { return 0; }
 signals:
-    void playbackEnded();
-
     void stateChanged(const PlayerState &);
     void statusChanged(const PlayerStatus &);
 
