@@ -47,6 +47,7 @@ void IPlayer::play(int startMili, bool paused, int maxDuration) {
         if (!(res = resumeProcessing()))
             emit statusChanged(StalledMedia);
     } else {
+        if (!isInitiating()) updateState(InitState);
         size = 0;
         prebuffering_level = 0;
 
