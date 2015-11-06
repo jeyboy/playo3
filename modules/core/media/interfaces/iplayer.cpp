@@ -23,6 +23,7 @@ void IPlayer::updateState(PlayerState new_state) {
         default: ;
     }
     ITrackable::updateState(isPlayed(), isPaused(), isStopped());
+    qDebug() << "PLAY:" << isPlayed() << "PAUSE:" << isPaused() << "STOP:" << isStopped();
     emit stateChanged(pstate);
 }
 
@@ -34,7 +35,7 @@ void IPlayer::updatePosition(int newPos) {
 void IPlayer::playPostprocessing() {
     if (isStopped()) {
         initFileSize();
-        emit statusChanged(StartOfMedia);       
+        emit statusChanged(PlaingMedia);
     }
     updateState(PlayingState);
 }

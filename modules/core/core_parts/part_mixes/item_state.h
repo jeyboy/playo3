@@ -8,6 +8,19 @@ namespace Core {
     class ItemState {
         public:
             enum ItemStateFlag {
+                not_proccessing = 8388608,
+//                not_mark_on_removing = 4194304,
+                not_played = 2097152,
+//                not_proceeded = 1048576,
+//                not_checked = 524288,
+//                not_expanded = 262144,
+//                info_not_required = 131072,
+                exist = 65536,
+                supported = 32768,
+//                not_new_item = 16384,
+//                not_listened = 8192,
+                not_liked = 4096,
+
                 proccessing = 2048,
                 mark_on_removing = 1024,
                 played = 512,

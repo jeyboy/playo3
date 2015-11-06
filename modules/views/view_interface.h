@@ -39,9 +39,6 @@ namespace Views {
 
         void scrollToActive();
 
-        void activatePrev();
-        void activateNext();
-
         inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
         inline bool isPlaylist() const { return sttngs.playlist; }
         inline bool isCommon() const { return sttngs.common; }
@@ -114,6 +111,7 @@ namespace Views {
         void moveCheckedToNewTab(Playlist * root = 0);
 
     protected:
+        bool setData(QModelIndex ind, int state) { return mdl -> setData(ind, state, ISTATE); }
         QModelIndex index(IItem * item) const { return mdl -> index(item); }
 
         void checkByPredicate(IItem::ItemStateFlag flag);

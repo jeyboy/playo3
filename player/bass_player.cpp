@@ -28,11 +28,9 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     int new_chan;
 
     if (url.isLocalFile()) {
-//        size = 0;
         new_chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
         prebufferingChanged(1);
     } else {
-//        size = -1;
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
         new_chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }

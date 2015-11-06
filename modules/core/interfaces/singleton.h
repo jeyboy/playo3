@@ -24,7 +24,7 @@ namespace Core {
         SingletonPtr() { }
         SingletonPtr(const SingletonPtr &);
         SingletonPtr & operator=(SingletonPtr &);
-       ~SingletonPtr() { }
+        virtual ~SingletonPtr() { }
         friend class SingletonDestroyer<T>;
     public:
         static T & obj() {

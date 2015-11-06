@@ -102,12 +102,12 @@ namespace Models {
 
         inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
     public slots:
-        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
-        inline void itemNotSupported(QModelIndex node) {
-            setData(node, ItemState::not_supported, ISTATE);
-            QDesktopServices::openUrl(node.data(IURL).toUrl());
-        }
-        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported | ItemState::not_exist, ISTATE); }
+//        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
+//        inline void itemNotSupported(QModelIndex node) {
+//            setData(node, ItemState::not_supported, ISTATE);
+//            QDesktopServices::openUrl(node.data(IURL).toUrl());
+//        }
+//        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported | ItemState::not_exist, ISTATE); }
 
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);

@@ -7,8 +7,14 @@
 
 namespace Core {
     class IPlaylistable {
+    protected:
+        virtual bool setData(QModelIndex ind, int state) = 0;
     public:
+        virtual void execNextIndex(bool deleteCurrent = false) = 0;
         virtual QModelIndex index(IItem * /*item*/) const { return QModelIndex(); }
+        bool setState(QModelIndex ind, int state) {
+            if (ind.isValid()) setData(ind, state);
+        }
     };
 }
 

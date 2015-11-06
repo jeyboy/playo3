@@ -60,12 +60,16 @@ public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
 
-    inline void setMedia(const QUrl & url) {
-        if (isPlayed()) stop();
-
+    inline void setMedia(const QUrl & url) {       
         media_url = url;
         updateState(InitState);
         max_duration = 0;
+    }
+
+    void closeMedia() {
+        if (isPlayed()) stop();
+        if (media_url.isValid())
+            emit statusChanged(CloseMedia);
     }
 
     inline bool isInitiating() { return pstate == InitState; }
@@ -85,7 +89,6 @@ public:
     inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
 
     inline void prebufferingLevel(float level = 1) {
-        qDebug() << "PREBUFF" << level;
         emit prebufferingChanged(prebuffering_level = level);
     }
     inline float prebufferingLevel() const { return prebuffering_level; }
@@ -127,10 +130,10 @@ public slots:
     }
 
     void endOfPlayback() {
-        emit statusChanged(EndOfMedia);
-
-        if (!looped)
+        if (!looped) {
             pause();
+            emit statusChanged(EndPlaingMedia);
+        }
 
         setPosition(0);
     }
