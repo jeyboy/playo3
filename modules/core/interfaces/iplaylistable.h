@@ -13,7 +13,8 @@ namespace Core {
         virtual void execNextIndex(bool deleteCurrent = false) = 0;
         virtual QModelIndex index(IItem * /*item*/) const { return QModelIndex(); }
         bool setState(QModelIndex ind, int state) {
-            if (ind.isValid()) setData(ind, state);
+            if (ind.isValid()) return setData(ind, state);
+            else return false;
         }
     };
 }

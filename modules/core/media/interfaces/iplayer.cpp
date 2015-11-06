@@ -11,6 +11,7 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), v
 
 void IPlayer::updateState(PlayerState new_state) {
     switch (pstate = new_state) {
+        case InitState: {emit statusChanged(InitMedia); break;}
         case PlayingState: {
             itimer -> start();
             spectrumCalcStart();
@@ -33,7 +34,7 @@ void IPlayer::updatePosition(int newPos) {
 }
 
 void IPlayer::playPostprocessing() {
-    if (isStopped()) {
+    if (isInitiating()) {
         initFileSize();
         emit statusChanged(PlaingMedia);
     }
