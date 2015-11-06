@@ -49,9 +49,15 @@ void IPlayer::play(int startMili, bool paused, int maxDuration) {
     } else {
         size = 0;
         prebuffering_level = 0;
-        emit statusChanged(media_url.isEmpty() ? NoMedia : LoadingMedia);
-        setDuration(maxDuration);
-        res = playProcessing(startMili, paused);
+
+        if (media_url.isEmpty()) {
+            emit statusChanged(NoMedia);
+            return;
+        } else {
+            emit statusChanged(LoadingMedia);
+            setDuration(maxDuration);
+            res = playProcessing(startMili, paused);
+        }
     }
 
     if (res) playPostprocessing();

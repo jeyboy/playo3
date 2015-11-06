@@ -31,6 +31,7 @@ namespace Core {
         }
 
         void playNext() {
+            setState(-(ItemState::proccessing | ItemState::played)); // extra call for item clearing states!
             if (!current_playlist) {
                 qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
                 return;
@@ -65,6 +66,7 @@ namespace Core {
                 player -> setMedia(current_item -> toUrl());
                 player -> play(startMili, paused, durationMili);
             }
+            else player -> setMedia(QUrl());
         }
 
         void proceedStoping() { currPlayer() -> stop(); }

@@ -62,8 +62,10 @@ public:
 
     inline void setMedia(const QUrl & url) {       
         media_url = url;
-        updateState(InitState);
         max_duration = 0;
+
+        if (!url.isEmpty())
+            updateState(InitState);
     }
 
     void closeMedia() {
