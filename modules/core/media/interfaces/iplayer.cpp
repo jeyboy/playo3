@@ -23,7 +23,7 @@ void IPlayer::updateState(PlayerState new_state) {
         break;}
         default: ;
     }
-    ITrackable::updateState(isPlayed(), isPaused(), isStopped());
+    ITrackable::updateState(isPlayed(), isPaused(), isStopped(), pstate != UnknowState);
     qDebug() << "PLAY:" << isPlayed() << "PAUSE:" << isPaused() << "STOP:" << isStopped();
     emit stateChanged(pstate);
 }

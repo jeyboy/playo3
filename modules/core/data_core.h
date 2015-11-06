@@ -31,7 +31,7 @@ namespace Core {
         }
 
         void playNext() {
-            setState(-(ItemState::proccessing | ItemState::played)); // extra call for item clearing states!
+            setState(-ItemState::proccessing); // extra call for item clearing states!
             if (!current_playlist) {
                 qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
                 return;
@@ -51,7 +51,10 @@ namespace Core {
         inline IItem * playedItem() { return current_item; }
         inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-        void resetPlaying() { proceedPlaying(0, 0); }
+        void resetPlaying() {
+            qDebug() << "RESET PLAYING";
+            proceedPlaying(0, 0);
+        }
 
         void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
 //            bool refresh = current_item && new_item == current_item;

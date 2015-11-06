@@ -16,7 +16,7 @@ public:
 protected:
     ITrackable(QWidget * parent);
 
-    void updateState(bool played, bool paused, bool stopped);
+    void updateState(bool played, bool paused, bool stopped, bool visible = true);
     void setProgress(int pos);
     void setMaxProgress(int maxPos);
 private:
