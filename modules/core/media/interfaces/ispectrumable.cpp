@@ -4,7 +4,7 @@ void ISpectrumable::calcSpectrum() {
     if (sheight > 0) {
         QList<QVector<int> > res;
 
-        if (state() == StoppedState)
+        if (state() == PausedState || state() == StoppedState)
             res = sdefault;
         else {
             if (respondToMultichannelSpectrumCalc() && channels_count > 1)
