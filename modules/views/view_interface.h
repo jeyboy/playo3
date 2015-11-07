@@ -52,8 +52,8 @@ namespace Views {
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
-        bool execIndex(const QModelIndex & node, bool paused = false, uint start = 0, int duration = 0);
-        bool execPath(const QString path, bool paused = false, uint start = 0, int duration = 0);
+        bool execIndex(const QModelIndex & node, PlayerInitState init_state = played, uint start = 0, int duration = 0);
+        bool execPath(const QString path, PlayerInitState init_state = played, uint start = 0, int duration = 0);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 

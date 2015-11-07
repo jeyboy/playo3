@@ -37,7 +37,7 @@ void Dockbars::load(const QJsonArray & bars) {
                 if (v) {
                     QString path = obj.value(QStringLiteral("played_item")).toString();
                     if (!path.isEmpty())
-                        v -> execPath(path, true, obj.value(QStringLiteral("played_time")).toInt(), obj.value(QStringLiteral("played_duration")).toInt());
+                        v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt(), obj.value(QStringLiteral("played_duration")).toInt());
                 }
             }
         }

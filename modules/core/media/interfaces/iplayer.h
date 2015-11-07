@@ -17,7 +17,7 @@ class IPlayer : public IEqualizable, public ITrackable {
 
     PlayerState pstate;
     QTimer * itimer;
-    int volumeVal, panVal, size;
+    int startPos, volumeVal, panVal, size;
     float prebuffering_level;
     bool muted, looped;
 protected:
@@ -26,7 +26,7 @@ protected:
 
     virtual QString title() const { return media_url.toString(); }
 
-    virtual bool playProcessing(int startMili, bool paused = false) = 0;
+    virtual bool playProcessing(bool paused = false) = 0;
     void playPostprocessing();
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
@@ -60,13 +60,14 @@ public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
 
-    inline void setMedia(const QUrl & url) {       
+    inline void setMedia(const QUrl & url, int startMili = 0, int maxDuration = 0) {
         media_url = url;
-        max_duration = 0;
-
-        if (!url.isEmpty())
-            updateState(InitState);
+        startPos = startMili;
+        setDuration(maxDuration);
+        updateState(url.isEmpty() ? UnknowState : InitState);
     }
+
+    inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration); }
 
     void closeMedia() {
         if (isPlayed()) stop();
@@ -119,7 +120,7 @@ protected slots:
         }
     }
 public slots:
-    void play(int startMili = 0, bool paused = false, int maxDuration = 0);
+    void play(bool paused = false);
     void pause();
     void playPause() { isPlayed() ? pause() : play(); }
     void stop();

@@ -67,8 +67,7 @@ void BassPlayer::playPreproccessing() {
     BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());
 
     if (max_duration == 0)
-        setDuration(round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER);
-
+        max_duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER;
 
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
@@ -78,19 +77,21 @@ void BassPlayer::playPreproccessing() {
 
     if (eqInUse) registerEQ();
 
-    if (BASS_ChannelPlay(chan, true))
+    if (BASS_ChannelPlay(chan, true)) {
         playPostprocessing();
 
-    syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
-    syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
+        syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
+        syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
 
-    if (startPos > 0) setPosition(startPos);
-    if (is_paused) pause();
+        if (is_paused) pause();
+    } else {
+        emit statusChanged(StalledMedia);
+        qDebug() << "IS NOT PLAYED";
+    }
 }
 
-bool BassPlayer::playProcessing(int startMili, bool paused) {
+bool BassPlayer::playProcessing(bool paused) {
     qDebug() << "PLAY";
-    startPos = startMili;
     is_paused = paused;
 
     if (!media_url.isEmpty()) {

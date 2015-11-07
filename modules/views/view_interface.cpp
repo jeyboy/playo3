@@ -125,17 +125,17 @@ void IView::execNextIndex(bool deleteCurrent) {
 //    }
 //}
 
-bool IView::execPath(const QString path, bool paused, uint start, int duration) {
+bool IView::execPath(const QString path, PlayerInitState init_state, uint start, int duration) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();
-        execIndex(ind, paused, start, duration);
+        execIndex(ind, init_state, start, duration);
         return true;
     } else
         return false;
 }
 
-bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int duration) {   
+bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint start, int duration) {
     if (node.isValid()) { // INFO: play playable and choosed by user
         IItem * itm = mdl -> item(node);
 
@@ -150,7 +150,7 @@ bool IView::execIndex(const QModelIndex & node, bool paused, uint start, int dur
                 DataFactory::obj().proceedPauseToggling();
                 return true;
             } else {
-                DataFactory::obj().proceedPlaying(this, itm, start, paused, duration);
+                DataFactory::obj().proceedPlaying(this, itm, start, init_state, duration);
                 return true;
             }
         }

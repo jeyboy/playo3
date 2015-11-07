@@ -46,7 +46,6 @@ class BassPlayer : public IPlayer {
     HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
-    int startPos;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
 
@@ -73,7 +72,7 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
-    bool playProcessing(int startMili, bool paused = false);
+    bool playProcessing(bool paused = false);
     bool resumeProcessing();
     bool pauseProcessing();
     bool stopProcessing();

@@ -11,6 +11,12 @@ enum PlayerType {
     bass_player = 1
 };
 
+enum PlayerInitState {
+    played,
+    paused,
+    initiated
+};
+
 class PlayerFactory : public Core::Singleton<PlayerFactory> {
     QList<PlayerCallback> callbacks;
 

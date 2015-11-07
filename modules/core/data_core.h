@@ -20,8 +20,7 @@ namespace Core {
         IPlaylistable * current_playlist;
         IItem * current_item;
 
-        bool paused_flag;
-        int start_mili_flag, duration_mili_flag;
+        PlayerInitState init_state_flag;
     protected:
         void setState(int state) {
             if (!current_playlist) {
@@ -54,8 +53,8 @@ namespace Core {
             } else {
                 qDebug() << "RESTORE: SUCCESS";
                 IPlayer * player = currPlayer();
-                player -> setMedia(current_item -> toUrl());
-                player -> play(start_mili_flag, paused_flag, duration_mili_flag);
+                player -> updateMedia(current_item -> toUrl());
+                player -> play(init_state_flag == paused);
             }
         }
     public:
@@ -73,7 +72,7 @@ namespace Core {
 
         void resetPlaying() { proceedPlaying(0, 0); }
 
-        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
+        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, PlayerInitState state = played, int durationMili = 0) {
             IPlayer * player = currPlayer();
             player -> closeMedia();
 
@@ -81,12 +80,14 @@ namespace Core {
             current_item = item;
 
             if (item) {
-                player -> setMedia(current_item -> toUrl());
-                player -> play(
-                    (start_mili_flag = startMili),
-                    (paused_flag = paused),
-                    (duration_mili_flag = durationMili)
+                player -> setMedia(
+                    current_item -> toUrl(),
+                    startMili,
+                    durationMili
                 );
+
+                if ((init_state_flag = state) != initiated)
+                    player -> play(init_state_flag == paused);
             }
             else player -> setMedia(QUrl());
         }
