@@ -30,7 +30,7 @@ namespace Views {
     class IView : public QTreeView, public IPlaylistable {
       Q_OBJECT
     public:
-        void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
+        inline void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
         IView(IModel * model, QWidget * parent, Params & settins);
         virtual ~IView();
@@ -38,6 +38,8 @@ namespace Views {
         inline QJsonObject toJson() { return mdl -> toJson(); }
 
         void scrollToActive();
+
+        bool restoreItem(IItem * itm) { return mdl -> restoreUrl(itm); }
 
         inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
         inline bool isPlaylist() const { return sttngs.playlist; }

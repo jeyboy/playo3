@@ -19,6 +19,9 @@ namespace Core {
 
         IPlaylistable * current_playlist;
         IItem * current_item;
+
+        bool paused_flag;
+        int start_mili_flag, duration_mili_flag;
     protected:
         void setState(int state) {
             if (!current_playlist) {
@@ -36,7 +39,24 @@ namespace Core {
                 qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
                 return;
             }
-            current_playlist -> execNextIndex();
+            if (current_playlist -> isPlaylist())
+                current_playlist -> execNextIndex();
+        }
+
+        void restoreOrNext() {
+            if (!current_playlist) {
+                qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
+                return;
+            }
+            if (!current_playlist -> restoreItem(current_item)) {
+                qDebug() << "RESTORE: FAILED";
+                playNext();
+            } else {
+                qDebug() << "RESTORE: SUCCESS";
+                IPlayer * player = currPlayer();
+                player -> setMedia(current_item -> toUrl());
+                player -> play(start_mili_flag, paused_flag, duration_mili_flag);
+            }
         }
     public:
         inline DataFactory() : QObject(), current_playlist(0), current_item(0) {
@@ -51,14 +71,9 @@ namespace Core {
         inline IItem * playedItem() { return current_item; }
         inline QString playedItemTreePath() const { return current_item -> buildTreeStr(); }
 
-        void resetPlaying() {
-            qDebug() << "RESET PLAYING";
-            proceedPlaying(0, 0);
-        }
+        void resetPlaying() { proceedPlaying(0, 0); }
 
         void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, bool paused = false, int durationMili = 0) {
-//            bool refresh = current_item && new_item == current_item;
-
             IPlayer * player = currPlayer();
             player -> closeMedia();
 
@@ -67,7 +82,11 @@ namespace Core {
 
             if (item) {
                 player -> setMedia(current_item -> toUrl());
-                player -> play(startMili, paused, durationMili);
+                player -> play(
+                    (start_mili_flag = startMili),
+                    (paused_flag = paused),
+                    (duration_mili_flag = durationMili)
+                );
             }
             else player -> setMedia(QUrl());
         }
@@ -120,7 +139,7 @@ namespace Core {
                     qDebug() << "STALLED MEDIA";
 
                     if (current_item -> isRemote()) {
-                        //REFRESH NEEDED
+                        restoreOrNext();
                     } else {
                         //MARK ELEM AS INVALID
                         playNext();
@@ -143,14 +162,14 @@ namespace Core {
                 break;}
 
                 case NoRemoteMedia: {
-
+                    restoreOrNext();
                 }
 
                 case NoMedia: {
                     qDebug() << "NO MEDIA";
 
                     if (current_item -> isRemote()) {
-                        //REFRESH NEEDED
+                        restoreOrNext();
                     } else {
                         //MARK ELEM AS NOT EXISTED
                         playNext();

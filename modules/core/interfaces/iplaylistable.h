@@ -10,6 +10,8 @@ namespace Core {
     protected:
         virtual bool setData(QModelIndex ind, int state) = 0;
     public:
+        virtual bool restoreItem(IItem * itm) = 0;
+        virtual bool isPlaylist() const = 0;
         virtual void execNextIndex(bool deleteCurrent = false) = 0;
         virtual QModelIndex index(IItem * /*item*/) const { return QModelIndex(); }
         bool setState(QModelIndex ind, int state) {
