@@ -169,7 +169,7 @@ namespace Core {
         }
 
         void discardSync(QAbstractItemModel * mdl) {
-            Library::obj().unregisterListSync(mdl);
+            Library::obj().declineAllItemsRestoration(mdl);
         }
 
 
