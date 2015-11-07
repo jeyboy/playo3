@@ -14,14 +14,18 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     player -> prebufferingLevel();
 }
 
-void BassPlayer::proceedErrorState() {
-    updateState(UnknowState);
+bool BassPlayer::proceedErrorState() {
+    qDebug() << "proceedErrorState" << BASS_ErrorGetCode();
     switch(BASS_ErrorGetCode()) {
+        case BASS_OK: return false;
         case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
         case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
         // BASS_ERROR_TIMEOUT
         default: emit statusChanged(StalledMedia);
     }
+
+    updateState(UnknowState);
+    return true;
 }
 
 int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
@@ -35,10 +39,10 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
         new_chan = openRemote(url.toString(), REMOTE_PLAY_ATTRS);
     }
 
-    if (!new_chan)
+    if (!new_chan) {
         qDebug() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
-
-    if (watcher -> isCanceled())
+        proceedErrorState();
+    } else if (watcher -> isCanceled())
         BASS_StreamFree(new_chan);
 
 
@@ -52,8 +56,8 @@ void BassPlayer::afterSourceOpening() {
 
     if (!watcher -> isCanceled()) {
         chan = watcher -> result();
+
         if (chan) playPreproccessing();
-        else proceedErrorState();
     } else emit statusChanged(LoadedMedia);
 
     watcher -> deleteLater();
@@ -85,7 +89,7 @@ void BassPlayer::playPreproccessing() {
 
         if (is_paused) pause();
     } else {
-        emit statusChanged(StalledMedia);
+        proceedErrorState();
         qDebug() << "IS NOT PLAYED";
     }
 }

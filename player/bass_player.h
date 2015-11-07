@@ -57,7 +57,7 @@ class BassPlayer : public IPlayer {
         #endif
     }
 
-    void proceedErrorState();
+    bool proceedErrorState();
     int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
 
     void playPreproccessing();
