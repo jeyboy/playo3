@@ -6,7 +6,7 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 //    BASS_ChannelStop(channel);
 //    BASS_ChannelRemoveSync(channel, handle);
     BassPlayer * player = static_cast<BassPlayer *>(user);
-    player -> endOfPlayback();
+    emit player -> playbackEnding();
 }
 
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {

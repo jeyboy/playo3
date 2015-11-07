@@ -107,7 +107,17 @@ signals:
     void durationChanged(int);
 
     void prebufferingChanged(float level); // 0 .. 1
+    void playbackEnding();
 
+protected slots:
+    void endOfPlayback() {
+        setPosition(0);
+
+        if (!looped) {
+            pause();
+            emit statusChanged(EndPlaingMedia);
+        }
+    }
 public slots:
     void play(int startMili = 0, bool paused = false, int maxDuration = 0);
     void pause();
@@ -129,15 +139,6 @@ public slots:
     inline void setPan(int newPan) {
         newPanProcessing(panVal = newPan);
         emit panChanged(newPan);
-    }
-
-    void endOfPlayback() {
-        setPosition(0);
-
-        if (!looped) {
-            pause();
-            emit statusChanged(EndPlaingMedia);
-        }
     }
 protected slots:
     void recalcPosition() {

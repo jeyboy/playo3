@@ -1,11 +1,12 @@
 #include "iplayer.h"
 
 IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), volumeVal(MAX_VOLUME), size(0), prebuffering_level(0), muted(false), looped(false), max_duration(0) {
-    qRegisterMetaType<PlayerState>("PlayerState");
-    qRegisterMetaType<PlayerStatus>("PlayerStatus");
+//    qRegisterMetaType<PlayerState>("PlayerState");
+//    qRegisterMetaType<PlayerStatus>("PlayerStatus");
 
     itimer = new QTimer(parent);
     connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
+    connect(this, SIGNAL(playbackEnding()), this, SLOT(endOfPlayback()));
     itimer -> setInterval(500);
 }
 
