@@ -132,12 +132,12 @@ public slots:
     }
 
     void endOfPlayback() {
+        setPosition(0);
+
         if (!looped) {
             pause();
             emit statusChanged(EndPlaingMedia);
         }
-
-        setPosition(0);
     }
 protected slots:
     void recalcPosition() {
