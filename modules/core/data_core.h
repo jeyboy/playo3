@@ -33,15 +33,19 @@ namespace Core {
                 qDebug() << "STATE IS NOT CHANGED";
         }
 
-        void playNext() {
+        void playNext(bool onFail = false) {
             setState(-ItemState::proccessing); // extra call for item clearing states!
             if (!current_playlist) {
                 qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
                 return;
             }
-            if (current_playlist -> isPlaylist())
-                if (attempts <= MAX_ATTEMPTS)
-                    current_playlist -> execNextIndex();
+            if (current_playlist -> isPlaylist()) {
+                if (onFail && Settings::obj().isFindValid())
+                    if (++attempts > MAX_ATTEMPTS)
+                        return;
+
+                current_playlist -> execNextIndex();
+            }
         }
 
         void restoreOrNext() {
@@ -61,9 +65,8 @@ namespace Core {
         }
 
         void proceedStalledState() {
-            attempts++;
             setState(ItemState::not_exist);
-            playNext();
+            playNext(true);
         }
     public:
         inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
@@ -142,8 +145,7 @@ namespace Core {
 
                 case UnknownMediaStatus: {
                     qDebug() << "UNKNOOW STATUS MEDIA";
-                    attempts++;
-                    playNext();
+                    playNext(true);
                 break;}
 
                 case StalledMedia: {
@@ -165,9 +167,8 @@ namespace Core {
 
                 case InvalidMedia: {
                     qDebug() << "INVALID MEDIA";
-                    attempts++;
                     setState(ItemState::not_supported);
-                    playNext();
+                    playNext(true);
                 break;}
 
                 case NoMedia: {
@@ -177,8 +178,7 @@ namespace Core {
                         restoreOrNext();
                     } else {
                         setState(ItemState::not_exist);
-                        attempts++;
-                        playNext();
+                        playNext(true);
                     }
                 break;}
                 default: { qDebug() << "WTF MEDIA"; }

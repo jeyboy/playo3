@@ -78,8 +78,6 @@ namespace Presentation {
             }
         }
 
-        void onNextItemNeeded(PlayerStatus);
-
         void playNext();
         void playNextWithDel();
         void playPrevWithDel();
