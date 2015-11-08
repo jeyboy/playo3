@@ -19,8 +19,7 @@
 
 enum SpectrumType {
     bars,
-    split_bars,
-    waves
+    split_bars
 };
 
 class SpectrumSettings {

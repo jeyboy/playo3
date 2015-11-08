@@ -62,7 +62,7 @@ namespace Core {
 
         void proceedStalledState() {
             attempts++;
-            setState(ItemState::undefined_status);
+            setState(ItemState::not_exist);
             playNext();
         }
     public:

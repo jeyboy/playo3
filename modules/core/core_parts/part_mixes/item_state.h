@@ -8,9 +8,8 @@ namespace Core {
     class ItemState {
         public:
             enum ItemStateFlag {
-                undefined_status = 268435456,
                 not_proccessing = 8388608,
-                not_undefined_status = 4194304,
+//                not_undefined_status = 4194304,
                 not_played = 2097152,
 //                not_proceeded = 1048576,
 //                not_checked = 524288,

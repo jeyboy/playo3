@@ -334,7 +334,6 @@ void SettingsDialog::initSpectrumSettings() {
     QStringList spectrumTypes;
     spectrumTypes.append(QStringLiteral("Combined"));
     spectrumTypes.append(QStringLiteral("By Channels"));
-    spectrumTypes.append(QStringLiteral("Curved"));
 
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
     ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::obj().spectrumType());

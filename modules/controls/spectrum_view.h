@@ -24,7 +24,6 @@ namespace Controls  {
     public slots:
         inline void setBarsView()      { changeType(bars); }
         inline void setSplitBarsView() { changeType(split_bars); }
-        inline void setWavesView()     { changeType(waves); }
 
         void updateColors();
         void changeType(SpectrumType);
@@ -48,8 +47,7 @@ namespace Controls  {
         inline int beetweenSpace() { return 6; }
 
         void paintCombo();
-        void paintDuo();
-        void paintWaves();
+        void paintPairs();
 
     private:
         QList<QVector<int> > peaks;

@@ -209,7 +209,7 @@ bool BassPlayer::calcSpectrum(QVector<int> & result) {
             if (peak < fft[1 + b0])
                 peak = fft[1 + b0];
 
-        y = fastSqrt(peak) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
+        y = sqrt(peak) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
         if (y > sheight) y = sheight; // cap it
 
         result.append(y);
@@ -241,7 +241,7 @@ bool BassPlayer::calcSpectrum(QList<QVector<int> > & result) {
         }
 
         for (z = 0; z < channels_count; z++) {
-            y = fastSqrt(peaks[z]) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
+            y = sqrt(peaks[z]) * spectrum_multiplicity + sdefault_level; // 4 // scale it (sqrt to make low values more visible)
             if (y > sheight) y = sheight; // cap it
 
             result[z].append(y);
