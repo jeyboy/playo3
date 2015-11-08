@@ -62,4 +62,6 @@ void ISpectrumable::spectrumBandsCount(int bandsCount) {
 
         b0 = b1;
     }
+
+    calcSpectrum(); // inform listeners about changes
 }

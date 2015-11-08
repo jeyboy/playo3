@@ -1,4 +1,6 @@
 #include "spectrum_view.h"
+#include "player/player_index.h"
+
 #include <qelapsedtimer.h>
 
 using namespace Controls;
@@ -82,7 +84,6 @@ void SpectrumView::changeType(SpectrumType newType) {
 
 void SpectrumView::changeBandCount() {
     PlayerFactory::obj().currPlayer() -> spectrumBandsCount(calcBarCount());
-//    dataUpdated(Player::obj().getDefaultSpectrum());
 }
 
 void SpectrumView::changeHeight(int newHeight) {

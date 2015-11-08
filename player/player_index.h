@@ -6,6 +6,8 @@
 #include "player_callback.h"
 #include "bass_player.h"
 
+#include "settings.h"
+
 enum PlayerType {
     none = 0,
     bass_player = 1
@@ -43,6 +45,9 @@ public:
 
         for(QList<PlayerCallback>::Iterator cl = callbacks.begin(); cl != callbacks.end(); cl++)
             (*cl).use(player);
+
+        player -> spectrumFreq(Settings::obj().spectrumFreqRate());
+        //TODO: connect other settings
 
         return player;
     }

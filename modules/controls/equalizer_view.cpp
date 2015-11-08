@@ -1,4 +1,5 @@
 #include "equalizer_view.h"
+#include "player/player_index.h"
 
 using namespace Controls;
 

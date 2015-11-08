@@ -1,4 +1,5 @@
 #include "mediainfo.h"
+#include "player/player_index.h"
 
 using namespace Core::Media;
 

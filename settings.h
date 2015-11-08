@@ -2,7 +2,6 @@
 #define APP_SETTINGS_H
 
 #include "modules/core/interfaces/singleton.h"
-#include "player/player_index.h"
 
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"

@@ -11,8 +11,6 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/interfaces/iplaylistable.h"
 
-#include "settings.h"
-
 #define MAX_ATTEMPTS 10
 
 namespace Core {
