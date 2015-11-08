@@ -132,7 +132,6 @@ void SpectrumView::recalcAttrs() {
             int bands_count = PlayerFactory::obj().currPlayer() -> spectrumBandsCount();
             bar_width = ((float)width() - start_h_offset - (bands_count + 1) * paddWidth()) / bands_count;
             break;}
-//case waves:
         default: {
             int bands_count = PlayerFactory::obj().currPlayer() -> calcSpectrumBandsGroupCount();
             bar_width = ((float)width() - start_h_offset - ((bands_count * pairs + pairs) * paddWidth()) - ((pairs - 1) * beetweenSpace()))/ pairs / bands_count;
@@ -161,8 +160,8 @@ int SpectrumView::peakDimension() {
             return start_v1_offset - verticalPadd();
 
         default:
-            h = (height() - (verticalPadd() * 2 + 8)) / 2;
-            start_v1_offset = h + verticalPadd() + 4; // +3
+            h = (height() - (verticalPadd() * 2 + 2)) / 2;
+            start_v1_offset = h + verticalPadd() + 2;
             start_v2_offset = start_v1_offset + 2; // 2px gap between bars
 
             g.setStart(halfBarWidth, start_v1_offset - h);
