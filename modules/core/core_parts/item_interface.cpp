@@ -134,6 +134,7 @@ QVariant IItem::data(int column) const {
                 params.insert(Key::played, is(played));
                 params.insert(Key::not_exist, is(not_exist));
                 params.insert(Key::proccessing, is(proccessing));
+                params.insert(Key::undefined, is(undefined_status));
                 params.insert(Key::type, itemType() + subtipe());
             }
             return params;

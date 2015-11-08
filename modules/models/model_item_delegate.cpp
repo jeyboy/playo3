@@ -48,6 +48,7 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     int size = icon_size - state_width * 2;
 
+    icons.insert(-3,                                                    PIXMAP(QStringLiteral(":/items/warn"), size));
     icons.insert(-2,                                                    PIXMAP(QStringLiteral(":/items/process"), size));
     icons.insert(-1,                                                    PIXMAP(QStringLiteral(":/items/err"), size));
     icons.insert(VK_FILE,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
@@ -155,7 +156,9 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                     bodyRect.height()
                 );
 
-        if (attrs[Key::proccessing].toBool())
+        if (attrs[Key::undefined].toBool())
+            painter -> drawPixmap(rect, icons[-3]);
+        else if (attrs[Key::proccessing].toBool())
             painter -> drawPixmap(rect, icons[-2]);
         else {
             if (attrs[Key::not_exist].toBool())
@@ -347,7 +350,9 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
 
-        if (attrs[Key::proccessing].toBool()) {
+        if (attrs[Key::undefined].toBool())
+            painter -> drawPixmap(rect, icons[-3]);
+        else if (attrs[Key::proccessing].toBool()) {
             painter -> drawPixmap(rect, icons[-2]);
         } else {
             if (attrs[Key::not_exist].toBool()) {

@@ -2,10 +2,9 @@
 #define PLAYER_STATUSES
 
 enum PlayerStatus {
-    InvalidMedia = -4,
-    UnknownMediaStatus = -3,
-    StalledMedia = -2,
-    NoRemoteMedia = -1,
+    InvalidMedia = -3,
+    UnknownMediaStatus,
+    StalledMedia,
     NoMedia = 0,
     InitMedia,
     LoadingMedia,

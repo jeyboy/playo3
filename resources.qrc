@@ -64,6 +64,7 @@
         <file alias="jetune_item_on">images/items/jetune_on.png</file>
         <file alias="od_item">images/items/od.png</file>
         <file alias="od_item_on">images/items/od_on.png</file>
+        <file alias="warn">images/items/warn.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

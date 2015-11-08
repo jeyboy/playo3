@@ -13,6 +13,8 @@
 
 #include "settings.h"
 
+#define MAX_ATTEMPTS 10
+
 namespace Core {
     class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
         Q_OBJECT
@@ -21,6 +23,7 @@ namespace Core {
         IItem * current_item;
 
         PlayerInitState init_state_flag;
+        int attempts;
     protected:
         void setState(int state) {
             if (!current_playlist) {
@@ -39,7 +42,8 @@ namespace Core {
                 return;
             }
             if (current_playlist -> isPlaylist())
-                current_playlist -> execNextIndex();
+                if (attempts <= MAX_ATTEMPTS)
+                    current_playlist -> execNextIndex();
         }
 
         void restoreOrNext() {
@@ -49,6 +53,7 @@ namespace Core {
             }
             if (!current_playlist -> restoreItem(current_item)) {
                 qDebug() << "RESTORE: FAILED";
+                attempts++;
                 playNext();
             } else {
                 qDebug() << "RESTORE: SUCCESS";
@@ -58,7 +63,7 @@ namespace Core {
             }
         }
     public:
-        inline DataFactory() : QObject(), current_playlist(0), current_item(0) {
+        inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
             PlayerFactory::obj().registerCallback(out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
         }
         ~DataFactory() {}
@@ -117,6 +122,7 @@ namespace Core {
                 break;}
 
                 case PlaingMedia: {
+                    attempts = 0;
                     qDebug() << "PLAING MEDIA";
                     setState(ItemState::listened);
                 break;}
@@ -133,6 +139,7 @@ namespace Core {
 
                 case UnknownMediaStatus: {
                     qDebug() << "UNKNOOW STATUS MEDIA";
+                    attempts++;
                     playNext();
                 break;}
 
@@ -142,7 +149,8 @@ namespace Core {
                     if (current_item -> isRemote()) {
                         restoreOrNext();
                     } else {
-                        //MARK ELEM AS INVALID
+                        attempts++;
+                        setState(ItemState::undefined_status);
                         playNext();
                     }
                 break;}
@@ -158,13 +166,10 @@ namespace Core {
 
                 case InvalidMedia: {
                     qDebug() << "INVALID MEDIA";
-                    //MARK ELEM AS NOT SUPPORTED
+                    attempts++;
+                    setState(ItemState::not_supported);
                     playNext();
                 break;}
-
-                case NoRemoteMedia: {
-                    restoreOrNext();
-                }
 
                 case NoMedia: {
                     qDebug() << "NO MEDIA";
@@ -172,11 +177,12 @@ namespace Core {
                     if (current_item -> isRemote()) {
                         restoreOrNext();
                     } else {
-                        //MARK ELEM AS NOT EXISTED
+                        setState(ItemState::not_exist);
+                        attempts++;
                         playNext();
                     }
                 break;}
-                default: {  }
+                default: { qDebug() << "WTF MEDIA"; }
             }
         }
 

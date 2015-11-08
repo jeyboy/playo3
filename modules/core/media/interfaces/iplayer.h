@@ -71,8 +71,7 @@ public:
 
     void closeMedia() {
         if (isPlayed()) stop();
-        if (media_url.isValid())
-            emit statusChanged(CloseMedia);
+        emit statusChanged(CloseMedia);
     }
 
     inline bool isInitiating() { return pstate == InitState; }

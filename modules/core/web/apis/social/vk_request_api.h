@@ -357,8 +357,10 @@ namespace Core {
                 }
                 QJsonObject getAudioInfo(QString & audio_uid) {
                     QStringList uids; uids << audio_uid;
-                    QJsonObject ret = getAudiosInfo(uids)[0].toObject();
-                    return ret;
+                    QJsonArray infos = getAudiosInfo(uids);
+                    if (infos.isEmpty())
+                        return QJsonObject();
+                    else return infos[0].toObject();
                 }
 
                 QString refresh(QString audio_uid) {
