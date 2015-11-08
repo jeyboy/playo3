@@ -13,14 +13,8 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-//    PlayerFactory::obj().registerCallback(out, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
-
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(spectrumChanged(const QList<QVector<int> > &)), SLOT(dataUpdated(const QList<QVector<int> > &)));
-//    connect(Settings::obj().currPlayer(), SIGNAL(spectrumChanged(const QList<QVector<int> > &)), this, SLOT(dataUpdated(const QList<QVector<int> > &)));
-
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
-//    connect(Settings::obj().currPlayer(), SIGNAL(channelsCountChanged()), this, SLOT(recalcAttrs()));
-
 
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
@@ -165,7 +159,6 @@ int SpectrumView::peakDimension() {
             g.setStart(halfBarWidth, verticalPadd());
             g.setFinalStop(halfBarWidth, start_v1_offset);
             return start_v1_offset - verticalPadd();
-//        case waves:
 
         default:
             h = (height() - (verticalPadd() * 2 + 8)) / 2;
