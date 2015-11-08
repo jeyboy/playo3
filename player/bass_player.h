@@ -88,8 +88,8 @@ protected:
     bool unregisterEQ();
     bool processEqSetGain(int band, float gain);
 
-    bool calcSpectrum(QVector<int> & result);
-    bool calcSpectrum(QList<QVector<int> > & result);
+    bool calcSpectrum(QVector<float> & result);
+    bool calcSpectrum(QList<QVector<float> > & result);
 public:
     explicit BassPlayer(QWidget * parent, float open_time_out_sec = 10);
     ~BassPlayer();

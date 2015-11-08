@@ -1,23 +1,21 @@
 #include "ispectrumable.h"
 
 void ISpectrumable::calcSpectrum() {
-    if (sheight > 0) {
-        QList<QVector<int> > res;
+    QList<QVector<float> > res;
 
-        if (state() != PlayingState)
-            res = sdefault;
+    if (state() != PlayingState)
+        res = sdefault;
+    else {
+        if (respondToMultichannelSpectrumCalc() && channels_count > 1)
+            calcSpectrum(res);
         else {
-            if (respondToMultichannelSpectrumCalc() && channels_count > 1)
-                calcSpectrum(res);
-            else {
-                QVector<int> layer;
-                calcSpectrum(layer);
-                res.append(layer);
-            }
+            QVector<float> layer;
+            calcSpectrum(layer);
+            res.append(layer);
         }
-
-        emit spectrumChanged(res);
     }
+
+    emit spectrumChanged(res);
 }
 
 void ISpectrumable::channelsCount(int newChannelsCount) {
@@ -28,10 +26,10 @@ void ISpectrumable::channelsCount(int newChannelsCount) {
     emit channelsCountChanged();
 }
 
-void ISpectrumable::spectrumBandsCount(int bandsCount) {
+void ISpectrumable::spectrumBandsCount(int bandsCount, bool update) {
     sdefault.clear();
-    QVector<int> l;
-    l.fill(sdefault_level, (sbands_count = bandsCount));
+    QVector<float> l;
+    l.fill(0, (sbands_count = bandsCount));
 
     while(sdefault.size() < channels_count)
         sdefault.append(l);
@@ -63,5 +61,6 @@ void ISpectrumable::spectrumBandsCount(int bandsCount) {
         b0 = b1;
     }
 
-    calcSpectrum(); // inform listeners about changes
+    if (update)
+        calcSpectrum(); // inform listeners about changes
 }

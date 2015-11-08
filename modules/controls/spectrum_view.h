@@ -31,7 +31,7 @@ namespace Controls  {
         void changeHeight(int newHeight);
 
     protected slots:
-        void dataUpdated(const QList<QVector<int> > &);
+        void dataUpdated(const QList<QVector<float> > &);
         void onMovableChanged(bool movable);
         void onOrientationChanged(Qt::Orientation orientation);
         void recalcAttrs();
@@ -50,11 +50,11 @@ namespace Controls  {
         void paintPairs();
 
     private:
-        QList<QVector<int> > peaks;
+        QList<QVector<float> > peaks;
 
-        int offset, last_pairs_count, pairs;
+        int offset, last_pairs_count, pairs, mult_bar_height;
         double start_h_offset, start_v1_offset, start_v2_offset;
-        float bar_width;
+        float bar_width, bar_height;
         QRect update_rect;
 
         SpectrumType type;

@@ -13,7 +13,7 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    PlayerFactory::obj().registerCallback(out, this, SIGNAL(spectrumChanged(const QList<QVector<int> > &)), SLOT(dataUpdated(const QList<QVector<int> > &)));
+    PlayerFactory::obj().registerCallback(out, this, SIGNAL(spectrumChanged(const QList<QVector<float> > &)), SLOT(dataUpdated(const QList<QVector<float> > &)));
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
 
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
@@ -69,7 +69,8 @@ void SpectrumView::updateColors() {
 void SpectrumView::changeType(SpectrumType newType) {
     Settings::obj().setSpectrumType(newType);
     type = newType;
-    PlayerFactory::obj().currPlayer() -> spectrumHeight(peakDimension());
+    bar_height = /*PlayerFactory::obj().currPlayer() -> spectrumHeight(*/peakDimension();
+    mult_bar_height = bar_height * Settings::obj().spectrumMultiplier();
 }
 
 void SpectrumView::changeBandCount() {
@@ -80,10 +81,11 @@ void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    PlayerFactory::obj().currPlayer() -> spectrumHeight(peakDimension());
+    bar_height = /*PlayerFactory::obj().currPlayer() -> spectrumHeight(*/peakDimension();
+    mult_bar_height = bar_height * 3;
 }
 
-void SpectrumView::dataUpdated(const QList<QVector<int> > & data) {
+void SpectrumView::dataUpdated(const QList<QVector<float> > & data) {
     peaks = data;
     pairs = (peaks.length() + 1) / 2;
 
@@ -153,13 +155,13 @@ int SpectrumView::peakDimension() {
     int halfBarWidth = bar_width / 2;
 
     switch(type) {
-        case bars:
+        case bars: {
             start_v1_offset = height() - verticalPadd();
             g.setStart(halfBarWidth, verticalPadd());
             g.setFinalStop(halfBarWidth, start_v1_offset);
-            return start_v1_offset - verticalPadd();
-
-        default:
+            h = start_v1_offset - verticalPadd();
+        break;}
+        default: {
             h = (height() - (verticalPadd() * 2 + 2)) / 2;
             start_v1_offset = h + verticalPadd() + 2;
             start_v2_offset = start_v1_offset + 2; // 2px gap between bars
@@ -169,8 +171,10 @@ int SpectrumView::peakDimension() {
 
             gg.setStart(halfBarWidth, start_v2_offset + h);
             gg.setFinalStop(halfBarWidth, start_v2_offset);
-            return h;
+        break;}
     }
+
+    return h;
 }
 
 void SpectrumView::paintCombo() {
@@ -186,7 +190,7 @@ void SpectrumView::paintCombo() {
     QVector<QRectF> gRects;
 
     for(int loop1 = 0; loop1 < peaks[0].length(); loop1++) {
-        rect.setCoords(accumulate, start_v1_offset - peaks[0][loop1], (accumulate + bar_width), start_v1_offset);
+        rect.setCoords(accumulate, start_v1_offset - qMin(peaks[0][loop1] * mult_bar_height, bar_height), (accumulate + bar_width), start_v1_offset);
         gRects.append(rect);
         accumulate += bar_width + paddWidth();
     }
@@ -212,12 +216,12 @@ void SpectrumView::paintPairs() {
             for(int loop1 = 0; loop1 < peaks[pair].length(); loop1++) {
                 temp_acc = (accumulate + bar_width);
 
-                peak = peaks[pair][loop1];
+                peak = qMin(peaks[pair][loop1] * mult_bar_height, bar_height);
                 rect.setCoords(accumulate, start_v1_offset - peak, temp_acc, start_v1_offset);
                 gRects.append(rect);
 
 
-                peak2 = peaks[pair + 1][loop1];
+                peak2 = qMin(peaks[pair + 1][loop1] * mult_bar_height, bar_height);
                 rect.setCoords(accumulate, start_v2_offset, temp_acc, start_v2_offset + peak2);
                 ggRects.append(rect);
 
@@ -227,7 +231,7 @@ void SpectrumView::paintPairs() {
             for(int loop1 = 0; loop1 < peaks[pair].length(); loop1++) {
                 temp_acc = (accumulate + bar_width);
 
-                peak = peaks[pair][loop1];
+                peak = qMin(peaks[pair][loop1] * mult_bar_height, bar_height);
                 rect.setCoords(accumulate, start_v1_offset - peak, temp_acc, start_v1_offset);
                 gRects.append(rect);
 
