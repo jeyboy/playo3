@@ -53,14 +53,19 @@ namespace Core {
             }
             if (!current_playlist -> restoreItem(current_item)) {
                 qDebug() << "RESTORE: FAILED";
-                attempts++;
-                playNext();
+                proceedStalledState();
             } else {
                 qDebug() << "RESTORE: SUCCESS";
                 IPlayer * player = currPlayer();
                 player -> updateMedia(current_item -> toUrl());
                 player -> play(init_state_flag == paused);
             }
+        }
+
+        void proceedStalledState() {
+            attempts++;
+            setState(ItemState::undefined_status);
+            playNext();
         }
     public:
         inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
@@ -146,13 +151,9 @@ namespace Core {
                 case StalledMedia: {
                     qDebug() << "STALLED MEDIA";
 
-                    if (current_item -> isRemote()) {
+                    if (current_item -> isRemote())
                         restoreOrNext();
-                    } else {
-                        attempts++;
-                        setState(ItemState::undefined_status);
-                        playNext();
-                    }
+                    else proceedStalledState();
                 break;}
 
                 case EndPlaingMedia: {

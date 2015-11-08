@@ -238,7 +238,10 @@ namespace Core {
 
                     if (!ret.value(albums_finished_key).toBool())
                         audioAlbums(uid, ar, ret.value(albums_offset_key).toInt());
-                    else setCount(ar, ar[0].toArray().size());
+                    else {
+                        int asize = ar.isEmpty() ? 0 : ar[0].toArray().size();
+                        setCount(ar, asize);
+                    }
 
                     ret.insert(albums_key, ar);
                     return ret;

@@ -7,18 +7,20 @@ bool ItemState::set(enum ItemStateFlag flag) {
         case new_item: return   reset();
         case listened: return   setListened();
         case liked: return      setLiked();
-        default: return         setBit(item_state, flag) == flag;
+        default: return         setBit(item_state, flag) == (int)flag;
     }
 }
 
 void ItemState::setStates(int flags) {
     if (flags < 0) {
+        if (bitIsSet(-flags, undefined_status))    unset(undefined_status);
         if (bitIsSet(-flags, proccessing))    unset(proccessing);
         if (bitIsSet(-flags, played))    unset(played);
         if (bitIsSet(-flags, liked))     unsetLiked();
         if (bitIsSet(-flags, not_exist)) unset(not_exist);
         if (bitIsSet(-flags, not_supported)) unset(not_supported);
     } else {
+        if (bitIsSet(flags, undefined_status))    setBit(item_state, undefined_status);
         if (bitIsSet(flags, listened))  {
             setListened();
             unsetBit(item_state, not_exist);
@@ -32,11 +34,15 @@ void ItemState::setStates(int flags) {
 
         // negative variants
 
+        if (bitIsSet(flags, not_undefined_status))     unset(undefined_status);
         if (bitIsSet(flags, not_proccessing))     unset(proccessing);
         if (bitIsSet(flags, not_played))     unset(played);
         if (bitIsSet(flags, not_liked))     unsetLiked();
         if (bitIsSet(flags, exist))     unset(not_exist);
         if (bitIsSet(flags, supported))     unset(not_supported);
+
+
+
     }
 }
 
