@@ -277,7 +277,8 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Liked"));
     act -> setCheckable(true);
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(like())); //TODO: not finished
+    connect(act, SIGNAL(triggered(bool)), &DataFactory::obj(), SLOT(changeLikeStatus(bool)));
+    connect(&DataFactory::obj(), SIGNAL(likeChanged(bool)), act, SLOT(setChecked(bool)));
 
     ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> adjustSize();

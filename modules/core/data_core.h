@@ -99,6 +99,8 @@ namespace Core {
 
                 if ((init_state_flag = state) != initiated)
                     player -> play(init_state_flag == paused);
+
+                emit likeChanged(current_item -> is(ItemState::liked));
             }
             else player -> setMedia(QUrl());
         }
@@ -107,11 +109,10 @@ namespace Core {
         void proceedPausing() { currPlayer() -> pause(); }
         void proceedPauseToggling() { currPlayer() -> playPause(); }
 
+    signals:
+        void likeChanged(bool);
 
     public slots:
-//        inline void startProccessing() { setItemState(ItemState::proccessing); }
-//        inline void endProccessing() { setItemState(-(ItemState::proccessing | ItemState::not_exist | ItemState::not_supported)); }
-
 //        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
 //        inline void itemNotSupported(QModelIndex node) {
 //            setData(node, ItemState::not_supported, ISTATE);
@@ -119,6 +120,7 @@ namespace Core {
 //        }
 //        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported | ItemState::not_exist, ISTATE); }
 
+        void changeLikeStatus(bool is_liked) { setState((is_liked ? 1 : -1) * ItemState::liked); }
 
         void playerStatusChanged(const PlayerStatus & status) {
             switch(status) {
