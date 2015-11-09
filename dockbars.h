@@ -69,14 +69,8 @@ namespace Presentation {
         inline void showAll() { changeBarsVisibility(false); }
 
         inline void createNewBar() { showViewSettingsDialog(); }
-        void editActiveBar() { showViewSettingsDialog(active); }
-        inline void scrollToActive() {
-            if (played) {
-                IView * v = view(played);
-                activate(played);
-                if (v) v -> scrollToActive();
-            }
-        }
+        inline void editActiveBar() { showViewSettingsDialog(active); }
+        void scrollToActive();
 
         void playNext();
         void playNextWithDel();

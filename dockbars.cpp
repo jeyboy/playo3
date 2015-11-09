@@ -309,6 +309,20 @@ void Dockbars::updateAllViews() { // update for item height
     }
 }
 
+void Dockbars::scrollToActive() {
+    if (played) {
+        IView * v = view(played);
+
+        if (!v) {
+            qDebug() << "VIEW IS NOT FINDED FOR PLAYLIST";
+            return;
+        }
+
+        activate(played);
+        v -> scrollToActive();
+    }
+}
+
 void Dockbars::playNext() {
     initPlayed();
     IView * v = view(played);

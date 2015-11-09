@@ -150,7 +150,7 @@
      </layout>
     </item>
     <item>
-     <widget class="SimpleListView" name="presetExtensions">
+     <widget class="Controls::SimpleListView" name="presetExtensions">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -181,7 +181,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SimpleListView</class>
+   <class>Controls::SimpleListView</class>
    <extends>QListView</extends>
    <header location="global">modules/controls/simple_list_view.h</header>
   </customwidget>
