@@ -1,13 +1,14 @@
 #ifndef I_EQUALIZABLE
 #define I_EQUALIZABLE
 
+#include <qdebug.h>
 #include <qmap.h>
 #include <qstringbuilder.h>
 
 #include "ispectrumable.h"
 
-#define LOW_INTERVAL 16.352
-#define HIGH_INTERVAL 15804
+#define LOW_INTERVAL 32 //16.352
+#define HIGH_INTERVAL 16744 //15804
 
 class EqualizablePreset {
     QMap<float, QString> bands;
@@ -15,15 +16,20 @@ class EqualizablePreset {
 
     QString toStr(float val) { return QString::number(roundf(val)); }
 public:
-    EqualizablePreset(float octaveOffset = 1.33) { // 1/3 octave offset
+    EqualizablePreset() {}
+    EqualizablePreset(float octaveOffset) { // 1/3 octave offset
         Q_ASSERT(octaveOffset > 1);
         preset_base = octaveOffset;
+        qDebug() << "---------------------------------" << octaveOffset;
 
         float res = LOW_INTERVAL;
         while(res <= HIGH_INTERVAL) {
             bands.insert(res, toStr(res));
             res *= octaveOffset;
         }
+
+        if (qAbs(res - HIGH_INTERVAL) < 1500)
+            bands.insert(HIGH_INTERVAL, toStr(HIGH_INTERVAL));
     }
 
     QMap<float, QString> bandsList() const { return bands; }
@@ -40,7 +46,7 @@ protected:
     virtual bool unregisterEQ() = 0;
     virtual bool equalizable() { return true; }
 
-    bool eqInUse;
+    bool eq_in_use;
     QString current_preset;
     QMap<QString, EqualizablePreset> presets;
     QMap<int, float> eqBandsGains;
@@ -55,10 +61,11 @@ public:
     inline void eqGains(QMap<int, float> gains) { eqBandsGains = gains; }
     inline QMap<float, QString> bands() const { return presets[current_preset].bandsList(); }
     inline float currentPresetBase() { return presets[current_preset].presetBase(); }
+    inline bool eqInUse() { return eq_in_use; }
 public slots:
     //TODO: add changing of preset
     inline void activateEQ(bool activate) {
-        if ((eqInUse = activate)) registerEQ();
+        if ((eq_in_use = activate)) registerEQ();
         else unregisterEQ();
     }
 };

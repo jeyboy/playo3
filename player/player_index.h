@@ -36,7 +36,7 @@ public:
     }
 
     IPlayer * build(QWidget * anchor, const PlayerType & newPlayerType) {
-        delete player;
+        IPlayer * old_player = player;
 
         switch(newPlayerType) {
     //        case bass_player: break;
@@ -48,6 +48,16 @@ public:
 
         player -> spectrumFreq(Settings::obj().spectrumFreqRate());
         //TODO: connect other settings
+
+        if (old_player) {
+            player -> setVolume(old_player -> volume());
+            player -> setPan(old_player -> pan());
+            player -> activateEQ(old_player -> eqInUse());
+            player -> eqGains(old_player -> eqGains());
+            player -> setMedia(old_player -> media(), old_player -> position(), old_player -> duration());
+
+            delete old_player;
+        }
 
         return player;
     }

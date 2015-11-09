@@ -1,6 +1,6 @@
 #include "iequalizable.h"
 
-IEqualizable::IEqualizable(QObject * parent) : ISpectrumable(parent), eqInUse(false) {
+IEqualizable::IEqualizable(QObject * parent) : ISpectrumable(parent), eq_in_use(false) {
 
 //    Октава →
 //    Нота ↓ 	Суб-контр 	Контр 	Большая 	Малая 	1 	2 	3 	4 	5 	6
@@ -50,5 +50,5 @@ IEqualizable::IEqualizable(QObject * parent) : ISpectrumable(parent), eqInUse(fa
     presets.insert(QStringLiteral("4 octaves"), EqualizablePreset(4));
     presets.insert(QStringLiteral("3 octaves"), EqualizablePreset(3));
     presets.insert((current_preset = QStringLiteral("2 octaves")), EqualizablePreset(2));
-    presets.insert(QStringLiteral("1/3 octave"), EqualizablePreset(1.0 + 1.0/3));
+    presets.insert(QStringLiteral("1/3 octave"), EqualizablePreset(1.33));
 }

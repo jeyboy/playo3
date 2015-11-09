@@ -9,6 +9,7 @@ using namespace Data;
 
 Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);
+//    setCentralWidget(new QWidget);
 //    ui-> centralWidget -> hide();
     QApplication::setWindowIcon(QIcon(QStringLiteral(":ico")));
     setWindowTitle(QStringLiteral("Playo"));
@@ -46,7 +47,7 @@ void Playo::activation() {
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
     Settings::obj().anchorWidget(this);
-    PlayerFactory::obj().build(this, bass_player);
+    PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings init and providing
 }
 
 void Playo::initialization() {

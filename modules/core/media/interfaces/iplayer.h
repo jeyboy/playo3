@@ -60,6 +60,8 @@ public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
 
+    inline QUrl media() { return media_url; }
+
     inline void setMedia(const QUrl & url, int startMili = 0, int maxDuration = 0) {
         media_url = url;
         startPos = startMili;
