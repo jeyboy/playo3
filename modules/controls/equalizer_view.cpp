@@ -4,14 +4,22 @@
 using namespace Controls;
 
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
-    enabled = new QCheckBox(QStringLiteral("On"), this);
-
+    enabled = new QCheckBox(QStringLiteral("On"), this);  
     PlayerFactory::obj().registerCallback(in, enabled, SIGNAL(toggled(bool)), SLOT(activateEQ(bool)));
     layout -> addWidget(enabled, 0, Qt::AlignCenter);
 
     QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
     connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
     layout -> addWidget(reset, 1, Qt::AlignCenter);
+
+
+    presetTypesList = new QComboBox(this);
+    presetTypesList -> insertItems(0, PlayerFactory::obj().currPlayer() -> presetTypesList());
+    presetTypesList -> setCurrentText(PlayerFactory::obj().currPlayer() -> currentPresetType());
+    PlayerFactory::obj().registerCallback(in, presetTypesList, SIGNAL(currentTextChanged(QString)), SLOT(changePresetType(QString)));
+    layout -> addWidget(presetTypesList, 3, Qt::AlignCenter);
+    PlayerFactory::obj().registerCallback(out, this, SIGNAL(presetTypeChanged()), SLOT(presetTypeChanged()));
+
 
     presetsList = new QComboBox(this);
     connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
@@ -64,15 +72,11 @@ EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging
     QHBoxLayout * topLayout = new QHBoxLayout();
     initTopLayout(topLayout);
 
-    QWidget * scroll_panel = new QWidget(this);
-    scroll_panel -> setStyleSheet("background-color: transparent;");
-    QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
-    initBottomLayout(bottomLayout);
-
-    QScrollArea * scrollArea = new QScrollArea(this);
+    scrollArea = new QScrollArea(this);
     scrollArea -> setWidgetResizable(true);
-    scrollArea -> setWidget(scroll_panel);
     scrollArea -> setStyleSheet("background-color: transparent; border: none;");
+
+    presetTypeChanged();
 
     vLayout -> addLayout(topLayout);
     vLayout -> addWidget(scrollArea);
@@ -149,6 +153,15 @@ void EqualizerView::removePreset() {
         presets.remove(presetsList -> currentText());
         presetsList -> removeItem(presetsList -> currentIndex());
     }
+}
+
+void EqualizerView::presetTypeChanged() {
+    QWidget * scroll_panel = new QWidget(this);
+    scroll_panel -> setStyleSheet("background-color: transparent;");
+    QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
+    initBottomLayout(bottomLayout);
+
+    scrollArea -> setWidget(scroll_panel);
 }
 
 void EqualizerView::presetChanged(QString name) {

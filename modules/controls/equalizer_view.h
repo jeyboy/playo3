@@ -34,6 +34,7 @@ namespace Controls {
         void createPreset();
         void removePreset();
 
+        void presetTypeChanged();
         void presetChanged(QString name);
         void eqValueChanged(int);
         void reset();
@@ -49,6 +50,8 @@ namespace Controls {
 
         QCheckBox * enabled;
         QComboBox * presetsList;
+        QComboBox * presetTypesList;
+        QScrollArea * scrollArea;
     };
 }
 

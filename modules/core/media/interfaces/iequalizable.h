@@ -1,7 +1,6 @@
 #ifndef I_EQUALIZABLE
 #define I_EQUALIZABLE
 
-#include <qdebug.h>
 #include <qmap.h>
 #include <qstringbuilder.h>
 
@@ -20,7 +19,6 @@ public:
     EqualizablePreset(float octaveOffset) { // 1/3 octave offset
         Q_ASSERT(octaveOffset > 1);
         preset_base = octaveOffset;
-        qDebug() << "---------------------------------" << octaveOffset;
 
         float res = LOW_INTERVAL;
         while(res <= HIGH_INTERVAL) {
@@ -47,7 +45,7 @@ protected:
     virtual bool equalizable() { return true; }
 
     bool eq_in_use;
-    QString current_preset;
+    QString current_preset_type;
     QMap<QString, EqualizablePreset> presets;
     QMap<int, float> eqBandsGains;
 public:
@@ -59,10 +57,18 @@ public:
     }
     inline QMap<int, float> eqGains() const { return eqBandsGains; }
     inline void eqGains(QMap<int, float> gains) { eqBandsGains = gains; }
-    inline QMap<float, QString> bands() const { return presets[current_preset].bandsList(); }
-    inline float currentPresetBase() { return presets[current_preset].presetBase(); }
+    inline QMap<float, QString> bands() const { return presets[current_preset_type].bandsList(); }
+    inline float currentPresetBase() { return presets[current_preset_type].presetBase(); }
+    inline QString currentPresetType() const { return current_preset_type; }
     inline bool eqInUse() { return eq_in_use; }
+    inline QStringList presetTypesList() const { return presets.keys(); }
+signals:
+    void presetTypeChanged();
 public slots:
+    inline void changePresetType(QString newPresetType) {
+        current_preset_type = newPresetType;
+        emit presetTypeChanged();
+    }
     //TODO: add changing of preset
     inline void activateEQ(bool activate) {
         if ((eq_in_use = activate)) registerEQ();
