@@ -54,8 +54,8 @@ public:
     virtual ~IEqualizable() {}
 
     void eqBand(int band, float gain) {
-        if (processEqSetGain(band, gain))
-            eqBandsGains.insert(band, gain);
+        processEqSetGain(band, gain);
+        eqBandsGains.insert(band, gain);
     }
     inline QMap<int, float> eqGains() const { return eqBandsGains; }
     inline void eqGains(QMap<int, float> gains) { eqBandsGains = gains; }

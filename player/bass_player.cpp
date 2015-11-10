@@ -79,6 +79,7 @@ void BassPlayer::playPreproccessing() {
     else
         channelsCount(2);
 
+    qDebug() << "EQ USE" << eq_in_use;
     if (eq_in_use) registerEQ();
 
     if (BASS_ChannelPlay(chan, true)) {
