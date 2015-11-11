@@ -365,7 +365,7 @@ void Dockbars::onDownloadProceeded(QString to) {
 void Dockbars::barClosed() {
     DockBar * bar = (DockBar *)sender();
 
-    linkedTabs.remove(linkedTabs.key(bar));
+    linkedTabs.remove(linkedTabs.key(bar)); // TODO: need to recheck this
 
     if (active == bar) active = 0;
     if (played == bar) played = 0;

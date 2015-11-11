@@ -33,8 +33,9 @@ void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
     layout -> addWidget(remove, 1, Qt::AlignCenter);
 }
-void EqualizerView::initBottomLayout(QGridLayout * layout) { // TODO: // need to add chooice between n line equalizers and reinitialization
+void EqualizerView::initBottomLayout(QGridLayout * layout) {
     QMap<float, QString> bands = PlayerFactory::obj().currPlayer() -> bands();
+    dbOutput.clear();
 
     QMap<float, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
@@ -163,8 +164,8 @@ void EqualizerView::presetTypeChanged() {
     scroll_panel -> setStyleSheet("background-color: transparent;");
     QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
     initBottomLayout(bottomLayout);
-
     scrollArea -> setWidget(scroll_panel);
+    reset();
 }
 
 void EqualizerView::presetChanged(QString name) {

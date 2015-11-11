@@ -26,7 +26,7 @@ public:
             res *= octaveOffset;
         }
 
-        if (qAbs(res - HIGH_INTERVAL) < 1500)
+        if (qAbs(bands.lastKey() - HIGH_INTERVAL) > 1500)
             bands.insert(HIGH_INTERVAL, toStr(HIGH_INTERVAL));
     }
 
@@ -67,9 +67,10 @@ signals:
 public slots:
     inline void changePresetType(QString newPresetType) {
         current_preset_type = newPresetType;
+        eqBandsGains.clear();
+        if (eq_in_use) registerEQ();
         emit presetTypeChanged();
     }
-    //TODO: add changing of preset
     inline void activateEQ(bool activate) {
         if ((eq_in_use = activate)) registerEQ();
         else unregisterEQ();
