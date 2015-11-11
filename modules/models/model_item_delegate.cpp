@@ -378,7 +378,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             painter -> setPen(textColor);
             QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
             painter -> setFont(font);
-            painter -> drawText(icoRect.topRight() + QPoint(3, 10), Key::asterix);
+            painter -> drawText(icoRect.topRight() + QPoint(-4, 10), Key::asterix);
         }
 
         ///////////////////////////////////////////////////

@@ -14,6 +14,12 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline Web::SubType siteType() { return jetune_site; }
 
+            QString refresh(QString refresh_page) {
+                qDebug() << "IN JETUNE";
+
+                return refresh_page;
+            }
+
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;
     //            if (genresList().isEmpty()) genresList();

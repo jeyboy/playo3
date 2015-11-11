@@ -58,6 +58,9 @@ namespace Core {
 
         virtual Web::SubType siteType() = 0;
 
+        virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
+        virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub
+
         virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
             if (!predicate.isEmpty()) {
                 return search_postprocess(predicate, genre, limitations);

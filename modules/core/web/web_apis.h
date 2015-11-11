@@ -6,11 +6,6 @@
 #include "apis/social/_socials.h"
 #include "apis/service/_services.h"
 
-#define SETTINGS_VK_SET_KEY QStringLiteral("vk")
-#define SETTINGS_SOUNDCLOUD_SET_KEY QStringLiteral("soundcloud")
-#define SETTINGS_FOURSHARED_SET_KEY QStringLiteral("fourshared")
-#define SETTINGS_OD_SET_KEY QStringLiteral("od")
-
 namespace Core {
     namespace Web {
         class Apis {

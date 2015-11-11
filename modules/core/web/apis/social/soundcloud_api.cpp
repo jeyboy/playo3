@@ -15,17 +15,18 @@ QString Api::authUrl() {
     return url.toString();
 }
 
-void Api::fromJson(QJsonObject hash) {
-    TeuAuth::fromJson(hash);
-    WebApi::fromJson(hash);
+void Api::fromJson(const QJsonObject & hash) {
+    QJsonObject obj = hash.value(name()).toObject();
+    TeuAuth::fromJson(obj);
+    WebApi::fromJson(obj);
 }
-QJsonObject Api::toJson() {
+void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
     WebApi::toJson(root);
 
-    return root;
+    hash.insert(name(), root);
 }
 
 //////////////////////////////////////////////////////////

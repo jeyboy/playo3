@@ -23,9 +23,9 @@ bool IModel::restoreUrl(IItem * itm) {
 ////                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
 //                break;}
 
-                case jetune_site: {
-                    newUrl = itm -> refresh_path();
-                break;}
+//                case jetune_site: {
+//                    newUrl = itm -> refresh_path();
+//                break;}
 
                 default: {
                     ISearchable * engine = Web::Apis::engine(itm -> subtipe());

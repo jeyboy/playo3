@@ -28,7 +28,7 @@ namespace Core {
                 inline QString authUrl() { return RequestApi::authUrl(); }
 
                 void fromJson(const QJsonObject & hash);
-                QJsonObject toJson();
+                void toJson(QJsonObject & hash);
 
                 inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 

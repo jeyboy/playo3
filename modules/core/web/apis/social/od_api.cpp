@@ -21,15 +21,16 @@ QString Api::authUrl() {
     return url.toString();
 }
 
-void Api::fromJson(QJsonObject hash) {
-    TeuAuth::fromJson(hash);
-    WebApi::fromJson(hash);
-    hash_key = hash.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
+void Api::fromJson(const QJsonObject & hash) {
+    QJsonObject obj = hash.value(name()).toObject();
+    TeuAuth::fromJson(obj);
+    WebApi::fromJson(obj);
+    hash_key = obj.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
 
     if (!sessionIsValid())
        connection(true);
 }
-QJsonObject Api::toJson() {
+void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
@@ -37,7 +38,7 @@ QJsonObject Api::toJson() {
 
     root.insert(HASH_KEY, hash_key);
 
-    return root;
+    hash.insert(name(), root);
 }
 
 //////////////////////////////////////////////////////////
