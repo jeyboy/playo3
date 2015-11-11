@@ -48,9 +48,10 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     int size = icon_size - state_width * 2;
 
-    icons.insert(-3,                                                    PIXMAP(QStringLiteral(":/items/warn"), size));
-    icons.insert(-2,                                                    PIXMAP(QStringLiteral(":/items/process"), size));
-    icons.insert(-1,                                                    PIXMAP(QStringLiteral(":/items/err"), size));
+    icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
+    icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
+    icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/process_on"), size));
+    icons.insert(-100,                                                  PIXMAP(QStringLiteral(":/items/err"), size));
     icons.insert(VK_FILE,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
     icons.insert(VK_FILE + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
     icons.insert(SOUNDCLOUD_FILE,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
@@ -157,12 +158,12 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                 );
 
         if (attrs[Key::undefined].toBool())
-            painter -> drawPixmap(rect, icons[-3]);
+            painter -> drawPixmap(rect, icons[-300]);
         else if (attrs[Key::proccessing].toBool())
-            painter -> drawPixmap(rect, icons[-2]);
+            painter -> drawPixmap(rect, icons[-200 + (is_selected ? SELECTION_ITER : 0)]);
         else {
             if (attrs[Key::not_exist].toBool())
-                painter -> drawPixmap(rect, icons[-1]);
+                painter -> drawPixmap(rect, icons[-100]);
             else {
                 if (Settings::obj().isShowSystemIcons()) {
                     QRect icoRect = QRect(
@@ -351,12 +352,12 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         painter -> setBrush(Qt::NoBrush);
 
         if (attrs[Key::undefined].toBool())
-            painter -> drawPixmap(rect, icons[-3]);
+            painter -> drawPixmap(rect, icons[-300]);
         else if (attrs[Key::proccessing].toBool()) {
-            painter -> drawPixmap(rect, icons[-2]);
+            painter -> drawPixmap(rect, icons[-200 + (is_selected ? SELECTION_ITER : 0)]);
         } else {
             if (attrs[Key::not_exist].toBool()) {
-                painter -> drawPixmap(rect, icons[-1]);
+                painter -> drawPixmap(rect, icons[-100]);
             } else {
                 if (Settings::obj().isShowSystemIcons()) {
                     QVariant iconVal = attrs.value(Key::icon);
