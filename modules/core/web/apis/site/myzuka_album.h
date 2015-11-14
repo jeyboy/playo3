@@ -1,7 +1,7 @@
 #ifndef MYZUKA_ALBUM
 #define MYZUKA_ALBUM
 
-#include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/web/interfaces/igrabber_api.h"
 #include "modules/core/interfaces/singleton.h"
 
 #define ITEMS_PER_PAGE 50

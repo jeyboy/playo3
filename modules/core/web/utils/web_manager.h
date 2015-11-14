@@ -26,10 +26,11 @@ namespace Core {
             inline QVariant redirectUrl() { return attribute(QNetworkRequest::RedirectionTargetAttribute); }
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
 
-            Response * followByRedirect();
-            QJsonObject toJson(const QString & wrap = QString());
-            QPixmap toImage();
-            Html::Document toHtml();
+            Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
+            QJsonObject toJson(const QString & wrap = QString(), bool destroy = true);
+            QPixmap toImage(bool destroy = true);
+            Html::Document toHtml(bool destroy = true);
+            QUrl toUrl(bool destroy = true);
         };
 
         class Manager;

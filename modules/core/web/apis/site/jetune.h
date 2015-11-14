@@ -1,7 +1,7 @@
 #ifndef JETUNE
 #define JETUNE
 
-#include "modules/core/interfaces/igrabber_api.h"
+#include "modules/core/web/interfaces/igrabber_api.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables

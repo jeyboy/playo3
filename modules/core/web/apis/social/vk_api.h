@@ -1,8 +1,8 @@
 #ifndef VK_API_H
 #define VK_API_H
 
-#include "modules/core/interfaces/web_api.h"
-#include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/web/interfaces/web_api.h"
+#include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/interfaces/singleton.h"
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
@@ -45,8 +45,8 @@ namespace Core {
                 }
 
             public slots:
+                bool connection();
                 inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
-                void proceedAuthResponse(const QUrl & url);
             protected:
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 

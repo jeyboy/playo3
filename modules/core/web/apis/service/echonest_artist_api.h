@@ -1,7 +1,7 @@
 #ifndef ECHONEST_ARTIST_API
 #define ECHONEST_ARTIST_API
 
-#include "modules/core/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iapi.h"
 
 //POSSIBLE BUCKETS
 

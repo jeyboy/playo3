@@ -3,7 +3,7 @@
 
 #include "modules/core/misc/thread_utils.h"
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/web/interfaces/teu_auth.h"
 #include "od_request_api.h"
 
 #define HASH_KEY QStringLiteral("hash")

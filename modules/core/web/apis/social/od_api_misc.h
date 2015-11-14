@@ -4,8 +4,8 @@
 #include <qstring.h>
 #include <qcryptographichash.h>
 
-#include "modules/core/interfaces/iapi.h"
-#include "modules/core/interfaces/web_api.h"
+#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/web_api.h"
 #include "od_api_keys.h"
 
 namespace Core {
@@ -77,7 +77,7 @@ namespace Core {
                             if (actionDialog -> exec() == QDialog::Accepted) {
                                 QHash<QString, QString> attrs;
                                 attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
-                                QUrl url = QUrl(base_url).resolved(forms.first() -> toFormSubmit(attrs));
+                                QUrl url = QUrl(base_url).resolved(forms.first() -> serializeFormToUrl(attrs));
                                 QNetworkReply * reply = Manager::prepare() -> followedForm(url, initHeaders());
                                 //TODO: check session
                                 reply -> deleteLater();

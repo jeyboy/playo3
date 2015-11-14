@@ -7,6 +7,9 @@
 namespace Core {
     namespace Web {
         class TeuAuth {
+            QString _token;
+            QString _expires_in;
+            QString _user_id;
         public:
             inline TeuAuth() {}
             inline TeuAuth(const QJsonObject & hash) { fromJson(hash); }
@@ -20,11 +23,6 @@ namespace Core {
 
             void fromJson(const QJsonObject & hash);
             void toJson(QJsonObject & hash);
-
-        private:
-            QString _token;
-            QString _expires_in;
-            QString _user_id;
         };
     }
 }

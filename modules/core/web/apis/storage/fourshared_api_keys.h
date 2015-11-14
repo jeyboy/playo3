@@ -1,7 +1,7 @@
 #ifndef FOURSHARED_API_KEYS
 #define FOURSHARED_API_KEYS
 
-#include "modules/core/interfaces/grabber_keys.h"
+#include "modules/core/web/grabber_keys.h"
 
 namespace Core {
     namespace Web {

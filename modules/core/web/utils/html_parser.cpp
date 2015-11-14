@@ -133,7 +133,7 @@ namespace Core {
 
                 ////////  Tag //////////
 
-                QUrl Tag::toFormSubmit(const QHash<QString, QString> & vals) { // not full support of inputs
+                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals) { // not full support of inputs
                     QUrl url = QUrl(value(QStringLiteral("action")));
                     Set inputs = find("input") << find("select");
 

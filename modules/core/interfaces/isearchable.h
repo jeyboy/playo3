@@ -88,6 +88,11 @@ namespace Core {
 
         virtual QString refresh(QString refresh_page) = 0;
     protected:
+        void concatJsonArrays(QJsonArray & ret, const QJsonArray & items) {
+            for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
+                ret.append(*it);
+        }
+
         virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
         QUrl baseUrl(QString predicate, QUrlQuery & query) {
             QUrl url(baseUrlStr(predicate));

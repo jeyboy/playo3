@@ -1,8 +1,8 @@
 #ifndef FOURSHARED_API
 #define FOURSHARED_API
 
-#include "modules/core/interfaces/web_api.h"
-#include "modules/core/web/auth_chemas/teu_auth.h"
+#include "modules/core/web/interfaces/web_api.h"
+#include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/interfaces/singleton.h"
 #include "fourshared_request_api.h"
 

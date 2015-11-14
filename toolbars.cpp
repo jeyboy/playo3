@@ -477,7 +477,7 @@ QToolButton * ToolBars::initiateVkButton() {
         vkToolButton = new QToolButton(container);
     else {
         vkToolButton -> setMenu(0);
-        disconnect(vkToolButton, SIGNAL(clicked()), container, SLOT(showVKTabDialog()));
+        disconnect(vkToolButton, SIGNAL(clicked()), container, SLOT(openVKTabDialog()));
     }
 
     if (Vk::Api::obj().isConnected()) {
@@ -487,15 +487,14 @@ QToolButton * ToolBars::initiateVkButton() {
 
         QMenu * vkMenu = new QMenu(vkToolButton);
         vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectVk()));
-        vkMenu -> addAction(QStringLiteral("Reconect"), container, SLOT(openVKTabDialog()));
-        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(showVKTabDialog()));
+        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(openVKTabDialog()));
         vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(showVKRelTabDialog()));
         vkMenu -> addAction(QStringLiteral("Open recommendations"), container, SLOT(openVKRecomendations()));
         vkToolButton -> setMenu(vkMenu);
     } else {
         vkToolButton -> setIcon(QIcon(QStringLiteral(":/add_vk")));
         vkToolButton -> setToolTip(QStringLiteral("Connect to VKontakte(vk.com)"));
-        connect(vkToolButton, SIGNAL(clicked()), container, SLOT(showVKTabDialog()));
+        connect(vkToolButton, SIGNAL(clicked()), container, SLOT(openVKTabDialog()));
     }
 
     return vkToolButton;

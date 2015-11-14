@@ -59,7 +59,6 @@ private slots:
 
     void openVKRecomendations();
     void openVKTabDialog();
-    void showVKTabDialog();
     void showVKRelTabDialog();
 
     void showSoundcloudRelTabDialog();

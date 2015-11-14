@@ -42,7 +42,6 @@ namespace Core {
         void toJson(QJsonObject & hash);
 
     signals:
-        void responseReady(QString);
         void errorReceived(int, QString);
         void authorized();
 
@@ -50,8 +49,7 @@ namespace Core {
         virtual inline void disconnect() { clearData(); }
 
         bool showingCaptcha(const QUrl & pict_url, QString & result);
-        bool showingLogin(QString & login, QString & pass);
-        virtual void proceedAuthResponse(const QUrl & url) = 0;
+        bool showingLogin(QString & login, QString & pass, const QString & err = QString());
 
     protected:
         UserActionDialog * actionDialog;

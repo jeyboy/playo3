@@ -133,11 +133,11 @@ HEADERS += \
     modules/core/core_parts/vk_playlist.h \
     modules/core/core_parts/web_file.h \
     modules/core/core_parts/web_playlist.h \
-    modules/core/interfaces/grabber_keys.h \
-    modules/core/interfaces/iapi.h \
-    modules/core/interfaces/igrabber_api.h \
+    modules/core/web/grabber_keys.h \
+    modules/core/web/interfaces/iapi.h \
+    modules/core/web/interfaces/igrabber_api.h \
     modules/core/interfaces/isearchable.h \
-    modules/core/interfaces/web_api.h \
+    modules/core/web/interfaces/web_api.h \
     modules/core/media/cue/cue.h \
     modules/core/media/cue/cue_structs.h \
     modules/core/media/genres/genres_interface.h \
@@ -187,7 +187,7 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_api.h \
     modules/core/web/apis/storage/fourshared_api_keys.h \
     modules/core/web/apis/storage/fourshared_request_api.h \
-    modules/core/web/auth_chemas/teu_auth.h \
+    modules/core/web/interfaces/teu_auth.h \
     modules/core/web/utils/html_parser.h \
     modules/core/web/utils/json_parser.h \
     modules/core/web/utils/unicode_decoding.h \
@@ -307,8 +307,8 @@ SOURCES += \
     modules/core/core_parts/vk_playlist.cpp \
     modules/core/core_parts/web_file.cpp \
     modules/core/core_parts/web_playlist.cpp \
-    modules/core/interfaces/grabber_keys.cpp \
-    modules/core/interfaces/web_api.cpp \
+    modules/core/web/grabber_keys.cpp \
+    modules/core/web/interfaces/web_api.cpp \
     modules/core/media/cue/cue.cpp \
     modules/core/media/genres/genres_interface.cpp \
     modules/core/media/genres/id3_music_genres.cpp \
@@ -340,7 +340,7 @@ SOURCES += \
     modules/core/web/apis/social/vk_api_keys.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
-    modules/core/web/auth_chemas/teu_auth.cpp \
+    modules/core/web/interfaces/teu_auth.cpp \
     modules/core/web/utils/html_parser.cpp \
     modules/core/web/utils/json_parser.cpp \
     modules/core/web/utils/web_manager.cpp \

@@ -25,7 +25,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 
 //    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
 //    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
-    int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size()/*Soundcloud::Api::extractCount(albums)*/, audios_count = audios.size();//Soundcloud::Api::extractCount(audios);
+    int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size(), audios_count = audios.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count + playlists_count); // refresh all indexes // maybe this its not good idea
 
@@ -48,8 +48,6 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
                     folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
 
                     QJsonArray tracks = Od::Api::obj().playlistInfo(pid, items_amount);
-
-                    Od::Api::extractCount(tracks);
                     int folderItemsAmount = proceedOdList(tracks, folder);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;

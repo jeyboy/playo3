@@ -19,8 +19,9 @@ namespace Core {
     };
 
     class IApi : public ISearchable {
+        int code;
+        QString message;
     public:
-        static inline int extractCount(QJsonArray & array) { return array.takeAt(0).toObject().value(QStringLiteral("count")).toInt(); }
         inline virtual ~IApi() {}
     protected:
         enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
@@ -73,21 +74,15 @@ namespace Core {
                     rules.fact_count += ar.size();
                 }
 
-                if (!invalid) result.append(val);
+                if (!invalid)
+                    concatJsonArrays(result, val.toArray());
 
                 iterateOffset(rules.offset, response, url);
                 if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
                 QThread::msleep(REQUEST_DELAY);
             }
 
-            setCount(result, rules.fact_count);
             return result;
-        }
-
-        inline void setCount(QJsonArray & ar, int count) {
-            QJsonObject countObj;
-            countObj.insert("count", count);
-            ar.prepend(countObj);
         }
 
         inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
@@ -117,9 +112,6 @@ namespace Core {
             url.setQuery(query);
             return url;
         }
-    private:
-        int code;
-        QString message;
     };
 }
 

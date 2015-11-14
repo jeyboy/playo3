@@ -1,7 +1,7 @@
 #ifndef ECHONEST_GENRE_API
 #define ECHONEST_GENRE_API
 
-#include "modules/core/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iapi.h"
 
 //POSSIBLE BUCKETS
 

@@ -19,22 +19,42 @@ void Api::toJson(QJsonObject & hash) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-void Api::proceedAuthResponse(const QUrl & url) {
-    QUrlQuery query(url.fragment());
+bool Api::connection() {
+    if (isConnected()) return true;
 
-    if (query.hasQueryItem(QStringLiteral("error"))) {
-        error = query.queryItemValue(QStringLiteral("error_description"));
-        emit responseReady(QStringLiteral("reject"));
-    } else if (query.hasQueryItem(QStringLiteral("access_token"))) {
-        setParams(
-            query.queryItemValue(QStringLiteral("access_token")),
-            query.queryItemValue(QStringLiteral("user_id")),
-            query.queryItemValue(QStringLiteral("expires_in"))
-        );
-        emit authorized();
-        emit responseReady(QStringLiteral("accept"));
+    QUrl form_url = authUrl();
+
+    while(true) {
+        Response * resp = Manager::prepare() -> followedGet(form_url);
+        QString err;
+        Html::Document html = resp -> toHtml(false);
+
+        if (html.has("input[name='pass']")) { // if user not authorized
+            QHash<QString, QString> vals;
+            err = html.find(".service_msg_warning").text();
+            if (!showingLogin(vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
+                return false;
+
+            form_url = html.find("form").first() -> serializeFormToUrl(vals);
+            resp = Manager::prepare() -> followedForm(form_url);
+        }
+
+        form_url = resp -> toUrl();
+        QUrlQuery query(form_url.fragment());
+
+        if (query.hasQueryItem(QStringLiteral("error"))) {
+            error = query.queryItemValue(QStringLiteral("error_description"));
+            return false;
+        } else if (query.hasQueryItem(QStringLiteral("access_token"))) {
+            setParams(
+                query.queryItemValue(QStringLiteral("access_token")),
+                query.queryItemValue(QStringLiteral("user_id")),
+                query.queryItemValue(QStringLiteral("expires_in"))
+            );
+            emit authorized();
+            return true;
+        }
     }
-    else emit responseReady("");
 }
 
 ///////////////////////////////////////////////////////////

@@ -2,32 +2,48 @@
 
 namespace Core {
     namespace Web {
-        Response * Response::followByRedirect() {
+        Response * Response::followByRedirect(QHash<QUrl, bool> prev_urls) {
             QVariant possibleRedirectUrl = redirectUrl();
             if (possibleRedirectUrl.isValid()) {
                 QUrl new_url = possibleRedirectUrl.toUrl();
+
                 if (new_url.isRelative())
                     new_url = url().resolved(new_url);
 
+                if (prev_urls.contains(new_url)) return this;
+                else prev_urls.insert(new_url, true);
+
                 deleteLater();
-                return ((Manager *)manager()) -> requestTo(new_url) -> viaGet() -> followByRedirect();
+                return ((Manager *)manager()) -> requestTo(new_url) -> viaGet() -> followByRedirect(prev_urls);
             }
 
             return this;
         }
-        QJsonObject Response::toJson(const QString & wrap) {
+        QJsonObject Response::toJson(const QString & wrap, bool destroy) {
             qDebug() << "IOERROR" << error();
             QByteArray ar = readAll();
             if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
-            deleteLater();
+            if (destroy) deleteLater();
             return QJsonDocument::fromJson(ar).object();
         }
-        QPixmap Response::toImage() {
+        QPixmap Response::toImage(bool destroy) {
             qDebug() << "IOERROR" << error();
             QImage image;
             image.loadFromData(readAll());
-            deleteLater();
+            if (destroy) deleteLater();
             return QPixmap::fromImage(image);
+        }
+
+        Html::Document Response::toHtml(bool destroy) {
+            Html::Document doc(this);
+            if (destroy) deleteLater();
+            return doc;
+        }
+
+        QUrl Response::toUrl(bool destroy) {
+            QUrl uri = url();
+            if (destroy) deleteLater();
+            return uri;
         }
 
         //////////////////////////     WEB_REQUEST     /////////////////////////////

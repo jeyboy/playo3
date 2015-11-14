@@ -1,7 +1,7 @@
 #ifndef ECHONEST_PLAYLIST_API
 #define ECHONEST_PLAYLIST_API
 
-#include "modules/core/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iapi.h"
 
 #define DEFAULT_PLAYLIST_LIMIT_AMOUNT 100
 

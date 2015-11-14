@@ -73,8 +73,9 @@ bool WebApi::showingCaptcha(const QUrl & pict_url, QString & result) {
     return res;
 }
 
-bool WebApi::showingLogin(QString & login, QString & pass) {
-    actionDialog -> buildLoginForm();
+bool WebApi::showingLogin(QString & login, QString & pass, const QString & err) {
+    actionDialog -> buildLoginForm(err);
+
     bool res = actionDialog -> exec();
 
     login = actionDialog -> getValue(actionDialog -> login_key);

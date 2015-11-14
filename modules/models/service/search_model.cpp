@@ -121,11 +121,11 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
                 switch (iface -> siteType()) {
                     case vk_site: { propagate_count = proceedVkList(items, parent); break; }
                     case sc_site: {
-                        if (Soundcloud::Api::extractCount(items) > 0)
+                        if (items.size() > 0)
                             propagate_count = proceedScList(items, parent);
                     break;}
                     case od_site: {
-                        if (Od::Api::extractCount(items) > 0)
+                        if (items.size() > 0)
                             propagate_count = proceedOdList(items, parent);
                     break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);

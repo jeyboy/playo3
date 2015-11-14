@@ -19,7 +19,7 @@
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, string, text, action, url, list, checkbox };
+enum FormInputType { image, string, text, action, url, list, checkbox, message };
 
 //class IdHighlighter : public QSyntaxHighlighter {
 //    Q_OBJECT
@@ -52,6 +52,10 @@ enum FormInputType { image, string, text, action, url, list, checkbox };
 
 struct FormInput {
     inline FormInput() {}
+
+    static inline FormInput createMessage(const QString & label) {
+        return FormInput(message, QString(), label);
+    }
 
     static inline FormInput createUrl(const QString & name, const QString & label, const QString & value = QString()) {
         return FormInput(url, name, label, value);
@@ -114,7 +118,7 @@ public:
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
 
-    void buildLoginForm(const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
+    void buildLoginForm(const QString & err = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
     void buildToolbarForm(const QString & name = QString());
@@ -189,6 +193,7 @@ private:
     void createUrl(FormInput input, QGridLayout * l);
     void createImage(FormInput input, QGridLayout * l);
     void createAction(FormInput input, QGridLayout * l);
+    void createMessage(FormInput input, QGridLayout * l);
 
     void proceedInputs(const QList<FormInput> & inputs);
     void insertButtons();

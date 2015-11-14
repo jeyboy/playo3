@@ -117,7 +117,7 @@ namespace Core {
                     return text ? text -> attrs.value(text_block_token) : QString();
                 }
 
-                QUrl toFormSubmit(const QHash<QString, QString> & vals = QHash<QString, QString>());
+                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>());
                 QString toText() const;
 
                 inline QString link() const { return attrs.value(href_token); }
@@ -140,6 +140,7 @@ namespace Core {
                 }
                 inline int childrenCount() { return tags.size(); }
 
+                inline bool has(const char * predicate) { return !find(predicate).isEmpty(); }
                 inline Set find(const Selector * selector) { return tags.find(selector); }
                 inline Set find(const char * predicate) {
                     Selector selector(predicate);
@@ -235,10 +236,8 @@ namespace Core {
 
                 inline ~Document() { delete root; }
 
-                inline Set find(const Selector * selector) {
-                    return root -> children().find(selector);
-                }
-
+                inline bool has(const char * predicate) { return root -> has(predicate); }
+                inline Set find(const Selector * selector) { return root -> children().find(selector); }
                 inline Set find(const char * predicate) {
                     Selector selector(predicate);
                     return find(&selector);
@@ -280,8 +279,8 @@ namespace Core {
 
                 inline void proceedCharset(Tag * tag) {
                     QString meta = tag -> value(QStringLiteral("charset"));
-                    if (meta.isEmpty()) {
-                        if (tag -> value(QStringLiteral("http-equiv")) == QStringLiteral("Content-Type")) {
+                    if (meta.isEmpty()) {                       
+                        if (tag -> value(QStringLiteral("http-equiv")).toLower() == QStringLiteral("content-type")) {
                             meta = tag -> value(QStringLiteral("content"));
                             meta = meta.section(QStringLiteral("charset="), 1).section(' ', 0);
                         }

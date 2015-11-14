@@ -1,7 +1,7 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-#include "modules/core/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iapi.h"
 
 #define SOUNDCLOUD_OFFSET_LIMIT 100
 

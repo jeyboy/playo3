@@ -5,7 +5,7 @@
 #include <qstringlistmodel.h>
 #include <qhash.h>
 
-#include "modules/core/interfaces/web_api.h"
+#include "modules/core/web/interfaces/web_api.h"
 
 namespace Ui { class RelationsDialog; }
 using namespace Core;
@@ -13,6 +13,10 @@ using namespace Core;
 class RelationsDialog : public QDialog {
     Q_OBJECT
 
+    Ui::RelationsDialog * ui;
+    QString uid, name;
+    QStringListModel * friendModel, * groupModel;
+    WebApi * api;
 public:
     explicit RelationsDialog(WebApi * currApi, QWidget * parent = 0);
     ~RelationsDialog();
@@ -26,14 +30,7 @@ private slots:
     void on_groupsList_activated(const QModelIndex & index);
 
     void on_friendManually_clicked();
-
     void on_groupManually_clicked();
-
-private:
-    Ui::RelationsDialog * ui;
-    QString uid, name;
-    QStringListModel * friendModel, * groupModel;
-    WebApi * api;
 };
 
 #endif // RELATIONS_DIALOG_H

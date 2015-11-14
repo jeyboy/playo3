@@ -67,21 +67,21 @@ QJsonObject Api::objectInfo(QString & uid) {
 void Api::proceedAuthResponse(const QUrl & url) {
     QUrlQuery query(url.query());
 
-    if (query.hasQueryItem(QStringLiteral("error"))) {
-        error = query.queryItemValue(QStringLiteral("error_description"));
-        emit responseReady(QStringLiteral("reject"));
-    } else if (query.hasQueryItem(QStringLiteral("code"))) {
-        QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
+//    if (query.hasQueryItem(QStringLiteral("error"))) {
+//        error = query.queryItemValue(QStringLiteral("error_description"));
+//        emit responseReady(QStringLiteral("reject"));
+//    } else if (query.hasQueryItem(QStringLiteral("code"))) {
+//        QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
 
-        if (doc.contains(QStringLiteral("access_token"))) {
-            QString newToken = doc.value(QStringLiteral("access_token")).toString();
-            doc = Web::Manager::prepare() -> getJson(confirmAuthUrl(newToken));
+//        if (doc.contains(QStringLiteral("access_token"))) {
+//            QString newToken = doc.value(QStringLiteral("access_token")).toString();
+//            doc = Web::Manager::prepare() -> getJson(confirmAuthUrl(newToken));
 
-            setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
-            emit authorized();
-            emit responseReady(QStringLiteral("accept"));
-        }
-        else emit responseReady(QStringLiteral("reject"));
-    }
-    else emit responseReady("");
+//            setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
+//            emit authorized();
+//            emit responseReady(QStringLiteral("accept"));
+//        }
+//        else emit responseReady(QStringLiteral("reject"));
+//    }
+//    else emit responseReady("");
 }

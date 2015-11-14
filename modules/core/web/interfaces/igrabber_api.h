@@ -2,8 +2,8 @@
 #define IGRABBER_API
 
 //#include "misc/web_utils/html_parser.h"
-#include "grabber_keys.h"
-#include "isearchable.h"
+#include "../grabber_keys.h"
+#include "modules/core/interfaces/isearchable.h"
 
 namespace Core {
     class IGrabberApi : public ISearchable {
@@ -25,7 +25,9 @@ namespace Core {
         virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
         inline QJsonArray sQuery(QUrl url, toJsonType jtype) {
-            QJsonArray items; sQuery(url, items, jtype);  return items;
+            QJsonArray items;
+            sQuery(url, items, jtype);
+            return items;
         }
 
         bool sQuery(QUrl url, QJsonArray & items, toJsonType jtype) {
@@ -37,7 +39,8 @@ namespace Core {
         }
 
         inline QJsonArray lQuery(QString url, toJsonType jtype, int count, int start = 1) {
-            QJsonArray items; return lQuery(url, items, jtype, count, start);
+            QJsonArray items;
+            return lQuery(url, items, jtype, count, start);
         }
 
         QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1) {

@@ -11,8 +11,12 @@ UserActionDialog::~UserActionDialog() {
     delete ui;
 }
 
-void UserActionDialog::buildLoginForm(const QString & login_label, const QString & password_label) {
+void UserActionDialog::buildLoginForm(const QString & err, const QString & login_label, const QString & password_label) {
     QList<FormInput> inputs;
+
+    if (!err.isEmpty())
+        inputs << FormInput::createMessage(err);
+
     inputs << FormInput::createStr(login_key, login_label);
     inputs << FormInput::createStr(pass_key, password_label);
     buildForm(inputs, QStringLiteral("Auth form"));
@@ -130,6 +134,12 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
         l -> setRowMinimumHeight(l -> rowCount(), 35);
 }
 
+void UserActionDialog::createMessage(FormInput input, QGridLayout * l) {
+    QLabel * msg = new QLabel(input.label, layer);
+    msg -> setStyleSheet(QStringLiteral("color: red; font-weight: bold;"));
+    insertElem(l, msg);
+}
+
 void UserActionDialog::createAction(FormInput input, QGridLayout * l) {
     QPushButton * button = new QPushButton(input.label, layer);
     actions.insert(button, input);
@@ -145,6 +155,7 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
             case url: createUrl(*input, l); break;
             case action: createAction(*input, l); break;
             case image: createImage(*input, l); break;
+            case message: createMessage(*input, l); break;
             default: createElement(*input, l);
         }
     }

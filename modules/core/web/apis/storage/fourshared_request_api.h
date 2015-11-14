@@ -3,7 +3,7 @@
 
 #include "fourshared_api_keys.h"
 
-#include "modules/core/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iapi.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
@@ -67,7 +67,7 @@ namespace Core {
 
             private:
                 QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
-                    if (extractCount(items) == 0)
+                    if (items.isEmpty())
                         return items;
 
                     Html::Selector prevSelector("input.jsD1PreviewUrl");

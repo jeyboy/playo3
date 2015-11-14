@@ -19,6 +19,45 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //    setAttribute(Qt::WA_DeleteOnClose);
 
+
+
+
+//    QUrl url(QStringLiteral("https://oauth.vk.com/authorize"));
+
+//    QUrlQuery query = QUrlQuery();
+//    query.addQueryItem("v", "5.21");
+//    query.addQueryItem(QStringLiteral("display"), QStringLiteral("page"));
+//    query.addQueryItem(QStringLiteral("client_id"), QStringLiteral("4332211"));
+//    query.addQueryItem(QStringLiteral("response_type"), QStringLiteral("token"));
+//    query.addQueryItem(QStringLiteral("scope"), QStringLiteral("audio,video,friends,groups,offline"));
+//    query.addQueryItem(QStringLiteral("redirect_uri"), QStringLiteral("https://oauth.vk.com/blank.html"));
+
+//    url.setQuery(query);
+//    qDebug() <<  url.toString();
+
+
+//    QHash<QString, QString> vals;
+//    Vk::Api::obj().showingLogin(vals[QStringLiteral("email")], vals[QStringLiteral("pass")]);
+//    QUrl form_url;
+
+////    for(int i = 0; i < 2; i++) {
+//        Web::Response * res = Web::Manager::prepare() -> followedGet(url);
+//        Html::Document doc = res -> toHtml(false);
+//        doc.output();
+
+
+//        Html::Set set = doc.find("form");
+//        if (set.isEmpty()) {
+//            qDebug() << "SOSO" << res -> url();
+//        } else {
+//            qDebug() << "-------------------------------------------------";
+//            form_url = set.first() -> serializeFormToUrl(vals);
+//            Web::Manager::prepare() -> followedForm(form_url) -> toHtml().output();
+//        }
+
+//        res -> deleteLater();
+////    }
+
     initialization();
 
     //safe usage of pointers
@@ -235,24 +274,21 @@ void Playo::openVKRecomendations() {
 }
 
 void Playo::openVKTabDialog() {
-    WebDialogInterface * dInt;
-    if (Plugins::loadWebDialog(dInt)) {
-        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
-        dInt -> registerActions(&Vk::Api::obj());
-
-        if (dialog -> exec() == QDialog::Accepted)
-            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
-
-        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::obj().isConnected() ? QStringLiteral("true") : Vk::Api::obj().getError());
-        delete dInt;
-    }
-//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
-}
-
-void Playo::showVKTabDialog() {
-    if (Vk::Api::obj().isConnected())
+    if (Vk::Api::obj().isConnected() || Vk::Api::obj().connection())
         Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
-    else openVKTabDialog();
+
+//    WebDialogInterface * dInt;
+//    if (Plugins::loadWebDialog(dInt)) {
+//        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
+//        dInt -> registerActions(&Vk::Api::obj());
+
+//        if (dialog -> exec() == QDialog::Accepted)
+//            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
+
+//        emit Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::obj().isConnected() ? QStringLiteral("true") : Vk::Api::obj().getError());
+//        delete dInt;
+//    }
+//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKRelTabDialog() {
