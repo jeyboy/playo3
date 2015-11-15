@@ -61,7 +61,6 @@ private slots:
 
     void showSoundcloudRelTabDialog();
     void openSoundcloudTabDialog();
-    void showSoundcloudTabDialog();
 
     void openFolderTriggered();
 

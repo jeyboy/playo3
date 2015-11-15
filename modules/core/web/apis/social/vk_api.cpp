@@ -30,12 +30,20 @@ bool Api::connection() {
         Html::Document html = resp -> toHtml(false);
 
         if (html.has("input[name='pass']")) { // if user not authorized
+            resp -> deleteLater();
             QHash<QString, QString> vals;
             err = html.find(".service_msg_warning").text();
             if (!showingLogin(vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
                 return false;
 
-            form_url = html.find("form").first() -> serializeFormToUrl(vals);
+            Html::Set forms = html.find("form");
+
+            if (forms.isEmpty()) {
+                Logger::obj().write("Vk auth", QStringLiteral("Auth form did not found"), true);
+                return false;
+            }
+
+            form_url = forms.first() -> serializeFormToUrl(vals);
             resp = Manager::prepare() -> followedForm(form_url);
         }
 

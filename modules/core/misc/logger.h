@@ -17,6 +17,10 @@ class Logger : public QObject, public Core::Singleton<Logger> {
 public:
     ~Logger();
 
+    void write(const QString & initiator, const QString & value, bool error = false);
+    void write(const QString & initiator, const QString & value, const QString & attr, bool error = false);
+    void write(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
+
     void initiate(QString fileName = "", QPlainTextEdit * editor = 0);
     inline void setShowDateTime(bool show) { m_showDate = show; }
     inline QPlainTextEdit * getEditor() { return m_editor; }
@@ -24,7 +28,7 @@ public:
 
     inline void startMark() { timer.start(); }
     inline void endMark(QString initiator, QString value) {
-        emit write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Info::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
+        write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Info::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
     }
 
 private:
@@ -42,12 +46,6 @@ private:
     QElapsedTimer timer;
 
     static Logger * self;
-
-signals:
-    void write(const QString & initiator, const QString & value, bool error = false);
-    void write(const QString & initiator, const QString & value, const QString & attr, bool error = false);
-    void write(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
-
 private slots:
     void writeToStream(const QString & initiator, const QString & value, bool error = false);
     void writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);

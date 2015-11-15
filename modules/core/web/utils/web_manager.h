@@ -111,7 +111,7 @@ namespace Core {
             inline void disconnectThread() {
                 qDebug() << "!!!!!!!!!!!!!!!!!!!! UNREGISTRATE MANAGER";
                 Manager * tmanager = Manager::managers.take(sender());
-                emit Logger::obj().write(QStringLiteral("Manager"), QStringLiteral("disconnection"));
+                Logger::obj().write(QStringLiteral("Manager"), QStringLiteral("disconnection"));
                 if (tmanager) tmanager -> deleteLater();
                 deleteLater();
             }

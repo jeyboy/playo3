@@ -448,7 +448,7 @@ QHash<QString, int> * Library::load(const QChar letter) {
 
 void Library::save() {
     if (saveBlock.tryLock()) {
-        emit Logger::obj().write(QStringLiteral("Library"), QStringLiteral("--Save--"));
+        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("--Save--"));
 
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();

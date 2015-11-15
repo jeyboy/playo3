@@ -506,7 +506,7 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
         soundcloudToolButton = new QToolButton(container);
     else {
         soundcloudToolButton -> setMenu(0);
-        disconnect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(showSoundcloudTabDialog()));
+        disconnect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(openSoundcloudTabDialog()));
     }
 
     if (Soundcloud::Api::obj().isConnected()) {
@@ -516,14 +516,13 @@ QToolButton * ToolBars::initiateSoundcloudButton() {
 
         QMenu * vkMenu = new QMenu(soundcloudToolButton);
         vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
-        vkMenu -> addAction(QStringLiteral("Reconect"), container, SLOT(openSoundcloudTabDialog()));
-        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(showSoundcloudTabDialog()));
+        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(openSoundcloudTabDialog()));
         vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(showSoundcloudRelTabDialog()));
         soundcloudToolButton -> setMenu(vkMenu);
     } else {
         soundcloudToolButton -> setIcon(QIcon(QStringLiteral(":/add_soundcloud")));
         soundcloudToolButton -> setToolTip(QStringLiteral("Connect to Soundcloud(soundcloud.com)"));
-        connect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(showSoundcloudTabDialog()));
+        connect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(openSoundcloudTabDialog()));
     }
 
     return soundcloudToolButton;

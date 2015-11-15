@@ -1,10 +1,6 @@
 #include "logger.h"
 
-Logger::Logger() : QObject(), out(0), file(0), m_showDate(true)  {
-    connect(this, SIGNAL(write(const QString &,const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, bool)));
-    connect(this, SIGNAL(write(const QString &,const QString &, const QString &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QString &, bool)));
-    connect(this, SIGNAL(write(const QString &,const QString &, const QStringList &, bool)), this, SLOT(writeToStream(const QString &,const QString &, const QStringList &, bool)));
-}
+Logger::Logger() : QObject(), out(0), file(0), m_showDate(true)  {}
 
 Logger::~Logger() {
     if (file != 0) {
@@ -15,6 +11,40 @@ Logger::~Logger() {
     delete out;
     delete file;
 }
+
+void Logger::write(const QString & initiator, const QString & value, bool error) {
+    QMetaObject::invokeMethod(
+        this,
+        "writeToStream",
+        Qt::AutoConnection,
+        Q_ARG(const QString &, initiator),
+        Q_ARG(const QString &, value),
+        Q_ARG(bool, error)
+    );
+}
+void Logger::write(const QString & initiator, const QString & value, const QString & attr, bool error) {
+    QMetaObject::invokeMethod(
+        this,
+        "writeToStream",
+        Qt::AutoConnection,
+        Q_ARG(const QString &, initiator),
+        Q_ARG(const QString &, value),
+        Q_ARG(const QString &, attr),
+        Q_ARG(bool, error)
+    );
+}
+void Logger::write(const QString & initiator, const QString & value, const QStringList & attrs, bool error) {
+    QMetaObject::invokeMethod(
+        this,
+        "writeToStream",
+        Qt::AutoConnection,
+        Q_ARG(const QString &, initiator),
+        Q_ARG(const QString &, value),
+        Q_ARG(const QStringList &, attrs),
+        Q_ARG(bool, error)
+    );
+}
+
 
 void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
     if ((m_editor = editor))

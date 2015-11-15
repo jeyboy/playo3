@@ -83,7 +83,7 @@ namespace Core {
                                 song_obj.insert(title_key, title);
 
                                 json << song_obj;
-                            } else emit Logger::obj().write(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
+                            } else Logger::obj().write(QStringLiteral("Jetune"), QStringLiteral("Parse error"), QString(), true);
                         }
 
                         result = !songs.isEmpty();
