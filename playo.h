@@ -22,8 +22,6 @@
 #include "dialogs/relations_dialog.h"
 #include "dialogs/echonest_dialog.h"
 
-#include "modules/plugins/plugins.h"
-
 namespace Ui { class Playo; }
 
 #define FRONT_SETTINGS_FILE_NAME QStringLiteral("settings.ini")

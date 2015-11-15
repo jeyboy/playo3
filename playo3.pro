@@ -219,8 +219,6 @@ HEADERS += \
     modules/models/model_interface.h \
     modules/models/model_item_delegate.h \
     modules/models/tree_model.h \
-    modules/plugins/plugins.h \
-    modules/plugins/web_dialog_interface.h \
     modules/views/web/od_view.h \
     modules/views/web/soundcloud_view.h \
     modules/views/web/vk_rel_view.h \
@@ -366,7 +364,6 @@ SOURCES += \
     modules/models/model_interface.cpp \
     modules/models/model_item_delegate.cpp \
     modules/models/tree_model.cpp \
-    modules/plugins/plugins.cpp \
     modules/views/web/od_view.cpp \
     modules/views/web/soundcloud_view.cpp \
     modules/views/web/vk_rel_view.cpp \

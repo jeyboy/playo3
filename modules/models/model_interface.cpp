@@ -640,19 +640,18 @@ void IModel::copyTitleToClipboard(const QModelIndex & index) {
 void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QString ret = "";
 
+    QHash<int, QString> templates;
+    templates.insert(VK_FILE, QString::number(VK_FILE));
+    templates.insert(SOUNDCLOUD_FILE, QString::number(SOUNDCLOUD_FILE));
+
     for(QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); it++) {
         IItem * itm = item(*it);
-        QString ident;
-
-        switch(itm -> itemType()) {
-            case VK_FILE: { ident = SHARE_TYPE_VK; break;}
-            case SOUNDCLOUD_FILE: { ident = SHARE_TYPE_SOUNDCLOUD; break;}
-        }
+        QString ident = templates[itm -> itemType()];
 
         if (!ident.isEmpty()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret += " " + (ident) + uid.toString();
+                ret += " " + (ident) + SHARE_DELIMITER + uid.toString();
         }
     }
 
@@ -662,14 +661,15 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QApplication::clipboard() -> setText(ret);
 }
 
-void IModel::importIds(QWidget * parent, QStringList ids) {
+void IModel::importIds(QStringList ids) {
     using namespace Data;
 
     emit moveInBackgroundProcess();
-    QHash<QString, QStringList> uidsMap;
+    QHash<int, QStringList> uidsMap;
 
     for(QStringList::Iterator it = ids.begin(); it != ids.end(); it++) {
-        uidsMap[(*it).mid(0, 2)].append((*it).mid(2));
+        QStringList parts = (*it).split(SHARE_DELIMITER);
+        uidsMap[parts.first().toInt()].append(parts.last());
     }
 
     Playlist * parentNode = 0;
@@ -704,37 +704,27 @@ void IModel::importIds(QWidget * parent, QStringList ids) {
         beginInsertRows(index(parentNode), from, from + ids.size() - 1);
     }
 
-    for(QHash<QString, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
-        if (map_it.key() == SHARE_TYPE_VK) { // TODO: move this to usual connection
-            if (!Vk::Api::obj().isConnected()) {
-                WebDialogInterface * dInt;
-                if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
-                    dInt -> registerActions(&Vk::Api::obj());
-                    dialog -> exec(); //  dialog.exec();/* == QDialog::Accepted*/
-                    delete dInt;
-                }
-            }
+    for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
+        switch(map_it.key()) {
+            case VK_FILE: {
+                Vk::Api::obj().connection();
 
-            if (Vk::Api::obj().isConnected()) {
-                QJsonArray obj = Vk::Api::obj().getAudiosInfo(map_it.value());
-                proceedVkList(obj, parentNode);
-            }
-        } else if (map_it.key() == SHARE_TYPE_SOUNDCLOUD) { // TODO: move this to usual connection
-            if (!Soundcloud::Api::obj().isConnected()) {
-                WebDialogInterface * dInt;
-                if (Plugins::loadWebDialog(dInt)) {
-                    QDialog * dialog = dInt -> createDialog(parent, Web::Manager::prepare(), Soundcloud::Api::obj().authUrl(), QStringLiteral("Soundcloud auth"));
-                    dInt -> registerActions(&Soundcloud::Api::obj());
-                    dialog -> exec();
-                    delete dInt;
+                if (Vk::Api::obj().isConnected()) {
+                    QJsonArray obj = Vk::Api::obj().getAudiosInfo(map_it.value());
+                    proceedVkList(obj, parentNode);
                 }
-            }
+            break;}
 
-            if (Soundcloud::Api::obj().isConnected()) {
-                QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
-                proceedScList(obj, parentNode);
-            }
+            case SOUNDCLOUD_FILE: {
+                Soundcloud::Api::obj().connection();
+
+                if (Soundcloud::Api::obj().isConnected()) {
+                    QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
+                    proceedScList(obj, parentNode);
+                }
+            break;}
+
+            default: qDebug() << "UNSUPPORTED EXPORT TYPE";
         }
     }
 

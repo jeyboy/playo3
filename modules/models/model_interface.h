@@ -16,7 +16,6 @@
 #include "modules/core/media/library.h"
 
 #include "modules/controls/user_dialog_box.h"
-#include "modules/plugins/plugins.h"
 
 namespace Models {
     using namespace Core;
@@ -111,7 +110,7 @@ namespace Models {
 
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);
-        void importIds(QWidget * parent, QStringList ids);
+        void importIds(QStringList ids);
 
         void markAllAsChecked();
         void markAllAsUnchecked();

@@ -64,8 +64,12 @@ QJsonObject Api::objectInfo(QString & uid) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-void Api::proceedAuthResponse(const QUrl & url) {
-    QUrlQuery query(url.query());
+bool Api::connection() {
+    if (isConnected()) return true;
+
+
+
+//    QUrlQuery query(url.query());
 
 //    if (query.hasQueryItem(QStringLiteral("error"))) {
 //        error = query.queryItemValue(QStringLiteral("error_description"));

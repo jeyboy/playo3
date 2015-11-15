@@ -37,7 +37,7 @@ namespace Core {
                 }
             public slots:
                 inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
-                void proceedAuthResponse(const QUrl & url);
+                bool connection();
 
             protected:
                 inline QString refresh(QString path) { return path; }

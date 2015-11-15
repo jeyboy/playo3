@@ -231,10 +231,10 @@ void IView::importIds() {
     UserActionDialog dialog(this);
     dialog.buildImportForm();
 
-    if (dialog.exec() == QDialog::Accepted) {
-        QStringList ids = dialog.getValue(dialog.text_key).split(QRegularExpression(QStringLiteral("\\W")), QString::SkipEmptyParts);
-        mdl -> importIds(this, ids);
-    }
+    if (dialog.exec() == QDialog::Accepted)
+        mdl -> importIds(
+            dialog.getValue(dialog.text_key).split(QRegularExpression(QStringLiteral("\\W")), QString::SkipEmptyParts)
+        );
 }
 
 void IView::copyIdsToClipboard() {
