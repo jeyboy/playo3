@@ -262,7 +262,8 @@ HEADERS += \
     modules/core/media/interfaces/imediainfo.h \
     modules/core/interfaces/iplaylistable.h \
     player/player_callback.h \
-    modules/controls/time_label.h
+    modules/controls/time_label.h \
+    modules/core/web/apis/service/recaptcha.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

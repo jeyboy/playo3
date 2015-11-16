@@ -5,6 +5,7 @@
 #include "modules/core/web/interfaces/web_api.h"
 #include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/apis/service/recaptcha.h"
 
 #include "soundcloud_request_api.h"
 #include "soundcloud_api_keys.h"

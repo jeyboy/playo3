@@ -27,6 +27,7 @@ namespace Core {
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
 
             Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
+            QString toText(bool destroy = true);
             QJsonObject toJson(const QString & wrap = QString(), bool destroy = true);
             QPixmap toImage(bool destroy = true);
             Html::Document toHtml(bool destroy = true);

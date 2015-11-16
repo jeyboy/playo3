@@ -133,19 +133,25 @@ namespace Core {
 
                 ////////  Tag //////////
 
-                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals) { // not full support of inputs
+                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable) { // not full support of inputs
                     QUrl url = QUrl(value(QStringLiteral("action")));
                     Set inputs = find("input") << find("select");
+                    QHash<QString, QString> url_vals(vals);
 
                     if (!inputs.isEmpty()) {
                         QUrlQuery query = QUrlQuery(url.query());
 
                         for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
                             QString inp_name = (*input) -> value(QStringLiteral("name"));
-                            QString inp_val = vals.value(inp_name, (*input) -> value());
+                            QString inp_val = url_vals.take(inp_name);
+                            if (inp_val.isEmpty()) inp_val = (*input) -> value();
 
                             query.addQueryItem(inp_name, inp_val);
                         }
+
+                        if (appendable && !url_vals.isEmpty())
+                            for(QHash<QString, QString>::Iterator it = url_vals.begin(); it != url_vals.end(); it++)
+                                query.addQueryItem(it.key(), it.value());
 
                         url.setQuery(query);
                     }

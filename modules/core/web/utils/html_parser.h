@@ -117,7 +117,7 @@ namespace Core {
                     return text ? text -> attrs.value(text_block_token) : QString();
                 }
 
-                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>());
+                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false);
                 QString toText() const;
 
                 inline QString link() const { return attrs.value(href_token); }

@@ -19,6 +19,12 @@ namespace Core {
 
             return this;
         }
+
+        QString Response::toText(bool destroy) {
+            QByteArray ar = readAll();
+            if (destroy) deleteLater();
+            return QString(ar);
+        }
         QJsonObject Response::toJson(const QString & wrap, bool destroy) {
             qDebug() << "IOERROR" << error();
             QByteArray ar = readAll();

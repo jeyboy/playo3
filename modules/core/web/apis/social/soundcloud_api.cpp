@@ -64,52 +64,65 @@ QJsonObject Api::objectInfo(QString & uid) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connection() { //TODO: not tested
+bool Api::connection() { //TODO: not finished
     if (isConnected()) return true;
 
     QUrl auth_url = authUrl();
     QUrl form_url = auth_url;
+    Response * resp = Manager::prepare() -> followedGet(form_url);
+    QHash<QString, QString> vals;
 
     while(true) {
-        Response * resp = Manager::prepare() -> followedGet(form_url);
+        qDebug() << "----------------------------------------------------";
         QString err;
-        Html::Document html = resp -> toHtml(false);
+        Html::Document html = resp -> toHtml();
 
-        if (html.has("input[name='password']")) { // if user not authorized
-            resp -> deleteLater();
-            QHash<QString, QString> vals;
-            err = html.find(".service_msg_warning").text();
-            if (!showingLogin(vals[QStringLiteral("username")], vals[QStringLiteral("password")], err))
-                return false;
+        html.output();
 
-            Html::Set forms = html.find("form.authorize-token");
+        Html::Set forms = html.find("form.authorize-token");
 
-            if (forms.isEmpty()) {
-                Logger::obj().write("Soundcloud auth", QStringLiteral("Auth form did not found"), true);
-                return false;
-            }
-
-            Html::Set captcha_set = html.find("#recaptcha_image");
-            if (!captcha_set.isEmpty()) {
-                QString captcha_src = captcha_set.find("img").value("src");
-
-                if (!showingCaptcha(QUrl(captcha_src), vals["recaptcha_response_field"]))
-                    return false;
-            }
-
-            form_url = forms.first() -> serializeFormToUrl(vals);
-
-            if (form_url.isRelative())
-                form_url = auth_url.resolved(form_url);
-
-            resp = Manager::prepare() -> followedForm(form_url);
+        if (forms.isEmpty()) {
+            Logger::obj().write("Soundcloud auth", QStringLiteral("Auth form did not found"), true);
+            return false;
         }
 
-        form_url = resp -> toUrl();
-        QUrlQuery query(form_url.query());
+        Html::Tag * form = forms.first();
+
+        if (form -> has("input[name='password']")) { // if user not authorized
+            err = html.find(".warning").text();
+            if (!showingLogin(vals[QStringLiteral("username")], vals[QStringLiteral("password")], err))
+                return false;           
+
+//            script ||| [(type : text/javascript)(src : https://www.google.com/recaptcha/api/challenge?k=6LeABsUSAAAAABLOEF92U0unfhlGLynYlhvJRFue)]
+
+//            Html::Set captcha_set = form -> find("script[src^'https://www.google.com/recaptcha/api/challenge']");
+            Html::Set captcha_set = form -> find(QString("script[src^'https://www.google.com/recaptcha/api/challenge']").toUtf8().data());
+            if (!captcha_set.isEmpty()) {
+                QString captcha_src = captcha_set.first() -> value("src");
+                qDebug() << "CAPTCHA" << captcha_src;
+
+                if (!showingCaptcha(Recaptcha::V1::obj().takeImageUrl(captcha_src, vals["recaptcha_challenge_field"]), vals["recaptcha_response_field"]))
+                    return false;
+            }
+        }
+
+        form_url = form -> serializeFormToUrl(vals, true);
+
+        if (form_url.isRelative())
+            form_url = auth_url.resolved(form_url);
+
+        qDebug() << "FORM_URL" << form_url;
+
+        QHash<QString, QString> headers;
+        headers.insert(QStringLiteral("Referer"), form_url.toString());
+        resp = Manager::prepare() -> followedForm(form_url, headers);
+
+        QUrlQuery query(resp->toUrl(false).query());
 
         if (query.hasQueryItem(QStringLiteral("error"))) {
             error = query.queryItemValue(QStringLiteral("error_description"));
+            qDebug() << "ERRRRRRRRRR" << error;
+            resp -> deleteLater();
             return false;
         } else if (query.hasQueryItem(QStringLiteral("code"))) {
             QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
@@ -120,6 +133,7 @@ bool Api::connection() { //TODO: not tested
 
                 setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
                 emit authorized();
+                resp -> deleteLater();
                 return true;
             }
         }

@@ -118,7 +118,7 @@ public:
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
 
-    void buildLoginForm(const QString & err = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
+    void buildLoginForm(const QString & err = QString(), const QString & login_val = QString(), const QString & password_val = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
     void buildToolbarForm(const QString & name = QString());

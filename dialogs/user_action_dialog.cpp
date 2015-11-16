@@ -11,7 +11,7 @@ UserActionDialog::~UserActionDialog() {
     delete ui;
 }
 
-void UserActionDialog::buildLoginForm(const QString & err, const QString & login_label, const QString & password_label) {
+void UserActionDialog::buildLoginForm(const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
     QList<FormInput> inputs;
 
     if (!err.isEmpty())
