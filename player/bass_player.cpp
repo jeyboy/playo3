@@ -164,7 +164,6 @@ int BassPlayer::calcFileSize() {
 
 
 bool BassPlayer::registerEQ() {
-    qDebug() << "REGISTER EQ";
     if (_fxEQ) unregisterEQ();
 
     if ((_fxEQ = BASS_ChannelSetFX(chan, BASS_FX_BFX_PEAKEQ, 0))) {
@@ -176,7 +175,6 @@ bool BassPlayer::registerEQ() {
         QMap<float, QString> eqBands = bands();
         QMap<float, QString>::Iterator band = eqBands.begin();
         for(int num = 0; band != eqBands.end(); band++, num++) {
-            qDebug() << "REGISTER EQ KEY" << num << eqBandsGains.value(num, 0);
             eq.fGain = eqBandsGains.value(num, 0);
             eq.lBand = num; eq.fCenter = band.key(); BASS_FXSetParameters(_fxEQ, &eq);
         }
@@ -185,7 +183,6 @@ bool BassPlayer::registerEQ() {
     return _fxEQ != 0;
 }
 bool BassPlayer::unregisterEQ() {
-    qDebug() << "UNREGISTER EQ";
     if (!_fxEQ) return false;
     bool res = BASS_ChannelRemoveFX(chan, _fxEQ);
     _fxEQ = 0;

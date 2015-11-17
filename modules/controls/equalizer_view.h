@@ -17,6 +17,11 @@
 #include "dialogs/user_action_dialog.h"
 #include "clickable_slider.h"
 
+#define EQ_MIN_INTERVAL -150
+#define EQ_MAX_INTERVAL 150
+#define EQ_BASE 10.0
+
+
 namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")
     #define JSON_KEY QStringLiteral("presets")

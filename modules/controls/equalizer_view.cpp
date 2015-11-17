@@ -46,7 +46,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
 
         ClickableSlider * slider = new ClickableSlider(this);
         slider -> setOrientation(Qt::Vertical);
-        slider -> setMinimum(-150); slider -> setMaximum(150);
+        slider -> setMinimum(EQ_MIN_INTERVAL); slider -> setMaximum(EQ_MAX_INTERVAL);
         slider -> setProperty("num", num);
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
         layout -> addWidget(slider, 1, num, Qt::AlignCenter);
@@ -182,9 +182,9 @@ void EqualizerView::presetChanged(QString name) {
 void EqualizerView::eqValueChanged(int val) {
     QSlider * slider = (QSlider *)sender();
     int pos = slider -> property("num").toInt();
-    PlayerFactory::obj().currPlayer() -> eqBand(pos, val / 15.0);
+    PlayerFactory::obj().currPlayer() -> eqBand(pos, val / EQ_BASE);
 
-    dbOutput[pos] -> setText(QString::number(val));
+    dbOutput[pos] -> setText(QString::number(val / EQ_BASE, 'g', 2) % QStringLiteral(" dB"));
 
     if (presetChanging) return;
 
