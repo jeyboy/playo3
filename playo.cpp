@@ -41,12 +41,12 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
+    Settings::obj().anchorWidget(this);
     Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
-    Settings::obj().anchorWidget(this);
     PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings init and providing
 }
 
@@ -59,10 +59,9 @@ void Playo::initialization() {
     ///////////////////////////////////////////////////////////
     ///services loading
     ///////////////////////////////////////////////////////////
-    Web::Apis::initiate(settings -> obj());
     Settings::obj().fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
-
     activation();
+    Web::Apis::initiate(settings -> obj());
 
     SettingsDialog::registerHotkeys(&Dockbars::obj());
 

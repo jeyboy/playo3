@@ -33,7 +33,7 @@ bool Api::connection() {
             resp -> deleteLater();
             QHash<QString, QString> vals;
             err = html.find(".service_msg_warning").text();
-            if (!showingLogin(vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
+            if (!showingLogin(QStringLiteral("Vk auth"), vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
                 return false;
 
             Html::Set forms = html.find("form");

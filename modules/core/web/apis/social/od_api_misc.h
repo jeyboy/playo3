@@ -27,7 +27,7 @@ namespace Core {
 
                     inline bool checkCredentials() {
                         if (authE.isEmpty() || authP.isEmpty())
-                            return showingLogin(authE, authP);
+                            return showingLogin(QStringLiteral("Odnoklassniki auth"), authE, authP);
 
                         return true;
                     }

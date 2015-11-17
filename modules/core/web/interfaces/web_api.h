@@ -49,7 +49,8 @@ namespace Core {
         virtual inline void disconnect() { clearData(); }
 
         bool showingCaptcha(const QUrl & pict_url, QString & result);
-        bool showingLogin(QString & login, QString & pass, const QString & err = QString());
+        bool showingLogin(const QString & title, QString & login, QString & pass, const QString & err = QString());
+        bool showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err = QString());
 
     protected:
         UserActionDialog * actionDialog;

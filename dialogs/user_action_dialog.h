@@ -118,6 +118,22 @@ public:
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
 
+
+    void buildErrFields(const QString & err) {
+        inputs << FormInput::createMessage(err);
+    }
+
+    void buildLoginFields(const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
+        inputs << FormInput::createStr(login_key, login_label, login_val);
+        inputs << FormInput::createStr(pass_key, password_label, password_val);
+    }
+
+    void buildCaptchaFields(const QPixmap & captcha_img) {
+        inputs << FormInput(captcha_img);
+        inputs << FormInput::createStr(captcha_key, QStringLiteral("Captcha value"));
+    }
+
+    void buildLoginWithCaptchaForm(const QPixmap & captcha_img, const QString & err, const QString & login_val, const QString & password_val, const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildLoginForm(const QString & err = QString(), const QString & login_val = QString(), const QString & password_val = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
@@ -201,6 +217,7 @@ private:
     Ui::UserActionDialog * ui;
     QHash<QString, QPair<FormInputType, QWidget *> > elements;
     QHash<QObject *, FormInput> actions;
+    QList<FormInput> inputs;
     QWidget * layer;
     bool finalized;
 };

@@ -30,7 +30,9 @@ namespace Core {
             public:
                 //                Recaptcha.finish_reload('03AHJ_VuvoR-17M1qLHt_V9U0CWwIFxUbXOiOngRNMOjmT_yKcWu0HdsAkWidBT213JAM_gdbovYJukKmgxxMc9mlpmHqedOXqs4WGXri4eOWy4u0MaHFO6s3Pua8V6KMcapFLZj8Ri-vFXRbR-4tJgsNHfKUhmyzDkEtTKZabSV1hlupV2Nq5Jp88fGbdXOjK5vIf_BmguQJvcTb-oDLVshQDeBRPXKStYZEmLX2JzgZMP4OJy_KWmyH4XES0CEq9pJucFHwKovkzrd36-DOm1eiw0jtt5EDgTQ', 'image', null, null);
                 QUrl takeNewImageUrl(const QString & key, QString & challenge, const QString & lang = QStringLiteral("en"), const QString & content_type = QStringLiteral("image")) {
-                    QString response = Manager::prepare() -> followedGet(buildReloadUrl(key, challenge, lang, content_type)) -> toText();
+                    QUrl rel_url = buildReloadUrl(key, challenge, lang, content_type);
+                    qDebug() << "REL URL" << rel_url;
+                    QString response = Manager::prepare() -> followedGet(rel_url) -> toText();
                     challenge = response.section(QStringLiteral("finish_reload('"), -1).section('\'', 0, 0);
                     qDebug() << "RECAPTCHA" << response;
                     qDebug() << "RECAPTCHA STR" << challenge;
@@ -38,10 +40,11 @@ namespace Core {
                 }
 
                 QUrl takeImageUrl(const QString & key, QString & challenge) {
-                    QUrl challenge_url = buildChallengeUrl(key.section(QStringLiteral("?k="), -1));
+                    QString key_str = key.section(QStringLiteral("?k="), -1);
+                    QUrl challenge_url = buildChallengeUrl(key_str);
                     QString challenge_manifest = Manager::prepare() -> followedGet(challenge_url) -> toText();
                     challenge = challenge_manifest.section(QStringLiteral("challenge : '"), -1).section('\'', 0, 0);
-                    return takeNewImageUrl(key, challenge);
+                    return takeNewImageUrl(key_str, challenge);
 //                    return buildPictUrl(challenge);
                 }
             };

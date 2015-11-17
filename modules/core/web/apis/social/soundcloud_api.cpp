@@ -90,19 +90,21 @@ bool Api::connection() { //TODO: not finished
 
         if (form -> has("input[name='password']")) { // if user not authorized
             err = html.find(".warning").text();
-            if (!showingLogin(vals[QStringLiteral("username")], vals[QStringLiteral("password")], err))
-                return false;           
-
-//            script ||| [(type : text/javascript)(src : https://www.google.com/recaptcha/api/challenge?k=6LeABsUSAAAAABLOEF92U0unfhlGLynYlhvJRFue)]
 
 //            Html::Set captcha_set = form -> find("script[src^'https://www.google.com/recaptcha/api/challenge']");
+            QString captcha_src;
             Html::Set captcha_set = form -> find(QString("script[src^'https://www.google.com/recaptcha/api/challenge']").toUtf8().data());
-            if (!captcha_set.isEmpty()) {
-                QString captcha_src = captcha_set.first() -> value("src");
-                qDebug() << "CAPTCHA" << captcha_src;
+            if (!captcha_set.isEmpty())
+                captcha_src = captcha_set.first() -> value("src");
 
-                if (!showingCaptcha(Recaptcha::V1::obj().takeImageUrl(captcha_src, vals["recaptcha_challenge_field"]), vals["recaptcha_response_field"]))
+            if (captcha_src.isEmpty()) {
+                if (!showingLogin(QStringLiteral("Soundcloud auth"), vals[QStringLiteral("username")], vals[QStringLiteral("password")], err))
                     return false;
+            } else {
+                if (!showingLoginWithCaptcha(
+                    QStringLiteral("Soundcloud auth"), Recaptcha::V1::obj().takeImageUrl(captcha_src, vals["recaptcha_challenge_field"]),
+                    vals[QStringLiteral("username")], vals[QStringLiteral("password")], vals["recaptcha_response_field"], err
+                )) return false;
             }
         }
 
