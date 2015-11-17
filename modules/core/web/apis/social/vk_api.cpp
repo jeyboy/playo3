@@ -23,6 +23,7 @@ bool Api::connection() {
     if (isConnected()) return true;
 
     QUrl form_url = authUrl();
+    qDebug() << "URLA" << form_url;
 
     while(true) {
         Response * resp = Manager::prepare() -> followedGet(form_url);
@@ -33,8 +34,6 @@ bool Api::connection() {
             resp -> deleteLater();
             QHash<QString, QString> vals;
             err = html.find(".service_msg_warning").text();
-            if (!showingLogin(QStringLiteral("Vk auth"), vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
-                return false;
 
             Html::Set forms = html.find("form");
 
@@ -42,8 +41,24 @@ bool Api::connection() {
                 Logger::obj().write("Vk auth", QStringLiteral("Auth form did not found"), true);
                 return false;
             }
+            Html::Tag * form = forms.first();
 
-            form_url = forms.first() -> serializeFormToUrl(vals);
+            QString captcha_src;
+            Html::Set captcha_set = form -> find("img#captcha");
+
+            if (!captcha_set.isEmpty())
+                captcha_src = captcha_set.first() -> value("src");
+
+            if (captcha_src.isEmpty()) {
+                if (!showingLogin(QStringLiteral("Vk auth"), vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
+                    return false;
+            } else {
+                if (!showingLoginWithCaptcha(QStringLiteral("Vk auth"), captcha_src,
+                    vals[QStringLiteral("email")], vals[QStringLiteral("pass")], vals[QStringLiteral("captcha_key")], err
+                )) return false;
+            }
+
+            form_url = form -> serializeFormToUrl(vals);
             resp = Manager::prepare() -> followedForm(form_url);
         }
 

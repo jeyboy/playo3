@@ -64,7 +64,7 @@ QJsonObject Api::objectInfo(QString & uid) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connection() { //TODO: not finished
+bool Api::connection() {
     if (isConnected()) return true;
 
     QUrl auth_url = authUrl();
@@ -73,11 +73,8 @@ bool Api::connection() { //TODO: not finished
     QHash<QString, QString> vals;
 
     while(true) {
-        qDebug() << "----------------------------------------------------";
         QString err;
         Html::Document html = resp -> toHtml();
-
-        html.output();
 
         Html::Set forms = html.find("form.authorize-token");
 
@@ -91,9 +88,10 @@ bool Api::connection() { //TODO: not finished
         if (form -> has("input[name='password']")) { // if user not authorized
             err = html.find(".warning").text();
 
-//            Html::Set captcha_set = form -> find("script[src^'https://www.google.com/recaptcha/api/challenge']");
             QString captcha_src;
-            Html::Set captcha_set = form -> find(QString("script[src^'https://www.google.com/recaptcha/api/challenge']").toUtf8().data());
+//            Html::Set captcha_set = form -> find(QString("script[src^'https://www.google.com/recaptcha/api/challenge']").toUtf8().data());
+            Html::Set captcha_set = form -> find(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
+
             if (!captcha_set.isEmpty())
                 captcha_src = captcha_set.first() -> value("src");
 

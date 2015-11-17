@@ -4,7 +4,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/utils/web_manager.h"
 
-#define RECAPTCHA_BASE_URL QStringLiteral("http://www.google.com/recaptcha/api/")
+#define RECAPTCHA_BASE_URL QStringLiteral("https://www.google.com/recaptcha/api/")
 #define RECAPTCHA_CHALLENGE_URL RECAPTCHA_BASE_URL % QStringLiteral("challenge?k=")
 #define RECAPTCHA_RELOAD_URL RECAPTCHA_BASE_URL % QStringLiteral("reload?c=")
 
