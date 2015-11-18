@@ -111,7 +111,6 @@ bool BassPlayer::playProcessing(bool paused) {
     return false; // skip inherited actions
 }
 bool BassPlayer::resumeProcessing() {
-    qDebug() << "RESUME";
     if (!BASS_ChannelPlay(chan, false)) {
         qDebug() << "Error resuming";
         return false;
@@ -120,18 +119,18 @@ bool BassPlayer::resumeProcessing() {
     return true;
 }
 bool BassPlayer::pauseProcessing() {
-    qDebug() << "PAUSE";
     return BASS_ChannelPause(chan);
 }
 bool BassPlayer::stopProcessing() {
-    qDebug() << "STOP";
-    if (BASS_ChannelStop(chan)) {
-        unregisterEQ();
-        BASS_ChannelRemoveSync(chan, syncHandle);
-        BASS_ChannelRemoveSync(chan, syncDownloadHandle);
-        BASS_StreamFree(chan);
+    if (chan) {
+        if (BASS_ChannelStop(chan)) {
+            unregisterEQ();
+            BASS_ChannelRemoveSync(chan, syncHandle);
+            BASS_ChannelRemoveSync(chan, syncDownloadHandle);
+            BASS_StreamFree(chan);
+        }
+        else qDebug() << "Error while stopping";
     }
-    else qDebug() << "Error while stopping";
 
     return true;
 }

@@ -129,7 +129,6 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> save();
 
     Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
-
     MainWindow::closeEvent(e);
 }
 
