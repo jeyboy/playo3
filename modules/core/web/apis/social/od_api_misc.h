@@ -20,18 +20,6 @@ namespace Core {
 
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
 
-                    inline void nullifyCredentials() {
-                        authE.clear();
-                        authP.clear();
-                    }
-
-                    inline bool checkCredentials() {
-                        if (authE.isEmpty() || authP.isEmpty())
-                            return showingLogin(QStringLiteral("Odnoklassniki auth"), authE, authP);
-
-                        return true;
-                    }
-
                     inline bool hasError(const QJsonObject & obj) {
                         return obj.contains(QStringLiteral("error"));
                     }

@@ -89,7 +89,6 @@ bool Api::connection() {
             err = html.find(".warning").text();
 
             QString captcha_src;
-//            Html::Set captcha_set = form -> find(QString("script[src^'https://www.google.com/recaptcha/api/challenge']").toUtf8().data());
             Html::Set captcha_set = form -> find(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
 
             if (!captcha_set.isEmpty())
@@ -110,8 +109,6 @@ bool Api::connection() {
 
         if (form_url.isRelative())
             form_url = auth_url.resolved(form_url);
-
-        qDebug() << "FORM_URL" << form_url;
 
         QHash<QString, QString> headers;
         headers.insert(QStringLiteral("Referer"), form_url.toString());
@@ -138,82 +135,4 @@ bool Api::connection() {
             }
         }
     }
-
-
-
-
-
-
-//    QUrl url(Web::Soundcloud::Api::obj().authUrl());
-//    qDebug() <<  url.toString();
-
-
-//    QHash<QString, QString> vals;
-//    Soundcloud::Api::obj().showingLogin(vals[QStringLiteral("username")], vals[QStringLiteral("password")]);
-//    QUrl form_url;
-
-//////    for(int i = 0; i < 2; i++) {
-//    Web::Response * res = Web::Manager::prepare() -> followedGet(url);
-
-//    // repeat this
-
-//    Html::Document doc = res -> toHtml(false);
-//    doc.output();
-
-
-//    Html::Set set = doc.find("form.log-in");
-//    if (set.isEmpty()) {
-//        set = doc.find("form.authorize-token");
-//    }
-
-//    if (!set.isEmpty()) {
-//        Html::Set captcha_set = doc.find("#recaptcha_image");
-//        if (!captcha_set.isEmpty()) {
-//            QString captcha_src = captcha_set.find("img").value("src");
-
-//            if (!Web::Soundcloud::Api::obj().showingCaptcha(QUrl(captcha_src), vals["recaptcha_response_field"]))
-//                return;
-//        }
-
-//        form_url = set.first() -> serializeFormToUrl(vals);
-//        if (form_url.isRelative())
-//            form_url = url.resolved(form_url);
-//        Web::Response * resp = Web::Manager::prepare() -> followedForm(form_url);
-
-//        qDebug() << "SOSO $$$" << resp -> toUrl(false);
-//    }
-//    else qDebug() << "PPPPPPPIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII";
-
-//    // if url is not contain access_token
-
-
-//    res -> deleteLater();
-
-
-
-
-
-
-
-
-
-//    QUrlQuery query(url.query());
-
-//    if (query.hasQueryItem(QStringLiteral("error"))) {
-//        error = query.queryItemValue(QStringLiteral("error_description"));
-//        emit responseReady(QStringLiteral("reject"));
-//    } else if (query.hasQueryItem(QStringLiteral("code"))) {
-//        QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
-
-//        if (doc.contains(QStringLiteral("access_token"))) {
-//            QString newToken = doc.value(QStringLiteral("access_token")).toString();
-//            doc = Web::Manager::prepare() -> getJson(confirmAuthUrl(newToken));
-
-//            setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
-//            emit authorized();
-//            emit responseReady(QStringLiteral("accept"));
-//        }
-//        else emit responseReady(QStringLiteral("reject"));
-//    }
-//    else emit responseReady("");
 }

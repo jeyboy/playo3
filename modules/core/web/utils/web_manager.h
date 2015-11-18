@@ -32,6 +32,7 @@ namespace Core {
             QPixmap toImage(bool destroy = true);
             Html::Document toHtml(bool destroy = true);
             QUrl toUrl(bool destroy = true);
+            QUrl toRedirectUrl(bool destroy = true);
         };
 
         class Manager;

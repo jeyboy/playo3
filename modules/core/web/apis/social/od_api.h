@@ -73,28 +73,58 @@ namespace Core {
                 }
 
                 bool formConnection() {
-                    Manager::printCookies();
-                    if (!checkCredentials()) return false;
+                    QString err;
 
-                    Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
-                    QUrl url = reply -> redirectUrl().toUrl();
-                    hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
-                    reply -> deleteLater();
+                    while(true) {
+                        if (!showingLogin(QStringLiteral("Odnoklassniki auth"), authE, authP, err)) return false;
 
-                    reply = Manager::prepare() -> followedGet(url, initHeaders());
-                    QString error = reply -> paramVal(QStringLiteral("st.error"));
-                    if (!error.isEmpty()) {
-                        nullifyCredentials();
-                        reply -> deleteLater();
-                        return false;
+                        Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
+                        QUrl url = reply -> toRedirectUrl();
+                        hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
+
+                        reply = Manager::prepare() -> followedGet(url, initHeaders());
+                        err = reply -> paramVal(QStringLiteral("st.error"));
+                        if (!err.isEmpty()) {
+                            reply -> deleteLater();
+                            continue;
+                        }
+
+                        Html::Document doc = reply -> toHtml();
+                        checkSecurity(doc);
+
+                        if (!Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty()) {
+                            setParams(QString(), grabUserId(doc), QString());
+                            break;
+                        }
+                        else err = doc.find(".anonym_e").text();
                     }
 
-                    Html::Document doc(reply);
-                    checkSecurity(doc);
+                    return true;
 
-                    setParams(QString(), grabUserId(doc), QString());
-                    reply -> deleteLater();
-                    return !Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
+
+
+//                    Manager::printCookies();
+//                    if (!checkCredentials()) return false;
+
+//                    Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
+//                    QUrl url = reply -> redirectUrl().toUrl();
+//                    hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
+//                    reply -> deleteLater();
+
+//                    reply = Manager::prepare() -> followedGet(url, initHeaders());
+//                    QString error = reply -> paramVal(QStringLiteral("st.error"));
+//                    if (!error.isEmpty()) {
+//                        nullifyCredentials();
+//                        reply -> deleteLater();
+//                        return false;
+//                    }
+
+//                    Html::Document doc(reply);
+//                    checkSecurity(doc);
+
+//                    setParams(QString(), grabUserId(doc), QString());
+//                    reply -> deleteLater();
+//                    return !Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
                 }
 
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }

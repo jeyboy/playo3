@@ -52,6 +52,12 @@ namespace Core {
             return uri;
         }
 
+        QUrl Response::toRedirectUrl(bool destroy) {
+            QUrl uri = redirectUrl().toUrl();
+            if (destroy) deleteLater();
+            return uri;
+        }
+
         //////////////////////////     WEB_REQUEST     /////////////////////////////
 
         Request * Request::withHeaders(const QHash<QString, QString> & headers) {
