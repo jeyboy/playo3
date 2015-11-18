@@ -193,7 +193,7 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
     return 0;
 }
 
-QToolBar * ToolBars::linkNameToToolbars(QString barName) {
+QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
     if (barName == toolbar_media_key)                   return createMediaBar();
     else if (barName == toolbar_equalizer_button_key)   return createEqualizerButtonBar();
     else if (barName == toolbar_media_plus_key)         return createAdditionalMediaBar();
@@ -207,7 +207,7 @@ QToolBar * ToolBars::linkNameToToolbars(QString barName) {
     else                                                return createToolBar(barName);
 }
 
-QToolBar * ToolBars::createToolBar(QString name) {
+QToolBar * ToolBars::createToolBar(const QString & name) {
     ToolBar * ptb = new ToolBar(name, container);
 
     ptb -> setFloatable(false);
@@ -223,7 +223,7 @@ QToolBar * ToolBars::createToolBar(QString name) {
     return ptb;
 }
 
-QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
+QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     QToolBar * ptb = new QToolBar(name, container);
     ptb -> setProperty(toolbar_service_mark, true);
     ptb -> setObjectName(QStringLiteral("_") % name);
@@ -242,23 +242,22 @@ QToolBar * ToolBars::precreateToolBar(QString name, bool oriented) {
 }
 
 QToolBar * ToolBars::createMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_key);
+    QToolBar * ptb = precreateToolBar(toolbar_media_key);   
 
-    QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
-//    connect(act, SIGNAL(triggered(bool)), this, SLOT(start()));
-    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(play()));
+    play_btn = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
+    PlayerFactory::obj().registerCallback(in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
 
-    act = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
-//    connect(act, SIGNAL(triggered(bool)), this, SLOT(pause()));
-    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(pause()));
+    pause_btn = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
+    PlayerFactory::obj().registerCallback(in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
 
-    act = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
-//    connect(act, SIGNAL(triggered(bool)), this, SLOT(stop()));
-    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(stop()));
+    stop_btn = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
+    PlayerFactory::obj().registerCallback(in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
 
-    act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
+    QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
     act -> setCheckable(true);
     PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
+
+    PlayerFactory::obj().registerCallback(out, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
 
     ptb -> adjustSize();
 
@@ -556,7 +555,7 @@ QToolButton * ToolBars::initiateOdButton() {
     return odToolButton;
 }
 
-void ToolBars::addPanelButton(QString name, QString path, QToolBar * bar) {
+void ToolBars::addPanelButton(const QString & name, const QString & path, QToolBar * bar) {
     ToolbarButton * button = new ToolbarButton(name, path);
     connect(button, SIGNAL(clicked()), container, SLOT(openFolderTriggered()));
     bar -> addWidget(button);
@@ -658,6 +657,12 @@ void ToolBars::changeToolbarsMovable() {
             (*bar) -> setMovable(movable);
 }
 
-void ToolBars::onFolderDrop(QString name, QString path) {
+void ToolBars::playerStateChanged(const PlayerState & state) {
+    play_btn -> setVisible(state != PlayingState);
+    pause_btn -> setVisible(state == PlayingState);
+    stop_btn -> setVisible(state == PlayingState || state == PausedState);
+}
+
+void ToolBars::onFolderDrop(const QString & name, const QString & path) {
     addPanelButton(name, path, (QToolBar *)QObject::sender());
 }

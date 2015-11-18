@@ -35,14 +35,14 @@ namespace Presentation {
         void load(const QJsonArray & bars);
         void save(Core::DataStore * settings);
         void createToolbars();
-        void addPanelButton(QString name, QString path, QToolBar * bar);
+        void addPanelButton(const QString & name, const QString & path, QToolBar * bar);
 
         inline QList<QToolBar *> toolbars() { return container -> findChildren<QToolBar *>(); }
         SpectrumView * getSpectrum();
         inline void updateMetricSliders() { slider -> updateMetric(); }
 
         inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
-        inline void setEqualizerSettings(QJsonObject settings) { equalizer -> setSettings(settings); }
+        inline void setEqualizerSettings(const QJsonObject & settings) { equalizer -> setSettings(settings); }
 
         inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
@@ -53,7 +53,7 @@ namespace Presentation {
         void toolbarOrientationChanged(Qt::Orientation);
 
         void removePanelHighlight();
-        void panelHighlight(QAction *action = 0);
+        void panelHighlight(QAction * action = 0);
         void addPanelTriggered();
         void removePanelTriggered();
         void addPanelButtonTriggered();
@@ -69,7 +69,8 @@ namespace Presentation {
         QToolButton * initiateOdButton();
 
     protected slots:
-        void onFolderDrop(QString name, QString path);
+        void playerStateChanged(const PlayerState &);
+        void onFolderDrop(const QString & name, const QString & path);
 
         inline void onMovableChanged(bool /*movable*/) {
             updateBarStyle((QToolBar *)sender());
@@ -85,10 +86,10 @@ namespace Presentation {
 
         QToolBar * deiterateToToolBar(QWidget * obj);
 
-        QToolBar * linkNameToToolbars(QString barName);
+        QToolBar * linkNameToToolbars(const QString & barName);
 
-        QToolBar * createToolBar(QString name);
-        QToolBar * precreateToolBar(QString name, bool oriented = false);
+        QToolBar * createToolBar(const QString & name);
+        QToolBar * precreateToolBar(const QString & name, bool oriented = false);
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();
         QToolBar * createPositionMediaBar();
@@ -112,6 +113,10 @@ namespace Presentation {
         QToolButton * vkToolButton;
         QToolButton * soundcloudToolButton;
         QToolButton * odToolButton;
+
+        QAction * play_btn;
+        QAction * pause_btn;
+        QAction * stop_btn;
 
         QToolBar * highlighted;
         MetricSlider * slider;
