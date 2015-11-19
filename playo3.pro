@@ -137,7 +137,6 @@ HEADERS += \
     modules/core/web/interfaces/iapi.h \
     modules/core/web/interfaces/igrabber_api.h \
     modules/core/interfaces/isearchable.h \
-    modules/core/web/interfaces/web_api.h \
     modules/core/media/cue/cue.h \
     modules/core/media/cue/cue_structs.h \
     modules/core/media/genres/genres_interface.h \
@@ -263,7 +262,9 @@ HEADERS += \
     modules/core/interfaces/iplaylistable.h \
     player/player_callback.h \
     modules/controls/time_label.h \
-    modules/core/web/apis/service/recaptcha.h
+    modules/core/web/apis/service/recaptcha.h \
+    modules/core/web/interfaces/friendable.h \
+    modules/core/web/interfaces/groupable.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -393,4 +394,5 @@ SOURCES += \
     modules/core/media/interfaces/iplayer.cpp \
     modules/core/media/interfaces/ispectrumable.cpp \
     modules/core/media/interfaces/iequalizable.cpp \
-    player/bass_player.cpp
+    player/bass_player.cpp \
+    modules/core/web/interfaces/iapi.cpp

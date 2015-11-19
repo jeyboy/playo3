@@ -21,10 +21,16 @@ namespace Core {
     class IApi : public ISearchable {
         int code;
         QString message;
+    signals:
+        void authorized();
     public:
         inline virtual ~IApi() {}
     protected:
         enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
+
+        bool showingCaptcha(const QUrl & pict_url, QString & result);
+        bool showingLogin(const QString & title, QString & login, QString & pass, const QString & err = QString());
+        bool showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err = QString());
 
         virtual bool endReached(QJsonObject & response, int offset) = 0;
         virtual int requestLimit() const = 0;
@@ -42,48 +48,14 @@ namespace Core {
             return res;
         }
 
-        bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-            response = Web::Manager::prepare() -> getJson(url, post_proc & wrap);
-
-            bool status = extractStatus(url, response, code, message);
-            if (!status) {
-                Logger::obj().write(QStringLiteral("sQuery"), url.toString(), message, true);
-                sendError(errorReceiver, message, code);
-            } else {
-                if (post_proc & extract) extractBody(response);
-                Logger::obj().write(QStringLiteral("sQuery"), url.toString(), response.keys());
-            }
-            return status;
-        }
+        bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
 
         QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
             QJsonArray res;
             return lQuery(url, rules, res, post_proc, errorReceiver);
         }
 
-        QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-            QJsonObject response;
-
-            while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
-                QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
-                bool invalid = val.isArray();
-
-                if (invalid) {
-                    QJsonArray ar = val.toArray();
-                    invalid = ar.isEmpty();
-                    rules.fact_count += ar.size();
-                }
-
-                if (!invalid)
-                    concatJsonArrays(result, val.toArray());
-
-                iterateOffset(rules.offset, response, url);
-                if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
-                QThread::msleep(REQUEST_DELAY);
-            }
-
-            return result;
-        }
+        QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
 
         inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
             if (errorReceiver)
