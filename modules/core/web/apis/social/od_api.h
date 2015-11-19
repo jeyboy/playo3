@@ -3,16 +3,16 @@
 
 #include "modules/core/misc/thread_utils.h"
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/teu_auth.h"
 #include "od_request_api.h"
-
-#define HASH_KEY QStringLiteral("hash")
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public RequestApi, public TeuAuth, public Singleton<Api> {
+            class Api : public RequestApi, public Singleton<Api> {
                 Q_OBJECT
+
+                friend class Singleton<Api>;
+                inline Api() { }
             public:
                 inline QString name() const { return QStringLiteral("Od"); }
                 inline Web::SubType siteType() { return od_site; }
@@ -54,78 +54,12 @@ namespace Core {
                     return res;
                 }
                 inline void disconnect() {
-                    WebApi::disconnect(); setParams(QString(), QString(), QString());
-                    hash_key = QString();
+                    WebApi::disconnect();
+                    setParams(QString(), QString(), QString());
                 }
-                void proceedAuthResponse(const QUrl & url);
-
             protected:
-                bool hashConnection(bool onlyAuto) {
-                    QNetworkReply * reply = Manager::prepare() -> followedGet(initUrl(), initHeaders());
-                    reply -> deleteLater();
-
-                    if (!sessionIsValid())
-                        if (!onlyAuto && !formConnection())
-                            return false;
-
-                    setParams(grabSID(), userID(), QString());
-                    return true;
-                }
-
-                bool formConnection() {
-                    QString err;
-
-                    while(true) {
-                        if (!showingLogin(QStringLiteral("Odnoklassniki auth"), authE, authP, err)) return false;
-
-                        Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
-                        QUrl url = reply -> toRedirectUrl();
-                        hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
-
-                        reply = Manager::prepare() -> followedGet(url, initHeaders());
-                        err = reply -> paramVal(QStringLiteral("st.error"));
-                        if (!err.isEmpty()) {
-                            reply -> deleteLater();
-                            continue;
-                        }
-
-                        Html::Document doc = reply -> toHtml();
-                        checkSecurity(doc);
-
-                        if (!Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty()) {
-                            setParams(QString(), grabUserId(doc), QString());
-                            break;
-                        }
-                        else err = doc.find(".anonym_e").text();
-                    }
-
-                    return true;
-
-
-
-//                    Manager::printCookies();
-//                    if (!checkCredentials()) return false;
-
-//                    Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
-//                    QUrl url = reply -> redirectUrl().toUrl();
-//                    hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
-//                    reply -> deleteLater();
-
-//                    reply = Manager::prepare() -> followedGet(url, initHeaders());
-//                    QString error = reply -> paramVal(QStringLiteral("st.error"));
-//                    if (!error.isEmpty()) {
-//                        nullifyCredentials();
-//                        reply -> deleteLater();
-//                        return false;
-//                    }
-
-//                    Html::Document doc(reply);
-//                    checkSecurity(doc);
-
-//                    setParams(QString(), grabUserId(doc), QString());
-//                    reply -> deleteLater();
-//                    return !Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty();
-                }
+                bool hashConnection(bool onlyAuto);
+                bool formConnection();
 
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
@@ -144,9 +78,6 @@ namespace Core {
         //            message = stat_obj.value(QStringLiteral("error_message")).toString();
                     return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
                 }
-            private:
-                friend class Singleton<Api>;
-                inline Api() { }
             };
         }
     }

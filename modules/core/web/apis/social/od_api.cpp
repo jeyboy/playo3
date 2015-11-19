@@ -11,7 +11,7 @@ QString Api::authUrl() {
 
     QUrlQuery query = genDefaultParams();
 
-    setParam(query, QStringLiteral("cliend_id"), hash_key/*QStringLiteral("1152123904")*/);
+    setParam(query, QStringLiteral("cliend_id"), token()/*QStringLiteral("1152123904")*/);
     setParam(query, QStringLiteral("response_type"), QStringLiteral("token")); // code
     setParam(query, QStringLiteral("scope"), QStringLiteral("VALUABLE_ACCESS"));
     setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
@@ -23,20 +23,18 @@ QString Api::authUrl() {
 
 void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
+
     TeuAuth::fromJson(obj);
     WebApi::fromJson(obj);
-    hash_key = obj.value(HASH_KEY).toString(QStringLiteral("Umlm81sLBth1zoe4Gvr91su9jMGy8-9YHxVHKKT2mVev577x2yILuVz1rAETfg1kKu5H6kkjmX1umDYLjK0X6t9FFtKWE8FbHqjd3DFIZp9ZcPRGsRTamryfuTHAbFpoa8-fzj08H0XtkftqWJQt-2J6QNHyMPdYyiIzeoMjGupkLxdRFYTvDS6xUjZQRF9WdVe7Cb7_yNyuOThSK775Z6wwK5yrEN-cF8yfzugRquI6oAUberHcry2T_nuc9w2m"));
 
     if (!sessionIsValid())
-       connection(true);
+        connection(true);
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
     WebApi::toJson(root);
-
-    root.insert(HASH_KEY, hash_key);
 
     hash.insert(name(), root);
 }
@@ -76,26 +74,47 @@ void Api::toJson(QJsonObject & hash) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-void Api::proceedAuthResponse(const QUrl & /*url*/) {
-//        QUrlQuery query(url.query());
+bool Api::hashConnection(bool onlyAuto) {
+    QNetworkReply * reply = Manager::prepare() -> followedGet(initUrl(), initHeaders());
+    qDebug() << "!!!!!!!" << reply -> readAll();
+    reply -> deleteLater();
 
-//        if (query.hasQueryItem(QStringLiteral("error"))) {
-//            error = query.queryItemValue(QStringLiteral("error_description"));
-//            emit responseReady(QStringLiteral("reject"));
-//        } else if (query.hasQueryItem(QStringLiteral("code"))) {
-//            QNetworkRequest request(authTokenUrl());
-//            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-//            QJsonObject doc = WebManager::manager() -> postJson(request, authTokenUrlParams(query.queryItemValue(QStringLiteral("code"))));
+    Manager::printCookies();
 
-//            if (doc.contains(QStringLiteral("access_token"))) {
-//                QString newToken = doc.value(QStringLiteral("access_token")).toString();
-//                doc = WebManager::manager() -> getJson(confirmAuthUrl(newToken));
+    if (!sessionIsValid())
+        if (!onlyAuto && !formConnection())
+            return false;
 
-//                setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
-//                emit authorized();
-//                emit responseReady(QStringLiteral("accept"));
-//            }
-//            else emit responseReady(QStringLiteral("reject"));
-//        }
-//        else emit responseReady("");
+    setParams(grabSID(), userID(), QString());
+    return true;
+}
+
+bool Api::formConnection() {
+    QString err;
+
+    while(true) {
+        if (!showingLogin(QStringLiteral("Odnoklassniki auth"), authE, authP, err)) return false;
+
+        Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(), initHeaders());
+        QUrl url = reply -> toRedirectUrl();
+        QString hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
+
+        reply = Manager::prepare() -> followedGet(url, initHeaders());
+        err = reply -> paramVal(QStringLiteral("st.error"));
+        if (!err.isEmpty()) {
+            reply -> deleteLater();
+            continue;
+        }
+
+        Html::Document doc = reply -> toHtml();
+        checkSecurity(doc);
+
+        if (!Manager::cookie(QStringLiteral("AUTHCODE")).isEmpty()) {
+            setParams(hash_key, grabUserId(doc), QString());
+            break;
+        }
+        else err = doc.find(".anonym_e").text();
+    }
+
+    return true;
 }

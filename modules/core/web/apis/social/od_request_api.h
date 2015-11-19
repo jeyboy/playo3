@@ -2,6 +2,7 @@
 #define OD_REQUEST_API
 
 #include "od_api_misc.h"
+#include "modules/core/web/interfaces/teu_auth.h"
 
 #define OD_OFFSET_LIMIT 2000
 #define OD_SEARCH_LIMIT 200
@@ -9,10 +10,8 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class RequestApi : public Misc {
+            class RequestApi : public Misc, public TeuAuth {
             protected:
-                QString hash_key;
-
                 RequestApi() {}
 
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
@@ -24,7 +23,7 @@ namespace Core {
                 }
 
                 inline QUrl initUrl() const {
-                    QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % hash_key);
+                    QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % token());
                     return url;
                 }
 
