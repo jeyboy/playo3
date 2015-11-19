@@ -10,7 +10,9 @@
 #include "player_statuses.h"
 #include "modules/core/media/interfaces/imediainfo.h"
 
-#define MAX_VOLUME 10000
+#define VOLUME_MULTIPLIER 10000.0
+#define POSITION_MULTIPLIER 1000.0
+#define PAN_MULTIPLIER 1000.0
 
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
@@ -48,7 +50,7 @@ protected:
         ITrackable::setMaxProgress(newDuration);
         emit durationChanged((max_duration = newDuration));
     }
-    inline virtual int slidePercentage() const { return 10; }
+    inline virtual int slidePercentage() const { return 10.0; }
 
     virtual inline bool seekingBlocked() { return false; }
     inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }

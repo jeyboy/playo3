@@ -96,7 +96,6 @@ void BassPlayer::playPreproccessing() {
 }
 
 bool BassPlayer::playProcessing(bool paused) {
-    qDebug() << "PLAY";
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
@@ -139,15 +138,15 @@ int BassPlayer::recalcCurrentPosProcessing() {
     return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER;
 }
 bool BassPlayer::newPosProcessing(int newPos) {
-    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, newPos / POSITION_MULTIPLIER), BASS_POS_BYTE);
+    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, newPos / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
 }
 bool BassPlayer::newVolumeProcessing(int newVol) {
-    int volumeVal = newVol > 0 ? (newVol / VOLUME_MULTIPLIER) : 0;
-    return  BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+    float volumeVal = newVol > 0 ? (newVol / BASS_VOLUME_MULTIPLIER) : 0;
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
 }
 bool BassPlayer::newPanProcessing(int newPan) {
-    int panVal = newPan > 0 ? (newPan / PAN_MULTIPLIER) : 0;
-    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, panVal);
+    float panVal = newPan < -BASS_PAN_MULTIPLIER ? -BASS_PAN_MULTIPLIER : newPan > BASS_PAN_MULTIPLIER ? BASS_PAN_MULTIPLIER : newPan;
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, (panVal / BASS_PAN_MULTIPLIER));
 }
 
 float BassPlayer::prebufferingLevelCalc() {

@@ -379,12 +379,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setMaximum(10000);
     slider -> setValue(10000);
 
-//    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
-
-//    connect(trackBar, SIGNAL(valueChanged(int)), this, SLOT(setChannelVolume(int)));
     PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
-
-//    connect(this, SIGNAL(volumeChanged(int)), this, SLOT(setVolTrackbarValue(int)));
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     ptb -> addWidget(slider);

@@ -297,7 +297,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QVariant checkable = attrs.value(Key::checkable);
 
     int background_state = attrs.value(Key::state).toInt();
-    int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
+    int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 4;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
     QBrush state_color;
@@ -323,7 +323,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         bodyRect.moveLeft(bodyRect.left() + 2);
         bodyRect.setWidth(bodyRect.width() - 2);
     }
-
 
     if (option.state & (QStyle::State_MouseOver))
         painter -> setPen(QPen(QBrush(textColor), 3));
@@ -374,13 +373,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             }
         }
 
-        if (is_vk || is_sc) {
-            painter -> setPen(textColor);
-            QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
-            painter -> setFont(font);
-            painter -> drawText(icoRect.topRight() + QPoint(-4, 10), Key::asterix);
-        }
-
         ///////////////////////////////////////////////////
         if (icon_size > 24) {
             QPen cPen(state_color, state_width); cPen.setCosmetic(true); cPen.setCapStyle(Qt::SquareCap);
@@ -395,6 +387,19 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 //        painter -> drawArc(icoRect, 60 * 16, -70 * 16);
         painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////
+
+        if (is_vk || is_sc) {
+
+            QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
+            painter -> setFont(font);
+            painter -> setPen(Qt::NoPen);
+            painter -> setBrush(QBrush(is_selected ? Settings::obj().itemTextColor() : Settings::obj().selectedItemTextColor()));
+            QPointF centerP = icoRect.topLeft() + QPointF(icoRect.width() / 2 + 0.5, 1);
+            int rect_size = extra_font_size / 4;
+            painter -> drawEllipse(centerP, rect_size, rect_size);
+            painter -> setPen(textColor);
+            painter -> drawText(centerP + QPointF(-rect_size, 9), Key::asterix);
+        }
 
         if (Settings::obj().isShowInfo()) {
             painter -> setFont(itemInfoFont);

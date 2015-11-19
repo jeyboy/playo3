@@ -1,6 +1,6 @@
 #include "iplayer.h"
 
-IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), startPos(0), volumeVal(MAX_VOLUME), size(0), prebuffering_level(0), muted(false), looped(false), max_duration(0) {
+IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), startPos(0), volumeVal(VOLUME_MULTIPLIER), size(0), prebuffering_level(0), muted(false), looped(false), max_duration(0) {
     qRegisterMetaType<PlayerState>("PlayerState");
     qRegisterMetaType<PlayerStatus>("PlayerStatus");
 
@@ -36,7 +36,7 @@ void IPlayer::updatePosition(int newPos) {
 void IPlayer::playPostprocessing() {
     if (isInitiating()) {
         initFileSize();
-        if (startPos > 0) setPosition(startPos);
+        if (startPos > 0 && media_url.isLocalFile()) setPosition(startPos); // sets start offset only for local files
         setDuration(max_duration);
         emit statusChanged(PlaingMedia);
     }
@@ -84,10 +84,10 @@ void IPlayer::slidePosBackward() {
 }
 
 void IPlayer::slideVolForward() {
-    setVolume(qMin(MAX_VOLUME, volume() + MAX_VOLUME / slidePercentage()));
+    setVolume(qMin(VOLUME_MULTIPLIER, volume() + VOLUME_MULTIPLIER / slidePercentage()));
 }
 void IPlayer::slideVolBackward() {
-    setVolume(qMax(0, volume() - MAX_VOLUME / slidePercentage()));
+    setVolume(qMax(0.0, volume() - VOLUME_MULTIPLIER / slidePercentage()));
 }
 
 void IPlayer::setPosition(int newPos) {
