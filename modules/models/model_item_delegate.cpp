@@ -297,7 +297,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QVariant checkable = attrs.value(Key::checkable);
 
     int background_state = attrs.value(Key::state).toInt();
-    int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 4;
+    int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 6;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
     QBrush state_color;
