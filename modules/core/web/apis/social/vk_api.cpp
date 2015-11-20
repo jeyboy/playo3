@@ -5,13 +5,15 @@ using namespace Core::Web::Vk;
 void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
     TeuAuth::fromJson(obj);
-    WebApi::fromJson(obj);
+    Friendable::fromJson(obj);
+    Groupable::fromJson(obj);
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
-    WebApi::toJson(root);
+    Friendable::toJson(root);
+    Groupable::toJson(root);
 
     hash.insert(name(), root);
 }
@@ -23,7 +25,6 @@ bool Api::connection() {
     if (isConnected()) return true;
 
     QUrl form_url = authUrl();
-    qDebug() << "URLA" << form_url;
 
     while(true) {
         Response * resp = Manager::prepare() -> followedGet(form_url);

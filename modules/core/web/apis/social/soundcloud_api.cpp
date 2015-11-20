@@ -36,18 +36,18 @@ void Api::toJson(QJsonObject & hash) {
 //////////////////////////////////////////////////////////
 
 void Api::getGroupInfo(QString uid, QJsonObject & object) {
-    object.insert(Soundcloud::audio_list_key, groupAudio(uid));
-    object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
+    object.insert(audio_list_key, groupAudio(uid));
+    object.insert(playlist_key, groupPlaylists(uid));
 }
 
 void Api::getUserInfo(QString & uid, QJsonObject & object) {
-    object.insert(Soundcloud::audio_list_key, userAudio(uid));
-    object.insert(Soundcloud::playlist_key, userPlaylists(uid));
+    object.insert(audio_list_key, userAudio(uid));
+    object.insert(playlist_key, userPlaylists(uid));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(Soundcloud::followings_key, userFollowings(uid)); // return bad request error
-    object.insert(Soundcloud::followers_key, userFollowers(uid));
+    object.insert(followings_key, userFollowings(uid)); // return bad request error
+    object.insert(followers_key, userFollowers(uid));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(Soundcloud::groups_key, userGroups(uid));
+    object.insert(groups_key, userGroups(uid));
 }
 
 
