@@ -9,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class RequestApi : public IApi, public Keys {
+            class RequestApi : public IApi {
             protected:
                 inline QString boolToStr(bool val) { return val ? QStringLiteral("1") : QStringLiteral("0"); }
                 inline QString apiVersion() { return QStringLiteral("5.21"); }

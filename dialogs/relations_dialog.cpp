@@ -1,7 +1,7 @@
 #include "relations_dialog.h"
 #include "ui_relations_dialog.h"
 
-RelationsDialog::RelationsDialog(WebApi * currApi, QWidget * parent)
+RelationsDialog::RelationsDialog(ISearchable * currApi, QWidget * parent)
     : QDialog(parent), ui(new Ui::RelationsDialog), api(currApi) {
 
     ui -> setupUi(this);

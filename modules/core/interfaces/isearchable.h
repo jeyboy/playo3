@@ -84,6 +84,9 @@ namespace Core {
             return genres;
         }
 
+        virtual inline QHash<QString, QString> friendsList() const { return QHash<QString, QString>(); } // stub
+        virtual inline QHash<QString, QString> groupsList() const { return QHash<QString, QString>(); } // stub
+
         virtual QJsonArray byGenre(const QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
         virtual QJsonArray byChar(QChar /*target_char*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }

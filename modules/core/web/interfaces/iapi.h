@@ -19,10 +19,8 @@ namespace Core {
     };
 
     class IApi : public ISearchable {
-        int code;
-        QString message;
-    signals:
-        void authorized();
+//        int code;
+//        QString message;
     public:
         inline virtual ~IApi() {}
     protected:

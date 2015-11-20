@@ -9,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi, public Keys {
+            class RequestApi : public IApi {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("original,remix,live,podcast")); }
 

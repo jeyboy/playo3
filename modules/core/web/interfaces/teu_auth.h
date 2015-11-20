@@ -1,12 +1,15 @@
 #ifndef TEU_H
 #define TEU_H
 
+#include <qobject.h>
 #include <qstring.h>
 #include <qjsonobject.h>
 
 namespace Core {
     namespace Web {
-        class TeuAuth {
+        class TeuAuth : public QObject {
+            Q_OBJECT
+
             QString _token;
             QString _additional;
             QString _user_id;
@@ -14,6 +17,8 @@ namespace Core {
             QString userIdJsonKey() const { return QStringLiteral("_u_"); }
             QString tokenJsonKey() const { return QStringLiteral("_t_"); }
             QString additionalJsonKey() const { return QStringLiteral("_a_"); }
+        signals:
+            void authorized();
         public:
             inline TeuAuth() {}
             inline TeuAuth(const QJsonObject & hash) { fromJson(hash); }

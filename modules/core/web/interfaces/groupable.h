@@ -17,7 +17,7 @@ namespace Core {
             }
 
             inline QHash<QString, QString> groupsList() const { return groups; }
-            inline clearGroups() { groups.clear(); }
+            inline void clearGroups() { groups.clear(); }
 
             void fromJson(const QJsonObject & hash) {
                 QJsonObject ar = hash.value(jsonToken()).toObject();

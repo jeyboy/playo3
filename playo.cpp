@@ -255,7 +255,7 @@ void Playo::showVKRelTabDialog() {
     if (dialog.exec() == QDialog::Accepted)
        Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), Views::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
 
-    Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().getError());
+    Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().lastError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {

@@ -17,7 +17,7 @@ namespace Core {
             }
 
             inline QHash<QString, QString> friendsList() const { return friends; }
-            inline clearFriends() { friends.clear(); }
+            inline void clearFriends() { friends.clear(); }
 
             void fromJson(const QJsonObject & hash) {
                 QJsonObject ar = hash.value(jsonToken()).toObject();
