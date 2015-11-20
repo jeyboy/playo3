@@ -6,8 +6,7 @@ void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
 
     TeuAuth::fromJson(obj);
-    Friendable::fromJson(obj);
-    Groupable::fromJson(obj);
+    Sociable::fromJson(obj);
 
     if (!sessionIsValid())
         connection(true);
@@ -16,8 +15,7 @@ void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
-    Friendable::toJson(root);
-    Groupable::toJson(root);
+    Sociable::toJson(root);
 
     hash.insert(name(), root);
 }

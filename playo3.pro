@@ -264,7 +264,8 @@ HEADERS += \
     modules/controls/time_label.h \
     modules/core/web/apis/service/recaptcha.h \
     modules/core/web/interfaces/friendable.h \
-    modules/core/web/interfaces/groupable.h
+    modules/core/web/interfaces/groupable.h \
+    modules/core/web/interfaces/sociable.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

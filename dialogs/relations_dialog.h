@@ -5,7 +5,7 @@
 #include <qstringlistmodel.h>
 #include <qhash.h>
 
-#include "modules/core/interfaces/isearchable.h"
+#include "modules/core/web/interfaces/sociable.h"
 
 namespace Ui { class RelationsDialog; }
 using namespace Core;
@@ -16,9 +16,9 @@ class RelationsDialog : public QDialog {
     Ui::RelationsDialog * ui;
     QString uid, name;
     QStringListModel * friendModel, * groupModel;
-    ISearchable * api;
+    Web::Sociable * api;
 public:
-    explicit RelationsDialog(ISearchable * currApi, QWidget * parent = 0);
+    explicit RelationsDialog(Web::Sociable * currApi, QWidget * parent = 0);
     ~RelationsDialog();
 
     inline QString getId() const { return uid; }

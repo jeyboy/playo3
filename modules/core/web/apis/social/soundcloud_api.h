@@ -5,15 +5,14 @@
 #include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
 
-#include "modules/core/web/interfaces/friendable.h"
-#include "modules/core/web/interfaces/groupable.h"
+#include "modules/core/web/interfaces/sociable.h"
 
 #include "soundcloud_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Friendable, public Groupable {
+            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

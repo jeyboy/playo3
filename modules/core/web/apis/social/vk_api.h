@@ -3,8 +3,7 @@
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/teu_auth.h"
-#include "modules/core/web/interfaces/friendable.h"
-#include "modules/core/web/interfaces/groupable.h"
+#include "modules/core/web/interfaces/sociable.h"
 
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
@@ -12,7 +11,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Friendable, public Groupable {
+            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
