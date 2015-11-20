@@ -392,11 +392,11 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
             painter -> setFont(font);
             painter -> setPen(Qt::NoPen);
-            painter -> setBrush(QBrush(is_selected ? Settings::obj().itemTextColor() : Settings::obj().selectedItemTextColor()));
+            painter -> setBrush(QBrush(textColor));
             QPointF centerP = icoRect.topLeft() + QPointF(icoRect.width() / 2 + 0.5, 1);
             int rect_size = extra_font_size / 4;
             painter -> drawEllipse(centerP, rect_size, rect_size);
-            painter -> setPen(textColor);
+            painter -> setPen(is_selected ? Settings::obj().itemTextColor() : Settings::obj().selectedItemTextColor());
             painter -> drawText(centerP + QPointF(-rect_size, 9), Keys::asterix);
         }
 
