@@ -1,17 +1,22 @@
 #ifndef VK_API_H
 #define VK_API_H
 
-#include "modules/core/web/interfaces/web_api.h"
-#include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/web/interfaces/friendable.h"
+#include "modules/core/web/interfaces/groupable.h"
+
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
+            class Api : public Friendable, public Groupable, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
+
+                friend class Singleton<Api>;
+                inline Api() {}
             public:
                 inline QString name() const { return QStringLiteral("Vk"); }
                 inline Web::SubType siteType() { return vk_site; }
@@ -46,7 +51,11 @@ namespace Core {
 
             public slots:
                 bool connection();
-                inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
+                inline void disconnect() {
+                    clearParams();
+                    clearFriends();
+                    clearGroups();
+                }
             protected:
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
 
@@ -62,10 +71,6 @@ namespace Core {
                 QUrl buildUrl(QUrl tUrl, int offset, int limit);
                 bool captchaProcessing(QJsonObject & response, QUrl & url);
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
-
-            private:
-                friend class Singleton<Api>;
-                inline Api() {}
             };
         }
     }

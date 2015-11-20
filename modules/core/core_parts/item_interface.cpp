@@ -123,21 +123,21 @@ QVariant IItem::data(int column) const {
     switch(column) {
         case IATTRS: {
             QVariantMap params;
-            params.insert(Key::name, title());
-            params.insert(Key::checkable, Settings::obj().isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Keys::name, title());
+            params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  is(checked) : QVariant());
             if (!isContainer()) {
                 if (Settings::obj().isShowSystemIcons())
-                    params.insert(Key::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
-                params.insert(Key::info, info());
-                params.insert(Key::ext, extension());
-                params.insert(Key::state, visualStates());
-                params.insert(Key::played, is(played));
+                    params.insert(Keys::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
+                params.insert(Keys::info, info());
+                params.insert(Keys::ext, extension());
+                params.insert(Keys::state, visualStates());
+                params.insert(Keys::played, is(played));
 
                 if (is(proccessing))
-                    params.insert(Key::proccessing, true);
+                    params.insert(Keys::proccessing, true);
                 else
-                    params.insert((isRemote() ? Key::undefined : Key::not_exist), is(not_exist));
-                params.insert(Key::type, itemType() + subtipe());
+                    params.insert((isRemote() ? Keys::undefined : Keys::not_exist), is(not_exist));
+                params.insert(Keys::type, itemType() + subtipe());
             }
             return params;
         }

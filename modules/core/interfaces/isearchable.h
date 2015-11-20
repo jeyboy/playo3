@@ -26,29 +26,6 @@ namespace Core {
     using namespace Media;
 
     class ISearchable {
-    signals:
-        void errorReceived(int, QString);
-    protected:
-        void concatJsonArrays(QJsonArray & ret, const QJsonArray & items) {
-            for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
-                ret.append(*it);
-        }
-
-        virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-        QUrl baseUrl(QString predicate, QUrlQuery & query) {
-            QUrl url(baseUrlStr(predicate));
-            url.setQuery(query);
-            return url;
-        }
-        virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
-
-        virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
-        virtual void genres_prepocessing() {}
-
-        TargetGenres genres;
-
-        QString error;
-        UserActionDialog * actionDialog;
     public:
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
 
@@ -98,7 +75,8 @@ namespace Core {
                 return byGenre(genre, limitations);
             else if (limitations.by_popularity())
                 return popular();
-            else return QJsonArray();
+
+            return QJsonArray();
         }
 
         inline TargetGenres genresList() {
@@ -117,6 +95,29 @@ namespace Core {
         //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 
         virtual QString refresh(QString refresh_page) = 0;
+    signals:
+        void errorReceived(int, QString);
+    protected:
+        void concatJsonArrays(QJsonArray & ret, const QJsonArray & items) {
+            for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
+                ret.append(*it);
+        }
+
+        virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+        QUrl baseUrl(QString predicate, QUrlQuery & query) {
+            QUrl url(baseUrlStr(predicate));
+            url.setQuery(query);
+            return url;
+        }
+        virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
+        virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
+        virtual void genres_prepocessing() {}
+
+        TargetGenres genres;
+
+        QString error;
+        UserActionDialog * actionDialog;
     };
 }
 

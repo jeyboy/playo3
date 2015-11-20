@@ -9,7 +9,6 @@
 #include "modules/core/web/interfaces/groupable.h"
 
 #include "soundcloud_request_api.h"
-#include "soundcloud_api_keys.h"
 
 namespace Core {
     namespace Web {

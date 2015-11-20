@@ -2,13 +2,14 @@
 #define SOUNDCLOUD_REQUEST_API
 
 #include "modules/core/web/interfaces/iapi.h"
+#include "soundcloud_api_keys.h"
 
 #define SOUNDCLOUD_OFFSET_LIMIT 100
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi {
+            class RequestApi : public IApi, public Keys {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, QStringLiteral("types"), QStringLiteral("original,remix,live,podcast")); }
 

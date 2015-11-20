@@ -17,7 +17,7 @@ namespace Models {
         inline virtual ~WebModel() {}
 
         inline bool isRelative() const { return false; }
-        virtual WebApi * api() = 0;
+        virtual ISearchable * api() = 0;
         inline QString tabUid() const { return tab_uid; }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);

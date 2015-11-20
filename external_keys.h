@@ -3,7 +3,7 @@
 
 #include <qstringbuilder.h>
 
-struct Keys {
+namespace Keys {
     const QString title         = QStringLiteral("title");
     const QString name          = QStringLiteral("name");
     const QString movable       = QStringLiteral("movable");

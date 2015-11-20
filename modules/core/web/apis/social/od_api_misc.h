@@ -10,7 +10,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Misc : public IApi {
+            class Misc : public IApi, public Keys {
                     int magic [33] = { 4, 3, 5, 6, 1, 2, 8, 7, 2, 9, 3, 5, 7, 1, 4, 8, 8, 3, 4, 3, 1, 7, 3, 5, 9, 8, 1, 4, 3, 7, 2, 8 };
                 protected:
                     inline Misc() {}
