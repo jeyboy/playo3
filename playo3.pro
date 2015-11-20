@@ -333,11 +333,8 @@ SOURCES += \
     modules/core/web/apis/site/shmidt.cpp \
     modules/core/web/apis/site/zaycev.cpp \
     modules/core/web/apis/social/od_api.cpp \
-    modules/core/web/apis/social/od_api_keys.cpp \
     modules/core/web/apis/social/soundcloud_api.cpp \
-    modules/core/web/apis/social/soundcloud_api_keys.cpp \
     modules/core/web/apis/social/vk_api.cpp \
-    modules/core/web/apis/social/vk_api_keys.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/interfaces/teu_auth.cpp \
@@ -383,7 +380,6 @@ SOURCES += \
     settings/spectrum_settings.cpp \
     settings/tab_settings.cpp \
     dockbars.cpp \
-    external_keys.cpp \
     main.cpp \
     playo.cpp \
     single_application.cpp \

@@ -5,18 +5,15 @@
 #include <qcryptographichash.h>
 
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/web/interfaces/web_api.h"
 #include "od_api_keys.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Misc : public WebApi, public IApi {
+            class Misc : public IApi {
                     int magic [33] = { 4, 3, 5, 6, 1, 2, 8, 7, 2, 9, 3, 5, 7, 1, 4, 8, 8, 3, 4, 3, 1, 7, 3, 5, 9, 8, 1, 4, 3, 7, 2, 8 };
                 protected:
-                    QString authE, authP;
-
-                    inline Misc() : WebApi() {}
+                    inline Misc() {}
 
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
 
@@ -54,7 +51,6 @@ namespace Core {
 
                     inline void checkSecurity(Html::Document & doc) {
                         Html::Set forms = doc.find("[id^'hook_Form'] form");
-            //            doc.output();
 
                         if (!forms.isEmpty()) {
                             QList<FormInput> inputs;

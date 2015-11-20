@@ -1,11 +1,12 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
-
-#include "modules/core/web/interfaces/web_api.h"
-#include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
+
+#include "modules/core/web/interfaces/friendable.h"
+#include "modules/core/web/interfaces/groupable.h"
 
 #include "soundcloud_request_api.h"
 #include "soundcloud_api_keys.h"
@@ -13,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public WebApi, public TeuAuth, public RequestApi, public Singleton<Api> {
+            class Api : public Friendable, public Groupable, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -37,8 +38,12 @@ namespace Core {
                     ThreadUtils::obj().run(this, &Api::objectInfo, uid, func);
                 }
             public slots:
-                inline void disconnect() { WebApi::disconnect(); setParams(QString(), QString(), QString()); }
                 bool connection();
+                inline void disconnect() {
+                    clearParams();
+                    clearFriends();
+                    clearGroups();
+                }
 
             protected:
                 inline QString refresh(QString path) { return path; }

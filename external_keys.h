@@ -3,23 +3,25 @@
 
 #include <qstringbuilder.h>
 
-namespace Key {
-    extern const QString title;
-    extern const QString name;
-    extern const QString movable;
-    extern const QString path;
-    extern const QString actions;
-    extern const QString checkable;
-    extern const QString info;
-    extern const QString icon;
-    extern const QString ext;
-    extern const QString state;
-    extern const QString played;
-    extern const QString not_exist;
-    extern const QString proccessing;
-    extern const QString undefined;
-    extern const QString type;
-    extern const QString asterix;
+struct Keys {
+    const QString title         = QStringLiteral("title");
+    const QString name          = QStringLiteral("name");
+    const QString movable       = QStringLiteral("movable");
+    const QString path          = QStringLiteral("path");
+    const QString actions       = QStringLiteral("actions");
+
+    const QString checkable     = QStringLiteral("checkable");
+    const QString info          = QStringLiteral("info");
+    const QString icon          = QStringLiteral("icon");
+    const QString ext           = QStringLiteral("ext");
+    const QString state         = QStringLiteral("state");
+    const QString played        = QStringLiteral("played");
+    const QString not_exist     = QStringLiteral("not_exist");
+    const QString proccessing   = QStringLiteral("proccess");
+    const QString undefined     = QStringLiteral("undefined");
+    const QString type          = QStringLiteral("type");
+
+    const QString asterix       = QStringLiteral("*");
 }
 
 #endif // EXTERNAL_KEYS

@@ -16,14 +16,14 @@ namespace Core {
 
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
 
-                inline QUrl authRequestUrl() const {
-                    QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(authE) + "&st.password=" + encodeStr(authP) + "&st.remember=on&st.iscode=false");
+                inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
+                    QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(email) + "&st.password=" + encodeStr(pass) + "&st.remember=on&st.iscode=false");
                     qDebug() << url;
                     return url;
                 }
 
                 inline QUrl initUrl() const {
-                    QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % token());
+                    QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % additional());
                     return url;
                 }
 
@@ -98,98 +98,6 @@ namespace Core {
                         QueryRules(QStringLiteral("tracks"), requestLimit(), qMin(count, OD_OFFSET_LIMIT))
                     );
                 }
-
-
-
-
-
-        //        /////////////////
-        //        /// AUTH
-        //        ////////////////
-
-        //        //QString authTokenUrl() const {
-        //        //    QUrl url("https://api.soundcloud.com/oauth2/token");
-        //        //    QUrlQuery query = genDefaultParams();
-
-
-        //        //    query.addQueryItem("client_secret", "54ca588303e1d2bf524509faf20931b4");
-        //        //    query.addQueryItem("scope", "non-expiring");
-
-        //        ////    query.addQueryItem("grant_type", "password");
-        //        ////    query.addQueryItem("username", "USERNAME");
-        //        ////    query.addQueryItem("password", "PASSWORD");
-
-        //        //    url.setQuery(query);
-        //        //    return url.toString();
-        //        //}
-        //        inline QUrl authTokenUrl() const { return QUrl(QStringLiteral("https://api.soundcloud.com/oauth2/token")); }
-        //        inline QString confirmAuthUrl(QString access_token) { return QStringLiteral("https://api.soundcloud.com/me.json?oauth_token=") % access_token; }
-
-        //        QByteArray authTokenUrlParams(QString code) {
-        //            QUrlQuery query = genDefaultParams();
-
-        //            setParam(query, QStringLiteral("client_secret"), QStringLiteral("54ca588303e1d2bf524509faf20931b4"));
-        //            setParam(query, QStringLiteral("grant_type"), QStringLiteral("authorization_code"));
-        //            setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
-        //            setParam(query, QStringLiteral("code"), code);
-
-        //            return query.toString(QUrl::FullyEncoded).toUtf8();
-        //        }
-        //    //    QUrlQuery userMethodParams(QString & token) {
-        //    //        QUrlQuery query = QUrlQuery();
-        //    //        query.addQueryItem("oauth_token", token);
-        //    //        return query;
-        //    //    }
-
-        //        /////////////////
-        //        /// API
-        //        ////////////////
-
-        //        QUrl audioInfoUrl(QString & audio_uid) {
-        //            QUrlQuery query = genDefaultParams();
-        //            return baseUrl("tracks/" % audio_uid, query);
-        //        }
-        //        QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
-
-
-        //        QUrl audioUrl(QStringList & audio_uids) {
-        //            QUrlQuery query = genDefaultParams();
-        //            setIdsFilter(query, audio_uids);
-        //            return baseUrl("tracks", query);
-        //        }
-        //        //"id": 142370360,
-        //        //"permalink": "sam-smith-stay-with-me",
-        //        QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(QStringLiteral("response")).toArray(); }
-
-
-
-            //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-            //        QJsonObject obj = Web::replyToJson(reply, true);
-
-            //        reply -> deleteLater();
-
-            //        bool hasError = obj.value("response").toObject().contains("errors");
-
-            //        qDebug() << fieldName << hasError << obj;
-
-            //        if (hasError)
-            //            errorSend(obj, func -> obj);
-            //        else {
-            //            if (func -> result.contains(fieldName)) { // rewrite on array of json arrays
-            //                QVariantList n_ar = obj.value("response").toArray().toVariantList();
-
-            //                if (!n_ar.isEmpty()) {
-            //                    QVariantList ar = func -> result.value(fieldName).toArray().toVariantList();
-            //                    ar.append(n_ar);
-
-            //                    func -> result.insert(fieldName, QJsonArray::fromVariantList(ar));
-            //                }
-            //            } else
-            //                func -> result.insert(fieldName, obj.value("response").toArray());
-            //        }
-
-            //        return !hasError;
-            //    }
             };
         }
     }

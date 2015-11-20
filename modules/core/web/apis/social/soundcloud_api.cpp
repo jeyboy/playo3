@@ -18,13 +18,15 @@ QString Api::authUrl() {
 void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
     TeuAuth::fromJson(obj);
-    WebApi::fromJson(obj);
+    Friendable::fromJson(obj);
+    Groupable::fromJson(obj);
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
 
     TeuAuth::toJson(root);
-    WebApi::toJson(root);
+    Friendable::toJson(root);
+    Groupable::toJson(root);
 
     hash.insert(name(), root);
 }
@@ -34,7 +36,6 @@ void Api::toJson(QJsonObject & hash) {
 //////////////////////////////////////////////////////////
 
 void Api::getGroupInfo(QString uid, QJsonObject & object) {
-//    uid = "101";
     object.insert(Soundcloud::audio_list_key, groupAudio(uid));
     object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
 }

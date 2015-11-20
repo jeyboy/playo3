@@ -1,14 +1,17 @@
 #ifndef OD_API_H
 #define OD_API_H
 
-#include "modules/core/misc/thread_utils.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/misc/thread_utils.h"
+#include "modules/core/web/interfaces/friendable.h"
+#include "modules/core/web/interfaces/groupable.h"
+
 #include "od_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public RequestApi, public Singleton<Api> {
+            class Api : public Friendable, public Groupable, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -17,7 +20,6 @@ namespace Core {
                 inline QString name() const { return QStringLiteral("Od"); }
                 inline Web::SubType siteType() { return od_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
-                QString authUrl();
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
@@ -43,19 +45,11 @@ namespace Core {
                 }
 
             public slots:
-                bool connection(bool onlyAuto = false) {
-                    bool res = !onlyAuto || (onlyAuto && !token().isEmpty());
-
-                    if (res) {
-                        res &= hashConnection(onlyAuto);
-                        if (res) emit authorized();
-                    }
-
-                    return res;
-                }
+                bool connection(bool onlyAuto = false);
                 inline void disconnect() {
-                    WebApi::disconnect();
-                    setParams(QString(), QString(), QString());
+                    clearParams();
+                    clearFriends();
+                    clearGroups();
                 }
             protected:
                 bool hashConnection(bool onlyAuto);

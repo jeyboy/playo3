@@ -6,31 +6,34 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            extern const QString base_url;
-            extern const QString offset_key;
-            extern const QString limit_key;
+            struct Keys {
+                const QString base_url              = QStringLiteral("https://api.soundcloud.com/");
 
-            extern const QString audio_list_key;
-            extern const QString playlist_key;
-            extern const QString followings_key;
-            extern const QString followers_key;
-            extern const QString groups_key;
+                const QString offset_key            = QStringLiteral("offset");
+                const QString limit_key             = QStringLiteral("limit");
 
-            extern const QString tracks_key;
-            extern const QString id_key;
-            extern const QString title_key;
-            extern const QString name_key;
-            extern const QString full_name_key;
-            extern const QString username_key;
+                const QString audio_list_key        = QStringLiteral("audio_list");
+                const QString playlist_key          = QStringLiteral("playlists");
+                const QString followings_key        = QStringLiteral("followings");
+                const QString followers_key         = QStringLiteral("followers");
+                const QString groups_key            = QStringLiteral("groups");
 
-            extern const QString user_id_key;
-            extern const QString download_url_key;
-            extern const QString stream_url_key;
-            extern const QString video_url_key;
-            extern const QString original_format_key;
-            extern const QString default_extension;
-            extern const QString duration_key;
-            extern const QString genre_id_key;
+                const QString tracks_key            = QStringLiteral("tracks");
+                const QString id_key                = QStringLiteral("id");
+                const QString title_key             = QStringLiteral("title");
+                const QString name_key              = QStringLiteral("name");
+                const QString full_name_key         = QStringLiteral("full_name");
+                const QString username_key          = QStringLiteral("username");
+
+                const QString user_id_key           = QStringLiteral("user_id");
+                const QString download_url_key      = QStringLiteral("download_url");
+                const QString stream_url_key        = QStringLiteral("stream_url");
+                const QString video_url_key         = QStringLiteral("video_url");
+                const QString original_format_key   = QStringLiteral("original_format");
+                const QString default_extension     = QStringLiteral("mp3");
+                const QString duration_key          = QStringLiteral("duration");
+                const QString genre_id_key          = QStringLiteral("genre_id");
+            };
         }
     }
 }
