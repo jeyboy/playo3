@@ -12,7 +12,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public Friendable, public Groupable, public TeuAuth, public RequestApi, public Singleton<Api> {
+            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Friendable, public Groupable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

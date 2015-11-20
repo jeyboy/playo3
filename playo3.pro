@@ -308,7 +308,6 @@ SOURCES += \
     modules/core/core_parts/web_file.cpp \
     modules/core/core_parts/web_playlist.cpp \
     modules/core/web/grabber_keys.cpp \
-    modules/core/web/interfaces/web_api.cpp \
     modules/core/media/cue/cue.cpp \
     modules/core/media/genres/genres_interface.cpp \
     modules/core/media/genres/id3_music_genres.cpp \

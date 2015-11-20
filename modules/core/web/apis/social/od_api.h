@@ -11,7 +11,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public Friendable, public Groupable, public RequestApi, public Singleton<Api> {
+            class Api : public RequestApi, public Singleton<Api>, public Friendable, public Groupable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

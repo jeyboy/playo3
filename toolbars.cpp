@@ -86,20 +86,20 @@ void ToolBars::load(const QJsonArray & bars) {
 
         for(QJsonArray::ConstIterator bar = bars.constBegin(); bar != bars.constEnd(); bar++) {
             obj = (*bar).toObject();
-            barName = obj.value(Key::title).toString();
+            barName = obj.value(Keys::title).toString();
             barsList.removeOne(barName);
             curr_bar = linkNameToToolbars(barName);
-            curr_bar -> setObjectName(obj.value(Key::name).toString(curr_bar -> objectName()));
-            curr_bar -> setMovable(obj.value(Key::movable).toBool());
+            curr_bar -> setObjectName(obj.value(Keys::name).toString(curr_bar -> objectName()));
+            curr_bar -> setMovable(obj.value(Keys::movable).toBool());
 
             container -> addToolBar(Qt::BottomToolBarArea, curr_bar);
 
-            if (obj.contains(Key::actions)) {
-                QJsonArray actions = obj.value(Key::actions).toArray();
+            if (obj.contains(Keys::actions)) {
+                QJsonArray actions = obj.value(Keys::actions).toArray();
 
                 foreach(QJsonValue act, actions) { // rewrite on for
                     actionObj = act.toObject();
-                    addPanelButton(actionObj.value(Key::name).toString(), actionObj.value(Key::path).toString(), curr_bar);
+                    addPanelButton(actionObj.value(Keys::name).toString(), actionObj.value(Keys::path).toString(), curr_bar);
                 }
             }
         }
@@ -122,9 +122,9 @@ void ToolBars::save(DataStore * settings) {
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
             curr_tab = QJsonObject();
 
-            curr_tab.insert(Key::title, (*bar) -> windowTitle());
-            curr_tab.insert(Key::name, (*bar) -> objectName());
-            curr_tab.insert(Key::movable, (*bar) -> isMovable());
+            curr_tab.insert(Keys::title, (*bar) -> windowTitle());
+            curr_tab.insert(Keys::name, (*bar) -> objectName());
+            curr_tab.insert(Keys::movable, (*bar) -> isMovable());
 
             if (!(*bar) -> property(toolbar_service_mark).toBool()) {
                 actions = (*bar) -> actions();
@@ -137,14 +137,14 @@ void ToolBars::save(DataStore * settings) {
                             curr_act = QJsonObject();
                             button = (ToolbarButton*) (*bar) -> widgetForAction((*act));
 
-                            curr_act.insert(Key::path, button -> mainPath());
-                            curr_act.insert(Key::name, button -> text());
+                            curr_act.insert(Keys::path, button -> mainPath());
+                            curr_act.insert(Keys::name, button -> text());
                             action_array.append(curr_act);
                         }
                     }
 
                     if (action_array.count() > 0)
-                        curr_tab.insert(Key::actions, action_array);
+                        curr_tab.insert(Keys::actions, action_array);
                 }
             }
 
