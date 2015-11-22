@@ -23,7 +23,7 @@ namespace Core {
                 }
 
                 inline QUrl initUrl() const {
-                    QUrl url(base_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % additional());
+                    QUrl url(base_auth_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % additional());
                     return url;
                 }
 

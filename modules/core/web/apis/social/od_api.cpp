@@ -8,8 +8,9 @@ void Api::fromJson(const QJsonObject & hash) {
     TeuAuth::fromJson(obj);
     Sociable::fromJson(obj);
 
-    if (!sessionIsValid())
-        connection(true);
+    Manager::loadCookies(obj);
+
+    if (!connection(true)) disconnect();
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
@@ -17,65 +18,56 @@ void Api::toJson(QJsonObject & hash) {
     TeuAuth::toJson(root);
     Sociable::toJson(root);
 
+    Manager::saveCookies(root, QUrl(base_url));
+
     hash.insert(name(), root);
 }
 
-//////////////////////////////////////////////////////////
-/// COMMON
-//////////////////////////////////////////////////////////
-
-//    void Api::getGroupInfo(QString uid, QJsonObject & object) {
-//    //    uid = "101";
-//        object.insert(Soundcloud::audio_list_key, groupAudio(uid));
-//        object.insert(Soundcloud::playlist_key, groupPlaylists(uid));
-//    }
-
-//    void Api::getUserInfo(QString & uid, QJsonObject & object) {
-//        object.insert(Soundcloud::audio_list_key, userAudio(uid));
-//        object.insert(Soundcloud::playlist_key, userPlaylists(uid));
-//        QThread::msleep(REQUEST_DELAY);
-//        object.insert(Soundcloud::followings_key, userFollowings(uid));
-//        object.insert(Soundcloud::followers_key, userFollowers(uid));
-//        QThread::msleep(REQUEST_DELAY);
-//        object.insert(Soundcloud::groups_key, userGroups(uid));
-//    }
-
-
-//    QJsonObject Api::objectInfo(QString & uid) {
-//        QJsonObject res;
-
-//        if (uid[0] == '-')
-//            getGroupInfo(uid.mid(1), res);
-//        else
-//            getUserInfo(uid, res);
-
-//        return res;
-//    }
+QString Api::refresh(QString refresh_page) { // here refresh_page must by eq to track id
+    QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
+    if (hasError(obj)) {
+        connection(true);
+        obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
+        qDebug() << "RECONECTION";
+    }
+    QUrl url(obj.value(QStringLiteral("play")).toString());
+    QUrlQuery query = QUrlQuery(url.query());
+    query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
+    url.setQuery(query);
+    return url.toString();
+}
 
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
 bool Api::connection(bool onlyAuto) {
-    bool res = !onlyAuto || (onlyAuto && !additional().isEmpty()); // TODO: need to check
+    if (!additional().isEmpty())
+        setParams(grabSID(), userID(), additional());
 
-    if (res) {
-        res &= hashConnection(onlyAuto);
-        if (res) emit authorized();
+    if (sessionIsValid()) // maybe use grabSID() ?
+        return true;
+
+    if (onlyAuto) return false;
+
+    bool auth_res = formConnection();
+    if (auth_res) {
+        setParams(grabSID(), userID(), additional());
+        emit authorized();
     }
 
-    return res;
+    return auth_res;
 }
 
-bool Api::hashConnection(bool onlyAuto) {
-    Manager::prepare() -> followedGet(initUrl(), initHeaders()) -> deleteLater();
+//bool Api::hashConnection(bool onlyAuto) {
+//    Manager::prepare() -> followedGet(initUrl(), initHeaders()) -> deleteLater();
 
-    if (!sessionIsValid())
-        if (!onlyAuto && !formConnection())
-            return false;
+//    if (!sessionIsValid())
+//        if (!onlyAuto && !formConnection())
+//            return false;
 
-    setParams(grabSID(), userID(), additional());
-    return true;
-}
+//    setParams(grabSID(), userID(), additional());
+//    return true;
+//}
 
 bool Api::formConnection() {
     QString err, authE, authP;
@@ -85,7 +77,7 @@ bool Api::formConnection() {
 
         Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(authE, authP), initHeaders());
         QUrl url = reply -> toRedirectUrl();
-        QString hash_key = Manager::paramVal(url, QStringLiteral("httpsdata"));
+        QString hash_key = Manager::paramVal(url, QStringLiteral("httpsdata")); // not used anywhere at this moment
 
         reply = Manager::prepare() -> followedGet(url, initHeaders());
         err = reply -> paramVal(QStringLiteral("st.error"));

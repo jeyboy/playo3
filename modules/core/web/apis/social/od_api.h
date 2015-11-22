@@ -29,19 +29,7 @@ namespace Core {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
 
-                inline QString refresh(QString refresh_page) { // here refresh_page must by eq to track id
-                    QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
-                    if (hasError(obj)) {
-                        connection(true);
-                        obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
-                        qDebug() << "RECONECTION";
-                    }
-                    QUrl url(obj.value(QStringLiteral("play")).toString());
-                    QUrlQuery query = QUrlQuery(url.query());
-                    query.addQueryItem(QStringLiteral("clientHash"), calcMagicNumber(query.queryItemValue(QStringLiteral("md5"))));
-                    url.setQuery(query);
-                    return url.toString();
-                }
+                QString refresh(QString refresh_page); // here refresh_page must by eq to track id
 
             public slots:
                 bool connection(bool onlyAuto = false);

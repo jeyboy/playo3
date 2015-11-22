@@ -26,14 +26,14 @@ namespace Core {
             return QString(ar);
         }
         QJsonObject Response::toJson(const QString & wrap, bool destroy) {
-            qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error();
             QByteArray ar = readAll();
             if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
             if (destroy) deleteLater();
             return QJsonDocument::fromJson(ar).object();
         }
         QPixmap Response::toImage(bool destroy) {
-            qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error();
             QImage image;
             image.loadFromData(readAll());
             if (destroy) deleteLater();
@@ -41,18 +41,21 @@ namespace Core {
         }
 
         Html::Document Response::toHtml(bool destroy) {
+            if (error()) qDebug() << "IOERROR" << error();
             Html::Document doc(this);
             if (destroy) deleteLater();
             return doc;
         }
 
         QUrl Response::toUrl(bool destroy) {
+            if (error()) qDebug() << "IOERROR" << error();
             QUrl uri = url();
             if (destroy) deleteLater();
             return uri;
         }
 
         QUrl Response::toRedirectUrl(bool destroy) {
+            if (error()) qDebug() << "IOERROR" << error();
             QUrl uri = redirectUrl().toUrl();
             if (destroy) deleteLater();
             return uri;
@@ -70,26 +73,37 @@ namespace Core {
             return this;
         }
 
-        Response * Request::viaGet() {
-            return manager -> get(*this);
-        }
+        Response * Request::viaGet() { return manager -> get(*this); }
 
-        Response * Request::viaPost(const QByteArray & data) {
-            return manager -> post(*this, data);
-        }
+        Response * Request::viaPost(const QByteArray & data) { return manager -> post(*this, data); }
 
         Response * Request::viaForm(const QByteArray & data) {
             setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
             return manager -> post(*this, data);
         }
 
-
-
         //////////////////////////     WEB_MANAGER     /////////////////////////////
-
 
         QHash<QObject *, Manager *> Manager::managers = QHash<QObject *, Manager *>();
         Cookies * Manager::cookies = new Cookies(QApplication::instance());
+
+        void Manager::loadCookies(const QJsonObject & store) {
+            QJsonArray arr = store.value(COOKIES_KEY).toArray();
+            for(QJsonValue const & cookie: arr) {
+                QList<QNetworkCookie> items = QNetworkCookie::parseCookies(cookie.toString().toUtf8());
+                for(QNetworkCookie & item: items)
+                    cookies -> insertCookie(item);
+            }
+        }
+
+        void Manager::saveCookies(QJsonObject & store, const QUrl & url) {
+            QList<QNetworkCookie> cookiesList = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
+            QJsonArray cookiesArray;
+            for(auto const & cookie: cookiesList)
+                cookiesArray << QJsonValue::fromVariant(cookie.toRawForm());
+
+            store.insert(COOKIES_KEY, cookiesArray);
+        }
 
         Manager * Manager::prepare() {
             QThread * thread = QThread::currentThread();

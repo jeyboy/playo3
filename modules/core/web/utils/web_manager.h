@@ -8,6 +8,8 @@
 #include "modules/core/misc/logger.h"
 #include "modules/core/web/utils/html_parser.h"
 
+#define COOKIES_KEY QStringLiteral("cookies")
+
 namespace Core {
     namespace Web {
         class ManagerController;
@@ -52,6 +54,13 @@ namespace Core {
 
         class Manager : public QNetworkAccessManager {
             Q_OBJECT
+
+            QSsl::SslProtocol protocol;
+            QSslSocket::PeerVerifyMode mode;
+
+            static Cookies * cookies;
+            static QHash<QObject *, Manager *> managers;
+            friend class ManagerController;
         public:
             static Manager * prepare();
 
@@ -66,6 +75,8 @@ namespace Core {
 
                 return QString();
             }
+            static void loadCookies(const QJsonObject & store);
+            static void saveCookies(QJsonObject & store, const QUrl & url = QUrl());
 
             static inline QString paramVal(const QUrl & url, const QString & param) { return QUrlQuery(url).queryItemValue(param); }
 
@@ -98,13 +109,6 @@ namespace Core {
         protected:
             Response * synchronizeRequest(QNetworkReply * m_http);
             QNetworkReply * createRequest(Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0);
-        private:
-            QSsl::SslProtocol protocol;
-            QSslSocket::PeerVerifyMode mode;
-
-            static Cookies * cookies;
-            static QHash<QObject *, Manager *> managers;
-            friend class ManagerController;
         };
 
         class ManagerController : public QObject {
