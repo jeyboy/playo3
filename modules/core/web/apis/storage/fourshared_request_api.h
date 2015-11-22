@@ -78,61 +78,59 @@ namespace Core {
                     QJsonArray ar;
                     QString ext, title, path, song_path;
 
-                    for(QJsonArray::Iterator parts_it = items.begin(); parts_it != items.end(); parts_it++) {
-                        QJsonArray part = (*parts_it).toArray();
-                        for(QJsonArray::Iterator item = part.begin(); item != part.end(); item++) {
 
-                            QJsonObject obj, item_obj = (*item).toObject();
-                            path = item_obj.value(download_page_key).toString();
+                    for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
 
-                            if (initInfo) {
-                                Html::Document doc = manager -> followedGet(QUrl(path)) -> toHtml();
+                        QJsonObject obj, item_obj = (*item).toObject();
+                        path = item_obj.value(download_page_key).toString();
 
-                                song_path = doc.find(&prevSelector).value();
+                        if (initInfo) {
+                            Html::Document doc = manager -> followedGet(QUrl(path)) -> toHtml();
 
-                                obj.insert(duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
+                            song_path = doc.find(&prevSelector).value();
 
-                                Html::Set tags = doc.find(&tagsSelector);
-                                for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
-                                    Html::Tag * span = (*tag) -> childTag(span_tag);
-                                    if (span) {
-                                        QString tag_title = span -> text();
+                            obj.insert(duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
 
-                                        if (tag_title == filetype_tag)
-                                            obj.insert(extension_key, (*tag) -> text());
-                                        else if (tag_title == bitrate_tag)
-                                            obj.insert(bitrate_key, (*tag) -> text());
-                                        else if (tag_title == discretion_rate_tag)
-                                            obj.insert(discretion_rate_key, (*tag) -> text());
-                                        else if (tag_title == genre_tag) {
-                                            int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
-                                            if (Media::MusicGenres::obj().defaultInt() != genre_id)
-                                                obj.insert(genre_id_key, genre_id);
-                                        }
+                            Html::Set tags = doc.find(&tagsSelector);
+                            for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
+                                Html::Tag * span = (*tag) -> childTag(span_tag);
+                                if (span) {
+                                    QString tag_title = span -> text();
 
-                                        // year ignored at this time
+                                    if (tag_title == filetype_tag)
+                                        obj.insert(extension_key, (*tag) -> text());
+                                    else if (tag_title == bitrate_tag)
+                                        obj.insert(bitrate_key, (*tag) -> text());
+                                    else if (tag_title == discretion_rate_tag)
+                                        obj.insert(discretion_rate_key, (*tag) -> text());
+                                    else if (tag_title == genre_tag) {
+                                        int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
+                                        if (Media::MusicGenres::obj().defaultInt() != genre_id)
+                                            obj.insert(genre_id_key, genre_id);
                                     }
+
+                                    // year ignored at this time
                                 }
-
-                                obj.insert(url_key, song_path);
-                            } else obj.insert(skip_info_key, true);
-
-                            if (!initInfo || !song_path.isEmpty()) {
-                                title = item_obj.value(name_token_key).toString();
-
-                                if (FilenameConversions::extractExtension(title, ext))
-                                    obj.insert(extension_key, ext);
-
-                                obj.insert(title_key, title);
-
-                                obj.insert(size_key, Info::toUnits(item_obj.value(size_token_key).toInt()));
-                                obj.insert(refresh_key, path);
-
-                                ar << obj;
                             }
 
-                            if (initInfo) QThread::msleep(REQUEST_DELAY);
+                            obj.insert(url_key, song_path);
+                        } else obj.insert(skip_info_key, true);
+
+                        if (!initInfo || !song_path.isEmpty()) {
+                            title = item_obj.value(name_token_key).toString();
+
+                            if (FilenameConversions::extractExtension(title, ext))
+                                obj.insert(extension_key, ext);
+
+                            obj.insert(title_key, title);
+
+                            obj.insert(size_key, Info::toUnits(item_obj.value(size_token_key).toInt()));
+                            obj.insert(refresh_key, path);
+
+                            ar << obj;
                         }
+
+                        if (initInfo) QThread::msleep(REQUEST_DELAY);
                     }
 
                     return ar;

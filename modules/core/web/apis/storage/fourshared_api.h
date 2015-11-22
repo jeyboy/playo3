@@ -26,7 +26,7 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                inline bool isConnected() { return !token().isEmpty(); }
+                inline bool isConnected() { return true/*!token().isEmpty()*/; }
         //        QString downloadLink();
 
             public slots:
