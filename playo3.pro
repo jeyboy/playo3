@@ -391,4 +391,5 @@ SOURCES += \
     modules/core/media/interfaces/ispectrumable.cpp \
     modules/core/media/interfaces/iequalizable.cpp \
     player/bass_player.cpp \
-    modules/core/web/interfaces/iapi.cpp
+    modules/core/web/interfaces/iapi.cpp \
+    external_keys.cpp

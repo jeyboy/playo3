@@ -23,22 +23,22 @@ namespace Core {
                     android = 10
                 };
 
-                inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, "category", (int)cType); }
-                inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, "query", predicate); }
+                inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, category_token_key, (int)cType); }
+                inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, query_token_key, predicate); }
             public:
                 QUrl audioSearchUrl(QString & predicate, CategoryTypes cType = music) {
                     QUrlQuery query = genDefaultParams();
                     setCategory(query, cType);
                     setSearchPredicate(query, predicate);
 
-                    return IApi::baseUrl(QStringLiteral("files"), query);
+                    return IApi::baseUrl(files_token_key, query);
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
                     bool initInfo = false;
                     QJsonArray res = lQuery(
                         audioSearchUrl(predicate),
-                        QueryRules(QStringLiteral("files"), requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
+                        QueryRules(files_token_key, requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
                         none
                     );
 
@@ -58,7 +58,7 @@ namespace Core {
                 QString downloadLink(QString refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
-                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(QUrl(QStringLiteral("http://4server.info/download/") % refresh_page.mid(12)));
+                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(QUrl(down_base_url % refresh_page.mid(12)));
                     QString res = Html::Document(response).find("a[href~'/download/']").link();
 
                     delete response;
@@ -67,8 +67,7 @@ namespace Core {
 
             private:
                 QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
-                    if (items.isEmpty())
-                        return items;
+                    if (items.isEmpty()) return items;
 
                     Html::Selector prevSelector("input.jsD1PreviewUrl");
                     Html::Selector durSelector("input.jsD1Duration");
@@ -84,12 +83,10 @@ namespace Core {
                         for(QJsonArray::Iterator item = part.begin(); item != part.end(); item++) {
 
                             QJsonObject obj, item_obj = (*item).toObject();
-                            path = item_obj.value("downloadPage").toString();
+                            path = item_obj.value(download_page_key).toString();
 
                             if (initInfo) {
-                                QNetworkReply * reply = manager -> followedGet(QUrl(path));
-                                Html::Document doc(reply);
-                                reply -> deleteLater();
+                                Html::Document doc = manager -> followedGet(QUrl(path)) -> toHtml();
 
                                 song_path = doc.find(&prevSelector).value();
 
@@ -97,17 +94,17 @@ namespace Core {
 
                                 Html::Set tags = doc.find(&tagsSelector);
                                 for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
-                                    Html::Tag * span = (*tag) -> childTag(QStringLiteral("span"));
+                                    Html::Tag * span = (*tag) -> childTag(span_tag);
                                     if (span) {
                                         QString tag_title = span -> text();
 
-                                        if (tag_title == filetype_tag || tag_title == filetype_tag2)
+                                        if (tag_title == filetype_tag)
                                             obj.insert(extension_key, (*tag) -> text());
-                                        else if (tag_title == bitrate_tag || tag_title == bitrate_tag2)
+                                        else if (tag_title == bitrate_tag)
                                             obj.insert(bitrate_key, (*tag) -> text());
-                                        else if (tag_title == discretion_rate_tag || tag_title == discretion_rate_tag2)
+                                        else if (tag_title == discretion_rate_tag)
                                             obj.insert(discretion_rate_key, (*tag) -> text());
-                                        else if (tag_title == genre_tag || tag_title == genre_tag2) {
+                                        else if (tag_title == genre_tag) {
                                             int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
                                             if (Media::MusicGenres::obj().defaultInt() != genre_id)
                                                 obj.insert(genre_id_key, genre_id);
@@ -121,14 +118,14 @@ namespace Core {
                             } else obj.insert(skip_info_key, true);
 
                             if (!initInfo || !song_path.isEmpty()) {
-                                title = item_obj.value("name").toString();
+                                title = item_obj.value(name_token_key).toString();
 
                                 if (FilenameConversions::extractExtension(title, ext))
                                     obj.insert(extension_key, ext);
 
                                 obj.insert(title_key, title);
 
-                                obj.insert(size_key, Info::toUnits(item_obj.value("size").toInt()));
+                                obj.insert(size_key, Info::toUnits(item_obj.value(size_token_key).toInt()));
                                 obj.insert(refresh_key, path);
 
                                 ar << obj;

@@ -66,6 +66,11 @@ namespace Core {
 
             Manager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
 
+            static inline void addCookie(const QString & cookie_str) {
+                QList<QNetworkCookie> items = QNetworkCookie::parseCookies(cookie_str.toUtf8());
+                for(QNetworkCookie & item: items)
+                    cookies -> insertCookie(item);
+            }
             static inline void printCookies() { qDebug() << "COOKIE" << cookies -> allCookies(); }
             static inline QString cookie(const QString & name, QUrl url = QUrl()) {
                 const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);

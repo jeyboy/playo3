@@ -5,6 +5,8 @@ using namespace Core::Web::Fourshared; // for auth required oauth 1
 void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
     TeuAuth::fromJson(obj);
+
+    Manager::addCookie(lang_cookie);
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
