@@ -37,7 +37,7 @@ bool Api::connection() {
             Html::Set forms = html.find("form");
 
             if (forms.isEmpty()) {
-                Logger::obj().write("Vk auth", QStringLiteral("Auth form did not found"), true);
+                Logger::obj().write(auth_title_key, QStringLiteral("Auth form did not found"), true);
                 return false;
             }
             Html::Tag * form = forms.first();
@@ -49,11 +49,11 @@ bool Api::connection() {
                 captcha_src = captcha_set.first() -> value("src");
 
             if (captcha_src.isEmpty()) {
-                if (!showingLogin(QStringLiteral("Vk auth"), vals[QStringLiteral("email")], vals[QStringLiteral("pass")], err))
+                if (!showingLogin(auth_title_key, vals[email_key], vals[password_key], err))
                     return false;
             } else {
-                if (!showingLoginWithCaptcha(QStringLiteral("Vk auth"), captcha_src,
-                    vals[QStringLiteral("email")], vals[QStringLiteral("pass")], vals[QStringLiteral("captcha_key")], err
+                if (!showingLoginWithCaptcha(auth_title_key, captcha_src,
+                    vals[email_key], vals[password_key], vals[captcha_key], err
                 )) return false;
             }
 
@@ -64,14 +64,14 @@ bool Api::connection() {
         form_url = resp -> toUrl();
         QUrlQuery query(form_url.fragment());
 
-        if (query.hasQueryItem(QStringLiteral("error"))) {
-            error = query.queryItemValue(QStringLiteral("error_description"));
+        if (query.hasQueryItem(error_key)) {
+            error = query.queryItemValue(error_description_key);
             return false;
-        } else if (query.hasQueryItem(QStringLiteral("access_token"))) {
+        } else if (query.hasQueryItem(access_token_key)) {
             setParams(
-                query.queryItemValue(QStringLiteral("access_token")),
-                query.queryItemValue(QStringLiteral("user_id")),
-                query.queryItemValue(QStringLiteral("expires_in"))
+                query.queryItemValue(access_token_key),
+                query.queryItemValue(user_id_key),
+                query.queryItemValue(expires_in_key)
             );
             emit authorized();
             return true;

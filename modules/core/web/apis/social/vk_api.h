@@ -17,12 +17,12 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() {}
             public:
-                inline QString name() const { return QStringLiteral("Vk"); }
+                inline QString name() const { return name_key; }
                 inline Web::SubType siteType() { return vk_site; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query = QUrlQuery();
 
-                    query.addQueryItem(version_key, apiVersion());
+                    query.addQueryItem(version_key, version_val);
                     query.addQueryItem(access_token_key, token());
             //        query.addQueryItem(QStringLiteral("test_mode"), "1");
 

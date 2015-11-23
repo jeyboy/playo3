@@ -9,25 +9,13 @@
 #include <qurlquery.h>
 
 #include "unicode_decoding.h"
+#include "html_parser_keys.h"
 
 #define DEBUG_LIMIT_OUTPUT 10000
 
 namespace Core {
     namespace Web {
         namespace Html {
-            const QString any_elem_token = QStringLiteral("*");
-            const QString text_block_token = QStringLiteral("text");
-            const QString href_token = QStringLiteral("href");
-            const QString comment_block_token = QStringLiteral("comment");
-
-            const QString id_token = QStringLiteral("id");
-            const QString class_token = QStringLiteral("class");
-            const QString type_token = QStringLiteral("type");
-            const QString input_token = QStringLiteral("input");
-            const QString select_token = QStringLiteral("select");
-            const QString split_token = QStringLiteral(" ");
-            const QString def_value_key = QStringLiteral("value");
-
             struct Selector {
                 enum SToken {
                     id_token = 35,
@@ -79,7 +67,7 @@ namespace Core {
             public:
                 QString link();
                 QString text();
-                QString value(QString name = def_value_key);
+                QString value(const QString & name = def_value_key);
 
                 inline Set find(const Selector * selector) {
                     Set set;
@@ -104,8 +92,8 @@ namespace Core {
                 inline int level() const { return _level; }
                 inline QHash<QString, QString> attributes() const { return attrs; }
                 inline Set children() const { return tags; }
-                inline QString value(QString name = def_value_key) {
-                    if (name != def_value_key || (name == def_value_key && _name != QStringLiteral("select")))
+                inline QString value(const QString & name = def_value_key) {
+                    if (name != def_value_key || (name == def_value_key && _name != select_token))
                         return attrs.value(name);
                     else {
                         Html::Set options = find("option[selected]");
@@ -122,14 +110,14 @@ namespace Core {
 
                 inline QString link() const { return attrs.value(href_token); }
 
-                inline bool is_link() { return _name == QStringLiteral("a"); }
-                inline bool is_script() { return _name == QStringLiteral("script"); }
-                inline bool is_head() { return _name == QStringLiteral("head"); }
-                inline bool is_meta() { return _name == QStringLiteral("meta"); }
+                inline bool is_link() { return _name == a_tag; }
+                inline bool is_script() { return _name == script_tag; }
+                inline bool is_head() { return _name == head_tag; }
+                inline bool is_meta() { return _name == meta_tag; }
 
                 inline Tag * parentTag() { return parent; }
                 inline Tag * childTag(int pos) const { return tags[pos]; }
-                inline Tag * childTag(QString name_predicate, int pos = 0) const {
+                inline Tag * childTag(const QString & name_predicate, int pos = 0) const {
                     Set::ConstIterator tag = tags.cbegin();
                     for(int i = 0; tag != tags.cend(); tag++) {
                         if ((*tag) -> name() == name_predicate)
@@ -169,7 +157,7 @@ namespace Core {
                     newTag -> addAttr(nm, val); val.clear();
                 }
 
-                inline bool hasClass(QString class_name) {
+                inline bool hasClass(const QString & class_name) {
                     return attrs[class_token].split(split_token, QString::SkipEmptyParts).contains(class_name);
                 }
 
@@ -278,11 +266,11 @@ namespace Core {
                 }
 
                 inline void proceedCharset(Tag * tag) {
-                    QString meta = tag -> value(QStringLiteral("charset"));
+                    QString meta = tag -> value(charset_key);
                     if (meta.isEmpty()) {                       
-                        if (tag -> value(QStringLiteral("http-equiv")).toLower() == QStringLiteral("content-type")) {
-                            meta = tag -> value(QStringLiteral("content"));
-                            meta = meta.section(QStringLiteral("charset="), 1).section(' ', 0);
+                        if (tag -> value(http_equiv_key).toLower() == content_type_key) {
+                            meta = tag -> value(content_key);
+                            meta = meta.section(charset_attr_key, 1).section(' ', 0);
                         }
                     }
 

@@ -6,41 +6,87 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            const QString base_url              = QStringLiteral("https://api.vk.com/method/");
-            const QString version_key           = QStringLiteral("v");
-            const QString access_token_key      = QStringLiteral("access_token");
-            const QString offset_key            = QStringLiteral("offset");
-            const QString limit_key             = QStringLiteral("count");
-            const QString response_key          = QStringLiteral("response");
-            const QString finished_key          = QStringLiteral("finished");
+            extern const QString name_key;
+            extern const QString auth_title_key;
 
-            const QString error_key             = QStringLiteral("error");
-            const QString error_msg_key         = QStringLiteral("error_msg");
-            const QString error_code_key        = QStringLiteral("error_code");
-            const QString captcha_img_key       = QStringLiteral("captcha_img");
-            const QString captcha_sid_key       = QStringLiteral("captcha_sid");
-            const QString captcha_key           = QStringLiteral("captcha_key");
+            extern const QString bool_str_true;
+            extern const QString bool_str_false;
 
-            const QString predef1_key           = QStringLiteral("_1_");
-            const QString predef2_key           = QStringLiteral("_2_");
+            extern const QString base_url;
+            extern const QString auth_url;
 
-            const QString execute_key           = QStringLiteral("execute");
-            const QString code_key              = QStringLiteral("code");
+            extern const QString user_info_path;
+            extern const QString resole_user_path;
+            extern const QString lyrics_path;
 
-            const QString albums_key            = QStringLiteral("albums");
-            const QString audio_list_key        = QStringLiteral("audio_list");
-            const QString groups_key            = QStringLiteral("groups");
-            const QString friends_key           = QStringLiteral("friends");
-            const QString albums_offset_key     = QStringLiteral("albums_offset");
-            const QString albums_finished_key   = QStringLiteral("albums_finished");
-            const QString url_key               = QStringLiteral("url");
+            extern const QString api_call_limit_val;
 
-            const QString id_key                = QStringLiteral("id");
-            const QString owner_id_key          = QStringLiteral("owner_id");
-            const QString artist_key            = QStringLiteral("artist");
-            const QString title_key             = QStringLiteral("title");
-            const QString duration_key          = QStringLiteral("duration");
-            const QString genre_id_key          = QStringLiteral("genre_id");
+            extern const QString version_key;
+            extern const QString version_val;
+
+            extern const QString display_token;
+            extern const QString page_token;
+
+            extern const QString client_id_token;
+            extern const QString client_token;
+
+            extern const QString response_type_token;
+            extern const QString response_token;
+
+            extern const QString scope_token;
+            extern const QString scope_val;
+
+            extern const QString redirect_uri_token;
+            extern const QString redirect_uri_val;
+
+            extern const QString access_token_key;
+            extern const QString offset_key;
+            extern const QString limit_key;
+            extern const QString response_key;
+            extern const QString finished_key;
+            extern const QString user_id_key;
+            extern const QString expires_in_key;
+
+            extern const QString error_key;
+            extern const QString error_description_key;
+            extern const QString error_msg_key;
+            extern const QString error_code_key;
+            extern const QString captcha_img_key;
+            extern const QString captcha_sid_key;
+            extern const QString captcha_key;
+
+            extern const QString predef1_key;
+            extern const QString predef2_key;
+
+            extern const QString execute_key;
+            extern const QString code_key;
+
+            extern const QString albums_key;
+            extern const QString audio_list_key;
+            extern const QString groups_key;
+            extern const QString friends_key;
+            extern const QString albums_offset_key;
+            extern const QString albums_finished_key;
+            extern const QString url_key;
+
+            extern const QString id_key;
+            extern const QString owner_id_key;
+            extern const QString artist_key;
+            extern const QString title_key;
+            extern const QString duration_key;
+            extern const QString genre_id_key;
+
+            extern const QString fields_key;
+            extern const QString counters_key;
+            extern const QString user_ids_key;
+            extern const QString screen_name_key;
+            extern const QString object_id_key;
+            extern const QString type_key;
+            extern const QString lyrics_id_key;
+
+            extern const QString email_key;
+            extern const QString password_key;
+
         }
     }
 }

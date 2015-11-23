@@ -6,7 +6,7 @@ namespace Core {
             ////////  Set //////////
                 QString Set::link() { return (isEmpty()) ? QString() : first() -> link(); }
                 QString Set::text() { return (isEmpty()) ? QString() : first() -> text(); }
-                QString Set::value(QString name) { return (isEmpty()) ? QString() : first() -> value(name); }
+                QString Set::value(const QString & name) { return (isEmpty()) ? QString() : first() -> value(name); }
 
                 Set & Set::find(const Selector * selector, Set & set) {
                     for(Set::Iterator tag = begin(); tag != end(); tag++) {
@@ -134,7 +134,7 @@ namespace Core {
                 ////////  Tag //////////
 
                 QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable) { // not full support of inputs
-                    QUrl url = QUrl(value(QStringLiteral("action")));
+                    QUrl url = QUrl(value(action_key));
                     Set inputs = find("input") << find("select");
                     QHash<QString, QString> url_vals(vals);
 
@@ -142,7 +142,7 @@ namespace Core {
                         QUrlQuery query = QUrlQuery(url.query());
 
                         for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
-                            QString inp_name = (*input) -> value(QStringLiteral("name"));
+                            QString inp_name = (*input) -> value(name_key);
                             QString inp_val = url_vals.take(inp_name);
                             if (inp_val.isEmpty()) inp_val = (*input) -> value();
 
@@ -263,17 +263,17 @@ namespace Core {
                 ////////  Document //////////
 
                 void Document::initSoloTags() {
-                    html_entities.insert("nbsp", ' ');
-                    html_entities.insert("amp", '&');
-                    html_entities.insert("lt", '<');
-                    html_entities.insert("gt", '>');
+                    html_entities.insert(nbsp_token, ' ');
+                    html_entities.insert(amp_token, '&');
+                    html_entities.insert(lt_token, '<');
+                    html_entities.insert(gt_token, '>');
 
-                    solo.insert(QStringLiteral("br"), true);
-                    solo.insert(QStringLiteral("meta"), true);
-                    solo.insert(QStringLiteral("link"), true);
-                    solo.insert(QStringLiteral("img"), true);
-                    solo.insert(QStringLiteral("!DOCTYPE"), true);
-                    solo.insert(QStringLiteral("input"), true);
+                    solo.insert(br_token, true);
+                    solo.insert(meta_tag, true);
+                    solo.insert(link_key, true);
+                    solo.insert(img_token, true);
+                    solo.insert(doctype_key, true);
+                    solo.insert(input_token, true);
                 }
 
 

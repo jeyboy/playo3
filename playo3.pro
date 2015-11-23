@@ -265,7 +265,8 @@ HEADERS += \
     modules/core/web/apis/service/recaptcha.h \
     modules/core/web/interfaces/friendable.h \
     modules/core/web/interfaces/groupable.h \
-    modules/core/web/interfaces/sociable.h
+    modules/core/web/interfaces/sociable.h \
+    modules/core/web/utils/html_parser_keys.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -392,4 +393,6 @@ SOURCES += \
     modules/core/media/interfaces/iequalizable.cpp \
     player/bass_player.cpp \
     modules/core/web/interfaces/iapi.cpp \
-    external_keys.cpp
+    external_keys.cpp \
+    modules/core/web/utils/html_parser_keys.cpp \
+    modules/core/web/apis/social/vk_api_keys.cpp

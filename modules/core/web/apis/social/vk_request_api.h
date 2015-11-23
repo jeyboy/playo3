@@ -11,20 +11,18 @@ namespace Core {
         namespace Vk {
             class RequestApi : public IApi {
             protected:
-                inline QString boolToStr(bool val) { return val ? QStringLiteral("1") : QStringLiteral("0"); }
-                inline QString apiVersion() { return QStringLiteral("5.21"); }
-                inline QString getApiLimit() { return QStringLiteral("20"); }
+                inline QString boolToStr(bool val) { return val ? bool_str_true : bool_str_false; }
 
                 QString authUrl() {
-                    QUrl url(QStringLiteral("https://oauth.vk.com/authorize"));
+                    QUrl url(auth_url);
 
                     QUrlQuery query = QUrlQuery();
-                    setParam(query, version_key, apiVersion());
-                    setParam(query, QStringLiteral("display"), QStringLiteral("page"));
-                    setParam(query, QStringLiteral("client_id"), QStringLiteral("4332211"));
-                    setParam(query, QStringLiteral("response_type"), QStringLiteral("token"));
-                    setParam(query, QStringLiteral("scope"), QStringLiteral("audio,video,friends,groups,offline"));
-                    setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("https://oauth.vk.com/blank.html"));
+                    setParam(query, version_key, version_val);
+                    setParam(query, display_token, page_token);
+                    setParam(query, client_id_token, client_token);
+                    setParam(query, response_type_token, response_token);
+                    setParam(query, scope_token, scope_val);
+                    setParam(query, redirect_uri_token, redirect_uri_val);
 
                     url.setQuery(query);
                     return url.toString();
@@ -42,7 +40,7 @@ namespace Core {
 
             //        setParam(query, code_key, QString(
             //            "var limit = 100; var offset = _1_; var finished = false; "
-            //            "var response = []; var look_window = limit * " + getApiLimit() + " %2b offset; var post_items = [];"
+            //            "var response = []; var look_window = limit * " + api_call_limit_val + " %2b offset; var post_items = [];"
 
             //            "while (offset < look_window && !finished) {"
             //            "   var items = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "}).items;"
@@ -158,7 +156,7 @@ namespace Core {
                            "};"
 
                            "var folders_result = API.audio.getAlbums({"
-                           "            count: " % getApiLimit() % ", "
+                           "            count: " % api_call_limit_val % ", "
                            "            owner_id: " % uid % ""
                            "    });"
                            "var folders_count = folders_result.count;"
@@ -182,8 +180,8 @@ namespace Core {
                            "    " % albums_key % ": [proceed_folders], "
                            "    " % groups_key % ": proceed_groups, "
                            "    " % friends_key % ": proceed_friends, "
-                           "    " % albums_offset_key % ": " % getApiLimit() % ", "
-                           "    " % albums_finished_key % ": (folders_count < " % getApiLimit() % "), "
+                           "    " % albums_offset_key % ": " % api_call_limit_val % ", "
+                           "    " % albums_finished_key % ": (folders_count < " % api_call_limit_val % "), "
                            "};"
                        )
                    );
@@ -196,7 +194,7 @@ namespace Core {
                     setParam(query, code_key,
                        QString(
                            "var folders_result = API.audio.getAlbums({ "
-                           "            count: " % getApiLimit() % ", "
+                           "            count: " % api_call_limit_val % ", "
                            "            owner_id: " % uid % ""
                            "        });"
                            "var folders_count = folders_result.count;"
@@ -220,8 +218,8 @@ namespace Core {
                            "        owner_id: " % uid % ""
                            "    }), "
                            "    " % albums_key % ": [sort_by_folders], "
-                           "    " % albums_offset_key % ": " % getApiLimit() % ", "
-                           "    " % albums_finished_key % ": (folders_count < " % getApiLimit() % ")"
+                           "    " % albums_offset_key % ": " % api_call_limit_val % ", "
+                           "    " % albums_finished_key % ": (folders_count < " % api_call_limit_val % ")"
                            "};"
                        )
                     );
@@ -245,10 +243,10 @@ namespace Core {
 
                 QJsonObject userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
                     QUrlQuery query;
-                    setParam(query, QStringLiteral("fields"), QStringLiteral("counters"));
-                    setParam(query, QStringLiteral("user_ids"), uid);
+                    setParam(query, fields_key, counters_key);
+                    setParam(query, user_ids_key, uid);
 
-                    return sQuery(baseUrl(QStringLiteral("users.get"), query)).value(QStringLiteral("response")).toArray().first().toObject();
+                    return sQuery(baseUrl(user_info_path, query)).value(response_key).toArray().first().toObject();
                 }
 
                 QUrl audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
@@ -368,16 +366,16 @@ namespace Core {
 
                 void nameToId(QString name, QString & id, QString & id_type) {
                     QUrlQuery query;
-                    setParam(query, QStringLiteral("screen_name"), name);
-                    QJsonObject ret = sQuery(baseUrl(QStringLiteral("utils.resolveScreenName"), query)).value(response_key).toObject();
-                    id = QString::number(ret.value(QStringLiteral("object_id")).toInt());
-                    id_type = ret.value(QStringLiteral("type")).toString();
+                    setParam(query, screen_name_key, name);
+                    QJsonObject ret = sQuery(baseUrl(resole_user_path, query)).value(response_key).toObject();
+                    id = QString::number(ret.value(object_id_key).toInt());
+                    id_type = ret.value(type_key).toString();
                 }
 
                 QUrl audioLyricsUrl(QString & lyrics_id) {
                     QUrlQuery query = genDefaultParams();
-                    setParam(query, QStringLiteral("lyrics_id"), lyrics_id);
-                    return baseUrl(QStringLiteral("audio.getLyrics"), query);
+                    setParam(query, lyrics_id_key, lyrics_id);
+                    return baseUrl(lyrics_path, query);
                 }
             };
         }
