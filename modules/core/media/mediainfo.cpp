@@ -44,7 +44,7 @@ MediaInfo::MediaInfo(const QUrl & uri, const QVariant & extension, bool onlyTags
     }
     else if (!onlyTags) {
         readed = true;
-        error = PlayerFactory::obj().currPlayer() -> fileInfo(uri, this); // this method only initiating tech info
+        error = !PlayerFactory::obj().currPlayer() -> fileInfo(uri, this); // this method only initiating tech info
     }
 }
 
