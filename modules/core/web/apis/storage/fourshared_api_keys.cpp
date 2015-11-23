@@ -26,6 +26,7 @@ namespace Core {
         extern const QString bitrate_tag            = QStringLiteral("Bit rate");
         extern const QString discretion_rate_tag    = QStringLiteral("Sample rate");
         extern const QString genre_tag              = QStringLiteral("Genre");
+        extern const QString year_tag               = QStringLiteral("Year");
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Grabber {
     extern const QString extension_key;
     extern const QString bitrate_key;
     extern const QString discretion_rate_key;
+    extern const QString year_key;
     extern const QString channels_key;
     extern const QString bpm_key;
     extern const QString skip_info_key;

@@ -29,6 +29,7 @@ namespace Core {
             extern const QString bitrate_tag;
             extern const QString discretion_rate_tag;
             extern const QString genre_tag;
+            extern const QString year_tag;
         }
     }
 }

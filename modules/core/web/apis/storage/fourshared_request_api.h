@@ -35,7 +35,7 @@ namespace Core {
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                    bool initInfo = false;
+                    bool initInfo = false; // initInfo is too slow
                     QJsonArray res = lQuery(
                         audioSearchUrl(predicate),
                         QueryRules(files_token_key, requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
@@ -78,7 +78,6 @@ namespace Core {
                     QJsonArray ar;
                     QString ext, title, path, song_path;
 
-
                     for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
 
                         QJsonObject obj, item_obj = (*item).toObject();
@@ -103,13 +102,13 @@ namespace Core {
                                         obj.insert(bitrate_key, (*tag) -> text());
                                     else if (tag_title == discretion_rate_tag)
                                         obj.insert(discretion_rate_key, (*tag) -> text());
+                                    else if (tag_title == year_tag)
+                                        obj.insert(year_key, (*tag) -> text());
                                     else if (tag_title == genre_tag) {
                                         int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
                                         if (Media::MusicGenres::obj().defaultInt() != genre_id)
                                             obj.insert(genre_id_key, genre_id);
                                     }
-
-                                    // year ignored at this time
                                 }
                             }
 
