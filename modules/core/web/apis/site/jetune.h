@@ -14,7 +14,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline Web::SubType siteType() { return jetune_site; }
 
-            QString refresh(QString refresh_page) {
+            QString refresh(const QString & refresh_page) {
                 qDebug() << "IN JETUNE";
 
                 return refresh_page;

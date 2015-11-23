@@ -33,7 +33,7 @@ namespace Core {
             protected:
                 inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}
 
-                inline QString refresh(QString path) { return path; }
+                inline QString refresh(const QString & path) { return path; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("api_key=TSCA6XDZTJQ1OOJSV")); }
 
                 inline QString baseUrlStr(const QString & predicate) { return QStringLiteral("http://developer.echonest.com/api/v4/") % predicate; }

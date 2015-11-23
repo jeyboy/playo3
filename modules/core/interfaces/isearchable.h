@@ -94,7 +94,7 @@ namespace Core {
 
         //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 
-        virtual QString refresh(QString refresh_page) = 0;
+        virtual QString refresh(const QString & refresh_page) = 0;
     signals:
         void errorReceived(int, QString);
     protected:

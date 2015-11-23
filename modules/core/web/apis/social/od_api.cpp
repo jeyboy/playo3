@@ -23,7 +23,7 @@ void Api::toJson(QJsonObject & hash) {
     hash.insert(name(), root);
 }
 
-QString Api::refresh(QString refresh_page) { // here refresh_page must by eq to track id
+QString Api::refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
     QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
     if (hasError(obj)) {
         connection(true);

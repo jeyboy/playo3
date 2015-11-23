@@ -258,7 +258,6 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
     BASS_CHANNELINFO media_info;
     if (BASS_ChannelGetInfo(chUID, &media_info)) {
         info -> setSize(len + BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_START));
-//        ret.insert("info", Format::toInfo(Format::toUnits(size), bitrate, info.freq, info.chans));
         info -> setSampleRate(media_info.freq);
         info -> setChannels(media_info.chans);
     }

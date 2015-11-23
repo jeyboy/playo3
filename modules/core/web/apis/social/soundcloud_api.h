@@ -44,7 +44,7 @@ namespace Core {
                 }
 
             protected:
-                inline QString refresh(QString path) { return path; }
+                inline QString refresh(const QString & path) { return path; }
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate % ".json"; }
 
                 inline QString offsetKey() const { return offset_key; }

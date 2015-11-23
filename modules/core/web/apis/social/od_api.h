@@ -29,7 +29,7 @@ namespace Core {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
 
-                QString refresh(QString refresh_page); // here refresh_page must by eq to track id
+                QString refresh(const QString & refresh_page); // here refresh_page must by eq to track id
 
             public slots:
                 bool connection(bool onlyAuto = false);

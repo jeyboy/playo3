@@ -354,7 +354,7 @@ namespace Core {
                 QJsonArray getAudiosInfo(QStringList & audio_uids) {
                     return sQuery(audioRefreshUrl(audio_uids)).value(response_key).toArray();
                 }
-                QJsonObject getAudioInfo(QString & audio_uid) {
+                QJsonObject getAudioInfo(const QString & audio_uid) {
                     QStringList uids; uids << audio_uid;
                     QJsonArray infos = getAudiosInfo(uids);
                     if (infos.isEmpty())
@@ -362,7 +362,7 @@ namespace Core {
                     else return infos[0].toObject();
                 }
 
-                QString refresh(QString audio_uid) {
+                QString refresh(const QString & audio_uid) {
                     return getAudioInfo(audio_uid).value(url_key).toString();
                 }
 

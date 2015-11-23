@@ -45,7 +45,7 @@ namespace Core {
                     return prepareAudios(res, initInfo);
                 }
 
-                QString refresh(QString refresh_page) {
+                QString refresh(const QString & refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
                     QNetworkReply * response = Web::Manager::prepare() -> followedGet(refresh_page);
@@ -55,7 +55,7 @@ namespace Core {
                     return res;
                 }
 
-                QString downloadLink(QString refresh_page) {
+                QString downloadLink(const QString & refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
                     QNetworkReply * response = Web::Manager::prepare() -> followedGet(QUrl(down_base_url % refresh_page.mid(12)));

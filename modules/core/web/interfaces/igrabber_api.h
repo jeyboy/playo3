@@ -10,7 +10,7 @@ namespace Core {
     public:
         enum toJsonType { songs1, songs2, artists1, artists2, genres1 };
 
-        virtual QString refresh(QString refresh_page) {
+        virtual QString refresh(const QString & refresh_page) {
             if (refresh_page.isEmpty()) return QString();
 
             Web::Response * response = Web::Manager::prepare() -> followedGet(QUrl(refresh_page));
