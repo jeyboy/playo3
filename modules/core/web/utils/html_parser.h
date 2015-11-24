@@ -67,7 +67,7 @@ namespace Core {
             public:
                 QString link();
                 QString text();
-                QString value(const QString & name = def_value_key);
+                QString value(const QString & name = attr_default);
 
                 inline Set find(const Selector * selector) {
                     Set set;
@@ -92,8 +92,8 @@ namespace Core {
                 inline int level() const { return _level; }
                 inline QHash<QString, QString> attributes() const { return attrs; }
                 inline Set children() const { return tags; }
-                inline QString value(const QString & name = def_value_key) {
-                    if (name != def_value_key || (name == def_value_key && _name != select_token))
+                inline QString value(const QString & name = attr_default) {
+                    if (name != attr_default || (name == attr_default && _name != tag_select))
                         return attrs.value(name);
                     else {
                         Html::Set options = find("option[selected]");
@@ -101,19 +101,19 @@ namespace Core {
                     }
                 }
                 inline QString text() const {
-                    const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
-                    return text ? text -> attrs.value(text_block_token) : QString();
+                    const Tag * text = (_name == tkn_text_block ? this : childTag(tkn_text_block));
+                    return text ? text -> attrs.value(tkn_text_block) : QString();
                 }
 
                 QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false);
                 QString toText() const;
 
-                inline QString link() const { return attrs.value(href_token); }
+                inline QString link() const { return attrs.value(attr_href); }
 
-                inline bool is_link() { return _name == a_tag; }
-                inline bool is_script() { return _name == script_tag; }
-                inline bool is_head() { return _name == head_tag; }
-                inline bool is_meta() { return _name == meta_tag; }
+                inline bool is_link() { return _name == tag_a; }
+                inline bool is_script() { return _name == tag_script; }
+                inline bool is_head() { return _name == tag_head; }
+                inline bool is_meta() { return _name == tag_meta; }
 
                 inline Tag * parentTag() { return parent; }
                 inline Tag * childTag(int pos) const { return tags[pos]; }
@@ -145,20 +145,20 @@ namespace Core {
                     return newTag;
                 }
                 inline void appendText(QString & val) {
-                    QString tnm(text_block_token);
+                    QString tnm(tkn_text_block);
                     Tag * newTag = appendTag(tnm);
-                    QString nm(text_block_token);
+                    QString nm(tkn_text_block);
                     newTag -> addAttr(nm, val); val.clear();
                 }
                 inline void appendComment(QString & val) {
-                    QString tnm(comment_block_token);
+                    QString tnm(tkn_comment_block);
                     Tag * newTag = appendTag(tnm);
-                    QString nm(comment_block_token);
+                    QString nm(tkn_comment_block);
                     newTag -> addAttr(nm, val); val.clear();
                 }
 
                 inline bool hasClass(const QString & class_name) {
-                    return attrs[class_token].split(split_token, QString::SkipEmptyParts).contains(class_name);
+                    return attrs[attr_class].split(tkn_split, QString::SkipEmptyParts).contains(class_name);
                 }
 
                 bool validTo(const Selector * selector);
@@ -266,11 +266,11 @@ namespace Core {
                 }
 
                 inline void proceedCharset(Tag * tag) {
-                    QString meta = tag -> value(charset_key);
+                    QString meta = tag -> value(tkn_charset);
                     if (meta.isEmpty()) {                       
-                        if (tag -> value(http_equiv_key).toLower() == content_type_key) {
-                            meta = tag -> value(content_key);
-                            meta = meta.section(charset_attr_key, 1).section(' ', 0);
+                        if (tag -> value(tkn_http_equiv).toLower() == tkn_content_type) {
+                            meta = tag -> value(tkn_content);
+                            meta = meta.section(tkn_charset_attr, 1).section(' ', 0);
                         }
                     }
 

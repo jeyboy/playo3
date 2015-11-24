@@ -53,7 +53,7 @@ namespace Core {
                             if (parts.length() > 1)
                                 _attrs.insert(parts.first(), QPair<char, QString>(rel, parts.last()));
                             else
-                                _attrs.insert(parts.first(), QPair<char, QString>(attr_rel_eq, any_elem_token));
+                                _attrs.insert(parts.first(), QPair<char, QString>(attr_rel_eq, tkn_any_elem));
                             rel = attr_rel_eq;
                         break;}
                         case klass: {
@@ -134,7 +134,7 @@ namespace Core {
                 ////////  Tag //////////
 
                 QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable) { // not full support of inputs
-                    QUrl url = QUrl(value(action_key));
+                    QUrl url = QUrl(value(attr_action));
                     Set inputs = find("input") << find("select");
                     QHash<QString, QString> url_vals(vals);
 
@@ -142,7 +142,7 @@ namespace Core {
                         QUrlQuery query = QUrlQuery(url.query());
 
                         for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
-                            QString inp_name = (*input) -> value(name_key);
+                            QString inp_name = (*input) -> value(attr_name);
                             QString inp_val = url_vals.take(inp_name);
                             if (inp_val.isEmpty()) inp_val = (*input) -> value();
 
@@ -159,8 +159,8 @@ namespace Core {
                     return url;
                 }
                 QString Tag::toText() const {
-                    if (_name == text_block_token)
-                        return attrs.value(text_block_token);
+                    if (_name == tkn_text_block)
+                        return attrs.value(tkn_text_block);
                     else {
                         QString result;
 
@@ -170,19 +170,19 @@ namespace Core {
                         return result;
                     }
 
-                    const Tag * text = (_name == text_block_token ? this : childTag(text_block_token));
-                    return text ? text -> attrs.value(text_block_token) : QString();
+                    const Tag * text = (_name == tkn_text_block ? this : childTag(tkn_text_block));
+                    return text ? text -> attrs.value(tkn_text_block) : QString();
                 }
 
                 bool Tag::validTo(const Selector * selector) {
                     for(QHash<Selector::SState, QString>::ConstIterator it = selector -> _tokens.cbegin(); it != selector -> _tokens.cend(); it++) {
                         switch(it.key()) {
-                            case Selector::tag: { if (!(it.value() == any_elem_token || _name == it.value())) return false; break; }
+                            case Selector::tag: { if (!(it.value() == tkn_any_elem || _name == it.value())) return false; break; }
                             case Selector::attr: {
                                 for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++)
                                     switch(it.value().first) {
                                         case Selector::attr_rel_eq: {
-                                            if (!(attrs.contains(it.key()) && (it.value().second == any_elem_token || attrs.value(it.key()) == it.value().second)))
+                                            if (!(attrs.contains(it.key()) && (it.value().second == tkn_any_elem || attrs.value(it.key()) == it.value().second)))
                                                 return false;
                                             break;}
                                         case Selector::attr_rel_begin: {
@@ -206,9 +206,9 @@ namespace Core {
                                     };
                                 break;
                             }
-                            case Selector::id:  { if (attrs[id_token] != it.value()) return false; break; }
+                            case Selector::id:  { if (attrs[attr_id] != it.value()) return false; break; }
                             case Selector::klass: { //TODO: optimisation needed
-                                QStringList node_klasses = attrs[class_token].split(split_token, QString::SkipEmptyParts);
+                                QStringList node_klasses = attrs[attr_class].split(tkn_split, QString::SkipEmptyParts);
                                 if (node_klasses.isEmpty()) return false;
 
                                 for(QStringList::ConstIterator it = selector -> klasses.cbegin(); it != selector -> klasses.cend(); it++) {
@@ -221,7 +221,7 @@ namespace Core {
                                 break;
                             }
                             case Selector::type: {
-                                if (!((_name == input_token || _name == select_token) && attrs[type_token] == it.value())) return false;
+                                if (!((_name == tag_input || _name == tag_select) && attrs[attr_type] == it.value())) return false;
                                 break;
                             }
                             default: ;
@@ -263,17 +263,17 @@ namespace Core {
                 ////////  Document //////////
 
                 void Document::initSoloTags() {
-                    html_entities.insert(nbsp_token, ' ');
-                    html_entities.insert(amp_token, '&');
-                    html_entities.insert(lt_token, '<');
-                    html_entities.insert(gt_token, '>');
+                    html_entities.insert(tkn_nbsp, ' ');
+                    html_entities.insert(tkn_amp, '&');
+                    html_entities.insert(tkn_lt, '<');
+                    html_entities.insert(tkn_gt, '>');
 
-                    solo.insert(br_token, true);
-                    solo.insert(meta_tag, true);
-                    solo.insert(link_key, true);
-                    solo.insert(img_token, true);
-                    solo.insert(doctype_key, true);
-                    solo.insert(input_token, true);
+                    solo.insert(tag_br, true);
+                    solo.insert(tag_meta, true);
+                    solo.insert(tag_link, true);
+                    solo.insert(tag_img, true);
+                    solo.insert(tag_doctype, true);
+                    solo.insert(tag_input, true);
                 }
 
 
@@ -282,7 +282,7 @@ namespace Core {
                     PState state = content;
                     char * ch = new char[2](), last = 0, del = 0;
                     QString curr, value; curr.reserve(1024); value.reserve(1024);
-                    Tag * elem = (root = new Tag(any_elem_token));
+                    Tag * elem = (root = new Tag(tkn_any_elem));
                     bool is_closed = false;
 
                     while(true) {

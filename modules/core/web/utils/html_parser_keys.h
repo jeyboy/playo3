@@ -6,41 +6,38 @@
 namespace Core {
     namespace Web {
         namespace Html {
-            extern const QString doctype_key;
+            extern const QString tag_doctype;
+            extern const QString tag_input;
+            extern const QString tag_select;
+            extern const QString tag_img;
+            extern const QString tag_br;
+            extern const QString tag_a;
+            extern const QString tag_script;
+            extern const QString tag_head;
+            extern const QString tag_meta;
+            extern const QString tag_link;
 
-            extern const QString any_elem_token;
-            extern const QString text_block_token;
-            extern const QString href_token;
-            extern const QString comment_block_token;
+            extern const QString tkn_split;
+            extern const QString tkn_any_elem;
+            extern const QString tkn_text_block;
+            extern const QString tkn_comment_block;
+            extern const QString tkn_nbsp;
+            extern const QString tkn_amp;
+            extern const QString tkn_lt;
+            extern const QString tkn_gt;
+            extern const QString tkn_charset;
+            extern const QString tkn_charset_attr;
+            extern const QString tkn_http_equiv;
+            extern const QString tkn_content_type;
+            extern const QString tkn_content;
 
-            extern const QString nbsp_token;
-            extern const QString amp_token;
-            extern const QString lt_token;
-            extern const QString gt_token;
-
-            extern const QString id_token;
-            extern const QString class_token;
-            extern const QString type_token;
-            extern const QString input_token;
-            extern const QString select_token;
-            extern const QString img_token;
-            extern const QString br_token;
-            extern const QString split_token;
-            extern const QString def_value_key;
-            extern const QString action_key;
-            extern const QString name_key;
-
-            extern const QString a_tag;
-            extern const QString script_tag;
-            extern const QString head_tag;
-            extern const QString meta_tag;
-            extern const QString link_key;
-
-            extern const QString charset_key;
-            extern const QString charset_attr_key;
-            extern const QString http_equiv_key;
-            extern const QString content_type_key;
-            extern const QString content_key;
+            extern const QString attr_name;
+            extern const QString attr_action;
+            extern const QString attr_href;
+            extern const QString attr_id;
+            extern const QString attr_class;
+            extern const QString attr_type;
+            extern const QString attr_default;
         }
     }
 }
