@@ -1,5 +1,7 @@
 #include "test_filename_conversions.h"
 
+using namespace Core;
+
 void TestFilenameConversions::cacheTitleFilterTest_data() {
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("result");
@@ -10,7 +12,7 @@ void TestFilenameConversions::cacheTitleFilterTest_data() {
 
 void TestFilenameConversions::cacheTitleFilterTest() {
     QFETCH(QString, input); QFETCH(QString, result);
-    QCOMPARE(cacheTitleFilter(input), result);
+    QCOMPARE(FilenameConversions::cacheTitleFilter(input), result);
 }
 
 
@@ -24,7 +26,7 @@ void TestFilenameConversions::forwardNumberFilterTest_data() {
 
 void TestFilenameConversions::forwardNumberFilterTest() {
     QFETCH(QString, input); QFETCH(QString, result);
-    QCOMPARE(forwardNumberFilter(input), result);
+    QCOMPARE(FilenameConversions::forwardNumberFilter(input), result);
 }
 
 void TestFilenameConversions::downloadTitleTest_data() {
@@ -38,5 +40,5 @@ void TestFilenameConversions::downloadTitleTest_data() {
 
 void TestFilenameConversions::downloadTitleTest() {
     QFETCH(QString, input); QFETCH(QString, ext); QFETCH(QString, result);
-    QCOMPARE(downloadTitle(input, ext), result);
+    QCOMPARE(FilenameConversions::downloadTitle(input, ext), result);
 }

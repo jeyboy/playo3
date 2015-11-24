@@ -9,7 +9,7 @@
 int main(int argc, char * argv[]) {
     QCoreApplication a(argc, argv);
 
-    QTest::qExec(new TestFilenameConversions, argc, argv);
+    QTest::qExec(new Core::TestFilenameConversions, argc, argv);
 
     return a.exec();
 }
