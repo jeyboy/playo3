@@ -67,8 +67,8 @@ void BassPlayer::afterSourceOpening() {
 
 void BassPlayer::playPreproccessing() {
     emit statusChanged(LoadedMedia);
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume());
-    BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan());
+    newVolumeProcessing(volume());
+    newPanProcessing(pan());
 
     if (max_duration == 0)
         max_duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER;
