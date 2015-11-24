@@ -17,13 +17,13 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() {}
             public:
-                inline QString name() const { return name_key; }
+                inline QString name() const { return tkn_name; }
                 inline Web::SubType siteType() { return vk_site; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query = QUrlQuery();
 
-                    query.addQueryItem(version_key, version_val);
-                    query.addQueryItem(access_token_key, token());
+                    query.addQueryItem(tkn_version, val_version);
+                    query.addQueryItem(tkn_access_token, token());
             //        query.addQueryItem(QStringLiteral("test_mode"), "1");
 
                     return query;
@@ -56,15 +56,15 @@ namespace Core {
                     clearGroups();
                 }
             protected:
-                inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
+                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
-                inline QString offsetKey() const { return offset_key; }
-                inline QString limitKey() const { return limit_key; }
+                inline QString offsetKey() const { return tkn_offset; }
+                inline QString limitKey() const { return tkn_limit; }
                 inline int requestLimit() const { return 200; }
                 inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-                inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(response_key).toObject()); }
-                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(finished_key).toBool(); }
+                inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(tkn_response).toObject()); }
+                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_finished).toBool(); }
                 bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
                 QUrl buildUrl(QUrl tUrl, int offset, int limit);

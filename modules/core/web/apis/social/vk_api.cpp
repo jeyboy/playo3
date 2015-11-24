@@ -37,7 +37,7 @@ bool Api::connection() {
             Html::Set forms = html.find("form");
 
             if (forms.isEmpty()) {
-                Logger::obj().write(auth_title_key, QStringLiteral("Auth form did not found"), true);
+                Logger::obj().write(tkn_auth_title, QStringLiteral("Auth form did not found"), true);
                 return false;
             }
             Html::Tag * form = forms.first();
@@ -49,11 +49,11 @@ bool Api::connection() {
                 captcha_src = captcha_set.first() -> value("src");
 
             if (captcha_src.isEmpty()) {
-                if (!showingLogin(auth_title_key, vals[email_key], vals[password_key], err))
+                if (!showingLogin(tkn_auth_title, vals[tkn_email], vals[tkn_password], err))
                     return false;
             } else {
-                if (!showingLoginWithCaptcha(auth_title_key, captcha_src,
-                    vals[email_key], vals[password_key], vals[captcha_key], err
+                if (!showingLoginWithCaptcha(tkn_auth_title, captcha_src,
+                    vals[tkn_email], vals[tkn_password], vals[tkn_captcha], err
                 )) return false;
             }
 
@@ -64,14 +64,14 @@ bool Api::connection() {
         form_url = resp -> toUrl();
         QUrlQuery query(form_url.fragment());
 
-        if (query.hasQueryItem(error_key)) {
-            error = query.queryItemValue(error_description_key);
+        if (query.hasQueryItem(tkn_error)) {
+            error = query.queryItemValue(tkn_error_description);
             return false;
-        } else if (query.hasQueryItem(access_token_key)) {
+        } else if (query.hasQueryItem(tkn_access_token)) {
             setParams(
-                query.queryItemValue(access_token_key),
-                query.queryItemValue(user_id_key),
-                query.queryItemValue(expires_in_key)
+                query.queryItemValue(tkn_access_token),
+                query.queryItemValue(tkn_user_id),
+                query.queryItemValue(tkn_expires_in)
             );
             emit authorized();
             return true;
@@ -84,9 +84,9 @@ bool Api::connection() {
 ///////////////////////////////////////////////////////////
 
 bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
-    QJsonObject stat_obj = response.value(error_key).toObject();
-    message = stat_obj.value(error_msg_key).toString();
-    code = stat_obj.value(error_code_key).toInt();
+    QJsonObject stat_obj = response.value(tkn_error).toObject();
+    message = stat_obj.value(tkn_error_msg).toString();
+    code = stat_obj.value(tkn_error_code).toInt();
 
     if (code == 14)
         return captchaProcessing(response, url);
@@ -95,24 +95,24 @@ bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString 
 
 QUrl Api::buildUrl(QUrl tUrl, int offset, int limit) {
     QString urlStr = tUrl.toString();
-    urlStr = urlStr.replace(predef1_key, QString::number(offset)).replace(predef2_key, QString::number(limit));
+    urlStr = urlStr.replace(tkn_predef1, QString::number(offset)).replace(tkn_predef2, QString::number(limit));
     return QUrl(urlStr);
 }
 
 bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {
-    QJsonObject stat_obj = response.value(error_key).toObject();
+    QJsonObject stat_obj = response.value(tkn_error).toObject();
 
     QString captchaText;
-    showingCaptcha(QUrl(stat_obj.value(captcha_img_key).toString()), captchaText);
+    showingCaptcha(QUrl(stat_obj.value(tkn_captcha_img).toString()), captchaText);
     if (captchaText.isEmpty())
         return false;
 
     QUrlQuery query(url.query());
-    query.removeQueryItem(captcha_sid_key);
-    query.removeQueryItem(captcha_key);
+    query.removeQueryItem(tkn_captcha_sid);
+    query.removeQueryItem(tkn_captcha);
 
-    query.addQueryItem(captcha_sid_key, stat_obj.value(captcha_sid_key).toString());
-    query.addQueryItem(captcha_key, captchaText);
+    query.addQueryItem(tkn_captcha_sid, stat_obj.value(tkn_captcha_sid).toString());
+    query.addQueryItem(tkn_captcha, captchaText);
 
     url.setQuery(query);
 

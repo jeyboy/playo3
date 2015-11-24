@@ -256,12 +256,12 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(Vk::id_key).toInt());
-            owner = QString::number(itm.value(Vk::owner_id_key).toInt());
+            id = QString::number(itm.value(Vk::tkn_id).toInt());
+            owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
             uid = WebFile::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(Vk::url_key).toString();
+            uri = itm.value(Vk::tkn_url).toString();
             uri = uri.section('?', 0, 0); // remove extra info from url
 
             items = store.values(uid.toString());
@@ -271,13 +271,13 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
                 newItem = new VkFile(
                     id,
                     uri,
-                    itm.value(Vk::artist_key).toString() % QStringLiteral(" - ") % itm.value(Vk::title_key).toString(),
+                    itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString(),
                     parent,
                     pos
                 );
 
                 newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::duration_key).toInt(0)));
+                newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
 
 //                if (itm.contains(Vk::genre_id_key))
 //                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));

@@ -6,87 +6,71 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            extern const QString name_key;
-            extern const QString auth_title_key;
+            extern const QString tkn_name;
+            extern const QString tkn_auth_title;
+            extern const QString tkn_str_true;
+            extern const QString tkn_str_false;
+            extern const QString tkn_version;
+            extern const QString tkn_display;
+            extern const QString tkn_client_id;
+            extern const QString tkn_response_type;
+            extern const QString tkn_scope;
+            extern const QString tkn_redirect_uri;
+            extern const QString tkn_access_token;
+            extern const QString tkn_offset;
+            extern const QString tkn_limit;
+            extern const QString tkn_response;
+            extern const QString tkn_finished;
+            extern const QString tkn_user_id;
+            extern const QString tkn_expires_in;
+            extern const QString tkn_error;
+            extern const QString tkn_error_description;
+            extern const QString tkn_error_msg;
+            extern const QString tkn_error_code;
+            extern const QString tkn_captcha_img;
+            extern const QString tkn_captcha_sid;
+            extern const QString tkn_captcha;
+            extern const QString tkn_execute;
+            extern const QString tkn_code;
+            extern const QString tkn_albums;
+            extern const QString tkn_audio_list;
+            extern const QString tkn_groups;
+            extern const QString tkn_friends;
+            extern const QString tkn_albums_offset;
+            extern const QString tkn_albums_finished;
+            extern const QString tkn_url;
+            extern const QString tkn_id;
+            extern const QString tkn_owner_id;
+            extern const QString tkn_artist;
+            extern const QString tkn_title;
+            extern const QString tkn_duration;
+            extern const QString tkn_genre_id;
+            extern const QString tkn_fields;
+            extern const QString tkn_counters;
+            extern const QString tkn_user_ids;
+            extern const QString tkn_screen_name;
+            extern const QString tkn_object_id;
+            extern const QString tkn_type;
+            extern const QString tkn_lyrics_id;
+            extern const QString tkn_email;
+            extern const QString tkn_password;
+            extern const QString tkn_predef1;
+            extern const QString tkn_predef2;
 
-            extern const QString bool_str_true;
-            extern const QString bool_str_false;
+            extern const QString url_redirect_uri;
+            extern const QString url_base;
+            extern const QString url_auth;
 
-            extern const QString base_url;
-            extern const QString auth_url;
+            extern const QString path_user_info;
+            extern const QString path_resole_user;
+            extern const QString path_lyrics;
 
-            extern const QString user_info_path;
-            extern const QString resole_user_path;
-            extern const QString lyrics_path;
-
-            extern const QString api_call_limit_val;
-
-            extern const QString version_key;
-            extern const QString version_val;
-
-            extern const QString display_token;
-            extern const QString page_token;
-
-            extern const QString client_id_token;
-            extern const QString client_token;
-
-            extern const QString response_type_token;
-            extern const QString response_token;
-
-            extern const QString scope_token;
-            extern const QString scope_val;
-
-            extern const QString redirect_uri_token;
-            extern const QString redirect_uri_val;
-
-            extern const QString access_token_key;
-            extern const QString offset_key;
-            extern const QString limit_key;
-            extern const QString response_key;
-            extern const QString finished_key;
-            extern const QString user_id_key;
-            extern const QString expires_in_key;
-
-            extern const QString error_key;
-            extern const QString error_description_key;
-            extern const QString error_msg_key;
-            extern const QString error_code_key;
-            extern const QString captcha_img_key;
-            extern const QString captcha_sid_key;
-            extern const QString captcha_key;
-
-            extern const QString predef1_key;
-            extern const QString predef2_key;
-
-            extern const QString execute_key;
-            extern const QString code_key;
-
-            extern const QString albums_key;
-            extern const QString audio_list_key;
-            extern const QString groups_key;
-            extern const QString friends_key;
-            extern const QString albums_offset_key;
-            extern const QString albums_finished_key;
-            extern const QString url_key;
-
-            extern const QString id_key;
-            extern const QString owner_id_key;
-            extern const QString artist_key;
-            extern const QString title_key;
-            extern const QString duration_key;
-            extern const QString genre_id_key;
-
-            extern const QString fields_key;
-            extern const QString counters_key;
-            extern const QString user_ids_key;
-            extern const QString screen_name_key;
-            extern const QString object_id_key;
-            extern const QString type_key;
-            extern const QString lyrics_id_key;
-
-            extern const QString email_key;
-            extern const QString password_key;
-
+            extern const QString val_api_call_limit;
+            extern const QString val_version;
+            extern const QString val_page_token;
+            extern const QString val_client_token;
+            extern const QString val_response_token;
+            extern const QString val_scope;
         }
     }
 }
