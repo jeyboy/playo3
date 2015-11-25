@@ -2,6 +2,8 @@
 #define HTML_PARSET_TEST
 
 #include <qtest.h>
+#include <qfile.h>
+
 #include "../modules/core/web/utils/html_parser.h"
 
 namespace Core {
@@ -12,10 +14,12 @@ namespace Core {
             public:
                 inline explicit TestHtmlParser(QObject * parent = 0) : QObject(parent) {}
 
-                void selectorParseTest_data();
-
             private slots:
+                void selectorParseTest_data();
                 void selectorParseTest();
+
+                void pageParseTest_data();
+                void pageParseTest();
             };
         }
     }
