@@ -7,11 +7,11 @@
 #include "test_filename_conversions.h"
 
 int main(int argc, char * argv[]) {
-    QCoreApplication a(argc, argv);
+//    QCoreApplication a(argc, argv);
 
     QTest::qExec(new Core::TestFilenameConversions, argc, argv);
 
-    return a.exec();
+//    return a.exec();
 }
 
 

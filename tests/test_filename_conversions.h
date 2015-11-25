@@ -9,15 +9,18 @@ namespace Core {
         Q_OBJECT
     public:
         inline explicit TestFilenameConversions(QObject * parent = 0) : QObject(parent) {}
-
-        void cacheTitleFilterTest_data();
-        void forwardNumberFilterTest_data();
-        void downloadTitleTest_data();
-
     private slots:
+        void extractExtension();
+        void extractExtension_data();
+
         void cacheTitleFilterTest();
+        void cacheTitleFilterTest_data();
+
         void forwardNumberFilterTest();
+        void forwardNumberFilterTest_data();
+
         void downloadTitleTest();
+        void downloadTitleTest_data();
     };
 }
 

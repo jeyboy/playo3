@@ -25,7 +25,7 @@ namespace Core {
         }
 
         static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QStringLiteral("(\\W|[_])"))).toLower(); }
-        static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("\\A(\\[|\\()+\\d{1,}(\\]|\\))"))); }
+        static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("^[\\[\\(]+\\d{1,}[\\]\\)]+"))); }
         static QString downloadTitle(QString title, QString extension) {
           QString ret = title.replace(QRegExp(QStringLiteral("[^()\\w\\-&.]|_")), QStringLiteral(" "));
 
