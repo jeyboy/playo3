@@ -253,7 +253,7 @@ void Playo::openVKTabDialog() {
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(&Vk::Api::obj(), this);
     if (dialog.exec() == QDialog::Accepted)
-       Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), Views::Params(vk_rel, dialog.getId(), user_rel), 0, true, true);
+       Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), Views::Params(vk_rel, dialog.getId()), 0, true, true);
 
     Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().lastError());
 }
