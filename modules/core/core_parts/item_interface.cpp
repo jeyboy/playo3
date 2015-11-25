@@ -148,6 +148,7 @@ QVariant IItem::data(int column) const {
         case Qt::FontRole:     return Settings::obj().itemFont();
         case ITREEPATH:        return buildTreePath();
         case ITREESTR:         return buildTreeStr();
+        case Qt::DisplayRole:  return title();
 //        case IUID:             return uid();
 
 //        case IADDFONT:         return Settings::obj().getItemInfoFont();
