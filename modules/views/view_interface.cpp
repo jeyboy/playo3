@@ -288,73 +288,47 @@ void IView::focusInEvent(QFocusEvent *) {
     Presentation::Dockbars::obj().setActive((DockBar *)parent());
 }
 
-void IView::contextMenuEvent(QContextMenuEvent * event) {
-    event -> accept();
-
-    QList<QAction *> actions;
-    QAction * act;
+void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is not work properly // need to use addActions() maybe
+    QMenu menu(this);
 
     if (isEditable()) {
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), this)));
-        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
-
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
+        menu.addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
+        menu.addSeparator();
     }
 
-    actions.append((act = new QAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), this)));
-    connect(act, SIGNAL(triggered(bool)), mdl, SLOT(refresh()));
+    menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
+    menu.addSeparator();
 
-    actions.append((act = new QAction(this)));
-    act -> setSeparator(true);
-
-    actions.append((act = new QAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), this)));
-    act -> setShortcut(QKeySequence(tr("Ctrl+F", "Find items")));
-    connect(act, SIGNAL(triggered(bool)), parent(), SLOT(showSearch()));
-
-    actions.append((act = new QAction(this)));
-    act -> setSeparator(true);
+    menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
+    menu.addSeparator();
 
     if (DataFactory::obj().playedIndex().isValid()) {
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"), this)));
-//        act -> setShortcut(QKeySequence(tr("Ctrl+P", "Played elem")));
-        connect(act, SIGNAL(triggered(bool)), &Presentation::Dockbars::obj(), SLOT(scrollToActive()));
-
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
+        menu.addAction(
+            QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"),
+            &Presentation::Dockbars::obj(), SLOT(scrollToActive()), QKeySequence(tr("Ctrl+P", "Played elem"))
+        );
+        menu.addSeparator();
     }
 
     if (mdl -> playlistType() == Data::vk) {
-        actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for user"), this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforUser()));
-
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
+        menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for user"), this, SLOT(openRecomendationsforUser()));
+        menu.addSeparator();
     }
 
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
         if (ind.data(ITYPE).toInt() == VK_FILE) {
-            actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item user"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforItemUser()));
-            actions.append((act = new QAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(openRecomendationsforItem()));
-            actions.append((act = new QAction(this)));
-            act -> setSeparator(true);
+            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item user"), this, SLOT(openRecomendationsforItemUser()));
+            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item"), this, SLOT(openRecomendationsforItem()));
+            menu.addSeparator();
         }
 
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this)));
-        act -> setShortcut(QKeySequence(tr("Ctrl+C", "Copy")));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(copyToClipboard()));
+        menu.addAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
+        menu.addSeparator();
 
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
-
-        if (!ind.data(IFULLPATH).toString().isEmpty()) {
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/open")), QStringLiteral("Open location"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(openLocation()));
-        }
+        if (!ind.data(IFULLPATH).toString().isEmpty())
+            menu.addAction(QIcon(QStringLiteral(":/open")), QStringLiteral("Open location"), this, SLOT(openLocation()));
 
         if (ind.data(IREMOTE).toBool()) {
             //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
@@ -377,79 +351,55 @@ void IView::contextMenuEvent(QContextMenuEvent * event) {
 //            actions.append(sepAct);
         }
 
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
+        menu.addSeparator();
     }
 
-    actions.append((act = new QAction(QIcon(QStringLiteral(":/import")), QStringLiteral("Import Ids"), this)));
-    act -> setShortcut(QKeySequence(tr("Ctrl+Shift+V", "Insert ids")));
-    connect(act, SIGNAL(triggered(bool)), this, SLOT(importIds()));
+    menu.addAction(
+        QIcon(QStringLiteral(":/import")), QStringLiteral("Import Ids"),
+        this, SLOT(importIds()), QKeySequence(tr("Ctrl+Shift+V", "Insert ids"))
+    );
 
     if (mdl -> rowCount() > 0) {
         if (!selectedIndexes().isEmpty()) {
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/export")), QStringLiteral("Copy Ids to Clipboard"), this)));
-            act -> setShortcut(QKeySequence(tr("Ctrl+Shift+C", "Copy ids")));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(copyIdsToClipboard()));
-
-            actions.append((act = new QAction(this)));
-            act -> setSeparator(true);
+            menu.addAction(
+                QIcon(QStringLiteral(":/export")), QStringLiteral("Copy Ids to Clipboard"),
+                this, SLOT(copyIdsToClipboard()), QKeySequence(tr("Ctrl+Shift+C", "Copy ids"))
+            );
+            menu.addSeparator();
         }       
 
 
         if (Settings::obj().isCheckboxShow()) {
-            actions.append((act = new QAction(this)));
-            act -> setSeparator(true);
+            menu.addSeparator();
 
-//            actions.append((act = new QAction(QIcon(":/move"), "Copy Checked To New Tab", this)));
-//            connect(act, SIGNAL(triggered(bool)), this, SLOT(moveCheckedToNewTab()));
+//            menu.addAction(QIcon(":/move"), "Copy Checked To New Tab", this, SLOT(moveCheckedToNewTab()));
 
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check All"), this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markAllAsChecked()));
-
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Uncheck All"), this)));
-            connect(act, SIGNAL(triggered(bool)), mdl, SLOT(markAllAsUnchecked()));
-
-
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Liked"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markLikedAsChecked()));
-
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check New"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markNewAsChecked()));
-
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Listened"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(markListenedAsChecked()));
-
-            actions.append((act = new QAction(this)));
-            act -> setSeparator(true);
+            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check All"), mdl, SLOT(markAllAsChecked()));
+            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Uncheck All"), mdl, SLOT(markAllAsUnchecked()));
+            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Liked"), this, SLOT(markLikedAsChecked()));
+            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check New"), this, SLOT(markNewAsChecked()));
+            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Listened"), this, SLOT(markListenedAsChecked()));
+            menu.addSeparator();
         }
 
+        menu.addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download"), this, SLOT(downloadSelected()));
+        menu.addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download All"), this, SLOT(downloadAll()));
+        menu.addSeparator();
 
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download"), this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadSelected()));
-
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download All"), this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(downloadAll()));
-
-        actions.append((act = new QAction(this)));
-        act -> setSeparator(true);
-
-        actions.append((act = new QAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this)));
-        connect(act, SIGNAL(triggered(bool)), this, SLOT(shuffle()));
+        menu.addAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this, SLOT(shuffle()));
 
         if (mdl -> playlistType() != level) {
-            actions.append((act = new QAction(this)));
-            act -> setSeparator(true);
+            menu.addSeparator();
 
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse all"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(collapseAll()));
-
-            actions.append((act = new QAction(QIcon(QStringLiteral(":/expand")), QStringLiteral("Expand all"), this)));
-            connect(act, SIGNAL(triggered(bool)), this, SLOT(expandAll()));
+            menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse all"), this, SLOT(collapseAll()));
+            menu.addAction(QIcon(QStringLiteral(":/expand")), QStringLiteral("Expand all"), this, SLOT(expandAll()));
         }
     }
 
-    if (actions.count() > 0)
-        QMenu::exec(actions, event -> globalPos(), 0, this);
+    if (!menu.isEmpty()) {
+        menu.exec(event -> globalPos());
+        event -> accept();
+    } else event -> ignore();
 }
 
 void IView::checkByPredicate(IItem::ItemStateFlag flag) {
@@ -835,12 +785,16 @@ void IView::keyPressEvent(QKeyEvent * event) {
 
     } else if (event -> key() == Qt::Key_Delete)
         removeSelectedItems();
+    // monkey patch for unworked shortcuts on menu
     else if (event -> key() == Qt::Key_F && event -> modifiers() & Qt::CTRL)
         ((DockBar *)parent()) -> showSearch();
     else if (event -> key() == Qt::Key_C && event -> modifiers() & Qt::CTRL && event -> modifiers() & Qt::SHIFT)
         copyIdsToClipboard();
     else if (event -> key() == Qt::Key_V && event -> modifiers() & Qt::CTRL && event -> modifiers() & Qt::SHIFT)
         importIds();
+    else if (event -> key() == Qt::Key_P && event -> modifiers() & Qt::CTRL)
+        Presentation::Dockbars::obj().scrollToActive();
+
     else QTreeView::keyPressEvent(event);
 }
 
