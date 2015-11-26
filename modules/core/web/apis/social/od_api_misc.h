@@ -56,7 +56,7 @@ namespace Core {
                             QList<FormInput> inputs;
                             inputs << FormInput::createStr(QStringLiteral("code"), QStringLiteral("Code from sms"));
                             inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
-                            actionDialog -> buildForm(inputs);
+                            actionDialog -> proceedForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
                                 QHash<QString, QString> attrs;

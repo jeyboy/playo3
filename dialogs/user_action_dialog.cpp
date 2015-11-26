@@ -18,7 +18,7 @@ void UserActionDialog::buildLoginWithCaptchaForm(const QPixmap & captcha_img, co
 
     buildCaptchaFields(captcha_img);
     buildLoginFields(login_val, password_val, login_label, password_label);
-    buildForm(inputs, QStringLiteral("Auth form"));
+    proceedForm(inputs, QStringLiteral("Auth form"));
 }
 
 void UserActionDialog::buildLoginForm(const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
@@ -27,38 +27,38 @@ void UserActionDialog::buildLoginForm(const QString & err, const QString & login
     if (!err.isEmpty()) buildErrFields(err);
 
     buildLoginFields(login_val, password_val, login_label, password_label);
-    buildForm(inputs, QStringLiteral("Auth form"));
+    proceedForm(inputs, QStringLiteral("Auth form"));
 }
 
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
     inputs.clear();
     buildCaptchaFields(captcha_img);
-    buildForm(inputs, QStringLiteral("Captcha form"));
+    proceedForm(inputs, QStringLiteral("Captcha form"));
 }
 
 void UserActionDialog::buildToolbarButtonForm(const QString & name, const QString & path) {
     inputs.clear();
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
     inputs << FormInput::createUrl(path_key, QStringLiteral("Path"), path);
-    buildForm(inputs, QStringLiteral("Toolbar Button form"));
+    proceedForm(inputs, QStringLiteral("Toolbar Button form"));
 }
 
 void UserActionDialog::buildToolbarForm(const QString & name) {
     inputs.clear();
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
-    buildForm(inputs, QStringLiteral("Toolbar form"));
+    proceedForm(inputs, QStringLiteral("Toolbar form"));
 }
 
 void UserActionDialog::buildPresetForm(const QString & name) {
     inputs.clear();
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
-    buildForm(inputs, QStringLiteral("New preset form"));
+    proceedForm(inputs, QStringLiteral("New preset form"));
 }
 
 void UserActionDialog::buildImportForm(const QString & text) {
     inputs.clear();
     inputs << FormInput::createTxt(text_key, QStringLiteral("Ids"), text);
-    buildForm(inputs, QStringLiteral("Import od IDs"));
+    proceedForm(inputs, QStringLiteral("Import od IDs"));
 }
 
 void UserActionDialog::buildForm(const QList<FormInput> & inputs, const QString & title) {

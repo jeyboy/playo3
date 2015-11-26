@@ -140,26 +140,37 @@ public:
     void buildToolbarForm(const QString & name = QString());
     void buildPresetForm(const QString & name = QString());
     void buildImportForm(const QString & text = QString());
-    void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
+    void proceedForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form")) { // thread safe call
+        if (!Core::ThreadUtils::livesInCurrThread(this))
+            QMetaObject::invokeMethod(this, "buildForm", Qt::BlockingQueuedConnection, Q_ARG(const QList<FormInput> &, inputs), Q_ARG(const QString &, title));
+        else return buildForm(inputs, title);
+    }
     void extendForm(const QList<FormInput> & inputs);
 
     QString getValue(const QString & name);
 
-public slots:
+public slots:   
     inline int exec() {
+         if (!Core::ThreadUtils::livesInCurrThread(this)) {
+            QMetaObject::invokeMethod(this, "finalization", Qt::BlockingQueuedConnection);
+            QMetaObject::invokeMethod((QDialog *)(this), "exec", Qt::BlockingQueuedConnection);
+            return result();
+        }
+        else {
+            finalization();
+            return QDialog::exec();
+        }
+    }
+
+protected slots:
+    void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
+    void finalization() {
         if (!finalized) {
             insertButtons();
             adjustSize();
         }
-
-        if (!Core::ThreadUtils::livesInCurrThread(this)) {
-            QMetaObject::invokeMethod((QDialog *)(this), "exec", Qt::BlockingQueuedConnection);
-            return result();
-        }
-        else return QDialog::exec();
     }
 
-protected slots:
     inline void actionRequired() {
         FormInput input = actions.value(sender());
         QMetaObject::invokeMethod(input.obj, input.slot, Qt::AutoConnection, Q_ARG(QString &, input.value));
