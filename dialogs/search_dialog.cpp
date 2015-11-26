@@ -247,3 +247,13 @@ void SearchDialog::on_sitesList_itemClicked(QListWidgetItem * item) {
     ui -> inSites -> setChecked(st);
     ui -> inSites -> blockSignals(false);
 }
+
+void SearchDialog::on_toolBox_currentChanged(int /*index*/) {
+    if (ui -> addPredicate -> isVisibleTo(this)) {
+        ui -> acceptButton -> setDefault(false);
+        ui -> addPredicate -> setDefault(true);
+    } else {
+        ui -> addPredicate -> setDefault(false);
+        ui -> acceptButton -> setDefault(true);
+    }
+}

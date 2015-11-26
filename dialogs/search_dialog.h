@@ -10,6 +10,8 @@ namespace Ui { class SearchDialog; }
 
 class SearchDialog : public QDialog {
     Q_OBJECT
+
+    Ui::SearchDialog * ui;
 public:
     explicit SearchDialog(QWidget * parent = 0);
     ~SearchDialog();
@@ -41,8 +43,7 @@ private slots:
 
     void on_sitesList_itemClicked(QListWidgetItem *item);
 
-private:
-    Ui::SearchDialog * ui;
+    void on_toolBox_currentChanged(int index);
 };
 
 #endif // SEARCH_DIALOG_H

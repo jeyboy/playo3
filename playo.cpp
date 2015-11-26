@@ -235,19 +235,6 @@ void Playo::openVKRecomendations() {
 void Playo::openVKTabDialog() {
     if (Vk::Api::obj().connection())
         Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
-
-//    WebDialogInterface * dInt;
-//    if (Plugins::loadWebDialog(dInt)) {
-//        QDialog * dialog = dInt -> createDialog(this, Web::Manager::prepare(), Vk::Api::obj().authUrl(), QStringLiteral("VK auth"));
-//        dInt -> registerActions(&Vk::Api::obj());
-
-//        if (dialog -> exec() == QDialog::Accepted)
-//            Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
-
-//        Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Connection"), Vk::Api::obj().isConnected() ? QStringLiteral("true") : Vk::Api::obj().getError());
-//        delete dInt;
-//    }
-//    else QMessageBox::information(this, "VK", VkApi::instance() -> getError());
 }
 
 void Playo::showVKRelTabDialog() {
