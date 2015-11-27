@@ -378,14 +378,14 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
             if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(Soundcloud::id_key).toInt());
-            owner = QString::number(itm.value(Soundcloud::user_id_key).toInt());
+            id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
+            owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
             uid = WebFile::toUid(owner, id);
             if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(Soundcloud::download_url_key).toString();
+            uri = itm.value(Soundcloud::tkn_download_url).toString();
             if (uri.isEmpty()) {
-                uri = itm.value(Soundcloud::stream_url_key).toString();
+                uri = itm.value(Soundcloud::tkn_stream_url).toString();
                 original = false;
             } else { original = true;}
             if (uri.isEmpty()) continue;
@@ -397,18 +397,18 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
                 newItem = new SoundcloudFile(
                     id,
                     uri,
-                    itm.value(Soundcloud::title_key).toString(),
+                    itm.value(Soundcloud::tkn_title).toString(),
                     parent
                 );
 
-                newItem -> setVideoPath(itm.value(Soundcloud::video_url_key).toString());
-                newItem -> setExtension(original ? itm.value(Soundcloud::original_format_key).toString() : Soundcloud::default_extension);
+                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+                newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
                 newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::duration_key).toInt(0)));
+                newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
 
     //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-                if (itm.contains(Soundcloud::genre_id_key))
-                    newItem -> setGenre(itm.value(Soundcloud::genre_id_key).toInt());
+                if (itm.contains(Soundcloud::tkn_genre_id))
+                    newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
             } else {
                 QList<IItem *>::Iterator it_it = items.begin();
 

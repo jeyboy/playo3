@@ -18,9 +18,9 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() { }
             public:
-                inline QString name() const { return QStringLiteral("Soundcloud"); }
+                inline QString name() const { return val_name; }
                 inline SubType siteType() { return sc_site; }
-                inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("client_id=8f84790a84f5a5acd1c92e850b5a91b7")); }
+                inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_client_id % val_id_tkn); }
                 QString authUrl();
 
                 void fromJson(const QJsonObject & hash);
@@ -32,9 +32,7 @@ namespace Core {
                 void getUserInfo(QString & uid, QJsonObject & object);
 
                 QJsonObject objectInfo(QString & uid);
-                inline void objectInfo(QString & uid, Func * func) {
-                    ThreadUtils::obj().run(this, &Api::objectInfo, uid, func);
-                }
+                inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
             public slots:
                 bool connection();
                 inline void disconnect() {
@@ -45,18 +43,18 @@ namespace Core {
 
             protected:
                 inline QString refresh(const QString & path) { return path; }
-                inline QString baseUrlStr(const QString & predicate) { return base_url % predicate % ".json"; }
+                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
 
-                inline QString offsetKey() const { return offset_key; }
-                inline QString limitKey() const { return limit_key; }
+                inline QString offsetKey() const { return tkn_offset; }
+                inline QString limitKey() const { return tkn_limit; }
                 inline int requestLimit() const { return 200; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(QStringLiteral("response")).toArray().isEmpty(); }
+                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_response).toArray().isEmpty(); }
                 inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
-                    QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
-                    message = stat_obj.value(QStringLiteral("error_message")).toString();
-                    return (code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0;
+                    QJsonObject stat_obj = response.value(tkn_response).toObject().value(tkn_errors).toArray().first().toObject();
+                    message = stat_obj.value(tkn_error_message).toString();
+                    return (code = stat_obj.value(tkn_error_code).toInt()) == 0;
                 }                
             };
         }

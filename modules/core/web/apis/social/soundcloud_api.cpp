@@ -3,13 +3,13 @@
 using namespace Core::Web::Soundcloud;
 
 QString Api::authUrl() {
-    QUrl url(QStringLiteral("https://soundcloud.com/connect"));
+    QUrl url(url_connect);
 
     QUrlQuery query = genDefaultParams();
-    setParam(query, QStringLiteral("response_type"), QStringLiteral("code"));
-    setParam(query, QStringLiteral("scope"), QStringLiteral("non-expiring"));
-    setParam(query, QStringLiteral("redirect_uri"), QStringLiteral("http://sos.com"));
-    setParam(query, QStringLiteral("display"), QStringLiteral("popup"));
+    setParam(query, tkn_response_type, val_response_type);
+    setParam(query, tkn_scope, val_scope);
+    setParam(query, tkn_redirect_uri, url_redirect);
+    setParam(query, tkn_display, val_display);
 
     url.setQuery(query);
     return url.toString();
@@ -34,18 +34,18 @@ void Api::toJson(QJsonObject & hash) {
 //////////////////////////////////////////////////////////
 
 void Api::getGroupInfo(QString uid, QJsonObject & object) {
-    object.insert(audio_list_key, groupAudio(uid));
-    object.insert(playlist_key, groupPlaylists(uid));
+    object.insert(tkn_audio_list, groupAudio(uid));
+    object.insert(tkn_playlist, groupPlaylists(uid));
 }
 
 void Api::getUserInfo(QString & uid, QJsonObject & object) {
-    object.insert(audio_list_key, userAudio(uid));
-    object.insert(playlist_key, userPlaylists(uid));
+    object.insert(tkn_audio_list, userAudio(uid));
+    object.insert(tkn_playlist, userPlaylists(uid));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(followings_key, userFollowings(uid)); // return bad request error
-    object.insert(followers_key, userFollowers(uid));
+    object.insert(tkn_followings, userFollowings(uid)); // return bad request error
+    object.insert(tkn_followers, userFollowers(uid));
     QThread::msleep(REQUEST_DELAY);
-    object.insert(groups_key, userGroups(uid));
+    object.insert(tkn_groups, userGroups(uid));
 }
 
 
@@ -78,7 +78,7 @@ bool Api::connection() {
         Html::Set forms = html.find("form.authorize-token");
 
         if (forms.isEmpty()) {
-            Logger::obj().write("Soundcloud auth", QStringLiteral("Auth form did not found"), true);
+            Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
             return false;
         }
 
@@ -91,15 +91,15 @@ bool Api::connection() {
             Html::Set captcha_set = form -> find(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
 
             if (!captcha_set.isEmpty())
-                captcha_src = captcha_set.first() -> value("src");
+                captcha_src = captcha_set.first() -> value(tkn_src);
 
             if (captcha_src.isEmpty()) {
-                if (!showingLogin(QStringLiteral("Soundcloud auth"), vals[QStringLiteral("username")], vals[QStringLiteral("password")], err))
+                if (!showingLogin(val_auth_title, vals[tkn_username], vals[tkn_password], err))
                     return false;
             } else {
                 if (!showingLoginWithCaptcha(
-                    QStringLiteral("Soundcloud auth"), Recaptcha::V1::obj().takeImageUrl(captcha_src, vals["recaptcha_challenge_field"]),
-                    vals[QStringLiteral("username")], vals[QStringLiteral("password")], vals["recaptcha_response_field"], err
+                    val_auth_title, Recaptcha::V1::obj().takeImageUrl(captcha_src, vals[tkn_recaptcha_challenge_field]),
+                    vals[tkn_username], vals[tkn_password], vals[tkn_recaptcha_response_field], err
                 )) return false;
             }
         }
@@ -110,24 +110,24 @@ bool Api::connection() {
             form_url = auth_url.resolved(form_url);
 
         QHash<QString, QString> headers;
-        headers.insert(QStringLiteral("Referer"), form_url.toString());
+        headers.insert(tkn_referer, form_url.toString());
         resp = Manager::prepare() -> followedForm(form_url, headers);
 
         QUrlQuery query(resp->toUrl(false).query());
 
-        if (query.hasQueryItem(QStringLiteral("error"))) {
-            error = query.queryItemValue(QStringLiteral("error_description"));
+        if (query.hasQueryItem(tkn_error)) {
+            error = query.queryItemValue(tkn_error_description);
             qDebug() << "ERRRRRRRRRR" << error;
             resp -> deleteLater();
             return false;
-        } else if (query.hasQueryItem(QStringLiteral("code"))) {
-            QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(QStringLiteral("code")))) -> toJson();
+        } else if (query.hasQueryItem(tkn_code)) {
+            QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(tkn_code))) -> toJson();
 
-            if (doc.contains(QStringLiteral("access_token"))) {
-                QString newToken = doc.value(QStringLiteral("access_token")).toString();
+            if (doc.contains(tkn_access_token)) {
+                QString newToken = doc.value(tkn_access_token).toString();
                 doc = Web::Manager::prepare() -> getJson(confirmAuthUrl(newToken));
 
-                setParams(newToken, QString::number(doc.value(QStringLiteral("id")).toInt()), QString());
+                setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
                 emit authorized();
                 resp -> deleteLater();
                 return true;

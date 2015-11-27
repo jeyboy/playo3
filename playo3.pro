@@ -395,4 +395,5 @@ SOURCES += \
     modules/core/web/interfaces/iapi.cpp \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
-    modules/core/web/apis/social/vk_api_keys.cpp
+    modules/core/web/apis/social/vk_api_keys.cpp \
+    modules/core/web/apis/social/soundcloud_api_keys.cpp

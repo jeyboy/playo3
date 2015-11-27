@@ -5,33 +5,86 @@
 
 namespace Core {
     namespace Web {
-        namespace Soundcloud {
-            const QString base_url              = QStringLiteral("https://api.soundcloud.com/");
+        namespace Soundcloud {       
+            extern const QString url_base;
+            extern const QString url_connect;
+            extern const QString url_redirect;
+            extern const QString url_auth_token;
+            extern const QString url_auth_confirm;
 
-            const QString offset_key            = QStringLiteral("offset");
-            const QString limit_key             = QStringLiteral("limit");
 
-            const QString audio_list_key        = QStringLiteral("audio_list");
-            const QString playlist_key          = QStringLiteral("playlists");
-            const QString followings_key        = QStringLiteral("followings");
-            const QString followers_key         = QStringLiteral("followers");
-            const QString groups_key            = QStringLiteral("groups");
+            extern const QString url_part_pre_users;
+            extern const QString url_part_pre_groups;
+            extern const QString url_part_pre_tracks;
+            extern const QString url_part_pos_tracks;
+            extern const QString url_part_pos_groups;
+            extern const QString url_part_pos_playlists;
+            extern const QString url_part_pos_followings;
+            extern const QString url_part_pos_followers;
 
-            const QString tracks_key            = QStringLiteral("tracks");
-            const QString id_key                = QStringLiteral("id");
-            const QString title_key             = QStringLiteral("title");
-            const QString name_key              = QStringLiteral("name");
-            const QString full_name_key         = QStringLiteral("full_name");
-            const QString username_key          = QStringLiteral("username");
 
-            const QString user_id_key           = QStringLiteral("user_id");
-            const QString download_url_key      = QStringLiteral("download_url");
-            const QString stream_url_key        = QStringLiteral("stream_url");
-            const QString video_url_key         = QStringLiteral("video_url");
-            const QString original_format_key   = QStringLiteral("original_format");
-            const QString default_extension     = QStringLiteral("mp3");
-            const QString duration_key          = QStringLiteral("duration");
-            const QString genre_id_key          = QStringLiteral("genre_id");
+            extern const QString tkn_grant_type;
+            extern const QString tkn_client_secret;
+            extern const QString tkn_referer;
+            extern const QString tkn_access_token;
+            extern const QString tkn_code;
+            extern const QString tkn_error_description;
+            extern const QString tkn_src;
+            extern const QString tkn_username;
+            extern const QString tkn_password;
+            extern const QString tkn_recaptcha_challenge_field;
+            extern const QString tkn_recaptcha_response_field;
+            extern const QString tkn_response_type;
+            extern const QString tkn_redirect_uri;
+            extern const QString tkn_scope;
+            extern const QString tkn_display;
+            extern const QString tkn_client_id;
+            extern const QString tkn_response;
+            extern const QString tkn_error;
+            extern const QString tkn_errors;
+            extern const QString tkn_error_message;
+            extern const QString tkn_error_code;
+            extern const QString tkn_offset;
+            extern const QString tkn_limit;
+            extern const QString tkn_audio_list;
+            extern const QString tkn_playlist;
+            extern const QString tkn_followings;
+            extern const QString tkn_followers;
+            extern const QString tkn_groups;
+            extern const QString tkn_tracks;
+            extern const QString tkn_id;
+            extern const QString tkn_title;
+            extern const QString tkn_name;
+            extern const QString tkn_full_name;
+            extern const QString tkn_user_id;
+            extern const QString tkn_download_url;
+            extern const QString tkn_stream_url;
+            extern const QString tkn_video_url;
+            extern const QString tkn_original_format;
+            extern const QString tkn_default_extension;
+            extern const QString tkn_duration;
+            extern const QString tkn_genre_id;
+            extern const QString tkn_types;
+            extern const QString tkn_q;
+            extern const QString tkn_ids;
+            extern const QString tkn_genres;
+            extern const QString tkn_order;
+
+
+            extern const QString val_client_tkn;
+            extern const QString val_hotness_order;
+            extern const QString val_created_at_order;
+            extern const QString val_audio_types;
+            extern const QString val_audio_org_types;
+            extern const QString val_audio_rmx_types;
+            extern const QString val_auth_title;
+            extern const QString val_name;
+            extern const QString val_default_format;
+            extern const QString val_id_tkn;
+            extern const QString val_response_type;
+            extern const QString val_scope;
+            extern const QString val_display;
+            extern const QString val_grant_type;
         }
     }
 }
