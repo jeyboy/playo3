@@ -21,6 +21,7 @@
 #define REQUEST_DELAY 260 // ms
 #define MAX_PAGE 999
 #define STYLES_MAX_PAGE 50
+#define UID_HEAD QStringLiteral("@")
 
 namespace Core {
     using namespace Media;
@@ -62,6 +63,8 @@ namespace Core {
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
         virtual QString name() const = 0;
+
+        inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
         virtual Web::SubType siteType() = 0;
 

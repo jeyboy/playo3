@@ -18,14 +18,13 @@ namespace Core {
                 inline Api() {}
             public:
                 inline QString name() const { return tkn_name; }
-                inline QString uidStr(const QString & user_id) const { return tkn_alpha % name() % user_id; }
                 inline Web::SubType siteType() { return vk_site; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query = QUrlQuery();
 
                     query.addQueryItem(tkn_version, val_version);
                     query.addQueryItem(tkn_access_token, token());
-            //        query.addQueryItem(QStringLiteral("test_mode"), "1");
+                    query.addQueryItem(QStringLiteral("test_mode"), "1");
 
                     return query;
                 }

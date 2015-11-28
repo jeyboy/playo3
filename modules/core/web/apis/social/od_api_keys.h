@@ -11,7 +11,7 @@ namespace Core {
                 const QString base_auth_url     = QStringLiteral("https://www.ok.ru/");
                 const QString base_audio_url    = QStringLiteral("http://wmf1.odnoklassniki.ru/");
 
-                /*extern*/ const QString tkn_alpha             = QStringLiteral("@");
+//                /*extern*/ const QString tkn_alpha             = QStringLiteral("@");
 
                 const QString offset_key        = QStringLiteral("start");
                 const QString limit_key         = QStringLiteral("count");

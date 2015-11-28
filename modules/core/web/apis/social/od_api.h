@@ -17,7 +17,6 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return QStringLiteral("Od"); }
-                inline QString uidStr(const QString & user_id) const { return tkn_alpha % name() % user_id; }
                 inline Web::SubType siteType() { return od_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
 

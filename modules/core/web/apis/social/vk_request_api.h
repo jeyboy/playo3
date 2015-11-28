@@ -86,9 +86,9 @@ namespace Core {
                            "while(folders_result.length > 0) {"
                            "    curr = folders_result.pop();"
                            "    proceed_folders.push({"
-                           "        folder_id: curr.id,"
-                           "        title: curr.title,"
-                           "        items: API.audio.get({"
+                           "        " % tkn_folder_id % ": curr.id,"
+                           "        " % tkn_title % ": curr.title,"
+                           "        " % tkn_items % ": API.audio.get({"
                            "            owner_id: " % uid % ","
                            "            album_id: curr.id"
                            "        }).items "
@@ -119,7 +119,6 @@ namespace Core {
                     );
                 }
 
-
                 QUrl userFullInfoUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
 
@@ -134,8 +133,8 @@ namespace Core {
                            "while(groups.length > 0) {"
                            "    curr = groups.pop();"
                            "    proceed_groups.push({"
-                           "        id: curr.id, "
-                           "        title: curr.name"
+                           "        " % tkn_id % ": curr.id, "
+                           "        " % tkn_title % ": curr.name"
                            "    });"
                            "};"
 
@@ -149,8 +148,8 @@ namespace Core {
                            "    while(friends.items.length > 0) { "
                            "        curr = friends.items.pop();"
                            "        proceed_friends.push({ "
-                           "            id: curr.id, "
-                           "            title: curr.first_name %2b \" \" %2b curr.last_name"
+                           "            " % tkn_id % ": curr.id, "
+                           "            " % tkn_title % ": curr.first_name %2b \" \" %2b curr.last_name"
                            "        }); "
                            "    }; "
                            "};"
@@ -165,9 +164,9 @@ namespace Core {
                            "    while(folders_result.items.length > 0) { "
                            "        curr = folders_result.items.pop();"
                            "        proceed_folders.push({"
-                           "            folder_id: curr.id, "
-                           "            title: curr.title, "
-                           "            items: API.audio.get({ "
+                           "            " % tkn_folder_id % ": curr.id, "
+                           "            " % tkn_title % ": curr.title, "
+                           "            " % tkn_items % ": API.audio.get({ "
                            "                album_id: curr.id "
                            "            }).items "
                            "        });"
@@ -203,9 +202,9 @@ namespace Core {
                            "    while(folders_result.items.length > 0) { "
                            "        var curr = folders_result.items.pop(); "
                            "        sort_by_folders.push({"
-                           "            folder_id: curr.id, "
-                           "            title: curr.title, "
-                           "            items: API.audio.get({ "
+                           "            " % tkn_folder_id % ": curr.id, "
+                           "            " % tkn_title % ": curr.title, "
+                           "            " % tkn_items % ": API.audio.get({ "
                            "                owner_id: " % uid % ", "
                            "                album_id: curr.id"
                            "            }).items"
@@ -284,7 +283,7 @@ namespace Core {
                         "    var count = limit - search.length;"
                         "    if (count > 300) count = 300;"
                         "    var items = API.audio.search({"
-                        "        q: \"" % QUrl::toPercentEncoding(searchStr) % "\", count: count, offset: search.length, lyrics: 0,"
+                        "        q: \"" % encodeStr(searchStr) % "\", count: count, offset: search.length, lyrics: 0,"
                         "        auto_complete: " % boolToStr(autoFix) % ","
                         "        performer_only: " % boolToStr(artistOnly) % ","
                         "        sort: " % QString::number(sort) % ","
@@ -309,7 +308,7 @@ namespace Core {
 
                     setParam(query, tkn_code, QString(
                         "    var items = API.audio.search({"
-                        "        q: \"" % QUrl::toPercentEncoding(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
+                        "        q: \"" % encodeStr(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
                         "    }).items;"
                         "return {" % tkn_audio_list % ": search};"
                     ));

@@ -143,7 +143,7 @@ DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & pat
     if (!bar) {
         bar = createDocBar(name, settings, attrs, closable, addToView, search_settings);
         linkedTabs.insert(path, bar);
-        if (!path.startsWith('@')) {
+        if (!path.startsWith(UID_HEAD)) {
             QList<QUrl> urls;
             urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash
             view(bar) -> appendRows(urls);

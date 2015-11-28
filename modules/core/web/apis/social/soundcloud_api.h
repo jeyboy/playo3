@@ -19,7 +19,6 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return val_name; }
-                inline QString uidStr(const QString & user_id) const { return tkn_alpha % name() % user_id; }
                 inline SubType siteType() { return sc_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_client_id % val_id_tkn); }
                 QString authUrl();

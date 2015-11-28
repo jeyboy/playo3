@@ -33,6 +33,7 @@ namespace Core {
             extern const QString tkn_execute;
             extern const QString tkn_code;
             extern const QString tkn_albums;
+            extern const QString tkn_audios;
             extern const QString tkn_audio_list;
             extern const QString tkn_groups;
             extern const QString tkn_friends;
@@ -54,9 +55,12 @@ namespace Core {
             extern const QString tkn_lyrics_id;
             extern const QString tkn_email;
             extern const QString tkn_password;
+            extern const QString tkn_date;
+            extern const QString tkn_items;
+            extern const QString tkn_folder_id;
             extern const QString tkn_predef1;
             extern const QString tkn_predef2;
-            extern const QString tkn_alpha;
+            extern const QString tkn_time_sep;
 
             extern const QString url_redirect_uri;
             extern const QString url_base;

@@ -36,10 +36,10 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 
         for(; it != posts.end(); it++) {
             post = (*it).toObject();
-            audios = post.value(QStringLiteral("audios")).toArray();
+            audios = post.value(Vk::tkn_audios).toArray();
 
-            title = post.value(QStringLiteral("title")).toString();
-            title = QDateTime::fromTime_t(post.value(QStringLiteral("date")).toInt()).toString() % (title.isEmpty() ? QString() : QStringLiteral(" : ")) % title;
+            title = post.value(Vk::tkn_title).toString();
+            title = QDateTime::fromTime_t(post.value(Vk::tkn_date).toInt()).toString() % (title.isEmpty() ? QString() : Vk::tkn_time_sep) % title;
 
             folder = rootFolder -> createPlaylist(title);
             proceedVkList(audios, folder);
@@ -54,8 +54,8 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 }
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
-    QJsonArray albums = hash.value(QStringLiteral("albums")).toArray();
-    QJsonArray audios = hash.value(QStringLiteral("audio_list")).toObject().value(QStringLiteral("items")).toArray();
+    QJsonArray albums = hash.value(Vk::tkn_albums).toArray();
+    QJsonArray audios = hash.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
     int itemsAmount = 0, albums_count = albums.size();
 
 //    beginResetModel();
@@ -69,11 +69,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             for(QJsonArray::Iterator album_obj = albums.begin(); album_obj != albums.end(); album_obj++, pos++) {
                 album = (*album_obj).toObject();
 
-                QJsonArray albumItems = album.value(QStringLiteral("items")).toArray();
+                QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
                 if (albumItems.size() > 0) {
                     folder = rootItem -> createPlaylist<VkPlaylist>(
-                        album.value(QStringLiteral("folder_id")).toString(),
-                        album.value(QStringLiteral("title")).toString(),
+                        album.value(Vk::tkn_folder_id).toString(),
+                        album.value(Vk::tkn_title).toString(),
                         pos
                     );
 
@@ -95,30 +95,30 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
     {
         QJsonObject group;
-        QJsonArray groups = hash.value(QStringLiteral("groups")).toArray();
+        QJsonArray groups = hash.value(Vk::tkn_groups).toArray();
         QJsonArray::Iterator it = groups.begin();
 
         for(; it != groups.end(); it++) {
             group = (*it).toObject();
 
             Vk::Api::obj().addGroup(
-                QString::number(group.value(QStringLiteral("id")).toInt()),
-                group.value(QStringLiteral("title")).toString()
+                QString::number(group.value(Vk::tkn_id).toInt()),
+                group.value(Vk::tkn_title).toString()
             );
         }
     }
 /////////////////////////////////////////////////////////////////////
     {
         QJsonObject frend;
-        QJsonArray friends = hash.value(QStringLiteral("friends")).toArray();
+        QJsonArray friends = hash.value(Vk::tkn_friends).toArray();
         QJsonArray::Iterator it = friends.begin();
 
         for(; it != friends.end(); it++) {
             frend = (*it).toObject();
 
             Vk::Api::obj().addFriend(
-                QString::number(frend.value(QStringLiteral("id")).toInt()),
-                frend.value(QStringLiteral("title")).toString()
+                QString::number(frend.value(Vk::tkn_id).toInt()),
+                frend.value(Vk::tkn_title).toString()
             );
         }
     }
