@@ -28,7 +28,7 @@ namespace Core {
                 /// AUTH
                 ////////////////
 
-                //QString authTokenUrl() extern const {
+                //QString authTokenUrl() const {
                 //    QUrl url("https://api.soundcloud.com/oauth2/token");
                 //    QUrlQuery query = genDefaultParams();
 
@@ -56,11 +56,6 @@ namespace Core {
 
                     return query.toString(QUrl::FullyEncoded).toUtf8();
                 }
-            //    QUrlQuery userMethodParams(QString & token) {
-            //        QUrlQuery query = QUrlQuery();
-            //        query.addQueryItem("oauth_token", token);
-            //        return query;
-            //    }
 
                 /////////////////
                 /// API
@@ -76,7 +71,7 @@ namespace Core {
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);
 
-                    return baseUrl(tkn_tracks, query);
+                    return baseUrl(path_tracks, query);
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
@@ -91,7 +86,7 @@ namespace Core {
                 QUrl groupAudioUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);
-                    return baseUrl(url_part_pre_groups % uid % url_part_pos_tracks, query);
+                    return baseUrl(path_group_tracks.arg(uid), query);
                 }
                 QJsonArray groupAudio(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                 //    group_id = "101";
@@ -103,10 +98,7 @@ namespace Core {
                 }
 
 
-                QUrl groupPlaylistsUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_groups % uid % url_part_pos_playlists, query);
-                }
+                QUrl groupPlaylistsUrl(QString & uid) { return baseUrl(path_group_playlists.arg(uid), genDefaultParams()); }
                 QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                 //    group_id = "101";
                     return lQuery(
@@ -117,27 +109,21 @@ namespace Core {
                 }
 
 
-                QUrl audioInfoUrl(QString & audio_uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_tracks % audio_uid, query);
-                }
+                QUrl audioInfoUrl(QString & audio_uid) { return baseUrl(path_tracks % audio_uid, genDefaultParams()); }
                 QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 
                 QUrl audioUrl(QStringList & audio_uids) {
                     QUrlQuery query = genDefaultParams();
                     setIdsFilter(query, audio_uids);
-                    return baseUrl(tkn_tracks, query);
+                    return baseUrl(path_tracks, query);
                 }
                 //"id": 142370360,
                 //"permalink": "sam-smith-stay-with-me",
                 QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray(); }
 
 
-                QUrl userAudioUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_users % uid % url_part_pos_tracks, query);
-                }
+                QUrl userAudioUrl(QString & uid) { return baseUrl(path_user_tracks.arg(uid), genDefaultParams()); }
                 QJsonArray userAudio(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                     return lQuery(
                         userAudioUrl(uid),
@@ -147,10 +133,7 @@ namespace Core {
                 }
 
 
-                QUrl userPlaylistsUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_users % uid % url_part_pos_playlists, query);
-                }
+                QUrl userPlaylistsUrl(QString & uid) { return baseUrl(path_user_playlists.arg(uid), genDefaultParams()); }
                 QJsonArray userPlaylists(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                     return lQuery(
                         userPlaylistsUrl(uid),
@@ -160,10 +143,7 @@ namespace Core {
                 }
 
 
-                QUrl userFollowingsUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_users % uid % url_part_pos_followings, query);
-                }
+                QUrl userFollowingsUrl(QString & uid) { return baseUrl(path_user_followings.arg(uid), genDefaultParams()); }
                 QJsonArray userFollowings(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                     return lQuery(
                         userFollowingsUrl(uid),
@@ -173,10 +153,7 @@ namespace Core {
                 }
 
 
-                QUrl userFollowersUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_users % uid % url_part_pos_followers, query);
-                }
+                QUrl userFollowersUrl(QString & uid) { return baseUrl(path_user_followers.arg(uid), genDefaultParams()); }
                 QJsonArray userFollowers(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                     return lQuery(
                         userFollowersUrl(uid),
@@ -186,10 +163,7 @@ namespace Core {
                 }
 
 
-                QUrl userGroupsUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrl(url_part_pre_users % uid % url_part_pos_groups, query);
-                }
+                QUrl userGroupsUrl(QString & uid) { return baseUrl(path_user_groups.arg(uid), genDefaultParams()); }
                 QJsonArray userGroups(QString & uid, int count = SOUNDCLOUD_OFFSET_LIMIT) {
                     return lQuery(
                         userGroupsUrl(uid),
@@ -197,34 +171,6 @@ namespace Core {
                         wrap
                     );
                 }
-
-            //    bool SoundcloudApi::responseRoutine(QString fieldName, QNetworkReply * reply, ApiFuncContainer * func) {
-            //        QJsonObject obj = Web::replyToJson(reply, true);
-
-            //        reply -> deleteLater();
-
-            //        bool hasError = obj.value(tkn_response).toObject().contains("errors");
-
-            //        qDebug() << fieldName << hasError << obj;
-
-            //        if (hasError)
-            //            errorSend(obj, func -> obj);
-            //        else {
-            //            if (func -> result.contains(fieldName)) { // rewrite on array of json arrays
-            //                QVariantList n_ar = obj.value(tkn_response).toArray().toVariantList();
-
-            //                if (!n_ar.isEmpty()) {
-            //                    QVariantList ar = func -> result.value(fieldName).toArray().toVariantList();
-            //                    ar.append(n_ar);
-
-            //                    func -> result.insert(fieldName, QJsonArray::fromVariantList(ar));
-            //                }
-            //            } else
-            //                func -> result.insert(fieldName, obj.value("response").toArray());
-            //        }
-
-            //        return !hasError;
-            //    }
             };
         }
     }

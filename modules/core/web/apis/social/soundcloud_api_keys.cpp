@@ -9,16 +9,14 @@ namespace Core {
             extern const QString url_auth_token        = QStringLiteral("https://api.soundcloud.com/oauth2/token");
             extern const QString url_auth_confirm      = QStringLiteral("https://api.soundcloud.com/me.json?oauth_token=");
 
-
-            extern const QString url_part_pre_users    = QStringLiteral("users/");
-            extern const QString url_part_pre_groups   = QStringLiteral("groups/");
-            extern const QString url_part_pre_tracks   = QStringLiteral("tracks/");
-            extern const QString url_part_pos_tracks   = QStringLiteral("/tracks");
-            extern const QString url_part_pos_groups   = QStringLiteral("/groups");
-            extern const QString url_part_pos_playlists = QStringLiteral("/playlists");
-            extern const QString url_part_pos_followings = QStringLiteral("/followings");
-            extern const QString url_part_pos_followers = QStringLiteral("/followers");
-
+            extern const QString path_tracks           = QStringLiteral("tracks/");
+            extern const QString path_group_tracks     = QStringLiteral("groups/%1/tracks");
+            extern const QString path_group_playlists  = QStringLiteral("groups/%1/playlists");
+            extern const QString path_user_tracks      = QStringLiteral("users/%1/tracks");
+            extern const QString path_user_playlists   = QStringLiteral("users/%1/playlists");
+            extern const QString path_user_followings  = QStringLiteral("users/%1/followings");
+            extern const QString path_user_followers   = QStringLiteral("users/%1/followers");
+            extern const QString path_user_groups      = QStringLiteral("users/%1/groups");
 
             extern const QString tkn_grant_type        = QStringLiteral("grant_type");
             extern const QString tkn_client_secret     = QStringLiteral("client_secret");

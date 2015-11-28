@@ -13,14 +13,14 @@ namespace Core {
             extern const QString url_auth_confirm;
 
 
-            extern const QString url_part_pre_users;
-            extern const QString url_part_pre_groups;
-            extern const QString url_part_pre_tracks;
-            extern const QString url_part_pos_tracks;
-            extern const QString url_part_pos_groups;
-            extern const QString url_part_pos_playlists;
-            extern const QString url_part_pos_followings;
-            extern const QString url_part_pos_followers;
+            extern const QString path_tracks;
+            extern const QString path_group_tracks;
+            extern const QString path_group_playlists;
+            extern const QString path_user_tracks;
+            extern const QString path_user_playlists;
+            extern const QString path_user_followings;
+            extern const QString path_user_followers;
+            extern const QString path_user_groups;
 
 
             extern const QString tkn_grant_type;

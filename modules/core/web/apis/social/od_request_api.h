@@ -17,15 +17,10 @@ namespace Core {
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
 
                 inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
-                    QUrl url(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(email) + "&st.password=" + encodeStr(pass) + "&st.remember=on&st.iscode=false");
-                    qDebug() << url;
-                    return url;
+                    return QUrl(base_auth_url % "https?st.redirect=&st.asr=&st.posted=set&st.originalaction=http://www.ok.ru/dk?cmd=AnonymLogin&amp;st.cmd=anonymLogin&amp;tkn=2039&st.fJS=on&st.screenSize=1920x1080&st.browserSize=621&st.flashVer=18.0.0&st.email=" + encodeStr(email) + "&st.password=" + encodeStr(pass) + "&st.remember=on&st.iscode=false");
                 }
 
-                inline QUrl initUrl() const {
-                    QUrl url(base_auth_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % additional());
-                    return url;
-                }
+                inline QUrl initUrl() const { return QUrl(base_auth_url % "dk?cmd=AnonymLogin&st.cmd=anonymLogin&httpsdata=" % additional()); }
 
                 inline QUrl audioUrl(const QString func, const QUrlQuery & query = QUrlQuery()) {
                     QUrl url(base_audio_url % func % QStringLiteral(";") % genDefaultParams().toString());
