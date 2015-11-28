@@ -141,7 +141,7 @@ DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & pat
     DockBar * bar = linkedTabs.value(path, 0);
 
     if (!bar) {
-        DockBar * bar = createDocBar(name, settings, attrs, closable, addToView, search_settings);
+        bar = createDocBar(name, settings, attrs, closable, addToView, search_settings);
         linkedTabs.insert(path, bar);
         if (!path.startsWith('@')) {
             QList<QUrl> urls;
