@@ -17,13 +17,22 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return QStringLiteral("Od"); }
+                inline QString uidStr(const QString & user_id) const { return tkn_alpha % name() % user_id; }
                 inline Web::SubType siteType() { return od_site; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                inline bool isConnected() { return !token().isEmpty(); }
+                inline bool isConnected() {
+                    if (!additional().isEmpty())
+                        setParams(grabSID(), userID(), additional());
+
+                    if (sessionIsValid()) // maybe use grabSID() ?
+                        return true;
+
+                    return false;
+                }
 
                 void objectInfo(const QString & uid, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);

@@ -20,7 +20,7 @@ namespace Views {
 
     class ViewFactory {
     public:
-        static IView * build(QWidget * parent, Params & settings, QJsonObject * attrs) {
+        static IView * build(QWidget * parent, const Params & settings, QJsonObject * attrs) {
             switch(settings.type) {
                 case level: return new ListView(parent, settings, attrs);
                 case level_tree: return new LevelTreeView(parent, settings, attrs);

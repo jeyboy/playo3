@@ -41,11 +41,7 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
 /// AUTH
 ///////////////////////////////////////////////////////////
 bool Api::connection(bool onlyAuto) {
-    if (!additional().isEmpty())
-        setParams(grabSID(), userID(), additional());
-
-    if (sessionIsValid()) // maybe use grabSID() ?
-        return true;
+    if (isConnected()) return true;
 
     if (onlyAuto) return false;
 

@@ -53,6 +53,7 @@ namespace Core {
             extern const QString tkn_password          = QStringLiteral("pass");
             extern const QString tkn_predef1           = QStringLiteral("_1_");
             extern const QString tkn_predef2           = QStringLiteral("_2_");
+            extern const QString tkn_alpha             = QStringLiteral("@");
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
             extern const QString url_base              = QStringLiteral("https://api.vk.com/method/");

@@ -186,11 +186,7 @@ void Playo::openFolderTriggered() {
     ToolbarButton * button = (ToolbarButton *)QObject::sender();
     if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::obj().isOpenDropPointInTab()) {
         Views::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
-        Dockbars::obj().createLinkedDocBar(button -> text(), button -> mainPath(), settings);
-//        DockBar * bar = Dockbars::obj().createDocBar(button -> text(), settings, 0, true, true);
-//        QList<QUrl> urls;
-//        urls << QUrl::fromLocalFile(button -> mainPath().mid(0, button -> mainPath().length() - 1));// remove backslash
-//        Dockbars::obj().view(bar) -> appendRows(urls);
+        Dockbars::obj().createLinkedDocBar(button -> text(), button -> mainPath(), settings, 0, true, true);
     }
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
 }
@@ -200,7 +196,7 @@ void Playo::showSearchDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         Views::Params settings(search, false, false, false, true);
         SearchSettings prms = dialog.params();
-        Dockbars::obj().createDocBar("Search", settings, 0, true, true, &prms);
+        Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
     }
 }
 
@@ -219,28 +215,48 @@ void Playo::showSettingsDialog() {
 }
 
 void Playo::showEchonestDialog() {
-    EchonestDialog d(this);
-    d.exec();
-}
-
-void Playo::openOdTabDialog() {
-    if (Od::Api::obj().isConnected() || Od::Api::obj().connection())
-        Dockbars::obj().createDocBar(QStringLiteral("OD [YOU]"), Views::Params(od, Od::Api::obj().userID()), 0, true, true);
+    EchonestDialog(this).exec();
 }
 
 void Playo::openVKRecomendations() {
-    Dockbars::obj().createDocBar(QStringLiteral("Rec for YOU"), Views::Params(vk_rel, Vk::Api::obj().userID(), user_rel), 0, true, true);
+    Dockbars::obj().createDocBar(
+        QStringLiteral("Rec for YOU"),
+        Views::Params(vk_rel, Vk::Api::obj().userID(), user_rel), 0, true, true
+    );
+}
+
+void Playo::openSoundcloudTabDialog() {
+    if (Soundcloud::Api::obj().connection())
+        Dockbars::obj().createLinkedDocBar(
+            QStringLiteral("SC [YOU]"), Soundcloud::Api::obj().uidStr(Soundcloud::Api::obj().userID()),
+            Views::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true
+        );
+}
+
+void Playo::openOdTabDialog() {
+    if (Od::Api::obj().connection())
+        Dockbars::obj().createLinkedDocBar(
+            QStringLiteral("OD [YOU]"), Od::Api::obj().uidStr(Od::Api::obj().userID()),
+            Views::Params(od, Od::Api::obj().userID()), 0, true, true
+        );
 }
 
 void Playo::openVKTabDialog() {
     if (Vk::Api::obj().connection())
-        Dockbars::obj().createDocBar(QStringLiteral("VK [YOU]"), Views::Params(vk, Vk::Api::obj().userID()), 0, true, true);
+        Dockbars::obj().createLinkedDocBar(
+            QStringLiteral("VK [YOU]"), Vk::Api::obj().uidStr(Vk::Api::obj().userID()),
+            Views::Params(vk, Vk::Api::obj().userID()), 0, true, true
+        );
 }
 
 void Playo::showVKRelTabDialog() {
     RelationsDialog dialog(&Vk::Api::obj(), this);
     if (dialog.exec() == QDialog::Accepted)
-       Dockbars::obj().createDocBar(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"), Views::Params(vk_rel, dialog.getId()), 0, true, true);
+        Dockbars::obj().createLinkedDocBar(
+            QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"),
+            Vk::Api::obj().uidStr(dialog.getId()),
+            Views::Params(vk_rel, dialog.getId()), 0, true, true
+        );
 
     Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().lastError());
 }
@@ -248,13 +264,11 @@ void Playo::showVKRelTabDialog() {
 void Playo::showSoundcloudRelTabDialog() {
     RelationsDialog dialog(&Soundcloud::Api::obj(), this);
     if (dialog.exec() == QDialog::Accepted)
-        Dockbars::obj().createDocBar(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"), Views::Params(soundcloud, dialog.getId()), 0, true, true);
-//    else QMessageBox::information(this, "Soundcloud", SoundcloudApi::instance() -> getError());
-}
-
-void Playo::openSoundcloudTabDialog() {
-    if (Soundcloud::Api::obj().connection())
-        Dockbars::obj().createDocBar(QStringLiteral("SC [YOU]"), Views::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true);
+        Dockbars::obj().createLinkedDocBar(
+            QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"),
+            Od::Api::obj().uidStr(dialog.getId()),
+            Views::Params(soundcloud, dialog.getId()), 0, true, true
+        );
 }
 
 //void MainWindow::outputActiveItem(ModelItem *, ModelItem * to) {

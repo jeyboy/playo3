@@ -69,6 +69,7 @@ namespace Core {
             extern const QString tkn_ids;
             extern const QString tkn_genres;
             extern const QString tkn_order;
+            extern const QString tkn_alpha;
 
 
             extern const QString val_client_tkn;

@@ -56,6 +56,7 @@ namespace Core {
             extern const QString tkn_password;
             extern const QString tkn_predef1;
             extern const QString tkn_predef2;
+            extern const QString tkn_alpha;
 
             extern const QString url_redirect_uri;
             extern const QString url_base;

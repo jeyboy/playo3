@@ -32,7 +32,7 @@ namespace Presentation {
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(QString barName, Params settings, QJsonObject attrs);
+        QDockWidget * linkNameToToolbars(const QString & barName, const Views::Params & settings, QJsonObject attrs, const QString & linkable_uid = QString());
 
         inline QList<DockBar *> dockbars() { return container -> findChildren<DockBar *>(); }
 
@@ -54,9 +54,9 @@ namespace Presentation {
         }
 
         DockBar * commonBar();
-        DockBar * createDocBar(QString name, Params settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
-        DockBar * createDocBar(QString name, bool closable = true, QWidget * content = 0);
-        DockBar * createLinkedDocBar(QString text, QString path, Params settings);
+        DockBar * createDocBar(const QString & name, const Views::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
+        DockBar * createDocBar(const QString & name, bool closable = true, QWidget * content = 0);
+        DockBar * createLinkedDocBar(const QString & name, const QString & path, const Views::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         void useVeticalTitles(bool vertical);

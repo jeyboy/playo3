@@ -66,6 +66,7 @@ namespace Core {
             extern const QString tkn_ids               = QStringLiteral("ids");
             extern const QString tkn_genres            = QStringLiteral("genres");
             extern const QString tkn_order             = QStringLiteral("order");
+            extern const QString tkn_alpha             = QStringLiteral("@");
 
 
             extern const QString val_client_tkn        = QStringLiteral("54ca588303e1d2bf524509faf20931b4");
