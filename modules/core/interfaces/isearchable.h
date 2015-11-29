@@ -107,7 +107,7 @@ namespace Core {
         }
 
         virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-        QUrl baseUrl(QString predicate, const QUrlQuery & query) {
+        QUrl baseUrl(const QString & predicate, const QUrlQuery & query) {
             QUrl url(baseUrlStr(predicate));
             url.setQuery(query);
             return url;

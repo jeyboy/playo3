@@ -37,7 +37,7 @@ bool Api::connection() {
             Html::Set forms = html.find("form");
 
             if (forms.isEmpty()) {
-                Logger::obj().write(tkn_auth_title, QStringLiteral("Auth form did not found"), true);
+                Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
                 return false;
             }
             Html::Tag * form = forms.first();
@@ -49,10 +49,10 @@ bool Api::connection() {
                 captcha_src = captcha_set.first() -> value("src");
 
             if (captcha_src.isEmpty()) {
-                if (!showingLogin(tkn_auth_title, vals[tkn_email], vals[tkn_password], err))
+                if (!showingLogin(val_auth_title, vals[tkn_email], vals[tkn_password], err))
                     return false;
             } else {
-                if (!showingLoginWithCaptcha(tkn_auth_title, captcha_src,
+                if (!showingLoginWithCaptcha(val_auth_title, captcha_src,
                     vals[tkn_email], vals[tkn_password], vals[tkn_captcha], err
                 )) return false;
             }

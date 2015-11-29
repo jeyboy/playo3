@@ -14,8 +14,10 @@ namespace Core {
             extern const QString path_groups           = QStringLiteral("groups/");
             extern const QString path_group_tracks     = QStringLiteral("groups/%1/tracks");
             extern const QString path_group_playlists  = QStringLiteral("groups/%1/playlists");
+            //            /groups/{id}/members
             extern const QString path_users            = QStringLiteral("users/");
             extern const QString path_user_tracks      = QStringLiteral("users/%1/tracks");
+            extern const QString path_user_favorites   = QStringLiteral("users/%1/favorites");
             extern const QString path_user_playlists   = QStringLiteral("users/%1/playlists");
             extern const QString path_user_followings  = QStringLiteral("users/%1/followings");
             extern const QString path_user_followers   = QStringLiteral("users/%1/followers");
@@ -31,8 +33,10 @@ namespace Core {
             extern const QString tkn_src               = QStringLiteral("src");
             extern const QString tkn_username          = QStringLiteral("username");
             extern const QString tkn_password          = QStringLiteral("password");
-            extern const QString tkn_recaptcha_challenge_field = QStringLiteral("recaptcha_challenge_field");
-            extern const QString tkn_recaptcha_response_field = QStringLiteral("recaptcha_response_field");
+            extern const QString tkn_recaptcha_challenge_field
+                                                       = QStringLiteral("recaptcha_challenge_field");
+            extern const QString tkn_recaptcha_response_field
+                                                       = QStringLiteral("recaptcha_response_field");
             extern const QString tkn_response_type     = QStringLiteral("response_type");
             extern const QString tkn_redirect_uri      = QStringLiteral("redirect_uri");
             extern const QString tkn_scope             = QStringLiteral("scope");

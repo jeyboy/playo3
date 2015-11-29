@@ -6,8 +6,6 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            extern const QString tkn_name;
-            extern const QString tkn_auth_title;
             extern const QString tkn_str_true;
             extern const QString tkn_str_false;
             extern const QString tkn_version;
@@ -61,15 +59,19 @@ namespace Core {
             extern const QString tkn_predef1;
             extern const QString tkn_predef2;
             extern const QString tkn_time_sep;
+            extern const QString tkn_q;
 
             extern const QString url_redirect_uri;
             extern const QString url_base;
             extern const QString url_auth;
 
+            extern const QString path_users_search;
             extern const QString path_user_info;
             extern const QString path_resole_user;
             extern const QString path_lyrics;
 
+            extern const QString val_name;
+            extern const QString val_auth_title;
             extern const QString val_api_call_limit;
             extern const QString val_version;
             extern const QString val_page_token;

@@ -161,8 +161,8 @@ namespace Core {
                     setSearchPredicate(query, name);
                     return baseUrl(path_playlists, query);
                 }
-                QJsonArray playlistByName(QString & name, int count = 10, in offset = 0) {
-                    return lQuery(baseUrl(playlistByNameUrl(name), genDefaultParams()), queryRules(count, offset, 2), wrap); // playlists is very weighted for loading - so set limitation to 2 playlists per request
+                QJsonArray playlistByName(QString & name, int count = 10, int offset = 0) {
+                    return lQuery(playlistByNameUrl(name), queryRules(count, offset, 2), wrap); // playlists is very weighted for loading - so set limitation to 2 playlists per request
                 }
             };
         }

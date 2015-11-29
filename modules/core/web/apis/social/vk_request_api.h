@@ -363,12 +363,19 @@ namespace Core {
                     return getAudioInfo(audio_uid).value(tkn_url).toString();
                 }
 
-                void nameToId(QString name, QString & id, QString & id_type) {
+                void userNameToUserId(const QString & name, QString & id, QString & id_type) {
                     QUrlQuery query;
                     setParam(query, tkn_screen_name, name);
                     QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
                     id = QString::number(ret.value(tkn_object_id).toInt());
                     id_type = ret.value(tkn_type).toString();
+                }
+
+                QJsonArray usersIdByName(const QString & name) {
+                    QUrlQuery query;
+                    setParam(query, tkn_q, name);
+                    QJsonObject ret = sQuery(baseUrl(path_users_search, query)).value(tkn_response).toObject();
+                    return ret.value(tkn_items).toArray();
                 }
 
                 QUrl audioLyricsUrl(QString & lyrics_id) {

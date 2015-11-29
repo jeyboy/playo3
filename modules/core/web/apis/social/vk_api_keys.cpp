@@ -3,8 +3,6 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            extern const QString tkn_name              = QStringLiteral("Vk");
-            extern const QString tkn_auth_title        = QStringLiteral("Vk auth");
             extern const QString tkn_str_true          = QStringLiteral("1");
             extern const QString tkn_str_false         = QStringLiteral("0");
             extern const QString tkn_version           = QStringLiteral("v");
@@ -58,15 +56,19 @@ namespace Core {
             extern const QString tkn_predef1           = QStringLiteral("_1_");
             extern const QString tkn_predef2           = QStringLiteral("_2_");
             extern const QString tkn_time_sep          = QStringLiteral(" : ");
+            extern const QString tkn_q                 = QStringLiteral("q");
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
             extern const QString url_base              = QStringLiteral("https://api.vk.com/method/");
             extern const QString url_auth              = QStringLiteral("https://oauth.vk.com/authorize");
 
+            extern const QString path_users_search     = QStringLiteral("users.search");
             extern const QString path_user_info        = QStringLiteral("users.get");
             extern const QString path_resole_user      = QStringLiteral("utils.resolveScreenName");
             extern const QString path_lyrics           = QStringLiteral("audio.getLyrics");
 
+            extern const QString val_name              = QStringLiteral("Vk");
+            extern const QString val_auth_title        = QStringLiteral("Vk auth");
             extern const QString val_api_call_limit    = QStringLiteral("20");
             extern const QString val_version           = QStringLiteral("5.21");
             extern const QString val_page_token        = QStringLiteral("page");
