@@ -11,6 +11,9 @@ namespace Core {
 
             QString jsonToken() const { return QStringLiteral("friends"); }
         public:
+//            virtual bool findFriendById(const QString & uid, QString & name) = 0;
+//            virtual bool findFriendByName(QString & uid, const QString & name) = 0;
+
             inline void addFriend(const QString & uid, const QString & name) {
                 if (!uid.isEmpty() && !name.isEmpty())
                     friends.insert(uid, name);

@@ -31,6 +31,13 @@ namespace Core {
                 void getGroupInfo(QString uid, QJsonObject & object);
                 void getUserInfo(QString & uid, QJsonObject & object);
 
+                bool findFriendById(const QString & uid, QString & name) {
+
+                }
+                bool findFriendByName(QString & uid, const QString & name) {
+
+                }
+
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
             public slots:

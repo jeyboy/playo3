@@ -11,6 +11,9 @@ namespace Core {
 
             QString jsonToken() const { return QStringLiteral("groups"); }
         public:
+//            virtual bool findGroupById(const QString & uid, QString & name) = 0;
+//            virtual bool findGroupByName(QString & uid, const QString & name) = 0;
+
             inline void addGroup(const QString & uid, const QString & name) {
                 if (!uid.isEmpty() && !name.isEmpty())
                     groups.insert(uid, name);
