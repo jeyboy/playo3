@@ -3,8 +3,6 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            extern const QString tkn_str_true          = QStringLiteral("1");
-            extern const QString tkn_str_false         = QStringLiteral("0");
             extern const QString tkn_version           = QStringLiteral("v");
             extern const QString tkn_display           = QStringLiteral("display");
             extern const QString tkn_client_id         = QStringLiteral("client_id");
@@ -57,16 +55,25 @@ namespace Core {
             extern const QString tkn_predef2           = QStringLiteral("_2_");
             extern const QString tkn_time_sep          = QStringLiteral(" : ");
             extern const QString tkn_q                 = QStringLiteral("q");
+            extern const QString tkn_photo             = QStringLiteral("photo_200");
+            extern const QString tkn_group_ids         = QStringLiteral("group_ids");
+
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
             extern const QString url_base              = QStringLiteral("https://api.vk.com/method/");
             extern const QString url_auth              = QStringLiteral("https://oauth.vk.com/authorize");
 
+
+            extern const QString path_groups_by_id     = QStringLiteral("groups.getById");
+            extern const QString path_groups_search    = QStringLiteral("groups.search");
             extern const QString path_users_search     = QStringLiteral("users.search");
             extern const QString path_user_info        = QStringLiteral("users.get");
             extern const QString path_resole_user      = QStringLiteral("utils.resolveScreenName");
             extern const QString path_lyrics           = QStringLiteral("audio.getLyrics");
 
+
+            extern const QString val_str_true          = QStringLiteral("1");
+            extern const QString val_str_false         = QStringLiteral("0");
             extern const QString val_name              = QStringLiteral("Vk");
             extern const QString val_auth_title        = QStringLiteral("Vk auth");
             extern const QString val_api_call_limit    = QStringLiteral("20");
@@ -75,6 +82,9 @@ namespace Core {
             extern const QString val_client_token      = QStringLiteral("4332211");
             extern const QString val_response_token    = QStringLiteral("token");
             extern const QString val_scope             = QStringLiteral("audio,video,friends,groups,offline");
+
+            extern const QString val_user_fields       = tkn_photo % QStringLiteral(",") % tkn_screen_name;
+
         }
     }
 }

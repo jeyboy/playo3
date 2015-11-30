@@ -11,7 +11,7 @@ namespace Core {
         namespace Vk {
             class RequestApi : public IApi {
             protected:
-                inline QString boolToStr(bool val) { return val ? tkn_str_true : tkn_str_false; }
+                inline QString boolToStr(bool val) { return val ? val_str_true : val_str_false; }
 
                 QString authUrl() {
                     QUrl url(url_auth);
@@ -363,7 +363,24 @@ namespace Core {
                     return getAudioInfo(audio_uid).value(tkn_url).toString();
                 }
 
-                void userNameToUserId(const QString & name, QString & id, QString & id_type) {
+//                QJsonArray groupsById(QString & id) {
+//                    QUrlQuery query;
+//                    setParam(query, tkn_screen_name, name);
+//                    QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
+//                    id = QString::number(ret.value(tkn_object_id).toInt());
+//                    id_type = ret.value(tkn_type).toString();
+//                }
+
+                QJsonArray usersByIdsOrPermas(const QStringList & ids) { return usersByIdOrPerma(ids.join(QStringLiteral(","))); }
+
+                QJsonArray usersByIdOrPerma(const QString & id) {
+                    QUrlQuery query;
+                    setParam(query, tkn_user_ids, id);
+                    setParam(query, tkn_fields, val_user_fields);
+                    return sQuery(baseUrl(path_user_info, query)).value(tkn_response).toArray();
+                }
+
+                void permaToId(const QString & name, QString & id, QString & id_type) {
                     QUrlQuery query;
                     setParam(query, tkn_screen_name, name);
                     QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
@@ -374,6 +391,7 @@ namespace Core {
                 QJsonArray usersIdByName(const QString & name) {
                     QUrlQuery query;
                     setParam(query, tkn_q, name);
+                    setParam(query, tkn_fields, val_user_fields);
                     QJsonObject ret = sQuery(baseUrl(path_users_search, query)).value(tkn_response).toObject();
                     return ret.value(tkn_items).toArray();
                 }
