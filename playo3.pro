@@ -266,7 +266,9 @@ HEADERS += \
     modules/core/web/interfaces/friendable.h \
     modules/core/web/interfaces/groupable.h \
     modules/core/web/interfaces/sociable.h \
-    modules/core/web/utils/html_parser_keys.h
+    modules/core/web/utils/html_parser_keys.h \
+    modules/core/web/interfaces/linkable.h \
+    modules/core/web/interfaces/linkable_list.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

@@ -2,8 +2,7 @@
 #define RELATIONS_DIALOG_H
 
 #include <qdialog.h>
-#include <qstringlistmodel.h>
-#include <qhash.h>
+#include <qlistwidget.h>
 
 #include "modules/core/web/interfaces/sociable.h"
 
@@ -15,8 +14,9 @@ class RelationsDialog : public QDialog {
 
     Ui::RelationsDialog * ui;
     QString uid, name;
-    QStringListModel * friendModel, * groupModel;
     Web::Sociable * api;
+
+    void prepareLinkablesList(QHash<QString, Web::Linkable> linkables, QListWidget * list);
 public:
     explicit RelationsDialog(Web::Sociable * currApi, QWidget * parent = 0);
     ~RelationsDialog();
@@ -26,11 +26,12 @@ public:
 
 private slots:
     void on_cancelButton_clicked();
-    void on_friendsList_activated(const QModelIndex & index);
-    void on_groupsList_activated(const QModelIndex & index);
-
     void on_friendManually_clicked();
     void on_groupManually_clicked();
+    void on_friendsList_activated(const QModelIndex &index);
+    void on_groupsList_activated(const QModelIndex &index);
+    void on_friendsList_itemActivated(QListWidgetItem *item);
+    void on_groupsList_itemActivated(QListWidgetItem *item);
 };
 
 #endif // RELATIONS_DIALOG_H

@@ -1,40 +1,20 @@
 #ifndef FRIENDABLE
 #define FRIENDABLE
 
-#include <qhash.h>
-#include <qjsonobject.h>
+#include "linkable_list.h"
 
 namespace Core {
     namespace Web {
-        class Friendable {
-            QHash<QString, QString> friends;
-
+        class Friendable : public LinkableList {
             QString jsonToken() const { return QStringLiteral("friends"); }
         public:
-//            virtual bool findFriendById(const QString & uid, QString & name) = 0;
-//            virtual bool findFriendByName(QString & uid, const QString & name) = 0;
+//            virtual QList<Linkable> findFriendById(const QString & uid) = 0;
+//            virtual QList<Linkable> findFriendByName(const QString & name) = 0;
 
-            inline void addFriend(const QString & uid, const QString & name) {
-                if (!uid.isEmpty() && !name.isEmpty())
-                    friends.insert(uid, name);
-            }
+            inline void addFriend(const Linkable & obj) { addLinkable(obj); }
 
-            inline QHash<QString, QString> friendsList() const { return friends; }
-            inline void clearFriends() { friends.clear(); }
-
-            void fromJson(const QJsonObject & hash) {
-                QJsonObject ar = hash.value(jsonToken()).toObject();
-                foreach(QString key, ar.keys())
-                    addFriend(key, ar.value(key).toString());
-            }
-            void toJson(QJsonObject & hash) {
-                QJsonObject friendsJson;
-
-                for(QHash<QString, QString>::Iterator frend = friends.begin(); frend != friends.end(); frend++)
-                    friendsJson.insert(frend.key(), QJsonValue(frend.value()));
-
-                hash.insert(jsonToken(), friendsJson);
-            }
+            inline QHash<QString, Linkable> friendsList() const { return linkablesList(); }
+            inline void clearFriends() { clearLinkables(); }
         };
     }
 }

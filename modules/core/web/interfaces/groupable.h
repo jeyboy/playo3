@@ -1,40 +1,20 @@
 #ifndef GROUPABLE
 #define GROUPABLE
 
-#include <qhash.h>
-#include <qjsonobject.h>
+#include "linkable_list.h"
 
 namespace Core {
     namespace Web {
-        class Groupable {
-            QHash<QString, QString> groups;
-
+        class Groupable : public LinkableList {
             QString jsonToken() const { return QStringLiteral("groups"); }
         public:
-//            virtual bool findGroupById(const QString & uid, QString & name) = 0;
-//            virtual bool findGroupByName(QString & uid, const QString & name) = 0;
+//            virtual QList<Linkable> findGroupById(const QString & uid) = 0;
+//            virtual QList<Linkable> findGroupByName(const QString & name) = 0;
 
-            inline void addGroup(const QString & uid, const QString & name) {
-                if (!uid.isEmpty() && !name.isEmpty())
-                    groups.insert(uid, name);
-            }
+            inline void addGroup(const Linkable & obj) { addLinkable(obj); }
 
-            inline QHash<QString, QString> groupsList() const { return groups; }
-            inline void clearGroups() { groups.clear(); }
-
-            void fromJson(const QJsonObject & hash) {
-                QJsonObject ar = hash.value(jsonToken()).toObject();
-                foreach(QString key, ar.keys())
-                    addGroup(key, ar.value(key).toString());
-            }
-            void toJson(QJsonObject & hash) {
-                QJsonObject groupsJson;
-
-                for(QHash<QString, QString>::Iterator group = groups.begin(); group != groups.end(); group++)
-                    groupsJson.insert(group.key(), QJsonValue(group.value()));
-
-                hash.insert(jsonToken(), groupsJson);
-            }
+            inline QHash<QString, Linkable> groupsList() const { return linkablesList(); }
+            inline void clearGroups() { clearLinkables(); }
         };
     }
 }

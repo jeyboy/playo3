@@ -31,12 +31,10 @@ namespace Core {
                 void getGroupInfo(QString uid, QJsonObject & object);
                 void getUserInfo(QString & uid, QJsonObject & object);
 
-                bool findFriendById(const QString & uid, QString & name) {
-
-                }
-                bool findFriendByName(QString & uid, const QString & name) {
-
-                }
+//                QList<Linkable> findFriendById(const QString & uid) {}
+//                QList<Linkable> findFriendByName(const QString & name) {}
+//                QList<Linkable> findGroupById(const QString & uid) {}
+//                QList<Linkable> findGroupByName(const QString & name) {}
 
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
