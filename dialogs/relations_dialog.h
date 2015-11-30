@@ -28,8 +28,6 @@ private slots:
     void on_cancelButton_clicked();
     void on_friendManually_clicked();
     void on_groupManually_clicked();
-    void on_friendsList_activated(const QModelIndex &index);
-    void on_groupsList_activated(const QModelIndex &index);
     void on_friendsList_itemActivated(QListWidgetItem *item);
     void on_groupsList_itemActivated(QListWidgetItem *item);
 };
