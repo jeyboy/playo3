@@ -26,6 +26,8 @@ namespace Core {
             extern const QString path_user_groups;
 
 
+            extern const QString tkn_avatar_url;
+            extern const QString tkn_artwork_url;
             extern const QString tkn_permalink;
             extern const QString tkn_grant_type;
             extern const QString tkn_client_secret;

@@ -57,50 +57,43 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
             group = (*group_it).toObject();
 
             Soundcloud::Api::obj().addGroup(
-                QString::number(group.value(Soundcloud::tkn_id).toInt()),
-                group.value(Soundcloud::tkn_name).toString()
+                Linkable(
+                    QString::number(group.value(Soundcloud::tkn_id).toInt()),
+                    group.value(Soundcloud::tkn_name).toString(),
+                    group.value(Soundcloud::tkn_permalink).toString(),
+                    group.value(Soundcloud::tkn_artwork_url).toString()
+                )
             );
         }
     }
     /////////////////////////////////////////////////////////////////////
+
+    proceedFriendsList(hash.value(Soundcloud::tkn_followings).toArray());
+    proceedFriendsList(hash.value(Soundcloud::tkn_followers).toArray());
+
+    emit moveOutProcess();
+}
+
+void SoundcloudModel::proceedFriendsList(const QJsonArray & friends) {
     QJsonObject frend;
     QString name;
 
-    {        
-        QJsonArray friends = hash.value(Soundcloud::tkn_followings).toArray();
+    for(QJsonArray::ConstIterator friend_it = friends.constBegin(); friend_it != friends.constEnd(); friend_it++) {
+        frend = (*friend_it).toObject();
 
-        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            frend = (*friend_it).toObject();
+        name = frend.value(Soundcloud::tkn_full_name).toString();
+        if (name.isEmpty())
+            name = frend.value(Soundcloud::tkn_username).toString();
 
-            name = frend.value(Soundcloud::tkn_full_name).toString();
-            if (name.isEmpty())
-                name = frend.value(Soundcloud::tkn_username).toString();
-
-            Soundcloud::Api::obj().addFriend(
+        Soundcloud::Api::obj().addFriend(
+            Linkable(
                 QString::number(frend.value(Soundcloud::tkn_id).toInt()),
-                name
-            );
-        }
+                name,
+                frend.value(Soundcloud::tkn_permalink).toString(),
+                frend.value(Soundcloud::tkn_avatar_url).toString()
+            )
+        );
     }
-
-    {
-        QJsonArray friends = hash.value(Soundcloud::tkn_followers).toArray();
-
-        for(QJsonArray::Iterator friend_it = friends.begin(); friend_it != friends.end(); friend_it++) {
-            frend = (*friend_it).toObject();
-
-            name = frend.value(Soundcloud::tkn_full_name).toString();
-            if (name.isEmpty())
-                name = frend.value(Soundcloud::tkn_username).toString();
-
-            Soundcloud::Api::obj().addFriend(
-                QString::number(frend.value(Soundcloud::tkn_id).toInt()),
-                name
-            );
-        }
-    }
-
-    emit moveOutProcess();
 }
 
 void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {

@@ -23,6 +23,8 @@ namespace Core {
             extern const QString path_user_followers   = QStringLiteral("users/%1/followers");
             extern const QString path_user_groups      = QStringLiteral("users/%1/groups");
 
+            extern const QString tkn_avatar_url        = QStringLiteral("avatar_url");
+            extern const QString tkn_artwork_url       = QStringLiteral("artwork_url");
             extern const QString tkn_permalink         = QStringLiteral("permalink");
             extern const QString tkn_grant_type        = QStringLiteral("grant_type");
             extern const QString tkn_client_secret     = QStringLiteral("client_secret");

@@ -104,8 +104,10 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
             QJsonObject frend = (*friend_it).toObject();
 
             Od::Api::obj().addFriend(
-                frend.value(QStringLiteral("id")).toString(),
-                frend.value(QStringLiteral("fullName")).toString()
+                Linkable(
+                    frend.value(QStringLiteral("id")).toString(),
+                    frend.value(QStringLiteral("fullName")).toString()
+                )
             );
         }
     }

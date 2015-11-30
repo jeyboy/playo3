@@ -6,6 +6,8 @@
 namespace Models {
     class SoundcloudModel : public WebModel {
         Q_OBJECT
+
+        void proceedFriendsList(const QJsonArray & friends);
     public:       
         inline SoundcloudModel(const QString & uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 

@@ -102,8 +102,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             group = (*it).toObject();
 
             Vk::Api::obj().addGroup(
-                QString::number(group.value(Vk::tkn_id).toInt()),
-                group.value(Vk::tkn_title).toString()
+                Linkable(
+                    QString::number(group.value(Vk::tkn_id).toInt()),
+                    group.value(Vk::tkn_title).toString()
+                    // need to add permalink and avatar url
+                )
             );
         }
     }
@@ -117,8 +120,11 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             frend = (*it).toObject();
 
             Vk::Api::obj().addFriend(
-                QString::number(frend.value(Vk::tkn_id).toInt()),
-                frend.value(Vk::tkn_title).toString()
+                Linkable(
+                    QString::number(frend.value(Vk::tkn_id).toInt()),
+                    frend.value(Vk::tkn_title).toString()
+                    // need to add permalink and avatar url
+                )
             );
         }
     }
