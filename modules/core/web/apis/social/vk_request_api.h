@@ -363,13 +363,20 @@ namespace Core {
                     return getAudioInfo(audio_uid).value(tkn_url).toString();
                 }
 
-//                QJsonArray groupsById(QString & id) {
-//                    QUrlQuery query;
-//                    setParam(query, tkn_screen_name, name);
-//                    QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
-//                    id = QString::number(ret.value(tkn_object_id).toInt());
-//                    id_type = ret.value(tkn_type).toString();
-//                }
+                //INFO not tested
+
+                QJsonArray groupsByIdOrPermas(const QStringList & ids) {
+                    QUrlQuery query;
+                    setParam(query, tkn_group_ids, ids);
+                    return sQuery(baseUrl(path_groups_by_id, query)).value(tkn_response).toArray();
+                }
+
+                QJsonArray groupsByName(const QString & name) {
+                    QUrlQuery query;
+                    setParam(query, tkn_type, val_group_types);
+                    setParam(query, tkn_q, name);
+                    return sQuery(baseUrl(path_groups_search, query)).value(tkn_response).toArray();
+                }
 
                 QJsonArray usersByIdsOrPermas(const QStringList & ids) { return usersByIdOrPerma(ids.join(QStringLiteral(","))); }
 
@@ -388,7 +395,7 @@ namespace Core {
                     id_type = ret.value(tkn_type).toString();
                 }
 
-                QJsonArray usersIdByName(const QString & name) {
+                QJsonArray usersByName(const QString & name) {
                     QUrlQuery query;
                     setParam(query, tkn_q, name);
                     setParam(query, tkn_fields, val_user_fields);

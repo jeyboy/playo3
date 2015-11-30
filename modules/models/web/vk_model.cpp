@@ -122,8 +122,9 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             Vk::Api::obj().addFriend(
                 Linkable(
                     QString::number(frend.value(Vk::tkn_id).toInt()),
-                    frend.value(Vk::tkn_title).toString()
-                    // need to add permalink and avatar url
+                    frend.value(Vk::tkn_title).toString(),
+                    frend.value(Vk::tkn_screen_name).toString(),
+                    frend.value(Vk::tkn_photo).toString()
                 )
             );
         }

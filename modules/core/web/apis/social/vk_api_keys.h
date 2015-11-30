@@ -86,6 +86,7 @@ namespace Core {
             extern const QString val_response_token;
             extern const QString val_scope;
             extern const QString val_user_fields;
+            extern const QString val_group_types;
         }
     }
 }
