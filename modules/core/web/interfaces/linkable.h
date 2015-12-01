@@ -28,7 +28,7 @@ namespace Core {
             QString permalink() const { return _permalink; }
             QString image_url() const { return _image_url; }
 
-            QString title() { return human_name() % QStringLiteral(" (aka %1)").arg(_permalink.isEmpty() ? QStringLiteral("?") : _permalink); }
+            QString permaTitle() { return QStringLiteral(" aka %1").arg(_permalink.isEmpty() ? QStringLiteral("?") : _permalink); }
 
             QJsonObject toJson() {
                 QJsonObject root;

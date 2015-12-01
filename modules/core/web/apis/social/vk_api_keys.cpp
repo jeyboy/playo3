@@ -82,12 +82,132 @@ namespace Core {
             extern const QString val_client_token      = QStringLiteral("4332211");
             extern const QString val_response_token    = QStringLiteral("token");
             extern const QString val_scope             = QStringLiteral("audio,video,friends,groups,offline");
-
             extern const QString val_user_fields       = tkn_photo % QStringLiteral(",") % tkn_screen_name;
-            extern const QString val_group_types      = QStringLiteral("group,page");
+            extern const QString val_group_types       = QStringLiteral("group,page");
 
 
+            extern const QString query_albums          = QString(
+                "var curr; var count = 5;"
+                "var folders_result = API.audio.getAlbums({"
+                "                count: count, "
+                "                offset: " % tkn_predef1 % ", "
+                "                owner_id: %1"
+                "    });"
+                "var folders_result = folders_result.items;"
+                "var proceed_folders = {};"
+                "while(folders_result.length > 0) {"
+                "    curr = folders_result.pop();"
+                "    proceed_folders.push({"
+                "        " % tkn_folder_id % ": curr.id,"
+                "        " % tkn_title % ": curr.title,"
+                "        " % tkn_items % ": API.audio.get({"
+                "            owner_id: %1,"
+                "            album_id: curr.id"
+                "        }).items "
+                "    });"
+                "};"
+                "return { "
+                "    " % tkn_albums % ": proceed_folders, "
+                "    " % tkn_finished % ": (proceed_folders.length < count), "
+                "    " % tkn_offset % ": " % tkn_predef1 % " %2b count"
+                "};"
+            );
 
+            extern const QString query_user_info      = QString(
+                "var curr; var proceed_groups = [];"
+                "var groups = API.groups.get({"
+                "            owner_id: %1, "
+                "            count: 1000, "
+                "            extended: 1"
+                "    }).items;"
+                "while(groups.length > 0) {"
+                "    curr = groups.pop();"
+                "    proceed_groups.push({"
+                "        " % tkn_id % ": curr.id, "
+                "        " % tkn_title % ": curr.name"
+                // need to add permalink and photo fields
+                "    });"
+                "};"
+
+                "var friends = API.friends.get({"
+                "            user_id: %1, "
+                "            order: \"name\", "
+                "            fields: \"nickname, " % val_user_fields % "\""
+                "    });"
+                "var proceed_friends = [];"
+                "if (friends.count > 0) { "
+                "    while(friends.items.length > 0) { "
+                "        curr = friends.items.pop();"
+                "        proceed_friends.push({ "
+                "            " % tkn_id % ": curr.id, "
+                "            " % tkn_title % ": curr.first_name %2b \" \" %2b curr.last_name, "
+                // need to add permalink and photo fields
+                "        }); "
+                "    }; "
+                "};"
+
+                "var folders_result = API.audio.getAlbums({"
+                "            count: " % val_api_call_limit % ", "
+                "            owner_id: %1"
+                "    });"
+                "var folders_count = folders_result.count;"
+                "var proceed_folders = {};"
+                "if (folders_count > 0) { "
+                "    while(folders_result.items.length > 0) { "
+                "        curr = folders_result.items.pop();"
+                "        proceed_folders.push({"
+                "            " % tkn_folder_id % ": curr.id, "
+                "            " % tkn_title % ": curr.title, "
+                "            " % tkn_items % ": API.audio.get({ "
+                "                album_id: curr.id "
+                "            }).items "
+                "        });"
+                "    };"
+                "};"
+                "return {"
+                "    " % tkn_audio_list % ": API.audio.get({ "
+                "        count: 6000, owner_id: %1"
+                "    }),"
+                "    " % tkn_albums % ": [proceed_folders], "
+                "    " % tkn_groups % ": proceed_groups, "
+                "    " % tkn_friends % ": proceed_friends, "
+                "    " % tkn_albums_offset % ": " % val_api_call_limit % ", "
+                "    " % tkn_albums_finished % ": (folders_count < " % val_api_call_limit % "), "
+                "};"
+            );
+
+            extern const QString query_user_short_info = QString(
+                "var folders_result = API.audio.getAlbums({ "
+                "            count: " % val_api_call_limit % ", "
+                "            owner_id: %1"
+                "        });"
+                "var folders_count = folders_result.count;"
+                "var sort_by_folders = {};"
+                "if (folders_count > 0) { "
+                "    while(folders_result.items.length > 0) { "
+                "        var curr = folders_result.items.pop(); "
+                "        sort_by_folders.push({"
+                "            " % tkn_folder_id % ": curr.id, "
+                "            " % tkn_title % ": curr.title, "
+                "            " % tkn_items % ": API.audio.get({ "
+                "                owner_id: %1, "
+                "                album_id: curr.id"
+                "            }).items"
+                "        });"
+                "    };"
+                "};"
+                "return {"
+                "    " % tkn_audio_list % ": API.audio.get({ "
+                "        count: 6000, "
+                "        owner_id: %1"
+                "    }), "
+                "    " % tkn_albums % ": [sort_by_folders], "
+                "    " % tkn_albums_offset % ": " % val_api_call_limit % ", "
+                "    " % tkn_albums_finished % ": (folders_count < " % val_api_call_limit % ")"
+                "};"
+            );
+
+//            extern const QString query_audio_recomend =
         }
     }
 }

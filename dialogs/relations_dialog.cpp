@@ -1,16 +1,20 @@
 #include "relations_dialog.h"
 #include "ui_relations_dialog.h"
 
+#include "modules/models/service/relations_delegate.h"
+
 using namespace Core;
 using namespace Web;
 
 void RelationsDialog::prepareLinkablesList(QHash<QString, Web::Linkable> linkables, QListWidget * list) {
     for(QHash<QString, Linkable>::Iterator linkable = linkables.begin(); linkable != linkables.end(); linkable++) {
-        QListWidgetItem * item = new QListWidgetItem(QIcon(linkable.value().image()), linkable.value().title(), list);
+        QListWidgetItem * item = new QListWidgetItem(QIcon(linkable.value().image()), linkable.value().human_name(), list);
+        item -> setData(Qt::UserRole + 1, linkable.value().permaTitle());
         item -> setData(Qt::UserRole, linkable.value().uid());
         list -> addItem(item);
     }
 
+    list -> setItemDelegate(new RelationsDelegate(list));
     list -> setEditTriggers(QListView::NoEditTriggers);
     list -> sortItems();
 }

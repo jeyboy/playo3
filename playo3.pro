@@ -268,7 +268,8 @@ HEADERS += \
     modules/core/web/interfaces/sociable.h \
     modules/core/web/utils/html_parser_keys.h \
     modules/core/web/interfaces/linkable.h \
-    modules/core/web/interfaces/linkable_list.h
+    modules/core/web/interfaces/linkable_list.h \
+    modules/models/service/relations_delegate.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -398,4 +399,5 @@ SOURCES += \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
     modules/core/web/apis/social/vk_api_keys.cpp \
-    modules/core/web/apis/social/soundcloud_api_keys.cpp
+    modules/core/web/apis/social/soundcloud_api_keys.cpp \
+    modules/models/service/relations_delegate.cpp

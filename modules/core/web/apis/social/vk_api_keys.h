@@ -87,6 +87,12 @@ namespace Core {
             extern const QString val_scope;
             extern const QString val_user_fields;
             extern const QString val_group_types;
+
+
+            extern const QString query_albums;
+            extern const QString query_user_info;
+            extern const QString query_user_short_info;
+
         }
     }
 }

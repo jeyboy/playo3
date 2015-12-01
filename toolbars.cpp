@@ -338,7 +338,6 @@ QToolBar * ToolBars::createPanMediaBar() {
     return ptb;
 }
 
-
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
 
@@ -346,11 +345,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
     timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
     ptb -> addWidget(timeLabel);
 
-
-//    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
-
-//    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
     PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
 
     ptb -> adjustSize();
