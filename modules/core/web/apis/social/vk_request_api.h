@@ -141,7 +141,7 @@ namespace Core {
                            "var friends = API.friends.get({"
                            "            user_id: " % uid % ", "
                            "            order: \"name\", "
-                           "            fields: \"nickname\""
+                           "            fields: \"nickname, " % val_user_fields % "\""
                            "    });"
                            "var proceed_friends = [];"
                            "if (friends.count > 0) { "
