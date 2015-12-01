@@ -7,17 +7,11 @@ QSize RelationsDelegate::sizeHint(const QStyleOptionViewItem & option, const QMo
 
 void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     QRect r = option.rect;
+    r.moveTop(r.top() + 1); r.setHeight(r.height() - 2);
 
-    //Color: #C4C4C4
-    QPen linePen(QColor::fromRgb(211, 211, 211), 1, Qt::SolidLine);
-
-    //Color: #005A83
+    QPen linePen(QColor::fromRgb(181, 181, 181), 1, Qt::SolidLine);
     QPen lineMarkedPen(QColor::fromRgb(0, 60, 111), 1, Qt::SolidLine);
-
-    //Color: #333
     QPen fontPen(QColor::fromRgb(51, 51, 51), 1, Qt::SolidLine);
-
-    //Color: #fff
     QPen fontMarkedPen(Qt::white, 1, Qt::SolidLine);
 
     if(option.state & QStyle::State_Selected){
