@@ -104,8 +104,9 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
             Vk::Api::obj().addGroup(
                 Linkable(
                     QString::number(group.value(Vk::tkn_id).toInt()),
-                    group.value(Vk::tkn_title).toString()
-                    // need to add permalink and avatar url
+                    group.value(Vk::tkn_title).toString(),
+                    group.value(Vk::tkn_screen_name).toString(),
+                    group.value(Vk::tkn_photo).toString()
                 )
             );
         }

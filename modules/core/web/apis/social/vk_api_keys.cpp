@@ -57,6 +57,7 @@ namespace Core {
             extern const QString tkn_q                 = QStringLiteral("q");
             extern const QString tkn_photo             = QStringLiteral("photo_200");
             extern const QString tkn_group_ids         = QStringLiteral("group_ids");
+            extern const QString tkn_domain            = QStringLiteral("domain");
 
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
@@ -124,15 +125,16 @@ namespace Core {
                 "    curr = groups.pop();"
                 "    proceed_groups.push({"
                 "        " % tkn_id % ": curr.id, "
-                "        " % tkn_title % ": curr.name"
-                // need to add permalink and photo fields
+                "        " % tkn_title % ": curr.name,"
+                "        " % tkn_screen_name % ": curr.screen_name,"
+                "        " % tkn_photo % ": curr." % tkn_photo % ""
                 "    });"
                 "};"
 
                 "var friends = API.friends.get({"
                 "            user_id: %1, "
                 "            order: \"name\", "
-                "            fields: \"nickname, " % val_user_fields % "\""
+                "            fields: \"" % tkn_domain % ", " % val_user_fields % "\""
                 "    });"
                 "var proceed_friends = [];"
                 "if (friends.count > 0) { "
@@ -141,7 +143,8 @@ namespace Core {
                 "        proceed_friends.push({ "
                 "            " % tkn_id % ": curr.id, "
                 "            " % tkn_title % ": curr.first_name %2b \" \" %2b curr.last_name, "
-                // need to add permalink and photo fields
+                "            " % tkn_screen_name % ": curr." % tkn_domain % ", "
+                "            " % tkn_photo % ": curr." % tkn_photo % ""
                 "        }); "
                 "    }; "
                 "};"

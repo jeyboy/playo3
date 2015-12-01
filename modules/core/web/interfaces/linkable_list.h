@@ -13,7 +13,7 @@ namespace Core {
             inline void clearLinkables() { linkables.clear(); }
 
             inline void addLinkable(const Linkable & obj) {
-                if (!obj.uid().isEmpty() && !obj.human_name().isEmpty())
+                if (!obj.uid().isEmpty() && !obj.humanName().isEmpty())
                     linkables.insert(obj.uid(), obj);
             }
         public:

@@ -5,8 +5,6 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#include "modules/core/web/utils/web_manager.h"
-
 #define LINKBLE_UID_KEY QStringLiteral("u")
 #define LINKBLE_NAME_KEY QStringLiteral("n")
 #define LINKBLE_PERMALINK_KEY QStringLiteral("p")
@@ -24,9 +22,9 @@ namespace Core {
                 : _uid(uid), _human_name(human_name), _permalink(permalink), _image_url(image_url) {}
 
             QString uid() const { return _uid; }
-            QString human_name() const { return _human_name; }
+            QString humanName() const { return _human_name; }
             QString permalink() const { return _permalink; }
-            QString image_url() const { return _image_url; }
+            QString imageUrl() const { return _image_url; }
 
             QString permaTitle() { return QStringLiteral(" aka %1").arg(_permalink.isEmpty() ? QStringLiteral("?") : _permalink); }
 
@@ -49,12 +47,6 @@ namespace Core {
                     json.value(LINKBLE_PERMALINK_KEY).toString(),
                     json.value(LINKBLE_IMAGE_KEY).toString()
                 );
-            }
-
-            QPixmap image() {
-                if (_image_url.isEmpty()) return QPixmap();
-
-                return Manager::prepare() -> getImage(QUrl(_image_url));
             }
         };
     }

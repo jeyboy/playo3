@@ -60,6 +60,7 @@ namespace Core {
             extern const QString tkn_q;
             extern const QString tkn_photo;
             extern const QString tkn_group_ids;
+            extern const QString tkn_domain;
 
 
             extern const QString url_redirect_uri;

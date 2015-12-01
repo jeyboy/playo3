@@ -47,7 +47,7 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     }
 
     //GET TITLE, DESCRIPTION AND ICON
-    QIcon ic = QIcon(qvariant_cast<QPixmap>(index.data(Qt::DecorationRole)));
+    QIcon ic = QIcon(qvariant_cast<QIcon>(index.data(Qt::DecorationRole)));
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
@@ -56,8 +56,10 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         //ICON
         r = option.rect.adjusted(5, 10, -10, -10);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
-        imageSpace = 55;
+        imageSpace = 45;
     }
+    // loading pict in setData() and repaint item
+//    else { index.model() -> setData(index, QVariant(), Qt::UserRole + 2); }
 
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);

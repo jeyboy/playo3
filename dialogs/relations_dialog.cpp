@@ -8,7 +8,9 @@ using namespace Web;
 
 void RelationsDialog::prepareLinkablesList(QHash<QString, Web::Linkable> linkables, QListWidget * list) {
     for(QHash<QString, Linkable>::Iterator linkable = linkables.begin(); linkable != linkables.end(); linkable++) {
-        QListWidgetItem * item = new QListWidgetItem(QIcon(linkable.value().image()), linkable.value().human_name(), list);
+        // icons stubed at this time
+        QListWidgetItem * item = new QListWidgetItem(QIcon(":main"), linkable.value().humanName(), list);
+        item -> setData(Qt::UserRole + 2, linkable.value().imageUrl());
         item -> setData(Qt::UserRole + 1, linkable.value().permaTitle());
         item -> setData(Qt::UserRole, linkable.value().uid());
         list -> addItem(item);
@@ -36,13 +38,13 @@ void RelationsDialog::on_cancelButton_clicked() { reject(); }
 
 void RelationsDialog::on_friendsList_itemActivated(QListWidgetItem * item) {
     Linkable linkable = api -> friendsList().value((uid = item -> data(Qt::UserRole).toString()));
-    name = linkable.human_name();
+    name = linkable.humanName();
     accept();
 }
 
 void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
     Linkable linkable = api -> friendsList().value((uid = item -> data(Qt::UserRole).toString()));
-    name = linkable.human_name();
+    name = linkable.humanName();
     uid = QStringLiteral("-") % uid;
     accept();
 }
