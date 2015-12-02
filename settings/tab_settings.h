@@ -11,6 +11,7 @@
 #define SETTINGS_TREE_IDENTATION_KEY QStringLiteral("tree_indentation")
 #define SETTINGS_ITEM_PRESENTATION_TYPE_KEY QStringLiteral("item_present_type")
 #define SETTINGS_FIND_VALID_KEY QStringLiteral("find_valid")
+#define SETTINGS_SHOW_NUMBER_KEY QStringLiteral("show_number")
 
 class TabSettings {
 public:
@@ -40,6 +41,9 @@ public:
 
     inline bool isFindValid() const { return _findValidOnFailure; }
     inline void setFindValid(bool find) { _findValidOnFailure = find; }
+
+    inline bool isShowNumber() const { return _showNumber; }
+    inline void setShowNumber(bool show) { _showNumber = show; }
 protected:
     int _treeIndentation;
     int _item_present_type;
@@ -50,6 +54,7 @@ protected:
     bool _spoilOnActivation;
     bool _alertOnFolderDeletion;
     bool _findValidOnFailure;
+    bool _showNumber;
 };
 
 #endif // TAB_SETTINGS

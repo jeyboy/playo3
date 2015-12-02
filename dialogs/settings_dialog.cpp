@@ -287,6 +287,8 @@ void SettingsDialog::initItemsSettings() {
 void SettingsDialog::initViewSettings() {
     ui -> showCheckboxes -> setChecked(Settings::obj().isCheckboxShow());
 
+    ui -> showNumber -> setChecked(Settings::obj().isShowNumber());
+
     ui -> alertOnDeletion -> setChecked(Settings::obj().isAlertOnFolderDeletion());
     ui -> spoilOnActivate -> setChecked(Settings::obj().isSpoilOnActivation());
 
@@ -396,6 +398,7 @@ void SettingsDialog::saveViewSettings() {
     Settings::obj().setAlertOnFolderDeletion(ui -> alertOnDeletion -> isChecked());
     Settings::obj().setSpoilOnActivation(ui -> spoilOnActivate -> isChecked());
     Settings::obj().setCheckboxShow(ui -> showCheckboxes -> isChecked());
+    Settings::obj().setShowNumber(ui -> showNumber -> isChecked());
 
     iconSizeChanged |= Settings::obj().itemHeight() != ui -> itemHeightSize -> value();
     Settings::obj().setShowInfo(ui -> showInfo -> isChecked());

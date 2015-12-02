@@ -5,7 +5,7 @@ using namespace Core::Web;
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
-    ico_mini(30), state_width(6) {
+    ico_mini(30), state_width(6), titleTemplate(QStringLiteral("(%1) %2")) {
 
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
@@ -263,7 +263,11 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     QPoint bottomMRight(right_offset, top - 2);
 
     QRect rectText2(topMLeft, bottomMRight);
-    QString s = fmf -> elidedText(attrs.value(Keys::name).toString(), Qt::ElideRight, rectText2.width());
+    QString s = attrs.value(Keys::name).toString();
+    if (Settings::obj().isShowNumber())
+        s = titleTemplate.arg(QString::number(index.row() + 1), s);
+
+    s = fmf -> elidedText(s, Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
 //    if (is_folder) {
@@ -439,7 +443,10 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QPoint bottomMRight(right_offset, top - 2);
 
     QRect rectText2(topMLeft, bottomMRight);
-    QString s = fmf -> elidedText(attrs.value(Keys::name).toString(), Qt::ElideRight, rectText2.width());
+    QString s = attrs.value(Keys::name).toString();
+    if (Settings::obj().isShowNumber())
+        s = titleTemplate.arg(QString::number(index.row() + 1), s);
+    s = fmf -> elidedText(s, Qt::ElideRight, rectText2.width());
     painter -> drawText(rectText2, Qt::AlignLeft | Qt::AlignVCenter, s);
 
 //    if (is_folder) {

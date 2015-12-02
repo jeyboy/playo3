@@ -14,6 +14,8 @@ void TabSettings::fromJson(const QJsonObject & settings) {
     _item_present_type = settings.value(SETTINGS_ITEM_PRESENTATION_TYPE_KEY).toInt(2);
 
     _findValidOnFailure = settings.value(SETTINGS_FIND_VALID_KEY).toBool(true);
+
+    _showNumber = settings.value(SETTINGS_SHOW_NUMBER_KEY).toBool(true);
 }
 
 void TabSettings::toJson(QJsonObject & settings) {
@@ -29,4 +31,6 @@ void TabSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_ITEM_PRESENTATION_TYPE_KEY, QJsonValue(_item_present_type));
 
     settings.insert(SETTINGS_FIND_VALID_KEY, QJsonValue(_findValidOnFailure));
+
+    settings.insert(SETTINGS_SHOW_NUMBER_KEY, QJsonValue(_showNumber));
 }
