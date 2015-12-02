@@ -9,7 +9,6 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     installEventFilter(parent);
 
-    setAttribute(Qt::WA_DeleteOnClose, closable);
     setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
     setTitleBarWidget((titleWidget = new WindowTitle(true, this, 26, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
     titleWidget -> addCustomButton(QStringLiteral("Rotate"), QPixmap(QStringLiteral(":/controls/rotate_off")), QPixmap(QStringLiteral(":/controls/rotate_on")), this, SLOT(rotate()));
@@ -17,6 +16,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
+    setAttribute(Qt::WA_DeleteOnClose, closable);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
