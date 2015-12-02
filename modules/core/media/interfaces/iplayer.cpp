@@ -1,6 +1,6 @@
 #include "iplayer.h"
 
-IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), startPos(0), volumeVal(VOLUME_MULTIPLIER), size(0), prebuffering_level(0), muted(false), looped(false), max_duration(0) {
+IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent), startPos(0), volumeVal(VOLUME_MULTIPLIER), panVal(0), size(0), prebuffering_level(0), muted(false), looped(false), max_duration(0) {
     qRegisterMetaType<PlayerState>("PlayerState");
     qRegisterMetaType<PlayerStatus>("PlayerStatus");
 

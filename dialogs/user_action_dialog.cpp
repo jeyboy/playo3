@@ -176,6 +176,7 @@ void UserActionDialog::insertButtons() {
 
     QPushButton * acceptButton = new QPushButton(QStringLiteral("Proceed"), layer);
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
+    acceptButton -> setDefault(true);
 
     insertPair(l, cancelButton, acceptButton);
     finalized = true;
