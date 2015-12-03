@@ -53,7 +53,7 @@ QString Stylesheets::appStyles() {
                 "QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
-            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle();
+            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % transparencyStyles();
 }
 
 QString Stylesheets::menuStyles() {
@@ -279,6 +279,18 @@ QString Stylesheets::listViewStyles() {
                 "   border-bottom-right-radius: 8px;"
                 "}"
               );
+}
+
+QString Stylesheets::transparencyStyles() {
+    return QStringLiteral(
+        "QWidget[transparent=\"true\"] {"
+        "   background-color: transparent;"
+        "}"
+
+        "QWidget[borderless=\"true\"] {"
+        "   border: none;"
+        "}"
+    );
 }
 
 QString Stylesheets::toolbarHighLightStyle() {

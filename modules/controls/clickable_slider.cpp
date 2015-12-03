@@ -3,7 +3,6 @@
 
 using namespace Controls;
 
-ClickableSlider::ClickableSlider(QWidget * parent)
-    : QSlider(parent) {
+ClickableSlider::ClickableSlider(QWidget * parent) : QSlider(parent) {
     setStyle(new SliderStyle());
 }

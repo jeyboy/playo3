@@ -14,7 +14,6 @@ ToolbarButton::ToolbarButton(const QString & text, const QString & folderPath, Q
 
     setProperty("custom", true);
     setText(text);
-//    setStyleSheet(Stylesheets::toolbarButtonStyle());
     setAcceptDrops(true);
     checkState();
     /*setDefaultDropAction(Qt::MoveAction);*/

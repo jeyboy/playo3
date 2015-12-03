@@ -75,7 +75,8 @@ EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging
 
     scrollArea = new QScrollArea(this);
     scrollArea -> setWidgetResizable(true);
-    scrollArea -> setStyleSheet("background-color: transparent; border: none;");
+    scrollArea -> setProperty("transparent", true);
+    scrollArea -> setProperty("borderless", true);
 
     presetTypeChanged();
 
@@ -161,7 +162,7 @@ void EqualizerView::removePreset() {
 
 void EqualizerView::presetTypeChanged() {
     QWidget * scroll_panel = new QWidget(this);
-    scroll_panel -> setStyleSheet("background-color: transparent;");
+    scroll_panel -> setProperty("transparent", true);
     QGridLayout * bottomLayout = new QGridLayout(scroll_panel);
     initBottomLayout(bottomLayout);
     scrollArea -> setWidget(scroll_panel);
