@@ -8,13 +8,16 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     setAcceptDrops(true);
     setObjectName(QStringLiteral("tool_") % title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
-//    setStyleSheet("#" + objectName() + "{ background-color: rgba(212, 212, 212, 92); }");
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
+    addTitleLabel(title);
+}
+
+void ToolBar::addTitleLabel(const QString & title) {
     QLabel * titleLabel = new QLabel(this);
-    titleLabel -> setStyleSheet(QStringLiteral("color: white;"));
+    titleLabel -> setProperty("colored_text", true);
     QFont f = titleLabel -> font();
     f.setBold(true);
     f.setPixelSize(10);
@@ -31,9 +34,6 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     titleLabel -> setAlignment(Qt::AlignCenter);
     titleLabel -> setContentsMargins(0,0,0,0);
     addWidget(titleLabel) -> setObjectName(QStringLiteral("*Title"));
-}
-
-ToolBar::~ToolBar() {
 }
 
 void ToolBar::dragEnterEvent(QDragEnterEvent * event) {

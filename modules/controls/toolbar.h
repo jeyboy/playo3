@@ -12,9 +12,9 @@ namespace Controls {
         Q_OBJECT
     public:
         ToolBar(const QString & title, QWidget * parent = 0);
-        ~ToolBar();
 
     protected:
+        void addTitleLabel(const QString & title);
         void dropEvent(QDropEvent * event);
         void dragEnterEvent(QDragEnterEvent * event);
         bool event(QEvent * ev) {

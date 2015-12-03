@@ -53,7 +53,7 @@ QString Stylesheets::appStyles() {
                 "QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
-            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % transparencyStyles();
+            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % tokenableStyles();
 }
 
 QString Stylesheets::menuStyles() {
@@ -281,7 +281,7 @@ QString Stylesheets::listViewStyles() {
               );
 }
 
-QString Stylesheets::transparencyStyles() {
+QString Stylesheets::tokenableStyles() {
     return QStringLiteral(
         "QWidget[transparent=\"true\"] {"
         "   background-color: transparent;"
@@ -289,6 +289,10 @@ QString Stylesheets::transparencyStyles() {
 
         "QWidget[borderless=\"true\"] {"
         "   border: none;"
+        "}"
+
+        "QWidget[colored_text=\"true\"] {"
+        "   color: white;" // need to change on predefined color
         "}"
     );
 }

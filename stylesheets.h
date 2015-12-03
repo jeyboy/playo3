@@ -24,7 +24,7 @@ public:
     static QString treeViewStyles();
     static QString listViewStyles();
 
-    static QString transparencyStyles();
+    static QString tokenableStyles();
 
     static QString scrollStyles();
 
