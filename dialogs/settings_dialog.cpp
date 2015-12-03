@@ -134,67 +134,67 @@ bool SettingsDialog::isIconSizeChanged() const {
 
 void SettingsDialog::on_defaultColorButton_clicked() {
     if (execColorDialog(defaultColor))
-        ui -> defaultColorButton -> setStyleSheet(QStringLiteral("background-color: ") % defaultColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> defaultColorButton, defaultColor);
 }
 
 void SettingsDialog::on_listenedColorButton_clicked() {
     if (execColorDialog(listenedColor))
-        ui -> listenedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % listenedColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> listenedColorButton, listenedColor);
 }
 
 void SettingsDialog::on_likedColorButton_clicked() {
     if (execColorDialog(likedColor))
-        ui -> likedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % likedColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> likedColorButton, likedColor);
 }
 
 void SettingsDialog::on_playedColorButton_clicked() {
     if (execColorDialog(playedColor))
-        ui -> playedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % playedColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> playedColorButton, playedColor);
 }
 
 void SettingsDialog::on_folderColorButton_clicked() {
     if (execColorDialog(folderColor))
-        ui -> folderColorButton -> setStyleSheet(QStringLiteral("background-color: ") % folderColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> folderColorButton, folderColor);
 }
 
 void SettingsDialog::on_itemColorButton_clicked() {
     if (execColorDialog(itemColor))
-        ui -> itemColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> itemColorButton, itemColor);
 }
 
 void SettingsDialog::on_defaultItemTextColorButton_clicked() {
     if (execColorDialog(itemTextColor))
-        ui -> defaultItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemTextColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> defaultItemTextColorButton, itemTextColor);
 }
 
 void SettingsDialog::on_selectedItemTextColorButton_clicked() {
     if (execColorDialog(selectedItemTextColor))
-        ui -> selectedItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemTextColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> selectedItemTextColorButton, selectedItemTextColor);
 }
 
 void SettingsDialog::on_defaultItemInfoTextColorButton_clicked() {
     if (execColorDialog(itemInfoTextColor))
-        ui -> defaultItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemInfoTextColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> defaultItemInfoTextColorButton, itemInfoTextColor);
 }
 
 void SettingsDialog::on_selectedItemInfoTextColorButton_clicked() {
     if (execColorDialog(selectedItemInfoTextColor))
-        ui -> selectedItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemInfoTextColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> selectedItemInfoTextColorButton, selectedItemInfoTextColor);
 }
 
 void SettingsDialog::on_spectrumColor_clicked() {
     if (execColorDialog(spectrumColor))
-        ui -> spectrumColor -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> spectrumColor, spectrumColor);
 }
 
 void SettingsDialog::on_spectrumColor2_clicked() {
     if (execColorDialog(spectrumColor2))
-        ui -> spectrumColor2 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor2.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> spectrumColor2, spectrumColor2);
 }
 
 void SettingsDialog::on_spectrumColor3_clicked() {
     if (execColorDialog(spectrumColor3))
-        ui -> spectrumColor3 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor3.name() % QStringLiteral(";"));
+        setBackgroundColor(ui -> spectrumColor3, spectrumColor3);
 }
 
 
@@ -252,35 +252,35 @@ void SettingsDialog::initItemsSettings() {
     ui -> itemInfoFontSelect -> setCurrentIndex(fontDatabase.families().indexOf(QRegExp(Settings::obj().itemInfoFontName())));
 
     defaultColor = Settings::obj().defaultItemColor();
-    ui -> defaultColorButton -> setStyleSheet(QStringLiteral("background-color: ") % defaultColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> defaultColorButton, defaultColor);
 
     listenedColor = Settings::obj().listenedItemColor();
-    ui -> listenedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % listenedColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> listenedColorButton, listenedColor);
 
     likedColor = Settings::obj().likedItemColor();
-    ui -> likedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % likedColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> likedColorButton, likedColor);
 
     playedColor = Settings::obj().playedItemColor();
-    ui -> playedColorButton -> setStyleSheet(QStringLiteral("background-color: ") % playedColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> playedColorButton, playedColor);
 
     folderColor = Settings::obj().folderItemColor();
-    ui -> folderColorButton -> setStyleSheet(QStringLiteral("background-color: ") % folderColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> folderColorButton, folderColor);
 
     itemColor = Settings::obj().itemColor();
-    ui -> itemColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> itemColorButton, itemColor);
 
 
     itemTextColor = Settings::obj().itemTextColor();
-    ui -> defaultItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemTextColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> defaultItemTextColorButton, itemTextColor);
 
     selectedItemTextColor = Settings::obj().selectedItemTextColor();
-    ui -> selectedItemTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemTextColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> selectedItemTextColorButton, selectedItemTextColor);
 
     itemInfoTextColor = Settings::obj().itemInfoTextColor();
-    ui -> defaultItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % itemInfoTextColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> defaultItemInfoTextColorButton, itemInfoTextColor);
 
     selectedItemInfoTextColor = Settings::obj().selectedItemInfoTextColor();
-    ui -> selectedItemInfoTextColorButton -> setStyleSheet(QStringLiteral("background-color: ") % selectedItemInfoTextColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> selectedItemInfoTextColorButton, selectedItemInfoTextColor);
 
     ui -> itemHeightSize -> setValue(Settings::obj().itemHeight());
 }
@@ -316,13 +316,13 @@ void SettingsDialog::initSpectrumSettings() {
     ui -> autoBarWidth -> setValue(Settings::obj().autoBarWidth());
 
     spectrumColor = Settings::obj().spectrumColor();
-    ui -> spectrumColor -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> spectrumColor, spectrumColor);
 
     spectrumColor2 = Settings::obj().spectrumColor2();
-    ui -> spectrumColor2 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor2.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> spectrumColor2, spectrumColor2);
 
     spectrumColor3 = Settings::obj().spectrumColor3();
-    ui -> spectrumColor3 -> setStyleSheet(QStringLiteral("background-color: ") % spectrumColor3.name() % QStringLiteral(";"));
+    setBackgroundColor(ui -> spectrumColor3, spectrumColor3);
 
     ui -> spectrumCustomColorUse -> setChecked(Settings::obj().isCustomColorSpectrum());
 

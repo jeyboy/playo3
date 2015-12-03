@@ -1,10 +1,10 @@
 #include "toolbarbutton.h"
-#include "stylesheets.h"
+//#include "stylesheets.h"
 
 using namespace Controls;
 using namespace Views;
 
-ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent) : QToolButton(parent) {
+ToolbarButton::ToolbarButton(const QString & text, const QString & folderPath, QWidget * parent) : QToolButton(parent) {
     path = folderPath;
 
     if (!path.endsWith('/'))
@@ -12,8 +12,9 @@ ToolbarButton::ToolbarButton(QString text, QString folderPath, QWidget * parent)
 
     QFile::setPermissions(path, QFile::WriteUser | QFile::ReadUser);
 
+    setProperty("custom", true);
     setText(text);
-    setStyleSheet(Stylesheets::toolbarButtonStyle());
+//    setStyleSheet(Stylesheets::toolbarButtonStyle());
     setAcceptDrops(true);
     checkState();
     /*setDefaultDropAction(Qt::MoveAction);*/

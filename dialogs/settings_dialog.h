@@ -69,6 +69,10 @@ namespace Dialogs {
         void on_autorunned_toggled(bool checked);
 
     protected:
+        void setBackgroundColor(QWidget * widget, const QColor & color) {
+            widget -> setStyleSheet(QStringLiteral("background-color: ") % color.name() % QStringLiteral(";"));
+        }
+
         void initGlobalSettings();
         void initItemsSettings();
         void initViewSettings();

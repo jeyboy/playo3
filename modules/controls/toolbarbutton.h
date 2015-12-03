@@ -13,7 +13,7 @@ namespace Controls {
     class ToolbarButton : public QToolButton {
         Q_OBJECT
     public:
-        ToolbarButton(QString text, QString folderPath, QWidget * parent = 0);
+        ToolbarButton(const QString & text, const QString & folderPath, QWidget * parent = 0);
         inline QString mainPath() const { return path; }
         void checkState();
         inline Qt::KeyboardModifiers keyboardModifiers() const { return keyModifiers; }

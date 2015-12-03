@@ -1,5 +1,5 @@
 #include "window.h"
-#include "stylesheets.h"
+//#include "stylesheets.h"
 #include "dockbar.h"
 
 using namespace Controls;
@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    setStyleSheet(Stylesheets::mainWindowTabsStyle());
+//    setStyleSheet(Stylesheets::mainWindowTabsStyle());
 
     titleWidget = new WindowTitle(
         false,

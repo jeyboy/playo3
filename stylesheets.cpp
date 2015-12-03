@@ -8,7 +8,7 @@ int Stylesheets::borderRadius = 12;
 int Stylesheets::stickDistance = 20;
 
 QString Stylesheets::appStyles() {
-    return QString(
+    return QStringLiteral(
                 "QToolTip {"
                 "   border: none;"
                 "   background-color: #444;"
@@ -53,11 +53,11 @@ QString Stylesheets::appStyles() {
                 "QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
-            );
+            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle();
 }
 
 QString Stylesheets::menuStyles() {
-    return QString(
+    return QStringLiteral(
 //                "QMenu {"
 //                  "border-radius: 8px;"
 //                "}"
@@ -65,7 +65,7 @@ QString Stylesheets::menuStyles() {
 }
 
 QString Stylesheets::sliderStyles() {
-    return QString(
+    return QStringLiteral(
                 "QSlider:horizontal { margin: 0 4px; }"
 
                 "QSlider:vertical { margin: 4px 0; }"
@@ -152,7 +152,7 @@ QString Stylesheets::sliderStyles() {
 }
 
 QString Stylesheets::scrollStyles() {
-    return QString(
+    return QStringLiteral(
         "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
         "    border: 1px solid grey;"
         "    background: #333;"
@@ -282,15 +282,15 @@ QString Stylesheets::listViewStyles() {
 }
 
 QString Stylesheets::toolbarHighLightStyle() {
-    return QString("QToolBar { border: 2px dotted #00FFFF; }");
+    return QStringLiteral("QToolBar { border: 2px dotted #00FFFF; }");
 }
 
 QString Stylesheets::toolbarFixedStyle() {
-    return QString("QToolBar { border: none; }");
+    return QStringLiteral("QToolBar { border: none; }");
 }
 
 QString Stylesheets::toolbarFloatStyle() {
-    return QString(
+    return QStringLiteral(
                 "QToolBar {"
                 "   background-color: rgba(0, 0, 0, 48);"
                 "   border-radius: 8px;"
@@ -300,7 +300,7 @@ QString Stylesheets::toolbarFloatStyle() {
 }
 
 QString Stylesheets::toolbarMovableStyle() {
-    return QString(
+    return QStringLiteral(
                 "QToolBar {"
                 "   border-radius: 8px;"
                 "   border: 1px ridge #888;"
@@ -309,8 +309,8 @@ QString Stylesheets::toolbarMovableStyle() {
 }
 
 QString Stylesheets::toolbarButtonStyle() {
-    return QString(
-                "QToolButton {"
+    return QStringLiteral(
+                "QToolButton[custom=\"true\"] {"
                     "border: 1px solid #444;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #FFF, stop:0.8 #E7DA1E, stop:1 #F7E488);"
 // "background: qradialgradient(cx:0.5, cy:0.5, radius: 1, fx:0.2, fy:0.2, stop:0 #FFFFFF, stop:0.5 #B3AF76, stop:1 #F7E488);"
@@ -320,12 +320,12 @@ QString Stylesheets::toolbarButtonStyle() {
                     "min-width: 24px;"
                     "margin: 0 2px;"
                 "}"
-                "QToolButton:hover {"
+                "QToolButton[custom=\"true\"]:hover {"
                     "color: #FFF;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:0.8 #AAA, stop:1 #666);"
                 "}"
 
-                "QToolButton[error=\"true\"] {"
+                "QToolButton[custom=\"true\"][error=\"true\"] {"
                     "color: #FFF;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #000, stop:1 #AA0000);"
                 "}"
@@ -333,14 +333,10 @@ QString Stylesheets::toolbarButtonStyle() {
 }
 
 QString Stylesheets::mainWindowTabsStyle() {
-    return QString(
+    return QStringLiteral(
                 "QMainWindow::separator:hover {"
                 "    background: #ff0000;"
                 "}"
-
-////                "QMainWindow::separator {"
-////                "   background: red;"
-////                "}"
 
                 "QTabBar::scroller {" /* the width of the scroll buttons */
                 "    width: 20px;"
@@ -397,7 +393,7 @@ void Stylesheets::initPens() {
     resizePen.setColor(colorResize());
 }
 
-void Stylesheets::calcBorderRect(QRect origin, QRect & res) {
+void Stylesheets::calcBorderRect(const QRect & origin, QRect & res) {
     res.setRect(
         origin.x() + borderWidth / 4,
         origin.y() + borderWidth / 4,

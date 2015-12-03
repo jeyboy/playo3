@@ -3,6 +3,7 @@
 
 #include <qcolor.h>
 #include <qpen.h>
+#include <qstringbuilder.h>
 
 class Stylesheets {
 public:
@@ -41,7 +42,7 @@ public:
     static void initPens();
 
     //calc border for custom window
-    static void calcBorderRect(QRect origin, QRect & res);
+    static void calcBorderRect(const QRect & origin, QRect & res);
 
     static QPen resizePen;
     static QPen pen;
