@@ -106,15 +106,24 @@ void DockBar::closeEvent(QCloseEvent * e) {
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {
-    QPainter painter(this);
-    painter.save();
+    switch(QApplication::instance() -> property("colors").toInt()) {
+        case Stylesheets::light:
+        case Stylesheets::dark: {
+            QPainter painter(this);
+            painter.save();
 
-    painter.setBrush(brush);
-    painter.setPen(Stylesheets::foregroundPen);
-    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            painter.setBrush(brush);
+            painter.setPen(Stylesheets::foregroundPen);
+            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
 
-    painter.restore();
-    event -> accept();
+            painter.restore();
+            event -> accept();
+        break; }
+
+        default: {}
+    }
+
+    QDockWidget::paintEvent(event);
 }
 
 void DockBar::setTabBarSettings() {

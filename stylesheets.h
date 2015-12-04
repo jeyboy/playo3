@@ -9,13 +9,18 @@
 
 class Stylesheets {
 public:
+    enum StyleType {
+        usuall = 0,
+        light,
+        dark
+    };
+
     // background colors
     static inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 
     static inline QColor color1() { return QColor::fromRgb(175, 184, 195, 212); }
     static inline QColor color2() { return QColor::fromRgb(150, 164, 176, 212); }
     static inline QColor color3() { return QColor::fromRgb(130, 140, 149, 212); }
-//    static inline QColor color3() { return QColor::fromRgb(40, 52, 59, 212); }
 
     static void applyProperty(QWidget * widget, const char * propertyName, const QVariant & val) {
         widget -> setProperty(propertyName, val);

@@ -1,6 +1,7 @@
 #include "playo.h"
 #include "single_application.h"
 #include "modules/core/misc/logger.h"
+#include "stylesheets.h"
 
 #include <qapplication.h>
 
@@ -35,6 +36,8 @@ int main(int argc, char * argv[]) {
     }
 
     Logger::obj().initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
+    QApplication::instance() -> setProperty("colors", Stylesheets::light);
+    a.setStyleSheet(Stylesheets::appStyles());
 
     Playo w;
 

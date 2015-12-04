@@ -275,12 +275,36 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-    QPainter painter(this);
+    switch(QApplication::instance() -> property("colors").toInt()) {
+        case Stylesheets::light: {
+            bool isResizing = (resizeFlagX || resizeFlagY);
+            QPainter painter(this);
+            painter.save();
 
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    painter.drawPixmap(backRect, *background);
+            painter.setBrush(brush);
+            if (!isResizing) {
+                painter.setPen(Stylesheets::pen);
+                painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            }
+
+            painter.setPen(isResizing ? Stylesheets::resizePen : Stylesheets::bevelPen);
+            painter.drawPixmap(backRect, *background);
+            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            painter.restore();
+        break; }
+
+        case Stylesheets::dark: {
+            QPainter painter(this);
+            painter.save();
+            painter.setBrush(brush);
+            painter.setPen(Qt::NoPen);
+            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            painter.drawPixmap(backRect, *background);
+            painter.restore();
+        break; }
+
+        default: {}
+    }
 
     QMainWindow::paintEvent(event);
 }

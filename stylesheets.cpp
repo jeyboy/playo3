@@ -1,3 +1,5 @@
+#include <qapplication.h>
+
 #include "stylesheets.h"
 
 QPen Stylesheets::resizePen = QPen();
@@ -9,17 +11,15 @@ int Stylesheets::borderRadius = 12;
 int Stylesheets::stickDistance = 20;
 
 QString Stylesheets::appStyles() {
-    return QStringLiteral(
-                "QLabel, QCheckBox { color: #EEEEEE; } "
-
-                "QDockBar { border: 1px ridge #888; }"
+    return QString(
+                "[colors=\"" % QString::number(dark) % "\"] QLabel, QCheckBox { color: #EEEEEE; } "
 
                 "QLabel[timer=\"true\"] {"
                 "   font-weight: bold;"
                 "   font-size: 12px;"
                 "}"
 
-                "QToolTip {"
+                "[colors] QToolTip {"
                 "   border: none;"
                 "   background-color: #444;"
                 "   color: #ddd; "
@@ -27,40 +27,40 @@ QString Stylesheets::appStyles() {
 //                "   opacity: 300; "
                 "}"
 
-                "QCheckBox::indicator {"
+                "[colors] QCheckBox::indicator {"
                 "   width: 14px;"
                 "   height: 14px;"
                 "}"
 
-                "QCheckBox::indicator:unchecked {"
+                "[colors] QCheckBox::indicator:unchecked {"
                 "   image: url(:/controls/check_blank);"
                 "}"
 
-                "QCheckBox::indicator:unchecked:hover {"
+                "[colors] QCheckBox::indicator:unchecked:hover {"
                 "   image: url(:/controls/check_blank);"
                 "}"
 
-                "QCheckBox::indicator:unchecked:disabled {"
+                "[colors] QCheckBox::indicator:unchecked:disabled {"
                 "   image: url(:/controls/check_blank_disabled);"
                 "}"
 
-                "QCheckBox::indicator:unchecked:pressed {"
+                "[colors] QCheckBox::indicator:unchecked:pressed {"
                 "   image: url(:/controls/check_blank);"
                 "}"
 
-                "QCheckBox::indicator:checked {"
+                "[colors] QCheckBox::indicator:checked {"
                 "   image: url(:/controls/check_fill);"
                 "}"
 
-                "QCheckBox::indicator:checked:hover {"
+                "[colors] QCheckBox::indicator:checked:hover {"
                 "   image: url(:/controls/check_tristate);"
                 "}"
 
-                "QCheckBox::indicator:checked:disabled {"
+                "[colors] QCheckBox::indicator:checked:disabled {"
                 "   image: url(:/controls/check_fill_disabled);"
                 "}"
 
-                "QCheckBox::indicator:checked:pressed {"
+                "[colors] QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
             ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() %
@@ -164,70 +164,70 @@ QString Stylesheets::sliderStyles() {
 
 QString Stylesheets::scrollStyles() {
     return QStringLiteral(
-        "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
+        "[colors] QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
         "    border: 1px solid grey;"
         "    background: #333;"
         "}"
 
-        "QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
+        "[colors] QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
         "    background: #2EA5EA;"
         "}"
 
-        "QScrollBar:horizontal  {"
+        "[colors] QScrollBar:horizontal  {"
         "    height: 16px;"
         "    margin: 0px 22px;"
         "}"
-        "QScrollBar::handle:horizontal  {"
+        "[colors] QScrollBar::handle:horizontal  {"
         "    background: white;"
         "    min-width: 16px;"
         "    border-radius: 4px;"
         "}"
-        "QScrollBar::add-line:horizontal  {"
+        "[colors] QScrollBar::add-line:horizontal  {"
         "    width: 20px;"
         "    subcontrol-position: right;"
         "    subcontrol-origin: margin;"
         "    border-bottom-right-radius: 8px;"
         "}"
 
-        "QScrollBar::sub-line:horizontal  {"
+        "[colors] QScrollBar::sub-line:horizontal  {"
         "    width: 20px;"
         "    subcontrol-position: left;"
         "    subcontrol-origin: margin;"
         "    border-bottom-left-radius: 8px;"
         "}"
 
-        "QScrollBar:left-arrow:horizontal  {"
+        "[colors] QScrollBar:left-arrow:horizontal  {"
         "    background: url(:/controls/scroll_left) no-repeat center center;"
         "}"
 
-        "QScrollBar::right-arrow:horizontal  {"
+        "[colors] QScrollBar::right-arrow:horizontal  {"
         "    background: url(:/controls/scroll_right) no-repeat center center;"
         "}"
 
-        "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
+        "[colors] QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
         "    background: none;"
         "}"
 
 //// vertical
 
-        "QScrollBar:vertical  {"
+        "[colors] QScrollBar:vertical  {"
         "    width: 16px;"
         "    margin: 22px 0;"
         "}"
-        "QScrollBar::handle:vertical  {"
+        "[colors] QScrollBar::handle:vertical  {"
         "    background: white;"
         "    min-height: 16px;"
         "    border-radius: 4px;"
         "}"
 
-        "QScrollBar::add-line:vertical  {"
+        "[colors] QScrollBar::add-line:vertical  {"
         "    height: 20px;"
         "    subcontrol-position: bottom;"
         "    subcontrol-origin: margin;"
         "    border-bottom-right-radius: 8px;"
         "}"
 
-        "QScrollBar::sub-line:vertical  {"
+        "[colors] QScrollBar::sub-line:vertical  {"
         "    height: 20px;"
         "    subcontrol-position: top;"
         "    subcontrol-origin: margin;"
@@ -235,15 +235,15 @@ QString Stylesheets::scrollStyles() {
         "    border-top-right-radius: 8px;"
         "}"
 
-        "QScrollBar::up-arrow:vertical  {"
+        "[colors] QScrollBar::up-arrow:vertical  {"
         "    background: url(:/controls/scroll_top) no-repeat center center;"
         "}"
 
-        "QScrollBar::down-arrow:vertical  {"
+        "[colors] QScrollBar::down-arrow:vertical  {"
         "    background: url(:/controls/scroll_bottom) no-repeat center center;"
         "}"
 
-        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
+        "[colors] QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
         "    background: none;"
         "}"
     );
@@ -251,60 +251,64 @@ QString Stylesheets::scrollStyles() {
 
 QString Stylesheets::treeViewStyles() {
     return QString(
-                "QTreeView {"
-                  "   background-color: transparent;"
-//                "   background-color: " + color2().name(QColor::HexArgb) + ";"
-                  "   border-radius: 8px;"
-                "}"
+        "[colors] QTreeView {"
+        "   background-color: " + color2().name(QColor::HexArgb) + ";"
+        "   border-radius: 8px;"
+        "}"
 
-                "QTreeView::branch:has-children:!has-siblings:closed,"
-                "QTreeView::branch:closed:has-children:has-siblings {"
-                "   border-image: none;"
-                "   image: url(:/controls/tree_closed);"
-                "}"
+        "[colors=\"" % QString::number(dark) % "\"] QTreeView {"
+        "   background-color: transparent;"
+        "}"
 
-                "QTreeView::branch:open:has-children:!has-siblings,"
-                "QTreeView::branch:open:has-children:has-siblings  {"
-                "   border-image: none;"
-                "   image: url(:/controls/tree_opened);"
-                "}"
+        "QTreeView::branch:has-children:!has-siblings:closed,"
+        "QTreeView::branch:closed:has-children:has-siblings {"
+        "   border-image: none;"
+        "   image: url(:/controls/tree_closed);"
+        "}"
 
-               "QTreeView::branch:has-children:!has-siblings:closed:hover,"
-               "QTreeView::branch:closed:has-children:has-siblings:hover {"
-               "   border-image: none;"
-               "   image: url(:/controls/tree_closed_hover);"
-               "}"
+        "QTreeView::branch:open:has-children:!has-siblings,"
+        "QTreeView::branch:open:has-children:has-siblings  {"
+        "   border-image: none;"
+        "   image: url(:/controls/tree_opened);"
+        "}"
 
-               "QTreeView::branch:open:has-children:!has-siblings:hover,"
-               "QTreeView::branch:open:has-children:has-siblings:hover  {"
-               "   border-image: none;"
-               "   image: url(:/controls/tree_opened_hover);"
-               "}"
-              ) + scrollStyles();
+       "QTreeView::branch:has-children:!has-siblings:closed:hover,"
+       "QTreeView::branch:closed:has-children:has-siblings:hover {"
+       "   border-image: none;"
+       "   image: url(:/controls/tree_closed_hover);"
+       "}"
+
+       "QTreeView::branch:open:has-children:!has-siblings:hover,"
+       "QTreeView::branch:open:has-children:has-siblings:hover  {"
+       "   border-image: none;"
+       "   image: url(:/controls/tree_opened_hover);"
+       "}"
+    ) + scrollStyles();
 }
 
 QString Stylesheets::listViewStyles() {
     return QString(
-                "QListView {"
-//                "   background-color: " + color2().name(QColor::HexArgb) + ";"
-                    "   border-bottom-left-radius: 8px;"
-                    "   border-bottom-right-radius: 8px;"
-                    "   background-color: transparent;"
-                "}"
-              );
+        "[colors] QListView {"
+        "   background-color: " + color2().name(QColor::HexArgb) + ";"
+        "}"
+
+        "[colors=\"" % QString::number(dark) % "\"] QListView {"
+        "   background-color: transparent;"
+        "}"
+    );
 }
 
 QString Stylesheets::tokenableStyles() {
     return QStringLiteral(
-        "QWidget[transparent=\"true\"] {"
+        "[colors] QWidget[transparent=\"true\"] {"
         "   background-color: transparent;"
         "}"
 
-        "QWidget[borderless=\"true\"] {"
+        "[colors] QWidget[borderless=\"true\"] {"
         "   border: none;"
         "}"
 
-        "QWidget[colored_text=\"true\"] {"
+        "[colors] QWidget[colored_text=\"true\"] {"
         "   color: white;" // need to change on predefined color
         "}"
     );
@@ -312,17 +316,17 @@ QString Stylesheets::tokenableStyles() {
 
 QString Stylesheets::toolbarStyles() {
     return QStringLiteral(
-        "QToolBar[state=\"fixed\"] { border: none; }"
+        "[colors] QToolBar[state=\"fixed\"] { border: none; }"
 
         "QToolBar[state=\"lighted\"] { border: 2px dotted #00FFFF; }"
 
-        "QToolBar[state=\"float\"] {"
+        "[colors] QToolBar[state=\"float\"] {"
         "   background-color: rgba(0, 0, 0, 48);"
         "   border-radius: 8px;"
         "   border: 1px ridge #888;"
         "}"
 
-        "QToolBar[state=\"movable\"] {"
+        "[colors] QToolBar[state=\"movable\"] {"
         "   border-radius: 8px;"
         "   border: 1px ridge #888;"
         "}"
@@ -400,64 +404,84 @@ QString Stylesheets::downloadProgressStyles() {
 //        "   border-color: qradialgradient(cx:0, cy:0, radius: 1,fx:0.5, fy:0.5, stop:0 white, stop:1 green);"
 //        "}"
 
-        "QProgressBar[download] {"
+        "[colors] QProgressBar[download] {"
         "   border: 2px solid grey;"
         "   border-radius: 4px;"
         "   text-align: center;"
         "}"
 
-        "QProgressBar[download=\"selected\"] {"
+        "[colors] QProgressBar[download=\"selected\"] {"
         "   background-color: #999999;"
         "}"
 
-        "QProgressBar::chunk[download] {"
+        "[colors] QProgressBar::chunk[download] {"
         "   background-color: #05B8CC;"
         /*width: 10px;  margin: 0.5px; border-radius: 6px;*/
         "}"
 
-        "QProgressBar::chunk[download=\"selected\"] {"
+        "[colors] QProgressBar::chunk[download=\"selected\"] {"
         "   background-color: #87CEFA;"
         "}"
     );
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {
-//    brush.setColorAt(0,     color1());
-//    brush.setColorAt(.36,   color2());
-//    brush.setColorAt(1,     color3());
+    switch(QApplication::instance() -> property("colors").toInt()) {
+        case Stylesheets::light: {
+            brush.setColorAt(0,     color1());
+            brush.setColorAt(.36,   color2());
+            brush.setColorAt(1,     color3());
+        break; }
 
-//    brush.setColorAt(0,    QColor(124, 124, 124));
-//    brush.setColorAt(.019,   QColor(80, 80, 80));
-//    brush.setColorAt(.02,  QColor(66, 66, 66));
-//    brush.setColorAt(.2,   QColor(88, 88, 88));
-//    brush.setColorAt(.4,   QColor(55, 55, 55));
-//    brush.setColorAt(.979,  QColor(55, 55, 55));
-//    brush.setColorAt(.98,   QColor(80, 80, 80));
-//    brush.setColorAt(1,    QColor(124, 124, 124));
+        case Stylesheets::dark: {
+            //    brush.setColorAt(0,    QColor(124, 124, 124));
+            //    brush.setColorAt(.019,   QColor(80, 80, 80));
+            //    brush.setColorAt(.02,  QColor(66, 66, 66));
+            //    brush.setColorAt(.2,   QColor(88, 88, 88));
+            //    brush.setColorAt(.4,   QColor(55, 55, 55));
+            //    brush.setColorAt(.979,  QColor(55, 55, 55));
+            //    brush.setColorAt(.98,   QColor(80, 80, 80));
+            //    brush.setColorAt(1,    QColor(124, 124, 124));
 
 
-//    brush.setColorAt(0,    QColor(168, 168, 168));
-//    brush.setColorAt(.019,   QColor(124, 124, 124));
-//    brush.setColorAt(.02,  QColor(100, 100, 100));
-//    brush.setColorAt(.2,   QColor(132, 132, 132));
-//    brush.setColorAt(.4,   QColor(86, 86, 86));
-//    brush.setColorAt(.979,  QColor(86, 86, 86));
-//    brush.setColorAt(.98,   QColor(124, 124, 124));
-//    brush.setColorAt(1,    QColor(168, 168, 168));
+            //    brush.setColorAt(0,    QColor(168, 168, 168));
+            //    brush.setColorAt(.019,   QColor(124, 124, 124));
+            //    brush.setColorAt(.02,  QColor(100, 100, 100));
+            //    brush.setColorAt(.2,   QColor(132, 132, 132));
+            //    brush.setColorAt(.4,   QColor(86, 86, 86));
+            //    brush.setColorAt(.979,  QColor(86, 86, 86));
+            //    brush.setColorAt(.98,   QColor(124, 124, 124));
+            //    brush.setColorAt(1,    QColor(168, 168, 168));
 
-    brush.setColorAt(0,    QColor(168, 168, 168));
-    brush.setColorAt(.019,   QColor(124, 124, 124));
-    brush.setColorAt(.02,  QColor(100, 100, 100));
-    brush.setColorAt(.5,   QColor(148, 148, 148));
-    brush.setColorAt(.979,  QColor(100, 100, 100));
-    brush.setColorAt(.98,   QColor(124, 124, 124));
-    brush.setColorAt(1,    QColor(168, 168, 168));
+            brush.setColorAt(0,    QColor(168, 168, 168));
+            brush.setColorAt(.019,   QColor(124, 124, 124));
+            brush.setColorAt(.02,  QColor(100, 100, 100));
+            brush.setColorAt(.5,   QColor(148, 148, 148));
+            brush.setColorAt(.979,  QColor(100, 100, 100));
+            brush.setColorAt(.98,   QColor(124, 124, 124));
+            brush.setColorAt(1,    QColor(168, 168, 168));
+        break; }
+
+        default: {}
+    }
 }
 
 void Stylesheets::initInnerBrush(QLinearGradient & brush) {
-    brush.setColorAt(0,  QColor(100, 100, 100));
-    brush.setColorAt(.5,   QColor(148, 148, 148));
-    brush.setColorAt(1,  QColor(100, 100, 100));
+    switch(QApplication::instance() -> property("colors").toInt()) {
+        case Stylesheets::light: {
+            brush.setColorAt(0,     color1());
+            brush.setColorAt(.36,   color2());
+            brush.setColorAt(1,     color3());
+        break; }
+
+        case Stylesheets::dark: {
+            brush.setColorAt(0,  QColor(100, 100, 100));
+            brush.setColorAt(.5,   QColor(148, 148, 148));
+            brush.setColorAt(1,  QColor(100, 100, 100));
+        break; }
+
+        default: {}
+    }
 }
 
 void Stylesheets::initPens() {
@@ -477,8 +501,8 @@ void Stylesheets::initPens() {
     resizePen.setWidth(2);
     resizePen.setColor(colorResize());
 
-    foregroundPen.setColor(QColor::fromRgb(255, 255, 255));
-    foregroundPen.setWidth(2);
+    foregroundPen.setColor(QColor::fromRgb(192, 192, 192));
+    foregroundPen.setWidth(1);
     foregroundPen.setCosmetic(true);
 }
 
