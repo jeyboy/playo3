@@ -3,12 +3,17 @@
 QPen Stylesheets::resizePen = QPen();
 QPen Stylesheets::pen = QPen();
 QPen Stylesheets::bevelPen = QPen();
+QPen Stylesheets::foregroundPen = QPen();
 int Stylesheets::borderWidth = 6;
 int Stylesheets::borderRadius = 12;
 int Stylesheets::stickDistance = 20;
 
 QString Stylesheets::appStyles() {
     return QStringLiteral(
+                "QLabel, QCheckBox { color: #EEEEEE; } "
+
+                "QDockBar { border: 1px ridge #888; }"
+
                 "QLabel[timer=\"true\"] {"
                 "   font-weight: bold;"
                 "   font-size: 12px;"
@@ -421,14 +426,38 @@ void Stylesheets::initBrush(QLinearGradient & brush) {
 //    brush.setColorAt(.36,   color2());
 //    brush.setColorAt(1,     color3());
 
-    brush.setColorAt(0,    QColor(124, 124, 124));
-    brush.setColorAt(.019,   QColor(80, 80, 80));
-    brush.setColorAt(.02,  QColor(66, 66, 66));
-    brush.setColorAt(.2,   QColor(88, 88, 88));
-    brush.setColorAt(.4,   QColor(55, 55, 55));
-    brush.setColorAt(.979,  QColor(55, 55, 55));
-    brush.setColorAt(.98,   QColor(80, 80, 80));
-    brush.setColorAt(1,    QColor(124, 124, 124));
+//    brush.setColorAt(0,    QColor(124, 124, 124));
+//    brush.setColorAt(.019,   QColor(80, 80, 80));
+//    brush.setColorAt(.02,  QColor(66, 66, 66));
+//    brush.setColorAt(.2,   QColor(88, 88, 88));
+//    brush.setColorAt(.4,   QColor(55, 55, 55));
+//    brush.setColorAt(.979,  QColor(55, 55, 55));
+//    brush.setColorAt(.98,   QColor(80, 80, 80));
+//    brush.setColorAt(1,    QColor(124, 124, 124));
+
+
+//    brush.setColorAt(0,    QColor(168, 168, 168));
+//    brush.setColorAt(.019,   QColor(124, 124, 124));
+//    brush.setColorAt(.02,  QColor(100, 100, 100));
+//    brush.setColorAt(.2,   QColor(132, 132, 132));
+//    brush.setColorAt(.4,   QColor(86, 86, 86));
+//    brush.setColorAt(.979,  QColor(86, 86, 86));
+//    brush.setColorAt(.98,   QColor(124, 124, 124));
+//    brush.setColorAt(1,    QColor(168, 168, 168));
+
+    brush.setColorAt(0,    QColor(168, 168, 168));
+    brush.setColorAt(.019,   QColor(124, 124, 124));
+    brush.setColorAt(.02,  QColor(100, 100, 100));
+    brush.setColorAt(.5,   QColor(148, 148, 148));
+    brush.setColorAt(.979,  QColor(100, 100, 100));
+    brush.setColorAt(.98,   QColor(124, 124, 124));
+    brush.setColorAt(1,    QColor(168, 168, 168));
+}
+
+void Stylesheets::initInnerBrush(QLinearGradient & brush) {
+    brush.setColorAt(0,  QColor(100, 100, 100));
+    brush.setColorAt(.5,   QColor(148, 148, 148));
+    brush.setColorAt(1,  QColor(100, 100, 100));
 }
 
 void Stylesheets::initPens() {
@@ -437,16 +466,20 @@ void Stylesheets::initPens() {
 
     pen.setColor(QColor::fromRgb(255, 255, 255));
     pen.setWidth(borderWidth / 2);
-//    pen.setCosmetic(true);
+    pen.setCosmetic(true);
 
     bevelPen.setColor(QColor::fromRgb(23, 23, 23));
     bevelPen.setWidth(borderWidth / 2);
-//    bevelPen.setCosmetic(true);
+    bevelPen.setCosmetic(true);
     bevelPen.setStyle(Qt::DashLine);
     bevelPen.setDashPattern(penPattern);
 
     resizePen.setWidth(2);
     resizePen.setColor(colorResize());
+
+    foregroundPen.setColor(QColor::fromRgb(255, 255, 255));
+    foregroundPen.setWidth(2);
+    foregroundPen.setCosmetic(true);
 }
 
 void Stylesheets::calcBorderRect(const QRect & origin, QRect & res) {

@@ -39,7 +39,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
 
     QMap<float, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
-        QLabel * dbLabel = new QLabel("0");
+        QLabel * dbLabel = new QLabel(QStringLiteral("0") % DB_STR);
         dbLabel -> setAlignment(Qt::AlignCenter);
         layout -> addWidget(dbLabel, 0, num, Qt::AlignCenter);
         dbOutput << dbLabel;
@@ -48,6 +48,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
         slider -> setOrientation(Qt::Vertical);
         slider -> setMinimum(EQ_MIN_INTERVAL); slider -> setMaximum(EQ_MAX_INTERVAL);
         slider -> setProperty("num", num);
+        slider -> setMinimumWidth(30);
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(eqValueChanged(int)));
         layout -> addWidget(slider, 1, num, Qt::AlignCenter);
 
@@ -185,7 +186,7 @@ void EqualizerView::eqValueChanged(int val) {
     int pos = slider -> property("num").toInt();
     PlayerFactory::obj().currPlayer() -> eqBand(pos, val / EQ_BASE);
 
-    dbOutput[pos] -> setText(QString::number(val / EQ_BASE, 'g', 2) % QStringLiteral(" dB"));
+    dbOutput[pos] -> setText(QString::number(val / EQ_BASE, 'g', 2) % DB_STR);
 
     if (presetChanging) return;
 

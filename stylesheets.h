@@ -48,6 +48,8 @@ public:
     //background brush
     static void initBrush(QLinearGradient & brush);
 
+    static void initInnerBrush(QLinearGradient & brush);
+
     //border pens
     static void initPens();
 
@@ -56,6 +58,7 @@ public:
 
     static QPen resizePen;
     static QPen pen;
+    static QPen foregroundPen;
     static QPen bevelPen;
     static int borderWidth;
     static int borderRadius;

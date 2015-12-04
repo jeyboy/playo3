@@ -20,7 +20,7 @@
 #define EQ_MIN_INTERVAL -150
 #define EQ_MAX_INTERVAL 150
 #define EQ_BASE 10.0
-
+#define DB_STR QStringLiteral(" dB")
 
 namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")

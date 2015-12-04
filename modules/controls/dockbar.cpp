@@ -20,7 +20,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    Stylesheets::initBrush(brush);
+    Stylesheets::initInnerBrush(brush);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
@@ -110,7 +110,7 @@ void DockBar::paintEvent(QPaintEvent * event) {
     painter.save();
 
     painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
+    painter.setPen(Stylesheets::foregroundPen);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
 
     painter.restore();
