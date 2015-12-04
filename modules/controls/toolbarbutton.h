@@ -15,8 +15,9 @@ namespace Controls {
     public:
         ToolbarButton(const QString & text, const QString & folderPath, QWidget * parent = 0);
         inline QString mainPath() const { return path; }
-        void checkState();
         inline Qt::KeyboardModifiers keyboardModifiers() const { return keyModifiers; }
+    protected slots:
+        void checkState();
     protected:
         inline void enterEvent(QEvent *) { checkState(); }
         inline void mousePressEvent(QMouseEvent * event) {

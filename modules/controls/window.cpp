@@ -92,7 +92,7 @@ void MainWindow::resizeEvent(QResizeEvent * event) {
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
     brush.setStart(rect().topLeft());
-    brush.setFinalStop(rect().bottomRight());
+    brush.setFinalStop(rect().topRight());
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
@@ -275,20 +275,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-//    setUpdatesEnabled(false)
-
-    bool isResizing = (resizeFlagX || resizeFlagY);
     QPainter painter(this);
 
     painter.setBrush(brush);
-    if (!isResizing) {
-        painter.setPen(Stylesheets::pen);
-        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    }
-
-    painter.setPen(isResizing ? Stylesheets::resizePen : Stylesheets::bevelPen);
-    painter.drawPixmap(backRect, *background);
+    painter.setPen(Qt::NoPen);
     painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+    painter.drawPixmap(backRect, *background);
 
     QMainWindow::paintEvent(event);
 }

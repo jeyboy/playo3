@@ -96,7 +96,7 @@ void DockBar::resizeEvent(QResizeEvent * event) {
     QDockWidget::resizeEvent(event);
 
     brush.setStart(rect().topLeft());
-    brush.setFinalStop(rect().bottomRight());
+    brush.setFinalStop(rect().topRight());
 }
 
 void DockBar::closeEvent(QCloseEvent * e) {
@@ -109,20 +109,9 @@ void DockBar::paintEvent(QPaintEvent * event) {
     QPainter painter(this);
     painter.save();
 
-    if (isFloating()) {
-        painter.setBrush(brush);
-        painter.setPen(Stylesheets::pen);
-        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-        painter.setPen(Stylesheets::bevelPen);
-        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    }
-    else {
-        QPen pen(Qt::lightGray);
-        pen.setCosmetic(true);
-        pen.setWidth(2);
-        painter.setPen(pen);
-        painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
-    }
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
 
     painter.restore();
     event -> accept();

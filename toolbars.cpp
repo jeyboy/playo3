@@ -311,10 +311,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setMinimumSize(30, 30);
     Stylesheets::applyProperty(pslider, "pan", true);
 
-//    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
     PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
-
-//    connect(Settings::obj.currPlayer(), SIGNAL(panChanged(int)), pslider, SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
     pslider -> setMinimum(-1000);

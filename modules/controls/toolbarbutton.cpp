@@ -1,5 +1,5 @@
 #include "toolbarbutton.h"
-//#include "stylesheets.h"
+#include "stylesheets.h"
 
 using namespace Controls;
 using namespace Views;
@@ -19,12 +19,7 @@ ToolbarButton::ToolbarButton(const QString & text, const QString & folderPath, Q
     /*setDefaultDropAction(Qt::MoveAction);*/
 }
 
-void ToolbarButton::checkState() {
-    setProperty("error", !QFile::exists(path));
-    style() -> unpolish(this);
-    style() -> polish(this);
-    update();
-}
+void ToolbarButton::checkState() { Stylesheets::applyProperty(this, "error", !QFile::exists(path)); }
 
 void ToolbarButton::dragEnterEvent(QDragEnterEvent * event) {
     if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list")))

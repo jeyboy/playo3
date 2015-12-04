@@ -247,8 +247,9 @@ QString Stylesheets::scrollStyles() {
 QString Stylesheets::treeViewStyles() {
     return QString(
                 "QTreeView {"
-                "   background-color: " + color2().name(QColor::HexArgb) + ";"
-                "   border-radius: 8px;"
+                  "   background-color: transparent;"
+//                "   background-color: " + color2().name(QColor::HexArgb) + ";"
+                  "   border-radius: 8px;"
                 "}"
 
                 "QTreeView::branch:has-children:!has-siblings:closed,"
@@ -280,9 +281,10 @@ QString Stylesheets::treeViewStyles() {
 QString Stylesheets::listViewStyles() {
     return QString(
                 "QListView {"
-                "   background-color: " + color2().name(QColor::HexArgb) + ";"
-                "   border-bottom-left-radius: 8px;"
-                "   border-bottom-right-radius: 8px;"
+//                "   background-color: " + color2().name(QColor::HexArgb) + ";"
+                    "   border-bottom-left-radius: 8px;"
+                    "   border-bottom-right-radius: 8px;"
+                    "   background-color: transparent;"
                 "}"
               );
 }
@@ -385,6 +387,14 @@ QString Stylesheets::mainWindowTabsStyle() {
 
 QString Stylesheets::downloadProgressStyles() {
     return QStringLiteral(
+//        "QToolButton {"
+//        "   border-style: solid;"
+//        "   border-width: 2px;"
+//        "   border-radius: 2px;"
+////        "   border-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(128,128,128,255), stop: 1 rgba(224,224,224,255));"
+//        "   border-color: qradialgradient(cx:0, cy:0, radius: 1,fx:0.5, fy:0.5, stop:0 white, stop:1 green);"
+//        "}"
+
         "QProgressBar[download] {"
         "   border: 2px solid grey;"
         "   border-radius: 4px;"
@@ -407,9 +417,18 @@ QString Stylesheets::downloadProgressStyles() {
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {
-    brush.setColorAt(0,     color1());
-    brush.setColorAt(.36,   color2());
-    brush.setColorAt(1,     color3());
+//    brush.setColorAt(0,     color1());
+//    brush.setColorAt(.36,   color2());
+//    brush.setColorAt(1,     color3());
+
+    brush.setColorAt(0,    QColor(124, 124, 124));
+    brush.setColorAt(.019,   QColor(80, 80, 80));
+    brush.setColorAt(.02,  QColor(66, 66, 66));
+    brush.setColorAt(.2,   QColor(88, 88, 88));
+    brush.setColorAt(.4,   QColor(55, 55, 55));
+    brush.setColorAt(.979,  QColor(55, 55, 55));
+    brush.setColorAt(.98,   QColor(80, 80, 80));
+    brush.setColorAt(1,    QColor(124, 124, 124));
 }
 
 void Stylesheets::initPens() {
