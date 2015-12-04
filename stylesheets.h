@@ -43,6 +43,8 @@ public:
 
     static QString mainWindowTabsStyle();
 
+    static QString downloadProgressStyles();
+
     //background brush
     static void initBrush(QLinearGradient & brush);
 

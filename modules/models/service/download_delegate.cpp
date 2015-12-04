@@ -1,4 +1,5 @@
 #include "download_delegate.h"
+#include "stylesheets.h"
 
 QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
@@ -29,15 +30,9 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         renderer.setAttribute(Qt::WA_NoSystemBackground, true);
         renderer.setAttribute(Qt::WA_TranslucentBackground, true);
 
-        QString style;
-
-        if(option.state & QStyle::State_Selected) {
-            style = QStringLiteral("QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; background-color: #999999; }")
-                % QStringLiteral("QProgressBar::chunk { background-color: #87CEFA; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }");
-        } else {
-            style = QStringLiteral("QProgressBar { border: 2px solid grey; border-radius: 4px; text-align: center; }")
-                % QStringLiteral("QProgressBar::chunk { background-color: #05B8CC; /*width: 10px;  margin: 0.5px; border-radius: 6px;*/ }");
-        }
+        Stylesheets::applyProperty(&renderer, "download",
+            option.state & QStyle::State_Selected ? QStringLiteral("selected") : QStringLiteral("usual")
+        );
 
         renderer.setTextVisible(true);
         renderer.setFormat(option.fontMetrics.elidedText(index.model() -> data(index, Qt::DisplayRole).toString(), Qt::ElideRight, rect.width() - 8));
@@ -47,7 +42,6 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         renderer.setMaximum(100);
         renderer.setValue(progressPercentage);
 
-        renderer.setStyleSheet(style);
         painter -> save();
         painter -> translate(rect.topLeft());
         renderer.render(painter);

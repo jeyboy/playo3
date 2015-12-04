@@ -19,8 +19,6 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-//    setStyleSheet(Stylesheets::mainWindowTabsStyle());
-
     titleWidget = new WindowTitle(
         false,
         this,

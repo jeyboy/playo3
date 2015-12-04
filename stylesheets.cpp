@@ -58,7 +58,8 @@ QString Stylesheets::appStyles() {
                 "QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
-            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % tokenableStyles() % toolbarStyles();
+            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() %
+            tokenableStyles() % toolbarStyles() % downloadProgressStyles();
 }
 
 QString Stylesheets::menuStyles() {
@@ -380,6 +381,29 @@ QString Stylesheets::mainWindowTabsStyle() {
                 "   width: 20px;"
                 "}"
     ) + treeViewStyles() + listViewStyles() + menuStyles();
+}
+
+QString Stylesheets::downloadProgressStyles() {
+    return QStringLiteral(
+        "QProgressBar[download] {"
+        "   border: 2px solid grey;"
+        "   border-radius: 4px;"
+        "   text-align: center;"
+        "}"
+
+        "QProgressBar[download=\"selected\"] {"
+        "   background-color: #999999;"
+        "}"
+
+        "QProgressBar::chunk[download] {"
+        "   background-color: #05B8CC;"
+        /*width: 10px;  margin: 0.5px; border-radius: 6px;*/
+        "}"
+
+        "QProgressBar::chunk[download=\"selected\"] {"
+        "   background-color: #87CEFA;"
+        "}"
+    );
 }
 
 void Stylesheets::initBrush(QLinearGradient & brush) {
