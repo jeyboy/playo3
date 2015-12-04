@@ -176,10 +176,8 @@ void ToolBars::createToolbars() {
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
     if (!bar) return;
-    if (bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0)
-        bar -> setStyleSheet(Stylesheets::toolbarMovableStyle());
-    else
-        bar -> setStyleSheet(Stylesheets::toolbarFixedStyle());
+    bool movable = bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0;
+    Stylesheets::applyProperty(bar, "state", movable ? QStringLiteral("movable") : QStringLiteral("fixed"));
 }
 
 QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
@@ -211,7 +209,7 @@ QToolBar * ToolBars::createToolBar(const QString & name) {
     ToolBar * ptb = new ToolBar(name, container);
 
     ptb -> setFloatable(false);
-    ptb -> setStyleSheet(Stylesheets::toolbarMovableStyle());
+    Stylesheets::applyProperty(ptb, "state", QStringLiteral("movable"));
 
     ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -291,19 +289,12 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
-    slider -> setProperty("position", true);
-    slider -> style() -> unpolish(slider);
-    slider -> style() -> polish(slider);  
+    Stylesheets::applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 
-//    connect(Settings::obj.currPlayer(), SIGNAL(positionChanged(int)), slider, SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
-
-//    connect(Settings::obj.currPlayer(), SIGNAL(durationChanged(int)), slider, SLOT(setMax(int)));
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
-
-//    connect(slider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(position(uint)));
     PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
     ptb -> addWidget(slider);
@@ -318,9 +309,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     ClickableSlider * pslider = new ClickableSlider(ptb);
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(30, 30);
-    pslider -> setProperty("pan", true);
-    pslider -> style() -> unpolish(pslider);
-    pslider -> style() -> polish(pslider);
+    Stylesheets::applyProperty(pslider, "pan", true);
 
 //    connect(pslider, SIGNAL(valueChanged(int)), Settings::obj.currPlayer(), SLOT(pan(int)));
     PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
@@ -342,7 +331,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
 
     TimeLabel * timeLabel = new TimeLabel(QStringLiteral("After click invert showing time") , QString(), ptb);
-    timeLabel -> setStyleSheet(QStringLiteral("QLabel { font-weight: bold; font-size: 12px; }"));
+    Stylesheets::applyProperty(timeLabel, "timer", true);
     ptb -> addWidget(timeLabel);
 
     PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
@@ -365,9 +354,8 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
 
     ClickableSlider * slider = new ClickableSlider(ptb);
-    slider -> setProperty("volume", true);
-    slider -> style() -> unpolish(slider);
-    slider -> style() -> polish(slider);
+    Stylesheets::applyProperty(slider, "volume", true);
+
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(30, 30);
@@ -566,7 +554,7 @@ void ToolBars::panelHighlight(QAction * action) {
     }
 
     if (highlighted)
-        highlighted -> setStyleSheet(Stylesheets::toolbarHighLightStyle());
+        Stylesheets::applyProperty(highlighted, "state", QStringLiteral("lighted"));
 }
 
 void ToolBars::removePanelHighlight() {

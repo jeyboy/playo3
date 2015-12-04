@@ -9,6 +9,11 @@ int Stylesheets::stickDistance = 20;
 
 QString Stylesheets::appStyles() {
     return QStringLiteral(
+                "QLabel[timer=\"true\"] {"
+                "   font-weight: bold;"
+                "   font-size: 12px;"
+                "}"
+
                 "QToolTip {"
                 "   border: none;"
                 "   background-color: #444;"
@@ -53,7 +58,7 @@ QString Stylesheets::appStyles() {
                 "QCheckBox::indicator:checked:pressed {"
                 "   image: url(:/controls/check_fill);"
                 "}"
-            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % tokenableStyles();
+            ) % sliderStyles() % mainWindowTabsStyle() % toolbarButtonStyle() % tokenableStyles() % toolbarStyles();
 }
 
 QString Stylesheets::menuStyles() {
@@ -297,30 +302,22 @@ QString Stylesheets::tokenableStyles() {
     );
 }
 
-QString Stylesheets::toolbarHighLightStyle() {
-    return QStringLiteral("QToolBar { border: 2px dotted #00FFFF; }");
-}
-
-QString Stylesheets::toolbarFixedStyle() {
-    return QStringLiteral("QToolBar { border: none; }");
-}
-
-QString Stylesheets::toolbarFloatStyle() {
+QString Stylesheets::toolbarStyles() {
     return QStringLiteral(
-                "QToolBar {"
-                "   background-color: rgba(0, 0, 0, 48);"
-                "   border-radius: 8px;"
-                "   border: 1px ridge #888;"
-                "}"
-    );
-}
+        "QToolBar[state=\"fixed\"] { border: none; }"
 
-QString Stylesheets::toolbarMovableStyle() {
-    return QStringLiteral(
-                "QToolBar {"
-                "   border-radius: 8px;"
-                "   border: 1px ridge #888;"
-                "}"
+        "QToolBar[state=\"lighted\"] { border: 2px dotted #00FFFF; }"
+
+        "QToolBar[state=\"float\"] {"
+        "   background-color: rgba(0, 0, 0, 48);"
+        "   border-radius: 8px;"
+        "   border: 1px ridge #888;"
+        "}"
+
+        "QToolBar[state=\"movable\"] {"
+        "   border-radius: 8px;"
+        "   border: 1px ridge #888;"
+        "}"
     );
 }
 

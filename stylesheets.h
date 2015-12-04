@@ -4,6 +4,8 @@
 #include <qcolor.h>
 #include <qpen.h>
 #include <qstringbuilder.h>
+#include <qwidget.h>
+#include <qstyle.h>
 
 class Stylesheets {
 public:
@@ -14,6 +16,13 @@ public:
     static inline QColor color2() { return QColor::fromRgb(150, 164, 176, 212); }
     static inline QColor color3() { return QColor::fromRgb(130, 140, 149, 212); }
 //    static inline QColor color3() { return QColor::fromRgb(40, 52, 59, 212); }
+
+    static void applyProperty(QWidget * widget, const char * propertyName, const QVariant & val) {
+        widget -> setProperty(propertyName, val);
+        widget -> style() -> unpolish(widget);
+        widget -> style() -> polish(widget);
+        widget -> update();
+    }
 
     static QString appStyles();
 
@@ -28,10 +37,7 @@ public:
 
     static QString scrollStyles();
 
-    static QString toolbarHighLightStyle();
-    static QString toolbarFixedStyle();
-    static QString toolbarFloatStyle();
-    static QString toolbarMovableStyle();
+    static QString toolbarStyles();
 
     static QString toolbarButtonStyle();
 

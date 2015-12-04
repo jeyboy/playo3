@@ -33,8 +33,6 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
 
     setIndentation(Settings::obj().treeIndentation());
     setStyle(new TreeViewStyle);
-//    setStyleSheet(Stylesheets::treeViewStyles());
-
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     setDragEnabled(true);
