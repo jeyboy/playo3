@@ -1,7 +1,6 @@
 #include "playo.h"
 #include "single_application.h"
 #include "modules/core/misc/logger.h"
-#include "stylesheets.h"
 
 #include <qapplication.h>
 
@@ -18,7 +17,6 @@ int main(int argc, char * argv[]) {
 
     SingleApplication a(argc, argv, QStringLiteral("bigbugplayo"));
     a.setApplicationVersion(APP_VERSION);
-    a.setStyleSheet(Stylesheets::appStyles());
 
     QThread::currentThread() -> setPriority(QThread::HighPriority);
 
@@ -36,13 +34,8 @@ int main(int argc, char * argv[]) {
     }
 
     Logger::obj().initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
-    QApplication::instance() -> setProperty("colors", Stylesheets::dark);
 
     Playo w;
-
-    w.setProperty("colors", Stylesheets::dark);
-    a.setStyleSheet(Stylesheets::appStyles());
-
     QObject::connect(&a, SIGNAL(messageAvailable(QString)), &w, SLOT(receiveMessage(QString)));
     if (!message.isEmpty())
         w.receiveMessage(message);

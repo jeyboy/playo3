@@ -73,7 +73,6 @@ namespace Controls {
         bool sticked, inProcess;
         WindowTitle * titleWidget;
         QRect borderRect;
-        QLinearGradient brush;
         QWidget * mWidget;
         Spinner * spinner;
     };

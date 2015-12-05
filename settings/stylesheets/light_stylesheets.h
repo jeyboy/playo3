@@ -7,12 +7,10 @@ class LightStylesheets : public IStylesheets {
     QString sliderStyles();
     QString treeViewStyles();
     QString listViewStyles();
-    QString tokenableStyles();
     QString scrollStyles();
     QString toolbarStyles();
     QString toolbarButtonStyle();
     QString mainWindowTabsStyle();
-    QString downloadProgressStyles();
 public:
     StyleType styleType() const { return light; }
 
@@ -25,9 +23,8 @@ public:
 
     QString appStyles();
 
-    void initBrush(QLinearGradient & brush);
-
-    void initInnerBrush(QLinearGradient & brush);
+    void initMainBrush();
+    void initInnerBrush();
 
     void initPens();
 };

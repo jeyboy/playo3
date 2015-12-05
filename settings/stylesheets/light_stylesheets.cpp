@@ -127,13 +127,12 @@ QString LightStylesheets::toolbarStyles() {
     );
 }
 
-void LightStylesheets::initBrush(QLinearGradient & brush) {
-    brush.setColorAt(0,     color1());
-    brush.setColorAt(.36,   color2());
-    brush.setColorAt(1,     color3());
+void LightStylesheets::initMainBrush() {
+    mainBrush.setColorAt(0,     color1());
+    mainBrush.setColorAt(.36,   color2());
+    mainBrush.setColorAt(1,     color3());
 }
-
-void LightStylesheets::initInnerBrush(QLinearGradient & brush) { initBrush(brush); }
+void LightStylesheets::initInnerBrush() { initMainBrush(); }
 
 void LightStylesheets::initPens() {
     QVector<qreal> penPattern;

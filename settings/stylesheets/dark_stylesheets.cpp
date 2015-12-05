@@ -123,39 +123,38 @@ QString DarkStylesheets::toolbarStyles() {
     );
 }
 
-void DarkStylesheets::initBrush(QLinearGradient & brush) {
-    //    brush.setColorAt(0,    QColor(124, 124, 124));
-    //    brush.setColorAt(.019,   QColor(80, 80, 80));
-    //    brush.setColorAt(.02,  QColor(66, 66, 66));
-    //    brush.setColorAt(.2,   QColor(88, 88, 88));
-    //    brush.setColorAt(.4,   QColor(55, 55, 55));
-    //    brush.setColorAt(.979,  QColor(55, 55, 55));
-    //    brush.setColorAt(.98,   QColor(80, 80, 80));
-    //    brush.setColorAt(1,    QColor(124, 124, 124));
+void DarkStylesheets::initMainBrush() {
+    //    mainBrush.setColorAt(0,    QColor(124, 124, 124));
+    //    mainBrush.setColorAt(.019,   QColor(80, 80, 80));
+    //    mainBrush.setColorAt(.02,  QColor(66, 66, 66));
+    //    mainBrush.setColorAt(.2,   QColor(88, 88, 88));
+    //    mainBrush.setColorAt(.4,   QColor(55, 55, 55));
+    //    mainBrush.setColorAt(.979,  QColor(55, 55, 55));
+    //    mainBrush.setColorAt(.98,   QColor(80, 80, 80));
+    //    mainBrush.setColorAt(1,    QColor(124, 124, 124));
 
+    //    mainBrush.setColorAt(0,    QColor(168, 168, 168));
+    //    mainBrush.setColorAt(.019,   QColor(124, 124, 124));
+    //    mainBrush.setColorAt(.02,  QColor(100, 100, 100));
+    //    mainBrush.setColorAt(.2,   QColor(132, 132, 132));
+    //    mainBrush.setColorAt(.4,   QColor(86, 86, 86));
+    //    mainBrush.setColorAt(.979,  QColor(86, 86, 86));
+    //    mainBrush.setColorAt(.98,   QColor(124, 124, 124));
+    //    mainBrush.setColorAt(1,    QColor(168, 168, 168));
 
-    //    brush.setColorAt(0,    QColor(168, 168, 168));
-    //    brush.setColorAt(.019,   QColor(124, 124, 124));
-    //    brush.setColorAt(.02,  QColor(100, 100, 100));
-    //    brush.setColorAt(.2,   QColor(132, 132, 132));
-    //    brush.setColorAt(.4,   QColor(86, 86, 86));
-    //    brush.setColorAt(.979,  QColor(86, 86, 86));
-    //    brush.setColorAt(.98,   QColor(124, 124, 124));
-    //    brush.setColorAt(1,    QColor(168, 168, 168));
-
-    brush.setColorAt(0,    QColor(168, 168, 168));
-    brush.setColorAt(.019,   QColor(124, 124, 124));
-    brush.setColorAt(.02,  QColor(100, 100, 100));
-    brush.setColorAt(.5,   QColor(148, 148, 148));
-    brush.setColorAt(.979,  QColor(100, 100, 100));
-    brush.setColorAt(.98,   QColor(124, 124, 124));
-    brush.setColorAt(1,    QColor(168, 168, 168));
+    mainBrush.setColorAt(0,    QColor(168, 168, 168));
+    mainBrush.setColorAt(.019,   QColor(124, 124, 124));
+    mainBrush.setColorAt(.02,  QColor(100, 100, 100));
+    mainBrush.setColorAt(.5,   QColor(148, 148, 148));
+    mainBrush.setColorAt(.979,  QColor(100, 100, 100));
+    mainBrush.setColorAt(.98,   QColor(124, 124, 124));
+    mainBrush.setColorAt(1,    QColor(168, 168, 168));
 }
 
-void DarkStylesheets::initInnerBrush(QLinearGradient & brush) {
-    brush.setColorAt(0,  QColor(100, 100, 100));
-    brush.setColorAt(.5,   QColor(148, 148, 148));
-    brush.setColorAt(1,  QColor(100, 100, 100));
+void DarkStylesheets::initInnerBrush() {
+    innerBrush.setColorAt(0,  QColor(100, 100, 100));
+    innerBrush.setColorAt(.5,   QColor(148, 148, 148));
+    innerBrush.setColorAt(1,  QColor(100, 100, 100));
 }
 
 void DarkStylesheets::initPens() {

@@ -58,7 +58,6 @@ namespace Controls {
         bool atBottom, atLeft, atRight, atTop;
         QPoint dragPos;
 
-        QLinearGradient brush;
         QRect backRect, borderRect, geom;
         QList<QRect> screenRects;
     };

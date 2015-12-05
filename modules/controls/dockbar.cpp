@@ -20,8 +20,6 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    Stylesheets::initInnerBrush(brush);
-
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
     useVerticalTitles(false);
@@ -92,11 +90,8 @@ void DockBar::onSetProgress2(int percent) {
 }
 
 void DockBar::resizeEvent(QResizeEvent * event) {
-    Stylesheets::calcBorderRect(rect(), borderRect);
+    Settings::currentStyle.calcBorderRect(rect(), borderRect);
     QDockWidget::resizeEvent(event);
-
-    brush.setStart(rect().topLeft());
-    brush.setFinalStop(rect().topRight());
 }
 
 void DockBar::closeEvent(QCloseEvent * e) {
@@ -106,15 +101,17 @@ void DockBar::closeEvent(QCloseEvent * e) {
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {
-    switch(QApplication::instance() -> property("colors").toInt()) {
-        case Stylesheets::light:
-        case Stylesheets::dark: {
+    switch(Settings::currentStyle.styleType()) {
+        case IStylesheets::light:
+        case IStylesheets::dark: {
             QPainter painter(this);
             painter.save();
 
-            painter.setBrush(brush);
-            painter.setPen(Stylesheets::foregroundPen);
-            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            Settings::currentStyle.innerBrush.setStart(rect().topLeft());
+            Settings::currentStyle.innerBrush.setFinalStop(rect().topRight());
+            painter.setBrush(Settings::currentStyle.innerBrush);
+            painter.setPen(Settings::currentStyle.foregroundPen);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
 
             painter.restore();
             event -> accept();

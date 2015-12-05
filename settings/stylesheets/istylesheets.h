@@ -16,7 +16,7 @@ protected:
     QString mainWindowTabsStyles();
 
     QString checkboxStyles();
-    QString tokenableStyles();
+    QString tokenableStyles(const QColor & textColor = QColor::fromRgb(255, 255, 255));
     QString downloadProgressStyles();
 public:
     enum StyleType {
@@ -40,8 +40,8 @@ public:
 
     virtual QString appStyles();
 
-    virtual void initBrush(QLinearGradient & /*brush*/) {}
-    virtual void initInnerBrush(QLinearGradient & /*brush*/) {}
+    virtual void initMainBrush() {}
+    virtual void initInnerBrush() {}
 
     //border pens
     virtual void initPens() {}
@@ -58,6 +58,9 @@ public:
     int borderWidth;
     int borderRadius;
     int stickDistance;
+
+    QLinearGradient mainBrush;
+    QLinearGradient innerBrush;
 };
 
 

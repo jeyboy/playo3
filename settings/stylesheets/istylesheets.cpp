@@ -1,7 +1,11 @@
 #include "istylesheets.h"
 
 IStylesheets::IStylesheets() :resizePen(QPen()), pen(QPen()), bevelPen(QPen()), foregroundPen(QPen()),
-    borderWidth(6), borderRadius(12), stickDistance(20) {}
+    borderWidth(6), borderRadius(12), stickDistance(20) {
+    initPens();
+    initMainBrush();
+    initInnerBrush();
+}
 
 void IStylesheets::applyProperty(QWidget * widget, const char * propertyName, const QVariant & val) {
     widget -> setProperty(propertyName, val);
@@ -144,7 +148,7 @@ QString IStylesheets::treeViewStyles() {
 }
 
 QString IStylesheets::tokenableStyles(const QColor & textColor) {
-    return QStringLiteral(
+    return QString(
         "QWidget[transparent=\"true\"] {"
         "   background-color: transparent;"
         "}"
@@ -154,7 +158,7 @@ QString IStylesheets::tokenableStyles(const QColor & textColor) {
         "}"
 
         "QWidget[colored_text=\"true\"] {"
-        "   color: white;" // need to change on predefined color
+        "   color: " % textColor.name(QColor::HexArgb) % ";" // need to change on predefined color
         "}"
     );
 }

@@ -1,12 +1,11 @@
 #include "window.h"
-//#include "stylesheets.h"
 #include "dockbar.h"
 
 using namespace Controls;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    titleHeight(30), doubleBorderWidth(Stylesheets::borderWidth * 2),
-    halfBorderWidth(Stylesheets::borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
+    titleHeight(30), doubleBorderWidth(Settings::currentStyle.borderWidth * 2),
+    halfBorderWidth(Settings::currentStyle.borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
      resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
      childInAction(false), skipChildAction(false)
 {
@@ -25,8 +24,8 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         titleHeight + 6,
         QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0),
         QMargins(0, 0, 0, 0),
-        Stylesheets::borderWidth,
-        Stylesheets::borderWidth,
+        Settings::currentStyle.borderWidth,
+        Settings::currentStyle.borderWidth,
         false, false, false
     );
     titleWidget -> addCustomButton(QStringLiteral("Most top"), QPixmap(QStringLiteral(":/controls/top_off_button")), QPixmap(QStringLiteral(":/controls/top_on_button")), this, SLOT(toggleWindowMostTop()));
@@ -44,8 +43,6 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
         titleWidget -> setTitleToolTip(tooltip);
     }
-
-    Stylesheets::initBrush(brush);
 
 //    setDocumentMode(true);
 }
@@ -88,11 +85,8 @@ void MainWindow::toggleWindowMostTop() {
 void MainWindow::resizeEvent(QResizeEvent * event) {
     QMainWindow::resizeEvent(event);
 
-    Stylesheets::calcBorderRect(rect(), borderRect);
+    Settings::currentStyle.calcBorderRect(rect(), borderRect);
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
-
-    brush.setStart(rect().topLeft());
-    brush.setFinalStop(rect().topRight());
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
     backRect.setRect(rect().width() / 2 - minSideHalf, (rect().height() + titleHeight) / 2 - minSideHalf, minSide, minSide);
@@ -171,16 +165,16 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
                 QRect currRect = bar -> geometry();
                 bool change = false;
 
-                if (change |= qAbs(parentRect.right() - currRect.left()) < Stylesheets::stickDistance)
+                if (change |= qAbs(parentRect.right() - currRect.left()) < Settings::currentStyle.stickDistance)
                     currRect.moveLeft(parentRect.right());
 
-                if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Stylesheets::stickDistance))
+                if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Settings::currentStyle.stickDistance))
                     currRect.moveTop(parentRect.bottom());
 
-                if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Stylesheets::stickDistance))
+                if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Settings::currentStyle.stickDistance))
                     currRect.moveRight(parentRect.left());
 
-                if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Stylesheets::stickDistance))
+                if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Settings::currentStyle.stickDistance))
                     currRect.moveBottom(parentRect.top());
 
                 bar -> setStickedFlag(change);
@@ -275,30 +269,35 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-    switch(QApplication::instance() -> property("colors").toInt()) {
-        case Stylesheets::light: {
+    switch(Settings::currentStyle.styleType()) {
+        case IStylesheets::light: {
             bool isResizing = (resizeFlagX || resizeFlagY);
             QPainter painter(this);
             painter.save();
 
-            painter.setBrush(brush);
+            Settings::currentStyle.mainBrush.setStart(rect().topLeft());
+            Settings::currentStyle.mainBrush.setFinalStop(rect().bottomRight());
+            painter.setBrush(Settings::currentStyle.mainBrush);
             if (!isResizing) {
-                painter.setPen(Stylesheets::pen);
-                painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+                painter.setPen(Settings::currentStyle.pen);
+                painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
             }
 
-            painter.setPen(isResizing ? Stylesheets::resizePen : Stylesheets::bevelPen);
+            painter.setPen(isResizing ? Settings::currentStyle.resizePen : Settings::currentStyle.bevelPen);
             painter.drawPixmap(backRect, *background);
-            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
             painter.restore();
         break; }
 
-        case Stylesheets::dark: {
+        case IStylesheets::dark: {
             QPainter painter(this);
             painter.save();
-            painter.setBrush(brush);
+
+            Settings::currentStyle.mainBrush.setStart(rect().topLeft());
+            Settings::currentStyle.mainBrush.setFinalStop(rect().topRight());
+            painter.setBrush(Settings::currentStyle.mainBrush);
             painter.setPen(Qt::NoPen);
-            painter.drawRoundedRect(borderRect, Stylesheets::borderRadius, Stylesheets::borderRadius, Qt::AbsoluteSize);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
             painter.drawPixmap(backRect, *background);
             painter.restore();
         break; }
@@ -311,16 +310,16 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
     for(QList<QRect>::Iterator it = screenRects.begin(); it != screenRects.end(); it++) {
-        if (qAbs((*it).right() - rect.right()) < Stylesheets::stickDistance)
+        if (qAbs((*it).right() - rect.right()) < Settings::currentStyle.stickDistance)
             rect.moveRight((*it).right());
 
-        if (qAbs((*it).bottom() - rect.bottom()) < Stylesheets::stickDistance)
+        if (qAbs((*it).bottom() - rect.bottom()) < Settings::currentStyle.stickDistance)
             rect.moveBottom((*it).bottom());
 
-        if (qAbs((*it).left() - rect.left()) < Stylesheets::stickDistance)
+        if (qAbs((*it).left() - rect.left()) < Settings::currentStyle.stickDistance)
             rect.moveLeft((*it).left());
 
-        if (qAbs((*it).top() - rect.top()) < Stylesheets::stickDistance)
+        if (qAbs((*it).top() - rect.top()) < Settings::currentStyle.stickDistance)
             rect.moveTop((*it).top());
     }
 

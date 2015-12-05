@@ -1,8 +1,6 @@
 #include "playo.h"
 #include "ui_playo.h"
 
-#include "stylesheets.h"
-
 using namespace Presentation;
 using namespace Dialogs;
 using namespace Data;
@@ -42,7 +40,6 @@ Playo::~Playo() {
 
 void Playo::activation() {
     Settings::obj().anchorWidget(this);
-    Stylesheets::initPens();
     new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
@@ -64,6 +61,7 @@ void Playo::initialization() {
     Web::Apis::initiate(settings -> obj());
 
     SettingsDialog::registerHotkeys(&Dockbars::obj());
+    Settings::setCurrentStyle(DarkStylesheets());
 
     setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
 

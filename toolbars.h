@@ -17,8 +17,6 @@
 #include "modules/controls/spectrum_view.h"
 #include "modules/controls/equalizer_view.h"
 
-#include "stylesheets.h"
-
 namespace Presentation {
     using namespace Controls;
     using namespace Core::Web;
@@ -76,7 +74,7 @@ namespace Presentation {
             updateBarStyle((QToolBar *)sender());
         }
 
-        inline void onTopLevelChanged(bool /*topLevel*/) { Stylesheets::applyProperty((QToolBar *)sender(), "state", QStringLiteral("float")); }
+        inline void onTopLevelChanged(bool /*topLevel*/) { Settings::currentStyle.applyProperty((QToolBar *)sender(), "state", QStringLiteral("float")); }
 
     private:
         void updateBarStyle(QToolBar * bar);

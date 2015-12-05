@@ -1,6 +1,6 @@
 #include "settings.h"
 
-IStylesheets Settings::currentStyle = StubStylesheets();
+IStylesheets Settings::currentStyle;
 
 Settings::Settings() : anchor(0) {}
 
