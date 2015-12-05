@@ -118,6 +118,10 @@ void DockBar::paintEvent(QPaintEvent * event) {
 
             painter.restore();
             event -> accept();
+
+//            QPen pen(Qt::lightGray);
+//            pen.setCosmetic(true);
+//            pen.setWidth(2);
         break; }
 
         default: {}

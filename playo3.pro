@@ -241,7 +241,6 @@ HEADERS += \
     external_keys.h \
     playo.h \
     single_application.h \
-    stylesheets.h \
     toolbars.h \
     settings.h \
     modules/core/media/interfaces/itrackable.h \
@@ -269,7 +268,11 @@ HEADERS += \
     modules/core/web/utils/html_parser_keys.h \
     modules/core/web/interfaces/linkable.h \
     modules/core/web/interfaces/linkable_list.h \
-    modules/models/service/relations_delegate.h
+    modules/models/service/relations_delegate.h \
+    settings/stylesheets/dark_stylesheets.h \
+    settings/stylesheets/light_stylesheets.h \
+    settings/stylesheets/istylesheets.h \
+    settings/stylesheets/stylesheets_list.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -387,7 +390,6 @@ SOURCES += \
     main.cpp \
     playo.cpp \
     single_application.cpp \
-    stylesheets.cpp \
     toolbars.cpp \
     settings.cpp \
     modules/core/media/interfaces/itrackable.cpp \
@@ -400,4 +402,7 @@ SOURCES += \
     modules/core/web/utils/html_parser_keys.cpp \
     modules/core/web/apis/social/vk_api_keys.cpp \
     modules/core/web/apis/social/soundcloud_api_keys.cpp \
-    modules/models/service/relations_delegate.cpp
+    modules/models/service/relations_delegate.cpp \
+    settings/stylesheets/dark_stylesheets.cpp \
+    settings/stylesheets/light_stylesheets.cpp \
+    settings/stylesheets/istylesheets.cpp

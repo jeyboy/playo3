@@ -4,7 +4,7 @@
 #include <qdockwidget.h>
 
 #include "modules/controls/window.h"
-#include "stylesheets.h"
+#include "settings.h"
 
 namespace Controls {
     struct TabifyParams {

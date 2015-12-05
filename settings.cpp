@@ -1,5 +1,7 @@
 #include "settings.h"
 
+IStylesheets Settings::currentStyle = StubStylesheets();
+
 Settings::Settings() : anchor(0) {}
 
 void Settings::fromJson(QJsonObject settings) {

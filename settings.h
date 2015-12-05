@@ -2,6 +2,7 @@
 #define APP_SETTINGS_H
 
 #include "modules/core/interfaces/singleton.h"
+#include "settings/stylesheets/stylesheets_list.h"
 
 #include "settings/global_settings.h"
 #include "settings/hotkey_settings.h"
@@ -32,6 +33,13 @@ public:
     void resetSpectrumSettings();
     void resetTabSettings();
     void resetLibrarySettings();
+
+    static void setCurrentStyle(const IStylesheets & newStyle) {
+        currentStyle = newStyle;
+        ((QApplication *)QApplication::instance()) -> setStyleSheet(currentStyle.appStyles());
+    }
+
+    static IStylesheets currentStyle;
 };
 
 #endif // APP_SETTINGS_H
