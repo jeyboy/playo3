@@ -4,7 +4,6 @@
 #include "istylesheets.h"
 
 class DarkStylesheets : public IStylesheets {
-    QString menuStyles();
     QString sliderStyles();
     QString treeViewStyles();
     QString listViewStyles();

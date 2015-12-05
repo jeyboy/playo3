@@ -74,7 +74,7 @@ namespace Presentation {
             updateBarStyle((QToolBar *)sender());
         }
 
-        inline void onTopLevelChanged(bool /*topLevel*/) { Settings::currentStyle.applyProperty((QToolBar *)sender(), "state", QStringLiteral("float")); }
+        inline void onTopLevelChanged(bool /*topLevel*/) { Settings::currentStyle -> applyProperty((QToolBar *)sender(), "state", QStringLiteral("float")); }
 
     private:
         void updateBarStyle(QToolBar * bar);

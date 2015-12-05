@@ -1,7 +1,7 @@
 #include "dark_stylesheets.h"
 
-QString DarkStylesheets::appStyles() {
-    return IStylesheets::appStyles() % QString("QLabel, QCheckBox { color: #EEEEEE; }")
+QString DarkStylesheets::appStyles() {  
+    return IStylesheets::appStyles() % QStringLiteral("QLabel, QCheckBox { color: #EEEEEE; }")
         % checkboxStyles() % scrollStyles() % treeViewStyles() % listViewStyles()
         % tokenableStyles() % toolbarStyles() % downloadProgressStyles();
 }

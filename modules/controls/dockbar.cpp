@@ -90,7 +90,7 @@ void DockBar::onSetProgress2(int percent) {
 }
 
 void DockBar::resizeEvent(QResizeEvent * event) {
-    Settings::currentStyle.calcBorderRect(rect(), borderRect);
+    Settings::currentStyle -> calcBorderRect(rect(), borderRect);
     QDockWidget::resizeEvent(event);
 }
 
@@ -101,17 +101,17 @@ void DockBar::closeEvent(QCloseEvent * e) {
 }
 
 void DockBar::paintEvent(QPaintEvent * event) {
-    switch(Settings::currentStyle.styleType()) {
+    switch(Settings::currentStyle -> styleType()) {
         case IStylesheets::light:
         case IStylesheets::dark: {
             QPainter painter(this);
             painter.save();
 
-            Settings::currentStyle.innerBrush.setStart(rect().topLeft());
-            Settings::currentStyle.innerBrush.setFinalStop(rect().topRight());
-            painter.setBrush(Settings::currentStyle.innerBrush);
-            painter.setPen(Settings::currentStyle.foregroundPen);
-            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
+            Settings::currentStyle -> innerBrush.setStart(rect().topLeft());
+            Settings::currentStyle -> innerBrush.setFinalStop(rect().topRight());
+            painter.setBrush(Settings::currentStyle -> innerBrush);
+            painter.setPen(Settings::currentStyle -> foregroundPen);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
 
             painter.restore();
             event -> accept();

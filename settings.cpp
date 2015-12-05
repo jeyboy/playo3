@@ -1,6 +1,6 @@
 #include "settings.h"
 
-IStylesheets Settings::currentStyle;
+IStylesheets * Settings::currentStyle = new IStylesheets();
 
 Settings::Settings() : anchor(0) {}
 

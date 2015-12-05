@@ -1,11 +1,13 @@
 #include "window.h"
 #include "dockbar.h"
 
+#include <qdebug.h>
+
 using namespace Controls;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
-    titleHeight(30), doubleBorderWidth(Settings::currentStyle.borderWidth * 2),
-    halfBorderWidth(Settings::currentStyle.borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
+    titleHeight(30), doubleBorderWidth(Settings::currentStyle -> borderWidth * 2),
+    halfBorderWidth(Settings::currentStyle -> borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
      resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
      childInAction(false), skipChildAction(false)
 {
@@ -24,8 +26,8 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         titleHeight + 6,
         QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0),
         QMargins(0, 0, 0, 0),
-        Settings::currentStyle.borderWidth,
-        Settings::currentStyle.borderWidth,
+        Settings::currentStyle -> borderWidth,
+        Settings::currentStyle -> borderWidth,
         false, false, false
     );
     titleWidget -> addCustomButton(QStringLiteral("Most top"), QPixmap(QStringLiteral(":/controls/top_off_button")), QPixmap(QStringLiteral(":/controls/top_on_button")), this, SLOT(toggleWindowMostTop()));
@@ -85,7 +87,7 @@ void MainWindow::toggleWindowMostTop() {
 void MainWindow::resizeEvent(QResizeEvent * event) {
     QMainWindow::resizeEvent(event);
 
-    Settings::currentStyle.calcBorderRect(rect(), borderRect);
+    Settings::currentStyle -> calcBorderRect(rect(), borderRect);
     titleWidget -> resize(event -> size().width(), titleWidget -> height());
 
     int minSide = qMin(rect().width(), (int)(rect().height() - titleHeight)) / 2, minSideHalf = minSide / 2;
@@ -165,16 +167,16 @@ bool MainWindow::eventFilter(QObject * o, QEvent * e) {
                 QRect currRect = bar -> geometry();
                 bool change = false;
 
-                if (change |= qAbs(parentRect.right() - currRect.left()) < Settings::currentStyle.stickDistance)
+                if (change |= qAbs(parentRect.right() - currRect.left()) < Settings::currentStyle -> stickDistance)
                     currRect.moveLeft(parentRect.right());
 
-                if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Settings::currentStyle.stickDistance))
+                if (!change && (change |= qAbs(parentRect.bottom() - currRect.top()) < Settings::currentStyle -> stickDistance))
                     currRect.moveTop(parentRect.bottom());
 
-                if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Settings::currentStyle.stickDistance))
+                if (!change && (change |= qAbs(parentRect.left() - currRect.right()) < Settings::currentStyle -> stickDistance))
                     currRect.moveRight(parentRect.left());
 
-                if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Settings::currentStyle.stickDistance))
+                if (!change && (change |= qAbs(parentRect.top() - currRect.bottom()) < Settings::currentStyle -> stickDistance))
                     currRect.moveBottom(parentRect.top());
 
                 bar -> setStickedFlag(change);
@@ -269,35 +271,37 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {
-    switch(Settings::currentStyle.styleType()) {
+    switch(Settings::currentStyle -> styleType()) {
         case IStylesheets::light: {
+            qDebug() << "LIGHT";
             bool isResizing = (resizeFlagX || resizeFlagY);
             QPainter painter(this);
             painter.save();
 
-            Settings::currentStyle.mainBrush.setStart(rect().topLeft());
-            Settings::currentStyle.mainBrush.setFinalStop(rect().bottomRight());
-            painter.setBrush(Settings::currentStyle.mainBrush);
+            Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
+            Settings::currentStyle -> mainBrush.setFinalStop(rect().bottomRight());
+            painter.setBrush(Settings::currentStyle -> mainBrush);
             if (!isResizing) {
-                painter.setPen(Settings::currentStyle.pen);
-                painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
+                painter.setPen(Settings::currentStyle -> pen);
+                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             }
 
-            painter.setPen(isResizing ? Settings::currentStyle.resizePen : Settings::currentStyle.bevelPen);
+            painter.setPen(isResizing ? Settings::currentStyle -> resizePen : Settings::currentStyle -> bevelPen);
             painter.drawPixmap(backRect, *background);
-            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             painter.restore();
         break; }
 
         case IStylesheets::dark: {
+            qDebug() << "DARK";
             QPainter painter(this);
             painter.save();
 
-            Settings::currentStyle.mainBrush.setStart(rect().topLeft());
-            Settings::currentStyle.mainBrush.setFinalStop(rect().topRight());
-            painter.setBrush(Settings::currentStyle.mainBrush);
+            Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
+            Settings::currentStyle -> mainBrush.setFinalStop(rect().topRight());
+            painter.setBrush(Settings::currentStyle -> mainBrush);
             painter.setPen(Qt::NoPen);
-            painter.drawRoundedRect(borderRect, Settings::currentStyle.borderRadius, Settings::currentStyle.borderRadius, Qt::AbsoluteSize);
+            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             painter.drawPixmap(backRect, *background);
             painter.restore();
         break; }
@@ -310,16 +314,16 @@ void MainWindow::paintEvent(QPaintEvent * event) {
 
 QRect & MainWindow::stickCorrection(QRect & rect) {
     for(QList<QRect>::Iterator it = screenRects.begin(); it != screenRects.end(); it++) {
-        if (qAbs((*it).right() - rect.right()) < Settings::currentStyle.stickDistance)
+        if (qAbs((*it).right() - rect.right()) < Settings::currentStyle -> stickDistance)
             rect.moveRight((*it).right());
 
-        if (qAbs((*it).bottom() - rect.bottom()) < Settings::currentStyle.stickDistance)
+        if (qAbs((*it).bottom() - rect.bottom()) < Settings::currentStyle -> stickDistance)
             rect.moveBottom((*it).bottom());
 
-        if (qAbs((*it).left() - rect.left()) < Settings::currentStyle.stickDistance)
+        if (qAbs((*it).left() - rect.left()) < Settings::currentStyle -> stickDistance)
             rect.moveLeft((*it).left());
 
-        if (qAbs((*it).top() - rect.top()) < Settings::currentStyle.stickDistance)
+        if (qAbs((*it).top() - rect.top()) < Settings::currentStyle -> stickDistance)
             rect.moveTop((*it).top());
     }
 

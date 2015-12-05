@@ -25,6 +25,8 @@ public:
         dark
     };
 
+    static IStylesheets * createStylesheet(const StyleType & stype);
+
     IStylesheets();
     virtual ~IStylesheets() {}
     virtual StyleType styleType() const { return stub; }
@@ -36,7 +38,7 @@ public:
     virtual inline QColor color2() { return QColor::fromRgb(150, 164, 176, 212); }
     virtual inline QColor color3() { return QColor::fromRgb(130, 140, 149, 212); }
 
-    void applyProperty(QWidget * widget, const char * propertyName, const QVariant & val);
+    static void applyProperty(QWidget * widget, const char * propertyName, const QVariant & val);
 
     virtual QString appStyles();
 

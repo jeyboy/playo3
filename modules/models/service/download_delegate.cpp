@@ -1,5 +1,5 @@
 #include "download_delegate.h"
-#include "stylesheets.h"
+#include "settings.h"
 
 QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
@@ -30,7 +30,7 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         renderer.setAttribute(Qt::WA_NoSystemBackground, true);
         renderer.setAttribute(Qt::WA_TranslucentBackground, true);
 
-        Stylesheets::applyProperty(&renderer, "download",
+        Settings::currentStyle -> applyProperty(&renderer, "download",
             option.state & QStyle::State_Selected ? QStringLiteral("selected") : QStringLiteral("usual")
         );
 

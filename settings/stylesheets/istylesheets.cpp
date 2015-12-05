@@ -1,10 +1,19 @@
 #include "istylesheets.h"
+#include "stylesheets_list.h"
 
 IStylesheets::IStylesheets() :resizePen(QPen()), pen(QPen()), bevelPen(QPen()), foregroundPen(QPen()),
     borderWidth(6), borderRadius(12), stickDistance(20) {
     initPens();
     initMainBrush();
     initInnerBrush();
+}
+
+IStylesheets * IStylesheets::createStylesheet(const StyleType & stype) {
+    switch(stype) {
+        case dark: return new DarkStylesheets();
+        case light: return new LightStylesheets();
+        default: return new IStylesheets();
+    }
 }
 
 void IStylesheets::applyProperty(QWidget * widget, const char * propertyName, const QVariant & val) {
@@ -254,7 +263,7 @@ QString IStylesheets::downloadProgressStyles() {
 }
 
 QString IStylesheets::checkboxStyles() {
-    QStringLiteral(
+    return QStringLiteral(
         "QCheckBox::indicator {"
         "   width: 14px;"
         "   height: 14px;"

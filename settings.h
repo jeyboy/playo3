@@ -1,6 +1,8 @@
 #ifndef APP_SETTINGS_H
 #define APP_SETTINGS_H
 
+#include <qdebug.h>
+
 #include "modules/core/interfaces/singleton.h"
 #include "settings/stylesheets/stylesheets_list.h"
 
@@ -16,6 +18,7 @@ class Settings : public GlobalSettings, public HotkeySettings,
         public TabSettings, public LibrarySettings, public Core::Singleton<Settings> {
 
     Settings(); friend class Core::Singleton<Settings>;
+    ~Settings() { delete currentStyle; }
     QWidget * anchor;
 public:
     void fromJson(QJsonObject settingsObj = QJsonObject());
@@ -34,12 +37,17 @@ public:
     void resetTabSettings();
     void resetLibrarySettings();
 
-    static void setCurrentStyle(const IStylesheets & newStyle) {
-        currentStyle = newStyle;
-        ((QApplication *)QApplication::instance()) -> setStyleSheet(currentStyle.appStyles());
+    static void setCurrentStyle(IStylesheets::StyleType newType) {
+        delete currentStyle;
+        currentStyle = IStylesheets::createStylesheet(newType);
+        qDebug() << "SET" << currentStyle -> styleType();
+        QApplication * app = ((QApplication *)QApplication::instance());
+        qDebug() << app;
+        qDebug() << currentStyle -> appStyles();
+        app -> setStyleSheet(currentStyle -> appStyles());
     }
 
-    static IStylesheets currentStyle;
+    static IStylesheets * currentStyle;
 };
 
 #endif // APP_SETTINGS_H
