@@ -36,10 +36,12 @@ int main(int argc, char * argv[]) {
     }
 
     Logger::obj().initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
-    QApplication::instance() -> setProperty("colors", Stylesheets::light);
-    a.setStyleSheet(Stylesheets::appStyles());
+    QApplication::instance() -> setProperty("colors", Stylesheets::dark);
 
     Playo w;
+
+    w.setProperty("colors", Stylesheets::dark);
+    a.setStyleSheet(Stylesheets::appStyles());
 
     QObject::connect(&a, SIGNAL(messageAvailable(QString)), &w, SLOT(receiveMessage(QString)));
     if (!message.isEmpty())
