@@ -12,6 +12,12 @@ class DarkStylesheets : public IStylesheets {
     QString toolbarButtonStyle();
     QString mainWindowTabsStyle();
 public:
+    DarkStylesheets() {
+        initPens();
+        initMainBrush();
+        initInnerBrush();
+    }
+
     StyleType styleType() const { return dark; }
 
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }

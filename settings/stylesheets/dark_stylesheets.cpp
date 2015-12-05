@@ -1,4 +1,5 @@
 #include "dark_stylesheets.h"
+#include <qdebug.h>
 
 QString DarkStylesheets::appStyles() {  
     return IStylesheets::appStyles() % QStringLiteral("QLabel, QCheckBox { color: #EEEEEE; }")
@@ -124,6 +125,8 @@ QString DarkStylesheets::toolbarStyles() {
 }
 
 void DarkStylesheets::initMainBrush() {
+    qDebug() << "initBrush";
+
     //    mainBrush.setColorAt(0,    QColor(124, 124, 124));
     //    mainBrush.setColorAt(.019,   QColor(80, 80, 80));
     //    mainBrush.setColorAt(.02,  QColor(66, 66, 66));

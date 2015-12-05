@@ -12,6 +12,12 @@ class LightStylesheets : public IStylesheets {
     QString toolbarButtonStyle();
     QString mainWindowTabsStyle();
 public:
+    LightStylesheets() {
+        initPens();
+        initMainBrush();
+        initInnerBrush();
+    }
+
     StyleType styleType() const { return light; }
 
     // background colors

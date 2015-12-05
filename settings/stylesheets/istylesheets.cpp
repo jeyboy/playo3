@@ -2,11 +2,7 @@
 #include "stylesheets_list.h"
 
 IStylesheets::IStylesheets() :resizePen(QPen()), pen(QPen()), bevelPen(QPen()), foregroundPen(QPen()),
-    borderWidth(6), borderRadius(12), stickDistance(20) {
-    initPens();
-    initMainBrush();
-    initInnerBrush();
-}
+    borderWidth(6), borderRadius(12), stickDistance(20) {}
 
 IStylesheets * IStylesheets::createStylesheet(const StyleType & stype) {
     switch(stype) {

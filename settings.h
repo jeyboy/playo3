@@ -40,10 +40,7 @@ public:
     static void setCurrentStyle(IStylesheets::StyleType newType) {
         delete currentStyle;
         currentStyle = IStylesheets::createStylesheet(newType);
-        qDebug() << "SET" << currentStyle -> styleType();
         QApplication * app = ((QApplication *)QApplication::instance());
-        qDebug() << app;
-        qDebug() << currentStyle -> appStyles();
         app -> setStyleSheet(currentStyle -> appStyles());
     }
 
