@@ -9,11 +9,11 @@
 
 class IStylesheets {
 protected:
-    QString sliderStyles();
-    QString treeViewStyles();
-    QString toolbarStyles();
-    QString toolbarButtonStyles();
-    QString mainWindowTabsStyles();
+    QString _sliderStyles();
+    QString _treeViewStyles();
+    QString _toolbarStyles();
+    QString _toolbarButtonStyles();
+    QString _mainWindowTabsStyles();
 
     QString checkboxStyles();
     QString tokenableStyles(const QColor & textColor = QColor::fromRgb(255, 255, 255));

@@ -293,7 +293,6 @@ void MainWindow::paintEvent(QPaintEvent * event) {
         break; }
 
         case IStylesheets::dark: {
-            qDebug() << "DARK";
             QPainter painter(this);
             painter.save();
 

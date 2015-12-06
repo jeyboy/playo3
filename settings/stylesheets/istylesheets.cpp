@@ -33,11 +33,11 @@ QString IStylesheets::appStyles() {
 //                "   border-radius: 8px;"
 //                "   opacity: 300; "
         "}"
-    ) % sliderStyles() % treeViewStyles() % toolbarStyles() %
-    toolbarButtonStyles() % mainWindowTabsStyles();
+    ) % _sliderStyles() % _treeViewStyles() % _toolbarStyles() %
+    _toolbarButtonStyles() % _mainWindowTabsStyles();
 }
 
-QString IStylesheets::sliderStyles() {
+QString IStylesheets::_sliderStyles() {
     return QStringLiteral(
         "QSlider:horizontal { margin: 0 4px; }"
 
@@ -124,7 +124,7 @@ QString IStylesheets::sliderStyles() {
     );
 }
 
-QString IStylesheets::treeViewStyles() {
+QString IStylesheets::_treeViewStyles() {
     return QStringLiteral(
         "QTreeView::branch:has-children:!has-siblings:closed,"
         "QTreeView::branch:closed:has-children:has-siblings {"
@@ -152,29 +152,13 @@ QString IStylesheets::treeViewStyles() {
     );
 }
 
-QString IStylesheets::tokenableStyles(const QColor & textColor) {
-    return QString(
-        "QWidget[transparent=\"true\"] {"
-        "   background-color: transparent;"
-        "}"
-
-        "QWidget[borderless=\"true\"] {"
-        "   border: none;"
-        "}"
-
-        "QWidget[colored_text=\"true\"] {"
-        "   color: " % textColor.name(QColor::HexArgb) % ";" // need to change on predefined color
-        "}"
-    );
-}
-
-QString IStylesheets::toolbarStyles() {
+QString IStylesheets::_toolbarStyles() {
     return QStringLiteral(
         "QToolBar[state=\"lighted\"] { border: 2px dotted #00FFFF; }"
     );
 }
 
-QString IStylesheets::toolbarButtonStyles() {
+QString IStylesheets::_toolbarButtonStyles() {
     return QStringLiteral(
                 "QToolButton[custom=\"true\"] {"
                     "border: 1px solid #444;"
@@ -198,7 +182,7 @@ QString IStylesheets::toolbarButtonStyles() {
               );
 }
 
-QString IStylesheets::mainWindowTabsStyles() {
+QString IStylesheets::_mainWindowTabsStyles() {
     return QStringLiteral(
                 "QMainWindow::separator:hover {"
                 "    background: #ff0000;"
@@ -295,6 +279,22 @@ QString IStylesheets::checkboxStyles() {
 
         "QCheckBox::indicator:checked:pressed {"
         "   image: url(:/controls/check_fill);"
+        "}"
+    );
+}
+
+QString IStylesheets::tokenableStyles(const QColor & textColor) {
+    return QString(
+        "QWidget[transparent=\"true\"] {"
+        "   background-color: transparent;"
+        "}"
+
+        "QWidget[borderless=\"true\"] {"
+        "   border: none;"
+        "}"
+
+        "QWidget[colored_text=\"true\"] {"
+        "   color: " % textColor.name(QColor::HexArgb) % ";"
         "}"
     );
 }

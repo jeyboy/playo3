@@ -61,7 +61,7 @@ void Playo::initialization() {
     Web::Apis::initiate(settings -> obj());
 
     SettingsDialog::registerHotkeys(&Dockbars::obj());
-    Settings::setCurrentStyle(IStylesheets::dark);
+    Settings::setCurrentStyle(IStylesheets::light);
 
     setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
 

@@ -132,7 +132,11 @@ void LightStylesheets::initMainBrush() {
     mainBrush.setColorAt(.36,   color2());
     mainBrush.setColorAt(1,     color3());
 }
-void LightStylesheets::initInnerBrush() { initMainBrush(); }
+void LightStylesheets::initInnerBrush() {
+    innerBrush.setColorAt(0,     color1());
+    innerBrush.setColorAt(.36,   color2());
+    innerBrush.setColorAt(1,     color3());
+}
 
 void LightStylesheets::initPens() {
     QVector<qreal> penPattern;
