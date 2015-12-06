@@ -1,14 +1,14 @@
 #ifndef SEARCH_DIALOG_H
 #define SEARCH_DIALOG_H
 
-#include <qdialog.h>
 #include <qlistwidget.h>
 
+#include "base_dialog.h"
 #include "modules/models/service/search_settings.h"
 
 namespace Ui { class SearchDialog; }
 
-class SearchDialog : public QDialog {
+class SearchDialog : public BaseDialog {
     Q_OBJECT
 
     Ui::SearchDialog * ui;

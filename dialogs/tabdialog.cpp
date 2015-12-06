@@ -4,7 +4,7 @@
 using namespace Dialogs;
 
 TabDialog::TabDialog(QWidget * parent) :
-  QDialog(parent), ui(new Ui::TabDialog) {
+  BaseDialog(parent), ui(new Ui::TabDialog) {
   ui -> setupUi(this);
 
   setWindowTitle(QStringLiteral("View settings"));

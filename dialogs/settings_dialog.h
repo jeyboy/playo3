@@ -17,7 +17,7 @@
 namespace Ui { class SettingsDialog; }
 
 namespace Dialogs {
-    class SettingsDialog : public QDialog {
+    class SettingsDialog : public BaseDialog {
         Q_OBJECT
     public:
         explicit SettingsDialog(QWidget * parent);

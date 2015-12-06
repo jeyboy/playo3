@@ -1,15 +1,15 @@
 #ifndef RELATIONS_DIALOG_H
 #define RELATIONS_DIALOG_H
 
-#include <qdialog.h>
 #include <qlistwidget.h>
 
+#include "base_dialog.h"
 #include "modules/core/web/interfaces/sociable.h"
 
 namespace Ui { class RelationsDialog; }
 using namespace Core;
 
-class RelationsDialog : public QDialog {
+class RelationsDialog : public BaseDialog {
     Q_OBJECT
 
     Ui::RelationsDialog * ui;

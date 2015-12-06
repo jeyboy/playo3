@@ -272,7 +272,8 @@ HEADERS += \
     settings/stylesheets/dark_stylesheets.h \
     settings/stylesheets/light_stylesheets.h \
     settings/stylesheets/istylesheets.h \
-    settings/stylesheets/stylesheets_list.h
+    settings/stylesheets/stylesheets_list.h \
+    dialogs/base_dialog.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

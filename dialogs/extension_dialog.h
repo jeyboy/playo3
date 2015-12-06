@@ -1,15 +1,15 @@
 #ifndef EXTENSION_DIALOG_H
 #define EXTENSION_DIALOG_H
 
-#include <qdialog.h>
 #include <qstringlistmodel.h>
 
+#include "base_dialog.h"
 #include "modules/core/misc/file_utils/extensions.h"
 
 namespace Ui { class ExtensionDialog; }
 
 namespace Dialogs {
-    class ExtensionDialog : public QDialog {
+    class ExtensionDialog : public BaseDialog {
         Q_OBJECT
 
     public:

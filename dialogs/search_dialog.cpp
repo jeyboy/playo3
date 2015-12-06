@@ -8,7 +8,7 @@
 using namespace Presentation;
 
 SearchDialog::SearchDialog(QWidget * parent) :
-    QDialog(parent), ui(new Ui::SearchDialog)
+    BaseDialog(parent), ui(new Ui::SearchDialog)
 {
     ui -> setupUi(this);
 

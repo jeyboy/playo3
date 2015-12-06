@@ -5,8 +5,7 @@
 #include "modules/controls/qxtspanslider.h"
 #include "modules/core/data_core.h"
 
-EchonestDialog::EchonestDialog(QWidget * parent) :
-    QDialog(parent),
+EchonestDialog::EchonestDialog(QWidget * parent) : BaseDialog(parent),
     ui(new Ui::EchonestDialog) {
     ui -> setupUi(this);
 

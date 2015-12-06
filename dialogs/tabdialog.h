@@ -1,13 +1,13 @@
 #ifndef TABDIALOG_H
 #define TABDIALOG_H
 
-#include <qdialog.h>
+#include "base_dialog.h"
 #include "modules/views/view_settings.h"
 
 namespace Ui { class TabDialog; }
 
 namespace Dialogs {
-    class TabDialog : public QDialog {
+    class TabDialog : public BaseDialog {
       Q_OBJECT
     public:
       explicit TabDialog(QWidget * parent = 0);

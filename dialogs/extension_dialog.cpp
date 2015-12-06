@@ -5,7 +5,7 @@ using namespace Dialogs;
 using namespace Core;
 
 ExtensionDialog::ExtensionDialog(QWidget * parent) :
-    QDialog(parent), ui(new Ui::ExtensionDialog) {
+    BaseDialog(parent), ui(new Ui::ExtensionDialog) {
     ui -> setupUi(this);
 
     ui -> presetExtensions -> setModel(new QStringListModel(Extensions::obj().activeFilterList(), this));

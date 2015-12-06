@@ -22,7 +22,7 @@ void RelationsDialog::prepareLinkablesList(QHash<QString, Web::Linkable> linkabl
 }
 
 RelationsDialog::RelationsDialog(Sociable * currApi, QWidget * parent)
-    : QDialog(parent), ui(new Ui::RelationsDialog), api(currApi) {
+    : BaseDialog(parent), ui(new Ui::RelationsDialog), api(currApi) {
 
     ui -> setupUi(this);
 

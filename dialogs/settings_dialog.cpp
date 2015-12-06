@@ -5,7 +5,7 @@
 using namespace Dialogs;
 
 SettingsDialog::SettingsDialog(QWidget * parent) :
-  QDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {
+  BaseDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {
   ui -> setupUi(this);
 
   setWindowTitle(QStringLiteral("Playo settings"));

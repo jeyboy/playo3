@@ -4,7 +4,6 @@
 #include <qfiledialog.h>
 //#include <qsyntaxhighlighter.h>
 
-#include <qdialog.h>
 #include <qgridlayout.h>
 #include <qlineedit.h>
 #include <qlabel.h>
@@ -15,6 +14,7 @@
 #include <qcheckbox.h>
 #include <qpair.h>
 
+#include "base_dialog.h"
 #include "modules/core/misc/thread_utils.h"
 
 namespace Ui { class UserActionDialog; }
@@ -102,7 +102,7 @@ struct FormInput {
 
 #define MAX_PIXMAP_WIDTH 370
 
-class UserActionDialog : public QDialog {
+class UserActionDialog : public BaseDialog {
     Q_OBJECT
 public:
     const QString name_key = QStringLiteral("name");
