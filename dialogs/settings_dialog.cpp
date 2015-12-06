@@ -20,6 +20,8 @@ SettingsDialog::SettingsDialog(QWidget * parent) :
   initSpectrumSettings();
   initLibrarySettings();
   initExtensions();
+
+  setProperty("transparent", true);
 }
 
 SettingsDialog::~SettingsDialog() {

@@ -22,6 +22,9 @@
   <layout class="QGridLayout" name="gridLayout_6">
    <item row="0" column="0" colspan="3">
     <widget class="QTabWidget" name="settingsTabs">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -38,6 +41,9 @@
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="common_tab">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="title">
        <string>Common</string>
       </attribute>
@@ -56,6 +62,9 @@
        </property>
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -303,6 +312,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tabber_tab">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="title">
        <string>Views</string>
       </attribute>
@@ -1051,8 +1063,8 @@ text color</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>335</width>
+            <height>245</height>
            </rect>
           </property>
           <widget class="QPushButton" name="spectrumColor3">

@@ -285,7 +285,7 @@ QString IStylesheets::checkboxStyles() {
 
 QString IStylesheets::tokenableStyles(const QColor & textColor) {
     return QString(
-        "QWidget[transparent=\"true\"] {"
+        "QWidget[transparent=\"true\"], [transparent=\"true\"] QScrollArea, [transparent=\"true\"] QScrollArea {"
         "   background-color: transparent;"
         "}"
 

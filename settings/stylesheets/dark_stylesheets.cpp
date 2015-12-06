@@ -2,8 +2,10 @@
 #include <qdebug.h>
 
 QString DarkStylesheets::appStyles() {  
-    return IStylesheets::appStyles() % QStringLiteral("QLabel, QCheckBox { color: #EEEEEE; }")
-        % checkboxStyles() % scrollStyles() % treeViewStyles() % listViewStyles()
+    return IStylesheets::appStyles() % QStringLiteral(
+        "QLabel, QCheckBox, QGroupBox { color: #EEEEEE; }"
+        "QTabWidget QLabel, QTabWidget QCheckBox, QTabWidget QGroupBox { color: #000000; }"
+    )   % checkboxStyles() % scrollStyles() % treeViewStyles() % listViewStyles()
         % tokenableStyles() % toolbarStyles() % downloadProgressStyles();
 }
 
