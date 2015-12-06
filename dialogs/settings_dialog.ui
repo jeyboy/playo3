@@ -29,7 +29,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -126,7 +126,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>70</y>
+             <y>60</y>
              <width>151</width>
              <height>17</height>
             </rect>
@@ -139,7 +139,7 @@
            <property name="geometry">
             <rect>
              <x>100</x>
-             <y>95</y>
+             <y>85</y>
              <width>231</width>
              <height>22</height>
             </rect>
@@ -149,7 +149,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>95</y>
+             <y>85</y>
              <width>71</width>
              <height>21</height>
             </rect>
@@ -162,7 +162,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>130</y>
+             <y>120</y>
              <width>111</width>
              <height>17</height>
             </rect>
@@ -175,7 +175,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>160</y>
+             <y>150</y>
              <width>141</width>
              <height>17</height>
             </rect>
@@ -184,25 +184,12 @@
             <string>Open drop point in tab</string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_dropPointTabType">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>185</y>
-             <width>101</width>
-             <height>21</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Drop point tab type</string>
-           </property>
-          </widget>
           <widget class="QComboBox" name="dropPointTabTypeSelect">
            <property name="geometry">
             <rect>
-             <x>120</x>
-             <y>185</y>
-             <width>211</width>
+             <x>150</x>
+             <y>150</y>
+             <width>181</width>
              <height>22</height>
             </rect>
            </property>
@@ -211,7 +198,7 @@
            <property name="geometry">
             <rect>
              <x>170</x>
-             <y>70</y>
+             <y>60</y>
              <width>151</width>
              <height>17</height>
             </rect>
@@ -224,7 +211,7 @@
            <property name="geometry">
             <rect>
              <x>190</x>
-             <y>130</y>
+             <y>120</y>
              <width>111</width>
              <height>17</height>
             </rect>
@@ -240,7 +227,7 @@
            <property name="geometry">
             <rect>
              <x>210</x>
-             <y>215</y>
+             <y>180</y>
              <width>21</width>
              <height>21</height>
             </rect>
@@ -253,7 +240,7 @@
            <property name="geometry">
             <rect>
              <x>120</x>
-             <y>215</y>
+             <y>180</y>
              <width>81</width>
              <height>22</height>
             </rect>
@@ -275,7 +262,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>215</y>
+             <y>180</y>
              <width>101</width>
              <height>21</height>
             </rect>
@@ -285,6 +272,29 @@
            </property>
            <property name="text">
             <string>Open item timeout</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_29">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>210</y>
+             <width>71</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Color Scheme</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="colorScheme">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>210</y>
+             <width>231</width>
+             <height>22</height>
+            </rect>
            </property>
           </widget>
          </widget>

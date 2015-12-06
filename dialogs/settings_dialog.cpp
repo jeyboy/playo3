@@ -236,6 +236,14 @@ void SettingsDialog::initGlobalSettings() {
     ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::obj().openDropPointInTabType() - 1);
 
     ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
+
+    QStringList schemas;
+    schemas.append(QStringLiteral("Normal"));
+    schemas.append(QStringLiteral("Light"));
+    schemas.append(QStringLiteral("Dark"));
+
+    ui -> colorScheme -> insertItems(0, schemas);
+    ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme());
 }
 
 void SettingsDialog::initItemsSettings() {
@@ -367,6 +375,7 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
+    Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex());
 }
 
 void SettingsDialog::saveItemsSettings() {
@@ -465,7 +474,6 @@ bool SettingsDialog::execColorDialog(QColor & color) {
 }
 
 void SettingsDialog::on_openDropPointInTab_toggled(bool checked) {
-    ui -> label_dropPointTabType -> setEnabled(checked);
     ui -> dropPointTabTypeSelect -> setEnabled(checked);
 }
 
@@ -478,4 +486,8 @@ void SettingsDialog::on_autorunned_toggled(bool checked) {
         Autorun::registerApp();
     else
         Autorun::unregisterApp();
+}
+
+void Dialogs::SettingsDialog::on_colorScheme_activated(int index) {
+    Settings::setCurrentStyle((IStylesheets::StyleType)index);
 }

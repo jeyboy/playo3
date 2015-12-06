@@ -16,9 +16,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setMouseTracking(true);
 
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
-    setAttribute(Qt::WA_OpaquePaintEvent, true);
-    setAttribute(Qt::WA_NoSystemBackground, true);
-    setAttribute(Qt::WA_TranslucentBackground, true);
+    Settings::registerTransparentWidget(this);
 
     titleWidget = new WindowTitle(
         false,
@@ -273,7 +271,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent * event) {
 void MainWindow::paintEvent(QPaintEvent * event) {
     switch(Settings::currentStyle -> styleType()) {
         case IStylesheets::light: {
-            qDebug() << "LIGHT";
             bool isResizing = (resizeFlagX || resizeFlagY);
             QPainter painter(this);
             painter.save();
@@ -305,10 +302,8 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             painter.restore();
         break; }
 
-        default: {}
+        default: { QMainWindow::paintEvent(event); }
     }
-
-    QMainWindow::paintEvent(event);
 }
 
 QRect & MainWindow::stickCorrection(QRect & rect) {

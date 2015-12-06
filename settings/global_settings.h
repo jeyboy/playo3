@@ -15,8 +15,8 @@
 #define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
-
-#define SETTINGS_OPEN_TIMEOUT QStringLiteral("open_time_out_key")
+#define SETTINGS_OPEN_TIMEOUT_KEY QStringLiteral("open_time_out_key")
+#define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
 
 class GlobalSettings {
 public:
@@ -50,6 +50,9 @@ public:
     inline float openTimeOut() { return _openTimeOut; }
     inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
 
+    inline int colorScheme() { return _colorScheme; }
+    inline void setColorScheme(int newColorScheme) { _colorScheme = newColorScheme; }
+
 protected:
     QString _defaultDownloadPath;
     bool _showMetric;
@@ -60,6 +63,7 @@ protected:
     bool _openDropPointInTab;
     Data::Type _openDropPointInTabType;
     int _tabPosition;
+    int _colorScheme;
 
     float _openTimeOut;
 };

@@ -1,6 +1,7 @@
 #include "settings.h"
 
 IStylesheets * Settings::currentStyle = new IStylesheets();
+QList<QWidget *> Settings::transparences = QList<QWidget *>();
 
 Settings::Settings() : anchor(0) {}
 

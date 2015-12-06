@@ -4,13 +4,10 @@
 #include "istylesheets.h"
 
 class DarkStylesheets : public IStylesheets {
-    QString sliderStyles();
     QString treeViewStyles();
     QString listViewStyles();
     QString scrollStyles();
     QString toolbarStyles();
-    QString toolbarButtonStyle();
-    QString mainWindowTabsStyle();
 public:
     DarkStylesheets() {
         initPens();
@@ -19,6 +16,7 @@ public:
     }
 
     StyleType styleType() const { return dark; }
+    virtual bool isTransparent() { return true; }
 
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 

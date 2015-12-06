@@ -4,13 +4,10 @@
 #include "istylesheets.h"
 
 class LightStylesheets : public IStylesheets {
-    QString sliderStyles();
     QString treeViewStyles();
     QString listViewStyles();
     QString scrollStyles();
     QString toolbarStyles();
-    QString toolbarButtonStyle();
-    QString mainWindowTabsStyle();
 public:
     LightStylesheets() {
         initPens();
@@ -19,6 +16,7 @@ public:
     }
 
     StyleType styleType() const { return light; }
+    virtual bool isTransparent() { return true; }
 
     // background colors
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }

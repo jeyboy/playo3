@@ -19,7 +19,7 @@ protected:
     QString tokenableStyles(const QColor & textColor = QColor::fromRgb(255, 255, 255));
     QString downloadProgressStyles();
 public:
-    enum StyleType {
+    enum StyleType : int {
         stub = 0,
         light,
         dark
@@ -30,6 +30,7 @@ public:
     IStylesheets();
     virtual ~IStylesheets() {}
     virtual StyleType styleType() const { return stub; }
+    virtual bool isTransparent() { return false; }
 
     // background colors
     virtual inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }

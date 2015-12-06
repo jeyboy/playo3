@@ -16,9 +16,8 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
+    Settings::registerTransparentWidget(this);
     setAttribute(Qt::WA_DeleteOnClose, closable);
-    setAttribute(Qt::WA_NoSystemBackground, true);
-    setAttribute(Qt::WA_TranslucentBackground, true);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
@@ -121,10 +120,8 @@ void DockBar::paintEvent(QPaintEvent * event) {
 //            pen.setWidth(2);
         break; }
 
-        default: {}
+        default: { QDockWidget::paintEvent(event); }
     }
-
-    QDockWidget::paintEvent(event);
 }
 
 void DockBar::setTabBarSettings() {

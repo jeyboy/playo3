@@ -21,6 +21,7 @@ namespace Controls {
         Q_OBJECT
     public:
         DockBar(const QString & title, QWidget * parent = 0, bool closable = true, Qt::WindowFlags flags = 0);
+        ~DockBar() { Settings::unregisterTransparentWidget(this); }
         inline void setWindowTitle(const QString & newTitle) {
             titleWidget -> setText(newTitle);
             QDockWidget::setWindowTitle(newTitle);
