@@ -240,12 +240,12 @@ void SettingsDialog::initGlobalSettings() {
     ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
 
     QStringList schemas;
-    schemas.append(QStringLiteral("Normal"));
+//    schemas.append(QStringLiteral("Normal"));
     schemas.append(QStringLiteral("Light"));
     schemas.append(QStringLiteral("Dark"));
 
     ui -> colorScheme -> insertItems(0, schemas);
-    ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme());
+    ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme() - 1);
 }
 
 void SettingsDialog::initItemsSettings() {
@@ -377,7 +377,7 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
-    Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex());
+    Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 }
 
 void SettingsDialog::saveItemsSettings() {
@@ -491,5 +491,5 @@ void SettingsDialog::on_autorunned_toggled(bool checked) {
 }
 
 void Dialogs::SettingsDialog::on_colorScheme_activated(int index) {
-    Settings::setCurrentStyle((IStylesheets::StyleType)index);
+    Settings::setCurrentStyle((IStylesheets::StyleType)(index + 1));
 }
