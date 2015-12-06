@@ -26,7 +26,7 @@ public:
 
     QString appStyles();
 
-    void initMainBrush();
+    void initMainBrush(const QRect & /*rect*/ = QRect());
     void initInnerBrush();
     void initPens();
 };

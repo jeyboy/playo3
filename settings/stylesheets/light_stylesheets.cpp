@@ -127,7 +127,7 @@ QString LightStylesheets::toolbarStyles() {
     );
 }
 
-void LightStylesheets::initMainBrush() {
+void LightStylesheets::initMainBrush(const QRect & /*rect*/) {
     mainBrush.setColorAt(0,     color1());
     mainBrush.setColorAt(.36,   color2());
     mainBrush.setColorAt(1,     color3());

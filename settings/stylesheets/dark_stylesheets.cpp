@@ -124,8 +124,20 @@ QString DarkStylesheets::toolbarStyles() {
     );
 }
 
-void DarkStylesheets::initMainBrush() {
-    qDebug() << "initBrush";
+void DarkStylesheets::initMainBrush(const QRect & rect) {
+    double border = rect.isEmpty() ? .019 : 8 / (double)rect.width();
+
+    QVector<QGradientStop> stops;
+
+    stops << QGradientStop(0,    QColor(168, 168, 168));
+    stops << QGradientStop(border,   QColor(124, 124, 124));
+    stops << QGradientStop(border + .0001,  QColor(100, 100, 100));
+    stops << QGradientStop(.5,   QColor(148, 148, 148));
+    stops << QGradientStop(1 - border - .0001,  QColor(100, 100, 100));
+    stops << QGradientStop(1 - border,   QColor(124, 124, 124));
+    stops << QGradientStop(1,    QColor(168, 168, 168));
+
+    mainBrush.setStops(stops);
 
     //    mainBrush.setColorAt(0,    QColor(124, 124, 124));
     //    mainBrush.setColorAt(.019,   QColor(80, 80, 80));
@@ -145,13 +157,8 @@ void DarkStylesheets::initMainBrush() {
     //    mainBrush.setColorAt(.98,   QColor(124, 124, 124));
     //    mainBrush.setColorAt(1,    QColor(168, 168, 168));
 
-    mainBrush.setColorAt(0,    QColor(168, 168, 168));
-    mainBrush.setColorAt(.019,   QColor(124, 124, 124));
-    mainBrush.setColorAt(.02,  QColor(100, 100, 100));
-    mainBrush.setColorAt(.5,   QColor(148, 148, 148));
-    mainBrush.setColorAt(.979,  QColor(100, 100, 100));
-    mainBrush.setColorAt(.98,   QColor(124, 124, 124));
-    mainBrush.setColorAt(1,    QColor(168, 168, 168));
+    mainBrush.setStart(rect.topLeft());
+    mainBrush.setFinalStop(rect.topRight());
 }
 
 void DarkStylesheets::initInnerBrush() {

@@ -43,7 +43,7 @@ public:
 
     virtual QString appStyles();
 
-    virtual void initMainBrush() {}
+    virtual void initMainBrush(const QRect & /*rect*/ = QRect()) {}
     virtual void initInnerBrush() {}
 
     //border pens

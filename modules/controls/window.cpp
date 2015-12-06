@@ -293,8 +293,7 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             QPainter painter(this);
             painter.save();
 
-            Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
-            Settings::currentStyle -> mainBrush.setFinalStop(rect().topRight());
+            Settings::currentStyle -> initMainBrush(rect());
             painter.setBrush(Settings::currentStyle -> mainBrush);
             painter.setPen(Qt::NoPen);
             painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
