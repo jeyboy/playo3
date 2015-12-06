@@ -2,6 +2,7 @@
 #define APP_SETTINGS_H
 
 #include <qdebug.h>
+#include <qmainwindow.h>
 
 #include "modules/core/interfaces/singleton.h"
 #include "settings/stylesheets/stylesheets_list.h"
@@ -21,12 +22,14 @@ class Settings : public GlobalSettings, public HotkeySettings,
     ~Settings() { delete currentStyle; }
     QWidget * anchor;
 
-    static void setTransparency(QWidget * widget, bool activate = true) {
-//        widget -> setAttribute(Qt::WA_OpaquePaintEvent, activate);
-        widget -> setAttribute(Qt::WA_NoSystemBackground, activate);
-        widget -> setAttribute(Qt::WA_TranslucentBackground, activate);
-        widget -> update();
-    }
+//    static void setTransparency(QWidget * widget, bool activate = true) {
+//        widget -> setAttribute(Qt::WA_NoSystemBackground, activate);
+//        widget -> setAttribute(Qt::WA_TranslucentBackground, activate);
+//        if (qobject_cast<QMainWindow *>(widget))
+//            widget -> setAttribute(Qt::WA_OpaquePaintEvent, activate);
+
+//        widget -> update();
+//    }
 public:
     void fromJson(QJsonObject settingsObj = QJsonObject());
     QJsonObject toJson();
@@ -45,29 +48,29 @@ public:
     void resetLibrarySettings();
 
     static void setCurrentStyle(IStylesheets::StyleType newType) {
-        bool is_transparent = currentStyle -> isTransparent();
+//        bool is_transparent = currentStyle -> isTransparent();
         delete currentStyle;
 
         currentStyle = IStylesheets::createStylesheet(newType);
 
-//        if (is_transparent != currentStyle -> isTransparent())
-            is_transparent = currentStyle -> isTransparent();
-            qDebug() << "TRANS" << is_transparent << transparences;
-            for(QList<QWidget *>::Iterator widget = transparences.begin(); widget != transparences.end(); widget++)
-                setTransparency(*widget, is_transparent);
+////        if (is_transparent != currentStyle -> isTransparent())
+//            is_transparent = currentStyle -> isTransparent();
+//            qDebug() << "TRANS" << is_transparent << transparences;
+//            for(QList<QWidget *>::Iterator widget = transparences.begin(); widget != transparences.end(); widget++)
+//                setTransparency(*widget, is_transparent);
 
         QApplication * app = ((QApplication *)QApplication::instance());
         app -> setStyleSheet(currentStyle -> appStyles());
     }
 
-    static void registerTransparentWidget(QWidget * widget) {
-        transparences.append(widget);
-        setTransparency(widget, currentStyle -> isTransparent());
-    }
-    static void unregisterTransparentWidget(QWidget * widget) { transparences.removeAll(widget); }
+//    static void registerTransparentWidget(QWidget * widget) {
+//        transparences.append(widget);
+//        setTransparency(widget, currentStyle -> isTransparent());
+//    }
+//    static void unregisterTransparentWidget(QWidget * widget) { transparences.removeAll(widget); }
 
     static IStylesheets * currentStyle;
-    static QList<QWidget *> transparences;
+//    static QList<QWidget *> transparences;
 };
 
 #endif // APP_SETTINGS_H

@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setMouseTracking(true);
 
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
-    Settings::registerTransparentWidget(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);
 
     titleWidget = new WindowTitle(
         false,

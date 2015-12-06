@@ -9,70 +9,70 @@ QString DarkStylesheets::appStyles() {
 
 QString DarkStylesheets::scrollStyles() {
     return QStringLiteral(
-        "[colors] QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
+        "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
         "    border: 1px solid grey;"
         "    background: #333;"
         "}"
 
-        "[colors] QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
+        "QScrollBar::add-line:hover, QScrollBar::sub-line:hover, QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover  {"
         "    background: #2EA5EA;"
         "}"
 
-        "[colors] QScrollBar:horizontal  {"
+        "QScrollBar:horizontal  {"
         "    height: 16px;"
         "    margin: 0px 22px;"
         "}"
-        "[colors] QScrollBar::handle:horizontal  {"
+        "QScrollBar::handle:horizontal  {"
         "    background: white;"
         "    min-width: 16px;"
         "    border-radius: 4px;"
         "}"
-        "[colors] QScrollBar::add-line:horizontal  {"
+        "QScrollBar::add-line:horizontal  {"
         "    width: 20px;"
         "    subcontrol-position: right;"
         "    subcontrol-origin: margin;"
         "    border-bottom-right-radius: 8px;"
         "}"
 
-        "[colors] QScrollBar::sub-line:horizontal  {"
+        "QScrollBar::sub-line:horizontal  {"
         "    width: 20px;"
         "    subcontrol-position: left;"
         "    subcontrol-origin: margin;"
         "    border-bottom-left-radius: 8px;"
         "}"
 
-        "[colors] QScrollBar:left-arrow:horizontal  {"
+        "QScrollBar:left-arrow:horizontal  {"
         "    background: url(:/controls/scroll_left) no-repeat center center;"
         "}"
 
-        "[colors] QScrollBar::right-arrow:horizontal  {"
+        "QScrollBar::right-arrow:horizontal  {"
         "    background: url(:/controls/scroll_right) no-repeat center center;"
         "}"
 
-        "[colors] QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
+        "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal  {"
         "    background: none;"
         "}"
 
 //// vertical
 
-        "[colors] QScrollBar:vertical  {"
+        "QScrollBar:vertical  {"
         "    width: 16px;"
         "    margin: 22px 0;"
         "}"
-        "[colors] QScrollBar::handle:vertical  {"
+        "QScrollBar::handle:vertical  {"
         "    background: white;"
         "    min-height: 16px;"
         "    border-radius: 4px;"
         "}"
 
-        "[colors] QScrollBar::add-line:vertical  {"
+        "QScrollBar::add-line:vertical  {"
         "    height: 20px;"
         "    subcontrol-position: bottom;"
         "    subcontrol-origin: margin;"
         "    border-bottom-right-radius: 8px;"
         "}"
 
-        "[colors] QScrollBar::sub-line:vertical  {"
+        "QScrollBar::sub-line:vertical  {"
         "    height: 20px;"
         "    subcontrol-position: top;"
         "    subcontrol-origin: margin;"
@@ -80,15 +80,15 @@ QString DarkStylesheets::scrollStyles() {
         "    border-top-right-radius: 8px;"
         "}"
 
-        "[colors] QScrollBar::up-arrow:vertical  {"
+        "QScrollBar::up-arrow:vertical  {"
         "    background: url(:/controls/scroll_top) no-repeat center center;"
         "}"
 
-        "[colors] QScrollBar::down-arrow:vertical  {"
+        "QScrollBar::down-arrow:vertical  {"
         "    background: url(:/controls/scroll_bottom) no-repeat center center;"
         "}"
 
-        "[colors] QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical  {"
         "    background: none;"
         "}"
     );
@@ -178,6 +178,6 @@ void DarkStylesheets::initPens() {
     resizePen.setColor(colorResize());
 
     foregroundPen.setColor(QColor::fromRgb(192, 192, 192));
-    foregroundPen.setWidth(1);
+    foregroundPen.setWidth(2);
     foregroundPen.setCosmetic(true);
 }

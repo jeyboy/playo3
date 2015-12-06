@@ -16,7 +16,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
-    Settings::registerTransparentWidget(this);
+    setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_DeleteOnClose, closable);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
