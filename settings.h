@@ -1,6 +1,8 @@
 #ifndef APP_SETTINGS_H
 #define APP_SETTINGS_H
 
+#include <qdebug.h>
+
 #include "modules/core/interfaces/singleton.h"
 #include "settings/stylesheets/stylesheets_list.h"
 
@@ -20,9 +22,10 @@ class Settings : public GlobalSettings, public HotkeySettings,
     QWidget * anchor;
 
     static void setTransparency(QWidget * widget, bool activate = true) {
-        widget -> setAttribute(Qt::WA_OpaquePaintEvent, activate);
+//        widget -> setAttribute(Qt::WA_OpaquePaintEvent, activate);
         widget -> setAttribute(Qt::WA_NoSystemBackground, activate);
         widget -> setAttribute(Qt::WA_TranslucentBackground, activate);
+        widget -> update();
     }
 public:
     void fromJson(QJsonObject settingsObj = QJsonObject());
@@ -49,6 +52,7 @@ public:
 
 //        if (is_transparent != currentStyle -> isTransparent())
             is_transparent = currentStyle -> isTransparent();
+            qDebug() << "TRANS" << is_transparent << transparences;
             for(QList<QWidget *>::Iterator widget = transparences.begin(); widget != transparences.end(); widget++)
                 setTransparency(*widget, is_transparent);
 
