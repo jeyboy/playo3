@@ -14,12 +14,6 @@ protected:
             case IStylesheets::dark: {
                 QPainter painter(this);
                 painter.save();
-
-                Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
-                Settings::currentStyle -> mainBrush.setFinalStop(rect().bottomRight());
-                painter.setBrush(Settings::currentStyle -> mainBrush);
-
-
                 Settings::currentStyle -> initMainBrush(rect());
                 painter.setBrush(Settings::currentStyle -> mainBrush);
                 painter.setPen(Qt::NoPen);
@@ -32,7 +26,7 @@ protected:
     }
 public:
     BaseDialog(QWidget * parent = 0, Qt::WindowFlags f = 0) : QDialog(parent, f) {
-        setAttribute(Qt::WA_TranslucentBackground, true);
+//        setAttribute(Qt::WA_TranslucentBackground, true);
     }
 };
 

@@ -70,9 +70,9 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>150</x>
      <y>40</y>
-     <width>151</width>
+     <width>141</width>
      <height>101</height>
     </rect>
    </property>
@@ -171,7 +171,7 @@
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>131</width>
+     <width>141</width>
      <height>101</height>
     </rect>
    </property>
@@ -198,7 +198,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>43</y>
       <width>121</width>
       <height>17</height>
      </rect>
@@ -211,19 +211,20 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
-      <width>121</width>
-      <height>17</height>
+      <y>66</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this option when you remove item, you are initiate deletion  of object from your hard disk ( or account data storage)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: red</string>
+     <string notr="true">color: red; font-weight: bold;</string>
     </property>
     <property name="text">
-     <string>Delete file with item</string>
+     <string>Delete file 
+ with item</string>
     </property>
    </widget>
   </widget>
