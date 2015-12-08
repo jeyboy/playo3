@@ -125,13 +125,10 @@ bool BassPlayer::pauseProcessing() {
 }
 bool BassPlayer::stopProcessing() {
     if (chan) {
-        if (BASS_ChannelStop(chan)) {
-            unregisterEQ();
-            BASS_ChannelRemoveSync(chan, syncHandle);
-            BASS_ChannelRemoveSync(chan, syncDownloadHandle);
-            BASS_StreamFree(chan);
-        }
-        else qDebug() << "Error while stopping";
+        unregisterEQ();
+        BASS_ChannelRemoveSync(chan, syncHandle);
+        BASS_ChannelRemoveSync(chan, syncDownloadHandle);
+        BASS_StreamFree(chan);
     }
 
     return true;

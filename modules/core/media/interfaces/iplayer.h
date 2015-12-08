@@ -74,7 +74,7 @@ public:
     inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration); }
 
     void closeMedia() {
-        if (isPlayed()) stop();
+        stop();
         emit statusChanged(CloseMedia);
     }
 
