@@ -16,9 +16,9 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() { }
             public:
-                inline QString name() const { return QStringLiteral("Od"); }
+                inline QString name() const { return val_name; }
                 inline Web::SubType siteType() { return od_site; }
-                inline QUrlQuery genDefaultParams() { return QUrlQuery(QStringLiteral("jsessionid=") % token()); }
+                inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_jsessionid % token()); }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
@@ -50,17 +50,17 @@ namespace Core {
                 bool hashConnection(bool onlyAuto);
                 bool formConnection();
 
-                inline QString baseUrlStr(const QString & predicate) { return base_url % predicate; }
+                inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
 
-                inline QString offsetKey() const { return offset_key; }
-                inline QString limitKey() const { return limit_key; }
+                inline QString offsetKey() const { return tkn_offset; }
+                inline QString limitKey() const { return tkn_limit; }
                 inline int requestLimit() const { return 100; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) {
-                    QJsonObject chunk_obj = response.value(QStringLiteral("chunk")).toObject();
+                    QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
                     if (chunk_obj.isEmpty()) return false;
-                    return chunk_obj.value(QStringLiteral("count")).toInt() < requestLimit();
+                    return chunk_obj.value(tkn_count).toInt() < requestLimit();
                 }
                 inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
         //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();

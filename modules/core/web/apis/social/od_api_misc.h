@@ -10,21 +10,20 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Misc : public IApi, public Keys {
+            class Misc : public IApi {
                     int magic [33] = { 4, 3, 5, 6, 1, 2, 8, 7, 2, 9, 3, 5, 7, 1, 4, 8, 8, 3, 4, 3, 1, 7, 3, 5, 9, 8, 1, 4, 3, 7, 2, 8 };
                 protected:
                     inline Misc() {}
 
-                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(QStringLiteral("web-api/music/conf"))); }
+                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(path_sid)); }
 
                     inline bool hasError(const QJsonObject & obj) {
-                        return obj.contains(QStringLiteral("error"));
+                        return obj.contains(tkn_error);
                     }
 
                     inline QHash<QString, QString> initHeaders() {
                         QHash<QString, QString> headers;
-            //            headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"));
-                        headers.insert(QStringLiteral("User-Agent"), QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0"));
+                        headers.insert(tkn_header_user_agent, val_default_agent);
                         return headers;
                     }
 
@@ -41,8 +40,8 @@ namespace Core {
 
                     inline QString grabSID() {
                         QJsonObject obj = Manager::prepare() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
-                        if (obj.contains(QStringLiteral("sid")))
-                            return obj.value(QStringLiteral("sid")).toString();
+                        if (obj.contains(tkn_sid))
+                            return obj.value(tkn_sid).toString();
                         else {
                             qDebug() << "SID ERROR" << obj;
                             return QString();
@@ -54,14 +53,14 @@ namespace Core {
 
                         if (!forms.isEmpty()) {
                             QList<FormInput> inputs;
-                            inputs << FormInput::createStr(QStringLiteral("code"), QStringLiteral("Code from sms"));
-                            inputs << FormInput(QStringLiteral("Resend sms"), forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
+                            inputs << FormInput::createStr(tkn_code, val_sms_code_title);
+                            inputs << FormInput(val_resend_sms_title, forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
                             actionDialog -> proceedForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
                                 QHash<QString, QString> attrs;
-                                attrs.insert("st.mobileCaptcha", actionDialog -> getValue(QStringLiteral("code")));
-                                QUrl url = QUrl(base_url).resolved(forms.first() -> serializeFormToUrl(attrs));
+                                attrs.insert(tkn_captcha, actionDialog -> getValue(tkn_code));
+                                QUrl url = QUrl(url_root).resolved(forms.first() -> serializeFormToUrl(attrs));
                                 QNetworkReply * reply = Manager::prepare() -> followedForm(url, initHeaders());
                                 //TODO: check session
                                 reply -> deleteLater();
@@ -71,7 +70,7 @@ namespace Core {
 
                     QString calcMagicNumber(const QString & md5) {
                         QCryptographicHash hash(QCryptographicHash::Md5);
-                        hash.addData((md5 % QStringLiteral("secret")).toLatin1());
+                        hash.addData((md5 % tkn_secret).toLatin1());
                         QByteArray src = hash.result().toHex().toLower();
 
                         QList<int> newSrc; newSrc.reserve(src.size() + 1);

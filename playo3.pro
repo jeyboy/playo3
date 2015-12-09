@@ -406,4 +406,5 @@ SOURCES += \
     modules/models/service/relations_delegate.cpp \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \
-    settings/stylesheets/istylesheets.cpp
+    settings/stylesheets/istylesheets.cpp \
+    modules/core/web/apis/social/od_api_keys.cpp
