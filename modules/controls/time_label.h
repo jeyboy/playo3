@@ -15,12 +15,16 @@ namespace Controls {
             : ClickableLabel(user_text, text, parent, f, receiver, slot), total(0), forward_turn(true), extended(false) {
             connect(this, SIGNAL(clicked()), this, SLOT(invertTurn()));
             setTotal(0);
+            setContentsMargins(0,0,0,0);
         }
     public slots:
         void invertTurn() { forward_turn = !forward_turn; }
         void setPos(int pos) { output(pos); }
         void setTotal(int newTotal) {
             extended = Duration::hasHours((total = newTotal));
+            int newWidth = fontMetrics().width(QString::number(total)) - 10;
+            setMinimumWidth(newWidth);
+            parentWidget() -> setMinimumWidth(qMax(parentWidget() -> minimumWidth(), newWidth));
             output(0);
         }
     protected:

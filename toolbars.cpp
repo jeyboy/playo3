@@ -240,7 +240,7 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
 }
 
 QToolBar * ToolBars::createMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_key);   
+    QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
     play_btn = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
     PlayerFactory::obj().registerCallback(in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
@@ -257,6 +257,7 @@ QToolBar * ToolBars::createMediaBar() {
 
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
 
+    ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
 
     return ptb;
@@ -278,6 +279,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     connect(&DataFactory::obj(), SIGNAL(likeChanged(bool)), act, SLOT(setChecked(bool)));
 
     ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
+    ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
 
     return ptb;
@@ -288,7 +290,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
-    slider -> setMinimumSize(30, 30);
+    slider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
@@ -298,6 +300,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
     ptb -> addWidget(slider);
+    ptb -> setMinimumWidth(70);
     ptb -> adjustSize();
 
     return ptb;
@@ -308,7 +311,7 @@ QToolBar * ToolBars::createPanMediaBar() {
 
     ClickableSlider * pslider = new ClickableSlider(ptb);
     pslider -> setOrientation(Qt::Horizontal);
-    pslider -> setMinimumSize(30, 30);
+    pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
 
     PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
@@ -319,6 +322,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setValue(0);
 
     ptb -> addWidget(pslider);
+    ptb -> setMinimumWidth(70);
     ptb -> adjustSize();
 
     return ptb;
@@ -334,7 +338,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
     PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
     PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
 
-    ptb -> adjustSize();
+//    ptb -> adjustSize();
 
     return ptb;
 }
@@ -355,7 +359,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
-    slider -> setMinimumSize(30, 30);
+    slider -> setMinimumSize(45, 30);
     slider -> setMaximum(10000);
     slider -> setValue(10000);
 
@@ -363,6 +367,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     PlayerFactory::obj().registerCallback(out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     ptb -> addWidget(slider);
+    ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
 
     return ptb;
