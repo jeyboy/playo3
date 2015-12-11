@@ -138,16 +138,19 @@ DockBar * Dockbars::commonBar() {
 }
 
 DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & path, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
-    DockBar * bar = linkedTabs.value(path, 0);
+    bool with_head = path.startsWith(UID_HEAD);
+    QString identifier = with_head ? path : UID_HEAD % path;
+
+    DockBar * bar = linkedTabs.value(identifier, 0);
 
     if (!bar) {
         bar = createDocBar(name, settings, attrs, closable, addToView, search_settings);
-        linkedTabs.insert(path, bar);
-        if (!path.startsWith(UID_HEAD)) {
+        if (!with_head) {
             QList<QUrl> urls;
-            urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash
+            urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash and head symbol
             view(bar) -> appendRows(urls);
         }
+        linkedTabs.insert(identifier, bar);
     }
     else activate(bar);
 
