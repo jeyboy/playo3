@@ -11,9 +11,9 @@ EchonestDialog::EchonestDialog(QWidget * parent) : BaseDialog(parent),
 
     Controls::Accordion * accordion = new Controls::Accordion(this);
 
-    QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
-    slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    layout() -> addWidget(slider);
+//    QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
+//    slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+//    layout() -> addWidget(slider);
 
     layout() -> addWidget(accordion);
 

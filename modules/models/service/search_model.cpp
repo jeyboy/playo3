@@ -19,7 +19,7 @@ void SearchModel::initiateSearch(SearchSettings & params) {
 }
 
 void SearchModel::initiateSearch(QStringList & predicates) {
-    SearchSettings settings(true, true, true);
+    SearchSettings settings(true, true, false/*true*/);
     settings.predicates = predicates;
     settings.onlyOne = true;
     initiateSearch(settings);

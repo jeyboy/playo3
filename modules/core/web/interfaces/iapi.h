@@ -56,7 +56,7 @@ namespace Core {
         inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
             if (errorReceiver)
                 QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
-            else qDebug() << message;
+            else qDebug() << "ERROR: " << message;
         }
 
         void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
