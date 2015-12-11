@@ -20,7 +20,7 @@ void IStylesheets::applyProperty(QWidget * widget, const char * propertyName, co
 }
 
 QString IStylesheets::appStyles() {
-    return QString(
+    return QStringLiteral(
         "QLabel[timer=\"true\"] {"
         "   font-weight: bold;"
         "   font-size: 12px;"
@@ -183,7 +183,18 @@ QString IStylesheets::_toolbarButtonStyles() {
 }
 
 QString IStylesheets::_mainWindowTabsStyles() {
-    return QStringLiteral(
+    QColor color = color2();
+    color.setAlpha(255);
+
+    return QString(
+//                "QToolBarExtension {"
+//                "    background-color: black;"
+//                "}"
+
+                "QToolBar:open {"
+                "   background-color: " + color.name(QColor::HexArgb) + ";"
+                "}"
+
                 "QMainWindow::separator:hover {"
                 "    background: #ff0000;"
                 "}"

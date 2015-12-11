@@ -1,10 +1,13 @@
 #include "toolbar.h"
+
 #include <qlabel.h>
 #include <qaction.h>
+#include <qtoolbutton.h>
+#include <qdebug.h>
 
 using namespace Controls;
 
-ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, parent) {
+ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, parent), m_action_expand(0) {
     setAcceptDrops(true);
     setObjectName(QStringLiteral("tool_") % title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
@@ -13,6 +16,7 @@ ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, pare
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     addTitleLabel(title);
+    findExtension();
 }
 
 void ToolBar::addTitleLabel(const QString & title) {
@@ -36,11 +40,34 @@ void ToolBar::addTitleLabel(const QString & title) {
     addWidget(titleLabel) -> setObjectName(QStringLiteral("*Title"));
 }
 
+void ToolBar::findExtension() {
+    for(QWidget * widget : findChildren<QWidget *>()) {
+        if(widget -> objectName() == "qt_toolbar_ext_button") {
+            m_action_expand = widget;
+            return;
+        }
+    }
+}
+
+void ToolBar::forceExtensionClick(bool open) {
+    if (!m_action_expand || m_action_expand -> isHidden()) return;
+    QToolButton * btn = ((QToolButton *)m_action_expand);
+    if (open != btn -> isDown())
+        btn -> animateClick();
+}
+
 void ToolBar::dragEnterEvent(QDragEnterEvent * event) {
-   if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list")))
-       event -> accept();
-   else
-       event -> ignore();
+    if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list"))) {
+        event -> accept();
+        forceExtensionClick();
+    } else
+        event -> ignore();
+}
+
+void ToolBar::dragLeaveEvent(QDragLeaveEvent * event) {
+    if (!rect().contains(mapFromGlobal(QCursor::pos()), true))
+        forceExtensionClick(false);
+    QToolBar::dragLeaveEvent(event);
 }
 
 void ToolBar::dropEvent(QDropEvent * event) {
@@ -57,4 +84,6 @@ void ToolBar::dropEvent(QDropEvent * event) {
         }
         event -> accept();
     } else { event -> ignore(); }
+
+    forceExtensionClick(false);
 }
