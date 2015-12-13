@@ -6,8 +6,8 @@
 namespace Core {
     class WebFile : public IItem {
     public:
-        static inline QVariant toUid(QVariant owner, QVariant id) {
-            return owner.isValid() && id.isValid() ? owner.toString() + QStringLiteral("_") + id.toString() : QVariant();
+        static inline QString toUid(QVariant owner, QVariant id) {
+            return /*owner.isValid() &&*/ id.isValid() ? owner.toString() % QStringLiteral("_") % id.toString() : QString();
         }
 
         inline WebFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
@@ -22,7 +22,7 @@ namespace Core {
 
         inline QString fullPath() const { return path().toString(); }
         virtual inline QUrl toUrl() const { return QUrl(fullPath()); }
-        virtual inline QVariant toUid() { return WebFile::toUid(owner(), uid()); }
+        virtual inline QString toUid() { return WebFile::toUid(owner(), uid()); }
         inline bool isRemote() const { return true; }
 
         inline virtual bool removePhysicalObject() { return false; }

@@ -9,7 +9,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
     switch(itm -> itemType()) {
         case VK_FILE: {
-            newUrl = Vk::Api::obj().refresh(itm -> toUid().toString()).section('?', 0, 0);
+            newUrl = Vk::Api::obj().refresh(itm -> toUid()).section('?', 0, 0);
         break;}
 
         case OD_FILE: {
@@ -235,61 +235,51 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     VkFile * newItem;
-    QString uri, id, owner;
-    QVariant uid;
+    QString uri, id, owner, uid;
     QList<IItem *> items;
-
-    if (!collection.at(0).isArray()) {
-        QJsonArray ar;
-        ar.append(collection);
-        collection = ar;
-    }
 
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
     int pos = parent -> playlistsAmount();
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
 
-            if (itm.isEmpty()) continue;
+        if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(Vk::tkn_id).toInt());
-            owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
-            uid = WebFile::toUid(owner, id);
-            if (ignoreListContainUid(uid)) continue;
+        id = QString::number(itm.value(Vk::tkn_id).toInt());
+        owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
+        uid = WebFile::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(Vk::tkn_url).toString();
-            uri = uri.section('?', 0, 0); // remove extra info from url
+        uri = itm.value(Vk::tkn_url).toString();
+        uri = uri.section('?', 0, 0); // remove extra info from url
 
-            items = store.values(uid.toString());
+        items = store.values(uid);
 
-            if (items.isEmpty()) {
-                itemsAmount++;
-                newItem = new VkFile(
-                    id,
-                    uri,
-                    itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString(),
-                    parent,
-                    pos
-                );
+        if (items.isEmpty()) {
+            itemsAmount++;
+            newItem = new VkFile(
+                id,
+                uri,
+                itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString(),
+                parent,
+                pos
+            );
 
-                newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
 
 //                if (itm.contains(Vk::genre_id_key))
 //                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
-            } else {
-                QList<IItem *>::Iterator it_it = items.begin();
+        } else {
+            QList<IItem *>::Iterator it_it = items.begin();
 
-                for(; it_it != items.end(); it_it++)
-                    (*it_it) -> setPath(uri);
-            }
-
-            pos++;
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
         }
+
+        pos++;
     }
 
     return itemsAmount;
@@ -357,64 +347,54 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm;
     SoundcloudFile * newItem;
-    QString uri, id, owner;
-    QVariant uid;
+    QString uri, id, owner, uid;
     QList<IItem *> items;
     bool original;
-
-    if (!collection.at(0).isArray()) {
-        QJsonArray ar;
-        ar.append(collection);
-        collection = ar;
-    }
 
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
 
-            if (itm.isEmpty()) continue;
+        if (itm.isEmpty()) continue;
 
-            id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
-            owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
-            uid = WebFile::toUid(owner, id);
-            if (ignoreListContainUid(uid)) continue;
+        id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
+        owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
+        uid = WebFile::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
 
-            uri = itm.value(Soundcloud::tkn_download_url).toString();
-            if (uri.isEmpty()) {
-                uri = itm.value(Soundcloud::tkn_stream_url).toString();
-                original = false;
-            } else { original = true;}
-            if (uri.isEmpty()) continue;
+        uri = itm.value(Soundcloud::tkn_download_url).toString();
+        if (uri.isEmpty()) {
+            uri = itm.value(Soundcloud::tkn_stream_url).toString();
+            original = false;
+        } else { original = true;}
+        if (uri.isEmpty()) continue;
 
-            items = store.values(uid.toString());
+        items = store.values(uid);
 
-            if (items.isEmpty()) {
-                itemsAmount++;
-                newItem = new SoundcloudFile(
-                    id,
-                    uri,
-                    itm.value(Soundcloud::tkn_title).toString(),
-                    parent
-                );
+        if (items.isEmpty()) {
+            itemsAmount++;
+            newItem = new SoundcloudFile(
+                id,
+                uri,
+                itm.value(Soundcloud::tkn_title).toString(),
+                parent
+            );
 
-                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
-                newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
-                newItem -> setOwner(owner);
-                newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
+            newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+            newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
+            newItem -> setOwner(owner);
+            newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
 
-    //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-                if (itm.contains(Soundcloud::tkn_genre_id))
-                    newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
-            } else {
-                QList<IItem *>::Iterator it_it = items.begin();
+//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
+            if (itm.contains(Soundcloud::tkn_genre_id))
+                newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
+        } else {
+            QList<IItem *>::Iterator it_it = items.begin();
 
-                for(; it_it != items.end(); it_it++)
-                    (*it_it) -> setPath(uri);
-            }
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
         }
     }
 
@@ -430,49 +410,38 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     QString id;
     QList<IItem *> items;
 
-    if (!collection.at(0).isArray()) {
-        QJsonArray ar;
-        ar.append(collection);
-        collection = ar;
-    }
-
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator parts_it = collection.begin(); parts_it != collection.end(); parts_it++) {
-        QJsonArray part = (*parts_it).toArray();
-        for(QJsonArray::Iterator it = part.begin(); it != part.end(); it++) {
-            itm = (*it).toObject();
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
 
-            if (itm.isEmpty()) continue;
+        if (itm.isEmpty()) continue;
 
-            qint64 iid = ((qint64)itm.value(QStringLiteral("id")).toDouble());
-            id = QString::number(iid);
-            if (iid == 0 || ignoreListContainUid(id)) continue;
+        qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
+        id = QString::number(iid);
+        if (iid == 0 || ignoreListContainUid(id)) continue;
 
-            items = store.values(id);
+        items = store.values(id);
 
-            if (items.isEmpty()) {
-                itemsAmount++;
-                newItem = new OdFile(
-                    id,
-                    QString(),
-                    itm.value(QStringLiteral("ensemble")).toString() % QStringLiteral(" - ") % itm.value(QStringLiteral("name")).toString(),
-                    parent
-                );
+        if (items.isEmpty()) {
+            itemsAmount++;
+            newItem = new OdFile(
+                id,
+                QString(),
+                itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString(),
+                parent
+            );
 
-                newItem -> setRefreshPath(id);
+            newItem -> setRefreshPath(id);
 
-                newItem -> setExtension(QStringLiteral("mp3"));
-                newItem -> setDuration(Duration::fromSeconds(itm.value(QStringLiteral("duration")).toInt(0)));
-                newItem -> setSize(itm.value(QStringLiteral("size")).toInt(0));
+            newItem -> setExtension(Od::tkn_default_extension);
+            newItem -> setDuration(Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)));
+            newItem -> setSize(itm.value(Od::tkn_size).toInt(0));
 
-            } else {
-                QList<IItem *>::Iterator it_it = items.begin();
-
-                for(; it_it != items.end(); it_it++)
-                    (*it_it) -> setRefreshPath(id);
-            }
+        } else {
+            for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
+                (*it_it) -> setRefreshPath(id);
         }
     }
 

@@ -43,7 +43,7 @@ void RelationsDialog::on_friendsList_itemActivated(QListWidgetItem * item) {
 }
 
 void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
-    Linkable linkable = api -> friendsList().value((uid = item -> data(Qt::UserRole).toString()));
+    Linkable linkable = api -> groupsList().value((uid = item -> data(Qt::UserRole).toString()));
     name = linkable.humanName();
     uid = QStringLiteral("-") % uid;
     accept();

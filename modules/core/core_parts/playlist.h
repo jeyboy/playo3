@@ -20,7 +20,7 @@ namespace Core {
         void linkNode(Playlist * node);
 
         void accumulateUids(QHash<QString, IItem *> & store);
-        QVariantList childrenUids(int position, int count);
+        QStringList childrenUids(int position, int count);
 
         inline int itemsCountInBranch() const { return filesCount; }
         inline void updateItemsCountInBranch(int offset) { filesCount += offset; }

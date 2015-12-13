@@ -131,21 +131,21 @@ void Playlist::linkNode(Playlist * node) {
 }
 
 void Playlist::accumulateUids(QHash<QString, IItem *> & store) {
-    QVariant item_uid;
+    QString item_uid;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
         if ((*it) -> isRemote()) {
             if (!(*it) -> isContainer()) {
                 item_uid = (*it) -> toUid();
-                if (item_uid.isValid())
-                    store.insert(item_uid.toString(), (*it));
+                if (!item_uid.isEmpty())
+                    store.insert(item_uid, (*it));
             }
         }
     }
 }
 
-QVariantList Playlist::childrenUids(int position, int count) {
-    QVariantList uids;
+QStringList Playlist::childrenUids(int position, int count) {
+    QStringList uids;
 
     if (position < 0 || position + count > children.size())
         return uids;
@@ -155,8 +155,8 @@ QVariantList Playlist::childrenUids(int position, int count) {
     for (int row = 0; row < count; ++row) {
         it = children.at(position);
         if (it -> isRemote()) {
-            QVariant item_uid = it -> toUid();
-            if (item_uid.isValid())
+            QString item_uid = it -> toUid();
+            if (!item_uid.isEmpty())
                 uids << item_uid;
         }
     }

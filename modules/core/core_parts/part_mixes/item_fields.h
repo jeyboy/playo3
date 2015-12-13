@@ -84,7 +84,7 @@ namespace Core {
 
         inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
-        inline virtual QVariant toUid() { return QVariant(); }
+        inline virtual QString toUid() { return QString(); }
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
     protected:

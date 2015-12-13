@@ -168,9 +168,7 @@ void Playo::receiveMessage(QString message) {
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
 
-    QStringList::iterator it = list.begin();
-
-    for(; it != list.end(); it++)
+    for(QStringList::iterator it = list.begin(); it != list.end(); it++)
         urls.append(QUrl::fromLocalFile((*it)));
 
     putToCommonTab(urls);

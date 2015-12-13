@@ -1,13 +1,16 @@
 #include "web_model.h"
 
+#include <qdebug.h>
+
 using namespace Models;
 ///////////////////////////////////////////////////////////
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     Playlist * parentItem = item<Playlist>(parent);
-    QVariantList uids = parentItem -> childrenUids(position, rows);
+    QStringList uids = parentItem -> childrenUids(position, rows);
 
     bool res = IModel::removeRows(position, rows, parent);
 
+    qDebug() << "IGNORE LIST UPDATE" << res << uids;
     if (res)
         ignoreListAddUid(uids);
 

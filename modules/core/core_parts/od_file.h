@@ -15,7 +15,7 @@ namespace Core {
             //    setBpm(itemBpm);
         }
 
-        inline QVariant toUid() { return uid(); }
+        inline QString toUid() { return uid().toString(); }
         inline int itemType() const { return OD_FILE; }
     };
 }

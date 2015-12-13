@@ -99,7 +99,7 @@ namespace Models {
 
         int initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source = 0);
 
-        inline virtual bool ignoreListContainUid(QVariant /*uid*/) { return false; }
+        inline virtual ignoreListContainUid(const QString & /*uid*/) { return false; }
     public slots:
 //        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
 //        inline void itemNotSupported(QModelIndex node) {

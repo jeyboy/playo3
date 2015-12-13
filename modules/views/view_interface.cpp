@@ -254,7 +254,7 @@ void IView::openRecomendationsforItemUser() {
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
-        Params settings(Data::vk_rel, false, false, false, true, it -> toUid().toString(), Data::song_rel);
+        Params settings(Data::vk_rel, false, false, false, true, it -> toUid(), Data::song_rel);
         Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
     }
 }

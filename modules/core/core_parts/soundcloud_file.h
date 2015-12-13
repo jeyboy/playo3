@@ -21,7 +21,7 @@ namespace Core {
             return url;
         }
 
-        inline QVariant toUid() { return uid(); }
+        inline QString toUid() { return uid().toString(); }
         inline int itemType() const { return SOUNDCLOUD_FILE; }
     };
 }
