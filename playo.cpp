@@ -114,7 +114,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     Logger::obj().startMark();
 
-    DataFactory::obj().currPlayer() -> pause();
+    DataFactory::obj().currPlayer() -> stop();
 
     settings -> clear();
 

@@ -78,7 +78,6 @@ void BassPlayer::playPreproccessing() {
     else
         channelsCount(2);
 
-    qDebug() << "EQ USE" << eq_in_use;
     if (eq_in_use) registerEQ();
 
     if (BASS_ChannelPlay(chan, true)) {
@@ -124,6 +123,13 @@ bool BassPlayer::pauseProcessing() {
     return BASS_ChannelPause(chan);
 }
 bool BassPlayer::stopProcessing() {
+    if (openChannelWatcher) {
+        openChannelWatcher -> cancel();
+        while(openChannelWatcher && !openChannelWatcher -> isFinished())
+            QApplication::processEvents();
+//        openChannelWatcher -> waitForFinished();
+    }
+
     if (chan) {
         unregisterEQ();
         BASS_ChannelRemoveSync(chan, syncHandle);
