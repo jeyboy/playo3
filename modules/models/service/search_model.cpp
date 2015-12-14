@@ -20,6 +20,13 @@ void SearchModel::initiateSearch(SearchSettings & params) {
 
 void SearchModel::initiateSearch(QStringList & predicates) {
     SearchSettings settings(true, true, false/*true*/);
+    // settings.tabs.append(Dockbars::obj().dockbars());
+
+
+    QHash<Web::SubType, ISearchable *> sites = Web::Apis::list();
+    for(QHash<Web::SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
+        settings.sites.append(*it);
+
     settings.predicates = predicates;
     settings.onlyOne = true;
     initiateSearch(settings);
@@ -118,16 +125,13 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
                 ISearchable * iface = (ISearchable *) r.search_interface;
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
+                qDebug() << "RESULT" << iface -> siteType() << items.count();
+                qDebug() << "RES" << items;
+
                 switch (iface -> siteType()) {
                     case vk_site: { propagate_count = proceedVkList(items, parent); break; }
-                    case sc_site: {
-                        if (items.size() > 0)
-                            propagate_count = proceedScList(items, parent);
-                    break;}
-                    case od_site: {
-                        if (items.size() > 0)
-                            propagate_count = proceedOdList(items, parent);
-                    break;}
+                    case sc_site: { propagate_count = proceedScList(items, parent); break;}
+                    case od_site: { propagate_count = proceedOdList(items, parent); break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 

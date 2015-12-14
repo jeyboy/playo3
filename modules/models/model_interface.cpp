@@ -232,6 +232,8 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
 }
 
 int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
+    if (collection.isEmpty()) return 0;
+
     int itemsAmount = 0;
     QJsonObject itm;
     VkFile * newItem;
@@ -286,6 +288,8 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 }
 
 int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
+    if (collection.isEmpty()) return 0;
+
     int itemsAmount = 0;
     QJsonObject itm;
     WebFile * newItem;
@@ -344,6 +348,8 @@ int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist 
 }
 
 int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
+    if (collection.isEmpty()) return 0;
+
     int itemsAmount = 0;
     QJsonObject itm;
     SoundcloudFile * newItem;
@@ -403,6 +409,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
 int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
+    if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
     QJsonObject itm;
