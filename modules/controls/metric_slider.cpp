@@ -144,7 +144,7 @@ void MetricSlider::calcGrid() {
             step = valToPos(step_val * ++multiplyer) - start_point;
 
         int center = rect().center().y() + point_radius / 2;
-        for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos <= bodyRect.width(); pos += step, val += vall_offset) {
+        for(double pos = bodyRect.x() + halfHandle / 2 + step, val = vall_offset; pos - halfHandle / 2 <= bodyRect.width(); pos += step, val += vall_offset) {
             if (!Settings::obj().isMetricNumero()) {
                 path.addEllipse(QPoint(pos + point_radius / 2, center), point_radius, point_radius);
             } else {
