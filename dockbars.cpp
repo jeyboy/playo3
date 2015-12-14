@@ -356,6 +356,7 @@ void Dockbars::slideVolForward()    { DataFactory::obj().currPlayer() -> slideVo
 void Dockbars::slideVolBackward()   { DataFactory::obj().currPlayer() -> slideVolBackward(); }
 
 void Dockbars::onDownloadProceeded(QString to) {
+    to = UID_HEAD % to;
     for(QHash<QString, DockBar *>::Iterator it = linkedTabs.begin(); it != linkedTabs.end(); it++) {
         if (to.startsWith(it.key())) {
             QList<QUrl> urls;
