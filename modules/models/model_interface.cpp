@@ -216,11 +216,14 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     if (list.isEmpty()) return 0;
 
     emit moveInProcess();
+    Logger::obj().startMark();
 
     DropData * res = new DropData();
     recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, list.first());
     res -> limitRow = res -> eRow + (parent == res -> eIndex ? list.length() - 1 : 0);
     dropProcession(parent, pos, list);
+    Logger::obj().endMark("Drop", "new files");
+
     return res;
 }
 

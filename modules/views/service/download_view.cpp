@@ -148,6 +148,7 @@ void DownloadView::addRow(QUrl from, QString to, QString name, QString dtype, QS
         data.insert(QString::number(DOWNLOAD_ID), uid);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
+    data.insert(QString::number(REMOTE_PROGRESS), -1);
 
     QModelIndex ind = mdl -> appendRow(data);
     proceedDownload(ind);
@@ -161,6 +162,12 @@ bool DownloadView::removeRow(const QModelIndex & node) {
 
     return true;
 //    return mdl -> removeRow(node.row(), node.parent());
+}
+
+void DownloadView::downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal) {
+    QIODevice * source = (QIODevice *)sender();
+    qDebug() << "DOWN" << downIndexes.value(source) << (bytesReceived / (double)bytesTotal);
+    emit updateAttr(downIndexes.value(source), REMOTE_PROGRESS, bytesReceived / (double)bytesTotal);
 }
 
 void DownloadView::reproceedDownload() {
@@ -226,6 +233,9 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         if (isRemote) {
             source = networkManager -> followedGet(from);
+            downIndexes.insert(source, ind);
+            connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));
+
             int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); // vk monkey patch
             if (status == 404) {
                 source -> close();

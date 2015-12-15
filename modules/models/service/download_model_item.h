@@ -15,6 +15,7 @@
 #define DOWNLOAD_ID 5
 #define DOWNLOAD_ERROR 998
 #define DOWNLOAD_PROGRESS 999
+#define REMOTE_PROGRESS 1000
 
 class DownloadModelItem {
 public:

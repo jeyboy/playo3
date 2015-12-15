@@ -15,6 +15,10 @@ QSize DownloadDelegate::sizeHint(const QStyleOptionViewItem & option, const QMod
 
 void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     int progressPercentage = index.data(DOWNLOAD_PROGRESS).toInt();
+    bool isSaving = progressPercentage >= 0;
+
+    if (!isSaving)
+        progressPercentage = index.data(REMOTE_PROGRESS).toInt();
 
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
@@ -23,7 +27,7 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
     rect.setTopLeft(rect.topLeft() + QPoint(4, 1));
     rect.setBottomRight(rect.bottomRight() - QPoint(8, 2));
 
-    if (progressPercentage >= 0) {       
+    if (progressPercentage >= 0) {
         QProgressBar renderer;
 
         renderer.setAttribute(Qt::WA_OpaquePaintEvent, true);
@@ -35,8 +39,8 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         );
 
         renderer.setTextVisible(true);
-        renderer.setFormat(option.fontMetrics.elidedText(index.model() -> data(index, Qt::DisplayRole).toString(), Qt::ElideRight, rect.width() - 8));
-
+        QString str = (isSaving ? QStringLiteral("(Saving) ") : QStringLiteral("(Reading) ")) % index.model() -> data(index, Qt::DisplayRole).toString();
+        renderer.setFormat(option.fontMetrics.elidedText(str, Qt::ElideRight, rect.width() - 8));
         renderer.resize(rect.size());
         renderer.setMinimum(0);
         renderer.setMaximum(100);

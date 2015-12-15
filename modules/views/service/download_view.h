@@ -49,6 +49,7 @@ namespace Views {
         bool removeRow(const QModelIndex & node);
 
     protected slots:
+        void downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal);
         void reproceedDownload();
         void proceedDownload();
 
@@ -69,6 +70,7 @@ namespace Views {
         DownloadModel * mdl;
         QPoint dragPoint;
     private:
+        QHash<QIODevice *, QModelIndex> downIndexes;
         bool paused;
 
         friend class Core::SingletonPtr<DownloadView>;
