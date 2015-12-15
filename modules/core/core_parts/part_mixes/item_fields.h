@@ -48,7 +48,7 @@ namespace Core {
 
         inline QVariant title() const       { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const        { return attrs.value(JSON_TYPE_PATH); }
-        inline QString refresh_path() const { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
+        virtual inline QString refresh_path() { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
         inline QVariant extension() const   { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant duration() const    { return attrs.value(JSON_TYPE_DURATION); }

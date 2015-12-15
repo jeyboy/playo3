@@ -275,7 +275,8 @@ HEADERS += \
     dialogs/base_dialog.h \
     modules/controls/toolbar_drop_button.h \
     modules/controls/toolbar_user_button.h \
-    modules/controls/toolbar_new_list_button.h
+    modules/controls/toolbar_new_list_button.h \
+    modules/core/core_parts/base_item_interface.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \

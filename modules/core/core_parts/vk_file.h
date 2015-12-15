@@ -12,6 +12,8 @@ namespace Core {
             : WebFile(uid, filePath, fileName, parent, pos) { setExtension(QStringLiteral("mp3")); }
 
         inline int itemType() const { return VK_FILE; }
+
+        inline QString refresh_path() { return toUid(); }
     };
 }
 

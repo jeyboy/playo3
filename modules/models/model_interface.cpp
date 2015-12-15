@@ -5,42 +5,10 @@ using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    QString newUrl;
-
-    switch(itm -> itemType()) {
-        case VK_FILE: {
-            newUrl = Vk::Api::obj().refresh(itm -> toUid()).section('?', 0, 0);
-        break;}
-
-        case OD_FILE: {
-            newUrl = Od::Api::obj().refresh(itm -> refresh_path());
-        break;}
-
-        case WEB_FILE: {
-            switch(itm -> subtipe()) {
-//                case Playo3::fourshared_site: {
-//                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
-////                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
-//                break;}
-
-//                case jetune_site: {
-//                    newUrl = itm -> refresh_path();
-//                break;}
-
-                default: {
-                    ISearchable * engine = Web::Apis::engine(itm -> subtipe());
-                    if (engine == 0)
-                        return false;
-                    else
-                        newUrl = engine -> refresh(itm -> refresh_path());
-                }
-            }
-        break;}
-        default: return false;
-    };
+    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> subtipe());
 
     qDebug() << itm -> refresh_path() << newUrl;
-    if (itm -> path().toString() != newUrl) {
+    if (!newUrl.isEmpty() && itm -> path().toString() != newUrl) {
         itm -> setPath(newUrl);
         return true;
     }
@@ -48,11 +16,10 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) { //TODO: rewrite
+IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) {
     sync = new QMutex(QMutex::NonRecursive);
     rootItem = hash ? new Playlist(hash) : new Playlist();
-
-    qDebug() << this << " " << rootItem -> itemsCountInBranch();
+    qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME
 }
 
 IModel::~IModel() {
