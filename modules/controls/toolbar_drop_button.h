@@ -1,27 +1,20 @@
-#ifndef TOOLBARBUTTON_H
-#define TOOLBARBUTTON_H
+#ifndef TOOLBAR_DROP_BUTTON_H
+#define TOOLBAR_DROP_BUTTON_H
 
 #include <qtoolbutton.h>
 #include <qmimedata.h>
 #include <qevent.h>
-#include <qfileinfo.h>
-
-#include "modules/views/service/download_view.h"
-#include "modules/views/view_interface.h"
 
 namespace Controls {
-    class ToolbarButton : public QToolButton {
+    class ToolbarDropButton : public QToolButton {
         Q_OBJECT
     public:
-        ToolbarButton(const QString & text, const QString & folderPath, QWidget * parent = 0);
-        inline QString mainPath() const { return path; }
+        ToolbarDropButton(const QString & text, QWidget * parent = 0);
         inline Qt::KeyboardModifiers keyboardModifiers() const { return keyModifiers; }
-    protected slots:
-        void checkState();
     protected:
-        inline void enterEvent(QEvent *) { checkState(); }
+        virtual void dropReaction(QDropEvent * event) = 0;
+
         inline void mousePressEvent(QMouseEvent * event) {
-            checkState();
             keyModifiers = event -> modifiers();
             QToolButton::mousePressEvent(event);
         }
@@ -29,9 +22,8 @@ namespace Controls {
         void dragEnterEvent(QDragEnterEvent * event);
 
     private:
-        QString path;
         Qt::KeyboardModifiers keyModifiers;
     };
 }
 
-#endif // TOOLBARBUTTON_H
+#endif // TOOLBAR_DROP_BUTTON_H

@@ -179,7 +179,7 @@ void Playo::receiveMessage(QString message) {
 //}
 
 void Playo::openFolderTriggered() {
-    ToolbarButton * button = (ToolbarButton *)QObject::sender();
+    ToolbarUserButton * button = (ToolbarUserButton *)QObject::sender();
     if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::obj().isOpenDropPointInTab()) {
         Views::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
         Dockbars::obj().createLinkedDocBar(button -> text(), button -> mainPath(), settings, 0, true, true);

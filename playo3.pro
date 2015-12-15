@@ -111,7 +111,6 @@ HEADERS += \
     modules/controls/spinner.h \
     modules/controls/title_layout.h \
     modules/controls/toolbar.h \
-    modules/controls/toolbarbutton.h \
     modules/controls/tray.h \
     modules/controls/user_dialog_box.h \
     modules/controls/window.h \
@@ -273,7 +272,10 @@ HEADERS += \
     settings/stylesheets/light_stylesheets.h \
     settings/stylesheets/istylesheets.h \
     settings/stylesheets/stylesheets_list.h \
-    dialogs/base_dialog.h
+    dialogs/base_dialog.h \
+    modules/controls/toolbar_drop_button.h \
+    modules/controls/toolbar_user_button.h \
+    modules/controls/toolbar_new_list_button.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -299,7 +301,6 @@ SOURCES += \
     modules/controls/spectrum_view.cpp \
     modules/controls/spinner.cpp \
     modules/controls/toolbar.cpp \
-    modules/controls/toolbarbutton.cpp \
     modules/controls/user_dialog_box.cpp \
     modules/controls/window.cpp \
     modules/controls/window_title.cpp \
@@ -407,4 +408,7 @@ SOURCES += \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \
     settings/stylesheets/istylesheets.cpp \
-    modules/core/web/apis/social/od_api_keys.cpp
+    modules/core/web/apis/social/od_api_keys.cpp \
+    modules/controls/toolbar_drop_button.cpp \
+    modules/controls/toolbar_user_button.cpp \
+    modules/controls/toolbar_new_list_button.cpp

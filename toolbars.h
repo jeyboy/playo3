@@ -13,7 +13,7 @@
 #include "modules/controls/time_label.h"
 #include "modules/controls/metric_slider.h"
 #include "modules/controls/toolbar.h"
-#include "modules/controls/toolbarbutton.h"
+#include "modules/controls/toolbar_user_button.h"
 #include "modules/controls/spectrum_view.h"
 #include "modules/controls/equalizer_view.h"
 
@@ -119,7 +119,7 @@ namespace Presentation {
         EqualizerView * equalizer;
         SpectrumView * spectrum;
         QToolBar * underMouseBar;
-        ToolbarButton * underMouseButton;
+        ToolbarUserButton * underMouseButton;
 
         QPoint lastClickPoint;
         QMainWindow * container;

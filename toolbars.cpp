@@ -1,6 +1,7 @@
 #include "toolbars.h"
 #include "dockbars.h"
 #include "external_keys.h"
+#include "modules/controls/toolbar_new_list_button.h"
 
 #include <qdatetime.h>
 
@@ -12,7 +13,7 @@ QMenu * ToolBars::createPopupMenu() {
     lastClickPoint = QCursor::pos();
     QWidget * currentHover = container -> childAt(container -> mapFromGlobal(lastClickPoint));
     underMouseBar = deiterateToToolBar(currentHover);
-    underMouseButton = qobject_cast<ToolbarButton *>(currentHover);
+    underMouseButton = qobject_cast<ToolbarUserButton *>(currentHover);
     bool isStatic = !qobject_cast<ToolBar *>(underMouseBar);
 
     menu -> addAction(QIcon(QStringLiteral(":panel_add")), QStringLiteral("Add panel"), this, SLOT(addPanelTriggered())/*, QKeySequence("Ctrl+P")*/);
@@ -116,8 +117,8 @@ void ToolBars::save(DataStore * settings) {
     if (bars.length() > 0) {
         QJsonArray toolbar_array = QJsonArray();
         QJsonObject curr_tab;
-        QList<QAction*> actions;
-        ToolbarButton* button;
+        QList<QAction *> actions;
+        ToolbarUserButton * button;
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
             curr_tab = QJsonObject();
@@ -135,7 +136,7 @@ void ToolBars::save(DataStore * settings) {
                     for(QList<QAction*>::Iterator act = actions.begin(); act != actions.end(); act++) {
                         if ((*act) -> objectName() != QStringLiteral("*Title") && QString((*act) -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
                             curr_act = QJsonObject();
-                            button = (ToolbarButton*) (*bar) -> widgetForAction((*act));
+                            button = (ToolbarUserButton *) (*bar) -> widgetForAction((*act));
 
                             curr_act.insert(Keys::path, button -> mainPath());
                             curr_act.insert(Keys::name, button -> text());
@@ -376,7 +377,12 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar(toolbar_controls_key);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
+    ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(QStringLiteral(":/add")), ptb);
+    connect(listBtn, SIGNAL(clicked(bool)), &Dockbars::obj(), SLOT(createNewBar()));
+    connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
+    ptb -> addWidget(listBtn);
+
+//    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
     ptb -> addWidget(initiateVkButton());
     ptb -> addWidget(initiateSoundcloudButton());
     ptb -> addWidget(initiateOdButton());
@@ -536,7 +542,7 @@ QToolButton * ToolBars::initiateOdButton() {
 }
 
 void ToolBars::addPanelButton(const QString & name, const QString & path, QToolBar * bar) {
-    ToolbarButton * button = new ToolbarButton(name, path);
+    ToolbarUserButton * button = new ToolbarUserButton(name, path);
     connect(button, SIGNAL(clicked()), container, SLOT(openFolderTriggered()));
     bar -> addWidget(button);
 }

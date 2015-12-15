@@ -69,6 +69,12 @@ namespace Presentation {
         inline void showAll() { changeBarsVisibility(false); }
 
         inline void createNewBar() { showViewSettingsDialog(); }
+        inline void createNewBar(QString name, QUrl url) {
+            DockBar * bar = createDocBar(name, Views::Params(Data::tree, false, false, false, true));
+            QList<QUrl> urls; urls << url;
+            view(bar) -> appendRows(urls);
+            container -> addDockWidget(Qt::RightDockWidgetArea, bar);
+        }
         inline void editActiveBar() { showViewSettingsDialog(active); }
         void scrollToActive();
 
