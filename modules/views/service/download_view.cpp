@@ -87,6 +87,8 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
             InnerData data;
             stream >> data.url >> isRemote >> data.attrs;
 
+            qDebug() << "DOWN" << data.attrs[JSON_TYPE_TITLE].toString() << data.url << data.attrs[JSON_TYPE_SUB_TYPE].toInt() << data.attrs[JSON_TYPE_REFRESH_PATH].toString();
+
             addRow(
                 data.url,
                 path,
@@ -206,15 +208,12 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
     DownloadModelItem * itm = mdl -> item(ind);
     Manager * networkManager = Manager::prepare();
 
-    QString to;
     QVariant toVar = itm -> data(DOWNLOAD_TO);
+    QString to = toVar.toString() % '/' % itm -> data(DOWNLOAD_TITLE).toString();
 
-//    if (toVar.type() == typeof(QUrl))
-//        to = toVar.toUrl().toLocalFile();
-//    else
-        to = toVar.toString() % '/' % itm -> data(DOWNLOAD_TITLE).toString();
+    qDebug() << "DOWN PROC" << itm -> data(DOWNLOAD_TITLE).toString();
 
-    if (QFile::exists(to))
+    if (QFile::exists(to)) //FIXME: remove only if file size < size of download object
         QFile::remove(to);
 
     QFile toFile(to);
@@ -234,7 +233,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
             source = networkManager -> followedGet(from);
 
             int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-            if (status == 404) {
+            if (status == 404 || status == 0) { // sttaus 0 has meaning what url is empty and should be refreshed
+                qDebug() << "DOWN PROC RECOVEERY";
                 source -> close();
                 delete source;
 
@@ -248,6 +248,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 if (newFrom != from) {
                     source = networkManager -> followedGet(newFrom);
                     invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
+                    qDebug() << "DOWN PROC RECOVEERY RES" << !invalid;
                 }
 
 //                if (itm -> data(DOWNLOAD_TYPE).to() == QStringLiteral("vk")) {
