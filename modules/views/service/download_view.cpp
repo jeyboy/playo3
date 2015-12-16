@@ -6,7 +6,7 @@ using namespace Core;
 using namespace Web;
 
 DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
-    paused(false), mdl(new DownloadModel(hash, this)) {
+    mdl(new DownloadModel(hash, this)), paused(false) {
 
     setModel(mdl);
 
@@ -145,6 +145,7 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
             }
         }
 
+        emit updateAttr(item, REMOTE_PROGRESS, 0);
         downIndexes.insert(source, item);
         connect(source, SIGNAL(readyRead()), this, SLOT(downloadFinished()));
         connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));
@@ -332,18 +333,6 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
     menu.exec(event -> globalPos());
     event -> accept();
 }
-
-//void DownloadView::removeProccessing(QModelIndexList & index_list) {
-//    qSort(index_list.begin(), index_list.end());
-
-//    QModelIndexList::Iterator eit = --index_list.end();
-//    for (; eit != index_list.begin(); --eit)
-//        removeRow((*eit));
-
-//    removeRow((*eit));
-
-//    index_list.clear();
-//}
 
 //////////////////////////////////////////////////////
 /// PROTECTED

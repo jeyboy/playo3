@@ -60,7 +60,6 @@ namespace Views {
         DownloadModelItem * downloading(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);
-//        void removeProccessing(QModelIndexList & index_list);
 
         void dragEnterEvent(QDragEnterEvent *);
         void dragMoveEvent(QDragMoveEvent *);
