@@ -28,13 +28,11 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(par
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
-    connect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), this, SLOT(onUpdateAttr(QModelIndex,int,QVariant)));
+    connect(this, SIGNAL(updateAttr(DownloadModelItem *,int,QVariant)), this, SLOT(onUpdateAttr(DownloadModelItem *,int,QVariant)));
     proceedDownload();
 }
 
 DownloadView::~DownloadView() {
-    qDeleteAll(watchers);   
-    watchers.clear();
     qDeleteAll(bussyWatchers.values());
     bussyWatchers.clear();
 
@@ -56,8 +54,8 @@ QJsonObject DownloadView::toJson() {
 }
 
 bool DownloadView::proceedDownload(DownloadModelItem * item) {
-    if (bussyWatchers.count() > 3) return;
-    initiateDownloading(item);
+    if (bussyWatchers.count() > 3) return false;
+    return initiateDownloading(item);
 
 //    QFutureWatcher<QModelIndex> * newItem = 0;
 
@@ -114,8 +112,8 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
     QIODevice * source;
 
     Manager * networkManager = Manager::prepare();
-    QUrl from = itm -> data(DOWNLOAD_FROM).toUrl();
-    bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
+    QUrl from = item -> data(DOWNLOAD_FROM).toUrl();
+    bool isRemote = item -> data(DOWNLOAD_IS_REMOTE).toBool();
 
     if (isRemote) {
         QApplication::processEvents();
@@ -130,8 +128,8 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
             bool invalid = true;
             QUrl newFrom = QUrl(
                 Core::Web::Apis::restoreUrl( // maybe need to do this async
-                    itm -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
-                    (Web::SubType)itm -> data(DOWNLOAD_TYPE).toInt()
+                    item -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
+                    (Web::SubType)item -> data(DOWNLOAD_TYPE).toInt()
                 )
             );
             QApplication::processEvents();
@@ -142,7 +140,7 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
             }
 
             if (invalid) {
-                emit updateAttr(mdl -> index(item), DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
+                emit updateAttr(item, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
                 return false;
             }
         }
@@ -154,13 +152,13 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
         source = new QFile(from.toLocalFile());
 
         if (!source -> open(QIODevice::ReadOnly)) {
-            emit updateAttr(mdl -> index(item), DOWNLOAD_ERROR, Core::FileErrors::ioError((QFile *)source));
+            emit updateAttr(item, DOWNLOAD_ERROR, Core::FileErrors::ioError((QFile *)source));
             source -> close();
             source -> deleteLater();
             return false;
         }
 
-        initiateSaving(item, device);
+        initiateSaving(item, source);
     }
 
     return true;
@@ -181,7 +179,7 @@ void DownloadView::initiateSaving(DownloadModelItem * item, QIODevice * source) 
     QFutureWatcher<DownloadModelItem *> * newItem = new QFutureWatcher<DownloadModelItem *>();
     connect(newItem, SIGNAL(finished()), this, SLOT(savingCompleted()));
     item -> setData(DOWNLOAD_PROGRESS, 0);
-    bussyWatchers.insert(newItem, newItem);
+    bussyWatchers.insert(item, newItem);
     newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, item, source, newItem));
 }
 
@@ -232,7 +230,7 @@ bool DownloadView::removeRow(DownloadModelItem * item) {
 void DownloadView::downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal) {
     QIODevice * source = (QIODevice *)sender();
     qDebug() << "DOWN" << downIndexes.value(source) << (bytesReceived / (double)bytesTotal);
-    emit updateAttr(mdl -> index(downIndexes.value(source)), REMOTE_PROGRESS, bytesReceived / (double)bytesTotal);
+    emit updateAttr(downIndexes.value(source), REMOTE_PROGRESS, bytesReceived / (double)bytesTotal);
 }
 
 void DownloadView::reproceedDownload() {
@@ -301,7 +299,7 @@ DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice
                     bufferLength /= 2;
             }
 
-            emit updateAttr(mdl -> index(itm), DOWNLOAD_PROGRESS, pos / limit);
+            emit updateAttr(itm, DOWNLOAD_PROGRESS, pos / limit);
 
             if (watcher -> isCanceled())
                 break;
@@ -311,7 +309,7 @@ DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice
 
         emit downloadProceeded(to);
     }
-    else emit updateAttr(ind, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
+    else emit updateAttr(itm, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
 
     source -> close();
     source -> deleteLater();
@@ -319,7 +317,7 @@ DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice
     if (!isReadyForWriting || watcher -> isCanceled())
         toFile.remove();
     else {
-        emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
+        emit updateAttr(itm, DOWNLOAD_PROGRESS, 100);
         toFile.close();
     }
 
@@ -374,7 +372,7 @@ void DownloadView::dropEvent(QDropEvent * event) {
 }
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {
-    if (event -> key() == Qt::Key_Delete) {
+    /*if (event -> key() == Qt::Key_Delete) {
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 
@@ -386,7 +384,7 @@ void DownloadView::keyPressEvent(QKeyEvent * event) {
                 removeRow(ind);
         }
     }
-    else QListView::keyPressEvent(event);
+    else */QListView::keyPressEvent(event);
 }
 
 void DownloadView::mousePressEvent(QMouseEvent * event) {

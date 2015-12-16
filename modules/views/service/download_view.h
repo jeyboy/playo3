@@ -43,7 +43,7 @@ namespace Views {
         void downloadProceeded(QString to);
 
     public slots:
-        void onUpdateAttr(DownloadModelItem * item, int attr, const QVariant & val) { mdl -> setData(ind, val, attr); }
+        void onUpdateAttr(DownloadModelItem * item, int attr, const QVariant & val) { mdl -> setData(mdl -> index(item), val, attr); }
         void downloadFinished();
         void initiateSaving(DownloadModelItem * item, QIODevice * source);
         void savingCompleted();
