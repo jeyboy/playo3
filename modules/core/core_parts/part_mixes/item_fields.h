@@ -59,7 +59,7 @@ namespace Core {
         inline QVariant genreID() const     { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant bpm() const         { return attrs.value(JSON_TYPE_BPM, 0); }
 
-        inline Web::SubType subtipe() const   { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::none).toInt(); }
+        inline Web::SubType subtipe() const   { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
 
         inline QVariant titlesCache() const    { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 

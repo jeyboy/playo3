@@ -104,7 +104,7 @@ namespace Core {
         class Mp3Base : public IGrabberApi, public Singleton<Mp3Base> {
         public:
             inline QString name() const { return QStringLiteral("Mp3Base"); }
-            inline Web::SubType siteType() { return mp3base_site; }
+            inline Web::SubType siteType() { return site_mp3base; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

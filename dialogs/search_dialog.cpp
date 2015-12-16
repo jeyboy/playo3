@@ -42,10 +42,10 @@ SearchDialog::SearchDialog(QWidget * parent) :
             item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
 
             switch(it.key()) {
-                case Web::SubType::vk_site:
-                case Web::SubType::sc_site:
-                case Web::SubType::od_site:
-                case Web::SubType::fourshared_site: {
+                case Web::SubType::site_vk:
+                case Web::SubType::site_sc:
+                case Web::SubType::site_od:
+                case Web::SubType::site_fourshared: {
                     ui -> sitesList -> insertItem(0, item);
                 break;}
                 default: ui -> sitesList -> addItem(item);

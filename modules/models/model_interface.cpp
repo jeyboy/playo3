@@ -239,7 +239,9 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
                 pos
             );
 
+            newItem -> setSubtype(Web::site_vk);
             newItem -> setOwner(owner);
+            newItem -> setRefreshPath(uid);
             newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
 
 //                if (itm.contains(Vk::genre_id_key))
@@ -362,6 +364,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
             newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
             newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
+            newItem -> setSubtype(Web::site_sc);
 
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
             if (itm.contains(Soundcloud::tkn_genre_id))
@@ -415,6 +418,7 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
             newItem -> setExtension(Od::tkn_default_extension);
             newItem -> setDuration(Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)));
             newItem -> setSize(itm.value(Od::tkn_size).toInt(0));
+            newItem -> setSubtype(Web::site_od);
 
         } else {
             for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)

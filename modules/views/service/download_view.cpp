@@ -1,4 +1,5 @@
 #include "download_view.h"
+#include "modules/core/web/web_apis.h"
 
 using namespace Views;
 using namespace Core;
@@ -23,7 +24,7 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(par
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    setItemDelegate((item_delegate = new DownloadDelegate(this)));
+    setItemDelegate(new DownloadDelegate(this));
 
     setContextMenuPolicy(Qt::DefaultContextMenu);
 
@@ -76,10 +77,8 @@ bool DownloadView::proceedDownload(QModelIndex & ind) {
     return true;
 }
 
-void DownloadView::proceedDrop(QDropEvent * event, QString path) {
+void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
     if (event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
-        event -> accept();
-
         QByteArray encoded = event -> mimeData() -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
         bool isRemote;
@@ -88,27 +87,28 @@ void DownloadView::proceedDrop(QDropEvent * event, QString path) {
             InnerData data;
             stream >> data.url >> isRemote >> data.attrs;
 
-            bool is_vk = data.attrs.take(JSON_TYPE_ITEM_TYPE).toInt() == VK_FILE; // vk monkey patch
-            // need to add patch for 4shared // need to prepare download link before row creation
-
             addRow(
                 data.url,
                 path,
                 FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
-                is_vk ? QStringLiteral("vk") : QString(),
-                is_vk ? (data.attrs[JSON_TYPE_OWNER_ID].toString() % QStringLiteral("_") % data.attrs[JSON_TYPE_UID].toString()) : QString() //WebItem::toUid
+                data.attrs[JSON_TYPE_SUB_TYPE].toInt(),
+                data.attrs[JSON_TYPE_REFRESH_PATH].toString()
             );
         }
     } else if (event -> mimeData() -> hasUrls()) {
-        event -> accept();
-        QList<QUrl>::Iterator it = event -> mimeData() -> urls().begin();
+        QList<QUrl> urls = event -> mimeData() -> urls();
 
-        for(; it != event -> mimeData() -> urls().end(); it++) {
+        for(QList<QUrl>::Iterator it = urls.begin(); it != urls.end(); it++) {
             QFileInfo file = QFileInfo((*it).toLocalFile());
             addRow((*it), path, FilenameConversions::downloadTitle(file.baseName(), file.completeSuffix()));
         }
     }
-    else event -> ignore();
+    else {
+        event -> ignore();
+        return;
+    }
+
+    event -> accept();
 }
 
 //////////////////////////////////////////////////////
@@ -135,17 +135,15 @@ void DownloadView::downloadCompleted() {
     proceedDownload();
 }
 
-void DownloadView::addRow(QUrl from, QString to, QString name, QString dtype, QString uid) {
+void DownloadView::addRow(const QUrl & from, const QString & to, const QString & name, int dtype, const QString & refresh_attrs) {
     QVariantMap data;
     data.insert(QString::number(DOWNLOAD_FROM), from);
     data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
+    data.insert(QString::number(DOWNLOAD_TYPE), dtype);
 
-    if (!dtype.isEmpty())
-        data.insert(QString::number(DOWNLOAD_TYPE), dtype);
-
-    if (!uid.isEmpty())
-        data.insert(QString::number(DOWNLOAD_ID), uid);
+    if (!refresh_attrs.isEmpty())
+        data.insert(QString::number(DOWNLOAD_REFRESH_ATTRS), refresh_attrs);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
     data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
     data.insert(QString::number(REMOTE_PROGRESS), -1);
@@ -177,6 +175,7 @@ void DownloadView::reproceedDownload() {
     for(int i = 0; it != items.end(); it++, i++)
         if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -2) {
             (*it) -> setData(DOWNLOAD_PROGRESS, -1);
+            (*it) -> setData(REMOTE_PROGRESS, -1);
             (*it) -> setData(DOWNLOAD_ERROR, QVariant());
         }
 
@@ -213,7 +212,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 //    if (toVar.type() == typeof(QUrl))
 //        to = toVar.toUrl().toLocalFile();
 //    else
-        to = toVar.toString() + '/' + itm -> data(DOWNLOAD_TITLE).toString();
+        to = toVar.toString() % '/' % itm -> data(DOWNLOAD_TITLE).toString();
 
     if (QFile::exists(to))
         QFile::remove(to);
@@ -233,23 +232,31 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         if (isRemote) {
             source = networkManager -> followedGet(from);
-            downIndexes.insert(source, ind);
-            connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));
 
-            int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); // vk monkey patch
+            int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             if (status == 404) {
                 source -> close();
                 delete source;
 
                 bool invalid = true;
-
-                if (itm -> data(DOWNLOAD_TYPE).toString() == QStringLiteral("vk")) {
-                    QUrl newFrom = QUrl(Vk::Api::obj().refresh(itm -> data(DOWNLOAD_ID).toString()));
-                    if (newFrom != from) {
-                        source = networkManager -> followedGet(newFrom);
-                        invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
-                    }
+                QUrl newFrom = QUrl(
+                    Core::Web::Apis::restoreUrl(
+                        itm -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
+                        (Web::SubType)itm -> data(DOWNLOAD_TYPE).toInt()
+                    )
+                );
+                if (newFrom != from) {
+                    source = networkManager -> followedGet(newFrom);
+                    invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
                 }
+
+//                if (itm -> data(DOWNLOAD_TYPE).to() == QStringLiteral("vk")) {
+//                    QUrl newFrom = QUrl(Vk::Api::obj().refresh(itm -> data(DOWNLOAD_ID).toString()));
+//                    if (newFrom != from) {
+//                        source = networkManager -> followedGet(newFrom);
+//                        invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
+//                    }
+//                }
 
                 if (invalid) {
                     emit updateAttr(ind, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
@@ -257,6 +264,9 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                     return ind;
                 }
             }
+
+            downIndexes.insert(source, ind);
+            connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));
 
             bufferLength = qMin(source -> bytesAvailable(), qint64(minBufferLen));
         } else {
@@ -277,6 +287,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         if (!toFile.resize(source -> bytesAvailable())) {
             emit updateAttr(ind, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
+            downIndexes.remove(source);
             source -> close();
             delete source;
             toFile.close();
@@ -306,6 +317,8 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
         if (!watcher -> isCanceled())
             emit updateAttr(ind, DOWNLOAD_PROGRESS, 100);
+
+        downIndexes.remove(source);
 
         source -> close();
         delete source;

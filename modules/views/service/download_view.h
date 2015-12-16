@@ -35,7 +35,7 @@ namespace Views {
         inline void scrollToActive() { scrollTo(currentIndex()); }
 
         bool proceedDownload(QModelIndex & ind);
-        void proceedDrop(QDropEvent * event, QString path);
+        void proceedDrop(QDropEvent * event, const QString & path);
     signals:
         void updateRequired(const QModelIndex & topLeft, const QModelIndex & bottomRight, const QVector<int> & roles = QVector<int>());
         void updateAttr(const QModelIndex, int attr, QVariant val);
@@ -45,7 +45,7 @@ namespace Views {
         void onUpdateAttr(const QModelIndex, int attr, QVariant val);
         void downloadCompleted();
 
-        void addRow(QUrl from, QString to, QString name, QString dtype = QString(), QString uid = QString());
+        void addRow(const QUrl & from, const QString & to, const QString & name, int dtype = 0, const QString & refresh_attrs = QString());
         bool removeRow(const QModelIndex & node);
 
     protected slots:
@@ -79,8 +79,6 @@ namespace Views {
 
         QList<QFutureWatcher<QModelIndex> *> watchers;
         QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
-
-        DownloadDelegate * item_delegate;
     };
 }
 #endif // DOWNLOAD_VIEW

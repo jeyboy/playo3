@@ -126,9 +126,9 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
-                    case vk_site: { propagate_count = proceedVkList(items, parent); break; }
-                    case sc_site: { propagate_count = proceedScList(items, parent); break;}
-                    case od_site: { propagate_count = proceedOdList(items, parent); break;}
+                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
+                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
+                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 

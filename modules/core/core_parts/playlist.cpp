@@ -16,6 +16,17 @@ int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap
             new SoundcloudFile(attrs, parent, pos);
             return 1;
         }
+
+        case OD_FILE: {
+            new OdFile(attrs, parent, pos);
+            return 1;
+        }
+
+        case WEB_FILE: {
+            new WebFile(attrs, parent, pos);
+            return 1;
+        }
+
 //                case CUE_FILE: {
 //                    new CueFile(data -> attrs, parent, pos);
 //                    return 1;

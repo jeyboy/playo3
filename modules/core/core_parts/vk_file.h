@@ -9,11 +9,13 @@ namespace Core {
         inline VkFile(QJsonObject * hash, Playlist * parent = 0) : WebFile(hash, parent) {}
         inline VkFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : WebFile(hash, parent, pos) {}
         inline VkFile(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1)
-            : WebFile(uid, filePath, fileName, parent, pos) { setExtension(QStringLiteral("mp3")); }
+            : WebFile(uid, filePath, fileName, parent, pos) {
+            setExtension(QStringLiteral("mp3"));
+        }
 
         inline int itemType() const { return VK_FILE; }
 
-        inline QString refresh_path() { return toUid(); }
+//        inline QString refresh_path() { return toUid(); }
     };
 }
 

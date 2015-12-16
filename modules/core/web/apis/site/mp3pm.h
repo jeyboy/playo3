@@ -13,7 +13,7 @@ namespace Core {
         class Mp3pm : public IGrabberApi, public Singleton<Mp3pm> {
         public:
             inline QString name() const { return QStringLiteral("Mp3pm"); }
-            inline Web::SubType siteType() { return mp3pm_site; }
+            inline Web::SubType siteType() { return site_mp3pm; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

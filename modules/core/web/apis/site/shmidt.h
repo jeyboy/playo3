@@ -12,7 +12,7 @@ namespace Core {
         class Shmidt : public IGrabberApi, public Singleton<Shmidt> {
         public:
             inline QString name() const { return QStringLiteral("Shmidt"); }
-            inline SubType siteType() { return shmidt_site; }
+            inline SubType siteType() { return site_shmidt; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

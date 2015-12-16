@@ -12,7 +12,7 @@ namespace Core {
         class Mp3cc : public IGrabberApi, public Singleton<Mp3cc> {
         public:
             inline QString name() const { return QStringLiteral("Mp3cc"); }
-            inline Web::SubType siteType() { return mp3cc_site; }
+            inline Web::SubType siteType() { return site_mp3cc; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

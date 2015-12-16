@@ -18,6 +18,8 @@ namespace Core {
             static void close(QJsonObject & obj);
 
             static QString restoreUrl(const QString & refreshStr/*, int itemType*/, const Web::SubType & itemSubType) {
+                qDebug() << "RESTORING" << itemSubType << refreshStr;
+
 //                switch(itemType) {
 ////                    case VK_FILE: {
 ////                        newUrl = Vk::Api::obj().refresh(refreshStr /*itm -> toUid()*/).section('?', 0, 0);
@@ -46,7 +48,7 @@ namespace Core {
                                     return QString();
                                 else {
                                     QString res = engine -> refresh(refreshStr /*itm -> refresh_path()*/);
-                                    if (itemSubType == vk_site) return res.section('?', 0, 0);
+                                    if (itemSubType == site_vk) return res.section('?', 0, 0);
                                     else return res;
                                 }
                             }

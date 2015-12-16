@@ -64,14 +64,14 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(SIMPLE_FILE + SELECTION_ITER,                          PIXMAP(QStringLiteral(":/items/local_item_on"), size));
     icons.insert(CUE_FILE, icons[SIMPLE_FILE]);
     icons.insert(CUE_FILE + SELECTION_ITER, icons[SIMPLE_FILE + SELECTION_ITER]);
-    icons.insert(WEB_FILE + fourshared_site,                            PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
-    icons.insert(WEB_FILE + fourshared_site + SELECTION_ITER,           PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
-    icons.insert(WEB_FILE + zaycev_site,                                PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
-    icons.insert(WEB_FILE + zaycev_site + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
-    icons.insert(WEB_FILE + promodj_site,                               PIXMAP(QStringLiteral(":/items/promodj_item"), size));
-    icons.insert(WEB_FILE + promodj_site + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
-    icons.insert(WEB_FILE + jetune_site,                                PIXMAP(QStringLiteral(":/items/jetune_item"), size));
-    icons.insert(WEB_FILE + jetune_site + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
+    icons.insert(WEB_FILE + site_fourshared,                            PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
+    icons.insert(WEB_FILE + site_fourshared + SELECTION_ITER,           PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
+    icons.insert(WEB_FILE + site_zaycev,                                PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
+    icons.insert(WEB_FILE + site_zaycev + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
+    icons.insert(WEB_FILE + site_promodj,                               PIXMAP(QStringLiteral(":/items/promodj_item"), size));
+    icons.insert(WEB_FILE + site_promodj + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
+    icons.insert(WEB_FILE + site_jetune,                                PIXMAP(QStringLiteral(":/items/jetune_item"), size));
+    icons.insert(WEB_FILE + site_jetune + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
 
 }
 

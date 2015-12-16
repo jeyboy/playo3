@@ -12,7 +12,7 @@ namespace Core {
         class Jetune : public IGrabberApi, public Singleton<Jetune> {
         public:
             inline QString name() const { return QStringLiteral("Jetune"); }
-            inline Web::SubType siteType() { return jetune_site; }
+            inline Web::SubType siteType() { return site_jetune; }
 
             QString refresh(const QString & refresh_page) {
                 qDebug() << "IN JETUNE";
