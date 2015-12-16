@@ -211,8 +211,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
     QVariant toVar = itm -> data(DOWNLOAD_TO);
     QString to = toVar.toString() % '/' % itm -> data(DOWNLOAD_TITLE).toString();
 
-    qDebug() << "DOWN PROC" << itm -> data(DOWNLOAD_TITLE).toString();
-
     if (QFile::exists(to)) //FIXME: remove only if file size < size of download object
         QFile::remove(to);
 
@@ -234,7 +232,6 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
 
             int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
             if (status == 404 || status == 0) { // sttaus 0 has meaning what url is empty and should be refreshed
-                qDebug() << "DOWN PROC RECOVEERY";
                 source -> close();
                 delete source;
 
@@ -248,16 +245,7 @@ QModelIndex DownloadView::downloading(QModelIndex & ind, QFutureWatcher<QModelIn
                 if (newFrom != from) {
                     source = networkManager -> followedGet(newFrom);
                     invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
-                    qDebug() << "DOWN PROC RECOVEERY RES" << !invalid;
                 }
-
-//                if (itm -> data(DOWNLOAD_TYPE).to() == QStringLiteral("vk")) {
-//                    QUrl newFrom = QUrl(Vk::Api::obj().refresh(itm -> data(DOWNLOAD_ID).toString()));
-//                    if (newFrom != from) {
-//                        source = networkManager -> followedGet(newFrom);
-//                        invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
-//                    }
-//                }
 
                 if (invalid) {
                     emit updateAttr(ind, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
