@@ -372,19 +372,34 @@ void DownloadView::dropEvent(QDropEvent * event) {
 }
 
 void DownloadView::keyPressEvent(QKeyEvent * event) {
-    /*if (event -> key() == Qt::Key_Delete) {
+    if (event -> key() == Qt::Key_Delete) {
         QModelIndexList list = selectedIndexes();
         selectionModel() -> clearSelection();
 
-        if (list.size() > 1)
-            removeProccessing(list);
-        else {
+        if (list.size() > 1) {
+            qSort(list.begin(), list.end());
+
+            QModelIndexList::Iterator eit = --list.end();
+            for (; eit != list.begin(); --eit) {
+                DownloadModelItem * itm = mdl -> item(*eit);
+                QFutureWatcher<DownloadModelItem *> * watcher = bussyWatchers.value(itm, 0);
+                if (!watcher)/* {
+                    watcher -> cancel();
+                    watcher -> waitForFinished();
+                }*/
+                    removeRow(itm);
+            }
+
+            DownloadModelItem * itm = mdl -> item(*eit);
+            if (!bussyWatchers.value(itm, 0))
+                removeRow(itm);
+        } else {
             QModelIndex ind = currentIndex();
-            if (currentIndex().isValid())
-                removeRow(ind);
+            if (ind.isValid())
+                removeRow(mdl -> item(ind));
         }
     }
-    else */QListView::keyPressEvent(event);
+    else QListView::keyPressEvent(event);
 }
 
 void DownloadView::mousePressEvent(QMouseEvent * event) {
