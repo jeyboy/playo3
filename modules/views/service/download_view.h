@@ -34,19 +34,22 @@ namespace Views {
 
         inline void scrollToActive() { scrollTo(currentIndex()); }
 
-        bool proceedDownload(QModelIndex & ind);
+        bool proceedDownload(DownloadModelItem * item);
         void proceedDrop(QDropEvent * event, const QString & path);
+        bool initiateDownloading(DownloadModelItem * item);
     signals:
         void updateRequired(const QModelIndex & topLeft, const QModelIndex & bottomRight, const QVector<int> & roles = QVector<int>());
-        void updateAttr(const QModelIndex, int attr, QVariant val);
+        void updateAttr(DownloadModelItem * item, int attr, QVariant val);
         void downloadProceeded(QString to);
 
     public slots:
-        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
-        void downloadCompleted();
+        void onUpdateAttr(DownloadModelItem * item, int attr, const QVariant & val) { mdl -> setData(ind, val, attr); }
+        void downloadFinished();
+        void initiateSaving(DownloadModelItem * item, QIODevice * source);
+        void savingCompleted();
 
         void addRow(const QUrl & from, const QString & to, const QString & name, int dtype = 0, const QString & refresh_attrs = QString());
-        bool removeRow(const QModelIndex & node);
+        bool removeRow(DownloadModelItem * item);
 
     protected slots:
         void downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal);
@@ -54,10 +57,10 @@ namespace Views {
         void proceedDownload();
 
     protected:
-        QModelIndex downloading(QModelIndex &, QFutureWatcher<QModelIndex> * watcher);
+        DownloadModelItem * downloading(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);
-        void removeProccessing(QModelIndexList & index_list);
+//        void removeProccessing(QModelIndexList & index_list);
 
         void dragEnterEvent(QDragEnterEvent *);
         void dragMoveEvent(QDragMoveEvent *);
@@ -70,15 +73,14 @@ namespace Views {
         DownloadModel * mdl;
         QPoint dragPoint;
     private:
-        QHash<QIODevice *, QModelIndex> downIndexes;
+        QHash<QIODevice *, DownloadModelItem *> downIndexes;
         bool paused;
 
         friend class Core::SingletonPtr<DownloadView>;
         DownloadView(QJsonObject * hash, QWidget * parent);
         DownloadView() {}
 
-        QList<QFutureWatcher<QModelIndex> *> watchers;
-        QHash<QModelIndex, QFutureWatcher<QModelIndex> *> bussyWatchers;
+        QHash<DownloadModelItem *, QFutureWatcher<DownloadModelItem *> *> bussyWatchers;
     };
 }
 #endif // DOWNLOAD_VIEW

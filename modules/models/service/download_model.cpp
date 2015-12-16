@@ -113,12 +113,12 @@ int DownloadModel::rowCount(const QModelIndex & parent) const {
     return parentItem -> childCount();
 }
 
-QModelIndex DownloadModel::appendRow(const QVariantMap & data) {
+DownloadModelItem * DownloadModel::appendRow(const QVariantMap & data) {
     DownloadModelItem * newItem;
     beginInsertRows(QModelIndex(), rootItem -> childCount(), rootItem -> childCount());
     newItem = new DownloadModelItem(data, rootItem);
     endInsertRows();
-    return index(newItem);
+    return newItem;
 }
 
 bool DownloadModel::removeRows(int position, int rows, const QModelIndex & parent) {
