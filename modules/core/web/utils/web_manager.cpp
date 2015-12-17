@@ -3,13 +3,8 @@
 namespace Core {
     namespace Web {
         Response * Response::followByRedirect(QHash<QUrl, bool> prev_urls) {
-            QVariant possibleRedirectUrl = redirectUrl();
-            if (possibleRedirectUrl.isValid()) {
-                QUrl new_url = possibleRedirectUrl.toUrl();
-
-                if (new_url.isRelative())
-                    new_url = url().resolved(new_url);
-
+            QUrl new_url = redirectUrl();
+            if (!new_url.isEmpty()) {
                 if (prev_urls.contains(new_url)) return this;
                 else prev_urls.insert(new_url, true);
 
@@ -56,7 +51,7 @@ namespace Core {
 
         QUrl Response::toRedirectUrl(bool destroy) {
             if (error()) qDebug() << "IOERROR" << error();
-            QUrl uri = redirectUrl().toUrl();
+            QUrl uri = redirectUrl();
             if (destroy) deleteLater();
             return uri;
         }
@@ -73,7 +68,7 @@ namespace Core {
             return this;
         }
 
-        Response * Request::viaGet() { return manager -> get(*this); }
+        Response * Request::viaGet(bool async) { return manager -> get(*this, async); }
 
         Response * Request::viaPost(const QByteArray & data) { return manager -> post(*this, data); }
 

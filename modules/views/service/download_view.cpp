@@ -47,6 +47,7 @@ QJsonObject DownloadView::toJson() {
         it.value() -> cancel();
         it.value() -> waitForFinished();
         it.key() -> setData(DOWNLOAD_PROGRESS, -1);
+        it.key() -> setData(REMOTE_PROGRESS, -1);
     }
 
     bussyWatchers.clear();
@@ -54,24 +55,10 @@ QJsonObject DownloadView::toJson() {
 }
 
 bool DownloadView::proceedDownload(DownloadModelItem * item) {
+    if (bussyWatchers.contains(item)) return false;
     if (bussyWatchers.count() > 3) return false;
+    bussyWatchers.insert(item, 0);
     return initiateDownloading(item);
-
-//    QFutureWatcher<QModelIndex> * newItem = 0;
-
-//    if (watchers.isEmpty()) {
-//        if (watchers.size() + bussyWatchers.size() < qMax(1,  2/*QThread::idealThreadCount()*/)) {
-//            newItem = new QFutureWatcher<QModelIndex>();
-//            connect(newItem, SIGNAL(finished()), this, SLOT(savingCompleted()));
-//        }
-//        else return false;
-//    }
-//    else newItem = watchers.takeLast();
-
-//    mdl -> setData(ind, 0, DOWNLOAD_PROGRESS);
-//    bussyWatchers.insert(ind, newItem);
-//    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, ind, newItem));
-//    return true;
 }
 
 void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
@@ -115,40 +102,14 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
     QUrl from = item -> data(DOWNLOAD_FROM).toUrl();
     bool isRemote = item -> data(DOWNLOAD_IS_REMOTE).toBool();
 
+    qDebug() << "DOWN START" << from;
+
     if (isRemote) {
-        QApplication::processEvents();
-        source = networkManager -> followedGet(from);
-
-        int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        if (status == 404 || status == 0) { // status 0 has meaning what url is empty and should be refreshed
-            source -> close();
-            source -> deleteLater();
-
-            QApplication::processEvents();
-            bool invalid = true;
-            QUrl newFrom = QUrl(
-                Core::Web::Apis::restoreUrl( // maybe need to do this async
-                    item -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
-                    (Web::SubType)item -> data(DOWNLOAD_TYPE).toInt()
-                )
-            );
-            QApplication::processEvents();
-
-            if (newFrom != from) {
-                source = networkManager -> followedGet(newFrom);
-                invalid = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 404;
-            }
-
-            if (invalid) {
-                emit updateAttr(item, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
-                return false;
-            }
-        }
-
+        source = networkManager -> followedGetAsync(from, Func(this, SLOT(asyncRequestFinished(QIODevice*,void*)), item));
         emit updateAttr(item, REMOTE_PROGRESS, 0);
         downIndexes.insert(source, item);
-        connect(source, SIGNAL(readyRead()), this, SLOT(downloadFinished()));
         connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));
+        return true;
     } else {
         source = new QFile(from.toLocalFile());
 
@@ -168,17 +129,22 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
-void DownloadView::downloadFinished() {
-    QIODevice * device = (QIODevice *)sender();
-    DownloadModelItem * item = downIndexes.value(device);
-    downIndexes.remove(device);
+//void DownloadView::downloadFinished() {
+//    QIODevice * source = (QIODevice *)sender();
+//    DownloadModelItem * item = downIndexes.value(source);
+//    downIndexes.remove(source);
 
-    initiateSaving(item, device);
-}
+//    qDebug() << "REMOTE DOWNLOAD FINISHED" << item -> data(DOWNLOAD_TITLE);
+//    int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+//    qDebug() << "REMOTE DOWNLOAD FINISHED" << status;
+
+//    initiateSaving(item, source);
+//}
 
 void DownloadView::initiateSaving(DownloadModelItem * item, QIODevice * source) {
     QFutureWatcher<DownloadModelItem *> * newItem = new QFutureWatcher<DownloadModelItem *>();
     connect(newItem, SIGNAL(finished()), this, SLOT(savingCompleted()));
+    item -> setData(REMOTE_PROGRESS, -1);
     item -> setData(DOWNLOAD_PROGRESS, 0);
     bussyWatchers.insert(item, newItem);
     newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, item, source, newItem));
@@ -206,6 +172,8 @@ void DownloadView::addRow(const QUrl & from, const QString & to, const QString &
     data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
     data.insert(QString::number(DOWNLOAD_TYPE), dtype);
+    data.insert(QString::number(DOWNLOAD_REFRESH_ATTEMPTS), 0);
+    data.insert(QString::number(DOWNLOAD_READY), false);
 
     if (!refresh_attrs.isEmpty())
         data.insert(QString::number(DOWNLOAD_REFRESH_ATTRS), refresh_attrs);
@@ -226,6 +194,50 @@ bool DownloadView::removeRow(DownloadModelItem * item) {
 
     QModelIndex node = mdl -> index(item);
     return mdl -> removeRow(node.row(), node.parent());
+}
+
+void DownloadView::asyncRequestFinished(QIODevice * source, void * userData) {
+    DownloadModelItem * item = (DownloadModelItem *)userData;
+    QUrl from = item -> data(DOWNLOAD_FROM).toUrl();
+    downIndexes.remove(source);
+
+    int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    if (status == 404 || status == 0) { // status 0 has meaning what url is empty and should be refreshed
+        qDebug() << "REMOTE CALL RESTORATION" << from;
+        source -> close();
+        source -> deleteLater();
+        bool invalid = true;
+
+        if (item -> data(DOWNLOAD_REFRESH_ATTEMPTS).toInt() == 0) {
+            qDebug() << "REMOTE CALL RESTORATION IN" << from;
+            item -> setData(DOWNLOAD_REFRESH_ATTEMPTS, item -> data(DOWNLOAD_REFRESH_ATTEMPTS).toInt() + 1);
+
+            QApplication::processEvents();
+
+            QUrl newFrom = QUrl(
+                Core::Web::Apis::restoreUrl( // maybe need to do this async
+                    item -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
+                    (Web::SubType)item -> data(DOWNLOAD_TYPE).toInt()
+                )
+            );
+            QApplication::processEvents();
+
+            if (newFrom != from) {
+                item -> setData(DOWNLOAD_FROM, newFrom);
+                initiateDownloading(item);
+                return;
+            }
+        }
+
+        qDebug() << "REMOTE CALL RESTORATION" << from << !invalid;
+        if (invalid) {
+            emit updateAttr(item, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
+            bussyWatchers.remove(item);
+            return;
+        }
+    }
+
+    initiateSaving(item, source);
 }
 
 void DownloadView::downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal) {
@@ -251,7 +263,7 @@ void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
 
     for(QList<DownloadModelItem *>::Iterator it = items.begin(); it != items.end(); it++) {
-        if (!paused && (*it) -> data(DOWNLOAD_PROGRESS).toInt() == -1) {
+        if (!paused && !(*it) -> data(DOWNLOAD_READY).toBool()) {
             if (!proceedDownload(*it))
                 return;
         }
@@ -318,6 +330,7 @@ DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice
     if (!isReadyForWriting || watcher -> isCanceled())
         toFile.remove();
     else {
+        itm -> setData(DOWNLOAD_READY, true);
         emit updateAttr(itm, DOWNLOAD_PROGRESS, 100);
         toFile.close();
     }

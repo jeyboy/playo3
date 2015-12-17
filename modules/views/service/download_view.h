@@ -23,7 +23,6 @@
 #include "modules/core/misc/file_utils/file_errors.h"
 #include "modules/core/web/response_error.h"
 
-// TODO: rewrite on mutex using while deleting items
 namespace Views {
     class DownloadView : public QListView, public Core::SingletonPtr<DownloadView>, public Core::FileErrors, public Core::ResponseError {
       Q_OBJECT
@@ -44,7 +43,6 @@ namespace Views {
 
     public slots:
         void onUpdateAttr(DownloadModelItem * item, int attr, const QVariant & val) { mdl -> setData(mdl -> index(item), val, attr); }
-        void downloadFinished();
         void initiateSaving(DownloadModelItem * item, QIODevice * source);
         void savingCompleted();
 
@@ -52,6 +50,7 @@ namespace Views {
         bool removeRow(DownloadModelItem * item);
 
     protected slots:
+        void asyncRequestFinished(QIODevice * source, void * userData);
         void downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal);
         void reproceedDownload();
         void proceedDownload();

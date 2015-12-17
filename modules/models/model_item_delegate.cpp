@@ -180,10 +180,10 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                     }
                 } else {
                     QRect pseudoIcoRect = QRect(
-                                bodyRect.left(),
+                                bodyRect.left() - 1,
                                 option.rect.top() + 1,
                                 icon_size + (ico_offset + 4),
-                                bodyRect.height()
+                                bodyRect.height() + 1
                             );
 
                     QFont font;

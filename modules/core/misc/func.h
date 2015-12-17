@@ -7,36 +7,28 @@
 
 struct Func {
     inline Func() { }
-    inline Func(QObject * receiver, const char * respSlot) : obj(receiver), arg(0) {
+    inline Func(QObject * receiver, const char * respSlot, void * userData = 0) : obj(receiver), user_data(userData) {
         char * entry = strchr(respSlot, '(');
         int len =  entry ? (entry - respSlot) : strlen(respSlot);
-        char * substr = new char[len];
-        strncpy(substr, respSlot + 1, len - 1); substr[len - 1] = '\0';
-        slot = substr;
+        strncpy(slot, respSlot + 1, len - 1); slot[len - 1] = '\0';
 
         if (entry) {
             char * entry2 = strchr(entry, ')');
 
             if (entry2) {
                 len = entry2 - entry;
-                char * argstr = new char[len];
-                strncpy(argstr, entry + 1, len - 1); argstr[len - 1] = '\0';
-                arg = argstr;
+                strncpy(arg, entry + 1, len - 1); arg[len - 1] = '\0';
             }
-        }
-
-        qDebug() << receiver << slot << arg << respSlot;
+        } else arg[0] = '\0';
 
         delete [] respSlot;
     }
-    inline ~Func() {
-        delete [] slot;
-        delete [] arg;
-    }
+    inline ~Func() {}
 
     QObject * obj;
-    const char * slot;
-    const char * arg;
+    char slot[512];
+    char arg[512];
+    void * user_data;
 };
 
 #endif // FUNC
