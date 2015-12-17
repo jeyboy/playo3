@@ -106,9 +106,10 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
 
     if (isRemote) {
         if (from.isEmpty()) {
-            QUrl newFrom = restoreUrl(item);
-            if (newFrom.isEmpty()) {
-                emit updateAttr(item, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
+            from = restoreUrl(item);
+            if (from.isEmpty()) {
+                setItemError(item);
+                bussyWatchers.remove(item);
                 return false;
             }
         }
@@ -122,7 +123,7 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
         source = new QFile(from.toLocalFile());
 
         if (!source -> open(QIODevice::ReadOnly)) {
-            emit updateAttr(item, DOWNLOAD_ERROR, Core::FileErrors::ioError((QFile *)source));
+            setItemError(item, Core::FileErrors::ioError((QFile *)source));
             source -> close();
             source -> deleteLater();
             return false;
@@ -143,7 +144,7 @@ void DownloadView::initiateSaving(DownloadModelItem * item, QIODevice * source) 
     item -> setData(REMOTE_PROGRESS, -1);
     item -> setData(DOWNLOAD_PROGRESS, 0);
     bussyWatchers.insert(item, newItem);
-    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::downloading, item, source, newItem));
+    newItem -> setFuture(QtConcurrent::run(this, &DownloadView::saving, item, source, newItem));
 }
 
 void DownloadView::savingCompleted() {
@@ -154,10 +155,8 @@ void DownloadView::savingCompleted() {
     obj -> deleteLater();
 
     if (!ind.data(DOWNLOAD_ERROR).isValid()) {
-        mdl -> setData(ind, -100, DOWNLOAD_PROGRESS);
         removeRow(item);
     } else {
-        mdl -> setData(ind, -2, DOWNLOAD_PROGRESS);
 //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
     }
     proceedDownload();
@@ -169,16 +168,14 @@ void DownloadView::addRow(const QUrl & from, const QString & to, const QString &
     data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
     data.insert(QString::number(DOWNLOAD_TYPE), dtype);
-    data.insert(QString::number(DOWNLOAD_REFRESH_ATTEMPTS), 0);
-    data.insert(QString::number(DOWNLOAD_READY), false);
 
     if (!refresh_attrs.isEmpty())
         data.insert(QString::number(DOWNLOAD_REFRESH_ATTRS), refresh_attrs);
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
-    data.insert(QString::number(DOWNLOAD_PROGRESS), -1);
-    data.insert(QString::number(REMOTE_PROGRESS), -1);
 
-    proceedDownload(mdl -> appendRow(data));
+    DownloadModelItem * itm = mdl -> appendRow(data);
+    initiateItem(itm);
+    proceedDownload(itm);
 }
 
 bool DownloadView::removeRow(DownloadModelItem * item) {
@@ -200,7 +197,7 @@ void DownloadView::asyncRequestFinished(QIODevice * source, void * userData) {
     downIndexes.remove(source);
 
     int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    if (status == 404 || status == 0) { // status 0 has meaning what url is empty and should be refreshed
+    if (status == 404) {
         qDebug() << "REMOTE CALL RESTORATION" << from;
         source -> close();
         source -> deleteLater();
@@ -220,7 +217,7 @@ void DownloadView::asyncRequestFinished(QIODevice * source, void * userData) {
 
         qDebug() << "REMOTE CALL RESTORATION" << from << !invalid;
         if (invalid) {
-            emit updateAttr(item, DOWNLOAD_ERROR, QStringLiteral("unprocessable"));
+            setItemError(item);
             bussyWatchers.remove(item);
             return;
         }
@@ -238,11 +235,8 @@ void DownloadView::reproceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
 
     for(QList<DownloadModelItem *>::Iterator it = items.begin(); it != items.end(); it++)
-        if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -2) {
-            (*it) -> setData(DOWNLOAD_PROGRESS, -1);
-            (*it) -> setData(REMOTE_PROGRESS, -1);
-            (*it) -> setData(DOWNLOAD_ERROR, QVariant());
-        }
+        if ((*it) -> data(DOWNLOAD_PROGRESS).toInt() == -2)
+            initiateItem((*it));
 
     proceedDownload();
 }
@@ -254,6 +248,19 @@ void DownloadView::proceedDownload() {
         if (!paused && !(*it) -> data(DOWNLOAD_READY).toBool())
             proceedDownload(*it);
     }
+}
+
+void DownloadView::initiateItem(DownloadModelItem * itm) {
+    itm -> setData(DOWNLOAD_PROGRESS, -1);
+    itm -> setData(REMOTE_PROGRESS, -1);
+    itm -> setData(DOWNLOAD_REFRESH_ATTEMPTS, 0);
+    itm -> setData(DOWNLOAD_READY, false);
+    itm -> setData(DOWNLOAD_ERROR, QVariant());
+}
+
+void DownloadView::setItemError(DownloadModelItem * itm, const QString & err) {
+//    itm -> setData(DOWNLOAD_PROGRESS, DOWNLOAD_ERROR_STATE);
+    emit updateAttr(itm, DOWNLOAD_ERROR, err);
 }
 
 QUrl DownloadView::restoreUrl(DownloadModelItem * item) {
@@ -273,7 +280,7 @@ QUrl DownloadView::restoreUrl(DownloadModelItem * item) {
     return QUrl();
 }
 
-DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher) {
+DownloadModelItem * DownloadView::saving(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher) {
     QVariant toVar = itm -> data(DOWNLOAD_TO);
     QString to = toVar.toString() % '/' % itm -> data(DOWNLOAD_TITLE).toString();
 
@@ -325,7 +332,7 @@ DownloadModelItem * DownloadView::downloading(DownloadModelItem * itm, QIODevice
 
         emit downloadProceeded(to);
     }
-    else emit updateAttr(itm, DOWNLOAD_ERROR, Core::FileErrors::ioError(&toFile));
+    else setItemError(itm, Core::FileErrors::ioError(&toFile));
 
     source -> close();
     source -> deleteLater();
