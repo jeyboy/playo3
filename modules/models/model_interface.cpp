@@ -611,13 +611,13 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QApplication::clipboard() -> setText(ret);
 }
 
-void IModel::importIds(QStringList ids) {
+void IModel::importIds(const QStringList & ids) {
     using namespace Data;
 
     emit moveInBackgroundProcess();
     QHash<int, QStringList> uidsMap;
 
-    for(QStringList::Iterator it = ids.begin(); it != ids.end(); it++) {
+    for(QStringList::ConstIterator it = ids.constBegin(); it != ids.constEnd(); it++) {
         QStringList parts = (*it).split(SHARE_DELIMITER);
         uidsMap[parts.first().toInt()].append(parts.last());
     }
@@ -660,7 +660,7 @@ void IModel::importIds(QStringList ids) {
                 Vk::Api::obj().connection();
 
                 if (Vk::Api::obj().isConnected()) {
-                    QJsonArray obj = Vk::Api::obj().getAudiosInfo(map_it.value());
+                    QJsonArray obj = Vk::Api::obj().audioInfo(map_it.value());
                     proceedVkList(obj, parentNode);
                 }
             break;}
@@ -673,6 +673,16 @@ void IModel::importIds(QStringList ids) {
                     proceedScList(obj, parentNode);
                 }
             break;}
+
+// need to add restoration of record by tid
+//            case OD_FILE: {
+//                Od::Api::obj().connection();
+
+//                if (Od::Api::obj().isConnected()) {
+//                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
+//                    proceedScList(obj, parentNode);
+//                }
+//            break;}
 
             default: qDebug() << "UNSUPPORTED EXPORT TYPE";
         }

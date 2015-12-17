@@ -110,7 +110,7 @@ namespace Models {
 
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);
-        void importIds(QStringList ids);
+        void importIds(const QStringList & ids);
 
         void markAllAsChecked();
         void markAllAsUnchecked();

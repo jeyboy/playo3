@@ -55,6 +55,7 @@ namespace Views {
         void proceedDownload();
 
     protected:
+        QUrl restoreUrl(DownloadModelItem * itm);
         DownloadModelItem * downloading(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher);
 
         void contextMenuEvent(QContextMenuEvent *);

@@ -203,7 +203,7 @@ bool IItem::setData(int column, const QVariant &value) {
 void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
     QUrl lastUrl = toUrl(); // maybe needed update for some services // need to retreive download link
 
-    if (urls.contains(lastUrl)) return;
+    if (!lastUrl.isEmpty() && urls.contains(lastUrl)) return;
 
     stream << lastUrl << isRemote() << toInnerAttrs(itemType());
     urls.insert(lastUrl, 0);

@@ -223,19 +223,19 @@ namespace Core {
 
                     return baseUrl(tkn_execute, query);
                 }
-                QJsonArray getAudiosInfo(QStringList & audio_uids) {
+                QJsonArray audioInfo(QStringList & audio_uids) {
                     return sQuery(audioRefreshUrl(audio_uids)).value(tkn_response).toArray();
                 }
-                QJsonObject getAudioInfo(const QString & audio_uid) {
+                QJsonObject audioInfo(const QString & audio_uid) {
                     QStringList uids; uids << audio_uid;
-                    QJsonArray infos = getAudiosInfo(uids);
+                    QJsonArray infos = audioInfo(uids);
                     if (infos.isEmpty())
                         return QJsonObject();
                     else return infos[0].toObject();
                 }
 
                 QString refresh(const QString & audio_uid) {
-                    return getAudioInfo(audio_uid).value(tkn_url).toString();
+                    return audioInfo(audio_uid).value(tkn_url).toString();
                 }
 
                 //INFO not tested
