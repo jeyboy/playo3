@@ -119,7 +119,6 @@ namespace Core {
                 asyncRequests.insert(url, response);
                 Response * resp = requestTo(url) -> viaGet(true);
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
-
                 return resp;
             }
 

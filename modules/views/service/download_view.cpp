@@ -259,7 +259,6 @@ void DownloadView::initiateItem(DownloadModelItem * itm) {
 }
 
 void DownloadView::setItemError(DownloadModelItem * itm, const QString & err) {
-//    itm -> setData(DOWNLOAD_PROGRESS, DOWNLOAD_ERROR_STATE);
     emit updateAttr(itm, DOWNLOAD_ERROR, err);
 }
 
@@ -362,7 +361,7 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
 //////////////////////////////////////////////////////
 
 void DownloadView::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> formats().toSet().intersect(mdl -> mimeTypes().toSet()).isEmpty())
+    if (!event -> mimeData() -> formats().toSet().intersect(mdl -> mimeTypes().toSet()).isEmpty())
 //    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
         event -> acceptProposedAction();
 }
@@ -372,8 +371,8 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
 //        event -> accept();
 //    else
 //        event -> ignore();
-
-    event -> acceptProposedAction();
+    if (!event -> mimeData() -> formats().toSet().intersect(mdl -> mimeTypes().toSet()).isEmpty())
+        event -> acceptProposedAction();
 }
 
 void DownloadView::dropEvent(QDropEvent * event) {
