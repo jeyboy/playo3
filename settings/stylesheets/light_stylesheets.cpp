@@ -106,6 +106,7 @@ QString LightStylesheets::listViewStyles() {
     return QString(
         "QListView {"
         "   background-color: " + color2().name(QColor::HexArgb) + ";"
+        "   border-radius: 8px;"
         "}"
     );
 }

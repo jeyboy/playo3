@@ -182,16 +182,23 @@ bool DownloadView::removeRow(DownloadModelItem * item) {
     QIODevice * device = 0;
     if (bussyWatchers.contains(item)) {
         device = downIndexes.key(item);
-        if (device) device -> disconnect();
+        if (device) {
+            device -> disconnect();
+            device -> close();
+        }
 
         QFutureWatcher<DownloadModelItem *> * watcher = bussyWatchers.take(item);
         if (watcher) {
             watcher -> cancel();
             watcher -> waitForFinished();
+            watcher -> deleteLater();
         }
     }
 
-    if (device) downIndexes.remove(device);
+    if (device) {
+        downIndexes.remove(device);
+        device -> deleteLater();
+    }
     QModelIndex node = mdl -> index(item);
     return mdl -> removeRow(node.row(), node.parent());
 }
@@ -372,10 +379,6 @@ void DownloadView::dragEnterEvent(QDragEnterEvent * event) {
 }
 
 void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
-//    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
-//        event -> accept();
-//    else
-//        event -> ignore();
     if (!event -> mimeData() -> formats().toSet().intersect(mdl -> mimeTypes().toSet()).isEmpty())
         event -> acceptProposedAction();
 }

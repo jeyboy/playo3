@@ -107,7 +107,12 @@ QString DarkStylesheets::treeViewStyles() {
 }
 
 QString DarkStylesheets::listViewStyles() {
-    return QStringLiteral("QListView { background-color: transparent; }");
+    return QStringLiteral(
+        "QListView {"
+        "   background-color: transparent;"
+        "   border-radius: 8px;"
+        "}"
+    );
 }
 
 QString DarkStylesheets::toolbarStyles() {
