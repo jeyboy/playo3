@@ -350,7 +350,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     if (!is_folder) {
         bool is_vk = attrs[Keys::type] == VK_FILE, is_sc = attrs[Keys::type] == SOUNDCLOUD_FILE;
 
-        QRect icoRect = QRect(bodyRect.left() + 2 + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+        QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
 
