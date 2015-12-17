@@ -20,9 +20,10 @@ public:
 
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 
-    inline QColor color1() { return QColor::fromRgb(175, 184, 195, 212); }
-    inline QColor color2() { return QColor::fromRgb(150, 164, 176, 212); }
-    inline QColor color3() { return QColor::fromRgb(130, 140, 149, 212); }
+    inline QColor hcolor() { return QColor::fromRgb(168, 168, 168, 232); }
+    inline QColor color1() { return QColor(124, 124, 124); }
+    inline QColor color2() { return QColor(148, 148, 148); }
+    inline QColor color3() { return QColor(100, 100, 100); }
 
     QString appStyles();
 

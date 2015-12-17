@@ -132,13 +132,13 @@ void DarkStylesheets::initMainBrush(const QRect & rect) {
 
     QVector<QGradientStop> stops;
 
-    stops << QGradientStop(0,    QColor(168, 168, 168));
-    stops << QGradientStop(border,   QColor(124, 124, 124));
-    stops << QGradientStop(border + .0001,  QColor(100, 100, 100));
-    stops << QGradientStop(.5,   QColor(148, 148, 148));
-    stops << QGradientStop(1 - border - .0001,  QColor(100, 100, 100));
-    stops << QGradientStop(1 - border,   QColor(124, 124, 124));
-    stops << QGradientStop(1,    QColor(168, 168, 168));
+    stops << QGradientStop(0,                   hcolor());
+    stops << QGradientStop(border,              color1());
+    stops << QGradientStop(border + .0001,      color3());
+    stops << QGradientStop(.5,                  color2());
+    stops << QGradientStop(1 - border - .0001,  color3());
+    stops << QGradientStop(1 - border,          color1());
+    stops << QGradientStop(1,                   hcolor());
 
     mainBrush.setStops(stops);
 
