@@ -179,14 +179,19 @@ void DownloadView::addRow(const QUrl & from, const QString & to, const QString &
 }
 
 bool DownloadView::removeRow(DownloadModelItem * item) {
+    QIODevice * device = 0;
     if (bussyWatchers.contains(item)) {
-        QFutureWatcher<DownloadModelItem *> * watcher = bussyWatchers.value(item, 0);
+        device = downIndexes.key(item);
+        if (device) device -> disconnect();
+
+        QFutureWatcher<DownloadModelItem *> * watcher = bussyWatchers.take(item);
         if (watcher) {
             watcher -> cancel();
             watcher -> waitForFinished();
         }
     }
 
+    if (device) downIndexes.remove(device);
     QModelIndex node = mdl -> index(item);
     return mdl -> removeRow(node.row(), node.parent());
 }

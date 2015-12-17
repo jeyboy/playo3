@@ -84,6 +84,19 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
             renderer.render(painter);
             painter -> restore();
         }
-        else QStyledItemDelegate::paint(painter, option, index);
+        else {
+            QLinearGradient grad(rect.left(), rect.top(), rect.left(), rect.bottom());
+            grad.setColorAt(0, QColor::fromRgb(0, 163, 255));
+            grad.setColorAt(1, (option.state & QStyle::State_Selected) ? Qt::white : Qt::gray);
+
+            QPen p((option.state & QStyle::State_Selected) ? Qt::black : Qt::white);
+            painter -> setPen(p);
+            painter -> setBrush(grad);
+
+            painter -> drawRoundedRect(rect, 8, 8);
+            rect.moveLeft(rect.left() + 8);
+            painter -> drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, option.fontMetrics.elidedText(index.data().toString(), Qt::ElideRight, rect.width() + 4));
+//            QStyledItemDelegate::paint(painter, option, index);
+        }
     }
 }
