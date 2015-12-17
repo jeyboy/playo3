@@ -17,7 +17,7 @@ DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(par
     setDropIndicatorShown(true);
 
     setDragDropMode(QAbstractItemView::DragDrop);
-//    setDefaultDropAction(Qt::CopyAction);
+    setDefaultDropAction(Qt::CopyAction);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection); // ContiguousSelection
@@ -102,8 +102,6 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
     QUrl from = item -> data(DOWNLOAD_FROM).toUrl();
     bool isRemote = item -> data(DOWNLOAD_IS_REMOTE).toBool();
 
-    qDebug() << "DOWN START" << from;
-
     if (isRemote) {
         source = networkManager -> followedGetAsync(from, Func(this, SLOT(asyncRequestFinished(QIODevice*,void*)), item));
         emit updateAttr(item, REMOTE_PROGRESS, 0);
@@ -129,18 +127,6 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
-//void DownloadView::downloadFinished() {
-//    QIODevice * source = (QIODevice *)sender();
-//    DownloadModelItem * item = downIndexes.value(source);
-//    downIndexes.remove(source);
-
-//    qDebug() << "REMOTE DOWNLOAD FINISHED" << item -> data(DOWNLOAD_TITLE);
-//    int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-//    qDebug() << "REMOTE DOWNLOAD FINISHED" << status;
-
-//    initiateSaving(item, source);
-//}
-
 void DownloadView::initiateSaving(DownloadModelItem * item, QIODevice * source) {
     QFutureWatcher<DownloadModelItem *> * newItem = new QFutureWatcher<DownloadModelItem *>();
     connect(newItem, SIGNAL(finished()), this, SLOT(savingCompleted()));
@@ -242,8 +228,7 @@ void DownloadView::asyncRequestFinished(QIODevice * source, void * userData) {
 
 void DownloadView::downloadRemoteProgress(qint64 bytesReceived, qint64 bytesTotal) {
     QIODevice * source = (QIODevice *)sender();
-    qDebug() << "DOWN" << downIndexes.value(source) << (bytesReceived / (double)bytesTotal);
-    emit updateAttr(downIndexes.value(source), REMOTE_PROGRESS, bytesReceived / (double)bytesTotal);
+    emit updateAttr(downIndexes.value(source), REMOTE_PROGRESS, bytesReceived / (double)bytesTotal * 100);
 }
 
 void DownloadView::reproceedDownload() {
@@ -263,10 +248,8 @@ void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
 
     for(QList<DownloadModelItem *>::Iterator it = items.begin(); it != items.end(); it++) {
-        if (!paused && !(*it) -> data(DOWNLOAD_READY).toBool()) {
-            if (!proceedDownload(*it))
-                return;
-        }
+        if (!paused && !(*it) -> data(DOWNLOAD_READY).toBool())
+            proceedDownload(*it);
     }
 }
 
@@ -352,21 +335,18 @@ void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
 //////////////////////////////////////////////////////
 
 void DownloadView::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
-        event -> accept();
-    else
-        event -> ignore();
-
-    QListView::dragEnterEvent(event);
+    if (event -> mimeData() -> formats().toSet().intersect(mdl -> mimeTypes().toSet()).isEmpty())
+//    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
+        event -> acceptProposedAction();
 }
 
 void DownloadView::dragMoveEvent(QDragMoveEvent * event) {
-    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
-        event -> accept();
-    else
-        event -> ignore();
+//    if (event -> mimeData() -> formats().contains(DROP_INNER_FORMAT) || event -> mimeData() -> formats().contains(DROP_OUTER_FORMAT))
+//        event -> accept();
+//    else
+//        event -> ignore();
 
-    QListView::dragMoveEvent(event);
+    event -> acceptProposedAction();
 }
 
 void DownloadView::dropEvent(QDropEvent * event) {

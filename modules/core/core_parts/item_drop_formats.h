@@ -2,6 +2,7 @@
 #define ITEM_DROP_FORMATS
 
 #include <qabstractitemmodel.h>
+#include <qurl.h>
 //#include "modules/core/core_parts/part_mixes/json_fields.h"
 
 #define DROP_OUTER_FORMAT "text/uri-list"

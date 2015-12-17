@@ -108,6 +108,13 @@ QModelIndex DownloadModel::parent(const QModelIndex & index) const {
 //    return success;
 //}
 
+QStringList DownloadModel::mimeTypes() const {
+    QStringList types;
+    types << DROP_INNER_FORMAT;
+    types << DROP_OUTER_FORMAT;
+    return types;
+}
+
 int DownloadModel::rowCount(const QModelIndex & parent) const {
     DownloadModelItem * parentItem = item(parent);
     return parentItem -> childCount();

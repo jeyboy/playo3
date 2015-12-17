@@ -5,6 +5,7 @@
 #include <qsize.h>
 
 #include "download_model_item.h"
+#include "modules/core/core_parts/item_drop_formats.h"
 
 class DownloadModel : public QAbstractItemModel {
     Q_OBJECT
@@ -27,6 +28,9 @@ public:
     int itemsCount() const;
 
     inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return rootItem -> columnCount(); }
+
+    Qt::DropActions supportedDropActions() const { return Qt::CopyAction | Qt::MoveAction; }
+    QStringList mimeTypes() const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     DownloadModelItem * appendRow(const QVariantMap & data);
