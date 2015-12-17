@@ -84,6 +84,29 @@ namespace Views {
 //        void showMessage(QString);
 
     protected slots:
+        void updateIds(const QModelIndex & node = QModelIndex()) { // temp method for data migration // remove later
+            Playlist * curr = mdl -> item<Playlist>(node);
+            IItem * item;
+
+            for(int i = 0; i < curr -> childCount(); i++) {
+                item = curr -> child(i);
+
+                if (item -> isContainer())
+                    updateIds(mdl -> index(item));
+                else {
+                    switch(item -> itemType()) {
+                        case VK_FILE: {
+                            item -> setSubtype(Web::site_vk);
+                            item -> setRefreshPath(item -> toUid());
+                        break;}
+                        case SOUNDCLOUD_FILE: { item -> setSubtype(Web::site_sc); break;}
+                        case OD_FILE: { item -> setSubtype(Web::site_od); break;}
+                        default: ;
+                    }
+                }
+            }
+        }
+
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
                 if (Settings::obj().isCheckboxShow()) {
