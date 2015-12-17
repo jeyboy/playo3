@@ -43,9 +43,11 @@ QJsonObject DownloadView::toJson() {
     paused = true;
 
     for(QHash<DownloadModelItem *, QFutureWatcher<DownloadModelItem *> *>::Iterator it = bussyWatchers.begin(); it != bussyWatchers.end(); it++) {
-        disconnect(it.value(), SIGNAL(finished()), this, SLOT(savingCompleted()));
-        it.value() -> cancel();
-        it.value() -> waitForFinished();
+        if (it.value()) {
+            disconnect(it.value(), SIGNAL(finished()), this, SLOT(savingCompleted()));
+            it.value() -> cancel();
+            it.value() -> waitForFinished();
+        }
         it.key() -> setData(DOWNLOAD_PROGRESS, -1);
         it.key() -> setData(REMOTE_PROGRESS, -1);
     }
@@ -141,6 +143,7 @@ void DownloadView::savingCompleted() {
     DownloadModelItem * item = bussyWatchers.key(obj);//obj -> result();
     bussyWatchers.remove(item);
     QModelIndex ind = mdl -> index(item);
+    obj -> deleteLater();
 
     if (!ind.data(DOWNLOAD_ERROR).isValid()) {
         mdl -> setData(ind, -100, DOWNLOAD_PROGRESS);
