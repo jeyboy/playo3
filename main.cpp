@@ -6,7 +6,7 @@
 
 // QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtInfoMsg, QtSystemMsg = QtCriticalMsg
 void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, const QString & message) {
-    OutputDebugString(reinterpret_cast<const wchar_t *>(message.utf16()));
+    OutputDebugString(reinterpret_cast<const wchar_t *>(QString(message % QStringLiteral("\n")).utf16()) );
 
     Logger::obj().write(
         QStringLiteral("%2 - %3 - %4").arg(QString(context.file), QString(context.function), QString::number(context.line)),
