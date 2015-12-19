@@ -24,15 +24,18 @@ namespace Core {
             }
         }
 
+        static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s\\n\\r\\t]+")), QStringLiteral(" ")); }
+
         static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QStringLiteral("(\\W|[_])"))).toLower(); }
         static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("^[\\[\\(]+\\d{1,}[\\]\\)]+"))); }
         static QString downloadTitle(QString title, QString extension) {
-          QString ret = title.replace(QRegExp(QStringLiteral("[^()\\w\\-&.]|_")), QStringLiteral(" "));
+            QString ret = title.replace(QRegExp(QStringLiteral("[^()\\w\\-&.]|_")), QStringLiteral(" "));
+            ret = ret.replace(QRegExp(QStringLiteral("\\s+")), QStringLiteral(" ")).trimmed().mid(0, FILENAME_MAX_LEN);
 
-          if (!extension.isEmpty())
-              ret = ret % QStringLiteral(".") % extension;
+            if (!extension.isEmpty())
+                ret = ret % QStringLiteral(".") % extension;
 
-          return ret.replace(QRegExp(QStringLiteral("\\s+")), QStringLiteral(" ")).trimmed().mid(0, FILENAME_MAX_LEN);
+            return ret;
         }
 
         //static inline QString sitesFilter(QString title)				{ return title.remove(QRegExp("((http:\\/\\/)?(www\\.)?[\\w-]+\\.(\\w+)(\\.(\\w+))*)")); }
