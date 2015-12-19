@@ -3,11 +3,12 @@
 
 #include <qstring.h>
 #include <qlist.h>
-#include <qobject.h>
+//#include <qobject.h>
+#include <qpointer.h>
 
 struct Func {
     inline Func() { }
-    inline Func(QObject * receiver, const char * respSlot, void * userData = 0) : obj(receiver), user_data(userData) {
+    inline Func(QObject * receiver, const char * respSlot, void * userData = 0) : obj(QPointer<QObject>(receiver)), user_data(userData) {
         char * entry = strchr(respSlot, '(');
         int len =  entry ? (entry - respSlot) : strlen(respSlot);
         strncpy(slot, respSlot + 1, len - 1); slot[len - 1] = '\0';
@@ -25,7 +26,7 @@ struct Func {
     }
     inline ~Func() {}
 
-    QObject * obj;
+    QPointer<QObject> obj;
     char slot[512];
     char arg[512];
     void * user_data;

@@ -5,8 +5,14 @@ using namespace Models;
 
 void OdModel::refresh(bool retryPlaing) {
     emit moveInProcess();
-    QApplication::processEvents();
-    Od::Api::obj().objectInfo((tab_uid == Od::Api::obj().userID() ? QString() : tab_uid), new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
+
+    Od::Api::obj().objectInfo(
+        (tab_uid == Od::Api::obj().userID() ? QString() : tab_uid),
+        new Func(
+            this,
+            retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))
+        )
+    );
 }
 
 void OdModel::proceedAudioList(QJsonObject & hash) {

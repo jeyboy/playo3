@@ -103,6 +103,7 @@ namespace Core {
 
 
                 QJsonObject userInfo(QString & uid, bool fullInfo = true) {
+                    QThread::sleep(10);
                     QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
                     QJsonObject ret = sQuery(url, extract);
 

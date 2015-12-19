@@ -60,13 +60,13 @@ void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
     }
 }
 
-void Logger::toFile(QString initiator, QString value) {
+void Logger::toFile(const QString & initiator, const QString & value) {
     if (file) {
         (*out) << initiator << " : " << value << "\n";
         out -> flush();
     }
 }
-void Logger::toEditor(QString initiator, QString value) {
+void Logger::toEditor(const QString & initiator, const QString & value) {
     if (m_editor != 0) {
         QString text;
 

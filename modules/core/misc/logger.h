@@ -32,8 +32,8 @@ public:
     }
 
 private:
-    void toFile(QString initiator, QString value);
-    void toEditor(QString initiator, QString value);
+    void toFile(const QString & initiator, const QString & value);
+    void toEditor(const QString & initiator, const QString & value);
 
     Logger(); friend class Core::Singleton<Logger>;
 

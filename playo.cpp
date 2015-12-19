@@ -16,9 +16,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     setTabShape(QTabWidget::Rounded);
 
     //    setAttribute(Qt::WA_DeleteOnClose);
-
-    qDebug() << "SSOSOSO" << Core::FilenameConversions::extraSymbolsFilter(QStringLiteral("sdfsdf    dsfsdfs  \r\n sdfsdfsdfs"));
-
     initialization();
 
     //safe usage of pointers

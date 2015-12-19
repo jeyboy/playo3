@@ -23,7 +23,7 @@ namespace Core {
         WatchCell(Func * func) : Cell(func) {}
         void postprocessing(QObject * obj) {
             QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
-            if (!initiator -> isCanceled() && response) {
+            if (response -> obj && !initiator -> isCanceled() && response) {
                 QGenericArgument arg = QArgument<T>(response -> arg, initiator -> result());
                 QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
             }
@@ -35,7 +35,7 @@ namespace Core {
         WatchCell(Func * func) : Cell(func) {}
         void postprocessing(QObject * obj) {
             QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)obj;
-                if (!initiator -> isCanceled() && response)
+                if (response -> obj && !initiator -> isCanceled() && response)
                     QMetaObject::invokeMethod(response -> obj, qPrintable(response -> slot), Qt::AutoConnection);
         }
     };
