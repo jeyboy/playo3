@@ -409,8 +409,11 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
 }
 
 void Library::initItemTitles(MediaInfo * info, IItem * itm) {
+    QString title = FilenameConversions::extraSymbolsFilter(itm -> title().toString());
+    itm -> setTitle(title);
+
     QStringList list;
-    QString title = FilenameConversions::cacheTitleFilter(itm -> title().toString());
+    title = FilenameConversions::cacheTitleFilter(title);
     list.append(title);
 
     QString temp = FilenameConversions::forwardNumberFilter(title);
