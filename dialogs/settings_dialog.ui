@@ -1510,9 +1510,21 @@ font-weight: bold;</string>
     <rect>
      <x>700</x>
      <y>0</y>
-     <width>131</width>
+     <width>91</width>
      <height>431</height>
     </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>91</width>
+     <height>251</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>91</width>
+     <height>16777215</height>
+    </size>
    </property>
    <property name="widgetResizable">
     <bool>true</bool>
@@ -1522,7 +1534,7 @@ font-weight: bold;</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>129</width>
+      <width>89</width>
       <height>429</height>
      </rect>
     </property>
@@ -1531,7 +1543,7 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -1544,18 +1556,24 @@ font-weight: bold;</string>
      <property name="checked">
       <bool>false</bool>
      </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
     </widget>
     <widget class="QPushButton" name="viewsBtn">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>50</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Views</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="hotkeysBtn">
@@ -1563,12 +1581,15 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>130</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Hot keys</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="itemsBtn">
@@ -1576,12 +1597,15 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>90</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Items</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="spectrumBtn">
@@ -1589,12 +1613,15 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>170</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Spectrum</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="extensionsBtn">
@@ -1602,46 +1629,17 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>210</y>
-       <width>111</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Spectrum</string>
+      <string>Extensions</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
-   </widget>
-  </widget>
-  <widget class="QScrollArea" name="extensionsArea">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>600</y>
-     <width>342</width>
-     <height>290</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Plain</enum>
-   </property>
-   <property name="lineWidth">
-    <number>0</number>
-   </property>
-   <property name="widgetResizable">
-    <bool>false</bool>
-   </property>
-   <widget class="QWidget" name="spectrumAreaBody_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>340</width>
-      <height>288</height>
-     </rect>
-    </property>
    </widget>
   </widget>
  </widget>
