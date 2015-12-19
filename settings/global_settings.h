@@ -17,6 +17,7 @@
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
 #define SETTINGS_OPEN_TIMEOUT_KEY QStringLiteral("open_time_out_key")
 #define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
+#define SETTINGS_ICON_SIZE_KEY QStringLiteral("icon_size")
 
 class GlobalSettings {
 public:
@@ -47,6 +48,9 @@ public:
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
 
+    inline int iconSize() { return _iconSize; }
+    inline void setIconSize(int newIconSize) { _iconSize = newIconSize; }
+
     inline float openTimeOut() { return _openTimeOut; }
     inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
 
@@ -64,6 +68,7 @@ protected:
     Data::Type _openDropPointInTabType;
     int _tabPosition;
     int _colorScheme;
+    int _iconSize;
 
     float _openTimeOut;
 };
