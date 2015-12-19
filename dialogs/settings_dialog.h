@@ -19,56 +19,17 @@ namespace Ui { class SettingsDialog; }
 namespace Dialogs {
     class SettingsDialog : public BaseDialog {
         Q_OBJECT
-    public:
-        explicit SettingsDialog(QWidget * parent);
-        ~SettingsDialog();
 
-        static void registerHotkeys(QWidget * receiver);
+        bool execColorDialog(QColor & color);
+        void instantiation();
+        void instantiateLayout();
 
-        bool isIconSizeChanged() const;
+        ExtensionDialog * extDialog;
 
-    private slots:
-        void on_cancelButton_clicked();
-
-        void on_resetButton_clicked();
-
-        void on_acceptButton_clicked();
-
-        void on_browseButton_clicked();
-
-        void on_defaultColorButton_clicked();
-
-        void on_listenedColorButton_clicked();
-
-        void on_likedColorButton_clicked();
-
-        void on_playedColorButton_clicked();
-
-        void on_folderColorButton_clicked();
-
-        void on_defaultItemTextColorButton_clicked();
-
-        void on_selectedItemTextColorButton_clicked();
-
-        void on_defaultItemInfoTextColorButton_clicked();
-
-        void on_selectedItemInfoTextColorButton_clicked();
-
-        void on_spectrumColor_clicked();
-
-        void on_spectrumColor2_clicked();
-
-        void on_spectrumColor3_clicked();
-
-        void on_openDropPointInTab_toggled(bool checked);
-
-        void on_drawMetrics_clicked(bool checked);
-
-        void on_itemColorButton_clicked();
-
-        void on_autorunned_toggled(bool checked);
-
-        void on_colorScheme_activated(int index);
+        Ui::SettingsDialog * ui;
+        bool iconSizeChanged;
+        QColor defaultColor, listenedColor, likedColor, playedColor, folderColor, itemColor, spectrumColor, spectrumColor2, spectrumColor3;
+        QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;
 
     protected:
         void setBackgroundColor(QWidget * widget, const QColor & color) {
@@ -89,16 +50,42 @@ namespace Dialogs {
         void saveHotkeysSettings();
         void saveSpectrumSettings();
         void saveLibrarySettings();
+    public:
+        explicit SettingsDialog(QWidget * parent);
+        ~SettingsDialog();
 
-    private:
-        bool execColorDialog(QColor & color);
+        static void registerHotkeys(QWidget * receiver);
 
-        ExtensionDialog * extDialog;
+        bool isIconSizeChanged() const;
 
-        Ui::SettingsDialog * ui;
-        bool iconSizeChanged;
-        QColor defaultColor, listenedColor, likedColor, playedColor, folderColor, itemColor, spectrumColor, spectrumColor2, spectrumColor3;
-        QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;
+    private slots:
+        void on_cancelButton_clicked();
+        void on_resetButton_clicked();
+        void on_acceptButton_clicked();
+        void on_browseButton_clicked();
+        void on_defaultColorButton_clicked();
+        void on_listenedColorButton_clicked();
+        void on_likedColorButton_clicked();
+        void on_playedColorButton_clicked();
+        void on_folderColorButton_clicked();
+        void on_defaultItemTextColorButton_clicked();
+        void on_selectedItemTextColorButton_clicked();
+        void on_defaultItemInfoTextColorButton_clicked();
+        void on_selectedItemInfoTextColorButton_clicked();
+        void on_spectrumColor_clicked();
+        void on_spectrumColor2_clicked();
+        void on_spectrumColor3_clicked();
+        void on_openDropPointInTab_toggled(bool checked);
+        void on_drawMetrics_clicked(bool checked);
+        void on_itemColorButton_clicked();
+        void on_autorunned_toggled(bool checked);
+        void on_colorScheme_activated(int index);
+        void on_commonBtn_clicked(bool checked);
+        void on_viewsBtn_clicked(bool checked);
+        void on_itemsBtn_clicked(bool checked);
+        void on_hotkeysBtn_clicked(bool checked);
+        void on_spectrumBtn_clicked(bool checked);
+        void on_extensionsBtn_clicked(bool checked);
     };
 }
 

@@ -6,26 +6,60 @@ using namespace Dialogs;
 
 SettingsDialog::SettingsDialog(QWidget * parent) :
   BaseDialog(parent), ui(new Ui::SettingsDialog), iconSizeChanged(false) {
-  ui -> setupUi(this);
+    ui -> setupUi(this);
 
-  setWindowTitle(QStringLiteral("Playo settings"));
-  setFixedWidth(359);
-  setFixedHeight(312);
-  setSizeGripEnabled(false);
+    setWindowTitle(QStringLiteral("Playo settings"));
+    setProperty("transparent", true);
 
-  initGlobalSettings();
-  initItemsSettings();
-  initViewSettings();
-  initHotkeysSettings();
-  initSpectrumSettings();
-  initLibrarySettings();
-  initExtensions();
+    instantiation();
 
-  setProperty("transparent", true);
+//    setFixedWidth(359);
+//    setFixedHeight(312);
+//    setSizeGripEnabled(false);
 }
 
 SettingsDialog::~SettingsDialog() {
   delete ui;
+}
+
+void SettingsDialog::instantiation() {
+    initExtensions();
+
+    instantiateLayout();
+
+    initGlobalSettings();
+    initItemsSettings();
+    initViewSettings();
+    initHotkeysSettings();
+    initSpectrumSettings();
+    initLibrarySettings();
+
+    on_commonBtn_clicked(true);
+    on_viewsBtn_clicked(false);
+    on_itemsBtn_clicked(false);
+    on_hotkeysBtn_clicked(false);
+    on_spectrumBtn_clicked(true);
+    on_extensionsBtn_clicked(true);
+}
+
+void SettingsDialog::instantiateLayout() {
+    QGridLayout * grid = new QGridLayout(this);
+
+    grid -> addWidget(ui -> linksArea, 0, 0);
+
+    grid -> addWidget(ui -> commonArea, 0, 1);
+    grid -> addWidget(ui -> viewsArea, 0, 1);
+    grid -> addWidget(ui -> itemsArea, 0, 1);
+    grid -> addWidget(ui -> hotkeysArea, 0, 1);
+    grid -> addWidget(ui -> spectrumArea, 0, 1);
+    grid -> addWidget(ui -> extensionsArea, 0, 1);
+
+    grid -> addWidget(ui -> buttons, 1, 0, 1, 2);
+
+    setLayout(grid);
+
+//    setMinimumSize();
+    setMaximumSize(340, 290);
 }
 
 void SettingsDialog::registerHotkeys(QWidget * receiver) {
@@ -77,36 +111,44 @@ void SettingsDialog::on_cancelButton_clicked() {
 }
 
 void SettingsDialog::on_resetButton_clicked() {
-    switch(ui -> settingsTabs -> currentIndex()) {
-        case 0: {
-            Settings::obj().resetGlobalSettings();
-            initGlobalSettings();
-        break;}
+    if (ui -> commonBtn -> isChecked()) {
+        Settings::obj().resetGlobalSettings();
+        initGlobalSettings();
+        return;
+    }
 
-        case 1: {
-            Settings::obj().resetTabSettings();
-            initViewSettings();
-        break;}
+    if (ui -> viewsBtn -> isChecked()) {
+        Settings::obj().resetTabSettings();
+        initViewSettings();
+        return;
+    }
 
-        case 2: {
-            Settings::obj().resetHotkeySettings();
-            initHotkeysSettings();
-        break;}
+    if (ui -> hotkeysBtn -> isChecked()) {
+        Settings::obj().resetHotkeySettings();
+        initHotkeysSettings();
+        return;
+    }
 
-        case 3: {
-            Settings::obj().resetItemSettings();
-            initItemsSettings();
-        break;}
+    if (ui -> itemsBtn -> isChecked()) {
+        Settings::obj().resetItemSettings();
+        initItemsSettings();
 
-        case 4: {
-            Settings::obj().resetSpectrumSettings();
-            initSpectrumSettings();
-        break;}
+        Settings::obj().resetLibrarySettings();
+        initLibrarySettings();
 
-        case 5: {
-            Settings::obj().resetLibrarySettings();
-            initLibrarySettings();
-        break;}
+        return;
+    }
+
+    if (ui -> spectrumBtn -> isChecked()) {
+        Settings::obj().resetSpectrumSettings();
+        initSpectrumSettings();
+        return;
+    }
+
+    if (ui -> spectrumBtn -> isChecked()) {
+        Settings::obj().resetSpectrumSettings();
+        initSpectrumSettings();
+        return;
     }
 }
 
@@ -315,11 +357,11 @@ void SettingsDialog::initViewSettings() {
         ui -> partialyFilledItem -> setChecked(true);
 }
 void SettingsDialog::initHotkeysSettings() {
-    ui -> treeView -> setEditTriggers(QTreeView::AllEditTriggers);
-    ui -> treeView -> setItemDelegate(new HotkeyDelegate(ui -> treeView));
-    ui -> treeView -> setModel(new HotkeyModel(Settings::obj().hotKeys(), this));
-    ui -> treeView -> hideColumn(2);
-    ui -> treeView -> setColumnWidth(0, 230);
+    ui -> hotkeysArea -> setEditTriggers(QTreeView::AllEditTriggers);
+    ui -> hotkeysArea -> setItemDelegate(new HotkeyDelegate(ui -> hotkeysArea));
+    ui -> hotkeysArea -> setModel(new HotkeyModel(Settings::obj().hotKeys(), this));
+    ui -> hotkeysArea -> hideColumn(2);
+    ui -> hotkeysArea -> setColumnWidth(0, 230);
 }
 void SettingsDialog::initSpectrumSettings() {
     ui -> autoBarsAmount -> setChecked(Settings::obj().isAutoBarsAmount());
@@ -361,7 +403,7 @@ void SettingsDialog::initLibrarySettings() {
 void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
     extDialog -> setWindowFlags(Qt::Widget);
-    ui -> settingsTabs -> addTab(extDialog, "Extension filters");
+//    ui -> settingsTabs -> addTab(extDialog, "Extension filters");
 }
 
 void SettingsDialog::saveGlobalSettings() {
@@ -426,7 +468,7 @@ void SettingsDialog::saveViewSettings() {
 }
 
 void SettingsDialog::saveHotkeysSettings() {
-    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> treeView -> model());
+    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> hotkeysArea -> model());
     QList<HotkeyModelItem *> list = model -> toplevelItems();
     Settings::obj().setHotKeys(list);
 
@@ -492,4 +534,28 @@ void SettingsDialog::on_autorunned_toggled(bool checked) {
 
 void Dialogs::SettingsDialog::on_colorScheme_activated(int index) {
     Settings::setCurrentStyle((IStylesheets::StyleType)(index + 1));
+}
+
+void Dialogs::SettingsDialog::on_commonBtn_clicked(bool checked) {
+    ui -> commonArea -> setVisible(checked);
+}
+
+void Dialogs::SettingsDialog::on_viewsBtn_clicked(bool checked) {
+    ui -> viewsArea -> setVisible(checked);
+}
+
+void Dialogs::SettingsDialog::on_itemsBtn_clicked(bool checked) {
+    ui -> itemsArea -> setVisible(checked);
+}
+
+void Dialogs::SettingsDialog::on_hotkeysBtn_clicked(bool checked) {
+    ui -> hotkeysArea -> setVisible(checked);
+}
+
+void Dialogs::SettingsDialog::on_spectrumBtn_clicked(bool checked) {
+    ui -> spectrumArea -> setVisible(checked);
+}
+
+void Dialogs::SettingsDialog::on_extensionsBtn_clicked(bool checked) {
+    ui -> extensionsArea -> setVisible(checked);
 }
