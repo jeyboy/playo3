@@ -1556,7 +1556,13 @@ font-weight: bold;</string>
      <property name="checked">
       <bool>false</bool>
      </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
      <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
       <bool>false</bool>
      </property>
     </widget>
@@ -1571,6 +1577,12 @@ font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Views</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -1588,6 +1600,12 @@ font-weight: bold;</string>
      <property name="text">
       <string>Hot keys</string>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
      <property name="autoDefault">
       <bool>false</bool>
      </property>
@@ -1603,6 +1621,12 @@ font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Items</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -1620,6 +1644,12 @@ font-weight: bold;</string>
      <property name="text">
       <string>Spectrum</string>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
      <property name="autoDefault">
       <bool>false</bool>
      </property>
@@ -1635,6 +1665,12 @@ font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Extensions</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
      </property>
      <property name="autoDefault">
       <bool>false</bool>

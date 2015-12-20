@@ -66,9 +66,8 @@ void SettingsDialog::instantiateLayout() {
 
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(tabClicked(int)));
 
-
-//    setMinimumSize();
-//    setMaximumSize(500, 400);
+    setMinimumSize(466, 360);
+    setMaximumSize(466, 360);
 }
 
 void SettingsDialog::registerHotkeys(QWidget * receiver) {
