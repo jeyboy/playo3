@@ -41,6 +41,13 @@ namespace Presentation {
 
         inline QJsonObject getEqualizerSettings() { return equalizer -> settings(); }
         inline void setEqualizerSettings(const QJsonObject & settings) { equalizer -> setSettings(settings); }
+        inline void setIconsSize(int newSize) {
+            QList<QToolBar *> bars = toolbars();
+            QSize size(newSize, newSize);
+
+            for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
+                (*bar) -> setIconSize(size);
+        }
 
         inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:

@@ -15,7 +15,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _isAutorunned = settings.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
     _colorScheme = settings.value(SETTINGS_COLOR_SCHEME_KEY).toInt(1);
 
-    _iconSize = settings.value(SETTINGS_ICON_SIZE_KEY).toInt(32);
+    _toolIconSize = settings.value(SETTINGS_TOOL_ICON_SIZE_KEY).toInt(28);
 }
 
 void GlobalSettings::toJson(QJsonObject & settings) {   
@@ -33,5 +33,5 @@ void GlobalSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_OPEN_TIMEOUT_KEY, QJsonValue::fromVariant(_openTimeOut));
     settings.insert(SETTINGS_COLOR_SCHEME_KEY, QJsonValue::fromVariant(_colorScheme));
 
-    settings.insert(SETTINGS_ICON_SIZE_KEY, QJsonValue::fromVariant(_iconSize));
+    settings.insert(SETTINGS_TOOL_ICON_SIZE_KEY, QJsonValue::fromVariant(_toolIconSize));
 }

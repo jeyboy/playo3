@@ -199,6 +199,7 @@ void Playo::showSettingsDialog() {
     SettingsDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         ToolBars::obj().updateMetricSliders();
+        ToolBars::obj().setIconsSize(Settings::obj().toolIconSize());
         ToolBars::obj().getSpectrum() -> updateColors();
         ToolBars::obj().getSpectrum() -> changeBandCount();
         ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());

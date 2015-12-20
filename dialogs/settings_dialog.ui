@@ -1441,10 +1441,10 @@ font-weight: bold;</string>
       <string notr="true"/>
      </property>
      <property name="text">
-      <string>Icon size</string>
+      <string>Tools icon size</string>
      </property>
     </widget>
-    <widget class="QDoubleSpinBox" name="openTimeOut_2">
+    <widget class="QSpinBox" name="toolIconSize">
      <property name="geometry">
       <rect>
        <x>120</x>
@@ -1453,17 +1453,11 @@ font-weight: bold;</string>
        <height>22</height>
       </rect>
      </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
      <property name="minimum">
-      <double>0.500000000000000</double>
+      <number>24</number>
      </property>
      <property name="maximum">
-      <double>25000.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.500000000000000</double>
+      <number>64</number>
      </property>
     </widget>
    </widget>

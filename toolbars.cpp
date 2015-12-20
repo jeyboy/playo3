@@ -224,9 +224,12 @@ QToolBar * ToolBars::createToolBar(const QString & name) {
 
 QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     QToolBar * ptb = new QToolBar(name, container);
+    int icoSize = Settings::obj().toolIconSize();
+
     ptb -> setProperty(toolbar_service_mark, true);
     ptb -> setObjectName(QStringLiteral("_") % name);
-    ptb -> setMinimumSize(30, 30);
+    ptb -> setMinimumSize(icoSize, 30);
+    ptb -> setIconSize(QSize(icoSize, icoSize));
 
     ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
     ptb -> setAttribute(Qt::WA_TranslucentBackground, true);

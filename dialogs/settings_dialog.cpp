@@ -33,8 +33,6 @@ void SettingsDialog::instantiation() {
     initHotkeysSettings();
     initSpectrumSettings();
     initLibrarySettings();
-
-//    on_commonBtn_clicked(true);
 }
 
 void SettingsDialog::instantiateLayout() {
@@ -289,6 +287,8 @@ void SettingsDialog::initGlobalSettings() {
 
     ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
 
+    ui -> toolIconSize -> setValue(Settings::obj().toolIconSize());
+
     QStringList schemas;
 //    schemas.append(QStringLiteral("Normal"));
     schemas.append(QStringLiteral("Light"));
@@ -426,6 +426,7 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
     Settings::obj().setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
+    Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 }
