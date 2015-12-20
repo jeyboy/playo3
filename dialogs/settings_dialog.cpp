@@ -49,7 +49,7 @@ void SettingsDialog::instantiateLayout() {
     grid -> addWidget(ui -> itemsArea, 0, 1); ui -> itemsArea -> setVisible(false);
     grid -> addWidget(ui -> hotkeysArea, 0, 1); ui -> hotkeysArea -> setVisible(false);
     grid -> addWidget(ui -> spectrumArea, 0, 1); ui -> spectrumArea -> setVisible(false);
-    grid -> addWidget(extDialog, 0, 1, 1, 1, Qt::AlignLeft); extDialog -> setVisible(false);
+    grid -> addWidget(ui -> extensionsArea, 0, 1); ui -> extensionsArea -> setVisible(false);
 
     grid -> addWidget(ui -> buttons, 1, 0, 1, 2);
 
@@ -63,7 +63,7 @@ void SettingsDialog::instantiateLayout() {
     group -> addButton(ui -> itemsBtn, (int)ui -> itemsArea);
     group -> addButton(ui -> hotkeysBtn, (int)ui -> hotkeysArea);
     group -> addButton(ui -> spectrumBtn, (int)ui -> spectrumArea);
-    group -> addButton(ui -> extensionsBtn, (int)extDialog);
+    group -> addButton(ui -> extensionsBtn, (int)ui -> extensionsArea);
 
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(tabClicked(int)));
     ui -> commonBtn -> animateClick();
@@ -416,6 +416,7 @@ void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
     extDialog -> setWindowFlags(Qt::Widget);
     extDialog -> findChild<QWidget *>(QStringLiteral("submitButtons")) -> setVisible(false);
+    ui -> extensionsArea -> setWidget(extDialog);
 }
 
 void SettingsDialog::saveGlobalSettings() {
