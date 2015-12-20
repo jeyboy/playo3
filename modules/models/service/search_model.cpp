@@ -114,15 +114,18 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
 
         switch(r.search_type) {
             case SearchRequest::local: {
+                qDebug() << "SO LOCAL";
                 propagate_count = proceedMyComputer(r, parent);
             break;}
 
             case SearchRequest::inner: {
+                qDebug() << "SO INNER";
                 propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
             break;}
 
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
+                qDebug() << "SO START" << iface -> siteType();
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
@@ -142,6 +145,7 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
             parent -> backPropagateItemsCountInBranch(propagate_count);
     }
 
+    qDebug() << "SO END";
     emit moveOutBackgroundProcess();
     return res;
 }

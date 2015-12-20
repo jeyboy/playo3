@@ -37,6 +37,7 @@ bool IApi::showingLoginWithCaptcha(const QString & title, const QUrl & pict_url,
 bool IApi::sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc, QObject * errorReceiver) {
     int code;
     QString message;
+    Logger::obj().write(QStringLiteral("sQuery"), url.toString(), QStringLiteral("sending"));
     response = Web::Manager::prepare() -> getJson(url, post_proc & wrap);
 
     bool status = extractStatus(url, response, code, message);

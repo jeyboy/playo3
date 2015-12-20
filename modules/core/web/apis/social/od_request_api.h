@@ -63,7 +63,7 @@ namespace Core {
 
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
                     if (predicate.isEmpty() || limitations.by_popularity())
-                        return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit()));
+                        return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
                     else {
                         if (limitations.by_artists())
                             return lQuery(searchArtistsUrl(predicate), QueryRules(tkn_artists, requestLimit(), OD_SEARCH_LIMIT));

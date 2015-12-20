@@ -29,6 +29,7 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
         grad.setColorAt(0.95, (option.state & QStyle::State_Selected) ? Qt::white : Qt::black);
 
         QPen p((option.state & QStyle::State_Selected) ? Qt::black : Qt::white);
+        p.setWidth(2);
         painter -> setPen(p);
         painter -> setBrush(grad);
         painter -> drawRoundedRect(rect, 8, 8);
