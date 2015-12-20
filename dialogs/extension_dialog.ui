@@ -25,7 +25,7 @@
   <property name="windowTitle">
    <string>Extensions Filter</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="submitButtons">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -44,7 +44,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -189,7 +189,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>submitButtons</sender>
    <signal>accepted()</signal>
    <receiver>ExtensionDialog</receiver>
    <slot>accept()</slot>
@@ -205,7 +205,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>submitButtons</sender>
    <signal>rejected()</signal>
    <receiver>ExtensionDialog</receiver>
    <slot>reject()</slot>

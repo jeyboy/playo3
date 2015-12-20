@@ -38,15 +38,18 @@ void SettingsDialog::instantiation() {
 void SettingsDialog::instantiateLayout() {
     QGridLayout * grid = new QGridLayout(this);
 
+    ui -> linksArea -> setProperty("borderless", true);
+    IStylesheets::applyProperty(ui -> linksArea, "transparent", true); // this shit did not work !!!!
+
     grid -> addWidget(ui -> linksArea, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
     grid -> setColumnStretch(0, 0);
 
-    grid -> addWidget(ui -> commonArea, 0, 1); ui -> commonArea -> setVisible(false);
+    grid -> addWidget(ui -> commonArea, 0, 1); ui -> commonArea -> setVisible(true);
     grid -> addWidget(ui -> viewsArea, 0, 1); ui -> viewsArea -> setVisible(false);
     grid -> addWidget(ui -> itemsArea, 0, 1); ui -> itemsArea -> setVisible(false);
     grid -> addWidget(ui -> hotkeysArea, 0, 1); ui -> hotkeysArea -> setVisible(false);
     grid -> addWidget(ui -> spectrumArea, 0, 1); ui -> spectrumArea -> setVisible(false);
-    grid -> addWidget(extDialog, 0, 1); extDialog -> setVisible(false);
+    grid -> addWidget(extDialog, 0, 1, 1, 1, Qt::AlignLeft); extDialog -> setVisible(false);
 
     grid -> addWidget(ui -> buttons, 1, 0, 1, 2);
 
@@ -63,6 +66,7 @@ void SettingsDialog::instantiateLayout() {
     group -> addButton(ui -> extensionsBtn, (int)extDialog);
 
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(tabClicked(int)));
+    ui -> commonBtn -> animateClick();
 
     setMinimumSize(466, 360);
     setMaximumSize(466, 360);
@@ -411,7 +415,7 @@ void SettingsDialog::initLibrarySettings() {
 void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
     extDialog -> setWindowFlags(Qt::Widget);
-//    ui -> settingsTabs -> addTab(extDialog, "Extension filters");
+    extDialog -> findChild<QWidget *>(QStringLiteral("submitButtons")) -> setVisible(false);
 }
 
 void SettingsDialog::saveGlobalSettings() {

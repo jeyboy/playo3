@@ -295,8 +295,8 @@ QString IStylesheets::checkboxStyles() {
 }
 
 QString IStylesheets::tokenableStyles(const QColor & textColor) {
-    return QString(
-        "QWidget[transparent=\"true\"], [transparent=\"true\"] QScrollArea, [transparent=\"true\"] QScrollArea {"
+    return QString( // this rule did not work in dialogs - but borderless work correctly
+        "QWidget[transparent=\"true\"], QScrollArea[transparent=\"true\"] > * > QWidget {"
         "   background-color: transparent;"
         "}"
 

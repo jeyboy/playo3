@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QScrollArea" name="viewsArea">
    <property name="geometry">
     <rect>
@@ -1199,6 +1202,11 @@ font-weight: bold;</string>
      <height>290</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QScrollArea &gt; * {
+	background-color: transparent;
+}</string>
+   </property>
    <property name="widgetResizable">
     <bool>false</bool>
    </property>
@@ -1519,6 +1527,9 @@ font-weight: bold;</string>
      <width>91</width>
      <height>16777215</height>
     </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QScrollArea &gt; * &gt; QWidget {background-color: transparent; }</string>
    </property>
    <property name="widgetResizable">
     <bool>true</bool>
