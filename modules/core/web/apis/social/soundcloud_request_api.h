@@ -99,7 +99,7 @@ namespace Core {
                 QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) { return lQuery(groupPlaylistsUrl(group_id), queryRules(count), wrap); }
 
 
-                QUrl audioInfoUrl(QString & audio_uid) { return baseUrl(path_tracks % audio_uid, genDefaultParams()); }
+                QUrl audioInfoUrl(QString & audio_uid) { return baseUrl(path_track % audio_uid, genDefaultParams()); }
                 QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 

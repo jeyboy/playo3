@@ -10,7 +10,8 @@ namespace Core {
             extern const QString url_auth_confirm      = QStringLiteral("https://api.soundcloud.com/me.json?oauth_token=");
 
             extern const QString path_playlists        = QStringLiteral("playlists/");
-            extern const QString path_tracks           = QStringLiteral("tracks/");
+            extern const QString path_tracks           = QStringLiteral("tracks");
+            extern const QString path_track            = QStringLiteral("tracks/");
             extern const QString path_groups           = QStringLiteral("groups/");
             extern const QString path_group_tracks     = QStringLiteral("groups/%1/tracks");
             extern const QString path_group_playlists  = QStringLiteral("groups/%1/playlists");
