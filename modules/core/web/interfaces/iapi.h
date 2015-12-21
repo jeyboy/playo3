@@ -12,7 +12,7 @@
 namespace Core {
     struct QueryRules {
         QueryRules(QString _field, int _limit_per_request = 5, int _total_limit = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-            : field(_field), count(_total_limit), offset(_offset), limit(_limit_per_request) , fact_count(0) {}
+            : field(_field), count(_total_limit), offset(_offset), limit(qMin(_limit_per_request, _total_limit)) , fact_count(0) {}
 
         QString field;
         int count, offset, limit, fact_count;

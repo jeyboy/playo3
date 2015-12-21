@@ -63,14 +63,14 @@ namespace Core {
 
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
                     if (predicate.isEmpty() || limitations.by_popularity())
-                        return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
+                        return lQuery(popAudioUrl(), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.count), qMin(OD_SEARCH_LIMIT, limitations.count)));
                     else {
                         if (limitations.by_artists())
-                            return lQuery(searchArtistsUrl(predicate), QueryRules(tkn_artists, requestLimit(), OD_SEARCH_LIMIT));
+                            return lQuery(searchArtistsUrl(predicate), QueryRules(tkn_artists, qMin(requestLimit(), limitations.count), qMin(OD_SEARCH_LIMIT, limitations.count)));
                         else if (limitations.by_songs())
-                            return lQuery(searchTracksUrl(predicate), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
+                            return lQuery(searchTracksUrl(predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.count), qMin(OD_SEARCH_LIMIT, limitations.count)));
                         else
-                            return lQuery(searchUrl(predicate), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
+                            return lQuery(searchUrl(predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.count), qMin(OD_SEARCH_LIMIT, limitations.count)));
                     }
                 }
             public:

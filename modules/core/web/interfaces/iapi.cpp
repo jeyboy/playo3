@@ -69,7 +69,7 @@ QJsonArray & IApi::lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonP
 
         iterateOffset(rules.offset, response, url);
         if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
-        QThread::msleep(REQUEST_DELAY);
+        else QThread::msleep(REQUEST_DELAY);
     }
 
     return result;

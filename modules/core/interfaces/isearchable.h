@@ -31,8 +31,8 @@ namespace Core {
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
 
         struct SearchLimit {
-            SearchLimit(PredicateType predicate_type, int limit, int start_page = 1, int page_amount = MAX_PAGE) :
-                count(limit), spage(start_page), cpage(page_amount), predicate_type(predicate_type) {}
+            SearchLimit(PredicateType predicate_type, int total_limit, int start_page = 1, int page_amount = MAX_PAGE) :
+                count(total_limit), spage(start_page), cpage(page_amount), predicate_type(predicate_type) {}
 
             int count;
             int spage;
