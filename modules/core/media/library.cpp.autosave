@@ -355,8 +355,6 @@ bool Library::proceedItemNames(IItem * itm, int state, bool override) {
                 catalogs_state.insert(letter, saveList);
             }
         }
-
-        qDebug() << "___________________ " << catalogs_state;
     }
 
     return catState;

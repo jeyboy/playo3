@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-VERSION = 0.6.3.1
+VERSION = 0.6.3.2
 
 CONFIG += c++11
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"

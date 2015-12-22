@@ -24,7 +24,9 @@ namespace Core {
             }
         }
 
-        static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s\\n\\r\\t]+")), QStringLiteral(" ")); }
+        //[\\s\\n\\r\\t]+
+        //[^\\S\\w-]+
+        static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s]+")), QStringLiteral(" ")); }
 
         static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QStringLiteral("(\\W|[_])"))).toLower(); }
         static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("^[\\[\\(]+\\d{1,}[\\]\\)]+"))); }

@@ -136,7 +136,7 @@ namespace Views {
         void moveCheckedToNewTab(Playlist * root = 0);
 
     protected:
-        bool setData(QModelIndex ind, int state) { return mdl -> setData(ind, state, ISTATE); }
+        bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE) { return mdl -> setData(ind, value, role); }
         QModelIndex index(IItem * item) const { return mdl -> index(item); }
 
         void checkByPredicate(IItem::ItemStateFlag flag);

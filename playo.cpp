@@ -18,6 +18,10 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
     initialization();
 
+    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
+    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);
+
+
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );
 

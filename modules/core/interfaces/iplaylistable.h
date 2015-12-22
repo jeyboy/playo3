@@ -8,7 +8,7 @@
 namespace Core {
     class IPlaylistable {
     protected:
-        virtual bool setData(QModelIndex ind, int state) = 0;
+        virtual bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE);
     public:
         virtual bool restoreItem(IItem * itm) = 0;
         virtual bool isPlaylist() const = 0;
@@ -16,6 +16,10 @@ namespace Core {
         virtual QModelIndex index(IItem * /*item*/) const { return QModelIndex(); }
         bool setState(QModelIndex ind, int state) {
             if (ind.isValid()) return setData(ind, state);
+            else return false;
+        }
+        bool spoil(QModelIndex ind) {
+            if (ind.isValid()) return setData(ind, QVariant(), ISPOILITEM);
             else return false;
         }
     };

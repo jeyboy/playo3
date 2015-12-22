@@ -23,17 +23,25 @@ namespace Core {
         PlayerInitState init_state_flag;
         int attempts;
     protected:
+        void spoil() {
+            if (!current_playlist) {
+                qDebug() << "PLAYLIST IS UNDEFINED";
+                return;
+            }
+
+            if (!current_playlist -> spoil(playedIndex()))
+                qDebug() << "STATE IS NOT CHANGED";
+        }
         void setState(int state) {
             if (!current_playlist) {
                 qDebug() << "PLAYLIST IS UNDEFINED";
                 return;
             }
 
+            qDebug() << "STATE" << state;
             if (!current_playlist -> setState(playedIndex(), state))
                 qDebug() << "STATE IS NOT CHANGED";
         }
-
-        void spoilItem() { setState(ISPOILITEM); }
 
         void playNext(bool onFail = false) {
             setState(-ItemState::proccessing); // extra call for item clearing states!
@@ -89,8 +97,8 @@ namespace Core {
             IPlayer * player = currPlayer();
             player -> closeMedia();
 
-            if (current_playlist && current_item && item)
-                spoilItem();
+            if (current_playlist && current_item && item && current_playlist != playlist)
+                spoil();
 
             current_playlist = playlist;
             current_item = item;

@@ -37,9 +37,6 @@ void ItemState::setStates(int flags) {
         if (bitIsSet(flags, not_liked))     unsetLiked();
         if (bitIsSet(flags, exist))     unset(not_exist);
         if (bitIsSet(flags, supported))     unset(not_supported);
-
-
-
     }
 }
 

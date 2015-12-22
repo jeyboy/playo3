@@ -62,7 +62,7 @@ namespace Core {
 
             inline QString libraryPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/library/"); }
 
-            bool proceedItemNames(IItem * itm, int state);
+            bool proceedItemNames(IItem * itm, int state, bool override = false);
             QChar getCatalogName(QString name);
 
             QHash<QString, int> * getCatalog(QChar & letter);
