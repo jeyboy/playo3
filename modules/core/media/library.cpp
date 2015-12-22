@@ -451,8 +451,6 @@ QHash<QString, int> * Library::load(const QChar letter) {
 
 void Library::save() {
     if (saveBlock.tryLock()) {
-        qDebug() << QStringLiteral("Library") << QStringLiteral("--Save--") << catalogs_state;
-
         QHash<QString, int> * res;
         QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 
@@ -485,7 +483,6 @@ void Library::save() {
 
 bool Library::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
     QHash<QString, int> * res = catalogs.value(key);
-    qDebug() << "SAVE" << key << keysList << res;
 
     QFile f(libraryPath % "cat_" % key);
     if (f.open(openFlags)) {
