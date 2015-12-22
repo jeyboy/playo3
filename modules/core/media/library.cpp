@@ -5,14 +5,14 @@ using namespace Core;
 using namespace Media;
 using namespace Models;
 
-Library::Library() : QObject(), timeAmount(0) {
+Library::Library() : QObject(), timeAmount(0), libraryPath(QCoreApplication::applicationDirPath() % QStringLiteral("/library/")) {
     catsSaveResult = QFuture<void>();
 
     saveTimer = new QTimer();
     QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(clockTick()));
     saveTimer -> start(TIMER_TICK);
 
-    QDir dir(libraryPath());
+    QDir dir(libraryPath);
     if (!dir.exists())
         dir.mkpath(".");
 }
@@ -430,7 +430,7 @@ void Library::initItemTitles(MediaInfo * info, IItem * itm) {
 QHash<QString, int> * Library::load(const QChar letter) {
     QHash<QString, int> * res = new QHash<QString, int>();
 
-    QFile f(libraryPath() + "cat_" + letter);
+    QFile f(libraryPath % QStringLiteral("cat_") % letter);
     if (f.open(QIODevice::ReadOnly)) {
         QByteArray ar;
         QString name;
@@ -484,19 +484,16 @@ void Library::save() {
 }
 
 bool Library::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
-    QList<QString>::const_iterator cat_i = keysList.cbegin();
     QHash<QString, int> * res = catalogs.value(key);
+    qDebug() << "SAVE" << key << keysList << res;
 
-    QFile f(libraryPath() % "cat_" % key);
+    QFile f(libraryPath % "cat_" % key);
     if (f.open(openFlags)) {
         QTextStream out(&f);
         out.setCodec("UTF-8");
 
-        while(cat_i != keysList.cend()) {
-            qDebug() << "DROP" << res -> value(*cat_i) << (*cat_i).toUtf8();
-            out << QString::number(res -> value(*cat_i)) << (*cat_i).toUtf8() << QStringLiteral("\n");
-            cat_i++;
-        }
+        for(QList<QString>::const_iterator cat_i = keysList.cbegin(); cat_i != keysList.cend(); cat_i++)
+            out << QString::number(res -> value(*cat_i)) << (*cat_i).toUtf8() << '\n';
 
         f.close();
 

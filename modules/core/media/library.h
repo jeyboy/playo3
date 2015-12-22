@@ -60,8 +60,6 @@ namespace Core {
             IItem * indToItm(const QModelIndex & ind);
             void emitItemAttrChanging(QModelIndex & ind, int state);
 
-            inline QString libraryPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/library/"); }
-
             bool proceedItemNames(IItem * itm, int state, bool override = false);
             QChar getCatalogName(QString name);
 
@@ -99,6 +97,7 @@ namespace Core {
 
             int inProcLimit;
             int timeAmount;
+            QString libraryPath;
         };
     }
 }
