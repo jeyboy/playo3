@@ -123,7 +123,16 @@ void IView::execNextIndex(bool deleteCurrent) {
 //    }
 //}
 
-bool IView::execPath(const QString path, PlayerInitState init_state, uint start, int duration) {
+bool IView::restoreSelection(const QString & path) {
+    QModelIndex ind = mdl -> fromPath(path);
+    if (ind.isValid()) {
+        setCurrentIndex(ind);
+        return true;
+    }
+    else return false;
+}
+
+bool IView::execPath(const QString & path, PlayerInitState init_state, uint start, int duration) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();

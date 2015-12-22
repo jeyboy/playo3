@@ -33,6 +33,8 @@ namespace Core {
                 qDebug() << "STATE IS NOT CHANGED";
         }
 
+        void spoilItem() { setState(ISPOILITEM); }
+
         void playNext(bool onFail = false) {
             setState(-ItemState::proccessing); // extra call for item clearing states!
             if (!current_playlist) {
@@ -86,6 +88,9 @@ namespace Core {
         void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, PlayerInitState state = played, int durationMili = 0) {
             IPlayer * player = currPlayer();
             player -> closeMedia();
+
+            if (current_playlist && current_item && item)
+                spoilItem();
 
             current_playlist = playlist;
             current_item = item;

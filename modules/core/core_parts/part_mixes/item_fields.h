@@ -20,6 +20,7 @@ namespace Core {
     #define ISTATERESTORE ITREESTR + 1
     #define IUID ISTATERESTORE + 1
     #define ITYPE IUID + 1
+    #define ISPOILITEM ITYPE + 1
 
     #define ITITLE Qt::DisplayRole
     #define IEXTENSION Qt::UserRole - 1

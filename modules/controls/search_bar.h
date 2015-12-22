@@ -16,6 +16,8 @@ namespace Controls {
             const QObject * receiver, const char * search_start_slot, const char * search_end_signal,
             const QObject * closeReceiver, const char * close_slot, QWidget * parent = 0
         );
+
+        void setFocus() { text -> setFocus(); }
     public slots:
         void searchEnded();
         void onHide();

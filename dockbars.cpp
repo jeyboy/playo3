@@ -31,8 +31,12 @@ void Dockbars::load(const QJsonArray & bars) {
 
             container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
+            IView * v = view(qobject_cast<DockBar *>(curr_bar));
+
+            if (obj.value(QStringLiteral("selection")).isString())
+                v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
+
             if (obj.value(QStringLiteral("played")).toBool()) {
-                IView * v = view(qobject_cast<DockBar *>(curr_bar));
                 if (v) {
                     QString path = obj.value(QStringLiteral("played_item")).toString();
                     if (!path.isEmpty())
@@ -99,6 +103,9 @@ void Dockbars::save(DataStore * settings) {
                 if (v) {
                     curr_bar.insert(QStringLiteral("set"), v -> settings().toJson());
                     curr_bar.insert(QStringLiteral("cont"), v -> toJson());
+
+                    if (v -> currentIndex().isValid())
+                        curr_bar.insert(QStringLiteral("selection"), v -> currentIndex().data(ITREEPATH).toString());
                 }
             }
 

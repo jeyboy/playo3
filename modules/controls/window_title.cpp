@@ -141,8 +141,10 @@ void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_
     }
 }
 void WindowTitle::showSearch() {
-    if (search)
+    if (search) {
         search -> show();
+        search -> setFocus();
+    }
 }
 void WindowTitle::hideSearch() {
     if (search)

@@ -61,6 +61,10 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
         result = true;
     } else if (role == Qt::EditRole)
         result = node -> setData(model_index.column(), value);
+    else if (role == ISPOILITEM) {
+        emit spoilNeeded(model_index);
+        result = true;
+    }
 
     if (result)
         emit dataChanged(model_index, model_index);
