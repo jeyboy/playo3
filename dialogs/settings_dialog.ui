@@ -37,10 +37,13 @@
      <height>290</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="widgetResizable">
     <bool>false</bool>
    </property>
-   <widget class="QWidget" name="v">
+   <widget class="QWidget" name="viewsAreaBody">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -223,6 +226,9 @@ font-weight: bold;</string>
      <height>290</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="rootIsDecorated">
     <bool>false</bool>
    </property>
@@ -244,6 +250,9 @@ font-weight: bold;</string>
      <width>341</width>
      <height>291</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
@@ -870,6 +879,9 @@ font-weight: bold;</string>
      <height>290</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
@@ -1203,9 +1215,7 @@ font-weight: bold;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QScrollArea &gt; * {
-	background-color: transparent;
-}</string>
+    <string notr="true"/>
    </property>
    <property name="widgetResizable">
     <bool>false</bool>
@@ -1529,7 +1539,7 @@ font-weight: bold;</string>
     </size>
    </property>
    <property name="styleSheet">
-    <string notr="true">QScrollArea &gt; * &gt; QWidget {background-color: transparent; }</string>
+    <string notr="true"/>
    </property>
    <property name="widgetResizable">
     <bool>true</bool>
@@ -1691,6 +1701,9 @@ font-weight: bold;</string>
      <width>342</width>
      <height>290</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>

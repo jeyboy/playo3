@@ -1,5 +1,4 @@
 #include "dark_stylesheets.h"
-#include <qdebug.h>
 
 QString DarkStylesheets::appStyles() {  
     return IStylesheets::appStyles() % QStringLiteral(

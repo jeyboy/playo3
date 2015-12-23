@@ -9,13 +9,9 @@ SettingsDialog::SettingsDialog(QWidget * parent) :
     ui -> setupUi(this);
 
     setWindowTitle(QStringLiteral("Playo settings"));
-    setProperty("transparent", true);
+    IStylesheets::applyProperty(this, "transparent", true); // this str is not do anything :(
 
     instantiation();
-
-//    setFixedWidth(359);
-//    setFixedHeight(312);
-//    setSizeGripEnabled(false);
 }
 
 SettingsDialog::~SettingsDialog() {
