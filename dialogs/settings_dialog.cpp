@@ -35,7 +35,7 @@ void SettingsDialog::instantiateLayout() {
     QGridLayout * grid = new QGridLayout(this);
 
     ui -> linksArea -> setProperty("borderless", true);
-    IStylesheets::applyProperty(ui -> linksArea, "transparent", true); // this shit did not work !!!!
+//    IStylesheets::applyProperty(ui -> linksArea, "transparent", true); // this shit did not work !!!!
 
     grid -> addWidget(ui -> linksArea, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
     grid -> setColumnStretch(0, 0);

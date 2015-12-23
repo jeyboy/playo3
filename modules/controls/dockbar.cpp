@@ -109,15 +109,18 @@ void DockBar::paintEvent(QPaintEvent * event) {
             Settings::currentStyle -> innerBrush.setStart(rect().topLeft());
             Settings::currentStyle -> innerBrush.setFinalStop(rect().topRight());
             painter.setBrush(Settings::currentStyle -> innerBrush);
-            painter.setPen(Settings::currentStyle -> foregroundPen);
+
+            if (isFloating()) {
+                painter.setPen(Settings::currentStyle -> pen);
+                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+                painter.setPen(Settings::currentStyle -> bevelPen);
+            }
+            else painter.setPen(Settings::currentStyle -> foregroundPen);
+
             painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
 
             painter.restore();
             event -> accept();
-
-//            QPen pen(Qt::lightGray);
-//            pen.setCosmetic(true);
-//            pen.setWidth(2);
         break; }
 
         default: { QDockWidget::paintEvent(event); }

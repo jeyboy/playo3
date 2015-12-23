@@ -35,9 +35,9 @@ public:
     // background colors
     virtual inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 
-    virtual inline QColor color1() { return QColor::fromRgb(175, 184, 195, 212); }
-    virtual inline QColor color2() { return QColor::fromRgb(150, 164, 176, 212); }
-    virtual inline QColor color3() { return QColor::fromRgb(130, 140, 149, 212); }
+    virtual inline QColor color1() { return QColor::fromRgb(255, 255, 255, 255); }
+    virtual inline QColor color2() { return QColor::fromRgb(255, 255, 255, 255); }
+    virtual inline QColor color3() { return QColor::fromRgb(255, 255, 255, 255); }
 
     static void applyProperty(QWidget * widget, const char * propertyName, const QVariant & val);
 
