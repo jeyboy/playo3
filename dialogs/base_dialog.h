@@ -9,15 +9,22 @@
 class BaseDialog : public QDialog {
 protected:
     void paintEvent(QPaintEvent * event) {
+        QPainter painter(this);
+
         switch(Settings::currentStyle -> styleType()) {
             case IStylesheets::light:
-            case IStylesheets::dark: {
-                QPainter painter(this);
-                painter.save();
-                Settings::currentStyle -> initMainBrush(rect());
-                painter.setBrush(Settings::currentStyle -> mainBrush);
                 painter.setPen(Qt::NoPen);
-                painter.drawRect(rect());
+                painter.setBrush(QColor(224, 224, 224, 224));
+                painter.drawRoundedRect(rect(), Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+
+            case IStylesheets::dark: {
+                painter.save();
+
+                Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
+                Settings::currentStyle -> mainBrush.setFinalStop(rect().topRight());
+                painter.setBrush(Settings::currentStyle -> mainBrush);
+                painter.drawRoundedRect(rect(), Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+
                 painter.restore();
             break; }
 
@@ -25,8 +32,8 @@ protected:
         }
     }
 public:
-    BaseDialog(QWidget * parent = 0, Qt::WindowFlags f = 0) : QDialog(parent, f) {
-//        setAttribute(Qt::WA_TranslucentBackground, true);
+    BaseDialog(QWidget * parent = 0, Qt::WindowFlags f = 0) : QDialog(parent, f | Qt::FramelessWindowHint) {
+        setAttribute(Qt::WA_TranslucentBackground, true);
     }
 };
 

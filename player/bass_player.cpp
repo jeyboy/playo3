@@ -321,7 +321,7 @@ BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(pare
     ///////////////////////////////////////////////
 
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
-    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
+//    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
     openTimeOut(open_time_out_sec);
 }
