@@ -658,6 +658,8 @@ void IModel::importIds(const QStringList & ids) {
         beginInsertRows(index(parentNode), from, from + ids.size() - 1);
     }
 
+
+
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         switch(map_it.key()) {
             case VK_FILE: {

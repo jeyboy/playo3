@@ -15,7 +15,7 @@ namespace Core {
     #define OD_FILE 2300
     #define OD_PLAYLIST 2301
 
-    #define SHARE_DELIMITER "^"
+    #define SHARE_DELIMITER QStringLiteral("^")
 }
 
 #endif // CORE_PART_TYPES_H
