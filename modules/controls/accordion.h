@@ -4,24 +4,17 @@
 #include <qscrollarea.h>
 #include <qpushbutton.h>
 #include <qboxlayout.h>
+#include <qbuttongroup.h>
 
 namespace Controls {
-    struct AccordionButton : public QPushButton {
-        AccordionButton(QString name, QWidget * parent = 0) : QPushButton(name, parent) {
-            setCheckable(true);
-        }
-    };
-
     struct AccordionCell : public QWidget {
         Q_OBJECT
     public:
         AccordionCell(QWidget * parent = 0) : QWidget(parent), item(0), title(0) {}
 
-        AccordionCell(QString name, QWidget * container, QWidget * parent = 0) :
-            QWidget(parent), item(container), title(new AccordionButton(name, this))
+        AccordionCell(const QString & name, QWidget * container, QWidget * parent = 0) :
+            QWidget(parent), item(container), title(new QPushButton(name, this))
         {
-            connect(title, SIGNAL(clicked()), this, SLOT(toogleCollapse()));
-
             container -> setParent(this);
             QVBoxLayout * l = new QVBoxLayout;
             l -> setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -39,7 +32,6 @@ namespace Controls {
         QWidget * item;
         QPushButton * title;
 
-
         inline bool isCollapsed() { return item -> isHidden(); }
     signals:
         void collapsed(bool);
@@ -54,28 +46,38 @@ namespace Controls {
 
     class Accordion : public QScrollArea {
         Q_OBJECT
+
+        enum TabState {
+            collapse = 1,
+            expand,
+            toogle
+        };
+
+        bool exclusive;
+        AccordionCell * currentCell;
+        QPushButton * topButton;
+
+        QVBoxLayout * new_layout;
+        QList<AccordionCell *> cells;
+        QButtonGroup * tabs;
     public:
         Accordion(QWidget * parent = 0);
 
-        void addItem(QString name, QWidget * item, bool expanded = false);
-        QWidget * addItem(QString name, bool expanded = false);
+        void addItem(const QString & name, QWidget * item, bool expanded = false);
+        QWidget * addItem(const QString & name, bool expanded = false);
         void removeItem(int index);
         void setItemCollapsed(int index, bool collapsed = true);
         void ensureVisible(int index);
         void activate(int index);
         inline void clear() { qDeleteAll(cells); }
         int indexOf(QWidget * obj);
+        inline bool isExclusive() const { return exclusive; }
+        void setExclusive(bool is_exclusive);
 
     protected slots:
         void scrollValueChanged(int value);
         void collapseRequired();
-
-    private:
-        AccordionCell * currentCell;
-        AccordionButton * topButton;
-
-        QVBoxLayout * new_layout;
-        QList<AccordionCell *> cells;
+        void tabActivated(int, TabState act = toogle);
     };
 }
 

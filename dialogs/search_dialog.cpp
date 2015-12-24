@@ -4,13 +4,27 @@
 
 #include <qfileinfo.h>
 #include "modules/core/web/web_apis.h"
+#include "modules/controls/accordion.h"
 
 using namespace Presentation;
 
-SearchDialog::SearchDialog(QWidget * parent) :
-    BaseDialog(parent), ui(new Ui::SearchDialog)
-{
+SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::SearchDialog) {
     ui -> setupUi(this);
+
+    Controls::Accordion * accordeon = new Controls::Accordion(this);
+    accordeon -> addItem(QStringLiteral("In locations"), ui -> locationsArea, true);
+    accordeon -> addItem(QStringLiteral("By predicates"), ui -> predicatesArea);
+    accordeon -> addItem(QStringLiteral("With limitations"), ui -> limitationsArea);
+
+    QGridLayout * newLayout = new QGridLayout(this);
+    newLayout -> addWidget(accordeon, 0, 0, 1, 2);
+    newLayout -> addWidget(ui -> cancelButton, 1, 0);
+    newLayout -> addWidget(ui -> acceptButton, 1, 1);
+    setLayout(newLayout);
+
+    setMinimumSize(480, 400);
+    setMaximumSize(480, 400);
+
 
     QList<DockBar *> bars = Dockbars::obj().dockbars();
     for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
