@@ -35,6 +35,8 @@ public:
     BaseDialog(QWidget * parent = 0, Qt::WindowFlags f = 0) : QDialog(parent, f | Qt::FramelessWindowHint) {
         setAttribute(Qt::WA_TranslucentBackground, true);
     }
+
+    inline void convertToWidget() { setWindowFlags(Qt::Widget); }
 };
 
 #endif // BASE_DIALOG

@@ -410,7 +410,7 @@ void SettingsDialog::initLibrarySettings() {
 
 void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
-    extDialog -> setWindowFlags(Qt::Widget);
+    extDialog -> convertToWidget();
     extDialog -> findChild<QWidget *>(QStringLiteral("submitButtons")) -> setVisible(false);
     ui -> extensionsArea -> setWidget(extDialog);
 }

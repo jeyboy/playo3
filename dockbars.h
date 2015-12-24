@@ -20,6 +20,7 @@
 #define COMMON_TAB "Common"
 #define DOWNLOADS_TAB "Downloads"
 #define LOGS_TAB "Logs"
+#define ECHONEST_TAB "Echonest"
 
 namespace Presentation {
     using namespace Views;
@@ -53,6 +54,7 @@ namespace Presentation {
                 bar -> raise();
         }
 
+        DockBar * echonestBar();
         DockBar * commonBar();
         DockBar * createDocBar(const QString & name, const Views::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(const QString & name, bool closable = true, QWidget * content = 0);
@@ -99,13 +101,13 @@ namespace Presentation {
         void barClosed();
     private:
         TabifyParams lastTabData;
-        DockBar * active, * played, * common;
+        DockBar * active, * played, * common, * echonest;
         QMainWindow * container;
 
         QHash<QString, DockBar *> linkedTabs;
 
         friend class Singleton<Dockbars>;
-        inline Dockbars() : QWidget(), active(0), played(0), common(0) {}
+        inline Dockbars() : QWidget(), active(0), played(0), common(0), echonest(0) {}
 
         inline ~Dockbars() {}
 

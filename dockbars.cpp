@@ -144,6 +144,15 @@ DockBar * Dockbars::commonBar() {
     return common;
 }
 
+DockBar * Dockbars::echonestBar() {
+    if (!echonest) {
+//        echonestWindow
+//        echonest = createDocBar(COMMON_TAB, false, echonestWindow);
+    }
+
+    return echonest;
+}
+
 DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & path, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     bool with_head = path.startsWith(UID_HEAD);
     QString identifier = with_head ? path : UID_HEAD % path;
