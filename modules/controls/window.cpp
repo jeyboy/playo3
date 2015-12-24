@@ -37,8 +37,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         QString tooltip(
             "<p><b>" % QApplication::applicationName() % "<b></p>"
             "<p><b>Version:<b> " % QApplication::applicationVersion() % "</p>"
-            "<p><b>Developer:<b> Jenua Boiko</p>"
-            "<p><b>Site:<b> https://github.com/jeyboy/playo3</p>"
+            "<p><b>All information is provided solely for information !<b></p>"
         );
 
         titleWidget -> setTitleToolTip(tooltip);
