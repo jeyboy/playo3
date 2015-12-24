@@ -20,6 +20,7 @@ namespace Keys {
     extern const QString proccessing;
     extern const QString type;
     extern const QString asterix;
+    extern const QString shareable;
 }
 
 #endif // EXTERNAL_KEYS

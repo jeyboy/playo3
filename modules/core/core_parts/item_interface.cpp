@@ -132,6 +132,7 @@ QVariant IItem::data(int column) const {
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
                 params.insert(Keys::played, is(played));
+                params.insert(Keys::shareable, isShareable());
 
                 if (is(proccessing))
                     params.insert(Keys::proccessing, true);

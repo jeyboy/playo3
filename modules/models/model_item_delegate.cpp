@@ -211,7 +211,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                                 ext
                             );
 
-                    if (attrs[Keys::type] == VK_FILE || attrs[Keys::type] == SOUNDCLOUD_FILE) {
+                    if (attrs.value(Keys::shareable).toBool()) {
                         font.setPixelSize(extra_font_size);
                         painter -> setFont(font);
 
@@ -392,7 +392,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////
 
-        if (is_vk || is_sc) {
+        if (attrs.value(Keys::shareable).toBool()) {
             QFont font; font.setFamily(extra_font_name); font.setPixelSize(extra_font_size);
             painter -> setFont(font);
             painter -> setPen(Qt::NoPen);

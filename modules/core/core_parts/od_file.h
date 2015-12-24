@@ -17,6 +17,7 @@ namespace Core {
 
         inline QString toUid() { return uid().toString(); }
         inline int itemType() const { return OD_FILE; }
+        inline bool isShareable() const { return true; }
     };
 }
 

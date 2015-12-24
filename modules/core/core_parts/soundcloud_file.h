@@ -23,6 +23,7 @@ namespace Core {
 
         inline QString toUid() { return uid().toString(); }
         inline int itemType() const { return SOUNDCLOUD_FILE; }
+        inline bool isShareable() const { return true; }
     };
 }
 

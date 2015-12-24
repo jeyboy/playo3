@@ -386,6 +386,8 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
 int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
+    // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
+
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -592,20 +594,14 @@ void IModel::copyTitleToClipboard(const QModelIndex & index) {
 }
 
 void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
-    QString ret = "";
-
-    QHash<int, QString> templates;
-    templates.insert(VK_FILE, QString::number(VK_FILE));
-    templates.insert(SOUNDCLOUD_FILE, QString::number(SOUNDCLOUD_FILE));
+    QString ret;
 
     for(QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); it++) {
         IItem * itm = item(*it);
-        QString ident = templates[itm -> itemType()];
-
-        if (!ident.isEmpty()) {
+        if (itm -> isShareable()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret += " " + (ident) + SHARE_DELIMITER + uid.toString();
+                ret = ret % QStringLiteral(" ") % QString::number(itm -> itemType()) % SHARE_DELIMITER % uid.toString();
         }
     }
 
@@ -678,15 +674,14 @@ void IModel::importIds(const QStringList & ids) {
                 }
             break;}
 
-// need to add restoration of record by tid
-//            case OD_FILE: {
-//                Od::Api::obj().connection();
+             case OD_FILE: {
+                Od::Api::obj().connection();
 
-//                if (Od::Api::obj().isConnected()) {
-//                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
-//                    proceedScList(obj, parentNode);
-//                }
-//            break;}
+                if (Od::Api::obj().isConnected()) {
+                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
+                    proceedOdList(obj, parentNode);
+                }
+            break;}
 
             default: qDebug() << "UNSUPPORTED EXPORT TYPE";
         }

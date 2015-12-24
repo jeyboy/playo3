@@ -51,7 +51,7 @@ namespace Core {
 
                 // artists // tracks // tuners // collections // albums
                 inline QUrl popAudioUrl() { return audioUrl(path_audio_popular); } // (locale: 'ru') and pagination attrs
-                inline QUrl customAudioUrl() { return audioUrl(path_audio_info); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
+                inline QUrl customAudioUrl(const QStringList & ids) { return audioUrl(path_audio_info, QUrlQuery(tkn_ids % ids.join(','))); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
         //        inline QUrl formaddplUrl() { return audioUrl(path_audio_add_to_playlist_form); } // params: (tid: track id) // used for adding new item to playlist
 
                 // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
@@ -92,6 +92,10 @@ namespace Core {
                         playlistAudioUrl(pid),
                         QueryRules(tkn_tracks, requestLimit(), qMin(count, OD_OFFSET_LIMIT))
                     );
+                }
+
+                QJsonArray audioInfo(const QStringList & uids) { // take only tracks - response also contains artists and albums arrays
+                    return sQuery(customAudioUrl(uids)).value(tkn_tracks).toArray();
                 }
             };
         }

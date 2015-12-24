@@ -42,6 +42,7 @@ namespace Core {
             extern const QString path_audio_del_from_playlist;
 
 
+            extern const QString tkn_ids;
             extern const QString tkn_uid_eq;
             extern const QString tkn_pid_eq;
             extern const QString tkn_tid_eq;

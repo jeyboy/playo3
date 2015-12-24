@@ -13,23 +13,8 @@ namespace Core {
     public:
         inline File(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline File(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
-        inline File(QString fileName, Playlist * parent = 0, int pos = -1) : IItem(parent, DEFAULT_TITLE, pos) {
-            QString ext;
-            if (FilenameConversions::extractExtension(fileName, ext))
-                setExtension(ext);
-
-            setTitle(fileName);
-        }
-        inline File(QString filePath, QString fileName, Playlist * parent = 0, int pos = -1)
-            : IItem(parent, DEFAULT_TITLE, pos) {
-
-            QString ext;
-            if (FilenameConversions::extractExtension(fileName, ext))
-                setExtension(ext);
-
-            setTitle(fileName);
-            setPath(filePath);
-        }
+        File(QString fileName, Playlist * parent = 0, int pos = -1);
+        File(QString filePath, QString fileName, Playlist * parent = 0, int pos = -1);
 
         inline virtual ~File() {
             if (is(mark_on_removing))

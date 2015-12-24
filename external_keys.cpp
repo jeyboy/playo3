@@ -19,4 +19,5 @@ namespace Keys {
     const QString type          = QStringLiteral("type");
 
     const QString asterix       = QStringLiteral("*");
+    const QString shareable     = QStringLiteral("shareable");
 }

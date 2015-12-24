@@ -37,6 +37,7 @@ namespace Core {
             extern const QString path_audio_del_from_playlist =     QStringLiteral("dislike");
 
 
+            extern const QString tkn_ids =                          QStringLiteral("ids=");
             extern const QString tkn_uid_eq =                       QStringLiteral("uid=");
             extern const QString tkn_pid_eq =                       QStringLiteral("pid=");
             extern const QString tkn_tid_eq =                       QStringLiteral("tid=");

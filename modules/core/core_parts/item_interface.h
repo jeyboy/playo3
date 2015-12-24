@@ -40,6 +40,7 @@ namespace Core {
 
         inline virtual bool isRemote() const { return false; }
         inline virtual bool isContainer() const { return false; }
+        inline virtual bool isShareable() const { return false; }
 
         virtual bool isExist() const = 0;
         inline bool isPlayable() const {

@@ -14,8 +14,7 @@ namespace Core {
         }
 
         inline int itemType() const { return VK_FILE; }
-
-//        inline QString refresh_path() { return toUid(); }
+        inline bool isShareable() const { return true; }
     };
 }
 
