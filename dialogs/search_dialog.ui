@@ -93,6 +93,9 @@
        <height>251</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Double click is removing item</string>
+     </property>
     </widget>
     <widget class="QPushButton" name="addStylePredicate">
      <property name="geometry">
@@ -177,6 +180,9 @@
        <height>251</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Double click is removing item</string>
+     </property>
     </widget>
     <widget class="QLineEdit" name="textPredicate">
      <property name="geometry">
@@ -207,22 +213,6 @@
       <string>Genres</string>
      </property>
     </widget>
-    <zorder>textPredicates</zorder>
-    <zorder>addStylePredicate</zorder>
-    <zorder>addPredicate</zorder>
-    <zorder>label</zorder>
-    <zorder>stylePredicate</zorder>
-    <zorder>stylePredicates</zorder>
-    <zorder>textPredicate</zorder>
-    <zorder>label_2</zorder>
-    <zorder>textPredicates</zorder>
-    <zorder>addStylePredicate</zorder>
-    <zorder>addPredicate</zorder>
-    <zorder>label</zorder>
-    <zorder>stylePredicate</zorder>
-    <zorder>stylePredicates</zorder>
-    <zorder>textPredicate</zorder>
-    <zorder>label_2</zorder>
    </widget>
   </widget>
   <widget class="QScrollArea" name="locationsArea">
