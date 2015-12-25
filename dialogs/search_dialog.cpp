@@ -12,9 +12,12 @@ SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::Se
     ui -> setupUi(this);
 
     Controls::Accordion * accordeon = new Controls::Accordion(this);
+    accordeon -> setExclusive(true);
+    accordeon -> setToggleable(false);
     accordeon -> addItem(QStringLiteral("In locations"), ui -> locationsArea, true);
     accordeon -> addItem(QStringLiteral("By predicates"), ui -> predicatesArea);
     accordeon -> addItem(QStringLiteral("With limitations"), ui -> limitationsArea);
+    connect(accordeon, SIGNAL(currentChanged(int)), this, SLOT(on_accordeon_currentChanged(int)));
 
     QGridLayout * newLayout = new QGridLayout(this);
     newLayout -> addWidget(accordeon, 0, 0, 1, 2);
@@ -22,8 +25,8 @@ SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::Se
     newLayout -> addWidget(ui -> acceptButton, 1, 1);
     setLayout(newLayout);
 
-    setMinimumSize(480, 400);
-    setMaximumSize(480, 400);
+    setMinimumSize(480, 480);
+    setMaximumSize(480, 480);
 
 
     QList<DockBar *> bars = Dockbars::obj().dockbars();
@@ -262,12 +265,10 @@ void SearchDialog::on_sitesList_itemClicked(QListWidgetItem * item) {
     ui -> inSites -> blockSignals(false);
 }
 
-void SearchDialog::on_toolBox_currentChanged(int /*index*/) {
-    if (ui -> addPredicate -> isVisibleTo(this)) {
-        ui -> acceptButton -> setDefault(false);
-        ui -> addPredicate -> setDefault(true);
-    } else {
-        ui -> addPredicate -> setDefault(false);
-        ui -> acceptButton -> setDefault(true);
-    }
+void SearchDialog::on_accordeon_currentChanged(int index) {
+    bool predicable = index == (int)ui -> predicatesArea;
+    qDebug() << "CUU" << index << (int)ui -> predicatesArea;
+
+    ui -> acceptButton -> setDefault(!predicable);
+    ui -> addPredicate -> setDefault(predicable);
 }

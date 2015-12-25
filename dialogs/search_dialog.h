@@ -43,7 +43,7 @@ private slots:
 
     void on_sitesList_itemClicked(QListWidgetItem *item);
 
-    void on_toolBox_currentChanged(int index);
+    void on_accordeon_currentChanged(int index);
 };
 
 #endif // SEARCH_DIALOG_H

@@ -2,13 +2,11 @@
 
 using namespace Controls;
 
-Accordion::Accordion(QWidget * parent) : QScrollArea(parent), exclusive(false), currentCell(0), tabs(new QButtonGroup(this)) {
+Accordion::Accordion(QWidget * parent) : QScrollArea(parent), exclusive(false), toggleable(true), currentCell(0), tabs(new QButtonGroup(this)) {
     topButton = new QPushButton(QStringLiteral("*"), this);
     topButton -> setFixedSize(16, 16);
     topButton -> hide();
     connect(topButton, SIGNAL(clicked()), this, SLOT(collapseRequired()));
-
-    setWidgetResizable(true);
 
     QWidget * container = new QWidget(this);
     new_layout = new QVBoxLayout;
@@ -17,6 +15,7 @@ Accordion::Accordion(QWidget * parent) : QScrollArea(parent), exclusive(false), 
     container -> setLayout(new_layout);
 
     setWidget(container);
+    setWidgetResizable(true);
 
     connect((QObject *)verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
     connect(tabs, SIGNAL(buttonClicked(int)), this, SLOT(tabActivated(int)));
@@ -26,8 +25,10 @@ void Accordion::addItem(const QString & name, QWidget * item, bool expanded) {
     AccordionCell * cell;
     cells << (cell = new AccordionCell(name, item, this));
     new_layout -> addWidget(cell);
-    cell -> setCollapse(!expanded);
     tabs -> addButton(cell -> title, (int)cell);
+    cell -> setCollapse(true);
+    if (expanded)
+        cell -> title -> animateClick();
 }
 QWidget * Accordion::addItem(const QString & name, bool expanded) {
     QWidget * panel = new QWidget(this);
@@ -93,6 +94,11 @@ void Accordion::collapseRequired() {
 void Accordion::tabActivated(int obj, TabState act) {
     AccordionCell * cell = (AccordionCell *)obj;
     if (!cell) return;
+
+    if (cell != currentCell)
+        emit currentChanged((int)cell -> item);
+
+    if (!toggleable && act == toggle) act = expand;
 
     switch(act) {
         case expand: {

@@ -50,10 +50,10 @@ namespace Controls {
         enum TabState {
             collapse = 1,
             expand,
-            toogle
+            toggle
         };
 
-        bool exclusive;
+        bool exclusive, toggleable;
         AccordionCell * currentCell;
         QPushButton * topButton;
 
@@ -71,13 +71,20 @@ namespace Controls {
         void activate(int index);
         inline void clear() { qDeleteAll(cells); }
         int indexOf(QWidget * obj);
+
         inline bool isExclusive() const { return exclusive; }
         void setExclusive(bool is_exclusive);
 
+        inline bool isToggleable() const { return toggleable; }
+        void setToggleable(bool is_toggleable) { toggleable = is_toggleable; }
+
+
+    signals:
+        void currentChanged(int uid);
     protected slots:
         void scrollValueChanged(int value);
         void collapseRequired();
-        void tabActivated(int, TabState act = toogle);
+        void tabActivated(int, TabState act = toggle);
     };
 }
 
