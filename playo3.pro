@@ -277,7 +277,8 @@ HEADERS += \
     modules/controls/toolbar_user_button.h \
     modules/controls/toolbar_new_list_button.h \
     modules/core/core_parts/base_item_interface.h \
-    modules/controls/echonest_widget.h
+    modules/controls/echonest_widget.h \
+    modules/controls/search_configurator.h
 
 SOURCES += \
     dialogs/echonest_dialog.cpp \
@@ -414,4 +415,5 @@ SOURCES += \
     modules/controls/toolbar_drop_button.cpp \
     modules/controls/toolbar_user_button.cpp \
     modules/controls/toolbar_new_list_button.cpp \
-    modules/controls/echonest_widget.cpp
+    modules/controls/echonest_widget.cpp \
+    modules/controls/search_configurator.cpp
