@@ -4,8 +4,6 @@
 #include <qstringlist.h>
 #include <qstringbuilder.h>
 
-//#include "modules/isearchable.h"
-
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) { }
 

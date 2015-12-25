@@ -1,4 +1,5 @@
 #include "echonest_widget.h"
+#include "dockbars.h"
 
 //#include "modules/controls/qxtspanslider.h"
 
@@ -195,6 +196,9 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
     //                ]
     //            }
 
+
+
+
       Views::SearchView * view = new Views::SearchView(this, Views::Params(Data::echo, QString()));
       QStringList predicates;
 
@@ -208,6 +212,12 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 //              model -> root()
 //          );
       }
+
+//      Views::Params settings(search, false, false, false, true);
+//      SearchSettings prms = dialog.params();
+//      Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
+
+
 
       qDebug() << "ELO" << predicates;
       view -> search(predicates);

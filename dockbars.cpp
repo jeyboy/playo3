@@ -1,4 +1,5 @@
 #include "dockbars.h"
+#include "modules/controls/echonest_widget.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -145,10 +146,8 @@ DockBar * Dockbars::commonBar() {
 }
 
 DockBar * Dockbars::echonestBar() {
-    if (!echonest) {
-//        echonestWindow
-//        echonest = createDocBar(COMMON_TAB, false, echonestWindow);
-    }
+    if (!echonest)
+        echonest = createDocBar(COMMON_TAB, false, &EchonestWidget::obj());
 
     return echonest;
 }
