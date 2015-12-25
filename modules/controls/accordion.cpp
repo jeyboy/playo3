@@ -26,6 +26,7 @@ void Accordion::addItem(const QString & name, QWidget * item, bool expanded) {
     cells << (cell = new AccordionCell(name, item, this));
     new_layout -> addWidget(cell);
     tabs -> addButton(cell -> title, (int)cell);
+    cell -> title -> setCheckable(exclusive);
     cell -> setCollapse(true);
     if (expanded)
         cell -> title -> animateClick();
