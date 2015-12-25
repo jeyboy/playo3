@@ -2,18 +2,52 @@
 #define SEARCH_CONFIGURATOR
 
 #include <qlistwidget.h>
+#include <qlabel.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
+#include <qgroupbox.h>
+#include <qradiobutton.h>
 
 #include "modules/models/service/search_settings.h"
 #include "modules/controls/accordion.h"
 
 namespace Controls {
-    class SearchConfigurator : Accordion {
-        QScrollArea * locationsArea();
-        QScrollArea * predicatesArea();
-        QScrollArea * limitationsArea();
+    class SearchConfigurator : public Accordion {
+        void initUI();
         void initiateSources();
 
         QPushButton * activationBtn;
+
+        QScrollArea * predicatesArea;
+        QWidget * predicatesAreaBody;
+        QListWidget * textPredicates;
+        QPushButton * addStylePredicate;
+        QPushButton * addPredicate;
+        QComboBox * stylePredicate;
+        QListWidget * stylePredicates;
+        QLineEdit * textPredicate;
+        QScrollArea * locationsArea;
+        QWidget * locationsAreaBody;
+        QListWidget * sitesList;
+        QCheckBox * inSites;
+        QListWidget * tabsList;
+        QListWidget * driveList;
+        QCheckBox * inComputer;
+        QCheckBox * inTabs;
+        QScrollArea * limitationsArea;
+        QWidget * limitationsAreaBody;
+        QGroupBox * searchInGroup;
+        QCheckBox * byPopular;
+        QCheckBox * byOwns;
+        QCheckBox * byOrigins;
+        QCheckBox * byForeign;
+        QGroupBox * searchByGroup;
+        QRadioButton * byTitle;
+        QRadioButton * byTag;
+        QRadioButton * byArtist;
+        QRadioButton * bySong;
+
+        bool has_not_connected;
     public:
         SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0);
         SearchSettings params();

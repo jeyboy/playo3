@@ -65,7 +65,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>461</width>
+     <width>451</width>
      <height>321</height>
     </rect>
    </property>
@@ -75,12 +75,12 @@
    <property name="widgetResizable">
     <bool>false</bool>
    </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents">
+   <widget class="QWidget" name="predicatesAreaBody">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>459</width>
+      <width>449</width>
       <height>319</height>
      </rect>
     </property>
@@ -142,7 +142,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="sentencesLabel">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -194,7 +194,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="genresLabel">
      <property name="geometry">
       <rect>
        <x>320</x>
@@ -220,19 +220,19 @@
     <rect>
      <x>490</x>
      <y>10</y>
-     <width>461</width>
+     <width>451</width>
      <height>321</height>
     </rect>
    </property>
    <property name="widgetResizable">
     <bool>false</bool>
    </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents_2">
+   <widget class="QWidget" name="locationsAreaBody">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>448</width>
+      <width>449</width>
       <height>319</height>
      </rect>
     </property>
@@ -339,14 +339,14 @@
     <rect>
      <x>10</x>
      <y>350</y>
-     <width>461</width>
+     <width>451</width>
      <height>171</height>
     </rect>
    </property>
    <property name="widgetResizable">
     <bool>false</bool>
    </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents_3">
+   <widget class="QWidget" name="limitationsAreaBody">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -355,7 +355,7 @@
       <height>169</height>
      </rect>
     </property>
-    <widget class="QGroupBox" name="groupBox_4">
+    <widget class="QGroupBox" name="searchInGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -444,7 +444,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="searchByGroup">
      <property name="geometry">
       <rect>
        <x>10</x>

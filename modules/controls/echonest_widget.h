@@ -5,6 +5,7 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qgroupbox.h>
+#include <qlistwidget.h>
 
 #include <qformlayout.h>
 #include <qboxlayout.h>

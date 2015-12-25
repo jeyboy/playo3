@@ -10,7 +10,7 @@ class SearchDialog : public BaseDialog {
     Q_OBJECT
 
     Ui::SearchDialog * ui;
-    SearchConfigurator * configurator;
+    Controls::SearchConfigurator * configurator;
 public:
     explicit SearchDialog(QWidget * parent = 0);
     ~SearchDialog();

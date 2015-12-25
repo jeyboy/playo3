@@ -7,7 +7,7 @@ using namespace Presentation;
 SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::SearchDialog) {
     ui -> setupUi(this);
 
-    configurator = new SearchConfigurator(this, ui -> acceptButton);
+    configurator = new Controls::SearchConfigurator(this, ui -> acceptButton);
 
     QGridLayout * newLayout = new QGridLayout(this);
     newLayout -> addWidget(configurator, 0, 0, 1, 2);
