@@ -60,7 +60,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 }
 
 void SearchModel::searchFinished() {
-    if (!initiator -> isCanceled()) {
+//    if (!initiator -> isCanceled()) {
 //        FolderItem * folder = initiator -> result();
 //        QList<FolderItem *> children = folder -> folderChildren();
 
@@ -68,18 +68,18 @@ void SearchModel::searchFinished() {
 //            for(QList<FolderItem *>::Iterator it = children.begin(); it != children.end(); it++)
 //                rootItem -> linkNode(*it);
 //        endInsertRows();
-    }
+//    }
 
-    beginResetModel();
-    endResetModel();
-    emit moveOutProcess();
+//    beginResetModel();
+//    endResetModel();
+//    emit moveOutProcess();
 
     delete initiator;
     initiator = 0;
 }
 
 Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
-    emit moveInProcess();
+//    emit moveInProcess();
     QList<SearchRequest> requests;
     Playlist * res = rootItem;
 
@@ -87,6 +87,7 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
     prepareRequests(requests);
     ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
 
+    int offset = 0;
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled())
@@ -94,7 +95,7 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
 
         SearchRequest r = requests.takeFirst();
 
-        emit setProgress(requests.size() / total);
+        emit setBackgroundProgress(requests.size() / total);
         Playlist * parent = res -> createPlaylist(r.token());
         int propagate_count = 0;
 
@@ -127,8 +128,13 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
             default:;
         }
 
-        if (propagate_count > 0)
+        if (propagate_count > 0) {
+            // hack for view updating
+            beginInsertRows(QModelIndex(), offset, propagate_count);
+            endInsertRows();
             parent -> backPropagateItemsCountInBranch(propagate_count);
+        }
+        offset += propagate_count;
     }
 
     qDebug() << "SO END";
