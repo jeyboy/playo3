@@ -238,6 +238,7 @@ void SearchConfigurator::initiateSources() {
 
 SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false) {
     initUI();
+    initiateSources();
 
     setExclusive(true);
     setToggleable(false);

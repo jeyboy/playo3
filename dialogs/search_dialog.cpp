@@ -1,8 +1,5 @@
 #include "search_dialog.h"
 #include "ui_search_dialog.h"
-#include "dockbars.h"
-
-using namespace Presentation;
 
 SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::SearchDialog) {
     ui -> setupUi(this);

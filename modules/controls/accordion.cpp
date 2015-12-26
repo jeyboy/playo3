@@ -27,9 +27,12 @@ void Accordion::addItem(const QString & name, QWidget * item, bool expanded) {
     new_layout -> addWidget(cell);
     tabs -> addButton(cell -> title, (int)cell);
     cell -> title -> setCheckable(exclusive);
-    cell -> setCollapse(true);
-    if (expanded)
+    cell -> setCollapse(!expanded);
+    if (expanded) {
+        tabs -> blockSignals(true);
         cell -> title -> animateClick();
+        tabs -> blockSignals(false);
+    }
 }
 QWidget * Accordion::addItem(const QString & name, bool expanded) {
     QWidget * panel = new QWidget(this);
