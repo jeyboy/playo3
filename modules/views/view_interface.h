@@ -85,6 +85,7 @@ namespace Views {
 //        void showMessage(QString);
 
     protected slots:
+        void updateRemovingBlockation(bool isBlocked) { blockDeletion = isBlocked; }
         void updateIds(const QModelIndex & node = QModelIndex()) { // temp method for data migration // remove later
             Playlist * curr = mdl -> item<Playlist>(node);
             IItem * item;
@@ -173,6 +174,7 @@ namespace Views {
     private:
         ModelItemDelegate * item_delegate;
         bool blockRepaint;
+        bool blockDeletion;
     };
 }
 

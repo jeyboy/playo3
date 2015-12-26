@@ -16,6 +16,7 @@ void SearchModel::initiateSearch(const SearchSettings & params) {
     initiator = new QFutureWatcher<Playlist *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
+    emit updateRemovingBlockation(true);
 }
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
@@ -60,6 +61,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 }
 
 void SearchModel::searchFinished() {
+    emit updateRemovingBlockation(false);
 //    if (!initiator -> isCanceled()) {
 //        FolderItem * folder = initiator -> result();
 //        QList<FolderItem *> children = folder -> folderChildren();
@@ -79,7 +81,6 @@ void SearchModel::searchFinished() {
 }
 
 Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
-//    emit moveInProcess();
     QList<SearchRequest> requests;
     Playlist * res = rootItem;
 
@@ -95,7 +96,6 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
 
         SearchRequest r = requests.takeFirst();
 
-        emit setBackgroundProgress(requests.size() / total);
         Playlist * parent = res -> createPlaylist(r.token());
         int propagate_count = 0;
 
@@ -135,6 +135,7 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
             parent -> backPropagateItemsCountInBranch(propagate_count);
         }
         offset += propagate_count;
+        emit setBackgroundProgress(requests.size() / total);
     }
 
     qDebug() << "SO END";

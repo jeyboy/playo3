@@ -87,7 +87,7 @@ void Dockbars::save(DataStore * settings) {
             if (!path.isEmpty())
                 curr_bar.insert(QStringLiteral("link"), path);
 
-            if ((*it) -> windowTitle() == LOGS_TAB) {
+            if ((*it) -> windowTitle() == LOGS_TAB || (*it) -> windowTitle() == ECHONEST_TAB) {
                 //do nothing
             } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
                 curr_bar.insert(QStringLiteral("cont"), ((DownloadView *)(*it) -> mainWidget()) -> toJson());
@@ -131,6 +131,8 @@ QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const Views:
         DockBar * bar = createDocBar(barName, false);
         bar -> setWidget(Logger::obj().getEditor());
         return bar;
+    } else if (barName == ECHONEST_TAB) {
+        return echonestBar();
     } else {
         if (linkable_uid.isEmpty())
             return createDocBar(barName, settings, &attrs);
@@ -146,8 +148,10 @@ DockBar * Dockbars::commonBar() {
 }
 
 DockBar * Dockbars::echonestBar() {
-    if (!echonest)
-        echonest = createDocBar(COMMON_TAB, false, &EchonestWidget::obj());
+    if (!echonest) {
+        echonest = createDocBar(ECHONEST_TAB, false, &EchonestWidget::obj());
+        container -> addDockWidget(Qt::TopDockWidgetArea, echonest);
+    }
 
     return echonest;
 }

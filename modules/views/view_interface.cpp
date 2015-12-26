@@ -16,10 +16,12 @@ void IView::registerParent(QWidget * newParent) {
     connect(mdl, SIGNAL(moveOutProcess()), newParent, SLOT(onMoveOutProcess()));
     connect(mdl, SIGNAL(setProgress(int)), newParent, SLOT(onSetProgress(int)));
     connect(mdl, SIGNAL(setProgress2(int)), newParent, SLOT(onSetProgress2(int)));
+
+    connect(mdl, SIGNAL(updateRemovingBlockation(bool)), this, SLOT(updateRemovingBlockation(bool)));
 }
 
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false) {
+    : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false), blockDeletion(false) {
 
     connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
     connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
@@ -595,6 +597,8 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 }
 
 void IView::removeSelectedItems(bool remove) {
+    if (blockDeletion) return;
+
     QModelIndexList list = selectedIndexes();
     selectionModel() -> clearSelection();
 

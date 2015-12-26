@@ -214,9 +214,9 @@ void Playo::showSettingsDialog() {
     }
 }
 
-void Playo::showEchonestDialog() {
-    EchonestDialog(this).exec();
-}
+//void Playo::showEchonestDialog() {
+//    EchonestDialog(this).exec();
+//}
 
 void Playo::openVKRecomendations() {
     Dockbars::obj().createDocBar(

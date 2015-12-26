@@ -453,7 +453,7 @@ QToolButton * ToolBars::initiateEchonestButton() {
     QToolButton * echoToolButton = new QToolButton(container);
 
     echoToolButton -> setIcon(QIcon(QStringLiteral(":/echonest")));
-    connect(echoToolButton, SIGNAL(clicked()), container, SLOT(showEchonestDialog()));
+    connect(echoToolButton, SIGNAL(clicked()), &Dockbars::obj(), SLOT(showEchonest()));
     echoToolButton -> setToolTip(QStringLiteral("Echonest(the.echonest.com)"));
 
     return echoToolButton;

@@ -51,7 +51,7 @@ private slots:
     void showSearchDialog();
     void showSettingsDialog();
 
-    void showEchonestDialog();
+//    void showEchonestDialog();
 
     void openOdTabDialog();
 
@@ -63,8 +63,6 @@ private slots:
     void openSoundcloudTabDialog();
 
     void openFolderTriggered();
-
-//    void dropEvent(QDropEvent * event);
 protected:
     void activation();
     void initialization();

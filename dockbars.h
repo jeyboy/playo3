@@ -65,6 +65,11 @@ namespace Presentation {
 
         inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
+        void showEchonest() {
+            DockBar * bar = echonestBar();
+            bar -> show();
+            Dockbars::obj().activate(bar);
+        }
         void updateActiveTabIcon(bool isFloating = false);
         void updateAllViews();
         inline void hideAll() { changeBarsVisibility(true); }
