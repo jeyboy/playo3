@@ -61,10 +61,10 @@ namespace Controls {
         void on_driveList_itemClicked(QListWidgetItem * item);
         void on_inComputer_toggled(bool checked);
         void on_inTabs_toggled(bool checked);
-        void on_tabsList_itemClicked(QListWidgetItem *item);
+        void on_tabsList_itemClicked(QListWidgetItem * item);
         void on_inSites_toggled(bool checked);
-        void on_sitesList_itemClicked(QListWidgetItem *item);
-        void on_accordeon_currentChanged(int index);
+        void on_sitesList_itemClicked(QListWidgetItem * item);
+        void on_searchConfigurator_currentChanged(int index);
     };
 }
 

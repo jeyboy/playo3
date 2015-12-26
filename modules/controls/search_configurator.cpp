@@ -240,13 +240,13 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
     initUI();
     initiateSources();
 
+    setObjectName(QStringLiteral("searchConfigurator"));
     setExclusive(true);
     setToggleable(false);
     addItem(QStringLiteral("In locations"), locationsArea, true);
     addItem(QStringLiteral("By predicates"), predicatesArea);
     addItem(QStringLiteral("With limitations"), limitationsArea);
 
-    connect(this, SIGNAL(currentChanged(int)), this, SLOT(on_accordeon_currentChanged(int)));
     QMetaObject::connectSlotsByName(this);
 }
 
@@ -418,7 +418,7 @@ void SearchConfigurator::on_sitesList_itemClicked(QListWidgetItem * item) {
     inSites -> blockSignals(false);
 }
 
-void SearchConfigurator::on_accordeon_currentChanged(int index) {
+void SearchConfigurator::on_searchConfigurator_currentChanged(int index) {
     bool predicable = index == (int)predicatesArea;
 
     if (activationBtn) activationBtn -> setDefault(!predicable);
