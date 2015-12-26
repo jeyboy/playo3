@@ -51,6 +51,16 @@ namespace Controls {
 
         bool has_not_connected;
     public:
+        enum SearchSettingsBlocks {
+            none = 0,
+            block_computer = 1,
+            block_tabs = 2,
+            block_sites = 4,
+            block_all = block_computer | block_tabs | block_sites
+        };
+
+        static SearchSettings buildParams(int limitPerPredicate = 999999, const SearchSettingsBlocks & blocks = block_all, const QStringList & predicates = QStringList(), const QStringList & ganres = QStringList());
+
         SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0);
         SearchSettings params();
     protected slots:

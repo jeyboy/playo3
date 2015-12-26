@@ -10,26 +10,12 @@ SearchModel::~SearchModel() {
     delete initiator;
 }
 
-void SearchModel::initiateSearch(SearchSettings & params) {
+void SearchModel::initiateSearch(const SearchSettings & params) {
     request = params;
 
     initiator = new QFutureWatcher<Playlist *>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
-}
-
-void SearchModel::initiateSearch(QStringList & predicates) {
-    SearchSettings settings(true, true, false/*true*/);
-    // settings.tabs.append(Dockbars::obj().dockbars());
-
-
-    QHash<Web::SubType, ISearchable *> sites = Web::Apis::list();
-    for(QHash<Web::SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
-        settings.sites.append(*it);
-
-    settings.predicates = predicates;
-    settings.onlyOne = true;
-    initiateSearch(settings);
 }
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {

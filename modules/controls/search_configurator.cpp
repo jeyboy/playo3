@@ -236,6 +236,33 @@ void SearchConfigurator::initiateSources() {
     }
 }
 
+SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates, const QStringList & genres) {
+    SearchSettings res(blocks & block_sites, blocks & block_tabs, blocks & block_computer, limitPerPredicate);
+
+    res.predicates.append(predicates);
+    res.genres.append(genres);
+
+    if (res.inSites) {
+        QList<Core::ISearchable *> searchables = Core::Web::Apis::list().values();
+        for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
+            res.sites.append(*it);
+    }
+
+    if (res.inTabs) {
+        QList<Controls::DockBar *> dockbars = Presentation::Dockbars::obj().dockbars();
+        for(QList<Controls::DockBar *>::Iterator it = dockbars.begin(); it != dockbars.end(); it++)
+            res.tabs.append(*it);
+    }
+
+    if (res.inComputer) {
+        QFileInfoList drives = QDir::drives();
+        for(QFileInfoList::Iterator it = drives.begin(); it != drives.end(); it++)
+            res.drives.append((*it).absolutePath());
+    }
+
+    return res;
+}
+
 SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false) {
     initUI();
     initiateSources();
@@ -259,7 +286,7 @@ SearchSettings SearchConfigurator::params() {
 
     count = stylePredicates -> count();
     for(int i = 0; i < count; i++)
-        res.addGenre(stylePredicates -> item(i) -> text());
+        res.genres.append(stylePredicates -> item(i) -> text());
 
     if (byTitle -> isChecked())
         res.type = Core::ISearchable::in_title;
@@ -312,12 +339,11 @@ SearchSettings SearchConfigurator::params() {
 void SearchConfigurator::on_addPredicate_clicked() {
     QString predicate = textPredicate -> text();
 
-    if (!predicate.isEmpty()) {
+    if (!predicate.isEmpty())
         if (textPredicates -> findItems(predicate, Qt::MatchFixedString).size() == 0) {
             textPredicates -> addItem(predicate);
             textPredicate -> setText("");
         }
-    }
 }
 
 void SearchConfigurator::on_textPredicates_itemActivated(QListWidgetItem * item) {

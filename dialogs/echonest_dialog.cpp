@@ -2,6 +2,7 @@
 #include "ui_echonest_dialog.h"
 #include <qdebug.h>
 
+#include "modules/controls/search_configurator.h"
 #include "modules/controls/qxtspanslider.h"
 #include "modules/core/data_core.h"
 
@@ -222,7 +223,7 @@ void EchonestDialog::onBasicPlaylistGenerateClicked() {
       }
 
       qDebug() << "ELO" << predicates;
-      view -> search(predicates);
+      view -> search(Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_all, predicates));
 
 //    view -> reset();
     ((QWidget *)sender()) -> parentWidget() -> layout() -> addWidget(view);

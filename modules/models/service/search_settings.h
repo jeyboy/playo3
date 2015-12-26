@@ -5,16 +5,15 @@
 #include <qstringbuilder.h>
 
 struct SearchSettings {   
-    inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false) : inSites(sites), inTabs(tabs), inComputer(comp), onlyOne(false) { }
+    inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false, int predicateLimitation = 999999) : inSites(sites), inTabs(tabs), inComputer(comp), limitPerPredicate(predicateLimitation) { }
 
-    inline void addGenre(QString genreName) { genres << genreName; }
-    inline int limit(int def) { return onlyOne ? 1 : def; }
+    inline int limit(int def) { return qMin(limitPerPredicate, def); }
 
     bool inSites;
     bool inTabs;
     bool inComputer;
 
-    bool onlyOne;
+    int limitPerPredicate;
 
     QList<QString> genres;
 

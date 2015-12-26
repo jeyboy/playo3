@@ -11,8 +11,7 @@ namespace Views {
         inline SearchView(QWidget * parent, Views::Params settings, QJsonObject * hash = 0)
             : IView(new SearchModel(hash), parent, settings) {}
 
-        inline void search(SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
-        inline void search(QStringList & predicates) { ((SearchModel *)mdl) -> initiateSearch(predicates); }
+        inline void search(const SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
     };
 }
 #endif // SEARCH_VIEW_H

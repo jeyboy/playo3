@@ -16,8 +16,7 @@ namespace Models {
         inline bool isRelative() const { return false; }
         inline Data::Type playlistType() const { return Data::search; }
 
-        void initiateSearch(SearchSettings & params);
-        void initiateSearch(QStringList & predicates);
+        void initiateSearch(const SearchSettings & params);
     protected slots:
         int proceedTabs(SearchRequest & params, Playlist * parent);
         int proceedMyComputer(SearchRequest & params, Playlist * parent);

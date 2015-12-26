@@ -1,6 +1,7 @@
 #include "echonest_widget.h"
 #include "dockbars.h"
 
+#include "modules/controls/search_configurator.h"
 //#include "modules/controls/qxtspanslider.h"
 
 EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
@@ -221,7 +222,7 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 
 
       qDebug() << "ELO" << predicates;
-      view -> search(predicates);
+      view -> search(Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_all, predicates));
 
 //    view -> reset();
     ((QWidget *)sender()) -> parentWidget() -> layout() -> addWidget(view);
