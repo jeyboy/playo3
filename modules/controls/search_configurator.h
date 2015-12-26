@@ -13,6 +13,8 @@
 
 namespace Controls {
     class SearchConfigurator : public Accordion {
+        Q_OBJECT
+
         void initUI();
         void initiateSources();
 
