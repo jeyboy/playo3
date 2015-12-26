@@ -150,9 +150,10 @@ void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
                 for(QList<void *>::Iterator search_interface = request.sites.begin(); search_interface != request.sites.end(); search_interface++)
                     requests.append(SearchRequest(SearchRequest::remote, (*search_interface), predicate, (*genre_it), request.popular));
 
-            if (request.inTabs)
+            if (request.inTabs) {
                 for(QList<void *>::Iterator tab = request.tabs.begin(); tab != request.tabs.end(); tab++)
                     requests.append(SearchRequest(SearchRequest::inner, (*tab), predicate, (*genre_it), request.popular));
+            }
 
             if (request.inComputer)
                 for(QStringList::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)

@@ -250,8 +250,10 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
 
     if (res.inTabs) {
         QList<Controls::DockBar *> dockbars = Presentation::Dockbars::obj().dockbars();
-        for(QList<Controls::DockBar *>::Iterator it = dockbars.begin(); it != dockbars.end(); it++)
-            res.tabs.append(*it);
+        for(QList<Controls::DockBar *>::Iterator it = dockbars.begin(); it != dockbars.end(); it++) {
+            Views::IView * v = Presentation::Dockbars::obj().view(*it);
+            if (v) res.tabs.append((Models::IModel *)v -> model());
+        }
     }
 
     if (res.inComputer) {
