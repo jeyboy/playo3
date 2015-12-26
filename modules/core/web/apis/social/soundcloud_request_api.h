@@ -81,7 +81,7 @@ namespace Core {
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
                     return lQuery(
                         audioSearchUrl(predicate, genre, limitations.by_popularity()),
-                        queryRules(limitations.count),
+                        queryRules(limitations.total_limit),
                         wrap
                     );
                 }

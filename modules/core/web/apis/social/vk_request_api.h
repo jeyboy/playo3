@@ -32,7 +32,7 @@ namespace Core {
                     if (predicate.isEmpty() && limitations.by_popularity())
                         return audioPopular(true, genre);
                     else
-                        return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.count);
+                        return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.total_limit);
                 }
             public:
             //    QUrl wallUrl(QString & uid) {

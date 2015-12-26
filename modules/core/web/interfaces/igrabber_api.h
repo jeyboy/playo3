@@ -5,6 +5,8 @@
 #include "../grabber_keys.h"
 #include "modules/core/interfaces/isearchable.h"
 
+#define MAX_TOTAL 1000
+
 namespace Core {
     class IGrabberApi : public ISearchable {
     public:
@@ -43,9 +45,10 @@ namespace Core {
             return lQuery(url, items, jtype, count, start);
         }
 
-        QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1) {
+        QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1, int total = MAX_TOTAL) {
+            int page_limit = count + (start - 1);
             while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
-                if (start++ >= count) break;
+                if (start++ >= page_limit || result.size() >= total) break;
                 QThread::msleep(REQUEST_DELAY);
             }
 

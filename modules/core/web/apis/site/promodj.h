@@ -119,7 +119,7 @@ namespace Core {
                             (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(predicate), page_offset_key);
 
                 QJsonArray json;
-                lQuery(url_str, json, songs1, qMin(limitations.cpage, 10));
+                lQuery(url_str, json, songs1, qMin(limitations.count_page, 10), limitations.start_page, limitations.total_limit);
 
 //                while(json.size() > limitations.count)
 //                    json.removeLast();

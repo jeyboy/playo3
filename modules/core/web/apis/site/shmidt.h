@@ -100,8 +100,8 @@ namespace Core {
                 QJsonArray json;
                 toJson(songs1, Manager::prepare() -> followedForm(QUrl(url_str)), json, true);
 
-                while(json.size() > limitations.count)
-                    json.removeLast();
+//                while(json.size() > limitations.total_limit)
+//                    json.removeLast();
 
                 return json;
             }

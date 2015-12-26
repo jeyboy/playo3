@@ -131,9 +131,9 @@ namespace Core {
                 if (!limitations.by_artists() && songs_table) {
                     Html::Set songs = songs_table -> find(&songTrSelector);
 
-                    if (limitations.count < ITEMS_PER_PAGE)
-                        while(songs.size() > limitations.count)
-                            songs.removeLast();
+//                    if (limitations.total_limit < ITEMS_PER_PAGE)
+//                        while(songs.size() > limitations.total_limit)
+//                            songs.removeLast();
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject track_obj;

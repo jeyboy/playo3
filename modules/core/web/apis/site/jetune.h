@@ -127,10 +127,10 @@ namespace Core {
                 );
 
                 QJsonArray json;
-                lQuery(url_str, json, songs1, 1/*limitations.cpage*/, limitations.spage);
+                lQuery(url_str, json, songs1, 1/*limitations.count_page*/, limitations.start_page, limitations.total_limit);
 
-                while(json.size() > limitations.count)
-                    json.removeLast();
+//                while(json.size() > limitations.count)
+//                    json.removeLast();
 
                 return json;
             }

@@ -51,6 +51,8 @@ namespace Core {
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
 
             bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                if (reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200) return false;
+
                 Html::Document parser(reply);
                 bool result = false;
 
@@ -122,10 +124,10 @@ namespace Core {
 
                 QJsonArray json;
 
-                lQuery(url_str, json, songs1, 2/*limitations.cpage*/); // 2 pages at this time // if pagination overlimited - 302 status received
+                lQuery(url_str, json, songs1, qMin(limitations.count_page, 2), limitations.start_page, limitations.total_limit); // 2 pages at this time // if pagination overlimited - 302 status received
 
-                while(json.size() > limitations.count)
-                    json.removeLast();
+//                while(json.size() > limitations.count)
+//                    json.removeLast();
 
                 return json;
             }

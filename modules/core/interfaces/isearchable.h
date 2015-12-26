@@ -1,7 +1,6 @@
 #ifndef ISEARCHABLE
 #define ISEARCHABLE
 
-#include <qdebug.h>
 #include <qurl.h>
 #include <qstringlist.h>
 #include <qstringbuilder.h>
@@ -19,7 +18,7 @@
 
 #define DEFAULT_PREDICATE_NAME QString()
 #define REQUEST_DELAY 260 // ms
-#define MAX_PAGE 999
+#define MAX_PAGE 99
 #define STYLES_MAX_PAGE 50
 #define UID_HEAD QStringLiteral("@")
 
@@ -32,11 +31,11 @@ namespace Core {
 
         struct SearchLimit {
             SearchLimit(PredicateType predicate_type, int total_limit, int start_page = 1, int page_amount = MAX_PAGE) :
-                count(total_limit), spage(start_page), cpage(page_amount), predicate_type(predicate_type) {}
+                total_limit(total_limit), start_page(start_page), count_page(page_amount), predicate_type(predicate_type) {}
 
-            int count;
-            int spage;
-            int cpage;
+            int total_limit;
+            int start_page;
+            int count_page;
             PredicateType predicate_type;
 
             inline bool by_artists() const { return predicate_type & in_artist; }

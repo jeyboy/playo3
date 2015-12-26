@@ -38,7 +38,7 @@ namespace Core {
                     bool initInfo = false; // initInfo is too slow
                     QJsonArray res = lQuery(
                         audioSearchUrl(predicate),
-                        QueryRules(files_token_key, requestLimit(), qMin(limitations.count, FOURSHARED_OFFSET_LIMIT)),
+                        QueryRules(files_token_key, requestLimit(), qMin(limitations.total_limit, FOURSHARED_OFFSET_LIMIT)),
                         none
                     );
 

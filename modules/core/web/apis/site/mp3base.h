@@ -204,10 +204,10 @@ namespace Core {
                 QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(encodeStr(predicate), page_offset_key);
 
                 QJsonArray json;
-                lQuery(url_str, json, songs1, limitations.cpage, limitations.spage);
+                lQuery(url_str, json, songs1, limitations.count_page, limitations.start_page, limitations.total_limit);
 
-                while(json.size() > limitations.count)
-                    json.removeLast();
+//                while(json.size() > limitations.count)
+//                    json.removeLast();
 
                 return json;
             }
