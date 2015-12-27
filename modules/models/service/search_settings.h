@@ -5,11 +5,11 @@
 #include <qstringbuilder.h>
 #include <qjsonarray.h>
 
-#define JSON_SEARCH_PREDICATE QStringList("p")
-#define JSON_SEARCH_GENRE QStringList("g")
-#define JSON_SEARCH_POPULAR QStringList("r")
-#define JSON_SEARCH_TYPE QStringList("t")
-#define JSON_SEARCH_SUBJECT QStringList("s")
+#define JSON_SEARCH_PREDICATE QStringLiteral("p")
+#define JSON_SEARCH_GENRE QStringLiteral("g")
+#define JSON_SEARCH_POPULAR QStringLiteral("r")
+#define JSON_SEARCH_TYPE QStringLiteral("t")
+#define JSON_SEARCH_SUBJECT QStringLiteral("s")
 
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false, int predicateLimitation = 999999) : inSites(sites), inTabs(tabs), inComputer(comp), limitPerPredicate(predicateLimitation) { }
@@ -46,12 +46,13 @@ struct SearchRequest {
 
     ~SearchRequest() {
         switch(search_type) {
-            case local: { delete search_interface; break;}
+            case local: { delete (QString *)search_interface; break;}
+            default:;
         }
     }
 
     QString token();
-    static SearchRequest load(const QJsonObject & obj);
+    static SearchRequest fromJson(const QJsonObject & obj);
     void save(QJsonArray & arr);
 };
 

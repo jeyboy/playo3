@@ -4,19 +4,24 @@ using namespace Models;
 using namespace Core::Web;
 
 SearchModel::~SearchModel() {
-    if (initiator)
+    if (initiator && initiator -> isRunning()) {
         initiator -> cancel();
+        initiator -> waitForFinished();
+    }
 
     delete initiator;
 }
 
-void SearchModel::initiateSearch(const SearchSettings & params) {
-    request = params;
-
+void SearchModel::startSearch() {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
     emit updateRemovingBlockation(true);
+}
+
+void SearchModel::initiateSearch(const SearchSettings & params) {
+    request = params;
+    startSearch();
 }
 
 void SearchModel::declineSearch() {
@@ -34,16 +39,23 @@ void SearchModel::suspendSearch(QJsonObject & obj) {
         if (!requests.isEmpty()) {
             QJsonArray res;
             for(QList<SearchRequest>::Iterator request = requests.begin(); request != requests.end(); request++)
-                res <<
+                (*request).save(res);
+
+            obj.insert(SEARCH_JSON_KEY, res);
         }
     }
 }
 
 void SearchModel::resumeSearch(const QJsonObject & obj) {
+    QJsonArray res = obj.value(SEARCH_JSON_KEY).toArray();
 
+    if (res.isEmpty()) return;
+
+    for(QJsonArray::ConstIterator request = res.constBegin(); request != res.constEnd(); request++)
+        requests << SearchRequest::fromJson((*request).toObject());
+
+    startSearch();
 }
-
-
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
     return ((IModel *) params.search_interface) -> initiateSearch(params, parent);
@@ -92,11 +104,12 @@ void SearchModel::searchFinished() {
     initiator = 0;
 }
 
-void SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
+void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
     Playlist * res = rootItem;
 
     emit moveInBackgroundProcess();
-    prepareRequests(requests);
+    if (requests.isEmpty())
+        prepareRequests(requests);
 
     ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
 

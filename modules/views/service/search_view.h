@@ -12,7 +12,6 @@ namespace Views {
             : IView(new SearchModel(hash), parent, settings) {}
 
         inline void search(const SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
-
     };
 }
 #endif // SEARCH_VIEW_H

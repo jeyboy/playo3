@@ -23,7 +23,7 @@
 //qDebug() << this->table->rowAt( 0 ) << "-" << this->table->rowAt( this->table->height() ); // this is what you want
 //qDebug() << this->table->columnAt( 0 ) << "-" << this->table->columnAt( this->table->width() ); // this is what you want
 
-#define MODEL_POSTFIX QStringList("_mdl")
+#define MODEL_POSTFIX QStringLiteral("_mdl")
 
 namespace Views {
     using namespace Models;

@@ -20,7 +20,7 @@ QString SearchRequest::token() {
     else return QStringLiteral("All");
 }
 
-SearchRequest SearchRequest::load(const QJsonObject & obj) {
+SearchRequest SearchRequest::fromJson(const QJsonObject & obj) {
     RequestType search_type = (RequestType)obj.value(JSON_SEARCH_TYPE).toInt();
     void * subject;
 
@@ -47,7 +47,13 @@ SearchRequest SearchRequest::load(const QJsonObject & obj) {
         break;}
     }
 
-
+    return SearchRequest(
+        search_type,
+        subject,
+        obj.value(JSON_SEARCH_PREDICATE).toString(),
+        obj.value(JSON_SEARCH_GENRE).toString(),
+        obj.value(JSON_SEARCH_POPULAR).toBool()
+    );
 }
 
 void SearchRequest::save(QJsonArray & arr) {
