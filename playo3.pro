@@ -43,7 +43,6 @@ FORMS    += playo.ui \
     dialogs/extension_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
-    dialogs/echonest_dialog.ui \
     dialogs/user_action_dialog.ui
 
 RESOURCES += \
@@ -80,7 +79,6 @@ INCLUDEPATH += $$PWD/libs/bass/include
 DEPENDPATH += $$PWD/libs/bass
 
 HEADERS += \
-    dialogs/echonest_dialog.h \
     dialogs/extension_dialog.h \
     dialogs/relations_dialog.h \
     dialogs/search_dialog.h \
@@ -281,7 +279,6 @@ HEADERS += \
     modules/controls/search_configurator.h
 
 SOURCES += \
-    dialogs/echonest_dialog.cpp \
     dialogs/extension_dialog.cpp \
     dialogs/relations_dialog.cpp \
     dialogs/search_dialog.cpp \

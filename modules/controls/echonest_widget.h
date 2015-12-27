@@ -13,13 +13,13 @@
 #include <qradiobutton.h>
 
 
-#include "modules/core/interfaces/singleton.h"
+//#include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/apis/service/echonest_api.h"
 #include "modules/core/web/utils/web_manager.h"
 #include "accordion.h"
-#include "modules/views/service/search_view.h"
+//#include "modules/views/service/search_view.h"
 
-class EchonestWidget : public Controls::Accordion, public Core::Singleton<EchonestWidget> {
+class EchonestWidget : public Controls::Accordion/*, public Core::Singleton<EchonestWidget>*/ {
     Q_OBJECT
 
     void artistInfoGeneration(QWidget * base);
@@ -42,7 +42,9 @@ class EchonestWidget : public Controls::Accordion, public Core::Singleton<Echone
     Controls::Accordion * artistAccordion;
 public:
     explicit EchonestWidget(QWidget * parent = 0);
-    ~EchonestWidget();
+//    ~EchonestWidget();
+
+    void createSearchResultBar(const QStringList & predicates);
 
 private slots:
     void onArtistInfoButtonClicked();

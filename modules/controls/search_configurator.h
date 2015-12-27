@@ -56,7 +56,8 @@ namespace Controls {
             block_computer = 1,
             block_tabs = 2,
             block_sites = 4,
-            block_all = block_computer | block_tabs | block_sites
+            block_all = block_computer | block_tabs | block_sites,
+            block_tabs_and_sites = block_tabs | block_sites
         };
 
         static SearchSettings buildParams(int limitPerPredicate = 999999, const SearchSettingsBlocks & blocks = block_all, const QStringList & predicates = QStringList(), const QStringList & ganres = QStringList());

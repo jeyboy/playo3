@@ -149,7 +149,7 @@ DockBar * Dockbars::commonBar() {
 
 DockBar * Dockbars::echonestBar() {
     if (!echonest) {
-        echonest = createDocBar(ECHONEST_TAB, false, &EchonestWidget::obj());
+        echonest = createDocBar(ECHONEST_TAB, false, new EchonestWidget(this));
         container -> addDockWidget(Qt::TopDockWidgetArea, echonest);
     }
 

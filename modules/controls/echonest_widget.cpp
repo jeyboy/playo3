@@ -6,6 +6,7 @@
 
 EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
     setObjectName(QStringLiteral("EchonestWidget"));
+
 //    QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
 //    slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
 //    layout() -> addWidget(slider);
@@ -14,7 +15,11 @@ EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
     basicPlaylistGeneration(addItem(QStringLiteral("Base Playlist")));
 }
 
-EchonestWidget::~EchonestWidget() {}
+void EchonestWidget::createSearchResultBar(const QStringList & predicates) {
+    Views::Params settings(Data::echo, QString());
+    SearchSettings prms = Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_tabs_and_sites, predicates);
+    Presentation::Dockbars::obj().createDocBar(QStringLiteral("Echonest Playlist"), settings, 0, true, true, &prms);
+}
 
 void EchonestWidget::onArtistInfoButtonClicked() {
     if (!artistName -> text().isEmpty()) {
@@ -170,10 +175,8 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
         }
 
         results = Core::Web::Echonest::Api::obj().playlistBasicByGenres(genres);
-    } else {
-        return;
-        // nothing choosed
     }
+    else return; // nothing choosed
 
     //            {
     //                "artist_foreign_ids": [
@@ -200,13 +203,11 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 
 
 
-
-      Views::SearchView * view = new Views::SearchView(this, Views::Params(Data::echo, QString()));
       QStringList predicates;
 
       for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
           QJsonObject obj = (*song).toObject();
-          predicates << (obj.value(QStringLiteral("artist_name")).toString() + " - " + obj.value(QStringLiteral("title")).toString());
+          predicates << (obj.value(QStringLiteral("artist_name")).toString() % QStringLiteral(" - ") % obj.value(QStringLiteral("title")).toString());
 //          new WebItem(
 //              obj.value("id").toString(),
 //              obj.value("artist_id").toString(),
@@ -215,17 +216,7 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 //          );
       }
 
-//      Views::Params settings(search, false, false, false, true);
-//      SearchSettings prms = dialog.params();
-//      Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
-
-
-
-      qDebug() << "ELO" << predicates;
-      view -> search(Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_all, predicates));
-
-//    view -> reset();
-    ((QWidget *)sender()) -> parentWidget() -> layout() -> addWidget(view);
+      createSearchResultBar(predicates);
 }
 
 void EchonestWidget::artistInfoGeneration(QWidget * base) {
