@@ -3,6 +3,13 @@
 
 #include <qstringlist.h>
 #include <qstringbuilder.h>
+#include <qjsonarray.h>
+
+#define JSON_SEARCH_PREDICATE QStringList("p")
+#define JSON_SEARCH_GENRE QStringList("g")
+#define JSON_SEARCH_POPULAR QStringList("r")
+#define JSON_SEARCH_TYPE QStringList("t")
+#define JSON_SEARCH_SUBJECT QStringList("s")
 
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false, int predicateLimitation = 999999) : inSites(sites), inTabs(tabs), inComputer(comp), limitPerPredicate(predicateLimitation) { }
@@ -37,19 +44,15 @@ struct SearchRequest {
     void * search_interface;
     RequestType search_type;
 
-    QString token() {
-        bool has_predicate = !spredicate.isEmpty();
-        bool has_genre = !sgenre.isEmpty();
-
-        if (has_predicate) {
-            if (has_genre)
-                return spredicate % QStringLiteral(" (") % sgenre % QStringLiteral(") ");
-            else
-                return spredicate;
-        } else if (has_genre) return sgenre;
-        else if (popular && search_type == remote) return QStringLiteral("Popular");
-        else return QStringLiteral("All");
+    ~SearchRequest() {
+        switch(search_type) {
+            case local: { delete search_interface; break;}
+        }
     }
+
+    QString token();
+    static SearchRequest load(const QJsonObject & obj);
+    void save(QJsonArray & arr);
 };
 
 #endif // SEARCH_SETTINGS

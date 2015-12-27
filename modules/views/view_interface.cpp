@@ -7,6 +7,7 @@ using namespace Controls;
 
 void IView::registerParent(QWidget * newParent) {
     setParent(newParent);
+    mdl -> setObjectName(newParent -> objectName() % MODEL_POSTFIX);
 
     connect(mdl, SIGNAL(moveInBackgroundProcess()), newParent, SLOT(onMoveInBackgroundProcess()));
     connect(mdl, SIGNAL(moveOutBackgroundProcess()), newParent, SLOT(onMoveOutBackgroundProcess()));

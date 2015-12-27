@@ -7,6 +7,13 @@
 namespace Models {
     class SearchModel : public LevelTreeModel {
         Q_OBJECT
+
+        void searchRoutine(QFutureWatcher<Playlist *> * watcher);
+        void prepareRequests(QList<SearchRequest> & requests);
+
+        SearchSettings request;
+        QFutureWatcher<void> * initiator;
+        QList<SearchRequest> requests;
     public:
         inline SearchModel(QJsonObject * hash = 0, QObject * parent = 0)
             : LevelTreeModel(hash, parent), initiator(0) {}
@@ -17,16 +24,15 @@ namespace Models {
         inline Data::Type playlistType() const { return Data::search; }
 
         void initiateSearch(const SearchSettings & params);
+        void declineSearch();
+        void suspendSearch(QJsonObject & obj);
+        void resumeSearch(const QJsonObject & obj);
+
+        inline bool inProccess() { return initiator && initiator -> isRunning(); }
     protected slots:
         int proceedTabs(SearchRequest & params, Playlist * parent);
         int proceedMyComputer(SearchRequest & params, Playlist * parent);
         void searchFinished();
-    private:
-        Playlist * searchRoutine(QFutureWatcher<Playlist *> * watcher);
-        void prepareRequests(QList<SearchRequest> & requests);
-
-        SearchSettings request;
-        QFutureWatcher<Playlist *> * initiator;
     };
 }
 

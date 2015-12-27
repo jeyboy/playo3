@@ -413,4 +413,5 @@ SOURCES += \
     modules/controls/toolbar_user_button.cpp \
     modules/controls/toolbar_new_list_button.cpp \
     modules/controls/echonest_widget.cpp \
-    modules/controls/search_configurator.cpp
+    modules/controls/search_configurator.cpp \
+    modules/models/service/search_settings.cpp

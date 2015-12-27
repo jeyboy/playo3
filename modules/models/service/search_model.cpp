@@ -13,11 +13,37 @@ SearchModel::~SearchModel() {
 void SearchModel::initiateSearch(const SearchSettings & params) {
     request = params;
 
-    initiator = new QFutureWatcher<Playlist *>();
+    initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
     emit updateRemovingBlockation(true);
 }
+
+void SearchModel::declineSearch() {
+    if (initiator && initiator -> isRunning()) {
+        initiator -> cancel();
+        initiator -> waitForFinished();
+        requests.clear();
+    }
+}
+void SearchModel::suspendSearch(QJsonObject & obj) {
+    if (initiator && initiator -> isRunning()) {
+        initiator -> cancel();
+        initiator -> waitForFinished();
+
+        if (!requests.isEmpty()) {
+            QJsonArray res;
+            for(QList<SearchRequest>::Iterator request = requests.begin(); request != requests.end(); request++)
+                res <<
+        }
+    }
+}
+
+void SearchModel::resumeSearch(const QJsonObject & obj) {
+
+}
+
+
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
     return ((IModel *) params.search_interface) -> initiateSearch(params, parent);
@@ -62,37 +88,23 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 
 void SearchModel::searchFinished() {
     emit updateRemovingBlockation(false);
-//    if (!initiator -> isCanceled()) {
-//        FolderItem * folder = initiator -> result();
-//        QList<FolderItem *> children = folder -> folderChildren();
-
-//        beginInsertRows(QModelIndex(), 0, children.count());
-//            for(QList<FolderItem *>::Iterator it = children.begin(); it != children.end(); it++)
-//                rootItem -> linkNode(*it);
-//        endInsertRows();
-//    }
-
-//    beginResetModel();
-//    endResetModel();
-//    emit moveOutProcess();
-
     delete initiator;
     initiator = 0;
 }
 
-Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
-    QList<SearchRequest> requests;
+void SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
     Playlist * res = rootItem;
 
     emit moveInBackgroundProcess();
     prepareRequests(requests);
+
     ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
 
     int offset = 0;
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled())
-            return res;
+            return;
 
         SearchRequest r = requests.takeFirst();
 
@@ -141,7 +153,6 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
 
     qDebug() << "SO END";
     emit moveOutBackgroundProcess();
-    return res;
 }
 
 void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
