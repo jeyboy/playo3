@@ -241,6 +241,7 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
 
     res.predicates.append(predicates);
     res.genres.append(genres);
+    res.type = Core::ISearchable::in_title;
 
     if (res.inSites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::list().values();

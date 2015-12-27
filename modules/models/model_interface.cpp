@@ -894,7 +894,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
 
 int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source) {
     int amount = 0;
-    qDebug() << "INNNNNNNNER" << search_source << rootItem;
+
     if (search_source == 0)
         search_source = rootItem;
 
