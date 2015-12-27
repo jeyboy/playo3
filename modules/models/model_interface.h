@@ -130,6 +130,7 @@ namespace Models {
         void updateRemovingBlockation(bool isBlocked);
         void spoilNeeded(const QModelIndex & index) const;
         void expandNeeded(const QModelIndex & index) const;
+        void collapseNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
 
         void moveInBackgroundProcess();

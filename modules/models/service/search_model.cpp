@@ -133,6 +133,7 @@ Playlist * SearchModel::searchRoutine(QFutureWatcher<Playlist *> * watcher) {
             beginInsertRows(QModelIndex(), offset, propagate_count);
             endInsertRows();
             parent -> backPropagateItemsCountInBranch(propagate_count);
+            emit collapseNeeded(index(parent));
         }
         offset += propagate_count;
         emit setBackgroundProgress(requests.size() / total);
