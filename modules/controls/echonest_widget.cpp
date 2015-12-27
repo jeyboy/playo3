@@ -16,9 +16,13 @@ EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
 }
 
 void EchonestWidget::createSearchResultBar(const QStringList & predicates) {
-    Views::Params settings(Data::echo, QString());
+    Views::Params settings(Data::search, QString());
     SearchSettings prms = Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_tabs_and_sites, predicates);
     Presentation::Dockbars::obj().createDocBar(QStringLiteral("Echonest Playlist"), settings, 0, true, true, &prms);
+}
+
+void EchonestWidget::clearData() {
+
 }
 
 void EchonestWidget::onArtistInfoButtonClicked() {
@@ -155,6 +159,9 @@ void EchonestWidget::onArtistInfoButtonClicked() {
 }
 
 void EchonestWidget::onBasicPlaylistGenerateClicked() {
+    ((Controls::DockBar *)parentWidget()) -> onMoveInBackgroundProcess();
+    collapseAll();
+
     QJsonArray results;
 
     if (artistTypeCheck -> isChecked()) {
@@ -217,6 +224,7 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
       }
 
       createSearchResultBar(predicates);
+      ((Controls::DockBar *)parentWidget()) -> onMoveOutBackgroundProcess();
 }
 
 void EchonestWidget::artistInfoGeneration(QWidget * base) {

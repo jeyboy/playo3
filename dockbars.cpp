@@ -184,7 +184,7 @@ DockBar * Dockbars::createDocBar(const QString & name, const Views::Params & set
     bar -> initiateSearch();
 
     if (!attrs) {
-        if (settings.type != search)
+        if (settings.type != Data::Type::search)
             ((IModel *)view -> model()) -> refresh();
         else
             ((SearchView *)view) -> search(*search_settings);

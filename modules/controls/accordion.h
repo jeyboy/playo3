@@ -78,6 +78,15 @@ namespace Controls {
         inline bool isToggleable() const { return toggleable; }
         void setToggleable(bool is_toggleable) { toggleable = is_toggleable; }
 
+        void collapseAll() {
+            bool excl = exclusive;
+            setExclusive(false);
+
+            for(QList<AccordionCell *>::Iterator cell = cells.begin(); cell != cells.end(); cell++)
+                tabActivated((int)*cell, collapse);
+
+            setExclusive(excl);
+        }
 
     signals:
         void currentChanged(int uid);

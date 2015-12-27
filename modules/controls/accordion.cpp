@@ -112,7 +112,7 @@ void Accordion::tabActivated(int obj, TabState act) {
         break;}
 
         case collapse: {
-            cell -> setCollapse(false);
+            cell -> setCollapse(true);
             ensureWidgetVisible(cell -> title);
         break; }
 

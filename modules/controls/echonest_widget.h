@@ -46,6 +46,9 @@ public:
 
     void createSearchResultBar(const QStringList & predicates);
 
+protected:
+    void clearData();
+
 private slots:
     void onArtistInfoButtonClicked();
     void onBasicPlaylistGenerateClicked();
