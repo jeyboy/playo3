@@ -5,6 +5,7 @@
 #include "search_settings.h"
 
 #define SEARCH_JSON_KEY QStringLiteral("search")
+#define SEARCH_SET_JSON_KEY QStringLiteral("search_set")
 
 namespace Models {
     class SearchModel : public LevelTreeModel {

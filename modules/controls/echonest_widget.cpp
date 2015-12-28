@@ -225,6 +225,7 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 
       createSearchResultBar(predicates);
       ((Controls::DockBar *)parentWidget()) -> onMoveOutBackgroundProcess();
+      ((Controls::DockBar *)parentWidget()) -> close();
 }
 
 void EchonestWidget::artistInfoGeneration(QWidget * base) {

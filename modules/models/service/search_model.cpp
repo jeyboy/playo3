@@ -32,9 +32,7 @@ void SearchModel::declineSearch() {
     }
 }
 void SearchModel::suspendSearch(QJsonObject & obj) {
-    qDebug() << "SUSPEND";
     if (initiator && initiator -> isRunning()) {
-        qDebug() << "SUSPEND IN";
         initiator -> cancel();
         initiator -> waitForFinished();
 
@@ -44,6 +42,7 @@ void SearchModel::suspendSearch(QJsonObject & obj) {
                 (*request).save(res);
 
             obj.insert(SEARCH_JSON_KEY, res);
+            obj.insert(SEARCH_SET_JSON_KEY, request.toJson());
         }
     }
 }
@@ -53,6 +52,7 @@ void SearchModel::resumeSearch(const QJsonObject & obj) {
 
     if (res.isEmpty()) return;
 
+    request.fromJson(obj.value(SEARCH_SET_JSON_KEY).toObject());
     SearchRequest::fromJson(res, requests);
 
     startSearch();

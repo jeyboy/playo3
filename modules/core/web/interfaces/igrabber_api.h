@@ -36,7 +36,7 @@ namespace Core {
             Logger::obj().startMark();
             Web::Response * response = Web::Manager::prepare() -> followedGet(url);
             bool res = toJson(jtype, response, items, true);
-            Logger::obj().endMark(QStringLiteral("Grabber"), url.toString());
+            Logger::obj().endMark(QStringLiteral("Grabber-") % QString::number(items.size()) % (res ? "true" : "false"), url.toString());
             return res;
         }
 
@@ -48,6 +48,7 @@ namespace Core {
         QJsonArray & lQuery(QString url, QJsonArray & result, toJsonType jtype, int count, int start = 1, int total = MAX_TOTAL) {
             int page_limit = count + (start - 1);
             while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
+                qDebug() << "LLL" << start << page_limit << result.size() << total;
                 if (start++ >= page_limit || result.size() >= total) break;
                 QThread::msleep(REQUEST_DELAY);
             }

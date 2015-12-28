@@ -4,17 +4,31 @@
 #include <qstringlist.h>
 #include <qstringbuilder.h>
 #include <qjsonarray.h>
+#include <qjsonobject.h>
 
 #define JSON_SEARCH_PREDICATE QStringLiteral("p")
 #define JSON_SEARCH_GENRE QStringLiteral("g")
 #define JSON_SEARCH_POPULAR QStringLiteral("r")
 #define JSON_SEARCH_TYPE QStringLiteral("t")
 #define JSON_SEARCH_SUBJECT QStringLiteral("s")
+#define JSON_SEARCH_LIMIT QStringLiteral("l")
 
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false, int predicateLimitation = 999999) : inSites(sites), inTabs(tabs), inComputer(comp), limitPerPredicate(predicateLimitation) { }
 
     inline int limit(int def) { return qMin(limitPerPredicate, def); }
+
+    QJsonObject toJson() {
+        QJsonObject set;
+        set.insert(JSON_SEARCH_TYPE, type);
+        set.insert(JSON_SEARCH_LIMIT, limitPerPredicate);
+        return set;
+    }
+
+    void fromJson(const QJsonObject & obj) {
+        type = obj.value(JSON_SEARCH_TYPE).toInt();
+        limitPerPredicate = obj.value(JSON_SEARCH_LIMIT).toInt();
+    }
 
     bool inSites;
     bool inTabs;

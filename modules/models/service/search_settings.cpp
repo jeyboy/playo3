@@ -38,7 +38,6 @@ void SearchRequest::fromJson(const QJsonArray & objs, QList<SearchRequest> & lis
         switch(search_type) {
             case inner: {
                 subject = inners.value(obj.value(JSON_SEARCH_SUBJECT).toString());
-                qDebug() << obj.value(JSON_SEARCH_SUBJECT).toString() << inners.keys();
             break;}
 
             case remote: {
