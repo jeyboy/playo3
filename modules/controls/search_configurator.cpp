@@ -185,7 +185,7 @@ void SearchConfigurator::initiateSources() {
     QList<DockBar *> bars = Presentation::Dockbars::obj().dockbars();
     for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
         Views::IView * v = Presentation::Dockbars::obj().view(*it);
-        if (v) {
+        if (v && !v -> isCommon()) {
             Models::IModel * mdl = (Models::IModel *)v -> model();
             if (mdl -> playlistType() != Data::search) {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), tabsList);
@@ -253,7 +253,7 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
         QList<Controls::DockBar *> dockbars = Presentation::Dockbars::obj().dockbars();
         for(QList<Controls::DockBar *>::Iterator it = dockbars.begin(); it != dockbars.end(); it++) {
             Views::IView * v = Presentation::Dockbars::obj().view(*it);
-            if (v) res.tabs.append((Models::IModel *)v -> model());
+            if (v && !v -> isCommon()) res.tabs.append((Models::IModel *)v -> model());
         }
     }
 

@@ -20,7 +20,7 @@ namespace Controls {
     class DockBar : public QDockWidget {
         Q_OBJECT
     public:
-        DockBar(const QString & title, QWidget * parent = 0, bool closable = true, Qt::WindowFlags flags = 0);
+        DockBar(const QString & title, QWidget * parent = 0, bool closable = true, Qt::WindowFlags flags = 0, const QString & objName = QString());
 //        ~DockBar() { Settings::unregisterTransparentWidget(this); }
         inline void setWindowTitle(const QString & newTitle) {
             titleWidget -> setText(newTitle);
@@ -50,7 +50,11 @@ namespace Controls {
 
         inline void onMoveInBackgroundProcess() { titleWidget -> showProgress(true); }
         inline void onMoveOutBackgroundProcess() { titleWidget -> showProgress(false); }
-        inline void onSetBackgroundProgress(int percent) { titleWidget -> setProgress(percent); }
+        inline void onSetBackgroundProgress(int percent) {
+            if (!titleWidget -> isShowProgress())
+                onMoveInBackgroundProcess();
+            titleWidget -> setProgress(percent);
+        }
 
         void onMoveInProcess();
         void onMoveOutProcess();

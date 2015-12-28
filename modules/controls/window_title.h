@@ -36,6 +36,7 @@ namespace Controls {
 
         void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal);
 
+        inline bool isShowProgress() { return !spinner -> isHidden(); }
         inline void showProgress(bool show) {
             if (show) {
                 spinner -> setValue(SPINNER_IS_CONTINIOUS);

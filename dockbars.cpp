@@ -19,11 +19,12 @@ void Dockbars::load(const QJsonArray & bars) {
             obj = (*it).toObject();
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
+
             curr_bar = linkNameToToolbars(
-                barName, Views::Params(obj.value(QStringLiteral("set")).toObject()),
-                obj.value(QStringLiteral("cont")).toObject(), obj.value(QStringLiteral("link")).toString()
+                BarCreationNames(barName, obj.value(QStringLiteral("link")).toString(), obj.value(QStringLiteral("name")).toString()),
+                Views::Params(obj.value(QStringLiteral("set")).toObject()),
+                obj.value(QStringLiteral("cont")).toObject()
             );
-            curr_bar -> setObjectName(obj.value(QStringLiteral("name")).toString(curr_bar -> objectName()));
 
             if (obj.value(QStringLiteral("stick")).toBool())
                 ((DockBar *)curr_bar) -> markAsSticked();
@@ -70,6 +71,8 @@ void Dockbars::save(DataStore * settings) {
         QJsonObject curr_bar;
 
         for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
+            if ((*it) -> windowTitle() == ECHONEST_TAB && (*it) -> isHidden()) continue;
+
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == COMMON_TAB) {
@@ -110,63 +113,69 @@ void Dockbars::save(DataStore * settings) {
                 }
             }
 
-            bar_array.append(curr_bar);
+            if (!v || (v && v -> isSearch()))
+                bar_array.append(curr_bar);
+            else
+                bar_array.prepend(curr_bar);
         }
 
         settings -> write(Dockbars::settingsName(), bar_array);
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(const QString & barName, const Views::Params & settings, QJsonObject attrs, const QString & linkable_uid) {
-    if (barName == SCREEN_TAB) {
+QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const Views::Params & settings, QJsonObject attrs) {
+    if (names.is(SCREEN_TAB)) {
         return 0; // stub
-    } else if (barName == COMMON_TAB) {
-        return createDocBar(barName, settings, &attrs, false);
-    } else if (barName == DOWNLOADS_TAB) {
-        DockBar * bar = createDocBar(barName, false);
+    } else if (names.is(COMMON_TAB)) {
+        return createDocBar(names, settings, &attrs, false);
+    } else if (names.is(DOWNLOADS_TAB)) {
+        DockBar * bar = createDocBar(names, false);
         bar -> setWidget(&DownloadView::linked_obj_with_init(&attrs, container));
         connect(&DownloadView::obj(), SIGNAL(downloadProceeded(QString)), this, SLOT(onDownloadProceeded(QString)));
         return bar;
-    } else if (barName == LOGS_TAB) {
-        DockBar * bar = createDocBar(barName, false);
+    } else if (names.is(LOGS_TAB)) {
+        DockBar * bar = createDocBar(names, false);
         bar -> setWidget(Logger::obj().getEditor());
         return bar;
-    } else if (barName == ECHONEST_TAB) {
+    } else if (names.is(ECHONEST_TAB)) {
         return echonestBar();
     } else {
-        if (linkable_uid.isEmpty())
-            return createDocBar(barName, settings, &attrs);
+        if (names.linkable_uid.isEmpty())
+            return createDocBar(names, settings, &attrs);
         else
-            return createLinkedDocBar(barName, linkable_uid, settings, &attrs);
+            return createLinkedDocBar(names, settings, &attrs);
     }
 }
+
 Views::Params defSettings(level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
-    if (!common) common = createDocBar(COMMON_TAB, defSettings, 0, false);
+    if (!common) common = createDocBar(BarCreationNames(COMMON_TAB), defSettings, 0, false);
     return common;
 }
 
 DockBar * Dockbars::echonestBar() {
     if (!echonest) {
-        echonest = createDocBar(ECHONEST_TAB, false, new EchonestWidget(this));
+        echonest = createDocBar(BarCreationNames(ECHONEST_TAB), false, new EchonestWidget(this));
         container -> addDockWidget(Qt::TopDockWidgetArea, echonest);
     }
 
     return echonest;
 }
 
-DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & path, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
-    bool with_head = path.startsWith(UID_HEAD);
-    QString identifier = with_head ? path : UID_HEAD % path;
+DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Views::Params & settings, QJsonObject * attrs,
+        bool closable, bool addToView, SearchSettings * search_settings)
+{
+    bool with_head = names.linkable_uid.startsWith(UID_HEAD);
+    QString identifier = with_head ? names.linkable_uid : UID_HEAD % names.linkable_uid;
 
     DockBar * bar = linkedTabs.value(identifier, 0);
 
     if (!bar) {
-        bar = createDocBar(name, settings, attrs, closable, addToView, search_settings);
+        bar = createDocBar(names, settings, attrs, closable, addToView, search_settings);
         if (!with_head) {
             QList<QUrl> urls;
-            urls << QUrl::fromLocalFile(path.mid(0, path.length() - 1));// remove backslash and head symbol
+            urls << QUrl::fromLocalFile(names.linkable_uid.mid(0, names.linkable_uid.length() - 1));// remove backslash and head symbol
             view(bar) -> appendRows(urls);
         }
         linkedTabs.insert(identifier, bar);
@@ -176,8 +185,8 @@ DockBar * Dockbars::createLinkedDocBar(const QString & name, const QString & pat
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const QString & name, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
-    DockBar * bar = createDocBar(name, closable);
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+    DockBar * bar = createDocBar(names, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
 
     bar -> setWidget(view);
@@ -196,8 +205,8 @@ DockBar * Dockbars::createDocBar(const QString & name, const Views::Params & set
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const QString & name, bool closable, QWidget * content) {
-    DockBar * dock = new DockBar(name, container, closable, Qt::WindowMinMaxButtonsHint);
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, bool closable, QWidget * content) {
+    DockBar * dock = new DockBar(names.name, container, closable, Qt::WindowMinMaxButtonsHint, names.innerName);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));
     connect(dock, SIGNAL(topLevelChanged(bool)), this, SLOT(updateActiveTabIcon(bool)));

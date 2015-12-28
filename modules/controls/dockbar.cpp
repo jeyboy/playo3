@@ -4,12 +4,12 @@
 
 using namespace Controls;
 
-DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::WindowFlags flags)
+DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::WindowFlags flags, const QString & objName)
     : QDockWidget(title, parent, flags), sticked(false), inProcess(false), mWidget(0), spinner(0) {
 
     installEventFilter(parent);
 
-    setObjectName(title + QString::number(QDateTime::currentMSecsSinceEpoch()));
+    setObjectName(objName.isEmpty() ? title + QString::number(QDateTime::currentMSecsSinceEpoch()) : objName);
     setTitleBarWidget((titleWidget = new WindowTitle(true, this, 26, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
     titleWidget -> addCustomButton(QStringLiteral("Rotate"), QPixmap(QStringLiteral(":/controls/rotate_off")), QPixmap(QStringLiteral(":/controls/rotate_on")), this, SLOT(rotate()));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));

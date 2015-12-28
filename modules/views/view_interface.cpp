@@ -255,20 +255,20 @@ void IView::copyIdsToClipboard() {
 
 void IView::openRecomendationsforUser() {
     Params settings(Data::vk_rel, false, false, false, true, sttngs.uid, Data::user_rel);
-    Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % sttngs.uid, settings, 0, true, true);
+    Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % sttngs.uid), settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> owner().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
-        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for user ") % it -> owner().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> toUid(), Data::song_rel);
-        Presentation::Dockbars::obj().createDocBar(QStringLiteral("Rec for song ") % it -> title().toString(), settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), settings, 0, true, true);
     }
 }
 

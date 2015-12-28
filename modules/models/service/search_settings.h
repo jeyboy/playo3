@@ -52,7 +52,7 @@ struct SearchRequest {
     }
 
     QString token();
-    static SearchRequest fromJson(const QJsonObject & obj);
+    static void fromJson(const QJsonArray & objs, QList<SearchRequest> & list);
     void save(QJsonArray & arr);
 };
 

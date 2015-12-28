@@ -32,7 +32,9 @@ void SearchModel::declineSearch() {
     }
 }
 void SearchModel::suspendSearch(QJsonObject & obj) {
+    qDebug() << "SUSPEND";
     if (initiator && initiator -> isRunning()) {
+        qDebug() << "SUSPEND IN";
         initiator -> cancel();
         initiator -> waitForFinished();
 
@@ -51,8 +53,7 @@ void SearchModel::resumeSearch(const QJsonObject & obj) {
 
     if (res.isEmpty()) return;
 
-    for(QJsonArray::ConstIterator request = res.constBegin(); request != res.constEnd(); request++)
-        requests << SearchRequest::fromJson((*request).toObject());
+    SearchRequest::fromJson(res, requests);
 
     startSearch();
 }
@@ -113,11 +114,11 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
     ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
 
-    int offset = 0;
+    int offset = res -> childCount();
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled())
-            return;
+            break;
 
         SearchRequest r = requests.takeFirst();
 
@@ -155,12 +156,12 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
         if (propagate_count > 0) {
             // hack for view updating
-            beginInsertRows(QModelIndex(), offset, propagate_count);
+            beginInsertRows(QModelIndex(), offset, offset);
             endInsertRows();
             parent -> backPropagateItemsCountInBranch(propagate_count);
             emit collapseNeeded(index(parent));
         }
-        offset += propagate_count;
+        offset += 1;
         emit setBackgroundProgress(requests.size() / total);
     }
 

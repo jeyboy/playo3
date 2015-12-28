@@ -20,40 +20,46 @@ QString SearchRequest::token() {
     else return QStringLiteral("All");
 }
 
-SearchRequest SearchRequest::fromJson(const QJsonObject & obj) {
-    RequestType search_type = (RequestType)obj.value(JSON_SEARCH_TYPE).toInt();
-    void * subject;
+void SearchRequest::fromJson(const QJsonArray & objs, QList<SearchRequest> & list) {
+    QHash<QString, QAbstractItemModel *> inners;
 
-    switch(search_type) {
-        case inner: {
-            QString subject_str = obj.value(JSON_SEARCH_SUBJECT).toString();
-            QList<Controls::DockBar *> bars = Presentation::Dockbars::obj().dockbars();
+    QList<Controls::DockBar *> bars = Presentation::Dockbars::obj().dockbars();
 
-            for(QList<Controls::DockBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
-                if ((*bar) -> objectName() == subject_str) {
-                    subject = Presentation::Dockbars::obj().view(*bar) -> model();
-                    break;
-                }
-        break;}
-
-        case remote: {
-            int subject_id = obj.value(JSON_SEARCH_SUBJECT).toInt();
-            subject = Core::Web::Apis::engine((Core::Web::SubType)subject_id);
-        break;}
-
-        default: {
-            QString subject_str = obj.value(JSON_SEARCH_SUBJECT).toString();
-            subject = new QString(subject_str);
-        break;}
+    for(QList<Controls::DockBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
+        Views::IView * v = Presentation::Dockbars::obj().view(*bar);
+        if (v) inners.insert((*bar) -> objectName(), v -> model());
     }
 
-    return SearchRequest(
-        search_type,
-        subject,
-        obj.value(JSON_SEARCH_PREDICATE).toString(),
-        obj.value(JSON_SEARCH_GENRE).toString(),
-        obj.value(JSON_SEARCH_POPULAR).toBool()
-    );
+    for(QJsonArray::ConstIterator request = objs.constBegin(); request != objs.constEnd(); request++) {
+        QJsonObject obj = (*request).toObject();
+        RequestType search_type = (RequestType)obj.value(JSON_SEARCH_TYPE).toInt();
+        void * subject;
+
+        switch(search_type) {
+            case inner: {
+                subject = inners.value(obj.value(JSON_SEARCH_SUBJECT).toString());
+                qDebug() << obj.value(JSON_SEARCH_SUBJECT).toString() << inners.keys();
+            break;}
+
+            case remote: {
+                int subject_id = obj.value(JSON_SEARCH_SUBJECT).toInt();
+                subject = Core::Web::Apis::engine((Core::Web::SubType)subject_id);
+            break;}
+
+            default: {
+                QString subject_str = obj.value(JSON_SEARCH_SUBJECT).toString();
+                subject = new QString(subject_str);
+            break;}
+        }
+
+        list << SearchRequest(
+            search_type,
+            subject,
+            obj.value(JSON_SEARCH_PREDICATE).toString(),
+            obj.value(JSON_SEARCH_GENRE).toString(),
+            obj.value(JSON_SEARCH_POPULAR).toBool()
+        );
+    }
 }
 
 void SearchRequest::save(QJsonArray & arr) {
