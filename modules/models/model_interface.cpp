@@ -926,3 +926,32 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
 
     return amount;
 }
+
+int IModel::innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source, int count) {
+    int amount = 0;
+
+    if (search_source == 0)
+        search_source = rootItem;
+
+    QList<IItem *> child = search_source -> childrenList();
+
+    for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
+        if ((*it) -> isContainer()) {
+            innerSearch(predicate, destination, (Playlist *) *it, count);
+        } else {
+            bool is_valid = (*it) -> title().toString().contains(predicate, Qt::CaseInsensitive);
+
+            if (is_valid) {
+                QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
+                if (!attrs.contains(JSON_TYPE_PATH))
+                    attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
+
+                amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+
+                if (amount == count) break;
+            }
+        }
+    }
+
+    return amount;
+}

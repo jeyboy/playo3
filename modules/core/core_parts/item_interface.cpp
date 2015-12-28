@@ -201,6 +201,8 @@ bool IItem::setData(int column, const QVariant &value) {
     return true;
 }
 
+void IItem::removeYouself() { if (_parent) _parent -> removeChildren(row(), 1); }
+
 void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
     QUrl lastUrl = toUrl(); // maybe needed update for some services // need to retreive download link
 

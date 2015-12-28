@@ -98,6 +98,7 @@ namespace Models {
         inline QMutex * syncMutex() { return sync; }
 
         int initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source = 0);
+        int innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source = 0, int count = 9999999);
 
         inline virtual ignoreListContainUid(const QString & /*uid*/) { return false; }
     public slots:

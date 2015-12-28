@@ -69,6 +69,7 @@ namespace Core {
             return valid;
         }
 
+        void removeYouself();
         virtual void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
 
 //        inline bool respondTo(QString & predicate) {

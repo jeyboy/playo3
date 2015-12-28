@@ -15,7 +15,9 @@ SearchModel::~SearchModel() {
 void SearchModel::startSearch() {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
-    initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
+    initiator -> setFuture(QtConcurrent::run(this, (
+            request.limit(DEFAULT_LIMIT_AMOUNT) == 1 && !request.predicates.isEmpty() ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
+        ), initiator));
     emit updateRemovingBlockation(true);
 }
 
@@ -29,6 +31,7 @@ void SearchModel::declineSearch() {
         initiator -> cancel();
         initiator -> waitForFinished();
         requests.clear();
+        search_reglament.clear();
     }
 }
 void SearchModel::suspendSearch(QJsonObject & obj) {
@@ -43,6 +46,7 @@ void SearchModel::suspendSearch(QJsonObject & obj) {
 
             obj.insert(SEARCH_JSON_KEY, res);
             obj.insert(SEARCH_SET_JSON_KEY, request.toJson());
+            obj.insert(SEARCH_REGLAMENT_JSON_KEY, QJsonObject::fromVariantHash(search_reglament));
         }
     }
 }
@@ -54,6 +58,7 @@ void SearchModel::resumeSearch(const QJsonObject & obj) {
 
     request.fromJson(obj.value(SEARCH_SET_JSON_KEY).toObject());
     SearchRequest::fromJson(res, requests);
+    search_reglament = obj.value(SEARCH_REGLAMENT_JSON_KEY).toObject().toVariantHash();
 
     startSearch();
 }
@@ -95,7 +100,6 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
         }
     }
 
-    delete (QString *)params.search_interface;
     return amount;
 }
 
@@ -162,6 +166,81 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             emit collapseNeeded(index(parent));
         }
         offset += 1;
+        emit setBackgroundProgress(requests.size() / total);
+    }
+
+    qDebug() << "SO END";
+    emit moveOutBackgroundProcess();
+}
+
+void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
+    Playlist * res = rootItem;
+
+    emit moveInBackgroundProcess();
+    if (requests.isEmpty())
+        prepareRequests(requests);
+
+    ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, 1);
+
+    int offset = res -> childCount();
+    float total = requests.size() / 100.0;
+    while(!requests.isEmpty()) {
+        if (watcher -> isCanceled())
+            break;
+
+        SearchRequest r = requests.takeFirst();
+
+        Playlist * parent = res -> createPlaylist(r.token());
+        int propagate_count = 0;
+
+        switch(r.search_type) {
+            case SearchRequest::local: {
+                qDebug() << "SO LOCAL";
+                propagate_count = proceedMyComputer(r, parent);
+            break;}
+
+            case SearchRequest::inner: {
+                qDebug() << "SO INNER";
+                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
+            break;}
+
+            case SearchRequest::remote: {
+                ISearchable * iface = (ISearchable *) r.search_interface;
+                qDebug() << "SO START" << iface -> siteType();
+                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
+
+                switch (iface -> siteType()) {
+                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
+                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
+                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
+                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
+                }
+
+                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
+            break;}
+
+            default:;
+        }
+
+        if (propagate_count > 0) {
+            int taked_amount = innerSearch(r.token(), res, parent, 1);
+            parent -> removeYouself();
+
+            if (taked_amount > 0) {
+                search_reglament.insert(r.token(), true);
+
+                while (true) {
+                    if (requests.first().spredicate == r.token())
+                        requests.removeFirst();
+                }
+
+                beginInsertRows(QModelIndex(), offset, offset);
+                endInsertRows();
+                res -> backPropagateItemsCountInBranch(taked_amount);
+                offset += taked_amount;
+                QThread::msleep(250); //
+            }
+        }
         emit setBackgroundProgress(requests.size() / total);
     }
 

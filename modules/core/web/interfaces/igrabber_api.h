@@ -49,7 +49,7 @@ namespace Core {
             int page_limit = count + (start - 1);
             while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
                 qDebug() << "LLL" << start << page_limit << result.size() << total;
-                if (start++ >= page_limit || result.size() >= total) break;
+                if (result.isEmpty() || start++ >= page_limit || result.size() >= total) break;
                 QThread::msleep(REQUEST_DELAY);
             }
 

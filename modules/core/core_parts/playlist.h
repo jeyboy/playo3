@@ -45,7 +45,6 @@ namespace Core {
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
         inline void declareChild(int pos, IItem * item) { children.insert(pos, item); }
         int removeChildren(int position, int count);
-        inline void removeYouself() { if (_parent) _parent -> removeChildren(row(), 1); }
 
 
         void shuffle();
