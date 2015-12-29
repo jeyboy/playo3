@@ -1,5 +1,7 @@
 #include "model_interface.h"
 
+#include "modules/core/misc/fuzzy_comparison.h"
+
 using namespace Models;
 using namespace Core::Web;
 
@@ -939,7 +941,8 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
         if ((*it) -> isContainer()) {
             innerSearch(predicate, destination, (Playlist *) *it, count);
         } else {
-            bool is_valid = (*it) -> title().toString().contains(predicate, Qt::CaseInsensitive);
+            int comparity = FuzzyComparison::compareStrings((*it) -> title().toString(), predicate);
+            bool is_valid = comparity > 75;
 
             if (is_valid) {
                 QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
