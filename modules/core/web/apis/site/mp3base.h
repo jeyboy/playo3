@@ -154,19 +154,24 @@ namespace Core {
                         for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                             QJsonObject song_obj;
 
-                            QString link = (*song) -> find(".download_icon").link();
+                            QString link = (*song) -> find(".play_icon").link();
                             if (link.isEmpty()) continue;
 
                             link = link.section('(', 1).section(')', 0, 0);
 
                             song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
-                            song_obj.insert(duration_key, (*song) -> childTag("td", 5) -> toText());
-                            song_obj.insert(skip_info_key, true);
 
                             QString artist = (*song) -> childTag(QStringLiteral("td"), 2) -> toText();
                             QString title = (*song) -> childTag(QStringLiteral("td"), 1) -> toText();
                             title = artist % QStringLiteral(" - ") % title;
                             song_obj.insert(title_key, title);
+
+                            Html::Tag * duration_tag = (*song) -> childTag("td", 5);
+                            if (duration_tag)
+                                song_obj.insert(duration_key, duration_tag -> toText());
+                            else
+                                qDebug() << title << "DID NOT HAVE DURATION";
+                            song_obj.insert(skip_info_key, true);
 
                             json << song_obj;
                         }

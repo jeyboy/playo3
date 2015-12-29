@@ -200,6 +200,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
         SearchRequest r = requests.takeFirst();
 
         Playlist * parent = new Playlist();
+        search_reglament.insert(r.token(), false);
         int propagate_count = 0;
 
         switch(r.search_type) {
@@ -250,21 +251,27 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
                 res -> backPropagateItemsCountInBranch(taked_amount);
                 offset += taked_amount;
                 QThread::msleep(250); //delay for getting away from captches
-            } else {
-                if (requests.first().spredicate != r.token()) {
-                    WebFile * file = new WebFile(QVariant(), QString(), QString(), res);
-                    file -> set(ItemState::not_exist);
-                    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!SOSOSOSOS!!!!!!!!!!!!!!!!!!!!!!!!";
-
-                    beginInsertRows(QModelIndex(), offset, offset);
-                    endInsertRows();
-                    res -> backPropagateItemsCountInBranch(taked_amount);
-                    offset += taked_amount;
-                }
             }
         }
         emit setBackgroundProgress(requests.size() / total);
     }
+
+    int not_finded = 0;
+    for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
+        if (!it.value().toBool()) {
+            qDebug() << "******" << it.key();
+            WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
+            file -> set(ItemState::not_exist);
+            not_finded++;
+        }
+
+    if (not_finded > 0) {
+        qDebug() << "EEEEEEEEE" << offset << not_finded;
+        beginInsertRows(QModelIndex(), offset, offset + (not_finded - 1));
+        endInsertRows();
+        res -> backPropagateItemsCountInBranch(not_finded);
+    }
+
 
     qDebug() << "SO END";
     emit moveOutBackgroundProcess();
@@ -277,7 +284,7 @@ void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
     if (request.genres.isEmpty()) request.genres << QString();
 
     for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
-        QString predicate = (*it).replace(QRegularExpression("'\""), " ");
+        QString predicate = (*it).replace(QRegularExpression("['\"]"), " ");
 
         for(QList<QString>::Iterator genre_it = request.genres.begin(); genre_it != request.genres.end(); genre_it++) {
             if (web_predicable && request.inSites)
