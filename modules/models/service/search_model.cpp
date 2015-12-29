@@ -12,11 +12,11 @@ SearchModel::~SearchModel() {
     delete initiator;
 }
 
-void SearchModel::startSearch() {
+void SearchModel::startSearch(bool continues) {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, (
-            request.limit(DEFAULT_LIMIT_AMOUNT) == 1 && !request.predicates.isEmpty() ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
+            request.limit(DEFAULT_LIMIT_AMOUNT) == 1 && (continues || !request.predicates.isEmpty()) ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
         ), initiator));
     emit updateRemovingBlockation(true);
 }
@@ -60,7 +60,7 @@ void SearchModel::resumeSearch(const QJsonObject & obj) {
     SearchRequest::fromJson(res, requests);
     search_reglament = obj.value(SEARCH_REGLAMENT_JSON_KEY).toObject().toVariantHash();
 
-    startSearch();
+    startSearch(true);
 }
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
@@ -190,7 +190,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
 
         SearchRequest r = requests.takeFirst();
 
-        Playlist * parent = res -> createPlaylist(r.token());
+        Playlist * parent = new Playlist();
         int propagate_count = 0;
 
         switch(r.search_type) {
@@ -232,6 +232,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
                 while (true) {
                     if (requests.first().spredicate == r.token())
                         requests.removeFirst();
+                    else break;
                 }
 
                 beginInsertRows(QModelIndex(), offset, offset);

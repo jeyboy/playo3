@@ -15,7 +15,7 @@ namespace Models {
         void searchRoutine(QFutureWatcher<void> * watcher);
         void searchSingleRoutine(QFutureWatcher<void> * watcher);
         void prepareRequests(QList<SearchRequest> & requests);
-        void startSearch();
+        void startSearch(bool continues = false);
 
         SearchSettings request;
         QFutureWatcher<void> * initiator;

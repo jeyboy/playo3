@@ -120,9 +120,35 @@ namespace Core {
         }
 
         Response * Manager::synchronizeRequest(QNetworkReply * m_http) {
+//            QTimer timer;
+//            timer.setSingleShot(true);
+
             QEventLoop loop;
+//            connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
             connect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
+//            timer.start(10000);   // 10 secs. timeout
             loop.exec();
+
+            //    if(timer.isActive()) {
+            //        timer.stop();
+            //        if(m_http -> error() > 0) {
+            //          ... // handle error
+            //        }
+            //        else {
+            //          int v = m_http -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+            //          if (v >= 200 && v < 300) {  // Success
+            //            ...
+            //          }
+            //        }
+            //    } else {
+            //       // timeout
+            //       disconnect(m_http, SIGNAL(finished()), &loop, SLOT(quit()));
+
+            //       m_http -> abort();
+            //    }
+
+
             return Response::fromReply(m_http);
         }
 

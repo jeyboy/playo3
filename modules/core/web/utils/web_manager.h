@@ -164,37 +164,6 @@ namespace Core {
             }
         };
     }
-
-
-//    request timeout bulding
-
-//    QTimer timer;
-//    timer.setSingleShot(true);
-
-//    QEventLoop loop;
-//    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-//    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-//    timer.start(30000);   // 30 secs. timeout
-//    loop.exec();
-
-//    if(timer.isActive()) {
-//        timer.stop();
-//        if(m_reply->error() > 0) {
-//          ... // handle error
-//        }
-//        else {
-//          int v = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-//          if (v >= 200 && v < 300) {  // Success
-//            ...
-//          }
-//        }
-//    } else {
-//       // timeout
-//       disconnect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-
-//       reply->abort();
-//    }
 }
 
 #endif // WEB_MANAGER_H
