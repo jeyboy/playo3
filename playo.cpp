@@ -1,6 +1,8 @@
 #include "playo.h"
 #include "ui_playo.h"
 
+#include "modules/core/misc/fuzzy_comparison.h"
+
 using namespace Presentation;
 using namespace Dialogs;
 using namespace Data;
@@ -18,9 +20,15 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
     initialization();
 
-    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
-    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);
+//    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
+//    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);
 
+
+    qDebug() << FuzzyComparison::compareStrings(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"))
+        << FuzzyComparison::compareStrings2(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"));
+
+    qDebug() << FuzzyComparison::compareStrings(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"))
+        << FuzzyComparison::compareStrings2(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"));
 
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );

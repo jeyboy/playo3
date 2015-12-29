@@ -259,14 +259,12 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     int not_finded = 0;
     for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
         if (!it.value().toBool()) {
-            qDebug() << "******" << it.key();
             WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
             file -> set(ItemState::not_exist);
             not_finded++;
         }
 
     if (not_finded > 0) {
-        qDebug() << "EEEEEEEEE" << offset << not_finded;
         beginInsertRows(QModelIndex(), offset, offset + (not_finded - 1));
         endInsertRows();
         res -> backPropagateItemsCountInBranch(not_finded);

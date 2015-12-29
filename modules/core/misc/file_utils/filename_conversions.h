@@ -9,6 +9,7 @@
 
 #include <qregexp.h>
 #include <qstringbuilder.h>
+#include <qvector.h>
 
 namespace Core {
     class FilenameConversions {

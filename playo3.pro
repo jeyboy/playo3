@@ -276,7 +276,8 @@ HEADERS += \
     modules/controls/toolbar_new_list_button.h \
     modules/core/core_parts/base_item_interface.h \
     modules/controls/echonest_widget.h \
-    modules/controls/search_configurator.h
+    modules/controls/search_configurator.h \
+    modules/core/misc/fuzzy_comparison.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
