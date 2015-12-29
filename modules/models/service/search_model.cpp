@@ -48,6 +48,10 @@ void SearchModel::suspendSearch(QJsonObject & obj) {
             obj.insert(SEARCH_SET_JSON_KEY, request.toJson());
             obj.insert(SEARCH_REGLAMENT_JSON_KEY, QJsonObject::fromVariantHash(search_reglament));
         }
+    } else { // wtf - why this keys apppers in json ?
+        obj.remove(SEARCH_JSON_KEY);
+        obj.remove(SEARCH_SET_JSON_KEY);
+        obj.remove(SEARCH_REGLAMENT_JSON_KEY);
     }
 }
 
@@ -104,6 +108,11 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 }
 
 void SearchModel::searchFinished() {
+    if (!initiator -> isCanceled()) {
+        search_reglament.clear();
+        requests.clear();
+    }
+
     emit updateRemovingBlockation(false);
     delete initiator;
     initiator = 0;
@@ -230,6 +239,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
                 search_reglament.insert(r.token(), true);
 
                 while (true) {
+                    if (requests.isEmpty()) break;
                     if (requests.first().spredicate == r.token())
                         requests.removeFirst();
                     else break;
@@ -239,7 +249,18 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
                 endInsertRows();
                 res -> backPropagateItemsCountInBranch(taked_amount);
                 offset += taked_amount;
-                QThread::msleep(250); //
+                QThread::msleep(250); //delay for getting away from captches
+            } else {
+                if (requests.first().spredicate != r.token()) {
+                    WebFile * file = new WebFile(QVariant(), QString(), QString(), res);
+                    file -> set(ItemState::not_exist);
+                    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!SOSOSOSOS!!!!!!!!!!!!!!!!!!!!!!!!";
+
+                    beginInsertRows(QModelIndex(), offset, offset);
+                    endInsertRows();
+                    res -> backPropagateItemsCountInBranch(taked_amount);
+                    offset += taked_amount;
+                }
             }
         }
         emit setBackgroundProgress(requests.size() / total);

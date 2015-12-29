@@ -80,7 +80,6 @@ namespace Core {
                             json << song_obj;
                         }
 
-                        qDebug() << "PROMODJ SONGS" << songs.size() << !songs.isEmpty();
                         result = !songs.isEmpty();
                     }
 
