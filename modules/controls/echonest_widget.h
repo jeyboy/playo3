@@ -12,46 +12,48 @@
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 
-
-//#include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/apis/service/echonest_api.h"
 #include "modules/core/web/utils/web_manager.h"
 #include "accordion.h"
-//#include "modules/views/service/search_view.h"
 
-class EchonestWidget : public Controls::Accordion/*, public Core::Singleton<EchonestWidget>*/ {
-    Q_OBJECT
+#include "echonest_parts/artist_info.h"
 
-    void artistInfoGeneration(QWidget * base);
-    void basicPlaylistGeneration(QWidget * base);
+namespace Controls {
+    class EchonestWidget : public Accordion {
+        Q_OBJECT
 
-    QStringList genresList();
-    QStringList stylesList();
-    QStringList moodsList();
+        void artistInfoGeneration(QWidget * base);
+        void songsSearch(QWidget * base);
+        void basicPlaylistGeneration(QWidget * base);
 
-    // basic playlist
-    QList<QLineEdit *> basicPlaylistArtists;
-    QList<QComboBox *> basicPlaylistGenres;
+        QStringList genresList();
+        QStringList stylesList();
+        QStringList moodsList();
 
-//    QComboBox * createGenresCombo(QWidget * parent);
-//    QComboBox * createMoodsCombo(QWidget * parent);
+        // basic playlist
+        QList<QLineEdit *> basicPlaylistArtists;
+        QList<QComboBox *> basicPlaylistGenres;
 
-    QLineEdit * artistName;
-    QRadioButton * artistTypeCheck, * genreTypeCheck;
+    //    QComboBox * createGenresCombo(QWidget * parent);
+    //    QComboBox * createMoodsCombo(QWidget * parent);
 
-    Controls::Accordion * artistAccordion;
-public:
-    explicit EchonestWidget(QWidget * parent = 0);
-//    ~EchonestWidget();
+        Echonest::ArtistInfo * artistInfo;
+        QRadioButton * artistTypeCheck, * genreTypeCheck;
 
-    void createSearchResultBar(const QStringList & predicates);
+        Controls::Accordion * artistAccordion;
+    public:
+        explicit EchonestWidget(QWidget * parent = 0);
+    //    ~EchonestWidget();
 
-protected:
-    void clearData();
+        void createSearchResultBar(const QStringList & predicates);
 
-private slots:
-    void onArtistInfoButtonClicked();
-    void onBasicPlaylistGenerateClicked();
-};
+    protected:
+        void clearData();
+
+    private slots:
+        void onArtistInfoButtonClicked();
+        void onBasicPlaylistGenerateClicked();
+    };
+}
 
 #endif // ECHONEST_DIALOG_H

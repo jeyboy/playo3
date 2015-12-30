@@ -229,38 +229,46 @@ void EchonestWidget::onBasicPlaylistGenerateClicked() {
 }
 
 void EchonestWidget::artistInfoGeneration(QWidget * base) {
-    QGridLayout * gl = new QGridLayout();
+    QGridLayout * artistInfoLayout = new QGridLayout();
 
     artistName = new QLineEdit(base);
-    gl -> addWidget(artistName, 0, 0);
+    artistInfoLayout -> addWidget(artistName, 0, 0);
 
     connect(artistName, SIGNAL(returnPressed()), this, SLOT(onArtistInfoButtonClicked()));
 
     QPushButton * artistInfoButton = new QPushButton(QStringLiteral("Find Info"), base);
     connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
-    gl -> addWidget(artistInfoButton, 0, 1);
+    artistInfoLayout -> addWidget(artistInfoButton, 0, 1);
 
     artistAccordion = new Controls::Accordion(base);
-    gl -> addWidget(artistAccordion, 1, 0, 10, 2);
+    artistInfoLayout -> addWidget(artistAccordion, 1, 0, 10, 2);
 
-    base -> setLayout(gl);
+    base -> setLayout(artistInfoLayout);
+}
+
+void EchonestWidget::songsSearch(QWidget * base) {
+    QWidget * songSearchWidget = new QWidget(base);
+    QVBoxLayout * songsSearchLayout = new QVBoxLayout(songSearchWidget);
+    QGroupBox * playlist_type = new QGroupBox(QStringLiteral("Search by artist or/and title"), songSearchWidget);
+
+    artistName = new QLineEdit(base);
+    artistInfoLayout -> addWidget(artistName, 0, 0);
 }
 
 void EchonestWidget::basicPlaylistGeneration(QWidget * base) {
-    QVBoxLayout * layoutSimilar = new QVBoxLayout(base);
+    QWidget * basicPlaylistWidget = new QWidget(base);
+    QVBoxLayout * basicPlaylistLayout = new QVBoxLayout(base);
 
-    QWidget * playlistType = new QWidget(base);
-
-    QGroupBox * playlist_type = new QGroupBox(QStringLiteral("Playlist Type"), playlistType);
+    QGroupBox * playlist_type = new QGroupBox(QStringLiteral("Playlist Type"), basicPlaylistWidget);
     QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
     artistTypeCheck = new QRadioButton(QStringLiteral("By similar artists"), playlist_type);
     playlist_type_layout -> addWidget(artistTypeCheck);
     genreTypeCheck = new QRadioButton(QStringLiteral("By genres"), playlist_type);
     playlist_type_layout -> addWidget(genreTypeCheck);
 
-    layoutSimilar -> addWidget(playlist_type);
+    basicPlaylistLayout -> addWidget(playlist_type);
 
-    QGroupBox * artist_type_fields = new QGroupBox(QStringLiteral("Artists for query"), playlistType);
+    QGroupBox * artist_type_fields = new QGroupBox(QStringLiteral("Artists for query"), basicPlaylistWidget);
     QVBoxLayout * artists_layout = new QVBoxLayout(artist_type_fields);
     for(int i = 0; i < 5; i++) {
         QLineEdit * edit = new QLineEdit(artist_type_fields);
@@ -268,10 +276,10 @@ void EchonestWidget::basicPlaylistGeneration(QWidget * base) {
         artists_layout -> addWidget(edit);
     }
 
-    layoutSimilar -> addWidget(artist_type_fields);
+    basicPlaylistLayout -> addWidget(artist_type_fields);
     artist_type_fields -> hide();
 
-    QGroupBox * genre_type_fields = new QGroupBox(QStringLiteral("Genres for query"), playlistType);
+    QGroupBox * genre_type_fields = new QGroupBox(QStringLiteral("Genres for query"), basicPlaylistWidget);
     QStringList genres = genresList();
     QVBoxLayout * genres_layout = new QVBoxLayout(genre_type_fields);
     for(int i = 0; i < 5; i++) {
@@ -281,7 +289,7 @@ void EchonestWidget::basicPlaylistGeneration(QWidget * base) {
         genres_layout -> addWidget(combo);
     }
 
-    layoutSimilar -> addWidget(genre_type_fields);
+    basicPlaylistLayout -> addWidget(genre_type_fields);
     genre_type_fields -> hide();
 
     connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
@@ -289,7 +297,7 @@ void EchonestWidget::basicPlaylistGeneration(QWidget * base) {
 
     QPushButton * basicPlaylistStart = new QPushButton(QStringLiteral("Generate basic playlist"), base);
     connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));
-    layoutSimilar -> addWidget(basicPlaylistStart);
+    basicPlaylistLayout -> addWidget(basicPlaylistStart);
 }
 
 QStringList EchonestWidget::genresList() {

@@ -277,7 +277,9 @@ HEADERS += \
     modules/core/core_parts/base_item_interface.h \
     modules/controls/echonest_widget.h \
     modules/controls/search_configurator.h \
-    modules/core/misc/fuzzy_comparison.h
+    modules/core/misc/fuzzy_comparison.h \
+    modules/controls/echonest_parts/artist_info.h \
+    modules/controls/echonest_parts/basic_playlist.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -415,4 +417,6 @@ SOURCES += \
     modules/controls/toolbar_new_list_button.cpp \
     modules/controls/echonest_widget.cpp \
     modules/controls/search_configurator.cpp \
-    modules/models/service/search_settings.cpp
+    modules/models/service/search_settings.cpp \
+    modules/controls/echonest_parts/artist_info.cpp \
+    modules/controls/echonest_parts/basic_playlist.cpp
