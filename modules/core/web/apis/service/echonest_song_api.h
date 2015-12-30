@@ -76,8 +76,9 @@ namespace Core {
 
 
                     //mode - (minor, major) 0, 1
-                    inline QUrl songSearchUrl(int mode, QString & artist, QString & title, QStringList & tags,
-                            QStringList & styles, QStringList & moods) {
+                    inline QUrl songSearchUrl(int mode, const QString & artist = QString(), const QString & title = QString(),
+                            const QStringList & tags = QStringList(), QStringList & styles = QStringList(),
+                            QStringList & moods = QStringList(), ) {
                         QUrlQuery query = genDefaultParams();
 
                         if (!artist.isEmpty()) setParam(query, QStringLiteral("artist"), artist);

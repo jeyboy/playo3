@@ -14,6 +14,7 @@ EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
 //    layout() -> addWidget(slider);
 
     addItem(QStringLiteral("Artist Info"), new Echonest::ArtistInfo(this));
+
     Echonest::BasicPlaylist * basicPlaylist = new Echonest::BasicPlaylist(genresList(), this);
     connect(basicPlaylist, SIGNAL(moveInProcess()), this, SLOT(moveInProcess()));
     connect(basicPlaylist, SIGNAL(playlistGenerationNeed(QString,QStringList&)), this, SLOT(playlistGenerationNeed(QString,QStringList&)));
