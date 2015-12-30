@@ -251,9 +251,12 @@ QToolBar * ToolBars::createMediaBar() {
 
     pause_btn = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
     PlayerFactory::obj().registerCallback(in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
+    pause_btn -> setVisible(false);
 
     stop_btn = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
     PlayerFactory::obj().registerCallback(in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
+    stop_btn -> setVisible(false);
+
 
     QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
     act -> setCheckable(true);

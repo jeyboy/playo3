@@ -123,6 +123,7 @@ namespace Core {
         void proceedPauseToggling() { currPlayer() -> playPause(); }
 
     signals:
+        void newPlaylistNeed();
         void likeChanged(bool);
 
     public slots:
@@ -189,12 +190,15 @@ namespace Core {
                 case NoMedia: {
                     qDebug() << "NO MEDIA";
 
-                    if (current_item -> isRemote()) {
-                        restoreOrNext();
-                    } else {
-                        setState(ItemState::not_exist);
-                        playNext(true);
+                    if (current_item) {
+                        if (current_item -> isRemote()) {
+                            restoreOrNext();
+                        } else {
+                            setState(ItemState::not_exist);
+                            playNext(true);
+                        }
                     }
+                    else emit newPlaylistNeed();
                 break;}
                 default: { qDebug() << "WTF MEDIA"; }
             }
