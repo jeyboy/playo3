@@ -148,11 +148,11 @@ void ArtistInfo::generateLayout() {
 
     connect(artistName, SIGNAL(returnPressed()), this, SLOT(onArtistInfoButtonClicked()));
 
-    QPushButton * artistInfoButton = new QPushButton(QStringLiteral("Find Info"), base);
+    QPushButton * artistInfoButton = new QPushButton(QStringLiteral("Find Info"), this);
     connect(artistInfoButton, SIGNAL(clicked()), this, SLOT(onArtistInfoButtonClicked()));
     artistInfoLayout -> addWidget(artistInfoButton, 0, 1);
 
-    artistAccordion = new Controls::Accordion(base);
+    artistAccordion = new Controls::Accordion(this);
     artistInfoLayout -> addWidget(artistAccordion, 1, 0, 10, 2);
 
     setLayout(artistInfoLayout);

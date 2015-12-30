@@ -33,7 +33,8 @@ namespace Controls {
             explicit BasicPlaylist(const QStringList & genresList, QWidget * parent = 0);
 
         signals:
-            void playlistGenerationNeed(QString & title, QStringList & predicates);
+            void moveInProcess();
+            void playlistGenerationNeed(const QString & title, QStringList & predicates);
         private slots:
             void onBasicPlaylistGenerateClicked();
         };

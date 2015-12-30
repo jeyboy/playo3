@@ -25,7 +25,7 @@ namespace Controls {
 
             Controls::Accordion * artistAccordion;
 
-            generateLayout();
+            void generateLayout();
         public:
             explicit ArtistInfo(QWidget * parent = 0);
 //        signals:

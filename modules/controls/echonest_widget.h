@@ -17,42 +17,24 @@
 #include "accordion.h"
 
 #include "echonest_parts/artist_info.h"
+#include "echonest_parts/basic_playlist.h"
 
 namespace Controls {
     class EchonestWidget : public Accordion {
         Q_OBJECT
 
-        void artistInfoGeneration(QWidget * base);
-        void songsSearch(QWidget * base);
-        void basicPlaylistGeneration(QWidget * base);
-
         QStringList genresList();
         QStringList stylesList();
         QStringList moodsList();
 
-        // basic playlist
-        QList<QLineEdit *> basicPlaylistArtists;
-        QList<QComboBox *> basicPlaylistGenres;
-
-    //    QComboBox * createGenresCombo(QWidget * parent);
-    //    QComboBox * createMoodsCombo(QWidget * parent);
-
-        Echonest::ArtistInfo * artistInfo;
-        QRadioButton * artistTypeCheck, * genreTypeCheck;
-
-        Controls::Accordion * artistAccordion;
+        QStringList genres;
+        QStringList styles;
+        QStringList moods;
     public:
         explicit EchonestWidget(QWidget * parent = 0);
-    //    ~EchonestWidget();
-
-        void createSearchResultBar(const QStringList & predicates);
-
-    protected:
-        void clearData();
-
     private slots:
-        void onArtistInfoButtonClicked();
-        void onBasicPlaylistGenerateClicked();
+        void moveInProcess();
+        void playlistGenerationNeed(const QString & title, QStringList & predicates);
     };
 }
 

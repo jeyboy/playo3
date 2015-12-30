@@ -8,8 +8,7 @@ BasicPlaylist::BasicPlaylist(const QStringList & genresList, QWidget * parent) :
 }
 
 void BasicPlaylist::onBasicPlaylistGenerateClicked() {
-    ((Controls::DockBar *)parentWidget()) -> onMoveInBackgroundProcess();
-    collapseAll();
+    emit moveInProcess();
 
     QJsonArray results;
 
@@ -64,18 +63,9 @@ void BasicPlaylist::onBasicPlaylistGenerateClicked() {
       for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
           QJsonObject obj = (*song).toObject();
           predicates << (obj.value(QStringLiteral("artist_name")).toString() % QStringLiteral(" - ") % obj.value(QStringLiteral("title")).toString());
-//          new WebItem(
-//              obj.value("id").toString(),
-//              obj.value("artist_id").toString(),
-//              obj.value("artist_name").toString() + " - " + obj.value("title").toString(),
-//              model -> root()
-//          );
       }
 
       emit playlistGenerationNeed(QStringLiteral("Echonest basic playlist"), predicates);
-//      createSearchResultBar(predicates);
-//      ((Controls::DockBar *)parentWidget()) -> onMoveOutBackgroundProcess();
-//      ((Controls::DockBar *)parentWidget()) -> close();
 }
 
 void BasicPlaylist::generateLayout() {
@@ -103,11 +93,10 @@ void BasicPlaylist::generateLayout() {
     artist_type_fields -> hide();
 
     QGroupBox * genre_type_fields = new QGroupBox(QStringLiteral("Genres for query"), basicPlaylistWidget);
-    QStringList genres = genresList();
     QVBoxLayout * genres_layout = new QVBoxLayout(genre_type_fields);
     for(int i = 0; i < 5; i++) {
         QComboBox * combo = new QComboBox(genre_type_fields);
-        combo -> addItems(genres);
+        combo -> addItems(genresList);
         basicPlaylistGenres << combo;
         genres_layout -> addWidget(combo);
     }
@@ -118,7 +107,7 @@ void BasicPlaylist::generateLayout() {
     connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
     connect(genreTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setVisible(bool)));
 
-    QPushButton * basicPlaylistStart = new QPushButton(QStringLiteral("Generate basic playlist"), base);
+    QPushButton * basicPlaylistStart = new QPushButton(QStringLiteral("Generate basic playlist"), this);
     connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));
     basicPlaylistLayout -> addWidget(basicPlaylistStart);
     setLayout(basicPlaylistLayout);
