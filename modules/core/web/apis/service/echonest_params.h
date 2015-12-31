@@ -10,6 +10,11 @@ namespace Core {
             struct IntervalParam {
                 float min; // 0
                 float max; // 0.999
+
+                void initParams(QUrlQuery & query, const QString & postfix) {
+                    if (min > 0) query.addQueryItem(QStringLiteral("min_") % postfix, QString::number(min));
+                    if (max < 1) query.addQueryItem(QStringLiteral("max_") % postfix, QString::number(max));
+                }
             };
 
             struct ParamWithPower {
@@ -37,7 +42,7 @@ namespace Core {
                     pack(query, QStringLiteral("mood"), moods);
                 }
 
-                void pack(QUrlQuery & query, QString & attr_name, QList<ParamWithPower> & objs) {
+                static void pack(QUrlQuery & query, QString & attr_name, QList<ParamWithPower> & objs) {
                     for(QList<ParamWithPower>::ConstIterator val = objs.constBegin(); val != objs.constEnd(); val++)
                         query.addQueryItem(attr_name, (*val).toStr());
                 }
@@ -80,10 +85,37 @@ namespace Core {
                     DGSMParams * gsm = 0, IntervalParam * familiarity = 0, IntervalParam * hotttnesss = 0) :
                     artist(artist), artistLocation(artistLocation), gsm(gsm), familiarity(familiarity), hotttnesss(hotttnesss) {}
 
-                void toParams(QUrlQuery & query) {
+                void initParams(QUrlQuery & query) {
                     artist.initParams(query);
                     if (!artistLocation.isEmpty()) query.addQueryItem(QStringLiteral("artist_location"), artistLocation);
                     if (gsm) gsm -> initParams(query);
+                    if (familiarity) familiarity -> initParams(query, QStringLiteral("familiarity"));
+                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("hotttnesss"));
+                }
+
+                ~ArtistParams() {
+                    delete gsm;
+                    delete familiarity;
+                    delete hotttnesss;
+                }
+            };
+
+            struct ArtistSimilarityParams {
+                QList<ParamWithPower> artists;
+//                QList<ParamWithPower> ids;
+
+                IntervalParam * familiarity;
+                IntervalParam * hotttnesss;
+
+                inline ArtistSimilarityParams(const QList<ParamWithPower> artists, IntervalParam * familiarity = 0,
+                    IntervalParam * hotttnesss = 0) : artists(artists), familiarity(familiarity), hotttnesss(hotttnesss) {}
+
+                void initParams(QUrlQuery & query) {
+//                  setParam(query, QStringLiteral("id"), ids);
+                    DGSMParams::pack(query, QStringLiteral("name"), names);
+
+                    if (familiarity) familiarity -> initParams(query, QStringLiteral("familiarity"));
+                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("hotttnesss"));
                 }
 
                 ~ArtistParams() {
