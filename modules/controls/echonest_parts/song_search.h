@@ -21,7 +21,8 @@ namespace Controls {
 
             void generateLayout();
 
-            QStringList genresList;
+            QStringList stylesList;
+            QStringList moodsList;
 
             bool combined;
             QLineEdit * artist;
@@ -60,7 +61,7 @@ namespace Controls {
 
             int mode; // (minor, major) 0, 1
 
-            QRadioButton * artistTypeCheck, * genreTypeCheck;
+//            QRadioButton * artistTypeCheck, * genreTypeCheck;
         public:
             explicit SongSearch(const QStringList & stylesList, const QStringList & moodsList, QWidget * parent = 0);
 
