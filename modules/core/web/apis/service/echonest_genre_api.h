@@ -33,7 +33,7 @@ namespace Core {
                 public:
                     inline virtual ~GenreApi() {}
 
-                    inline QUrl artistsByGenreUrl(QString & genre) {
+                    inline QUrl artistsByGenreUrl(const QString & genre) {
                         QUrlQuery query = genDefaultParams();
                         setParam(query, QStringLiteral("bucket"), QStringLiteral("hotttnesss"));
                         setParam(query, QStringLiteral("name"), genre);
@@ -153,7 +153,7 @@ namespace Core {
                     //}
 
 
-                    inline QUrl genreSimilarUrl(QString & genre) {
+                    inline QUrl genreSimilarUrl(const QString & genre) {
                         QUrlQuery query = genDefaultParams();
                         setParam(query, QStringLiteral("name"), genre);
                         return baseUrl(QStringLiteral("genre/similar"), query);

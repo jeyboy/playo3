@@ -375,9 +375,9 @@ namespace Core {
 
 
                     // did not use name and description at once
-                    inline QUrl artistSearchUrl(const ArtistParams artistParams, bool fuzzySearch = false, QString artistLocation = QString()) {
+                    inline QUrl artistSearchUrl(const ArtistParams & artistParams, bool fuzzySearch = false, const QString & artistLocation = QString()) {
                         QUrlQuery query = genDefaultParams();
-                        artistParams.toParams(query);
+                        artistParams.initParams(query);
                         if (!artistLocation.isEmpty()) setParam(query, QStringLiteral("artist_location"), artistLocation);
                         if (fuzzySearch) setParam(query, QStringLiteral("fuzzy_match"), QStringLiteral("true"));
 
@@ -385,8 +385,8 @@ namespace Core {
                     }
 
                     // need to check
-                    QJsonArray artistSearch(const ArtistParams artistParams, bool fuzzySearch = false,
-                                            QString artistLocation = QString(), int count = DEFAULT_LIMIT_AMOUNT, int start = 0)
+                    QJsonArray artistSearch(const ArtistParams & artistParams, bool fuzzySearch = false,
+                                            const QString & artistLocation = QString(), int count = DEFAULT_LIMIT_AMOUNT, int start = 0)
                     {
                         return lQuery(
                             artistSearchUrl(artistParams, fuzzySearch, artistLocation),
@@ -614,7 +614,7 @@ namespace Core {
 
 
                     //bucket biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss, hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
-                    inline QUrl artistTopUrl(QStringList & genres) {
+                    inline QUrl artistTopUrl(const QStringList & genres) {
                         QUrlQuery query = genDefaultParams();
                         setParam(query, QStringLiteral("genre"), genres);
                         return baseUrl(QStringLiteral("artist/top_hottt"), query);

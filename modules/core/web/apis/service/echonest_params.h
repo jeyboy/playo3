@@ -21,7 +21,7 @@ namespace Core {
                 QString name;
                 float power;
 
-                QString toStr() {
+                QString toStr() const {
                     if (power == 0) return name;
                     if (power > 0) return name % '^' % QString::number(power);
                     return '-' % name;
@@ -37,12 +37,12 @@ namespace Core {
                 void initParams(QUrlQuery & query) {
                     if (!genres.isEmpty()) query.addQueryItem(QStringLiteral("genre"), genres.join(','));
 
-                    pack(query, QStringLiteral("style"), styles);
-                    pack(query, QStringLiteral("description"), descriptions);
-                    pack(query, QStringLiteral("mood"), moods);
+                    DGSMParams::pack(query, QStringLiteral("style"), styles);
+                    DGSMParams::pack(query, QStringLiteral("description"), descriptions);
+                    DGSMParams::pack(query, QStringLiteral("mood"), moods);
                 }
 
-                static void pack(QUrlQuery & query, QString & attr_name, QList<ParamWithPower> & objs) {
+                static void pack(QUrlQuery & query, const QString & attr_name, const QList<ParamWithPower> & objs) {
                     for(QList<ParamWithPower>::ConstIterator val = objs.constBegin(); val != objs.constEnd(); val++)
                         query.addQueryItem(attr_name, (*val).toStr());
                 }
@@ -51,7 +51,7 @@ namespace Core {
             struct Artist {
                 inline Artist(const QString & name) : name(name) {}
 
-                inline bool initParams(QUrlQuery & query) {
+                inline bool initParams(QUrlQuery & query) const {
                     bool is_present = !name.isEmpty();
                     if (is_present)
                         query.addQueryItem(QStringLiteral("name"), name);
@@ -65,7 +65,7 @@ namespace Core {
             struct ArtistCharacter {
                 inline ArtistCharacter(const QString & name, const QString & id = QString()) : artist(Artist(name)), id(id) {}
 
-                inline void initParams(QUrlQuery & query) {
+                inline void initParams(QUrlQuery & query) const {
                     if (!artist.initParams(query))
                         query.addQueryItem(QStringLiteral("id"), id);
                 }
@@ -85,7 +85,7 @@ namespace Core {
                     DGSMParams * gsm = 0, IntervalParam * familiarity = 0, IntervalParam * hotttnesss = 0) :
                     artist(artist), artistLocation(artistLocation), gsm(gsm), familiarity(familiarity), hotttnesss(hotttnesss) {}
 
-                void initParams(QUrlQuery & query) {
+                void initParams(QUrlQuery & query) const {
                     artist.initParams(query);
                     if (!artistLocation.isEmpty()) query.addQueryItem(QStringLiteral("artist_location"), artistLocation);
                     if (gsm) gsm -> initParams(query);
@@ -110,16 +110,15 @@ namespace Core {
                 inline ArtistSimilarityParams(const QList<ParamWithPower> artists, IntervalParam * familiarity = 0,
                     IntervalParam * hotttnesss = 0) : artists(artists), familiarity(familiarity), hotttnesss(hotttnesss) {}
 
-                void initParams(QUrlQuery & query) {
+                void initParams(QUrlQuery & query) const {
 //                  setParam(query, QStringLiteral("id"), ids);
-                    DGSMParams::pack(query, QStringLiteral("name"), names);
+                    DGSMParams::pack(query, QStringLiteral("name"), artists);
 
                     if (familiarity) familiarity -> initParams(query, QStringLiteral("familiarity"));
                     if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("hotttnesss"));
                 }
 
-                ~ArtistParams() {
-                    delete gsm;
+                ~ArtistSimilarityParams() {
                     delete familiarity;
                     delete hotttnesss;
                 }
