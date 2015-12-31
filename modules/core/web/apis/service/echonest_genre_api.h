@@ -33,16 +33,16 @@ namespace Core {
                 public:
                     inline virtual ~GenreApi() {}
 
-                    inline QUrl genreArtistsUrl(QString & genre) {
+                    inline QUrl artistsByGenreUrl(QString & genre) {
                         QUrlQuery query = genDefaultParams();
                         setParam(query, QStringLiteral("bucket"), QStringLiteral("hotttnesss"));
                         setParam(query, QStringLiteral("name"), genre);
                         return baseUrl(QStringLiteral("genre/artists"), query);
                     }
 
-                    QJsonArray genreArtists(QString genre, int offset = 0, int count = DEFAULT_LIMIT_AMOUNT) {
+                    QJsonArray artistsByGenre(const QString & genre, int offset = 0, int count = DEFAULT_LIMIT_AMOUNT) {
                         return lQuery(
-                            genreArtistsUrl(genre),
+                            artistsByGenreUrl(genre),
                             QueryRules(QStringLiteral("artists"), requestLimit(), count, offset)
                         );
                     }
@@ -85,7 +85,7 @@ namespace Core {
                         }
                     }
 
-                    inline QUrl genreInfoUrl(QString & genre) {
+                    inline QUrl genreInfoUrl(const QString & genre) {
                         QUrlQuery query = genDefaultParams();
                         setParam(query, QStringLiteral("bucket"), QStringLiteral("description"));
                         setParam(query, QStringLiteral("name"), genre);
@@ -93,7 +93,7 @@ namespace Core {
                     }
 
 
-                    QJsonArray genreInfo(QString genre) {
+                    QJsonArray genreInfo(const QString & genre) {
                         QJsonObject response;
 
                         if (sQuery(genreInfoUrl(genre), response))
@@ -118,16 +118,17 @@ namespace Core {
                     //    }
                     //}
 
-                    inline QUrl genresSerachUrl(QString & genre) {
+                    inline QUrl genresSerachUrl(const QString & genre_part) {
                         QUrlQuery query = genDefaultParams();
-                        setParam(query, QStringLiteral("name"), genre);
+                        if (!genre_part.isEmpty())
+                            setParam(query, QStringLiteral("name"), genre_part);
                         return baseUrl(QStringLiteral("genre/search"), query);
                     }
 
-                    QJsonArray genresSerach(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+                    QJsonArray genresSerach(const QString & genre_part = QString(), int count = DEFAULT_LIMIT_AMOUNT, int start = 0) {
                         return lQuery(
-                            genresSerachUrl(genre),
-                            QueryRules(QStringLiteral("genres"), requestLimit(), count)
+                            genresSerachUrl(genre_part),
+                            QueryRules(QStringLiteral("genres"), requestLimit(), count, start)
                         );
                     }
 
@@ -158,10 +159,10 @@ namespace Core {
                         return baseUrl(QStringLiteral("genre/similar"), query);
                     }
 
-                    QJsonArray genreSimilar(QString genre, int count = DEFAULT_LIMIT_AMOUNT) {
+                    QJsonArray genreSimilar(const QString & genre, int count = DEFAULT_LIMIT_AMOUNT, int start = 0) {
                         return lQuery(
                             genreSimilarUrl(genre),
-                            QueryRules(QStringLiteral("genres"), requestLimit(), count)
+                            QueryRules(QStringLiteral("genres"), requestLimit(), count, start)
                         );
                     }
 

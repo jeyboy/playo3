@@ -151,10 +151,10 @@ namespace Core {
                         return baseUrl(QStringLiteral("artist/images"), query);
                     }
 
-                    QJsonArray artistImages(const ArtistCharacter & artist, int count = 1) {
+                    QJsonArray artistImages(const ArtistCharacter & artist, int count = 1, int start = 0) {
                         return lQuery(
                             artistImagesUrl(artist),
-                            QueryRules(QStringLiteral("images"), requestLimit(), count)
+                            QueryRules(QStringLiteral("images"), requestLimit(), count, start)
                         );
                     }
 
@@ -190,10 +190,10 @@ namespace Core {
                         return baseUrl(QStringLiteral("artist/news"), query);
                     }
 
-                    QJsonArray artistNews(const ArtistCharacter & artist, int count = 1) {
+                    QJsonArray artistNews(const ArtistCharacter & artist, int count = 1, int start = 0) {
                         return lQuery(
                             artistNewsUrl(artist),
-                            QueryRules(QStringLiteral("news"), requestLimit(), count)
+                            QueryRules(QStringLiteral("news"), requestLimit(), count, start)
                         );
                     }
 
