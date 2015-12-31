@@ -2,6 +2,7 @@
 #define ECHONEST_ARTIST_API
 
 #include "modules/core/web/interfaces/iapi.h"
+#include "echonest_params.h"
 
 //POSSIBLE BUCKETS
 
@@ -33,21 +34,18 @@ namespace Core {
                 public:
                     inline virtual ~ArtistApi() {}
 
-                    inline QUrl artistBiographiesUrl(QString & name, QString & id, int limit = DEFAULT_LIMIT_AMOUNT) {
+                    inline QUrl artistBiographiesUrl(const ArtistCharacter & artist, int limit = DEFAULT_LIMIT_AMOUNT) {
                         QUrlQuery query = genDefaultParams();
                         setLimit(query, qMin(limit, requestLimit()), 0);
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         return baseUrl(QStringLiteral("artist/biographies"), query);
                     }
 
-                    QJsonArray artistBiographie(QString artist, QString id = QString(), int limit = 1) {
+                    QJsonArray artistBiographie(const ArtistCharacter & artist, int limit = 1) {
                         QJsonObject response;
 
-                        if (sQuery(artistBiographiesUrl(artist, id, limit), response))
+                        if (sQuery(artistBiographiesUrl(artist, limit), response))
                             return response.value(QStringLiteral("biographies")).toArray();
 
                         return QJsonArray();
@@ -78,20 +76,17 @@ namespace Core {
 
 
 
-                    inline QUrl artistFamiliarityUrl(QString & name, QString & id) {
+                    inline QUrl artistFamiliarityUrl(const ArtistCharacter & artist) {
                         QUrlQuery query = genDefaultParams();
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         return baseUrl(QStringLiteral("artist/familiarity"), query);
                     }
 
-                    QJsonObject artistFamiliarity(QString artist, QString id = QString()) {
+                    QJsonObject artistFamiliarity(const ArtistCharacter & artist) {
                         QJsonObject response;
 
-                        if (sQuery(artistFamiliarityUrl(artist, id), response))
+                        if (sQuery(artistFamiliarityUrl(artist), response))
                             return response.value(QStringLiteral("artist")).toObject();
 
                         return QJsonObject();
@@ -114,22 +109,19 @@ namespace Core {
 
 
                     //types - overall, social, reviews, mainstream
-                    inline QUrl artistHotttnesssUrl(QString & name, QString & id, QString type = QStringLiteral("overall")) {
+                    inline QUrl artistHotttnesssUrl(const ArtistCharacter & artist, QString type = QStringLiteral("overall")) {
                         QUrlQuery query = genDefaultParams();
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         setParam(query, QStringLiteral("type"), type);
 
                         return baseUrl(QStringLiteral("artist/hotttnesss"), query);
                     }
 
-                    QJsonObject artistHotttnesss(QString artist, QString id = QString()) {
+                    QJsonObject artistHotttnesss(const ArtistCharacter & artist) {
                         QJsonObject response;
 
-                        if (sQuery(artistHotttnesssUrl(artist, id), response))
+                        if (sQuery(artistHotttnesssUrl(artist), response))
                             return response.value(QStringLiteral("artist")).toObject();
 
                         return QJsonObject();
@@ -152,20 +144,16 @@ namespace Core {
 
 
 
-                    inline QUrl artistImagesUrl(QString & name, QString & id) {
+                    inline QUrl artistImagesUrl(const ArtistCharacter & artist) {
                         QUrlQuery query = genDefaultParams();
-
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         return baseUrl(QStringLiteral("artist/images"), query);
                     }
 
-                    QJsonArray artistImages(QString name, QString id = QString(), int count = 1) {
+                    QJsonArray artistImages(const ArtistCharacter & artist, int count = 1) {
                         return lQuery(
-                            artistImagesUrl(name, id),
+                            artistImagesUrl(artist),
                             QueryRules(QStringLiteral("images"), requestLimit(), count)
                         );
                     }
@@ -193,22 +181,18 @@ namespace Core {
                     //}
 
 
-                    inline QUrl artistNewsUrl(QString & name, QString & id) {
+                    inline QUrl artistNewsUrl(const ArtistCharacter & artist) {
                         QUrlQuery query = genDefaultParams();
-
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         setParam(query, QStringLiteral("high_relevance"), QStringLiteral("true")); // if true only news articles that are highly relevant for this artist will be returned
 
                         return baseUrl(QStringLiteral("artist/news"), query);
                     }
 
-                    QJsonArray artistNews(QString name, QString id = QString(), int count = 1) {
+                    QJsonArray artistNews(const ArtistCharacter & artist, int count = 1) {
                         return lQuery(
-                            artistNewsUrl(name, id),
+                            artistNewsUrl(artist),
                             QueryRules(QStringLiteral("news"), requestLimit(), count)
                         );
                     }
@@ -241,20 +225,16 @@ namespace Core {
 
                     // buckets: biographies, blogs, discovery, discovery_rank, doc_counts, familiarity, familiarity_rank, genre, hotttnesss,
                     // hotttnesss_rank, images, artist_location, news, reviews, songs, terms, urls, video, years_active, id:Rosetta-space
-                    inline QUrl artistProfileUrl(QString name, QStringList buckets, QString id = QString()) {
+                    inline QUrl artistProfileUrl(const ArtistCharacter & artist, const QStringList & buckets) {
                         QUrlQuery query = genDefaultParams();
-
-                        if (!name.isEmpty())
-                            setParam(query, QStringLiteral("name"), name);
-                        else
-                            setParam(query, QStringLiteral("id"), id);
+                        artist.initParams(query);
 
                         setParam(query, QStringLiteral("bucket"), buckets);
 
                         return baseUrl(QStringLiteral("artist/profile"), query);
                     }
 
-                    QJsonObject artistProfile(QString name, QString id = QString()) {
+                    QJsonObject artistProfile(const ArtistCharacter & artist) {
                         QJsonObject response;
 
                         QStringList buckets;
@@ -263,7 +243,7 @@ namespace Core {
                                 << QStringLiteral("images") << QStringLiteral("songs") << QStringLiteral("years_active")
                                 << QStringLiteral("news") << QStringLiteral("terms");
 
-                        if (sQuery(artistProfileUrl(name, buckets, id), response))
+                        if (sQuery(artistProfileUrl(artist, buckets), response))
                             return response.value(QStringLiteral("artist")).toObject();
 
                         return QJsonObject();
@@ -395,15 +375,15 @@ namespace Core {
 
 
                     // did not use name and description at once
-                    inline QUrl artistSearchUrl(QString & name, bool fuzzySearch, QStringList & tags,
-                                                QStringList & moods, QString & artistLocation,
-                                                QStringList & genres, QStringList & styles)
+                    inline QUrl artistSearchUrl(QString & artist, bool fuzzySearch, const QStringList & tags,
+                                                const QStringList & moods, const QString & artistLocation,
+                                                const QStringList & genres, const QStringList & styles)
                     {
                         QUrlQuery query = genDefaultParams();
 
                         if (!artistLocation.isEmpty()) setParam(query, QStringLiteral("artist_location"), artistLocation);
                         if (fuzzySearch) setParam(query, QStringLiteral("fuzzy_match"), QStringLiteral("true"));
-                        if (!name.isEmpty()) setParam(query, QStringLiteral("name"), name);
+                        if (!artist.isEmpty()) setParam(query, QStringLiteral("name"), artist);
                         if (!genres.isEmpty()) setParam(query, QStringLiteral("genre"), genres.join(','));
 
                         setParam(query, QStringLiteral("style"), styles);
@@ -414,7 +394,7 @@ namespace Core {
                     }
 
                     // need to check
-                    QJsonArray artistSearch(int count = DEFAULT_LIMIT_AMOUNT, QString name = QString(), bool fuzzySearch = false, QStringList tags = QStringList(),
+                    QJsonArray artistSearch(int count = DEFAULT_LIMIT_AMOUNT, bool fuzzySearch = false, const Artist & artist = Artist(), QStringList tags = QStringList(),
                                             QStringList moods = QStringList(), QString artistLocation = QString(),
                                             QStringList genres = QStringList(), QStringList styles = QStringList())
                     {

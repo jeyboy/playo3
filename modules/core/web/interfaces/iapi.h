@@ -64,12 +64,12 @@ namespace Core {
             setParam(query, limitKey(), QString::number(limit));
         }
 
-        inline void setParam(QUrlQuery & query, QString name, int value) { query.addQueryItem(name, QString::number(value)); }
-        inline void setParam(QUrlQuery & query, QString name, float value) { query.addQueryItem(name, QString::number(value)); }
-        inline void setParam(QUrlQuery & query, QString name, QString value) { query.addQueryItem(name, value); }
-        inline void setParam(QUrlQuery & query, QString name, QStringList values) {
+        inline void setParam(QUrlQuery & query, const QString & name, int value) { query.addQueryItem(name, QString::number(value)); }
+        inline void setParam(QUrlQuery & query, const QString & name, float value) { query.addQueryItem(name, QString::number(value)); }
+        inline void setParam(QUrlQuery & query, const QString & name, const QString & value) { query.addQueryItem(name, value); }
+        inline void setParam(QUrlQuery & query, const QString & name, const QStringList & values) {
             if (values.isEmpty()) return;
-            for(QStringList::Iterator val = values.begin(); val != values.end(); val++)
+            for(QStringList::ConstIterator val = values.constBegin(); val != values.constEnd(); val++)
                 query.addQueryItem(name, *val);
         }
 

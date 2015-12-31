@@ -280,7 +280,8 @@ HEADERS += \
     modules/core/misc/fuzzy_comparison.h \
     modules/controls/echonest_parts/artist_info.h \
     modules/controls/echonest_parts/basic_playlist.h \
-    modules/controls/echonest_parts/song_search.h
+    modules/controls/echonest_parts/song_search.h \
+    modules/core/web/apis/service/echonest_params.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
