@@ -2,16 +2,11 @@
 #include "dockbars.h"
 
 #include "modules/controls/search_configurator.h"
-//#include "modules/controls/qxtspanslider.h"
 
 using namespace Controls;
 
 EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
     setObjectName(QStringLiteral("EchonestWidget"));
-
-//    QxtSpanSlider * slider = new QxtSpanSlider(Qt::Horizontal, this);
-//    slider -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-//    layout() -> addWidget(slider);
 
     addItem(QStringLiteral("Artist Info"), new Echonest::ArtistInfo(this));
 

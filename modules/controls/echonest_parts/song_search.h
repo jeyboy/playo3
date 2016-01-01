@@ -13,6 +13,9 @@
 
 #include "modules/core/web/apis/service/echonest_api.h"
 #include "modules/core/web/utils/web_manager.h"
+#include "modules/controls/qxtspanslider.h"
+
+#define SLIDER_MULTIPLIER .001
 
 namespace Controls {
     namespace Echonest {
@@ -24,7 +27,7 @@ namespace Controls {
             QStringList stylesList;
             QStringList moodsList;
 
-            bool combined;
+            QCheckBox * combined;
             QLineEdit * artist;
             QLineEdit * title;
 
@@ -35,31 +38,16 @@ namespace Controls {
             QList<QComboBox *> moods;
             QList<QDoubleSpinBox *> moodPowers;
 
-            float song_min_hotttnesss;
-            float song_max_hotttnesss;
+            QxtSpanSlider * artist_familiarity;
+            QxtSpanSlider * song_hotttnesss;
+            QxtSpanSlider * song_danceability;
+            QxtSpanSlider * song_energy;
+            QxtSpanSlider * song_liveness;
+            QxtSpanSlider * song_speechiness;
+            QxtSpanSlider * song_acousticness;
+            QxtSpanSlider * song_tempo;
 
-            float min_danceability;
-            float max_danceability;
-
-            float min_energy;
-            float max_energy;
-
-            float min_liveness;
-            float max_liveness;
-
-            float min_speechiness;
-            float max_speechiness;
-
-            float min_acousticness;
-            float max_acousticness;
-
-            float min_tempo;
-            float max_tempo;
-
-            float artist_min_familiarity;
-            float artist_max_familiarity;
-
-            int mode; // (minor, major) 0, 1
+            QComboBox * mode; // (minor, major) 0, 1
 
 //            QRadioButton * artistTypeCheck, * genreTypeCheck;
         public:

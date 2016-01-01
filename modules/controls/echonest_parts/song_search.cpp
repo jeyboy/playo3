@@ -69,6 +69,89 @@ void SongSearch::onSearchClicked() {
 }
 
 void SongSearch::generateLayout() {
+    QVBoxLayout * songSearchLayout = new QVBoxLayout(this);
+
+    QGroupBox * songAttrGroup = new QGroupBox(QStringLiteral("Song attrs"), this);
+    songSearchLayout -> addWidget(songAttrGroup);
+
+
+    //    QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
+    //    artistTypeCheck = new QRadioButton(QStringLiteral("By similar artists"), playlist_type);
+    //    playlist_type_layout -> addWidget(artistTypeCheck);
+    //    genreTypeCheck = new QRadioButton(QStringLiteral("By genres"), playlist_type);
+    //    playlist_type_layout -> addWidget(genreTypeCheck);
+
+    setLayout(songSearchLayout);
+
+    artist = new QLineEdit(songAttrGroup);
+    title = new QLineEdit(songAttrGroup);
+    combined = new QCheckBox(songAttrGroup);
+
+
+    QGroupBox * songCredentilsGroup = new QGroupBox(QStringLiteral("Song credentials"), this);
+    songSearchLayout -> addWidget(songCredentilsGroup);
+
+
+    mode = new QComboBox(songCredentilsGroup);
+    mode -> addItem(QStringLiteral("All"));
+    mode -> addItem(QStringLiteral("Minor"), 0);
+    mode -> addItem(QStringLiteral("Major"), 1);
+
+    artist_familiarity = new QxtSpanSlider(Qt::Horizontal, this);
+    artist_familiarity -> setMinimum(0); artist_familiarity -> setMaximum(1000);
+    artist_familiarity -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(artist_familiarity);
+
+    song_hotttnesss = new QxtSpanSlider(Qt::Horizontal, this);
+    song_hotttnesss -> setMinimum(0); song_hotttnesss -> setMaximum(1000);
+    song_hotttnesss -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_hotttnesss);
+
+    song_danceability = new QxtSpanSlider(Qt::Horizontal, this);
+    song_danceability -> setMinimum(0); song_danceability -> setMaximum(1000);
+    song_danceability -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_danceability);
+
+    song_energy = new QxtSpanSlider(Qt::Horizontal, this);
+    song_energy -> setMinimum(0); song_energy -> setMaximum(1000);
+    song_energy -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_energy);
+
+    song_liveness = new QxtSpanSlider(Qt::Horizontal, this);
+    song_liveness -> setMinimum(0); song_liveness -> setMaximum(1000);
+    song_liveness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_liveness);
+
+    song_speechiness = new QxtSpanSlider(Qt::Horizontal, this);
+    song_speechiness -> setMinimum(0); song_speechiness -> setMaximum(1000);
+    song_speechiness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_speechiness);
+
+    song_acousticness = new QxtSpanSlider(Qt::Horizontal, this);
+    song_acousticness -> setMinimum(0); song_acousticness -> setMaximum(1000);
+    song_acousticness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_acousticness);
+
+    song_tempo = new QxtSpanSlider(Qt::Horizontal, this);
+    song_tempo -> setMinimum(0); song_tempo -> setMaximum(1000);
+    song_tempo -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    songSearchLayout -> addWidget(song_tempo);
+
+
+    QWidget * songDescriptions = new QWidget(this);
+    songSearchLayout -> addWidget(songDescriptions);
+
+
+//    QList<QLineEdit *> descriptions;
+//    QList<QDoubleSpinBox *> descriptionPowers;
+//    QList<QComboBox *> styles;
+//    QList<QDoubleSpinBox *> stylePowers;
+//    QList<QComboBox *> moods;
+//    QList<QDoubleSpinBox *> moodPowers;
+
+
+
+
 
 
 
