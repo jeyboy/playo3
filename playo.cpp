@@ -24,11 +24,11 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);
 
 
-    qDebug() << FuzzyComparison::compareStrings(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"))
-        << FuzzyComparison::compareStrings2(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"));
+//    qDebug() << FuzzyComparison::compareStrings(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"))
+//        << FuzzyComparison::compareStrings2(QString("Michael George - One More Try (Live in Paris, 1988)"), QString("George Michael - One More Try"));
 
-    qDebug() << FuzzyComparison::compareStrings(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"))
-        << FuzzyComparison::compareStrings2(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"));
+//    qDebug() << FuzzyComparison::compareStrings(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"))
+//        << FuzzyComparison::compareStrings2(QString("GeorgeMichael - One More Try"), QString("George Michael - One More Try"));
 
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );

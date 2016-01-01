@@ -24,6 +24,10 @@ namespace Controls {
 
             void generateLayout();
 
+            QVBoxLayout * descsLayout;
+            QVBoxLayout * stylesLayout;
+            QVBoxLayout * moodsLayout;
+
             QStringList stylesList;
             QStringList moodsList;
 
@@ -31,12 +35,9 @@ namespace Controls {
             QLineEdit * artist;
             QLineEdit * title;
 
-            QList<QLineEdit *> descriptions;
-            QList<QDoubleSpinBox *> descriptionPowers;
-            QList<QComboBox *> styles;
-            QList<QDoubleSpinBox *> stylePowers;
-            QList<QComboBox *> moods;
-            QList<QDoubleSpinBox *> moodPowers;
+            QHash<QLineEdit *, QDoubleSpinBox *> descriptions;
+            QHash<QComboBox *, QDoubleSpinBox *> styles;
+            QHash<QComboBox *, QDoubleSpinBox *> moods;
 
             QxtSpanSlider * artist_familiarity;
             QxtSpanSlider * song_hotttnesss;
@@ -57,6 +58,15 @@ namespace Controls {
             void moveInProcess();
             void playlistGenerationNeed(const QString & title, QStringList & predicates);
         private slots:
+            void onDescriptionAdd();
+            void onDescriptionRemove();
+
+            void onStyleAdd();
+            void onStyleRemove();
+
+            void onMoodAdd();
+            void onMoodRemove();
+
             void onSearchClicked();
         };
     }

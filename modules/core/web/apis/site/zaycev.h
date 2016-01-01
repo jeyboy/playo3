@@ -66,7 +66,9 @@ namespace Core {
                         Html::Selector artist_selector(".musicset-track__artist a");
                         Html::Selector title_selector(".musicset-track__track-name a");
 
+                        qDebug() << "TRACKS AMOUNT" << songs.size();
                         for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
+                            qDebug() << "TRACKS" << (*song) -> hasClass(ban_class);
                             if ((*song) -> hasClass(ban_class)) continue;
 
                             QJsonObject song_obj;

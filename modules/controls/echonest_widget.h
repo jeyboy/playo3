@@ -18,6 +18,7 @@
 
 #include "echonest_parts/artist_info.h"
 #include "echonest_parts/basic_playlist.h"
+#include "echonest_parts/song_search.h"
 
 namespace Controls {
     class EchonestWidget : public Accordion {

@@ -7,6 +7,49 @@ SongSearch::SongSearch(const QStringList & stylesList, const QStringList & moods
     generateLayout();
 }
 
+void SongSearch::onDescriptionAdd() {
+    QWidget * descBlock = new QWidget(descsLayout -> widget());
+    descsLayout -> addWidget(descBlock);
+
+    QHBoxLayout * descBlockLayout = new QHBoxLayout(descBlock);
+
+    QLineEdit * edit = new QLineEdit(descBlock);
+    descBlockLayout -> addWidget(edit);
+    edit -> setProperty("parent", (int)descBlock);
+
+    QDoubleSpinBox * power = new QDoubleSpinBox(descBlock);
+    power -> setValue(1);
+    descBlockLayout -> addWidget(edit);
+
+    descriptions.insert(edit, power);
+
+    QPushButton * remove = new QPushButton(descBlock);
+    remove -> setProperty("parent", (int)edit);
+    descBlockLayout -> addWidget(edit);
+    connect(remove, SIGNAL(clicked(bool)), this, SLOT(onDescriptionRemove()));
+}
+void SongSearch::onDescriptionRemove() {
+    QPushButton * remove = (QPushButton *)sender();
+    QLineEdit * edit = (QLineEdit *)remove -> property("parent").toInt();
+    QWidget * descBlock = (QWidget *) edit -> property("parent").toInt();
+    descriptions.remove(edit);
+    descBlock -> deleteLater();
+}
+
+void SongSearch::onStyleAdd() {
+
+}
+void SongSearch::onStyleRemove() {
+
+}
+
+void SongSearch::onMoodAdd() {
+
+}
+void SongSearch::onMoodRemove() {
+
+}
+
 void SongSearch::onSearchClicked() {
 //    emit moveInProcess();
 
@@ -72,129 +115,113 @@ void SongSearch::generateLayout() {
     QVBoxLayout * songSearchLayout = new QVBoxLayout(this);
 
     QGroupBox * songAttrGroup = new QGroupBox(QStringLiteral("Song attrs"), this);
+    QVBoxLayout * songAttrsLayout = new QVBoxLayout(songAttrGroup);
     songSearchLayout -> addWidget(songAttrGroup);
 
-
-    //    QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
-    //    artistTypeCheck = new QRadioButton(QStringLiteral("By similar artists"), playlist_type);
-    //    playlist_type_layout -> addWidget(artistTypeCheck);
-    //    genreTypeCheck = new QRadioButton(QStringLiteral("By genres"), playlist_type);
-    //    playlist_type_layout -> addWidget(genreTypeCheck);
-
-    setLayout(songSearchLayout);
-
-    artist = new QLineEdit(songAttrGroup);
-    title = new QLineEdit(songAttrGroup);
-    combined = new QCheckBox(songAttrGroup);
+    songAttrsLayout -> addWidget((combined = new QCheckBox(QStringLiteral("Search by artist and title"), songAttrGroup)));
+    songAttrsLayout -> addWidget(new QLabel(QStringLiteral("Artist"), songAttrGroup));
+    songAttrsLayout -> addWidget((artist = new QLineEdit(songAttrGroup)));
+    songAttrsLayout -> addWidget(new QLabel(QStringLiteral("Song title"), songAttrGroup));
+    songAttrsLayout -> addWidget((title = new QLineEdit(songAttrGroup)));
 
 
     QGroupBox * songCredentilsGroup = new QGroupBox(QStringLiteral("Song credentials"), this);
+    QVBoxLayout * songCredentilsLayout = new QVBoxLayout(songCredentilsGroup);
     songSearchLayout -> addWidget(songCredentilsGroup);
 
 
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Tonality of songs"), songCredentilsGroup));
     mode = new QComboBox(songCredentilsGroup);
     mode -> addItem(QStringLiteral("All"));
     mode -> addItem(QStringLiteral("Minor"), 0);
     mode -> addItem(QStringLiteral("Major"), 1);
+    songCredentilsLayout -> addWidget(mode);
 
-    artist_familiarity = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Artist familiarity"), songCredentilsGroup));
+    artist_familiarity = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     artist_familiarity -> setMinimum(0); artist_familiarity -> setMaximum(1000);
     artist_familiarity -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(artist_familiarity);
+    songCredentilsLayout -> addWidget(artist_familiarity);
 
-    song_hotttnesss = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song hotttnesss"), songCredentilsGroup));
+    song_hotttnesss = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_hotttnesss -> setMinimum(0); song_hotttnesss -> setMaximum(1000);
     song_hotttnesss -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_hotttnesss);
+    songCredentilsLayout -> addWidget(song_hotttnesss);
 
-    song_danceability = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song daneability"), songCredentilsGroup));
+    song_danceability = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_danceability -> setMinimum(0); song_danceability -> setMaximum(1000);
     song_danceability -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_danceability);
+    songCredentilsLayout -> addWidget(song_danceability);
 
-    song_energy = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song energy"), songCredentilsGroup));
+    song_energy = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_energy -> setMinimum(0); song_energy -> setMaximum(1000);
     song_energy -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_energy);
+    songCredentilsLayout -> addWidget(song_energy);
 
-    song_liveness = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song liveness"), songCredentilsGroup));
+    song_liveness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_liveness -> setMinimum(0); song_liveness -> setMaximum(1000);
     song_liveness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_liveness);
+    songCredentilsLayout -> addWidget(song_liveness);
 
-    song_speechiness = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song speechiness"), songCredentilsGroup));
+    song_speechiness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_speechiness -> setMinimum(0); song_speechiness -> setMaximum(1000);
     song_speechiness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_speechiness);
+    songCredentilsLayout -> addWidget(song_speechiness);
 
-    song_acousticness = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song acousticness"), songCredentilsGroup));
+    song_acousticness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_acousticness -> setMinimum(0); song_acousticness -> setMaximum(1000);
     song_acousticness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_acousticness);
+    songCredentilsLayout -> addWidget(song_acousticness);
 
-    song_tempo = new QxtSpanSlider(Qt::Horizontal, this);
+    songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Song tempo"), songCredentilsGroup));
+    song_tempo = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     song_tempo -> setMinimum(0); song_tempo -> setMaximum(1000);
     song_tempo -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    songSearchLayout -> addWidget(song_tempo);
-
-
-    QWidget * songDescriptions = new QWidget(this);
-    songSearchLayout -> addWidget(songDescriptions);
-
-
-//    QList<QLineEdit *> descriptions;
-//    QList<QDoubleSpinBox *> descriptionPowers;
-//    QList<QComboBox *> styles;
-//    QList<QDoubleSpinBox *> stylePowers;
-//    QList<QComboBox *> moods;
-//    QList<QDoubleSpinBox *> moodPowers;
+    songCredentilsLayout -> addWidget(song_tempo);
 
 
 
+    QGroupBox * songChracterizationGroup = new QGroupBox(QStringLiteral("Song characrezition"), this);
+    QVBoxLayout * songChracterizationLayout = new QVBoxLayout(songChracterizationGroup);
+    songSearchLayout -> addWidget(songChracterizationGroup);
 
 
+    // descriptions block
+    QWidget * songDescriptions = new QWidget(songChracterizationGroup);
+    songChracterizationLayout -> addWidget(songDescriptions);
 
+    descsLayout = new QVBoxLayout(songDescriptions);
+    songDescriptions -> setLayout(descsLayout);
 
-//    QWidget * basicPlaylistWidget = new QWidget(this);
-//    QVBoxLayout * basicPlaylistLayout = new QVBoxLayout(this);
+    QPushButton * addDescription = new QPushButton(QStringLiteral("Add Description creteria"), songChracterizationGroup);
+    songChracterizationLayout -> addWidget(addDescription);
+    connect(addDescription, SIGNAL(clicked(bool)), this, SLOT(onDescriptionAdd()));
 
-//    QGroupBox * playlist_type = new QGroupBox(QStringLiteral("Playlist Type"), basicPlaylistWidget);
-//    QHBoxLayout * playlist_type_layout = new QHBoxLayout(playlist_type);
-//    artistTypeCheck = new QRadioButton(QStringLiteral("By similar artists"), playlist_type);
-//    playlist_type_layout -> addWidget(artistTypeCheck);
-//    genreTypeCheck = new QRadioButton(QStringLiteral("By genres"), playlist_type);
-//    playlist_type_layout -> addWidget(genreTypeCheck);
+    // styles block
+    QWidget * songStyles = new QWidget(songChracterizationGroup);
+    songChracterizationLayout -> addWidget(songStyles);
 
-//    basicPlaylistLayout -> addWidget(playlist_type);
+    stylesLayout = new QVBoxLayout(songStyles);
+    songStyles -> setLayout(stylesLayout);
 
-//    QGroupBox * artist_type_fields = new QGroupBox(QStringLiteral("Artists for query"), basicPlaylistWidget);
-//    QVBoxLayout * artists_layout = new QVBoxLayout(artist_type_fields);
-//    for(int i = 0; i < 5; i++) {
-//        QLineEdit * edit = new QLineEdit(artist_type_fields);
-//        basicPlaylistArtists << edit;
-//        artists_layout -> addWidget(edit);
-//    }
+    QPushButton * addStyle = new QPushButton(QStringLiteral("Add Style creteria"), songChracterizationGroup);
+    songChracterizationLayout -> addWidget(addStyle);
+    connect(addStyle, SIGNAL(clicked(bool)), this, SLOT(onStyleAdd()));
 
-//    basicPlaylistLayout -> addWidget(artist_type_fields);
-//    artist_type_fields -> hide();
+    // moods block
+    QWidget * songMoods = new QWidget(songChracterizationGroup);
+    songChracterizationLayout -> addWidget(songMoods);
 
-//    QGroupBox * genre_type_fields = new QGroupBox(QStringLiteral("Genres for query"), basicPlaylistWidget);
-//    QVBoxLayout * genres_layout = new QVBoxLayout(genre_type_fields);
-//    for(int i = 0; i < 5; i++) {
-//        QComboBox * combo = new QComboBox(genre_type_fields);
-//        combo -> addItems(genresList);
-//        basicPlaylistGenres << combo;
-//        genres_layout -> addWidget(combo);
-//    }
+    moodsLayout = new QVBoxLayout(songMoods);
+    songMoods -> setLayout(moodsLayout);
 
-//    basicPlaylistLayout -> addWidget(genre_type_fields);
-//    genre_type_fields -> hide();
-
-//    connect(artistTypeCheck, SIGNAL(toggled(bool)), artist_type_fields, SLOT(setVisible(bool)));
-//    connect(genreTypeCheck, SIGNAL(toggled(bool)), genre_type_fields, SLOT(setVisible(bool)));
-
-//    QPushButton * basicPlaylistStart = new QPushButton(QStringLiteral("Generate basic playlist"), this);
-//    connect(basicPlaylistStart, SIGNAL(clicked()), this, SLOT(onBasicPlaylistGenerateClicked()));
-//    basicPlaylistLayout -> addWidget(basicPlaylistStart);
-//    setLayout(basicPlaylistLayout);
+    QPushButton * addMood = new QPushButton(QStringLiteral("Add Mood creteria"), songChracterizationGroup);
+    songChracterizationLayout -> addWidget(addMood);
+    connect(addMood, SIGNAL(clicked(bool)), this, SLOT(onMoodAdd()));
 }

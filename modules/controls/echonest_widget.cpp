@@ -14,6 +14,11 @@ EchonestWidget::EchonestWidget(QWidget * parent) : Controls::Accordion(parent) {
     connect(basicPlaylist, SIGNAL(moveInProcess()), this, SLOT(moveInProcess()));
     connect(basicPlaylist, SIGNAL(playlistGenerationNeed(QString,QStringList&)), this, SLOT(playlistGenerationNeed(QString,QStringList&)));
     addItem(QStringLiteral("Base Playlist"), basicPlaylist);
+
+    Echonest::SongSearch * songSearch = new Echonest::SongSearch(stylesList(), moodsList(), this);
+    connect(songSearch, SIGNAL(moveInProcess()), this, SLOT(moveInProcess()));
+    connect(songSearch, SIGNAL(playlistGenerationNeed(QString,QStringList&)), this, SLOT(playlistGenerationNeed(QString,QStringList&)));
+    addItem(QStringLiteral("Songs Search"), songSearch);
 }
 
 void EchonestWidget::moveInProcess() {
@@ -318,9 +323,10 @@ QStringList EchonestWidget::stylesList() {
     if (styles.isEmpty()) {
         styles << QStringLiteral("");
 
-        QJsonArray styles = Core::Web::Echonest::Api::obj().artistStylesForSearch();
-        for(QJsonArray::Iterator style = styles.begin(); style != styles.end(); style++)
+        QJsonArray stylesObjs = Core::Web::Echonest::Api::obj().artistStylesForSearch();
+        for(QJsonArray::Iterator style = stylesObjs.begin(); style != stylesObjs.end(); style++) {
             styles.append((*style).toObject().value(QStringLiteral("name")).toString());
+        }
     }
 
     return styles;
@@ -328,8 +334,8 @@ QStringList EchonestWidget::stylesList() {
 
 QStringList EchonestWidget::moodsList() {
     if (moods.isEmpty()) {
-        QJsonArray moodsList = Core::Web::Echonest::Api::obj().artistMoodsForSearch();
-        for(QJsonArray::Iterator mood = moodsList.begin(); mood != moodsList.end(); mood++)
+        QJsonArray moodsObjs = Core::Web::Echonest::Api::obj().artistMoodsForSearch();
+        for(QJsonArray::Iterator mood = moodsObjs.begin(); mood != moodsObjs.end(); mood++)
             moods.append((*mood).toObject().value(QStringLiteral("name")).toString());
     }
 
