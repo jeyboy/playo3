@@ -23,7 +23,7 @@ namespace Core {
 
                     inline QHash<QString, QString> initHeaders() {
                         QHash<QString, QString> headers;
-                        headers.insert(tkn_header_user_agent, val_default_agent);
+                        headers.insert(tkn_header_user_agent, DEFAULT_AGENT);
                         return headers;
                     }
 

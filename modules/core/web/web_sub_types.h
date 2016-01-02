@@ -18,7 +18,8 @@ namespace Core {
             site_mp3pm,
             site_shmidt,
             site_jetune,
-            site_music_shara
+            site_music_shara,
+            site_redmp3
         };
     }
 }

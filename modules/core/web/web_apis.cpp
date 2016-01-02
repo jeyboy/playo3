@@ -18,6 +18,7 @@ namespace Core {
             sites.insert(Shmidt::obj().siteType(), &Shmidt::obj());
             sites.insert(Jetune::obj().siteType(), &Jetune::obj());
             sites.insert(MusicShara::obj().siteType(), &MusicShara::obj());
+            sites.insert(RedMp3::obj().siteType(), &RedMp3::obj());
 
             for(QHash<SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
                 it.value() -> fromJson(obj);

@@ -189,7 +189,7 @@ void SongSearch::onSearchClicked() {
         predicates << (obj.value(QStringLiteral("artist_name")).toString() % QStringLiteral(" - ") % obj.value(QStringLiteral("title")).toString());
     }
 
-    emit playlistGenerationNeed(QStringLiteral("Echonest basic playlist"), predicates);
+    emit playlistGenerationNeed(QStringLiteral("Echonest predicable playlist"), predicates);
 }
 
 QStringList SongSearch::yearsSet() {

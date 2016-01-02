@@ -942,7 +942,8 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
             innerSearch(predicate, destination, (Playlist *) *it, count);
         } else {
             int comparity = FuzzyComparison::compareStrings((*it) -> title().toString(), predicate);
-            bool is_valid = comparity > 75;
+            qDebug() << "COMPATIBILITY CHECK" << predicate << " (VS) " << (*it) -> title().toString() << " ||| " << comparity;
+            bool is_valid = comparity >= 80;
 
             if (is_valid) {
                 QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());

@@ -10,6 +10,7 @@
 #include "modules/core/web/utils/html_parser.h"
 
 #define COOKIES_KEY QStringLiteral("cookies")
+#define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
 
 namespace Core {
     namespace Web {

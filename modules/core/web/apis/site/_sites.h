@@ -10,5 +10,6 @@
 #include "shmidt.h"
 #include "jetune.h"
 #include "musicshara.h"
+#include "redmp3.h"
 
 #endif // SITES

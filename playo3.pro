@@ -281,7 +281,8 @@ HEADERS += \
     modules/controls/echonest_parts/artist_info.h \
     modules/controls/echonest_parts/basic_playlist.h \
     modules/controls/echonest_parts/song_search.h \
-    modules/core/web/apis/service/echonest_params.h
+    modules/core/web/apis/service/echonest_params.h \
+    modules/core/web/apis/site/redmp3.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -422,4 +423,5 @@ SOURCES += \
     modules/models/service/search_settings.cpp \
     modules/controls/echonest_parts/artist_info.cpp \
     modules/controls/echonest_parts/basic_playlist.cpp \
-    modules/controls/echonest_parts/song_search.cpp
+    modules/controls/echonest_parts/song_search.cpp \
+    modules/core/web/apis/site/redmp3.cpp

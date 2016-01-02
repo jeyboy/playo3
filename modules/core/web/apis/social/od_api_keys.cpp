@@ -77,7 +77,6 @@ namespace Core {
             extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");
             extern const QString val_sms_code_title =               QStringLiteral("Code from sms");
             extern const QString val_name =                         QStringLiteral("Od");
-            extern const QString val_default_agent =                QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0"); // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
         }
     }
 }
