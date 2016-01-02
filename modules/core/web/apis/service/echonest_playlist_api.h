@@ -21,7 +21,7 @@ namespace Core {
                     //            genre-radio - plays songs from artists matching the given genre
 
                     //bucket id:catalog-name, tracks
-                    inline QUrl playlistBasicUrl(QString type, QStringList artists, QStringList genres, QStringList songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+                    inline QUrl playlistBasicUrl(const QString & type, const QStringList & artists, const QStringList & genres, const QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
                         QUrlQuery query = genDefaultParams();
                         setLimit(query, qMin(limit, requestLimit()), 0);
 
@@ -54,7 +54,7 @@ namespace Core {
             //            return QJsonArray();
             //        }
 
-                    QJsonArray playlistBasicByArtists(QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+                    QJsonArray playlistBasicByArtists(const QStringList & artists, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
                         QJsonObject response;
 
                         if (sQuery(playlistBasicUrl(QStringLiteral("artist-radio"), artists, QStringList(), QStringList(), limit), response))
@@ -63,7 +63,7 @@ namespace Core {
                         return QJsonArray();
                     }
 
-                    QJsonArray playlistBasicByGenres(QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+                    QJsonArray playlistBasicByGenres(const QStringList & genres, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
                         QJsonObject response;
 
                         if (sQuery(playlistBasicUrl(QStringLiteral("genre-radio"), QStringList(), genres, QStringList(), limit), response))
@@ -72,7 +72,7 @@ namespace Core {
                         return QJsonArray();
                     }
 
-                    QJsonArray playlistBasicBySongs(QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
+                    QJsonArray playlistBasicBySongs(const QStringList & songs_ids, int limit = DEFAULT_PLAYLIST_LIMIT_AMOUNT) {
                         QJsonObject response;
 
                         if (sQuery(playlistBasicUrl(QStringLiteral("song-radio"), QStringList(), QStringList(), songs_ids, limit), response))

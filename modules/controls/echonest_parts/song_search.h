@@ -22,7 +22,10 @@ namespace Controls {
         class SongSearch : public QWidget {
             Q_OBJECT
 
+            QStringList yearsSet();
             void generateLayout();
+
+            QStringList yearslist;
 
             QVBoxLayout * descsLayout;
             QVBoxLayout * stylesLayout;
@@ -49,6 +52,8 @@ namespace Controls {
             QxtSpanSlider * song_tempo;
 
             QComboBox * mode; // (minor, major) 0, 1
+            QComboBox * artistFromYear;
+            QComboBox * artistToYear;
 
 //            QRadioButton * artistTypeCheck, * genreTypeCheck;
         public:
@@ -58,6 +63,8 @@ namespace Controls {
             void moveInProcess();
             void playlistGenerationNeed(const QString & title, QStringList & predicates);
         private slots:
+            void spanChanged(int lower, int upper);
+
             void onDescriptionAdd();
             void onDescriptionRemove();
 

@@ -2,6 +2,7 @@
 #define ECHONEST_GENRE_API
 
 #include "modules/core/web/interfaces/iapi.h"
+#include "echonest_params.h"
 
 //POSSIBLE BUCKETS
 
@@ -76,31 +77,19 @@ namespace Core {
 
 
                     //mode - (minor, major) 0, 1
-                    inline QUrl songSearchUrl(int mode, const QString & artist = QString(), const QString & title = QString(),
-                            const QStringList & tags = QStringList(), const QStringList & styles = QStringList(),
-                            const QStringList & moods = QStringList()) {
+                    inline QUrl songSearchUrl(const SongSearchParams & params) {
                         QUrlQuery query = genDefaultParams();
 
-                        if (!artist.isEmpty()) setParam(query, QStringLiteral("artist"), artist);
-                        if (!title.isEmpty()) setParam(query, QStringLiteral("title"), title);
-
-                        if (mode == 0 || mode == 1)
-                            setParam(query, QStringLiteral("mode"), QString::number(mode));
-
-
-                        setParam(query, QStringLiteral("style"), styles);
-                        setParam(query, QStringLiteral("description"), tags);
-                        setParam(query, QStringLiteral("mood"), moods);
+                        params.initParams(query);
 
                         return baseUrl(QStringLiteral("song/search"), query);
                     }
 
-                    QJsonArray songSearch(int mode = -1, QString artist = QString(), QString title = QString(), QStringList tags = QStringList(),
-                                          QStringList styles = QStringList(), QStringList moods = QStringList(), int count = DEFAULT_LIMIT_AMOUNT) {
+                    QJsonArray songSearch(const SongSearchParams & params, int count = DEFAULT_LIMIT_AMOUNT, int start = 0) {
 
                         return lQuery(
-                            songSearchUrl(mode, artist, title, tags, styles, moods),
-                            QueryRules("songs", requestLimit(), count)
+                            songSearchUrl(params),
+                            QueryRules("songs", requestLimit(), count, start)
                         );
                     }
 

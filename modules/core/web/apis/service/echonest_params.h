@@ -7,13 +7,37 @@
 namespace Core {
     namespace Web {
         namespace Echonest {
+            struct SongTypeParam {
+                QString name;
+                QString state;
+
+                SongTypeParam(const QString & name, const QString & state) : name(name), state(state) {}
+
+                QString toStr() const { return name % QStringLiteral(":") % state; }
+            };
+
+            struct SongTypeParamsList : public QList<SongTypeParam> {
+                void initParams(QUrlQuery & query) const {
+                    if (!isEmpty()) {
+                        QString typesListStr = first().toStr();
+                        for(QList<SongTypeParam>::ConstIterator sType = constBegin()++; sType != constEnd(); sType++)
+                            typesListStr = typesListStr % ',' % (*sType).toStr();
+
+                        query.addQueryItem(QStringLiteral("song_type"), typesListStr);
+                    }
+                }
+            };
+
             struct IntervalParam {
                 float min; // 0
                 float max; // 0.999
+                float top;
 
-                void initParams(QUrlQuery & query, const QString & postfix) {
-                    if (min > 0) query.addQueryItem(QStringLiteral("min_") % postfix, QString::number(min));
-                    if (max < 1) query.addQueryItem(QStringLiteral("max_") % postfix, QString::number(max));
+                IntervalParam(float min, float max, float top = .999) : min(min), max(max), top(top) {}
+
+                void initParams(QUrlQuery & query, const QString & mask) {
+                    if (min > 0) query.addQueryItem(mask.arg("min"), QString::number(min));
+                    if (max < top) query.addQueryItem(mask.arg("max"), QString::number(max));
                 }
             };
 
@@ -89,8 +113,8 @@ namespace Core {
                     artist.initParams(query);
                     if (!artistLocation.isEmpty()) query.addQueryItem(QStringLiteral("artist_location"), artistLocation);
                     if (gsm) gsm -> initParams(query);
-                    if (familiarity) familiarity -> initParams(query, QStringLiteral("familiarity"));
-                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("hotttnesss"));
+                    if (familiarity) familiarity -> initParams(query, QStringLiteral("%1_familiarity"));
+                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("%1_hotttnesss"));
                 }
 
                 ~ArtistParams() {
@@ -114,13 +138,101 @@ namespace Core {
 //                  setParam(query, QStringLiteral("id"), ids);
                     DGSMParams::pack(query, QStringLiteral("name"), artists);
 
-                    if (familiarity) familiarity -> initParams(query, QStringLiteral("familiarity"));
-                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("hotttnesss"));
+                    if (familiarity) familiarity -> initParams(query, QStringLiteral("%1_familiarity"));
+                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("%1_hotttnesss"));
                 }
 
                 ~ArtistSimilarityParams() {
                     delete familiarity;
                     delete hotttnesss;
+                }
+            };
+
+            struct SongSearchParams {
+                Artist * artist;
+                QString title;
+                bool combined;
+
+                int mode;
+                SongTypeParamsList songTypes;
+
+                QString artist_start_year_after;
+                QString artist_end_year_after;
+
+                DGSMParams * gsm; // did not usse genres
+
+                IntervalParam * familiarity;
+                IntervalParam * hotttnesss;
+                IntervalParam * tempo;
+                IntervalParam * artist_familiarity;
+                IntervalParam * danceability;
+                IntervalParam * energy;
+                IntervalParam * liveness;
+                IntervalParam * speechiness;
+                IntervalParam * acousticness;
+
+                inline SongSearchParams(
+                    Artist * artist = 0, const QString & title = QString(), bool combined = false,
+                    const QString & artist_start_year = QString(), const QString & artist_end_year = QString(),
+                    int mode = -1, const SongTypeParamsList & songTypes = SongTypeParamsList(),
+                    DGSMParams * gsm = 0, IntervalParam * familiarity = 0,
+                    IntervalParam * hotttnesss = 0, IntervalParam * tempo = 0,
+                    IntervalParam * artist_familiarity = 0, IntervalParam * danceability = 0,
+                    IntervalParam * energy = 0, IntervalParam * liveness = 0,
+                    IntervalParam * speechiness = 0, IntervalParam * acousticness = 0) :
+                    artist(artist), title(title), combined(combined),
+                    mode(mode), songTypes(songTypes), artist_start_year_after(artist_start_year),
+                    artist_end_year_after(artist_end_year), gsm(gsm), familiarity(familiarity),
+                    hotttnesss(hotttnesss), tempo(tempo), artist_familiarity(artist_familiarity),
+                    danceability(danceability), energy(energy), liveness(liveness),
+                    speechiness(speechiness), acousticness(acousticness)
+                {}
+
+                void initParams(QUrlQuery & query) const {
+                    if (combined) {
+                        if (!artist) return;
+                        query.addQueryItem(QStringLiteral("combined"), artist -> name % ' ' % title);
+                    } else {
+                        if (artist) artist -> initParams(query);
+                        if (!title.isEmpty()) query.addQueryItem(QStringLiteral("title"), title);
+                    }
+
+                    if (mode == 0 || mode == 1) query.addQueryItem(QStringLiteral("mode"), QString::number(mode));
+
+
+                    songTypes.initParams(query);
+
+                    if (!artist_start_year_after.isEmpty())
+                        query.addQueryItem(QStringLiteral("artist_start_year_after"), artist_start_year_after);
+
+                    if (!artist_end_year_after.isEmpty())
+                        query.addQueryItem(QStringLiteral("artist_end_year_after"), artist_end_year_after);
+
+                    if (gsm) gsm -> initParams(query);
+
+                    if (familiarity) familiarity -> initParams(query, QStringLiteral("%1_familiarity"));
+                    if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("%1_hotttnesss"));
+                    if (tempo) tempo -> initParams(query, QStringLiteral("%1_tempo"));
+                    if (artist_familiarity) hotttnesss -> initParams(query, QStringLiteral("artist_%1_familiarity"));
+                    if (danceability) danceability -> initParams(query, QStringLiteral("%1_danceability"));
+                    if (energy) energy -> initParams(query, QStringLiteral("%1_energy"));
+                    if (liveness) liveness -> initParams(query, QStringLiteral("%1_liveness"));
+                    if (speechiness) speechiness -> initParams(query, QStringLiteral("%1_speechiness"));
+                    if (acousticness) acousticness -> initParams(query, QStringLiteral("%1_acousticness"));
+                }
+
+                ~SongSearchParams() {
+                    delete artist;
+                    delete gsm;
+                    delete familiarity;
+                    delete hotttnesss;
+                    delete tempo;
+                    delete artist_familiarity;
+                    delete danceability;
+                    delete energy;
+                    delete liveness;
+                    delete speechiness;
+                    delete acousticness;
                 }
             };
         }
