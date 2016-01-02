@@ -10,9 +10,9 @@ SongSearch::SongSearch(const QStringList & stylesList, const QStringList & moods
 void SongSearch::spanChanged(int lower, int upper) {
     QxtSpanSlider * slider = (QxtSpanSlider *)sender();
     QLabel * display = (QLabel *)slider -> property("display").toInt();
+    float coeff = slider -> property("coeff").toFloat();
     QString newText = display -> property("original_text").toString();
-    qDebug() << newText << display;
-    display -> setText(newText % QStringLiteral("(%1 to %2)").arg(QString::number(lower), QString::number(upper)));
+    display -> setText(newText % QStringLiteral(" (%1 to %2 %3)").arg(QString::number(lower / coeff), QString::number(upper / coeff), slider -> property("postfix").toString()));
 }
 
 void SongSearch::onDescriptionAdd() {
@@ -248,8 +248,11 @@ void SongSearch::generateLayout() {
     label -> setProperty("original_text", QStringLiteral("Artist familiarity"));
     songCredentilsLayout -> addWidget(label);
     artist_familiarity = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
+    artist_familiarity -> setShowRail(true);
     connect(artist_familiarity, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     artist_familiarity -> setProperty("display", (int)label);
+    artist_familiarity -> setProperty("coeff", 10);
+    artist_familiarity -> setProperty("postfix", QStringLiteral("%"));
     artist_familiarity -> setMinimum(0); artist_familiarity -> setMaximum(1000); artist_familiarity -> setUpperValue(artist_familiarity -> maximum());
     artist_familiarity -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(artist_familiarity);
@@ -260,16 +263,20 @@ void SongSearch::generateLayout() {
     song_hotttnesss = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_hotttnesss, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_hotttnesss -> setProperty("display", (int)label);
+    song_hotttnesss -> setProperty("coeff", 10);
+    song_hotttnesss -> setProperty("postfix", QStringLiteral("%"));
     song_hotttnesss -> setMinimum(0); song_hotttnesss -> setMaximum(1000); song_hotttnesss -> setUpperValue(song_hotttnesss -> maximum());
     song_hotttnesss -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_hotttnesss);
 
     label = new QLabel(songCredentilsGroup);
-    label -> setProperty("original_text", QStringLiteral("Song daneability"));
+    label -> setProperty("original_text", QStringLiteral("Song danceability"));
     songCredentilsLayout -> addWidget(label);
     song_danceability = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_danceability, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_danceability -> setProperty("display", (int)label);
+    song_danceability -> setProperty("coeff", 10);
+    song_danceability -> setProperty("postfix", QStringLiteral("%"));
     song_danceability -> setMinimum(0); song_danceability -> setMaximum(1000); song_danceability -> setUpperValue(song_danceability -> maximum());
     song_danceability -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_danceability);
@@ -280,6 +287,8 @@ void SongSearch::generateLayout() {
     song_energy = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_energy, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_energy -> setProperty("display", (int)label);
+    song_energy -> setProperty("coeff", 10);
+    song_energy -> setProperty("postfix", QStringLiteral("%"));
     song_energy -> setMinimum(0); song_energy -> setMaximum(1000); song_energy -> setUpperValue(song_energy -> maximum());
     song_energy -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_energy);
@@ -290,6 +299,8 @@ void SongSearch::generateLayout() {
     song_liveness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_liveness, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_liveness -> setProperty("display", (int)label);
+    song_liveness -> setProperty("coeff", 10);
+    song_liveness -> setProperty("postfix", QStringLiteral("%"));
     song_liveness -> setMinimum(0); song_liveness -> setMaximum(1000); song_liveness -> setUpperValue(song_liveness -> maximum());
     song_liveness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_liveness);
@@ -300,6 +311,8 @@ void SongSearch::generateLayout() {
     song_speechiness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_speechiness, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_speechiness -> setProperty("display", (int)label);
+    song_speechiness -> setProperty("coeff", 10);
+    song_speechiness -> setProperty("postfix", QStringLiteral("%"));
     song_speechiness -> setMinimum(0); song_speechiness -> setMaximum(1000); song_speechiness -> setUpperValue(song_speechiness -> maximum());
     song_speechiness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_speechiness);
@@ -310,6 +323,8 @@ void SongSearch::generateLayout() {
     song_acousticness = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_acousticness, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_acousticness -> setProperty("display", (int)label);
+    song_acousticness -> setProperty("coeff", 10);
+    song_acousticness -> setProperty("postfix", QStringLiteral("%"));
     song_acousticness -> setMinimum(0); song_acousticness -> setMaximum(1000); song_acousticness -> setUpperValue(song_acousticness -> maximum());
     song_acousticness -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_acousticness);
@@ -320,6 +335,8 @@ void SongSearch::generateLayout() {
     song_tempo = new QxtSpanSlider(Qt::Horizontal, songCredentilsGroup);
     connect(song_tempo, SIGNAL(spanChanged(int,int)), this, SLOT(spanChanged(int,int)));
     song_tempo -> setProperty("display", (int)label);
+    song_tempo -> setProperty("coeff", 1);
+    song_tempo -> setProperty("postfix", QStringLiteral("BPM"));
     song_tempo -> setMinimum(0); song_tempo -> setMaximum(1000); song_tempo -> setUpperValue(song_tempo -> maximum());
     song_tempo -> setHandleMovementMode(QxtSpanSlider::NoCrossing);
     songCredentilsLayout -> addWidget(song_tempo);

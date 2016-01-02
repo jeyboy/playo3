@@ -50,9 +50,6 @@ QString IStylesheets::_sliderStyles() {
 
         "QSlider::add-page, QSlider::sub-page {"
             "border-radius: 4px;"
-        "}"
-
-        "QSlider::add-page, QSlider::sub-page {"
             "margin: 4px;"
             "background: #fff;"
         "}"
@@ -68,11 +65,6 @@ QString IStylesheets::_sliderStyles() {
         "QSlider::groove:vertical {"
             "width: 20px;"
         "}"
-
-
-//                "QSlider::add-page:horizontal, QSlider::sub-page:vertical {"
-//                    "background: #fff;"
-//                "}"
 
         "QSlider::add-page:vertical {"
 //                        "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
@@ -120,6 +112,16 @@ QString IStylesheets::_sliderStyles() {
         "QSlider::handle:disabled {"
           "background: #eee;"
           "border: 1px solid #aaa;"
+        "}"
+
+
+
+        "QxtSpanSlider::add-page, QxtSpanSlider::sub-page {"
+          "margin: 1px"
+        "}"
+
+        "QxtSpanSlider::add-page, QxtSpanSlider::sub-page:horizontal, QxtSpanSlider::groove {"
+          "background: rgba(0,0,0,0);"
         "}"
     );
 }
