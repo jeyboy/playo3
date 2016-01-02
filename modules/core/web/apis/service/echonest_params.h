@@ -45,6 +45,8 @@ namespace Core {
                 QString name;
                 float power;
 
+                ParamWithPower(const QString & name, float power) : name(name), power(power) {}
+
                 QString toStr() const {
                     if (power == 0) return name;
                     if (power > 0) return name % '^' % QString::number(power);
@@ -54,9 +56,16 @@ namespace Core {
 
             struct DGSMParams {
                 QList<ParamWithPower> descriptions;
-                QStringList genres;
                 QList<ParamWithPower> styles;
                 QList<ParamWithPower> moods;
+                QStringList genres;
+
+                DGSMParams(const QList<ParamWithPower> & descriptions = QList<ParamWithPower>(),
+                    const QList<ParamWithPower> & styles = QList<ParamWithPower>(),
+                    const QList<ParamWithPower> & moods = QList<ParamWithPower>(),
+                    const QStringList genres = QStringList()) :
+                    descriptions(descriptions), styles(styles), moods(moods), genres(genres)
+                {}
 
                 void initParams(QUrlQuery & query) {
                     if (!genres.isEmpty()) query.addQueryItem(QStringLiteral("genre"), genres.join(','));
@@ -159,12 +168,11 @@ namespace Core {
                 QString artist_start_year_after;
                 QString artist_end_year_after;
 
-                DGSMParams * gsm; // did not usse genres
+                DGSMParams * gsm; // genres is not used here
 
-                IntervalParam * familiarity;
+                IntervalParam * artist_familiarity;
                 IntervalParam * hotttnesss;
                 IntervalParam * tempo;
-                IntervalParam * artist_familiarity;
                 IntervalParam * danceability;
                 IntervalParam * energy;
                 IntervalParam * liveness;
@@ -175,16 +183,16 @@ namespace Core {
                     Artist * artist = 0, const QString & title = QString(), bool combined = false,
                     const QString & artist_start_year = QString(), const QString & artist_end_year = QString(),
                     int mode = -1, const SongTypeParamsList & songTypes = SongTypeParamsList(),
-                    DGSMParams * gsm = 0, IntervalParam * familiarity = 0,
+                    DGSMParams * gsm = 0, IntervalParam * artist_familiarity = 0,
                     IntervalParam * hotttnesss = 0, IntervalParam * tempo = 0,
-                    IntervalParam * artist_familiarity = 0, IntervalParam * danceability = 0,
+                    IntervalParam * danceability = 0,
                     IntervalParam * energy = 0, IntervalParam * liveness = 0,
                     IntervalParam * speechiness = 0, IntervalParam * acousticness = 0) :
                     artist(artist), title(title), combined(combined),
                     mode(mode), songTypes(songTypes), artist_start_year_after(artist_start_year),
-                    artist_end_year_after(artist_end_year), gsm(gsm), familiarity(familiarity),
-                    hotttnesss(hotttnesss), tempo(tempo), artist_familiarity(artist_familiarity),
-                    danceability(danceability), energy(energy), liveness(liveness),
+                    artist_end_year_after(artist_end_year), gsm(gsm), artist_familiarity(artist_familiarity),
+                    hotttnesss(hotttnesss), tempo(tempo), danceability(danceability),
+                    energy(energy), liveness(liveness),
                     speechiness(speechiness), acousticness(acousticness)
                 {}
 
@@ -210,10 +218,9 @@ namespace Core {
 
                     if (gsm) gsm -> initParams(query);
 
-                    if (familiarity) familiarity -> initParams(query, QStringLiteral("%1_familiarity"));
                     if (hotttnesss) hotttnesss -> initParams(query, QStringLiteral("%1_hotttnesss"));
                     if (tempo) tempo -> initParams(query, QStringLiteral("%1_tempo"));
-                    if (artist_familiarity) hotttnesss -> initParams(query, QStringLiteral("artist_%1_familiarity"));
+                    if (artist_familiarity) artist_familiarity -> initParams(query, QStringLiteral("artist_%1_familiarity"));
                     if (danceability) danceability -> initParams(query, QStringLiteral("%1_danceability"));
                     if (energy) energy -> initParams(query, QStringLiteral("%1_energy"));
                     if (liveness) liveness -> initParams(query, QStringLiteral("%1_liveness"));
@@ -224,10 +231,9 @@ namespace Core {
                 ~SongSearchParams() {
                     delete artist;
                     delete gsm;
-                    delete familiarity;
+                    delete artist_familiarity;
                     delete hotttnesss;
                     delete tempo;
-                    delete artist_familiarity;
                     delete danceability;
                     delete energy;
                     delete liveness;

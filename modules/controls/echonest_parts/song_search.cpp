@@ -128,65 +128,66 @@ void SongSearch::onMoodRemove() {
 void SongSearch::onSearchClicked() {
     emit moveInProcess();
 
-    Core::Web::Echonest::SongSearchParams params();
+    Core::Web::Echonest::SongTypeParamsList songTypeParams;
+    for(QHash<QLabel *, QComboBox *>::Iterator songType = songTypes.begin(); songType != songTypes.end(); songType++)
+        songTypeParams << Core::Web::Echonest::SongTypeParam(songType.key() -> text(), songType.value() -> currentText());
 
 
+    QList<Core::Web::Echonest::ParamWithPower> descriptionParams;
+    for(QHash<QLineEdit *, QDoubleSpinBox *>::Iterator description = descriptions.begin(); description != descriptions.end(); description++)
+        descriptionParams << Core::Web::Echonest::ParamWithPower(description.key() -> text(), description.value() -> value());
 
 
-//    QJsonArray results;
+    QList<Core::Web::Echonest::ParamWithPower> styleParams;
+    for(QHash<QComboBox *, QDoubleSpinBox *>::Iterator style = styles.begin(); style != styles.end(); style++)
+        styleParams << Core::Web::Echonest::ParamWithPower(style.key() -> currentText(), style.value() -> value());
 
-//    if (artistTypeCheck -> isChecked()) {
-//        QStringList artists;
+    QList<Core::Web::Echonest::ParamWithPower> moodParams;
+    for(QHash<QComboBox *, QDoubleSpinBox *>::Iterator mood = moods.begin(); mood != moods.end(); mood++)
+        moodParams << Core::Web::Echonest::ParamWithPower(mood.key() -> currentText(), mood.value() -> value());
 
-//        for(QList<QLineEdit *>::Iterator artist = basicPlaylistArtists.begin(); artist != basicPlaylistArtists.end(); artist++) {
-//            if (!(*artist) -> text().isEmpty())
-//                artists << (*artist) -> text();
-//        }
+    Core::Web::Echonest::DGSMParams * gsmParams = new Core::Web::Echonest::DGSMParams(
+        descriptionParams,
+        styleParams,
+        moodParams
+    );
 
-//        results = Core::Web::Echonest::Api::obj().playlistBasicByArtists(artists);
-//    } else if (genreTypeCheck -> isChecked()) {
-//        QStringList genres;
+    Core::Web::Echonest::SongSearchParams params(
+        new Core::Web::Echonest::Artist(artist -> text()),
+        title -> text(),
+        combined -> isChecked(),
+        artistFromYear -> currentText(),
+        artistToYear -> currentText(),
+        mode -> currentText().toInt(),
+        songTypeParams,
+        gsmParams,
+        new Core::Web::Echonest::IntervalParam(artist_familiarity -> lowerValue() / 1000.0, artist_familiarity -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_hotttnesss -> lowerValue() / 1000.0, song_hotttnesss -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_tempo -> lowerValue(), song_tempo -> upperValue()),
+        new Core::Web::Echonest::IntervalParam(song_danceability -> lowerValue() / 1000.0, song_danceability -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_energy -> lowerValue() / 1000.0, song_energy -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_liveness -> lowerValue() / 1000.0, song_liveness -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_speechiness -> lowerValue() / 1000.0, song_speechiness -> upperValue() / 1000.0),
+        new Core::Web::Echonest::IntervalParam(song_acousticness -> lowerValue() / 1000.0, song_acousticness -> upperValue() / 1000.0)
+    );
 
-//        for(QList<QComboBox *>::Iterator genre = basicPlaylistGenres.begin(); genre != basicPlaylistGenres.end(); genre++) {
-//            if (!(*genre) -> currentText().isEmpty())
-//                genres << (*genre) -> currentText();
-//        }
+    QJsonArray results = Core::Web::Echonest::Api::obj().songSearch(params);
 
-//        results = Core::Web::Echonest::Api::obj().playlistBasicByGenres(genres);
+//    {
+//      "artist_id": "ARH6W4X1187B99274F",
+//      "id": "SOCZZBT12A6310F251",
+//      "artist_name": "Radiohead",
+//      "title": "Karma Police"
 //    }
-//    else return; // nothing choosed
-
-//    //            {
-//    //                "artist_foreign_ids": [
-//    //                    {
-//    //                        "catalog": "7digital-US",
-//    //                        "foreign_id": "7digital-US:artist:7516"
-//    //                    }
-//    //                ],
-//    //                "artist_id": "AR633SY1187B9AC3B9",
-//    //                "artist_name": "Weezer",
-//    //                "id": "SOBSLVH12A8C131F38",
-//    //                "title": "Island In The Sun",
-//    //                "tracks": [
-//    //                    {
-//    //                        "catalog": "7digital-US",
-//    //                        "foreign_id": "7digital-US:track:20637990",
-//    //                        "foreign_release_id": "7digital-US:release:1914387",
-//    //                        "id": "TRTXLYU13A79B0B112",
-//    //                        "preview_url": "http://previews.7digital.com/clips/34/20637990.clip.mp3",
-//    //                        "release_image": "http://cdn.7static.com/static/img/sleeveart/00/019/143/0001914387_200.jpg"
-//    //                    }
-//    //                ]
-//    //            }
 
 
 
     QStringList predicates;
 
-//      for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
-//          QJsonObject obj = (*song).toObject();
-//          predicates << (obj.value(QStringLiteral("artist_name")).toString() % QStringLiteral(" - ") % obj.value(QStringLiteral("title")).toString());
-//      }
+    for(QJsonArray::Iterator song = results.begin(); song != results.end(); song++) {
+        QJsonObject obj = (*song).toObject();
+        predicates << (obj.value(QStringLiteral("artist_name")).toString() % QStringLiteral(" - ") % obj.value(QStringLiteral("title")).toString());
+    }
 
     emit playlistGenerationNeed(QStringLiteral("Echonest basic playlist"), predicates);
 }
@@ -229,6 +230,26 @@ void SongSearch::generateLayout() {
     mode -> addItem(QStringLiteral("Minor"), 0);
     mode -> addItem(QStringLiteral("Major"), 1);
     songCredentilsLayout -> addWidget(mode);
+
+
+    QGroupBox * songTypesGroup = new QGroupBox(QStringLiteral("Song types"), songCredentilsGroup);
+    QGridLayout * songTypesLayout = new QGridLayout(songTypesGroup);
+    songCredentilsLayout -> addWidget(songTypesGroup);
+
+    QList<QString> types; types << QStringLiteral("christmas") << QStringLiteral("live")
+        << QStringLiteral("studio") << QStringLiteral("acoustic") << QStringLiteral("electric");
+    QList<QString> chooses; chooses << QStringLiteral("any") << QStringLiteral("true") << QStringLiteral("false");
+
+    for(QList<QString>::Iterator tipe = types.begin(); tipe != types.end(); tipe++) {
+        QLabel * typeTitle = new QLabel(*tipe, songTypesGroup);
+        QComboBox * typeChoose = new QComboBox(songTypesGroup);
+        typeChoose -> addItems(chooses);
+
+        songTypesLayout -> addWidget(typeTitle, songTypesLayout -> rowCount(), 0);
+        songTypesLayout -> addWidget(typeChoose, songTypesLayout -> rowCount() - 1, 1);
+
+        songTypes.insert(typeTitle, typeChoose);
+    }
 
 
     songCredentilsLayout -> addWidget(new QLabel(QStringLiteral("Artist carrier starts from"), songCredentilsGroup));

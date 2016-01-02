@@ -25,14 +25,13 @@ namespace Controls {
             QStringList yearsSet();
             void generateLayout();
 
-            QStringList yearslist;
-
             QVBoxLayout * descsLayout;
             QVBoxLayout * stylesLayout;
             QVBoxLayout * moodsLayout;
 
             QStringList stylesList;
             QStringList moodsList;
+            QStringList yearslist;
 
             QCheckBox * combined;
             QLineEdit * artist;
@@ -41,6 +40,8 @@ namespace Controls {
             QHash<QLineEdit *, QDoubleSpinBox *> descriptions;
             QHash<QComboBox *, QDoubleSpinBox *> styles;
             QHash<QComboBox *, QDoubleSpinBox *> moods;
+
+            QHash<QLabel *, QComboBox *> songTypes;
 
             QxtSpanSlider * artist_familiarity;
             QxtSpanSlider * song_hotttnesss;
@@ -54,8 +55,6 @@ namespace Controls {
             QComboBox * mode; // (minor, major) 0, 1
             QComboBox * artistFromYear;
             QComboBox * artistToYear;
-
-//            QRadioButton * artistTypeCheck, * genreTypeCheck;
         public:
             explicit SongSearch(const QStringList & stylesList, const QStringList & moodsList, QWidget * parent = 0);
 

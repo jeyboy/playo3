@@ -117,7 +117,7 @@ QString IStylesheets::_sliderStyles() {
 
 
         "QxtSpanSlider::add-page, QxtSpanSlider::sub-page {"
-          "margin: 1px"
+          "margin: 2px"
         "}"
 
         "QxtSpanSlider::add-page, QxtSpanSlider::sub-page:horizontal, QxtSpanSlider::groove {"
