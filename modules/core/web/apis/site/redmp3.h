@@ -76,8 +76,6 @@ namespace Core {
                             song_obj.insert(refresh_key, baseUrlStr(infos.find(".track-title").link()));
 //                            song_obj.insert(skip_info_key, true);
                             song_obj.insert(title_key, (*song) -> value(data_title));
-
-                            qDebug() << "REDMP3" << song_obj;
                             json << song_obj;
                         }
 

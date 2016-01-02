@@ -66,6 +66,8 @@
         <file alias="od_item_on">images/items/od_on.png</file>
         <file alias="warn">images/items/warn.png</file>
         <file alias="process_on">images/items/process_on.png</file>
+        <file alias="redmp3_item">images/items/redmp3.png</file>
+        <file alias="redmp3_item_on">images/items/redmp3_on.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

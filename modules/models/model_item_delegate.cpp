@@ -72,7 +72,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(WEB_FILE + site_promodj + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
     icons.insert(WEB_FILE + site_jetune,                                PIXMAP(QStringLiteral(":/items/jetune_item"), size));
     icons.insert(WEB_FILE + site_jetune + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
-
+    icons.insert(WEB_FILE + site_redmp3,                                PIXMAP(QStringLiteral(":/items/redmp3_item"), size));
+    icons.insert(WEB_FILE + site_redmp3 + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/redmp3_item_on"), size));
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
@@ -348,8 +349,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     //    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
-        bool is_vk = attrs[Keys::type] == VK_FILE, is_sc = attrs[Keys::type] == SOUNDCLOUD_FILE;
-
         QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
         painter -> setBrush(Qt::NoBrush);
