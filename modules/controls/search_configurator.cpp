@@ -246,7 +246,8 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
     if (res.inSites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::list().values();
         for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
-            res.sites.append(*it);
+            if ((*it) -> isConnected())
+                res.sites.append(*it);
     }
 
     if (res.inTabs) {

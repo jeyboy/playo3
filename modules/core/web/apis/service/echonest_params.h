@@ -13,18 +13,16 @@ namespace Core {
 
                 SongTypeParam(const QString & name, const QString & state) : name(name), state(state) {}
 
-                QString toStr() const { return name % QStringLiteral(":") % state; }
+                void initParams(QUrlQuery & query) const {
+                    query.addQueryItem(QStringLiteral("song_type"), name % QStringLiteral(":") % state);
+                }
             };
 
             struct SongTypeParamsList : public QList<SongTypeParam> {
                 void initParams(QUrlQuery & query) const {
-                    if (!isEmpty()) {
-                        QString typesListStr = first().toStr();
-                        for(QList<SongTypeParam>::ConstIterator sType = constBegin()++; sType != constEnd(); sType++)
-                            typesListStr = typesListStr % ',' % (*sType).toStr();
-
-                        query.addQueryItem(QStringLiteral("song_type"), typesListStr);
-                    }
+                    qDebug() << "&&&&&&&&&&&&&&&&&&&&& " << size();
+                    for(QList<SongTypeParam>::ConstIterator sType = constBegin(); sType != constEnd(); sType++)
+                        (*sType).initParams(query);
                 }
             };
 
