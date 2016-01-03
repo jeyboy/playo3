@@ -69,6 +69,7 @@ namespace Models {
         int proceedVkList(QJsonArray & collection, Playlist * parent);
         int proceedScList(QJsonArray & collection, Playlist * parent);
         int proceedOdList(QJsonArray & collection, Playlist * parent);
+        int proceedYandexList(QJsonArray & collection, Playlist * parent);
         int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());

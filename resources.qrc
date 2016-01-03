@@ -68,6 +68,8 @@
         <file alias="process_on">images/items/process_on.png</file>
         <file alias="redmp3_item">images/items/redmp3.png</file>
         <file alias="redmp3_item_on">images/items/redmp3_on.png</file>
+        <file alias="yandex_item">images/items/yandex.png</file>
+        <file alias="yandex_item_on">images/items/yandex_on.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

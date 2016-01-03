@@ -265,6 +265,66 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
+int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
+    if (collection.isEmpty()) return 0;
+
+    int itemsAmount = 0;
+//    QJsonObject itm;
+//    WebFile * newItem;
+//    QString uri, refresh_url, id;
+
+//    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+//        itm = (*it).toObject();
+
+//        if (itm.isEmpty()) continue;
+
+//        id = QString::number(itm.value(Grabber::id_key).toInt());
+
+//        uri = itm.value(Grabber::url_key).toString();
+//        refresh_url = itm.value(Grabber::refresh_key).toString();
+
+//        itemsAmount++;
+//        newItem = new WebFile(
+//            id,
+//            uri,
+//            itm.value(Grabber::title_key).toString(),
+//            parent
+//        );
+
+//        newItem -> setSubtype(site_yandex);
+//        newItem -> setRefreshPath(refresh_url);
+//        newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
+
+//        if (itm.contains(Grabber::duration_key)) {
+//            if (itm.value(Grabber::duration_key).isDouble())
+//                newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
+//            else
+//                newItem -> setDuration(itm.value(Grabber::duration_key));
+//        }
+
+//        if (itm.contains(Grabber::genre_id_key))
+//            newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
+
+//        if (itm.contains(Grabber::bpm_key))
+//            newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
+
+//        if (itm.contains(Grabber::size_key))
+//            newItem -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
+
+//        if (!itm.contains(Grabber::skip_info_key))
+//            newItem -> setInfo(Info::str(
+//                    itm.value(Grabber::size_key).toString("?"),
+//                    newItem -> extension().toString(),
+//                    itm.value(Grabber::bitrate_key).toString("?"),
+//                    itm.value(Grabber::discretion_rate_key).toString("?"),
+//                    itm.value(Grabber::channels_key).toString("?")
+//                )
+//            );
+//    }
+
+    return itemsAmount;
+}
+
 int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 

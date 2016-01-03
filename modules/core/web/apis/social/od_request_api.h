@@ -7,7 +7,7 @@
 #define OD_OFFSET_LIMIT 2000
 #define OD_SEARCH_LIMIT 200
 
-namespace Core {
+namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
             class RequestApi : public Misc, public TeuAuth {
@@ -22,7 +22,7 @@ namespace Core {
 
                 inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % additional()); }
 
-                inline QUrl audioUrl(const QString func, const QUrlQuery & query = QUrlQuery()) {
+                inline QUrl audioUrl(const QString & func, const QUrlQuery & query = QUrlQuery()) {
                     QUrl url(url_base_audio % func % tkn_coma_dot % genDefaultParams().toString());
                     url.setQuery(query);
                     return url;
