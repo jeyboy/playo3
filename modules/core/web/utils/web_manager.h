@@ -39,6 +39,14 @@ namespace Core {
 
                 } else return QUrl();
             }
+            inline void appendHeaders(QUrl & url) {
+                QString urlStr = QStringLiteral("%1\r\nReferer: %2").arg(url.toString(), QString(request().rawHeader("Referer")));
+//                QHash<QString, QString> headers;
+//                headers.insert(QStringLiteral("User-Agent"), request().header(QNetworkRequest::UserAgentHeader).toString());
+//                headers.insert(QStringLiteral("Referer"), QString(request().rawHeader("Referer")));
+//                ///////////////    ////////////////
+                url = QUrl(urlStr);
+            }
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
 
             Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
@@ -98,6 +106,27 @@ namespace Core {
 
             static inline QString paramVal(const QUrl & url, const QString & param) { return QUrlQuery(url).queryItemValue(param); }
 
+            static inline QHash<QString, QString> extractHeaders(QString & url) {
+                QStringList heads = url.split(QRegularExpression("%0D%0A|\\r\\n"), QString::SkipEmptyParts);
+                QHash<QString, QString> res;
+                if (heads.size() > 1) {
+                    url = heads.takeFirst();
+
+                    while(!heads.isEmpty()) {
+                        QStringList parts =  heads.takeLast().split(QStringLiteral(": "), QString::SkipEmptyParts);
+                        res.insert(parts.first(), parts.last());
+                    }
+                }
+
+                return res;
+            }
+            static inline QHash<QString, QString> extractHeaders(const QUrl & url) {
+                QString urlStr = url.toString();
+                QHash<QString, QString> headers = extractHeaders(urlStr);
+                if (!headers.isEmpty()) const_cast<QUrl &>(url) = QUrl(urlStr);
+                return headers;
+            }
+
             Response * get(const Request & request, bool async = false) {
                 QNetworkReply * m_http = QNetworkAccessManager::get(request);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
@@ -107,8 +136,15 @@ namespace Core {
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
 
-            inline Request * requestTo(const QString & url) { return new Request(this, url); }
-            inline Request * requestTo(const QUrl & url) { return new Request(this, url); }
+            inline Request * requestTo(const QString & url) {
+                QHash<QString, QString> headers = extractHeaders(const_cast<QString &>(url));
+                return (new Request(this, url)) -> withHeaders(headers);
+            }
+            inline Request * requestTo(const QUrl & url) {
+                QHash<QString, QString> headers = extractHeaders(url);
+                qDebug() << "----------------------" << url << headers;
+                return (new Request(this, url)) -> withHeaders(headers);
+            }
 
             inline QPixmap getImage(const QUrl & url) { return followedGet(url) -> toImage(); }
             inline QJsonObject getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
@@ -117,8 +153,8 @@ namespace Core {
             inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
 
             inline Response * followedGetAsync(const QUrl & url, const Func & response) {
-                asyncRequests.insert(url, response);
                 Response * resp = requestTo(url) -> viaGet(true);
+                asyncRequests.insert(resp -> url(), response);
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
                 return resp;
             }
@@ -143,9 +179,10 @@ namespace Core {
                 Func func = asyncRequests.take(source -> url());
                 QUrl new_url = source -> redirectUrl();
 
-                if (!new_url.isEmpty())
+                if (!new_url.isEmpty()) {
+                    source -> appendHeaders(new_url);
                     followedGetAsync(new_url, func);
-                else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QIODevice *, source), Q_ARG(void *, func.user_data));
+                } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QIODevice *, source), Q_ARG(void *, func.user_data));
             }
         protected:
             QHash<QUrl, Func> asyncRequests;

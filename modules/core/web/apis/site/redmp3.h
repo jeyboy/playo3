@@ -75,7 +75,7 @@ namespace Core {
                             song_obj.insert(year_key, album_and_year.last());
                             song_obj.insert(refresh_key, baseUrlStr(infos.find(".track-title").link()));
 //                            song_obj.insert(skip_info_key, true);
-                            song_obj.insert(title_key, (*song) -> value(data_title));
+                            song_obj.insert(title_key, (*song) -> value(data_title).replace(QString("—"), QString("-")));
                             json << song_obj;
                         }
 

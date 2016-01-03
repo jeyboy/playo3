@@ -8,6 +8,7 @@ namespace Core {
                 if (prev_urls.contains(new_url)) return this;
                 else prev_urls.insert(new_url, true);
 
+                appendHeaders(new_url);
                 deleteLater();
                 return ((Manager *)manager()) -> requestTo(new_url) -> viaGet() -> followByRedirect(prev_urls);
             }
@@ -64,6 +65,9 @@ namespace Core {
 
             if (!headers.contains(QStringLiteral("Referer")))
                 setRawHeader("Referer", url().path().toUtf8());
+
+            if (!headers.contains(QStringLiteral("User-Agent")))
+                setRawHeader("User-Agent", DEFAULT_AGENT.toUtf8());
 
             return this;
         }
