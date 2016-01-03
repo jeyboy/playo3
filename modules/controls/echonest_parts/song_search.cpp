@@ -153,7 +153,7 @@ void SongSearch::onSearchClicked() {
     );
 
     Core::Web::Echonest::SongSearchParams params(
-        new Core::Web::Echonest::Artist(artist -> text()),
+        artist -> text(),
         title -> text(),
         combined -> isChecked(),
         artistFromYear -> currentText(),

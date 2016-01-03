@@ -156,7 +156,7 @@ namespace Core {
             };
 
             struct SongSearchParams {
-                Artist * artist;
+                QString artist;
                 QString title;
                 bool combined;
 
@@ -178,7 +178,7 @@ namespace Core {
                 IntervalParam * acousticness;
 
                 inline SongSearchParams(
-                    Artist * artist = 0, const QString & title = QString(), bool combined = false,
+                    const QString & artist = QString(), const QString & title = QString(), bool combined = false,
                     const QString & artist_start_year = QString(), const QString & artist_end_year = QString(),
                     int mode = -1, const SongTypeParamsList & songTypes = SongTypeParamsList(),
                     DGSMParams * gsm = 0, IntervalParam * artist_familiarity = 0,
@@ -196,10 +196,10 @@ namespace Core {
 
                 void initParams(QUrlQuery & query) const {
                     if (combined) {
-                        if (!artist) return;
-                        query.addQueryItem(QStringLiteral("combined"), artist -> name % ' ' % title);
+                        if (artist.isEmpty()) return;
+                        query.addQueryItem(QStringLiteral("combined"), artist % ' ' % title);
                     } else {
-                        if (artist) artist -> initParams(query);
+                        if (!artist.isEmpty()) query.addQueryItem(QStringLiteral("artist"), artist);
                         if (!title.isEmpty()) query.addQueryItem(QStringLiteral("title"), title);
                     }
 
@@ -227,7 +227,6 @@ namespace Core {
                 }
 
                 ~SongSearchParams() {
-                    delete artist;
                     delete gsm;
                     delete artist_familiarity;
                     delete hotttnesss;

@@ -70,7 +70,7 @@ namespace Core {
                             Html::Set infos = (*song) -> find(".track-info");
                             QStringList album_and_year = infos.text().split(',');
 
-                            song_obj.insert(url_key, url_template.arg(baseUrlStr((*song) -> value(data_url)), baseUrlStr(), DEFAULT_AGENT));
+                            song_obj.insert(url_key, url_template.arg(baseUrlStr((*song) -> value(data_url)), baseUrlStr()));
                             song_obj.insert(album_key, album_and_year.first());
                             song_obj.insert(year_key, album_and_year.last());
                             song_obj.insert(refresh_key, baseUrlStr(infos.find(".track-title").link()));
