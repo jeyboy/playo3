@@ -98,7 +98,7 @@ void SongSearch::onMoodAdd() {
     moodBlockLayout -> addWidget(new QLabel(QStringLiteral("Mood")), 0, 0);
 
     QComboBox * edit = new QComboBox(moodBlock);
-    edit -> addItems(stylesList);
+    edit -> addItems(moodsList);
     moodBlockLayout -> addWidget(edit, 1, 0);
     edit -> setProperty("parent", (int)moodBlock);
 
