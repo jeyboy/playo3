@@ -141,6 +141,7 @@ namespace Core {
                 return (new Request(this, url)) -> withHeaders(headers);
             }
             inline Request * requestTo(const QUrl & url) {
+                qDebug() << "-----------XXX--------" << url;
                 QHash<QString, QString> headers = extractHeaders(url);
                 qDebug() << "----------------------" << url << headers;
                 return (new Request(this, url)) -> withHeaders(headers);

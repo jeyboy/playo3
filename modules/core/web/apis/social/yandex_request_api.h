@@ -12,13 +12,6 @@ namespace Core {
     namespace Web {
         namespace Yandex {
             class RequestApi : public TeuAuth, public IApi {
-                enum FilterType {
-                    none = QString(),
-                    albums = QStringLiteral("albums"),
-                    artists = QStringLiteral("artists"),
-                    tracks = QStringLiteral("tracks")
-                };
-
             protected:
                 RequestApi() {} // uid should be in format track_id:album_id (25358347:2988319)
 
@@ -86,12 +79,12 @@ namespace Core {
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
                     if (predicate.isEmpty() || limitations.by_popularity())
-                        return lQuery(topUrl(tracks, genre), QueryRules(tracks, qMin(requestLimit(), limitations.total_limit), qMin(YANDEX_SEARCH_LIMIT, limitations.total_limit)));
+                        return sQuery(topUrl(tkn_tracks, genre)).value(tkn_tracks).toArray();
                     else {
                         if (limitations.by_artists())
-                            return lQuery(searchUrl(predicate, artists), QueryRules(artists, qMin(requestLimit(), limitations.total_limit), qMin(YANDEX_SEARCH_LIMIT, limitations.total_limit)));
+                            return sQuery(searchUrl(predicate, tkn_artists)).value(tkn_artists).toArray();
                         else
-                            return lQuery(searchUrl(predicate, tracks), QueryRules(tracks, qMin(requestLimit(), limitations.total_limit), qMin(YANDEX_SEARCH_LIMIT, limitations.total_limit)));
+                            return sQuery(searchUrl(predicate, tkn_tracks)).value(tkn_tracks).toObject().value(QStringLiteral("items")).toArray();
                     }
                 }
             public:

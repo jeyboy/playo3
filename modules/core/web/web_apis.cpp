@@ -5,6 +5,7 @@ namespace Core {
         QHash<SubType, ISearchable *> Apis::sites = QHash<SubType, ISearchable *>();
 
         void Apis::initiate(const QJsonObject & obj) {
+            sites.insert(Yandex::Api::obj().siteType(), &Yandex::Api::obj());
             sites.insert(Vk::Api::obj().siteType(), &Vk::Api::obj());
             sites.insert(Soundcloud::Api::obj().siteType(), &Soundcloud::Api::obj());
             sites.insert(Fourshared::Api::obj().siteType(), &Fourshared::Api::obj());
