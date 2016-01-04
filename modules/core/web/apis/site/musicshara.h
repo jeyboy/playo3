@@ -70,7 +70,7 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+            inline QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
 
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }

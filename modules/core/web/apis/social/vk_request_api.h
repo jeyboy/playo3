@@ -28,9 +28,11 @@ namespace Core {
                     return url.toString();
                 }
 
+                QJsonArray popular(QString & genre) { return audioPopular(true, genre); }
+
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
                     if (predicate.isEmpty() && limitations.by_popularity())
-                        return audioPopular(true, genre);
+                        return popular(genre);
                     else
                         return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.total_limit);
                 }

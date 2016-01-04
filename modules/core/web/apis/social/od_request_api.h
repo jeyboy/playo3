@@ -61,9 +61,13 @@ namespace Core { // NOT FINISHED
                 inline QUrl tunersUrl() { return audioUrl(path_audio_tuners_for_radio); } // params: (locale: 'ru')  need to check pagination
                 inline QUrl radioUrl(QString /*tuner*/) { return audioUrl(path_audio_radio); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
-                QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+                QJsonArray popular(QString & /*genre*/) {
+                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
+                }
+
+                QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
                     if (predicate.isEmpty() || limitations.by_popularity())
-                        return lQuery(popAudioUrl(), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.total_limit), qMin(OD_SEARCH_LIMIT, limitations.total_limit)));
+                        return popular(genre);
                     else {
                         if (limitations.by_artists())
                             return lQuery(searchArtistsUrl(predicate), QueryRules(tkn_artists, qMin(requestLimit(), limitations.total_limit), qMin(OD_SEARCH_LIMIT, limitations.total_limit)));

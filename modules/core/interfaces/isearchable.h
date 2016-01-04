@@ -75,8 +75,8 @@ namespace Core {
                 return search_postprocess(predicate, genre, limitations);
             } else if (!genre.isEmpty())
                 return byGenre(genre, limitations);
-            else if (limitations.by_popularity())
-                return popular();
+            else if (limitations.by_popularity() || predicate.isEmpty())
+                return popular(genre);
 
             return QJsonArray();
         }
@@ -92,7 +92,7 @@ namespace Core {
 
         virtual QJsonArray byType(ByTypeArg /*target_type*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray popular() { return QJsonArray(); }
+        virtual QJsonArray popular(QString & /*genre*/) { return QJsonArray(); }
 
         //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
 

@@ -34,6 +34,21 @@ namespace Core {
                     return IApi::baseUrl(files_token_key, query);
                 }
 
+
+                QJsonArray popular(QString & /*genre*/) {
+                    QUrlQuery query = genDefaultParams();
+                    setCategory(query, music);
+                    // http://search.4shared.com/q/lastmonth/CAQD/1/music
+
+                    QJsonArray res = lQuery(
+                        IApi::baseUrl(files_token_key, query),
+                        QueryRules(files_token_key, requestLimit(), FOURSHARED_OFFSET_LIMIT / 5),
+                        none
+                    );
+
+                    return prepareAudios(res);
+                }
+
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
                     bool initInfo = false; // initInfo is too slow
                     QJsonArray res = lQuery(
@@ -66,7 +81,7 @@ namespace Core {
                 }
 
             private:
-                QJsonArray prepareAudios(QJsonArray & items, bool initInfo) {
+                QJsonArray prepareAudios(QJsonArray & items, bool initInfo = false) {
                     if (items.isEmpty()) return items;
 
                     Html::Selector prevSelector("input.jsD1PreviewUrl");

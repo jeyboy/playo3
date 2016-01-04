@@ -17,9 +17,9 @@ namespace Core {
                 inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, tkn_types, val_audio_org_types); }
                 inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, tkn_types, val_audio_rmx_types); }
 
-                inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, tkn_q, predicate); }
-                inline void setIdsFilter(QUrlQuery & query, QStringList & uids) { setParam(query, tkn_ids, uids.join(',')); }
-                inline void setGenreLimitation(QUrlQuery & query, QString & genre) { setParam(query, tkn_genres, genre); }
+                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
+                inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids.join(',')); }
+                inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
                 inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
 
                 QueryRules queryRules(int count = SOUNDCLOUD_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
@@ -64,7 +64,7 @@ namespace Core {
                 /////////////////
                 /// API
                 ////////////////
-                QUrl audioSearchUrl(QString & predicate, QString & genre, bool hottest = false) {
+                QUrl audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);
                     setOrder(query, hottest);
@@ -76,6 +76,14 @@ namespace Core {
                         setSearchPredicate(query, predicate);
 
                     return baseUrl(path_tracks, query);
+                }
+
+                QJsonArray popular(QString & genre) {
+                    return lQuery(
+                        audioSearchUrl(QString(), genre, true),
+                        queryRules(100),
+                        wrap
+                    );
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5

@@ -76,7 +76,7 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            inline QJsonArray popular() { return sQuery(QUrl(baseUrlStr()), songs1); }
+            inline QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
 
         protected:
             void prepareTables(Html::Set & tables, Html::Tag *& artists_table, Html::Tag *& songs_table) {

@@ -76,13 +76,17 @@ namespace Core {
                 // title, kind, trackCount, tracks, owner: {uid, login, name, verified}, cover: {type, dir, version, uri}, trackIds, modified
                 inline QUrl playlistUrl(const QString & owner) { return url_api_v1 + QStringLiteral("playlist.jsx?owner=%1&kinds=1267&light=true").arg(owner); }
 
+                QJsonArray popular(QString & genre) {
+                    qDebug() << "__________________________________";
+                    return sQuery(topUrl(tkn_tracks, genre)).value(tkn_tracks).toArray();
+                }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-                    if (predicate.isEmpty() || limitations.by_popularity())
-                        return sQuery(topUrl(tkn_tracks, genre)).value(tkn_tracks).toArray();
-                    else {
+                    if (predicate.isEmpty() || limitations.by_popularity()) {
+                        return popular(genre);
+                    } else {
                         if (limitations.by_artists())
-                            return sQuery(searchUrl(predicate, tkn_artists)).value(tkn_artists).toArray();
+                            return sQuery(searchUrl(predicate, tkn_artists)).value(tkn_artists).toObject().value(QStringLiteral("items")).toArray();
                         else
                             return sQuery(searchUrl(predicate, tkn_tracks)).value(tkn_tracks).toObject().value(QStringLiteral("items")).toArray();
                     }
