@@ -39,14 +39,11 @@ namespace Core {
 //                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
 //                }
 
-//              https://s35e.storage.yandex.net/get-mp3/ba2e04c26a528594c75a708dc93899c6/music/11/3/data-0.3:27882002036:8072208?track-id=20454067&play=false
-//              https://s23g.storage.yandex.net/get-mp3/6b58172d3c505ebca19aa09fa2a96868/0005287d8756c244/music/25/2/data-0.5:23733055851:6519535?track-id=19723294&play=false&
-
                 QString refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
                     QJsonObject obj = Manager::prepare() -> getJson(trackDownloadingUrl(refresh_page));
                     obj = Manager::prepare() -> getJson(QString(obj.value(QStringLiteral("src")).toString() % QStringLiteral("&format=json")));
                     QString path = obj.value(QStringLiteral("path")).toString();
-                    return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false").arg(
+                    return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
                         obj.value(QStringLiteral("host")).toString(), calcKey(path, obj.value(QStringLiteral("s")).toString()),
                         obj.value(QStringLiteral("ts")).toString(), path, refresh_page.split(':').first()
                     );

@@ -4,7 +4,6 @@
 namespace Core {
     namespace Web {
         enum SubType {
-            site_yandex = -5,
             site_od = -4,
             site_echonest = -3,
             site_vk = -2,
@@ -20,7 +19,8 @@ namespace Core {
             site_shmidt,
             site_jetune,
             site_music_shara,
-            site_redmp3
+            site_redmp3,
+            site_yandex
         };
     }
 }
