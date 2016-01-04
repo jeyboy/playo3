@@ -68,6 +68,7 @@ public:
         media_url = url;
         startPos = startMili;
         setDuration(maxDuration);
+        updatePosition(startMili);
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
