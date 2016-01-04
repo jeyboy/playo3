@@ -173,7 +173,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             beginInsertRows(QModelIndex(), offset, offset);
             endInsertRows();
             parent -> backPropagateItemsCountInBranch(propagate_count);
-            emit collapseNeeded(index(parent));
+//            emit collapseNeeded(index(parent));
         }
         offset += 1;
         emit setBackgroundProgress(requests.size() / total);
@@ -234,7 +234,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
         }
 
         if (propagate_count > 0) {
-            int taked_amount = innerSearch(r.token(), res, parent, 1); // need t orework algo - at this time taked first compatible item - not better
+            int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
             parent -> removeYouself();
 
             if (taked_amount > 0) {
@@ -277,7 +277,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
 }
 
 void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
-    bool web_predicable = !(request.predicates.isEmpty() && request.genres.isEmpty());
+    bool web_predicable = !(request.predicates.isEmpty() && request.genres.isEmpty()) || request.popular;
 
     if (request.predicates.isEmpty()) request.predicates << QString();
     if (request.genres.isEmpty()) request.genres << QString();
