@@ -273,58 +273,48 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-//    QJsonObject itm;
-//    WebFile * newItem;
-//    QString uri, refresh_url, id;
+    QJsonObject itm;
+    WebFile * newItem;
+    QString id, album_id, genre;
 
-//    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-//        itm = (*it).toObject();
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
+        if (itm.isEmpty()) continue;
 
-//        if (itm.isEmpty()) continue;
+        QStringList artistUids;
+        QString artistStr;
+        QJsonArray artistsAr = itm.value(Yandex::tkn_artists).toArray();
+        for(QJsonArray::Iterator artist = artistsAr.begin(); artist != artistsAr.end(); artist++) {
+            QJsonObject obj = (*artist).toObject();
+            artistUids << QString::number(obj.value(Yandex::tkn_id).toInt());
+            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % obj.value(Yandex::tkn_name).toString();
+        };
 
-//        id = QString::number(itm.value(Grabber::id_key).toInt());
+        QJsonObject album = itm.value(Yandex::tkn_album).toObject();
+        genre = album.value(Yandex::tkn_genre).toString();
+        album_id = QString::number(album.value(Yandex::tkn_id).toInt());
+        id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
 
-//        uri = itm.value(Grabber::url_key).toString();
-//        refresh_url = itm.value(Grabber::refresh_key).toString();
+        qDebug() << "YNDX ITM" << id << genre << album_id << artistStr;
 
-//        itemsAmount++;
-//        newItem = new WebFile(
-//            id,
-//            uri,
-//            itm.value(Grabber::title_key).toString(),
-//            parent
-//        );
+        itemsAmount++;
+        newItem = new WebFile(
+            id,
+            QString(),
+            artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString(),
+            parent
+        );
 
-//        newItem -> setSubtype(site_yandex);
-//        newItem -> setRefreshPath(refresh_url);
-//        newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
+        newItem -> setSubtype(site_yandex);
+        newItem -> setRefreshPath(id);
+        newItem -> setExtension(Grabber::default_extension);
 
-//        if (itm.contains(Grabber::duration_key)) {
-//            if (itm.value(Grabber::duration_key).isDouble())
-//                newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
-//            else
-//                newItem -> setDuration(itm.value(Grabber::duration_key));
-//        }
+        newItem -> setDuration(Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)));
+        //newItem -> setGenre(genre); // need to convert genre to genre id
 
-//        if (itm.contains(Grabber::genre_id_key))
-//            newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
-
-//        if (itm.contains(Grabber::bpm_key))
-//            newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
-
-//        if (itm.contains(Grabber::size_key))
-//            newItem -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
-
-//        if (!itm.contains(Grabber::skip_info_key))
-//            newItem -> setInfo(Info::str(
-//                    itm.value(Grabber::size_key).toString("?"),
-//                    newItem -> extension().toString(),
-//                    itm.value(Grabber::bitrate_key).toString("?"),
-//                    itm.value(Grabber::discretion_rate_key).toString("?"),
-//                    itm.value(Grabber::channels_key).toString("?")
-//                )
-//            );
-//    }
+        if (itm.contains(Yandex::tkn_fileSize))
+            newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+    }
 
     return itemsAmount;
 }

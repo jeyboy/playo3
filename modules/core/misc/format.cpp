@@ -22,7 +22,7 @@ QString Info::toUnits(long long val) {
     return QString().sprintf("%.2f ", dVal) + unitList[rel];
 }
 
-long long Info::fromUnits(QString val) {
+long long Info::fromUnits(const QString & val) {
     int size = sizeof(unitList) / sizeof(unitList[0]);
     QStringList rel = val.split(' ', QString::SkipEmptyParts);
 

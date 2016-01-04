@@ -11,7 +11,7 @@ public:
     static QString str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount);
     static QString str(const QString & size, const QString & ext, int bitrate, int freq, int channelsCount);
     static QString toUnits(long long val);
-    static long long fromUnits(QString val);
+    static long long fromUnits(const QString & val);
 
     static QString paddedNumber(qint64 time);
 };

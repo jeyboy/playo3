@@ -9,7 +9,7 @@ namespace Core {
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");
     const QString JSON_TYPE_DURATION = QStringLiteral("d");
     const QString JSON_TYPE_EXTENSION = QStringLiteral("e");
-    const QString JSON_TYPE_ARTIST_UID = QStringLiteral("f");
+    const QString JSON_TYPE_ARTIST_UIDS = QStringLiteral("f");
     const QString JSON_TYPE_GENRE_ID = QStringLiteral("g");
     const QString JSON_TYPE_ITEM_TYPE = QStringLiteral("i");
     const QString JSON_TYPE_SONG_UID = QStringLiteral("h");
