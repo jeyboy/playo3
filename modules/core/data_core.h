@@ -58,7 +58,7 @@ namespace Core {
             }
         }
 
-        void restoreOrNext() {
+        void restoreOrNext() { // need to prevent form loop
             if (!current_playlist) {
                 qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
                 return;

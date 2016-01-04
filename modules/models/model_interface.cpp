@@ -268,8 +268,6 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
-
-
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -294,8 +292,6 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
         genre = album.value(Yandex::tkn_genre).toString();
         album_id = QString::number(album.value(Yandex::tkn_id).toInt());
         id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
-
-        qDebug() << "YNDX ITM" << id << genre << album_id << artistStr;
 
         itemsAmount++;
         newItem = new WebFile(
