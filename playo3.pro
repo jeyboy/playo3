@@ -58,7 +58,10 @@ unix:!mac {
         DEFINES += HAVE_X11
         SOURCES += modules/controls/qxtglobalshortcut_x11.cpp
 }
-win32: { SOURCES += modules/controls/qxtglobalshortcut_win.cpp }
+win32: {
+    SOURCES += modules/controls/qxtglobalshortcut_win.cpp
+    SOURCES += modules/core/misc/file_utils/watcher_win.cpp
+}
 mac: {   SOURCES += modules/controls/qxtglobalshortcut_mac.cpp }
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/taglib/ -ltaglib-project
@@ -285,7 +288,8 @@ HEADERS += \
     modules/core/web/apis/site/redmp3.h \
     modules/core/web/apis/social/yandex.h \
     modules/core/web/apis/social/yandex_api_keys.h \
-    modules/core/web/apis/social/yandex_request_api.h
+    modules/core/web/apis/social/yandex_request_api.h \
+    modules/core/misc/file_utils/watcher.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -428,4 +432,5 @@ SOURCES += \
     modules/controls/echonest_parts/basic_playlist.cpp \
     modules/controls/echonest_parts/song_search.cpp \
     modules/core/web/apis/site/redmp3.cpp \
-    modules/core/web/apis/social/yandex_api_keys.cpp
+    modules/core/web/apis/social/yandex_api_keys.cpp \
+    modules/core/misc/file_utils/watcher_win.cpp
