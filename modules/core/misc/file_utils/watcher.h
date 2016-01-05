@@ -1,5 +1,5 @@
-#ifndef WATCHER
-#define WATCHER
+#ifndef FILE_WATCHER
+#define FILE_WATCHER
 
 #include <qobject.h>
 
@@ -51,4 +51,4 @@ signals:
     void folderChanged(const QString & path);
 };
 
-#endif // WATCHER
+#endif // FILE_WATCHER
