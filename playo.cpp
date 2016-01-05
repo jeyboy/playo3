@@ -1,7 +1,7 @@
 #include "playo.h"
 #include "ui_playo.h"
 
-#include "modules/core/misc/fuzzy_comparison.h"
+#include "modules/core/misc/file_utils/watcher.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -19,6 +19,9 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //    setAttribute(Qt::WA_DeleteOnClose);
     initialization();
+
+    Watcher::obj().registerPath(QStringLiteral("F:\\"), true);
+    connect(&Watcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
 
 //    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
 //    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);

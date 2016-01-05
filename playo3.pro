@@ -434,4 +434,6 @@ SOURCES += \
     modules/core/web/apis/site/redmp3.cpp \
     modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/watcher_win.cpp \
-    modules/core/misc/file_utils/watcher.cpp
+    modules/core/misc/file_utils/watcher.cpp \
+    modules/core/misc/file_utils/watcher_x11.cpp \
+    modules/core/misc/file_utils/watcher_mac.cpp

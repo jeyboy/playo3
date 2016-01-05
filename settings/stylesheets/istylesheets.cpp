@@ -78,7 +78,7 @@ QString IStylesheets::_sliderStyles() {
 
         "QSlider::sub-page:horizontal {"
 //                      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000, stop: 1 #777);"
-          "background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 1, stop: 0 #777, stop: 1 #fff);"
+            "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #777, stop: 0.3 #fff, stop: 0.35 #fff, stop:1 #777);"
         "}"
 
         "QSlider::sub-page:disabled {"

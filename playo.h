@@ -45,6 +45,9 @@ public slots:
     void receiveMessage(QString);
 
 private slots:
+    void messa(const QString & str) {
+        qDebug() << "MESSA" << str;
+    }
 //    void showError(QString);
 
     void showSearchDialog();

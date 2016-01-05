@@ -8,6 +8,7 @@
 class WatcherCell {
 public:
     virtual ~WatcherCell() {}
+    virtual bool isValid() = 0;
 };
 
 class Watcher : public QObject, public Core::Singleton<Watcher> {
@@ -19,10 +20,12 @@ protected:
 public:
     bool registerPath(const QString & path, bool recursive = false) {
         WatcherCell * cell = createCell(path, recursive);
-        if (cell)
+        bool valid = cell -> isValid();
+        if (valid)
             watchers.insert(path, cell);
+        else delete cell;
 
-        return !!cell;
+        return valid;
     }
     void unregisterPath(const QString & path) {
         delete watchers.take(path);
