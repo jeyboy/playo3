@@ -2,6 +2,7 @@
 #define FILE_WATCHER
 
 #include <qobject.h>
+#include <qdir.h>
 
 #include "modules/core/interfaces/singleton.h"
 

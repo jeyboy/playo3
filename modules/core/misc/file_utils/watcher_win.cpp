@@ -73,31 +73,61 @@ namespace {
         }
     }
 
+//    QString WinWatcher::getPidlPath(ITEMIDLIST * pidl) {
+//        if (!pidl) return "";
+//        SHFILEINFO shfi;
+//        QString name =
+//           (SHGetFileInfo((WCHAR *) pidl, 0, &shfi, sizeof(shfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+//           ? QString::fromWCharArray(shfi.szDisplayName) : "<unknown>";
+//        ITEMIDLIST * p = pidl;
+//        if (p -> mkid.cb) {
+//            for (;;) {
+//                ITEMIDLIST * q = (ITEMIDLIST *) (((char *) p) + p -> mkid.cb);
+//                if (q -> mkid.cb == 0) break;
+//                p = q;
+//            }
+
+//            int n = (char *)p - (char *)pidl;
+//            char * s = new char[n + 2];
+//            memcpy(s, pidl, n);
+//            s[n] = s[n + 1] = 0;
+//            name = getPidlPath((ITEMIDLIST *) s) + "\\" + name;
+//        }
+//        return name;
+//    }
+
     QString WinWatcher::getPidlPath(ITEMIDLIST * pidl) {
         if (!pidl) return "";
-        SHFILEINFO shfi;
-        QString name =
-           (SHGetFileInfo((WCHAR *) pidl, 0, &shfi, sizeof(shfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
-           ? QString::fromWCharArray(shfi.szDisplayName) : "<unknown>";
-        ITEMIDLIST * p = pidl;
-        if (p -> mkid.cb) {
-            for (;;) {
-                ITEMIDLIST * q = (ITEMIDLIST *) (((char *) p) + p -> mkid.cb);
-                if (q -> mkid.cb == 0) break;
-                p = q;
-            }
 
-            int n = (char *)p - (char *)pidl;
-            char * s = new char[n + 2];
-            memcpy(s, pidl, n);
-            s[n] = s[n + 1] = 0;
-            name = getPidlPath((ITEMIDLIST *) s) + "\\" + name;
-        }
+        QString name;
+        wchar_t str[MAX_PATH];
+        if (SHGetPathFromIDListW(pidl, str))
+            name = QString::fromWCharArray(str);
+
         return name;
+
+//        SHFILEINFO shfi;
+//        QString name =
+//           (SHGetFileInfo((WCHAR *) pidl, 0, &shfi, sizeof(shfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+//           ? QString::fromWCharArray(shfi.szDisplayName) : "<unknown>";
+//        ITEMIDLIST * p = pidl;
+//        if (p -> mkid.cb) {
+//            for (;;) {
+//                ITEMIDLIST * q = (ITEMIDLIST *) (((char *) p) + p -> mkid.cb);
+//                if (q -> mkid.cb == 0) break;
+//                p = q;
+//            }
+
+//            int n = (char *)p - (char *)pidl;
+//            char * s = new char[n + 2];
+//            memcpy(s, pidl, n);
+//            s[n] = s[n + 1] = 0;
+//            name = getPidlPath((ITEMIDLIST *) s) + "\\" + name;
+//        }
+//        return name;
     }
 
     bool WinWatcher::nativeEvent(const QByteArray & eventType, void * message, long * result) {
-        qDebug() << "MESSAGA" << eventType;
         if (eventType != "windows_generic_MSG") return false;
         MSG * msg = (MSG *)message;
         if (msg -> message != msgShellChange) return false;
@@ -105,25 +135,8 @@ namespace {
         long event;
         ITEMIDLIST ** items;
         HANDLE lock = SHChangeNotification_Lock((HANDLE) msg -> wParam, msg -> lParam, &items, &event);
-        QString n1 = getPidlPath(items[0]);
-        QString n2 = getPidlPath(items[1]);
-        /*
-        WCHAR path[MAX_PATH];
-        QString n1 = "?";
-        QString n2 = "?";
-        if (items[0]) {
-            DWORD r1 = SHGetPathFromIDList(items[0], path);
-            if (r1) {
-                n1 = QString::fromWCharArray(path);
-            }
-        }
-        if (items[1]) {
-            DWORD r2 = SHGetPathFromIDList(items[1], path);
-            if (r2) {
-                n2 = QString::fromWCharArray(path);
-            }
-        }
-        */
+        QString n1 = QDir::fromNativeSeparators(getPidlPath(items[0]));
+        QString n2 = QDir::fromNativeSeparators(getPidlPath(items[1]));
 
         switch (event) {
             case SHCNE_ATTRIBUTES: {
@@ -194,99 +207,4 @@ namespace {
         result = 0;
         return true;
     }
-
-//    bool WinWatcher::winEvent(MSG * msg, long * result) {
-//        if (msg -> message != msgShellChange) return false;
-//        long event;
-//        ITEMIDLIST ** items;
-//        HANDLE lock = SHChangeNotification_Lock((HANDLE) msg -> wParam, msg -> lParam, &items, &event);
-//        QString n1 = getPidlPath(items[0]);
-//        QString n2 = getPidlPath(items[1]);
-//        /*
-//        WCHAR path[MAX_PATH];
-//        QString n1 = "?";
-//        QString n2 = "?";
-//        if (items[0]) {
-//            DWORD r1 = SHGetPathFromIDList(items[0], path);
-//            if (r1) {
-//                n1 = QString::fromWCharArray(path);
-//            }
-//        }
-//        if (items[1]) {
-//            DWORD r2 = SHGetPathFromIDList(items[1], path);
-//            if (r2) {
-//                n2 = QString::fromWCharArray(path);
-//            }
-//        }
-//        */
-
-//        switch (event) {
-//            case SHCNE_ATTRIBUTES: {
-//               qDebug() << QString("Got change ATTRIBUTES for %1.").arg(n1);
-//               emit Watcher::obj().attributeChanged(n1);
-//            break;}
-
-//            case SHCNE_CREATE: {
-//               qDebug() << QString("Got change CREATE for %1.").arg(n1);
-//               emit Watcher::obj().fileCreated(n1);
-//            break;}
-//            case SHCNE_DELETE: {
-//               qDebug() << QString("Got change DELETE %1.").arg(n1);
-//               emit Watcher::obj().fileDeleted(n1);
-//            break;}
-//            case SHCNE_RENAMEITEM: {
-//               qDebug() << QString("Got change RENAMEITEM %1 to %2.").arg(n1).arg(n2);
-//               emit Watcher::obj().fileRenamed(n1, n2);
-//            break;}
-//            case SHCNE_UPDATEITEM: {
-//               qDebug() << QString("Got change UPDATEITEM %1.").arg(n1);
-//               emit Watcher::obj().fileChanged(n1);
-//            break;}
-
-//            case SHCNE_DRIVEADD: {
-//               qDebug() << QString("Got change DRIVEADD %1.").arg(n1);
-//               emit Watcher::obj().driveAdded(n1);
-//            break;}
-//            case SHCNE_DRIVEADDGUI: {
-//               qDebug() << QString("Got change DRIVEADDGUI %1.").arg(n1);
-//               emit Watcher::obj().driveGuiAdded(n1);
-//            break;}
-//            case SHCNE_DRIVEREMOVED: {
-//               qDebug() << QString("Got change DRIVEREMOVED %1.").arg(n1);
-//               emit Watcher::obj().driveRemoved(n1);
-//            break;}
-
-//            case SHCNE_MEDIAINSERTED: {
-//               qDebug() << QString("Got change MEDIAINSERTED %1.").arg(n1);
-//               emit Watcher::obj().mediaInserted(n1);
-//            break;}
-//            case SHCNE_MEDIAREMOVED: {
-//               qDebug() << QString("Got change MEDIAREMOVED %1.").arg(n1);
-//               emit Watcher::obj().mediaRemoved(n1);
-//            break;}
-
-//            case SHCNE_MKDIR: {
-//               qDebug() << QString("Got change MKDIR %1.").arg(n1);
-//               emit Watcher::obj().folderCreated(n1);
-//            break;}
-//            case SHCNE_RENAMEFOLDER: {
-//               qDebug() << QString("Got change RENAMEFOLDER %1 to %2.").arg(n1).arg(n2);
-//               emit Watcher::obj().folderRenamed(n1, n2);
-//            break;}
-//            case SHCNE_RMDIR: {
-//               qDebug() << QString("Got change RMDIR %1.").arg(n1);
-//               emit Watcher::obj().folderDeleted(n1);
-//            break;}
-//            case SHCNE_UPDATEDIR: {
-//               qDebug() << QString("Got change UPDATEDIR %1.").arg(n1);
-//               emit Watcher::obj().folderChanged(n1);
-//            break;}
-
-//            default: qDebug() << "Got unrecognized change.";
-//        }
-
-//        SHChangeNotification_Unlock(lock);
-//        result = 0;
-//        return true;
-//    }
 }
