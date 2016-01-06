@@ -1,46 +1,27 @@
-//#include <qt_windows.h>
 #include <shlobj.h>
 #include <shlwapi.h>
-#include <qlibrary.h>
-#include <qdebug.h>
+//#include <qlibrary.h>
+#include <qwidget.h>
 
 #include "watcher.h"
 
-//typedef struct {
-//    LPCITEMIDLIST pidl;
-//    BOOL fRecursive;
-//} SHChangeNotifyEntry;
-
-//#define SHELL_ENTRY(returnType, functionName, parameters) \
-//typedef returnType __stdcall (*functionName##_type) parameters; \
-//const functionName##_type functionName \
-//= (functionName##_type) QLibrary::resolve("shell32", #functionName)
-
-//SHELL_ENTRY(ULONG, SHChangeNotifyRegister,
-//           (HWND hwnd, int fSources, LONG fEvents, UINT wMsg, int cEntries, SHChangeNotifyEntry * pshcne));
-//SHELL_ENTRY(BOOL, SHChangeNotifyDeregister, (unsigned long ulID));
-//SHELL_ENTRY(HANDLE, SHChangeNotification_Lock,
-//           (HANDLE hChangeNotification, DWORD dwProcessId, LPITEMIDLIST ** pppidl, LONG * plEvent));
-//SHELL_ENTRY(BOOL, SHChangeNotification_Unlock, (HANDLE hLock));
-
 namespace {
-    class WinWatcher : public QWidget, public WatcherCell {
-        static const unsigned int msgShellChange = WM_USER + 1;
-        unsigned long id;
-        static QString getPidlPath(ITEMIDLIST * pidl);
-        ITEMIDLIST * dir;
-        public:
-            WinWatcher(const QString & path, bool recursive);
-            ~WinWatcher();
+    #define msgShellChange WM_USER + 1
 
-            bool isValid();
+    class WinWatcher : public QWidget, public Core::Singleton<WinWatcher> {
+        static QString getPidlPath(ITEMIDLIST * pidl);
+        public:
+            WinWatcher() {}
+            ~WinWatcher() {}
+
+            bool registerPath(qintptr & id, const QString & path, bool recursive);
+            void unregisterPath(qintptr ptr);
         protected:
-//            bool winEvent(MSG * message, long * result);
             bool nativeEvent(const QByteArray & eventType, void * message, long * result);
     };
 
-    WinWatcher::WinWatcher(const QString & path, bool recursive) : QWidget(), id(0) {
-        dir = ILCreateFromPathW(path.toStdWString().c_str()); // this requires on test
+    bool WinWatcher::registerPath(qintptr & id, const QString & path, bool recursive) {
+        ITEMIDLIST * dir = ILCreateFromPathW(path.toStdWString().c_str()); // this requires on test
 //        qDebug() << "~~~~~~~~~~~~~" << WinWatcher::getPidlPath(dir);
 
         SHChangeNotifyEntry ne = {dir, recursive};
@@ -62,39 +43,13 @@ namespace {
                                     SHCNE_UPDATEITEM,
                                     msgShellChange, 1, &ne);
         qDebug() << "SHChangeNotifyRegister id =" << id;
+        ILFree(dir);
+        return id > 0;
     }
 
-    bool WinWatcher::isValid() { return id > 0; }
-
-    WinWatcher::~WinWatcher() {
-        if (id) {
-            SHChangeNotifyDeregister(id);
-            ILFree(dir);
-        }
+    void WinWatcher::unregisterPath(qintptr ptr) {
+        if(ptr) SHChangeNotifyDeregister(ptr);
     }
-
-//    QString WinWatcher::getPidlPath(ITEMIDLIST * pidl) {
-//        if (!pidl) return "";
-//        SHFILEINFO shfi;
-//        QString name =
-//           (SHGetFileInfo((WCHAR *) pidl, 0, &shfi, sizeof(shfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
-//           ? QString::fromWCharArray(shfi.szDisplayName) : "<unknown>";
-//        ITEMIDLIST * p = pidl;
-//        if (p -> mkid.cb) {
-//            for (;;) {
-//                ITEMIDLIST * q = (ITEMIDLIST *) (((char *) p) + p -> mkid.cb);
-//                if (q -> mkid.cb == 0) break;
-//                p = q;
-//            }
-
-//            int n = (char *)p - (char *)pidl;
-//            char * s = new char[n + 2];
-//            memcpy(s, pidl, n);
-//            s[n] = s[n + 1] = 0;
-//            name = getPidlPath((ITEMIDLIST *) s) + "\\" + name;
-//        }
-//        return name;
-//    }
 
     QString WinWatcher::getPidlPath(ITEMIDLIST * pidl) {
         if (!pidl) return "";

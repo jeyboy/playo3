@@ -3,38 +3,38 @@
 
 #include <qobject.h>
 #include <qdir.h>
+#include <qdebug.h>
 
 #include "modules/core/interfaces/singleton.h"
 
-class WatcherCell {
-public:
-    virtual ~WatcherCell() {}
-    virtual bool isValid() = 0;
-};
-
-class Watcher : public QObject, public Core::Singleton<Watcher> {
+class Watcher : public QWidget, public Core::Singleton<Watcher> {
     Q_OBJECT
 
-    QHash<QString, WatcherCell *> watchers;
+    QHash<QString, qintptr> pathPids;
 protected:
-    WatcherCell * createCell(const QString & path, bool recursive);
+    bool registerPathProc(qintptr & ptr, const QString & path, bool recursive = false);
+    void unregisterPathProc(qintptr ptr);
 public:
-    bool registerPath(const QString & path, bool recursive = false) {
-        WatcherCell * cell = createCell(path, recursive);
-        bool valid = cell -> isValid();
-        if (valid)
-            watchers.insert(path, cell);
-        else delete cell;
+    virtual ~Watcher() {
+        for(QHash<QString, qintptr>::Iterator pid = pathPids.begin(); pid != pathPids.end(); pid++)
+            unregisterPathProc(pid.value());
 
-        return valid;
+        pathPids.clear();
+    }
+    bool registerPath(const QString & path, bool recursive = false) {
+        qintptr ptr;
+        bool res = registerPathProc(ptr, path, recursive);
+
+        if (res)
+            pathPids.insert(path, ptr);
+
+        return res;
     }
     void unregisterPath(const QString & path) {
-        delete watchers.take(path);
+        if (pathPids.contains(path))
+            unregisterPathProc(pathPids.take(path));
     }
 
-    ~Watcher() {
-        qDeleteAll(watchers);
-    }
 signals:
     void attributeChanged(const QString & path);
     void fileCreated(const QString & path);

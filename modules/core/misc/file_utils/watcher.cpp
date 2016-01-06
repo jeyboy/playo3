@@ -8,12 +8,21 @@
     #include "watcher_x11.cpp"
 #endif
 
-WatcherCell * Watcher::createCell(const QString & path, bool recursive) {
+bool Watcher::registerPathProc(qintptr & ptr, const QString & path, bool recursive) {
     #ifdef Q_OS_WIN
-        return new WinWatcher(path, recursive);
+        return WinWatcher::obj().registerPath(ptr, path, recursive);
     #elif Q_OS_MAC
-        return new MacWatcher(path, recursive);
+        return MacWatcher::obj().registerPath(ptr, path, recursive);
     #else
-        return new X11Watcher(path, recursive);
+        return X11Watcher::obj().registerPath(ptr, path, recursive);
+    #endif
+}
+void Watcher::unregisterPathProc(qintptr ptr) {
+    #ifdef Q_OS_WIN
+        WinWatcher::obj().unregisterPath(ptr);
+    #elif Q_OS_MAC
+        MacWatcher::obj().unregisterPath(ptr);
+    #else
+        X11Watcher::obj().unregisterPath(ptr);
     #endif
 }
