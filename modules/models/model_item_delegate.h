@@ -2,7 +2,7 @@
 #define MODEL_ITEM_DELEGATE_H
 
 #include <qstyleditemdelegate.h>
-#include <qpainter>
+#include <qpainter.h>
 #include <qstyleoption.h>
 #include <qtreeview.h>
 #include <qcheckbox.h>

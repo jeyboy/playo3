@@ -1,7 +1,7 @@
 #ifndef THREAD_UTILS
 #define THREAD_UTILS
 
-#include <typeinfo.h>
+#include <typeinfo>
 #include <qthread.h>
 #include <qapplication.h>
 

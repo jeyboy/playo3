@@ -23,7 +23,7 @@ namespace Models {
         bool removeRows(int position, int rows, const QModelIndex & parent);
         QJsonObject toJson();
 
-        inline ignoreListContainUid(const QString & uid) { return IgnoreList::ignoreListContainUid(uid); } // overriding for model_interface
+        inline bool ignoreListContainUid(const QString & uid) { return IgnoreList::ignoreListContainUid(uid); } // overriding for model_interface
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

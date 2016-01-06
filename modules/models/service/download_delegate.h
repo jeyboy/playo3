@@ -2,7 +2,7 @@
 #define DOWNLOAD_DELEGATE_H
 
 #include <qstyleditemdelegate.h>
-#include <qpainter>
+#include <qpainter.h>
 #include <qprogressbar.h>
 #include <qstyleoption.h>
 #include <qstringbuilder.h>
