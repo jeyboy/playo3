@@ -6,7 +6,14 @@
 
 // QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtInfoMsg, QtSystemMsg = QtCriticalMsg
 void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, const QString & message) {
-    OutputDebugString(reinterpret_cast<const wchar_t *>(QString(message % QStringLiteral("\n")).utf16()) );
+    #ifdef Q_OS_WIN
+        OutputDebugString(reinterpret_cast<const wchar_t *>(QString(message % QStringLiteral("\n")).utf16()) );
+    #else
+        const char symbols[] = { 'I', 'E', '!', 'X' };
+        QString output = QString("[%1] %2").arg(symbols[msgType]).arg(message);
+        std::cerr << output.toStdString() << std::endl;
+//        if(type == QtFatalMsg) abort();
+    #endif
 
     Logger::obj().write(
         QStringLiteral("%2 - %3 - %4").arg(QString(context.file), QString(context.function), QString::number(context.line)),
