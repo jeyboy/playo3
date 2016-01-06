@@ -27,11 +27,14 @@ namespace {
         SHChangeNotifyEntry ne = {dir, recursive};
 
         id = SHChangeNotifyRegister((HWND)winId(), SHCNRF_InterruptLevel | SHCNRF_ShellLevel | SHCNRF_RecursiveInterrupt | SHCNRF_NewDelivery,
+//                                    SHCNE_NETSHARE
+//                                    SHCNE_NETUNSHARE
+//                                    SHCNE_SERVERDISCONNECT
+                                    SHCNE_FREESPACE        |
                                     SHCNE_ATTRIBUTES       |
                                     SHCNE_CREATE           |
                                     SHCNE_DELETE           |
                                     SHCNE_DRIVEADD         |
-                                    SHCNE_DRIVEADDGUI      |
                                     SHCNE_DRIVEREMOVED     |
                                     SHCNE_MEDIAINSERTED    |
                                     SHCNE_MEDIAREMOVED     |
@@ -82,7 +85,9 @@ namespace {
 //        return name;
     }
 
-    bool WinWatcher::nativeEvent(const QByteArray & eventType, void * message, long * result) {
+    bool WinWatcher::nativeEvent(const QByteArray & eventType, void * message, long * /*result*/) {
+//        Q_NOT_USED(result);
+
         if (eventType != "windows_generic_MSG") return false;
         MSG * msg = (MSG *)message;
         if (msg -> message != msgShellChange) return false;
@@ -94,6 +99,11 @@ namespace {
         QString n2 = QDir::fromNativeSeparators(getPidlPath(items[1]));
 
         switch (event) {
+            case SHCNE_FREESPACE: {
+               qDebug() << QString("Got change FREE SPACE for %1.").arg(n1);
+               emit Watcher::obj().freeSpaceChanged(n1);
+            break;}
+
             case SHCNE_ATTRIBUTES: {
                qDebug() << QString("Got change ATTRIBUTES for %1.").arg(n1);
                emit Watcher::obj().attributeChanged(n1);
@@ -119,10 +129,6 @@ namespace {
             case SHCNE_DRIVEADD: {
                qDebug() << QString("Got change DRIVEADD %1.").arg(n1);
                emit Watcher::obj().driveAdded(n1);
-            break;}
-            case SHCNE_DRIVEADDGUI: {
-               qDebug() << QString("Got change DRIVEADDGUI %1.").arg(n1);
-               emit Watcher::obj().driveGuiAdded(n1);
             break;}
             case SHCNE_DRIVEREMOVED: {
                qDebug() << QString("Got change DRIVEREMOVED %1.").arg(n1);
@@ -159,7 +165,7 @@ namespace {
         }
 
         SHChangeNotification_Unlock(lock);
-        result = 0;
+//        result = 0;
         return true;
     }
 }

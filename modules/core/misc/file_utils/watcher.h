@@ -36,14 +36,22 @@ public:
     }
 
 signals:
+    void freeSpaceChanged(const QString & path);
+
     void attributeChanged(const QString & path);
+
+    // x11 only
+    void fileOpened(const QString & path);
+    void fileReaded(const QString & path);
+    void fileClosed(const QString & path);
+    ////////////////////////
+
     void fileCreated(const QString & path);
     void fileDeleted(const QString & path);
     void fileRenamed(const QString & oldPath, const QString & newPath);
     void fileChanged(const QString & path);
 
     void driveAdded(const QString & path);
-    void driveGuiAdded(const QString & path);
     void driveRemoved(const QString & path);
 
     void mediaInserted(const QString & path);
