@@ -128,7 +128,6 @@ namespace Core {
                     }
 
                     if (!token.isEmpty()) selector -> addToken(state, token, rel);
-                    free((void *)predicate);
                 }
 
                 ////////  Tag //////////
