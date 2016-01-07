@@ -6,7 +6,7 @@
 
 VERSION = 0.6.4.1
 
-CONFIG += c++11
+CONFIG += c++11 release debug
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES *= QT_USE_QSTRINGBUILDER
 
@@ -52,7 +52,7 @@ RC_FILE = playo.rc
 
 unix:!mac {
         QT += gui-private
-        CONFIG += link_pkgconfig release
+        CONFIG += link_pkgconfig
         PKGCONFIG += x11
         LDFLAGS =- lX11
         DEFINES += HAVE_X11

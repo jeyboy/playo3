@@ -22,6 +22,11 @@
     <height>16777215</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>8</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -100,9 +105,15 @@
        <height>17</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">color: green;
-font-weight: bold;</string>
+      <string notr="true">font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Show checkboxes for batch operations</string>
@@ -124,9 +135,9 @@ font-weight: bold;</string>
     <widget class="QCheckBox" name="spoilOnActivate">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>80</y>
-       <width>131</width>
+       <x>170</x>
+       <y>100</y>
+       <width>151</width>
        <height>17</height>
       </rect>
      </property>
@@ -139,7 +150,7 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>80</y>
-       <width>171</width>
+       <width>311</width>
        <height>17</height>
       </rect>
      </property>
@@ -168,7 +179,7 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>100</y>
-       <width>251</width>
+       <width>161</width>
        <height>17</height>
       </rect>
      </property>
@@ -179,10 +190,10 @@ font-weight: bold;</string>
     <widget class="QCheckBox" name="showNumber">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>190</x>
        <y>40</y>
-       <width>151</width>
-       <height>17</height>
+       <width>141</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -207,7 +218,7 @@ font-weight: bold;</string>
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>151</width>
+       <width>171</width>
        <height>17</height>
       </rect>
      </property>
@@ -1125,9 +1136,9 @@ font-weight: bold;</string>
     <widget class="QLabel" name="label_21">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>180</x>
        <y>40</y>
-       <width>81</width>
+       <width>91</width>
        <height>21</height>
       </rect>
      </property>
@@ -1261,8 +1272,15 @@ font-weight: bold;</string>
        <height>21</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">color: red; font-weight: bold;</string>
+      <string notr="true">font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Open item timeout</string>
@@ -1403,6 +1421,13 @@ font-weight: bold;</string>
        <width>111</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">color: green; font-weight: bold;</string>

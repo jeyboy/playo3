@@ -10,6 +10,11 @@
     <height>181</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>8</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -85,9 +90,9 @@
    <widget class="QRadioButton" name="isListRadio">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>70</x>
       <y>20</y>
-      <width>41</width>
+      <width>51</width>
       <height>17</height>
      </rect>
     </property>
@@ -103,7 +108,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>41</width>
+      <width>51</width>
       <height>17</height>
      </rect>
     </property>
@@ -154,7 +159,7 @@
      <rect>
       <x>60</x>
       <y>70</y>
-      <width>81</width>
+      <width>91</width>
       <height>17</height>
      </rect>
     </property>
@@ -216,11 +221,18 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this option when you remove item, you are initiate deletion  of object from your hard disk ( or account data storage)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: red; font-weight: bold;</string>
+     <string notr="true">font-weight: bold;</string>
     </property>
     <property name="text">
      <string>Delete file 

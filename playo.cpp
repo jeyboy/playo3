@@ -140,6 +140,8 @@ void Playo::closeEvent(QCloseEvent * e) {
     Web::Apis::close(settings -> obj());
     settings -> save();
 
+    HotkeyManager::obj().~HotkeyManager(); // x11 realisation based on gui and should be closed before application closing
+
     Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
     MainWindow::closeEvent(e);
 }
