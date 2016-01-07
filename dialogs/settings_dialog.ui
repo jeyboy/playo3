@@ -1262,7 +1262,7 @@ font-weight: bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: red; text-width: bold;</string>
+      <string notr="true">color: red; font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Open item timeout</string>
