@@ -308,6 +308,8 @@ bool Playlist::updateCheckedStateByPredicate(ItemStateFlag pred_state) {
         valid |= (*it) -> updateCheckedStateByPredicate(pred_state);
 
     IItem::updateCheckedState(valid);
+
+    return valid;
 }
 
 void Playlist::shuffle() {

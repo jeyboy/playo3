@@ -66,7 +66,7 @@ namespace {
     };
 
     void INotifyThread::run() {
-        int len, i;
+        uint len, i;
         struct inotify_event * event, * nested_event;
         char buffer[BUFFERSIZE];
 

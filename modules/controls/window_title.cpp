@@ -4,7 +4,7 @@ using namespace Controls;
 
 WindowTitle::WindowTitle(bool compact, QWidget * window, int height, QMargins margins, QMargins buttonsMargins,
             int left_padding, int right_padding, bool showMini, bool showMaxi, bool showClose)
-    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), isCompact(compact), hMargins(margins), search(0)
+    : QWidget(window), rightPadding(right_padding), leftPadding(left_padding), search(0), isCompact(compact), hMargins(margins)
 {
     button_height = height - (margins.top() + buttonsMargins.top() + buttonsMargins.bottom());
 
