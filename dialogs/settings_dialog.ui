@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-249</y>
+      <y>0</y>
       <width>320</width>
       <height>550</height>
      </rect>
@@ -1260,7 +1260,7 @@
       <rect>
        <x>10</x>
        <y>60</y>
-       <width>151</width>
+       <width>171</width>
        <height>17</height>
       </rect>
      </property>
@@ -1294,9 +1294,9 @@
     <widget class="QComboBox" name="dropPointTabTypeSelect">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>170</x>
        <y>150</y>
-       <width>181</width>
+       <width>161</width>
        <height>22</height>
       </rect>
      </property>
@@ -1361,7 +1361,7 @@
       <rect>
        <x>10</x>
        <y>210</y>
-       <width>71</width>
+       <width>81</width>
        <height>21</height>
       </rect>
      </property>
@@ -1372,9 +1372,9 @@
     <widget class="QCheckBox" name="drawMetricsNumero">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>180</x>
        <y>60</y>
-       <width>151</width>
+       <width>141</width>
        <height>17</height>
       </rect>
      </property>
@@ -1387,7 +1387,7 @@
       <rect>
        <x>10</x>
        <y>120</y>
-       <width>111</width>
+       <width>131</width>
        <height>17</height>
       </rect>
      </property>
@@ -1410,7 +1410,7 @@
       <rect>
        <x>10</x>
        <y>85</y>
-       <width>71</width>
+       <width>81</width>
        <height>21</height>
       </rect>
      </property>
@@ -1423,7 +1423,7 @@
       <rect>
        <x>190</x>
        <y>120</y>
-       <width>111</width>
+       <width>131</width>
        <height>17</height>
       </rect>
      </property>
@@ -1438,7 +1438,7 @@
       <string notr="true">font-weight: bold;</string>
      </property>
      <property name="text">
-      <string>Start on system start up</string>
+      <string>Start with system</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="openDropPointInTab">
@@ -1446,7 +1446,7 @@
       <rect>
        <x>10</x>
        <y>150</y>
-       <width>141</width>
+       <width>151</width>
        <height>17</height>
       </rect>
      </property>

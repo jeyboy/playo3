@@ -2,6 +2,7 @@
 #include "single_application.h"
 #include "modules/core/misc/logger.h"
 
+#include <qdebug.h>
 #include <qapplication.h>
 
 // QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtInfoMsg, QtSystemMsg = QtCriticalMsg
@@ -38,6 +39,15 @@ int main(int argc, char * argv[]) {
 
         SingleApplication a(argc, argv, QStringLiteral("bigbugplayo"));
         a.setApplicationVersion(APP_VERSION);
+
+        QFont font;
+        font.setFamily(font.defaultFamily());
+        #ifdef HAVE_X11
+            font.setFamily(QStringLiteral("Ubuntu"));
+            font.setPointSize(8);
+        #endif
+        a.setFont(font);
+        qDebug() << font.family();
 
         QThread::currentThread() -> setPriority(QThread::HighPriority);
 
