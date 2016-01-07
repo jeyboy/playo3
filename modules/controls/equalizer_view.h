@@ -24,7 +24,7 @@
 
 namespace Controls {
     #define DEFAULT_PRESET QStringLiteral("Manual")
-    #define JSON_KEY QStringLiteral("presets")
+    #define EQUALIZER_JSON_KEY QStringLiteral("presets")
 
     class EqualizerView : public QWidget {
         Q_OBJECT

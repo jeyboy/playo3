@@ -24,10 +24,11 @@ namespace Dialogs {
         void instantiation();
         void instantiateLayout();
 
+        Ui::SettingsDialog * ui;
+
         QWidget * lastTab;
         ExtensionDialog * extDialog;
 
-        Ui::SettingsDialog * ui;
         bool iconSizeChanged;
         QColor defaultColor, listenedColor, likedColor, playedColor, folderColor, itemColor, spectrumColor, spectrumColor2, spectrumColor3;
         QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;

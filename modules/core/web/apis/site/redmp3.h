@@ -92,13 +92,14 @@ namespace Core {
             void genres_prepocessing() {} // not supports genres
 
 
-            inline QString refresh_postprocess(Response * reply) {
+            inline QString refresh_postprocess(Response * /*reply*/) {
 //                return reply -> toJson().value(QStringLiteral("url")).toString();
+                return QString();
             }
 
             QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
                 QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(
-                    encodeStr(predicate.toLower().replace(QRegularExpression("[\W_]+"), QStringLiteral("-"))),
+                    encodeStr(predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
                     page_offset_key
                 ));
 
