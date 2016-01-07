@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>-249</y>
       <width>320</width>
       <height>550</height>
      </rect>
@@ -787,8 +787,13 @@
          <height>41</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
-        <string notr="true">color: red;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Delay of remote items info proccessing</string>
@@ -1268,7 +1273,7 @@
       <rect>
        <x>10</x>
        <y>180</y>
-       <width>101</width>
+       <width>111</width>
        <height>21</height>
       </rect>
      </property>
@@ -1299,7 +1304,7 @@
     <widget class="QLabel" name="label_remoteProcMetric_2">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>220</x>
        <y>180</y>
        <width>21</width>
        <height>21</height>
@@ -1430,7 +1435,7 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: green; font-weight: bold;</string>
+      <string notr="true">font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Start on system start up</string>
@@ -1452,7 +1457,7 @@
     <widget class="QDoubleSpinBox" name="openTimeOut">
      <property name="geometry">
       <rect>
-       <x>120</x>
+       <x>130</x>
        <y>180</y>
        <width>81</width>
        <height>22</height>

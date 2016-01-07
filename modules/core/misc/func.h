@@ -20,8 +20,6 @@ struct Func {
                 strncpy(arg, entry + 1, len - 1); arg[len - 1] = '\0';
             }
         } else arg[0] = '\0';
-
-        delete [] respSlot;
     }
     inline ~Func() {}
 
