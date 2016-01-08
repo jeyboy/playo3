@@ -260,8 +260,9 @@ void DownloadView::proceedDownload() {
     QList<DownloadModelItem *> items =  mdl -> root() -> childList();
 
     for(QList<DownloadModelItem *>::Iterator it = items.begin(); it != items.end(); it++) {
-        if (!paused && !(*it) -> data(DOWNLOAD_READY).toBool())
-            proceedDownload(*it);
+        if (paused || (*it) -> data(DOWNLOAD_ERROR).isValid() || (*it) -> data(DOWNLOAD_FINISHED).toBool())
+            continue;
+        proceedDownload(*it);
     }
 }
 
@@ -269,7 +270,7 @@ void DownloadView::initiateItem(DownloadModelItem * itm) {
     itm -> setData(DOWNLOAD_PROGRESS, -1);
     itm -> setData(REMOTE_PROGRESS, -1);
     itm -> setData(DOWNLOAD_REFRESH_ATTEMPTS, 0);
-    itm -> setData(DOWNLOAD_READY, false);
+    itm -> setData(DOWNLOAD_FINISHED, false);
     itm -> setData(DOWNLOAD_ERROR, QVariant());
 }
 
@@ -311,6 +312,7 @@ DownloadModelItem * DownloadView::saving(DownloadModelItem * itm, QIODevice * so
     QFile toFile(to);
     bool isRemote = itm -> data(DOWNLOAD_IS_REMOTE).toBool();
     // QIODevice::Append | QIODevice::Unbuffered
+
     bool isReadyForWriting = toFile.open(QIODevice::WriteOnly) && toFile.resize(source -> bytesAvailable());
 
     if (isReadyForWriting) {
@@ -354,7 +356,7 @@ DownloadModelItem * DownloadView::saving(DownloadModelItem * itm, QIODevice * so
     if (!isReadyForWriting || watcher -> isCanceled())
         toFile.remove();
     else {
-        itm -> setData(DOWNLOAD_READY, true);
+        itm -> setData(DOWNLOAD_FINISHED, true);
         emit updateAttr(itm, DOWNLOAD_PROGRESS, 100);
         toFile.close();
     }
@@ -365,7 +367,7 @@ DownloadModelItem * DownloadView::saving(DownloadModelItem * itm, QIODevice * so
 void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
     QMenu menu(this);
 
-    menu.addAction(QStringLiteral("Restart all blocked"), this, SLOT(reproceedDownload()));
+    menu.addAction(QStringLiteral("Restart all unsuccessfull"), this, SLOT(reproceedDownload()));
 
     menu.exec(event -> globalPos());
     event -> accept();

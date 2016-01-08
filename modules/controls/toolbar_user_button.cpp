@@ -9,7 +9,12 @@ ToolbarUserButton::ToolbarUserButton(const QString & text, const QString & folde
     if (!path.endsWith('/'))
         path = path.append('/') ;
 
-    QFile::setPermissions(path, QFile::WriteUser | QFile::ReadUser);
+    QFile::setPermissions(path,
+        QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner |
+        QFile::ReadUser | QFile::WriteUser | QFile::ExeUser |
+        QFile::ReadGroup | QFile::WriteGroup | QFile::ExeGroup /*|
+        QFile::ReadOther | QFile::WriteOther | QFile::ExeOther*/
+    );
 
     setProperty("custom", true);
     checkState();
