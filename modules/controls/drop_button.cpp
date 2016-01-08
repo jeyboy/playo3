@@ -24,12 +24,9 @@ void DropButton::registerAction(QWidget * action) {
 
 void DropButton::hoverIn() {
     HoverableLabel::hoverIn();
-    menu -> popup(mapToGlobal(mapFromParent(pos())));
 
-    QApplication::processEvents();
-    QApplication::processEvents();
-    QApplication::processEvents();
-
-    if (!rect().contains(mapFromGlobal(QCursor::pos()), true))
+    if (!rect().contains(mapFromGlobal(QCursor::pos())))
         menu -> hide();
+    else if (menu -> isHidden())
+        menu -> popup(mapToGlobal(mapFromParent(pos())));
 }

@@ -2,6 +2,7 @@
 #define HOVERABLE_MENU
 
 #include <qmenu.h>
+#include <qdebug.h>
 
 namespace Controls {
     class HoverableMenu : public QMenu {
@@ -12,8 +13,13 @@ namespace Controls {
         inline void close() { hide(); }
 
     protected:
+        void mouseMoveEvent(QMouseEvent *) {
+            if (!rect().contains(mapFromGlobal(QCursor::pos())))
+                close();
+        }
+
         inline void leaveEvent(QEvent *) {
-            if (!rect().contains(mapFromGlobal(QCursor::pos()), true))
+            if (!rect().contains(mapFromGlobal(QCursor::pos())))
                 close();
         }
     };
