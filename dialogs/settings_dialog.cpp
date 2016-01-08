@@ -52,7 +52,6 @@ void SettingsDialog::instantiateLayout() {
     setLayout(grid);
 
     QButtonGroup * group = new QButtonGroup(this);
-    group -> setExclusive(true);
 
     group -> addButton(ui -> commonBtn, (int)ui -> commonArea);
     group -> addButton(ui -> viewsBtn, (int)ui -> viewsArea);
@@ -62,6 +61,7 @@ void SettingsDialog::instantiateLayout() {
     group -> addButton(ui -> extensionsBtn, (int)ui -> extensionsArea);
 
     connect(group, SIGNAL(buttonClicked(int)), this, SLOT(tabClicked(int)));
+    ui -> commonBtn -> setDefault(true);
     ui -> commonBtn -> animateClick();
 
     setMinimumSize(466, 360);
@@ -550,57 +550,3 @@ void Dialogs::SettingsDialog::tabClicked(int obj_id) {
     if (lastTab) lastTab -> setVisible(false);
     (lastTab = (QWidget *)obj_id) -> setVisible(true);
 }
-
-//void Dialogs::SettingsDialog::on_commonBtn_clicked(bool checked) {
-//    ui -> commonArea -> setVisible(checked);
-////    ui -> viewsArea -> setVisible(false);
-////    ui -> itemsArea -> setVisible(false);
-////    ui -> hotkeysArea -> setVisible(false);
-////    ui -> spectrumArea -> setVisible(false);
-////    extDialog -> setVisible(false);
-//}
-
-//void Dialogs::SettingsDialog::on_viewsBtn_clicked(bool checked) {
-////    ui -> commonArea -> setVisible(false);
-//    ui -> viewsArea -> setVisible(checked);
-////    ui -> itemsArea -> setVisible(false);
-////    ui -> hotkeysArea -> setVisible(false);
-////    ui -> spectrumArea -> setVisible(false);
-////    extDialog -> setVisible(false);
-//}
-
-//void Dialogs::SettingsDialog::on_itemsBtn_clicked(bool checked) {
-////    ui -> commonArea -> setVisible(false);
-////    ui -> viewsArea -> setVisible(false);
-//    ui -> itemsArea -> setVisible(checked);
-////    ui -> hotkeysArea -> setVisible(false);
-////    ui -> spectrumArea -> setVisible(false);
-////    extDialog -> setVisible(false);
-//}
-
-//void Dialogs::SettingsDialog::on_hotkeysBtn_clicked(bool checked) {
-////    ui -> commonArea -> setVisible(false);
-////    ui -> viewsArea -> setVisible(false);
-////    ui -> itemsArea -> setVisible(false);
-//    ui -> hotkeysArea -> setVisible(checked);
-////    ui -> spectrumArea -> setVisible(false);
-////    extDialog -> setVisible(false);
-//}
-
-//void Dialogs::SettingsDialog::on_spectrumBtn_clicked(bool checked) {
-////    ui -> commonArea -> setVisible(false);
-////    ui -> viewsArea -> setVisible(false);
-////    ui -> itemsArea -> setVisible(false);
-////    ui -> hotkeysArea -> setVisible(false);
-//    ui -> spectrumArea -> setVisible(checked);
-////    extDialog -> setVisible(false);
-//}
-
-//void Dialogs::SettingsDialog::on_extensionsBtn_clicked(bool checked) {
-////    ui -> commonArea -> setVisible(false);
-////    ui -> viewsArea -> setVisible(false);
-////    ui -> itemsArea -> setVisible(false);
-////    ui -> hotkeysArea -> setVisible(false);
-////    ui -> spectrumArea -> setVisible(false);
-//    extDialog -> setVisible(checked);
-//}

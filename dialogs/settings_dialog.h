@@ -83,12 +83,6 @@ namespace Dialogs {
         void on_colorScheme_activated(int index);
 
         void tabClicked(int);
-//        void on_commonBtn_clicked(bool checked);
-//        void on_viewsBtn_clicked(bool checked);
-//        void on_itemsBtn_clicked(bool checked);
-//        void on_hotkeysBtn_clicked(bool checked);
-//        void on_spectrumBtn_clicked(bool checked);
-//        void on_extensionsBtn_clicked(bool checked);
     };
 }
 

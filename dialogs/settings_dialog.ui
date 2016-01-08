@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>-222</y>
       <width>320</width>
       <height>550</height>
      </rect>
@@ -383,6 +383,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QComboBox" name="itemInfoFontSelect">
       <property name="geometry">
@@ -432,6 +435,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QLabel" name="label_10">
       <property name="geometry">
@@ -460,6 +466,9 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_12">
@@ -538,6 +547,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox_4">
@@ -567,6 +579,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="defaultColorButton">
       <property name="geometry">
@@ -580,6 +595,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="folderColorButton">
       <property name="geometry">
@@ -592,6 +610,9 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
@@ -671,6 +692,9 @@
       <property name="text">
        <string/>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="playedColorButton">
       <property name="geometry">
@@ -683,6 +707,9 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -722,6 +749,9 @@
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
@@ -931,6 +961,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="label_17">
      <property name="geometry">
@@ -1066,6 +1099,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="label_22">
      <property name="geometry">
@@ -1104,6 +1140,9 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QLabel" name="label_20">
@@ -1354,6 +1393,9 @@
       <property name="text">
        <string>Browse...</string>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QLabel" name="label_29">
@@ -1527,6 +1569,9 @@
         <property name="text">
          <string>Cancel</string>
         </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -1534,12 +1579,18 @@
         <property name="text">
          <string>Reset current tab</string>
         </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="acceptButton">
         <property name="text">
          <string>Ok</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -1605,7 +1656,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="flat">
       <bool>false</bool>
@@ -1630,7 +1681,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="hotkeysBtn">
@@ -1652,7 +1703,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="itemsBtn">
@@ -1674,7 +1725,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="spectrumBtn">
@@ -1696,7 +1747,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="extensionsBtn">
@@ -1718,7 +1769,7 @@
       <bool>true</bool>
      </property>
      <property name="autoDefault">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
