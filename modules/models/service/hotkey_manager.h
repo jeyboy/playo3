@@ -28,7 +28,7 @@ class HotkeyManager : public Core::Singleton<HotkeyManager> {
     QHash<int, QxtGlobalShortcut *> shortcuts;
 public:
     inline virtual ~HotkeyManager() {
-        shortcuts.clear();
+//        shortcuts.clear();
 //        foreach (QxtGlobalShortcut * hotkey, shortcuts.values())
 //            delete hotkey;
     }

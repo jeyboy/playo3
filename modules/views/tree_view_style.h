@@ -17,6 +17,12 @@ public:
         brush = QBrush(color);
     }
 
+    int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0) const {
+        if (hint == QStyle::SH_ItemView_ShowDecorationSelected) {
+            return 0;
+        } else return QProxyStyle::styleHint(hint, option, widget, returnData);
+    }
+
     void drawPrimitive(PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const {
         if (element == QStyle::PE_IndicatorItemViewItemDrop && !option -> rect.isNull()) {
             painter -> save();

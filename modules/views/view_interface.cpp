@@ -38,6 +38,11 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     setStyle(new TreeViewStyle);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    /////////////////////////////////
+    setAutoFillBackground(false);
+    setAllColumnsShowFocus(false);
+    /////////////////////////////////
+
     setDragEnabled(true);
     setAcceptDrops(true);
     setDropIndicatorShown(true);

@@ -128,6 +128,13 @@ QString IStylesheets::_sliderStyles() {
 
 QString IStylesheets::_treeViewStyles() {
     return QStringLiteral(
+        "QTreeView, QTreeView::branch {"
+        "   selection-background-color: transparent;"
+//        "   show-decoration-selected: 0;"
+//        "   paint-alternating-row-colors-for-empty-area: 0;"
+//        "   alternate-background-color: transparent; "
+        "}"
+
         "QTreeView::branch:has-children:!has-siblings:closed,"
         "QTreeView::branch:closed:has-children:has-siblings {"
         "   border-image: none;"

@@ -95,6 +95,9 @@ QString LightStylesheets::scrollStyles() {
 
 QString LightStylesheets::treeViewStyles() {
     return QString(
+        "QTreeView::branch::selected {"
+        "   background-color: " + color1().name(QColor::HexRgb) + ";"
+        "}"
         "QTreeView {"
         "   background-color: " + color2().name(QColor::HexArgb) + ";"
         "   border-radius: 8px;"

@@ -98,6 +98,9 @@ QString DarkStylesheets::scrollStyles() {
 
 QString DarkStylesheets::treeViewStyles() {
     return QString(
+        "QTreeView::branch::selected {"
+        "   background-color: " + color1().name(QColor::HexArgb) + ";"
+        "}"
         "QTreeView {"
         "   border-radius: 8px;"
         "   background-color: transparent;"
