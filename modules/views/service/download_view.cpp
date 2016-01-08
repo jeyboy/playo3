@@ -150,14 +150,17 @@ void DownloadView::initiateSaving(DownloadModelItem * item, QIODevice * source) 
 void DownloadView::savingCompleted() {
     QFutureWatcher<DownloadModelItem *> * obj = (QFutureWatcher<DownloadModelItem *> *)sender();
     DownloadModelItem * item = bussyWatchers.key(obj);//obj -> result();
-    bussyWatchers.remove(item);
-    QModelIndex ind = mdl -> index(item);
-    obj -> deleteLater();
 
-    if (!ind.data(DOWNLOAD_ERROR).isValid()) {
-        removeRow(item);
-    } else {
-//        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
+    if (item) {
+        bussyWatchers.remove(item);
+        QModelIndex ind = mdl -> index(item);
+        obj -> deleteLater();
+
+        if (!ind.data(DOWNLOAD_ERROR).isValid()) {
+            removeRow(item);
+        } else {
+    //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
+        }
     }
     proceedDownload();
 }

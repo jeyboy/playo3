@@ -36,7 +36,7 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
         prebufferingChanged(1);
     } else {
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        new_chan = openRemote(url.toString().replace(QStringLiteral("%0D%0A"), QStringLiteral("\r\n")), REMOTE_PLAY_ATTRS);
+        new_chan = openRemote(url.toString().replace(QStringLiteral("%0D%0A"), QStringLiteral("\r\n")) % QStringLiteral("\r\n"), REMOTE_PLAY_ATTRS);
     }
 
     if (!new_chan) {
