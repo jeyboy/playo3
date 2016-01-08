@@ -2,6 +2,7 @@
 #define THREAD_CELL
 
 #include <qfuturewatcher.h>
+#include <qdebug.h>
 
 #include "func.h"
 
@@ -24,7 +25,8 @@ namespace Core {
         void postprocessing(QObject * obj) {
             QFutureWatcher<T> * initiator = (QFutureWatcher<T> *)obj;
             if (response -> obj && !initiator -> isCanceled() && response) {
-                QGenericArgument arg = QArgument<T>(response -> arg, initiator -> result());
+                T result = initiator -> result();
+                QGenericArgument arg = QArgument<T>(response -> arg, result);
                 QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
             }
         }
@@ -35,8 +37,9 @@ namespace Core {
         WatchCell(Func * func) : Cell(func) {}
         void postprocessing(QObject * obj) {
             QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)obj;
-                if (response -> obj && !initiator -> isCanceled() && response)
+                if (response -> obj && !initiator -> isCanceled() && response) {
                     QMetaObject::invokeMethod(response -> obj, qPrintable(response -> slot), Qt::AutoConnection);
+                }
         }
     };
 

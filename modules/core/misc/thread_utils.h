@@ -1,7 +1,7 @@
 #ifndef THREAD_UTILS
 #define THREAD_UTILS
 
-#include <typeinfo>
+//#include <typeinfo>
 #include <qthread.h>
 #include <qapplication.h>
 
@@ -29,6 +29,7 @@ namespace Core {
         void postprocessing() {
             QObject * obj = sender();
             requests[obj] -> postprocessing(obj);
+            obj -> deleteLater();
         }
     public:
         static bool inMainThread() { return QThread::currentThread() == QApplication::instance() -> thread(); }
