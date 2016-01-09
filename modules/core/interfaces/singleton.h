@@ -61,6 +61,29 @@ namespace Core {
         Singleton(const Singleton &);
         Singleton & operator=(const Singleton &);
     };
+/////////////////////////////////////////////////////////////////////////////
+/// singleton without removing control
+/////////////////////////////////////////////////////////////////////////////
+
+    template<class T> class RelSingleton {
+    public:
+        static T & obj() {
+            if (!target) target = new T();
+
+            return *target;
+        }
+
+        static void destroy() { delete target; }
+
+        virtual ~RelSingleton() {}
+    protected:
+        static T * target;
+        RelSingleton() {}
+        RelSingleton(const RelSingleton &);
+        RelSingleton & operator=(const RelSingleton &);
+    };
+
+    template<class T> T * RelSingleton<T>::target = 0;
 }
 
 #endif // SINGLETON

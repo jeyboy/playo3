@@ -26,3 +26,15 @@ void FileSystemWatcher::unregisterPathProc(qintptr ptr) {
         X11Watcher::obj().unregisterPath(ptr);
     #endif
 }
+
+FileSystemWatcher::~FileSystemWatcher() {
+    clear();
+
+    #ifdef Q_OS_WIN
+        WinWatcher::destroy();
+    #elif Q_OS_MAC
+        MacWatcher::destroy();
+    #else
+        X11Watcher::destroy();
+    #endif
+}

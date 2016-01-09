@@ -16,12 +16,17 @@ namespace {
         QHash<QString, bool> drives;
         QHash<QString, bool> media;
     protected:
+        void proceedDrives(bool init = false);
+        void proceedMedia(bool init = false);
         void run();
     public:
-        INotifyThread(qintptr notifyPID) : notifyPID(notifyPID) {}
+        INotifyThread(qintptr notifyPID) : notifyPID(notifyPID) {
+            proceedDrives(true);
+            proceedMedia(true);
+        }
     };
 
-    class X11Watcher : public Core::Singleton<X11Watcher> {
+    class X11Watcher : public Core::RelSingleton<X11Watcher> {
         qintptr notifyPID;
 
         INotifyThread * thread;
@@ -80,6 +85,7 @@ namespace {
                 inotify_rm_watch(notifyPID, ptr);
 
                 if (recursiveTrees.contains(ptr)) {
+                    qDebug() << recursiveTrees;
                     QList<qintptr> ptrs = recursiveTrees.take(ptr);
                     for(QList<qintptr>::Iterator subPtr = ptrs.begin(); subPtr != ptrs.end(); subPtr++)
                         inotify_rm_watch(notifyPID, *subPtr);
@@ -87,14 +93,59 @@ namespace {
             }
     };
 
+    void INotifyThread::proceedDrives(bool init) {
+        QStringList drivesList;
+        FileSystemWatcher::foldersList(QStringLiteral("/mnt"), drivesList);
+
+        qDebug() << "DRIVES" << drivesList;
+
+        if (!drivesList.isEmpty()) {
+            QHash<QString, bool> checkable(drives);
+
+            for(QStringList::Iterator drive = drivesList.begin(); drive != drivesList.end(); drive++) {
+                if (!drives.contains(*drive)) {
+                    drives.insert(*drive, true);
+                    if (!init) emit FileSystemWatcher::obj().driveAdded(*drive);
+                } else checkable.remove(*drive);
+            }
+
+            if (!init)
+                for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
+                    emit FileSystemWatcher::obj().driveRemoved(removed.key());
+        }
+    }
+    void INotifyThread::proceedMedia(bool init) {
+        QStringList mediaList;
+        FileSystemWatcher::foldersList(QStringLiteral("/media"), mediaList);
+
+        qDebug() << "MEDIA" << mediaList;
+        if (!mediaList.isEmpty()) {
+            QHash<QString, bool> checkable(media);
+
+            for(QStringList::Iterator item = mediaList.begin(); item != mediaList.end(); item++) {
+                if (!media.contains(*item)) {
+                    media.insert(*item, true);
+                    if (!init) emit FileSystemWatcher::obj().mediaInserted(*item);
+                } else checkable.remove(*item);
+            }
+
+            if (!init)
+                for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
+                    emit FileSystemWatcher::obj().mediaRemoved(removed.key());
+        }
+    }
+
     void INotifyThread::run() {
         uint len, i;
         struct inotify_event * event;
         char buffer[BUFFERSIZE];
 
-        qDebug() << "IN NOTIFY THREAD";
         while((len = read(notifyPID, buffer, BUFFERSIZE)) > 0) {
             i = 0;
+
+            qDebug() << "PIDO";
+            proceedDrives();
+            proceedMedia();
 
             while(i + sizeof(struct inotify_event) < len) {
                 event = (struct inotify_event *) &buffer[i];
@@ -192,30 +243,6 @@ namespace {
                     case IN_Q_OVERFLOW: {
                         qDebug() << QString("OVERFLOW!!!");
                     break;}
-
-
-//                    /media,/mnt
-                    //                    case SHCNE_DRIVEADD: {
-                    //                       qDebug() << QString("Got change DRIVEADD %1.").arg(n1);
-                    //                       emit FileSystemWatcher::obj().driveAdded(n1);
-                    //                    break;}
-                    //                    case SHCNE_DRIVEADDGUI: {
-                    //                       qDebug() << QString("Got change DRIVEADDGUI %1.").arg(n1);
-                    //                       emit FileSystemWatcher::obj().driveGuiAdded(n1);
-                    //                    break;}
-                    //                    case SHCNE_DRIVEREMOVED: {
-                    //                       qDebug() << QString("Got change DRIVEREMOVED %1.").arg(n1);
-                    //                       emit FileSystemWatcher::obj().driveRemoved(n1);
-                    //                    break;}
-
-                    //                    case SHCNE_MEDIAINSERTED: {
-                    //                       qDebug() << QString("Got change MEDIAINSERTED %1.").arg(n1);
-                    //                       emit FileSystemWatcher::obj().mediaInserted(n1);
-                    //                    break;}
-                    //                    case SHCNE_MEDIAREMOVED: {
-                    //                       qDebug() << QString("Got change MEDIAREMOVED %1.").arg(n1);
-                    //                       emit FileSystemWatcher::obj().mediaRemoved(n1);
-                    //                    break;}
                 }
 
                 i += sizeof(struct inotify_event) + event -> len;

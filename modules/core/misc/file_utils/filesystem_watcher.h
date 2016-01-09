@@ -31,7 +31,6 @@ protected:
                 QDir(file.filePath()).entryInfoList(nameFilters, (QDir::Filter)filters);
     }
 public:
-
     static void filesList(const QString & path, QStringList & result, const QStringList & nameFilters = QStringList()) {
         entriesList(path, result, FILE_FILTERS, nameFilters);
     }
@@ -48,12 +47,8 @@ public:
         entriesInfoList(file, result, FOLDER_FILTERS, nameFilters);
     }
 
-    virtual ~FileSystemWatcher() {
-        for(QHash<QString, qintptr>::Iterator pid = pathPids.begin(); pid != pathPids.end(); pid++)
-            unregisterPathProc(pid.value());
+    virtual ~FileSystemWatcher();
 
-        pathPids.clear();
-    }
     bool registerPath(const QString & path, bool recursive = false) {
         qintptr ptr;
         bool res = registerPathProc(ptr, path, recursive);
@@ -67,6 +62,13 @@ public:
     void unregisterPath(const QString & path) {
         if (pathPids.contains(path))
             unregisterPathProc(pathPids.take(path));
+    }
+
+    void clear() {
+        for(QHash<QString, qintptr>::Iterator pid = pathPids.begin(); pid != pathPids.end(); pid++)
+            unregisterPathProc(pid.value());
+
+        pathPids.clear();
     }
 
 signals:
