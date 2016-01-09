@@ -6,7 +6,7 @@
 
 VERSION = 0.6.4.1
 
-CONFIG += c++11 release debug
+CONFIG += c++11
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES *= QT_USE_QSTRINGBUILDER
 

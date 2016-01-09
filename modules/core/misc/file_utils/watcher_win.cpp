@@ -8,7 +8,7 @@
 namespace {
     #define msgShellChange WM_USER + 1
 
-    class WinWatcher : public QWidget, public Core::Singleton<WinWatcher> {
+    class WinWatcher : public QWidget, public Core::RelSingleton<WinWatcher> {
         static QString getPidlPath(ITEMIDLIST * pidl);
         public:
             WinWatcher() {}

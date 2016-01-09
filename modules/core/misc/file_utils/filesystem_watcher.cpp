@@ -31,10 +31,10 @@ FileSystemWatcher::~FileSystemWatcher() {
     clear();
 
     #ifdef Q_OS_WIN
-        WinWatcher::destroy();
+        WinWatcher::destruct();
     #elif Q_OS_MAC
-        MacWatcher::destroy();
+        MacWatcher::destruct();
     #else
-        X11Watcher::destroy();
+        X11Watcher::destruct();
     #endif
 }

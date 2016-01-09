@@ -73,7 +73,7 @@ namespace Core {
             return *target;
         }
 
-        static void destroy() { delete target; }
+        static void destruct() { delete target; }
 
         virtual ~RelSingleton() {}
     protected:
