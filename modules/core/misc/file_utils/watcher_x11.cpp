@@ -44,10 +44,8 @@ namespace {
                 delete thread;
             }
 
-            bool registerPath(qintptr & id, const QString & path, bool /*recursive*/) {
+            bool registerPath(qintptr & id, const QString & path, bool recursive) {
                 if (!initiated()) return false;
-
-                //TODO: need to realize recursive schema
 
                 id = inotify_add_watch(
                     notifyPID,
@@ -55,7 +53,28 @@ namespace {
                     IN_ALL_EVENTS | IN_UNMOUNT | IN_Q_OVERFLOW | IN_IGNORED
                 );
 
-                return id > -1;
+                bool res = id > -1;
+
+                if (res && recursive) {
+                    QFileInfo info(path);
+                    if (info.isDir()) {
+                        QStringList subdirs;
+                        FileSystemWatcher::foldersList(path, subdirs);
+
+                        if (!subdirs.isEmpty()) {
+                            QList<qintptr> ptrs = recursiveTrees.take(id);
+                            for(QStringList::Iterator dir = subdirs.begin(); dir != subdirs.end(); dir++) {
+                                qintptr uid;
+                                registerPath(uid, *dir, recursive);
+                                ptrs << uid;
+                            }
+
+                            recursiveTrees.insert(id, ptrs);
+                        }
+                    }
+                }
+
+                return res;
             }
             void unregisterPath(qintptr ptr) {
                 inotify_rm_watch(notifyPID, ptr);
