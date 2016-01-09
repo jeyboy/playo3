@@ -5,7 +5,7 @@
 
 #include <qhash.h>
 #include <qthread.h>
-#include <qdir.h>
+#include <qstringbuilder.h>
 
 namespace {
     #define BUFFERSIZE 512
@@ -70,8 +70,8 @@ namespace {
                             QList<qintptr> ptrs = recursiveTrees.take(id);
                             for(QStringList::Iterator dir = subdirs.begin(); dir != subdirs.end(); dir++) {
                                 qintptr uid;
-                                registerPath(uid, *dir, recursive);
-                                ptrs << uid;
+                                if (registerPath(uid, info.filePath() % QDir::separator() % (*dir), recursive))
+                                    ptrs << uid;
                             }
 
                             recursiveTrees.insert(id, ptrs);
