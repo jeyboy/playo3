@@ -9,5 +9,4 @@ HoverableLabel::HoverableLabel(QString user_text, const QPixmap & icon, const QP
     connect(this, SIGNAL(hoverOut()), this, SLOT(hoverOut()));
 }
 
-HoverableLabel::~HoverableLabel() {
-}
+HoverableLabel::~HoverableLabel() {}

@@ -3,6 +3,8 @@
 
 #include "clickable_label.h"
 
+#include <qdebug.h>
+
 namespace Controls {
     class HoverableLabel : public ClickableLabel {
       Q_OBJECT
@@ -13,8 +15,14 @@ namespace Controls {
         inline void setOn() { hoverIn(); blockEvent = true; }
         inline void setOff() { hoverOut(); blockEvent = false; }
     protected slots:
-        virtual inline void hoverIn() { if (!blockEvent) setPixmap(hico); }
-        virtual inline void hoverOut() { if (!blockEvent) setPixmap(ico); }
+        virtual inline void hoverIn() {
+//            qDebug() << "HOVER IN" << blockEvent;
+            if (!blockEvent) setPixmap(hico);
+        }
+        virtual inline void hoverOut() {
+//            qDebug() << "HOVER OUT" << blockEvent;
+            if (!blockEvent) setPixmap(ico);
+        }
 
     private:
         bool blockEvent;
