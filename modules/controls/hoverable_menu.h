@@ -2,7 +2,6 @@
 #define HOVERABLE_MENU
 
 #include <qmenu.h>
-#include <qdebug.h>
 
 namespace Controls {
     class HoverableMenu : public QMenu {
