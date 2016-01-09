@@ -1,4 +1,4 @@
-#include "watcher.h"
+#include "filesystem_watcher.h"
 
 namespace {   
     class MacWatcher : public QWidget, public Core::Singleton<WinWatcher> {

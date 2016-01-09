@@ -10,6 +10,7 @@
 #include "modules/core/core_parts_index.h"
 #include "modules/core/web/web_apis.h"
 #include "modules/core/misc/file_utils/extensions.h"
+#include "modules/core/misc/file_utils/filesystem_watcher.h"
 #include "modules/models/service/search_settings.h"
 
 #include "modules/core/core_parts/item_drop_formats.h"

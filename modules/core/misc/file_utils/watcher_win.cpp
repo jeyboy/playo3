@@ -3,7 +3,7 @@
 //#include <qlibrary.h>
 #include <qwidget.h>
 
-#include "watcher.h"
+#include "filesystem_watcher.h"
 
 namespace {
     #define msgShellChange WM_USER + 1

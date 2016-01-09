@@ -157,16 +157,7 @@ bool Extensions::restoreExtension(QString & file_path, QString & restoredExt) {
 
 //TODO: try to find join file with folder search pattern
 
-QFileInfoList Extensions::folderFiles(QFileInfo file) {
-    return QDir(file.filePath()).entryInfoList(activeFilterList(), QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
-}
-
-QFileInfoList Extensions::folderDirectories(QFileInfo file) {
-    return QDir(file.filePath()).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden);
-//    return QDir(file.filePath()).entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
-}
-
-bool Extensions::respondToExtension(QString ext) const {
+bool Extensions::respondToExtension(const QString & ext) const {
     return activeFilterList().contains(QStringLiteral("*.") % ext) || activeFilterList().contains(QStringLiteral("*.*")) || activeFilterList().contains(QStringLiteral("*"));
 }
 

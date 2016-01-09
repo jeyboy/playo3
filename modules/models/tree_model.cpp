@@ -34,21 +34,22 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
 
-    QFileInfoList folderList = Extensions::obj().folderDirectories(currFile);
-    if (!folderList.isEmpty()) {
-        QFileInfoList::Iterator it = folderList.begin();
+    QStringList nameFilters = Extensions::obj().activeFilterList();
 
-        for(; it != folderList.end(); it++)
+    QFileInfoList folderList;
+    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
+
+    if (!folderList.isEmpty()) {
+        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
             res += filesRoutine((*it), node -> createPlaylist((*it).fileName()));
     }
 
-    QFileInfoList fileList = Extensions::obj().folderFiles(currFile);
+    QFileInfoList fileList;
+    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
 
     if (!fileList.isEmpty()) {
-        QFileInfoList::Iterator it = fileList.begin();
-
         res += fileList.size();
-        for(; it != fileList.end(); it++)
+        for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
             new File((*it).fileName(), node);
     }
 

@@ -43,22 +43,20 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
 int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Playlist *, int> & rels) {
     int res = 0;
     rels[node]++;
+    QStringList nameFilters = Extensions::obj().activeFilterList();
 
-    QFileInfoList folderList = Extensions::obj().folderDirectories(currFile);
+    QFileInfoList folderList;
+    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
     if (!folderList.isEmpty()) {
-        QFileInfoList::Iterator it = folderList.begin();
-
-        for(; it != folderList.end(); it++)
+        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
             res += filesRoutine((*it), rootItem -> createPlaylist(Extensions::folderName((*it))), rels);
     }
 
-    QFileInfoList fileList = Extensions::obj().folderFiles(currFile);
-
+    QFileInfoList fileList;
+    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
     if (!fileList.isEmpty()) {
-        QFileInfoList::Iterator it = fileList.begin();
-
         res += fileList.size();
-        for(; it != fileList.end(); it++)
+        for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
             new File((*it).path(), (*it).fileName(), node);
 
         node -> updateItemsCountInBranch(fileList.size());

@@ -20,20 +20,20 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
 int ListModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
+    QStringList nameFilters = Extensions::obj().activeFilterList();
 
-    QFileInfoList folderList = Extensions::obj().folderDirectories(currFile);
+    QFileInfoList folderList;
+    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
     {
-        QFileInfoList::Iterator it = folderList.begin();
-
-        for(; it != folderList.end(); it++)
+        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
             res += filesRoutine((*it), node);
     }
 
-    QFileInfoList fileList = Extensions::obj().folderFiles(currFile);
-    QFileInfoList::Iterator it = fileList.begin();
+    QFileInfoList fileList;
+    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
 
     res += fileList.size();
-    for(; it != fileList.end(); it++)
+    for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
         new File((*it).path(), (*it).fileName(), node);
 
     return res;
