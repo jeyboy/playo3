@@ -33,7 +33,6 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
 int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
-
     QStringList nameFilters = Extensions::obj().activeFilterList();
 
     QFileInfoList folderList;
