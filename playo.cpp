@@ -20,8 +20,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
     initialization();
 
-    FileSystemWatcher::obj().registerPath(QStringLiteral("/home/jb/Desktop"), true);
-    connect(&FileSystemWatcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
+//    FileSystemWatcher::obj().registerPath(QStringLiteral("/home/jb/Desktop"), true);
+//    connect(&FileSystemWatcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
 
 //    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
 //    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);

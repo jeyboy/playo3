@@ -101,64 +101,64 @@ namespace {
         switch (event) {
             case SHCNE_FREESPACE: {
                qDebug() << QString("Got change FREE SPACE for %1.").arg(n1);
-               emit Watcher::obj().freeSpaceChanged(n1);
+               emit FileSystemWatcher::obj().freeSpaceChanged(n1);
             break;}
 
             case SHCNE_ATTRIBUTES: {
                qDebug() << QString("Got change ATTRIBUTES for %1.").arg(n1);
-               emit Watcher::obj().attributeChanged(n1);
+               emit FileSystemWatcher::obj().attributeChanged(n1);
             break;}
 
             case SHCNE_CREATE: {
                qDebug() << QString("Got change CREATE for %1.").arg(n1);
-               emit Watcher::obj().fileCreated(n1);
+               emit FileSystemWatcher::obj().fileCreated(n1);
             break;}
             case SHCNE_DELETE: {
                qDebug() << QString("Got change DELETE %1.").arg(n1);
-               emit Watcher::obj().fileDeleted(n1);
+               emit FileSystemWatcher::obj().fileDeleted(n1);
             break;}
             case SHCNE_RENAMEITEM: {
                qDebug() << QString("Got change RENAMEITEM %1 to %2.").arg(n1).arg(n2);
-               emit Watcher::obj().fileRenamed(n1, n2);
+               emit FileSystemWatcher::obj().fileRenamed(n1, n2);
             break;}
             case SHCNE_UPDATEITEM: {
                qDebug() << QString("Got change UPDATEITEM %1.").arg(n1);
-               emit Watcher::obj().fileChanged(n1);
+               emit FileSystemWatcher::obj().fileChanged(n1);
             break;}
 
             case SHCNE_DRIVEADD: {
                qDebug() << QString("Got change DRIVEADD %1.").arg(n1);
-               emit Watcher::obj().driveAdded(n1);
+               emit FileSystemWatcher::obj().driveAdded(n1);
             break;}
             case SHCNE_DRIVEREMOVED: {
                qDebug() << QString("Got change DRIVEREMOVED %1.").arg(n1);
-               emit Watcher::obj().driveRemoved(n1);
+               emit FileSystemWatcher::obj().driveRemoved(n1);
             break;}
 
             case SHCNE_MEDIAINSERTED: {
                qDebug() << QString("Got change MEDIAINSERTED %1.").arg(n1);
-               emit Watcher::obj().mediaInserted(n1);
+               emit FileSystemWatcher::obj().mediaInserted(n1);
             break;}
             case SHCNE_MEDIAREMOVED: {
                qDebug() << QString("Got change MEDIAREMOVED %1.").arg(n1);
-               emit Watcher::obj().mediaRemoved(n1);
+               emit FileSystemWatcher::obj().mediaRemoved(n1);
             break;}
 
             case SHCNE_MKDIR: {
                qDebug() << QString("Got change MKDIR %1.").arg(n1);
-               emit Watcher::obj().folderCreated(n1);
+               emit FileSystemWatcher::obj().folderCreated(n1);
             break;}
             case SHCNE_RENAMEFOLDER: {
                qDebug() << QString("Got change RENAMEFOLDER %1 to %2.").arg(n1).arg(n2);
-               emit Watcher::obj().folderRenamed(n1, n2);
+               emit FileSystemWatcher::obj().folderRenamed(n1, n2);
             break;}
             case SHCNE_RMDIR: {
                qDebug() << QString("Got change RMDIR %1.").arg(n1);
-               emit Watcher::obj().folderDeleted(n1);
+               emit FileSystemWatcher::obj().folderDeleted(n1);
             break;}
             case SHCNE_UPDATEDIR: {
                qDebug() << QString("Got change UPDATEDIR %1.").arg(n1);
-               emit Watcher::obj().folderChanged(n1);
+               emit FileSystemWatcher::obj().folderChanged(n1);
             break;}
 
             default: qDebug() << "Got unrecognized change.";
