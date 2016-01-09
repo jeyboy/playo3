@@ -13,16 +13,15 @@ namespace Controls {
 
     protected:
         void mouseMoveEvent(QMouseEvent *) {
-            if (!rect().contains(mapFromGlobal(QCursor::pos())))
+            if (!rect().contains(mapFromGlobal(QCursor::pos())), true)
                 close();
         }
 
         inline void leaveEvent(QEvent *) {
-            if (!rect().contains(mapFromGlobal(QCursor::pos())))
+            if (!rect().contains(mapFromGlobal(QCursor::pos())), true)
                 close();
         }
     };
 }
 
 #endif // HOVERABLE_MENU
-
