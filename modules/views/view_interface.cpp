@@ -332,7 +332,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     }
 
     if (mdl -> playlistType() == Data::vk) {
-        menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for user"), this, SLOT(openRecomendationsforUser()));
+        menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
 
@@ -340,8 +340,8 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     if (ind.isValid()) {
         if (ind.data(ITYPE).toInt() == VK_FILE) {
-            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item user"), this, SLOT(openRecomendationsforItemUser()));
-            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item"), this, SLOT(openRecomendationsforItem()));
+            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
+            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
             menu.addSeparator();
         }
 

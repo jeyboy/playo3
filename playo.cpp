@@ -20,8 +20,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     //    setAttribute(Qt::WA_DeleteOnClose);
     initialization();
 
-//    Watcher::obj().registerPath(QStringLiteral("F:\\"), true);
-//    connect(&Watcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
+    Watcher::obj().registerPath(QStringLiteral("/home/jb/Desktop"), true);
+    connect(&Watcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
 
 //    QString s = QStringLiteral("► Paradise Lost - Ordinary Days \r\n       111");
 //    qDebug() << Core::FilenameConversions::extraSymbolsFilter(s);
@@ -140,7 +140,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     Web::Apis::close(settings -> obj());
     settings -> save();
 
-    HotkeyManager::obj().~HotkeyManager(); // x11 realisation based on gui and should be closed before application closing
+    HotkeyManager::obj().clear();
 
     Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
     MainWindow::closeEvent(e);

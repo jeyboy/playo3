@@ -12,6 +12,7 @@ namespace {
 
     class INotifyThread : public QThread {
         qintptr notifyPID;
+        QHash<uint32_t, QString> linked_operations;
     protected:
         void run();
     public:
@@ -70,6 +71,7 @@ namespace {
         struct inotify_event * event, * nested_event;
         char buffer[BUFFERSIZE];
 
+        qDebug() << "IN NOTIFY THREAD";
         while((len = read(notifyPID, buffer, BUFFERSIZE)) > 0) {
             i = 0;
 
@@ -117,16 +119,17 @@ namespace {
                     break;}
 
 
-                        //                #define IN_MOVED_FROM	 0x00000040	/* File was moved from X.  */
-                        //                #define IN_MOVED_TO      0x00000080	/* File was moved to Y.  */
-                        //                #define IN_MOVE		 (IN_MOVED_FROM | IN_MOVED_TO) /* Moves.  */
-                        //                #define IN_MOVE_SELF	 0x00000800	/* Self was moved.  */
+                    case IN_ISDIR | IN_MOVE_SELF:
+                    case IN_ISDIR | IN_MOVED_FROM:
                     case IN_MOVE_SELF:
                     case IN_MOVED_FROM: {
-                        nested_event = (struct inotify_event *) event -> cookie;
-                        QString n2(nested_event -> name);
-                        qDebug() << QString("Got change RENAMEITEM %1 to %2.").arg(n1).arg(n2);
-                        emit Watcher::obj().fileRenamed(n1, n2);
+                        linked_operations.insert(event -> cookie, n1);
+                    break;}
+
+                    case IN_MOVED_TO: {
+                        QString n0 = linked_operations.take(event -> cookie);
+                        qDebug() << QString("Got change RENAMEITEM %1 to %2.").arg(n0).arg(n1);
+                        emit Watcher::obj().fileRenamed(n0, n1);
                     break;}
 
                     case IN_MODIFY: {
@@ -151,13 +154,18 @@ namespace {
                         emit Watcher::obj().folderDeleted(n1);
                     break;}
 
+                    case IN_ISDIR | IN_MOVED_TO: {
+                        QString n0 = linked_operations.take(event -> cookie);
+                        qDebug() << QString("Got change RENAMEFOLDER %1 to %2.").arg(n0).arg(n1);
+                        emit Watcher::obj().folderRenamed(n0, n1);
+                    break;}
 
-                    case IN_ISDIR | IN_MOVE_SELF:
-                    case IN_ISDIR | IN_MOVED_FROM: {
-                        nested_event = (struct inotify_event *) event -> cookie;
-                        QString n2(nested_event -> name);
-                        qDebug() << QString("Got change RENAMEFOLDER %1 to %2.").arg(n1).arg(n2);
-                        emit Watcher::obj().folderRenamed(n1, n2);
+
+                    case IN_IGNORED:
+                    case IN_UNMOUNT: {
+                        qDebug() << QString("UNMOUNT");
+
+//                        unregisterPath();
                     break;}
 
 
@@ -187,6 +195,8 @@ namespace {
                 i += sizeof(struct inotify_event) + event -> len;
             }
         }
+
+        qDebug() << "OUT NOTIFY THREAD";
     }
 }
 

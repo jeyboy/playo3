@@ -24,6 +24,7 @@ public:
     bool registerPath(const QString & path, bool recursive = false) {
         qintptr ptr;
         bool res = registerPathProc(ptr, path, recursive);
+        qDebug() << "REG" << path << res;
 
         if (res)
             pathPids.insert(path, ptr);

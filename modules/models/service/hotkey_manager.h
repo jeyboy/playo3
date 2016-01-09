@@ -27,11 +27,7 @@ class HotkeyManager : public Core::Singleton<HotkeyManager> {
     QHash<int, HotkeySlot> relations;
     QHash<int, QxtGlobalShortcut *> shortcuts;
 public:
-    inline virtual ~HotkeyManager() {
-//        shortcuts.clear();
-//        foreach (QxtGlobalShortcut * hotkey, shortcuts.values())
-//            delete hotkey;
-    }
+    inline ~HotkeyManager() { clear(); }
 
     bool registerSequence(int hotkeyType, const QString & sequence, QObject * receiver = 0, const char * slot = 0);
     void clear();
