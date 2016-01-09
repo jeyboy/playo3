@@ -85,7 +85,6 @@ namespace {
                 inotify_rm_watch(notifyPID, ptr);
 
                 if (recursiveTrees.contains(ptr)) {
-                    qDebug() << recursiveTrees;
                     QList<qintptr> ptrs = recursiveTrees.take(ptr);
                     for(QList<qintptr>::Iterator subPtr = ptrs.begin(); subPtr != ptrs.end(); subPtr++)
                         inotify_rm_watch(notifyPID, *subPtr);
@@ -97,8 +96,6 @@ namespace {
         QStringList drivesList;
         FileSystemWatcher::foldersList(QStringLiteral("/mnt"), drivesList);
 
-        qDebug() << "DRIVES" << drivesList;
-
         if (!drivesList.isEmpty()) {
             QHash<QString, bool> checkable(drives);
 
@@ -109,6 +106,7 @@ namespace {
                 } else checkable.remove(*drive);
             }
 
+            // objects is not removed from folder on unmount // maybe need to check on emptyness
             if (!init)
                 for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
                     emit FileSystemWatcher::obj().driveRemoved(removed.key());
@@ -118,7 +116,6 @@ namespace {
         QStringList mediaList;
         FileSystemWatcher::foldersList(QStringLiteral("/media"), mediaList);
 
-        qDebug() << "MEDIA" << mediaList;
         if (!mediaList.isEmpty()) {
             QHash<QString, bool> checkable(media);
 
@@ -129,6 +126,7 @@ namespace {
                 } else checkable.remove(*item);
             }
 
+            // objects is not removed from folder on unmount // maybe need to check on emptyness
             if (!init)
                 for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
                     emit FileSystemWatcher::obj().mediaRemoved(removed.key());
@@ -143,7 +141,6 @@ namespace {
         while((len = read(notifyPID, buffer, BUFFERSIZE)) > 0) {
             i = 0;
 
-            qDebug() << "PIDO";
             proceedDrives();
             proceedMedia();
 
