@@ -50,7 +50,7 @@ class BassPlayer : public IPlayer {
 
     inline int default_device() {
         #ifdef Q_OS_WIN
-            return -1;
+            return BASS_DEVICE_ENABLED/*-1*/;
         #else
             return BASS_DEVICE_DEFAULT;
         #endif
