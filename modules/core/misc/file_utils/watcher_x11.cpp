@@ -7,23 +7,25 @@
 #include <qthread.h>
 #include <qstringbuilder.h>
 
+#define DRIVES_PATH QStringLiteral("/mnt")
+#define MEDIA_PATH QStringLiteral("/media")
+
 namespace {
     #define BUFFERSIZE 512
 
     class INotifyThread : public QThread {
         qintptr notifyPID;
         QHash<uint32_t, QString> linked_operations;
-        QHash<QString, bool> drives;
-        QHash<QString, bool> media;
+        QHash<qintptr, QString> pathes;
     protected:
-        void proceedDrives(bool init = false);
-        void proceedMedia(bool init = false);
         void run();
     public:
-        INotifyThread(qintptr notifyPID) : notifyPID(notifyPID) {
-            proceedDrives(true);
-            proceedMedia(true);
-        }
+        qintptr drives_ptr;
+        qintptr media_ptr;
+
+        INotifyThread(qintptr notifyPID) : notifyPID(notifyPID) {}
+        void addPath(qintptr ptr, const QString & path) { pathes.insert(ptr, path); }
+        void removePath(qintptr ptr) { pathes.remove(ptr); }
     };
 
     class X11Watcher : public Core::RelSingleton<X11Watcher> {
@@ -37,7 +39,12 @@ namespace {
             X11Watcher() {
                 notifyPID = inotify_init();
                 if (!initiated()) return;
+
                 thread = new INotifyThread(notifyPID);
+
+                registerPath(thread -> drives_ptr, DRIVES_PATH, true, 2);
+                registerPath(thread -> media_ptr, MEDIA_PATH, true, 2);
+
                 thread -> start();
             }
             ~X11Watcher() {
@@ -46,10 +53,14 @@ namespace {
                 close(notifyPID);
                 thread -> terminate();
                 thread -> wait(3000);
+
+                unregisterPath(thread -> drives_ptr);
+                unregisterPath(thread -> media_ptr);
+
                 delete thread;
             }
 
-            bool registerPath(qintptr & id, const QString & path, bool recursive) {
+            bool registerPath(qintptr & id, const QString & path, bool recursive, int deepLevel = -1, int currLevel = 0) {
                 if (!initiated()) return false;
 
                 id = inotify_add_watch(
@@ -57,10 +68,11 @@ namespace {
                     path.toUtf8().data(),
                     IN_ALL_EVENTS | IN_UNMOUNT | IN_Q_OVERFLOW | IN_IGNORED
                 );
+                thread -> addPath(id, path);
 
                 bool res = id > -1;
 
-                if (res && recursive) {
+                if (res && recursive && currLevel != deepLevel) {
                     QFileInfo info(path);
                     if (info.isDir()) {
                         QStringList subdirs;
@@ -70,7 +82,7 @@ namespace {
                             QList<qintptr> ptrs = recursiveTrees.take(id);
                             for(QStringList::Iterator dir = subdirs.begin(); dir != subdirs.end(); dir++) {
                                 qintptr uid;
-                                if (registerPath(uid, info.filePath() % QDir::separator() % (*dir), recursive))
+                                if (registerPath(uid, info.filePath() % QDir::separator() % (*dir), recursive, deepLevel, currLevel + 1))
                                     ptrs << uid;
                             }
 
@@ -86,52 +98,13 @@ namespace {
 
                 if (recursiveTrees.contains(ptr)) {
                     QList<qintptr> ptrs = recursiveTrees.take(ptr);
-                    for(QList<qintptr>::Iterator subPtr = ptrs.begin(); subPtr != ptrs.end(); subPtr++)
+                    for(QList<qintptr>::Iterator subPtr = ptrs.begin(); subPtr != ptrs.end(); subPtr++) {
                         inotify_rm_watch(notifyPID, *subPtr);
+                        thread -> removePath(*subPtr);
+                    }
                 }
             }
     };
-
-    void INotifyThread::proceedDrives(bool init) {
-        QStringList drivesList;
-        FileSystemWatcher::foldersList(QStringLiteral("/mnt"), drivesList);
-
-        if (!drivesList.isEmpty()) {
-            QHash<QString, bool> checkable(drives);
-
-            for(QStringList::Iterator drive = drivesList.begin(); drive != drivesList.end(); drive++) {
-                if (!drives.contains(*drive)) {
-                    drives.insert(*drive, true);
-                    if (!init) emit FileSystemWatcher::obj().driveAdded(*drive);
-                } else checkable.remove(*drive);
-            }
-
-            // objects is not removed from folder on unmount // maybe need to check on emptyness
-            if (!init)
-                for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
-                    emit FileSystemWatcher::obj().driveRemoved(removed.key());
-        }
-    }
-    void INotifyThread::proceedMedia(bool init) {
-        QStringList mediaList;
-        FileSystemWatcher::foldersList(QStringLiteral("/media"), mediaList);
-
-        if (!mediaList.isEmpty()) {
-            QHash<QString, bool> checkable(media);
-
-            for(QStringList::Iterator item = mediaList.begin(); item != mediaList.end(); item++) {
-                if (!media.contains(*item)) {
-                    media.insert(*item, true);
-                    if (!init) emit FileSystemWatcher::obj().mediaInserted(*item);
-                } else checkable.remove(*item);
-            }
-
-            // objects is not removed from folder on unmount // maybe need to check on emptyness
-            if (!init)
-                for(QHash<QString, bool>::Iterator removed = checkable.begin(); removed != checkable.end(); removed++)
-                    emit FileSystemWatcher::obj().mediaRemoved(removed.key());
-        }
-    }
 
     void INotifyThread::run() {
         uint len, i;
@@ -141,8 +114,8 @@ namespace {
         while((len = read(notifyPID, buffer, BUFFERSIZE)) > 0) {
             i = 0;
 
-            proceedDrives();
-            proceedMedia();
+//            proceedDrives();
+//            proceedMedia();
 
             while(i + sizeof(struct inotify_event) < len) {
                 event = (struct inotify_event *) &buffer[i];
@@ -153,6 +126,7 @@ namespace {
 //                #define IN_IGNORED	 0x00008000	/* File was ignored.  */
 
                 QString n1(event -> name);
+                n1 = pathes[event -> wd] % QDir::separator() % n1;
 
                 switch (event -> mask) {
                     case IN_ATTRIB: {
@@ -214,12 +188,34 @@ namespace {
 
                     case IN_ISDIR | IN_CREATE: {
                         qDebug() << QString("Got change MKDIR %1.").arg(n1);
+
+                        if (event -> wd == drives_ptr) {
+                            qDebug() << QString("Got drive added %1.").arg(n1);
+                            emit FileSystemWatcher::obj().driveAdded(n1);
+                            break;
+                        } else if (event -> wd == media_ptr) {
+                            qDebug() << QString("Got media added %1.").arg(n1);
+                            emit FileSystemWatcher::obj().mediaInserted(n1);
+                            break;
+                        }
+
                         emit FileSystemWatcher::obj().folderCreated(n1);
                     break;}
 
                     case IN_ISDIR | IN_DELETE_SELF:
                     case IN_ISDIR | IN_DELETE: {
                         qDebug() << QString("Got change RMDIR %1.").arg(n1);
+
+                        if (event -> wd == drives_ptr) {
+                            qDebug() << QString("Got drive removing %1.").arg(n1);
+                            emit FileSystemWatcher::obj().driveRemoved(n1);
+                            break;
+                        } else if (event -> wd == media_ptr) {
+                            qDebug() << QString("Got media removing %1.").arg(n1);
+                            emit FileSystemWatcher::obj().mediaRemoved(n1);
+                            break;
+                        }
+
                         emit FileSystemWatcher::obj().folderDeleted(n1);
                     break;}
 
