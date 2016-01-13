@@ -29,7 +29,12 @@ namespace Views {
     using namespace Models;
 
     class IView : public QTreeView, public IPlaylistable {
-      Q_OBJECT
+        Q_OBJECT
+
+        TreeViewStyle * tree_style;
+        ModelItemDelegate * item_delegate;
+        bool blockRepaint;
+        bool blockDeletion;
     public:
         inline void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
@@ -174,10 +179,6 @@ namespace Views {
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;
-    private:
-        ModelItemDelegate * item_delegate;
-        bool blockRepaint;
-        bool blockDeletion;
     };
 }
 

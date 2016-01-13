@@ -35,7 +35,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     emit registerSync(mdl, mdl -> syncMutex());
 
     setIndentation(Settings::obj().treeIndentation());
-    setStyle(new TreeViewStyle);
+    setStyle((tree_style = new TreeViewStyle()));
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 //    /////////////////////////////////
@@ -103,6 +103,7 @@ IView::~IView() {
     mdl -> syncMutex() -> unlock();
 
     delete mdl;
+    delete tree_style;
 }
 
 void IView::scrollToActive() {

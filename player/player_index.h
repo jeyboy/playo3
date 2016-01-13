@@ -24,6 +24,7 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
 
     friend class Core::Singleton<PlayerFactory>;
     inline PlayerFactory() : player(0) {}
+    inline ~PlayerFactory() {}
 
     IPlayer * player;
 public:

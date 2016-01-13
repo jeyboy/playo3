@@ -14,7 +14,7 @@ public:
     void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
-    QList<HotkeyModelItem *> * hotKeys() const;
+    QList<HotkeyModelItem *> hotKeys() const;
     void setHotKeys(QList<HotkeyModelItem *>);
     void setHotKeys(const QJsonObject & hotkeysHash = QJsonObject());
 

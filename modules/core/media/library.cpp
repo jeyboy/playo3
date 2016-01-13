@@ -26,6 +26,8 @@ Library::~Library() {
     saveTimer -> stop();
     saveTimer -> deleteLater();
     save();
+
+    qDeleteAll(catalogs);
 }
 
 void Library::setItemState(const QModelIndex & ind, int state) {
@@ -211,9 +213,9 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
     QStringList titles = itm -> titlesCache().toStringList();
 
     for (i = titles.begin(); i != titles.end(); ++i) {
-        if (!(cat = getCatalog((*i)))) continue;
+        if (!(cat = getCatalog(*i))) continue;
 
-        state = cat -> value((*i), -1);
+        state = cat -> value(*i, -1);
 
         if (state != -1) {
             if (state == 1) {
@@ -473,9 +475,10 @@ void Library::save() {
                 result = fileDump(i.key(), keys, QIODevice::WriteOnly | QIODevice::Text);
             }
 
-            if (result)
+            if (result) {
                 i = catalogs_state.erase(i);
-            else
+                delete res;
+            } else
                 i++;
         }
 

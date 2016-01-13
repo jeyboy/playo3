@@ -21,9 +21,9 @@ void HotkeySettings::toJson(QJsonObject & settings) {
     settings.insert(QStringLiteral("hotkeys"), _hotkeys);
 }
 
-QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage
+QList<HotkeyModelItem *> HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage
     QVector<QVariant> itemVals;
-    QList<HotkeyModelItem *> * ret = new QList<HotkeyModelItem *>();
+    QList<HotkeyModelItem *> ret;
     int iKey;
 
     foreach(QString key, _hotkeys.keys()) {
@@ -32,7 +32,7 @@ QList<HotkeyModelItem *> * HotkeySettings::hotKeys() const { //TODO: rewrite on 
         itemVals.append(_humanizeHotkeyText.value(iKey));
         itemVals.append(_hotkeys.value(key));
         itemVals.append(iKey);
-        ret -> append(new HotkeyModelItem(itemVals));
+        ret.append(new HotkeyModelItem(itemVals));
     }
 
     return ret;

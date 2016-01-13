@@ -19,7 +19,7 @@
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:43.0) Gecko/20100101 Firefox/43.0")
 #endif
 
-namespace Core {
+namespace Core { // requests and response has memory leaks
     namespace Web {
         class ManagerController;
         class Cookies : public QNetworkCookieJar {

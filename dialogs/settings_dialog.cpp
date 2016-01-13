@@ -69,10 +69,9 @@ void SettingsDialog::instantiateLayout() {
 }
 
 void SettingsDialog::registerHotkeys(QWidget * receiver) {
-    QList<HotkeyModelItem *> list = *Settings::obj().hotKeys();
+    QList<HotkeyModelItem *> list = Settings::obj().hotKeys();
 
-    QList<HotkeyModelItem *>::Iterator it = list.begin();
-    for(; it != list.end(); it++) {
+    for(QList<HotkeyModelItem *>::Iterator it = list.begin(); it != list.end(); it++) {
         switch((*it) -> data(2).toInt()) {
             case HOTKEY_NEXT: {
                 HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString(), receiver, SLOT(playNext()));
@@ -110,6 +109,8 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
             break;}
         }
     }
+
+    qDeleteAll(list);
 }
 
 void SettingsDialog::on_cancelButton_clicked() {
@@ -367,7 +368,8 @@ void SettingsDialog::initViewSettings() {
 void SettingsDialog::initHotkeysSettings() {
     ui -> hotkeysArea -> setEditTriggers(QTreeView::AllEditTriggers);
     ui -> hotkeysArea -> setItemDelegate(new HotkeyDelegate(ui -> hotkeysArea));
-    ui -> hotkeysArea -> setModel(new HotkeyModel(Settings::obj().hotKeys(), this));
+    QList<HotkeyModelItem *> hotkeys = Settings::obj().hotKeys();
+    ui -> hotkeysArea -> setModel(new HotkeyModel(&hotkeys, this));
     ui -> hotkeysArea -> hideColumn(2);
     ui -> hotkeysArea -> setColumnWidth(0, 230);
 }
