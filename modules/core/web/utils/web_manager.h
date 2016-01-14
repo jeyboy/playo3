@@ -143,11 +143,11 @@ namespace Core { // requests and response has memory leaks
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
 
-            inline Request * requestTo(const QString & url) {
+            inline Request requestTo(const QString & url) {
                 QHash<QString, QString> headers = extractHeaders(const_cast<QString &>(url));
                 return (new Request(this, url)) -> withHeaders(headers);
             }
-            inline Request * requestTo(const QUrl & url) {
+            inline Request requestTo(const QUrl & url) {
                 QHash<QString, QString> headers = extractHeaders(url);
                 return (new Request(this, url)) -> withHeaders(headers);
             }
@@ -165,8 +165,8 @@ namespace Core { // requests and response has memory leaks
                 return resp;
             }
 
-            inline Response * followedGet(const QUrl & url) { return requestTo(url) -> viaGet() -> followByRedirect(); }
-            inline Response * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaGet() -> followByRedirect(); }
+            inline Response * followedGet(const QUrl & url) { return requestTo(url).viaGet() -> followByRedirect(); }
+            inline Response * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers) -> viaGet() -> followByRedirect(); }
 
             inline Response * followedPost(const QUrl & url) { return requestTo(url) -> viaPost() -> followByRedirect(); }
             inline Response * followedPost(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaPost() -> followByRedirect(); }
