@@ -13,7 +13,7 @@
 
 #ifdef Q_OS_WIN
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
-#elif Q_OS_MAC
+#elif Q_OS_MAC // there should be agent for mac
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:43.0) Gecko/20100101 Firefox/43.0")
 #else
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:43.0) Gecko/20100101 Firefox/43.0")
@@ -48,10 +48,6 @@ namespace Core { // requests and response has memory leaks
             }
             inline void appendHeaders(QUrl & url) {
                 QString urlStr = QStringLiteral("%1\r\nReferer: %2").arg(url.toString(), QString(request().rawHeader("Referer")));
-//                QHash<QString, QString> headers;
-//                headers.insert(QStringLiteral("User-Agent"), request().header(QNetworkRequest::UserAgentHeader).toString());
-//                headers.insert(QStringLiteral("Referer"), QString(request().rawHeader("Referer")));
-//                ///////////////    ////////////////
                 url = QUrl(urlStr);
             }
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
@@ -72,7 +68,7 @@ namespace Core { // requests and response has memory leaks
             inline Request(Manager * manager, const QString & url_str) : QNetworkRequest(QUrl(url_str)), manager(manager) {}
             inline Request(Manager * manager, const QUrl & url = QUrl()) : QNetworkRequest(url), manager(manager) {}
 
-            Request * withHeaders(const QHash<QString, QString> & headers);
+            Request withHeaders(const QHash<QString, QString> & headers);
             Response * viaGet(bool async = false);
             Response * viaPost(const QByteArray & data = QByteArray());
             Response * viaForm(const QByteArray & data = QByteArray());
@@ -159,23 +155,23 @@ namespace Core { // requests and response has memory leaks
             inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
 
             inline Response * followedGetAsync(const QUrl & url, const Func & response) {
-                Response * resp = requestTo(url) -> viaGet(true);
+                Response * resp = requestTo(url).viaGet(true);
                 asyncRequests.insert(resp -> url(), response);
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
                 return resp;
             }
 
             inline Response * followedGet(const QUrl & url) { return requestTo(url).viaGet() -> followByRedirect(); }
-            inline Response * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers) -> viaGet() -> followByRedirect(); }
+            inline Response * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaGet() -> followByRedirect(); }
 
-            inline Response * followedPost(const QUrl & url) { return requestTo(url) -> viaPost() -> followByRedirect(); }
-            inline Response * followedPost(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaPost() -> followByRedirect(); }
+            inline Response * followedPost(const QUrl & url) { return requestTo(url).viaPost() -> followByRedirect(); }
+            inline Response * followedPost(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaPost() -> followByRedirect(); }
 
-            inline Response * unfollowedForm(const QUrl & url) { return requestTo(url) -> viaForm(); }
-            inline Response * unfollowedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaForm(); }
-            inline Response * followedForm(const QUrl & url) { return requestTo(url) -> viaForm() -> followByRedirect(); }
-            inline Response * followedForm(const QUrl & url, const QByteArray & data) { return requestTo(url) -> viaForm(data) -> followByRedirect(); }
-            inline Response * followedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url) -> withHeaders(headers) -> viaForm() -> followByRedirect(); }
+            inline Response * unfollowedForm(const QUrl & url) { return requestTo(url).viaForm(); }
+            inline Response * unfollowedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaForm(); }
+            inline Response * followedForm(const QUrl & url) { return requestTo(url).viaForm() -> followByRedirect(); }
+            inline Response * followedForm(const QUrl & url, const QByteArray & data) { return requestTo(url).viaForm(data) -> followByRedirect(); }
+            inline Response * followedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaForm() -> followByRedirect(); }
 
         public slots:
             inline void sendGet(QString & url) { followedGet(url) -> deleteLater(); }

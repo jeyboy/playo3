@@ -10,7 +10,7 @@ namespace Core {
 
                 appendHeaders(new_url);
                 deleteLater();
-                return ((Manager *)manager()) -> requestTo(new_url) -> viaGet() -> followByRedirect(prev_urls);
+                return ((Manager *)manager()) -> requestTo(new_url).viaGet() -> followByRedirect(prev_urls);
             }
 
             return this;
@@ -69,7 +69,7 @@ namespace Core {
             if (!headers.contains(QStringLiteral("User-Agent")))
                 setRawHeader("User-Agent", DEFAULT_AGENT.toUtf8());
 
-            return this;
+            return *this;
         }
 
         Response * Request::viaGet(bool async) { return manager -> get(*this, async); }
