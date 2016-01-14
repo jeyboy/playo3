@@ -141,11 +141,11 @@ namespace Core { // requests and response has memory leaks
 
             inline Request requestTo(const QString & url) {
                 QHash<QString, QString> headers = extractHeaders(const_cast<QString &>(url));
-                return (new Request(this, url)) -> withHeaders(headers);
+                return Request(this, url).withHeaders(headers);
             }
             inline Request requestTo(const QUrl & url) {
                 QHash<QString, QString> headers = extractHeaders(url);
-                return (new Request(this, url)) -> withHeaders(headers);
+                return Request(this, url).withHeaders(headers);
             }
 
             inline QPixmap getImage(const QUrl & url) { return followedGet(url) -> toImage(); }

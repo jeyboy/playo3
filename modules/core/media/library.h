@@ -29,6 +29,8 @@ namespace Core {
         public:
             ~Library();
 
+            void stopProcessing();
+
             void setItemState(const QModelIndex & ind, int state);
 
             void directItemStateRestoration(const QModelIndex & ind);

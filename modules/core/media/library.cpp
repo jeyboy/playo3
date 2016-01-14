@@ -18,16 +18,20 @@ Library::Library() : QObject(), timeAmount(0), libraryPath(QCoreApplication::app
 }
 
 Library::~Library() {   
-    waitOnProc.clear();
-    waitRemoteOnProc.clear();
-
-    cancelActiveRestorations();
+    stopProcessing();
 
     saveTimer -> stop();
     saveTimer -> deleteLater();
     save();
 
     qDeleteAll(catalogs);
+}
+
+void Library::stopProcessing() {
+    waitOnProc.clear();
+    waitRemoteOnProc.clear();
+
+    cancelActiveRestorations();
 }
 
 void Library::setItemState(const QModelIndex & ind, int state) {
@@ -475,10 +479,9 @@ void Library::save() {
                 result = fileDump(i.key(), keys, QIODevice::WriteOnly | QIODevice::Text);
             }
 
-            if (result) {
+            if (result)
                 i = catalogs_state.erase(i);
-                delete res;
-            } else
+            else
                 i++;
         }
 
