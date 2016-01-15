@@ -1,7 +1,6 @@
 #ifndef THREAD_UTILS
 #define THREAD_UTILS
 
-//#include <typeinfo>
 #include <qthread.h>
 #include <qapplication.h>
 
@@ -10,7 +9,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "thread_cell.h"
 
-namespace Core {
+namespace Core { // need to realise cancelation
     class ThreadUtils : public QObject, public Singleton<ThreadUtils> {
         Q_OBJECT
 

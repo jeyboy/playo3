@@ -1,5 +1,4 @@
 #include "library.h"
-#include "modules/core/misc/logger.h"
 
 using namespace Core;
 using namespace Media;

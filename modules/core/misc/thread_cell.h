@@ -2,7 +2,6 @@
 #define THREAD_CELL
 
 #include <qfuturewatcher.h>
-#include <qdebug.h>
 
 #include "func.h"
 

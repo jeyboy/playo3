@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-222</y>
+      <y>-261</y>
       <width>320</width>
       <height>550</height>
      </rect>
@@ -881,10 +881,10 @@
        <number>1</number>
       </property>
       <property name="maximum">
-       <double>60000.000000000000000</double>
+       <double>360000.000000000000000</double>
       </property>
       <property name="singleStep">
-       <double>0.500000000000000</double>
+       <double>60000.000000000000000</double>
       </property>
      </widget>
      <widget class="QCheckBox" name="interactiveStats">

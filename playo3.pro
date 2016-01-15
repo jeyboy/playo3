@@ -293,7 +293,8 @@ HEADERS += \
     modules/core/web/apis/social/yandex.h \
     modules/core/web/apis/social/yandex_api_keys.h \
     modules/core/web/apis/social/yandex_request_api.h \
-    modules/core/misc/file_utils/filesystem_watcher.h
+    modules/core/misc/file_utils/filesystem_watcher.h \
+    modules/core/media/library_base.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -437,4 +438,5 @@ SOURCES += \
     modules/controls/echonest_parts/song_search.cpp \
     modules/core/web/apis/site/redmp3.cpp \
     modules/core/web/apis/social/yandex_api_keys.cpp \
-    modules/core/misc/file_utils/filesystem_watcher.cpp
+    modules/core/misc/file_utils/filesystem_watcher.cpp \
+    modules/core/media/library_base.cpp
