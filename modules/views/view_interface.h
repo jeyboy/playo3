@@ -82,7 +82,7 @@ namespace Views {
 
     public slots:
         bool startInnerSearch(QString, QModelIndex it = QModelIndex());
-        void onUpdateAttr(const QModelIndex, int attr, QVariant val);
+        void onUpdateAttr(const QModelIndex &, int attr, const QVariant & val);
 
         void expandeAll();
         void collapseAll();

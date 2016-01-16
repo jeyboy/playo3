@@ -119,7 +119,7 @@ namespace Models {
         void markAllAsUnchecked();
 //        void removeChecked();
 
-        inline void onUpdateAttr(const QModelIndex ind, int attr, QVariant val) { setData(ind, val, attr); }
+        inline void onUpdateAttr(const QModelIndex & ind, int attr, const QVariant & val) { setData(ind, val, attr); }
         void expanded(const QModelIndex & index);
         void expandeAll();
         void collapsed(const QModelIndex & index);

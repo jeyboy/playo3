@@ -22,6 +22,35 @@ namespace Core {
 
         class Library : public LibraryBase, public Singleton<Library> {
             Q_OBJECT
+
+            enum ItemsListType {
+                all_items = 0,
+                local_items,
+                remote_items
+            };
+
+            inline Library() {}
+
+            void cancelActiveRestorations();
+
+            void stateRestoring(QFutureWatcher<void> * initiator, QModelIndex ind);
+            bool remoteInfoRestoring(QFutureWatcher<bool> * initiator, QModelIndex ind);
+
+            IItem * indToItm(const QModelIndex & ind);
+            void emitItemAttrChanging(QModelIndex & ind, int state);
+
+            void initItemData(IItem * itm);
+            void initItemInfo(MediaInfo * info, IItem * itm);
+            void initItemTitles(MediaInfo * info, IItem * itm);
+
+            bool proceedItemTitles(IItem * itm, int state, bool override = false);
+
+            QHash<const QAbstractItemModel *, QMutex *> listSyncs;
+            QHash<const QAbstractItemModel *, int> waitListLimit;
+
+            QHash<const QAbstractItemModel *, QHash<ItemsListType, QHash<QModelIndex, bool> > > waitOnProc;
+            QHash<QModelIndex, QFutureWatcher<void> *> inProc;
+            QHash<QModelIndex, QFutureWatcher<bool> *> inRemoteProc;
         public:
             ~Library();
 
@@ -41,38 +70,12 @@ namespace Core {
                 listSyncs.remove(model);
             }
         signals:
-            void updateAttr(const QModelIndex, int attr, QVariant val);
+            void updateAttr(const QModelIndex &, int attr, const QVariant & val);
         private slots:
             void initStateRestoring();
             void finishStateRestoring();
             void initRemoteItemInfo();
             void finishRemoteItemInfoInit();
-        private:
-            inline Library() {}
-
-            void cancelActiveRestorations();
-            IItem * indToItm(const QModelIndex & ind);
-            void emitItemAttrChanging(QModelIndex & ind, int state);
-
-            bool proceedItemNames(IItem * itm, int state, bool override = false);
-
-            void stateRestoring(QFutureWatcher<void> * initiator, QModelIndex ind);
-            bool remoteInfoRestoring(QFutureWatcher<bool> * initiator, QModelIndex ind);
-
-            void initItemData(IItem * itm);
-            void initItemInfo(MediaInfo * info, IItem * itm);
-            void initItemTitles(MediaInfo * info, IItem * itm);
-
-            QHash<const QAbstractItemModel *, QMutex *> listSyncs;
-            QHash<const QAbstractItemModel *, int > waitListLimit;
-
-            QHash<const QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
-            QHash<QModelIndex, QFutureWatcher<void> *> inProc;
-
-            QHash<const QAbstractItemModel *, QList<QModelIndex> > waitRemoteOnProc;
-            QHash<QModelIndex, QFutureWatcher<bool> *> inRemoteProc;
-
-            int inProcLimit;
         };
     }
 }

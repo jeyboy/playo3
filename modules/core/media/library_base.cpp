@@ -73,11 +73,10 @@ QHash<QString, int> * LibraryBase::load(const QChar letter) {
 void LibraryBase::save() {
     if (saveBlock.tryLock()) {
         QHash<QString, int> * res;
-        QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
 
         bool result;
 
-        while(i != catalogs_state.end()) {
+        for(QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin(); i != catalogs_state.end();) {
             res = catalogs.value(i.key());
 
             if (i.value()) {

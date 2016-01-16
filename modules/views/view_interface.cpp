@@ -207,7 +207,7 @@ bool IView::startInnerSearch(QString predicate, QModelIndex ind) {
     return has_item;
 }
 
-void IView::onUpdateAttr(const QModelIndex ind, int attr, QVariant val) {
+void IView::onUpdateAttr(const QModelIndex & ind, int attr, const QVariant & val) {
     mdl -> setData(ind, val, attr);
 }
 

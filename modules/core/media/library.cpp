@@ -34,21 +34,24 @@ void Library::restoreItemState(const QModelIndex & ind) {
 void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
 
-    QList<QModelIndex> & list = waitOnProc[ind.model()];
+    QHash<ItemsListType, QHash<QModelIndex, bool> > & list = waitOnProc[ind.model()];
+    QHash<QModelIndex, bool> all = list[all_items];
 
-    if (!list.contains(ind)) {
-        list.append(ind);
+    if (!all.contains(ind)) {
+        all.insert(ind, is_remote);
 
-        while(list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
-            QModelIndex i = list.takeFirst();
-            IItem * item = indToItm(i);
-            if (item -> isRemote())
-                remote_list.removeOne(i);
-            item -> unset(ItemFields::proceeded);
+        int current_amount = all.size(), limit = waitListLimit.value(ind.model(), WAIT_LIMIT);
+
+        if (current_amount > limit) {
+            for(QHash<QModelIndex, bool>::Iterator item = all.begin(); item != all.end();) {
+                IItem * itm = indToItm(item.key());
+                itm -> unset(ItemFields::proceeded);
+
+                list[item.value() ? remote_items : local_items].remove(item.key());
+            }
         }
 
-        if (is_remote)
-            waitRemoteOnProc[ind.model()].append(ind);
+        list[is_remote ? remote_items : local_items].insert(ind, true);
     }
 
     if (!is_remote && inProc.size() < INPROC_LIMIT)
@@ -56,31 +59,30 @@ void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
 }
 
 void Library::declineItemStateRestoring(const QModelIndex & ind) {
-    if (inProc.contains(ind)) {
-        QFutureWatcher<void> * watcher = inProc.value(ind);
+    QFutureWatcherBase * watcher = 0;
+
+    if (inProc.contains(ind)) watcher = inProc.value(ind);
+    if (inRemoteProc.contains(ind)) watcher = inRemoteProc.value(ind);
+
+    if (watcher) {
         watcher -> cancel();
         watcher -> waitForFinished();
         return;
     }
 
-    if (inRemoteProc.contains(ind)) {
-        QFutureWatcher<bool> * watcher = inRemoteProc.value(ind);
-        watcher -> cancel();
-        watcher -> waitForFinished();
-        return;
-    }
-
-    waitOnProc[ind.model()].removeAll(ind);
-    waitRemoteOnProc[ind.model()].removeAll(ind);
+    QHash<ItemsListType, QHash<QModelIndex, bool> > & list = waitOnProc[ind.model()];
+    QHash<QModelIndex, bool> all = list[all_items];
+    if (all.contains(ind))
+        list[all.take(ind) ? remote_items : local_items].remove(ind);
 }
 
 void Library::declineItemStateRestoring(const QAbstractItemModel * model) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("DeclineItemRestoration"));
     waitRemoteOnProc.take(model).clear();
-    QList<QModelIndex> items = waitOnProc.take(model);
+    QHash<QModelIndex, bool> items = waitOnProc.take(model)[all_items];
 
-    while(!items.isEmpty())
-        indToItm(items.takeFirst()) -> unset(ItemFields::proceeded);
+    for(QHash<QModelIndex, bool>::iterator item = items.begin(); item != items.end(); item = items.erase(item))
+        indToItm(item.key()) -> unset(ItemFields::proceeded);
 
     cancelActiveRestorations();
 }
@@ -179,6 +181,29 @@ void Library::finishStateRestoring() {
 
 
 
+IItem * Library::indToItm(const QModelIndex & ind) {
+    return static_cast<IItem *>(ind.internalPointer());
+//    return (qobject_cast<const IModel *>(ind.model())) -> item(ind);
+}
+
+void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
+    QMetaObject::invokeMethod(
+        ind.model(),
+        "onUpdateAttr",
+        (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection),
+        Q_ARG(const QModelIndex &, ind),
+        Q_ARG(int, ISTATERESTORE),
+        Q_ARG(const QVariant &, state)
+    );
+//    connect(
+//        this, SIGNAL(updateAttr(QModelIndex,int,QVariant)),
+//        ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection)
+//    );
+//    emit updateAttr(ind, ISTATERESTORE, state);
+//    disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
+}
+
+
 
 
 
@@ -249,18 +274,6 @@ void Library::cancelActiveRestorations() {
             (*it) -> cancel();
 }
 
-IItem * Library::indToItm(const QModelIndex & ind) {
-    return (qobject_cast<const IModel *>(ind.model())) -> item(ind);
-}
-
-void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
-    connect(
-        this, SIGNAL(updateAttr(QModelIndex,int,QVariant)),
-        ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection)
-    );
-    emit updateAttr(ind, ISTATERESTORE, state);
-    disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
-}
 
 bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex ind) {
     IItem * itm = indToItm(ind);
@@ -290,7 +303,7 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
 ////////////////////////////////////////////////////////////////////////
 ///// privates
 ////////////////////////////////////////////////////////////////////////
-bool Library::proceedItemNames(IItem * itm, int state, bool override) {
+bool Library::proceedItemTitles(IItem * itm, int state, bool override) {
     QHash<QString, int> * cat;
     QChar letter;
     bool catState = false, catalog_has_item, catalog_state_has_item;
