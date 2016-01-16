@@ -222,20 +222,16 @@ namespace Core {
         }
 
         void proceedInfo(const QModelIndex & ind) {
-            Library::obj().directItemStateRestoration(ind);
+            Library::obj().restoreItemState(ind);
         }
 
         void proceedInfoAsync(const QModelIndex & ind) {
             IItem * node = static_cast<IItem *>(ind.internalPointer());
+            if (node -> isContainer()) return;
 
-            bool is_interactive = Settings::obj().isInteractiveProc();
-            bool is_proceeded = node -> is(ItemState::proceeded);
-
-            if (!is_proceeded) {
-                if (!is_interactive)
-                    node -> set(ItemState::proceeded);
-                if (!node -> isContainer())
-                    Library::obj().restoreItemState(ind);
+            if (!node -> is(ItemState::proceeded)) {
+                node -> set(ItemState::proceeded);
+                Library::obj().restoreItemStateAsync(ind, node -> isRemote());
             }
         }
     };

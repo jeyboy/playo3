@@ -4,34 +4,14 @@ using namespace Core;
 using namespace Media;
 using namespace Models;
 
-Library::Library() : QObject(), timeAmount(0), libraryPath(QCoreApplication::applicationDirPath() % QStringLiteral("/library/")) {
-    catsSaveResult = QFuture<void>();
+Library::~Library() { declineItemStateRestoring(); }
 
-    saveTimer = new QTimer();
-    QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(clockTick()));
-    saveTimer -> start(TIMER_TICK);
+//void Library::stopProcessing() {
+//    waitOnProc.clear();
+//    waitRemoteOnProc.clear();
 
-    QDir dir(libraryPath);
-    if (!dir.exists())
-        dir.mkpath(".");
-}
-
-Library::~Library() {   
-    stopProcessing();
-
-    saveTimer -> stop();
-    saveTimer -> deleteLater();
-    save();
-
-    qDeleteAll(catalogs);
-}
-
-void Library::stopProcessing() {
-    waitOnProc.clear();
-    waitRemoteOnProc.clear();
-
-    cancelActiveRestorations();
-}
+//    cancelActiveRestorations();
+//}
 
 void Library::setItemState(const QModelIndex & ind, int state) {
     bool override = state < 0;
@@ -47,70 +27,78 @@ void Library::setItemState(const QModelIndex & ind, int state) {
     proceedItemNames(itm, state, override);
 }
 
-void Library::directItemStateRestoration(const QModelIndex & ind) {
+void Library::restoreItemState(const QModelIndex & ind) {
     stateRestoring(0, ind);
 }
 
-void Library::restoreItemState(const QModelIndex & ind) {
-//    if (!listSyncs.value(ind.model(), 0)) return;
+void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
 
     QList<QModelIndex> & list = waitOnProc[ind.model()];
 
     if (!list.contains(ind)) {
-        QList<QModelIndex> & remote_list = waitRemoteOnProc[ind.model()];
         list.append(ind);
 
         while(list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
             QModelIndex i = list.takeFirst();
-            if (i.data(IREMOTE).toBool())
+            IItem * item = indToItm(i);
+            if (item -> isRemote())
                 remote_list.removeOne(i);
-            IItem * itm = indToItm(i);
-            itm -> unset(ItemFields::proceeded);
+            item -> unset(ItemFields::proceeded);
         }
 
-        if (Settings::obj().isUsedDelayForRemote())
-            if (ind.data(IREMOTE).toBool()) {
-                remote_list.append(ind);
-
-                while(remote_list.size() > waitListLimit.value(ind.model(), WAIT_LIMIT)) {
-                    IItem * itm = indToItm(remote_list.takeFirst());
-                    itm -> unset(ItemFields::proceeded);
-                }
-            }
+        if (is_remote)
+            waitRemoteOnProc[ind.model()].append(ind);
     }
 
-    if (inProc.size() < INPROC_LIMIT)
+    if (!is_remote && inProc.size() < INPROC_LIMIT)
         initStateRestoring();
 }
 
 void Library::declineItemStateRestoring(const QModelIndex & ind) {
-    if (inProc.contains(ind))
-        inProc.value(ind) -> cancel();
-    else waitOnProc[ind.model()].removeAll(ind);
+    if (inProc.contains(ind)) {
+        QFutureWatcher<void> * watcher = inProc.value(ind);
+        watcher -> cancel();
+        watcher -> waitForFinished();
+        return;
+    }
+
+    if (inRemoteProc.contains(ind)) {
+        QFutureWatcher<bool> * watcher = inRemoteProc.value(ind);
+        watcher -> cancel();
+        watcher -> waitForFinished();
+        return;
+    }
+
+    waitOnProc[ind.model()].removeAll(ind);
+    waitRemoteOnProc[ind.model()].removeAll(ind);
 }
 
-void Library::declineAllItemsRestoration(const QAbstractItemModel * model) {
+void Library::declineItemStateRestoring(const QAbstractItemModel * model) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("DeclineItemRestoration"));
+    waitRemoteOnProc.take(model).clear();
     QList<QModelIndex> items = waitOnProc.take(model);
-    QList<QModelIndex> remote_items = waitRemoteOnProc.take(model);
 
-    while(!items.isEmpty()) {
-        QModelIndex i = items.takeFirst();
-        if (i.data(IREMOTE).toBool())
-            remote_items.removeOne(i);
-        IItem * itm = indToItm(i);
-        itm -> unset(ItemFields::proceeded);
-    }
-
-    while(!remote_items.isEmpty()) {
-        QModelIndex i = remote_items.takeFirst();
-        IItem * itm = indToItm(i);
-        itm -> unset(ItemFields::proceeded);
-    }
+    while(!items.isEmpty())
+        indToItm(items.takeFirst()) -> unset(ItemFields::proceeded);
 
     cancelActiveRestorations();
 }
+
+void Library::declineItemStateRestoring() {
+    QList<const QAbstractItemModel *> keys = waitOnProc.keys();
+    for(QList<const QAbstractItemModel *>::ConstIterator key = keys.constBegin(); key != keys.constEnd(); key++)
+        declineItemStateRestoring(*key);
+}
+
+
+
+
+
+
+
+
+
 
 void Library::initRemoteItemInfo() {
     if (!waitRemoteOnProc.isEmpty()) {
@@ -161,12 +149,15 @@ void Library::finishRemoteItemInfoInit() {
 void Library::initStateRestoring() {
     if (!waitOnProc.isEmpty()) {
         const QAbstractItemModel * key = 0;
+        QList<QModelIndex> & list;
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
-        QList<const QAbstractItemModel *>::Iterator it = keys.begin();
+        for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
+            list = waitOnProc[*it];
 
-        for(; it != keys.end(); it++) {
-            if (listSyncs[(*it)] -> tryLock()) {
+            if (list.isEmpty())
+                waitOnProc.remove(*it);
+            else if (listSyncs[(*it)] -> tryLock()) {
                 key = (*it);
                 break;
             }
@@ -174,19 +165,8 @@ void Library::initStateRestoring() {
 
         if (!key) return;
 
-        QList<QModelIndex> & list = waitOnProc[key];
-
-        if (list.isEmpty()) {
-            waitOnProc.remove(key);
-            listSyncs[key] -> unlock();
-            return;
-        }
-
         QModelIndex ind = list.takeLast();
         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitInfo"), ind.data().toString());
-
-        if (list.isEmpty()) waitOnProc.remove(key);
-
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
         inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
@@ -252,18 +232,16 @@ void Library::cancelActiveRestorations() {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelActiveRestorations"));
     {
         QList<QFutureWatcher<void> *> inProcList = inProc.values();
-        QList<QFutureWatcher<void> *>::Iterator it = inProcList.begin();
-
-        for(; it != inProcList.end(); it++)
-            if ((*it) -> isRunning())
+        for(QList<QFutureWatcher<void> *>::Iterator it = inProcList.begin(); it != inProcList.end(); it++)
+//            if ((*it) -> isRunning())
                 (*it) -> cancel();
     }
 
     QList<QFutureWatcher<bool> *> inProcRemoteList = inRemoteProc.values();
-    QList<QFutureWatcher<bool> *>::Iterator it = inProcRemoteList.begin();
 
-    for(; it != inProcRemoteList.end(); it++)
-        if ((*it) -> isRunning())
+
+    for(QList<QFutureWatcher<bool> *>::Iterator it = inProcRemoteList.begin(); it != inProcRemoteList.end(); it++)
+//        if ((*it) -> isRunning())
             (*it) -> cancel();
 }
 

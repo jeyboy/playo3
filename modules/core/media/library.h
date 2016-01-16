@@ -25,14 +25,13 @@ namespace Core {
         public:
             ~Library();
 
-            void stopProcessing();
-
             void setItemState(const QModelIndex & ind, int state);
 
-            void directItemStateRestoration(const QModelIndex & ind);
             void restoreItemState(const QModelIndex & ind);
+            void restoreItemStateAsync(const QModelIndex & ind, bool is_remote);
             void declineItemStateRestoring(const QModelIndex & ind);
-            void declineAllItemsRestoration(const QAbstractItemModel * model);
+            void declineItemStateRestoring(const QAbstractItemModel * model);
+            void declineItemStateRestoring();
 
             inline void setWaitListLimit(QAbstractItemModel * model, int newLimit) { waitListLimit[model] = newLimit; }
 
@@ -49,7 +48,7 @@ namespace Core {
             void initRemoteItemInfo();
             void finishRemoteItemInfoInit();
         private:
-            Library();
+            inline Library() {}
 
             void cancelActiveRestorations();
             IItem * indToItm(const QModelIndex & ind);
@@ -65,7 +64,6 @@ namespace Core {
             void initItemTitles(MediaInfo * info, IItem * itm);
 
             QHash<const QAbstractItemModel *, QMutex *> listSyncs;
-
             QHash<const QAbstractItemModel *, int > waitListLimit;
 
             QHash<const QAbstractItemModel *, QList<QModelIndex> > waitOnProc;
