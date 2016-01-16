@@ -93,60 +93,7 @@ void Library::declineItemStateRestoring() {
 
 
 
-
-
-
-
-
-
-
-void Library::initRemoteItemInfo() {
-    if (!waitRemoteOnProc.isEmpty()) {
-        const QAbstractItemModel * key = 0;
-
-        QList<const QAbstractItemModel *> keys = waitRemoteOnProc.keys();
-        QList<const QAbstractItemModel *>::Iterator it = keys.begin();
-
-        for(; it != keys.end(); it++) {
-            if (listSyncs[(*it)] -> tryLock()) {
-                key = (*it);
-                break;
-            }
-        }
-
-        if (!key) return;
-
-        QList<QModelIndex> & list = waitRemoteOnProc[key];
-
-        if (list.isEmpty()) {
-            waitRemoteOnProc.remove(key);
-            listSyncs[key] -> unlock();
-            return;
-        }
-
-        QModelIndex ind = list.takeLast();
-        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitRemoteInfo"), ind.data().toString());
-        if (list.isEmpty()) waitRemoteOnProc.remove(key);
-
-        QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
-        inRemoteProc.insert(ind, initiator);
-        connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, ind));
-    }
-}
-
-void Library::finishRemoteItemInfoInit() {
-    QFutureWatcher<bool> * initiator = (QFutureWatcher<bool> *)sender();
-    bool result = initiator -> isCanceled() || initiator -> result();
-    QModelIndex ind = inRemoteProc.key(initiator);
-    inRemoteProc.remove(ind);
-    delete initiator;
-
-    if (!result) // call new item initiation if prev item initiation is finished without remote call for info
-        initRemoteItemInfo();
-}
-
-void Library::initStateRestoring() {
+void Library::procLocale() {
     if (!waitOnProc.isEmpty()) {
         const QAbstractItemModel * key = 0;
         QList<QModelIndex> & list;
@@ -172,16 +119,6 @@ void Library::initStateRestoring() {
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, initiator, ind));
     }
-}
-
-void Library::finishStateRestoring() {
-    QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
-    QModelIndex ind = inProc.key(initiator);
-    inProc.remove(ind);
-    delete initiator;
-
-    if (inProc.size() < INPROC_LIMIT)
-        initStateRestoring();
 }
 
 void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
@@ -226,6 +163,73 @@ void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
             emitItemAttrChanging(ind, ItemState::new_item);
 
     if (watcher) listSyncs[ind.model()] -> unlock();
+}
+
+void Library::finishStateRestoring() {
+    QFutureWatcher<void> * initiator = (QFutureWatcher<void> *)sender();
+    QModelIndex ind = inProc.key(initiator);
+    inProc.remove(ind);
+    delete initiator;
+
+    if (inProc.size() < INPROC_LIMIT)
+        initStateRestoring();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Library::procRemote() {
+    if (!waitRemoteOnProc.isEmpty()) {
+        const QAbstractItemModel * key = 0;
+
+        QList<const QAbstractItemModel *> keys = waitRemoteOnProc.keys();
+
+        for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
+            if (listSyncs[(*it)] -> tryLock()) {
+                key = (*it);
+                break;
+            }
+        }
+
+        if (!key) return;
+
+        QList<QModelIndex> & list = waitRemoteOnProc[key];
+
+        if (list.isEmpty()) {
+            waitRemoteOnProc.remove(key);
+            listSyncs[key] -> unlock();
+            return;
+        }
+
+        QModelIndex ind = list.takeLast();
+        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitRemoteInfo"), ind.data().toString());
+        if (list.isEmpty()) waitRemoteOnProc.remove(key);
+
+        QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
+        inRemoteProc.insert(ind, initiator);
+        connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, ind));
+    }
+}
+
+void Library::finishProcRemote() {
+    QFutureWatcher<bool> * initiator = (QFutureWatcher<bool> *)sender();
+    bool result = initiator -> isCanceled() || initiator -> result();
+    QModelIndex ind = inRemoteProc.key(initiator);
+    inRemoteProc.remove(ind);
+    delete initiator;
+
+    if (!result) // call new item initiation if prev item initiation is finished without remote call for info
+        initRemoteItemInfo();
 }
 
 void Library::cancelActiveRestorations() {
@@ -286,25 +290,6 @@ bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex in
 ////////////////////////////////////////////////////////////////////////
 ///// privates
 ////////////////////////////////////////////////////////////////////////
-void Library::clockTick() {
-    if ((timeAmount += TIMER_TICK) > 999999999) timeAmount = 0;
-
-    int saveLibDelay = Settings::obj().saveLibDelay();
-
-    if (saveLibDelay != 0 && timeAmount % saveLibDelay == 0)
-        saveCatalogs();
-
-    int procDelay = Settings::obj().remoteItemsProcDelay();
-    if (procDelay == 0 || timeAmount % procDelay == 0)
-        initRemoteItemInfo();
-}
-
-void Library::saveCatalogs() {
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("Trying to save new data"));
-    if (!catsSaveResult.isRunning())
-        catsSaveResult = QtConcurrent::run(this, &Library::save);
-}
-
 bool Library::proceedItemNames(IItem * itm, int state, bool override) {
     QHash<QString, int> * cat;
     QChar letter;
@@ -341,28 +326,6 @@ bool Library::proceedItemNames(IItem * itm, int state, bool override) {
     }
 
     return catState;
-}
-
-QChar Library::getCatalogName(QString name) {
-    if (name.length() == 0) return '_';
-    return name.at(0);
-}
-
-QHash<QString, int> * Library::getCatalog(QChar & letter) {
-    if (catalogs.contains(letter)) {
-        return catalogs.value(letter);
-    } else {
-        QHash<QString, int> * res = load(letter);
-        catalogs.insert(letter, res);
-        return res;
-    }
-}
-
-QHash<QString, int> * Library::getCatalog(QString & name) {
-    if (name.length() == 0) return 0;
-
-    QChar c = getCatalogName(name);
-    return getCatalog(c);
 }
 
 void Library::initItemData(IItem * itm) {
@@ -410,77 +373,4 @@ void Library::initItemTitles(MediaInfo * info, IItem * itm) {
         list.append(tagTitle);
 
     itm -> setTitlesCache(list);
-}
-
-QHash<QString, int> * Library::load(const QChar letter) {
-    QHash<QString, int> * res = new QHash<QString, int>();
-
-    QFile f(libraryPath % QStringLiteral("cat_") % letter);
-    if (f.open(QIODevice::ReadOnly)) {
-        QByteArray ar;
-        QString name;
-        int state;
-
-        while(!f.atEnd()) {
-            ar = f.readLine();
-            state = ar.mid(0, 1).toInt();
-            name = QString::fromUtf8(ar.mid(1, ar.length() - 3));
-            res -> insert(name, state);
-        }
-
-        f.close();
-    }
-
-    return res;
-}
-
-void Library::save() {
-    if (saveBlock.tryLock()) {
-        QHash<QString, int> * res;
-        QHash<QChar, QList<QString> *>::iterator i = catalogs_state.begin();
-
-        bool result;
-
-        while(i != catalogs_state.end()) {
-            res = catalogs.value(i.key());
-
-            if (i.value()) {
-                result = fileDump(i.key(), *i.value(), QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
-
-                if(result) {
-                    delete catalogs_state.value(i.key());
-                    catalogs_state.insert(i.key(), 0);
-                }
-            } else {
-                QList<QString> keys = res -> keys();
-                result = fileDump(i.key(), keys, QIODevice::WriteOnly | QIODevice::Text);
-            }
-
-            if (result)
-                i = catalogs_state.erase(i);
-            else
-                i++;
-        }
-
-        saveBlock.unlock();
-    }
-}
-
-bool Library::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
-    QHash<QString, int> * res = catalogs.value(key);
-
-    QFile f(libraryPath % "cat_" % key);
-    if (f.open(openFlags)) {
-        QTextStream out(&f);
-        out.setCodec("UTF-8");
-
-        for(QList<QString>::const_iterator cat_i = keysList.cbegin(); cat_i != keysList.cend(); cat_i++)
-            out << QString::number(res -> value(*cat_i)) << (*cat_i).toUtf8() << '\n';
-
-        f.close();
-
-        return true;
-    }
-
-    return false;
 }

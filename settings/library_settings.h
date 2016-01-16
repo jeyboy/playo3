@@ -5,7 +5,7 @@
 
 #define SETTINGS_REMOTE_LIB_PROC_DELAY_KEY QStringLiteral("remote_lib_proc_delay")
 #define SETTINGS_SAVE_LIB_DELAY_KEY QStringLiteral("save_lib_delay")
-#define SETTINGS_INTERACTIVE_LIB_PROC_KEY QStringLiteral("interactive_lib_proc")
+#define SETTINGS_INITIATE_ON_PLAYING_KEY QStringLiteral("initiate_on_playing")
 #define SETTINGS_SHOW_INFO_KEY QStringLiteral("show_info")
 
 class LibrarySettings {
@@ -16,8 +16,8 @@ public:
     inline bool isShowInfo() const { return _showInfo; }
     inline void setShowInfo(bool show) { _showInfo = show; }
 
-    inline bool isInteractiveProc() const { return _interactiveProc; }
-    inline void setInteractiveProc(bool is_interactive) { _interactiveProc = is_interactive; }
+    inline bool isInitiateOnPlaying() const { return _initiate_on_play; }
+    inline void setInitiateOnPlaying(bool is_interactive) { _interactiveProc = is_interactive; }
 
     inline bool isUsedDelayForRemote() const { return _remoteItemsProcDelay > 0; }
 
@@ -30,7 +30,7 @@ protected:
     int _remoteItemsProcDelay;
     int _saveLibDelay;
 
-    bool _interactiveProc;
+    bool _initiate_on_play;
     bool _showInfo;
 };
 

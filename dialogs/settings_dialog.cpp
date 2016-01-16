@@ -406,7 +406,7 @@ void SettingsDialog::initSpectrumSettings() {
 void SettingsDialog::initLibrarySettings() {
     ui -> libSaveFreq -> setValue(Settings::obj().saveLibDelay() / 1000.0);
     ui -> remoteItemProcDelay -> setValue(Settings::obj().remoteItemsProcDelay() / 1000.0);
-    ui -> interactiveStats -> setChecked(Settings::obj().isInteractiveProc());
+    ui -> initiateOnPlaying -> setChecked(Settings::obj().isInitiateOnPlaying());
     ui -> showInfo -> setChecked(Settings::obj().isShowInfo());
 }
 
@@ -512,7 +512,7 @@ void SettingsDialog::saveSpectrumSettings() {
 void SettingsDialog::saveLibrarySettings() {
     Settings::obj().setSaveLibDelay(ui -> libSaveFreq -> value() * 1000);
     Settings::obj().setRemoteItemsProcDelay(ui -> remoteItemProcDelay -> value() * 1000);
-    Settings::obj().setInteractiveProc(ui -> interactiveStats -> isChecked());
+    Settings::obj().setInitiateOnPlaying(ui -> initiateOnPlaying -> isChecked());
 
     iconSizeChanged |= Settings::obj().isShowInfo() != ui -> showInfo -> isChecked();
     Settings::obj().setShowInfo(ui -> showInfo -> isChecked());
