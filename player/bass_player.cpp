@@ -336,4 +336,25 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
+QHash<QString, QVariant> BassPlayer::deviceList() {
+    QHash<QString, QVariant> res;
+
+    BASS_DEVICEINFO info;
+    for (int a = 1; BASS_GetDeviceInfo(a, &info); a++)
+        if (info.flags & BASS_DEVICE_ENABLED)
+            res.insert(QString(info.name), a);
+
+    #ifdef Q_OS_MAC
+        for (int a = 0; BASS_GetDeviceInfo(a | BASS_DEVICES_AIRPLAY, &info); a++)
+            res.insert(QString(info.name), a | BASS_DEVICES_AIRPLAY);
+    #endif
+}
+bool BassPlayer::setDevice(const QVariant & device) {
+    bool res = BASS_SetDevice(device.toInt());
+    if (res && isPlayed())
+        res &= BASS_ChannelSetDevice(chan, device.toInt());
+
+    return res;
+}
+
 int BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
