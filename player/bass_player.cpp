@@ -348,6 +348,8 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
         for (int a = 0; BASS_GetDeviceInfo(a | BASS_DEVICES_AIRPLAY, &info); a++)
             res.insert(QString(info.name), a | BASS_DEVICES_AIRPLAY);
     #endif
+
+    return res;
 }
 bool BassPlayer::setDevice(const QVariant & device) {
     bool res = BASS_SetDevice(device.toInt());
