@@ -22,7 +22,7 @@ void IView::registerParent(QWidget * newParent) {
 }
 
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
-    : QTreeView(parent), mdl(newModel), sttngs(settings), direction(IModel::forward), blockRepaint(false), blockDeletion(false) {
+    : QTreeView(parent), blockRepaint(false), blockDeletion(false), mdl(newModel), sttngs(settings), direction(IModel::forward) {
 
     connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
     connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);

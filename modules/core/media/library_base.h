@@ -19,6 +19,7 @@ namespace Core {
             Q_OBJECT
         public:
             LibraryBase();
+            ~LibraryBase();
         protected slots:
             void saveCatalogs();
         protected:
@@ -27,7 +28,8 @@ namespace Core {
             QHash<QString, int> * getCatalog(const QChar & letter);
             QHash<QString, int> * getCatalog(const QString & name);
             QHash<QString, int> * load(const QChar & letter);
-            bool fileDump(QChar & key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags);
+            void save();
+            bool fileDump(const QChar & key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags);
 
             QHash<QChar, QHash<QString, int> *> catalogs;
             QHash<QChar, QList<QString> *> catalogs_state;

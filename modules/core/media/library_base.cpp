@@ -48,7 +48,7 @@ QHash<QString, int> * LibraryBase::getCatalog(const QString & name) {
     return getCatalog(getCatalogName(name));
 }
 
-QHash<QString, int> * LibraryBase::load(const QChar letter) {
+QHash<QString, int> * LibraryBase::load(const QChar & letter) {
     QHash<QString, int> * res = new QHash<QString, int>();
 
     QFile f(libraryPath % QStringLiteral("cat_") % letter);
@@ -101,7 +101,7 @@ void LibraryBase::save() {
     }
 }
 
-bool LibraryBase::fileDump(QChar key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
+bool LibraryBase::fileDump(const QChar & key, QList<QString> & keysList, QFlags<QIODevice::OpenModeFlag> openFlags) {
     QHash<QString, int> * res = catalogs.value(key);
 
     QFile f(libraryPath % "cat_" % key);

@@ -224,7 +224,7 @@ void Library::remoteItemInfo() {
         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitRemoteInfo"), ind.data().toString());
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
         inRemoteProc.insert(ind, initiator);
-        connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
+        connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfo()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, ind, initiator));
     }
 
