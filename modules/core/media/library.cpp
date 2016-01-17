@@ -225,7 +225,7 @@ void Library::remoteItemInfo() {
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
         inRemoteProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, ind));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, ind, initiator));
     }
 
     remoteProcTimer -> setInterval(Settings::obj().remoteItemsProcDelay());

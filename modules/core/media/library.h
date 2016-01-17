@@ -29,6 +29,7 @@ namespace Core {
                 remote_items
             };
 
+            friend class Singleton<Library>;
             inline Library() {
                 remoteProcTimer = new QTimer();
                 QObject::connect(remoteProcTimer, SIGNAL(timeout()), this, SLOT(remoteItemInfo()));
