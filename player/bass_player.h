@@ -93,6 +93,9 @@ public:
     explicit BassPlayer(QWidget * parent, float open_time_out_sec = 10);
     ~BassPlayer();
 
+    QHash<QString, QVariant> deviceList();
+    bool setDevice(const QVariant & device);
+
     int position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);

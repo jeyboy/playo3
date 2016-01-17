@@ -79,6 +79,9 @@ public:
         emit statusChanged(CloseMedia);
     }
 
+    virtual QHash<QString, QVariant> deviceList() = 0;
+    virtual bool setDevice(const QVariant & device) = 0;
+
     inline bool isInitiating() { return pstate == InitState; }
     inline bool isPlayed() { return pstate == PlayingState; }
     inline bool isPaused() { return pstate == PausedState; }
