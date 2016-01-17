@@ -24,11 +24,11 @@ void Library::setItemState(const QModelIndex & ind, int state) {
     IItem * itm = indToItm(ind);
     initItemData(itm);
 
-    proceedItemNames(itm, state, override);
+    proceedItemTitles(itm, state, override);
 }
 
 void Library::restoreItemState(const QModelIndex & ind) {
-    stateRestoring(0, ind);
+    stateRestoring(ind);
 }
 
 void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
@@ -78,7 +78,6 @@ void Library::declineItemStateRestoring(const QModelIndex & ind) {
 
 void Library::declineItemStateRestoring(const QAbstractItemModel * model) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("DeclineItemRestoration"));
-    waitRemoteOnProc.take(model).clear();
     QHash<QModelIndex, bool> items = waitOnProc.take(model)[all_items];
 
     for(QHash<QModelIndex, bool>::iterator item = items.begin(); item != items.end(); item = items.erase(item))
@@ -95,8 +94,8 @@ void Library::declineItemStateRestoring() {
 
 
 bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) {
-    if (!waitOnProc[iType].isEmpty()) {
-        QList<QModelIndex> & list;
+    if (!waitOnProc.isEmpty()) {
+        QHash<QModelIndex, bool> list;
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
         QList<const QAbstractItemModel *>::Iterator it = keys.end();
@@ -105,10 +104,10 @@ bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) {
 
             list = waitOnProc[*it][iType];
 
-            if (!list.isEmpty() && waitOnProc[*it][all_items])
+            if (list.isEmpty() && waitOnProc[*it][all_items].isEmpty())
                 waitOnProc.remove(*it);
             else if (listSyncs[*it] -> tryLock()) {
-                ind = list.takeLast();
+                list.take(ind = list.keys().last());
                 waitOnProc[*it][all_items].remove(ind);
                 return true;
             }
@@ -130,7 +129,7 @@ void Library::initStateRestoring() {
     }
 }
 
-void Library::stateRestoring(QModelIndex & ind, QFutureWatcher<void> * watcher) {
+void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * watcher) {
     IItem * itm = indToItm(ind);
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("StateRestoring"), itm -> title().toString());
     initItemData(itm);
@@ -193,9 +192,9 @@ IItem * Library::indToItm(const QModelIndex & ind) {
 //    return (qobject_cast<const IModel *>(ind.model())) -> item(ind);
 }
 
-void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
+void Library::emitItemAttrChanging(const QModelIndex & ind, int state) {
     QMetaObject::invokeMethod(
-        ind.model(),
+        const_cast<QAbstractItemModel *>(ind.model()),
         "onUpdateAttr",
         (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection),
         Q_ARG(const QModelIndex &, ind),
@@ -228,6 +227,8 @@ void Library::remoteItemInfo() {
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
         initiator -> setFuture(QtConcurrent::run(this, &Library::remoteInfoRestoring, initiator, ind));
     }
+
+    remoteProcTimer -> setInterval(Settings::obj().remoteItemsProcDelay());
 }
 
 void Library::finishRemoteItemInfo() {
@@ -238,7 +239,7 @@ void Library::finishRemoteItemInfo() {
     delete initiator;
 
     if (!result) // call new item initiation if prev item initiation is finished without remote call for info
-        initRemoteItemInfo();
+        remoteItemInfo();
 }
 
 void Library::cancelActiveRestorations() {
@@ -259,7 +260,7 @@ void Library::cancelActiveRestorations() {
 }
 
 
-bool Library::remoteInfoRestoring(QModelIndex & ind, QFutureWatcher<bool> * watcher) {
+bool Library::remoteInfoRestoring(const QModelIndex & ind, QFutureWatcher<bool> * watcher) {
     IItem * itm = indToItm(ind);
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RemoteInfoRestoring"), itm -> title().toString());
     bool has_info = itm -> hasInfo();

@@ -17,7 +17,7 @@ public:
     inline void setShowInfo(bool show) { _showInfo = show; }
 
     inline bool isInitiateOnPlaying() const { return _initiate_on_play; }
-    inline void setInitiateOnPlaying(bool is_interactive) { _interactiveProc = is_interactive; }
+    inline void setInitiateOnPlaying(bool on_play) { _initiate_on_play = on_play; }
 
     inline bool isUsedDelayForRemote() const { return _remoteItemsProcDelay > 0; }
 

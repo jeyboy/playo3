@@ -31,7 +31,7 @@ namespace Core {
 
             inline Library() {
                 remoteProcTimer = new QTimer();
-                QObject::connect(remoteProcTimer, SIGNAL(timeout()), this, SLOT(saveCatalogs()));
+                QObject::connect(remoteProcTimer, SIGNAL(timeout()), this, SLOT(remoteItemInfo()));
                 remoteProcTimer -> start(Settings::obj().remoteItemsProcDelay());
             }
 
@@ -39,11 +39,11 @@ namespace Core {
 
             void cancelActiveRestorations();
 
-            void stateRestoring(QModelIndex & ind, QFutureWatcher<void> * initiator);
-            bool remoteInfoRestoring(QModelIndex & ind, QFutureWatcher<bool> * initiator);
+            void stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * initiator = 0);
+            bool remoteInfoRestoring(const QModelIndex & ind, QFutureWatcher<bool> * initiator);
 
             IItem * indToItm(const QModelIndex & ind);
-            void emitItemAttrChanging(QModelIndex & ind, int state);
+            void emitItemAttrChanging(const QModelIndex & ind, int state);
 
             void initItemData(IItem * itm);
             void initItemInfo(MediaInfo * info, IItem * itm);
@@ -74,7 +74,7 @@ namespace Core {
 
             inline void registerListSync(const QAbstractItemModel * model, QMutex * sync) { listSyncs[model] = sync; }
             void unregisterListSync(const QAbstractItemModel * model) {
-                declineAllItemsRestoration(model);
+                declineItemStateRestoring(model);
                 listSyncs.remove(model);
             }
         signals:
