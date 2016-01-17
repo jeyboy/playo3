@@ -94,36 +94,43 @@ void Library::declineItemStateRestoring() {
 }
 
 
-
-void Library::procLocale() {
-    if (!waitOnProc.isEmpty()) {
-        const QAbstractItemModel * key = 0;
+bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) {
+    if (!waitOnProc[iType].isEmpty()) {
         QList<QModelIndex> & list;
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
-        for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
-            list = waitOnProc[*it];
+        QList<const QAbstractItemModel *>::Iterator it = keys.end();
+        while(it != keys.begin()) {
+            --it;
 
-            if (list.isEmpty())
+            list = waitOnProc[*it][iType];
+
+            if (!list.isEmpty() && waitOnProc[*it][all_items])
                 waitOnProc.remove(*it);
-            else if (listSyncs[(*it)] -> tryLock()) {
-                key = (*it);
-                break;
+            else if (listSyncs[*it] -> tryLock()) {
+                ind = list.takeLast();
+                waitOnProc[*it][all_items].remove(ind);
+                return true;
             }
         }
+    }
 
-        if (!key) return;
+    return false;
+}
 
-        QModelIndex ind = list.takeLast();
+
+void Library::initStateRestoring() {
+    QModelIndex ind;
+    if (nextProcItem(local_items, ind)) {
         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitInfo"), ind.data().toString());
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
         inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
-        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, initiator, ind));
+        initiator -> setFuture(QtConcurrent::run(this, &Library::stateRestoring, ind, initiator));
     }
 }
 
-void Library::stateRestoring(QFutureWatcher<void> * watcher, QModelIndex ind) {
+void Library::stateRestoring(QModelIndex & ind, QFutureWatcher<void> * watcher) {
     IItem * itm = indToItm(ind);
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("StateRestoring"), itm -> title().toString());
     initItemData(itm);
@@ -212,33 +219,10 @@ void Library::emitItemAttrChanging(QModelIndex & ind, int state) {
 
 
 
-void Library::procRemote() {
-    if (!waitRemoteOnProc.isEmpty()) {
-        const QAbstractItemModel * key = 0;
-
-        QList<const QAbstractItemModel *> keys = waitRemoteOnProc.keys();
-
-        for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
-            if (listSyncs[(*it)] -> tryLock()) {
-                key = (*it);
-                break;
-            }
-        }
-
-        if (!key) return;
-
-        QList<QModelIndex> & list = waitRemoteOnProc[key];
-
-        if (list.isEmpty()) {
-            waitRemoteOnProc.remove(key);
-            listSyncs[key] -> unlock();
-            return;
-        }
-
-        QModelIndex ind = list.takeLast();
+void Library::remoteItemInfo() {
+    QModelIndex ind;
+    if (nextProcItem(remote_items, ind)) {
         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitRemoteInfo"), ind.data().toString());
-        if (list.isEmpty()) waitRemoteOnProc.remove(key);
-
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
         inRemoteProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfoInit()));
@@ -246,7 +230,7 @@ void Library::procRemote() {
     }
 }
 
-void Library::finishProcRemote() {
+void Library::finishRemoteItemInfo() {
     QFutureWatcher<bool> * initiator = (QFutureWatcher<bool> *)sender();
     bool result = initiator -> isCanceled() || initiator -> result();
     QModelIndex ind = inRemoteProc.key(initiator);
@@ -275,7 +259,7 @@ void Library::cancelActiveRestorations() {
 }
 
 
-bool Library::remoteInfoRestoring(QFutureWatcher<bool> * watcher, QModelIndex ind) {
+bool Library::remoteInfoRestoring(QModelIndex & ind, QFutureWatcher<bool> * watcher) {
     IItem * itm = indToItm(ind);
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RemoteInfoRestoring"), itm -> title().toString());
     bool has_info = itm -> hasInfo();

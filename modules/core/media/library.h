@@ -29,12 +29,18 @@ namespace Core {
                 remote_items
             };
 
-            inline Library() {}
+            inline Library() {
+                remoteProcTimer = new QTimer();
+                QObject::connect(remoteProcTimer, SIGNAL(timeout()), this, SLOT(saveCatalogs()));
+                remoteProcTimer -> start(Settings::obj().remoteItemsProcDelay());
+            }
+
+            bool nextProcItem(ItemsListType iType, QModelIndex & ind);
 
             void cancelActiveRestorations();
 
-            void stateRestoring(QFutureWatcher<void> * initiator, QModelIndex ind);
-            bool remoteInfoRestoring(QFutureWatcher<bool> * initiator, QModelIndex ind);
+            void stateRestoring(QModelIndex & ind, QFutureWatcher<void> * initiator);
+            bool remoteInfoRestoring(QModelIndex & ind, QFutureWatcher<bool> * initiator);
 
             IItem * indToItm(const QModelIndex & ind);
             void emitItemAttrChanging(QModelIndex & ind, int state);
@@ -51,6 +57,8 @@ namespace Core {
             QHash<const QAbstractItemModel *, QHash<ItemsListType, QHash<QModelIndex, bool> > > waitOnProc;
             QHash<QModelIndex, QFutureWatcher<void> *> inProc;
             QHash<QModelIndex, QFutureWatcher<bool> *> inRemoteProc;
+
+            QTimer * remoteProcTimer;
         public:
             ~Library();
 
@@ -74,8 +82,8 @@ namespace Core {
         private slots:
             void initStateRestoring();
             void finishStateRestoring();
-            void initRemoteItemInfo();
-            void finishRemoteItemInfoInit();
+            void remoteItemInfo();
+            void finishRemoteItemInfo();
         };
     }
 }
