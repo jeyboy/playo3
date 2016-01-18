@@ -6,13 +6,6 @@ using namespace Models;
 
 Library::~Library() { declineStateRestoring(); }
 
-//void Library::stopProcessing() {
-//    waitOnProc.clear();
-//    waitRemoteOnProc.clear();
-
-//    cancelActiveRestorations();
-//}
-
 void Library::setItemState(const QModelIndex & ind, int state) {
     bool override = state < 0;
     if (state & ItemFields::listened || state == -ItemFields::liked)
@@ -62,7 +55,7 @@ void Library::declineStateRestoring(const QModelIndex & ind) {
     QFutureWatcherBase * watcher = 0;
 
     if (inProc.contains(ind)) watcher = inProc.value(ind);
-    if (inRemoteProc.contains(ind)) watcher = inRemoteProc.value(ind);
+    if (!watcher && inRemoteProc.contains(ind)) watcher = inRemoteProc.value(ind);
 
     if (watcher) {
         watcher -> cancel();
@@ -112,14 +105,13 @@ void Library::cancelActiveRestorations() {
 
 bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) {
     if (!waitOnProc.isEmpty()) {
-        QHash<QModelIndex, bool> list;
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
         QList<const QAbstractItemModel *>::Iterator it = keys.end();
         while(it != keys.begin()) {
             --it;
 
-            list = waitOnProc[*it][iType];
+            QHash<QModelIndex, bool> & list = waitOnProc[*it][iType];
 
             if (list.isEmpty() && waitOnProc[*it][all_items].isEmpty())
                 waitOnProc.remove(*it);
