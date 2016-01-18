@@ -27,25 +27,10 @@ void Library::restoreItemState(const QModelIndex & ind) {
 void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
 
-    QHash<ItemsListType, QHash<QModelIndex, bool> > & list = waitOnProc[ind.model()];
-    QHash<QModelIndex, bool> all = list[all_items];
+    ModelCell & cell = waitOnProc[ind.model()];
 
-    if (!all.contains(ind)) {
-        all.insert(ind, is_remote);
-
-        int current_amount = all.size(), limit = waitListLimit.value(ind.model(), WAIT_LIMIT);
-
-        if (current_amount > limit) {
-            for(QHash<QModelIndex, bool>::Iterator item = all.begin(); item != all.end();) {
-                IItem * itm = indToItm(item.key());
-                itm -> unset(ItemFields::proceeded);
-
-                list[item.value() ? remote_items : local_items].remove(item.key());
-            }
-        }
-
-        list[is_remote ? remote_items : local_items].insert(ind, true);
-    }
+    if (!cell.contains(ind, is_remote))
+        cell.append(ind, is_remote, waitListLimit.value(ind.model(), WAIT_LIMIT));
 
     if (!is_remote && inProc.size() < INPROC_LIMIT)
         initStateRestoring();
@@ -63,18 +48,16 @@ void Library::declineStateRestoring(const QModelIndex & ind) {
         return;
     }
 
-    QHash<ItemsListType, QHash<QModelIndex, bool> > & list = waitOnProc[ind.model()];
-    QHash<QModelIndex, bool> all = list[all_items];
-    if (all.contains(ind))
-        list[all.take(ind) ? remote_items : local_items].remove(ind);
+    waitOnProc[ind.model()].remove(ind);
 }
 
 void Library::declineStateRestoring(const QAbstractItemModel * model) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("DeclineItemRestoration"));
-    QHash<QModelIndex, bool> items = waitOnProc.take(model)[all_items];
+    waitOnProc.take(model).clear();
+//    QList<QModelIndex> items = waitOnProc.take(model).order;
 
-    for(QHash<QModelIndex, bool>::iterator item = items.begin(); item != items.end(); item = items.erase(item))
-        indToItm(item.key()) -> unset(ItemFields::proceeded);
+//    for(QList<QModelIndex>::iterator item = items.begin(); item != items.end(); item = items.erase(item))
+//        indToItm(item.key()) -> unset(ItemFields::proceeded);
 
     cancelActiveRestorations();
 }
@@ -103,21 +86,19 @@ void Library::cancelActiveRestorations() {
 }
 
 
-bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) {
+bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) { // need to think about priority for current visible lists
     if (!waitOnProc.isEmpty()) {
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
-        QList<const QAbstractItemModel *>::Iterator it = keys.end();
-        while(it != keys.begin()) {
-            --it;
+        for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
+            ModelCell & cell = waitOnProc[*it];
+            QHash<QModelIndex, bool> & list = cell.waitLists[iType];
 
-            QHash<QModelIndex, bool> & list = waitOnProc[*it][iType];
-
-            if (list.isEmpty() && waitOnProc[*it][all_items].isEmpty())
+            if (list.isEmpty() && cell.order.isEmpty())
                 waitOnProc.remove(*it);
             else if (listSyncs[*it] -> tryLock()) {
                 list.take(ind = list.keys().last());
-                waitOnProc[*it][all_items].remove(ind);
+                cell.order.removeOne(ind);
                 return true;
             }
         }

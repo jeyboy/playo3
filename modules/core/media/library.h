@@ -24,9 +24,50 @@ namespace Core {
             Q_OBJECT
 
             enum ItemsListType {
-                all_items = 0,
+//                all_items = 0,
                 local_items,
                 remote_items
+            };
+
+            struct ModelCell {
+                QHash<ItemsListType, QHash<QModelIndex, bool> > waitLists;
+                QList<QModelIndex> order;
+
+                bool contains(const QModelIndex & ind, bool is_remote) {
+                    return waitLists[is_remote ? remote_items : local_items].contains(ind);
+                }
+
+                void append(const QModelIndex & ind, bool is_remote, int window_limit) {
+                    order.append(ind);
+//                    waitLists[all_items].insert(ind, is_remote);
+
+                    int current_amount = order.size();
+
+                    if (current_amount > window_limit) {
+                        for(QList<QModelIndex>::Iterator item = order.begin(); item != order.end(); item = order.erase(item)) {
+                            IItem * itm = Library::indToItm(*item);
+                            itm -> unset(ItemFields::proceeded);
+
+                            waitLists[itm -> isRemote() ? remote_items : local_items].remove(*item);
+                            Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
+                        }
+                    }
+
+                    waitLists[is_remote ? remote_items : local_items].insert(ind, true);
+                }
+
+                void remove(const QModelIndex & ind) {
+                    order.removeOne(ind);
+
+                    IItem * itm = Library::indToItm(ind);
+//                    itm -> unset(ItemFields::proceeded);
+                    waitLists[itm -> isRemote() ? remote_items : local_items].remove(ind);
+                }
+
+                void clear() {
+                    order.clear();
+                    waitLists.clear();
+                }
             };
 
             friend class Singleton<Library>;
@@ -43,7 +84,7 @@ namespace Core {
             void stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * initiator = 0);
             bool remoteInfoRestoring(const QModelIndex & ind, QFutureWatcher<bool> * initiator);
 
-            IItem * indToItm(const QModelIndex & ind);
+            static IItem * indToItm(const QModelIndex & ind);
             void emitItemAttrChanging(const QModelIndex & ind, int state);
 
             void initItemData(IItem * itm);
@@ -55,7 +96,8 @@ namespace Core {
             QHash<const QAbstractItemModel *, QMutex *> listSyncs;
             QHash<const QAbstractItemModel *, int> waitListLimit;
 
-            QHash<const QAbstractItemModel *, QHash<ItemsListType, QHash<QModelIndex, bool> > > waitOnProc;
+            QList<QModelIndex> waitOnProcList;
+            QHash<const QAbstractItemModel *, ModelCell> waitOnProc;
             QHash<QModelIndex, QFutureWatcher<void> *> inProc;
             QHash<QModelIndex, QFutureWatcher<bool> *> inRemoteProc;
 
