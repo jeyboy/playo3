@@ -67,15 +67,15 @@ namespace Core {
 
             void restoreItemState(const QModelIndex & ind);
             void restoreItemStateAsync(const QModelIndex & ind, bool is_remote);
-            void declineItemStateRestoring(const QModelIndex & ind);
-            void declineItemStateRestoring(const QAbstractItemModel * model);
-            void declineItemStateRestoring();
+            void declineStateRestoring(const QModelIndex & ind);
+            void declineStateRestoring(const QAbstractItemModel * model);
+            void declineStateRestoring();
 
             inline void setWaitListLimit(QAbstractItemModel * model, int newLimit) { waitListLimit[model] = newLimit; }
 
             inline void registerListSync(const QAbstractItemModel * model, QMutex * sync) { listSyncs[model] = sync; }
             void unregisterListSync(const QAbstractItemModel * model) {
-                declineItemStateRestoring(model);
+                declineStateRestoring(model);
                 listSyncs.remove(model);
             }
         signals:
