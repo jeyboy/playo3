@@ -42,8 +42,6 @@ namespace Core {
                         QModelIndex rm_ind = waitLists[is_remote ? remote_items : local_items].takeFirst();
                         IItem * itm = Library::indToItm(rm_ind);
                         itm -> unset(ItemFields::proceeded);
-
-                        qDebug() << "CLEAR" << window_limit << waitLists[local_items].size() << waitLists[remote_items].size();
                         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
                     }
                 }
