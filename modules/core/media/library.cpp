@@ -29,7 +29,7 @@ void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
 
     ModelCell & cell = waitOnProc[ind.model()];
 
-    if (!cell.contains(ind, is_remote))
+//    if (!cell.contains(ind, is_remote))
         cell.append(ind, is_remote, waitListLimit.value(ind.model(), WAIT_LIMIT));
 
     if (!is_remote && inProc.size() < INPROC_LIMIT)
@@ -96,7 +96,7 @@ bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) { // need to 
 
             if (cell.isEmpty())
                 waitOnProc.remove(*it);
-            else if (listSyncs[*it] -> tryLock()) {
+            else if (!list.isEmpty() && listSyncs[*it] -> tryLock()) {
                 ind = list.takeLast();
                 return true;
             }

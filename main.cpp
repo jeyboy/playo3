@@ -16,7 +16,7 @@ void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, cons
     #endif
 
     Logger::obj().write(
-        QStringLiteral("%2 - %3 - %4").arg(QString(context.file), QString(context.function), QString::number(context.line)),
+        QStringLiteral("%1 - %2 - %3").arg(QString(context.file), QString(context.function), QString::number(context.line)),
         message,
         context.category,
         msgType == QtWarningMsg || msgType == QtCriticalMsg || msgType == QtFatalMsg
