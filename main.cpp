@@ -23,7 +23,6 @@ void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, cons
     );
 }
 
-
 int main(int argc, char * argv[]) {
     try {
         qRegisterMetaType<QVector <int> >("QVector<int>");
