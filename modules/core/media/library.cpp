@@ -92,13 +92,12 @@ bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) { // need to 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
         for(QList<const QAbstractItemModel *>::Iterator it = keys.begin(); it != keys.end(); it++) {
             ModelCell & cell = waitOnProc[*it];
-            QHash<QModelIndex, bool> & list = cell.waitLists[iType];
+            QList<QModelIndex> & list = cell.waitLists[iType];
 
-            if (list.isEmpty() && cell.order.isEmpty())
+            if (cell.isEmpty())
                 waitOnProc.remove(*it);
             else if (listSyncs[*it] -> tryLock()) {
-                list.take(ind = list.keys().last());
-                cell.order.removeOne(ind);
+                ind = list.takeLast();
                 return true;
             }
         }

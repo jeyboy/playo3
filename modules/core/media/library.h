@@ -24,46 +24,39 @@ namespace Core {
             Q_OBJECT
 
             enum ItemsListType {
-//                all_items = 0,
                 local_items,
                 remote_items
             };
 
             struct ModelCell {
-                QHash<ItemsListType, QHash<QModelIndex, bool> > waitLists;
-                QList<QModelIndex> order;
+                QHash<ItemsListType, QList<QModelIndex> > waitLists;
 
                 bool contains(const QModelIndex & ind, bool is_remote) {
                     return waitLists[is_remote ? remote_items : local_items].contains(ind);
                 }
 
                 void append(const QModelIndex & ind, bool is_remote, int window_limit) {
-                    order.append(ind);
-//                    waitLists[all_items].insert(ind, is_remote);
+                    waitLists[is_remote ? remote_items : local_items].append(ind);
 
-                    if (order.size() > window_limit) {
-                        for(QList<QModelIndex>::Iterator item = order.begin(); item != order.end(); item = order.erase(item)) {
-                            IItem * itm = Library::indToItm(*item);
-                            itm -> unset(ItemFields::proceeded);
+                    if (waitLists[local_items].size() + waitLists[remote_items].size() > window_limit) {
+                        QModelIndex rm_ind = waitLists[is_remote ? remote_items : local_items].takeFirst();
+                        IItem * itm = Library::indToItm(rm_ind);
+                        itm -> unset(ItemFields::proceeded);
 
-                            waitLists[itm -> isRemote() ? remote_items : local_items].remove(*item);
-                            Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
-                        }
+                        qDebug() << "CLEAR" << window_limit << waitLists[local_items].size() << waitLists[remote_items].size();
+                        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
                     }
-
-                    waitLists[is_remote ? remote_items : local_items].insert(ind, true);
                 }
 
-                void remove(const QModelIndex & ind) {
-                    order.removeOne(ind);
+                bool isEmpty() { return waitLists[remote_items].isEmpty() && waitLists[local_items].isEmpty(); }
 
+                void remove(const QModelIndex & ind) {
                     IItem * itm = Library::indToItm(ind);
 //                    itm -> unset(ItemFields::proceeded);
-                    waitLists[itm -> isRemote() ? remote_items : local_items].remove(ind);
+                    waitLists[itm -> isRemote() ? remote_items : local_items].removeOne(ind);
                 }
 
                 void clear() {
-                    order.clear();
                     waitLists.clear();
                 }
             };
