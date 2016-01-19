@@ -146,6 +146,8 @@ namespace Core {
                 case PlaingMedia: {
                     attempts = 0;
                     qDebug() << "PLAING MEDIA";
+                    if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying())
+                        Library::obj().initItemData(current_item, true);
                     setState(ItemState::listened);
                 break;}
 

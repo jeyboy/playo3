@@ -297,7 +297,7 @@ void IView::resizeEvent(QResizeEvent * event) {
     if (event -> size().height() > 0)
         emit changeCadrSize(
             mdl,
-            (event -> size().height() / Settings::obj().totalItemHeight()) + 2
+            (event -> size().height() / Settings::obj().totalItemHeight())/* + 1*/
         );
 
     QTreeView::resizeEvent(event);

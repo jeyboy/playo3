@@ -246,14 +246,20 @@ bool BassPlayer::calcSpectrum(QList<QVector<float> > & result) {
 }
 
 bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
+    bool currently_played = media_url.isValid() && uri == media_url;
+
     int chUID;
 
-    if (uri.isLocalFile())
-        chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS);
-    else
-        chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS);
+    if (currently_played)
+        chUID = chan;
+    else {
+        if (uri.isLocalFile())
+            chUID = open(uri.toLocalFile(), LOCAL_PLAY_ATTRS);
+        else
+            chUID = openRemote(uri.toString(), REMOTE_PLAY_ATTRS);
 
-    if (!chUID) return false;
+        if (!chUID) return false;
+    }
 
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
     DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
@@ -268,7 +274,8 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
         info -> setChannels(media_info.chans);
     }
 
-    BASS_StreamFree(chUID);
+    if (!currently_played)
+        BASS_StreamFree(chUID);
     return true;
 }
 

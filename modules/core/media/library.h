@@ -36,10 +36,12 @@ namespace Core {
                 }
 
                 void append(const QModelIndex & ind, bool is_remote, int window_limit) {
-                    waitLists[is_remote ? remote_items : local_items].append(ind);
+                    waitLists[local_items].append(ind);
+                    if (is_remote && !Settings::obj().isInitiateOnPlaying()) waitLists[remote_items].append(ind);
 
-                    if (waitLists[local_items].size() + waitLists[remote_items].size() > window_limit) {
-                        QModelIndex rm_ind = waitLists[is_remote ? remote_items : local_items].takeFirst();
+                    if (waitLists[local_items].size() > window_limit) {
+                        QModelIndex rm_ind = waitLists[local_items].takeFirst();
+                        waitLists[remote_items].removeOne(rm_ind);
                         IItem * itm = Library::indToItm(rm_ind);
                         itm -> unset(ItemFields::proceeded);
                         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
@@ -76,10 +78,6 @@ namespace Core {
             static IItem * indToItm(const QModelIndex & ind);
             void emitItemAttrChanging(const QModelIndex & ind, int state);
 
-            void initItemData(IItem * itm);
-            void initItemInfo(MediaInfo * info, IItem * itm);
-            void initItemTitles(MediaInfo * info, IItem * itm);
-
             bool proceedItemTitles(IItem * itm, int state, bool override = false);
 
             QHash<const QAbstractItemModel *, QMutex *> listSyncs;
@@ -92,6 +90,10 @@ namespace Core {
 
             QTimer * remoteProcTimer;
         public:
+            static void initItemData(IItem * itm, bool force_remote = false);
+            static void initItemInfo(MediaInfo * info, IItem * itm);
+            static void initItemTitles(MediaInfo * info, IItem * itm);
+
             ~Library();
 
             void setItemState(const QModelIndex & ind, int state);

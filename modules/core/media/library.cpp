@@ -28,11 +28,9 @@ void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
     Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
 
     ModelCell & cell = waitOnProc[ind.model()];
+    cell.append(ind, is_remote, waitListLimit.value(ind.model(), WAIT_LIMIT));
 
-//    if (!cell.contains(ind, is_remote))
-        cell.append(ind, is_remote, waitListLimit.value(ind.model(), WAIT_LIMIT));
-
-    if (!is_remote && inProc.size() < INPROC_LIMIT)
+    if (inProc.size() < INPROC_LIMIT)
         initStateRestoring();
 }
 
@@ -190,20 +188,7 @@ void Library::emitItemAttrChanging(const QModelIndex & ind, int state) {
         Q_ARG(int, ISTATERESTORE),
         Q_ARG(const QVariant &, state)
     );
-//    connect(
-//        this, SIGNAL(updateAttr(QModelIndex,int,QVariant)),
-//        ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)), (Qt::ConnectionType)(Qt::BlockingQueuedConnection | Qt::UniqueConnection)
-//    );
-//    emit updateAttr(ind, ISTATERESTORE, state);
-//    disconnect(this, SIGNAL(updateAttr(QModelIndex,int,QVariant)), ind.model(), SLOT(onUpdateAttr(const QModelIndex,int,QVariant)));
 }
-
-
-
-
-
-
-
 
 
 
@@ -297,9 +282,9 @@ bool Library::proceedItemTitles(IItem * itm, int state, bool override) {
     return catState;
 }
 
-void Library::initItemData(IItem * itm) {
+void Library::initItemData(IItem * itm, bool force_remote) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = (itm -> isRemote() && Settings::obj().isUsedDelayForRemote()) || itm -> hasInfo();
+    bool has_info = itm -> hasInfo() || !force_remote || (itm -> isRemote() && Settings::obj().isUsedDelayForRemote());
 
     if (has_titles && has_info) return;
 
