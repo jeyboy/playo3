@@ -41,9 +41,7 @@ namespace Core {
                     order.append(ind);
 //                    waitLists[all_items].insert(ind, is_remote);
 
-                    int current_amount = order.size();
-
-                    if (current_amount > window_limit) {
+                    if (order.size() > window_limit) {
                         for(QList<QModelIndex>::Iterator item = order.begin(); item != order.end(); item = order.erase(item)) {
                             IItem * itm = Library::indToItm(*item);
                             itm -> unset(ItemFields::proceeded);
