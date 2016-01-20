@@ -1,4 +1,5 @@
 #include "bass_player.h"
+#include "settings.h"
 
 #include <qapplication.h>
 
@@ -12,6 +13,22 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     BassPlayer * player = static_cast<BassPlayer *>(user);
     player -> prebufferingLevel();
+}
+
+int BassPlayer::default_device() {
+    QString device = Settings::obj().outputDevice();
+
+    int deviceId = device.isEmpty() ? -1 : deviceList().value(device, QVariant::fromValue(-1)).toInt();
+
+    if (deviceId < 0) {
+        #ifdef Q_OS_WIN
+            return BASS_DEVICE_ENABLED;
+        #else
+            return BASS_DEVICE_DEFAULT;
+        #endif
+    }
+
+    return deviceId;
 }
 
 bool BassPlayer::proceedErrorState() {

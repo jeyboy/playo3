@@ -16,6 +16,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _colorScheme = settings.value(SETTINGS_COLOR_SCHEME_KEY).toInt(1);
 
     _toolIconSize = settings.value(SETTINGS_TOOL_ICON_SIZE_KEY).toInt(28);
+    _output_device = settings.value(SETTINGS_OUTPUT_DEVICE_KEY).toString();
 }
 
 void GlobalSettings::toJson(QJsonObject & settings) {   
@@ -34,4 +35,5 @@ void GlobalSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_COLOR_SCHEME_KEY, QJsonValue::fromVariant(_colorScheme));
 
     settings.insert(SETTINGS_TOOL_ICON_SIZE_KEY, QJsonValue::fromVariant(_toolIconSize));
+    settings.insert(SETTINGS_OUTPUT_DEVICE_KEY, QJsonValue::fromVariant(_output_device));
 }

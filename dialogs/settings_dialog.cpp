@@ -1,6 +1,7 @@
 #include "settings_dialog.h"
 #include "ui_settings_dialog.h"
 #include <QFontDatabase>
+#include "player/player_index.h"
 
 using namespace Dialogs;
 
@@ -250,6 +251,14 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 
 void SettingsDialog::initGlobalSettings() {
+    QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> deviceList();
+    QString current_device = Settings::obj().outputDevice();
+    ui -> outputDeviceSelect -> insertItems(0, devices.keys());
+    if (devices.contains(current_device))
+        ui -> outputDeviceSelect -> setCurrentText(current_device);
+    else
+        ui -> outputDeviceSelect -> setCurrentIndex(0);
+
     ui -> autorunned -> blockSignals(true);
     ui -> autorunned -> setChecked(Settings::obj().isAutorunned());
     ui -> autorunned -> blockSignals(false);
@@ -261,7 +270,6 @@ void SettingsDialog::initGlobalSettings() {
 
     if (!QDir().mkdir(Settings::obj().defaultDownloadPath()))
         ui -> downloadPath -> setStyleSheet(QStringLiteral("background-color: red; color: white;"));
-
 
     QStringList positions;
     positions.append(QStringLiteral("Above"));
@@ -433,6 +441,12 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
+
+    if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
+        Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
+        QVariant device = PlayerFactory::obj().currPlayer() -> deviceList().value(Settings::obj().outputDevice());
+        PlayerFactory::obj().currPlayer() -> setDevice(device);
+    }
 }
 
 void SettingsDialog::saveItemsSettings() {

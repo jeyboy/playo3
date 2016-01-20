@@ -18,6 +18,7 @@
 #define SETTINGS_OPEN_TIMEOUT_KEY QStringLiteral("open_time_out_key")
 #define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
 #define SETTINGS_TOOL_ICON_SIZE_KEY QStringLiteral("tool_icon_size")
+#define SETTINGS_OUTPUT_DEVICE_KEY QStringLiteral("output_device")
 
 class GlobalSettings {
 public:
@@ -57,7 +58,11 @@ public:
     inline int colorScheme() { return _colorScheme; }
     inline void setColorScheme(int newColorScheme) { _colorScheme = newColorScheme; }
 
+    inline QString outputDevice() { return _output_device; }
+    inline void setOutputDevice(const QString & newDevice) { _output_device = newDevice; }
+
 protected:
+    QString _output_device;
     QString _defaultDownloadPath;
     bool _showMetric;
     bool _showMetricNumero;

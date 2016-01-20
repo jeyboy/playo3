@@ -48,13 +48,7 @@ class BassPlayer : public IPlayer {
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
 
-    inline int default_device() {
-        #ifdef Q_OS_WIN
-            return BASS_DEVICE_ENABLED/*-1*/;
-        #else
-            return BASS_DEVICE_DEFAULT;
-        #endif
-    }
+    int default_device();
 
     bool proceedErrorState();
     int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
