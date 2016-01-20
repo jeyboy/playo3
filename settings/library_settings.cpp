@@ -5,7 +5,7 @@ void LibrarySettings::fromJson(const QJsonObject & settings) {
 
     _saveLibDelay = settings.value(SETTINGS_SAVE_LIB_DELAY_KEY).toInt(10000); // in msec
 
-    _initiate_on_play = settings.value(SETTINGS_INITIATE_ON_PLAYING_KEY).toBool(false);
+    _initiate_on_play = settings.value(SETTINGS_INITIATE_ON_PLAYING_KEY).toBool(true);
     _showInfo = settings.value(SETTINGS_SHOW_INFO_KEY).toBool(true);
 }
 

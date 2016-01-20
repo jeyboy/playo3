@@ -83,6 +83,7 @@ namespace Dialogs {
         void on_colorScheme_activated(int index);
 
         void tabClicked(int);
+        void on_initiateOnPlaying_clicked(bool checked);
     };
 }
 

@@ -775,7 +775,7 @@
        <rect>
         <x>10</x>
         <y>80</y>
-        <width>301</width>
+        <width>281</width>
         <height>91</height>
        </rect>
       </property>
@@ -799,7 +799,7 @@
        <property name="geometry">
         <rect>
          <x>240</x>
-         <y>40</y>
+         <y>50</y>
          <width>41</width>
          <height>21</height>
         </rect>
@@ -836,9 +836,9 @@
        <property name="geometry">
         <rect>
          <x>160</x>
-         <y>40</y>
+         <y>50</y>
          <width>71</width>
-         <height>22</height>
+         <height>21</height>
         </rect>
        </property>
        <property name="decimals">
@@ -864,7 +864,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Initiate on playing</string>
+        <string>Initiate remote only on playing</string>
        </property>
       </widget>
      </widget>

@@ -407,6 +407,7 @@ void SettingsDialog::initLibrarySettings() {
     ui -> libSaveFreq -> setValue(Settings::obj().saveLibDelay() / 1000.0);
     ui -> remoteItemProcDelay -> setValue(Settings::obj().remoteItemsProcDelay() / 1000.0);
     ui -> initiateOnPlaying -> setChecked(Settings::obj().isInitiateOnPlaying());
+    on_initiateOnPlaying_clicked(Settings::obj().isInitiateOnPlaying());
     ui -> showInfo -> setChecked(Settings::obj().isShowInfo());
 }
 
@@ -551,4 +552,9 @@ void Dialogs::SettingsDialog::on_colorScheme_activated(int index) {
 void Dialogs::SettingsDialog::tabClicked(int obj_id) {
     if (lastTab) lastTab -> setVisible(false);
     (lastTab = (QWidget *)obj_id) -> setVisible(true);
+}
+
+void Dialogs::SettingsDialog::on_initiateOnPlaying_clicked(bool checked) {
+    ui -> remoteItemProcDelay -> setEnabled(!checked);
+    ui -> label_remoteItemDelay -> setEnabled(!checked);
 }
