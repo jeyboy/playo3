@@ -41,7 +41,14 @@ namespace Core {
 
                     if (waitLists[local_items].size() > window_limit) {
                         QModelIndex rm_ind = waitLists[local_items].takeFirst();
-                        waitLists[remote_items].removeOne(rm_ind);
+                        waitLists[remote_items].removeAll(rm_ind);
+                        IItem * itm = Library::indToItm(rm_ind);
+                        itm -> unset(ItemFields::proceeded);
+                        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
+                    }
+
+                    if (waitLists[remote_items].size() > window_limit) {
+                        QModelIndex rm_ind = waitLists[remote_items].takeFirst();
                         IItem * itm = Library::indToItm(rm_ind);
                         itm -> unset(ItemFields::proceeded);
                         Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), true);
@@ -90,7 +97,7 @@ namespace Core {
 
             QTimer * remoteProcTimer;
         public:
-            static void initItemData(IItem * itm, bool force_remote = false);
+            static void initItemData(IItem * itm, bool dont_force_remote = true);
             static void initItemInfo(MediaInfo * info, IItem * itm);
             static void initItemTitles(MediaInfo * info, IItem * itm);
 

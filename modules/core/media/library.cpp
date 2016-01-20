@@ -226,6 +226,11 @@ bool Library::remoteInfoRestoring(const QModelIndex & ind, QFutureWatcher<bool> 
         return false;
     }
 
+    QUrl item_url = itm -> toUrl();
+    if (item_url.isEmpty()) // some elements did not contains valid urls on moment of call
+        if (IModel::restoreUrl(itm))
+            item_url = itm -> toUrl();
+
     MediaInfo m(itm -> toUrl(), itm -> extension(), has_info);
     if (m.isRemote() && m.hasError()) {
         if (IModel::restoreUrl(itm))
@@ -282,9 +287,9 @@ bool Library::proceedItemTitles(IItem * itm, int state, bool override) {
     return catState;
 }
 
-void Library::initItemData(IItem * itm, bool force_remote) {
+void Library::initItemData(IItem * itm, bool dont_force_remote) {
     bool has_titles = itm -> titlesCache().isValid();
-    bool has_info = itm -> hasInfo() || !force_remote || (itm -> isRemote() && Settings::obj().isUsedDelayForRemote());
+    bool has_info = itm -> hasInfo() || (dont_force_remote ? (itm -> isRemote() && Settings::obj().isUsedDelayForRemote()) : false);
 
     if (has_titles && has_info) return;
 
