@@ -361,8 +361,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     act -> setCheckable(true);
     PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
 
-    ClickableSlider * slider = new ClickableSlider(ptb);
-    Settings::currentStyle -> applyProperty(slider, "volume", true);
+    ClickableSlider * slider = new ClickableSlider(ptb, QStringLiteral("volume"));
 
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);

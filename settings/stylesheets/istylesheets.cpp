@@ -92,8 +92,16 @@ QString IStylesheets::_sliderStyles() {
             "height: 18px;"
         "}"
 
-        "QSlider::handle[volume=\"true\"] {"
+        "QSlider::handle[volume=\"full\"] {"
             "image: url(:/controls/volume_btn);"
+        "}"
+
+        "QSlider::handle[volume=\"half\"] {"
+            "image: url(:/controls/volume_half_btn);"
+        "}"
+
+        "QSlider::handle[volume=\"semi\"] {"
+            "image: url(:/controls/volume_semi_btn);"
         "}"
 
         "QSlider::handle[position=\"true\"] {"

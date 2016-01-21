@@ -10,8 +10,9 @@ namespace Controls {
         Q_OBJECT
 
         SliderStyle * slider_style;
+        QString rule;
     public:
-        ClickableSlider(QWidget * parent = 0);
+        ClickableSlider(QWidget * parent = 0, QString css_rule = QString());
         ~ClickableSlider() { delete slider_style; }
     public slots:
         void setValueSilently(int val) {
@@ -19,6 +20,8 @@ namespace Controls {
             setValue(val);
             blockSignals(false);
         }
+    protected slots:
+        void valieChanged(int newVal);
     };
 }
 

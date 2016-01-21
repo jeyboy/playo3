@@ -100,5 +100,7 @@
         <file alias="volume_btn">images/elements/volume_small.png</file>
         <file alias="pos_btn">images/elements/pos_small.png</file>
         <file alias="pan_btn">images/elements/pan_small.png</file>
+        <file alias="volume_half_btn">images/elements/volume_small_half.png</file>
+        <file alias="volume_semi_btn">images/elements/volume_small_semi.png</file>
     </qresource>
 </RCC>
