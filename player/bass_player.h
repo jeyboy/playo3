@@ -60,6 +60,7 @@ protected slots:
 
 protected:
     bool initDevice(int newDevice, int frequency = 44100);
+    bool closeDevice(int device);
     void loadPlugins();
 
     inline unsigned long open(const QString & path, DWORD flags) {

@@ -319,15 +319,12 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
 }
 
 bool BassPlayer::initDevice(int newDevice, int frequency) {
-    BASS_Stop();
-    BASS_Free();
     bool res = BASS_Init(newDevice, frequency, 0, NULL, NULL);
 
     if (!res)
         qDebug() << "Init error: " << BASS_ErrorGetCode();
 //        throw "Cannot initialize device";
     else {
-
         BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
@@ -335,6 +332,10 @@ bool BassPlayer::initDevice(int newDevice, int frequency) {
     }
 
     return res;
+}
+
+bool BassPlayer::closeDevice(int device) {
+    return BASS_SetDevice(device) && BASS_Free();
 }
 
 void BassPlayer::loadPlugins() {
@@ -390,21 +391,33 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
     return res;
 }
 bool BassPlayer::setDevice(const QVariant & device) {
-    bool res = false, paused = isPaused(), played = isPlayed();
-    int currPos = 0, dur = 0;
+    bool res = false/*, paused = isPaused(), played = isPlayed()*/;
+//    int currPos = 0, dur = 0;
+    int currDevice = BASS_GetDevice();
+    int newDevice = device.toInt();
 
-    if (played || paused) {
-        currPos = position();
-        dur = duration();
-        stop();
+    if ((res = initDevice(newDevice))) {
+        res = BASS_SetDevice(newDevice);
+        if (res && (isPlayed() || isPaused()))
+            res &= BASS_ChannelSetDevice(chan, newDevice);
     }
 
-    if ((res = initDevice(device.toInt()))) {
-        if (played || paused) {
-            setMedia(media_url, currPos, dur);
-            play(paused);
-        }
-    }
+    if (res)
+        closeDevice(currDevice);
+
+
+//    if (played || paused) {
+//        currPos = position();
+//        dur = duration();
+//        stop();
+//    }
+
+//    if ((res = initDevice(device.toInt()))) {
+//        if (played || paused) {
+//            setMedia(media_url, currPos, dur);
+//            play(paused);
+//        }
+//    }
 
     //    res = BASS_SetDevice(device.toInt());
     //        if (res && isPlayed())
