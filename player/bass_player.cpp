@@ -317,16 +317,33 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
     } else return 0;
 }
 
-BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(parent), openChannelWatcher(0) {
+bool BassPlayer::initDevice(int newDevice, int frequency) {
+    bool res = BASS_Init(newDevice, frequency, BASS_DEVICE_DEFAULT, NULL, NULL);
+
+    if (!res)
+        qDebug() << "Init error: " << BASS_ErrorGetCode();
+//        throw "Cannot initialize device";
+    else {
+        openedDevices.append(newDevice);
+        BASS_SetDevice(newDevice);
+
+        BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
+    //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
+
+        openTimeOut(Settings::obj().openTimeOut());
+    }
+
+    return res;
+}
+
+BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
     if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS_FX.DLL was loaded";
 
-    if (!BASS_Init(default_device(), 44100, 0, NULL, NULL))
-        qDebug() << "Init error: " << BASS_ErrorGetCode();
-//        throw "Cannot initialize device";
+    initDevice(default_device());
 
     ///////////////////////////////////////////////
     /// load plugins
@@ -343,11 +360,6 @@ BassPlayer::BassPlayer(QWidget * parent, float open_time_out_sec) : IPlayer(pare
 //            qDebug() << file.filePath() << res;
     }
     ///////////////////////////////////////////////
-
-    BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
-//    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
-
-    openTimeOut(open_time_out_sec);
 }
 
 BassPlayer::~BassPlayer() {
@@ -357,7 +369,11 @@ BassPlayer::~BassPlayer() {
 
     stop();
     BASS_PluginFree(0);
-    BASS_Free();
+
+    for(int device : openedDevices) {
+        setDevice(device);
+        BASS_Free();
+    }
 }
 
 QHash<QString, QVariant> BassPlayer::deviceList() {
@@ -376,9 +392,25 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
     return res;
 }
 bool BassPlayer::setDevice(const QVariant & device) {
-    bool res = BASS_SetDevice(device.toInt());
-    if (res && isPlayed())
-        res &= BASS_ChannelSetDevice(chan, device.toInt());
+    bool res = false, paused;
+    int currPos, dur;
+
+    if (isPlayed() || (paused = isPaused())) {
+        currPos = position();
+        dur = duration();
+        stop();
+    }
+
+    if (res = initDevice(device.toInt())) {
+        if (isPlayed() || paused) {
+            setMedia(media_url, currPos, dur);
+            play(paused);
+        }
+    }
+
+//    res = BASS_SetDevice(device.toInt());
+//        if (res && isPlayed())
+//            res &= BASS_ChannelSetDevice(chan, device.toInt());
 
     return res;
 }

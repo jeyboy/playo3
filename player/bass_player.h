@@ -47,6 +47,7 @@ class BassPlayer : public IPlayer {
     bool is_paused;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
+    QList<int> openedDevices;
 
     int default_device();
 
@@ -58,6 +59,8 @@ protected slots:
     void afterSourceOpening();
 
 protected:
+    bool initDevice(int newDevice, int frequency = 44100);
+
     inline unsigned long open(const QString & path, DWORD flags) {
         return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
     }
@@ -84,7 +87,7 @@ protected:
     bool calcSpectrum(QVector<float> & result);
     bool calcSpectrum(QList<QVector<float> > & result);
 public:
-    explicit BassPlayer(QWidget * parent, float open_time_out_sec = 10);
+    explicit BassPlayer(QWidget * parent);
     ~BassPlayer();
 
     QHash<QString, QVariant> deviceList();
