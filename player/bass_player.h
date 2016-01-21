@@ -93,6 +93,7 @@ public:
     ~BassPlayer();
 
     QHash<QString, QVariant> deviceList();
+    QVariant currDevice();
     bool setDevice(const QVariant & device);
 
     int position() const;

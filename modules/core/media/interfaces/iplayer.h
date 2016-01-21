@@ -80,6 +80,7 @@ public:
     }
 
     virtual QHash<QString, QVariant> deviceList() = 0;
+    virtual QVariant currDevice() = 0;
     virtual bool setDevice(const QVariant & device) = 0;
 
     inline bool isInitiating() { return pstate == InitState; }

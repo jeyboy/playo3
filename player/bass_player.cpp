@@ -390,6 +390,9 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
 
     return res;
 }
+
+QVariant BassPlayer::currDevice() { return QVariant::fromValue(BASS_GetDevice()); }
+
 bool BassPlayer::setDevice(const QVariant & device) {
     bool res = false/*, paused = isPaused(), played = isPlayed()*/;
 //    int currPos = 0, dur = 0;

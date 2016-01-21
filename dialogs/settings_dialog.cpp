@@ -254,10 +254,9 @@ void SettingsDialog::initGlobalSettings() {
     QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> deviceList();
     QString current_device = Settings::obj().outputDevice();
     ui -> outputDeviceSelect -> insertItems(0, devices.keys());
-    if (devices.contains(current_device))
-        ui -> outputDeviceSelect -> setCurrentText(current_device);
-    else
-        ui -> outputDeviceSelect -> setCurrentIndex(0);
+    if (!devices.contains(current_device))
+        current_device = devices.key(PlayerFactory::obj().currPlayer() -> currDevice());
+    ui -> outputDeviceSelect -> setCurrentText(current_device);
 
     ui -> autorunned -> blockSignals(true);
     ui -> autorunned -> setChecked(Settings::obj().isAutorunned());
