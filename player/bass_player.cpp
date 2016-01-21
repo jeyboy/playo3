@@ -151,6 +151,7 @@ bool BassPlayer::stopProcessing() {
         unregisterEQ();
         BASS_ChannelRemoveSync(chan, syncHandle);
         BASS_ChannelRemoveSync(chan, syncDownloadHandle);
+        BASS_ChannelStop(chan);
         BASS_StreamFree(chan);
     }
 
@@ -318,17 +319,18 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
 }
 
 bool BassPlayer::initDevice(int newDevice, int frequency) {
-    if (!openedDevices.isEmpty()) {
-        BASS_SetDevice(openedDevices.takeFirst());
+//    if (!openedDevices.isEmpty()) {
+//        BASS_SetDevice(openedDevices.takeFirst());
+        qDebug() << "STOP OLD" << BASS_Stop();
         qDebug() << "FREED OLD" << BASS_Free();
-    }
+//    }
     bool res = BASS_Init(newDevice, frequency, 0, NULL, NULL);
 
     if (!res)
         qDebug() << "Init error: " << BASS_ErrorGetCode();
 //        throw "Cannot initialize device";
     else {
-        openedDevices.append(newDevice);
+//        openedDevices.append(newDevice);
 //        BASS_SetDevice(newDevice);
 
         BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
@@ -340,18 +342,7 @@ bool BassPlayer::initDevice(int newDevice, int frequency) {
     return res;
 }
 
-BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0) {
-    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
-        throw "An incorrect version of BASS.DLL was loaded";
-
-    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
-        throw "An incorrect version of BASS_FX.DLL was loaded";
-
-    initDevice(default_device());
-
-    ///////////////////////////////////////////////
-    /// load plugins
-    ///////////////////////////////////////////////
+void BassPlayer::loadPlugins() {
     QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QStringLiteral("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
     QFileInfoList::Iterator it = list.begin();
 
@@ -366,18 +357,26 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0
     ///////////////////////////////////////////////
 }
 
+BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0) {
+    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
+        throw "An incorrect version of BASS.DLL was loaded";
+
+    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
+        throw "An incorrect version of BASS_FX.DLL was loaded";
+
+    initDevice(default_device());
+    loadPlugins();
+}
+
 BassPlayer::~BassPlayer() {
     if (openChannelWatcher)
         openChannelWatcher -> cancel();
     openChannelWatcher -> deleteLater();
 
     stop();
+    BASS_Stop();
     BASS_PluginFree(0);
-
-    for(int device : openedDevices) {
-        BASS_SetDevice(device);
-        BASS_Free();
-    }
+    BASS_Free();
 }
 
 QHash<QString, QVariant> BassPlayer::deviceList() {
@@ -396,17 +395,18 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
     return res;
 }
 bool BassPlayer::setDevice(const QVariant & device) {
-    bool res = false, paused = false;
-    int currPos, dur;
+    bool res = false, paused = false, played;
+    int currPos = 0, dur = 0;
 
-    if (isPlayed() || (paused = isPaused())) {
+    if ((played = isPlayed()) || (paused = isPaused())) {
         currPos = position();
         dur = duration();
         stop();
     }
 
+    initDevice(device.toInt());
     if ((res = initDevice(device.toInt()))) {
-        if (isPlayed() || paused) {
+        if (played || paused) {
             setMedia(media_url, currPos, dur);
             play(paused);
         }

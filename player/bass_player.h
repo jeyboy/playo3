@@ -47,7 +47,7 @@ class BassPlayer : public IPlayer {
     bool is_paused;
     unsigned long chan;
     QFutureWatcher<int> * openChannelWatcher;
-    QList<int> openedDevices;
+//    QList<int> openedDevices;
 
     int default_device();
 
@@ -60,6 +60,7 @@ protected slots:
 
 protected:
     bool initDevice(int newDevice, int frequency = 44100);
+    void loadPlugins();
 
     inline unsigned long open(const QString & path, DWORD flags) {
         return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);

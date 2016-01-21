@@ -443,11 +443,8 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 
     if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
-
-        QVariant device = PlayerFactory::obj().currPlayer() -> deviceList().value(Settings::obj().outputDevice());
-        bool res = PlayerFactory::obj().currPlayer() -> setDevice(device);
-        qDebug() << "SET DEVICE" << device << res;
-        if (res)
+        QVariant device = PlayerFactory::obj().currPlayer() -> deviceList().value(ui -> outputDeviceSelect -> currentText());
+        if (PlayerFactory::obj().currPlayer() -> setDevice(device))
             Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
     }
 }
