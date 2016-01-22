@@ -795,7 +795,9 @@ void IView::dragMoveEvent(QDragMoveEvent * event) {
 
 void IView::dropEvent(QDropEvent * event) {
     if (event -> source() == this)
-        removeSelectedItems(false, dont_remove_played);
+        mdl -> setDNDList(selectedIndexes());
+//    if (event -> source() == this)
+//        removeSelectedItems(false, dont_remove_played);
 
     QTreeView::dropEvent(event);
     event -> accept();

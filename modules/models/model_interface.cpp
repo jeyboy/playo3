@@ -844,6 +844,27 @@ QStringList IModel::mimeTypes() const {
     return types;
 }
 
+bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent) {
+    data -> dRow = row;
+    QModelIndex eIndex, dIndex;
+    int eRow, dRow;
+
+    for(QModelIndex ind : dndList) {
+        dIndex = parent; dRow = row;
+        recalcParentIndex(dIndex, dRow, eIndex, eRow, ind.data(IURL).toUrl());
+
+        parentFolder = item<Playlist>(dIndex);
+    }
+
+    beginMoveRows();
+
+    endMoveRows();
+
+//    beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
+//        counts[parentFolder] += Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
+//    endInsertRows();
+}
+
 bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) {
     int totalAdded = 0;
     QModelIndex dIndex;
@@ -867,7 +888,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
                     data -> attrs.remove(JSON_TYPE_PATH);
             }
         }
-        else data -> url = REMOTE_DND_URL;
+        else data -> url = REMOTE_DND_URL; // need to improve this for one level lists
 
         data -> dRow = row;
         dIndex = parent;
@@ -935,9 +956,13 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
         Dialogs::ExtensionDialog(QApplication::activeWindow()).exec();
 
     if (data -> hasFormat(DROP_INNER_FORMAT)) {
-        QByteArray encoded = data -> data(DROP_INNER_FORMAT);
-        QDataStream stream(&encoded, QIODevice::ReadOnly);
-        return decodeInnerData(row, column, parentIndex, stream);
+        if (!dndList.isEmpty()) {
+            return proceedSelfDnd(row, column, parentIndex);
+        } else {
+            QByteArray encoded = data -> data(DROP_INNER_FORMAT);
+            QDataStream stream(&encoded, QIODevice::ReadOnly);
+            return decodeInnerData(row, column, parentIndex, stream);
+        }
     } else if (data -> hasUrls())
         return /*insertRows*/threadlyInsertRows(data -> urls(), row, parentIndex);
 

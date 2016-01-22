@@ -23,6 +23,8 @@ namespace Models {
 
     class IModel : public QAbstractItemModel {
         Q_OBJECT
+
+        QModelIndexList dndList;
     public:
         enum Direction {
             none = 0,
@@ -39,6 +41,8 @@ namespace Models {
 
         virtual Data::Type playlistType() const = 0;
         virtual bool isRelative() const = 0;
+
+        void setDNDList(QModelIndexList newDndList) { dndList = newDndList; }
 
         QVariant data(const QModelIndex & index, int role) const;
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
@@ -94,6 +98,7 @@ namespace Models {
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
+        bool proceedSelfDnd(int row, int column, const QModelIndex & parent);
         bool decodeInnerData(int row, int column, const QModelIndex & parent, QDataStream & stream);
         QMimeData * mimeData(const QModelIndexList & indexes) const;
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
