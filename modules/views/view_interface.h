@@ -28,6 +28,13 @@
 namespace Views {
     using namespace Models;
 
+    enum DelFlags : int {
+        none = 0,
+        use_prev_action,
+        dont_remove_played,
+        in_background
+    };
+
     class IView : public QTreeView, public IPlaylistable {
         Q_OBJECT
 
@@ -77,7 +84,7 @@ namespace Views {
         void infoInvalidationAsync(const QModelIndex & node) const;
 
         void showAlert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
-        void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, bool usePrevAction);
+        void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, int flags);
         void searchFinished();
 
     public slots:
@@ -133,7 +140,7 @@ namespace Views {
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();
-        bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, bool usePrevAction = false);
+        bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, int flags = none);
 
         void downloadSelected();
         void downloadChecked(QString & path, Playlist * root = 0);
@@ -151,8 +158,8 @@ namespace Views {
         void checkByPredicate(IItem::ItemStateFlag flag);
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
-        void removeProccessing(QModelIndexList & index_list, bool remove, bool inProcess = false);
-        void removeSelectedItems(bool remove = true);
+        void removeProccessing(QModelIndexList & index_list, bool remove, int flags = none);
+        void removeSelectedItems(bool remove = true, int flags = none);
 
         void downloadItems(const QModelIndexList & nodes, QString savePath);
         void downloadBranch(const QModelIndex & node, QString savePath);

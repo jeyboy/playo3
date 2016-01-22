@@ -678,11 +678,11 @@ void IModel::importIds(const QStringList & ids) {
     bool is_new = false;
 
     switch(playlistType()) {
+        case search:
         case soundcloud:
         case vk:
         case vk_rel:
         case level: { parentNode = rootItem; break; }
-        case search:
         case tree:
         case level_tree: {
             QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());

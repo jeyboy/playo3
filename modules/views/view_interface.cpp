@@ -66,7 +66,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     int iconDimension = Settings::obj().iconHeight();
     setIconSize(QSize(iconDimension, iconDimension));
 
-    connect(this, SIGNAL(threadedRowRemoving(const QModelIndex &, bool, int, bool)), this, SLOT(removeRow(const QModelIndex &, bool, int, bool)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(threadedRowRemoving(QModelIndex,bool,int,int)), this, SLOT(removeRow(QModelIndex,bool,int,int)), Qt::BlockingQueuedConnection);
 
     connect(this, SIGNAL(activated(const QModelIndex &)), this, SLOT(onDoubleClick(const QModelIndex &)));
     connect(this, SIGNAL(expanded(const QModelIndex &)), mdl, SLOT(expanded(const QModelIndex &)));
@@ -483,11 +483,12 @@ void IView::findAndExecIndex(bool deleteCurrent) {
     }
 }
 
-bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, bool usePrevAction) {
+bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, int flags) {
     bool isFolder = false;
 
     if (Settings::obj().isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
+            bool usePrevAction = flags & use_prev_action;
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
                 return false;
 
@@ -506,16 +507,18 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         }
     }
 
-    if (DataFactory::obj().playedIndex().isValid()) {
-        if (DataFactory::obj().currentPlaylist() == this &&
-             DataFactory::obj().playedItemTreePath().startsWith(
-            node.data(ITREESTR).toString()
-        ))
-            DataFactory::obj().resetPlaying();
-    }
+    if (!(flags & dont_remove_played)) {
+        if (DataFactory::obj().playedIndex().isValid()) {
+            if (DataFactory::obj().currentPlaylist() == this &&
+                 DataFactory::obj().playedItemTreePath().startsWith(
+                node.data(ITREESTR).toString()
+            ))
+                DataFactory::obj().resetPlaying();
+        }
 
-    if (remove_file_with_item)
-        mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
+        if (remove_file_with_item)
+            mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
+    }
 
     if (selectionUpdate != IModel::none) {
         QModelIndex newSel = QModelIndex();
@@ -537,8 +540,10 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
     return model() -> removeRow(node.row(), node.parent());
 }
 
-void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool inProcess) {
+void IView::removeProccessing(QModelIndexList & index_list, bool remove, int flags) {
     float total = index_list.size(), temp = total;
+    flags |= use_prev_action;
+    bool inProcess = flags & in_background;
 
     if (inProcess)
         emit mdl -> moveInProcess();
@@ -577,7 +582,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     if (mdl -> playlistType() == level || !inProcess) {
         for (; eit != index_list.begin(); --eit) {
-            removeRow((*eit), remove, IModel::none, true);
+            removeRow((*eit), remove, IModel::none, flags);
 
             if (inProcess)
                 emit mdl -> setProgress(--temp / total);
@@ -585,9 +590,9 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     } else {
         for (; eit != index_list.begin(); --eit) {
             if ((*eit).data(IFOLDER).toBool())
-                emit threadedRowRemoving((*eit), remove, IModel::none, true);
+                emit threadedRowRemoving((*eit), remove, IModel::none, flags);
             else
-                removeRow((*eit), remove, IModel::none, true);
+                removeRow((*eit), remove, IModel::none, flags);
             emit mdl -> setProgress(--temp / total);
         }
     }
@@ -595,9 +600,9 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
 
     if (inProcess)
         // in thread item selected in view, but not added to selected model :(
-        emit threadedRowRemoving((*eit), remove, IModel::none, true); // if last elem is folder - throwned error if we in thread
+        emit threadedRowRemoving((*eit), remove, IModel::none, flags); // if last elem is folder - throwned error if we in thread
     else
-        removeRow((*eit), remove, IModel::backward | IModel::forward, true);
+        removeRow((*eit), remove, IModel::backward | IModel::forward, flags);
 
     index_list.clear();
     if (inProcess)
@@ -606,7 +611,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, bool in
     mdl -> syncMutex() -> unlock();
 }
 
-void IView::removeSelectedItems(bool remove) {
+void IView::removeSelectedItems(bool remove, int flags) {
     if (blockDeletion) return;
 
     QModelIndexList list = selectedIndexes();
@@ -619,14 +624,15 @@ void IView::removeSelectedItems(bool remove) {
         emit discardSync(mdl);
     } else return;
 
-    if (list.size() > 200)
-        QtConcurrent::run(this, &IView::removeProccessing, list, remove && isRemoveFileWithItem(), true);
-    else if (list.size() > 1)
-        removeProccessing(list, isRemoveFileWithItem());
+    if (list.size() > 200) {
+        flags |= in_background;
+        QtConcurrent::run(this, &IView::removeProccessing, list, remove && isRemoveFileWithItem(), flags);
+    } else if (list.size() > 1)
+        removeProccessing(list, remove && isRemoveFileWithItem());
     else {
         QModelIndex ind = currentIndex();
         if (ind.isValid()) {
-            removeRow(ind, remove && isRemoveFileWithItem(), true, false);
+            removeRow(ind, remove && isRemoveFileWithItem(), true, flags);
             mdl -> syncMutex() -> unlock();
         }
     }
@@ -789,7 +795,7 @@ void IView::dragMoveEvent(QDragMoveEvent * event) {
 
 void IView::dropEvent(QDropEvent * event) {
     if (event -> source() == this)
-        removeSelectedItems(false);
+        removeSelectedItems(false, dont_remove_played);
 
     QTreeView::dropEvent(event);
     event -> accept();
