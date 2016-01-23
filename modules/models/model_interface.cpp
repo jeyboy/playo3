@@ -1,3 +1,4 @@
+#include <qpair.h>
 #include "model_interface.h"
 
 #include "modules/core/misc/fuzzy_comparison.h"
@@ -844,25 +845,58 @@ QStringList IModel::mimeTypes() const {
     return types;
 }
 
-bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent) {
-    data -> dRow = row;
+bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent) { // not tested
     QModelIndex eIndex, dIndex;
-    int eRow, dRow;
+    int eRow, dRow, totalAdded = 0;
 
-    for(QModelIndex ind : dndList) {
-        dIndex = parent; dRow = row;
-        recalcParentIndex(dIndex, dRow, eIndex, eRow, ind.data(IURL).toUrl());
+    if (dndList.count() == 1) {
+        IItem * itm = item(dndList.first());
+        totalAdded += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
+        recalcParentIndex(parent, row, eIndex, eRow, itm -> toUrl());
+        beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), eIndex, eRow);
+            Playlist * newPlaylist = item<Playlist>(parent);
+            itm -> setParent(newPlaylist);
+            newPlaylist -> moveChild(itm, row);
+        endMoveRows();
+    } else {
+        QHash<Playlist *, QList<IItem *> > moveItems;
+        QHash<Playlist *, Playlist * > links;
+        QHash<IItem *, int> insertPos;
 
-        parentFolder = item<Playlist>(dIndex);
+        for(QModelIndex ind : dndList) {
+            dIndex = parent; dRow = row;
+            recalcParentIndex(dIndex, dRow, eIndex, eRow, ind.data(IURL).toUrl());
+
+            Playlist * parentFolder = item<Playlist>(dIndex);
+            IItem * itm = item(ind);
+            moveItems[parentFolder].append(itm);
+            if (eIndex != dIndex)
+                links.insert(parentFolder, item<Playlist>(eIndex));
+            insertPos.insert(itm, eRow);
+        }
+
+        for(QHash<Playlist *, QList<IItem *> >::Iterator position = moveItems.begin(); position != moveItems.end(); position++) {
+            Playlist * newParentItm = links.value(position.key(), position.key());
+            QModelIndex newParent = index(newParentItm);
+            int listTotal = 0;
+
+            for(IItem * itm : position.value()) {
+                beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), newParent, insertPos[itm]);
+                    itm -> setParent(newParentItm);
+                    newParentItm -> moveChild(itm, insertPos[itm]);
+                    listTotal += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
+                endMoveRows();
+            }
+
+            newParentItm -> backPropagateItemsCountInBranch(listTotal);
+            totalAdded += listTotal;
+        }
+
+        if (totalAdded > 0) emit itemsCountChanged(totalAdded);
     }
 
-    beginMoveRows();
-
-    endMoveRows();
-
-//    beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-//        counts[parentFolder] += Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
-//    endInsertRows();
+    dndList.clear();
+    return true;
 }
 
 bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) {

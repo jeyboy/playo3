@@ -80,7 +80,7 @@ namespace Core {
 //            return /*predicate.isEmpty() ||*/ title().toString().contains(predicate, Qt::CaseInsensitive);
 //        }
 
-        inline void setParent(Playlist * pNode) {
+        virtual inline void setParent(Playlist * pNode) {
 //            if (_parent != 0) qDebug() << "Parent already setted";
             _parent = pNode;
         }

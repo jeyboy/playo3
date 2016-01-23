@@ -40,6 +40,17 @@ namespace Core {
         inline QList<IItem *> childrenList() const { return children; }
         inline int childRow(IItem * child) { return children.indexOf(child); }
         inline IItem * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
+        inline bool moveChild(int row, int newRow) {
+            if (row < 0 || row >= children.size()) return false;
+            if (newRow < 0 || newRow >= children.size()) return false;
+            children.move(row, newRow);
+            return true;
+        }
+        inline bool moveChild(IItem * item, int newRow) {
+            if (newRow < 0 || newRow >= children.size()) return false;
+            children.move(item -> row(), newRow);
+            return true;
+        }
         virtual inline int childCount() const { return children.count(); }
         inline void declareChild(IItem * child) { children.append(child); }
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
@@ -70,6 +81,11 @@ namespace Core {
         inline QList<Playlist *> playlistsList() const { return playlists.values(); }
 
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
+
+        inline void setParent(Playlist * pNode) {
+            IItem::setParent(pNode);
+            pNode -> declarePlaylist(playlistUid(), this);
+        }
     protected:
         inline QString playlistUid() const { return playlistUid(title().toString(), uid().toString()); }
         inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QStringLiteral("*") % uid)); }
