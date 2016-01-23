@@ -861,7 +861,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     } else {
         QHash<Playlist *, QList<IItem *> > moveItems;
         QHash<Playlist *, Playlist * > links;
-        QHash<IItem *, int> insertPos;
+        QHash<IItem *, int> insertPos; // elems inserted in 0 pos all time
 
         for(QModelIndex ind : dndList) {
             dIndex = parent; dRow = row;
@@ -872,7 +872,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
             moveItems[parentFolder].append(itm);
             if (eIndex != dIndex)
                 links.insert(parentFolder, item<Playlist>(eIndex));
-            insertPos.insert(itm, eRow);
+            insertPos.insert(itm, dRow);
         }
 
         for(QHash<Playlist *, QList<IItem *> >::Iterator position = moveItems.begin(); position != moveItems.end(); position++) {
