@@ -852,9 +852,15 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     if (dndList.count() == 1) {
         IItem * itm = item(dndList.first());
         recalcParentIndex(parent, row, eIndex, eRow, itm -> toUrl());
+
+        Playlist * newPlaylist = item<Playlist>(parent);
+        bool same_parent = itm -> parent() == newPlaylist;
+        if (same_parent && itm -> row() == row) return false;
+
+        if (same_parent && itm -> row() + 1 == row) eRow += 1;
+
         beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), eIndex, eRow);
-            Playlist * newPlaylist = item<Playlist>(parent);
-            if (newPlaylist != itm -> parent()) {
+            if (!same_parent) {
                 itm -> setParent(newPlaylist);
                 totalAdded += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
             }
@@ -887,9 +893,13 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
             for(IItem * itm : position.value()) {
                 int itm_row = itm -> row();
-                if (itm -> parent() == newParentItm && (itm_row == insertPos[itm] || itm_row + 1 == insertPos[itm])) continue;
+                bool same_parent = itm -> parent() == newParentItm;
+                if (same_parent && itm_row == insertPos[itm]) continue;
+                if (same_parent && (itm_row + 1 == insertPos[itm])) insertPos[itm] += 1;
+//                if (same_parent && (itm_row - 1 == insertPos[itm])) insertPos[itm] -= 1;
+
                 beginMoveRows(index(itm -> parent()), itm_row, itm_row, newParent, insertPos[itm]);
-                    if (itm -> parent() != newParentItm) {
+                    if (!same_parent) {
                         itm -> setParent(newParentItm);
                         listTotal += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
                     }
