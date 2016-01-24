@@ -848,10 +848,19 @@ QStringList IModel::mimeTypes() const {
 bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent) { // not tested
     QModelIndex eIndex, dIndex, dropIndex = index(item<Playlist>(parent) -> child(row));
     int eRow, dRow, totalAdded = 0;
+    bool has_free_moving;
+
+    switch(playlistType()) {
+        case Data::tree:
+        case Data::level_tree: {
+            has_free_moving = false;
+        break;}
+        default: has_free_moving = true;
+    }
 
     if (dndList.count() == 1) {
         IItem * itm = item(dndList.first());
-        recalcParentIndex(parent, row, eIndex, eRow, itm -> isRemote() ? QUrl() : itm -> toUrl());
+        recalcParentIndex(parent, row, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
 
         Playlist * newPlaylist = item<Playlist>(parent);
         bool same_parent = itm -> parent() == newPlaylist;
@@ -876,7 +885,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
             IItem * itm = item(ind);
             dIndex = parent; dRow = row;
-            recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() ? QUrl() : itm -> toUrl());
+            recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
 
             Playlist * parentFolder = item<Playlist>(dIndex);
             moveItems[parentFolder].append(itm);
