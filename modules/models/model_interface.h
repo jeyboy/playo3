@@ -150,7 +150,7 @@ namespace Models {
         void setProgress(int percent);
         void setProgress2(int percent);
     protected:
-        virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/);
+        virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 //        virtual void parseCue(Playlist * parent, QUrl curUri, QUrl cueTargetUri = QUrl()) = 0;
 

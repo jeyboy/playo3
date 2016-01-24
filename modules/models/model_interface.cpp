@@ -795,7 +795,7 @@ void IModel::finishingItemsAdding() {
 
 /////////////////////////////////////////////////////////
 
-void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
+void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & /*url*/) {
     exIndex = dIndex;
     exRow = dRow < 0 ? 0 : dRow;
 }

@@ -2,31 +2,34 @@
 
 using namespace Models;
 
-void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
-    QFileInfo file = QFileInfo(url.toLocalFile());
-    QString fName;
+void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url) {
+    if (!url.isEmpty()) {
+        QFileInfo file = QFileInfo(url.toLocalFile());
+        QString fName;
 
-    if (file.isDir())
-        fName = file.fileName();
-    else
-        fName = Extensions::folderName(file);
+        if (file.isDir())
+            fName = file.fileName();
+        else
+            fName = Extensions::folderName(file);
 
-    Playlist * nearestNode = rootItem -> playlist(fName);
-    Playlist * node;
-    if (!nearestNode) {
-        exIndex = index(rootItem);
-        exRow = rootItem -> childCount();
-        node = rootItem -> createPlaylist(fName);
-    } else {
-        node = nearestNode;
-        exIndex = index(nearestNode);
-        exRow = nearestNode -> row();
+        Playlist * nearestNode = rootItem -> playlist(fName);
+        Playlist * node;
+        if (!nearestNode) {
+            exIndex = index(rootItem);
+            exRow = rootItem -> childCount();
+            node = rootItem -> createPlaylist(fName);
+        } else {
+            node = nearestNode;
+            exIndex = index(nearestNode);
+            exRow = nearestNode -> row();
+        }
+
+        (const_cast<QModelIndex &>(dIndex)) = index(node);
+
+        if (dIndex != exIndex)
+            dRow = -1;
     }
-
-    (const_cast<QModelIndex &>(dIndex)) = index(node);
-
-    if (dIndex != exIndex)
-        dRow = -1;
+    else IModel::recalcParentIndex(dIndex, dRow, exIndex, exRow, url);
 }
 
 void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {

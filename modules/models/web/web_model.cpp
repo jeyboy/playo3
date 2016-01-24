@@ -22,12 +22,15 @@ QJsonObject WebModel::toJson() {
     return ignoreListToJson(res);
 }
 
-void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
-    exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
-    if (dRow == -1)
-        exRow = rootItem -> childCount();
-    else
-        exRow = dRow;
+void WebModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url) {
+    if (!url.isEmpty()) {
+        exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
+        if (dRow == -1)
+            exRow = rootItem -> childCount();
+        else
+            exRow = dRow;
+    }
+    else IModel::recalcParentIndex(dIndex, dRow, exIndex, exRow, url);
 }
 
 void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {

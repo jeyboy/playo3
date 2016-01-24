@@ -25,7 +25,7 @@ namespace Models {
 
         inline bool ignoreListContainUid(const QString & uid) { return IgnoreList::ignoreListContainUid(uid); } // overriding for model_interface
     protected:
-        void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url);
+        void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
         int filesRoutine(QFileInfo & currFile, Playlist * node);
         int filesRoutine(const QList<QUrl> & list, Playlist * node, int pos = -1);

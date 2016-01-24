@@ -2,12 +2,15 @@
 
 using namespace Models;
 
-void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl /*url*/) {
-    exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
-    if (dRow == -1)
-        exRow = rootItem -> childCount();
-    else
-        exRow = dRow;
+void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url) {
+    if (!url.isEmpty()) {
+        exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
+        if (dRow == -1)
+            exRow = rootItem -> childCount();
+        else
+            exRow = dRow;
+    }
+    else IModel::recalcParentIndex(dIndex, dRow, exIndex, exRow, url);
 }
 
 void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {   

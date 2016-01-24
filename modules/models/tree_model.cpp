@@ -3,21 +3,24 @@
 using namespace Models;
 ///////////////////////////////////////////////////////////
 
-void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, QUrl url) {
-    QFileInfo file = QFileInfo(url.toLocalFile());
-    QString path = file.path();
-    if (path.isEmpty()) path = Extensions::folderName(file);
+void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url) {
+    if (!url.isEmpty()) {
+        QFileInfo file = QFileInfo(url.toLocalFile());
+        QString path = file.path();
+        if (path.isEmpty()) path = Extensions::folderName(file);
 
-    QStringList list = path.split('/', QString::SkipEmptyParts);
-    Playlist * nearestNode = rootItem -> findCompatblePlaylist(&list);
-    Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(list.takeFirst(), &list);
-    exIndex = index(nearestNode);
+        QStringList list = path.split('/', QString::SkipEmptyParts);
+        Playlist * nearestNode = rootItem -> findCompatblePlaylist(&list);
+        Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(list.takeFirst(), &list);
+        exIndex = index(nearestNode);
 
-    (const_cast<QModelIndex &>(dIndex)) = index(node);
-    exRow = nearestNode -> row();
+        (const_cast<QModelIndex &>(dIndex)) = index(node);
+        exRow = nearestNode -> row();
 
-    if (dIndex != exIndex)
-        dRow = -1;
+        if (dIndex != exIndex)
+            dRow = -1;
+    }
+    else IModel::recalcParentIndex(dIndex, dRow, exIndex, exRow, url);
 }
 
 void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list) {
