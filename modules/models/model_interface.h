@@ -166,6 +166,12 @@ namespace Models {
             return a.data(ITREESTR).toString() < b.data(ITREESTR).toString();
         }
     };
+
+    struct itemsComparator {
+        bool operator()(const IItem * a, const IItem * b) const {
+            return a -> buildTreeStr() > b -> buildTreeStr();
+        }
+    };
 }
 
 #endif // MODEL_INTERFACE

@@ -890,12 +890,14 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
             QModelIndex newParent = index(newParentItm);
             int listTotal = 0;
 
-            for(IItem * itm : position.value()) {
+            QList<IItem *> items_list = position.value();
+            qSort(items_list.begin(), items_list.end(), itemsComparator());
+
+            for(IItem * itm : items_list) {
                 int itm_row = itm -> row();
                 bool same_parent = itm -> parent() == newParentItm;
                 if (same_parent && itm_row == insertPos[itm]) continue;
                 if (same_parent && (itm_row + 1 == insertPos[itm])) insertPos[itm] += 1;
-//                if (same_parent && (itm_row - 1 == insertPos[itm])) insertPos[itm] -= 1;
 
                 beginMoveRows(index(itm -> parent()), itm_row, itm_row, newParent, insertPos[itm]);
                     if (!same_parent) {

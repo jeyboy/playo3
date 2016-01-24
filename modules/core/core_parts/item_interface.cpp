@@ -211,3 +211,10 @@ void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
     stream << lastUrl << isRemote() << toInnerAttrs(itemType());
     urls.insert(lastUrl, 0);
 }
+
+void IItem::setParent(Playlist * pNode, int pos) {
+    if (pNode == _parent) return;
+    _parent -> undeclareChild(this);
+    _parent = pNode;
+    (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(pos, this);
+}

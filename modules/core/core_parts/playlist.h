@@ -55,6 +55,10 @@ namespace Core {
         inline void declareChild(IItem * child) { children.append(child); }
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
         inline void declareChild(int pos, IItem * item) { children.insert(pos, item); }
+        inline void undeclareChild(IItem * child) {
+            if (children.removeOne(child) > 0)
+                backPropagateItemsCountInBranch(-((child -> isContainer()) ? ((Playlist *)child) -> childCount() : 1));
+        }
         int removeChildren(int position, int count);
 
 
@@ -83,6 +87,8 @@ namespace Core {
         void packToStream(QHash<QUrl, int> & urls, QDataStream & stream);
 
         inline void setParent(Playlist * pNode) {
+            if (pNode == _parent) return;
+            _parent -> undeclarePlaylist(playlistUid());
             IItem::setParent(pNode);
             pNode -> declarePlaylist(playlistUid(), this);
         }
