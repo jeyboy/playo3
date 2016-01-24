@@ -946,6 +946,8 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
             if (requirePath) {
                 if (!containPath)
                     data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
+
+                data -> url = QUrl();
             } else {
                 if (containPath)
                     data -> attrs.remove(JSON_TYPE_PATH);
