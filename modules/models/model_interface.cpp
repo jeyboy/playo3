@@ -856,7 +856,6 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
         Playlist * newPlaylist = item<Playlist>(parent);
         bool same_parent = itm -> parent() == newPlaylist;
         if (same_parent && itm -> row() == row) return false;
-
         if (same_parent && itm -> row() + 1 == row) eRow += 1;
 
         beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), eIndex, eRow);
@@ -869,7 +868,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     } else {
         QHash<Playlist *, QList<IItem *> > moveItems;
         QHash<Playlist *, Playlist * > links;
-        QHash<IItem *, int> insertPos; // elems inserted in 0 pos all time
+        QHash<IItem *, int> insertPos;
 
         for(QModelIndex ind : dndList) {
             if (ind == dropIndex)
@@ -941,7 +940,13 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
                     data -> attrs.remove(JSON_TYPE_PATH);
             }
         }
-        else data -> url = REMOTE_DND_URL; // need to improve this for one level lists
+        else {
+            switch(playlistType()) {
+                case Data::Type::tree:
+                case Data::Type::level_tree: { data -> url = REMOTE_DND_URL; break; }
+                default: data -> url = QUrl();
+            }
+        }
 
         data -> dRow = row;
         dIndex = parent;
