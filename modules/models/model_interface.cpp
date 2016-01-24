@@ -851,7 +851,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
     if (dndList.count() == 1) {
         IItem * itm = item(dndList.first());
-        recalcParentIndex(parent, row, eIndex, eRow, itm -> toUrl());
+        recalcParentIndex(parent, row, eIndex, eRow, itm -> isRemote() ? QUrl() : itm -> toUrl());
 
         Playlist * newPlaylist = item<Playlist>(parent);
         bool same_parent = itm -> parent() == newPlaylist;
@@ -860,10 +860,10 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
         beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), eIndex, eRow);
             if (!same_parent) {
-                itm -> setParent(newPlaylist);
+                itm -> setParent(newPlaylist, row);
                 totalAdded += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
             }
-            newPlaylist -> moveChild(itm, row);
+            else newPlaylist -> moveChild(itm, row);
         endMoveRows();
     } else {
         QHash<Playlist *, QList<IItem *> > moveItems;
@@ -874,11 +874,11 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
             if (ind == dropIndex)
                 continue;
 
+            IItem * itm = item(ind);
             dIndex = parent; dRow = row;
-            recalcParentIndex(dIndex, dRow, eIndex, eRow, ind.data(IURL).toUrl());
+            recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() ? QUrl() : itm -> toUrl());
 
             Playlist * parentFolder = item<Playlist>(dIndex);
-            IItem * itm = item(ind);
             moveItems[parentFolder].append(itm);
             if (eIndex != dIndex)
                 links.insert(parentFolder, item<Playlist>(eIndex));
@@ -901,10 +901,10 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
                 beginMoveRows(index(itm -> parent()), itm_row, itm_row, newParent, insertPos[itm]);
                     if (!same_parent) {
-                        itm -> setParent(newParentItm);
+                        itm -> setParent(newParentItm, insertPos[itm]);
                         listTotal += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
                     }
-                    newParentItm -> moveChild(itm, insertPos[itm]);
+                    else newParentItm -> moveChild(itm, insertPos[itm]);
                 endMoveRows();
             }
 
