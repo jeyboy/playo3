@@ -193,7 +193,15 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     Logger::obj().startMark();
 
     DropData * res = new DropData();
-    recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, list.first());
+    QUrl url;
+
+    switch(playlistType()) {
+        case Data::Type::tree:
+        case Data::Type::level_tree: { url = list.first(); break; }
+        default: url = QUrl();
+    }
+
+    recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, url);
     res -> limitRow = res -> eRow + (parent == res -> eIndex ? list.length() - 1 : 0);
     dropProcession(parent, pos, list);
     Logger::obj().endMark("Drop", "new files");
@@ -934,7 +942,13 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     InnerData * data;
     Playlist * parentFolder;
     QHash<Playlist *, int> counts;
-    bool containPath, isRemote, requirePath = !isRelative();
+    bool containPath, isRemote, requirePath = !isRelative(), free_drop;
+
+    switch(playlistType()) {
+        case Data::Type::tree:
+        case Data::Type::level_tree: { free_drop = false; break; }
+        default: free_drop = true;
+    }
 
     while (!stream.atEnd()) {
         data = new InnerData();
@@ -954,11 +968,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
             }
         }
         else {
-            switch(playlistType()) {
-                case Data::Type::tree:
-                case Data::Type::level_tree: { data -> url = REMOTE_DND_URL; break; }
-                default: data -> url = QUrl();
-            }
+            data -> url = free_drop ? QUrl() : REMOTE_DND_URL;
         }
 
         data -> dRow = row;
