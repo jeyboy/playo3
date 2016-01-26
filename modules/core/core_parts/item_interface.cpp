@@ -176,7 +176,7 @@ QVariant IItem::data(int column) const {
         }
 
         case Qt::ToolTipRole:
-            return title()/* + "(" + _extension + ")" + "\n" + _path*/;
+            return relationStr() + '\n' + title().toString()/* + "(" + _extension + ")" + "\n" + _path*/;
 
         case IEXTENSION:        return extension();
 //        case PATHID:            return path();

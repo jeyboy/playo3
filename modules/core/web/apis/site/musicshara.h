@@ -78,6 +78,7 @@ namespace Core {
             QString refresh_postprocess(Response * reply) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".options a[itemprop='audio']");
+                qDebug() << "IN RESTORING" << tracks.count();
 
                 if (tracks.isEmpty())
                     return QString();
@@ -112,7 +113,7 @@ namespace Core {
                         for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                             QJsonObject song_obj;
 
-                            song_obj.insert(url_key, (*song) -> value(QStringLiteral("data-src")));
+                            song_obj.insert(refresh_key/*url_key*/, (*song) -> value(QStringLiteral("data-src")));
 
                             QString artist = (*song) -> find(&artistSelector).text();
                             QString title = (*song) -> find(&titleSelector).text();

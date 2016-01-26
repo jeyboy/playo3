@@ -10,6 +10,9 @@ SearchModel::~SearchModel() {
     }
 
     delete initiator;
+
+    beginResetModel();
+    endResetModel();
 }
 
 void SearchModel::startSearch(bool continues) {

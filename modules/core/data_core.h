@@ -11,7 +11,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/interfaces/iplaylistable.h"
 
-#define MAX_ATTEMPTS 10
+#define MAX_ATTEMPTS 1
 
 namespace Core {
     class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
@@ -51,8 +51,10 @@ namespace Core {
             }
             if (current_playlist -> isPlaylist()) {
                 if (onFail && Settings::obj().isFindValid())
-                    if (++attempts > MAX_ATTEMPTS)
+                    if (++attempts > MAX_ATTEMPTS) {
+                        attempts = 0;
                         return;
+                    }
 
                 current_playlist -> execNextIndex();
             }
