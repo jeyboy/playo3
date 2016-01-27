@@ -854,7 +854,7 @@ QStringList IModel::mimeTypes() const {
 }
 
 bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent) { // not tested
-    QModelIndex eIndex, dIndex, dropIndex = index(item<Playlist>(parent) -> child(row));
+    QModelIndex eIndex, dIndex, dropIndex = row == -1 ? QModelIndex() : index(item<Playlist>(parent) -> child(row));
     int eRow, dRow, totalAdded = 0;
     bool has_free_moving;
 
@@ -871,11 +871,18 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
         recalcParentIndex(parent, row, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
 
         Playlist * newPlaylist = item<Playlist>(parent);
-        bool same_parent = itm -> parent() == newPlaylist;
-        if (same_parent && itm -> row() == row) return false;
-        if (same_parent && itm -> row() + 1 == row) eRow += 1;
+        if (newPlaylist == itm) {
+            newPlaylist = itm -> parent();
+            eIndex = index(newPlaylist);
+            eRow = row;
+        }
 
-        beginMoveRows(index(itm -> parent()), itm -> row(), itm -> row(), eIndex, eRow);
+        bool same_parent = itm -> parent() == newPlaylist;
+        int itm_row = itm -> row();
+        if (same_parent && itm_row == row) return false;
+        if (same_parent && itm_row + 1 == row) eRow += 1;
+
+        beginMoveRows(index(itm -> parent()), itm_row, itm_row, eIndex, eRow);
             if (!same_parent) {
                 itm -> setParent(newPlaylist, row);
                 totalAdded += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
@@ -896,6 +903,12 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
             recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
 
             Playlist * parentFolder = item<Playlist>(dIndex);
+            if (parentFolder == itm) {
+                parentFolder = itm -> parent();
+                eIndex = index(parentFolder);
+                eRow = row;
+            }
+
             moveItems[parentFolder].append(itm);
             if (eIndex != dIndex)
                 links.insert(parentFolder, item<Playlist>(eIndex));

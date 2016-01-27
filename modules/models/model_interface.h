@@ -88,7 +88,7 @@ namespace Models {
             }
             return rootItem;
         }
-        template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(item(index)); }
+        template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : rootItem); }
 
         void shuffle();
         virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
