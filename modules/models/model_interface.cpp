@@ -859,8 +859,8 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     bool has_free_moving = hasFreeMoving();
 
     Playlist * globParent = item<Playlist>(parent);
-    dRow = globParent -> childCount();
-    if (row == -1 || row >= dRow) {
+    dRow = globParent -> childCount() - 1;
+    if (row == -1 || row >= dRow + 1) {
         dropIndex = QModelIndex();
         row = dRow;
     }
