@@ -41,6 +41,13 @@ namespace Models {
 
         virtual Data::Type playlistType() const = 0;
         virtual bool isRelative() const = 0;
+        inline bool hasFreeMoving() {
+            switch(playlistType()) {
+                case Data::tree:
+                case Data::level_tree: return false;
+                default: return true;
+            }
+        }
 
         void setDNDList(QModelIndexList newDndList) { dndList = newDndList; }
 
