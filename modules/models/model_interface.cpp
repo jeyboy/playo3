@@ -900,13 +900,12 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
         IItem * itm = item(ind);
         dIndex = parent; dRow = row;
-        recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
+        recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() || has_free_moving || !parent.isValid() ? QUrl() : itm -> toUrl());
 
         Playlist * parentFolder = item<Playlist>(dIndex);
         if (parentFolder == itm) {
             parentFolder = itm -> parent();
             eIndex = index(parentFolder);
-            eRow = row;
         }
 
         moveItems[parentFolder].append(itm);
