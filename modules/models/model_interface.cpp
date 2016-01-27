@@ -923,12 +923,13 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
         qSort(items_list.begin(), items_list.end(), itemsComparator());
 
         for(IItem * itm : items_list) {
-            int itm_row = itm -> row();
+            int itm_row = itm -> row(), insert_row = insertPos[itm];
             bool same_parent = itm -> parent() == newParentItm;
-            if (same_parent && itm_row == insertPos[itm]) continue;
-            if (same_parent && (itm_row + 1 == insertPos[itm])) insertPos[itm] += 1;
 
-            beginMoveRows(index(itm -> parent()), itm_row, itm_row, newParent, insertPos[itm]);
+            if (same_parent && itm_row == insert_row) continue;
+            if (same_parent && (itm_row + 1 == insert_row)) insert_row += 1;
+
+            beginMoveRows(index(itm -> parent()), itm_row, itm_row, newParent, insert_row);
                 if (!same_parent) {
                     itm -> setParent(newParentItm, insertPos[itm]);
                     listTotal += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
