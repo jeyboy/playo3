@@ -866,30 +866,6 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     }
     else dropIndex = index(globParent -> child(row));
 
-//    if (dndList.count() == 1) {
-//        IItem * itm = item(dndList.first());
-//        recalcParentIndex(parent, row, eIndex, eRow, itm -> isRemote() || has_free_moving ? QUrl() : itm -> toUrl());
-
-//        Playlist * newPlaylist = item<Playlist>(parent);
-//        if (newPlaylist == itm) {
-//            newPlaylist = itm -> parent();
-//            eIndex = index(newPlaylist);
-//            eRow = row;
-//        }
-
-//        bool same_parent = itm -> parent() == newPlaylist;
-//        int itm_row = itm -> row();
-//        if (same_parent && itm_row == row) return false;
-//        if (same_parent && itm_row + 1 == row) eRow += 1;
-
-//        beginMoveRows(index(itm -> parent()), itm_row, itm_row, eIndex, eRow);
-//            if (!same_parent) {
-//                itm -> setParent(newPlaylist, row);
-//                totalAdded += (itm -> isContainer()) ? ((Playlist *)itm) -> childCount() : 1;
-//            }
-//            else newPlaylist -> moveChild(itm, row);
-//        endMoveRows();
-//    } else {
     QHash<Playlist *, QList<IItem *> > moveItems;
     QHash<Playlist *, Playlist * > links;
     QHash<IItem *, int> insertPos;
@@ -901,6 +877,8 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
         IItem * itm = item(ind);
         dIndex = parent; dRow = row;
         recalcParentIndex(dIndex, dRow, eIndex, eRow, itm -> isRemote() || has_free_moving || !parent.isValid() ? QUrl() : itm -> toUrl());
+
+        if (dRow == -1) continue;
 
         Playlist * parentFolder = item<Playlist>(dIndex);
         if (parentFolder == itm) {
@@ -943,7 +921,6 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     }
 
     if (totalAdded > 0) emit itemsCountChanged(totalAdded);
-//    }
 
     dndList.clear();
     return true;
@@ -981,7 +958,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
             }
         }
         else {
-            data -> url = free_drop ? QUrl() : REMOTE_DND_URL;
+            data -> url = /*free_drop ?*/ QUrl()/* : REMOTE_DND_URL*/;
         }
 
         data -> dRow = row;
