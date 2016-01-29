@@ -36,10 +36,9 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
 int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
-    QStringList nameFilters = Extensions::obj().activeFilterList();
 
     QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
+    FileSystemWatcher::foldersList(currFile, folderList);
 
     if (!folderList.isEmpty()) {
         for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
@@ -47,7 +46,7 @@ int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     }
 
     QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
+    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
 
     if (!fileList.isEmpty()) {
         res += fileList.size();
@@ -64,9 +63,8 @@ int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
 
 int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
-    QList<QUrl>::ConstIterator it = list.begin();
 
-    for(; it != list.end(); it++) {
+    for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
             res += filesRoutine(file, node -> createPlaylist(file.fileName(), 0, pos));

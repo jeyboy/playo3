@@ -32,7 +32,6 @@ namespace Views {
         none = 0,
         use_prev_action = 1,
         dont_remove_played = 2,
-        in_background = 4
     };
 
     class IView : public QTreeView, public IPlaylistable {

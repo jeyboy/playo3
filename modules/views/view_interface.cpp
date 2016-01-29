@@ -544,7 +544,7 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
 void IView::removeProccessing(QModelIndexList & index_list, bool remove, int flags) {
     float total = index_list.size(), temp = total;
     flags |= use_prev_action;
-    bool inProcess = flags & in_background;
+    bool inProcess = !ThreadUtils::inMainThread();
 
     if (inProcess)
         emit mdl -> moveInProcess();
@@ -626,7 +626,6 @@ void IView::removeSelectedItems(bool remove, int flags) {
     } else return;
 
     if (list.size() > 200) {
-        flags |= in_background;
         QtConcurrent::run(this, &IView::removeProccessing, list, remove && isRemoveFileWithItem(), flags);
     } else if (list.size() > 1)
         removeProccessing(list, remove && isRemoveFileWithItem());

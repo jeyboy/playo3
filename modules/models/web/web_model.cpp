@@ -43,17 +43,16 @@ void WebModel::dropProcession(const QModelIndex & ind, int row, const QList<QUrl
 
 int WebModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
     int res = 0;
-    QStringList nameFilters = Extensions::obj().activeFilterList();
 
     QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
+    FileSystemWatcher::foldersList(currFile, folderList);
     {
         for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
             res += filesRoutine((*it), node -> createPlaylist((*it).fileName()));
     }
 
     QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
+    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
 
     res += fileList.size();
     for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
@@ -65,9 +64,8 @@ int WebModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
 
 int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
-    QList<QUrl>::ConstIterator it = list.begin();
 
-    for(; it != list.end(); it++) {
+    for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, node -> createPlaylist(file.fileName(), 0, pos));

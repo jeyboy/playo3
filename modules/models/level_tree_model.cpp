@@ -46,17 +46,16 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
 int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Playlist *, int> & rels) {
     int res = 0;
     rels[node]++;
-    QStringList nameFilters = Extensions::obj().activeFilterList();
 
     QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList, nameFilters);
+    FileSystemWatcher::foldersList(currFile, folderList);
     if (!folderList.isEmpty()) {
         for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
             res += filesRoutine((*it), rootItem -> createPlaylist(Extensions::folderName((*it))), rels);
     }
 
     QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, nameFilters);
+    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
     if (!fileList.isEmpty()) {
         res += fileList.size();
         for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
@@ -75,10 +74,9 @@ int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Pl
 
 int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
-    QList<QUrl>::ConstIterator it = list.begin();
     QHash<Playlist *, int> relations;
 
-    for(; it != list.end(); it++) {
+    for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file, rootItem -> createPlaylist(Extensions::folderName(file)), relations);
