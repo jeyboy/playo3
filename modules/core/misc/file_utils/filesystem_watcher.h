@@ -7,7 +7,7 @@
 
 #include "modules/core/interfaces/singleton.h"
 
-#define COMMON_FILTERS (int)QDir::NoDotAndDotDot | (int)QDir::Hidden
+#define COMMON_FILTERS (int)QDir::NoDotAndDotDot | (int)QDir::Hidden | (int)QDir::System
 #define FILE_FILTERS (int)QDir::Files | COMMON_FILTERS
 #define FOLDER_FILTERS (int)QDir::Dirs | COMMON_FILTERS
 
