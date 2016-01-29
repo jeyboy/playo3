@@ -30,9 +30,9 @@ namespace Views {
 
     enum DelFlags : int {
         none = 0,
-        use_prev_action,
-        dont_remove_played,
-        in_background
+        use_prev_action = 1,
+        dont_remove_played = 2,
+        in_background = 4
     };
 
     class IView : public QTreeView, public IPlaylistable {

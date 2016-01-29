@@ -1015,7 +1015,7 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
-    if (row == -1 && !parentIndex.data(IFOLDER).toBool()) {
+    if (row == -1/* && !parentIndex.data(IFOLDER).toBool()*/) {
         row = parentIndex.row();
         (const_cast<QModelIndex &>(parentIndex)) = parentIndex.parent();
     }
