@@ -89,7 +89,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
     //System.Music.Artist:(Beethoven OR Mozart)
 
 //    int genre_id = MusicGenres::instance() -> toInt();
-    QDirIterator dir_it(*(QString *)(params.search_interface), filters,  QDir::AllEntries | QDir::NoSymLinks | QDir::Hidden, QDirIterator::Subdirectories);
+    QDirIterator dir_it(*(QString *)(params.search_interface), filters,  (QDir::Filter)FILE_FILTERS, QDirIterator::Subdirectories);
 
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
@@ -100,13 +100,13 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //            valid = m.getGenre() == params.sgenre_id;
 //        }
 
-        if (valid) { // file info is not needed there - need to rewrite this
-            QFileInfo file = dir_it.fileInfo();
-            new File(file.path(), file.fileName(), parent);
+        if (valid) {
+            new File(path, dir_it.fileName(), parent);
             amount++;
         }
     }
 
+    params.clearInterface();
     return amount;
 }
 
@@ -143,7 +143,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
         switch(r.search_type) {
             case SearchRequest::local: {
-                qDebug() << "SO LOCAL";
+//                qDebug() << "SO COMP";
                 propagate_count = proceedMyComputer(r, parent);
             break;}
 

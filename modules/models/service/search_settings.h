@@ -58,7 +58,9 @@ struct SearchRequest {
     void * search_interface;
     RequestType search_type;
 
-    ~SearchRequest() {
+    ~SearchRequest() {}
+
+    void clearInterface() {
         switch(search_type) {
             case local: { delete (QString *)search_interface; break;}
             default:;

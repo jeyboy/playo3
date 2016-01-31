@@ -9,9 +9,9 @@
 #include "modules/core/interfaces/singleton.h"
 
 //QDir::NoSymLinks
-#define COMMON_FILTERS (int)QDir::NoDotAndDotDot | (int)QDir::Hidden | (int)QDir::System
-#define FILE_FILTERS (int)QDir::Files | COMMON_FILTERS
-#define FOLDER_FILTERS (int)QDir::Drives | (int)QDir::Dirs | COMMON_FILTERS
+#define COMMON_FILTERS ((int)QDir::NoDotAndDotDot | (int)QDir::Hidden | (int)QDir::System)
+#define FILE_FILTERS ((int)QDir::Files | COMMON_FILTERS)
+#define FOLDER_FILTERS ((int)QDir::Drives | (int)QDir::Dirs | COMMON_FILTERS)
 
 class FileSystemWatcher : public QWidget, public Core::Singleton<FileSystemWatcher> {
     Q_OBJECT
@@ -33,46 +33,6 @@ protected:
                 QDir(file.filePath()).entryInfoList(nameFilters, (QDir::Filter)filters);
     }
 public:
-//    static void foldersIterator(const QString & path, const QStringList & nameFilters = QStringList()) {
-//        QDirIterator dir_it(path, nameFilters, (QDir::Filter)(FOLDER_FILTERS));
-
-//        while(dir_it.hasNext()) {
-//            QString path = dir_it.next();
-////            bool valid = true; //params.sgenre_id == -1;
-
-////    //        if (!valid) {
-////    //            MediaInfo m(QUrl::fromLocalFile(path), true, true);
-////    //            valid = m.getGenre() == params.sgenre_id;
-////    //        }
-
-////            if (valid) {
-////                QFileInfo file = dir_it.fileInfo();
-////                new File(file.path(), file.fileName(), parent);
-////                amount++;
-////            }
-//        }
-//    }
-
-//    static void filesIterator(const QString & path, const QStringList & nameFilters = QStringList()) {
-//        QDirIterator dir_it(path, nameFilters, (QDir::Filter)(FILE_FILTERS));
-
-//        while(dir_it.hasNext()) {
-//            QString path = dir_it.next();
-////            bool valid = true; //params.sgenre_id == -1;
-
-////    //        if (!valid) {
-////    //            MediaInfo m(QUrl::fromLocalFile(path), true, true);
-////    //            valid = m.getGenre() == params.sgenre_id;
-////    //        }
-
-////            if (valid) {
-////                QFileInfo file = dir_it.fileInfo();
-////                new File(file.path(), file.fileName(), parent);
-////                amount++;
-////            }
-//        }
-//    }
-
     static void filesList(const QString & path, QStringList & result, const QStringList & nameFilters = QStringList()) {
         entriesList(path, result, FILE_FILTERS, nameFilters);
     }
