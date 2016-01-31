@@ -14,17 +14,6 @@
 namespace Core {
     class FilenameConversions {
     public:
-        static inline bool extractExtension(QString & fileName, QString & sExt) {
-            sExt = fileName.section('.', -1, -1);
-            if (sExt != fileName && sExt.indexOf(' ') == -1) {
-                fileName = fileName.section('.', 0, -2);
-                return true;
-            } else {
-                sExt.clear();
-                return false;
-            }
-        }
-
         //[\\s\\n\\r\\t]+
         //[^\\S\\w-]+
         static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s]+")), QStringLiteral(" ")); }

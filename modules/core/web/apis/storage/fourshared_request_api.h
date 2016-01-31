@@ -4,7 +4,7 @@
 #include "fourshared_api_keys.h"
 
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/misc/file_utils/filename_conversions.h"
+#include "modules/core/misc/file_utils/extensions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
 #include "modules/core/media/genres/music_genres.h"
@@ -133,7 +133,7 @@ namespace Core {
                         if (!initInfo || !song_path.isEmpty()) {
                             title = item_obj.value(name_token_key).toString();
 
-                            if (FilenameConversions::extractExtension(title, ext))
+                            if (Extensions::obj().extractExtension(title, ext))
                                 obj.insert(extension_key, ext);
 
                             obj.insert(title_key, title);

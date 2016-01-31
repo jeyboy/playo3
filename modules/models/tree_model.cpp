@@ -34,40 +34,41 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     else node -> removeYouself();
 }
 
-int TreeModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
+int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
     int res = 0;
 
-    QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList);
-
-    if (!folderList.isEmpty()) {
-        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
-            res += filesRoutine((*it), node -> createPlaylist((*it).fileName()));
+    {
+        QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
+        while(dir_it.hasNext()) {
+            QString path = dir_it.next();
+            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()));
+        }
     }
 
-    QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
+    QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
+    while(dir_it.hasNext()) {
+        res++;
+        dir_it.next();
 
-    if (!fileList.isEmpty()) {
-        res += fileList.size();
-        for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
-            new File((*it).fileName(), node);
+        new File(dir_it.fileName(), node);
     }
 
     if (res > 0)
         node -> updateItemsCountInBranch(res);
     else
         node -> removeYouself();
+
     return res;
 }
 
 int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
 
+    Logger::obj().startMark();
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
-            res += filesRoutine(file, node -> createPlaylist(file.fileName(), 0, pos));
+            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos));
         } else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
@@ -75,6 +76,7 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
             }
         }
     }
+    Logger::obj().endMark("list", "parsing");
 
     return res;
 }

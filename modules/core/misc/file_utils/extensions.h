@@ -19,6 +19,7 @@ namespace Core {
         static QString folderName(QFileInfo & info);
         ~Extensions();
 
+        bool extractExtension(QString & fileName, QString & sExt);
         bool restoreExtension(QString & file_path, QString & restoredExt);
 
         bool respondToExtension(const QString & ext) const;

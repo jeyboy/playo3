@@ -100,7 +100,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //            valid = m.getGenre() == params.sgenre_id;
 //        }
 
-        if (valid) {
+        if (valid) { // file info is not needed there - need to rewrite this
             QFileInfo file = dir_it.fileInfo();
             new File(file.path(), file.fileName(), parent);
             amount++;
