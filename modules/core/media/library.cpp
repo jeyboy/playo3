@@ -315,8 +315,7 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
 
 void Library::initItemTitles(MediaInfo * info, IItem * itm) {
     QString title = itm -> title().toString();
-    if (itm -> isRemote()) //FIXME local files broke at this time by clearing // need to separately storing of display title for tree
-        title = FilenameConversions::extraSymbolsFilter(title);
+    title = FilenameConversions::extraSymbolsFilter(title);
     itm -> setTitle(title);
 
     QStringList list;

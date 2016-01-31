@@ -49,7 +49,6 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
     while(dir_it.hasNext()) {
         res++;
         dir_it.next();
-
         new File(dir_it.fileName(), node);
     }
 
@@ -64,7 +63,6 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
 int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
 
-    Logger::obj().startMark();
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
@@ -76,7 +74,6 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
             }
         }
     }
-    Logger::obj().endMark("list", "parsing");
 
     return res;
 }

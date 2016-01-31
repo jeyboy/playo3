@@ -49,13 +49,9 @@ QJsonObject IItem::toJson() {
 QString IItem::fullPath() const {
     Playlist * curr = _parent;
 
-    QString path_buff;
+    QString path_buff = path().toString();
 
-    if (path().isValid()) {
-        path_buff = path().toString() % '/' % title().toString();
-    } else {
-        path_buff = title().toString();
-
+    if (!path_buff.contains(QDir::separator())) {
         while(curr != 0 && curr -> title().isValid()) {
             path_buff = curr -> title().toString() % '/' % path_buff;
             curr = curr -> _parent;
@@ -65,9 +61,6 @@ QString IItem::fullPath() const {
 #ifdef Q_OS_LINUX
     path_buff = '/' % path_buff;
 #endif
-
-    if (extension().isValid())
-        path_buff += '.' % extension().toString();
 
     return path_buff;
 }

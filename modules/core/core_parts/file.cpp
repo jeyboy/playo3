@@ -4,6 +4,7 @@
 using namespace Core;
 
 File::File(QString fileName, Playlist * parent, int pos) : IItem(parent, DEFAULT_TITLE, pos) {
+    setPath(fileName);
     QString ext;
     if (Extensions::obj().extractExtension(fileName, ext))
         setExtension(ext);

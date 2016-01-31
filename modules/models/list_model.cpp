@@ -21,22 +21,15 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     if (count > 0) emit itemsCountChanged(count);
 }
 
-int ListModel::filesRoutine(QFileInfo & currFile, Playlist * node) {
+int ListModel::filesRoutine(const QString & filePath, Playlist * node) {
     int res = 0;
 
-    QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList);
-    {
-        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
-            res += filesRoutine((*it), node);
+    QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS), QDirIterator::Subdirectories);
+    while(dir_it.hasNext()) {
+        res++;
+        QString path = dir_it.next();
+        new File(path, dir_it.fileName(), node);
     }
-
-    QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
-
-    res += fileList.size();
-    for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
-        new File((*it).path(), (*it).fileName(), node);
 
     return res;
 }
@@ -47,7 +40,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file, node);
+            res += filesRoutine(file.filePath(), node);
         else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
