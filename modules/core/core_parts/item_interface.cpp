@@ -51,7 +51,7 @@ QString IItem::fullPath() const {
 
     QString path_buff = path().toString();
 
-    if (!path_buff.contains(QDir::separator())) {
+    if (!path_buff.contains('/')) {
         while(curr != 0 && curr -> title().isValid()) {
             path_buff = curr -> title().toString() % '/' % path_buff;
             curr = curr -> _parent;

@@ -43,25 +43,29 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     else node -> removeYouself();
 }
 
-int LevelTreeModel::filesRoutine(QFileInfo & currFile, Playlist * node, QHash<Playlist *, int> & rels) {
+int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels) {
     int res = 0;
     rels[node]++;
 
-    QFileInfoList folderList;
-    FileSystemWatcher::foldersList(currFile, folderList);
-    if (!folderList.isEmpty()) {
-        for(QFileInfoList::Iterator it = folderList.begin(); it != folderList.end(); it++)
-            res += filesRoutine((*it), rootItem -> createPlaylist(Extensions::folderName((*it))), rels);
+    {
+        QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
+        while(dir_it.hasNext()) {
+            QString path = dir_it.next();
+            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels);
+        }
     }
 
-    QFileInfoList fileList;
-    FileSystemWatcher::filesList(currFile, fileList, Extensions::obj().activeFilterList());
-    if (!fileList.isEmpty()) {
-        res += fileList.size();
-        for(QFileInfoList::Iterator it = fileList.begin(); it != fileList.end(); it++)
-            new File((*it).path(), (*it).fileName(), node);
+    QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
+    int local_res = 0;
+    while(dir_it.hasNext()) {
+        local_res++;
+        QString path = dir_it.next();
+        new File(path, dir_it.fileName(), node);
+    }
 
-        node -> updateItemsCountInBranch(fileList.size());
+    if (local_res > 0) {
+        node -> updateItemsCountInBranch(local_res);
+        res += local_res;
     }
 
     if (node -> childCount() == 0) {
@@ -79,7 +83,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file, rootItem -> createPlaylist(Extensions::folderName(file)), relations);
+            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations);
         else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
