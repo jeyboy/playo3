@@ -44,7 +44,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
         else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
-                new File(file.path(), file.fileName(), node, pos);
+                new File(file.filePath(), file.fileName(), node, pos);
             }
         }
     }
