@@ -167,6 +167,8 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         else {
             if (attrs[Keys::not_exist].toBool())
                 painter -> drawPixmap(rect, icons[-100]);
+            else if (attrs[Keys::unsupported].toBool())
+                painter -> drawPixmap(rect, icons[-300]);
             else {
                 if (Settings::obj().isShowSystemIcons()) {
                     QRect icoRect = QRect(
@@ -360,9 +362,11 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         else if (attrs[Keys::proccessing].toBool()) {
             painter -> drawPixmap(rect, icons[-200 + (is_selected ? SELECTION_ITER : 0)]);
         } else {
-            if (attrs[Keys::not_exist].toBool()) {
+            if (attrs[Keys::not_exist].toBool())
                 painter -> drawPixmap(rect, icons[-100]);
-            } else {
+            else if (attrs[Keys::unsupported].toBool())
+                painter -> drawPixmap(rect, icons[-300]);
+            else {
                 if (Settings::obj().isShowSystemIcons()) {
                     QVariant iconVal = attrs.value(Keys::icon);
                     if (iconVal.isValid()) {

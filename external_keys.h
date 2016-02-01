@@ -16,6 +16,7 @@ namespace Keys {
     extern const QString state;
     extern const QString played;
     extern const QString not_exist;
+    extern const QString unsupported;
     extern const QString undefined;
     extern const QString proccessing;
     extern const QString type;
@@ -24,3 +25,4 @@ namespace Keys {
 }
 
 #endif // EXTERNAL_KEYS
+

@@ -129,8 +129,10 @@ QVariant IItem::data(int column) const {
 
                 if (is(proccessing))
                     params.insert(Keys::proccessing, true);
-                else
+                else {
                     params.insert((isRemote() ? Keys::undefined : Keys::not_exist), is(not_exist));
+                    params.insert(Keys::unsupported, is(not_supported));
+                }
                 params.insert(
                     Keys::type,
                     subtipe() > 0 ? (itemType() + subtipe()) : itemType()

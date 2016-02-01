@@ -29,6 +29,7 @@ void ItemState::setStates(int flags) {
         if (bitIsSet(flags, proceeded)) setBit(item_state, proceeded);
         if (bitIsSet(flags, mark_on_removing)) setBit(item_state, mark_on_removing);
         if (bitIsSet(flags, proccessing)) setBit(item_state, proccessing);
+        if (bitIsSet(flags, not_supported)) setBit(item_state, not_supported);
 
         // negative variants
 
