@@ -12,8 +12,9 @@ class ISpectrumable : public QObject {
 
     QTimer * itimer;
     QList<QVector<float> > sdefault;
+    bool block_multichannel;
 protected:
-    inline ISpectrumable(QObject * parent) : QObject(parent), channels_count(2) {
+    inline ISpectrumable(QObject * parent) : QObject(parent), block_multichannel(false), channels_count(2) {
         itimer = new QTimer(parent);
         spectrumBandsCount(12, false);
         connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
@@ -33,7 +34,7 @@ protected:
     virtual bool calcSpectrum(QList<QVector<float> > & result) = 0;
     virtual bool spectrumable() { return true; }
 
-    virtual bool respondToMultichannelSpectrumCalc() { return channels_count != 1; }
+    virtual bool respondToMultichannelSpectrumCalc() { return !block_multichannel && channels_count != 1; }
 
 //    inline float fastSqrt(float x) {
 //      unsigned int i = *(unsigned int*) &x;
@@ -64,6 +65,13 @@ public:
 signals:
     void spectrumChanged(const QList<QVector<float> > &);
     void channelsCountChanged();
+public slots:
+    inline void setMultichannelRendering(bool render) {
+        bool updateRequired = block_multichannel == render;
+        block_multichannel = !render;
+        if (updateRequired)
+            spectrumBandsCount(sbands_count, true);
+    }
 protected slots:
     void calcSpectrum();
 };

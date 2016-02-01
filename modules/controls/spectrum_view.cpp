@@ -15,6 +15,7 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
 
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(spectrumChanged(const QList<QVector<float> > &)), SLOT(dataUpdated(const QList<QVector<float> > &)));
     PlayerFactory::obj().registerCallback(out, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
+    PlayerFactory::obj().registerCallback(in, this, SIGNAL(changeMultichannelRendering(bool)), SLOT(setMultichannelRendering(bool)));
 
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
@@ -69,8 +70,9 @@ void SpectrumView::updateColors() {
 void SpectrumView::changeType(SpectrumType newType) {
     Settings::obj().setSpectrumType(newType);
     type = newType;
-    bar_height = /*PlayerFactory::obj().currPlayer() -> spectrumHeight(*/peakDimension();
+    bar_height = peakDimension();
     mult_bar_height = bar_height * Settings::obj().spectrumMultiplier();
+    changeMultichannelRendering(newType == split_bars);
 }
 
 void SpectrumView::changeBandCount() {
@@ -81,7 +83,7 @@ void SpectrumView::changeHeight(int newHeight) {
     setFixedHeight(newHeight);
     setMinimumWidth(100);
     recalcAttrs();
-    bar_height = /*PlayerFactory::obj().currPlayer() -> spectrumHeight(*/peakDimension();
+    bar_height = peakDimension();
     mult_bar_height = bar_height * 3;
 }
 

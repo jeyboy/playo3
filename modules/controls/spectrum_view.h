@@ -49,6 +49,9 @@ namespace Controls  {
         void paintCombo();
         void paintPairs();
 
+    signals:
+        void changeMultichannelRendering(bool render);
+
     private:
         QList<QVector<float> > peaks;
 
