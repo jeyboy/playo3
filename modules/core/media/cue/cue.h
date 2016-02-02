@@ -7,15 +7,19 @@
 
 #include "cue_structs.h"
 
+#define CHOP_STR(str) \
+    if (str.startsWith('"')) \
+        str = str.mid(1, str.length() - 2);
+
 namespace Core {
     namespace Media {
         class Cue {
             public:
-                Cue(QIODevice & obj);
+                Cue(const QString & path, QIODevice & obj);
                 static Cue * fromPath(const QString & path) {
                     QFile f(path);
                     if (f.open(QFile::ReadOnly)) {
-                        Cue * cue = new Cue(f);
+                        Cue * cue = new Cue(path, f);
                         f.close();
                         return cue;
                     }
@@ -25,9 +29,9 @@ namespace Core {
 
                 inline QList<CueFile *> files() const { return _files; }
                 inline QHash<QString, QString> infos() const { return _infos; }
-                QMap<qint64, QString> songs();
+                QMap<qint64, QPair<QString, QString> > songs();
             protected:
-                QList<QString> splitLine(QString & line);
+                void splitLine(QString & line, QList<QString> & res);
                 void proceedLine(QString & line);
                 inline void addFile(const QString & fpath, const QString & fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
             private:
@@ -42,6 +46,7 @@ namespace Core {
                 QString songwriter;
                 QString catalog; // 13 digits
                 QString text_file;
+                QString path;
         };
     }
 }

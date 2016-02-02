@@ -1,9 +1,14 @@
 #include "cue.h"
+#include <qdir.h>
 #include <qdebug.h>
 
 using namespace Core::Media;
 
-Cue::Cue(QIODevice & obj) : level(0) {
+Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
+    QStringList parts = filePath.split('/', QString::SkipEmptyParts);
+    parts.removeLast();
+    path = parts.join('/');
+
     QTextStream in(&obj);
 
     while(!in.atEnd()) {
@@ -12,52 +17,54 @@ Cue::Cue(QIODevice & obj) : level(0) {
     }
 }
 
-QMap<qint64, QString> Cue::songs() {
-    QMap<qint64, QString> res;
+QMap<qint64, QPair<QString, QString> > Cue::songs() {
+    QMap<qint64, QPair<QString, QString> > res;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
+        QString file_path = QDir::fromNativeSeparators((*file) -> path);
+
+        if (!file_path.contains('/'))
+            file_path = path % '/' % file_path;
+
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
-                res.insert((*index) -> toMillis(), (*track) -> toStr());
+                res.insert((*index) -> toMillis(), QPair<QString, QString>(file_path, (*track) -> toStr()));
 
         for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
-            res.insert((*index) -> toMillis(), (*file) -> path);
+            res.insert((*index) -> toMillis(), QPair<QString, QString>(file_path, file_path));
     }
 
     return res;
 }
 
-QList<QString> Cue::splitLine(QString & line) {
-    QList<QString> res = line.split(' ', QString::SkipEmptyParts);
-
-    QMutableListIterator<QString> i(res);
-    bool has_token = false;
-    QString token;
-
-    while (i.hasNext()) {
-        QString val = i.next();
-
-        if (val.startsWith('"')) {
-            has_token = true;
-            token = val.mid(1);
+void Cue::splitLine(QString & line, QList<QString> & res) {
+    bool locked = false;
+    int pos = 0, offset = 0;
+    for(QString::iterator ch = line.begin(); ch != line.end(); ch++, offset++)
+        switch((*ch).unicode()) {
+            case 32: {
+                if (!locked) {
+                    QStringRef str = line.midRef(pos, offset - pos);
+                    if (!str.isEmpty()) {
+                        CHOP_STR(str);
+                        res.append(str.toString());
+                    }
+                    pos = offset + 1;
+                }
+            break;}
+            case 34: { locked = !locked; break;}
         }
-        else if (has_token)
-            token += ' ' + val;
 
-        if (has_token) {
-            if (!(has_token = !token.endsWith('"'))) {
-                token.chop(1);
-                i.setValue(token);
-            } else
-                i.remove();
-        }
+    QStringRef str = line.midRef(pos, offset);
+    if (!str.isEmpty()) {
+        CHOP_STR(str);
+        res.append(str.toString());
     }
-
-    return res;
 }
 
 void Cue::proceedLine(QString & line) {
-    QList<QString> parts = splitLine(line);
+    QList<QString> parts;
+    splitLine(line, parts);
     if (!parts.isEmpty()) {
         QString token = parts.takeFirst();
 

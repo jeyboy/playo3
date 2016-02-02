@@ -932,13 +932,13 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     InnerData * data;
     Playlist * parentFolder;
     QHash<Playlist *, int> counts;
-    bool containPath, isRemote, requirePath = !isRelative(), free_drop;
+    bool containPath, isRemote, requirePath = !isRelative()/*, free_drop*/;
 
-    switch(playlistType()) {
-        case Data::Type::tree:
-        case Data::Type::level_tree: { free_drop = false; break; }
-        default: free_drop = true;
-    }
+//    switch(playlistType()) {
+//        case Data::Type::tree:
+//        case Data::Type::level_tree: { free_drop = false; break; }
+//        default: free_drop = true;
+//    }
 
     while (!stream.atEnd()) {
         data = new InnerData();

@@ -63,7 +63,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
-        if (name.endsWith(cue_ext), Qt::CaseInsensitive) {
+        if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
             CuePlaylist * cueta = new CuePlaylist(path, name, node);
             local_res += cueta -> childCount();
         } else {
