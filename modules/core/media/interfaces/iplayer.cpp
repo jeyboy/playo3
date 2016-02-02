@@ -23,7 +23,7 @@ void IPlayer::updateState(PlayerState new_state) {
             spectrumCalcStop();
             itimer -> stop();
         break;}
-        default: ;
+        default: channelsCount(2); // update spectrum if item opening is failed
     }
     ITrackable::updateState(isPlayed(), isPaused(), isStopped(), pstate != UnknowState);
     emit stateChanged(pstate);

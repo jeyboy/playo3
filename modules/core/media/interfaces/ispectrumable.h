@@ -15,6 +15,7 @@ class ISpectrumable : public QObject {
     bool block_multichannel;
 protected:
     inline ISpectrumable(QObject * parent) : QObject(parent), block_multichannel(false), channels_count(2) {
+        qRegisterMetaType<QList<QVector<float> > >("QList<QVector<float> >");
         itimer = new QTimer(parent);
         spectrumBandsCount(12, false);
         connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
