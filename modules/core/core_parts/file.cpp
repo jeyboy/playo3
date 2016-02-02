@@ -11,7 +11,7 @@ File::File(QString fileName, Playlist * parent, int pos) : IItem(parent, DEFAULT
 
     setTitle(fileName);
 }
-File::File(QString filePath, QString fileName, Playlist * parent, int pos)
+File::File(const QString & filePath, QString fileName, Playlist * parent, int pos)
     : IItem(parent, DEFAULT_TITLE, pos) {
 
     QString ext;
@@ -21,3 +21,12 @@ File::File(QString filePath, QString fileName, Playlist * parent, int pos)
     setTitle(fileName);
     setPath(filePath);
 }
+
+File::File(const QString & filePath, const QString & fileName, const QString & fileExtension, Playlist * parent, int pos)
+    : IItem(parent, fileName, pos) {
+
+    setExtension(fileExtension);
+    setPath(filePath);
+}
+
+

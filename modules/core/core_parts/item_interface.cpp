@@ -18,7 +18,7 @@ IItem::IItem(Playlist * parent, QVariantMap & hash, int pos)
         if (pos < 0)
             _parent -> declareChild(this);
         else
-            _parent -> declareChild(pos, this);
+            _parent -> declareChild(this, pos);
     }
 }
 IItem::IItem(Playlist * parent, QJsonObject * hash)
@@ -27,14 +27,14 @@ IItem::IItem(Playlist * parent, QJsonObject * hash)
     if (_parent)
         _parent -> declareChild(this);
 }
-IItem::IItem(Playlist * parent, QString title, int pos, int initState)
+IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
     : ItemFields(title, initState), _parent(parent) {
 
     if (_parent) {
         if (pos < 0)
             _parent -> declareChild(this);
         else
-            _parent -> declareChild(pos, this);
+            _parent -> declareChild(this, pos);
     }
 }
 
@@ -211,5 +211,5 @@ void IItem::setParent(Playlist * pNode, int pos) {
     if (pNode == _parent) return;
     _parent -> undeclareChild(this);
     _parent = pNode;
-    (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(pos, this);
+    (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }

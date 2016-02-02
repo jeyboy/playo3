@@ -53,8 +53,8 @@ namespace Core {
         }
         virtual inline int childCount() const { return children.count(); }
         inline void declareChild(IItem * child) { children.append(child); }
+        inline void declareChild(IItem * item, int pos) { children.insert(pos, item); }
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
-        inline void declareChild(int pos, IItem * item) { children.insert(pos, item); }
         inline void undeclareChild(IItem * child) {
             if (children.removeOne(child) > 0)
                 backPropagateItemsCountInBranch(-((child -> isContainer()) ? ((Playlist *)child) -> childCount() : 1));

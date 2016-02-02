@@ -21,7 +21,7 @@ namespace Core {
         IItem(Playlist * parent = 0, int initState = DEFAULT_FILE_STATE);
         IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
         IItem(Playlist * parent, QJsonObject * hash);
-        IItem(Playlist * parent, QString title, int pos = -1, int initState = DEFAULT_FILE_STATE);
+        IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_FILE_STATE);
 
         inline virtual ~IItem() {}
 

@@ -14,7 +14,8 @@ namespace Core {
         inline File(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline File(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
         File(QString fileName, Playlist * parent = 0, int pos = -1);
-        File(QString filePath, QString fileName, Playlist * parent = 0, int pos = -1);
+        File(const QString & filePath, QString fileName, Playlist * parent = 0, int pos = -1);
+        File(const QString & filePath, const QString & fileName, const QString & fileExtension, Playlist * parent = 0, int pos = -1);
 
         inline virtual ~File() {
             if (is(mark_on_removing))
