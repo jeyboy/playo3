@@ -6,7 +6,8 @@
 namespace Core {
     #define SIMPLE_FILE 1000
     #define PLAYLIST 1001
-    #define CUE_FILE 1002
+    #define CUE_PLAYLIST 1002
+    #define CUE_FILE 1003
     #define WEB_FILE 2000
     #define VK_FILE 2100
     #define VK_PLAYLIST 2101

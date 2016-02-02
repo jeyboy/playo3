@@ -8,7 +8,7 @@ namespace Core {
     public:
         inline OdPlaylist(int initState) : WebPlaylist(initState) {}
         inline OdPlaylist(QJsonObject * hash, Playlist * parent = 0) : WebPlaylist(hash, parent) {}
-        inline OdPlaylist(QString uid, QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
+        inline OdPlaylist(const QString & uid, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
             : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return OD_PLAYLIST; }

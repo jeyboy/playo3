@@ -40,11 +40,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 //    ba = QByteArray::fromPercentEncoding(ba);
 //    QTextCodec* codec = QTextCodec::codecForName("windows-1251");
 //    QString res  =codec->toUnicode(ba);
-
-////    QFile f("E:/Muzon/LOSSLESS/Evanescence/2003 - My Immortal (UK 1)/My Immortal (UK Single 1).cue");
-//    QFile f("F:/o.cue");
-//    if (f.open(QFile::ReadOnly)) {
-//        Cue cue(f);
 }
 
 Playo::~Playo() {

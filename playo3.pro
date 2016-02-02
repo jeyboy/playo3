@@ -294,7 +294,9 @@ HEADERS += \
     modules/core/web/apis/social/yandex_api_keys.h \
     modules/core/web/apis/social/yandex_request_api.h \
     modules/core/misc/file_utils/filesystem_watcher.h \
-    modules/core/media/library_base.h
+    modules/core/media/library_base.h \
+    modules/core/core_parts/cue_file.h \
+    modules/core/core_parts/cue_playlist.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -439,4 +441,6 @@ SOURCES += \
     modules/core/web/apis/site/redmp3.cpp \
     modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/filesystem_watcher.cpp \
-    modules/core/media/library_base.cpp
+    modules/core/media/library_base.cpp \
+    modules/core/core_parts/cue_file.cpp \
+    modules/core/core_parts/cue_playlist.cpp

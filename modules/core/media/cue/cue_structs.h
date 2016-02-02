@@ -66,7 +66,7 @@ namespace Core {
         };
 
         struct CueTrack : IndexContainer {
-            CueTrack(int numb, QString dType) : number(numb),
+            CueTrack(int numb, const QString & dType) : number(numb),
                 pregap_minutes(0), pregap_seconds(0), pregap_millis(0),
                 postgap_minutes(0), postgap_seconds(0), postgap_millis(0),
                 flags(FLAG_NONE)
@@ -118,7 +118,7 @@ namespace Core {
         };
 
         struct CueFile : IndexContainer {
-            CueFile(QString fpath, QString fType) : path(fpath) {
+            CueFile(const QString & fpath, const QString & fType) : path(fpath) {
                 if (fType == QStringLiteral("BINARY")) format = BINARY;
                 if (fType == QStringLiteral("MOTOROLA")) format = MOTOROLA;
                 if (fType == QStringLiteral("AIFF")) format = AIFF;
@@ -128,7 +128,7 @@ namespace Core {
 
             virtual ~CueFile() { qDeleteAll(tracks); }
 
-            inline void addTrack(QString numb, QString dType) {
+            inline void addTrack(const QString & numb, const QString & dType) {
                 tracks << (activeTrack = new CueTrack(numb.toInt(), dType));
             }
 

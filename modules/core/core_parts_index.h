@@ -9,5 +9,7 @@
 #include "core_parts/soundcloud_playlist.h"
 #include "core_parts/od_file.h"
 #include "core_parts/od_playlist.h"
+#include "core_parts/cue_file.h"
+#include "core_parts/cue_playlist.h"
 
 #endif // CORE_INDEX_H

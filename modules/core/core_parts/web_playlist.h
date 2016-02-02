@@ -8,7 +8,7 @@ namespace Core {
     public:
         inline WebPlaylist(int initState = DEFAULT_PLAYLIST_STATE) : Playlist(initState) {}
         inline WebPlaylist(QJsonObject * hash, Playlist * parent = 0) : Playlist(hash, parent) {}
-        inline WebPlaylist(QString uid, QString folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
+        inline WebPlaylist(const QString & uid, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE)
             : Playlist(folderTitle, parent, uid, pos, initState) {}
 
         inline virtual ~WebPlaylist() {}

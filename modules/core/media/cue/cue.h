@@ -12,7 +12,16 @@ namespace Core {
         class Cue {
             public:
                 Cue(QIODevice & obj);
-        //        Cue(QString & obj);
+                static Cue * fromPath(const QString & path) {
+                    QFile f(path);
+                    if (f.open(QFile::ReadOnly)) {
+                        Cue * cue = new Cue(f);
+                        f.close();
+                        return cue;
+                    }
+
+                    return 0;
+                }
 
                 inline QList<CueFile *> files() const { return _files; }
                 inline QHash<QString, QString> infos() const { return _infos; }
@@ -20,7 +29,7 @@ namespace Core {
             protected:
                 QList<QString> splitLine(QString & line);
                 void proceedLine(QString & line);
-                inline void addFile(QString fpath, QString fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
+                inline void addFile(const QString & fpath, const QString & fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
             private:
                 int level;
 

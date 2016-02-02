@@ -27,10 +27,10 @@ int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap
             return 1;
         }
 
-//                case CUE_FILE: {
-//                    new CueFile(data -> attrs, parent, pos);
-//                    return 1;
-//                }
+        case CUE_FILE: {
+            new CueFile(attrs, parent, pos);
+            return 1;
+        }
 
         default: qDebug() << "ITEM TYPE NOT SUPPORTED YET";
     }
@@ -80,9 +80,12 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
                     new OdPlaylist(&iterObj, this);
                 break;}
 
-                 case CUE_FILE: {
-                    new CueFile(&iter_obj, this); // ?
-                 break;}
+                case CUE_FILE: {
+                    new CueFile(&iterObj, this);
+                break;}
+                case CUE_PLAYLIST: {
+                   new CuePlaylist(&iterObj, this);
+                break;}
             }
         }
     }
