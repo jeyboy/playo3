@@ -57,10 +57,18 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     int local_res = 0;
+    QString cue_ext = QStringLiteral(".cue");
+
     while(dir_it.hasNext()) {
-        local_res++;
         QString path = dir_it.next();
-        new File(path, dir_it.fileName(), node);
+        QString name = dir_it.fileName();
+
+        if (name.endsWith(cue_ext), Qt::CaseInsensitive) {
+            CUE_FILE
+        } else {
+            local_res++;
+            new File(path, name, node);
+        }
     }
 
     if (local_res > 0) {

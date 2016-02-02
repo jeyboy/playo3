@@ -52,6 +52,7 @@ namespace Core {
         virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
+        inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
         inline QVariant duration() const                        { return attrs.value(JSON_TYPE_DURATION); }
         QStringList info() const;
         inline QVariant _info() const                           { return attrs.value(JSON_TYPE_INFO); }
@@ -71,6 +72,7 @@ namespace Core {
 
         inline void setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline void setBpm(const QVariant & newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
+        inline void setStartPos(const QVariant & newStartPos)   { attrs[JSON_TYPE_START_POS] = newStartPos; }
         inline void setDuration(const QVariant & newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
         inline void setGenre(const QVariant & newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }
         inline void setSize(const QVariant & newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }

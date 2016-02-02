@@ -80,9 +80,9 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
                     new OdPlaylist(&iterObj, this);
                 break;}
 
-                // case CUE_FILE: {
-                // new CueFile(&iter_obj, this); // ?
-                // break;}
+                 case CUE_FILE: {
+                    new CueFile(&iter_obj, this); // ?
+                 break;}
             }
         }
     }
