@@ -14,10 +14,9 @@
 namespace Core {
     namespace Media {
         struct CueSong {
-            CueSong(qint64 startPos = 0, qint64 duration = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString())
-                : startPos(startPos), duration(duration), trackName(trackName), filePath(filePath), extension(extension) { }
+            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString())
+                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension) { }
             qint64 startPos;
-            qint64 duration;
             QString trackName;
             QString filePath;
             QString extension;

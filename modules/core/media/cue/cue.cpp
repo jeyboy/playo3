@@ -30,7 +30,6 @@ QList<CueSong> Cue::songs() { // last element always missed at duration // need 
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
                 res.append(CueSong(
                     (*index) -> toMillis(),
-                    (*index) -> duration,
                     (*track) -> toStr(),
                     file_path,
                     (*file) -> extension
@@ -39,7 +38,6 @@ QList<CueSong> Cue::songs() { // last element always missed at duration // need 
         for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
             res.append(CueSong(
                 (*index) -> toMillis(),
-                (*index) -> duration,
                 file_path,
                 file_path,
                 (*file) -> extension

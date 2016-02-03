@@ -38,10 +38,10 @@ namespace Core {
             CDI_2352    /*CDI Mode2 Data*/
         };
 
-        static void parseCueTimeStr(QString str, int & min, int & sec, int & milli) {
+        static void parseCueTimeStr(const QString & str, qint64 & min, qint64 & sec, qint64 & milli) {
             QList<QString> attrs = str.split(':');
-            min = attrs.value(0).toInt();
-            sec = attrs.value(1).toInt();
+            min = attrs.value(0).toLongLong();
+            sec = attrs.value(1).toLongLong();
             milli = (attrs.value(2).toFloat() / 75.0) * 1000;
         }
 
@@ -51,7 +51,7 @@ namespace Core {
             inline qint64 toMillis() { return millis + seconds * 1000 + minutes * 60000; }
 
             int number;
-            int minutes, seconds, millis;
+            qint64 minutes, seconds, millis;
         };
 
         struct IndexContainer {
@@ -84,8 +84,8 @@ namespace Core {
                 qDeleteAll(indexes);
             }
 
-            void parseFlags(QList<QString> flgs) {
-                for(QList<QString>::Iterator flag = flgs.begin(); flag != flgs.end(); flag++) {
+            void parseFlags(const QList<QString> & flgs) {
+                for(QList<QString>::ConstIterator flag = flgs.cbegin(); flag != flgs.cend(); flag++) {
                     if ((*flag) == QStringLiteral("DCP")) flags = (AudioFlag)(flags|FLAG_DCP);
                     if ((*flag) == QStringLiteral("4CH")) flags = (AudioFlag)(flags|FLAG_4CH);
                     if ((*flag) == QStringLiteral("PRE")) flags = (AudioFlag)(flags|FLAG_PRE);
@@ -93,8 +93,8 @@ namespace Core {
                 }
             }
 
-            void setPregap(QString pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
-            void setPostgap(QString postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
+            void setPregap(const QString & pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
+            void setPostgap(const QString & postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
 
             QString toStr() {
                 if (!performer.isEmpty())
@@ -105,8 +105,8 @@ namespace Core {
             int number;
             TrackDataType data_type;
 
-            int pregap_minutes, pregap_seconds, pregap_millis;
-            int postgap_minutes, postgap_seconds, postgap_millis;
+            qint64 pregap_minutes, pregap_seconds, pregap_millis;
+            qint64 postgap_minutes, postgap_seconds, postgap_millis;
 
             QString title;
             QString songwriter;

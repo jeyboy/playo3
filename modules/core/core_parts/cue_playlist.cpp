@@ -10,8 +10,9 @@ CuePlaylist::CuePlaylist(const QString & filePath, const QString & fileTitle, Pl
     QList<Media::CueSong> songs = cue -> songs();
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
-        qDebug() << "CUETA" << (*song).startPos << (*song).duration << (*song).trackName << (*song).extension << (*song).filePath;
-        new CueFile((*song).startPos, (*song).duration, (*song).filePath, (*song).trackName, (*song).extension, this);
+        qint64 duration = ((song + 1) != songs.end()) ? (*(song + 1)).startPos - (*song).startPos : 0;
+        qDebug() << "CUETA" << (*song).startPos << duration << (*song).trackName << (*song).extension << (*song).filePath;
+        new CueFile((*song).startPos, duration, (*song).filePath, (*song).trackName, (*song).extension, this);
     }
 
     delete cue;
