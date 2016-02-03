@@ -45,6 +45,8 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
 
 int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels) {
     int res = 0;
+    QHash<QString, bool> unproc_files;
+
     rels[node]++;
 
     {
@@ -63,12 +65,14 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
-        if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
-            CuePlaylist * cueta = new CuePlaylist(path, name, node);
-            local_res += cueta -> childCount();
-        } else {
-            local_res++;
-            new File(path, name, node);
+        if (!unproc_files.contains(path)) {
+            if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
+                CuePlaylist * cueta = new CuePlaylist(path, name, node);
+                local_res += cueta -> initFiles(unproc_files);
+            } else {
+                local_res++;
+                new File(path, name, node);
+            }
         }
     }
 

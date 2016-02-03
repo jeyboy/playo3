@@ -27,21 +27,27 @@ QList<CueSong> Cue::songs() { // last element always missed at duration // need 
             file_path = path % '/' % file_path;
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
-            for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
+            for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
+                if ((*index) -> number == 0) continue;
+
                 res.append(CueSong(
                     (*index) -> toMillis(),
                     (*track) -> toStr(),
                     file_path,
                     (*file) -> extension
                 ));
+            }
 
-        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
+        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {
+            if ((*index) -> number == 0) continue;
+
             res.append(CueSong(
                 (*index) -> toMillis(),
                 file_path,
                 file_path,
                 (*file) -> extension
             ));
+        }
     }
 
     return res;

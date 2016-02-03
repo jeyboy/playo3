@@ -28,5 +28,3 @@ File::File(const QString & filePath, const QString & fileName, const QString & f
     setExtension(fileExtension);
     setPath(filePath);
 }
-
-

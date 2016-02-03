@@ -10,6 +10,8 @@ namespace Core {
         inline CuePlaylist(QJsonObject * hash, Playlist * parent = 0) : Playlist(hash, parent) {}
         CuePlaylist(const QString & filePath, const QString & fileTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
 
+        int initFiles(QHash<QString, bool> & filePathes);
+
         inline int itemType() const { return CUE_PLAYLIST; }
 
         inline bool removePhysicalObject() {
