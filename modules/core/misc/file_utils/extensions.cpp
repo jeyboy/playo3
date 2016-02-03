@@ -131,10 +131,11 @@ QString Extensions::folderName(QFileInfo & info) {
     return name.split('/').last();
 }
 
-bool Extensions::extractExtension(QString & fileName, QString & sExt) {
+bool Extensions::extractExtension(QString & fileName, QString & sExt, bool extract) {
     sExt = fileName.section('.', -1, -1);
     if (sExt != fileName && sExt.indexOf(' ') == -1) {
-        fileName = fileName.section('.', 0, -2);
+        if (extract)
+            fileName = fileName.section('.', 0, -2);
         return true;
     } else {
         sExt.clear();

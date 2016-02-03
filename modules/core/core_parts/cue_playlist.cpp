@@ -7,11 +7,11 @@ using namespace Core;
 CuePlaylist::CuePlaylist(const QString & filePath, const QString & fileTitle, Playlist * parent, int pos, int initState)
     : Playlist(filePath, fileTitle, parent, pos, initState) {
     Media::Cue * cue = Media::Cue::fromPath(filePath);
-    QMap<qint64, QPair<QString, QString> > songs = cue -> songs();
+    QList<Media::CueSong> songs = cue -> songs();
 
-    for(QMap<qint64, QPair<QString, QString> >::Iterator song = songs.begin(); song != songs.end(); song++) {
-        qDebug() << "CUETA" << song.key() << song.value();
-        new CueFile(song.key(), song.value().first, song.value().second, this);
+    for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
+        qDebug() << "CUETA" << (*song).startPos << (*song).trackName << (*song).extension << (*song).filePath;
+        new CueFile((*song).startPos, (*song).filePath, (*song).trackName, (*song).extension, this);
     }
 
     delete cue;

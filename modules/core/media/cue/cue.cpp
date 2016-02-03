@@ -17,8 +17,8 @@ Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
     }
 }
 
-QMap<qint64, QPair<QString, QString> > Cue::songs() {
-    QMap<qint64, QPair<QString, QString> > res;
+QList<CueSong> Cue::songs() {
+    QList<CueSong> res;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
@@ -28,10 +28,10 @@ QMap<qint64, QPair<QString, QString> > Cue::songs() {
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
-                res.insert((*index) -> toMillis(), QPair<QString, QString>(file_path, (*track) -> toStr()));
+                res.append(CueSong((*index) -> toMillis(), (*track) -> toStr(), file_path, (*file) -> extension));
 
         for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
-            res.insert((*index) -> toMillis(), QPair<QString, QString>(file_path, file_path));
+            res.append(CueSong((*index) -> toMillis(), file_path, file_path, (*file) -> extension));
     }
 
     return res;

@@ -13,6 +13,15 @@
 
 namespace Core {
     namespace Media {
+        struct CueSong {
+            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString())
+                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension) { }
+            qint64 startPos;
+            QString trackName;
+            QString filePath;
+            QString extension;
+        };
+
         class Cue {
             public:
                 Cue(const QString & path, QIODevice & obj);
@@ -29,7 +38,7 @@ namespace Core {
 
                 inline QList<CueFile *> files() const { return _files; }
                 inline QHash<QString, QString> infos() const { return _infos; }
-                QMap<qint64, QPair<QString, QString> > songs();
+                QList<CueSong> songs();
             protected:
                 void splitLine(QString & line, QList<QString> & res);
                 void proceedLine(QString & line);

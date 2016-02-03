@@ -4,6 +4,8 @@
 #include <qlist.h>
 #include <qstringbuilder.h>
 
+#include "modules/core/misc/file_utils/extensions.h"
+
 #define MAXTRACK	99	/* Red Book track limit */
 #define MAXINDEX	99	/* Red Book index limit */
 
@@ -47,13 +49,9 @@ namespace Core {
             inline CueTrackIndex(int numb, QString pos) : number(numb) { parseCueTimeStr(pos, minutes, seconds, millis); }
 
             inline qint64 toMillis() { return millis + seconds * 1000 + minutes * 60000; }
-            inline QString toStr() { return title; }
 
             int number;
             int minutes, seconds, millis;
-
-            QString title;
-            QString writer;
         };
 
         struct IndexContainer {
@@ -122,8 +120,19 @@ namespace Core {
                 if (fType == QStringLiteral("BINARY")) format = BINARY;
                 if (fType == QStringLiteral("MOTOROLA")) format = MOTOROLA;
                 if (fType == QStringLiteral("AIFF")) format = AIFF;
-                if (fType == QStringLiteral("WAVE")) format = WAVE;
-                if (fType == QStringLiteral("MP3")) format = MP3;
+                if (fType == QStringLiteral("WAVE")) {
+                    extension = QStringLiteral("wav");
+                    format = WAVE;
+                }
+                if (fType == QStringLiteral("MP3")) {
+                    extension = QStringLiteral("mp3");
+                    format = MP3;
+                }
+
+                if (extension.isEmpty()) {
+                    QString tpath = QString(fpath);
+                    Extensions::obj().extractExtension(tpath, extension, false);
+                }
             }
 
             virtual ~CueFile() { qDeleteAll(tracks); }
@@ -134,6 +143,7 @@ namespace Core {
 
             QString path;
             AudioFormat format;
+            QString extension;
 
             QList<CueTrack *> tracks;
             CueTrack * activeTrack;
