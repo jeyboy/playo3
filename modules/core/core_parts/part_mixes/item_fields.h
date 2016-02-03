@@ -8,6 +8,7 @@
 #include "settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/web/web_sub_types.h"
+#include "modules/core/misc/format.h"
 
 namespace Core {
     #define IURL Qt::UserRole + 1
@@ -54,6 +55,7 @@ namespace Core {
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
         inline QVariant duration() const                        { return attrs.value(JSON_TYPE_DURATION); }
+        inline quint64 durationMillis() const                   { return attrs.value(JSON_TYPE_DURATION).isValid() ? Duration::toMillis(attrs.value(JSON_TYPE_DURATION).toString()) : 0; }
         QStringList info() const;
         inline QVariant _info() const                           { return attrs.value(JSON_TYPE_INFO); }
 

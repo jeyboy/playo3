@@ -151,7 +151,12 @@ public slots:
     }
 protected slots:
     void recalcPosition() {
-        updatePosition(recalcCurrentPosProcessing());
+        int new_pos = recalcCurrentPosProcessing();
+        updatePosition(new_pos);
+
+        // cue tweak
+        if (new_pos >= duration())
+            endOfPlayback();
 
         if (prebuffering_level < 1)
             prebufferingLevel(prebufferingLevelCalc());

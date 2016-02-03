@@ -305,8 +305,11 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
         itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
     else
         itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension()));
-    if (info -> getDuration() > 0)
-        itm -> setDuration(Duration::fromSeconds(info -> getDuration()));
+
+    qint64 duration = info -> getDuration();
+    if (!itm -> duration().isValid() && duration > 0)
+        itm -> setDuration(duration - itm -> startPos().toLongLong());
+
     itm -> setGenre(info -> getGenre());
 
     if (!info -> getExtension().isEmpty())

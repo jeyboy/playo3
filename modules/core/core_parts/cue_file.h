@@ -8,12 +8,15 @@ namespace Core {
     public:
         inline CueFile(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
         inline CueFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
-        inline CueFile(uint startPos, const QString & filePath, const QString & fileName, const QString & extension, Playlist * parent = 0)
+        inline CueFile(uint startPos, uint duration, const QString & filePath, const QString & fileName, const QString & extension, Playlist * parent = 0)
             : IItem(parent, fileName) {
 
+            if (duration > 0)
+                setDuration(Duration::fromMillis(duration));
             setExtension(extension);
             setStartPos(startPos);
             setPath(filePath);
+
         }
 
         inline int itemType() const { return CUE_FILE; }

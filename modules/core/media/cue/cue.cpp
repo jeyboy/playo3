@@ -17,7 +17,7 @@ Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
     }
 }
 
-QList<CueSong> Cue::songs() {
+QList<CueSong> Cue::songs() { // last element always missed at duration // need to scan on postgap aviability
     QList<CueSong> res;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
@@ -28,10 +28,22 @@ QList<CueSong> Cue::songs() {
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++)
-                res.append(CueSong((*index) -> toMillis(), (*track) -> toStr(), file_path, (*file) -> extension));
+                res.append(CueSong(
+                    (*index) -> toMillis(),
+                    (*index) -> duration,
+                    (*track) -> toStr(),
+                    file_path,
+                    (*file) -> extension
+                ));
 
         for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++)
-            res.append(CueSong((*index) -> toMillis(), file_path, file_path, (*file) -> extension));
+            res.append(CueSong(
+                (*index) -> toMillis(),
+                (*index) -> duration,
+                file_path,
+                file_path,
+                (*file) -> extension
+            ));
     }
 
     return res;
