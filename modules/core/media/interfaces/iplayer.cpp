@@ -20,7 +20,7 @@ void IPlayer::updateState(PlayerState new_state) {
             spectrumCalcStart();
         break;}           
         case StoppedState:
-            updatePosition(startPos);
+            updatePosition(0);
         case PausedState: {
             spectrumCalcStop();
             itimer -> stop();

@@ -69,11 +69,11 @@ public:
         startPos = startMili;
         playPos = playStartMili;
         setDuration(maxDuration);
-        updatePosition(0);
+        updatePosition(playStartMili);
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
-    inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration); }
+    inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration, playPos); }
 
     void closeMedia() {
         stop();
@@ -124,7 +124,7 @@ signals:
 
 protected slots:
     void endOfPlayback() {
-        setPosition(startPos);
+        setPosition(0);
 
         if (!looped) {
             pause();

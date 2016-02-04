@@ -162,7 +162,7 @@ qint64 BassPlayer::position() const {
     return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER - startPosition();
 }
 bool BassPlayer::newPosProcessing(qint64 newPos) {
-    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, newPos / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE) + startPosition();
+    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, (newPos + startPosition()) / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
 }
 bool BassPlayer::newVolumeProcessing(int newVol) {
     float volumeVal = newVol > 0 ? (newVol / BASS_VOLUME_MULTIPLIER) : 0;
