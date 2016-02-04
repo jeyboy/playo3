@@ -300,15 +300,22 @@ void Library::initItemData(IItem * itm, bool dont_force_remote) {
 }
 
 void Library::initItemInfo(MediaInfo * info, IItem * itm) {
-    itm -> setSize(info -> getSize());
-    if (info -> isReaded())
-        itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
-    else
-        itm -> setInfo(Info::str(Info::toUnits(info -> getSize()), info -> getExtension()));
+    qint64 iSize = info -> getSize();
 
     qint64 duration = info -> getDuration();
     if (!itm -> duration().isValid() && duration > 0)
         itm -> setDuration(duration - itm -> startPos().toLongLong());
+
+    if (itm -> isPartial()) { //TODO: need to calculate size of parts
+        iSize = 0;
+    }
+
+    itm -> setSize(iSize);
+
+    if (info -> isReaded())
+        itm -> setInfo(Info::str(Info::toUnits(iSize), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));
+    else
+        itm -> setInfo(Info::str(Info::toUnits(iSize), info -> getExtension()));
 
     itm -> setGenre(info -> getGenre());
 

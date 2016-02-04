@@ -14,6 +14,8 @@ namespace Core {
 
         inline int itemType() const { return CUE_PLAYLIST; }
 
+        bool isPartial() { return true; }
+
         inline bool removePhysicalObject() {
             //TODO: add realization
             return false;

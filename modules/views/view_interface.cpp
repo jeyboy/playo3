@@ -144,17 +144,17 @@ bool IView::restoreSelection(const QString & path) {
     else return false;
 }
 
-bool IView::execPath(const QString & path, PlayerInitState init_state, uint start, int duration) {
+bool IView::execPath(const QString & path, PlayerInitState init_state, uint start) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();
-        execIndex(ind, init_state, start, duration);
+        execIndex(ind, init_state, start);
         return true;
     } else
         return false;
 }
 
-bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint start, int duration) {
+bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint start) {
     if (node.isValid()) { // INFO: play playable and choosed by user
         IItem * itm = mdl -> item(node);
 
@@ -169,7 +169,7 @@ bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint
                 DataFactory::obj().proceedPauseToggling();
                 return true;
             } else {
-                DataFactory::obj().proceedPlaying(this, itm, start, init_state, duration);
+                DataFactory::obj().proceedPlaying(this, itm, start, init_state);
                 return true;
             }
         }

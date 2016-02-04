@@ -54,6 +54,7 @@ namespace Core {
 
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
+        inline qint64 startPosMillis() const                    { return attrs.value(JSON_TYPE_START_POS, 0).toLongLong(); }
         inline QVariant duration() const                        { return attrs.value(JSON_TYPE_DURATION); }
         inline quint64 durationMillis() const                   { return attrs.value(JSON_TYPE_DURATION).isValid() ? Duration::toMillis(attrs.value(JSON_TYPE_DURATION).toString()) : 0; }
         QStringList info() const;

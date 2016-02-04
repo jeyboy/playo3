@@ -32,6 +32,7 @@ namespace Core {
         void openLocation();
         virtual bool removePhysicalObject() = 0;
         virtual int itemType() const = 0;
+        virtual bool isPartial() { return false; }
 
         inline int column() const { return 0; }
         int row() const;

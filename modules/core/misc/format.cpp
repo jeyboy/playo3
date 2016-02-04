@@ -11,6 +11,8 @@ QString Info::str(const QString & size, const QString & ext, int bitrate, int fr
 }
 
 QString Info::toUnits(long long val) {
+    if (val == 0) return QStringLiteral("*");
+
     int size = sizeof(unitList) / sizeof(unitList[0]);
 
     int rel = 0;

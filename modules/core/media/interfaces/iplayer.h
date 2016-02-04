@@ -19,12 +19,13 @@ class IPlayer : public IEqualizable, public ITrackable {
 
     PlayerState pstate;
     QTimer * itimer;
-    int startPos, volumeVal, panVal, size;
+    qint64 playPos, startPos, size;
+    int volumeVal, panVal;
     float prebuffering_level;
     bool muted, looped;
 protected:
     void updateState(PlayerState new_state);
-    void updatePosition(int newPos);
+    void updatePosition(qint64 newPos);
 
     virtual QString title() const { return media_url.toString(); }
 
@@ -34,19 +35,19 @@ protected:
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
 
-    virtual int recalcCurrentPosProcessing() = 0;
-    virtual bool newPosProcessing(int newPos) = 0;
+    virtual qint64 recalcCurrentPosProcessing() = 0;
+    virtual bool newPosProcessing(qint64 newPos) = 0;
     virtual bool newVolumeProcessing(int newVol) = 0;
     virtual bool newPanProcessing(int newPan) = 0;
     virtual float prebufferingLevelCalc() = 0;
-    virtual int calcFileSize() = 0;
+    virtual qint64 calcFileSize() = 0;
 
     void initFileSize() {
         size = calcFileSize();
         qDebug() << "FILESIZE" << size;
     }
 
-    inline void setDuration(int newDuration) {
+    inline void setDuration(qint64 newDuration) {
         ITrackable::setMaxProgress(newDuration);
         emit durationChanged((max_duration = newDuration));
     }
@@ -56,7 +57,7 @@ protected:
     inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
 
     QUrl media_url;
-    int max_pos, max_duration;
+    qint64 max_pos, max_duration;
 
 public:
     explicit IPlayer(QWidget * parent);
@@ -64,9 +65,10 @@ public:
 
     inline QUrl media() { return media_url; }
 
-    inline void setMedia(const QUrl & url, int startMili = 0, int maxDuration = 0) {
+    inline void setMedia(const QUrl & url, qint64 startMili = 0, qint64 maxDuration = 0, qint64 playStartMili = 0) {
         media_url = url;
         startPos = startMili;
+        playPos = playStartMili;
         setDuration(maxDuration);
         updatePosition(startMili);
         updateState(url.isEmpty() ? UnknowState : InitState);
@@ -90,7 +92,7 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
-    virtual int position() const = 0;
+    virtual qint64 position() const = 0;
     int duration() const { return max_duration; }
     inline int volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
@@ -112,7 +114,9 @@ signals:
 
     void panChanged(int);
     void volumeChanged(int);
+//    void position64Changed(qint64);
     void positionChanged(int);
+//    void duration64Changed(qint64);
     void durationChanged(int);
 
     void prebufferingChanged(float level); // 0 .. 1
@@ -120,7 +124,7 @@ signals:
 
 protected slots:
     void endOfPlayback() {
-        setPosition(0);
+        setPosition(startPos);
 
         if (!looped) {
             pause();
@@ -138,7 +142,8 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    void setPosition(int newPos);
+    void setPosition(int newPos) { setPosition(qint64(newPos)); }
+    void setPosition(qint64 newPos);
     void mute(bool enable = false);
     void loop(bool enable = false) { looped = enable; }
     inline void setVolume(int newVol) {
@@ -155,7 +160,7 @@ protected slots:
         updatePosition(new_pos);
 
         // cue tweak
-        if (new_pos >= duration())
+        if (new_pos >= duration() + startPos)
             endOfPlayback();
 
         if (prebuffering_level < 1)

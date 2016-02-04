@@ -75,12 +75,12 @@ protected:
     bool pauseProcessing();
     bool stopProcessing();
 
-    int recalcCurrentPosProcessing();
-    bool newPosProcessing(int newPos);
+    qint64 recalcCurrentPosProcessing();
+    bool newPosProcessing(qint64 newPos);
     bool newVolumeProcessing(int newVol);
     bool newPanProcessing(int newPan);
     float prebufferingLevelCalc();
-    int calcFileSize();
+    qint64 calcFileSize();
 
     bool registerEQ();
     bool unregisterEQ();
@@ -96,7 +96,7 @@ public:
     QVariant currDevice();
     bool setDevice(const QVariant & device);
 
-    int position() const;
+    qint64 position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
     float bpmCalc(const QUrl & uri);

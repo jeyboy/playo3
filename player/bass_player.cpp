@@ -158,10 +158,10 @@ bool BassPlayer::stopProcessing() {
     return true;
 }
 
-int BassPlayer::recalcCurrentPosProcessing() {
+qint64 BassPlayer::recalcCurrentPosProcessing() {
     return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER;
 }
-bool BassPlayer::newPosProcessing(int newPos) {
+bool BassPlayer::newPosProcessing(qint64 newPos) {
     return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, newPos / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
 }
 bool BassPlayer::newVolumeProcessing(int newVol) {
@@ -179,8 +179,8 @@ float BassPlayer::prebufferingLevelCalc() {
     else return 1;
 }
 
-int BassPlayer::calcFileSize() {
-    DWORD len = BASS_StreamGetFilePosition(chan, BASS_FILEPOS_END);
+qint64 BassPlayer::calcFileSize() {
+    qint64 len = BASS_StreamGetFilePosition(chan, BASS_FILEPOS_END);
     return len + BASS_StreamGetFilePosition(chan, BASS_FILEPOS_START);
 }
 
@@ -280,7 +280,7 @@ bool BassPlayer::fileInfo(const QUrl & uri, IMediaInfo * info) {
     }
 
     float time = BASS_ChannelBytes2Seconds(chUID, BASS_ChannelGetLength(chUID, BASS_POS_BYTE)); // playback duration
-    DWORD len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
+    qint64 len = BASS_StreamGetFilePosition(chUID, BASS_FILEPOS_END); // file length
 
     info -> setDuration(time);
     info -> setBitrate((len / (125 * time) + 0.5));
@@ -429,4 +429,4 @@ bool BassPlayer::setDevice(const QVariant & device) {
     return res;
 }
 
-int BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }
+qint64 BassPlayer::position() const { return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER; }

@@ -59,7 +59,7 @@ namespace Core {
         playNext(true);
     }
 
-    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, int durationMili) {
+    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state) {
         IPlayer * player = currPlayer();
         player -> closeMedia();
 
@@ -72,8 +72,9 @@ namespace Core {
         if (item) {
             player -> setMedia(
                 current_item -> toUrl(),
-                startMili,
-                durationMili
+                item -> startPosMillis(),
+                item -> durationMillis(),
+                startMili
             );
 
             if ((init_state_flag = state) != initiated)

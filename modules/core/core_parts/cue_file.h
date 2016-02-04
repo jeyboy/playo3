@@ -21,6 +21,8 @@ namespace Core {
 
         inline int itemType() const { return CUE_FILE; }
 
+        bool isPartial() { return true; } // some items may stored in standalone files and they should not be marked as partial
+
         inline bool removePhysicalObject() {
             //TODO: add realization
             return false;
