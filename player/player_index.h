@@ -55,7 +55,7 @@ public:
             player -> setPan(old_player -> pan());
             player -> activateEQ(old_player -> eqInUse());
             player -> eqGains(old_player -> eqGains());
-            player -> setMedia(old_player -> media(), old_player -> position(), old_player -> duration());
+            player -> setMedia(old_player -> media(), old_player -> startPosition(), old_player -> duration(), old_player -> position());
 
             delete old_player;
         }

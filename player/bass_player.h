@@ -75,7 +75,6 @@ protected:
     bool pauseProcessing();
     bool stopProcessing();
 
-    qint64 recalcCurrentPosProcessing();
     bool newPosProcessing(qint64 newPos);
     bool newVolumeProcessing(int newVol);
     bool newPanProcessing(int newPan);

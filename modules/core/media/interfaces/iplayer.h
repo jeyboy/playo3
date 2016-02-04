@@ -35,7 +35,6 @@ protected:
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
 
-    virtual qint64 recalcCurrentPosProcessing() = 0;
     virtual bool newPosProcessing(qint64 newPos) = 0;
     virtual bool newVolumeProcessing(int newVol) = 0;
     virtual bool newPanProcessing(int newPan) = 0;
@@ -70,7 +69,7 @@ public:
         startPos = startMili;
         playPos = playStartMili;
         setDuration(maxDuration);
-        updatePosition(startMili);
+        updatePosition(0);
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
@@ -92,8 +91,9 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
+    qint64 startPosition() const { return startPos; }
     virtual qint64 position() const = 0;
-    int duration() const { return max_duration; }
+    qint64 duration() const { return max_duration; }
     inline int volume() const { return muted ? 0 : volumeVal; }
     inline int pan() const { return panVal; }
     inline int fileSize() const { return size; }
@@ -156,11 +156,11 @@ public slots:
     }
 protected slots:
     void recalcPosition() {
-        int new_pos = recalcCurrentPosProcessing();
+        int new_pos = position();
         updatePosition(new_pos);
 
         // cue tweak
-        if (new_pos >= duration() + startPos)
+        if (new_pos >= duration())
             endOfPlayback();
 
         if (prebuffering_level < 1)

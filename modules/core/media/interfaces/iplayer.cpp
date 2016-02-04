@@ -20,7 +20,7 @@ void IPlayer::updateState(PlayerState new_state) {
             spectrumCalcStart();
         break;}           
         case StoppedState:
-            updatePosition(0);
+            updatePosition(startPos);
         case PausedState: {
             spectrumCalcStop();
             itimer -> stop();
@@ -33,7 +33,7 @@ void IPlayer::updateState(PlayerState new_state) {
 
 void IPlayer::updatePosition(qint64 newPos) {
     ITrackable::setProgress(newPos);
-    emit positionChanged(newPos - startPos);
+    emit positionChanged(newPos);
 }
 
 void IPlayer::playPostprocessing() {
@@ -42,7 +42,7 @@ void IPlayer::playPostprocessing() {
 
         if (playPos > 0 && media_url.isLocalFile())
             setPosition(playPos);
-        else setPosition(startPos);
+        else setPosition(0);
 
         setDuration(max_duration);
         emit statusChanged(PlaingMedia);
@@ -98,7 +98,7 @@ void IPlayer::slideVolBackward() {
 }
 
 void IPlayer::setPosition(qint64 newPos) {
-    if (isInitiating()) startPos = newPos;
+//    if (isInitiating()) startPos = newPos;
     newPosProcessing(newPos);
     updatePosition(newPos);
 }
