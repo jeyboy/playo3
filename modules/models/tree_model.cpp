@@ -36,6 +36,7 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
 int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
     int res = 0;
+    QHash<QString, bool> unproc_files;
 
     {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
@@ -45,11 +46,21 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
         }
     }
 
+    QString cue_ext = QStringLiteral(".cue");
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     while(dir_it.hasNext()) {
-        res++;
-        dir_it.next();
-        new File(dir_it.fileName(), node);
+        QString path = dir_it.next();
+        QString name = dir_it.fileName();
+
+        if (!unproc_files.contains(path)) {
+            if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
+                CuePlaylist * cueta = new CuePlaylist(path, name, node);
+                res += cueta -> initFiles(unproc_files);
+            } else {
+                res++;
+                new File(name, node);
+            }
+        }
     }
 
     if (res > 0)
@@ -62,15 +73,23 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
 
 int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
+    QString cue_ext = QStringLiteral("cue");
+    QHash<QString, bool> unproc_files;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
             res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos));
         } else {
+            if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                res++;
-                new File(file.fileName(), node, pos);
+                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive)) {
+                    CuePlaylist * cueta = new CuePlaylist(file.filePath(), file.fileName(), node, pos);
+                    res += cueta -> initFiles(unproc_files);
+                } else {
+                    res++;
+                    new File(file.fileName(), node, pos);
+                }
             }
         }
     }
