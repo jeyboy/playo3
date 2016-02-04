@@ -54,7 +54,7 @@ public:
     inline int getTrack() const { return track; }
     inline int getChannels() const { return channels; }
     inline int getBitrate() const { return bitrate; }
-    inline qint64 getDuration() const { return duration; }
+    inline qint64 getDuration() const { return duration * 1000; } // convert to millis
     inline int getSampleRate() const { return sampleRate; }
 
     inline void setSize(qint64 newSize) { size = newSize; }

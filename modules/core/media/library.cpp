@@ -304,7 +304,7 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
 
     qint64 duration = info -> getDuration();
     if (!itm -> duration().isValid() && duration > 0)
-        itm -> setDuration(duration - itm -> startPos().toLongLong());
+        itm -> setDuration(Duration::fromMillis(duration - itm -> startPos().toLongLong()));
 
     if (itm -> isPartial()) { //TODO: need to calculate size of parts
         iSize = 0;
