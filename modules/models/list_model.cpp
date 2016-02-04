@@ -23,12 +23,23 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 
 int ListModel::filesRoutine(const QString & filePath, Playlist * node) {
     int res = 0;
+    QString cue_ext = QStringLiteral(".cue");
+    QHash<QString, bool> unproc_files;
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS), QDirIterator::Subdirectories);
     while(dir_it.hasNext()) {
-        res++;
         QString path = dir_it.next();
-        new File(path, dir_it.fileName(), node);
+        QString name = dir_it.fileName();
+
+        if (!unproc_files.contains(path)) {
+            if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
+                CuePlaylist * cueta = new CuePlaylist(path, name, node);
+                res += cueta -> initFiles(unproc_files);
+            } else {
+                res++;
+                new File(path, name, node);
+            }
+        }
     }
 
     return res;
@@ -36,15 +47,23 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node) {
 
 int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
+    QString cue_ext = QStringLiteral("cue");
+    QHash<QString, bool> unproc_files;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file.filePath(), node);
         else {
+            if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                res++;
-                new File(file.filePath(), file.fileName(), node, pos);
+                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive)) {
+                    CuePlaylist * cueta = new CuePlaylist(file.filePath(), file.fileName(), node, pos);
+                    res += cueta -> initFiles(unproc_files);
+                } else {
+                    res++;
+                    new File(file.filePath(), file.fileName(), node, pos);
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Views {
     public:
         inline ListView(QWidget * parent, Params settings, QJsonObject * hash = 0)
             : IView(new ListModel(hash), parent, settings) {
-            setIndentation(4); // -2
+//            setIndentation(4); // -2
         }
     };
 }
