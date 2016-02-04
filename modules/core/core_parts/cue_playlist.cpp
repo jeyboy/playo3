@@ -15,13 +15,13 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
     QHash<QString, QString> redirects, ignore;
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
-        if (ignore.contains((*song).filePath)) continue;
-
         qint64 duration = ((song + 1) != songs.end()) ? (*(song + 1)).startPos - (*song).startPos : 0;
         QString songPath = redirects.value((*song).filePath, (*song).filePath);
         bool res = true;
 
-        if (!filePathes.contains(songPath)) {
+        if (ignore.contains((*song).filePath))
+            res = false;
+        else if (!filePathes.contains(songPath)) {
             res = QFile::exists(songPath);
 
             if (!res) {
@@ -48,13 +48,13 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
             if (res)
                 filePathes.insert(songPath, true);
             else {
-                // ask user about manual choosing of media source for cue
+                //TODO: ask user about manual choosing of media source for cue
                 ignore.insert((*song).filePath, QString());
             }
         }
 
-        if (res)
-            new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, this);
+        CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, this);
+        if (!res) f -> set(not_exist);
     }
 
     delete cue;

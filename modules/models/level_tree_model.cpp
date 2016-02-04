@@ -92,15 +92,23 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
 int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
     QHash<Playlist *, int> relations;
+    QString cue_ext = QStringLiteral("cue");
+    QHash<QString, bool> unproc_files;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
             res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations);
-        else {
+        else { 
+            if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                res++;
-                new File(file.filePath(), file.fileName(), node, pos);
+                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive)) {
+                    CuePlaylist * cueta = new CuePlaylist(file.filePath(), file.fileName(), node, pos);
+                    res += cueta -> initFiles(unproc_files);
+                } else {
+                    res++;
+                    new File(file.filePath(), file.fileName(), node, pos);
+                }
             }
         }
     }
