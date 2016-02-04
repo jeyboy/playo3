@@ -14,6 +14,18 @@
 namespace Core {
     class FilenameConversions {
     public:
+        static inline QString takePath(const QString & filePath) {
+            QStringList parts = filePath.split('/', QString::SkipEmptyParts);
+            parts.removeLast();
+            return parts.join('/');
+        }
+
+        static inline void splitPath(QString & filePath, QString & fileName) {
+            QStringList parts = filePath.split('/', QString::SkipEmptyParts);
+            fileName = parts.takeLast();
+            filePath = parts.join('/');
+        }
+
         //[\\s\\n\\r\\t]+
         //[^\\S\\w-]+
         static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s]+")), QStringLiteral(" ")); }

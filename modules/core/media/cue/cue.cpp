@@ -1,13 +1,12 @@
 #include "cue.h"
+#include "modules/core/misc/file_utils/filename_conversions.h"
 #include <qdir.h>
 #include <qdebug.h>
 
 using namespace Core::Media;
 
 Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
-    QStringList parts = filePath.split('/', QString::SkipEmptyParts);
-    parts.removeLast();
-    path = parts.join('/');
+    path = FilenameConversions::takePath(filePath);
 
     QTextStream in(&obj);
 

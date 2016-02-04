@@ -2,6 +2,8 @@
 #include "cue_file.h"
 #include "modules/core/media/cue/cue.h"
 
+#include <qdiriterator.h>
+
 using namespace Core;
 
 CuePlaylist::CuePlaylist(const QString & filePath, const QString & fileTitle, Playlist * parent, int pos, int initState)
@@ -10,11 +12,49 @@ CuePlaylist::CuePlaylist(const QString & filePath, const QString & fileTitle, Pl
 int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
     Media::Cue * cue = Media::Cue::fromPath(path().toString());
     QList<Media::CueSong> songs = cue -> songs();
+    QHash<QString, QString> redirects, ignore;
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
+        if (ignore.contains((*song).filePath)) continue;
+
         qint64 duration = ((song + 1) != songs.end()) ? (*(song + 1)).startPos - (*song).startPos : 0;
-        new CueFile((*song).startPos, duration, (*song).filePath, (*song).trackName, (*song).extension, this);
-        filePathes.insert((*song).filePath, true);
+        QString songPath = redirects.value((*song).filePath, (*song).filePath);
+        bool res = true;
+
+        if (!filePathes.contains(songPath)) {
+            res = QFile::exists(songPath);
+
+            if (!res) {
+                QString tPath = path().toString(), tExt, tName;
+                FilenameConversions::splitPath(tPath, tName);
+
+                if (Extensions::obj().extractExtension(tName, tExt)) {
+                    QDirIterator dir_it(
+                        tPath,
+                        QStringList() << (tName % QStringLiteral("*.") % (*song).extension),
+                        QDir::NoDotAndDotDot | QDir::Files,
+                        QDirIterator::Subdirectories
+                    );
+
+                    while(dir_it.hasNext()) {
+                        songPath = dir_it.next();
+                        redirects.insert(path().toString(), songPath);
+                        res = true;
+                        break;
+                    }
+                }
+            }
+
+            if (res)
+                filePathes.insert(songPath, true);
+            else {
+                // ask user about manual choosing of media source for cue
+                ignore.insert((*song).filePath, QString());
+            }
+        }
+
+        if (res)
+            new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, this);
     }
 
     delete cue;
