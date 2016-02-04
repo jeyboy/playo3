@@ -551,9 +551,9 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
 
     _deleteFolderAnswer = QMessageBox::No;
 
-    if (mdl -> playlistType() == level) {
-        qSort(index_list.begin(), index_list.end());
-    } else {
+//    if (mdl -> playlistType() == level) {
+//        qSort(index_list.begin(), index_list.end());
+//    } else {
         qSort(index_list.begin(), index_list.end(), modelIndexComparator());
 
         //INFO - remove dependent items
@@ -575,13 +575,13 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
         mdl -> setProgress2(SPINNER_NOT_SHOW_SECOND);
         temp = total = index_list.size();
         //////
-    }
+//    }
 
     blockRepaint = true; // list type sometimes trying redraw yourself in process :(
     QModelIndexList::Iterator eit = --index_list.end();
     total /= 100.0;
 
-    if (mdl -> playlistType() == level || !inProcess) {
+    if (/*mdl -> playlistType() == level || */!inProcess) {
         for (; eit != index_list.begin(); --eit) {
             removeRow((*eit), remove, IModel::none, flags);
 
