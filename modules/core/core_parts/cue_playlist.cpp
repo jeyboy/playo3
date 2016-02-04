@@ -13,11 +13,11 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
         qint64 duration = ((song + 1) != songs.end()) ? (*(song + 1)).startPos - (*song).startPos : 0;
-        qDebug() << "CUETA" << (*song).startPos << duration << (*song).trackName << (*song).extension << (*song).filePath;
         new CueFile((*song).startPos, duration, (*song).filePath, (*song).trackName, (*song).extension, this);
         filePathes.insert((*song).filePath, true);
     }
 
     delete cue;
+    updateItemsCountInBranch(childCount());
     return childCount();
 }
