@@ -5,6 +5,7 @@
 #include <qstringbuilder.h>
 
 #include "modules/core/misc/file_utils/extensions.h"
+#include "modules/core/misc/file_utils/filename_conversions.h"
 
 #define MAXTRACK	99	/* Red Book track limit */
 #define MAXINDEX	99	/* Red Book index limit */

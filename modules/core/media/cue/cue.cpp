@@ -16,24 +16,36 @@ Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
     }
 }
 
-QList<CueSong> Cue::songs() { // last element always missed at duration // need to scan on postgap aviability
+QList<CueSong> Cue::songs() { // last element always missed at duration
     QList<CueSong> res;
+    int group = 0;
 
-    for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
+    for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++, group++) {
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
 
-        if (!file_path.contains('/'))
+        if (!file_path.contains('/') || !QFile::exists(file_path))
             file_path = path % '/' % file_path;
+        // there need to repeat check on file xistance and try to search it in subdirectories on false
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
                 if ((*index) -> number == 0) continue;
 
+                QString title = (*track) -> toStr();
+
+                if (title.isEmpty()) {
+                    QString tPath = file_path, tExt;
+                    FilenameConversions::splitPath(tPath, title);
+                    Extensions::obj().extractExtension(title, tExt);
+                }
+
                 res.append(CueSong(
-                    (*index) -> toMillis(),
-                    (*track) -> toStr(),
+                    (*index) -> toMillis(), // need to add correction on pregap for current item and postgap for next
+                    title,
                     file_path,
-                    (*file) -> extension
+                    (*file) -> extension,
+                    (*file) -> tracks.length() > 1,
+                    group
                 ));
             }
 
@@ -44,7 +56,9 @@ QList<CueSong> Cue::songs() { // last element always missed at duration // need 
                 (*index) -> toMillis(),
                 file_path,
                 file_path,
-                (*file) -> extension
+                (*file) -> extension,
+                true, // there should be some predicate?
+                group
             ));
         }
     }
@@ -55,7 +69,8 @@ QList<CueSong> Cue::songs() { // last element always missed at duration // need 
 void Cue::splitLine(QString & line, QList<QString> & res) {
     bool locked = false;
     int pos = 0, offset = 0;
-    for(QString::iterator ch = line.begin(); ch != line.end(); ch++, offset++)
+    line.remove('\t'); // better do this in loop - but string is not supported removing through iterator :(
+    for(QString::iterator ch = line.begin(); ch != line.end(); ch++, offset++) {
         switch((*ch).unicode()) {
             case 32: {
                 if (!locked) {
@@ -69,6 +84,7 @@ void Cue::splitLine(QString & line, QList<QString> & res) {
             break;}
             case 34: { locked = !locked; break;}
         }
+    }
 
     QStringRef str = line.midRef(pos, offset);
     if (!str.isEmpty()) {

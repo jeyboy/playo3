@@ -14,12 +14,14 @@
 namespace Core {
     namespace Media {
         struct CueSong {
-            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString())
-                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension) { }
+            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString(), bool isPartial = true, int group = 0)
+                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group) { }
             qint64 startPos;
             QString trackName;
             QString filePath;
             QString extension;
+            bool isPartial;
+            int group;
         };
 
         class Cue {

@@ -52,6 +52,7 @@ namespace Core {
         inline QVariant path() const                            { return attrs.value(JSON_TYPE_PATH); }
         virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
+        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
         inline qint64 startPosMillis() const                    { return attrs.value(JSON_TYPE_START_POS, 0).toLongLong(); }
@@ -73,6 +74,7 @@ namespace Core {
         inline void setArtistUids(const QStringList & ids)      { attrs[JSON_TYPE_ARTIST_UIDS] = ids; }
         inline void setSongUid(const QVariant & newSongId)      { attrs[JSON_TYPE_SONG_UID] = newSongId; }
 
+        inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
         inline void setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline void setBpm(const QVariant & newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
         inline void setStartPos(const QVariant & newStartPos)   { attrs[JSON_TYPE_START_POS] = newStartPos; }

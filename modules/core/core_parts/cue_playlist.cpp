@@ -15,7 +15,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
     QHash<QString, QString> redirects, ignore;
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
-        qint64 duration = ((song + 1) != songs.end()) ? (*(song + 1)).startPos - (*song).startPos : 0;
+        qint64 duration = ((song + 1) != songs.end()) && (*(song + 1)).group == (*song).group ? (*(song + 1)).startPos - (*song).startPos : 0;
         QString songPath = redirects.value((*song).filePath, (*song).filePath);
         bool res = true;
 
@@ -28,7 +28,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
                 QString tPath = path().toString(), tExt, tName;
                 FilenameConversions::splitPath(tPath, tName);
 
-                if (Extensions::obj().extractExtension(tName, tExt)) {
+                if (Extensions::obj().extractExtension(tName, tExt)) { // maybe check of result is not needed?
                     QDirIterator dir_it(
                         tPath,
                         QStringList() << (tName % QStringLiteral("*.") % (*song).extension),
@@ -53,7 +53,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
             }
         }
 
-        CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, this);
+        CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
         if (!res) f -> set(not_exist);
     }
 
