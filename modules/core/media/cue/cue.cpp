@@ -1,6 +1,7 @@
 #include "cue.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include <qdir.h>
+#include <qdiriterator.h>
 #include <qdebug.h>
 
 using namespace Core::Media;
@@ -23,9 +24,26 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++, group++) {
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
 
-        if (!file_path.contains('/') || !QFile::exists(file_path))
-            file_path = path % '/' % file_path;
-        // there need to repeat check on file xistance and try to search it in subdirectories on false
+        if (!QFile::exists(file_path)) {
+            QString tPath = path % '/' % file_path;
+            if (!QFile::exists(tPath)) {
+                tPath = path;
+                QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
+                Extensions::obj().extractExtension(tName, tExt);
+
+                QDirIterator dir_it(
+                    tPath,
+                    QStringList() << (tName % QStringLiteral(".") % tExt), // QStringLiteral("*.") // did not allow free form of search
+                    QDir::NoDotAndDotDot | QDir::Files,
+                    QDirIterator::Subdirectories
+                );
+
+                while(dir_it.hasNext()) {
+                    file_path = dir_it.next();
+                    break;
+                }
+            } else file_path = tPath;
+        }
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
