@@ -98,7 +98,6 @@ void IPlayer::slideVolBackward() {
 }
 
 void IPlayer::setPosition(qint64 newPos) {
-//    if (isInitiating()) startPos = newPos;
     newPosProcessing(newPos);
     updatePosition(newPos);
 }

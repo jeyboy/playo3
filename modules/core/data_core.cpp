@@ -61,7 +61,15 @@ namespace Core {
 
     void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state) {
         IPlayer * player = currPlayer();
-        player -> closeMedia();
+
+        bool continuePlaying = item && !player -> media().isEmpty() && item -> toUrl() == player -> media();
+
+        if (!continuePlaying)
+            player -> closeMedia();
+        else {
+            player -> pause();
+            playerStatusChanged(CloseMedia);
+        }
 
         if (current_playlist && current_item && item && current_playlist != playlist)
             spoil();
@@ -70,12 +78,21 @@ namespace Core {
         current_item = item;
 
         if (item) {
-            player -> setMedia(
-                current_item -> toUrl(),
-                item -> startPosMillis(),
-                item -> durationMillis(),
-                startMili
-            );
+            if (continuePlaying) {
+                player -> updateMedia(
+                    item -> startPosMillis(),
+                    item -> durationMillis()
+                );
+                playerStatusChanged(InitMedia);
+                playerStatusChanged(PlaingMedia);
+            } else {
+                player -> setMedia(
+                    current_item -> toUrl(),
+                    item -> startPosMillis(),
+                    item -> durationMillis(),
+                    startMili
+                );
+            }
 
             if ((init_state_flag = state) != initiated)
                 player -> play(init_state_flag == paused);
