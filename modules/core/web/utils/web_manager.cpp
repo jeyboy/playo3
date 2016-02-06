@@ -63,8 +63,9 @@ namespace Core {
             for(QHash<QString, QString>::ConstIterator header = headers.cbegin(); header != headers.cend(); header++)
                 setRawHeader(header.key().toUtf8(), header.value().toUtf8());
 
-            if (!headers.contains(QStringLiteral("Referer")))
-                setRawHeader("Referer", url().path().toUtf8());
+            // in some cases referer broke the link - od is one of it
+//            if (!headers.contains(QStringLiteral("Referer")))
+//                setRawHeader("Referer", url().path().toUtf8());
 
             if (!headers.contains(QStringLiteral("User-Agent")))
                 setRawHeader("User-Agent", DEFAULT_AGENT.toUtf8());

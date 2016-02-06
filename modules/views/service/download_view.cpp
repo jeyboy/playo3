@@ -212,8 +212,9 @@ void DownloadView::asyncRequestFinished(QIODevice * source, void * userData) {
     downIndexes.remove(source);
 
     int status = ((QNetworkReply *)source) -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    if (status == 404) {
+    if (status == 404 || status == 500) { // od return 500 status on too old links
         qDebug() << "REMOTE CALL RESTORATION" << from;
+        qDebug() << ((QNetworkReply *)source) -> readAll();
         source -> close();
         source -> deleteLater();
         bool invalid = true;

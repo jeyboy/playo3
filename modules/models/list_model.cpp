@@ -24,6 +24,7 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
 int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files) {
     int res = 0;
     QString cue_ext = QStringLiteral(".cue");
+    QHash<QString, IItem *> items;
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS), QDirIterator::Subdirectories);
     while(dir_it.hasNext()) {
@@ -33,10 +34,17 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         if (!unproc_files.contains(path)) {
             if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
                 CuePlaylist * cueta = new CuePlaylist(path, name, node);
-                res += cueta -> initFiles(unproc_files);
+                int amount = cueta -> initFiles(unproc_files);
+                res += amount;
+
+                //TODO: temp solution for removing from list already added cue parts
+                for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
+                    IItem * itm = items.take(uf.key());
+                    if (itm) itm -> removeYouself();
+                }
             } else {
                 res++;
-                new File(path, name, node);
+                items.insert(path, new File(path, name, node));
             }
         }
     }
