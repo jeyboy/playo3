@@ -34,15 +34,14 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     else node -> removeYouself();
 }
 
-int TreeModel::filesRoutine(const QString & filePath, Playlist * node) {
+int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files) {
     int res = 0;
-    QHash<QString, bool> unproc_files;
 
     {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()));
+            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files);
         }
     }
 
@@ -79,7 +78,7 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
-            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos));
+            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos), unproc_files);
         } else {
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

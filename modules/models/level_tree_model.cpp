@@ -43,9 +43,8 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     else node -> removeYouself();
 }
 
-int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels) {
+int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels, QHash<QString, bool> & unproc_files) {
     int res = 0;
-    QHash<QString, bool> unproc_files;
 
     rels[node]++;
 
@@ -53,7 +52,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels);
+            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels, unproc_files);
         }
     }
 
@@ -98,7 +97,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations);
+            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations, unproc_files);
         else { 
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

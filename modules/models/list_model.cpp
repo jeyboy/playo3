@@ -21,10 +21,9 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     if (count > 0) emit itemsCountChanged(count);
 }
 
-int ListModel::filesRoutine(const QString & filePath, Playlist * node) {
+int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files) {
     int res = 0;
     QString cue_ext = QStringLiteral(".cue");
-    QHash<QString, bool> unproc_files;
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS), QDirIterator::Subdirectories);
     while(dir_it.hasNext()) {
@@ -53,7 +52,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file.filePath(), node);
+            res += filesRoutine(file.filePath(), node, unproc_files);
         else {
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

@@ -75,7 +75,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 file_path,
                 file_path,
                 (*file) -> extension,
-                true, // there should be some predicate?
+                true,
                 group
             ));
         }
