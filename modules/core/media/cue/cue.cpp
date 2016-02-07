@@ -33,7 +33,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
 
                 QDirIterator dir_it(
                     tPath,
-                    QStringList() << (tName % QStringLiteral(".") % tExt), // QStringLiteral("*.") // did not allow free form of search
+                    QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt), // QStringLiteral("*.") // did not allow free form of search
                     QDir::NoDotAndDotDot | QDir::Files,
                     QDirIterator::Subdirectories
                 );
@@ -44,6 +44,18 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 }
             } else file_path = tPath;
         }
+
+        #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but required sharp name
+        {
+            QString tPath = file_path, tName, tExt;
+            FilenameConversions::splitPath(tPath, tName);
+            Extensions::obj().extractExtension(tName, tExt);
+
+            QDir dir(tPath, (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt.toLower()));
+            QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
+            if (!files.isEmpty()) file_path = tPath % '/' % files.first();
+        }
+        #endif
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {

@@ -45,16 +45,18 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
                 }
             }
 
-            if (res)
-                filePathes.insert(songPath, true);
-            else {
-                //TODO: ask user about manual choosing of media source for cue
-                ignore.insert((*song).filePath, QString());
+            if (!res) {
+              //TODO: ask user about manual choosing of media source for cue
             }
         }
 
         CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
-        if (!res) f -> set(not_exist);
+        if (res)
+            filePathes.insert(songPath, true);
+        else {
+            ignore.insert(songPath, QString());
+            f -> set(not_exist);
+        }
     }
 
     delete cue;
