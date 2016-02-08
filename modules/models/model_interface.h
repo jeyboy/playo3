@@ -83,6 +83,7 @@ namespace Models {
         int proceedOdList(QJsonArray & collection, Playlist * parent);
         int proceedYandexList(QJsonArray & collection, Playlist * parent);
         int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
+        int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());

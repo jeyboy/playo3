@@ -65,23 +65,9 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QString name = dir_it.fileName();
 
         if (!unproc_files.contains(path)) {
-            if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
-                CuePlaylist * cueta = new CuePlaylist(path, name, node);
-                int amount = cueta -> initFiles(unproc_files);
-                local_res += amount;
-
-                //TODO: temp solution for removing from list already added cue parts
-                if (!items.isEmpty() && amount > 0)
-                    for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
-                        IItem * itm = items.take(uf.key());
-                        if (itm) {
-                            if (itm -> parent() -> childCount() == 1)
-                                itm -> parent() -> removeYouself();
-                            else
-                                itm -> removeYouself();
-                        }
-                    }
-            } else {
+            if (name.endsWith(cue_ext, Qt::CaseInsensitive))
+                local_res += proceedCue(path, name, node, -1, unproc_files, items);
+            else {
                 local_res++;
                 items.insert(path, new File(path, name, node));
             }
@@ -115,23 +101,9 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
         else { 
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive)) {
-                    CuePlaylist * cueta = new CuePlaylist(file.filePath(), file.fileName(), node, pos);
-                    int amount = cueta -> initFiles(unproc_files);
-                    res += amount;
-
-                    //TODO: temp solution for removing from list already added cue parts
-                    if (!items.isEmpty() && amount > 0)
-                        for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
-                            IItem * itm = items.take(uf.key());
-                            if (itm) {
-                                if (itm -> parent() -> childCount() == 1)
-                                    itm -> parent() -> removeYouself();
-                                else
-                                    itm -> removeYouself();
-                            }
-                        }
-                } else {
+                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
+                    res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
+                else {
                     res++;
                     items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
                 }
