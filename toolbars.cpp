@@ -34,6 +34,7 @@ QMenu * ToolBars::createPopupMenu() {
 
     menu -> addAction(QIcon(QStringLiteral(":drop_add")), QStringLiteral("Add drop point"), this, SLOT(addPanelButtonTriggered())/*, QKeySequence("Ctrl+F")*/) -> setEnabled(!isStatic && underMouseBar);
     menu -> addAction(QIcon(QStringLiteral(":drop_remove")), QStringLiteral("Remove drop point"), this, SLOT(removePanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
+    menu -> addAction(QIcon(QStringLiteral(":edit_remove")), QStringLiteral("Edit drop point"), this, SLOT(editPanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
 
     QList<QToolBar *> bars = toolbars();
     QList<DockBar *> docs = Dockbars::obj().dockbars();
@@ -609,6 +610,17 @@ void ToolBars::addPanelButtonTriggered() {
 void ToolBars::removePanelButtonTriggered() {
     QToolBar * bar = (QToolBar *)underMouseButton -> parentWidget();
     bar -> removeAction(bar -> actionAt(bar -> mapFromGlobal(lastClickPoint)));
+}
+
+void ToolBars::editPanelButtonTriggered() {
+    ToolbarUserButton * btn = (ToolbarUserButton *)underMouseButton;
+    UserActionDialog dialog(container);
+    dialog.buildToolbarButtonForm(btn -> text(), btn -> mainPath());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        btn -> setText(dialog.getValue(dialog.name_key));
+        btn -> setMainPath(dialog.getValue(dialog.path_key));
+    }
 }
 
 void ToolBars::toolbarOrientationChanged(Qt::Orientation orientation) {

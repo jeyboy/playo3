@@ -63,6 +63,7 @@ namespace Presentation {
         void removePanelTriggered();
         void addPanelButtonTriggered();
         void removePanelButtonTriggered();
+        void editPanelButtonTriggered();
 
         void disconnectVk();
         void disconnectSoundcloud();

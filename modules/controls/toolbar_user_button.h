@@ -10,16 +10,17 @@
 namespace Controls {
     class ToolbarUserButton : public ToolbarDropButton {
         Q_OBJECT
+
+        QString path;
     public:
         ToolbarUserButton(const QString & text, const QString & folderPath, QWidget * parent = 0);
         inline QString mainPath() const { return path; }
+        inline void setMainPath(const QString & newPath) { path = newPath; }
     protected slots:
         void checkState();
     protected:
         void dropReaction(QDropEvent * event);
         inline void enterEvent(QEvent *) { checkState(); }
-    private:
-        QString path;
     };
 }
 
