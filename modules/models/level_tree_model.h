@@ -14,7 +14,7 @@ namespace Models {
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);
-        int filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels, QHash<QString, bool> & unproc_files);
+        int filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
         int filesRoutine(const QList<QUrl> & list, Playlist * node, int pos = -1);
     };
 }

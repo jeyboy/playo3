@@ -43,7 +43,7 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     else node -> removeYouself();
 }
 
-int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels, QHash<QString, bool> & unproc_files) {
+int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<Playlist *, int> & rels, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
     int res = 0;
 
     rels[node]++;
@@ -52,7 +52,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels, unproc_files);
+            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels, unproc_files, items);
         }
     }
 
@@ -67,10 +67,18 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         if (!unproc_files.contains(path)) {
             if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
                 CuePlaylist * cueta = new CuePlaylist(path, name, node);
-                local_res += cueta -> initFiles(unproc_files);
+                int amount = cueta -> initFiles(unproc_files);
+                local_res += amount;
+
+                //TODO: temp solution for removing from list already added cue parts
+                if (!items.isEmpty() && amount > 0)
+                    for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
+                        IItem * itm = items.take(uf.key());
+                        if (itm) itm -> removeYouself();
+                    }
             } else {
                 local_res++;
-                new File(path, name, node);
+                items.insert(path, new File(path, name, node));
             }
         }
     }
@@ -93,11 +101,12 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
     QHash<Playlist *, int> relations;
     QString cue_ext = QStringLiteral("cue");
     QHash<QString, bool> unproc_files;
+    QHash<QString, IItem *> items;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations, unproc_files);
+            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations, unproc_files, items);
         else { 
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
@@ -106,7 +115,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
                     res += cueta -> initFiles(unproc_files);
                 } else {
                     res++;
-                    new File(file.filePath(), file.fileName(), node, pos);
+                    items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
                 }
             }
         }

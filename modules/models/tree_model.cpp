@@ -34,14 +34,14 @@ void TreeModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     else node -> removeYouself();
 }
 
-int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files) {
+int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
     int res = 0;
 
     {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files);
+            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files, items);
         }
     }
 
@@ -54,10 +54,19 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         if (!unproc_files.contains(path)) {
             if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
                 CuePlaylist * cueta = new CuePlaylist(path, name, node);
-                res += cueta -> initFiles(unproc_files);
+                int amount = cueta -> initFiles(unproc_files);
+                res += amount;
+
+                //TODO: temp solution for removing from list already added cue parts
+                if (!items.isEmpty() && amount > 0)
+                    for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
+                        IItem * itm = items.take(uf.key());
+                        if (itm) itm -> removeYouself();
+                    }
+
             } else {
                 res++;
-                new File(name, node);
+                items.insert(path, new File(name, node));
             }
         }
     }
@@ -74,11 +83,12 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
     int res = 0;
     QString cue_ext = QStringLiteral("cue");
     QHash<QString, bool> unproc_files;
+    QHash<QString, IItem *> items;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir()) {
-            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos), unproc_files);
+            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos), unproc_files, items);
         } else {
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
@@ -87,7 +97,7 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
                     res += cueta -> initFiles(unproc_files);
                 } else {
                     res++;
-                    new File(file.fileName(), node, pos);
+                    items.insert(file.filePath(), new File(file.fileName(), node, pos));
                 }
             }
         }

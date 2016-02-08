@@ -30,7 +30,6 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
-        qDebug() << "OLOLO" << path << unproc_files;
         if (!unproc_files.contains(path)) {
             if (name.endsWith(cue_ext, Qt::CaseInsensitive)) {
                 CuePlaylist * cueta = new CuePlaylist(path, name, node);
