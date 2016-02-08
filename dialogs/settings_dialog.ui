@@ -1281,14 +1281,14 @@
       <x>0</x>
       <y>0</y>
       <width>340</width>
-      <height>320</height>
+      <height>350</height>
      </rect>
     </property>
     <widget class="QComboBox" name="colorScheme">
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>260</y>
+       <y>280</y>
        <width>211</width>
        <height>22</height>
       </rect>
@@ -1298,7 +1298,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>130</y>
        <width>171</width>
        <height>17</height>
       </rect>
@@ -1311,7 +1311,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>111</width>
        <height>21</height>
       </rect>
@@ -1334,7 +1334,7 @@
      <property name="geometry">
       <rect>
        <x>160</x>
-       <y>200</y>
+       <y>220</y>
        <width>161</width>
        <height>22</height>
       </rect>
@@ -1344,7 +1344,7 @@
      <property name="geometry">
       <rect>
        <x>220</x>
-       <y>230</y>
+       <y>250</y>
        <width>21</width>
        <height>21</height>
       </rect>
@@ -1357,7 +1357,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>70</y>
        <width>311</width>
        <height>46</height>
       </rect>
@@ -1402,7 +1402,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>280</y>
        <width>81</width>
        <height>21</height>
       </rect>
@@ -1415,7 +1415,7 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>110</y>
+       <y>130</y>
        <width>141</width>
        <height>17</height>
       </rect>
@@ -1428,7 +1428,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>190</y>
        <width>131</width>
        <height>17</height>
       </rect>
@@ -1441,7 +1441,7 @@
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>130</y>
+       <y>150</y>
        <width>211</width>
        <height>22</height>
       </rect>
@@ -1451,7 +1451,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>150</y>
        <width>81</width>
        <height>21</height>
       </rect>
@@ -1464,7 +1464,7 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>170</y>
+       <y>190</y>
        <width>131</width>
        <height>17</height>
       </rect>
@@ -1487,7 +1487,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>200</y>
+       <y>220</y>
        <width>141</width>
        <height>17</height>
       </rect>
@@ -1500,7 +1500,7 @@
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>230</y>
+       <y>250</y>
        <width>81</width>
        <height>22</height>
       </rect>
@@ -1522,7 +1522,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
+       <y>310</y>
        <width>101</width>
        <height>21</height>
       </rect>
@@ -1538,7 +1538,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>290</y>
+       <y>310</y>
        <width>81</width>
        <height>22</height>
       </rect>
@@ -1571,6 +1571,19 @@
        <width>211</width>
        <height>22</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="showDownload">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>45</y>
+       <width>301</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Show downloading panel on start of proccess</string>
      </property>
     </widget>
    </widget>

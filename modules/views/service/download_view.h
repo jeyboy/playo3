@@ -25,6 +25,8 @@
 namespace Views {
     class DownloadView : public QListView, public Core::SingletonPtr<DownloadView>, public Core::FileErrors, public Core::ResponseError {
       Q_OBJECT
+
+      bool toggleNeeded;
     public:
         ~DownloadView();
 

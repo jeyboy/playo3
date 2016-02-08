@@ -5,7 +5,7 @@ using namespace Views;
 using namespace Core;
 using namespace Web;
 
-DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent),
+DownloadView::DownloadView(QJsonObject * hash, QWidget * parent) : QListView(parent), toggleNeeded(false),
     mdl(new DownloadModel(hash, this)), paused(false) {
 
     setModel(mdl);
@@ -100,6 +100,13 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
 bool DownloadView::initiateDownloading(DownloadModelItem * item) {
     QIODevice * source;
 
+    if (parentWidget() -> isHidden()) {
+        if (Settings::obj().isShowDownloadingOnStart()) {
+            toggleNeeded = true;
+            parentWidget() -> show();
+        } else toggleNeeded = false;
+    }
+
     Manager * networkManager = Manager::prepare();
     QUrl from = item -> data(DOWNLOAD_FROM).toUrl();
     bool isRemote = item -> data(DOWNLOAD_IS_REMOTE).toBool();
@@ -158,6 +165,11 @@ void DownloadView::savingCompleted() {
 
         if (!ind.data(DOWNLOAD_ERROR).isValid()) {
             removeRow(item);
+
+            if (toggleNeeded && mdl -> root() -> childList().isEmpty()) {
+                toggleNeeded = false;
+                parentWidget() -> hide();
+            }
         } else {
     //        mdl -> moveRow(QModelIndex(), ind.row(), QModelIndex(), mdl -> root() -> childCount()); //TODO: is broken
         }
