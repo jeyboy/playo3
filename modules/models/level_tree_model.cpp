@@ -74,7 +74,12 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
                 if (!items.isEmpty() && amount > 0)
                     for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
                         IItem * itm = items.take(uf.key());
-                        if (itm) itm -> removeYouself();
+                        if (itm) {
+                            if (itm -> parent() -> childCount() == 1)
+                                itm -> parent() -> removeYouself();
+                            else
+                                itm -> removeYouself();
+                        }
                     }
             } else {
                 local_res++;
@@ -112,7 +117,20 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive)) {
                     CuePlaylist * cueta = new CuePlaylist(file.filePath(), file.fileName(), node, pos);
-                    res += cueta -> initFiles(unproc_files);
+                    int amount = cueta -> initFiles(unproc_files);
+                    res += amount;
+
+                    //TODO: temp solution for removing from list already added cue parts
+                    if (!items.isEmpty() && amount > 0)
+                        for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
+                            IItem * itm = items.take(uf.key());
+                            if (itm) {
+                                if (itm -> parent() -> childCount() == 1)
+                                    itm -> parent() -> removeYouself();
+                                else
+                                    itm -> removeYouself();
+                            }
+                        }
                 } else {
                     res++;
                     items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
