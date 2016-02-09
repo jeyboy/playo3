@@ -115,7 +115,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 qint64 time_mark = (*index) -> toMillis();
                 if (time_marks.contains(time_mark)) {
                     error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
-                    qDebug() << error;
+                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, true);
                     time_mark = 0;
                 }
 
@@ -267,10 +267,7 @@ void Cue::proceedLine(QString & line) {
                     } else if (token == QStringLiteral("POSTGAP")) {
                         activeFile -> activeTrack -> setPostgap(parts[0]); return;
                     } else if (token == QStringLiteral("REM")) { // specification did not contain this case, but some cue generators inserted REM into track
-                        if (parts.length() != 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else
-                            activeFile -> activeTrack -> addInfo(parts[0], parts[1]); return;
+                        activeFile -> activeTrack -> addInfo(parts.join(' ')); return;
                     }
                 break;}
 
