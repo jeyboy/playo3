@@ -176,6 +176,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                     error
                 ));
 
+                INIT_DURATION(res);
                 time_marks.insert(time_mark, true);
             }
 
@@ -190,6 +191,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 true,
                 group
             ));
+            INIT_DURATION(res);
         }
     }
 

@@ -15,7 +15,6 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
     QHash<QString, QString> redirects, ignore;
 
     for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
-        qint64 duration = ((song + 1) != songs.end()) && (*(song + 1)).group == (*song).group ? (*(song + 1)).startPos - (*song).startPos : 0;
         QString songPath = redirects.value((*song).filePath, (*song).filePath);
         bool res = true;
 
@@ -51,7 +50,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
         }
 
         //TODO: maybe add error field to the item ?
-        CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
+        CueFile * f = new CueFile((*song).startPos, (*song).duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
         if (res) {
             filePathes.insert(songPath, true);
             if (!(*song).error.isEmpty())

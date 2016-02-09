@@ -11,11 +11,26 @@
     if (str.startsWith('"')) \
         str = str.mid(1, str.length() - 2);
 
+#define INIT_DURATION(res) \
+    int length = res.length(); \
+    if (length > 1) { \
+        CueSong & updated = res[length - 2]; \
+        CueSong & last = res[length - 1]; \
+        updated.initDuration(last); \
+    }
+
+
 namespace Core {
     namespace Media {
         struct CueSong {
             CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString(), bool isPartial = true, int group = 0, const QString & error = QString())
-                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group), error(error) { }
+                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group), error(error), duration(0) { }
+
+            void initDuration(const CueSong & last) {
+                if (last.group == group) \
+                    duration = last.startPos - startPos; \
+            }
+
             qint64 startPos;
             QString trackName;
             QString filePath;
@@ -23,6 +38,7 @@ namespace Core {
             bool isPartial;
             int group;
             QString error;
+            qint64 duration;
         };
 
         class Cue {
