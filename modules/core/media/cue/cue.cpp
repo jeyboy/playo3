@@ -135,7 +135,12 @@ void Cue::proceedLine(QString & line) {
     QList<QString> parts;
     splitLine(line, parts);
     if (!parts.isEmpty()) {
-        QString token = parts.takeFirst();
+        QString token = parts.takeFirst().toUpper();
+
+        if (token.startsWith(';')) {
+            qDebug() << "CUE COMMENT" << line;
+            return;
+        }
 
         if (parts.isEmpty()) {
             qDebug() << "WRONG CUE TAG" << line;
@@ -226,8 +231,10 @@ void Cue::proceedLine(QString & line) {
         }
     }
 
-    if (level == -1)
+    if (level == -1) {
         qDebug() << path << QStringLiteral("ERROR LEVEL") << line;
+        level = 0;
+    }
 }
 
 //REM (comment)
