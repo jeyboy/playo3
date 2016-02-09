@@ -389,7 +389,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 
     //TODO: temp solution for removing from list already added cue parts
     if (!items.isEmpty() && amount > 0)
-        for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + (unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
+        for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + qMax(0, unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
             IItem * itm = items.take(uf.key());
             if (itm) {
                 if (itm -> parent() -> childCount() == 1)

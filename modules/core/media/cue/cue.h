@@ -29,7 +29,7 @@ namespace Core {
                 Cue(const QString & path, QIODevice & obj);
                 static Cue * fromPath(const QString & path) {
                     QFile f(path);
-                    if (f.open(QFile::ReadOnly)) {
+                    if (f.open(QFile::ReadOnly | QFile::Text)) {
                         Cue * cue = new Cue(path, f);
                         f.close();
                         return cue;

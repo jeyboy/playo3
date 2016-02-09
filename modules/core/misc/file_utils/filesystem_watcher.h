@@ -5,6 +5,7 @@
 #include <qdir.h>
 #include <qdiriterator.h>
 #include <qdebug.h>
+//#include <qtextcodec.h>
 
 #include "modules/core/interfaces/singleton.h"
 
@@ -33,6 +34,31 @@ protected:
                 QDir(file.filePath()).entryInfoList(nameFilters, (QDir::Filter)filters);
     }
 public:
+//    static void setEncoding(QTextStream & stream) {
+//        QTextCodec::ConverterState state;
+//        QTextCodec * codec;
+//        QByteArray sample;
+//        stream >> sample;
+//        stream.seek(0);
+
+//        QStringList codecs; codecs << QStringLiteral("UTF-8") << QStringLiteral("UTF-16") << QStringLiteral("ISO 8859-9");
+//        for(QStringList::Iterator codec_name = codecs.begin(); codec_name != codecs.end(); codec_name++) {
+//            codec = QTextCodec::codecForName((*codec_name).toStdString().data());
+
+//            QString res = codec -> toUnicode(sample.constData(), sample.size(), &state);
+
+//            if (state.invalidChars > 0) {
+////                codec = QTextCodec::codecForLocale();
+//                qDebug() << "Not a valid sequence." << (*codec_name);
+//                qDebug() << res << sample;
+//                codec = 0;
+//            } else break;
+//        }
+
+//        if (codec)
+//            stream.setCodec(codec);
+//    }
+
     static void filesList(const QString & path, QStringList & result, const QStringList & nameFilters = QStringList()) {
         entriesList(path, result, FILE_FILTERS, nameFilters);
     }

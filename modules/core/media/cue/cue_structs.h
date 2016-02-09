@@ -96,6 +96,7 @@ namespace Core {
 
             void setPregap(const QString & pregap) { parseCueTimeStr(pregap, pregap_minutes, pregap_seconds, pregap_millis); }
             void setPostgap(const QString & postgap) { parseCueTimeStr(postgap, postgap_minutes, postgap_seconds, postgap_millis); }
+            void addInfo(const QString & name, const QString & value) { infos.insert(name, value); }
 
             QString toStr() {
                 if (!performer.isEmpty())
@@ -114,6 +115,7 @@ namespace Core {
             AudioFlag flags; //      FLAGS [flags] // one or more // AudioFlag
             QString isrc;
             QString performer;
+            QHash<QString, QString> infos;
         };
 
         struct CueFile : IndexContainer {

@@ -54,6 +54,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
         if (res)
             filePathes.insert(songPath, true);
         else {
+            filePathes.insert(songPath, false);
             ignore.insert(songPath, QString());
             f -> set(not_exist);
         }

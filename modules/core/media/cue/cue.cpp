@@ -1,15 +1,17 @@
 #include "cue.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
-#include <qdir.h>
+#include "modules/core/misc/file_utils/filesystem_watcher.h"
 #include <qdiriterator.h>
 #include <qdebug.h>
 
 using namespace Core::Media;
 
 Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
+    qDebug() << "---------   CUETA   ------------------ " << filePath;
     path = FilenameConversions::takePath(filePath);
 
     QTextStream in(&obj);
+//    FileSystemWatcher::setEncoding(in);
 
     while(!in.atEnd()) {
         QString str = in.readLine();
@@ -23,6 +25,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++, group++) {
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
+        QString real_extension = (*file) -> extension;
 
         if (!QFile::exists(file_path)) {
             QString tPath = path % '/' % file_path;
@@ -33,19 +36,24 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
 
                 QDirIterator dir_it(
                     tPath,
-                    QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt), // QStringLiteral("*.") // did not allow free form of search
+                    QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")/* % tExt*/), // there is not possible to use extension from filename
                     QDir::NoDotAndDotDot | QDir::Files,
                     QDirIterator::Subdirectories
                 );
 
                 while(dir_it.hasNext()) {
-                    file_path = dir_it.next();
-                    break;
+                    QString eq_str = dir_it.next();
+                    // in some cases extension is not eq to cue type and there we should to reinit real extension :(
+                    if (!eq_str.endsWith(QStringLiteral(".cue"))) {
+                        file_path = eq_str;
+                        Extensions::obj().extractExtension(file_path, real_extension, false);
+                        break;
+                    }
                 }
             } else file_path = tPath;
         }
 
-        #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but required sharp name
+        #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but we required on sharp name
         {
             QString tPath = file_path, tName, tExt;
             FilenameConversions::splitPath(tPath, tName);
@@ -73,7 +81,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                     (*index) -> toMillis(), // need to add correction on pregap for current item and postgap for next
                     title,
                     file_path,
-                    (*file) -> extension,
+                    real_extension,
                     (*file) -> tracks.length() > 1,
                     group
                 ));
@@ -86,7 +94,7 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 (*index) -> toMillis(),
                 file_path,
                 file_path,
-                (*file) -> extension,
+                real_extension,
                 true,
                 group
             ));
@@ -129,11 +137,23 @@ void Cue::proceedLine(QString & line) {
     if (!parts.isEmpty()) {
         QString token = parts.takeFirst();
 
+        if (parts.isEmpty()) {
+            qDebug() << "WRONG CUE TAG" << line;
+            return;
+        }
+
+        if (level == 0 && token == QStringLiteral("TRACK")) // fix for non standart builded cue
+            level = 1;
+
         while(level > -1) {
             switch(level) {
                 case 0: {
                     if (token == QStringLiteral("REM")) {
-                        _infos.insert(parts[0], parts[1]); return;
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else
+                            _infos.insert(parts[0], parts[1]);
+                        return;
                     } else if (token == QStringLiteral("TITLE")) {
                         title = parts[0]; return;
                     } else if (token == QStringLiteral("SONGWRITER")) {
@@ -143,8 +163,12 @@ void Cue::proceedLine(QString & line) {
                     } else if (token == QStringLiteral("CDTEXTFILE")) {
                         text_file = parts[0]; return;
                     } else if (token == QStringLiteral("FILE")) {
-                        level++;
-                        addFile(parts[0], parts[1]); return;
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else {
+                            level++;
+                            addFile(parts[0], parts[1]); return;
+                        }
                     } else if (token == QStringLiteral("PERFORMER")) {
                         performer = parts[0]; return;
                     }
@@ -152,10 +176,18 @@ void Cue::proceedLine(QString & line) {
 
                 case 1: {
                     if (token == QStringLiteral("TRACK")) {
-                        level++;
-                        activeFile -> addTrack(parts[0], parts[1]); return;
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else {
+                            level++;
+                            activeFile -> addTrack(parts[0], parts[1]); return;
+                        }
                     } else if (token == QStringLiteral("INDEX")) {
-                        activeFile -> addIndex(parts[0], parts[1]); return;
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else
+                            activeFile -> addIndex(parts[0], parts[1]); return;
+
                     }
                 break;}
 
@@ -171,11 +203,19 @@ void Cue::proceedLine(QString & line) {
                     } else if (token == QStringLiteral("FLAGS")) {
                         activeFile -> activeTrack -> parseFlags(parts); return;
                     } else if (token == QStringLiteral("INDEX")) {
-                        activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else
+                            activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
                     } else if (token == QStringLiteral("PREGAP")) {
                         activeFile -> activeTrack -> setPregap(parts[0]); return;
                     } else if (token == QStringLiteral("POSTGAP")) {
                         activeFile -> activeTrack -> setPostgap(parts[0]); return;
+                    } else if (token == QStringLiteral("REM")) { // specification did not contain this case, but some cue generators inserted REM into track
+                        if (parts.length() != 2)
+                            qDebug() << "WRONG CUE TAG" << line;
+                        else
+                            activeFile -> activeTrack -> addInfo(parts[0], parts[1]); return;
                     }
                 break;}
 
@@ -187,7 +227,7 @@ void Cue::proceedLine(QString & line) {
     }
 
     if (level == -1)
-        qDebug() << QStringLiteral("ERROR LEVEL") << line;
+        qDebug() << path << QStringLiteral("ERROR LEVEL") << line;
 }
 
 //REM (comment)
