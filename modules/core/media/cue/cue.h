@@ -7,6 +7,9 @@
 
 #include "cue_structs.h"
 
+#define PREPARE_SEARCH_PREDICATE(tName) \
+    tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")
+
 #define CHOP_STR(str) \
     if (str.startsWith('"')) \
         str = str.mid(1, str.length() - 2);
@@ -17,6 +20,13 @@
         CueSong & updated = res[length - 2]; \
         CueSong & last = res[length - 1]; \
         updated.initDuration(last); \
+    }
+
+#define ADD_LINE_PART(res, line, pos, offset) \
+    QStringRef str = line.midRef(pos, offset - pos); \
+    if (!str.isEmpty()) { \
+        CHOP_STR(str); \
+        res.append(str.toString()); \
     }
 
 
@@ -53,7 +63,9 @@ namespace Core {
                 QString songwriter;
                 QString catalog; // 13 digits
                 QString text_file;
+
                 QString path;
+                QString filename;
             public:
                 Cue(const QString & path, QIODevice & obj);
                 static Cue * fromPath(const QString & path);
