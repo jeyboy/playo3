@@ -12,6 +12,7 @@
 #define JSON_KEY QStringLiteral("filters")
 #define JSON_ACTIVE_KEY QStringLiteral("active")
 #define DEFAULT_ACTIVE QStringLiteral("all")
+#define MUSIC_PRESET QStringLiteral("music")
 
 namespace Core {
     class Extensions : public Singleton<Extensions> {

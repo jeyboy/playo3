@@ -14,38 +14,18 @@
 namespace Core {
     namespace Media {
         struct CueSong {
-            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString(), bool isPartial = true, int group = 0)
-                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group) { }
+            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString(), bool isPartial = true, int group = 0, const QString & error = QString())
+                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group), error(error) { }
             qint64 startPos;
             QString trackName;
             QString filePath;
             QString extension;
             bool isPartial;
             int group;
+            QString error;
         };
 
         class Cue {
-            public:
-                Cue(const QString & path, QIODevice & obj);
-                static Cue * fromPath(const QString & path) {
-                    QFile f(path);
-                    if (f.open(QFile::ReadOnly | QFile::Text)) {
-                        Cue * cue = new Cue(path, f);
-                        f.close();
-                        return cue;
-                    }
-
-                    return 0;
-                }
-
-                inline QList<CueFile *> files() const { return _files; }
-                inline QHash<QString, QString> infos() const { return _infos; }
-                QList<CueSong> songs();
-            protected:
-                void splitLine(QString & line, QList<QString> & res);
-                void proceedLine(QString & line);
-                inline void addFile(const QString & fpath, const QString & fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
-            private:
                 int level;
 
                 QList<CueFile *> _files;
@@ -58,6 +38,19 @@ namespace Core {
                 QString catalog; // 13 digits
                 QString text_file;
                 QString path;
+            public:
+                Cue(const QString & path, QIODevice & obj);
+                static Cue * fromPath(const QString & path);
+                ~Cue() { qDeleteAll(_files); }
+
+                inline QList<CueFile *> files() const { return _files; }
+                inline QHash<QString, QString> infos() const { return _infos; }
+                QList<CueSong> songs();
+            protected:
+                void identifyFile(QString & file_path, QString & file_extension, bool isShareable);
+                void splitLine(QString & line, QList<QString> & res);
+                void proceedLine(QString & line);
+                inline void addFile(const QString & fpath, const QString & fType) { _files << (activeFile = new CueFile(fpath, fType) ); }
         };
     }
 }

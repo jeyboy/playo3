@@ -50,10 +50,13 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes) {
             }
         }
 
+        //TODO: maybe add error field to the item ?
         CueFile * f = new CueFile((*song).startPos, duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
-        if (res)
+        if (res) {
             filePathes.insert(songPath, true);
-        else {
+            if (!(*song).error.isEmpty())
+                f -> set(not_exist);
+        } else {
             filePathes.insert(songPath, false);
             ignore.insert(songPath, QString());
             f -> set(not_exist);

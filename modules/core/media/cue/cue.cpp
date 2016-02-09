@@ -19,55 +19,144 @@ Cue::Cue(const QString & filePath, QIODevice & obj) : level(0) {
     }
 }
 
+Cue * Cue::fromPath(const QString & path) {
+    QFile f(path);
+    if (f.open(QFile::ReadOnly | QFile::Text)) {
+        Cue * cue = new Cue(path, f);
+        f.close();
+        return cue;
+    }
+
+    return 0;
+}
+
+void Cue::identifyFile(QString & file_path, QString & file_extension, bool isShareable) {
+    if (!QFile::exists(file_path)) {
+        QString tPath = path % '/' % file_path;
+        if (!QFile::exists(tPath)) {
+            tPath = path;
+            QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
+            Extensions::obj().extractExtension(tName, tExt);
+
+            bool findCompatible = false;
+            QDirIterator dir_it(
+                tPath,
+                QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")/* % tExt*/), // there is not possible to use extension from filename
+                QDir::NoDotAndDotDot | QDir::Files,
+                QDirIterator::Subdirectories
+            );
+
+            while(dir_it.hasNext()) {
+                QString eq_str = dir_it.next();
+                // in some cases extension is not eq to cue type and there we should to reinit real extension :(
+                if (!eq_str.endsWith(QStringLiteral(".cue"))) {
+                    findCompatible = true;
+                    file_path = eq_str;
+                    Extensions::obj().extractExtension(file_path, file_extension, false);
+                    break;
+                }
+            }
+
+            // try to find media file - if cue part contains more then 1 part
+            if (!findCompatible && isShareable) {
+                QDirIterator dir_it(path, Extensions::obj().filterList(MUSIC_PRESET), QDir::NoDotAndDotDot | QDir::Files);
+
+                while(dir_it.hasNext()) {
+                    file_path = dir_it.next();
+                    Extensions::obj().extractExtension(file_path, file_extension, false);
+                    break;
+                }
+            }
+        } else file_path = tPath;
+    }
+
+    #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but we required on sharp name
+    {
+        QString tPath = file_path, tName, tExt;
+        FilenameConversions::splitPath(tPath, tName);
+        Extensions::obj().extractExtension(tName, tExt);
+
+        QDir dir(tPath, (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt.toLower()));
+        QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
+        if (!files.isEmpty()) file_path = tPath % '/' % files.first();
+    }
+    #endif
+}
+
 QList<CueSong> Cue::songs() { // last element always missed at duration
     QList<CueSong> res;
     int group = 0;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++, group++) {
+        bool isShareable = (*file) -> tracks.length() > 1;
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
         QString real_extension = (*file) -> extension;
+        QHash<qint64, bool> time_marks;
 
-        if (!QFile::exists(file_path)) {
-            QString tPath = path % '/' % file_path;
-            if (!QFile::exists(tPath)) {
-                tPath = path;
-                QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
-                Extensions::obj().extractExtension(tName, tExt);
+        identifyFile(file_path, real_extension, isShareable);
+//        if (!QFile::exists(file_path)) {
+//            QString tPath = path % '/' % file_path;
+//            if (!QFile::exists(tPath)) {
+//                tPath = path;
+//                QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
+//                Extensions::obj().extractExtension(tName, tExt);
 
-                QDirIterator dir_it(
-                    tPath,
-                    QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")/* % tExt*/), // there is not possible to use extension from filename
-                    QDir::NoDotAndDotDot | QDir::Files,
-                    QDirIterator::Subdirectories
-                );
+//                bool findCompatible = false;
+//                QDirIterator dir_it(
+//                    tPath,
+//                    QStringList() << (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")/* % tExt*/), // there is not possible to use extension from filename
+//                    QDir::NoDotAndDotDot | QDir::Files,
+//                    QDirIterator::Subdirectories
+//                );
 
-                while(dir_it.hasNext()) {
-                    QString eq_str = dir_it.next();
-                    // in some cases extension is not eq to cue type and there we should to reinit real extension :(
-                    if (!eq_str.endsWith(QStringLiteral(".cue"))) {
-                        file_path = eq_str;
-                        Extensions::obj().extractExtension(file_path, real_extension, false);
-                        break;
-                    }
-                }
-            } else file_path = tPath;
-        }
+//                while(dir_it.hasNext()) {
+//                    QString eq_str = dir_it.next();
+//                    // in some cases extension is not eq to cue type and there we should to reinit real extension :(
+//                    if (!eq_str.endsWith(QStringLiteral(".cue"))) {
+//                        findCompatible = true;
+//                        file_path = eq_str;
+//                        Extensions::obj().extractExtension(file_path, real_extension, false);
+//                        break;
+//                    }
+//                }
 
-        #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but we required on sharp name
-        {
-            QString tPath = file_path, tName, tExt;
-            FilenameConversions::splitPath(tPath, tName);
-            Extensions::obj().extractExtension(tName, tExt);
+//                // try to find media file - if cue part contains more then 1 part
+//                if (!findCompatible && isShareable) {
+//                    QDirIterator dir_it(path, Extensions::obj().filterList(MUSIC_PRESET), QDir::NoDotAndDotDot | QDir::Files);
 
-            QDir dir(tPath, (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt.toLower()));
-            QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
-            if (!files.isEmpty()) file_path = tPath % '/' % files.first();
-        }
-        #endif
+//                    while(dir_it.hasNext()) {
+//                        file_path = dir_it.next();
+//                        Extensions::obj().extractExtension(file_path, real_extension, false);
+//                        break;
+//                    }
+//                }
+//            } else file_path = tPath;
+//        }
+
+//        #ifdef Q_OS_WIN // windows allow to use case insensitive extensions - but we required on sharp name
+//        {
+//            QString tPath = file_path, tName, tExt;
+//            FilenameConversions::splitPath(tPath, tName);
+//            Extensions::obj().extractExtension(tName, tExt);
+
+//            QDir dir(tPath, (tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % tExt.toLower()));
+//            QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
+//            if (!files.isEmpty()) file_path = tPath % '/' % files.first();
+//        }
+//        #endif
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
                 if ((*index) -> number == 0) continue;
+
+                QString error;
+                qint64 time_mark = (*index) -> toMillis();
+                if (time_marks.contains(time_mark)) {
+                    error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
+                    qDebug() << error;
+                    time_mark = 0;
+                }
+
 
                 QString title = (*track) -> toStr();
 
@@ -78,13 +167,16 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                 }
 
                 res.append(CueSong(
-                    (*index) -> toMillis(), // need to add correction on pregap for current item and postgap for next
+                    time_mark, // need to add correction on pregap for current item and postgap for next
                     title,
                     file_path,
                     real_extension,
-                    (*file) -> tracks.length() > 1,
-                    group
+                    isShareable,
+                    group,
+                    error
                 ));
+
+                time_marks.insert(time_mark, true);
             }
 
         for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {

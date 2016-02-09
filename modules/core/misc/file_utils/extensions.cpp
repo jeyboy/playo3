@@ -236,5 +236,5 @@ void Extensions::initMusicExtensions() { // TODO: not complete list
     mList << QStringLiteral("*.m4b");   // MPEG-4 Audio Layer audio book file
     mList << QStringLiteral("*.acm");   // ACM compressed sound file
 
-    filters.insert(QStringLiteral("music"), mList);
+    filters.insert(MUSIC_PRESET, mList);
 }
