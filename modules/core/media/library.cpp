@@ -336,9 +336,11 @@ void Library::initItemTitles(MediaInfo * info, IItem * itm) {
     if (temp != title)
         list.append(temp);
 
-    QString tagTitle = FilenameConversions::cacheTitleFilter(info -> getArtist() + info -> getTitle());
-    if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
-        list.append(tagTitle);
+    if (!itm -> isPartial()) {
+        QString tagTitle = FilenameConversions::cacheTitleFilter(info -> getArtist() + info -> getTitle());
+        if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
+            list.append(tagTitle);
+    }
 
     itm -> setTitlesCache(list);
 }
