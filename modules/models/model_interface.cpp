@@ -385,12 +385,13 @@ int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist 
 }
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
     CuePlaylist * cueta = new CuePlaylist(path, name, newParent, insertPos);
-    int amount = cueta -> initFiles(unproc_files);
+    QStringList unprocable;
+    int amount = cueta -> initFiles(unproc_files, unprocable);
 
     //TODO: temp solution for removing from list already added cue parts
     if (!items.isEmpty() && amount > 0)
-        for(QHash<QString, bool>::Iterator uf = unproc_files.begin() + qMax(0, unproc_files.size() - amount); uf != unproc_files.end(); uf++) {
-            IItem * itm = items.take(uf.key());
+        for(QStringList::Iterator uf = unprocable.begin(); uf != unprocable.end(); uf++) {
+            IItem * itm = items.take(*uf);
             if (itm) {
                 if (itm -> parent() -> childCount() == 1)
                     itm -> parent() -> removeYouself();
