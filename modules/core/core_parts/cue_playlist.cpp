@@ -7,7 +7,7 @@ using namespace Core;
 CuePlaylist::CuePlaylist(const QString & filePath, const QString & fileTitle, Playlist * parent, int pos, int initState)
     : Playlist(filePath, fileTitle, parent, pos, initState) {}
 
-int CuePlaylist::initFiles(QHash<QString, bool> & filePathes, QStringList & unprocable) {
+int CuePlaylist::initFiles(QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed) {
     Media::Cue * cue = Media::Cue::fromPath(path().toString());
     QList<Media::CueSong> songs = cue -> songs();
     QHash<QString, QString> ignore;
@@ -19,7 +19,18 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes, QStringList & unpr
         if (ignore.contains((*song).filePath))
             res = false;
         else if (!filePathes.contains(songPath)) {
-            unprocable << songPath;
+            //TODO: temp solution for removing from list already added cue parts
+            if (!existed.isEmpty()) {
+                IItem * itm = existed.take(songPath);
+                if (itm) {
+                    if (itm -> parent() -> childCount() == 1)
+                        itm -> parent() -> removeYouself();
+                    else
+                        itm -> removeYouself();
+                }
+            }
+
+
             res = QFile::exists(songPath);
 
             if (!res) {

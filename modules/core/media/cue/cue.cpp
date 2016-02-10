@@ -57,6 +57,7 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
             QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
             Extensions::obj().extractExtension(tName, tExt);
 
+            QStringList music_filters = Extensions::obj().filterList(MUSIC_PRESET);
             bool findCompatible = false;
             // try to find media file with name of cue or with name from cue file
             QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, QStringLiteral("*")) << PREPARE_SEARCH_PREDICATE(filename, QStringLiteral("*")),
@@ -65,7 +66,7 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
 
             while(dir_it.hasNext()) {
                 // in some cases extension is not eq to cue type and there we should to reinit real extension :(
-                if (!dir_it.next().endsWith(QStringLiteral(".cue"))) {
+                if (QDir::match(music_filters, dir_it.next())) {
                     findCompatible = true;
                     file_path = dir_it.filePath();
                     Extensions::obj().extractExtension(file_path, file_extension, false);
@@ -75,7 +76,7 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
 
             // if cue part contains more then 1 part (related to one big file) try to find any media file
             if (!findCompatible && isShareable) {
-                QDirIterator dir_it(path, Extensions::obj().filterList(MUSIC_PRESET), QDir::NoDotAndDotDot | QDir::Files);
+                QDirIterator dir_it(path, music_filters, QDir::NoDotAndDotDot | QDir::Files);
 
                 while(dir_it.hasNext()) {
                     file_path = dir_it.next();
