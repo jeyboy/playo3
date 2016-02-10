@@ -49,7 +49,7 @@ Cue * Cue::fromPath(const QString & path) {
     return 0;
 }
 
-void Cue::identifyFile(QString & file_path, QString & file_extension, bool isShareable) {
+void Cue::identifyFile(QString & file_path, QString & file_extension, bool isShareable) { // this method is very slow :(
     if (!QFile::exists(file_path)) {
         QString tPath = path % '/' % file_path;
         if (!QFile::exists(tPath)) {
