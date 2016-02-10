@@ -6,6 +6,25 @@
 
 using namespace Core::Media;
 
+QHash<QString, Cue::CueTokens> Cue::tokens{
+    {QStringLiteral("REM"), Cue::rem},
+    {QStringLiteral("TITLE"), Cue::title},
+    {QStringLiteral("SONGWRITER"), Cue::songwriter},
+    {QStringLiteral("CATALOG"), Cue::catalog},
+    {QStringLiteral("CDTEXTFILE"), Cue::cdtextfile},
+    {QStringLiteral("FILE"), Cue::file},
+    {QStringLiteral("PERFORMER"), Cue::performer},
+
+    {QStringLiteral("TRACK"), Cue::track},
+    {QStringLiteral("INDEX"), Cue::index},
+
+    {QStringLiteral("ISRC"), Cue::isrc},
+    {QStringLiteral("FLAGS"), Cue::flags},
+    {QStringLiteral("PREGAP"), Cue::pregap},
+    {QStringLiteral("POSTGAP"), Cue::postgap}
+};
+
+
 Cue::Cue(const QString & filePath, QIODevice & obj) : level(0), path(filePath) {
     Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("INIT"), QStringList() << filePath);
     QString ext;
@@ -181,97 +200,99 @@ void Cue::splitLine(QString & line, QList<QString> & res) {
 }
 
 void Cue::proceedLine(QString & line) {
+    if (line.startsWith(';')) {
+        Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("COMMENT"), QStringList() << line);
+        return;
+    }
+
     QList<QString> parts;
     splitLine(line, parts);
     if (!parts.isEmpty()) {
-        QString token = parts.takeFirst().toUpper();
+        Cue::CueTokens token = Cue::tokens.value(parts.takeFirst().toUpper(), Cue::unknow);
 
-        if (token.startsWith(';')) {
-            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("COMMENT"), QStringList() << line);
-            return;
-        }
-
-        if (parts.isEmpty()) {
+        if (token == -1 || parts.isEmpty()) {
             Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
             return;
         }
 
-        if (level == 0 && token == QStringLiteral("TRACK")) // fix for non standart builded cue
+        if (level == 0 && token == Cue::track) // fix for non standart builded cue
             level = 1;
 
         while(level > -1) {
             switch(level) {
                 case 0: {
-                    if (token == QStringLiteral("REM")) {
-                        if (parts.length() < 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else {
-                            _infos.insert(parts.takeFirst(), parts.join(' '));
-                        }
-                        return;
-                    } else if (token == QStringLiteral("TITLE")) {
-                        title = parts[0]; return;
-                    } else if (token == QStringLiteral("SONGWRITER")) {
-                        songwriter = parts[0]; return;
-                    } else if (token == QStringLiteral("CATALOG")) {
-                        catalog = parts[0]; return;
-                    } else if (token == QStringLiteral("CDTEXTFILE")) {
-                        text_file = parts[0]; return;
-                    } else if (token == QStringLiteral("FILE")) {
-                        if (parts.length() != 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else {
-                            level++;
-                            addFile(parts[0], parts[1]); return;
-                        }
-                    } else if (token == QStringLiteral("PERFORMER")) {
-                        performer = parts[0]; return;
+                    switch(token) {
+                        case Cue::rem: {
+                            if (parts.length() < 2)
+                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                    QStringList() << line, true);
+                            else _infos.insert(parts.takeFirst(), parts.join(' '));
+                        return;}
+
+                        case Cue::file: {
+                            if (parts.length() != 2)
+                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                    QStringList() << line, true);
+                            else {
+                                level++;
+                                addFile(parts[0], parts[1]); return;
+                            }
+                        return;}
+
+                        case Cue::title:
+                        case Cue::songwriter:
+                        case Cue::catalog:
+                        case Cue::cdtextfile:
+                        case Cue::performer: { _attrs.insert(token, parts[0]); return; }
                     }
                 break;}
 
                 case 1: {
-                    if (token == QStringLiteral("TRACK")) {
-                        if (parts.length() != 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else {
-                            level++;
-                            activeFile -> addTrack(parts[0], parts[1]); return;
-                        }
-                    } else if (token == QStringLiteral("INDEX")) {
-                        if (parts.length() != 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else
-                            activeFile -> addIndex(parts[0], parts[1]); return;
+                    switch(token) {
+                        case Cue::track: {
+                            if (parts.length() != 2)
+                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                    QStringList() << line, true);
+                            else {
+                                level++;
+                                activeFile -> addTrack(parts[0], parts[1]); return;
+                            }
+                        return;}
 
+                        case Cue::index: {
+                            if (parts.length() < 2)
+                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                    QStringList() << line, true);
+                            else activeFile -> addIndex(parts[0], parts[1]); return;
+                        return;}
                     }
                 break;}
 
                 case 2: {
-                    if (token == QStringLiteral("TITLE")) {
-                        activeFile -> activeTrack -> title = parts[0]; return;
-                    } else if (token == QStringLiteral("SONGWRITER")) {
-                        activeFile -> activeTrack -> songwriter = parts[0]; return;
-                    } else if (token == QStringLiteral("ISRC")) {
-                        activeFile -> activeTrack -> isrc = parts[0]; return;
-                    } else if (token == QStringLiteral("PERFORMER")) {
-                        activeFile -> activeTrack -> performer = parts[0]; return;
-                    } else if (token == QStringLiteral("FLAGS")) {
-                        activeFile -> activeTrack -> parseFlags(parts); return;
-                    } else if (token == QStringLiteral("INDEX")) {
-                        if (parts.length() != 2)
-                            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
-                        else
-                            activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
-                    } else if (token == QStringLiteral("PREGAP")) {
-                        activeFile -> activeTrack -> setPregap(parts[0]); return;
-                    } else if (token == QStringLiteral("POSTGAP")) {
-                        activeFile -> activeTrack -> setPostgap(parts[0]); return;
-                    } else if (token == QStringLiteral("REM")) { // specification did not contain this case, but some cue generators inserted REM into track
-                        activeFile -> activeTrack -> addInfo(parts.join(' ')); return;
+                    switch(token) {
+                        case Cue::index: {
+                            if (parts.length() < 2)
+                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                    QStringList() << line, true);
+                            else activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
+                        return;}
+
+                        case Cue::title: { activeFile -> activeTrack -> title = parts[0]; return; }
+                        case Cue::songwriter: { activeFile -> activeTrack -> songwriter = parts[0]; return; }
+                        case Cue::isrc: { activeFile -> activeTrack -> isrc = parts[0]; return; }
+                        case Cue::performer: { activeFile -> activeTrack -> performer = parts[0]; return; }
+                        case Cue::flags: { activeFile -> activeTrack -> parseFlags(parts); return; }
+
+                        case Cue::pregap: { activeFile -> activeTrack -> setPregap(parts[0]); return; }
+                        case Cue::postgap: { activeFile -> activeTrack -> setPostgap(parts[0]); return; }
+                        // specification did not contain this case, but some cue generators inserted REM into track
+                        // item store only ONE value
+                        case Cue::rem: { activeFile -> activeTrack -> addInfo(parts.join(' ')); return; }
                     }
                 break;}
 
-                default: Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("UNSUPPORTED PREDICATE"), QStringList() << line, true);
+                default: Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("UNSUPPORTED PREDICATE"),
+                            QStringList() << line, true);
             }
 
             level--;

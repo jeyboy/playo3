@@ -52,17 +52,39 @@ namespace Core {
         };
 
         class Cue {
+                enum CueTokens {
+                    unknow = -1,
+                    rem = 1,
+                    title,
+                    songwriter,
+                    catalog,
+                    cdtextfile,
+                    file,
+                    performer,
+
+                    track,
+                    index,
+
+                    isrc,
+                    flags,
+                    pregap,
+                    postgap
+                };
+
+                static QHash<QString, CueTokens> tokens;
+
                 int level;
 
                 QList<CueFile *> _files;
                 CueFile * activeFile;
 
+                QHash<CueTokens, QString> _attrs;
                 QHash<QString, QString> _infos;
-                QString title;
-                QString performer;
-                QString songwriter;
-                QString catalog; // 13 digits
-                QString text_file;
+//                QString title;
+//                QString performer;
+//                QString songwriter;
+//                QString catalog; // 13 digits
+//                QString text_file;
 
                 QString path;
                 QString filename;
