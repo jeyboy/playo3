@@ -58,44 +58,29 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
             Extensions::obj().extractExtension(tName, tExt);
 
             bool findCompatible = false;
-            QDirIterator dir_it(tPath, QStringList() << (PREPARE_SEARCH_PREDICATE(tName)/* % tExt*/),
+            // try to find media file with name of cue or with name from cue file
+            QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, QStringLiteral("*")) << PREPARE_SEARCH_PREDICATE(filename, QStringLiteral("*")),
                 QDir::NoDotAndDotDot | QDir::Files, QDirIterator::Subdirectories
             );
 
             while(dir_it.hasNext()) {
-                QString eq_str = dir_it.next();
                 // in some cases extension is not eq to cue type and there we should to reinit real extension :(
-                if (!eq_str.endsWith(QStringLiteral(".cue"))) {
+                if (!dir_it.next().endsWith(QStringLiteral(".cue"))) {
                     findCompatible = true;
-                    file_path = eq_str;
+                    file_path = dir_it.filePath();
                     Extensions::obj().extractExtension(file_path, file_extension, false);
                     break;
                 }
             }
 
-            // if cue part contains more then 1 part (related to one big file)
+            // if cue part contains more then 1 part (related to one big file) try to find any media file
             if (!findCompatible && isShareable) {
-                // try to find media file with name of cue
-                {
-                    QDirIterator dir_it(path, QStringList() << PREPARE_SEARCH_PREDICATE(filename), QDir::NoDotAndDotDot | QDir::Files, QDirIterator::Subdirectories);
-                    while(dir_it.hasNext()) {
-                        if (!dir_it.next().endsWith(QStringLiteral(".cue"))) {
-                            file_path = dir_it.filePath();
-                            findCompatible = true;
-                            break;
-                        }
-                    }
-                }
+                QDirIterator dir_it(path, Extensions::obj().filterList(MUSIC_PRESET), QDir::NoDotAndDotDot | QDir::Files);
 
-                // try to find any media file
-                if (!findCompatible) {
-                    QDirIterator dir_it(path, Extensions::obj().filterList(MUSIC_PRESET), QDir::NoDotAndDotDot | QDir::Files);
-
-                    while(dir_it.hasNext()) {
-                        file_path = dir_it.next();
-                        Extensions::obj().extractExtension(file_path, file_extension, false);
-                        break;
-                    }
+                while(dir_it.hasNext()) {
+                    file_path = dir_it.next();
+                    Extensions::obj().extractExtension(file_path, file_extension, false);
+                    break;
                 }
             }
         } else file_path = tPath;
@@ -107,9 +92,11 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
         FilenameConversions::splitPath(tPath, tName);
         Extensions::obj().extractExtension(tName, tExt);
 
-        QDir dir(tPath, (PREPARE_SEARCH_PREDICATE(tName) % tExt.toLower()));
-        QStringList files = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
-        if (!files.isEmpty()) file_path = tPath % '/' % files.first();
+        QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, tExt.toLower()), QDir::NoDotAndDotDot | QDir::Files);
+        while(dir_it.hasNext()) {
+            file_path = dir_it.next();
+            break;
+        }
     }
     #endif
 }
@@ -244,6 +231,7 @@ void Cue::proceedLine(QString & line) {
                         case Cue::catalog:
                         case Cue::cdtextfile:
                         case Cue::performer: { _attrs.insert(token, parts[0]); return; }
+                        default: ;
                     }
                 break;}
 
@@ -265,6 +253,7 @@ void Cue::proceedLine(QString & line) {
                                     QStringList() << line, true);
                             else activeFile -> addIndex(parts[0], parts[1]); return;
                         return;}
+                        default: ;
                     }
                 break;}
 
@@ -288,6 +277,7 @@ void Cue::proceedLine(QString & line) {
                         // specification did not contain this case, but some cue generators inserted REM into track
                         // item store only ONE value
                         case Cue::rem: { activeFile -> activeTrack -> addInfo(parts.join(' ')); return; }
+                        default: ;
                     }
                 break;}
 

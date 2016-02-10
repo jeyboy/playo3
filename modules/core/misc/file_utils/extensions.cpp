@@ -209,6 +209,7 @@ void Extensions::initMusicExtensions() { // TODO: not complete list
     mList << QStringLiteral("*.cda");   // CD Audio track
     mList << QStringLiteral("*.flac");  // Audio files encoded by Flac - free lossless audio codec
     mList << QStringLiteral("*.fla");   // Audio files encoded by Flac - free lossless audio codec
+    mList << QStringLiteral("*.mp1");   // Compressed audio and music file
     mList << QStringLiteral("*.mp2");   // Compressed audio and music file
     mList << QStringLiteral("*.mpa");   // Compressed audio and music file
     mList << QStringLiteral("*.mp3");   // Compressed audio and music file, mp3 songs or ringtones

@@ -7,8 +7,8 @@
 
 #include "cue_structs.h"
 
-#define PREPARE_SEARCH_PREDICATE(tName) \
-    tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".*")
+#define PREPARE_SEARCH_PREDICATE(tName, ext) \
+    tName.replace(QRegularExpression("[\\W]+"), QStringLiteral("*")) % QStringLiteral(".") % ext
 
 #define CHOP_STR(str) \
     if (str.startsWith('"')) \
