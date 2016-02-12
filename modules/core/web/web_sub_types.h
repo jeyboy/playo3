@@ -20,7 +20,8 @@ namespace Core {
             site_jetune,
             site_music_shara,
             site_redmp3,
-            site_yandex
+            site_yandex,
+            site_youtube
         };
     }
 }
