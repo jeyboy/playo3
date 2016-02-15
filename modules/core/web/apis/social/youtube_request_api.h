@@ -1,22 +1,22 @@
 #ifndef YOUTUBE_REQUEST_API
-#define SOUNDCLOUD_REQUEST_API
+#define YOUTUBE_REQUEST_API
 
 #include "modules/core/web/interfaces/iapi.h"
 #include "youtube_api_keys.h"
 
-//#define SOUNDCLOUD_OFFSET_LIMIT 100
+#define YOUTUBE_OFFSET_LIMIT 100
 
 namespace Core {
     namespace Web {
         namespace Youtube {
             class RequestApi : public IApi {
             private:
-                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
-                inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
+//                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
+//                inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
 
-                QueryRules queryRules(int count = SOUNDCLOUD_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, SOUNDCLOUD_OFFSET_LIMIT), offset);
-                }
+//                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
+//                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
+//                }
             public:
                 inline virtual ~RequestApi() {}
 
@@ -156,4 +156,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_REQUEST_API
+#endif // YOUTUBE_REQUEST_API

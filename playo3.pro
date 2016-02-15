@@ -297,10 +297,9 @@ HEADERS += \
     modules/core/media/library_base.h \
     modules/core/core_parts/cue_file.h \
     modules/core/core_parts/cue_playlist.h \
-    modules/core/web/apis/social/youtube_api .h \
+    modules/core/web/apis/social/youtube_api.h \
     modules/core/web/apis/social/youtube_api_keys.h \
-    modules/core/web/apis/social/youtube_request_api.h \
-    modules/core/web/apis/social/youtube_api.h
+    modules/core/web/apis/social/youtube_request_api.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -448,6 +447,5 @@ SOURCES += \
     modules/core/media/library_base.cpp \
     modules/core/core_parts/cue_file.cpp \
     modules/core/core_parts/cue_playlist.cpp \
-    modules/core/web/apis/social/youtube_api .cpp \
     modules/core/web/apis/social/youtube_api_keys.cpp \
     modules/core/web/apis/social/youtube_api.cpp
