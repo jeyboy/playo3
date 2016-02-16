@@ -59,8 +59,14 @@ namespace Core {
             else qDebug() << "ERROR: " << message;
         }
 
-        void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, int offset = 0) {
-            if (offset > 0) setParam(query, offsetKey(), QString::number(offset));
+        void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, QVariant offset = 0) {
+            if (offset.type() == QVariant::Int) {
+                int of = offset.toInt();
+                if (of > 0) setParam(query, offsetKey(), QString::number(of));
+            } else if (offset.type() == QVariant::String) {
+                QString of = offset.toString();
+                if (!of.isEmpty()) setParam(query, offsetKey(), of);
+            }
             setParam(query, limitKey(), QString::number(limit));
         }
 
@@ -73,7 +79,7 @@ namespace Core {
                 query.addQueryItem(name, *val);
         }
 
-        virtual QUrl buildUrl(QUrl tUrl, int offset, int limit) {
+        virtual QUrl buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {
             QUrl url(tUrl);
             QUrlQuery query = QUrlQuery(url);
             setLimit(query, limit, offset);

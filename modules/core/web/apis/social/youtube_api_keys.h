@@ -6,12 +6,13 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-//            extern const QString url_base;
+            extern const QString url_base;
 //            extern const QString url_connect;
 //            extern const QString url_redirect;
 //            extern const QString url_auth_token;
 //            extern const QString url_auth_confirm;
 
+            extern const QString path_search;
 
 //            extern const QString path_playlists;
 //            extern const QString path_tracks;
@@ -72,10 +73,16 @@ namespace Core {
 //            extern const QString tkn_duration;
 //            extern const QString tkn_genre_id;
 //            extern const QString tkn_types;
-//            extern const QString tkn_q;
+            extern const QString tkn_q;
+            extern const QString tkn_max_results;
+            extern const QString tkn_page_token;
+            extern const QString tkn_video_embedable;
+            extern const QString tkn_type;
+            extern const QString tkn_items;
+
 //            extern const QString tkn_ids;
 //            extern const QString tkn_genres;
-//            extern const QString tkn_order;
+            extern const QString tkn_order;
 
 
 //            extern const QString val_client_tkn;

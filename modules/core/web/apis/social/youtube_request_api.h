@@ -4,19 +4,36 @@
 #include "modules/core/web/interfaces/iapi.h"
 #include "youtube_api_keys.h"
 
-#define YOUTUBE_OFFSET_LIMIT 100
+#define YOUTUBE_OFFSET_LIMIT 50
 
 namespace Core {
     namespace Web {
         namespace Youtube {
             class RequestApi : public IApi {
             private:
-//                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
-//                inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
+                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
 
-//                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-//                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
-//                }
+//                date – Resources are sorted in reverse chronological order based on the date they were created.
+//                rating – Resources are sorted from highest to lowest rating.
+//                relevance – Resources are sorted based on their relevance to the search query. This is the default value for this parameter.
+//                title – Resources are sorted alphabetically by title.
+//                videoCount – Channels are sorted in descending order of their number of uploaded videos.
+//                viewCount – Resources are sorted from highest to lowest number of views. For live broadcasts, videos are sorted by number of concurrent viewers while the broadcasts are ongoing.
+                inline void setOrder(QUrlQuery & query, const QString & order = QStringLiteral("relevance")) {
+                    setParam(query, tkn_order, order);
+                }
+
+                inline void setEmbedable(QUrlQuery & query) {
+                    setParam(query, tkn_video_embedable, QStringLiteral("true")); // any // true
+                    setParam(query, tkn_type, QStringLiteral("video")); // channel // playlist // video
+                }
+
+
+
+
+                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
+                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
+                }
             public:
                 inline virtual ~RequestApi() {}
 
@@ -41,36 +58,29 @@ namespace Core {
                 /////////////////
                 /// API
                 ////////////////
-//                QUrl audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
-//                    QUrlQuery query = genDefaultParams();
-//                    setAudioTypesParam(query);
-//                    setOrder(query, hottest);
+                QUrl searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false) {
+                    QUrlQuery query = genDefaultParams();
+                    setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
+                    setEmbedable(query);
 
-//                    if (!genre.isEmpty())
-//                        setGenreLimitation(query, genre);
+                    if (!predicate.isEmpty())
+                        setSearchPredicate(query, predicate);
 
-//                    if (!predicate.isEmpty())
-//                        setSearchPredicate(query, predicate);
+                    return baseUrl(path_search, query);
+                }
 
-//                    return baseUrl(path_tracks, query);
-//                }
-
-//                QJsonArray popular(QString & genre) {
-//                    return lQuery(
-//                        audioSearchUrl(QString(), genre, true),
-//                        queryRules(100),
-//                        wrap
-//                    );
-//                }
+                QJsonArray popular(QString & genre) {
+                    return lQuery(
+                        searchUrl(QString(), genre, true),
+                        queryRules(100)
+                    );
+                }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
-
-
-//                    return lQuery(
-//                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
-//                        queryRules(limitations.total_limit),
-//                        wrap
-//                    );
+                    return lQuery(
+                        searchUrl(predicate, genre, limitations.by_popularity()),
+                        queryRules(limitations.total_limit)
+                    );
                 }
 
 

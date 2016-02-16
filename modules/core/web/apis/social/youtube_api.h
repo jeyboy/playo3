@@ -37,15 +37,23 @@ namespace Core {
                 }
 
             protected:
-                inline QString refresh(const QString & path) { return path; }
-                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
+                QUrl buildUrl(QUrl tUrl, int /*offset*/, int limit, const QJsonObject & prev_response) {
+                    QUrl url(tUrl);
+                    QUrlQuery query = QUrlQuery(url);
+                    setLimit(query, limit, prev_response.value(QStringLiteral("nextPageToken")));
+                    url.setQuery(query);
+                    return url;
+                }
 
-                inline QString offsetKey() const { return tkn_offset; }
-                inline QString limitKey() const { return tkn_limit; }
+                inline QString refresh(const QString & path) { return path; }
+                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
+
+                inline QString offsetKey() const { return tkn_page_token; }
+                inline QString limitKey() const { return tkn_max_results; }
                 inline int requestLimit() const { return 200; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_response).toArray().isEmpty(); }
+                inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(tkn_response).toArray().isEmpty()*/; }
                 inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
 //                    QJsonObject stat_obj = response.value(tkn_response).toObject().value(tkn_errors).toArray().first().toObject();
 //                    message = stat_obj.value(tkn_error_message).toString();

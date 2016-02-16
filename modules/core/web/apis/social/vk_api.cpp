@@ -93,7 +93,7 @@ bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString 
     else return code == 0;
 }
 
-QUrl Api::buildUrl(QUrl tUrl, int offset, int limit) {
+QUrl Api::buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {
     QString urlStr = tUrl.toString();
     urlStr = urlStr.replace(tkn_predef1, QString::number(offset)).replace(tkn_predef2, QString::number(limit));
     return QUrl(urlStr);

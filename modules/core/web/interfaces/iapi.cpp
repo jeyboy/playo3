@@ -54,7 +54,7 @@ bool IApi::sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc, QObj
 QJsonArray & IApi::lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc, QObject * errorReceiver) {
     QJsonObject response;
 
-    while (sQuery(buildUrl(url, rules.offset, rules.limit), response, post_proc, errorReceiver)) {
+    while (sQuery(buildUrl(url, rules.offset, rules.limit, response), response, post_proc, errorReceiver)) {
         QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
         bool invalid = val.isArray();
 

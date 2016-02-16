@@ -3,11 +3,14 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-//            extern const QString url_base              = QStringLiteral("https://api.soundcloud.com/");
+            extern const QString url_base              = QStringLiteral("https://www.googleapis.com/youtube/v3/");
 //            extern const QString url_connect           = QStringLiteral("https://soundcloud.com/connect");
 //            extern const QString url_redirect          = QStringLiteral("http://sos.com");
 //            extern const QString url_auth_token        = QStringLiteral("https://api.soundcloud.com/oauth2/token");
 //            extern const QString url_auth_confirm      = QStringLiteral("https://api.soundcloud.com/me.json?oauth_token=");
+
+            extern const QString path_search           = QStringLiteral("search/");
+
 
 //            extern const QString path_playlists        = QStringLiteral("playlists/");
 //            extern const QString path_tracks           = QStringLiteral("tracks");
@@ -71,10 +74,16 @@ namespace Core {
 //            extern const QString tkn_duration          = QStringLiteral("duration");
 //            extern const QString tkn_genre_id          = QStringLiteral("genre_id");
 //            extern const QString tkn_types             = QStringLiteral("types");
-//            extern const QString tkn_q                 = QStringLiteral("q");
+            extern const QString tkn_q                  = QStringLiteral("q");
+            extern const QString tkn_max_results        = QStringLiteral("maxResults");
+            extern const QString tkn_page_token         = QStringLiteral("pageToken");
+            extern const QString tkn_video_embedable    = QStringLiteral("videoEmbeddable");
+            extern const QString tkn_type               = QStringLiteral("type");
+            extern const QString tkn_items              = QStringLiteral("items");
+
 //            extern const QString tkn_ids               = QStringLiteral("ids");
 //            extern const QString tkn_genres            = QStringLiteral("genres");
-//            extern const QString tkn_order             = QStringLiteral("order");
+            extern const QString tkn_order             = QStringLiteral("order");
 
 
 //            extern const QString val_client_tkn        = QStringLiteral("54ca588303e1d2bf524509faf20931b4");

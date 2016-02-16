@@ -67,7 +67,7 @@ namespace Core {
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_finished).toBool(); }
                 bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
 
-                QUrl buildUrl(QUrl tUrl, int offset, int limit);
+                QUrl buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & prev_response);
                 bool captchaProcessing(QJsonObject & response, QUrl & url);
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
             };
