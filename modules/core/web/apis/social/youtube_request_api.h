@@ -29,8 +29,6 @@ namespace Core {
                 }
 
 
-
-
                 QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
                     return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
                 }
@@ -62,6 +60,7 @@ namespace Core {
                     QUrlQuery query = genDefaultParams();
                     setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
                     setEmbedable(query);
+                    setParam(query, tkn_part, QStringLiteral("snippet"));
 
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);

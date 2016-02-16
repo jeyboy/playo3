@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_API_KEYS
-#define SOUNDCLOUD_API_KEYS
+#ifndef YOUTUBE_API_KEYS
+#define YOUTUBE_API_KEYS
 
 #include <qstringbuilder.h>
 
@@ -79,13 +79,15 @@ namespace Core {
             extern const QString tkn_video_embedable;
             extern const QString tkn_type;
             extern const QString tkn_items;
+            extern const QString tkn_part;
+            extern const QString tkn_key;
 
 //            extern const QString tkn_ids;
 //            extern const QString tkn_genres;
             extern const QString tkn_order;
 
 
-//            extern const QString val_client_tkn;
+            extern const QString val_client_tkn;
 //            extern const QString val_hotness_order;
 //            extern const QString val_created_at_order;
 //            extern const QString val_audio_types;
@@ -103,4 +105,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_API_KEYS
+#endif // YOUTUBE_API_KEYS

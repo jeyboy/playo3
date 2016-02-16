@@ -20,7 +20,11 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline SubType siteType() { return site_youtube; }
-                inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+                inline QUrlQuery genDefaultParams() {
+                    QUrlQuery query;
+                    query.addQueryItem(tkn_key, val_client_tkn);
+                    return query;
+                }
                 QString authUrl();
 
                 void fromJson(const QJsonObject & hash);
@@ -29,7 +33,7 @@ namespace Core {
                 inline bool isConnected() { return true; /*!token().isEmpty();*/ }
 
             public slots:
-                bool connection() {}
+                bool connection() { return true; }
                 inline void disconnect() {
 //                    clearParams();
 //                    clearFriends();

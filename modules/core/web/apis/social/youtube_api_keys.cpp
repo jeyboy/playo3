@@ -1,4 +1,4 @@
-#include "soundcloud_api_keys.h"
+#include "youtube_api_keys.h"
 
 namespace Core {
     namespace Web {
@@ -80,13 +80,15 @@ namespace Core {
             extern const QString tkn_video_embedable    = QStringLiteral("videoEmbeddable");
             extern const QString tkn_type               = QStringLiteral("type");
             extern const QString tkn_items              = QStringLiteral("items");
+            extern const QString tkn_part               = QStringLiteral("part");
+            extern const QString tkn_key                = QStringLiteral("key");
 
 //            extern const QString tkn_ids               = QStringLiteral("ids");
 //            extern const QString tkn_genres            = QStringLiteral("genres");
             extern const QString tkn_order             = QStringLiteral("order");
 
 
-//            extern const QString val_client_tkn        = QStringLiteral("54ca588303e1d2bf524509faf20931b4");
+            extern const QString val_client_tkn        = QStringLiteral("AIzaSyApdFaU0JogzzuUA2a8GeGURe2H9Kw0XFs");
 //            extern const QString val_hotness_order     = QStringLiteral("hotness");
 //            extern const QString val_created_at_order  = QStringLiteral("created_at");
 //            extern const QString val_audio_types       = QStringLiteral("original,remix,live,podcast");
@@ -95,7 +97,6 @@ namespace Core {
 //            extern const QString val_auth_title        = QStringLiteral("Soundcloud auth");
             extern const QString val_name              = QStringLiteral("Youtube");
 //            extern const QString val_default_format    = QStringLiteral(".json");
-//            extern const QString val_id_tkn            = QStringLiteral("8f84790a84f5a5acd1c92e850b5a91b7");
 //            extern const QString val_response_type     = QStringLiteral("code");
 //            extern const QString val_scope             = QStringLiteral("non-expiring");
 //            extern const QString val_display           = QStringLiteral("popup");
