@@ -12,7 +12,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Api : /*public TeuAuth,*/ public RequestApi, public Singleton<Api>/*, public Sociable*/ {
+            class Api : public QObject,/*public TeuAuth,*/ public RequestApi, public Singleton<Api>/*, public Sociable*/ {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -29,7 +29,7 @@ namespace Core {
                 inline bool isConnected() { return true; /*!token().isEmpty();*/ }
 
             public slots:
-                bool connection();
+                bool connection() {}
                 inline void disconnect() {
 //                    clearParams();
 //                    clearFriends();

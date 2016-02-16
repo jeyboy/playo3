@@ -15,19 +15,19 @@ using namespace Core::Web::Youtube;
 //    return url.toString();
 //}
 
-//void Api::fromJson(const QJsonObject & hash) {
+void Api::fromJson(const QJsonObject & /*hash*/) {
 //    QJsonObject obj = hash.value(name()).toObject();
 //    TeuAuth::fromJson(obj);
 //    Sociable::fromJson(obj);
-//}
-//void Api::toJson(QJsonObject & hash) {
+}
+void Api::toJson(QJsonObject & /*hash*/) {
 //    QJsonObject root;
 
 //    TeuAuth::toJson(root);
 //    Sociable::toJson(root);
 
 //    hash.insert(name(), root);
-//}
+}
 
 ////////////////////////////////////////////////////////////
 ///// COMMON
