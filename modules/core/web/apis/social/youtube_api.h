@@ -42,6 +42,11 @@ namespace Core {
 
             protected:
                 QUrl buildUrl(QUrl tUrl, int /*offset*/, int limit, const QJsonObject & prev_response) {
+//                    "pageInfo": {
+//                      "totalResults": integer,
+//                      "resultsPerPage": integer
+//                    },
+
                     QUrl url(tUrl);
                     QUrlQuery query = QUrlQuery(url);
                     setLimit(query, limit, prev_response.value(QStringLiteral("nextPageToken")));

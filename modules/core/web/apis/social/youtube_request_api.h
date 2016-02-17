@@ -11,6 +11,10 @@ namespace Core {
         namespace Youtube {
             class RequestApi : public IApi {
             private:
+//                Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
+//                search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
+//                Similarly, to search for videos matching either "boating" or "sailing" but not "fishing", set the q parameter value to boating|sailing -fishing.
+//                Note that the pipe character must be URL-escaped when it is sent in your API request. The URL-escaped value for the pipe character is %7C.
                 inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
 
 //                date – Resources are sorted in reverse chronological order based on the date they were created.
@@ -23,6 +27,20 @@ namespace Core {
                     setParam(query, tkn_order, order);
                 }
 
+//            {
+//             "kind": "youtube#videoCategory",
+//             "etag": "\"DsOZ7qVJA4mxdTxZeNzis6uE6ck/nqRIq97-xe5XRZTxbknKFVe5Lmg\"",
+//             "id": "10",
+//             "snippet": {
+//              "channelId": "UCBR8-60-B28hp2BmDPdntcQ",
+//              "title": "Music",
+//              "assignable": true
+//             }
+//            },
+                void setMusicVideoCategory(QUrlQuery & query) {
+                    setParam(query, QStringLiteral("videoCategoryId"), 10);
+                }
+
                 inline void setEmbedable(QUrlQuery & query) {
                     setParam(query, tkn_video_embedable, QStringLiteral("true")); // any // true
                     setParam(query, tkn_type, QStringLiteral("video")); // channel // playlist // video
@@ -31,6 +49,28 @@ namespace Core {
 
                 QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
                     return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
+                }
+
+                void initDuration(QJsonArray & arr) {
+                    QHash<QString, QJsonObject &> relations;
+                    QStringList ids;
+
+                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++) {
+                        if (ids.length() == 50) {
+                            QJsonArray infos = lQuery(
+                                videosUrl(ids),
+                                queryRules(50)
+                            );
+                            ids.clear();
+
+                            for(QJsonArray::Iterator info = infos.begin(); info != infos.end(); info++) {
+
+                            }
+                        } else {
+                            QString id = (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
+                            ids.insert(id, *(*item).toObject());
+                        }
+                    }
                 }
             public:
                 inline virtual ~RequestApi() {}
@@ -56,11 +96,30 @@ namespace Core {
                 /////////////////
                 /// API
                 ////////////////
-                QUrl searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false) {
+//                videoDuration 	string
+//                The videoDuration parameter filters video search results based on their duration. If you specify a value for this parameter, you must also set the type parameter's value to video.
+
+//                Acceptable values are:
+
+//                    any – Do not filter video search results based on their duration. This is the default value.
+//                    long – Only include videos longer than 20 minutes.
+//                    medium – Only include videos that are between four and 20 minutes long (inclusive).
+//                    short – Only include videos that are less than four minutes long.
+
+                ///
+                QUrl searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
                     QUrlQuery query = genDefaultParams();
                     setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
                     setEmbedable(query);
                     setParam(query, tkn_part, QStringLiteral("snippet"));
+                    setParam(query, QStringLiteral("fields"), QStringLiteral("items(id,snippet),nextPageToken,pageInfo"));
+                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
+                    setParam(query, QStringLiteral("eventType"), QStringLiteral("completed"));
+//                    setParam(query, QStringLiteral("safeSearch"), QStringLiteral("none"));
+                    setMusicVideoCategory(query);
+
+                    if (!relatedVideoId.isEmpty())
+                        setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
 
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);
@@ -68,19 +127,50 @@ namespace Core {
                     return baseUrl(path_search, query);
                 }
 
-                QJsonArray popular(QString & genre) {
+                QJsonArray popular(QString & /*genre*/) {
                     return lQuery(
-                        searchUrl(QString(), genre, true),
+                        videosUrl(),
                         queryRules(100)
                     );
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
-                    return lQuery(
+                    QJsonArray res = lQuery(
                         searchUrl(predicate, genre, limitations.by_popularity()),
                         queryRules(limitations.total_limit)
                     );
+
+                    initDuration(res);
+
+                    return res;
                 }
+
+
+
+                QUrl videosUrl(const QStringList & ids = QStringList()) {
+                    QUrlQuery query = genDefaultParams();
+                    if (!ids.isEmpty())
+                        setParam(query, QStringLiteral("id"), ids.join(','));
+
+                    setParam(query, tkn_part, QStringLiteral("snippet"));
+                    setParam(query, QStringLiteral("fields"), QStringLiteral("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
+                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
+                    setParam(query, QStringLiteral("chart"), QStringLiteral("mostPopular"));
+                    setMusicVideoCategory(query);
+
+                    return baseUrl(QStringLiteral("videos"), query);
+                }
+
+
+
+
+
+
+
+
+
+
+
 
 
 //                QUrl groupAudioUrl(QString & uid) {

@@ -324,6 +324,56 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
+int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
+    if (collection.isEmpty()) return 0;
+
+    int itemsAmount = 0;
+    QJsonObject itm, snippet;
+    WebFile * newItem;
+    //QString id, album_id, genre;
+
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        itm = (*it).toObject();
+
+//        QStringList artistUids;
+//        QString artistStr;
+//        QJsonArray artistsAr = itm.value(Yandex::tkn_artists).toArray();
+//        for(QJsonArray::Iterator artist = artistsAr.begin(); artist != artistsAr.end(); artist++) {
+//            QJsonObject obj = (*artist).toObject();
+//            artistUids << QString::number(obj.value(Yandex::tkn_id).toInt());
+//            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % obj.value(Yandex::tkn_name).toString();
+//        };
+
+//        QJsonObject album = itm.value(Yandex::tkn_album).toObject();
+//        genre = album.value(Yandex::tkn_genre).toString();
+//        album_id = QString::number(album.value(Yandex::tkn_id).toInt());
+//        id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
+
+        snippet = itm .value(QStringLiteral("snippet")).toObject();
+
+        itemsAmount++;
+        newItem = new WebFile(
+            itm.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString(),
+            QString(),
+            snippet.value(QStringLiteral("title")).toString(), // "description"
+            parent
+        );
+
+        //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
+        newItem -> setSubtype(site_youtube);
+//        newItem -> setRefreshPath(id);
+//        newItem -> setExtension(Grabber::default_extension);
+
+//        newItem -> setDuration(Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)));
+//        //newItem -> setGenre(genre); // need to convert genre to genre id
+
+//        if (itm.contains(Yandex::tkn_fileSize))
+//            newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+    }
+
+    return itemsAmount;
+}
+
 int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 

@@ -162,9 +162,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
                     case site_sc: { propagate_count = proceedScList(items, parent); break;}
                     case site_od: { propagate_count = proceedOdList(items, parent); break;}
                     case site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
-                    case site_youtube: {
-                        qDebug() << items;
-                    break;}
+                    case site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 
