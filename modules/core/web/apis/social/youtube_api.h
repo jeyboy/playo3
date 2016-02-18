@@ -63,11 +63,15 @@ namespace Core {
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(tkn_response).toArray().isEmpty()*/; }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
-//                    QJsonObject stat_obj = response.value(tkn_response).toObject().value(tkn_errors).toArray().first().toObject();
-//                    message = stat_obj.value(tkn_error_message).toString();
-//                    return (code = stat_obj.value(tkn_error_code).toInt()) == 0;
-                    return true;
+                inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & /*code*/, QString & /*message*/) {
+                    QJsonObject error = response.value(QStringLiteral("error")).toObject();
+                    if (error.isEmpty())
+                        return true;
+                    else {
+                        code = error.value(QStringLiteral("code")).toInt();
+                        message = error.value(QStringLiteral("message")).toString();
+                        return false;
+                    }
                 }                
             };
         }
