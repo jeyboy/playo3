@@ -52,19 +52,12 @@ namespace Core {
                 }
 
                 void proceedDurationResult(QStringList & ids, QJsonArray & res, QHash<QString, QJsonObject> & relations) {
-                    QJsonArray infos = lQuery(
+                    lQuery(
                         videosUrl(ids),
-                        queryRules(50)
+                        queryRules(50),
+                        res
                     );
                     ids.clear();
-
-                    for(QJsonArray::Iterator info = infos.begin(); info != infos.end(); info++) {
-                        QJsonObject obj = (*info).toObject();
-                        QString id = obj.value(QStringLiteral("id")).toString();
-                        QJsonObject cell = relations[id];
-                        cell.insert(QStringLiteral("contentDetails"), obj);
-                        res << cell;
-                    }
                 }
 
                 void initDuration(QJsonArray & arr) {
@@ -122,7 +115,7 @@ namespace Core {
 //                    medium – Only include videos that are between four and 20 minutes long (inclusive).
 //                    short – Only include videos that are less than four minutes long.
 
-                ///
+                //encodeStr
                 QUrl searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
                     QUrlQuery query = genDefaultParams();
                     setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
@@ -157,7 +150,6 @@ namespace Core {
                     );
 
                     initDuration(res);
-
                     return res;
                 }
 
@@ -167,11 +159,13 @@ namespace Core {
                     QUrlQuery query = genDefaultParams();
                     if (!ids.isEmpty())
                         setParam(query, QStringLiteral("id"), ids.join(','));
+                    else
+                        setParam(query, QStringLiteral("chart"), QStringLiteral("mostPopular"));
 
-                    setParam(query, tkn_part, QStringLiteral("snippet"));
+                    setParam(query, tkn_part, QStringLiteral("snippet,contentDetails"));
                     setParam(query, QStringLiteral("fields"), QStringLiteral("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
                     setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
-                    setParam(query, QStringLiteral("chart"), QStringLiteral("mostPopular"));
+                    setParam(query, QStringLiteral("regionCode"), QStringLiteral("ua"));
                     setMusicVideoCategory(query);
 
                     return baseUrl(QStringLiteral("videos"), query);
