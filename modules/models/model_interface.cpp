@@ -330,7 +330,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     int itemsAmount = 0;
     QJsonObject itm, snippet;
     WebFile * newItem;
-    //QString id, album_id, genre;
+    QString id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         itm = (*it).toObject();
@@ -349,11 +349,12 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 //        album_id = QString::number(album.value(Yandex::tkn_id).toInt());
 //        id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
 
-        snippet = itm .value(QStringLiteral("snippet")).toObject();
+        snippet = itm.value(QStringLiteral("snippet")).toObject();
+        id = itm.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
 
         itemsAmount++;
         newItem = new WebFile(
-            itm.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString(),
+            id,
             QString(),
             snippet.value(QStringLiteral("title")).toString(), // "description"
             parent
@@ -361,14 +362,25 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 
         //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
         newItem -> setSubtype(site_youtube);
-//        newItem -> setRefreshPath(id);
-//        newItem -> setExtension(Grabber::default_extension);
+        newItem -> setRefreshPath(id);
+        newItem -> setExtension(Grabber::default_extension);
 
-//        newItem -> setDuration(Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)));
-//        //newItem -> setGenre(genre); // need to convert genre to genre id
 
-//        if (itm.contains(Yandex::tkn_fileSize))
-//            newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+        snippet = itm.value(QStringLiteral("contentDetails")).toObject();
+//        "contentDetails": {
+//            "duration": "PT3M48S",
+//            "dimension": "2d",
+//            "definition": "hd",
+//            "caption": "false",
+//            "licensedContent": true,
+//            "regionRestriction": {
+//             "blocked": [
+//              "DE"
+//             ]
+//            }
+//           }
+        if (!snippet.isEmpty())
+            newItem -> setDuration(Duration::fromISO8601Str(snippet.value(QStringLiteral("duration")).toString()));
     }
 
     return itemsAmount;

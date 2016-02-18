@@ -1,4 +1,5 @@
 #include "format.h"
+#include <qdebug.h>
 
 QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
 
@@ -66,6 +67,44 @@ QString Duration::fromMillis(qint64 millis, bool includeHours) {
     int h = millis == 0 ? 0 : abs(millis / 3600000) % 24;
 
     return fromHMS(h, m, s, includeHours);
+}
+
+// PT3M48S // youtube
+QString Duration::fromISO8601Str(const QString & str, bool includeHours) {
+    qint64 summ = 0;
+    int pos = 2, offset = 2, mult = 1;
+    for(QString::ConstIterator ch = str.cbegin() + 2; ch != str.cend(); ch++, offset++) {
+        switch((*ch).unicode()) {
+            case 87: {
+                mult = 604800;
+                summ += mult * str.midRef(pos, offset - pos).toInt() * 1000;
+                pos = offset + 1;
+            break;}// w
+            case 68: {
+                mult = 86400;
+                summ += mult * str.midRef(pos, offset - pos).toInt() * 1000;
+                pos = offset + 1;
+            break;}// d
+            case 72: {
+                mult = 3600;
+                summ += mult * str.midRef(pos, offset - pos).toInt() * 1000;
+                pos = offset + 1;
+            break;}// h
+            case 77: {
+                mult = 60;
+                summ += mult * str.midRef(pos, offset - pos).toInt() * 1000;
+                pos = offset + 1;
+            break;}// m
+            case 83: {
+                mult = 1;
+                summ += mult * str.midRef(pos, offset - pos).toInt() * 1000;
+                pos = offset + 1;
+            break;}// s
+            default:;
+        }
+    }
+
+    return fromMillis(summ, includeHours);
 }
 
 bool Duration::hasHours(qint64 millis) {
