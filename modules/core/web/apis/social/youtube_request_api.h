@@ -52,10 +52,11 @@ namespace Core {
                 }
 
                 void initDuration(QJsonArray & arr) {
-                    QHash<QString, QJsonObject &> relations;
+                    QHash<QString, QJsonObject> relations;
                     QStringList ids;
+                    QJsonArray res;
 
-                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++) {
+                    for(int i = 0; i < arr.size(); i++) {
                         if (ids.length() == 50) {
                             QJsonArray infos = lQuery(
                                 videosUrl(ids),
@@ -64,13 +65,21 @@ namespace Core {
                             ids.clear();
 
                             for(QJsonArray::Iterator info = infos.begin(); info != infos.end(); info++) {
-
+                                QJsonObject obj = (*info).toObject();
+                                QString id = obj.value(QStringLiteral("id")).toString();
+                                QJsonObject cell = relations[id];
+                                cell.insert(QStringLiteral("contentDetails"), obj);
+                                res << cell;
                             }
                         } else {
-                            QString id = (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
-                            ids.insert(id, *(*item).toObject());
+                            QJsonObject item = arr[i].toObject();
+                            QString id = item.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
+                            relations.insert(id, arr[i].toObject());
+                            ids << id;
                         }
                     }
+
+                    arr = res;
                 }
             public:
                 inline virtual ~RequestApi() {}

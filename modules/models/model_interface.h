@@ -82,6 +82,7 @@ namespace Models {
         int proceedScList(QJsonArray & collection, Playlist * parent);
         int proceedOdList(QJsonArray & collection, Playlist * parent);
         int proceedYandexList(QJsonArray & collection, Playlist * parent);
+        int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
         int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
