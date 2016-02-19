@@ -76,6 +76,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(WEB_FILE + site_redmp3 + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/redmp3_item_on"), size));
     icons.insert(WEB_FILE + site_yandex,                                PIXMAP(QStringLiteral(":/items/yandex_item"), size));
     icons.insert(WEB_FILE + site_yandex + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/yandex_item_on"), size));
+    icons.insert(WEB_FILE + site_youtube,                               PIXMAP(QStringLiteral(":/items/youtube_item"), size));
+    icons.insert(WEB_FILE + site_youtube + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/youtube_item_on"), size));
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
