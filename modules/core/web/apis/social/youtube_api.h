@@ -57,10 +57,22 @@ namespace Core {
                 inline QString refresh(const QString & path) {
                     QString response = Web::Manager::prepare() -> followedGet(url_info.arg(path)) -> toText();
                     QUrlQuery query(response);
-                    qDebug() << path << query.toString();
                     //account_playback_token // token // url_encoded_fmt_stream_map
-                    qDebug() << url_video.arg(path, query.queryItemValue(QStringLiteral("token")));
-                    return url_video.arg(path, query.queryItemValue(QStringLiteral("token")));
+                    if (!query.hasQueryItem(QStringLiteral("url_encoded_fmt_stream_map"))) {
+                        qDebug() << path << query.toString();
+                        if (query.hasQueryItem(QStringLiteral("errorcode"))) {
+                            //"cbr=Firefox&reason=\u042D\u0442\u043E+\u0432\u0438\u0434\u0435\u043E+\u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442+\u043A\u043E\u043D\u0442\u0435\u043D\u0442+\u043E\u0442+\u043F\u0430\u0440\u0442\u043D\u0435\u0440\u0430+UMG.+\u041D\u0430+\u043D\u0435\u043A\u043E\u0442\u043E\u0440\u044B\u0445+\u0432\u0435\u0431-\u0441\u0430\u0439\u0442\u0430\u0445+\u0435\u0433\u043E+\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440+\u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D.%3Cbr%2F%3E%3Cu%3E%3Ca+href%3D%27http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DwqcPgGMJMdc%26feature%3Dplayer_embedded%27+target%3D%27_blank%27%3E\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C+\u043D\u0430+YouTube%3C%2Fa%3E%3C%2Fu%3E&enablecsi=1&eventid=evXGVr7hDYbjWq6_o5gB&status=fail&csi_page_type=embed&c=WEB&errordetail=0&cosver=6.1&cbrver=39.0&errorcode=150&cos=Windows"
+                        } else {
+                            // ?
+                        }
+                        return path;
+                    } else {
+                        QVector<QStringRef> links = query.queryItemValue(QStringLiteral("url_encoded_fmt_stream_map")).splitRef(',');
+                        QUrlQuery vQuery(links.first().toString());
+                        QString res;
+                        qDebug() << "LINK" << res;
+                        return QUrl::fromPercentEncoding(QUrl::fromPercentEncoding(vQuery.queryItemValue(QStringLiteral("url")).toLatin1()).toLatin1());
+                    }
                 }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
