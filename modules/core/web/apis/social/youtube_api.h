@@ -54,7 +54,14 @@ namespace Core {
                     return url;
                 }
 
-                inline QString refresh(const QString & path) { return path; }
+                inline QString refresh(const QString & path) {
+                    QString response = Web::Manager::prepare() -> followedGet(url_info.arg(path)) -> toText();
+                    QUrlQuery query(response);
+                    qDebug() << path << query.toString();
+                    //account_playback_token // token // url_encoded_fmt_stream_map
+                    qDebug() << url_video.arg(path, query.queryItemValue(QStringLiteral("token")));
+                    return url_video.arg(path, query.queryItemValue(QStringLiteral("token")));
+                }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
                 inline QString offsetKey() const { return tkn_page_token; }

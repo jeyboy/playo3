@@ -334,23 +334,11 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         itm = (*it).toObject();
-
-//        QStringList artistUids;
-//        QString artistStr;
-//        QJsonArray artistsAr = itm.value(Yandex::tkn_artists).toArray();
-//        for(QJsonArray::Iterator artist = artistsAr.begin(); artist != artistsAr.end(); artist++) {
-//            QJsonObject obj = (*artist).toObject();
-//            artistUids << QString::number(obj.value(Yandex::tkn_id).toInt());
-//            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % obj.value(Yandex::tkn_name).toString();
-//        };
-
-//        QJsonObject album = itm.value(Yandex::tkn_album).toObject();
-//        genre = album.value(Yandex::tkn_genre).toString();
-//        album_id = QString::number(album.value(Yandex::tkn_id).toInt());
-//        id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
+        qDebug() << itm;
 
         snippet = itm.value(QStringLiteral("snippet")).toObject();
-        id = itm.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
+        QJsonValue idVal = itm.value(QStringLiteral("id"));
+        id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
 
         itemsAmount++;
         newItem = new WebFile(
