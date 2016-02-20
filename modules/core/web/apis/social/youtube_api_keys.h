@@ -8,7 +8,8 @@ namespace Core {
         namespace Youtube {
             extern const QString url_base;
             extern const QString url_info;
-            extern const QString url_video;
+//            extern const QString url_video;
+            extern const QString url_embed;
 //            extern const QString url_connect;
 //            extern const QString url_redirect;
 //            extern const QString url_auth_token;

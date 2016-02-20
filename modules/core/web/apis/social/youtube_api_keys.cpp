@@ -5,7 +5,8 @@ namespace Core {
         namespace Youtube {
             extern const QString url_base              = QStringLiteral("https://www.googleapis.com/youtube/v3/");
             extern const QString url_info              = QStringLiteral("http://www.youtube.com/get_video_info?video_id=%1");
-            extern const QString url_video             = QStringLiteral("http://youtube.com/get_video?video_id=%1&t=%2&fmt=18&asv=2");
+//            extern const QString url_video             = QStringLiteral("http://youtube.com/get_video?video_id=%1&t=%2&fmt=18&asv=2");
+            extern const QString url_embed             = QStringLiteral("https://www.youtube.com/watch?v=%1&feature=player_embedded");
 //            extern const QString url_connect           = QStringLiteral("https://soundcloud.com/connect");
 //            extern const QString url_redirect          = QStringLiteral("http://sos.com");
 //            extern const QString url_auth_token        = QStringLiteral("https://api.soundcloud.com/oauth2/token");

@@ -54,24 +54,76 @@ namespace Core {
                     return url;
                 }
 
+// cpn
+//                var l11 = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"];
+//                var l1I = "";
+//                var lIl = 0;
+//                while (lIl < 16) {
+//                l1I = (l1I + l11[Math.floor((Math.random() * 64))]);
+//                lIl++;
+//                }
+//                l1I;
+
+
                 inline QString refresh(const QString & path) {
+//                    !url.contains("ratebypass"))
+//                            {
+//                                url = url.append("&ratebypass=yes");
+//                            }
+
+
                     QString response = Web::Manager::prepare() -> followedGet(url_info.arg(path)) -> toText();
                     QUrlQuery query(response);
                     //account_playback_token // token // url_encoded_fmt_stream_map
-                    if (!query.hasQueryItem(QStringLiteral("url_encoded_fmt_stream_map"))) {
-                        qDebug() << path << query.toString();
+
+                    // https://www.quora.com/How-can-I-make-a-YouTube-video-downloader-web-application-from-scratch
+                    // https://github.com/rg3/youtube-dl/blob/9dd8e46a2d0860421b4bb4f616f05e5ebd686380/youtube_dl/extractor/youtube.py
+                    // http://superuser.com/questions/773719/how-do-all-of-these-save-video-from-youtube-services-work
+
+                    QString url_map_tkn = QStringLiteral("url_encoded_fmt_stream_map");
+                    if (!query.hasQueryItem(url_map_tkn)) {
                         if (query.hasQueryItem(QStringLiteral("errorcode"))) {
-                            //"cbr=Firefox&reason=\u042D\u0442\u043E+\u0432\u0438\u0434\u0435\u043E+\u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442+\u043A\u043E\u043D\u0442\u0435\u043D\u0442+\u043E\u0442+\u043F\u0430\u0440\u0442\u043D\u0435\u0440\u0430+UMG.+\u041D\u0430+\u043D\u0435\u043A\u043E\u0442\u043E\u0440\u044B\u0445+\u0432\u0435\u0431-\u0441\u0430\u0439\u0442\u0430\u0445+\u0435\u0433\u043E+\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440+\u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D.%3Cbr%2F%3E%3Cu%3E%3Ca+href%3D%27http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DwqcPgGMJMdc%26feature%3Dplayer_embedded%27+target%3D%27_blank%27%3E\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C+\u043D\u0430+YouTube%3C%2Fa%3E%3C%2Fu%3E&enablecsi=1&eventid=evXGVr7hDYbjWq6_o5gB&status=fail&csi_page_type=embed&c=WEB&errordetail=0&cosver=6.1&cbrver=39.0&errorcode=150&cos=Windows"
+
+
+                            //there should be 2 variants:
+                                //  str has 's' param, which should be decoded first with usage of separate js file
+                                    // http://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
+                                    // http://www.codeproject.com/Articles/2352/JavaScript-call-from-C
+                                    // https://github.com/bitnol/CipherAPI
+                                //  str has 'signature' or 'sig' which simply copied to link
+
+
+                            QString response = Web::Manager::prepare() -> followedGet(url_embed.arg(path)) -> toText();
+                            int pos = response.indexOf(url_map_tkn) + url_map_tkn.length() + 3;
+                            int len = response.indexOf('"', pos) - pos;
+                            QString map = response.mid(pos, len);
+                            qDebug() << "MAP" << response.midRef(pos);
+                            qDebug() << "------------------------------";
+                            QStringList links = map.split(','); // each link contains param type equal to the 'video' or 'audio'
+
+                            for(int i = 0; i < links.length(); i++)
+                                if (links[i].indexOf("signature") != -1)
+                                    qDebug() << "********" << i << links[i];
+
+
+                            QString res = links.first().replace("\\u0026", "&");
+                            qDebug() << "LINK!" << res;
+                            qDebug() << "------------------------------";
+                            QUrlQuery vQuery(res);
+                            res = QUrl::fromPercentEncoding(vQuery.queryItemValue(QStringLiteral("url")).toLatin1()) + "&cpn=Twcgu-mcw4SjsEIM";
+                            qDebug() << "LINK" << res << vQuery.toString();
+                            return res;
                         } else {
                             // ?
+                            Logger::obj().write(QStringLiteral("Youtube API"), path, QStringList() << query.toString(), true);
                         }
                         return path;
                     } else {
                         QVector<QStringRef> links = query.queryItemValue(QStringLiteral("url_encoded_fmt_stream_map")).splitRef(',');
                         QUrlQuery vQuery(links.first().toString());
-                        QString res;
-                        qDebug() << "LINK" << res;
-                        return QUrl::fromPercentEncoding(QUrl::fromPercentEncoding(vQuery.queryItemValue(QStringLiteral("url")).toLatin1()).toLatin1());
+                        QString res = QUrl::fromPercentEncoding(QUrl::fromPercentEncoding(vQuery.queryItemValue(QStringLiteral("url")).toLatin1()).toLatin1());
+                        qDebug() << "LINK" << res << vQuery.toString();
+                        return res;
                     }
                 }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }

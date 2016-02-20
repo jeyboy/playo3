@@ -51,7 +51,7 @@ namespace Core {
                     return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
                 }
 
-                void proceedDurationResult(QStringList & ids, QJsonArray & res, QHash<QString, QJsonObject> & relations) {
+                void proceedDurationResult(QStringList & ids, QJsonArray & res) {
                     lQuery(
                         videosUrl(ids),
                         queryRules(50),
@@ -61,23 +61,18 @@ namespace Core {
                 }
 
                 void initDuration(QJsonArray & arr) {
-                    QHash<QString, QJsonObject> relations;
                     QStringList ids;
                     QJsonArray res;
 
-                    for(int i = 0; i < arr.size(); i++) {
+                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++) {
                         if (ids.length() == 50)
-                            proceedDurationResult(ids, res, relations);
-                        else {
-                            QJsonObject item = arr[i].toObject();
-                            QString id = item.value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
-                            relations.insert(id, arr[i].toObject());
-                            ids << id;
-                        }
+                            proceedDurationResult(ids, res);
+                        else
+                            ids << (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
                     }
 
                     if (!ids.isEmpty())
-                        proceedDurationResult(ids, res, relations);
+                        proceedDurationResult(ids, res);
 
                     arr = res;
                 }
@@ -123,15 +118,13 @@ namespace Core {
                     setParam(query, tkn_part, QStringLiteral("snippet"));
                     setParam(query, QStringLiteral("fields"), QStringLiteral("items(id,snippet),nextPageToken,pageInfo"));
                     setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
-                    setParam(query, QStringLiteral("eventType"), QStringLiteral("completed"));
 //                    setParam(query, QStringLiteral("safeSearch"), QStringLiteral("none"));
                     setMusicVideoCategory(query);
 
-                    if (!relatedVideoId.isEmpty())
-                        setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
-
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);
+                    else if (!relatedVideoId.isEmpty())
+                        setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
 
                     return baseUrl(path_search, query);
                 }
