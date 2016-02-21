@@ -299,7 +299,10 @@ HEADERS += \
     modules/core/web/apis/social/youtube_api.h \
     modules/core/web/apis/social/youtube_api_keys.h \
     modules/core/web/apis/social/youtube_request_api.h \
-    modules/core/web/apis/social/yandex_api.h
+    modules/core/web/apis/social/yandex_api.h \
+    modules/pizduck/duk_config.h \
+    modules/pizduck/duktape.h \
+    modules/core/web/utils/js_parser.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -448,4 +451,5 @@ SOURCES += \
     modules/core/core_parts/cue_file.cpp \
     modules/core/core_parts/cue_playlist.cpp \
     modules/core/web/apis/social/youtube_api_keys.cpp \
-    modules/core/web/apis/social/youtube_api.cpp
+    modules/core/web/apis/social/youtube_api.cpp \
+    modules/pizduck/duktape.c
