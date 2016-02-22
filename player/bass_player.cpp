@@ -99,7 +99,7 @@ void BassPlayer::playPreproccessing() {
 
     if (eq_in_use) registerEQ();
 
-    if (BASS_ChannelPlay(chan, true)) {
+    if (BASS_ChannelPlay(chan, true)) { // stalled with big sized video files
         playPostprocessing();
 
         syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
