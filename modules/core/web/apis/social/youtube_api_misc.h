@@ -322,28 +322,30 @@ namespace Core {
                     QString response = Web::Manager::prepare() -> followedGet(url_info.arg(id)) -> toText();
                     QUrlQuery query(response);
 
-                    // https://www.quora.com/How-can-I-make-a-YouTube-video-downloader-web-application-from-scratch
-                    // https://github.com/rg3/youtube-dl/blob/9dd8e46a2d0860421b4bb4f616f05e5ebd686380/youtube_dl/extractor/youtube.py
-                    // http://superuser.com/questions/773719/how-do-all-of-these-save-video-from-youtube-services-work
+                    if (query.queryItemValue(tkn_use_cipher_signature) != "True") {
+                        // https://www.quora.com/How-can-I-make-a-YouTube-video-downloader-web-application-from-scratch
+                        // https://github.com/rg3/youtube-dl/blob/9dd8e46a2d0860421b4bb4f616f05e5ebd686380/youtube_dl/extractor/youtube.py
+                        // http://superuser.com/questions/773719/how-do-all-of-these-save-video-from-youtube-services-work
 
-                    if (query.hasQueryItem(tkn_url_encoded_fmt_stream_map)) {
-                        QStringList templates =
-                            decodeStr(
-                                query.queryItemValue(tkn_url_encoded_fmt_stream_map)
-                            ).split(',');
+                        if (query.hasQueryItem(tkn_url_encoded_fmt_stream_map)) {
+                            QStringList templates =
+                                decodeStr(
+                                    query.queryItemValue(tkn_url_encoded_fmt_stream_map)
+                                ).split(',');
 
-                        proceedLinkTemplates(templates, options, "&");
-                    }
+                            proceedLinkTemplates(templates, options, "&");
+                        }
 
-                    if (query.hasQueryItem(tkn_adaptive_fmts)) {
-                        Logger::obj().write(QStringLiteral("Youtube API ADAPTIVE"), id, QStringList() << query.toString(), true);
+                        if (query.hasQueryItem(tkn_adaptive_fmts)) {
+                            Logger::obj().write(QStringLiteral("Youtube API ADAPTIVE"), id, QStringList() << query.toString(), true);
 
-                        QStringList templates =
-                            decodeStr(
-                                query.queryItemValue(tkn_adaptive_fmts)
-                            ).split(',');
+                            QStringList templates =
+                                decodeStr(
+                                    query.queryItemValue(tkn_adaptive_fmts)
+                                ).split(',');
 
-                        proceedLinkTemplates(templates, options, "&");
+                            proceedLinkTemplates(templates, options, "&");
+                        }
                     }
 
                     if (options.isEmpty())

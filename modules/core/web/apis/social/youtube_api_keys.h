@@ -86,6 +86,7 @@ namespace Core {
             extern const QString tkn_key;
             extern const QString tkn_url_encoded_fmt_stream_map;
             extern const QString tkn_adaptive_fmts;
+            extern const QString tkn_use_cipher_signature;
 
 //            extern const QString tkn_ids;
 //            extern const QString tkn_genres;
