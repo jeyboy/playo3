@@ -1,6 +1,8 @@
 #ifndef JS_PARSER
 #define JS_PARSER
 
+//http://duktape.org/api.html
+
 #include <qstring.h>
 #include "modules/pizduck/duktape.h"
 
@@ -8,15 +10,19 @@ namespace Core {
     namespace Web {
         namespace Js {
             class Document {
-                duk_context * ctx;
+//                duk_context * ctx;
             public:
-                static QString proceedFuncScript(const QString & script) {
-                    ctx = duk_create_heap_default();
+                static QString proceedJsCall(const QString & script, const QString & call, const QString & arg) {
+                    duk_context * ctx = duk_create_heap_default();
+                    qDebug() << "script" << script;
+                    qDebug() << "call" << call;
+                    qDebug() << "arg" << arg;
 
-                    duk_push_string(ctx, script.toLatin1().const_pointer());
-                    duk_compile(ctx, DUK_COMPILE_FUNCTION);
+                    duk_push_string(ctx, script.toLatin1().constData());
+                    duk_push_string(ctx, call.toLatin1().constData());
+                    duk_compile(ctx, 0);
+                    duk_push_string(ctx, arg.toLatin1().constData());
 //                    duk_push_int(ctx, 5); // push param1 for func
-//                    duk_push_int(ctx, 5); // push param2 for func
                     duk_call(ctx, 0);      /* [ func ] -> [ result ] */
                     QString res(duk_get_string(ctx, -1));
 //                    printf("program result: %lf\n", (double) duk_get_number(ctx, -1));
@@ -24,6 +30,22 @@ namespace Core {
                     duk_destroy_heap(ctx);
                     return res;
                 }
+
+
+//                static QString proceedFuncScript(const QString & script) {
+//                    ctx = duk_create_heap_default();
+
+//                    duk_push_string(ctx, script.toLatin1().const_pointer());
+//                    duk_compile(ctx, DUK_COMPILE_FUNCTION);
+////                    duk_push_int(ctx, 5); // push param1 for func
+////                    duk_push_int(ctx, 5); // push param2 for func
+//                    duk_call(ctx, 0);      /* [ func ] -> [ result ] */
+//                    QString res(duk_get_string(ctx, -1));
+////                    printf("program result: %lf\n", (double) duk_get_number(ctx, -1));
+//                    duk_pop(ctx);
+//                    duk_destroy_heap(ctx);
+//                    return res;
+//                }
 
 //                static QString proceedEvalScript(const QString & script) {
 //                    ctx = duk_create_heap_default();

@@ -1,16 +1,14 @@
 #ifndef YOUTUBE_REQUEST_API
 #define YOUTUBE_REQUEST_API
 
-#include "modules/core/web/interfaces/iapi.h"
-#include "youtube_api_keys.h"
+#include "youtube_api_misc.h"
 
 #define YOUTUBE_OFFSET_LIMIT 50
 
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class RequestApi : public IApi {
-            private:
+            class RequestApi : public Misc {
 //                Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
 //                search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
 //                Similarly, to search for videos matching either "boating" or "sailing" but not "fishing", set the q parameter value to boating|sailing -fishing.
@@ -64,12 +62,11 @@ namespace Core {
                     QStringList ids;
                     QJsonArray res;
 
-                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++) {
+                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++)
                         if (ids.length() == 50)
                             proceedDurationResult(ids, res);
                         else
                             ids << (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
-                    }
 
                     if (!ids.isEmpty())
                         proceedDurationResult(ids, res);
