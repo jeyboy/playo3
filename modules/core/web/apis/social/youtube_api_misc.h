@@ -15,7 +15,7 @@ namespace Core {
                 };
 
                 struct FmtOption {
-                    FmtOption() : audio(false), adaptive(false), decode_required(false) {}
+                    FmtOption() : quality_id(0), audio(false), adaptive(false), decode_required(false) {}
 
                     QString toUrl() {
                         if (decode_required)
@@ -24,6 +24,7 @@ namespace Core {
                         return url;
                     }
 
+                    int quality_id;
                     bool audio;
                     bool adaptive;
                     bool decode_required;
@@ -41,7 +42,7 @@ namespace Core {
                 //                }
                 //                l1I;
 
-                QString extractFromPage(const QString & id, QHash<QString, FmtOption> & options) {
+                QString extractFromPage(const QString & id, QHash<int, FmtOption> & options) {
                     //there should be 2 variants:
                         //  str has 's' param, which should be decoded first with usage of separate js file
                             // http://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
@@ -180,7 +181,7 @@ namespace Core {
 //                }
 
             protected:
-                FmtOption chooseFmtByQuality(QHash<QString, FmtOption> options) {
+                FmtOption chooseFmtByQuality(QHash<int, FmtOption> options) {
                     // update me :)
                     return options.values().first();
                 }
@@ -193,18 +194,17 @@ namespace Core {
 
                 }
 
-                void proceedLinkTemplates(const QStringList & templates, QHash<QString, FmtOption> & options, const QString & splitter = QString()) {
+                void proceedLinkTemplates(const QStringList & templates, QHash<int, FmtOption> & options, const QString & splitter = QString()) {
                     for(QStringList::ConstIterator item = templates.cbegin(); item != templates.cend(); item++) {
                         qDebug() << (*item);
                         FmtOption opt;
-                        QString quality_tag;
 
                         if (!splitter.isEmpty()) {
-                            QStringList parts = (*item).split(splitter);
-                            qDebug() << parts;
+                            QStringList parts = (*item).split(splitter); // not used: fallback_host, quality, (for adaptive only): projection_type, init, index, fps, lmt, quality_label, bitrate, size, clen
                             for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {
+                                qDebug() << (*part);
                                 if ((*part).startsWith("url="))
-                                    opt.url = (*part).mid(4);
+                                    opt.url = decodeStr((*part).mid(4));
                                 else if ((*part).startsWith("sig=")) //  str has 'signature' or 'sig' which simply copied to link
                                     opt.signature = (*part).mid(4);
                                 else if ((*part).startsWith("signature="))
@@ -213,14 +213,16 @@ namespace Core {
                                     opt.signature = (*part).mid(2);
                                     opt.decode_required = true;
                                 }
+                                else if ((*part).startsWith("itag="))
+                                    opt.quality_id = (*part).mid(5).toInt();
                                 else if ((*part).startsWith("type=")) // each link contains param type equal to the 'video' or 'audio'
-                                    opt.audio = (*part).mid(5) == QStringLiteral("audio");
+                                    opt.audio = (*part).mid(5, 5) == QStringLiteral("audio");
                             }
                         } else {
 
                         }
 
-                        options.insert(quality_tag, opt);
+                        options.insert(opt.quality_id, opt);
                     }
 
 
@@ -228,7 +230,7 @@ namespace Core {
                 }
 
                 QString idToUrl(const QString & id) {
-                    QHash<QString, FmtOption> options;
+                    QHash<int, FmtOption> options;
 
                     QString response = Web::Manager::prepare() -> followedGet(url_info.arg(id)) -> toText();
                     QUrlQuery query(response);
@@ -239,22 +241,22 @@ namespace Core {
 
                     if (query.hasQueryItem(tkn_url_encoded_fmt_stream_map)) {
                         QStringList templates =
-                                QUrl::fromPercentEncoding(QUrl::fromPercentEncoding(
-                                    query.queryItemValue(tkn_url_encoded_fmt_stream_map).toLatin1()
-                                ).toLatin1()).split(',');
+                            decodeStr(
+                                query.queryItemValue(tkn_url_encoded_fmt_stream_map)
+                            ).split(',');
 
-                        proceedLinkTemplates(templates, options);
+                        proceedLinkTemplates(templates, options, "&");
                     }
 
                     if (query.hasQueryItem(tkn_adaptive_fmts)) {
                         Logger::obj().write(QStringLiteral("Youtube API ADAPTIVE"), id, QStringList() << query.toString(), true);
 
                         QStringList templates =
-                                QUrl::fromPercentEncoding(QUrl::fromPercentEncoding(
-                                    query.queryItemValue(tkn_adaptive_fmts).toLatin1()
-                                ).toLatin1()).split(',');
+                            decodeStr(
+                                query.queryItemValue(tkn_adaptive_fmts)
+                            ).split(',');
 
-                        proceedLinkTemplates(templates, options);
+                        proceedLinkTemplates(templates, options, "&");
                     }
 
                     if (options.isEmpty())

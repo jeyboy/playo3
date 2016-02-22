@@ -55,7 +55,7 @@ namespace Core {
                     return url;
                 }
 
-                inline QString refresh(const QString & path) { return idToUrl(path); }
+                inline QString refresh(const QString & path) { return idToUrl("IB7I9Fhp_-g"/*path*/); }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
                 inline QString offsetKey() const { return tkn_page_token; }

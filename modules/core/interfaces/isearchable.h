@@ -58,6 +58,7 @@ namespace Core {
         inline virtual bool isConnected() { return true; }
 
         inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
+        inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
