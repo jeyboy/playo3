@@ -106,6 +106,8 @@ namespace Core {
                         return url;
                     }
 
+                    bool isEmpty() { return url.isEmpty(); }
+
                     int quality_id;
                     bool audio;
                     bool adaptive;
@@ -124,7 +126,7 @@ namespace Core {
                 //                }
                 //                l1I;
 
-                QString extractFromPage(const QString & id, QHash<int, FmtOption> & options) {
+                void extractFromPage(const QString & id, QHash<int, FmtOption> & options) {
                     //there should be 2 variants:
                         //  str has 's' param, which should be decoded first with usage of separate js file
                             // http://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
@@ -132,6 +134,12 @@ namespace Core {
                             // https://github.com/bitnol/CipherAPI
 
                     QString response = Web::Manager::prepare() -> followedGet(url_embed.arg(id)) -> toText();
+
+                    QString jsUrl;
+                    extractJsUrl(response, jsUrl);
+
+                    // need to prepare js decoding
+
                     int pos = response.indexOf(tkn_url_encoded_fmt_stream_map);
                     if (pos != -1) {
                         pos += tkn_url_encoded_fmt_stream_map.length() + 3;
@@ -262,10 +270,24 @@ namespace Core {
 ////                    view->deleteLater();
 //                }
 
-            protected:
                 FmtOption chooseFmtByQuality(QHash<int, FmtOption> options) {
-                    // update me :)
-                    return options.values().first();
+                    // bass library did not support any audio quality
+                    QList<int> qualities;
+                    qualities
+                            << 13 << 17 << 18
+                            << 22 << 36 << 37 << 38
+                            << 82 << 83 << 84
+                            << 85 << 133 << 134
+                            << 135 << 136 << 137
+                            << 138 << 160 << 264
+                            << 298 << 299 << 266;
+
+                    for(QList<int>::Iterator quality = qualities.begin(); quality != qualities.end(); quality++)
+                        if (options.contains(*quality))
+                            return options[*quality];
+
+                    qDebug() << "NO QUALITY";
+                    return FmtOption();
                 }
 
                 void prepareUrl(QString /*url*/) {
@@ -310,7 +332,7 @@ namespace Core {
 
 //                    .replace("\\u0026", "&")
                 }
-
+            protected:
                 QString idToUrl(const QString & id) {
                     QHash<int, FmtOption> options;
 
@@ -348,7 +370,7 @@ namespace Core {
                         return id;
 
                     FmtOption option = chooseFmtByQuality(options);
-                    return option.toUrl();
+                    return option.isEmpty() ? id : option.toUrl();
                 }
             };
         }
