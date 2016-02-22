@@ -132,12 +132,6 @@ namespace Core {
                 //                l1I;
 
                 void extractFromPage(const QString & id, QHash<int, FmtOption> & options) {
-                    //there should be 2 variants:
-                        //  str has 's' param, which should be decoded first with usage of separate js file
-                            // http://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
-                            // http://www.codeproject.com/Articles/2352/JavaScript-call-from-C
-                            // https://github.com/bitnol/CipherAPI
-
                     QString response = Web::Manager::prepare() -> followedGet(url_embed.arg(id)) -> toText();
 
                     QString jsUrl;
@@ -309,9 +303,6 @@ namespace Core {
 
                         options.insert(opt.quality_id, opt);
                     }
-
-
-//                    .replace("\\u0026", "&")
                 }
             protected:
                 QString idToUrl(const QString & id) {
@@ -321,10 +312,6 @@ namespace Core {
                     QUrlQuery query(response);
 
                     if (query.queryItemValue(tkn_use_cipher_signature) != "True") {
-                        // https://www.quora.com/How-can-I-make-a-YouTube-video-downloader-web-application-from-scratch
-                        // https://github.com/rg3/youtube-dl/blob/9dd8e46a2d0860421b4bb4f616f05e5ebd686380/youtube_dl/extractor/youtube.py
-                        // http://superuser.com/questions/773719/how-do-all-of-these-save-video-from-youtube-services-work
-
                         if (query.hasQueryItem(tkn_url_encoded_fmt_stream_map)) {
                             QStringList templates =
                                 decodeStr(
@@ -335,8 +322,6 @@ namespace Core {
                         }
 
                         if (query.hasQueryItem(tkn_adaptive_fmts)) {
-                            Logger::obj().write(QStringLiteral("Youtube API ADAPTIVE"), id, QStringList() << query.toString(), true);
-
                             QStringList templates =
                                 decodeStr(
                                     query.queryItemValue(tkn_adaptive_fmts)
