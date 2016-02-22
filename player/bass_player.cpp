@@ -38,7 +38,9 @@ bool BassPlayer::proceedErrorState() {
         case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
         case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
         // BASS_ERROR_TIMEOUT
-        default: emit statusChanged(StalledMedia);
+        default:
+            qDebug() << "UNKNOWN ERROR: " << BASS_ErrorGetCode();
+            emit statusChanged(StalledMedia);
     }
 
     updateState(UnknowState);

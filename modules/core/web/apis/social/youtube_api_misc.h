@@ -286,12 +286,10 @@ namespace Core {
 
                 void proceedLinkTemplates(const QStringList & templates, QHash<int, FmtOption> & options, const QString & splitter, const JsMethod & js = JsMethod()) {
                     for(QStringList::ConstIterator item = templates.cbegin(); item != templates.cend(); item++) {
-                        qDebug() << (*item);
                         FmtOption opt;
 
                         QStringList parts = (*item).split(splitter); // not used: fallback_host, quality, (for adaptive only): projection_type, init, index, fps, lmt, quality_label, bitrate, size, clen
                         for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {
-                            qDebug() << (*part);
                             if ((*part).startsWith("url="))
                                 opt.url = decodeStr((*part).mid(4));
                             else if ((*part).startsWith("sig=")) //  str has 'signature' or 'sig' which simply copied to link
