@@ -1,6 +1,6 @@
 /*
 	BASSOPUS 2.4 C/C++ header file
-	Copyright (c) 2012-2013 Un4seen Developments Ltd.
+	Copyright (c) 2012-2015 Un4seen Developments Ltd.
 
 	See the BASSOPUS.CHM file for more detailed documentation
 */
@@ -27,6 +27,7 @@ extern "C" {
 
 // Additional attributes
 #define BASS_ATTRIB_OPUS_ORIGFREQ	0x13000
+#define BASS_ATTRIB_OPUS_GAIN		0x13001
 
 HSTREAM BASSOPUSDEF(BASS_OPUS_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags);
 HSTREAM BASSOPUSDEF(BASS_OPUS_StreamCreateURL)(const char *url, DWORD offset, DWORD flags, DOWNLOADPROC *proc, void *user);
@@ -35,7 +36,7 @@ HSTREAM BASSOPUSDEF(BASS_OPUS_StreamCreateFileUser)(DWORD system, DWORD flags, c
 #ifdef __cplusplus
 }
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NOBASSOVERLOADS)
 static inline HSTREAM BASS_OPUS_StreamCreateFile(BOOL mem, const WCHAR *file, QWORD offset, QWORD length, DWORD flags)
 {
 	return BASS_OPUS_StreamCreateFile(mem, (const void*)file, offset, length, flags|BASS_UNICODE);
