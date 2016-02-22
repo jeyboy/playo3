@@ -264,31 +264,17 @@ namespace Core {
                     return res;
                 }
 
-//                void convertSignature(const QString & js, const QString & methodName, QString & s) {
-//                    qDebug() << "SSSSSSSSSSSSSSSSSSS" << s;
-//                    s = Js::Document::proceedJsCall(js, methodName, s);
-//                    qDebug() << "WWWWWWWWWWWWWWWWWWW" << s;
-
-////                    qDebug() << "received signature: " << s;
-
-////                    QWebView* view = new QWebView();
-////                    view->setHtml("<script>" + this->js + "</script>");
-////                    s = view->page()->mainFrame()->evaluateJavaScript(this->signatureMethodName + "(\"" + s + "\")").toString();
-////                    qDebug() << "parsed signature: " << s;
-////                    view->deleteLater();
-//                }
-
                 FmtOption chooseFmtByQuality(QHash<int, FmtOption> options) {
                     // bass library did not support any audio quality
                     QList<int> qualities;
                     qualities // qualities, which supported by bass
-                            << 13 << 17 << 18
-                            << 22 << 36 << 37 << 38
-                            << 82 << 83 << 84
-                            << 85 << 133 << 134
-                            << 135 << 136 << 137
-                            << 138 << 160 << 264
-                            << 298 << 299 << 266;
+                        // << audio_webm_dash_x_160 << audio_webm_dash_x_70 << audio_webm_dash_x_50
+                        // << audio_webm_dash_44_256 << audio_webm_dash_44_128 << audio_m4a_dash_44_256
+                        // << audio_m4a_dash_44_128 << audio_m4a_dash_44_48 // separate audio tracks// not supported by bass
+                        //<< 133 << 134 << 135 << 136 << 137 << 138 << 160 << 264 << 298 << 299 << 266 // this options under question, because did not contains audio
+                        << video_mp4_4096_3072 << video_mp4_1920_1080 << video_mp4_3d_x_1080 << video_mp4_3d_x_720
+                        << video_mp4_3d_x_480 << video_mp4_3d_x_360 << video_mp4_1280_720 << video_mp4_640_360
+                        << video_3gp_320_240 << video_3gp_176_144 << video_3gp_x_x;
 
                     for(QList<int>::Iterator quality = qualities.begin(); quality != qualities.end(); quality++)
                         if (options.contains(*quality))
