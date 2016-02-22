@@ -17,16 +17,21 @@ namespace Core {
                     qDebug() << "script" << script;
                     qDebug() << "call" << call;
                     qDebug() << "arg" << arg;
+                    duk_eval_string(ctx, (script + "\n" + call + "(\"" + arg + "\");").toLatin1().constData());
 
-                    duk_push_string(ctx, script.toLatin1().constData());
-                    duk_push_string(ctx, call.toLatin1().constData());
-                    duk_compile(ctx, 0);
-                    duk_push_string(ctx, arg.toLatin1().constData());
-//                    duk_push_int(ctx, 5); // push param1 for func
-                    duk_call(ctx, 0);      /* [ func ] -> [ result ] */
+
+
+//                    duk_push_string(ctx, script.toLatin1().constData());
+//                    duk_push_string(ctx, (call + "(\"" + arg + "\");").toLatin1().constData());
+//                    duk_push_string(ctx, "eval");
+//                    duk_compile(ctx, DUK_COMPILE_EVAL);
+//                    duk_call(ctx, 0);      /* [ func ] -> [ result ] */
+
+
+
                     QString res(duk_get_string(ctx, -1));
-//                    printf("program result: %lf\n", (double) duk_get_number(ctx, -1));
-                    duk_pop(ctx);
+                    qDebug() << "UUUU" << res;
+
                     duk_destroy_heap(ctx);
                     return res;
                 }

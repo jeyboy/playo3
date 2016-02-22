@@ -100,6 +100,11 @@ namespace Core {
                     FmtOption() : quality_id(0), audio(false), adaptive(false), decode_required(false) {}
 
                     QString toUrl() {
+                        //                    !url.contains("ratebypass"))
+                        //                            {
+                        //                                url = url.append("&ratebypass=yes");
+                        //                            }
+
                         if (decode_required)
                             return url % QStringLiteral("&signature=") % signature;
 
@@ -136,33 +141,26 @@ namespace Core {
                     QString response = Web::Manager::prepare() -> followedGet(url_embed.arg(id)) -> toText();
 
                     QString jsUrl;
-                    extractJsUrl(response, jsUrl);
+                    if (extractJsUrl(response, jsUrl)) {
+                        JsMethod js_method = extractJsMethod(jsUrl);
 
-                    // need to prepare js decoding
+                        if (!js_method.code.isEmpty()) {
+                            int pos = response.indexOf(tkn_url_encoded_fmt_stream_map);
+                            if (pos != -1) {
+                                pos += tkn_url_encoded_fmt_stream_map.length() + 3;
+                                int len = response.indexOf('"', pos) - pos;
+                                QStringList templates = response.mid(pos, len).split(',');
+                                proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"), js_method);
+                            }
 
-                    int pos = response.indexOf(tkn_url_encoded_fmt_stream_map);
-                    if (pos != -1) {
-                        pos += tkn_url_encoded_fmt_stream_map.length() + 3;
-                        int len = response.indexOf('"', pos) - pos;
-                        QStringList templates = response.mid(pos, len).split(',');
-                        proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"));
-
-                        // need to split by \\u0026
-//                        QString res = links.first().replace("\\u0026", "&");
-//                        qDebug() << "LINK!" << res;
-//                        qDebug() << "------------------------------";
-//                        QUrlQuery vQuery(res);
-//                        res = QUrl::fromPercentEncoding(vQuery.queryItemValue(QStringLiteral("url")).toLatin1()) + "&cpn=Twcgu-mcw4SjsEIM";
-//                        qDebug() << "LINK" << res << vQuery.toString();
-//                        return res;
-                    }
-
-                    pos = response.indexOf(tkn_adaptive_fmts);
-                    if (pos != -1) {
-                        pos += tkn_adaptive_fmts.length() + 3;
-                        int len = response.indexOf('"', pos) - pos;
-                        QStringList templates = response.mid(pos, len).split(',');
-                        proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"));
+                            pos = response.indexOf(tkn_adaptive_fmts);
+                            if (pos != -1) {
+                                pos += tkn_adaptive_fmts.length() + 3;
+                                int len = response.indexOf('"', pos) - pos;
+                                QStringList templates = response.mid(pos, len).split(',');
+                                proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"), js_method);
+                            }
+                        }
                     }
                 }
 
@@ -193,7 +191,9 @@ namespace Core {
                     return false;
                 }
 
-                void extractJSMethod(const QString & name, const QString & js, QList<JsMethod> & jsMethods) {
+                void extractJSMethod(const QString & name, const QString & js, QList<JsMethod> & jsMethods, QHash<QString, bool> locals = QHash<QString, bool>()) {
+                    if (locals.contains(name)) return;
+
                     for (QList<JsMethod>::Iterator meth = jsMethods.begin(); meth != jsMethods.end(); meth++)
                         if ((*meth).name == name)
                             return;
@@ -206,9 +206,9 @@ namespace Core {
                         JsMethod method;
                         method.name = name;
                         QString descriptor = expression.cap(1);
-                        if (!expression.cap(2).isEmpty()) {
+                        if (!expression.cap(2).isEmpty())
                             descriptor = descriptor.right(descriptor.length() - expression.cap(2).length());
-                        }
+
                         QString code = expression.cap(4);
                         QString parameters = expression.cap(3).replace(QRegExp("[\\(\\)\\s]"), "");
 
@@ -226,11 +226,13 @@ namespace Core {
                             int pos = expression.indexIn(method.code);
                             QStringList expressions;
                             expressions << "function" << "return" << "if" << "elseif";
-                            expressions.append(parameters.split(','));
+                            /*expressions.append(parameters.split(','));*/
+                            foreach(QString arg, parameters.split(','))
+                                locals.insert(arg, true);
 
                             while (pos != -1) {
                                 if (expressions.indexOf(expression.cap(1)) == -1)
-                                    extractJSMethod(expression.cap(1), js, jsMethods);
+                                    extractJSMethod(expression.cap(1), js, jsMethods, locals);
                                 pos = expression.indexIn(method.code, pos + expression.cap(0).length());
                             }
                         }
@@ -238,8 +240,11 @@ namespace Core {
                 }
 
 
-                void convertSToSignature(const QString & js, QString & s) {
+                JsMethod extractJsMethod(const QString & jsUrl) {
+                    QString js = Web::Manager::prepare() -> followedGet(jsUrl) -> toText();
+
                     QString methodName;
+                    JsMethod res;
 
                     QRegExp expression("signature=|set\\(\"signature\",(.+)\\("); // \\.sig\\|\\|([a-zA-Z0-9$]+)\\(
                     expression.setMinimal(true);
@@ -252,8 +257,11 @@ namespace Core {
                         for (QList<JsMethod>::Iterator meth = jsMethods.begin(); meth != jsMethods.end(); meth++)
                             resJs.append((*meth).code).append(";");
 
-                        s = Js::Document::proceedJsCall(resJs, methodName, s);
+                        res.name = methodName;
+                        res.code = resJs/*.replace(QStringLiteral("\\\""), QStringLiteral("\""))*/;
                     }
+
+                    return res;
                 }
 
 //                void convertSignature(const QString & js, const QString & methodName, QString & s) {
@@ -273,7 +281,7 @@ namespace Core {
                 FmtOption chooseFmtByQuality(QHash<int, FmtOption> options) {
                     // bass library did not support any audio quality
                     QList<int> qualities;
-                    qualities
+                    qualities // qualities, which supported by bass
                             << 13 << 17 << 18
                             << 22 << 36 << 37 << 38
                             << 82 << 83 << 84
@@ -290,40 +298,29 @@ namespace Core {
                     return FmtOption();
                 }
 
-                void prepareUrl(QString /*url*/) {
-                    //                    !url.contains("ratebypass"))
-                    //                            {
-                    //                                url = url.append("&ratebypass=yes");
-                    //                            }
-
-                }
-
-                void proceedLinkTemplates(const QStringList & templates, QHash<int, FmtOption> & options, const QString & splitter = QString()) {
+                void proceedLinkTemplates(const QStringList & templates, QHash<int, FmtOption> & options, const QString & splitter, const JsMethod & js = JsMethod()) {
                     for(QStringList::ConstIterator item = templates.cbegin(); item != templates.cend(); item++) {
                         qDebug() << (*item);
                         FmtOption opt;
 
-                        if (!splitter.isEmpty()) {
-                            QStringList parts = (*item).split(splitter); // not used: fallback_host, quality, (for adaptive only): projection_type, init, index, fps, lmt, quality_label, bitrate, size, clen
-                            for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {
-                                qDebug() << (*part);
-                                if ((*part).startsWith("url="))
-                                    opt.url = decodeStr((*part).mid(4));
-                                else if ((*part).startsWith("sig=")) //  str has 'signature' or 'sig' which simply copied to link
-                                    opt.signature = (*part).mid(4);
-                                else if ((*part).startsWith("signature="))
-                                    opt.signature = (*part).mid(10);
-                                else if ((*part).startsWith("s=")) {
-                                    opt.signature = (*part).mid(2);
-                                    opt.decode_required = true;
-                                }
-                                else if ((*part).startsWith("itag="))
-                                    opt.quality_id = (*part).mid(5).toInt();
-                                else if ((*part).startsWith("type=")) // each link contains param type equal to the 'video' or 'audio'
-                                    opt.audio = (*part).mid(5, 5) == QStringLiteral("audio");
+                        QStringList parts = (*item).split(splitter); // not used: fallback_host, quality, (for adaptive only): projection_type, init, index, fps, lmt, quality_label, bitrate, size, clen
+                        for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {
+                            qDebug() << (*part);
+                            if ((*part).startsWith("url="))
+                                opt.url = decodeStr((*part).mid(4));
+                            else if ((*part).startsWith("sig=")) //  str has 'signature' or 'sig' which simply copied to link
+                                opt.signature = (*part).mid(4);
+                            else if ((*part).startsWith("signature="))
+                                opt.signature = (*part).mid(10);
+                            else if ((*part).startsWith("s=")) {
+                                opt.signature = (*part).mid(2);
+                                opt.signature = Js::Document::proceedJsCall(js.code, js.name, opt.signature);
+                                opt.decode_required = true;
                             }
-                        } else {
-
+                            else if ((*part).startsWith("itag="))
+                                opt.quality_id = (*part).mid(5).toInt();
+                            else if ((*part).startsWith("type=")) // each link contains param type equal to the 'video' or 'audio'
+                                opt.audio = (*part).mid(5, 5) == QStringLiteral("audio");
                         }
 
                         options.insert(opt.quality_id, opt);
