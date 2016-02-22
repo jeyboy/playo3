@@ -106,7 +106,7 @@ namespace Core {
         switch(status) {
             case InitMedia: {
                 qDebug() << "INIT MEDIA";
-                setState(ItemState::played);
+                setState(ItemState::played | ItemState::proccessing);
             break;}
 
             case PlaingMedia: {
@@ -127,7 +127,7 @@ namespace Core {
 
             case LoadingMedia: {
                 qDebug() << "LOADING MEDIA";
-                setState(ItemState::proccessing);
+//                setState(ItemState::proccessing);
             break;}
 
             case UnknownMediaStatus: {
