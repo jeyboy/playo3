@@ -9,6 +9,88 @@ namespace Core {
     namespace Web {
         namespace Youtube {
             class Misc : public IApi {
+                enum Formats {
+                    other = 0,
+                    video_flv_400_240 = 5,
+                    video_flv_450_270 = 6,
+                    video_3gp_x_x = 13,
+                    video_3gp_176_144 = 17,
+                    video_mp4_640_360 = 18,
+                    video_mp4_1280_720 = 22,
+                    video_flv_640_360 = 34,
+                    video_flv_854_480 = 35,
+                    video_3gp_320_240 = 36,
+                    video_mp4_1920_1080 = 37,
+                    video_mp4_4096_3072 = 38,
+                    video_webm_640_360 = 43,
+                    video_webm_854_480 = 44,
+                    video_webm_1280_720 = 45,
+                    video_webm_1920_1080 = 46,
+
+                    video_mp4_3d_x_360 = 82,
+                    video_mp4_3d_x_480 = 83,
+                    video_mp4_3d_x_720 = 84,
+                    video_mp4_3d_x_1080 = 85,
+                    video_webm_3d_x_360 = 100,
+                    video_webm_3d_x_480 = 101,
+                    video_webm_3d_x_720 = 102,
+
+                    video_mp4_live_x_240_1 = 92,
+                    video_mp4_live_x_360 = 93,
+                    video_mp4_live_x_480 = 94,
+                    video_mp4_live_x_720 = 95,
+                    video_mp4_live_x_1080 = 96,
+                    video_mp4_live_x_240_2 = 132,
+                    video_mp4_live_x_72 = 151,
+
+                    video_mp4_dash_x_240 = 133,
+                    video_mp4_dash_x_360 = 134,
+                    video_mp4_dash_x_480 = 135,
+                    video_mp4_dash_x_720_1 = 136,
+                    video_mp4_dash_x_1080_1 = 137,
+                    video_mp4_dash_x_vary = 138,
+                    video_mp4_dash_x_144 = 160,
+                    video_mp4_dash_x_1440 = 264,
+                    video_mp4_dash_x_720_2 = 298, // 60 fps
+                    video_mp4_dash_x_1080_2 = 299, // 60 fps
+                    video_mp4_dash_x_2160 = 266,
+
+                    audio_m4a_dash_44_48 = 139, // aac
+                    audio_m4a_dash_44_128 = 140, // aac
+                    audio_m4a_dash_44_256 = 141, // aac
+
+                    video_webm_dash_640_360 = 167,
+                    video_webm_dash_854_480_1 = 168,
+                    video_webm_dash_1280_720 = 169,
+                    video_webm_dash_1920_1080 = 170,
+                    video_webm_dash_854_480_2 = 218,
+                    video_webm_dash_854_480_3 = 219,
+                    video_webm_dash_x_144 = 278,
+                    video_webm_dash_x_240 = 242,
+                    video_webm_dash_x_360 = 243,
+                    video_webm_dash_x_480_1 = 244,
+                    video_webm_dash_x_480_2 = 245,
+                    video_webm_dash_x_480_3 = 246,
+                    video_webm_dash_x_720_1 = 247,
+                    video_webm_dash_x_1080_1 = 248,
+                    video_webm_dash_x_1440_1 = 271,
+                    video_webm_dash_x_2160_1 = 272,
+                    video_webm_dash_x_720_2 = 302, // 60 fps
+                    video_webm_dash_x_1080_2 = 303, // 60 fps
+                    video_webm_dash_x_1440_2 = 308, // 60 fps
+                    video_webm_dash_x_2160_2 = 313,
+                    video_webm_dash_x_2160_3 = 315, // 60 fps
+
+                    audio_webm_dash_44_128 = 171, // aac
+                    audio_webm_dash_44_256 = 172, // aac
+
+                    audio_webm_dash_x_50 = 249, // opus
+                    audio_webm_dash_x_70 = 250, // opus
+                    audio_webm_dash_x_160 = 251, // opus
+
+//                    video_rtmp = "_rtmp" // not ebable
+                };
+
                 struct JsMethod {
                     QString name;
                     QString code;
