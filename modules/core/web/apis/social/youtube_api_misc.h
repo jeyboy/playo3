@@ -259,13 +259,11 @@ namespace Core {
                 }
 
                 FmtOption chooseFmtByQuality(QHash<int, FmtOption> options) {
-                    // bass library did not support any audio quality
                     QList<int> qualities;
                     qualities // qualities, which supported by bass
 //                        << audio_webm_dash_x_160 << audio_webm_dash_x_70 << audio_webm_dash_x_50
 //                        << audio_webm_dash_44_256 << audio_webm_dash_44_128 << audio_m4a_dash_44_256
 //                        << audio_m4a_dash_44_128 << audio_m4a_dash_44_48 // separate audio tracks // not supported by bass
-                        //<< 133 << 134 << 135 << 136 << 137 << 138 << 160 << 264 << 298 << 299 << 266 // this options under question, because did not contains audio
                         << video_mp4_4096_3072 << video_mp4_1920_1080 << video_mp4_3d_x_1080 << video_mp4_3d_x_720
                         << video_mp4_3d_x_480 << video_mp4_3d_x_360 << video_mp4_1280_720 << video_mp4_640_360
                         << video_3gp_320_240 << video_3gp_176_144 << video_3gp_x_x;
