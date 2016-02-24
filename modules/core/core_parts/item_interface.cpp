@@ -128,7 +128,7 @@ QVariant IItem::data(int column) const {
                 if (err_key.isEmpty())
                     params.insert(Keys::info, info());
                 else
-                    params.insert(Keys::error, error().toString());
+                    params.insert(Keys::error, err_msg);
 
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
