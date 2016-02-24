@@ -7,7 +7,7 @@ enum ItemErrors {
 
     warn_not_supported = 1000,
     warn_not_accessable,
-    warn_not_size_permitted
+    warn_not_permitted
 };
 
 #endif // ITEM_ERRORS

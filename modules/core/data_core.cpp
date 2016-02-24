@@ -88,26 +88,28 @@ namespace Core {
         current_item = item;
 
         if (item) {
-            if (continuePlaying) {
-                player -> updateMedia(
-                    item -> startPosMillis(),
-                    item -> durationMillis()
-                );
-                playerStatusChanged(InitMedia);
-                playerStatusChanged(PlaingMedia);
-            } else {
-                player -> setMedia(
-                    current_item -> toUrl(),
-                    item -> startPosMillis(),
-                    item -> durationMillis(),
-                    startMili
-                );
-            }
+            if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
+                if (continuePlaying) {
+                    player -> updateMedia(
+                        item -> startPosMillis(),
+                        item -> durationMillis()
+                    );
+                    playerStatusChanged(InitMedia);
+                    playerStatusChanged(PlaingMedia);
+                } else {
+                    player -> setMedia(
+                        current_item -> toUrl(),
+                        item -> startPosMillis(),
+                        item -> durationMillis(),
+                        startMili
+                    );
+                }
 
-            if ((init_state_flag = state) != initiated)
-                player -> play(init_state_flag == paused);
+                if ((init_state_flag = state) != initiated)
+                    player -> play(init_state_flag == paused);
 
-            emit likeChanged(current_item -> is(ItemState::liked));
+                emit likeChanged(current_item -> is(ItemState::liked));
+            } else playNext(false);
         }
         else player -> setMedia(QUrl());
     }

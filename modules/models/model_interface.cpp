@@ -370,8 +370,12 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 //             ]
 //            }
 //           }
-        if (!snippet.isEmpty())
-            newItem -> setDuration(Duration::fromISO8601Str(snippet.value(QStringLiteral("duration")).toString()));
+        if (!snippet.isEmpty()) {
+            qint64 durMillis = Duration::ISO8601StrtoMillis(snippet.value(QStringLiteral("duration")).toString());
+            if (durMillis > 1200000) // 20 min
+                newItem -> setError(ItemErrors::warn_not_permitted);
+            newItem -> setDuration(Duration::fromMillis(durMillis));
+        }
     }
 
     return itemsAmount;

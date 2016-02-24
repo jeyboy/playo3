@@ -279,9 +279,9 @@ QString IItem::errorStr(QString & key_name) const {
             key_name = Keys::warning;
             return QStringLiteral("Not accessable at this time");
         break;}
-        case warn_not_size_permitted: {
+        case warn_not_permitted: {
             key_name = Keys::warning;
-            return QStringLiteral("This item may crashed the program");
+            return QStringLiteral("Playing of this item is not permitted at this moment");
         break;}
 
         default: return QString();

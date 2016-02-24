@@ -69,8 +69,13 @@ QString Duration::fromMillis(qint64 millis, bool includeHours) {
     return fromHMS(h, m, s, includeHours);
 }
 
+bool Duration::hasHours(qint64 millis) {
+    int h = millis == 0 ? 0 : abs(millis / 3600000) % 24;
+    return h > 0;
+}
+
 // PT3M48S // youtube
-QString Duration::fromISO8601Str(const QString & str, bool includeHours) {
+qint64 Duration::ISO8601StrtoMillis(const QString & str) {
     qint64 summ = 0;
     int pos = 2, offset = 2, mult = 1;
     for(QString::ConstIterator ch = str.cbegin() + 2; ch != str.cend(); ch++, offset++) {
@@ -104,12 +109,7 @@ QString Duration::fromISO8601Str(const QString & str, bool includeHours) {
         }
     }
 
-    return fromMillis(summ, includeHours);
-}
-
-bool Duration::hasHours(qint64 millis) {
-    int h = millis == 0 ? 0 : abs(millis / 3600000) % 24;
-    return h > 0;
+    return summ;
 }
 
 qint64 Duration::toMillis(const QString & str) {
