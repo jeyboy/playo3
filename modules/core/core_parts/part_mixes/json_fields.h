@@ -17,6 +17,7 @@ namespace Core {
     const QString JSON_TYPE_PATH = QStringLiteral("p");
     const QString JSON_TYPE_REFRESH_PATH = QStringLiteral("r");
     const QString JSON_TYPE_STATE = QStringLiteral("s");
+    const QString JSON_TYPE_ERROR = QStringLiteral("k");
     const QString JSON_TYPE_OWNER_ID = QStringLiteral("o");
     const QString JSON_TYPE_TITLE = QStringLiteral("t");
     const QString JSON_TYPE_UID = QStringLiteral("u");

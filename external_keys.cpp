@@ -9,6 +9,7 @@ namespace Keys {
 
     const QString checkable     = QStringLiteral("checkable");
     const QString info          = QStringLiteral("info");
+    const QString error         = QStringLiteral("error");
     const QString icon          = QStringLiteral("icon");
     const QString ext           = QStringLiteral("ext");
     const QString state         = QStringLiteral("state");

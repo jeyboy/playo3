@@ -11,6 +11,7 @@ namespace Keys {
     extern const QString actions;
     extern const QString checkable;
     extern const QString info;
+    extern const QString error;
     extern const QString icon;
     extern const QString ext;
     extern const QString state;

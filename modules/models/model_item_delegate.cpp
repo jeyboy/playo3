@@ -234,33 +234,47 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
 
     if (!is_folder && Settings::obj().isShowInfo()) {
         painter -> setFont(itemInfoFont);
-        painter -> setPen(
-                    is_selected ?
-                        Settings::obj().selectedItemInfoTextColor()
-                      :
-                        Settings::obj().itemInfoTextColor()
-                    );
 
-        QStringList infos = attrs.value(Keys::info).toStringList();
+        if (attrs.contains(Keys::info)) {
+            painter -> setPen(
+                        is_selected ?
+                            Settings::obj().selectedItemInfoTextColor()
+                          :
+                            Settings::obj().itemInfoTextColor()
+                        );
 
-        int timeWidth = fmfInfo -> width(infos.last());
-        int right_offset_with_corner = right_offset - (angle / 3);
-        int beetweeX = right_offset_with_corner - timeWidth - 2;
-        top = bodyRect.bottom() - fmfInfo -> height() - 2;
+            QStringList infos = attrs.value(Keys::info).toStringList();
 
-        QPoint topLeft(left_offset, top);
-        QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
-        QRect rectText(topLeft, bottomRight);
-        QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
+            int timeWidth = fmfInfo -> width(infos.last());
+            int right_offset_with_corner = right_offset - (angle / 3);
+            int beetweeX = right_offset_with_corner - timeWidth - 2;
+            top = bodyRect.bottom() - fmfInfo -> height() - 2;
 
-        QPoint topTLeft(beetweeX, top);
-        QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
-        QRect rectTimeText(topTLeft, bottomTRight);
+            QPoint topLeft(left_offset, top);
+            QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
+            QRect rectText(topLeft, bottomRight);
+            QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
 
-        painter -> drawText(rectText, Qt::AlignLeft, s);
-        painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
+            QPoint topTLeft(beetweeX, top);
+            QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
+            QRect rectTimeText(topTLeft, bottomTRight);
 
-        painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
+            painter -> drawText(rectText, Qt::AlignLeft, s);
+            painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
+
+            painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
+        } else {
+            painter -> setPen(Qt::red);
+
+            int right_offset_with_corner = right_offset - (angle / 3);
+            top = bodyRect.bottom() - fmfInfo -> height() - 2;
+
+            QPoint bottomRight(right_offset_with_corner - 4, bodyRect.bottom());
+            QRect rectText(QPoint(left_offset, top), bottomRight);
+            QString s = fmfInfo -> elidedText(attrs.value(Keys::error).toString(), Qt::ElideRight, rectText.width());
+            painter -> drawText(rectText, Qt::AlignLeft, s);
+            painter -> drawLine(rectText.topLeft(), rectText.topRight());
+        }
     }
 
     painter -> setFont(itemFont);
@@ -413,33 +427,46 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
         if (Settings::obj().isShowInfo()) {
             painter -> setFont(itemInfoFont);
-            painter -> setPen(
-                        is_selected ?
-                            Settings::obj().selectedItemInfoTextColor()
-                          :
-                            Settings::obj().itemInfoTextColor()
-                        );
 
-            QStringList infos = attrs.value(Keys::info).toStringList();
+            if (attrs.contains(Keys::info)) {
+                painter -> setPen(
+                            is_selected ?
+                                Settings::obj().selectedItemInfoTextColor()
+                              :
+                                Settings::obj().itemInfoTextColor()
+                            );
 
-            int timeWidth = fmfInfo -> width(infos.last());
-            int right_offset_with_corner = right_offset - (angle / 3);
-            int beetweeX = right_offset_with_corner - timeWidth - 2;
-            top = bodyRect.bottom() - fmfInfo -> height() - 2;
+                QStringList infos = attrs.value(Keys::info).toStringList();
 
-            QPoint topLeft(left_offset, top);
-            QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
-            QRect rectText(topLeft, bottomRight);
-            QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
+                int timeWidth = fmfInfo -> width(infos.last());
+                int right_offset_with_corner = right_offset - (angle / 3);
+                int beetweeX = right_offset_with_corner - timeWidth - 2;
+                top = bodyRect.bottom() - fmfInfo -> height() - 2;
 
-            QPoint topTLeft(beetweeX, top);
-            QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
-            QRect rectTimeText(topTLeft, bottomTRight);
+                QPoint topLeft(left_offset, top);
+                QPoint bottomRight(beetweeX - 4, bodyRect.bottom());
+                QRect rectText(topLeft, bottomRight);
+                QString s = fmfInfo -> elidedText(infos.first(), Qt::ElideRight, rectText.width());
 
-            painter -> drawText(rectText, Qt::AlignLeft, s);
-            painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
+                QPoint topTLeft(beetweeX, top);
+                QPoint bottomTRight(right_offset_with_corner, bodyRect.bottom());
+                QRect rectTimeText(topTLeft, bottomTRight);
 
-            painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
+                painter -> drawText(rectText, Qt::AlignLeft, s);
+                painter -> drawText(rectTimeText, Qt::AlignRight, infos.last());
+
+                painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
+            } else {
+                painter -> setPen(Qt::red);
+                int right_offset_with_corner = right_offset - (angle / 3);
+                top = bodyRect.bottom() - fmfInfo -> height() - 2;
+                QPoint bottomRight(right_offset_with_corner, bodyRect.bottom());
+                QRect rectText(QPoint(left_offset, top), bottomRight);
+                QString s = fmfInfo -> elidedText(attrs.value(Keys::error).toString(), Qt::ElideRight, rectText.width());
+
+                painter -> drawText(rectText, Qt::AlignLeft, s);
+                painter -> drawLine(rectText.topLeft(), rectText.topRight());
+            }
         }
     }
 

@@ -121,7 +121,11 @@ QVariant IItem::data(int column) const {
             if (!isContainer()) {
                 if (Settings::obj().isShowSystemIcons())
                     params.insert(Keys::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
-                params.insert(Keys::info, info());
+
+                if (error().isValid())
+                    params.insert(Keys::error, error().toString());
+                else
+                    params.insert(Keys::info, info());
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
                 params.insert(Keys::played, is(played));
@@ -171,7 +175,12 @@ QVariant IItem::data(int column) const {
         }
 
         case Qt::ToolTipRole:
-            return relationStr() + '\n' + title().toString()/* + "(" + _extension + ")" + "\n" + _path*/;
+            return
+                relationStr() +
+                (_info().isValid() ? ('\n' + _info().toString()) : "") +
+                '\n' + title().toString() +
+                (error().isValid() ? ("\n Error: " + error().toString()) : "") +
+                (path().isValid() ? ('\n' + path().toString()) : "");
 
         case IEXTENSION:        return extension();
 //        case PATHID:            return path();
@@ -212,4 +221,37 @@ void IItem::setParent(Playlist * pNode, int pos) {
     _parent -> undeclareChild(this);
     _parent = pNode;
     (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
+}
+
+QString IItem::relationStr() const {
+    switch(itemType()) {
+        case SIMPLE_FILE: return QStringLiteral("(Local) ");
+        case PLAYLIST: return QStringLiteral("(Folder) ");
+        case CUE_FILE: return QStringLiteral("(Cueta) ");
+        case WEB_FILE: {
+            switch(subtipe()) {
+                case Web::site_myzuka: return QStringLiteral("(Myzika) ");
+                case Web::site_fourshared: return QStringLiteral("(4shared) ");
+                case Web::site_zaycev: return QStringLiteral("(Zaycev) ");
+                case Web::site_mp3base: return QStringLiteral("(Mp3base) ");
+                case Web::site_promodj: return QStringLiteral("(PromoDj) ");
+                case Web::site_mp3cc: return QStringLiteral("(Mp3cc) ");
+                case Web::site_mp3pm: return QStringLiteral("(Mp3pm) ");
+                case Web::site_shmidt: return QStringLiteral("(Shmidt) ");
+                case Web::site_jetune: return QStringLiteral("(Jetune) ");
+                case Web::site_music_shara: return QStringLiteral("(MShara) ");
+                case Web::site_redmp3: return QStringLiteral("(Redmp3) ");
+                case Web::site_yandex: return QStringLiteral("(Yandex) ");
+                case Web::site_youtube: return QStringLiteral("(Youtube) ");
+                default: return QStringLiteral("(Unknow subtype) ");
+            }
+        break;}
+        case VK_FILE: return QStringLiteral("(Vk) ");
+        case VK_PLAYLIST: return QStringLiteral("(Vk Folder) ");
+        case SOUNDCLOUD_FILE: return QStringLiteral("(Sc) ");
+        case SOUNDCLOUD_PLAYLIST: return QStringLiteral("(Sc Folder) ");
+        case OD_FILE: return QStringLiteral("(Od) ");
+        case OD_PLAYLIST: return QStringLiteral("(Od Folder) ");
+        default: return QStringLiteral("(Unknow) ");
+    }
 }

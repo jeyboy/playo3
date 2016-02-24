@@ -85,37 +85,7 @@ namespace Core {
     protected:
         Playlist * _parent;
 
-        QString relationStr() const {
-            switch(itemType()) {
-                case SIMPLE_FILE: return QStringLiteral("(Local) ");
-                case PLAYLIST: return QStringLiteral("(Folder) ");
-                case CUE_FILE: return QStringLiteral("(Cueta) ");
-                case WEB_FILE: {
-                    switch(subtipe()) {
-                        case Web::site_myzuka: return QStringLiteral("(Myzika) ");
-                        case Web::site_fourshared: return QStringLiteral("(4shared) ");
-                        case Web::site_zaycev: return QStringLiteral("(Zaycev) ");
-                        case Web::site_mp3base: return QStringLiteral("(Mp3base) ");
-                        case Web::site_promodj: return QStringLiteral("(PromoDj) ");
-                        case Web::site_mp3cc: return QStringLiteral("(Mp3cc) ");
-                        case Web::site_mp3pm: return QStringLiteral("(Mp3pm) ");
-                        case Web::site_shmidt: return QStringLiteral("(Shmidt) ");
-                        case Web::site_jetune: return QStringLiteral("(Jetune) ");
-                        case Web::site_music_shara: return QStringLiteral("(MShara) ");
-                        case Web::site_redmp3: return QStringLiteral("(Redmp3) ");
-                        case Web::site_yandex: return QStringLiteral("(Yandex) ");
-                        default: return QStringLiteral("(Unknow subtype) ");
-                    }
-                break;}
-                case VK_FILE: return QStringLiteral("(Vk) ");
-                case VK_PLAYLIST: return QStringLiteral("(Vk Folder) ");
-                case SOUNDCLOUD_FILE: return QStringLiteral("(Sc) ");
-                case SOUNDCLOUD_PLAYLIST: return QStringLiteral("(Sc Folder) ");
-                case OD_FILE: return QStringLiteral("(Od) ");
-                case OD_PLAYLIST: return QStringLiteral("(Od Folder) ");
-                default: return QStringLiteral("(Unknow) ");
-            }
-        }
+        QString relationStr() const;
     };
 }
 

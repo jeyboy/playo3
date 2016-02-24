@@ -67,6 +67,8 @@ namespace Core {
         inline Web::SubType subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
 
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
+        inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
+
 
         inline void setUid(const QVariant & newId)              { attrs[JSON_TYPE_UID] = newId; }
         inline void addArtistUid(QString id)                    { attrs[JSON_TYPE_ARTIST_UIDS].toStringList() << id; }
@@ -88,6 +90,7 @@ namespace Core {
         inline void setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
         inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
         inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
+        inline void setError(const QVariant & error)            { attrs[JSON_TYPE_ERROR] = error; }
 
         inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
