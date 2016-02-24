@@ -24,6 +24,43 @@ void SearchModel::startSearch(bool continues) {
     emit updateRemovingBlockation(true);
 }
 
+int SearchModel::searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent) {
+    int propagate_count = 0;
+
+    switch(r.search_type) {
+        case SearchRequest::local: {
+//                qDebug() << "SO COMP";
+            propagate_count = proceedMyComputer(r, parent);
+        break;}
+
+        case SearchRequest::inner: {
+            qDebug() << "SO INNER";
+            propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
+        break;}
+
+        case SearchRequest::remote: {
+            ISearchable * iface = (ISearchable *) r.search_interface;
+            qDebug() << "SO START" << iface -> siteType();
+            QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
+
+            switch (iface -> siteType()) {
+                case site_vk: { propagate_count = proceedVkList(items, parent); break; }
+                case site_sc: { propagate_count = proceedScList(items, parent); break;}
+                case site_od: { propagate_count = proceedOdList(items, parent); break;}
+                case site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
+                case site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
+                default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
+            }
+
+            qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
+        break;}
+
+        default:;
+    }
+
+    return propagate_count;
+}
+
 void SearchModel::initiateSearch(const SearchSettings & params) {
     request = params;
     startSearch();
@@ -137,40 +174,8 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             break;
 
         SearchRequest r = requests.takeFirst();
-
         Playlist * parent = res -> createPlaylist(r.token());
-        int propagate_count = 0;
-
-        switch(r.search_type) {
-            case SearchRequest::local: {
-//                qDebug() << "SO COMP";
-                propagate_count = proceedMyComputer(r, parent);
-            break;}
-
-            case SearchRequest::inner: {
-                qDebug() << "SO INNER";
-                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
-            break;}
-
-            case SearchRequest::remote: {
-                ISearchable * iface = (ISearchable *) r.search_interface;
-                qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-
-                switch (iface -> siteType()) {
-                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
-                    case site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
-                    case site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
-                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
-                }
-
-                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
-            break;}
-
-            default:;
-        }
+        int propagate_count = searchProc(r, limitation, parent);
 
         if (propagate_count > 0) {
             // hack for view updating
@@ -199,43 +204,13 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     int offset = res -> childCount();
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
-        if (watcher -> isCanceled())
+        if (watcher && watcher -> isCanceled())
             break;
 
         SearchRequest r = requests.takeFirst();
-
         Playlist * parent = new Playlist();
         search_reglament.insert(r.token(), false);
-        int propagate_count = 0;
-
-        switch(r.search_type) {
-            case SearchRequest::local: {
-                qDebug() << "SO LOCAL";
-                propagate_count = proceedMyComputer(r, parent);
-            break;}
-
-            case SearchRequest::inner: {
-                qDebug() << "SO INNER";
-                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
-            break;}
-
-            case SearchRequest::remote: {
-                ISearchable * iface = (ISearchable *) r.search_interface;
-                qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-
-                switch (iface -> siteType()) {
-                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
-                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
-                }
-
-                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
-            break;}
-
-            default:;
-        }
+        int propagate_count = searchProc(r, limitation, parent);
 
         if (propagate_count > 0) {
             int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better

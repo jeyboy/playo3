@@ -16,6 +16,7 @@ namespace Models {
         void searchSingleRoutine(QFutureWatcher<void> * watcher);
         void prepareRequests(QList<SearchRequest> & requests);
         void startSearch(bool continues = false);
+        int searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent);
 
         SearchSettings request;
         QFutureWatcher<void> * initiator;
