@@ -264,14 +264,15 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
 
             painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
         } else {
-            painter -> setPen(Qt::red);
+            bool is_error = attrs.contains(Keys::error);
+            painter -> setPen(is_error ? Qt::red : QColor::fromRgb(142,120,0));
 
             int right_offset_with_corner = right_offset - (angle / 3);
             top = bodyRect.bottom() - fmfInfo -> height() - 2;
 
             QPoint bottomRight(right_offset_with_corner - 4, bodyRect.bottom());
             QRect rectText(QPoint(left_offset, top), bottomRight);
-            QString s = fmfInfo -> elidedText(attrs.value(Keys::error).toString(), Qt::ElideRight, rectText.width());
+            QString s = fmfInfo -> elidedText(attrs.value(is_error ? Keys::error : Keys::warning).toString(), Qt::ElideRight, rectText.width());
             painter -> drawText(rectText, Qt::AlignLeft, s);
             painter -> drawLine(rectText.topLeft(), rectText.topRight());
         }
@@ -457,12 +458,14 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
                 painter -> drawLine(rectText.topLeft(), rectTimeText.topRight());
             } else {
-                painter -> setPen(Qt::red);
+                bool is_error = attrs.contains(Keys::error);
+
+                painter -> setPen(is_error ? Qt::red : QColor::fromRgb(142,120,0));
                 int right_offset_with_corner = right_offset - (angle / 3);
                 top = bodyRect.bottom() - fmfInfo -> height() - 2;
                 QPoint bottomRight(right_offset_with_corner, bodyRect.bottom());
                 QRect rectText(QPoint(left_offset, top), bottomRight);
-                QString s = fmfInfo -> elidedText(attrs.value(Keys::error).toString(), Qt::ElideRight, rectText.width());
+                QString s = fmfInfo -> elidedText(attrs.value(is_error ? Keys::error : Keys::warning).toString(), Qt::ElideRight, rectText.width());
 
                 painter -> drawText(rectText, Qt::AlignLeft, s);
                 painter -> drawLine(rectText.topLeft(), rectText.topRight());
