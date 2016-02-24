@@ -303,7 +303,8 @@ HEADERS += \
     modules/pizduck/duk_config.h \
     modules/pizduck/duktape.h \
     modules/core/web/utils/js_parser.h \
-    modules/core/web/apis/social/youtube_api_misc.h
+    modules/core/web/apis/social/youtube_api_misc.h \
+    modules/core/core_parts/part_mixes/item_errors.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

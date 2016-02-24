@@ -21,6 +21,16 @@ namespace Core {
             qDebug() << "STATE IS NOT CHANGED";
     }
 
+    void DataFactory::setError(ItemErrors error) {
+        if (!current_playlist) {
+            qDebug() << "PLAYLIST IS UNDEFINED";
+            return;
+        }
+
+        if (!current_playlist -> setError(playedIndex(), error))
+            qDebug() << "ERROR IS NOT ATTACHED";
+    }
+
     void DataFactory::playNext(bool onFail) {
         setState(-ItemState::proccessing); // extra call for item clearing states!
         if (!current_playlist) {
@@ -55,7 +65,7 @@ namespace Core {
     }
 
     void DataFactory::proceedStalledState() {
-        setState(ItemState::not_exist);
+        setError(ItemErrors::err_not_existed);
         playNext(true);
     }
 
@@ -149,12 +159,13 @@ namespace Core {
             break;}
 
             case LoadedMedia: {
-                setState(ItemState::not_proccessing | ItemState::exist | ItemState::supported);
+                setState(ItemState::not_proccessing);
+                setError(ItemErrors::err_none);
             break;}
 
             case InvalidMedia: {
                 qDebug() << "INVALID MEDIA";
-                setState(ItemState::not_supported);
+                setError(ItemErrors::warn_not_supported);
                 playNext(true);
             break;}
 
@@ -165,7 +176,7 @@ namespace Core {
                     if (current_item -> isRemote()) {
                         restoreOrNext();
                     } else {
-                        setState(ItemState::not_exist);
+                        setError(ItemErrors::err_not_existed);
                         playNext(true);
                     }
                 }

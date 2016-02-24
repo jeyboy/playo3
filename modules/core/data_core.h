@@ -25,6 +25,7 @@ namespace Core {
     protected:
         void spoil();
         void setState(int state);
+        void setError(ItemErrors error);
 
         void playNext(bool onFail = false);
         void restoreOrNext();
@@ -55,13 +56,6 @@ namespace Core {
         void likeChanged(bool);
 
     public slots:
-//        inline void itemNotExist(QModelIndex node) { setData(node, ItemState::not_exist, ISTATE); }
-//        inline void itemNotSupported(QModelIndex node) {
-//            setData(node, ItemState::not_supported, ISTATE);
-//            QDesktopServices::openUrl(node.data(IURL).toUrl());
-//        }
-//        inline void itemError(QModelIndex node) { setData(node, ItemState::not_supported | ItemState::not_exist, ISTATE); }
-
         void changeLikeStatus(bool is_liked) { setState((is_liked ? 1 : -1) * ItemState::liked); }
 
         void playerStatusChanged(const PlayerStatus & status);

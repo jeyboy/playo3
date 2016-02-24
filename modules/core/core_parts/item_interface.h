@@ -86,6 +86,7 @@ namespace Core {
         Playlist * _parent;
 
         QString relationStr() const;
+        QString errorStr(QString & key_name) const;
     };
 }
 

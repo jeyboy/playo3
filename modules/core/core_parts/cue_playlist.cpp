@@ -42,12 +42,12 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes, QHash<QString, IIt
         CueFile * f = new CueFile((*song).startPos, (*song).duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
         if (res) {
             filePathes.insert(songPath, true);
-            if (!(*song).error.isEmpty())
-                f -> set(not_exist);
+            if (!(*song).error.isEmpty()) // there should be other error status ?
+                f -> setError(ItemErrors::err_not_existed);
         } else {
             filePathes.insert(songPath, false);
             ignore.insert(songPath, QString());
-            f -> set(not_exist);
+            f -> setError(ItemErrors::err_not_existed);
         }
     }
 

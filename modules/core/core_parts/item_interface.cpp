@@ -122,10 +122,14 @@ QVariant IItem::data(int column) const {
                 if (Settings::obj().isShowSystemIcons())
                     params.insert(Keys::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
 
-                if (error().isValid())
-                    params.insert(Keys::error, error().toString());
-                else
+                QString err_key;
+                QString err_msg = errorStr(err_key);
+
+                if (err_key.isEmpty())
                     params.insert(Keys::info, info());
+                else
+                    params.insert(Keys::error, error().toString());
+
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
                 params.insert(Keys::played, is(played));
@@ -134,8 +138,9 @@ QVariant IItem::data(int column) const {
                 if (is(proccessing))
                     params.insert(Keys::proccessing, true);
                 else {
-                    params.insert((isRemote() ? Keys::undefined : Keys::not_exist), is(not_exist));
-                    params.insert(Keys::unsupported, is(not_supported));
+                    int err_code = error().toInt();
+                    params.insert((isRemote() ? Keys::undefined : Keys::not_exist), err_code > 0 && err_code < 1000);
+                    params.insert(Keys::unsupported, err_code > 999 && err_code < 2000);
                 }
                 params.insert(
                     Keys::type,
@@ -169,18 +174,21 @@ QVariant IItem::data(int column) const {
                 return Qt::AlignLeft;
 
         case Qt::CheckStateRole: {
-            if (Settings::obj().isCheckboxShow()) {
+            if (Settings::obj().isCheckboxShow())
                 return is(checked);
-            } else return QVariant();
+            else return QVariant();
         }
 
-        case Qt::ToolTipRole:
+        case Qt::ToolTipRole: {
+            QString err_key;
+            QString err_msg = errorStr(err_key);
             return
                 relationStr() +
                 (_info().isValid() ? ('\n' + _info().toString()) : "") +
                 '\n' + title().toString() +
-                (error().isValid() ? ("\n Error: " + error().toString()) : "") +
+                (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "") +
                 (path().isValid() ? ('\n' + path().toString()) : "");
+        }
 
         case IEXTENSION:        return extension();
 //        case PATHID:            return path();
@@ -253,5 +261,29 @@ QString IItem::relationStr() const {
         case OD_FILE: return QStringLiteral("(Od) ");
         case OD_PLAYLIST: return QStringLiteral("(Od Folder) ");
         default: return QStringLiteral("(Unknow) ");
+    }
+}
+
+QString IItem::errorStr(QString & key_name) const {
+    switch(error().toInt()) {
+        case err_not_existed: {
+            key_name = Keys::error;
+            return QStringLiteral("Not existed");
+        break;}
+
+        case warn_not_supported: {
+            key_name = Keys::warning;
+            return QStringLiteral("Not supported");
+        break;}
+        case warn_not_accessable: {
+            key_name = Keys::warning;
+            return QStringLiteral("Not accessable at this time");
+        break;}
+        case warn_not_size_permitted: {
+            key_name = Keys::warning;
+            return QStringLiteral("This item may crashed the program");
+        break;}
+
+        default: return QString();
     }
 }

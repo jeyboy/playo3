@@ -16,28 +16,28 @@ void ItemState::setStates(int flags) {
         if (bitIsSet(-flags, proccessing))    unset(proccessing);
         if (bitIsSet(-flags, played))    unset(played);
         if (bitIsSet(-flags, liked))     unsetLiked();
-        if (bitIsSet(-flags, not_exist)) unset(not_exist);
-        if (bitIsSet(-flags, not_supported)) unset(not_supported);
+//        if (bitIsSet(-flags, not_exist)) unset(not_exist);
+//        if (bitIsSet(-flags, not_supported)) unset(not_supported);
     } else {
         if (bitIsSet(flags, listened))  {
             setListened();
-            unsetBit(item_state, not_exist);
+//            unsetBit(item_state, not_exist);
         }
         if (bitIsSet(flags, liked))     setLiked();
         if (bitIsSet(flags, played))    setBit(item_state, played);
-        if (bitIsSet(flags, not_exist)) setBit(item_state, not_exist);
+//        if (bitIsSet(flags, not_exist)) setBit(item_state, not_exist);
         if (bitIsSet(flags, proceeded)) setBit(item_state, proceeded);
         if (bitIsSet(flags, mark_on_removing)) setBit(item_state, mark_on_removing);
         if (bitIsSet(flags, proccessing)) setBit(item_state, proccessing);
-        if (bitIsSet(flags, not_supported)) setBit(item_state, not_supported);
+//        if (bitIsSet(flags, not_supported)) setBit(item_state, not_supported);
 
         // negative variants
 
         if (bitIsSet(flags, not_proccessing))     unset(proccessing);
         if (bitIsSet(flags, not_played))     unset(played);
         if (bitIsSet(flags, not_liked))     unsetLiked();
-        if (bitIsSet(flags, exist))     unset(not_exist);
-        if (bitIsSet(flags, supported))     unset(not_supported);
+//        if (bitIsSet(flags, exist))     unset(not_exist);
+//        if (bitIsSet(flags, supported))     unset(not_supported);
     }
 }
 

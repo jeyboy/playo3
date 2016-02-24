@@ -67,6 +67,9 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
     else if (role == ISPOILITEM) {
         emit spoilNeeded(model_index);
         result = true;
+    } else if (role == IERROR) {
+        node -> setError(value);
+        result = true;
     }
 
     if (result)

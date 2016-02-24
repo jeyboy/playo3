@@ -5,6 +5,7 @@
 
 #include "item_state.h"
 #include "json_fields.h"
+#include "item_errors.h"
 #include "settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/web/web_sub_types.h"
@@ -32,6 +33,7 @@ namespace Core {
     #define ITITLESCACHE IINFO - 1
     #define IADDFONT ITITLESCACHE - 1
     #define IREMOTE IADDFONT - 1
+    #define IERROR IREMOTE - 1
 
     class ItemFields : public ItemState {
     public:
@@ -90,7 +92,12 @@ namespace Core {
         inline void setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
         inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
         inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
-        inline void setError(const QVariant & error)            { attrs[JSON_TYPE_ERROR] = error; }
+        inline void setError(const QVariant & error)            {
+            if (error.toInt() == err_none)
+                attrs.remove(JSON_TYPE_ERROR);
+            else
+                attrs[JSON_TYPE_ERROR] = error;
+        }
 
         inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 

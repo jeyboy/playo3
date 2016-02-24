@@ -265,7 +265,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
         if (!it.value().toBool()) {
             WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
-            file -> set(ItemState::not_exist);
+            file -> setError(ItemErrors::err_not_existed);
             not_finded++;
         }
 
