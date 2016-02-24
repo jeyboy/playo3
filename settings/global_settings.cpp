@@ -18,6 +18,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _toolIconSize = settings.value(SETTINGS_TOOL_ICON_SIZE_KEY).toInt(28);
     _output_device = settings.value(SETTINGS_OUTPUT_DEVICE_KEY).toString();
     _showDownload = settings.value(SETTINGS_SHOW_DOWNLOAD_KEY).toBool(true);
+    _findOtherSource = settings.value(SETTINGS_FIND_OTHER_SOURE_KEY).toBool(true);
 }
 
 void GlobalSettings::toJson(QJsonObject & settings) {   
@@ -39,4 +40,5 @@ void GlobalSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_OUTPUT_DEVICE_KEY, QJsonValue::fromVariant(_output_device));
 
     settings.insert(SETTINGS_SHOW_DOWNLOAD_KEY, QJsonValue::fromVariant(_showDownload));
+    settings.insert(SETTINGS_FIND_OTHER_SOURE_KEY, QJsonValue::fromVariant(_findOtherSource));
 }

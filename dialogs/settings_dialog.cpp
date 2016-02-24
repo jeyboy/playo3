@@ -263,6 +263,7 @@ void SettingsDialog::initGlobalSettings() {
     ui -> autorunned -> blockSignals(false);
 
     ui -> showDownload -> setChecked(Settings::obj().isShowDownloadingOnStart());
+    ui -> findOtherSource -> setChecked(Settings::obj().isFindOtherSource());
 
     ui -> drawMetrics -> setChecked(Settings::obj().isMetricShow());
     ui -> drawMetricsNumero -> setChecked(Settings::obj().isMetricNumero());
@@ -430,6 +431,7 @@ void SettingsDialog::initExtensions() {
 void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setAutorun(ui -> autorunned -> isChecked());
 
+    Settings::obj().setFindOtherSource(ui -> findOtherSource -> isChecked());
     Settings::obj().setShowDownloadingOnStart(ui -> showDownload -> isChecked());
     Settings::obj().setDefaultDownloadPath(ui -> downloadPath -> text());
     Settings::obj().setMetricShow(ui -> drawMetrics -> isChecked());

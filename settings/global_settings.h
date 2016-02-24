@@ -20,6 +20,7 @@
 #define SETTINGS_TOOL_ICON_SIZE_KEY QStringLiteral("tool_icon_size")
 #define SETTINGS_OUTPUT_DEVICE_KEY QStringLiteral("output_device")
 #define SETTINGS_SHOW_DOWNLOAD_KEY QStringLiteral("show_download")
+#define SETTINGS_FIND_OTHER_SOURE_KEY QStringLiteral("find_other_source")
 
 class GlobalSettings {
 public:
@@ -31,6 +32,9 @@ public:
 
     inline bool isShowDownloadingOnStart() const { return _showDownload; }
     inline void setShowDownloadingOnStart(bool show) { _showDownload = show; }
+
+    inline bool isFindOtherSource() const { return _findOtherSource; }
+    inline void setFindOtherSource(bool find) { _findOtherSource = find; }
 
     inline bool isMetricShow() const { return _showMetric; }
     inline void setMetricShow(bool show) { _showMetric = show; }
@@ -69,6 +73,7 @@ protected:
     QString _output_device;
     QString _defaultDownloadPath;
     bool _showDownload;
+    bool _findOtherSource;
     bool _showMetric;
     bool _showMetricNumero;
     bool _isAutorunned;
