@@ -18,6 +18,8 @@
 
 #include "modules/controls/user_dialog_box.h"
 
+#define FUZZY_COMPARITY_PERCENT 80
+
 namespace Models {
     using namespace Core;
 
@@ -78,13 +80,13 @@ namespace Models {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        int proceedVkList(QJsonArray & collection, Playlist * parent);
-        int proceedScList(QJsonArray & collection, Playlist * parent);
-        int proceedOdList(QJsonArray & collection, Playlist * parent);
-        int proceedYandexList(QJsonArray & collection, Playlist * parent);
-        int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
-        int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
-        int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
+        static int proceedVkList(QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedScList(QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedOdList(QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedYandexList(QJsonArray & collection, Playlist * parent);
+        static int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
+        static int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
+        static int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
@@ -114,7 +116,7 @@ namespace Models {
         inline QMutex * syncMutex() { return sync; }
 
         int initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source = 0);
-        int innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source = 0, int count = 9999999);
+        static int innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source = 0, int count = 9999999);
 
         inline virtual bool ignoreListContainUid(const QString & /*uid*/) { return false; }
     public slots:

@@ -219,7 +219,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedVkList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -240,7 +240,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
         id = QString::number(itm.value(Vk::tkn_id).toInt());
         owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
         uid = WebFile::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
+        if (mdl && mdl -> ignoreListContainUid(uid)) continue;
 
         uri = itm.value(Vk::tkn_url).toString();
         uri = uri.section('?', 0, 0); // remove extra info from url
@@ -446,7 +446,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 }
 
 
-int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -467,7 +467,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
         id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
         owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
         uid = WebFile::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
+        if (mdl && mdl -> ignoreListContainUid(uid)) continue;
 
         uri = itm.value(Soundcloud::tkn_download_url).toString();
         if (uri.isEmpty()) {
@@ -507,7 +507,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedOdList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
@@ -529,7 +529,7 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
 
         qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
         id = QString::number(iid);
-        if (iid == 0 || ignoreListContainUid(id)) continue;
+        if (iid == 0 || (mdl && mdl -> ignoreListContainUid(id))) continue;
 
         items = store.values(id);
 
@@ -784,7 +784,7 @@ void IModel::importIds(const QStringList & ids) {
 
                 if (Vk::Api::obj().isConnected()) {
                     QJsonArray obj = Vk::Api::obj().audioInfo(map_it.value());
-                    proceedVkList(obj, parentNode);
+                    proceedVkList(obj, parentNode, this);
                 }
             break;}
 
@@ -793,7 +793,7 @@ void IModel::importIds(const QStringList & ids) {
 
                 if (Soundcloud::Api::obj().isConnected()) {
                     QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
-                    proceedScList(obj, parentNode);
+                    proceedScList(obj, parentNode, this);
                 }
             break;}
 
@@ -802,7 +802,7 @@ void IModel::importIds(const QStringList & ids) {
 
                 if (Od::Api::obj().isConnected()) {
                     QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
-                    proceedOdList(obj, parentNode);
+                    proceedOdList(obj, parentNode, this);
                 }
             break;}
 
@@ -1140,8 +1140,8 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
 int IModel::innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source, int count) {
     int amount = 0;
 
-    if (search_source == 0)
-        search_source = rootItem;
+//    if (search_source == 0)
+//        search_source = rootItem;
 
     QList<IItem *> child = search_source -> childrenList();
 
@@ -1151,7 +1151,7 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
         } else {
             int comparity = FuzzyComparison::compareStrings((*it) -> title().toString(), predicate);
             qDebug() << "COMPATIBILITY CHECK" << predicate << " (VS) " << (*it) -> title().toString() << " ||| " << comparity;
-            bool is_valid = comparity >= 80;
+            bool is_valid = comparity >= FUZZY_COMPARITY_PERCENT;
 
             if (is_valid) {
                 QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());

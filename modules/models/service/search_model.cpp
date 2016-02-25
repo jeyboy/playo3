@@ -15,6 +15,29 @@ SearchModel::~SearchModel() {
     endResetModel();
 }
 
+Web::SubType SearchModel::findSource(QString & predicate, QString & url) {
+    ISearchable::SearchLimit limitation(ISearchable::in_title, 1);
+
+    QHash<Web::SubType, ISearchable *> sources = Web::Apis::list();
+    Playlist * results = new Playlist(), * middle_results = new Playlist();
+    QString genre = QString();
+
+    for(QHash<Web::SubType, ISearchable *>::Iterator source = sources.begin(); source != sources.end(); source++) {
+        QJsonArray items = source.value() -> search(predicate, genre, limitation);
+
+        int propagate_count = proceedLists(source.key(), items, middle_results, 0);
+        if (propagate_count > 0) {
+            int taked_amount = innerSearch(predicate, results, middle_results, 1);
+            if (taked_amount > 0) {
+                url = results -> child(0) -> toUrl().toString();
+                return source.key();
+            }
+        }
+    }
+
+    return Web::site_none;
+}
+
 void SearchModel::startSearch(bool continues) {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
@@ -22,6 +45,17 @@ void SearchModel::startSearch(bool continues) {
             request.limit(DEFAULT_LIMIT_AMOUNT) == 1 && (continues || !request.predicates.isEmpty()) ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
         ), initiator));
     emit updateRemovingBlockation(true);
+}
+
+int SearchModel::proceedLists(const Web::SubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl) {
+    switch (listType) {
+        case site_vk: return proceedVkList(items, parent, mdl);
+        case site_sc: return proceedScList(items, parent, mdl);
+        case site_od: return proceedOdList(items, parent, mdl);
+        case site_yandex: return proceedYandexList(items, parent);
+        case site_youtube: return proceedYoutubeList(items, parent);
+        default: return proceedGrabberList(listType, items, parent);
+    }
 }
 
 int SearchModel::searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent) {
@@ -42,16 +76,7 @@ int SearchModel::searchProc(SearchRequest & r, ISearchable::SearchLimit limitati
             ISearchable * iface = (ISearchable *) r.search_interface;
             qDebug() << "SO START" << iface -> siteType();
             QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
-
-            switch (iface -> siteType()) {
-                case site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                case site_sc: { propagate_count = proceedScList(items, parent); break;}
-                case site_od: { propagate_count = proceedOdList(items, parent); break;}
-                case site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
-                case site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
-                default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
-            }
-
+            propagate_count = proceedLists(iface -> siteType(), items, parent, this);
             qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
         break;}
 
@@ -240,7 +265,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
         if (!it.value().toBool()) {
             WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
-            file -> setError(ItemErrors::err_not_existed);
+            file -> setError(ItemErrors::err_not_finded);
             not_finded++;
         }
 

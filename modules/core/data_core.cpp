@@ -65,7 +65,8 @@ namespace Core {
     }
 
     void DataFactory::proceedStalledState() {
-        setError(ItemErrors::err_not_existed);
+        if (current_item)
+            setError(current_item -> isRemote() ? ItemErrors::warn_not_accessable : ItemErrors::err_not_existed);
         playNext(true);
     }
 

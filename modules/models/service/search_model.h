@@ -16,7 +16,9 @@ namespace Models {
         void searchSingleRoutine(QFutureWatcher<void> * watcher);
         void prepareRequests(QList<SearchRequest> & requests);
         void startSearch(bool continues = false);
+        static int proceedLists(const Web::SubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl);
         int searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent);
+        static Web::SubType findSource(QString & predicate, QString & url);
 
         SearchSettings request;
         QFutureWatcher<void> * initiator;

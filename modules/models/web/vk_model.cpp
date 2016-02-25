@@ -42,7 +42,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
             title = QDateTime::fromTime_t(post.value(Vk::tkn_date).toInt()).toString() % (title.isEmpty() ? QString() : Vk::tkn_time_sep) % title;
 
             folder = rootFolder -> createPlaylist(title);
-            proceedVkList(audios, folder);
+            proceedVkList(audios, folder, this);
 //            if (folder -> childCount() == 0)
 //                removeFolderPrebuild(folder);
         }
@@ -77,7 +77,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
                         pos
                     );
 
-                    int folderItemsAmount = proceedVkList(albumItems, folder);
+                    int folderItemsAmount = proceedVkList(albumItems, folder, this);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -87,7 +87,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
 
         if (audios.count() > 0)
-            itemsAmount += proceedVkList(audios, rootItem);
+            itemsAmount += proceedVkList(audios, rootItem, this);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();

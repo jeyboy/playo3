@@ -271,6 +271,11 @@ QString IItem::errorStr(QString & key_name) const {
             return QStringLiteral("Not existed");
         break;}
 
+        case err_not_finded: {
+            key_name = Keys::error;
+            return QStringLiteral("Noting founded");
+        break;}
+
         case warn_not_supported: {
             key_name = Keys::warning;
             return QStringLiteral("Not supported");

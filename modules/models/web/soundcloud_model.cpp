@@ -33,7 +33,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
                         album.value(Soundcloud::tkn_title).toString()
                     );
 
-                    int folderItemsAmount = proceedScList(albumItems, folder);
+                    int folderItemsAmount = proceedScList(albumItems, folder, this);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -43,7 +43,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
 
         if (audios_count > 0)
-            itemsAmount += proceedScList(audios, rootItem);
+            itemsAmount += proceedScList(audios, rootItem, this);
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();

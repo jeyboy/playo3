@@ -54,7 +54,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
                     folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
 
                     QJsonArray tracks = Od::Api::obj().playlistInfo(pid, items_amount);
-                    int folderItemsAmount = proceedOdList(tracks, folder);
+                    int folderItemsAmount = proceedOdList(tracks, folder, this);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -77,7 +77,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
 //    /////////////////////////////////////////////////////////////////////
 
         if (audios.size() > 0)
-            itemsAmount += proceedOdList(audios, rootItem);
+            itemsAmount += proceedOdList(audios, rootItem, this);
 //    }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
