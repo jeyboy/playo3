@@ -18,7 +18,6 @@ namespace Models {
         void startSearch(bool continues = false);
         static int proceedLists(const Web::SubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl);
         int searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent);
-        static Web::SubType findSource(QString & predicate, QString & url);
 
         SearchSettings request;
         QFutureWatcher<void> * initiator;
@@ -32,6 +31,8 @@ namespace Models {
         }
 
         ~SearchModel();
+
+        static bool findSource(IItem * item);
 
         inline bool isRelative() const { return false; }
         inline Data::Type playlistType() const { return Data::search; }

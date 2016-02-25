@@ -231,6 +231,10 @@ void IItem::setParent(Playlist * pNode, int pos) {
     (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }
 
+void IItem::addSource(QString & url, const QString & refresh_token = QString()) {
+    // update me :(
+}
+
 QString IItem::relationStr() const {
     switch(itemType()) {
         case SIMPLE_FILE: return QStringLiteral("(Local) ");

@@ -1,4 +1,5 @@
 #include "data_core.h"
+#include "modules/models/service/search_model.h"
 
 namespace Core {
     void DataFactory::spoil() {
@@ -55,6 +56,10 @@ namespace Core {
         }
         if (!current_playlist -> restoreItem(current_item)) {
             qDebug() << "RESTORE: FAILED";
+            if (Settings::obj().isFindOtherSource()) {
+                Models::SearchModel::
+            }
+
             proceedStalledState();
         } else {
             qDebug() << "RESTORE: SUCCESS";

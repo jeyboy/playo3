@@ -15,27 +15,25 @@ SearchModel::~SearchModel() {
     endResetModel();
 }
 
-Web::SubType SearchModel::findSource(QString & predicate, QString & url) {
+bool SearchModel::findSource(IItem * item) {
     ISearchable::SearchLimit limitation(ISearchable::in_title, 1);
 
     QHash<Web::SubType, ISearchable *> sources = Web::Apis::list();
     Playlist * results = new Playlist(), * middle_results = new Playlist();
-    QString genre = QString();
+    QString genre = QString(), predicate = item -> title().toString();
 
     for(QHash<Web::SubType, ISearchable *>::Iterator source = sources.begin(); source != sources.end(); source++) {
         QJsonArray items = source.value() -> search(predicate, genre, limitation);
 
-        int propagate_count = proceedLists(source.key(), items, middle_results, 0);
-        if (propagate_count > 0) {
-            int taked_amount = innerSearch(predicate, results, middle_results, 1);
-            if (taked_amount > 0) {
-                url = results -> child(0) -> toUrl().toString();
-                return source.key();
+        if (proceedLists(source.key(), items, middle_results, 0) > 0)
+            if (innerSearch(predicate, results, middle_results, 1) > 0) {
+                IItem * res = results -> child(0);
+                item -> addSource(res -> toUrl().toString(), res -> refresh_path());
+                return true;
             }
-        }
     }
 
-    return Web::site_none;
+    return false;
 }
 
 void SearchModel::startSearch(bool continues) {
