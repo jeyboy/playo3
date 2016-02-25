@@ -41,7 +41,7 @@ namespace Core {
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(files_token_key).toArray().isEmpty(); }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) { return true; } // stub
+                inline bool extractStatus(QUrl & /*url*/, QUrl & /*responseUrl*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) { return true; } // stub
             };
         }
     }

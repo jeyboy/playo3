@@ -64,7 +64,7 @@ namespace Core {
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(tkn_response).toArray().isEmpty()*/; }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
+                inline bool extractStatus(QUrl & /*url*/, QUrl & /*responseUrl*/, QJsonObject & response, int & code, QString & message) {
                     QJsonObject error = response.value(QStringLiteral("error")).toObject();
                     if (error.isEmpty())
                         return true;

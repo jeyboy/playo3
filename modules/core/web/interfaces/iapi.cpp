@@ -38,9 +38,10 @@ bool IApi::sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc, QObj
     int code;
     QString message;
     Logger::obj().write(QStringLiteral("sQuery"), url.toString(), QStringLiteral("sending"));
-    response = Web::Manager::prepare() -> getJson(url, post_proc & wrap);
+    QUrl respUrl;
+    response = Web::Manager::prepare() -> getJson(url, respUrl, post_proc & wrap);
 
-    bool status = extractStatus(url, response, code, message);
+    bool status = extractStatus(url, respUrl, response, code, message);
     if (!status) {
         Logger::obj().write(QStringLiteral("sQuery"), url.toString(), message, true);
         sendError(errorReceiver, message, code);

@@ -83,7 +83,7 @@ bool Api::connection() {
 /// PROTECTED
 ///////////////////////////////////////////////////////////
 
-bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
+bool Api::extractStatus(QUrl & url, QUrl & /*responseUrl*/, QJsonObject & response, int & code, QString & message) {
     QJsonObject stat_obj = response.value(tkn_error).toObject();
     message = stat_obj.value(tkn_error_msg).toString();
     code = stat_obj.value(tkn_error_code).toInt();

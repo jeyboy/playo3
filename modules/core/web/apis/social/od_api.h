@@ -62,7 +62,7 @@ namespace Core {
                     if (chunk_obj.isEmpty()) return false;
                     return chunk_obj.value(tkn_count).toInt() < requestLimit();
                 }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
+                inline bool extractStatus(QUrl & /*url*/, QUrl & /*responseUrl*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
         //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
         //            message = stat_obj.value(QStringLiteral("error_message")).toString();
                     return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;

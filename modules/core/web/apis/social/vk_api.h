@@ -65,7 +65,7 @@ namespace Core {
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(tkn_response).toObject()); }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_finished).toBool(); }
-                bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
+                bool extractStatus(QUrl & url, QUrl & /*responseUrl*/, QJsonObject & response, int & code, QString & message);
 
                 QUrl buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & prev_response);
                 bool captchaProcessing(QJsonObject & response, QUrl & url);

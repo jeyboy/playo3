@@ -44,7 +44,7 @@ namespace Core {
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(QStringLiteral("response")).toObject()); }
                 inline bool endReached(QJsonObject & response, int offset) { return offset >= extractBody(response).value(QStringLiteral("total")).toInt(); }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
+                inline bool extractStatus(QUrl & /*url*/, QUrl & /*responseUrl*/, QJsonObject & response, int & code, QString & message) {
                     QJsonObject stat_obj = extractBody(response).value(QStringLiteral("status")).toObject();
                     message = stat_obj.value(QStringLiteral("message")).toString();
                     return (code = stat_obj.value(QStringLiteral("code")).toInt()) == 0;

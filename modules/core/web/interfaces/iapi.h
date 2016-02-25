@@ -33,7 +33,7 @@ namespace Core {
         virtual QString offsetKey() const = 0;
         virtual QString limitKey() const = 0;
 
-        virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
+        virtual bool extractStatus(QUrl & url, QUrl & responseUrl, QJsonObject & response, int & code, QString & message) = 0;
         virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
         QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {

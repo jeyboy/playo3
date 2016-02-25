@@ -69,7 +69,11 @@ namespace Core {
 //                    return chunk_obj.value(tkn_count).toInt() < requestLimit();
                     return true;
                 }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
+                inline bool extractStatus(QUrl & /*url*/, QUrl & responseUrl, QJsonObject & response, int & /*code*/, QString & /*message*/) {
+                    if (response.isEmpty()) {
+                        if (responseUrl.toString().startsWith(QStringLiteral("https://music.yandex.ua/showcaptcha")))
+                            Logger::obj().write("Yandex API", "CAPTCHA"); // proceed captcha
+                    }
         //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
         //            message = stat_obj.value(QStringLiteral("error_message")).toString();
                     return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;

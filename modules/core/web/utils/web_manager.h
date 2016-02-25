@@ -151,6 +151,11 @@ namespace Core { // requests and response has memory leaks
             inline QPixmap getImage(const QUrl & url) { return followedGet(url) -> toImage(); }
             inline QJsonObject getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
             inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
+            inline QJsonObject getJson(const QUrl & url, QUrl & responseUrl, bool wrap = false) {
+                Response * resp = followedGet(url);
+                responseUrl = resp -> toUrl(false);
+                return resp -> toJson(wrap ? QStringLiteral("response") : QString());
+            }
             inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
             inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
 
