@@ -28,7 +28,8 @@ bool SearchModel::findSource(IItem * item) {
         if (proceedLists(source.key(), items, middle_results, 0) > 0)
             if (innerSearch(predicate, results, middle_results, 1) > 0) {
                 IItem * res = results -> child(0);
-                item -> addSource(res -> toUrl().toString(), res -> refresh_path());
+                QString url_path = res -> toUrl().toString();
+                item -> addSource(url_path, res -> refresh_path());
                 return true;
             }
     }

@@ -54,19 +54,23 @@ namespace Core {
             qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
             return;
         }
-        if (!current_playlist -> restoreItem(current_item)) {
-            qDebug() << "RESTORE: FAILED";
-            if (Settings::obj().isFindOtherSource()) {
-                Models::SearchModel::
-            }
 
-            proceedStalledState();
-        } else {
-            qDebug() << "RESTORE: SUCCESS";
-            IPlayer * player = currPlayer();
-            player -> updateMedia(current_item -> toUrl());
-            player -> play(init_state_flag == paused);
+        bool item_updated = current_playlist -> restoreItem(current_item);
+        if (!item_updated) {
+            qDebug() << "RESTORE: FAILED";
+            if (Settings::obj().isFindOtherSource())
+                item_updated = Models::SearchModel::findSource(current_item);
         }
+
+        if (!item_updated) {
+            proceedStalledState();
+            return;
+        }
+
+        qDebug() << "FIND SOURCE OR RESTORE";
+        IPlayer * player = currPlayer();
+        player -> updateMedia(current_item -> toUrl());
+        player -> play(init_state_flag == paused);
     }
 
     void DataFactory::proceedStalledState() {

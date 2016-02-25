@@ -83,7 +83,7 @@ namespace Core {
 
         virtual void setParent(Playlist * pNode, int pos = -1);
 
-        void addSource(QString & url, const QString & refresh_token = QString());
+        void addSource(QString & url, const QString & refresh_token = QString(), bool setAsMain = false);
     protected:
         Playlist * _parent;
 
