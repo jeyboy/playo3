@@ -184,7 +184,7 @@ QVariant IItem::data(int column) const {
             QString err_msg = errorStr(err_key);
             return
                 relationStr() +
-                (_info().isValid() ? ('\n' + _info().toString()) : "") +
+                (infoVar().isValid() ? ('\n' + infoVar().toString()) : "") +
                 '\n' + title().toString() +
                 (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "") +
                 (path().isValid() ? ('\n' + path().toString()) : "");

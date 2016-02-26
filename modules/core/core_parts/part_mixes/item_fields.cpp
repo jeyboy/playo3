@@ -17,15 +17,15 @@ ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
 ItemFields::ItemFields(int state) : ItemState(state) {
 }
 
-QStringList ItemFields::info() const {
+QStringList ItemFields::_info() const {
     QStringList list;
-    QVariant i = _info();
+    QVariant i = _infoVar();
 
     if (!i.isValid())
         list.append(QStringLiteral("Wait on proc..."));
     else
         list.append(i.toString());
-    list.append(duration().toString());
+    list.append(_duration().toString());
 
     return list;
 }
