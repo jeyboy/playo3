@@ -83,9 +83,11 @@ namespace Core {
 
         virtual void setParent(Playlist * pNode, int pos = -1);
 
-        void addSource(QString & url, const QString & refresh_token = QString(), bool setAsMain = false);
+        void addSource(QJsonObject * hash);
+        void addSource(IItem * newSource, bool setAsMain = false);
     protected:
         Playlist * _parent;
+        QList<IItem *> sources;
 
         QString relationStr() const;
         QString errorStr(QString & key_name) const;

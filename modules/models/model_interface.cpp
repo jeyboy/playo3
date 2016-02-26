@@ -419,7 +419,7 @@ int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist 
         }
 
         if (itm.contains(Grabber::genre_id_key))
-            newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
+            newItem -> setGenreID(itm.value(Grabber::genre_id_key).toInt());
 
         if (itm.contains(Grabber::bpm_key))
             newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
@@ -495,7 +495,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * m
 
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
             if (itm.contains(Soundcloud::tkn_genre_id))
-                newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
+                newItem -> setGenreID(itm.value(Soundcloud::tkn_genre_id).toInt());
         } else {
             QList<IItem *>::Iterator it_it = items.begin();
 

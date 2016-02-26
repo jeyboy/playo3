@@ -228,26 +228,30 @@ void IItem::setParent(Playlist * pNode, int pos) {
     if (pNode == _parent) return;
     _parent -> undeclareChild(this);
     _parent = pNode;
-    (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
+    if (pNode)
+        (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }
 
-void IItem::addSource(const QString & url, const QString & refresh_token, bool setAsMain) {
+void IItem::addSource(QJsonObject * hash) { addSource(Playlist::restoreItem(0, *hash)); }
+
+void IItem::addSource(IItem * newSource, bool setAsMain) {
+    sources.append(newSource);
+
     if (setAsMain)
-
-    // update me :(
+        setActiveSource(sources.length() - 1);
 }
 
-bool IItem::hasSource(const QString & url, const QString & refresh_token) {
-    // update me :(
-}
+//bool IItem::hasSource(const QString & url, const QString & refresh_token) {
+//    // update me :(
+//}
 
-void IItem::removeSource(const QString & url) {
-    // update me :(
-}
+//void IItem::removeSource(const QString & url) {
+//    // update me :(
+//}
 
-void IItem::removeSource(int index) {
-    // update me :(
-}
+//void IItem::removeSource(int index) {
+//    // update me :(
+//}
 
 QString IItem::relationStr() const {
     switch(itemType()) {

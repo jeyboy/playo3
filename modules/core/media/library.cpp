@@ -317,7 +317,7 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     else
         itm -> setInfo(Info::str(Info::toUnits(iSize), info -> getExtension()));
 
-    itm -> setGenre(info -> getGenre());
+    itm -> setGenreID(info -> getGenre());
 
     if (!info -> getExtension().isEmpty())
         itm -> setExtension(info -> getExtension());
