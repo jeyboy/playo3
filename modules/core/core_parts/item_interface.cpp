@@ -231,7 +231,21 @@ void IItem::setParent(Playlist * pNode, int pos) {
     (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }
 
-void IItem::addSource(QString & url, const QString & refresh_token, bool setAsMain) {
+void IItem::addSource(const QString & url, const QString & refresh_token, bool setAsMain) {
+    if (setAsMain)
+
+    // update me :(
+}
+
+bool IItem::hasSource(const QString & url, const QString & refresh_token) {
+    // update me :(
+}
+
+void IItem::removeSource(const QString & url) {
+    // update me :(
+}
+
+void IItem::removeSource(int index) {
     // update me :(
 }
 

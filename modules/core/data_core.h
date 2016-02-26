@@ -50,7 +50,6 @@ namespace Core {
         void proceedStoping() { currPlayer() -> stop(); }
         void proceedPausing() { currPlayer() -> pause(); }
         void proceedPauseToggling() { currPlayer() -> playPause(); }
-
     signals:
         void newPlaylistNeed();
         void likeChanged(bool);
