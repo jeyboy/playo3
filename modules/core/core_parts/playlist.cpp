@@ -2,14 +2,14 @@
 
 using namespace Core;
 
-int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
+IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
     switch(item_type) {
-        case SIMPLE_FILE:       { new File(attrs, parent, pos); return 1; }
-        case VK_FILE:           { new VkFile(attrs, parent, pos); return 1; }
-        case SOUNDCLOUD_FILE:   { new SoundcloudFile(attrs, parent, pos); return 1; }
-        case OD_FILE:           { new OdFile(attrs, parent, pos); return 1; }
-        case WEB_FILE:          { new WebFile(attrs, parent, pos); return 1; }
-        case CUE_FILE:          { new CueFile(attrs, parent, pos); return 1; }
+        case SIMPLE_FILE:       { return new File(attrs, parent, pos); }
+        case VK_FILE:           { return new VkFile(attrs, parent, pos); }
+        case SOUNDCLOUD_FILE:   { return new SoundcloudFile(attrs, parent, pos); }
+        case OD_FILE:           { return new OdFile(attrs, parent, pos); }
+        case WEB_FILE:          { return new WebFile(attrs, parent, pos); }
+        case CUE_FILE:          { return new CueFile(attrs, parent, pos); }
         default:                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
     }
 
@@ -49,42 +49,20 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
             iterObj = (*it).toObject();
             restoreItem(this, iterObj);
 //            switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-//                case SIMPLE_FILE: {
-//                    new File(&iterObj, this);
-//                break;}
-//                case PLAYLIST: {
-//                    new Playlist(&iterObj, this);
-//                break;}
+//                case SIMPLE_FILE:           { new File(&iterObj, this);  break;}
+//                case PLAYLIST:              { new Playlist(&iterObj, this); break;}
 
-//                case WEB_FILE: {
-//                    new WebFile(&iterObj, this);
-//                break;}
+//                case WEB_FILE:              { new WebFile(&iterObj, this); break;}
 
-//                case VK_FILE: {
-//                    new VkFile(&iterObj, this);
-//                break;}
-//                case VK_PLAYLIST: {
-//                    new VkPlaylist(&iterObj, this);
-//                break;}
-//                case SOUNDCLOUD_FILE: {
-//                    new SoundcloudFile(&iterObj, this);
-//                break;}
-//                case SOUNDCLOUD_PLAYLIST: {
-//                    new SoundcloudPlaylist(&iterObj, this);
-//                break;}
-//                case OD_FILE: {
-//                    new OdFile(&iterObj, this);
-//                break;}
-//                case OD_PLAYLIST: {
-//                    new OdPlaylist(&iterObj, this);
-//                break;}
+//                case VK_FILE:               { new VkFile(&iterObj, this); break;}
+//                case VK_PLAYLIST:           { new VkPlaylist(&iterObj, this); break;}
+//                case SOUNDCLOUD_FILE:       { new SoundcloudFile(&iterObj, this); break;}
+//                case SOUNDCLOUD_PLAYLIST:   { new SoundcloudPlaylist(&iterObj, this); break;}
+//                case OD_FILE:               { new OdFile(&iterObj, this); break;}
+//                case OD_PLAYLIST:           { new OdPlaylist(&iterObj, this); break;}
 
-//                case CUE_FILE: {
-//                    new CueFile(&iterObj, this);
-//                break;}
-//                case CUE_PLAYLIST: {
-//                   new CuePlaylist(&iterObj, this);
-//                break;}
+//                case CUE_FILE:              { new CueFile(&iterObj, this); break;}
+//                case CUE_PLAYLIST:          { new CuePlaylist(&iterObj, this); break;}
 //            }
         }
     }

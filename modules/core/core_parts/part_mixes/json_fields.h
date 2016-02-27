@@ -4,6 +4,7 @@
 #include <qstringbuilder.h>
 
 namespace Core {
+    // 1-9 is still free
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");
@@ -20,7 +21,7 @@ namespace Core {
     const QString JSON_TYPE_TAB_NAME = QStringLiteral("n");
     const QString JSON_TYPE_OWNER_ID = QStringLiteral("o");
     const QString JSON_TYPE_PATH = QStringLiteral("p");
-    // q is still free
+    const QString JSON_TYPE_SOURCES = QStringLiteral("q");
     const QString JSON_TYPE_REFRESH_PATH = QStringLiteral("r");
     const QString JSON_TYPE_STATE = QStringLiteral("s");
     const QString JSON_TYPE_TITLE = QStringLiteral("t");

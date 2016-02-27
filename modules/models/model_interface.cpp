@@ -1031,7 +1031,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         parentFolder = item<Playlist>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-            counts[parentFolder] += Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
+            counts[parentFolder] += (int)(Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs) != 0);
         endInsertRows();
         delete data;
     }
@@ -1128,7 +1128,7 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
                     if (!attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                    amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+                    amount += (int)(!!Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs));
                 }
             }
         }
@@ -1158,7 +1158,7 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
                 if (!attrs.contains(JSON_TYPE_PATH))
                     attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+                amount += (int)(!!Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs));
 
                 if (amount == count) break;
             }

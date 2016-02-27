@@ -85,56 +85,68 @@ namespace Core {
 
         void addSource(QJsonObject * hash);
         void addSource(IItem * newSource, bool setAsMain = false);
+        inline IItem * activeSourceItem() const {
+            if (sources.isEmpty()) {
+                IItem * self = const_cast<IItem *>(this);
+                QJsonArray arr = const_cast<QVariantMap &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
+                for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
+                    QJsonObject obj = (*it).toObject();
+                    self -> addSource(&obj);
+                }
+            }
 
-        inline void setTitle(const QVariant & newTitle)         { sources[activeSource()] -> _setTitle(newTitle); }
-        inline QVariant title() const                           { return sources[activeSource()] -> _title(); }
+            return sources[activeSource()];
+        }
 
-        inline void setTitlesCache(const QVariant & newTitles)  { sources[activeSource()] -> _setTitlesCache(newTitles); }
-        inline QVariant titlesCache() const                     { return sources[activeSource()] -> _titlesCache(); }
+        inline void setTitle(const QVariant & newTitle)         { activeSourceItem() -> _setTitle(newTitle); }
+        inline QVariant title() const                           { return activeSourceItem() -> _title(); }
 
-        inline void setVideoPath(const QVariant & videoPath)    { sources[activeSource()] -> _setVideoPath(videoPath); }
+        inline void setTitlesCache(const QVariant & newTitles)  { activeSourceItem() -> _setTitlesCache(newTitles); }
+        inline QVariant titlesCache() const                     { return activeSourceItem() -> _titlesCache(); }
 
-        inline void setDuration(const QVariant & newDuration)   { sources[activeSource()] -> _setDuration(newDuration); }
-        inline QVariant duration() const                        { return sources[activeSource()] -> _duration(); }
-        inline quint64 durationMillis() const                   { return sources[activeSource()] -> _durationMillis(); }
+        inline void setVideoPath(const QVariant & videoPath)    { activeSourceItem() -> _setVideoPath(videoPath); }
+
+        inline void setDuration(const QVariant & newDuration)   { activeSourceItem() -> _setDuration(newDuration); }
+        inline QVariant duration() const                        { return activeSourceItem() -> _duration(); }
+        inline quint64 durationMillis() const                   { return activeSourceItem() -> _durationMillis(); }
 
         // per source info
-        inline void setUid(const QVariant & newId)              { sources[activeSource()] -> _setUid(newId); }
-        inline QVariant uid() const                             { return sources[activeSource()] -> _uid(); }
+        inline void setUid(const QVariant & newId)              { activeSourceItem() -> _setUid(newId); }
+        inline QVariant uid() const                             { return activeSourceItem() -> _uid(); }
 
-        inline void setOwner(const QVariant & newOwner)         { sources[activeSource()] -> _setOwner(newOwner); }
-        inline QVariant owner() const                           { return sources[activeSource()] -> _owner(); }
+        inline void setOwner(const QVariant & newOwner)         { activeSourceItem() -> _setOwner(newOwner); }
+        inline QVariant owner() const                           { return activeSourceItem() -> _owner(); }
 
-        inline void addArtistUid(const QString & id)            { sources[activeSource()] -> _addArtistUid(id); }
-        inline void setArtistUids(const QStringList & ids)      { sources[activeSource()] -> _setArtistUids(ids); }
-        inline QVariant artistUids() const                      { return sources[activeSource()] -> _artistUids(); }
+        inline void addArtistUid(const QString & id)            { activeSourceItem() -> _addArtistUid(id); }
+        inline void setArtistUids(const QStringList & ids)      { activeSourceItem() -> _setArtistUids(ids); }
+        inline QVariant artistUids() const                      { return activeSourceItem() -> _artistUids(); }
 
-        inline void setSongUid(const QVariant & newSongId)      { sources[activeSource()] -> _setSongUid(newSongId); }
-        inline QVariant songUid() const                         { return sources[activeSource()] -> _songUid(); }
+        inline void setSongUid(const QVariant & newSongId)      { activeSourceItem() -> _setSongUid(newSongId); }
+        inline QVariant songUid() const                         { return activeSourceItem() -> _songUid(); }
 
-        inline void setPath(const QVariant & newPath)           { sources[activeSource()] -> _setPath(newPath); }
-        inline QVariant path() const                            { return sources[activeSource()] -> _path(); }
+        inline void setPath(const QVariant & newPath)           { activeSourceItem() -> _setPath(newPath); }
+        inline QVariant path() const                            { return activeSourceItem() -> _path(); }
 
-        inline void setRefreshPath(const QVariant & newPath)    { sources[activeSource()] -> _setRefreshPath(newPath); }
-        virtual inline QString refresh_path()                   { return sources[activeSource()] -> _refresh_path(); }
+        inline void setRefreshPath(const QVariant & newPath)    { activeSourceItem() -> _setRefreshPath(newPath); }
+        virtual inline QString refresh_path()                   { return activeSourceItem() -> _refresh_path(); }
 
-        inline void setExtension(const QVariant & newExtension) { sources[activeSource()] -> _setExtension(newExtension); }
-        inline QVariant extension() const                       { return sources[activeSource()] -> _extension(); }
+        inline void setExtension(const QVariant & newExtension) { activeSourceItem() -> _setExtension(newExtension); }
+        inline QVariant extension() const                       { return activeSourceItem() -> _extension(); }
 
-        inline void setStartPos(const QVariant & newStartPos)   { sources[activeSource()] -> _setStartPos(newStartPos); }
-        inline QVariant startPos() const                        { return sources[activeSource()] -> _startPos(); }
-        inline qint64 startPosMillis() const                    { return sources[activeSource()] -> _startPosMillis(); }
+        inline void setStartPos(const QVariant & newStartPos)   { activeSourceItem() -> _setStartPos(newStartPos); }
+        inline QVariant startPos() const                        { return activeSourceItem() -> _startPos(); }
+        inline qint64 startPosMillis() const                    { return activeSourceItem() -> _startPosMillis(); }
 
-        inline void setInfo(const QVariant & newInfo)           { sources[activeSource()] -> _setInfo(newInfo); }
-        QStringList info() const                                { return sources[activeSource()] -> _info(); }
-        QVariant infoVar() const                                { return sources[activeSource()] -> _infoVar(); }
-        inline bool hasInfo() const                             { return sources[activeSource()] -> _hasInfo();}
+        inline void setInfo(const QVariant & newInfo)           { activeSourceItem() -> _setInfo(newInfo); }
+        QStringList info() const                                { return activeSourceItem() -> _info(); }
+        QVariant infoVar() const                                { return activeSourceItem() -> _infoVar(); }
+        inline bool hasInfo() const                             { return activeSourceItem() -> _hasInfo();}
 
-        inline void setSize(const QVariant & newSize)           { sources[activeSource()] -> _setSize(newSize); }
-        inline QVariant size() const                            { return sources[activeSource()] -> _size(); }
+        inline void setSize(const QVariant & newSize)           { activeSourceItem() -> _setSize(newSize); }
+        inline QVariant size() const                            { return activeSourceItem() -> _size(); }
 
-        inline void setSubtype(Web::SubType subType)            { sources[activeSource()] -> _setSubtype(subType); }
-        inline Web::SubType subtipe() const                     { return sources[activeSource()] -> _subtipe(); }
+        inline void setSubtype(Web::SubType subType)            { activeSourceItem() -> _setSubtype(subType); }
+        inline Web::SubType subtipe() const                     { return activeSourceItem() -> _subtipe(); }
     protected:
         Playlist * _parent;
         QList<IItem *> sources;

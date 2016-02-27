@@ -41,6 +41,13 @@ IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
 QJsonObject IItem::toJson() {
     QJsonObject root = ItemFields::toJson();
 
+    if (!sources.isEmpty()) {
+        QJsonArray sourcesJson;
+        for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
+            sourcesJson.append(((ItemFields*)(*source)) -> toJson());
+        root[JSON_TYPE_SOURCES] = sourcesJson;
+    }
+
     root[JSON_TYPE_ITEM_TYPE] = itemType();
 
     return root;
