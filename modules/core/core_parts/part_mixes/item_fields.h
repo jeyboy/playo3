@@ -60,8 +60,8 @@ namespace Core {
         }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
-        inline void setActiveSource(int index)                  { attrs[JSON_TYPE_ACTIVE_SOURCE] = index; }
-        inline int activeSource() const                         { return attrs.value(JSON_TYPE_ACTIVE_SOURCE, 0).toInt(); }
+        inline void setActiveSourceIndex(int index)             { attrs[JSON_TYPE_ACTIVE_SOURCE] = index; }
+        inline int activeSourceIndex() const                    { return attrs.value(JSON_TYPE_ACTIVE_SOURCE, 0).toInt(); }
 
         inline virtual QString toUid() { return QString(); }
         virtual QJsonObject toJson();

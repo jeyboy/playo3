@@ -58,8 +58,10 @@ namespace Core {
         bool item_updated = current_playlist -> restoreItem(current_item);
         if (!item_updated) {
             qDebug() << "RESTORE: FAILED";
-            if (Settings::obj().isFindOtherSource())
-                item_updated = Models::SearchModel::findSource(current_item);
+            if (!(item_updated = current_item -> useNextSource())) {
+                if (Settings::obj().isFindOtherSource())
+                    item_updated = Models::SearchModel::findNewSource(current_item);
+            }
         }
 
         if (!item_updated) {
@@ -79,7 +81,7 @@ namespace Core {
         playNext(true);
     }
 
-    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state) {
+    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, bool fixSourceLimit) {
         IPlayer * player = currPlayer();
 
         bool continuePlaying = item && !player -> media().isEmpty() && item -> toUrl() == player -> media();
@@ -99,6 +101,9 @@ namespace Core {
 
         if (item) {
             if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
+                if (fixSourceLimit)
+                    item -> fixSourceLimit();
+
                 if (continuePlaying) {
                     player -> updateMedia(
                         item -> startPosMillis(),
@@ -106,7 +111,7 @@ namespace Core {
                     );
                     playerStatusChanged(InitMedia);
                     playerStatusChanged(PlaingMedia);
-                } else {
+                } else {                   
                     player -> setMedia(
                         current_item -> toUrl(),
                         item -> startPosMillis(),

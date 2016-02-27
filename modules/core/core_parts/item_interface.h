@@ -83,8 +83,10 @@ namespace Core {
 
         virtual void setParent(Playlist * pNode, int pos = -1);
 
-        void addSource(QJsonObject * hash);
-        void addSource(IItem * newSource, bool setAsMain = false);
+        inline void fixSourceLimit() { activeSourceIndexLimit = activeSourceIndex(); }
+        bool addSource(QJsonObject * hash);
+        bool addSource(IItem * newSource, bool setAsMain = false, bool checkExistance = true);
+        bool useNextSource();
         inline IItem * activeSourceItem() const {
             if (isContainer()) return const_cast<IItem *>(this);
 
@@ -100,7 +102,7 @@ namespace Core {
                     }
             }
 
-            return sources[activeSource()];
+            return sources[activeSourceIndex()];
         }
 
         inline void setTitle(const QVariant & newTitle)         { activeSourceItem() -> _setTitle(newTitle); }
@@ -152,7 +154,11 @@ namespace Core {
 
         inline void setSubtype(Web::SubType subType)            { activeSourceItem() -> _setSubtype(subType); }
         inline Web::SubType subtipe() const                     { return activeSourceItem() -> _subtipe(); }
+
     protected:
+        bool eqlByLocation(IItem * itm) { return path() == itm -> path() && refresh_path() == itm -> refresh_path(); }
+
+        int activeSourceIndexLimit;
         Playlist * _parent;
         QList<IItem *> sources;
 

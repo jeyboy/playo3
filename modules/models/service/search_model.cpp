@@ -15,7 +15,7 @@ SearchModel::~SearchModel() {
     endResetModel();
 }
 
-bool SearchModel::findSource(IItem * item) {
+bool SearchModel::findNewSource(IItem * item) {
     ISearchable::SearchLimit limitation(ISearchable::in_title, 1);
 
     QHash<Web::SubType, ISearchable *> sources = Web::Apis::list();
@@ -29,7 +29,7 @@ bool SearchModel::findSource(IItem * item) {
             if (innerSearch(predicate, results, middle_results, 1) > 0) {
                 IItem * res = results -> child(0);
                 res -> setParent(0);
-                item -> addSource(res);
+                item -> addSource(res, true);
                 return true;
             }
     }

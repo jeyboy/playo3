@@ -45,7 +45,7 @@ namespace Core {
 
         void resetPlaying() { proceedPlaying(0, 0); }
 
-        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, PlayerInitState state = played);
+        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, PlayerInitState state = played, bool fixSourceLimit = false);
 
         void proceedStoping() { currPlayer() -> stop(); }
         void proceedPausing() { currPlayer() -> pause(); }

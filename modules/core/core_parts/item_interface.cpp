@@ -6,13 +6,13 @@
 using namespace Core;
 
 IItem::IItem(Playlist * parent, int initState)
-    : ItemFields(initState), _parent(parent) {
+    : ItemFields(initState), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
 IItem::IItem(Playlist * parent, QVariantMap & hash, int pos)
-    : ItemFields(hash), _parent(parent) {
+    : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) {
         if (pos < 0)
@@ -22,13 +22,13 @@ IItem::IItem(Playlist * parent, QVariantMap & hash, int pos)
     }
 }
 IItem::IItem(Playlist * parent, QJsonObject * hash)
-    : ItemFields(hash), _parent(parent) {
+    : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent)
         _parent -> declareChild(this);
 }
 IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
-    : ItemFields(title, initState), _parent(parent) {
+    : ItemFields(title, initState), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) {
         if (pos < 0)
@@ -239,13 +239,34 @@ void IItem::setParent(Playlist * pNode, int pos) {
         (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }
 
-void IItem::addSource(QJsonObject * hash) { addSource(Playlist::restoreItem(0, *hash)); }
+bool IItem::addSource(QJsonObject * hash) { return addSource(Playlist::restoreItem(0, *hash), false, false); }
 
-void IItem::addSource(IItem * newSource, bool setAsMain) {
+bool IItem::addSource(IItem * newSource, bool setAsMain, bool checkExistance) {
+    if (checkExistance) {
+        for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
+            if ((*source) -> eqlByLocation(newSource)) {
+                qDebug() << "SOURCE ALREADY EXISTS";
+                return false;
+            }
+    }
+
     sources.append(newSource);
 
     if (setAsMain)
-        setActiveSource(sources.length() - 1);
+        setActiveSourceIndex(sources.length() - 1);
+
+    return true;
+}
+
+bool IItem::useNextSource() {
+    if (sources.length() == 1) return false;
+
+    int currSourceIndex = activeSourceIndex() + 1;
+    if (currSourceIndex >= sources.length())
+        currSourceIndex = 0;
+
+    setActiveSourceIndex(currSourceIndex);
+    return currSourceIndex != activeSourceIndexLimit;
 }
 
 //bool IItem::hasSource(const QString & url, const QString & refresh_token) {

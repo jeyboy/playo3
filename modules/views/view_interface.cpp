@@ -169,7 +169,7 @@ bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint
                 DataFactory::obj().proceedPauseToggling();
                 return true;
             } else {
-                DataFactory::obj().proceedPlaying(this, itm, start, init_state);
+                DataFactory::obj().proceedPlaying(this, itm, start, init_state, true);
                 return true;
             }
         }
@@ -315,9 +315,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
         menu.addSeparator();
     }
-
-    menu.addAction(QIcon(QStringLiteral(":/update")), QStringLiteral("Update flags for items"), this, SLOT(updateIds()));
-    menu.addSeparator();
 
     menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
     menu.addSeparator();
@@ -638,12 +635,12 @@ void IView::removeSelectedItems(bool remove, int flags) {
     }
 }
 
-void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
+void IView::downloadItems(const QModelIndexList & nodes, const QString & savePath) {
     QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
     DownloadView::obj().proceedDrop(event, savePath);
 }
 
-void IView::downloadBranch(const QModelIndex & node, QString savePath) {
+void IView::downloadBranch(const QModelIndex & node, const QString & savePath) {
     Playlist * curr = mdl -> item<Playlist>(node);
     IItem * item;
     QModelIndexList list;
