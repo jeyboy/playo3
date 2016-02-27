@@ -44,7 +44,7 @@ QJsonObject IItem::toJson() {
     if (!sources.isEmpty()) {
         QJsonArray sourcesJson;
         for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
-            sourcesJson.append(((ItemFields*)(*source)) -> toJson());
+            sourcesJson.append((*source) -> ItemFields::toJson());
         root[JSON_TYPE_SOURCES] = sourcesJson;
     }
 
