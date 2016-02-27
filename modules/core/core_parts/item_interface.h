@@ -89,10 +89,13 @@ namespace Core {
             if (sources.isEmpty()) {
                 IItem * self = const_cast<IItem *>(this);
                 QJsonArray arr = const_cast<QVariantMap &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
-                for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
-                    QJsonObject obj = (*it).toObject();
-                    self -> addSource(&obj);
-                }
+                if (arr.isEmpty())
+                    self -> addSource(self);
+                else
+                    for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
+                        QJsonObject obj = (*it).toObject();
+                        self -> addSource(&obj);
+                    }
             }
 
             return sources[activeSource()];
