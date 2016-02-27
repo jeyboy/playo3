@@ -86,10 +86,12 @@ namespace Core {
         void addSource(QJsonObject * hash);
         void addSource(IItem * newSource, bool setAsMain = false);
         inline IItem * activeSourceItem() const {
+            if (isContainer()) return const_cast<IItem *>(this);
+
             if (sources.isEmpty()) {
                 IItem * self = const_cast<IItem *>(this);
                 QJsonArray arr = const_cast<QVariantMap &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
-                if (arr.isEmpty())
+                if (arr.isEmpty()) // root node is always empty // so it shpuld be source for yourself
                     self -> addSource(self);
                 else
                     for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
