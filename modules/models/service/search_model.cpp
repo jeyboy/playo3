@@ -27,10 +27,13 @@ bool SearchModel::findNewSource(IItem * item) {
 
         if (proceedLists(source.key(), items, middle_results, 0) > 0)
             if (innerSearch(predicate, results, middle_results, 1) > 0) {
-                IItem * res = results -> child(0);
-                res -> setParent(0);
-                item -> addSource(res, true);
-                return true;
+                for(int iter = results -> childCount() - 1; iter >= 0; --iter) {
+                    IItem * res = results -> child(iter);
+                    if (item -> addSource(res, true))
+                        return true;
+                    else
+                        results -> removeChildren(iter, 1);
+                }
             }
     }
 

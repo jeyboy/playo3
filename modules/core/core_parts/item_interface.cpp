@@ -243,6 +243,7 @@ bool IItem::addSource(QJsonObject * hash) { return addSource(Playlist::restoreIt
 
 bool IItem::addSource(IItem * newSource, bool setAsMain, bool checkExistance) {
     if (checkExistance) {
+        newSource -> setParent(0);
         for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
             if ((*source) -> eqlByLocation(newSource)) {
                 qDebug() << "SOURCE ALREADY EXISTS";
@@ -254,6 +255,8 @@ bool IItem::addSource(IItem * newSource, bool setAsMain, bool checkExistance) {
 
     if (setAsMain)
         setActiveSourceIndex(sources.length() - 1);
+
+    qDebug() << "ADD NEW SOURCE";
 
     return true;
 }
@@ -267,6 +270,27 @@ bool IItem::useNextSource() {
 
     setActiveSourceIndex(currSourceIndex);
     return currSourceIndex != activeSourceIndexLimit;
+}
+
+IItem * IItem::activeSourceItem() const {
+    if (isContainer()) return const_cast<IItem *>(this);
+
+    if (sources.isEmpty()) {
+        IItem * self = const_cast<IItem *>(this);
+        QJsonArray arr = const_cast<QVariantMap &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
+        if (arr.isEmpty()) // root node is always empty // so it shpuld be source for yourself
+            self -> addSource(self, false, false);
+        else
+            for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
+                QJsonObject obj = (*it).toObject();
+                self -> addSource(&obj);
+            }
+    }
+
+    int ind = activeSourceIndex();
+    if (ind >= sources.length()) ind = 0;
+
+    return sources[ind];
 }
 
 //bool IItem::hasSource(const QString & url, const QString & refresh_token) {
