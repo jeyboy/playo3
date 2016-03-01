@@ -53,7 +53,7 @@ namespace Core {
         void likeChanged(bool);
 
     public slots:
-        void changeLikeStatus(bool is_liked) { setState((is_liked ? 1 : -1) * ItemState::liked); }
+        void changeLikeStatus(bool is_liked) { setState(is_liked ? flag_liked : flag_not_liked); }
 
         void playerStatusChanged(const PlayerStatus & status);
 

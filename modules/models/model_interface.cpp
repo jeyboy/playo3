@@ -44,7 +44,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
     IItem * node = item(model_index);
 
     if (role == Qt::CheckStateRole) {
-        bool checked = !node -> is(ItemState::checked);
+        bool checked = !node -> has(flag_checked);
         node -> updateCheckedState(checked);
 
         if (node -> isContainer()) {
@@ -57,7 +57,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
     } else if (role == ISTATERESTORE) {
         int iState = value.toInt();
         node -> setStates(iState);
-        result = iState != -ItemState::proceeded && iState != -ItemState::mark_on_removing;
+        result = iState != flag_not_proceeded && iState != flag_not_mark_on_removing;
     } else if (role == ISTATE) {
         Library::obj().setItemState(model_index, value.toInt());
         node -> setStates(value.toInt());
@@ -830,21 +830,21 @@ void IModel::markAllAsUnchecked() {
 
 
 void IModel::expandeAll() {
-    rootItem -> propagatePlaylistSetFlag(ItemState::expanded);
+    rootItem -> propagatePlaylistSetFlag(flag_expanded);
 }
 
 void IModel::expanded(const QModelIndex & index) {
     IItem * node = item(index);
-    node -> set(ItemState::expanded);
+    node -> set(flag_expanded);
 }
 
 void IModel::collapseAll() {
-    rootItem -> propagatePlaylistUnsetFlag(ItemState::expanded);
+    rootItem -> propagatePlaylistUnsetFlag(flag_expanded);
 }
 
 void IModel::collapsed(const QModelIndex & index) {
     IItem * node = item(index);
-    node -> unset(IItem::expanded);
+    node -> unset(flag_expanded);
 }
 
 void IModel::finishingItemsAdding() {

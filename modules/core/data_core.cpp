@@ -33,7 +33,7 @@ namespace Core {
     }
 
     void DataCore::playNext(bool onFail) {
-        setState(-ItemState::proccessing); // extra call for item clearing states!
+        setState(flag_not_proccessing); // extra call for item clearing states!
         if (!current_playlist) {
             qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
             return;
@@ -123,7 +123,7 @@ namespace Core {
                 if ((init_state_flag = state) != initiated)
                     player -> play(init_state_flag == paused);
 
-                emit likeChanged(current_item -> is(ItemState::liked));
+                emit likeChanged(current_item -> has(flag_liked));
             } else playNext(false);
         }
         else player -> setMedia(QUrl());
@@ -133,7 +133,7 @@ namespace Core {
         switch(status) {
             case InitMedia: {
                 qDebug() << "INIT MEDIA";
-                setState(ItemState::played | ItemState::proccessing);
+                setState(flag_played | flag_proccessing);
             break;}
 
             case PlaingMedia: {
@@ -142,14 +142,14 @@ namespace Core {
                 qDebug() << "PLAING MEDIA";
                 if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying()) {
                     Library::obj().initItemData(current_item, false);
-                    add_state = ItemFields::proceeded;
+                    add_state = flag_proceeded;
                 }
-                setState(ItemState::listened | add_state);
+                setState(flag_listened | add_state);
             break;}
 
             case CloseMedia: {
                 qDebug() << "CLOSE MEDIA";
-                setState(-(ItemState::proccessing | ItemState::played));
+                setState(flag_not_proccessing | flag_not_played);
             break;}
 
             case LoadingMedia: {
@@ -176,13 +176,13 @@ namespace Core {
             break;}
 
             case LoadedMedia: {
-                setState(ItemState::not_proccessing);
-                setError(ItemErrors::err_none);
+                setState(flag_not_proccessing);
+                setError(err_none);
             break;}
 
             case InvalidMedia: {
                 qDebug() << "INVALID MEDIA";
-                setError(ItemErrors::warn_not_supported);
+                setError(warn_not_supported);
                 playNext(true);
             break;}
 
@@ -193,7 +193,7 @@ namespace Core {
                     if (current_item -> isRemote()) {
                         restoreOrNext();
                     } else {
-                        setError(ItemErrors::err_not_existed);
+                        setError(err_not_existed);
                         playNext(true);
                     }
                 }
@@ -207,8 +207,8 @@ namespace Core {
         IItem * node = static_cast<IItem *>(ind.internalPointer());
         if (node -> isContainer()) return;
 
-        if (!node -> is(ItemState::proceeded)) {
-            node -> set(ItemState::proceeded);
+        if (!node -> has(flag_proceeded)) {
+            node -> set(flag_proceeded);
             Library::obj().restoreItemStateAsync(ind, node -> isRemote());
         }
     }
