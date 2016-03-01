@@ -2,7 +2,7 @@
 #include "modules/models/service/search_model.h"
 
 namespace Core {
-    void DataFactory::spoil() {
+    void DataCore::spoil() {
         if (!current_playlist) {
             qDebug() << "PLAYLIST IS UNDEFINED";
             return;
@@ -11,7 +11,7 @@ namespace Core {
         if (!current_playlist -> spoil(playedIndex()))
             qDebug() << "STATE IS NOT CHANGED";
     }
-    void DataFactory::setState(int state) {
+    void DataCore::setState(int state) {
         if (!current_playlist) {
             qDebug() << "PLAYLIST IS UNDEFINED";
             return;
@@ -22,7 +22,7 @@ namespace Core {
             qDebug() << "STATE IS NOT CHANGED";
     }
 
-    void DataFactory::setError(ItemErrors error) {
+    void DataCore::setError(ItemErrors error) {
         if (!current_playlist) {
             qDebug() << "PLAYLIST IS UNDEFINED";
             return;
@@ -32,7 +32,7 @@ namespace Core {
             qDebug() << "ERROR IS NOT ATTACHED";
     }
 
-    void DataFactory::playNext(bool onFail) {
+    void DataCore::playNext(bool onFail) {
         setState(-ItemState::proccessing); // extra call for item clearing states!
         if (!current_playlist) {
             qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
@@ -49,7 +49,7 @@ namespace Core {
         }
     }
 
-    void DataFactory::restoreOrNext() { // need to prevent form loop
+    void DataCore::restoreOrNext() { // need to prevent form loop
         if (!current_playlist) {
             qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
             return;
@@ -75,13 +75,13 @@ namespace Core {
         player -> play(init_state_flag == paused);
     }
 
-    void DataFactory::proceedStalledState() {
+    void DataCore::proceedStalledState() {
         if (current_item)
             setError(current_item -> isRemote() ? ItemErrors::warn_not_accessable : ItemErrors::err_not_existed);
         playNext(true);
     }
 
-    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, bool fixSourceLimit) {
+    void DataCore::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, bool fixSourceLimit) {
         IPlayer * player = currPlayer();
 
         bool continuePlaying = item && !player -> media().isEmpty() && item -> toUrl() == player -> media();
@@ -129,7 +129,7 @@ namespace Core {
         else player -> setMedia(QUrl());
     }
 
-    void DataFactory::playerStatusChanged(const PlayerStatus & status) {
+    void DataCore::playerStatusChanged(const PlayerStatus & status) {
         switch(status) {
             case InitMedia: {
                 qDebug() << "INIT MEDIA";
@@ -203,7 +203,7 @@ namespace Core {
         }
     }
 
-    void DataFactory::proceedInfoAsync(const QModelIndex & ind) {
+    void DataCore::proceedInfoAsync(const QModelIndex & ind) {
         IItem * node = static_cast<IItem *>(ind.internalPointer());
         if (node -> isContainer()) return;
 

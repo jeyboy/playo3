@@ -18,10 +18,10 @@ namespace Core {
 
     class IItem : public ItemFields {
     public:
-        IItem(Playlist * parent = 0, int initState = DEFAULT_FILE_STATE);
+        IItem(Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
         IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
         IItem(Playlist * parent, QJsonObject * hash);
-        IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_FILE_STATE);
+        IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
         inline virtual ~IItem() {}
 
@@ -46,7 +46,7 @@ namespace Core {
         virtual bool isExist() const = 0;
         inline bool isPlayable() const {
             bool showBatch = Settings::obj().isCheckboxShow();
-            return !isContainer() && (!showBatch || (showBatch && is(checked)));
+            return !isContainer() && (!showBatch || (showBatch && has(flag_checked)));
         }
 
         virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
@@ -61,11 +61,11 @@ namespace Core {
         inline virtual int columnCount() const { return 1; }
 
         inline virtual void updateCheckedState(bool setChecked) {
-            if (setChecked) set(checked); else unset(checked);
+            if (setChecked) set(flag_checked); else unset(flag_checked);
         }
 
         inline virtual bool updateCheckedStateByPredicate(ItemStateFlag pred_state) {
-            bool valid = is(pred_state);
+            bool valid = has(pred_state);
             updateCheckedState(valid);
             return valid;
         }

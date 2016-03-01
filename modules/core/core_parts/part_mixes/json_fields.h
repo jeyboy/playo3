@@ -5,6 +5,8 @@
 
 namespace Core {
     // 1-9 is still free
+    const QString JSON_TYPE_REL_AMOUNT = QStringLiteral("0");
+
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");

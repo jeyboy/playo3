@@ -124,7 +124,7 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert(Keys::name, title());
-            params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  has(flag_checked) : QVariant());
             if (!isContainer()) {
                 if (Settings::obj().isShowSystemIcons())
                     params.insert(Keys::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
@@ -139,10 +139,10 @@ QVariant IItem::data(int column) const {
 
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
-                params.insert(Keys::played, is(played));
+                params.insert(Keys::played, has(flag_played));
                 params.insert(Keys::shareable, isShareable());
 
-                if (is(proccessing))
+                if (has(flag_proccessing))
                     params.insert(Keys::proccessing, true);
                 else {
                     int err_code = error().toInt();
@@ -182,7 +182,7 @@ QVariant IItem::data(int column) const {
 
         case Qt::CheckStateRole: {
             if (Settings::obj().isCheckboxShow())
-                return is(checked);
+                return has(flag_checked);
             else return QVariant();
         }
 

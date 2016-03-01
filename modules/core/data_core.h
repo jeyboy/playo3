@@ -1,10 +1,9 @@
 #ifndef DATA_CORE_H
 #define DATA_CORE_H
 
-#include <qdebug.h>
 #include <qobject.h>
-#include <qhash.h>
 
+#include "data_factory.h"
 #include "core_parts_index.h"
 #include "player/player_index.h"
 #include "modules/core/media/library.h"
@@ -14,7 +13,7 @@
 #define MAX_ATTEMPTS 1
 
 namespace Core {
-    class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
+    class DataCore : public QObject, public DataFactory, public Singleton<DataCore> {
         Q_OBJECT
 
         IPlaylistable * current_playlist;
@@ -31,10 +30,9 @@ namespace Core {
         void restoreOrNext();
         void proceedStalledState();
     public:
-        inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
+        inline DataCore() : QObject(), current_playlist(0), current_item(0), attempts(0) {
             PlayerFactory::obj().registerCallback(out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
         }
-        ~DataFactory() {}
 
         inline IPlayer * currPlayer() { return PlayerFactory::obj().currPlayer(); }
 

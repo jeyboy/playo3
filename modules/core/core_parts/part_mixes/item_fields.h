@@ -42,8 +42,8 @@ namespace Core {
 
         ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
-        ItemFields(QString title, int initState = DEFAULT_FILE_STATE);
-        ItemFields(int state = DEFAULT_FILE_STATE);
+        ItemFields(QString title, int initState = DEFAULT_ITEM_STATE);
+        ItemFields(int state = DEFAULT_ITEM_STATE);
 
         // const info
         inline void setGenreID(const QVariant & newGenreID)     { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }

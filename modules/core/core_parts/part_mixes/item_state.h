@@ -2,56 +2,46 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Core {
-    #define DEFAULT_FILE_STATE (ItemState::checked | ItemState::new_item)
-    #define DEFAULT_PLAYLIST_STATE (ItemState::checked | ItemState::expanded)
+    #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
+
+    enum ItemStateFlag {
+        flag_not_played = 131072,
+        flag_not_proccessing = 65536,
+        flag_not_mark_on_removing = 32768,
+        flag_not_checked = 16384,
+        flag_not_expanded = 8192,
+        flag_not_proceeded = 4096,
+        flag_not_listened = 2048,
+        flag_not_liked = 1024,
+
+        flag_played = 512,
+        flag_proccessing = 256,
+
+        // 128
+        flag_mark_on_removing = 64,
+        flag_checked = 32,
+        flag_expanded = 16,
+        flag_proceeded = 8,
+        flag_listened = 4,
+        flag_liked = 2,
+        flag_new_item = 1
+    };
 
     class ItemState {
         public:
-            enum ItemStateFlag {
-                not_proccessing = 8388608,
-//                not_undefined_status = 4194304,
-                not_played = 2097152,
-//                not_proceeded = 1048576,
-//                not_checked = 524288,
-//                not_expanded = 262144,
-//                info_not_required = 131072,
-//                exist = 65536,
-//                supported = 32768,
-//                not_new_item = 16384,
-//                not_listened = 8192,
-                not_liked = 4096,
-
-                proccessing = 2048,
-                mark_on_removing = 1024,
-                played = 512,
-                proceeded = 256, // once list proceeding
-                checked = 128,
-                expanded = 64,
-                info_required = 32,
-//                not_exist = 16,
-//                not_supported = 8,
-                new_item = 4,
-                listened = 2,
-                liked = 1
-            };
-
-            inline ItemState(int state = DEFAULT_FILE_STATE) { item_state = state; }
+            inline ItemState(int state = DEFAULT_ITEM_STATE) { item_state = state; }
             inline virtual ~ItemState() {}
 
-            inline bool is(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
+            inline bool has(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
             inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }
             bool set(enum ItemStateFlag flag);
-
             void setStates(int flags);
 
             inline int states() const { return item_state; }
             inline int saveStates() const { return (unsigned char)item_state; }
-//            inline int innerStates() { return item_state & ((0 << 6) - 1) << 3; }
-            inline int visualStates() const { return visualStateOffset(); }
+            inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
         protected:
-            inline int visualStateOffset() const { return item_state & 7; }  // get six first bits
-
             bool reset();
             bool setListened();
             bool setLiked();

@@ -101,11 +101,11 @@ Playlist::~Playlist() {
     if (_parent)
         _parent -> undeclarePlaylist(playlistUid());
 
-    bool remove_marked = is(mark_on_removing);
+    bool remove_marked = has(flag_mark_on_removing);
 
     QList<IItem *>::Iterator begin = children.begin(), end = children.end();
     while (begin != end) {
-        if (remove_marked) (*begin) -> set(mark_on_removing);
+        if (remove_marked) (*begin) -> set(flag_mark_on_removing);
         delete *begin;
         ++begin;
     }
