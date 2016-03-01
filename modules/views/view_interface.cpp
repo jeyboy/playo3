@@ -24,12 +24,12 @@ void IView::registerParent(QWidget * newParent) {
 IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     : QTreeView(parent), blockRepaint(false), blockDeletion(false), mdl(newModel), sttngs(settings), direction(IModel::forward) {
 
-    connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
-    connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
-    connect(this, SIGNAL(discardSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(discardSync(QAbstractItemModel*)), Qt::DirectConnection);
-    connect(this, SIGNAL(infoInvalidation(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfo(QModelIndex)), Qt::DirectConnection);
-    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex)));
-    connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataFactory::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
+    connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataCore::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
+    connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataCore::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(discardSync(QAbstractItemModel*)), &DataCore::obj(), SLOT(discardSync(QAbstractItemModel*)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidation(QModelIndex)), &DataCore::obj(), SLOT(proceedInfo(QModelIndex)), Qt::DirectConnection);
+    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex)), &DataCore::obj(), SLOT(proceedInfoAsync(QModelIndex)));
+    connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataCore::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
 
     setModel(mdl);
     emit registerSync(mdl, mdl -> syncMutex());
@@ -107,7 +107,7 @@ IView::~IView() {
 }
 
 void IView::scrollToActive() {
-    QModelIndex ind = DataFactory::obj().playedIndex();
+    QModelIndex ind = DataCore::obj().playedIndex();
     if (ind.isValid())
         scrollTo(ind, QAbstractItemView::PositionAtCenter);
 }
@@ -165,11 +165,11 @@ bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint
             if (Settings::obj().isSpoilOnActivation())
                 scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
 
-            if (DataFactory::obj().playedItem() == itm) {
-                DataFactory::obj().proceedPauseToggling();
+            if (DataCore::obj().playedItem() == itm) {
+                DataCore::obj().proceedPauseToggling();
                 return true;
             } else {
-                DataFactory::obj().proceedPlaying(this, itm, start, init_state, true);
+                DataCore::obj().proceedPlaying(this, itm, start, init_state, true);
                 return true;
             }
         }
@@ -275,14 +275,14 @@ void IView::openRecomendationsforItemUser() {
 }
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
-    if (it -> uid().isValid()) {
+    if (it -> id().isValid()) {
         Params settings(playlist_vk_rel, false, false, false, true, it -> toUid(), playlist_song_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), settings, 0, true, true);
     }
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    if (mdl -> item(index) -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
+    if (mdl -> item(index) -> has(flag_expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
     emit infoInvalidationAsync(index);
@@ -322,7 +322,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
 
-    if (DataFactory::obj().playedIndex().isValid()) {
+    if (DataCore::obj().playedIndex().isValid()) {
         menu.addAction(
             QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"),
             &Presentation::Dockbars::obj(), SLOT(scrollToActive()), QKeySequence(tr("Ctrl+P", "Played elem"))
@@ -422,7 +422,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     } else event -> ignore();
 }
 
-void IView::checkByPredicate(IItem::ItemStateFlag flag) {
+void IView::checkByPredicate(ItemStateFlag flag) {
     emit mdl -> moveInProcess();
     QApplication::processEvents();
 
@@ -434,12 +434,12 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> isContainer() && !node -> is(ItemState::proceeded))
+        if (!node -> isContainer() && !node -> has(flag_proceeded))
             emit infoInvalidation(curr);
 
         node -> updateCheckedStateByPredicate(flag);
 
-        if (!ensureVisibility && node -> is(flag)) {
+        if (!ensureVisibility && node -> has(flag)) {
             ensureVisibility = true;
             scrollTo(curr, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
         }
@@ -506,16 +506,16 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
     }
 
     if (!(flags & dont_remove_played)) {
-        if (DataFactory::obj().playedIndex().isValid()) {
-            if (DataFactory::obj().currentPlaylist() == this &&
-                 DataFactory::obj().playedItemTreePath().startsWith(
+        if (DataCore::obj().playedIndex().isValid()) {
+            if (DataCore::obj().currentPlaylist() == this &&
+                 DataCore::obj().playedItemTreePath().startsWith(
                 node.data(ITREESTR).toString()
             ))
-                DataFactory::obj().resetPlaying();
+                DataCore::obj().resetPlaying();
         }
 
         if (remove_file_with_item)
-            mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
+            mdl -> setData(node, flag_mark_on_removing, ISTATERESTORE);
     }
 
     if (selectionUpdate != IModel::none) {
@@ -678,7 +678,7 @@ void IView::downloadChecked(QString & path, Playlist * root) {
     QModelIndexList list;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
-        if ((*it) -> is(IItem::checked)) {
+        if ((*it) -> has(flag_checked)) {
             if ((*it) -> isContainer())
                 downloadChecked(path, (Playlist *)*it);
             else
@@ -689,13 +689,13 @@ void IView::downloadChecked(QString & path, Playlist * root) {
 }
 
 void IView::markLikedAsChecked() {
-    checkByPredicate(IItem::liked);
+    checkByPredicate(flag_liked);
 }
 void IView::markNewAsChecked() {
-    checkByPredicate(IItem::new_item);
+    checkByPredicate(flag_new_item);
 }
 void IView::markListenedAsChecked() {
-    checkByPredicate(IItem::listened);
+    checkByPredicate(flag_listened);
 }
 
 void IView::moveCheckedToNewTab(Playlist * /*root*/) {
@@ -716,7 +716,7 @@ void IView::appendRows(QList<QUrl> & urls) {
 }
 
 void IView::markSelectedAsLiked(bool liked) {
-    int state = liked ? ItemState::liked : -ItemState::liked;
+    int state = liked ? flag_liked : flag_not_liked;
 
     QModelIndexList indexes = selectedIndexes();
     QModelIndexList::ConstIterator it = indexes.begin();
@@ -729,7 +729,7 @@ void IView::markSelectedAsLiked(bool liked) {
 //////////////////////////////////////////////////////
 
 QModelIndex IView::activeIndex() {
-    QModelIndex ind = DataFactory::obj().playedIndex();
+    QModelIndex ind = DataCore::obj().playedIndex();
 
     if (ind.model() != model())
         ind = QModelIndex();
@@ -748,7 +748,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (!curr.isValid())
         curr = mdl -> index(0, 0);
 
-    if (DataFactory::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
+    if (DataCore::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
     expand(curr.parent());
@@ -802,8 +802,8 @@ void IView::dropEvent(QDropEvent * event) {
 
 void IView::keyPressEvent(QKeyEvent * event) {
     if (event -> key() == Qt::Key_Space) {
-        if (DataFactory::obj().playedItem())
-            DataFactory::obj().proceedPauseToggling();
+        if (DataCore::obj().playedItem())
+            DataCore::obj().proceedPauseToggling();
         else
            execNextIndex();
     } else if (event -> key() == Qt::Key_Enter || event -> key() == Qt::Key_Return) {

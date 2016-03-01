@@ -132,7 +132,7 @@ namespace Views {
         bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE) { return mdl -> setData(ind, value, role); }
         QModelIndex index(IItem * item) const { return mdl -> index(item); }
 
-        void checkByPredicate(IItem::ItemStateFlag flag);
+        void checkByPredicate(ItemStateFlag flag);
         QModelIndex candidateOnSelection(QModelIndex node, bool reverseOrder = false);
         void findAndExecIndex(bool deleteCurrent);
         void removeProccessing(QModelIndexList & index_list, bool remove, int flags = none);

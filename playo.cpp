@@ -122,7 +122,7 @@ void Playo::closeEvent(QCloseEvent * e) {
 
     Logger::obj().startMark();
 
-    DataFactory::obj().currPlayer() -> pause();
+    DataCore::obj().currPlayer() -> pause();
     Library::obj().declineStateRestoring();
 
     settings -> clear();
@@ -217,7 +217,7 @@ void Playo::showSettingsDialog() {
         ToolBars::obj().getSpectrum() -> changeBandCount();
         ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
         ToolBars::obj().getSpectrum() -> changeType(Settings::obj().spectrumType());
-        DataFactory::obj().currPlayer() -> spectrumFreq(Settings::obj().spectrumFreqRate());
+        DataCore::obj().currPlayer() -> spectrumFreq(Settings::obj().spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::obj().updateAllViews();
     }

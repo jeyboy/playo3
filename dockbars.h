@@ -141,7 +141,7 @@ namespace Presentation {
 
         friend class Singleton<Dockbars>;
         inline Dockbars() : QWidget(), active(0), played(0), common(0), echonest(0) {
-            connect(&DataFactory::obj(), SIGNAL(newPlaylistNeed()), this, SLOT(playNext()));
+            connect(&DataCore::obj(), SIGNAL(newPlaylistNeed()), this, SLOT(playNext()));
         }
 
         inline ~Dockbars() {}

@@ -96,9 +96,9 @@ void Dockbars::save(DataStore * settings) {
             } else {
                 if ((*it) == played) {
                     curr_bar.insert(QStringLiteral("played"), true);
-                    if (DataFactory::obj().playedIndex().isValid()) {
-                        curr_bar.insert(QStringLiteral("played_item"), DataFactory::obj().playedItem() -> buildTreePath());
-                        curr_bar.insert(QStringLiteral("played_time"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> position()));
+                    if (DataCore::obj().playedIndex().isValid()) {
+                        curr_bar.insert(QStringLiteral("played_item"), DataCore::obj().playedItem() -> buildTreePath());
+                        curr_bar.insert(QStringLiteral("played_time"), QJsonValue::fromVariant(DataCore::obj().currPlayer() -> position()));
 //                        curr_bar.insert(QStringLiteral("played_duration"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> duration()));
                     }
                 }
@@ -375,12 +375,12 @@ void Dockbars::playPrev() {
     if (v) v -> execPrevIndex();
 }
 
-void Dockbars::stop()               { DataFactory::obj().currPlayer() -> stop(); }
-void Dockbars::playPause()          { DataFactory::obj().currPlayer() -> playPause(); }
-void Dockbars::slidePosForward()    { DataFactory::obj().currPlayer() -> slidePosForward(); }
-void Dockbars::slidePosBackward()   { DataFactory::obj().currPlayer() -> slidePosBackward(); }
-void Dockbars::slideVolForward()    { DataFactory::obj().currPlayer() -> slideVolForward(); }
-void Dockbars::slideVolBackward()   { DataFactory::obj().currPlayer() -> slideVolBackward(); }
+void Dockbars::stop()               { DataCore::obj().currPlayer() -> stop(); }
+void Dockbars::playPause()          { DataCore::obj().currPlayer() -> playPause(); }
+void Dockbars::slidePosForward()    { DataCore::obj().currPlayer() -> slidePosForward(); }
+void Dockbars::slidePosBackward()   { DataCore::obj().currPlayer() -> slidePosBackward(); }
+void Dockbars::slideVolForward()    { DataCore::obj().currPlayer() -> slideVolForward(); }
+void Dockbars::slideVolBackward()   { DataCore::obj().currPlayer() -> slideVolBackward(); }
 
 void Dockbars::onDownloadProceeded(QString to) {
     QString key = UID_HEAD % to;
@@ -404,6 +404,6 @@ void Dockbars::barClosed() {
 
     IView * v = view(bar);
 
-    if (v && DataFactory::obj().currentPlaylist() == v)
-        DataFactory::obj().resetPlaying();
+    if (v && DataCore::obj().currentPlaylist() == v)
+        DataCore::obj().resetPlaying();
 }

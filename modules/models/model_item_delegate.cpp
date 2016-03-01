@@ -114,13 +114,13 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         fill_color = Settings::obj().playedState(bodyRect, is_selected);
     else {
         switch (background_state) {
-            case Core::ItemState::new_item:
+            case Core::flag_new_item:
                 fill_color = Settings::obj().defaultState(bodyRect, is_selected);
                 break;
-            case Core::ItemState::listened:
+            case Core::flag_listened:
                 fill_color = Settings::obj().listenedState(bodyRect, is_selected);
                 break;
-            case Core::ItemState::liked:
+            case Core::flag_liked:
                 fill_color = Settings::obj().likedState(bodyRect, is_selected);
                 break;
             default:
@@ -329,13 +329,13 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QBrush state_color;
 
     switch (background_state) {
-        case Core::ItemState::new_item:
+        case Core::flag_new_item:
             state_color = Settings::obj().defaultState(bodyRect, !is_selected);
             break;
-        case Core::ItemState::listened:
+        case Core::flag_listened:
             state_color = Settings::obj().listenedState(bodyRect, !is_selected);
             break;
-        case Core::ItemState::liked:
+        case Core::flag_liked:
             state_color = Settings::obj().likedState(bodyRect, !is_selected);
             break;
         default: is_folder = true;
