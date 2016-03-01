@@ -91,7 +91,7 @@ Playlist::Playlist(const QString & folderTitle, Playlist * parent, int pos, int 
 Playlist::Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos, int initState)
     : IItem(parent, folderTitle, pos, initState), filesCount(0) {
 
-    setUid(uid);
+    setId(uid);
 
     if (parent != 0)
         parent -> declarePlaylist(playlistUid(), this);

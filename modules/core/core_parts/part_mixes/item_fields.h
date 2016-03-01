@@ -84,8 +84,8 @@ namespace Core {
         inline quint64 _durationMillis() const                   { return attrs.value(JSON_TYPE_DURATION).isValid() ? Duration::toMillis(attrs.value(JSON_TYPE_DURATION).toString()) : 0; }
 
         // per source info
-        inline void _setUid(const QVariant & newId)              { attrs[JSON_TYPE_UID] = newId; }
-        inline QVariant _uid() const                             { return attrs.value(JSON_TYPE_UID); }
+        inline void _setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
+        inline QVariant _id() const                              { return attrs.value(JSON_TYPE_ID); }
 
         inline void _setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline QVariant _owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }

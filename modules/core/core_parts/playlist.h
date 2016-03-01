@@ -94,8 +94,8 @@ namespace Core {
             pNode -> declarePlaylist(playlistUid(), this);
         }
     protected:
-        inline QString playlistUid() const { return playlistUid(title().toString(), uid().toString()); }
-        inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QStringLiteral("*") % uid)); }
+        inline QString playlistUid() const { return playlistUid(title().toString(), id().toString()); }
+        inline QString playlistUid(const QString & name, const QString & id) const { return name + (id.isEmpty() ? QString() : (QStringLiteral("*") % id)); }
 
         QHash<QString, Playlist *> playlists;
         QList<IItem *> children;

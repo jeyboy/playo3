@@ -102,8 +102,8 @@ namespace Core {
         inline quint64 durationMillis() const                   { return activeSourceItem() -> _durationMillis(); }
 
         // per source info
-        inline void setUid(const QVariant & newId)              { activeSourceItem() -> _setUid(newId); }
-        inline QVariant uid() const                             { return activeSourceItem() -> _uid(); }
+        inline void setId(const QVariant & newId)               { activeSourceItem() -> _setId(newId); }
+        inline QVariant id() const                              { return activeSourceItem() -> _id(); }
 
         inline void setOwner(const QVariant & newOwner)         { activeSourceItem() -> _setOwner(newOwner); }
         inline QVariant owner() const                           { return activeSourceItem() -> _owner(); }

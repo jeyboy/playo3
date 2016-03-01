@@ -7,10 +7,10 @@ using namespace Models;
 Library::~Library() { declineStateRestoring(); }
 
 void Library::setItemState(const QModelIndex & ind, int state) {
-    bool override = state < 0;
-    if (state & ItemFields::listened || state == -ItemFields::liked)
+    bool override = state == flag_not_liked;
+    if (state & flag_listened || override)
         state = 0;
-    else if (state & ItemFields::liked)
+    else if (state & flag_liked)
         state = 1;
     else return;
 
@@ -135,9 +135,9 @@ void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * wat
         if (state != -1) {
             if (state == 1) {
                 if (!watcher || (watcher && watcher -> isCanceled()))
-                    itm -> set(ItemState::liked);
+                    itm -> set(flag_liked);
                 else
-                    emitItemAttrChanging(ind, ItemState::liked);
+                    emitItemAttrChanging(ind, flag_liked);
 
                 if (watcher) listSyncs[ind.model()] -> unlock();
                 return;
@@ -150,12 +150,12 @@ void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * wat
     bool canceled = !watcher || (watcher && watcher -> isCanceled());
     if (isListened) {
         if (canceled)
-            itm -> set(ItemState::listened);
+            itm -> set(flag_listened);
         else
-            emitItemAttrChanging(ind, ItemState::listened);
+            emitItemAttrChanging(ind, flag_listened);
     } else
         if (!canceled)
-            emitItemAttrChanging(ind, ItemState::new_item);
+            emitItemAttrChanging(ind, flag_new_item);
 
     if (watcher) listSyncs[ind.model()] -> unlock();
 }

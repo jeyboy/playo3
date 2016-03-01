@@ -7,22 +7,23 @@
 #include <qjsonarray.h>
 #include <qstringbuilder.h>
 
-#include "data_item_state.h"
 #include "data_item_errors.h"
 #include "settings.h"
 #include "modules/core/web/web_sub_types.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
+#include "modules/core/core_parts/part_mixes/item_state.h"
+#include "modules/core/core_parts/part_mixes/item_fields.h"
 
 #include "modules/core/misc/format.h"
 
 namespace Core {
-    class DataItem : public DataItemState {
+    class DataItem : public ItemState {
         QVariantHash attrs;
         int relation_amount;
         int activeSourceIndexLimit;
     public:
         DataItem(const QVariantHash & attrs, int rel_amount)
-            : DataItemState(attrs.contains(JSON_TYPE_STATE) ? const_cast<QVariantHash &>(attrs).take(JSON_TYPE_STATE).toInt() : DEFAULT_FILE_STATE),
+            : ItemState(attrs.contains(JSON_TYPE_STATE) ? const_cast<QVariantHash &>(attrs).take(JSON_TYPE_STATE).toInt() : DEFAULT_ITEM_STATE),
               attrs(attrs), relation_amount(rel_amount) {
             activeSourceIndexLimit = attrs.value(JSON_TYPE_ACTIVE_SOURCE, 0).toInt();
         }

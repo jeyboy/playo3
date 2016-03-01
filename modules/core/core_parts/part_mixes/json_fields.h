@@ -27,7 +27,7 @@ namespace Core {
     const QString JSON_TYPE_REFRESH_PATH = QStringLiteral("r");
     const QString JSON_TYPE_STATE = QStringLiteral("s");
     const QString JSON_TYPE_TITLE = QStringLiteral("t");
-    const QString JSON_TYPE_UID = QStringLiteral("u");
+    const QString JSON_TYPE_ID = QStringLiteral("u");
     const QString JSON_TYPE_VIDEO_PATH = QStringLiteral("v");
     const QString JSON_TYPE_SUB_TYPE = QStringLiteral("w");
     const QString JSON_TYPE_START_POS = QStringLiteral("x");

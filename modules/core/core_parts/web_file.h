@@ -13,7 +13,7 @@ namespace Core {
         inline WebFile(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline WebFile(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
         inline WebFile(const QVariant & uid, const QString & filePath, const QString & fileName, Playlist * parent = 0, int pos = -1) : IItem(parent, fileName, pos) {
-            setUid(uid);
+            setId(uid);
             setPath(filePath);
         }
         inline virtual ~WebFile() {}
@@ -22,7 +22,7 @@ namespace Core {
 
         inline QString fullPath() const { return path().toString(); }
         virtual inline QUrl toUrl() const { return QUrl(fullPath()); }
-        virtual inline QString toUid() { return WebFile::toUid(owner(), uid()); }
+        virtual inline QString toUid() { return WebFile::toUid(owner(), id()); }
         inline bool isRemote() const { return true; }
 
         inline virtual bool removePhysicalObject() { return false; }
