@@ -199,8 +199,8 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     QUrl url;
 
     switch(playlistType()) {
-        case Data::Type::tree:
-        case Data::Type::level_tree: { url = list.first(); break; }
+        case playlist_tree:
+        case playlist_level_tree: { url = list.first(); break; }
         default: url = QUrl();
     }
 
@@ -735,8 +735,6 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
 }
 
 void IModel::importIds(const QStringList & ids) {
-    using namespace Data;
-
     emit moveInBackgroundProcess();
     QHash<int, QStringList> uidsMap;
 
@@ -749,13 +747,13 @@ void IModel::importIds(const QStringList & ids) {
     bool is_new = false;
 
     switch(playlistType()) {
-        case search:
-        case soundcloud:
-        case vk:
-        case vk_rel:
-        case level: { parentNode = rootItem; break; }
-        case tree:
-        case level_tree: {
+        case playlist_search:
+        case playlist_soundcloud:
+        case playlist_vk:
+        case playlist_vk_rel:
+        case playlist_level: { parentNode = rootItem; break; }
+        case playlist_tree:
+        case playlist_level_tree: {
             QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
             QString path = file.path();
             if (path.isEmpty()) path = Extensions::folderName(file);

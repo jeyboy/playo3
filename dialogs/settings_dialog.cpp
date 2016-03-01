@@ -440,7 +440,7 @@ void SettingsDialog::saveGlobalSettings() {
 
     Settings::obj().setSaveCommonTab(ui -> saveCommonTab -> isChecked());
     Settings::obj().setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
-    Settings::obj().setOpenDropPointInTabType((Data::Type)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
+    Settings::obj().setOpenDropPointInTabType((Core::PlaylistType)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
 
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());

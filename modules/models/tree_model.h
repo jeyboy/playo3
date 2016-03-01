@@ -10,7 +10,7 @@ namespace Models {
         inline TreeModel(QJsonObject * hash = 0, QObject * parent = 0) : IModel(hash, parent) {}
 
         inline bool isRelative() const { return true; }
-        inline Data::Type playlistType() const { return Data::tree; }
+        inline PlaylistType playlistType() const { return playlist_tree; }
 
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);

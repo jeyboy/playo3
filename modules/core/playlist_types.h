@@ -1,24 +1,24 @@
-#ifndef DATA_TYPES
-#define DATA_TYPES
+#ifndef PLAYLIST_TYPES
+#define PLAYLIST_TYPES
 
-namespace Data {
-    enum Type {
-        level = 1,
-        level_tree = 2,
-        tree = 3,
-        vk = 4,
-        soundcloud = 5,
-        search = 6,
-        vk_rel = 7,
-        echo = 8,
-        od = 9
+namespace Core {
+    enum PlaylistType {
+        playlist_level = 1,
+        playlist_level_tree = 2,
+        playlist_tree = 3,
+        playlist_vk = 4,
+        playlist_soundcloud = 5,
+        playlist_search = 6,
+        playlist_vk_rel = 7,
+        playlist_echo = 8,
+        playlist_od = 9
     };
 
-    enum RelType {
-        none_rel,
-        user_rel,
-        song_rel
+    enum PlaylistRelType {
+        playlist_none_rel,
+        playlist_user_rel,
+        playlist_song_rel
     };
 }
 
-#endif // DATA_TYPES
+#endif // PLAYLIST_TYPES

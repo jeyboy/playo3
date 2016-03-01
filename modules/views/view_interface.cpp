@@ -263,20 +263,20 @@ void IView::copyIdsToClipboard() {
 }
 
 void IView::openRecomendationsforUser() {
-    Params settings(Data::vk_rel, false, false, false, true, sttngs.uid, Data::user_rel);
+    Params settings(playlist_vk_rel, false, false, false, true, sttngs.uid, playlist_user_rel);
     Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % sttngs.uid), settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> owner().isValid()) {
-        Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
+        Params settings(playlist_vk_rel, false, false, false, true, it -> owner().toString(), playlist_user_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
     WebFile * it = mdl -> item<WebFile>(currentIndex());
     if (it -> uid().isValid()) {
-        Params settings(Data::vk_rel, false, false, false, true, it -> toUid(), Data::song_rel);
+        Params settings(playlist_vk_rel, false, false, false, true, it -> toUid(), playlist_song_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), settings, 0, true, true);
     }
 }
@@ -330,7 +330,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addSeparator();
     }
 
-    if (mdl -> playlistType() == Data::vk) {
+    if (mdl -> playlistType() == playlist_vk) {
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
@@ -408,7 +408,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
         menu.addAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this, SLOT(shuffle()));
 
-        if (mdl -> playlistType() != level) {
+        if (mdl -> playlistType() != playlist_level) {
             menu.addSeparator();
 
             menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse all"), this, SLOT(collapseAll()));

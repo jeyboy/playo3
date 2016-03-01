@@ -51,8 +51,8 @@ public:
     inline bool isOpenDropPointInTab() const { return _openDropPointInTab; }
     inline void setOpenDropPointInTab(bool open) { _openDropPointInTab = open; }
 
-    inline Data::Type openDropPointInTabType() const { return _openDropPointInTabType; }
-    inline void setOpenDropPointInTabType(const Data::Type & type) { _openDropPointInTabType = type; }
+    inline Core::PlaylistType openDropPointInTabType() const { return _openDropPointInTabType; }
+    inline void setOpenDropPointInTabType(const Core::PlaylistType & type) { _openDropPointInTabType = type; }
 
     inline int tabPosition() { return _tabPosition; }
     inline void setTabPosition(int newPositionsType) { _tabPosition = newPositionsType; }
@@ -80,7 +80,7 @@ protected:
 
     bool _saveCommonTab;
     bool _openDropPointInTab;
-    Data::Type _openDropPointInTabType;
+    Core::PlaylistType _openDropPointInTabType;
     int _tabPosition;
     int _colorScheme;
     int _toolIconSize;

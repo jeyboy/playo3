@@ -11,7 +11,7 @@ namespace Models {
     public:       
         inline SoundcloudModel(const QString & uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
-        inline Data::Type playlistType() const { return Data::soundcloud; }
+        inline PlaylistType playlistType() const { return playlist_soundcloud; }
         inline ISearchable * api() { return &Soundcloud::Api::obj(); }
     public slots:
         void refresh(bool retryPlaing = false);

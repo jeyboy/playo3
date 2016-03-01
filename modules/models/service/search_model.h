@@ -35,7 +35,7 @@ namespace Models {
         static bool findNewSource(IItem * item);
 
         inline bool isRelative() const { return false; }
-        inline Data::Type playlistType() const { return Data::search; }
+        inline PlaylistType playlistType() const { return playlist_search; }
 
         void initiateSearch(const SearchSettings & params);
         void declineSearch();

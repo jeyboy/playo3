@@ -10,7 +10,7 @@ namespace Models {
         inline LevelTreeModel(QJsonObject * hash = 0, QObject * parent = 0) : IModel(hash, parent) {}
 
         inline bool isRelative() const { return false; }
-        inline Data::Type playlistType() const { return Data::level_tree; }
+        inline PlaylistType playlistType() const { return playlist_level_tree; }
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

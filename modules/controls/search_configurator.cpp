@@ -187,7 +187,7 @@ void SearchConfigurator::initiateSources() {
         Views::IView * v = Presentation::Dockbars::obj().view(*it);
         if (v && !v -> isCommon()) {
             Models::IModel * mdl = (Models::IModel *)v -> model();
-            if (mdl -> playlistType() != Data::search) {
+            if (mdl -> playlistType() != Core::playlist_search) {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), tabsList);
                 item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
                 item -> setCheckState(Qt::Unchecked);

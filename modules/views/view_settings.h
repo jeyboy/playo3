@@ -5,12 +5,14 @@
 #include <qjsonobject.h>
 
 namespace Views {
+    using namespace Core;
+
     struct Params {
-        Params(Data::Type cType, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(false), playlist(true),
+        Params(PlaylistType cType, const QString & uniq_id = QString(), PlaylistRelType rel = playlist_none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Params(Data::Type cType = Data::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(delFile), playlist(isPlaylist),
+        Params(PlaylistType cType = playlist_tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+            bool isPlaylist = false, const QString & uniq_id = QString(), PlaylistRelType rel = playlist_none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
         Params(const QJsonObject & obj) {
@@ -18,9 +20,9 @@ namespace Views {
             playlist = obj[QStringLiteral("play")].toBool();
             interactive = obj[QStringLiteral("int")].toBool();
             common = obj[QStringLiteral("common")].toBool();
-            type = (Data::Type)obj[QStringLiteral("type")].toInt();
+            type = (PlaylistType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
-            rel_type = (Data::RelType)obj[QStringLiteral("rel_type")].toInt();
+            rel_type = (PlaylistRelType)obj[QStringLiteral("rel_type")].toInt();
         }
 
         QJsonObject toJson() {
@@ -44,9 +46,9 @@ namespace Views {
         bool interactive;
         bool common;
         QString uid;
-        Data::RelType rel_type;
+        PlaylistRelType rel_type;
 
-        Data::Type type;
+        PlaylistType type;
     };
 }
 

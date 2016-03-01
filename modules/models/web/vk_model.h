@@ -10,7 +10,7 @@ namespace Models {
     public:
         inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
-        inline Data::Type playlistType() const { return Data::vk; }
+        inline PlaylistType playlistType() const { return playlist_vk; }
         inline ISearchable * api() { return &Vk::Api::obj(); }
     public slots:
         virtual void refresh(bool retryPlaing = false);

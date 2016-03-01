@@ -2,6 +2,7 @@
 #include "ui_tabdialog.h"
 
 using namespace Dialogs;
+using namespace Core;
 
 TabDialog::TabDialog(QWidget * parent) :
   BaseDialog(parent), ui(new Ui::TabDialog) {
@@ -33,15 +34,15 @@ Views::Params TabDialog::getSettings() {
     settings.playlist = ui -> playlist -> isChecked();
 
     if (ui -> isListRadio -> isChecked())
-        settings.type = Data::level;
+        settings.type = playlist_level;
     else if (ui -> isOneLevelTreeRadio -> isChecked())
-        settings.type = Data::level_tree;
+        settings.type = playlist_level_tree;
     else if (ui -> isTreeRadio -> isChecked())
-        settings.type = Data::tree;
+        settings.type = playlist_tree;
     else if (ui -> isVkRadio -> isChecked())
-        settings.type = Data::vk;
+        settings.type = playlist_vk;
     else if (ui -> isSoundcloudRadio -> isChecked())
-        settings.type = Data::soundcloud;
+        settings.type = playlist_soundcloud;
 
     return settings;
 }
@@ -51,11 +52,11 @@ void TabDialog::setSettings(Views::Params settings) {
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);
 
-  ui -> isListRadio -> setChecked(settings.type == Data::level);
-  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Data::level_tree);
-  ui -> isTreeRadio -> setChecked(settings.type == Data::tree);
-  ui -> isVkRadio -> setChecked(settings.type == Data::vk);
-  ui -> isSoundcloudRadio -> setChecked(settings.type == Data::soundcloud);
+  ui -> isListRadio -> setChecked(settings.type == playlist_level);
+  ui -> isOneLevelTreeRadio -> setChecked(settings.type == playlist_level_tree);
+  ui -> isTreeRadio -> setChecked(settings.type == playlist_tree);
+  ui -> isVkRadio -> setChecked(settings.type == playlist_vk);
+  ui -> isSoundcloudRadio -> setChecked(settings.type == playlist_soundcloud);
 
   ui -> isListRadio -> setEnabled(false);
   ui -> isTreeRadio -> setEnabled(false);

@@ -7,15 +7,15 @@ namespace Models {
     class VkRelModel : public VkModel {
         Q_OBJECT
     public:       
-        inline VkRelModel(Data::RelType rtype, QString uid, QJsonObject * hash = 0, QObject * parent = 0)
+        inline VkRelModel(PlaylistRelType rtype, const QString & uid, QJsonObject * hash = 0, QObject * parent = 0)
             : VkModel(uid, hash, parent), rel_type(rtype) {}
 
-        inline Data::Type playlistType() const { return Data::vk_rel; }
+        inline PlaylistType playlistType() const { return playlist_vk_rel; }
     public slots:
         void refresh(bool retryPlaing = false);
         inline void refreshWall() { /*stub*/ }
     private:
-        Data::RelType rel_type;
+        PlaylistRelType rel_type;
     };
 }
 

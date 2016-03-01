@@ -7,7 +7,7 @@ void VkRelModel::refresh(bool retryPlaing) {
 
 //    lastRefresh = QDateTime::currentMSecsSinceEpoch();
 
-    if (rel_type == Data::none_rel) {
+    if (rel_type == playlist_none_rel) {
         VkModel::refresh(retryPlaing);
     } else {
         emit moveInProcess();
@@ -15,7 +15,7 @@ void VkRelModel::refresh(bool retryPlaing) {
 
         Vk::Api::obj().audioRecomendations(
             tab_uid,
-            rel_type == Data::user_rel,
+            rel_type == playlist_user_rel,
             true,
             new Func(this, SLOT(proceedAudioList(QJsonObject &)))
         );

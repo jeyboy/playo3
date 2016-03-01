@@ -11,7 +11,7 @@ namespace Models {
         virtual ~ListModel() {}
 
         inline bool isRelative() const { return false; }
-        inline Data::Type playlistType() const { return Data::level; }
+        inline PlaylistType playlistType() const { return playlist_level; }
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

@@ -56,9 +56,9 @@ namespace Views {
         inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
         inline bool isPlaylist() const { return sttngs.playlist; }
         inline bool isCommon() const { return sttngs.common; }
-        inline bool isEditable() const { return sttngs.type < Data::vk && !isCommon(); }
-        inline bool isRequiredOnUpdate() const { return sttngs.type == Data::vk; }
-        inline bool isSearch() const { return sttngs.type == Data::search; }
+        inline bool isEditable() const { return sttngs.type < playlist_vk && !isCommon(); }
+        inline bool isRequiredOnUpdate() const { return sttngs.type == playlist_vk; }
+        inline bool isSearch() const { return sttngs.type == playlist_search; }
 
         inline Params settings() const { return sttngs; }
         inline void setSettings(Params newSettings) { sttngs = newSettings; }

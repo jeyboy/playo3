@@ -41,12 +41,12 @@ namespace Models {
 
         inline Playlist * root() { return rootItem; }
 
-        virtual Data::Type playlistType() const = 0;
+        virtual PlaylistType playlistType() const = 0;
         virtual bool isRelative() const = 0;
         inline bool hasFreeMoving() {
             switch(playlistType()) {
-                case Data::tree:
-                case Data::level_tree: return false;
+                case playlist_tree:
+                case playlist_level_tree: return false;
                 default: return true;
             }
         }
