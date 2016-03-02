@@ -242,7 +242,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
 
                     if (option.state & (QStyle::State_MouseOver)) {
                         QPointF c = pseudoIcoRect.center();
-                        int amount = qMin(qMax(1, attrs.value(Keys::sources_amount).toInt()), sources.size());
+                        int amount = qMin(attrs.value(Keys::sources_amount).toInt(), sources.size());
                         painter -> setBrush(Qt::green); // by default all sources are green colored - accessible
                         for(int i = 0; i < amount; i++)
                             painter -> drawEllipse(c + sources[i] / 2, 3, 3);
@@ -422,7 +422,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         ///////////////////////////////////////////////////
         if (option.state & (QStyle::State_MouseOver)) {
             QPointF c = icoRect.center();
-            int amount = qMin(qMax(1, attrs.value(Keys::sources_amount).toInt()), sources.size());
+            int amount = qMin(attrs.value(Keys::sources_amount).toInt(), sources.size());
             painter -> setBrush(Qt::green); // by default all sources are green colored - accessible
             qDebug() << amount;
             for(int i = 0; i < amount; i++)

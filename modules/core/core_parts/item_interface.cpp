@@ -141,7 +141,7 @@ QVariant IItem::data(int column) const {
                 params.insert(Keys::state, visualStates());
                 params.insert(Keys::played, has(flag_played));
                 params.insert(Keys::shareable, isShareable());
-                params.insert(Keys::sources_amount, sources.size());
+                params.insert(Keys::sources_amount, activeSourceItem() -> sources.size());
 
                 if (has(flag_proccessing))
                     params.insert(Keys::proccessing, true);
