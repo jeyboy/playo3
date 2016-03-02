@@ -71,55 +71,55 @@ namespace Core {
         inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
 
-        inline void _setTitle(const QVariant & newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
-        inline QVariant _title() const                           { return attrs.value(JSON_TYPE_TITLE); }
+        inline void setTitle(const QVariant & newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
+        inline QVariant title() const                           { return attrs.value(JSON_TYPE_TITLE); }
 
-        inline void _setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
-        inline QVariant _titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
+        inline void setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
+        inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
 
-        inline void _setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; } // maybe need move to sources if source site is supported ?
+        inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; } // maybe need move to sources if source site is supported ?
 
-        inline void _setDuration(const QVariant & newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
-        inline QVariant _duration() const                        { return attrs.value(JSON_TYPE_DURATION); }
-        inline quint64 _durationMillis() const                   { return attrs.value(JSON_TYPE_DURATION).isValid() ? Duration::toMillis(attrs.value(JSON_TYPE_DURATION).toString()) : 0; }
+        inline void setDuration(const QVariant & newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
+        inline QVariant duration() const                        { return attrs.value(JSON_TYPE_DURATION); }
+        inline quint64 durationMillis() const                   { return attrs.value(JSON_TYPE_DURATION).isValid() ? Duration::toMillis(attrs.value(JSON_TYPE_DURATION).toString()) : 0; }
 
         // per source info
-        inline void _setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
-        inline QVariant _id() const                              { return attrs.value(JSON_TYPE_ID); }
+        inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
+        inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
 
-        inline void _setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
-        inline QVariant _owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
+        inline void setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
+        inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
 
-        inline void _addArtistUid(const QString & id)            { attrs[JSON_TYPE_ARTIST_UIDS].toStringList() << id; }
-        inline void _setArtistUids(const QStringList & ids)      { attrs[JSON_TYPE_ARTIST_UIDS] = ids; }
-        inline QVariant _artistUids() const                      { return attrs.value(JSON_TYPE_ARTIST_UIDS); }
+        inline void addArtistUid(const QString & id)            { attrs[JSON_TYPE_ARTIST_UIDS].toStringList() << id; }
+        inline void setArtistUids(const QStringList & ids)      { attrs[JSON_TYPE_ARTIST_UIDS] = ids; }
+        inline QVariant artistUids() const                      { return attrs.value(JSON_TYPE_ARTIST_UIDS); }
 
-        inline void _setSongUid(const QVariant & newSongId)      { attrs[JSON_TYPE_SONG_UID] = newSongId; }
-        inline QVariant _songUid() const                         { return attrs.value(JSON_TYPE_SONG_UID); }
+        inline void setSongUid(const QVariant & newSongId)      { attrs[JSON_TYPE_SONG_UID] = newSongId; }
+        inline QVariant songUid() const                         { return attrs.value(JSON_TYPE_SONG_UID); }
 
-        inline void _setPath(const QVariant & newPath)           { attrs[JSON_TYPE_PATH] = newPath; }
-        inline QVariant _path() const                            { return attrs.value(JSON_TYPE_PATH); }
+        inline void setPath(const QVariant & newPath)           { attrs[JSON_TYPE_PATH] = newPath; }
+        inline QVariant path() const                            { return attrs.value(JSON_TYPE_PATH); }
 
-        inline void _setRefreshPath(const QVariant & newPath)    { attrs[JSON_TYPE_REFRESH_PATH] = newPath; }
-        virtual inline QString _refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
+        inline void setRefreshPath(const QVariant & newPath)    { attrs[JSON_TYPE_REFRESH_PATH] = newPath; }
+        virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
-        inline void _setExtension(const QVariant & newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
-        inline QVariant _extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
+        inline void setExtension(const QVariant & newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
+        inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
 
-        inline void _setStartPos(const QVariant & newStartPos)   { attrs[JSON_TYPE_START_POS] = newStartPos; }
-        inline QVariant _startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
-        inline qint64 _startPosMillis() const                    { return attrs.value(JSON_TYPE_START_POS, 0).toLongLong(); }
+        inline void setStartPos(const QVariant & newStartPos)   { attrs[JSON_TYPE_START_POS] = newStartPos; }
+        inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
+        inline qint64 startPosMillis() const                    { return attrs.value(JSON_TYPE_START_POS, 0).toLongLong(); }
 
-        inline void _setInfo(const QVariant & newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
-        QStringList _info() const;
-        inline QVariant _infoVar() const                         { return attrs.value(JSON_TYPE_INFO); }
-        inline bool _hasInfo() const                             { return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _infoVar().isValid());}
+        inline void setInfo(const QVariant & newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
+        QStringList info() const;
+        inline QVariant infoVar() const                         { return attrs.value(JSON_TYPE_INFO); }
+        inline bool hasInfo() const                             { return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && infoVar().isValid());}
 
-        inline void _setSize(const QVariant & newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
-        inline QVariant _size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
+        inline void setSize(const QVariant & newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
+        inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
 
-        inline void _setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
-        inline Web::SubType _subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
+        inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
+        inline Web::SubType subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
 
         QVariantMap attrs;
     };

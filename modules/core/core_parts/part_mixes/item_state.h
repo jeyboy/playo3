@@ -1,6 +1,8 @@
 #ifndef MODEL_ITEM_STATE_H
 #define MODEL_ITEM_STATE_H
 
+#include <qdebug.h>
+
 namespace Core {
     #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
 
@@ -22,6 +24,7 @@ namespace Core {
         // 64
         flag_checked = 32,
         flag_expanded = 16,
+        // per source
         flag_proceeded = 8,
         flag_listened = 4,
         flag_liked = 2,
@@ -42,7 +45,19 @@ namespace Core {
             inline int saveStates() const { return (unsigned char)item_state; }
             inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
+            void swap(ItemState * other) {
+                int swap_interval = item_state & 15;
+                copyBits(other -> item_state, 4);
+                other -> copyBits(swap_interval, 4);
+            }
         protected:
+            void copyBits(int state, int bitsCount) { // need carefully test this
+                for(int i = 0; i < bitsCount; i++) {
+                    qDebug() << "BI" << (state & (1 << i));
+                    item_state |= ((state & (1 << i)) << i);
+                }
+            }
+
             bool reset();
             bool setListened();
             bool setLiked();

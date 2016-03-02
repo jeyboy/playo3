@@ -269,6 +269,7 @@ bool IItem::useNextSource() {
         currSourceIndex = 0;
 
     setActiveSourceIndex(currSourceIndex);
+    connectToSource(activeSourceItem());
     return currSourceIndex != activeSourceIndexLimit;
 }
 
@@ -292,18 +293,6 @@ IItem * IItem::activeSourceItem() const {
 
     return sources[ind];
 }
-
-//bool IItem::hasSource(const QString & url, const QString & refresh_token) {
-//    // update me :(
-//}
-
-//void IItem::removeSource(const QString & url) {
-//    // update me :(
-//}
-
-//void IItem::removeSource(int index) {
-//    // update me :(
-//}
 
 QString IItem::relationStr() const {
     switch(itemType()) {
