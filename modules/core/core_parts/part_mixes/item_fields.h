@@ -63,14 +63,6 @@ namespace Core {
         inline void setActiveSourceIndex(int index)             { attrs[JSON_TYPE_ACTIVE_SOURCE] = index; }
         inline int activeSourceIndex() const                    { return attrs.value(JSON_TYPE_ACTIVE_SOURCE, 0).toInt(); }
 
-        inline virtual QString toUid() { return QString(); }
-        virtual QJsonObject toJson();
-        QVariantMap toInnerAttrs(int itemType) const;
-    protected:
-        inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
-        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
-
-
         inline void setTitle(const QVariant & newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
         inline QVariant title() const                           { return attrs.value(JSON_TYPE_TITLE); }
 
@@ -120,6 +112,13 @@ namespace Core {
 
         inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
         inline Web::SubType subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
+
+        inline virtual QString toUid() { return QString(); }
+        virtual QJsonObject toJson();
+        QVariantMap toInnerAttrs(int itemType) const;
+    protected:
+        inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
+        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
         QVariantMap attrs;
     };
