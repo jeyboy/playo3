@@ -47,15 +47,12 @@ namespace Core {
 
             void swap(ItemState * other) {
                 int swap_interval = item_state & 15;
-                copyBits(other -> item_state, 4);
-                other -> copyBits(swap_interval, 4);
+                copyBits(other -> item_state, 15);
+                other -> copyBits(swap_interval, 15);
             }
         protected:
-            void copyBits(int state, int bitsCount) { // need carefully test this
-                for(int i = 0; i < bitsCount; i++) {
-                    qDebug() << "BI" << (state & (1 << i));
-                    item_state |= ((state & (1 << i)) << i);
-                }
+            void copyBits(int state, int mask) { // need carefully test this
+                item_state = item_state - (item_state & mask) + (state & mask);
             }
 
             bool reset();

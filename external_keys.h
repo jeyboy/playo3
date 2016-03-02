@@ -24,6 +24,7 @@ namespace Keys {
     extern const QString type;
     extern const QString asterix;
     extern const QString shareable;
+    extern const QString sources_amount;
 }
 
 #endif // EXTERNAL_KEYS

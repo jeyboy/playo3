@@ -78,6 +78,18 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(WEB_FILE + site_yandex + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/yandex_item_on"), size));
     icons.insert(WEB_FILE + site_youtube,                               PIXMAP(QStringLiteral(":/items/youtube_item"), size));
     icons.insert(WEB_FILE + site_youtube + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/youtube_item_on"), size));
+
+
+    int limit = 7;
+    int scale = icon_size;
+    float angleUnit = 6.28 / limit;
+
+    for(int i = 0; i < limit; i++) {
+        sources.append(QPointF(
+           cos(angleUnit * i) * scale,
+           sin(angleUnit * i) * scale
+        ));
+    }
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {
@@ -226,6 +238,14 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                             pseudoIcoRect.topRight() + QPoint(-10, 13),
                             Keys::asterix
                         );
+                    }
+
+                    if (option.state & (QStyle::State_MouseOver)) {
+                        QPointF c = pseudoIcoRect.center();
+                        int amount = qMin(qMax(1, attrs.value(Keys::sources_amount).toInt()), sources.size());
+                        painter -> setBrush(Qt::green); // by default all sources are green colored - accessible
+                        for(int i = 0; i < amount; i++)
+                            painter -> drawEllipse(c + sources[i] / 2, 3, 3);
                     }
                 }
             }
@@ -400,18 +420,28 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         }
 
         ///////////////////////////////////////////////////
-        if (icon_size > 24) {
-            QPen cPen(state_color, state_width); cPen.setCosmetic(true); cPen.setCapStyle(Qt::SquareCap);
-            painter -> setPen(cPen);
+        if (option.state & (QStyle::State_MouseOver)) {
+            QPointF c = icoRect.center();
+            int amount = qMin(qMax(1, attrs.value(Keys::sources_amount).toInt()), sources.size());
+            painter -> setBrush(Qt::green); // by default all sources are green colored - accessible
+            qDebug() << amount;
+            for(int i = 0; i < amount; i++)
+                painter -> drawEllipse(c + sources[i] / 2, 3, 3);
         } else {
-            painter -> setPen(Qt::NoPen);
-            painter -> setBrush(state_color);
+            if (icon_size > 24) {
+                QPen cPen(state_color, state_width); cPen.setCosmetic(true); cPen.setCapStyle(Qt::SquareCap);
+                painter -> setPen(cPen);
+            } else {
+                painter -> setPen(Qt::NoPen);
+                painter -> setBrush(state_color);
+            }
+
+    //        painter -> drawArc(icoRect, 120 * 16, 70 * 16);
+    //        painter -> drawArc(icoRect, 235 * 16, 70 * 16);
+    //        painter -> drawArc(icoRect, 60 * 16, -70 * 16);
+            painter -> drawEllipse(icoRect);
         }
 
-//        painter -> drawArc(icoRect, 120 * 16, 70 * 16);
-//        painter -> drawArc(icoRect, 235 * 16, 70 * 16);
-//        painter -> drawArc(icoRect, 60 * 16, -70 * 16);
-        painter -> drawEllipse(icoRect);
         ///////////////////////////////////////////////////
 
         if (attrs.value(Keys::shareable).toBool()) {
