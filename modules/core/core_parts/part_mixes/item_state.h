@@ -5,20 +5,21 @@ namespace Core {
     #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
 
     enum ItemStateFlag {
-        flag_not_played = 131072,
-        flag_not_proccessing = 65536,
-        flag_not_mark_on_removing = 32768,
-        flag_not_checked = 16384,
-        flag_not_expanded = 8192,
-        flag_not_proceeded = 4096,
-        flag_not_listened = 2048,
-        flag_not_liked = 1024,
+        flag_not_played = 262144,
+        flag_not_proccessing = 131072,
+        flag_not_mark_on_removing = 65536,
+        flag_not_checked = 32768,
+        flag_not_expanded = 16384,
+        flag_not_proceeded = 8192,
+        flag_not_listened = 4096,
+        flag_not_liked = 2048,
 
+        flag_mark_on_removing = 1024,
         flag_played = 512,
         flag_proccessing = 256,
 
         // 128
-        flag_mark_on_removing = 64,
+        // 64
         flag_checked = 32,
         flag_expanded = 16,
         flag_proceeded = 8,
