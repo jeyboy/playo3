@@ -77,7 +77,7 @@ namespace Core {
 
     bool DataCore::useNextSource() {
         return current_item -> useNextSource() ||
-            (Settings::obj().isFindOtherSource() && Models::SearchModel::findNewSource(current_item));
+            (Settings::obj().isFindOtherSource() && Models::SearchModel::findNewSources(current_item));
     }
 
     void DataCore::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, bool fixSourceLimit) {

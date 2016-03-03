@@ -254,8 +254,10 @@ bool IItem::addSource(IItem * newSource, bool setAsMain, bool checkExistance) {
 
     sources.append(newSource);
 
-    if (setAsMain)
+    if (setAsMain) {
         setActiveSourceIndex(sources.length() - 1);
+        connectToSource(activeSourceItem());
+    }
 
     qDebug() << "ADD NEW SOURCE";
 

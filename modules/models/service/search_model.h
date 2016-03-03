@@ -32,7 +32,7 @@ namespace Models {
 
         ~SearchModel();
 
-        static bool findNewSource(IItem * item);
+        static bool findNewSources(IItem * item);
 
         inline bool isRelative() const { return false; }
         inline PlaylistType playlistType() const { return playlist_search; }

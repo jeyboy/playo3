@@ -48,7 +48,7 @@ namespace Core {
             QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
 
         protected:
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
+            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.su") % predicate; }
 
             bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 if (reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200) return false;

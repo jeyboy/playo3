@@ -86,8 +86,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     for(int i = 0; i < limit; i++) {
         sources.append(QPointF(
-           cos(angleUnit * i) * scale,
-           sin(angleUnit * i) * scale
+           cos(angleUnit * i - 3.14 / 4) * scale, // 3.14 / 2 for top position start
+           sin(angleUnit * i - 3.14 / 4) * scale // 3.14 / 2 for top position start
         ));
     }
 }
