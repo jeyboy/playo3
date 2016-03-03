@@ -55,13 +55,10 @@ namespace Core {
             return;
         }
 
-        bool item_updated = current_playlist -> restoreItem(current_item);
+        bool item_updated = current_item -> isRemote() ? current_playlist -> restoreItem(current_item) : false;
         if (!item_updated) {
             qDebug() << "RESTORE: FAILED";
-            if (!(item_updated = current_item -> useNextSource())) {
-                if (Settings::obj().isFindOtherSource())
-                    item_updated = Models::SearchModel::findNewSource(current_item);
-            }
+            item_updated = useNextSource();
         }
 
         if (!item_updated) {
@@ -69,16 +66,18 @@ namespace Core {
             return;
         }
 
-        qDebug() << "FIND SOURCE OR RESTORE";
-        IPlayer * player = currPlayer();
-        player -> updateMedia(current_item -> toUrl());
-        player -> play(init_state_flag == paused);
+        playNewSource();
     }
 
     void DataCore::proceedStalledState() {
         if (current_item)
             setError(current_item -> isRemote() ? ItemErrors::warn_not_accessable : ItemErrors::err_not_existed);
         playNext(true);
+    }
+
+    bool DataCore::useNextSource() {
+        return current_item -> useNextSource() ||
+            (Settings::obj().isFindOtherSource() && Models::SearchModel::findNewSource(current_item));
     }
 
     void DataCore::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state, bool fixSourceLimit) {
@@ -164,10 +163,7 @@ namespace Core {
 
             case StalledMedia: {
                 qDebug() << "STALLED MEDIA";
-
-                if (current_item -> isRemote())
-                    restoreOrNext();
-                else proceedStalledState();
+                restoreOrNext();
             break;}
 
             case EndPlaingMedia: {
@@ -183,20 +179,18 @@ namespace Core {
             case InvalidMedia: {
                 qDebug() << "INVALID MEDIA";
                 setError(warn_not_supported);
-                playNext(true);
+
+                if (useNextSource())
+                    playNewSource();
+                else
+                    playNext(true);
             break;}
 
             case NoMedia: {
                 qDebug() << "NO MEDIA";
 
-                if (current_item) {
-                    if (current_item -> isRemote()) {
-                        restoreOrNext();
-                    } else {
-                        setError(err_not_existed);
-                        playNext(true);
-                    }
-                }
+                if (current_item)
+                    restoreOrNext();
                 else emit newPlaylistNeed();
             break;}
             default: { qDebug() << "WTF MEDIA"; }

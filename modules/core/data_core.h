@@ -29,6 +29,13 @@ namespace Core {
         void playNext(bool onFail = false);
         void restoreOrNext();
         void proceedStalledState();
+        bool useNextSource();
+        void playNewSource() {
+            qDebug() << "FIND SOURCE OR RESTORE";
+            IPlayer * player = currPlayer();
+            player -> updateMedia(current_item -> toUrl());
+            player -> play(init_state_flag == paused);
+        }
     public:
         inline DataCore() : QObject(), current_playlist(0), current_item(0), attempts(0) {
             PlayerFactory::obj().registerCallback(out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
