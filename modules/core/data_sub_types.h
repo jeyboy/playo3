@@ -6,7 +6,7 @@ namespace Core {
         dt_playlist_local = -9999,
         dt_playlist_cue,
 
-        dt_platlist_soundcloud = -8999,
+        dt_playlist_sc = -8999,
         dt_playlist_vk,
         dt_playlist_od,
 

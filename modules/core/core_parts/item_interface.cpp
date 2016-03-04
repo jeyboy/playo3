@@ -48,7 +48,7 @@ QJsonObject IItem::toJson() {
         root[JSON_TYPE_SOURCES] = sourcesJson;
     }
 
-    root[JSON_TYPE_ITEM_TYPE] = itemType();
+//    root[JSON_TYPE_ITEM_TYPE] = itemType();
 
     return root;
 }
@@ -131,10 +131,7 @@ QVariant IItem::data(int column) const {
                     params.insert((isRemote() ? Keys::undefined : Keys::not_exist), err_code > 0 && err_code < 1000);
                     params.insert(Keys::unsupported, err_code > 999 && err_code < 2000);
                 }
-                params.insert(
-                    Keys::type,
-                    subtipe() > 0 ? (itemType() + subtipe()) : itemType()
-                );
+                params.insert(Keys::type, dataType());
             }
             return params;
         }
@@ -184,7 +181,7 @@ QVariant IItem::data(int column) const {
         case IREMOTE:           return isRemote();
         case ISTATE:            return visualStates();
         case IFULLPATH:         return fullPath();
-        case ITYPE:             return itemType();
+        case ITYPE:             return dataType();
 
         default:                return QVariant();
     }
@@ -209,7 +206,7 @@ void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
 
     if (!lastUrl.isEmpty() && urls.contains(lastUrl)) return;
 
-    stream << lastUrl << isRemote() << toInnerAttrs(itemType());
+    stream << lastUrl << isRemote() << toInnerAttrs(dataType());
     urls.insert(lastUrl, 0);
 }
 
@@ -279,34 +276,31 @@ IItem * IItem::activeSourceItem() const {
 }
 
 QString IItem::relationStr() const {
-    switch(itemType()) {
-        case SIMPLE_FILE: return QStringLiteral("(Local) ");
-        case PLAYLIST: return QStringLiteral("(Folder) ");
-        case CUE_FILE: return QStringLiteral("(Cueta) ");
-        case WEB_FILE: {
-            switch(subtipe()) {
-                case Web::site_myzuka: return QStringLiteral("(Myzika) ");
-                case Web::site_fourshared: return QStringLiteral("(4shared) ");
-                case Web::site_zaycev: return QStringLiteral("(Zaycev) ");
-                case Web::site_mp3base: return QStringLiteral("(Mp3base) ");
-                case Web::site_promodj: return QStringLiteral("(PromoDj) ");
-                case Web::site_mp3cc: return QStringLiteral("(Mp3cc) ");
-                case Web::site_mp3pm: return QStringLiteral("(Mp3pm) ");
-                case Web::site_shmidt: return QStringLiteral("(Shmidt) ");
-                case Web::site_jetune: return QStringLiteral("(Jetune) ");
-                case Web::site_music_shara: return QStringLiteral("(MShara) ");
-                case Web::site_redmp3: return QStringLiteral("(Redmp3) ");
-                case Web::site_yandex: return QStringLiteral("(Yandex) ");
-                case Web::site_youtube: return QStringLiteral("(Youtube) ");
-                default: return QStringLiteral("(Unknow subtype) ");
-            }
-        break;}
-        case VK_FILE: return QStringLiteral("(Vk) ");
-        case VK_PLAYLIST: return QStringLiteral("(Vk Folder) ");
-        case SOUNDCLOUD_FILE: return QStringLiteral("(Sc) ");
-        case SOUNDCLOUD_PLAYLIST: return QStringLiteral("(Sc Folder) ");
-        case OD_FILE: return QStringLiteral("(Od) ");
-        case OD_PLAYLIST: return QStringLiteral("(Od Folder) ");
+    switch(dataType()) {
+        case dt_local: return QStringLiteral("(Local) ");
+        case dt_playlist_local: return QStringLiteral("(Folder) ");
+        case dt_playlist_cue: return QStringLiteral("(Folder Cueta) ");
+        case dt_local_cue: return QStringLiteral("(Cueta) ");
+        case dt_site_myzuka: return QStringLiteral("(Myzika) ");
+        case dt_site_fourshared: return QStringLiteral("(4shared) ");
+        case dt_site_zaycev: return QStringLiteral("(Zaycev) ");
+        case dt_site_mp3base: return QStringLiteral("(Mp3base) ");
+        case dt_site_promodj: return QStringLiteral("(PromoDj) ");
+        case dt_site_mp3cc: return QStringLiteral("(Mp3cc) ");
+        case dt_site_mp3pm: return QStringLiteral("(Mp3pm) ");
+        case dt_site_shmidt: return QStringLiteral("(Shmidt) ");
+        case dt_site_jetune: return QStringLiteral("(Jetune) ");
+        case dt_site_music_shara: return QStringLiteral("(MShara) ");
+        case dt_site_redmp3: return QStringLiteral("(Redmp3) ");
+        case dt_site_yandex: return QStringLiteral("(Yandex) ");
+        case dt_site_youtube: return QStringLiteral("(Youtube) ");
+        case dt_site_vk: return QStringLiteral("(Vk) ");
+        case dt_playlist_vk: return QStringLiteral("(Vk Folder) ");
+        case dt_site_sc: return QStringLiteral("(Sc) ");
+        case dt_playlist_sc: return QStringLiteral("(Sc Folder) ");
+        case dt_site_od: return QStringLiteral("(Od) ");
+        case dt_playlist_od: return QStringLiteral("(Od Folder) ");
+        case dt_site_echonest: return QStringLiteral("(Echonest) ");
         default: return QStringLiteral("(Unknow) ");
     }
 }

@@ -36,9 +36,9 @@ QJsonObject ItemFields::toJson() {
     return root;
 }
 
-QVariantMap ItemFields::toInnerAttrs(int itemType) const {
+QVariantMap ItemFields::toInnerAttrs(int /*itemType*/) const {
     QVariantMap a(attrs);
     a.insert(JSON_TYPE_STATE, saveStates());
-    a.insert(JSON_TYPE_ITEM_TYPE, itemType);
+//    a.insert(JSON_TYPE_ITEM_TYPE, itemType);
     return a;
 }

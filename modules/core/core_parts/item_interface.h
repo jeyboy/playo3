@@ -29,7 +29,7 @@ namespace Core {
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
         inline virtual ~IItem() {
-            if (has(flag_mark_on_removing) && !isPartial())
+            if (has(flag_mark_on_removing) && !isParted())
                 removePhysicalObject();
         }
 
@@ -69,9 +69,6 @@ namespace Core {
         virtual inline int itemsCountInBranch() const { return 1; }
 
         inline virtual bool isContainer() const { return false; }
-        virtual bool isExist() const {
-//            check be type
-        }
 
         inline bool isPlayable() const {
             if (isContainer()) return false;

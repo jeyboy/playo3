@@ -93,7 +93,7 @@ namespace Core {
         inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
 
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_DATA_SUB_TYPE] = dataType; }
-        inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_SUB_TYPE, dt_none).toInt(); }
+        inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_DATA_SUB_TYPE, dt_none).toInt(); }
 
 //        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
         inline bool isShareable() const                         {
