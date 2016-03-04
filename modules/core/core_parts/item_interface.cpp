@@ -53,25 +53,6 @@ QJsonObject IItem::toJson() {
     return root;
 }
 
-QString IItem::fullPath() const {
-    Playlist * curr = _parent;
-
-    QString path_buff = path().toString();
-
-    if (!path_buff.contains('/')) {
-        while(curr != 0 && curr -> title().isValid()) {
-            path_buff = curr -> title().toString() % '/' % path_buff;
-            curr = curr -> _parent;
-        }
-    }
-
-#ifdef Q_OS_LINUX
-    path_buff = '/' % path_buff;
-#endif
-
-    return path_buff;
-}
-
 void IItem::openLocation() {
     QFileInfo info(fullPath());
     QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));

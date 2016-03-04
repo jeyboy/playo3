@@ -15,9 +15,7 @@ namespace Core {
             //    setBpm(itemBpm);
         }
 
-        inline QString toUid() { return id().toString(); }
         inline int itemType() const { return OD_FILE; }
-        inline bool isShareable() const { return true; }
     };
 }
 

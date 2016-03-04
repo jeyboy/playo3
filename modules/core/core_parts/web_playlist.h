@@ -12,9 +12,6 @@ namespace Core {
             : Playlist(folderTitle, parent, uid, pos, initState) {}
 
         inline virtual ~WebPlaylist() {}
-
-        inline QUrl toUrl() { return QUrl(path().toString()); }
-        inline bool isRemote() const { return true; }
     };
 }
 

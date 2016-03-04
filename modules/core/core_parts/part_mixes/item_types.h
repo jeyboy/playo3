@@ -14,9 +14,6 @@ namespace Core {
         #define OD_PLAYLIST 900
         #define OD_ITEM 1000
     }
-
-    #define SHARE_TYPE_VK QStringLiteral("vk")
-    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
 }
 
 #endif // MODEL_ITEM_TYPES_H

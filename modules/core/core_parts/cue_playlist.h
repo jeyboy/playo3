@@ -13,17 +13,6 @@ namespace Core {
         int initFiles(QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed);
 
         inline int itemType() const { return CUE_PLAYLIST; }
-
-        bool isPartial() { return true; }
-
-        inline bool removePhysicalObject() {
-            //TODO: add realization
-            return false;
-        }
-        inline bool isExist() const {
-            //TODO: add realization
-            return true;
-        }
     };
 }
 

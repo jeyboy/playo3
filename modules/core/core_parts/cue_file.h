@@ -20,17 +20,6 @@ namespace Core {
         }
 
         inline int itemType() const { return CUE_FILE; }
-
-        bool isPartial() { return isParted(); }
-
-        inline bool removePhysicalObject() {
-            //TODO: add realization
-            return false;
-        }
-        inline bool isExist() const {
-            //TODO: add realization
-            return true;
-        }
     };
 }
 

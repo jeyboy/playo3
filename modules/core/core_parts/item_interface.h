@@ -9,6 +9,7 @@
 #include "core_part_types.h"
 #include "part_mixes/item_fields.h"
 
+#include "modules/core/web/apis/social/soundcloud_api.h"
 #include "modules/core/misc/file_utils/icon_provider.h"
 
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
@@ -27,16 +28,40 @@ namespace Core {
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
-        inline virtual ~IItem() {}
+        inline virtual ~IItem() {
+            if (has(flag_mark_on_removing) && !isPartial())
+                removePhysicalObject();
+        }
 
         virtual QJsonObject toJson();
 
-        virtual QString fullPath() const;
+        QString fullPath() const {
+            QString path_buff = path().toString();
+            #ifdef Q_OS_LINUX
+                path_buff = '/' % path_buff;
+            #endif
+            return path_buff;
+        }
 
         void openLocation();
-        virtual bool removePhysicalObject() = 0;
-        virtual int itemType() const = 0;
-        virtual bool isPartial() { return false; }
+        bool removePhysicalObject() {
+            switch(dataType()) {
+                case dt_local:
+                    return QFile::remove(fullPath());
+                case dt_local_cue: // this required on some additional checks
+                default: return false;
+            }
+
+
+        }
+        bool isExist() const {
+            switch(dataType()) {
+                case dt_local:
+                case dt_local_cue:
+                    return QFile::exists(fullPath());
+                default: return true;
+            }
+        }
 
         inline int column() const { return 0; }
         int row() const;
@@ -55,7 +80,18 @@ namespace Core {
             return !showBatch || (showBatch && has(flag_checked));
         }
 
-        virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
+        QUrl toUrl() const {
+            if (isRemote()) {
+                QUrl url = QUrl(path().toString());
+                switch(dataType()) {
+                    case dt_site_sc:
+                        url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams());
+                    default: ;
+                }
+                return url;
+            } else
+                return QUrl::fromLocalFile(fullPath());
+        }
         QString buildTreePath() const;
         QString buildTreeStr() const; // used for tree sorting on removing
 

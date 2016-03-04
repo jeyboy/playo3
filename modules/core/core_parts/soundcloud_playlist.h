@@ -12,15 +12,6 @@ namespace Core {
             : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
 
         inline int itemType() const { return SOUNDCLOUD_PLAYLIST; }
-
-        inline bool removePhysicalObject() {
-            //TODO: add realization
-            return false;
-        }
-        inline bool isExist() const {
-            //TODO: add realization
-            return true;
-        }
     };
 }
 

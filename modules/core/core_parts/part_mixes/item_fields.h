@@ -15,6 +15,10 @@
 namespace Core {
     class ItemFields : public ItemState {
     public:
+        static inline QString toUid(const QVariant & owner, const QVariant & id) {
+            return /*owner.isValid() &&*/ id.isValid() ? owner.toString() % QStringLiteral("_") % id.toString() : QString();
+        }
+
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
@@ -91,18 +95,51 @@ namespace Core {
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_DATA_SUB_TYPE] = dataType; }
         inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_SUB_TYPE, dt_none).toInt(); }
 
-        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
-        inline bool isShareable() const                         { return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool(); }
+//        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
+        inline bool isShareable() const                         {
+//            return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool();
+            switch(dataType()) {
+                case dt_site_od:
+                case dt_site_vk:
+                case dt_site_sc:
+                    return true;
+                default: return false;
+            }
+        }
 
-        inline bool setRemote(const bool able)                  { attrs[JSON_TYPE_IS_REMOTE] = able; }
-        inline bool isRemote() const                            { return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool(); }
+//        inline bool setRemote(const bool able)                  { attrs[JSON_TYPE_IS_REMOTE] = able; }
+        inline bool isRemote() const                            {
+//            return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool();
+            switch(dataType()) {
+                case dt_local:
+                case dt_local_cue:
+                case dt_playlist_local:
+                case dt_playlist_cue:
+                    return false;
+                default: return true;
+            }
+        }
 
-        inline virtual QString toUid() { return QString(); } // not virtual anymore
+        inline QString toUid() {
+            switch(dataType()) {
+                case dt_site_vk:
+//            case dt_playlist_vk:
+                    return toUid(owner(), id());
+                case dt_site_sc:
+                case dt_site_od:
+                    return id().toString();
+
+                default: return QString();
+            }
+        }
+
+        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
+
+
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const; // remove later
     protected:
         inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
-        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
         QVariantMap attrs;
     };

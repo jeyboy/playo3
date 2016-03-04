@@ -24,6 +24,10 @@ namespace Core {
     #define IADDFONT ITITLESCACHE - 1
     #define IREMOTE IADDFONT - 1
     #define IERROR IREMOTE - 1
+
+    #define SHARE_DELIMITER QStringLiteral("^")
+//    #define SHARE_TYPE_VK QStringLiteral("vk") // use api name()
+//    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc") // use api name()
 }
 
 #endif // ITEM_FIELD_DEFINES

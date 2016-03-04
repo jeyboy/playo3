@@ -6,7 +6,7 @@
 namespace Core {
     // 1-9 is still free
     const QString JSON_TYPE_REL_AMOUNT                  = QStringLiteral("0");
-    const QString JSON_TYPE_IS_REMOTE                   = QStringLiteral("1");
+//    const QString JSON_TYPE_IS_REMOTE                   = QStringLiteral("1");
 
     const QString JSON_TYPE_INFO                        = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE                  = QStringLiteral("b");
@@ -21,7 +21,7 @@ namespace Core {
     const QString JSON_TYPE_ERROR                       = QStringLiteral("k");
     const QString JSON_TYPE_CONTAINER_ITEMS_COUNT       = QStringLiteral("l");
     const QString JSON_TYPE_BPM                         = QStringLiteral("m");
-    const QString JSON_TYPE_IS_SHAREABLE                = QStringLiteral("n");
+//    const QString JSON_TYPE_IS_SHAREABLE                = QStringLiteral("n");
     const QString JSON_TYPE_OWNER_ID                    = QStringLiteral("o");
     const QString JSON_TYPE_PATH                        = QStringLiteral("p");
     const QString JSON_TYPE_SOURCES                     = QStringLiteral("q");

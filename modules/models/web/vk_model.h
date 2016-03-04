@@ -8,7 +8,7 @@ namespace Models {
     class VkModel : public WebModel {
         Q_OBJECT
     public:
-        inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
+        inline VkModel(const QString & uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
 
         inline PlaylistType playlistType() const { return playlist_vk; }
         inline ISearchable * api() { return &Vk::Api::obj(); }

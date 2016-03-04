@@ -17,15 +17,12 @@ namespace Core {
         File(const QString & filePath, QString fileName, Playlist * parent = 0, int pos = -1);
         File(const QString & filePath, const QString & fileName, const QString & fileExtension, Playlist * parent = 0, int pos = -1);
 
-        inline virtual ~File() {
-            if (has(flag_mark_on_removing) && !isPartial())
-                removePhysicalObject();
-        }
+//        inline virtual ~File() {
+//            if (has(flag_mark_on_removing) && !isPartial())
+//                removePhysicalObject();
+//        }
 
         inline int itemType() const { return SIMPLE_FILE; }
-        inline bool removePhysicalObject() { return QFile::remove(fullPath()); }
-
-        inline bool isExist() const { return QFile::exists(fullPath()); }
     };
 }
 

@@ -2,7 +2,6 @@
 #define SOUNDCLOUD_ITEM_H
 
 #include "web_file.h"
-#include "modules/core/web/apis/social/soundcloud_api.h"
 
 namespace Core {
     class SoundcloudFile : public WebFile {
@@ -15,15 +14,7 @@ namespace Core {
             //    setBpm(itemBpm);
         }
 
-        inline QUrl toUrl() const {
-            QUrl url = QUrl(fullPath());
-            url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams());
-            return url;
-        }
-
-        inline QString toUid() { return id().toString(); }
         inline int itemType() const { return SOUNDCLOUD_FILE; }
-        inline bool isShareable() const { return true; }
     };
 }
 

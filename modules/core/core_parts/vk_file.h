@@ -14,7 +14,6 @@ namespace Core {
         }
 
         inline int itemType() const { return VK_FILE; }
-        inline bool isShareable() const { return true; }
     };
 }
 
