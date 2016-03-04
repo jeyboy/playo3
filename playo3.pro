@@ -196,7 +196,6 @@ HEADERS += \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
-    modules/core/web/web_sub_types.h \
     modules/core/core_parts_index.h \
     modules/core/data_core.h \
     modules/core/playlist_types.h \
@@ -281,7 +280,6 @@ HEADERS += \
     modules/controls/toolbar_drop_button.h \
     modules/controls/toolbar_user_button.h \
     modules/controls/toolbar_new_list_button.h \
-    modules/core/core_parts/base_item_interface.h \
     modules/controls/echonest_widget.h \
     modules/controls/search_configurator.h \
     modules/core/misc/fuzzy_comparison.h \
@@ -307,7 +305,9 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/data_factory.h \
     modules/core/data_item.h \
-    modules/core/data_item_errors.h
+    modules/core/data_item_errors.h \
+    modules/core/data_sub_types.h \
+    modules/core/core_parts/part_mixes/item_field_defines.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

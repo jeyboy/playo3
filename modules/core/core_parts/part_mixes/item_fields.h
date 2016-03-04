@@ -4,37 +4,15 @@
 #include <qjsonobject.h>
 
 #include "item_state.h"
+#include "item_field_defines.h"
 #include "json_fields.h"
 #include "item_errors.h"
 #include "settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
-#include "modules/core/web/web_sub_types.h"
+#include "modules/core/data_sub_types.h"
 #include "modules/core/misc/format.h"
 
 namespace Core {
-    #define IURL Qt::UserRole + 1
-    #define IFULLPATH IURL + 1
-    #define IPLAYABLE IFULLPATH + 1
-    #define IATTRS IPLAYABLE + 1
-    #define IEXECCOUNTS IATTRS + 1
-    #define ITREEPATH IEXECCOUNTS + 1
-    #define ITREESTR ITREEPATH + 1
-    #define ISTATERESTORE ITREESTR + 1
-    #define IUID ISTATERESTORE + 1
-    #define ITYPE IUID + 1
-    #define ISPOILITEM ITYPE + 1
-
-    #define ITITLE Qt::DisplayRole
-    #define IEXTENSION Qt::UserRole - 1
-    #define IPATH IEXTENSION - 1
-    #define IFOLDER IPATH - 1
-    #define ISTATE IFOLDER - 1
-    #define IINFO ISTATE - 1
-    #define ITITLESCACHE IINFO - 1
-    #define IADDFONT ITITLESCACHE - 1
-    #define IREMOTE IADDFONT - 1
-    #define IERROR IREMOTE - 1
-
     class ItemFields : public ItemState {
     public:
         inline ItemFields() {}
@@ -110,12 +88,18 @@ namespace Core {
         inline void setSize(const QVariant & newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
         inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
 
-        inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
-        inline Web::SubType subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
+        inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_DATA_SUB_TYPE] = dataType; }
+        inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_SUB_TYPE, dt_none).toInt(); }
 
-        inline virtual QString toUid() { return QString(); }
+        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
+        inline bool isShareable() const                         { return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool(); }
+
+        inline bool setRemote(const bool able)                  { attrs[JSON_TYPE_IS_REMOTE] = able; }
+        inline bool isRemote() const                            { return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool(); }
+
+        inline virtual QString toUid() { return QString(); } // not virtual anymore
         virtual QJsonObject toJson();
-        QVariantMap toInnerAttrs(int itemType) const;
+        QVariantMap toInnerAttrs(int itemType) const; // remove later
     protected:
         inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
         inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }

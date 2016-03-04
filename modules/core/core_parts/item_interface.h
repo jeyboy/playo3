@@ -43,14 +43,16 @@ namespace Core {
 
         virtual inline int itemsCountInBranch() const { return 1; }
 
-        inline virtual bool isRemote() const { return false; }
         inline virtual bool isContainer() const { return false; }
-        inline virtual bool isShareable() const { return false; }
+        virtual bool isExist() const {
+//            check be type
+        }
 
-        virtual bool isExist() const = 0;
         inline bool isPlayable() const {
+            if (isContainer()) return false;
+
             bool showBatch = Settings::obj().isCheckboxShow();
-            return !isContainer() && (!showBatch || (showBatch && has(flag_checked)));
+            return !showBatch || (showBatch && has(flag_checked));
         }
 
         virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
@@ -97,7 +99,7 @@ namespace Core {
 
         int activeSourceIndexLimit;
         Playlist * _parent;
-        QList<IItem *> sources;
+        QList<IItem *> sources; // move later to fields as string list
 
         QString relationStr() const;
         QString errorStr(QString & key_name) const;
