@@ -20,7 +20,7 @@ namespace Core {
                 }
             public:
                 inline QString name() const { return val_name; }
-                inline Web::SubType siteType() { return site_yandex; }
+                inline DataSubType siteType() { return dt_site_yandex; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
                 void fromJson(const QJsonObject & /*hash*/) {}

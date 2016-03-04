@@ -85,7 +85,7 @@ namespace Models {
         static int proceedOdList(QJsonArray & collection, Playlist * parent, IModel * mdl);
         static int proceedYandexList(QJsonArray & collection, Playlist * parent);
         static int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
-        static int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
+        static int proceedGrabberList(DataSubType wType, QJsonArray & collection, Playlist * parent);
         static int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());

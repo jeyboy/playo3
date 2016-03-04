@@ -18,7 +18,7 @@ namespace Core {
                 inline Api() {}
             public:
                 inline QString name() const { return val_name; }
-                inline Web::SubType siteType() { return site_vk; }
+                inline DataSubType siteType() { return dt_site_vk; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query = QUrlQuery();
 

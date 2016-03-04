@@ -17,23 +17,23 @@ IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVarian
 }
 
 IItem * Playlist::restoreItem(Playlist * playlist, QJsonObject & iterObj) {
-    switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-        case SIMPLE_FILE:           return new File(&iterObj, playlist);
-        case PLAYLIST:              return new Playlist(&iterObj, playlist);
+//    switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
+//        case SIMPLE_FILE:           return new File(&iterObj, playlist);
+//        case PLAYLIST:              return new Playlist(&iterObj, playlist);
 
-        case WEB_FILE:              return new WebFile(&iterObj, playlist);
-        case VK_FILE:               return new VkFile(&iterObj, playlist);
-        case VK_PLAYLIST:           return new VkPlaylist(&iterObj, playlist);
-        case SOUNDCLOUD_FILE:       return new SoundcloudFile(&iterObj, playlist);
-        case SOUNDCLOUD_PLAYLIST:   return new SoundcloudPlaylist(&iterObj, playlist);
-        case OD_FILE:               return new OdFile(&iterObj, playlist);
-        case OD_PLAYLIST:           return new OdPlaylist(&iterObj, playlist);
+//        case WEB_FILE:              return new WebFile(&iterObj, playlist);
+//        case VK_FILE:               return new VkFile(&iterObj, playlist);
+//        case VK_PLAYLIST:           return new VkPlaylist(&iterObj, playlist);
+//        case SOUNDCLOUD_FILE:       return new SoundcloudFile(&iterObj, playlist);
+//        case SOUNDCLOUD_PLAYLIST:   return new SoundcloudPlaylist(&iterObj, playlist);
+//        case OD_FILE:               return new OdFile(&iterObj, playlist);
+//        case OD_PLAYLIST:           return new OdPlaylist(&iterObj, playlist);
 
-        case CUE_FILE:              return new CueFile(&iterObj, playlist);
-        case CUE_PLAYLIST:          return new CuePlaylist(&iterObj, playlist);
+//        case CUE_FILE:              return new CueFile(&iterObj, playlist);
+//        case CUE_PLAYLIST:          return new CuePlaylist(&iterObj, playlist);
 
-        default: return 0;
-    }
+//        default: return 0;
+//    }
 }
 
 ///////////////////////////////////////////////////////////
@@ -41,8 +41,8 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
     : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
       filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
-    if (hash -> contains(JSON_TYPE_CHILDS)) {
-        QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
+    if (hash -> contains(JSON_TYPE_CONTAINER_CHILDS)) {
+        QJsonArray ar = hash -> take(JSON_TYPE_CONTAINER_CHILDS).toArray();
         QJsonObject iterObj;
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
@@ -190,7 +190,7 @@ QJsonObject Playlist::toJson() {
         for( ;it != children.end(); it++)
             ar.append((*it) -> toJson());
 
-        root[JSON_TYPE_CHILDS] = ar;
+        root[JSON_TYPE_CONTAINER_CHILDS] = ar;
     }
 
     return root;
