@@ -2,15 +2,15 @@
 
 using namespace Core;
 
-ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
-    attrs = QVariantMap(hash);
+ItemFields::ItemFields(QVariantHash & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
+    attrs = QVariantHash(hash);
 }
 
 ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_STATE).toInt()) {
-    attrs = hash -> toVariantMap();
+    attrs = hash -> toVariantHash();
 }
 
-ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
+ItemFields::ItemFields(const QString & title, int initState) : ItemState(initState) {
     attrs[JSON_TYPE_TITLE] = title;
 }
 
@@ -31,13 +31,13 @@ QStringList ItemFields::info() const {
 }
 
 QJsonObject ItemFields::toJson() {
-    QJsonObject root = QJsonObject::fromVariantMap(attrs);
+    QJsonObject root = QJsonObject::fromVariantHash(attrs);
     root[JSON_TYPE_STATE] = saveStates();
     return root;
 }
 
-QVariantMap ItemFields::toInnerAttrs(int /*itemType*/) const {
-    QVariantMap a(attrs);
+QVariantHash ItemFields::toInnerAttrs(int /*itemType*/) const {
+    QVariantHash a(attrs);
     a.insert(JSON_TYPE_STATE, saveStates());
 //    a.insert(JSON_TYPE_ITEM_TYPE, itemType);
     return a;

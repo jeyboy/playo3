@@ -22,9 +22,9 @@ namespace Core {
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
-        ItemFields(QVariantMap & hash);
+        ItemFields(QVariantHash & hash);
         ItemFields(QJsonObject * hash);
-        ItemFields(QString title, int initState = DEFAULT_ITEM_STATE);
+        ItemFields(const QString & title, int initState = DEFAULT_ITEM_STATE);
         ItemFields(int state = DEFAULT_ITEM_STATE);
 
         // const info
@@ -137,11 +137,11 @@ namespace Core {
 
 
         virtual QJsonObject toJson();
-        QVariantMap toInnerAttrs(int itemType) const; // remove later
+        QVariantHash toInnerAttrs(int itemType) const; // remove later
     protected:
         inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
 
-        QVariantMap attrs;
+        QVariantHash attrs;
     };
 }
 
