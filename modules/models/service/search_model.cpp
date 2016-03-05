@@ -55,7 +55,7 @@ void SearchModel::startSearch(bool continues) {
     emit updateRemovingBlockation(true);
 }
 
-int SearchModel::proceedLists(const Web::SubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl) {
+int SearchModel::proceedLists(const DataSubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl) {
     switch (listType) {
         case site_vk: return proceedVkList(items, parent, mdl);
         case site_sc: return proceedScList(items, parent, mdl);

@@ -16,7 +16,7 @@ namespace Models {
         void searchSingleRoutine(QFutureWatcher<void> * watcher);
         void prepareRequests(QList<SearchRequest> & requests);
         void startSearch(bool continues = false);
-        static int proceedLists(const Web::SubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl);
+        static int proceedLists(const DataSubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl);
         int searchProc(SearchRequest & r, ISearchable::SearchLimit limitation, Playlist * parent);
 
         SearchSettings request;
