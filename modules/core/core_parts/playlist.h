@@ -8,7 +8,7 @@
 namespace Core {
     class Playlist : public IItem {
     public:
-        static IItem * restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantMap & attrs);
+        static IItem * restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantHash & attrs);
         static IItem * restoreItem(Playlist * playlist, QJsonObject & iterObj);
 
         inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) {}

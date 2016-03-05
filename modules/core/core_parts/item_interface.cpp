@@ -11,7 +11,7 @@ IItem::IItem(Playlist * parent, int initState)
     if (_parent)
         _parent -> declareChild(this);
 }
-IItem::IItem(Playlist * parent, QVariantMap & hash, int pos)
+IItem::IItem(Playlist * parent, QVariantHash & hash, int pos)
     : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) {
@@ -259,7 +259,7 @@ IItem * IItem::activeSourceItem() const {
 
     if (sources.isEmpty()) {
         IItem * self = const_cast<IItem *>(this);
-        QJsonArray arr = const_cast<QVariantMap &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
+        QJsonArray arr = const_cast<QVariantHash &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
         if (arr.isEmpty()) // root node is always empty // so it shpuld be source for yourself
             self -> addSource(self, false, false);
         else

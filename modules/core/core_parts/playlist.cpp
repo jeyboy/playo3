@@ -2,7 +2,7 @@
 
 using namespace Core;
 
-IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
+IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantHash & attrs) {
     switch(item_type) {
         case SIMPLE_FILE:       { return new File(attrs, parent, pos); }
         case VK_FILE:           { return new VkFile(attrs, parent, pos); }
@@ -67,7 +67,7 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
         }
     }
 
-    attrs = hash -> toVariantMap();
+    attrs = hash -> toVariantHash();
     if (parent != 0)
         parent -> declarePlaylist(playlistUid(), this);
 }

@@ -11,7 +11,7 @@
 namespace Core {
     class File : public IItem {
     public:
-        inline File(QVariantMap & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
+        inline File(QVariantHash & hash, Playlist * parent = 0, int pos = -1) : IItem(parent, hash, pos) {}
         inline File(QJsonObject * hash, Playlist * parent = 0) : IItem(parent, hash) {}
         File(QString fileName, Playlist * parent = 0, int pos = -1);
         File(const QString & filePath, QString fileName, Playlist * parent = 0, int pos = -1);
