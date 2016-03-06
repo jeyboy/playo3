@@ -39,7 +39,7 @@ int CuePlaylist::initFiles(QHash<QString, bool> & filePathes, QHash<QString, IIt
         }
 
         //TODO: maybe add error field to the item ?
-        CueFile * f = new CueFile((*song).startPos, (*song).duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
+        Core::CueFile * f = new Core::CueFile((*song).startPos, (*song).duration, songPath, (*song).trackName, (*song).extension, (*song).isPartial, this);
         if (res) {
             filePathes.insert(songPath, true);
             if (!(*song).error.isEmpty()) // there should be other error status ?
