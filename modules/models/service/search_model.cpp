@@ -18,11 +18,11 @@ SearchModel::~SearchModel() {
 bool SearchModel::findNewSources(IItem * item) {
     ISearchable::SearchLimit limitation(ISearchable::in_title, 1);
 
-    QHash<Web::SubType, ISearchable *> sources = Web::Apis::list();
+    QHash<DataSubType, ISearchable *> sources = Web::Apis::list();
     Playlist * results = new Playlist(), * middle_results = new Playlist();
     QString genre = QString(), predicate = item -> title().toString();
 
-    for(QHash<Web::SubType, ISearchable *>::Iterator source = sources.begin(); source != sources.end(); source++) {
+    for(QHash<DataSubType, ISearchable *>::Iterator source = sources.begin(); source != sources.end(); source++) {
         QJsonArray items = source.value() -> search(predicate, genre, limitation);
 
         if (proceedLists(source.key(), items, middle_results, 0) > 0)
