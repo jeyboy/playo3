@@ -57,11 +57,11 @@ void SearchModel::startSearch(bool continues) {
 
 int SearchModel::proceedLists(const DataSubType & listType, QJsonArray & items, Playlist * parent, IModel * mdl) {
     switch (listType) {
-        case site_vk: return proceedVkList(items, parent, mdl);
-        case site_sc: return proceedScList(items, parent, mdl);
-        case site_od: return proceedOdList(items, parent, mdl);
-        case site_yandex: return proceedYandexList(items, parent);
-        case site_youtube: return proceedYoutubeList(items, parent);
+        case dt_site_vk: return proceedVkList(items, parent, mdl);
+        case dt_site_sc: return proceedScList(items, parent, mdl);
+        case dt_site_od: return proceedOdList(items, parent, mdl);
+        case dt_site_yandex: return proceedYandexList(items, parent);
+        case dt_site_youtube: return proceedYoutubeList(items, parent);
         default: return proceedGrabberList(listType, items, parent);
     }
 }

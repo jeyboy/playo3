@@ -20,6 +20,8 @@ namespace Core {
 
         dt_none = 0,
 
+        dt_web = 100,
+
         dt_site_myzuka,
         dt_site_fourshared,
         dt_site_zaycev,

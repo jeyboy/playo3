@@ -8,7 +8,7 @@ using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> subtipe());
+    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType());
 
     qDebug() << itm -> refresh_path() << newUrl;
     if (!newUrl.isEmpty() && itm -> path().toString() != newUrl) {
@@ -219,7 +219,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedVkList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
+int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IModel * mdl) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -232,7 +232,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent, IModel * m
     parent -> accumulateUids(store);
 
     int pos = parent -> playlistsAmount();
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -257,7 +257,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent, IModel * m
                 pos
             );
 
-            newItem -> setSubtype(Web::site_vk);
+            newItem -> setDatatype(dt_site_vk);
             newItem -> setOwner(owner);
             newItem -> setRefreshPath(uid);
             newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
@@ -277,7 +277,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent, IModel * m
     return itemsAmount;
 }
 
-int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
     if (collection.isEmpty()) return 0;
@@ -287,7 +287,7 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
     WebFile * newItem;
     QString id, album_id, genre;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
@@ -313,7 +313,7 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
             parent
         );
 
-        newItem -> setSubtype(site_yandex);
+        newItem -> setDatatype(dt_site_yandex);
         newItem -> setRefreshPath(id);
         newItem -> setExtension(Grabber::default_extension);
 
@@ -327,7 +327,7 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -335,7 +335,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     WebFile * newItem;
     QString id;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
         qDebug() << itm;
 
@@ -352,7 +352,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
         );
 
         //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
-        newItem -> setSubtype(site_youtube);
+        newItem -> setDatatype(dt_site_youtube);
         newItem -> setRefreshPath(id);
         newItem -> setExtension(Grabber::default_extension);
 
@@ -381,7 +381,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
+int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -389,7 +389,7 @@ int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist 
     WebFile * newItem;
     QString uri, refresh_url, id;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -407,7 +407,7 @@ int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist 
             parent
         );
 
-        newItem -> setSubtype(wType);
+        newItem -> setDatatype(wType);
         newItem -> setRefreshPath(refresh_url);
         newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
 
@@ -446,7 +446,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 }
 
 
-int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
+int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IModel * mdl) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
@@ -459,7 +459,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * m
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -491,7 +491,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * m
             newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
             newItem -> setOwner(owner);
             newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
-            newItem -> setSubtype(Web::site_sc);
+            newItem -> setDatatype(dt_site_sc);
 
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
             if (itm.contains(Soundcloud::tkn_genre_id))
@@ -507,7 +507,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent, IModel * m
     return itemsAmount;
 }
 
-int IModel::proceedOdList(QJsonArray & collection, Playlist * parent, IModel * mdl) {
+int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, IModel * mdl) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
@@ -522,7 +522,7 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent, IModel * m
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -547,7 +547,7 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent, IModel * m
             newItem -> setExtension(Od::tkn_default_extension);
             newItem -> setDuration(Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)));
             newItem -> setSize(itm.value(Od::tkn_size).toInt(0));
-            newItem -> setSubtype(Web::site_od);
+            newItem -> setDatatype(dt_site_od);
 
         } else {
             for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
@@ -724,7 +724,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         if (itm -> isShareable()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret = ret % QStringLiteral(" ") % QString::number(itm -> itemType()) % SHARE_DELIMITER % uid.toString();
+                ret = ret % QStringLiteral(" ") % QString::number(itm -> dataType()) % SHARE_DELIMITER % uid.toString();
         }
     }
 
@@ -777,7 +777,7 @@ void IModel::importIds(const QStringList & ids) {
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         switch(map_it.key()) {
-            case VK_FILE: {
+            case dt_site_vk: {
                 Vk::Api::obj().connection();
 
                 if (Vk::Api::obj().isConnected()) {
@@ -786,7 +786,7 @@ void IModel::importIds(const QStringList & ids) {
                 }
             break;}
 
-            case SOUNDCLOUD_FILE: {
+            case dt_site_sc: {
                 Soundcloud::Api::obj().connection();
 
                 if (Soundcloud::Api::obj().isConnected()) {
@@ -795,7 +795,7 @@ void IModel::importIds(const QStringList & ids) {
                 }
             break;}
 
-             case OD_FILE: {
+             case dt_site_od: {
                 Od::Api::obj().connection();
 
                 if (Od::Api::obj().isConnected()) {
@@ -1029,7 +1029,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         parentFolder = item<Playlist>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-            counts[parentFolder] += (int)(Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs) != 0);
+            counts[parentFolder] += (int)(Playlist::restoreItem(data -> attrs.value(JSON_TYPE_DATA_SUB_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs) != 0);
         endInsertRows();
         delete data;
     }
@@ -1122,11 +1122,11 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
                 }
 
                 if (is_valid) {
-                    QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
+                    QVariantHash attrs = (*it) -> toInnerAttrs((*it) -> dataType());
                     if (!attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                    amount += (int)(!!Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs));
+                    amount += (int)(!!Playlist::restoreItem(attrs.value(JSON_TYPE_DATA_SUB_TYPE).toInt(), destination, -1, attrs));
                 }
             }
         }
@@ -1152,11 +1152,11 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
             bool is_valid = comparity >= FUZZY_COMPARITY_PERCENT;
 
             if (is_valid) {
-                QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
+                QVariantHash attrs = (*it) -> toInnerAttrs((*it) -> dataType());
                 if (!attrs.contains(JSON_TYPE_PATH))
                     attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                amount += (int)(!!Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs));
+                amount += (int)(!!Playlist::restoreItem(attrs.value(JSON_TYPE_DATA_SUB_TYPE).toInt(), destination, -1, attrs));
 
                 if (amount == count) break;
             }

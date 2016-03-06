@@ -80,12 +80,12 @@ namespace Models {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        static int proceedVkList(QJsonArray & collection, Playlist * parent, IModel * mdl);
-        static int proceedScList(QJsonArray & collection, Playlist * parent, IModel * mdl);
-        static int proceedOdList(QJsonArray & collection, Playlist * parent, IModel * mdl);
-        static int proceedYandexList(QJsonArray & collection, Playlist * parent);
-        static int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
-        static int proceedGrabberList(DataSubType wType, QJsonArray & collection, Playlist * parent);
+        static int proceedVkList(const QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedScList(const QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedOdList(const QJsonArray & collection, Playlist * parent, IModel * mdl);
+        static int proceedYandexList(const QJsonArray & collection, Playlist * parent);
+        static int proceedYoutubeList(const QJsonArray & collection, Playlist * parent);
+        static int proceedGrabberList(const DataSubType & wType, const QJsonArray & collection, Playlist * parent);
         static int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());

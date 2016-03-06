@@ -1,7 +1,7 @@
 #include "model_item_delegate.h"
 #include "external_keys.h"
 
-using namespace Core::Web;
+//using namespace Core::Web;
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
@@ -52,32 +52,32 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
     icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/process_on"), size));
     icons.insert(-100,                                                  PIXMAP(QStringLiteral(":/items/err"), size));
-    icons.insert(VK_FILE,                                               PIXMAP(QStringLiteral(":/items/vk_item"), size));
-    icons.insert(VK_FILE + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
-    icons.insert(SOUNDCLOUD_FILE,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
-    icons.insert(SOUNDCLOUD_FILE + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
-    icons.insert(OD_FILE,                                               PIXMAP(QStringLiteral(":/items/od_item"), size));
-    icons.insert(OD_FILE + SELECTION_ITER,                              PIXMAP(QStringLiteral(":/items/od_item_on"), size));
-    icons.insert(WEB_FILE,                                              PIXMAP(QStringLiteral(":/items/web_item"), size));
-    icons.insert(WEB_FILE + SELECTION_ITER,                             PIXMAP(QStringLiteral(":/items/web_item_on"), size));
-    icons.insert(SIMPLE_FILE,                                           PIXMAP(QStringLiteral(":/items/local_item"), size));
-    icons.insert(SIMPLE_FILE + SELECTION_ITER,                          PIXMAP(QStringLiteral(":/items/local_item_on"), size));
-    icons.insert(CUE_FILE, icons[SIMPLE_FILE]);
-    icons.insert(CUE_FILE + SELECTION_ITER, icons[SIMPLE_FILE + SELECTION_ITER]);
-    icons.insert(WEB_FILE + site_fourshared,                            PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
-    icons.insert(WEB_FILE + site_fourshared + SELECTION_ITER,           PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
-    icons.insert(WEB_FILE + site_zaycev,                                PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
-    icons.insert(WEB_FILE + site_zaycev + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
-    icons.insert(WEB_FILE + site_promodj,                               PIXMAP(QStringLiteral(":/items/promodj_item"), size));
-    icons.insert(WEB_FILE + site_promodj + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
-    icons.insert(WEB_FILE + site_jetune,                                PIXMAP(QStringLiteral(":/items/jetune_item"), size));
-    icons.insert(WEB_FILE + site_jetune + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
-    icons.insert(WEB_FILE + site_redmp3,                                PIXMAP(QStringLiteral(":/items/redmp3_item"), size));
-    icons.insert(WEB_FILE + site_redmp3 + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/redmp3_item_on"), size));
-    icons.insert(WEB_FILE + site_yandex,                                PIXMAP(QStringLiteral(":/items/yandex_item"), size));
-    icons.insert(WEB_FILE + site_yandex + SELECTION_ITER,               PIXMAP(QStringLiteral(":/items/yandex_item_on"), size));
-    icons.insert(WEB_FILE + site_youtube,                               PIXMAP(QStringLiteral(":/items/youtube_item"), size));
-    icons.insert(WEB_FILE + site_youtube + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/youtube_item_on"), size));
+    icons.insert(Core::dt_site_vk,                                      PIXMAP(QStringLiteral(":/items/vk_item"), size));
+    icons.insert(Core::dt_site_vk + SELECTION_ITER,                     PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
+    icons.insert(Core::dt_site_sc,                                      PIXMAP(QStringLiteral(":/items/sc_item"), size));
+    icons.insert(Core::dt_site_sc + SELECTION_ITER,                     PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
+    icons.insert(Core::dt_site_od,                                      PIXMAP(QStringLiteral(":/items/od_item"), size));
+    icons.insert(Core::dt_site_od + SELECTION_ITER,                     PIXMAP(QStringLiteral(":/items/od_item_on"), size));
+    icons.insert(Core::dt_web,                                          PIXMAP(QStringLiteral(":/items/web_item"), size));
+    icons.insert(Core::dt_web + SELECTION_ITER,                         PIXMAP(QStringLiteral(":/items/web_item_on"), size));
+    icons.insert(Core::dt_local,                                        PIXMAP(QStringLiteral(":/items/local_item"), size));
+    icons.insert(Core::dt_local + SELECTION_ITER,                       PIXMAP(QStringLiteral(":/items/local_item_on"), size));
+    icons.insert(Core::dt_local_cue, icons[SIMPLE_FILE]);
+    icons.insert(Core::dt_local_cue + SELECTION_ITER, icons[SIMPLE_FILE + SELECTION_ITER]);
+    icons.insert(Core::dt_site_fourshared,                              PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
+    icons.insert(Core::dt_site_fourshared + SELECTION_ITER,             PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
+    icons.insert(Core::dt_site_zaycev,                                  PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
+    icons.insert(Core::dt_site_zaycev + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
+    icons.insert(Core::dt_site_promodj,                                 PIXMAP(QStringLiteral(":/items/promodj_item"), size));
+    icons.insert(Core::dt_site_promodj + SELECTION_ITER,                PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
+    icons.insert(Core::dt_site_jetune,                                  PIXMAP(QStringLiteral(":/items/jetune_item"), size));
+    icons.insert(Core::dt_site_jetune + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
+    icons.insert(Core::dt_site_redmp3,                                  PIXMAP(QStringLiteral(":/items/redmp3_item"), size));
+    icons.insert(Core::dt_site_redmp3 + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/redmp3_item_on"), size));
+    icons.insert(Core::dt_site_yandex,                                  PIXMAP(QStringLiteral(":/items/yandex_item"), size));
+    icons.insert(Core::dt_site_yandex + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/yandex_item_on"), size));
+    icons.insert(Core::dt_site_youtube,                                 PIXMAP(QStringLiteral(":/items/youtube_item"), size));
+    icons.insert(Core::dt_site_youtube + SELECTION_ITER,                PIXMAP(QStringLiteral(":/items/youtube_item_on"), size));
 
 
     int limit = 7;

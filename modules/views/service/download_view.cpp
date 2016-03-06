@@ -77,7 +77,7 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
                 data.url,
                 path,
                 FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
-                data.attrs[JSON_TYPE_SUB_TYPE].toInt(),
+                data.attrs[JSON_TYPE_DATA_SUB_TYPE].toInt(),
                 data.attrs[JSON_TYPE_REFRESH_PATH].toString()
             );
         }
@@ -300,7 +300,7 @@ QUrl DownloadView::restoreUrl(DownloadModelItem * item) {
         return QUrl(
             Core::Web::Apis::restoreUrl(
                 item -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
-                (Web::SubType)item -> data(DOWNLOAD_TYPE).toInt()
+                (DataSubType)item -> data(DOWNLOAD_TYPE).toInt()
             )
         );
     }
