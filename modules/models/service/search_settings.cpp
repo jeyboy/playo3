@@ -42,7 +42,7 @@ void SearchRequest::fromJson(const QJsonArray & objs, QList<SearchRequest> & lis
 
             case remote: {
                 int subject_id = obj.value(JSON_SEARCH_SUBJECT).toInt();
-                subject = Core::Web::Apis::engine((Core::Web::SubType)subject_id);
+                subject = Core::Web::Apis::engine((Core::DataSubType)subject_id);
             break;}
 
             default: {
