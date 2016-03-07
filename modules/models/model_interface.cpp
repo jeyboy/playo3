@@ -835,7 +835,7 @@ void IModel::expandeAll() {
 
 void IModel::expanded(const QModelIndex & index) {
     IItem * node = item(index);
-    node -> set(flag_expanded);
+    node -> setStates(flag_expanded);
 }
 
 void IModel::collapseAll() {
@@ -844,7 +844,7 @@ void IModel::collapseAll() {
 
 void IModel::collapsed(const QModelIndex & index) {
     IItem * node = item(index);
-    node -> unset(flag_expanded);
+    node -> setStates(flag_not_expanded);
 }
 
 void IModel::finishingItemsAdding() {

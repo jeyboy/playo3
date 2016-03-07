@@ -29,7 +29,6 @@ namespace Core {
 
         QVariant data(int column) const;
 
-        inline void openLocation() { QDesktopServices::openUrl(toUrl()); }
         inline int itemType() const { return PLAYLIST; }
         bool removePhysicalObject();
 

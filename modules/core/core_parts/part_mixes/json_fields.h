@@ -16,7 +16,7 @@ namespace Core {
     const QString JSON_TYPE_ARTIST_UIDS                 = QStringLiteral("f");
     const QString JSON_TYPE_GENRE_ID                    = QStringLiteral("g");
     const QString JSON_TYPE_SONG_UID                    = QStringLiteral("h");
-//    const QString JSON_TYPE_ITEM_TYPE = QStringLiteral("i");
+    const QString JSON_TYPE_ITEM_STATE                  = QStringLiteral("i");
     const QString JSON_TYPE_ACTIVE_SOURCE               = QStringLiteral("j");
     const QString JSON_TYPE_ERROR                       = QStringLiteral("k");
     const QString JSON_TYPE_CONTAINER_ITEMS_COUNT       = QStringLiteral("l");

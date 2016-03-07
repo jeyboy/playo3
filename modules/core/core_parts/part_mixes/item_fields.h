@@ -3,7 +3,6 @@
 
 #include <qjsonobject.h>
 #include <qurl.h>
-#include <qdesktopservices.h>
 #include <qstringbuilder.h>
 
 #include "item_state.h"
@@ -14,7 +13,6 @@
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/data_sub_types.h"
 #include "modules/core/misc/format.h"
-#include "modules/core/web/apis/social/soundcloud_api.h"
 
 namespace Core {
     class ItemFields : public ItemState {
@@ -39,12 +37,7 @@ namespace Core {
         inline void setBpm(const QVariant & newBeat)            { attrs -> operator[](JSON_TYPE_BPM) = newBeat; }
         inline QVariant bpm() const                             { return attrs -> value(JSON_TYPE_BPM, 0); }
 
-        inline void setError(const QVariant & error)            {
-            if (error.toInt() == err_none)
-                attrs -> remove(JSON_TYPE_ERROR);
-            else
-                attrs -> operator[](JSON_TYPE_ERROR) = error;
-        }
+        void setError(const QVariant & error);
         inline QVariant error() const                           { return attrs -> value(JSON_TYPE_ERROR); }
 
         inline void setActiveSourceIndex(int index)             { attrs -> operator[](JSON_TYPE_ACTIVE_SOURCE) = index; }
@@ -107,95 +100,35 @@ namespace Core {
         inline void setDatatype(const DataSubType & dataType)   { attrs -> operator[](JSON_TYPE_DATA_SUB_TYPE) = dataType; }
         inline DataSubType dataType() const                     { return (DataSubType)attrs -> value(JSON_TYPE_DATA_SUB_TYPE, dt_none).toInt(); }
 
-
-        void openLocation() {
-            QFileInfo info(fullPath());
-            QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-        }
-        bool removePhysicalObject() {
-            switch(dataType()) {
-                case dt_local:
-                    return QFile::remove(fullPath());
-                case dt_local_cue: // this required on some additional checks
-                default: return false;
-            }
-
+        void setStates(int flags) {
+            ItemState::setStates(flags);
+            int res = flags & 15;
+            if (res > 0) setState(fieldStatePart(saveStates()));
 
         }
-        bool isExist() const {
-            switch(dataType()) {
-                case dt_local:
-                case dt_local_cue:
-                    return QFile::exists(fullPath());
-                default: return true;
-            }
-        }
+        inline void setState(const QVariant & newState)         { attrs -> operator[](JSON_TYPE_STATE) = newState; }
+        inline int state() const                                { return attrs -> value(JSON_TYPE_STATE, flag_new_item).toInt(); }
+//
+
+
+        void openLocation();
+        bool removePhysicalObject();
+        bool isExist() const;
 
 //        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
-        bool isShareable() const                         {
-//            return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool();
-            switch(dataType()) {
-                case dt_site_od:
-                case dt_site_vk:
-                case dt_site_sc:
-                    return true;
-                default: return false;
-            }
-        }
+        bool isShareable() const;
 
 //        inline bool setRemote(const bool able)                  { attrs[JSON_TYPE_IS_REMOTE] = able; }
-        bool isRemote() const                            {
-//            return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool();
-            switch(dataType()) {
-                case dt_local:
-                case dt_local_cue:
-                case dt_playlist_local:
-                case dt_playlist_cue:
-                    return false;
-                default: return true;
-            }
-        }
+        bool isRemote() const;
 
-        QString toUid() {
-            switch(dataType()) {
-                case dt_site_vk:
-//            case dt_playlist_vk:
-                    return toUid(owner(), id());
-                case dt_site_sc:
-                case dt_site_od:
-                    return id().toString();
+        QString toUid();
 
-                default: return QString();
-            }
-        }
-
-        QString fullPath() const {
-            QString path_buff = path().toString();
-            #ifdef Q_OS_LINUX
-                path_buff = '/' % path_buff;
-            #endif
-            return path_buff;
-        }
-
-        QUrl toUrl() const {
-            if (isRemote()) {
-                QUrl url = QUrl(path().toString());
-                switch(dataType()) {
-                    case dt_site_sc: { url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams()); break;}
-                    default: ;
-                }
-                return url;
-            } else
-                return QUrl::fromLocalFile(fullPath());
-        }
+        QString fullPath() const;
+        QUrl toUrl() const;
 
         inline bool isParted() const                            { return attrs -> value(JSON_TYPE_PARTIAL, false).toBool(); }
 
-        QVariantHash toHash() {
-            QVariantHash a(*attrs);
-            a.insert(JSON_TYPE_STATE, saveStates());
-            return a;
-        }
+        QVariantHash toHash();
 
         virtual QJsonObject toJson();
         QVariantHash toInnerAttrs(int itemType) const; // remove later

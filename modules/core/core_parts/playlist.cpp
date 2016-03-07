@@ -105,7 +105,7 @@ Playlist::~Playlist() {
 
     QList<IItem *>::Iterator begin = children.begin(), end = children.end();
     while (begin != end) {
-        if (remove_marked) (*begin) -> set(flag_mark_on_removing);
+        if (remove_marked) (*begin) -> setStates(flag_mark_on_removing);
         delete *begin;
         ++begin;
     }

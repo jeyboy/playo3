@@ -135,7 +135,7 @@ void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * wat
         if (state != -1) {
             if (state == 1) {
                 if (!watcher || (watcher && watcher -> isCanceled()))
-                    itm -> set(flag_liked);
+                    itm -> setStates(flag_liked);
                 else
                     emitItemAttrChanging(ind, flag_liked);
 
@@ -150,7 +150,7 @@ void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * wat
     bool canceled = !watcher || (watcher && watcher -> isCanceled());
     if (isListened) {
         if (canceled)
-            itm -> set(flag_listened);
+            itm -> setStates(flag_listened);
         else
             emitItemAttrChanging(ind, flag_listened);
     } else

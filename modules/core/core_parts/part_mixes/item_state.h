@@ -1,10 +1,9 @@
 #ifndef MODEL_ITEM_STATE_H
 #define MODEL_ITEM_STATE_H
 
-#include <qdebug.h>
-
 namespace Core {
-    #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
+    #define DEFAULT_ITEM_STATE (flag_checked /*| flag_new_item*/ | flag_expanded)
+    #define fieldStatePart(x) (x & 15)
 
     enum ItemStateFlag {
         flag_not_played = 262144,
@@ -20,10 +19,10 @@ namespace Core {
         flag_played = 512,
         flag_proccessing = 256,
 
-        // 128
-        // 64
-        flag_checked = 32,
-        flag_expanded = 16,
+        flag_checked = 128,
+        flag_expanded = 64,
+        //32
+        //16
         // per source
         flag_proceeded = 8,
         flag_listened = 4,
@@ -37,22 +36,23 @@ namespace Core {
             inline virtual ~ItemState() {}
 
             inline bool has(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
-            inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }
-            bool set(enum ItemStateFlag flag);
-            void setStates(int flags);
-
             inline int states() const { return item_state; }
+
             inline int saveStates() const { return (unsigned char)item_state; }
             inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
             void swapState(ItemState * other) {
-                int swap_interval = item_state & 15;
-                copyBits(other -> item_state, 15);
-                other -> copyBits(swap_interval, 15);
+                int swap_interval = fieldStatePart(item_state);
+                copyBits(other -> item_state);
+                other -> copyBits(swap_interval);
             }
         protected:
-            void copyBits(int state, int mask) { // need carefully test this
-                item_state = item_state - (item_state & mask) + (state & mask);
+            inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }
+            bool set(enum ItemStateFlag flag);
+            void setStates(int flags);
+
+            void copyBits(int state) { // need carefully test this
+                item_state = item_state - fieldStatePart(item_state) + fieldStatePart(state);
             }
 
             bool reset();

@@ -202,7 +202,7 @@ namespace Core {
         if (node -> isContainer()) return;
 
         if (!node -> has(flag_proceeded)) {
-            node -> set(flag_proceeded);
+            node -> setStates(flag_proceeded);
             Library::obj().restoreItemStateAsync(ind, node -> isRemote());
         }
     }
