@@ -20,7 +20,7 @@ namespace Core {
     class IItem : public ItemFields {
         void connectToSource(IItem * newSource) {
             qSwap(newSource -> attrs, attrs);
-            swap(newSource);
+            swapState(newSource);
         }
     public:
         IItem(Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
@@ -29,7 +29,7 @@ namespace Core {
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
         inline virtual ~IItem() {
-            if (has(flag_mark_on_removing) && !isParted())
+            if (has(flag_mark_on_removing))
                 removePhysicalObject();
         }
 
@@ -66,8 +66,7 @@ namespace Core {
         inline int column() const { return 0; }
         int row() const;
 
-        virtual inline int itemsCountInBranch() const { return 1; }
-
+        inline virtual int itemsCountInBranch() const { return 1; }
         inline virtual bool isContainer() const { return false; }
 
         inline bool isPlayable() const {
@@ -81,8 +80,7 @@ namespace Core {
             if (isRemote()) {
                 QUrl url = QUrl(path().toString());
                 switch(dataType()) {
-                    case dt_site_sc:
-                        url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams());
+                    case dt_site_sc: { url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams()); break;}
                     default: ;
                 }
                 return url;
@@ -122,9 +120,10 @@ namespace Core {
 
         virtual void setParent(Playlist * pNode, int pos = -1);
 
+        inline QStringList sources() const { return _sources; }
         inline void fixSourceLimit() { activeSourceIndexLimit = activeSourceIndex(); }
-        bool addSource(QJsonObject * hash);
-        bool addSource(IItem * newSource, bool setAsMain = false, bool checkExistance = true);
+//        bool addSource(QJsonObject * hash);
+        bool addSource(const QString & sourceUid, bool setAsMain = false, bool checkExistance = true);
         bool useNextSource();
         IItem * activeSourceItem() const;
     protected:
@@ -132,7 +131,7 @@ namespace Core {
 
         int activeSourceIndexLimit;
         Playlist * _parent;
-        QList<IItem *> sources; // move later to fields as string list
+        QStringList _sources; // move later to fields as string list
 
         QString relationStr() const;
         QString errorStr(QString & key_name) const;

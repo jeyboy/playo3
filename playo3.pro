@@ -305,7 +305,6 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/data_factory.h \
     modules/core/data_item.h \
-    modules/core/data_item_errors.h \
     modules/core/data_sub_types.h \
     modules/core/core_parts/part_mixes/item_field_defines.h
 

@@ -45,7 +45,7 @@ namespace Core {
             inline int saveStates() const { return (unsigned char)item_state; }
             inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
-            void swap(ItemState * other) {
+            void swapState(ItemState * other) {
                 int swap_interval = item_state & 15;
                 copyBits(other -> item_state, 15);
                 other -> copyBits(swap_interval, 15);

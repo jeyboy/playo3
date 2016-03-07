@@ -413,7 +413,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                 } else {
                     if (icon_size > 24) {
                         int selection = (is_selected ? SELECTION_ITER : 0);
-                        painter -> drawPixmap(rect, icons.value(attrs[Keys::type].toInt() + selection, icons[WEB_FILE + selection]));
+                        painter -> drawPixmap(rect, icons.value(attrs[Keys::type].toInt() + selection, icons[Core::dt_web + selection]));
                     }
                 }
             }
