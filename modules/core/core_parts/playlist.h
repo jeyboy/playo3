@@ -53,8 +53,10 @@ namespace Core {
             return true;
         }
         virtual inline int childCount() const { return children.count(); }
-        inline void declareChild(IItem * child) { children.append(child); }
-        inline void declareChild(IItem * item, int pos) { children.insert(pos, item); }
+        inline void declareChild(IItem * child, int pos = -1) {
+            if (pos == -1) children.append(child);
+            else children.insert(pos, child);
+        }
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
         inline void undeclareChild(IItem * child) {
             if (children.removeOne(child) > 0)

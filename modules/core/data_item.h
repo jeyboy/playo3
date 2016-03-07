@@ -7,7 +7,6 @@
 #include <qjsonarray.h>
 #include <qstringbuilder.h>
 
-#include "data_item_errors.h"
 #include "settings.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/core_parts/part_mixes/item_fields.h"
@@ -19,11 +18,10 @@ namespace Core {
         int relation_amount;
     public:
         DataItem(const QVariantHash & attrs, int rel_amount) : ItemFields(attrs), relation_amount(rel_amount) { }
-        virtual ~DataItem() {}
 
         static DataItem * fromJson(const QJsonObject & obj) {
-            int rel_amount = const_cast<QJsonObject &>(obj).take(JSON_TYPE_REL_AMOUNT).toInt();
-            return new DataItem(obj.toVariantHash(), rel_amount);
+            QVariantHash hash = obj.toVariantHash();
+            return new DataItem(hash, hash.take(JSON_TYPE_REL_AMOUNT).toInt());
         }
 
         void toJson(QJsonArray & arr) {

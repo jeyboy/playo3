@@ -15,10 +15,11 @@
 #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
 
 namespace Core {
+    class DataItem;
     class Playlist;
 
     class IItem : public ItemFields {
-        void connectToSource(IItem * newSource) {
+        void connectToSource(ItemFields * newSource) {
             qSwap(newSource -> attrs, attrs);
             swapState(newSource);
         }
@@ -125,9 +126,9 @@ namespace Core {
 //        bool addSource(QJsonObject * hash);
         bool addSource(const QString & sourceUid, bool setAsMain = false, bool checkExistance = true);
         bool useNextSource();
-        IItem * activeSourceItem() const;
     protected:
-        bool eqlByLocation(IItem * itm) { return path() == itm -> path() && refresh_path() == itm -> refresh_path(); }
+        // this should be checked on global source registration
+//        bool eqlByLocation(IItem * itm) { return path() == itm -> path() && refresh_path() == itm -> refresh_path(); }
 
         int activeSourceIndexLimit;
         Playlist * _parent;

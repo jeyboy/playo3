@@ -1,54 +1,36 @@
 #include "item_interface.h"
 #include "playlist.h"
 #include "external_keys.h"
-#include <qdebug.h>
+#include "modules/core/data_core.h"
 
 using namespace Core;
 
 IItem::IItem(Playlist * parent, int initState)
     : ItemFields(initState), activeSourceIndexLimit(0), _parent(parent) {
 
-    if (_parent)
-        _parent -> declareChild(this);
+    if (_parent) _parent -> declareChild(this);
 }
 IItem::IItem(Playlist * parent, QVariantHash & hash, int pos)
     : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
 
-    if (_parent) {
-        if (pos < 0)
-            _parent -> declareChild(this);
-        else
-            _parent -> declareChild(this, pos);
-    }
+    if (_parent) _parent -> declareChild(this, pos);
 }
 IItem::IItem(Playlist * parent, QJsonObject * hash)
     : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
 
-    if (_parent)
-        _parent -> declareChild(this);
+    if (_parent) _parent -> declareChild(this);
 }
 IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
     : ItemFields(title, initState), activeSourceIndexLimit(0), _parent(parent) {
 
-    if (_parent) {
-        if (pos < 0)
-            _parent -> declareChild(this);
-        else
-            _parent -> declareChild(this, pos);
-    }
+    if (_parent) _parent -> declareChild(this, pos);
 }
 
 QJsonObject IItem::toJson() {
     QJsonObject root = ItemFields::toJson();
 
-    if (!sources.isEmpty()) {
-        QJsonArray sourcesJson;
-        for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
-            sourcesJson.append((*source) -> ItemFields::toJson());
-        root[JSON_TYPE_SOURCES] = sourcesJson;
-    }
-
-//    root[JSON_TYPE_ITEM_TYPE] = itemType();
+    if (!_sources.isEmpty())
+        root[JSON_TYPE_SOURCES] = QJsonArray::fromStringList(_sources);
 
     return root;
 }
@@ -122,7 +104,7 @@ QVariant IItem::data(int column) const {
                 params.insert(Keys::state, visualStates());
                 params.insert(Keys::played, has(flag_played));
                 params.insert(Keys::shareable, isShareable());
-                params.insert(Keys::sources_amount, activeSourceItem() -> sources.size());
+                params.insert(Keys::sources_amount, _sources.size());
 
                 if (has(flag_proccessing))
                     params.insert(Keys::proccessing, true);
@@ -221,28 +203,20 @@ void IItem::setParent(Playlist * pNode, int pos) {
 //bool IItem::addSource(QJsonObject * hash) { return addSource(Playlist::restoreItem(0, *hash), false, false); }
 
 bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExistance) {
-    //            QStringList uids = attrs[JSON_TYPE_SOURCES].toStringList();
-    //            for(QStringList::Iterator source = uids.begin(); source != uids.end(); source++)
-    //                if (*source == uid) return false;
-
-    //            attrs[JSON_TYPE_SOURCES] = uids << uid;
-    //            if (useIt) setActiveSourceIndex(uids.length() - 1);
-
-
     if (checkExistance) {
-        newSource -> setParent(0);
-        for(QList<IItem *>::Iterator source = sources.begin(); source != sources.end(); source++)
-            if ((*source) -> eqlByLocation(newSource)) {
+        for(QStringList::Iterator source = _sources.begin(); source != _sources.end(); source++)
+            if ((*source) == sourceUid) {
                 qDebug() << "SOURCE ALREADY EXISTS";
                 return false;
             }
     }
 
-    sources.append(newSource);
+    _sources.append(sourceUid);
 
     if (setAsMain) {
-        setActiveSourceIndex(sources.length() - 1);
-        connectToSource(activeSourceItem());
+        int newIndex = _sources.length() - 1;
+        setActiveSourceIndex(newIndex);
+        connectToSource(newIndex);
     }
 
     qDebug() << "ADD NEW SOURCE";
@@ -251,37 +225,37 @@ bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExist
 }
 
 bool IItem::useNextSource() {
-    if (sources.length() == 1) return false;
+    if (_sources.size() == 1) return false;
 
     int currSourceIndex = activeSourceIndex() + 1;
-    if (currSourceIndex >= sources.length())
+    if (currSourceIndex >= _sources.size())
         currSourceIndex = 0;
 
     setActiveSourceIndex(currSourceIndex);
-    connectToSource(activeSourceItem());
+    connectToSource(activeSource());
     return currSourceIndex != activeSourceIndexLimit;
 }
 
-IItem * IItem::activeSourceItem() const {
-    if (isContainer()) return const_cast<IItem *>(this);
+//DataItem * IItem::activeSource() const {
+//    if (isContainer()) return const_cast<IItem *>(this);
 
-    if (sources.isEmpty()) {
-        IItem * self = const_cast<IItem *>(this);
-        QJsonArray arr = const_cast<QVariantHash &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
-        if (arr.isEmpty()) // root node is always empty // so it shpuld be source for yourself
-            self -> addSource(self, false, false);
-        else
-            for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
-                QJsonObject obj = (*it).toObject();
-                self -> addSource(&obj);
-            }
-    }
+//    if (_sources.isEmpty()) {
+//        IItem * self = const_cast<IItem *>(this);
+//        QJsonArray arr = const_cast<QVariantHash &>(attrs).take(JSON_TYPE_SOURCES).toJsonArray();
+//        if (arr.isEmpty()) // root node is always empty // so it shpuld be source for yourself
+//            addSource(self, false, false);
+//        else
+//            for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++){
+//                QJsonObject obj = (*it).toObject();
+//                addSource(&obj);
+//            }
+//    }
 
-    int ind = activeSourceIndex();
-    if (ind >= sources.length()) ind = 0;
+//    int ind = activeSourceIndex();
+//    if (ind >= sources.length()) ind = 0;
 
-    return sources[ind];
-}
+//    return DataCore::obj().value(sources[ind]);
+//}
 
 QString IItem::relationStr() const {
     switch(dataType()) {

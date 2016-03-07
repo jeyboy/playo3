@@ -13,13 +13,11 @@ namespace Core {
             clear();
         }
 
-        void registerSource(const QString & uid, const QString & source_uid, const QVariantHash & source_attrs) {
+        void registerSource(const QString & source_uid, const QVariantHash & source_attrs) {
             if (!contains(source_uid))
                 insert(source_uid, new DataItem(source_attrs, 0));
             else
                 operator[](source_uid) -> iterateRelationsAmount();
-
-            operator[](uid) -> addSource(source_uid);
         }
         void unregisterSource(const QString & uid) {
             DataItem * data = operator[](uid);
@@ -40,12 +38,11 @@ namespace Core {
                 return newItem;
             }
         }
-        void unregisterDataItem(const QString & uid) {
+        void unregisterDataItem(const QString & uid, const QStringList & sources) {
             DataItem * data = operator[](uid);
 
             if (data -> relationsAmount() == 1) {
-                QStringList sources = data -> sources();
-                for(QStringList::Iterator source = sources.begin(); source != sources.end(); source++)
+                for(QStringList::ConstIterator source = sources.cbegin(); source != sources.cend(); source++)
                     unregisterSource(*source);
 
                 delete take(uid);
@@ -53,7 +50,7 @@ namespace Core {
             else data -> deiterateRelationsAmount();
         }
 
-        DataItem * dataItem(const QString & uid) { return value(uid, 0); }
+        ItemFields * dataItem(const QString & uid) { return value(uid, 0); }
     };
 }
 
