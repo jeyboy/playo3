@@ -2,9 +2,6 @@
 #define ITEM_INTERFACE
 
 #include <qlist.h>
-#include <qdesktopservices.h>
-#include <qurl.h>
-#include <qstringbuilder.h>
 
 #include "core_part_types.h"
 #include "part_mixes/item_fields.h"
@@ -20,7 +17,7 @@ namespace Core {
 
     class IItem : public ItemFields {
         void connectToSource(ItemFields * newSource) {
-            qSwap(newSource -> attrs, attrs);
+            connectFields(newSource);
             swapState(newSource);
         }
     public:
@@ -36,34 +33,6 @@ namespace Core {
 
         virtual QJsonObject toJson();
 
-        QString fullPath() const {
-            QString path_buff = path().toString();
-            #ifdef Q_OS_LINUX
-                path_buff = '/' % path_buff;
-            #endif
-            return path_buff;
-        }
-
-        void openLocation();
-        bool removePhysicalObject() {
-            switch(dataType()) {
-                case dt_local:
-                    return QFile::remove(fullPath());
-                case dt_local_cue: // this required on some additional checks
-                default: return false;
-            }
-
-
-        }
-        bool isExist() const {
-            switch(dataType()) {
-                case dt_local:
-                case dt_local_cue:
-                    return QFile::exists(fullPath());
-                default: return true;
-            }
-        }
-
         inline int column() const { return 0; }
         int row() const;
 
@@ -77,17 +46,6 @@ namespace Core {
             return !showBatch || (showBatch && has(flag_checked));
         }
 
-        QUrl toUrl() const {
-            if (isRemote()) {
-                QUrl url = QUrl(path().toString());
-                switch(dataType()) {
-                    case dt_site_sc: { url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams()); break;}
-                    default: ;
-                }
-                return url;
-            } else
-                return QUrl::fromLocalFile(fullPath());
-        }
         QString buildTreePath() const;
         QString buildTreeStr() const; // used for tree sorting on removing
 

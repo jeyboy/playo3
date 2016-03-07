@@ -21,7 +21,7 @@ namespace Core {
     const QString JSON_TYPE_ERROR                       = QStringLiteral("k");
     const QString JSON_TYPE_CONTAINER_ITEMS_COUNT       = QStringLiteral("l");
     const QString JSON_TYPE_BPM                         = QStringLiteral("m");
-//    const QString JSON_TYPE_IS_SHAREABLE                = QStringLiteral("n");
+    const QString JSON_TYPE_DATABASE_UID                = QStringLiteral("n");
     const QString JSON_TYPE_OWNER_ID                    = QStringLiteral("o");
     const QString JSON_TYPE_PATH                        = QStringLiteral("p");
     const QString JSON_TYPE_SOURCES                     = QStringLiteral("q");

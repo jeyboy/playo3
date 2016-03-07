@@ -30,19 +30,21 @@ bool SearchModel::findNewSources(IItem * item) {
                 int matched = 0;
                 for(int iter = results -> childCount() - 1; iter >= 0; --iter) {
                     IItem * res = results -> child(iter);
-                    if (item -> addSource(res, true))
+                    if (item -> addSource(res -> databaseId(), true))
                         matched++;
                     else
                         results -> removeChildren(iter, 1);
                 }
 
                 if (matched > 0)
-                    return true;
+                    break;
 
                 qDebug() << "------------------------------" << matched;
             }
     }
 
+    delete results;
+    delete middle_results;
     return false;
 }
 

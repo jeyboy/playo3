@@ -25,7 +25,7 @@ namespace Core {
         }
 
         void toJson(QJsonArray & arr) {
-            QJsonObject obj = QJsonObject::fromVariantHash(attrs);
+            QJsonObject obj = QJsonObject::fromVariantHash(*attrs);
             obj.insert(JSON_TYPE_REL_AMOUNT, relation_amount);
             arr << obj;
         }

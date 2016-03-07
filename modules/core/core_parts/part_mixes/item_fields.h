@@ -2,6 +2,9 @@
 #define MODEL_ITEM_FIELDS_H
 
 #include <qjsonobject.h>
+#include <qurl.h>
+#include <qdesktopservices.h>
+#include <qstringbuilder.h>
 
 #include "item_state.h"
 #include "item_field_defines.h"
@@ -11,6 +14,7 @@
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/data_sub_types.h"
 #include "modules/core/misc/format.h"
+#include "modules/core/web/apis/social/soundcloud_api.h"
 
 namespace Core {
     class ItemFields : public ItemState {
@@ -21,6 +25,7 @@ namespace Core {
 
         inline ItemFields() {}
         inline virtual ~ItemFields() { delete attrs; }
+        inline void connectFields(ItemFields * newSource) { attrs = newSource -> attrs; }
 
         ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
@@ -61,6 +66,10 @@ namespace Core {
         }
 
         // per source info
+
+        inline void setDatabaseId(const QVariant & newId)       { attrs -> operator[](JSON_TYPE_DATABASE_UID) = newId; }
+        inline QString databaseId() const                      { return attrs -> value(JSON_TYPE_DATABASE_UID).toString(); }
+
         inline void setId(const QVariant & newId)               { attrs -> operator[](JSON_TYPE_ID) = newId; }
         inline QVariant id() const                              { return attrs -> value(JSON_TYPE_ID); }
 
@@ -98,8 +107,32 @@ namespace Core {
         inline void setDatatype(const DataSubType & dataType)   { attrs -> operator[](JSON_TYPE_DATA_SUB_TYPE) = dataType; }
         inline DataSubType dataType() const                     { return (DataSubType)attrs -> value(JSON_TYPE_DATA_SUB_TYPE, dt_none).toInt(); }
 
+
+        void openLocation() {
+            QFileInfo info(fullPath());
+            QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
+        }
+        bool removePhysicalObject() {
+            switch(dataType()) {
+                case dt_local:
+                    return QFile::remove(fullPath());
+                case dt_local_cue: // this required on some additional checks
+                default: return false;
+            }
+
+
+        }
+        bool isExist() const {
+            switch(dataType()) {
+                case dt_local:
+                case dt_local_cue:
+                    return QFile::exists(fullPath());
+                default: return true;
+            }
+        }
+
 //        inline bool setShareable(const bool able)               { attrs[JSON_TYPE_IS_SHAREABLE] = able; }
-        inline bool isShareable() const                         {
+        bool isShareable() const                         {
 //            return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool();
             switch(dataType()) {
                 case dt_site_od:
@@ -111,7 +144,7 @@ namespace Core {
         }
 
 //        inline bool setRemote(const bool able)                  { attrs[JSON_TYPE_IS_REMOTE] = able; }
-        inline bool isRemote() const                            {
+        bool isRemote() const                            {
 //            return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool();
             switch(dataType()) {
                 case dt_local:
@@ -123,7 +156,7 @@ namespace Core {
             }
         }
 
-        inline QString toUid() {
+        QString toUid() {
             switch(dataType()) {
                 case dt_site_vk:
 //            case dt_playlist_vk:
@@ -136,8 +169,33 @@ namespace Core {
             }
         }
 
+        QString fullPath() const {
+            QString path_buff = path().toString();
+            #ifdef Q_OS_LINUX
+                path_buff = '/' % path_buff;
+            #endif
+            return path_buff;
+        }
+
+        QUrl toUrl() const {
+            if (isRemote()) {
+                QUrl url = QUrl(path().toString());
+                switch(dataType()) {
+                    case dt_site_sc: { url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams()); break;}
+                    default: ;
+                }
+                return url;
+            } else
+                return QUrl::fromLocalFile(fullPath());
+        }
+
         inline bool isParted() const                            { return attrs -> value(JSON_TYPE_PARTIAL, false).toBool(); }
 
+        QVariantHash toHash() {
+            QVariantHash a(*attrs);
+            a.insert(JSON_TYPE_STATE, saveStates());
+            return a;
+        }
 
         virtual QJsonObject toJson();
         QVariantHash toInnerAttrs(int itemType) const; // remove later

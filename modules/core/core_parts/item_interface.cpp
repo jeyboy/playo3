@@ -35,11 +35,6 @@ QJsonObject IItem::toJson() {
     return root;
 }
 
-void IItem::openLocation() {
-    QFileInfo info(fullPath());
-    QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
-}
-
 int IItem::row() const {
     if (_parent)
         return _parent -> childRow(const_cast<IItem *>(this));
@@ -216,7 +211,7 @@ bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExist
     if (setAsMain) {
         int newIndex = _sources.length() - 1;
         setActiveSourceIndex(newIndex);
-        connectToSource(newIndex);
+        connectToSource(DataCore::obj().dataItem(_sources[newIndex]));
     }
 
     qDebug() << "ADD NEW SOURCE";
@@ -232,7 +227,7 @@ bool IItem::useNextSource() {
         currSourceIndex = 0;
 
     setActiveSourceIndex(currSourceIndex);
-    connectToSource(activeSource());
+    connectToSource(DataCore::obj().dataItem(_sources[currSourceIndex]));
     return currSourceIndex != activeSourceIndexLimit;
 }
 
