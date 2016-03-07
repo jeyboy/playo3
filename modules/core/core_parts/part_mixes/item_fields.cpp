@@ -16,6 +16,7 @@ ItemFields::ItemFields(const QString & title, int initState) : ItemState(initSta
 }
 
 ItemFields::ItemFields(int state) : ItemState(state) {
+    attrs = new QVariantHash();
 }
 
 QStringList ItemFields::info() const {
