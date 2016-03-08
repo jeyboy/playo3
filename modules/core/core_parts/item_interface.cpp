@@ -26,10 +26,19 @@ IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
     if (_parent) _parent -> declareChild(this, pos);
 }
 
+IItem::IItem(const QString & sourceUid, Playlist * parent, int pos)
+    : ItemFields(), activeSourceIndexLimit(0), _parent(parent) {
+
+    if (_parent) _parent -> declareChild(this, pos);
+    _sources.append(sourceUid);
+    connectToSource(DataCore::obj().dataItem(sourceUid));
+}
+
 IItem::~IItem() {
     if (has(flag_mark_on_removing))
         removePhysicalObject();
-    DataCore::obj().unregisterDataItem(databaseId(), _sources);
+    if (!databaseId().isEmpty())
+        DataCore::obj().unregisterDataItem(databaseId(), _sources);
 }
 
 void IItem::toJson(QJsonObject & obj) {

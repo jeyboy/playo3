@@ -1,4 +1,5 @@
 #include "library.h"
+#include "modules/models/model_interface.h"
 
 using namespace Core;
 using namespace Media;

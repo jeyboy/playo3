@@ -21,17 +21,17 @@ namespace Core {
             return /*owner.isValid() &&*/ id.isValid() ? owner.toString() % QStringLiteral("_") % id.toString() : QString();
         }
 
-        inline ItemFields() {}
         inline virtual ~ItemFields() { delete attrs; }
         inline void connectToSource(ItemFields * newSource) {
             attrs = newSource -> attrs;
             copyBits(newSource);
         }
 
+        inline ItemFields() : attrs(0) {}
         ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
         ItemFields(const QString & title, int initState = DEFAULT_ITEM_STATE);
-        ItemFields(int state = DEFAULT_ITEM_STATE);
+        ItemFields(int state);
 
         // const info
         inline void setGenreID(const QVariant & newGenreID)     { attrs -> operator[](JSON_TYPE_GENRE_ID) = newGenreID; }

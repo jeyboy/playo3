@@ -46,6 +46,7 @@ namespace Core {
                 return 0;
             } else {
                 DataItem * newItem = new DataItem(attrs, 1);
+                newItem -> setDatabaseId(uid);
                 insert(uid, newItem);
                 return newItem;
             }
@@ -67,7 +68,7 @@ namespace Core {
             else data -> deiterateRelationsAmount();
         }
 
-        ItemFields * dataItem(const QString & uid) { return value(uid, 0); }
+        DataItem * dataItem(const QString & uid) { return value(uid, 0); }
     };
 }
 

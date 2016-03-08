@@ -7,6 +7,7 @@
 #include <qfuturewatcher.h> // include async
 #include <qdesktopservices.h>
 
+#include "modules/core/data_core.h"
 #include "modules/core/core_parts_index.h"
 #include "modules/core/web/web_apis.h"
 #include "modules/core/misc/file_utils/extensions.h"
@@ -19,6 +20,9 @@
 #include "modules/controls/user_dialog_box.h"
 
 #define FUZZY_COMPARITY_PERCENT 80
+
+#define REGISTER_LOCAL_DATA(path, title) \
+    DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, { JSON_TYPE_PATH, path}, { JSON_TYPE_TITLE, title} });
 
 namespace Models {
     using namespace Core;

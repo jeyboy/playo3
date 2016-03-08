@@ -20,6 +20,7 @@ namespace Core {
         IItem(Playlist * parent, QVariantHash & hash, int pos = -1);
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        IItem(const QString & sourceUid, Playlist * parent, int pos = -1);
 
         virtual ~IItem();
 
