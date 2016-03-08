@@ -16,10 +16,6 @@ namespace Core {
     class Playlist;
 
     class IItem : public ItemFields {
-        void connectToSource(ItemFields * newSource) {
-            connectFields(newSource);
-            swapState(newSource);
-        }
     public:
         IItem(Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
         IItem(Playlist * parent, QVariantHash & hash, int pos = -1);

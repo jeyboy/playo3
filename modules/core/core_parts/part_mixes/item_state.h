@@ -36,24 +36,20 @@ namespace Core {
             inline virtual ~ItemState() {}
 
             inline bool has(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
+            bool set(enum ItemStateFlag flag); // use only for flag_expanded and highter
             inline int states() const { return item_state; }
 
             inline int saveStates() const { return (unsigned char)item_state; }
             inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
-            void swapState(ItemState * other) {
-                int swap_interval = fieldStatePart(item_state);
-                copyBits(other -> item_state);
-                other -> copyBits(swap_interval);
+            void copyBits(ItemState * other) { // need carefully test this
+                item_state = item_state - fieldStatePart(item_state) + fieldStatePart(other -> item_state);
             }
         protected:
             inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }
-            bool set(enum ItemStateFlag flag);
             void setStates(int flags);
 
-            void copyBits(int state) { // need carefully test this
-                item_state = item_state - fieldStatePart(item_state) + fieldStatePart(state);
-            }
+
 
             bool reset();
             bool setListened();

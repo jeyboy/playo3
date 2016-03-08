@@ -23,7 +23,10 @@ namespace Core {
 
         inline ItemFields() {}
         inline virtual ~ItemFields() { delete attrs; }
-        inline void connectFields(ItemFields * newSource) { attrs = newSource -> attrs; }
+        inline void connectToSource(ItemFields * newSource) {
+            attrs = newSource -> attrs;
+            copyBits(newSource);
+        }
 
         ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
