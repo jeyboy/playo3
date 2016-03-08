@@ -13,6 +13,18 @@ namespace Core {
             clear();
         }
 
+        void loadJson(QJsonArray & arr) {
+            for(QJsonArray::Iterator it = arr.begin(); it != arr.end(); it++) {
+                DataItem * item = DataItem::fromJson((*it).toObject());
+                insert(item -> databaseId(), item);
+            }
+        }
+
+        void toJson(QJsonArray & arr) {
+            for(QHash<QString, DataItem *>::Iterator it = this -> begin(); it != this -> end(); it++)
+                (*it) -> toJson(arr);
+        }
+
         void registerSource(const QString & source_uid, const QVariantHash & source_attrs) {
             if (!contains(source_uid))
                 insert(source_uid, new DataItem(source_attrs, 0));
