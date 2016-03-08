@@ -125,10 +125,9 @@ QUrl ItemFields::toUrl() const {
         return QUrl::fromLocalFile(fullPath());
 }
 
-QJsonObject ItemFields::toJson() {
-    QJsonObject root = QJsonObject::fromVariantHash(*attrs);
-    root[JSON_TYPE_ITEM_STATE] = saveStates();
-    return root;
+void ItemFields::toJson(QJsonObject & obj) {
+    obj = QJsonObject::fromVariantHash(*attrs);
+    obj[JSON_TYPE_ITEM_STATE] = saveStates();
 }
 
 QVariantHash ItemFields::toHash() {

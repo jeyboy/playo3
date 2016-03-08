@@ -338,7 +338,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
-        if (ind.data(ITYPE).toInt() == VK_FILE) {
+        if (ind.data(ITYPE).toInt() == dt_site_vk) {
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
             menu.addSeparator();

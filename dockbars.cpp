@@ -105,7 +105,9 @@ void Dockbars::save(DataStore * settings) {
 
                 if (v) {
                     curr_bar.insert(QStringLiteral("set"), v -> settings().toJson());
-                    curr_bar.insert(QStringLiteral("cont"), v -> toJson());
+                    QJsonObject obj;
+                    v -> toJson(obj);
+                    curr_bar.insert(QStringLiteral("cont"), obj);
 
                     if (v -> currentIndex().isValid())
                         curr_bar.insert(QStringLiteral("selection"), v -> currentIndex().data(ITREEPATH).toString());

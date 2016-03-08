@@ -3,7 +3,6 @@
 
 #include <qlist.h>
 
-#include "core_part_types.h"
 #include "part_mixes/item_fields.h"
 
 #include "modules/core/web/apis/social/soundcloud_api.h"
@@ -24,7 +23,7 @@ namespace Core {
 
         virtual ~IItem();
 
-        virtual void toJson(QJsonArray & arr);
+        virtual void toJson(QJsonObject & obj);
 
         inline int column() const { return 0; }
         int row() const;

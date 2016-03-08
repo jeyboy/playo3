@@ -11,8 +11,6 @@ namespace Core {
         CuePlaylist(const QString & filePath, const QString & fileTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
         int initFiles(QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed);
-
-        inline int itemType() const { return CUE_PLAYLIST; }
     };
 }
 

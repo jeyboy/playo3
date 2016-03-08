@@ -17,7 +17,7 @@ namespace Models {
         void ignoreListRemoveUid(const QString & uid);
         bool ignoreListContainUid(const QString & uid);
 
-        QJsonObject & ignoreListToJson(QJsonObject &);
+        void ignoreListToJson(QJsonObject &);
         void ignoreListFromJson(const QJsonObject &);
     };
 }

@@ -14,8 +14,6 @@ namespace Core {
             //    setExtension("mp3");
             //    setBpm(itemBpm);
         }
-
-        inline int itemType() const { return OD_FILE; }
     };
 }
 

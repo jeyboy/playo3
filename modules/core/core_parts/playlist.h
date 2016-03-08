@@ -8,7 +8,7 @@
 namespace Core {
     class Playlist : public IItem {
     public:
-        static IItem * restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantHash & attrs);
+//        static IItem * restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantHash & attrs);
         static IItem * restoreItem(Playlist * playlist, QJsonObject & iterObj);
 
         inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) {}
@@ -31,7 +31,7 @@ namespace Core {
 
         inline bool isContainer() const { return true; }
 
-        void toJson(QJsonArray & arr);
+        void toJson(QJsonObject & obj);
 
         inline QList<IItem *> childrenList() const { return children; }
         inline int childRow(IItem * child) { return children.indexOf(child); }

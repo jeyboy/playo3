@@ -21,8 +21,6 @@ namespace Core {
 //            if (has(flag_mark_on_removing) && !isPartial())
 //                removePhysicalObject();
 //        }
-
-        inline int itemType() const { return SIMPLE_FILE; }
     };
 }
 

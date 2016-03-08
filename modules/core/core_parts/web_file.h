@@ -14,8 +14,6 @@ namespace Core {
         }
         inline virtual ~WebFile() {}
 
-        inline virtual int itemType() const { return WEB_FILE; }
-
 //        inline QString fullPath() const { return path().toString(); }
 //        virtual inline QUrl toUrl() const { return QUrl(fullPath()); }
 //        virtual inline QString toUid() { return WebFile::toUid(owner(), id()); }

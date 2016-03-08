@@ -21,7 +21,7 @@ namespace Models {
         inline QString tabUid() const { return tab_uid; }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);
-        QJsonObject toJson();
+        void toJson(QJsonObject & res);
 
         inline bool ignoreListContainUid(const QString & uid) { return IgnoreList::ignoreListContainUid(uid); } // overriding for model_interface
     protected:

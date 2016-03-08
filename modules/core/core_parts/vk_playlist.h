@@ -10,8 +10,6 @@ namespace Core {
         inline VkPlaylist(QJsonObject * hash, Playlist * parent = 0) : WebPlaylist(hash, parent) {}
         inline VkPlaylist(const QString & uid, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE)
             : WebPlaylist(uid, folderTitle, parent, pos, initState) {}
-
-        inline int itemType() const { return VK_PLAYLIST; }
     };
 }
 

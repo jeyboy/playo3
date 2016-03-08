@@ -43,10 +43,9 @@ namespace Models {
         void resumeSearch(const QJsonObject & obj);
 
         inline bool inProccess() { return initiator && initiator -> isRunning(); }
-        inline QJsonObject toJson() {
-            QJsonObject res = LevelTreeModel::toJson();
-            suspendSearch(res);
-            return res;
+        inline void toJson(QJsonObject & obj) {
+            LevelTreeModel::toJson(obj);
+            suspendSearch(obj);
         }
     protected slots:
         int proceedTabs(SearchRequest & params, Playlist * parent);

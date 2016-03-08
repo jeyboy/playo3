@@ -47,7 +47,7 @@ namespace Views {
         IView(IModel * model, QWidget * parent, Params & settins);
         virtual ~IView();
 
-        inline QJsonObject toJson() { return mdl -> toJson(); }
+        inline void toJson(QJsonObject & obj) { return mdl -> toJson(obj); }
 
         void scrollToActive();
 

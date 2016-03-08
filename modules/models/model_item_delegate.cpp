@@ -62,8 +62,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     icons.insert(Core::dt_web + SELECTION_ITER,                         PIXMAP(QStringLiteral(":/items/web_item_on"), size));
     icons.insert(Core::dt_local,                                        PIXMAP(QStringLiteral(":/items/local_item"), size));
     icons.insert(Core::dt_local + SELECTION_ITER,                       PIXMAP(QStringLiteral(":/items/local_item_on"), size));
-    icons.insert(Core::dt_local_cue, icons[SIMPLE_FILE]);
-    icons.insert(Core::dt_local_cue + SELECTION_ITER, icons[SIMPLE_FILE + SELECTION_ITER]);
+    icons.insert(Core::dt_local_cue, icons[Core::dt_local]);
+    icons.insert(Core::dt_local_cue + SELECTION_ITER, icons[Core::dt_local + SELECTION_ITER]);
     icons.insert(Core::dt_site_fourshared,                              PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
     icons.insert(Core::dt_site_fourshared + SELECTION_ITER,             PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
     icons.insert(Core::dt_site_zaycev,                                  PIXMAP(QStringLiteral(":/items/zaycev_item"), size));

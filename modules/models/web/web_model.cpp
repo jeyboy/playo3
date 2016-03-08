@@ -13,9 +13,9 @@ bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     return res;
 }
 
-QJsonObject WebModel::toJson() {
-    QJsonObject res = IModel::toJson();
-    return ignoreListToJson(res);
+void WebModel::toJson(QJsonObject & res) {
+    IModel::toJson(res);
+    ignoreListToJson(res);
 }
 
 int WebModel::filesRoutine(const QString & filePath, Playlist * node) {

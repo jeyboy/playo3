@@ -8,7 +8,6 @@
 #include <qcheckbox.h>
 
 #include "modules/core/core_parts/part_mixes/item_fields.h"
-#include "modules/core/core_parts/core_part_types.h"
 
 #define SELECTION_ITER 50
 #define PIXMAP(path, size) \

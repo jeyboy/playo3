@@ -2,19 +2,19 @@
 
 using namespace Core;
 
-IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantHash & attrs) {
-    switch(item_type) {
-        case SIMPLE_FILE:       { return new File(attrs, parent, pos); }
-        case VK_FILE:           { return new VkFile(attrs, parent, pos); }
-        case SOUNDCLOUD_FILE:   { return new SoundcloudFile(attrs, parent, pos); }
-        case OD_FILE:           { return new OdFile(attrs, parent, pos); }
-        case WEB_FILE:          { return new WebFile(attrs, parent, pos); }
-        case CUE_FILE:          { return new CueFile(attrs, parent, pos); }
-        default:                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-    }
+//IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantHash & attrs) {
+//    switch(item_type) {
+//        case SIMPLE_FILE:       { return new File(attrs, parent, pos); }
+//        case VK_FILE:           { return new VkFile(attrs, parent, pos); }
+//        case SOUNDCLOUD_FILE:   { return new SoundcloudFile(attrs, parent, pos); }
+//        case OD_FILE:           { return new OdFile(attrs, parent, pos); }
+//        case WEB_FILE:          { return new WebFile(attrs, parent, pos); }
+//        case CUE_FILE:          { return new CueFile(attrs, parent, pos); }
+//        default:                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
+//    }
 
-    return 0;
-}
+//    return 0;
+//}
 
 IItem * Playlist::restoreItem(Playlist * playlist, QJsonObject & iterObj) {
 //    switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
@@ -170,20 +170,21 @@ QVariant Playlist::data(int column) const {
     }
 }
 
-void Playlist::toJson(QJsonArray & arr) {
-    QJsonObject obj = ItemFields::toJson();
+void Playlist::toJson(QJsonObject & obj) {
+    ItemFields::toJson(obj);
 
     if (children.length() > 0) {
-        root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = filesCount;
+        obj[JSON_TYPE_CONTAINER_ITEMS_COUNT] = filesCount;
 
         QJsonArray ar = QJsonArray();
-        for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
-            (*it) -> toJson(ar);
+        for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
+            QJsonObject tobj;
+            (*it) -> toJson(tobj);
+            ar << tobj;
+        }
 
         obj[JSON_TYPE_CONTAINER_CHILDS] = ar;
     }
-
-    arr << obj;
 }
 
 Playlist * Playlist::createPlaylistPath(QString path) { // usable only for tree

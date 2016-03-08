@@ -53,6 +53,11 @@ namespace Core {
         void unregisterDataItem(const QString & uid, const QStringList & sources) {
             DataItem * data = operator[](uid);
 
+            if (!data) {
+                qDebug() << "data item missed";
+                return;
+            }
+
             if (data -> relationsAmount() == 1) {
                 for(QStringList::ConstIterator source = sources.cbegin(); source != sources.cend(); source++)
                     unregisterSource(*source);

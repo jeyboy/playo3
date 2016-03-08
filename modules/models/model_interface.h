@@ -102,7 +102,7 @@ namespace Models {
         template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : rootItem); }
 
         void shuffle();
-        virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
+        virtual inline void toJson(QJsonObject & obj) { return rootItem -> toJson(obj); }
 
         QModelIndex fromPath(QString path, Direction direction = none);
 

@@ -18,8 +18,6 @@ namespace Core {
             setPath(filePath);
             setParted(is_parted);
         }
-
-        inline int itemType() const { return CUE_FILE; }
     };
 }
 

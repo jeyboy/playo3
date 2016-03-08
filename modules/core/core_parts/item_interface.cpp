@@ -29,19 +29,16 @@ IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
 IItem::~IItem() {
     if (has(flag_mark_on_removing))
         removePhysicalObject();
-    DataCore::obj().unregisterDataItem(uid, _sources);
+    DataCore::obj().unregisterDataItem(databaseId(), _sources);
 }
 
-void IItem::toJson(QJsonArray & arr) {
+void IItem::toJson(QJsonObject & obj) {
 //    QJsonObject root = ItemFields::toJson();
-    QJsonObject obj;
 
     obj[JSON_TYPE_ITEM_STATE] = saveStates();
 
     if (!_sources.isEmpty())
         obj[JSON_TYPE_SOURCES] = QJsonArray::fromStringList(_sources);
-
-    arr << obj;
 }
 
 int IItem::row() const {

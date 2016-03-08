@@ -133,7 +133,7 @@ namespace Core {
 
         QVariantHash toHash();
 
-        virtual QJsonObject toJson();
+        virtual void toJson(QJsonObject & obj);
         QVariantHash toInnerAttrs(int itemType) const; // remove later
     protected:
         inline void setParted(const QVariant & isParted)        { attrs -> operator[](JSON_TYPE_PARTIAL) = isParted; }
