@@ -22,12 +22,9 @@ namespace Core {
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
-        inline virtual ~IItem() {
-            if (has(flag_mark_on_removing))
-                removePhysicalObject();
-        }
+        virtual ~IItem();
 
-        virtual QJsonObject toJson();
+        virtual void toJson(QJsonArray & arr);
 
         inline int column() const { return 0; }
         int row() const;

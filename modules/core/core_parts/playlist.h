@@ -29,13 +29,9 @@ namespace Core {
 
         QVariant data(int column) const;
 
-        inline int itemType() const { return PLAYLIST; }
-        bool removePhysicalObject();
-
-        inline bool isExist() const { return QDir(fullPath()).exists(); }
         inline bool isContainer() const { return true; }
 
-        QJsonObject toJson();
+        void toJson(QJsonArray & arr);
 
         inline QList<IItem *> childrenList() const { return children; }
         inline int childRow(IItem * child) { return children.indexOf(child); }

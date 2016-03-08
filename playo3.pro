@@ -123,7 +123,6 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_fields.h \
     modules/core/core_parts/part_mixes/item_state.h \
     modules/core/core_parts/part_mixes/json_fields.h \
-    modules/core/core_parts/core_part_types.h \
     modules/core/core_parts/file.h \
     modules/core/core_parts/item_drop_formats.h \
     modules/core/core_parts/item_interface.h \

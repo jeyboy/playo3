@@ -52,14 +52,19 @@ bool ItemFields::removePhysicalObject() {
         case dt_local:
             return QFile::remove(fullPath());
         case dt_local_cue: // this required on some additional checks
+        case dt_playlist_local:
+            //    QDir delDir(fullPath());
+            //    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
+            //        return delDir.removeRecursively();
+                return false;
         default: return false;
     }
 }
 bool ItemFields::isExist() const {
     switch(dataType()) {
         case dt_local:
-        case dt_local_cue:
-            return QFile::exists(fullPath());
+        case dt_local_cue: return QFile::exists(fullPath());
+        case dt_playlist_local: return QDir(fullPath()).exists();
         default: return true;
     }
 }

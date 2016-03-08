@@ -170,30 +170,20 @@ QVariant Playlist::data(int column) const {
     }
 }
 
-// cue is not removable yet
-bool Playlist::removePhysicalObject() { // this is a little dangerous (   
-//    QDir delDir(fullPath());
-//    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
-//        return delDir.removeRecursively();
-    return false;
-}
-
-QJsonObject Playlist::toJson() {
-    QJsonObject root = IItem::toJson();
+void Playlist::toJson(QJsonArray & arr) {
+    QJsonObject obj = ItemFields::toJson();
 
     if (children.length() > 0) {
         root[JSON_TYPE_CONTAINER_ITEMS_COUNT] = filesCount;
 
         QJsonArray ar = QJsonArray();
-        QList<IItem *>::Iterator it = children.begin();
+        for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
+            (*it) -> toJson(ar);
 
-        for( ;it != children.end(); it++)
-            ar.append((*it) -> toJson());
-
-        root[JSON_TYPE_CONTAINER_CHILDS] = ar;
+        obj[JSON_TYPE_CONTAINER_CHILDS] = ar;
     }
 
-    return root;
+    arr << obj;
 }
 
 Playlist * Playlist::createPlaylistPath(QString path) { // usable only for tree
