@@ -47,23 +47,10 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
             iterObj = (*it).toObject();
-            restoreItem(this, iterObj);
-//            switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-//                case SIMPLE_FILE:           { new File(&iterObj, this);  break;}
-//                case PLAYLIST:              { new Playlist(&iterObj, this); break;}
-
-//                case WEB_FILE:              { new WebFile(&iterObj, this); break;}
-
-//                case VK_FILE:               { new VkFile(&iterObj, this); break;}
-//                case VK_PLAYLIST:           { new VkPlaylist(&iterObj, this); break;}
-//                case SOUNDCLOUD_FILE:       { new SoundcloudFile(&iterObj, this); break;}
-//                case SOUNDCLOUD_PLAYLIST:   { new SoundcloudPlaylist(&iterObj, this); break;}
-//                case OD_FILE:               { new OdFile(&iterObj, this); break;}
-//                case OD_PLAYLIST:           { new OdPlaylist(&iterObj, this); break;}
-
-//                case CUE_FILE:              { new CueFile(&iterObj, this); break;}
-//                case CUE_PLAYLIST:          { new CuePlaylist(&iterObj, this); break;}
-//            }
+            if (iterObj.value(JSON_TYPE_DATA_SUB_TYPE).toInt() < dt_none)
+                new Playlist(&iterObj, this);
+            else
+                new IItem(this, &iterObj);
         }
     }
 
