@@ -59,8 +59,8 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 item = REGISTER_LOCAL_DATA(path, name);
-                res++;
                 items.insert(path, new IItem(path, node));
+                res++;
             }
         }
     }

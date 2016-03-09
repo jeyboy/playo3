@@ -31,11 +31,15 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         QString name = dir_it.fileName();
 
         if (!unproc_files.contains(path)) {
+            DataItem * item = DataCore::obj().dataItem(path);
+            if (item) continue;
+
             if (name.endsWith(cue_ext, Qt::CaseInsensitive))
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
+                item = REGISTER_LOCAL_DATA(path, name);
+                items.insert(path, new IItem(path, node));
                 res++;
-                items.insert(path, new File(path, name, node));
             }
         }
     }
@@ -51,16 +55,23 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString path = file.filePath();
+
         if (file.isDir())
-            res += filesRoutine(file.filePath(), node, unproc_files, items);
+            res += filesRoutine(path, node, unproc_files, items);
         else {
-            if (unproc_files.contains(file.filePath())) continue;
+            if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
+                DataItem * item = DataCore::obj().dataItem(path);
+                if (item) continue;
+
                 if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
-                    res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
+                    res += proceedCue(path, file.fileName(), node, pos, unproc_files, items);
                 else {
+                    item = REGISTER_LOCAL_DATA(path, file.fileName());
+
+                    items.insert(path, new IItem(path, node, pos));
                     res++;
-                    items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
                 }
             }
         }
