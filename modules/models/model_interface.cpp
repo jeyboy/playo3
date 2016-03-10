@@ -225,6 +225,9 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
     int itemsAmount = 0;
     QString uri, id, owner, uid, sourceUid, prefix = QString::number(dt_site_vk);
 
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
     int pos = parent -> playlistsAmount();
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -259,8 +262,10 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
 ////                    item -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
         }
 
-        itemsAmount++;
-        new IItem(sourceUid, parent, pos);
+        if (store.values(uid).isEmpty()) {
+            itemsAmount++;
+            new IItem(sourceUid, parent, pos);
+        }
 
         pos++;
     }
@@ -274,7 +279,7 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) 
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QString id, album_id, genre, sourceUid, prefix = QString::number(site_yandex);
+    QString id, album_id, genre, sourceUid, prefix = QString::number(dt_site_yandex);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -321,7 +326,7 @@ int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent)
 
     int itemsAmount = 0;
     QJsonObject itm, snippet;
-    QString id, sourceUid, prefix = QString::number(site_youtube);
+    QString id, sourceUid, prefix = QString::number(dt_site_youtube);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
@@ -373,7 +378,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QString sourceUid, refresh_url, prefix = QString::number(wType), id;
+    QString sourceUid, refresh_url, uri, prefix = QString::number(wType), id;
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -423,7 +428,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
         }
 
         itemsAmount++;
-        new WebFile(sourceUid, parent);
+        new IItem(sourceUid, parent);
     }
 
     return itemsAmount;
@@ -438,7 +443,7 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QString uri, id, owner, uid, sourceUid, prefix = QString::number(site_sc);
+    QString uri, id, owner, uid, sourceUid, prefix = QString::number(dt_site_sc);
     QList<IItem *> items;
     bool original;
 
@@ -482,8 +487,10 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
         }
         else item -> setPath(uri);
 
-        itemsAmount++;
-        new IItem(sourceUid, parent);
+        if (store.values(uid).isEmpty()) {
+            itemsAmount++;
+            new IItem(sourceUid, parent);
+        }
     }
 
     return itemsAmount;
@@ -496,7 +503,7 @@ int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, IMod
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QString id, sourceUid, prefix = QString::number(site_od);
+    QString id, sourceUid, prefix = QString::number(dt_site_od);
     QList<IItem *> items;
 
     QHash<QString, IItem *> store;
