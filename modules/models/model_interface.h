@@ -25,11 +25,11 @@
     DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title} });
 
 
-#define REGISTER_WEB_DATA(sourceUid, data_type, id, path, title, refresh_path, duration, extension) \
+#define REGISTER_WEB_DATA(sourceUid, data_type, id, path, title, refresh_path, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \
         {JSON_TYPE_DATA_SUB_TYPE, data_type}, {JSON_TYPE_PATH, path}, \
-        {JSON_TYPE_TITLE, title}, {JSON_TYPE_ID, id}, {JSON_TYPE_REFRESH_PATH, refresh_path}, \
-        {JSON_TYPE_DURATION, duration}, {JSON_TYPE_EXTENSION, extension} \
+        {JSON_TYPE_TITLE, title}, {JSON_TYPE_REFRESH_PATH, refresh_path}, \
+        {JSON_TYPE_ID, id}, {JSON_TYPE_EXTENSION, extension} \
     });
 
 
@@ -40,16 +40,16 @@
         {JSON_TYPE_DURATION, duration}, {JSON_TYPE_EXTENSION, extension} \
     });
 
-#define REGISTER_SC_DATA(sourceUid, id, path, title, owner, refresh_path, duration, extension) \
+#define REGISTER_SC_DATA(sourceUid, id, path, title, owner, duration, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \
-        {JSON_TYPE_DATA_SUB_TYPE, dt_site_sc}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title}, \
-        {JSON_TYPE_ID, id}, {JSON_TYPE_OWNER_ID, owner}, {JSON_TYPE_REFRESH_PATH, refresh_path}, \
+        {JSON_TYPE_DATA_SUB_TYPE, dt_site_sc}, {JSON_TYPE_PATH, path}, \
+        {JSON_TYPE_ID, id}, {JSON_TYPE_OWNER_ID, owner}, {JSON_TYPE_TITLE, title}, \
         {JSON_TYPE_DURATION, duration}, {JSON_TYPE_EXTENSION, extension} \
     });
 
-#define REGISTER_OD_DATA(sourceUid, id, path, title, size, refresh_path, duration, extension) \
+#define REGISTER_OD_DATA(sourceUid, id, title, size, refresh_path, duration, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \
-        {JSON_TYPE_DATA_SUB_TYPE, dt_site_sc}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title}, \
+        {JSON_TYPE_DATA_SUB_TYPE, dt_site_sc}, {JSON_TYPE_TITLE, title}, \
         {JSON_TYPE_ID, id}, {JSON_TYPE_BYTES_SIZE, size}, {JSON_TYPE_REFRESH_PATH, refresh_path}, \
         {JSON_TYPE_DURATION, duration}, {JSON_TYPE_EXTENSION, extension} \
     });
@@ -60,10 +60,10 @@
         {JSON_TYPE_REFRESH_PATH, refresh_path}, {JSON_TYPE_EXTENSION, extension}, {JSON_TYPE_DURATION, duration} \
     });
 
-#define REGISTER_YOUTUBE_DATA(sourceUid, id, title, refresh_path, duration, extension) \
+#define REGISTER_YOUTUBE_DATA(sourceUid, id, title, refresh_path, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \
         {JSON_TYPE_DATA_SUB_TYPE, dt_site_youtube}, {JSON_TYPE_ID, id}, {JSON_TYPE_TITLE, title}, \
-        {JSON_TYPE_REFRESH_PATH, refresh_path}, {JSON_TYPE_EXTENSION, extension}, {JSON_TYPE_DURATION, duration} \
+        {JSON_TYPE_REFRESH_PATH, refresh_path}, {JSON_TYPE_EXTENSION, extension} \
     });
 
 namespace Models {

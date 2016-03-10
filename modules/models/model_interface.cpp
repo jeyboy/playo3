@@ -223,18 +223,11 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QJsonObject itm;
-    VkFile * newItem;
-    QString uri, id, owner, uid;
-    QList<IItem *> items;
-
-    QHash<QString, IItem *> store;
-    parent -> accumulateUids(store);
+    QString uri, id, owner, uid, sourceUid, prefix = QString::number(dt_site_vk);
 
     int pos = parent -> playlistsAmount();
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         id = QString::number(itm.value(Vk::tkn_id).toInt());
@@ -242,34 +235,32 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
         uid = WebFile::toUid(owner, id);
         if (mdl && mdl -> ignoreListContainUid(uid)) continue;
 
+        sourceUid = prefix % uid;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
+
         uri = itm.value(Vk::tkn_url).toString();
         uri = uri.section('?', 0, 0); // remove extra info from url
 
-        items = store.values(uid);
-
-        if (items.isEmpty()) {
-            itemsAmount++;
-            newItem = new VkFile(
+        if (item)
+            item -> setPath(uri);
+        else {
+            item = REGISTER_VK_DATA(
+                sourceUid,
                 id,
                 uri,
-                itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString(),
-                parent,
-                pos
+                QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
+                owner,
+                uid,
+                Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)),
+                Grabber::default_extension
             );
 
-            newItem -> setDatatype(dt_site_vk);
-            newItem -> setOwner(owner);
-            newItem -> setRefreshPath(uid);
-            newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
-
-//                if (itm.contains(Vk::genre_id_key))
-//                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
-
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
+////                if (itm.contains(Vk::genre_id_key))
+////                    item -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
         }
+
+        itemsAmount++;
+        new IItem(sourceUid, parent, pos);
 
         pos++;
     }
@@ -283,12 +274,10 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) 
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QJsonObject itm;
-    WebFile * newItem;
-    QString id, album_id, genre;
+    QString id, album_id, genre, sourceUid, prefix = QString::number(site_yandex);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        itm = (*it).toObject();
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         QStringList artistUids;
@@ -305,23 +294,23 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) 
         album_id = QString::number(album.value(Yandex::tkn_id).toInt());
         id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
 
+        sourceUid = prefix % id;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
+        if (!item) {
+            item = REGISTER_YANDEX_DATA(sourceUid, id,
+                                        QString(artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString()),
+                                        id,
+                                        Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)),
+                                        Grabber::default_extension)
+
+            //item -> setGenre(genre); // need to convert genre to genre id
+
+            if (itm.contains(Yandex::tkn_fileSize))
+                item -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+        }
+
         itemsAmount++;
-        newItem = new WebFile(
-            id,
-            QString(),
-            artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString(),
-            parent
-        );
-
-        newItem -> setDatatype(dt_site_yandex);
-        newItem -> setRefreshPath(id);
-        newItem -> setExtension(Grabber::default_extension);
-
-        newItem -> setDuration(Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)));
-        //newItem -> setGenre(genre); // need to convert genre to genre id
-
-        if (itm.contains(Yandex::tkn_fileSize))
-            newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+        new IItem(sourceUid, parent);
     }
 
     return itemsAmount;
@@ -332,50 +321,49 @@ int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent)
 
     int itemsAmount = 0;
     QJsonObject itm, snippet;
-    WebFile * newItem;
-    QString id;
+    QString id, sourceUid, prefix = QString::number(site_youtube);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         itm = (*it).toObject();
-        qDebug() << itm;
 
         snippet = itm.value(QStringLiteral("snippet")).toObject();
         QJsonValue idVal = itm.value(QStringLiteral("id"));
         id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
 
-        itemsAmount++;
-        newItem = new WebFile(
-            id,
-            QString(),
-            snippet.value(QStringLiteral("title")).toString(), // "description"
-            parent
-        );
+        sourceUid = prefix % id;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
 
-        //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
-        newItem -> setDatatype(dt_site_youtube);
-        newItem -> setRefreshPath(id);
-        newItem -> setExtension(Grabber::default_extension);
+        if (!item) {
+            item = REGISTER_YOUTUBE_DATA(sourceUid, id,
+                                         snippet.value(QStringLiteral("title")).toString(),
+                                         id, Grabber::default_extension);
 
+//            snippet.value(QStringLiteral("title")).toString(), // "description"
+            //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
 
-        snippet = itm.value(QStringLiteral("contentDetails")).toObject();
-//        "contentDetails": {
-//            "duration": "PT3M48S",
-//            "dimension": "2d",
-//            "definition": "hd",
-//            "caption": "false",
-//            "licensedContent": true,
-//            "regionRestriction": {
-//             "blocked": [
-//              "DE"
-//             ]
-//            }
-//           }
-        if (!snippet.isEmpty()) {
-            qint64 durMillis = Duration::ISO8601StrtoMillis(snippet.value(QStringLiteral("duration")).toString());
-            if (durMillis > 1200000) // 20 min
-                newItem -> setError(ItemErrors::warn_not_permitted);
-            newItem -> setDuration(Duration::fromMillis(durMillis));
+            snippet = itm.value(QStringLiteral("contentDetails")).toObject();
+    //        "contentDetails": {
+    //            "duration": "PT3M48S",
+    //            "dimension": "2d",
+    //            "definition": "hd",
+    //            "caption": "false",
+    //            "licensedContent": true,
+    //            "regionRestriction": {
+    //             "blocked": [
+    //              "DE"
+    //             ]
+    //            }
+    //           }
+            if (!snippet.isEmpty()) {
+                qint64 durMillis = Duration::ISO8601StrtoMillis(snippet.value(QStringLiteral("duration")).toString());
+                if (durMillis > 1200000) // 20 min
+                    item -> setError(ItemErrors::warn_not_permitted);
+                item -> setDuration(Duration::fromMillis(durMillis));
+            }
         }
+
+        new IItem(sourceUid, parent);
+        itemsAmount++;
     }
 
     return itemsAmount;
@@ -385,13 +373,10 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QJsonObject itm;
-    WebFile * newItem;
-    QString uri, refresh_url, id;
+    QString sourceUid, refresh_url, prefix = QString::number(wType), id;
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         id = QString::number(itm.value(Grabber::id_key).toInt());
@@ -399,43 +384,46 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
         uri = itm.value(Grabber::url_key).toString();
         refresh_url = itm.value(Grabber::refresh_key).toString();
 
-        itemsAmount++;
-        newItem = new WebFile(
-            id,
-            uri,
-            itm.value(Grabber::title_key).toString(),
-            parent
-        );
+        sourceUid = prefix % refresh_url;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
 
-        newItem -> setDatatype(wType);
-        newItem -> setRefreshPath(refresh_url);
-        newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
+        if (!item) {
+            item = REGISTER_WEB_DATA(sourceUid, wType, id,
+                                     itm.value(Grabber::url_key).toString(),
+                                     itm.value(Grabber::title_key).toString(),
+                                     refresh_url,
+                                     itm.value(Grabber::extension_key).toString(Grabber::default_extension)
+                                    );
 
-        if (itm.contains(Grabber::duration_key)) {
-            if (itm.value(Grabber::duration_key).isDouble())
-                newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
-            else
-                newItem -> setDuration(itm.value(Grabber::duration_key));
+            if (itm.contains(Grabber::duration_key)) {
+                if (itm.value(Grabber::duration_key).isDouble())
+                    item -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
+                else
+                    item -> setDuration(itm.value(Grabber::duration_key));
+            }
+
+            if (itm.contains(Grabber::genre_id_key))
+                item -> setGenreID(itm.value(Grabber::genre_id_key).toInt());
+
+            if (itm.contains(Grabber::bpm_key))
+                item -> setBpm(itm.value(Grabber::bpm_key).toInt());
+
+            if (itm.contains(Grabber::size_key))
+                item -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
+
+            if (!itm.contains(Grabber::skip_info_key))
+                item -> setInfo(Info::str(
+                        itm.value(Grabber::size_key).toString("?"),
+                        item -> extension().toString(),
+                        itm.value(Grabber::bitrate_key).toString("?"),
+                        itm.value(Grabber::discretion_rate_key).toString("?"),
+                        itm.value(Grabber::channels_key).toString("?")
+                    )
+                );
         }
 
-        if (itm.contains(Grabber::genre_id_key))
-            newItem -> setGenreID(itm.value(Grabber::genre_id_key).toInt());
-
-        if (itm.contains(Grabber::bpm_key))
-            newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
-
-        if (itm.contains(Grabber::size_key))
-            newItem -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
-
-        if (!itm.contains(Grabber::skip_info_key))
-            newItem -> setInfo(Info::str(
-                    itm.value(Grabber::size_key).toString("?"),
-                    newItem -> extension().toString(),
-                    itm.value(Grabber::bitrate_key).toString("?"),
-                    itm.value(Grabber::discretion_rate_key).toString("?"),
-                    itm.value(Grabber::channels_key).toString("?")
-                )
-            );
+        itemsAmount++;
+        new WebFile(sourceUid, parent);
     }
 
     return itemsAmount;
@@ -450,9 +438,7 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QJsonObject itm;
-    SoundcloudFile * newItem;
-    QString uri, id, owner, uid;
+    QString uri, id, owner, uid, sourceUid, prefix = QString::number(site_sc);
     QList<IItem *> items;
     bool original;
 
@@ -460,8 +446,7 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
     parent -> accumulateUids(store);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
@@ -478,30 +463,27 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
 
         items = store.values(uid);
 
-        if (items.isEmpty()) {
-            itemsAmount++;
-            newItem = new SoundcloudFile(
-                id,
-                uri,
-                itm.value(Soundcloud::tkn_title).toString(),
-                parent
-            );
+        sourceUid = prefix % id;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
 
-            newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
-            newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
-            newItem -> setDatatype(dt_site_sc);
+        if (!item) {
+            item = REGISTER_SC_DATA(sourceUid, id, uri,
+                                    itm.value(Soundcloud::tkn_title).toString(),
+                                    owner,
+                                    Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)),
+                                    original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension
+                                   );
+            //    setBpm(itemBpm);
+            //            newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
 
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
             if (itm.contains(Soundcloud::tkn_genre_id))
-                newItem -> setGenreID(itm.value(Soundcloud::tkn_genre_id).toInt());
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
-
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
+                item -> setGenreID(itm.value(Soundcloud::tkn_genre_id).toInt());
         }
+        else item -> setPath(uri);
+
+        itemsAmount++;
+        new IItem(sourceUid, parent);
     }
 
     return itemsAmount;
@@ -514,17 +496,14 @@ int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, IMod
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
-    QJsonObject itm;
-    OdFile * newItem;
-    QString id;
+    QString id, sourceUid, prefix = QString::number(site_od);
     QList<IItem *> items;
 
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
@@ -533,25 +512,23 @@ int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, IMod
 
         items = store.values(id);
 
+        sourceUid = prefix % id;
+        DataItem * item = DataCore::obj().dataItem(sourceUid);
+
+        if (!item) {
+            item = REGISTER_OD_DATA(sourceUid, id,
+                                    QString(itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString()),
+                                    itm.value(Od::tkn_size).toInt(0),
+                                    id,
+                                    Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)),
+                                    Od::tkn_default_extension
+                                   );
+        }
+        else item -> setRefreshPath(id);
+
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new OdFile(
-                id,
-                QString(),
-                itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString(),
-                parent
-            );
-
-            newItem -> setRefreshPath(id);
-
-            newItem -> setExtension(Od::tkn_default_extension);
-            newItem -> setDuration(Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)));
-            newItem -> setSize(itm.value(Od::tkn_size).toInt(0));
-            newItem -> setDatatype(dt_site_od);
-
-        } else {
-            for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
-                (*it_it) -> setRefreshPath(id);
+            new IItem(sourceUid, parent);
         }
     }
 
