@@ -1,6 +1,7 @@
 #include <qpair.h>
 #include "model_interface.h"
 
+#include "modules/core/media/cue/cue.h"
 #include "modules/core/misc/fuzzy_comparison.h"
 
 using namespace Models;
@@ -433,9 +434,67 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
 
     return itemsAmount;
 }
+
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
-    CuePlaylist * cueta = new CuePlaylist(path, name, newParent, insertPos);
-    return cueta -> initFiles(unproc_files, items);
+//    CuePlaylist * cueta = new CuePlaylist(path, name, newParent, insertPos);
+//    QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed
+//    return cueta -> initFiles(unproc_files, items);
+
+    Playlist * cuePlaylist = new Playlist(path, name, newParent, insertPos);
+
+    Media::Cue * cue = Media::Cue::fromPath(path);
+    QList<Media::CueSong> songs = cue -> songs();
+    QHash<QString, QString> ignore;
+    int amount = 0;
+
+    for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
+        QString songPath = (*song).filePath;
+        bool res = true;
+
+        if (ignore.contains((*song).filePath))
+            res = false;
+        else if (!unproc_files.contains(songPath)) {
+            //TODO: temp solution for removing from list already added cue parts
+            if (!items.isEmpty()) {
+                IItem * itm = items.take(songPath);
+                if (itm) {
+                    if (itm -> parent() -> childCount() == 1)
+                        itm -> parent() -> removeYouself();
+                    else
+                        itm -> removeYouself();
+                }
+            }
+
+
+            res = QFile::exists(songPath);
+
+            if (!res) {
+              //TODO: ask user about manual choosing of media source for cue
+            }
+        }
+
+        QString sourceUid = songPath % QString::number((*song).group);
+        DataItem * ditem = REGISTER_LOCAL_CUE_DATA(sourceUid, songPath, (*song).trackName, (*song).extension, (*song).startPos, (*song).isPartial);
+
+        if ((*song).duration > 0)
+            ditem -> setDuration(Duration::fromMillis((*song).duration));
+
+        if (res) {
+            if (!(*song).error.isEmpty()) // there should be other error status ?
+                ditem -> setError(ItemErrors::err_not_existed);
+        } else {
+            ignore.insert(songPath, QString());
+            ditem -> setError(ItemErrors::err_not_existed);
+        }
+
+        new IItem(sourceUid, cuePlaylist);
+        unproc_files.insert(songPath, res);
+        amount++;
+    }
+
+    delete cue;
+    cuePlaylist -> updateItemsCountInBranch(amount);
+    return amount;
 }
 
 
@@ -974,7 +1033,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
     int totalAdded = 0;
     QModelIndex dIndex;
     InnerData * data;
-    Playlist * parentFolder;
+//    Playlist * parentFolder;
     QHash<Playlist *, int> counts;
     bool containPath, isRemote, requirePath = !isRelative()/*, free_drop*/;
 

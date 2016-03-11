@@ -24,6 +24,11 @@
 #define REGISTER_LOCAL_DATA(path, title) \
     DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title} });
 
+#define REGISTER_LOCAL_CUE_DATA(sourceUid, path, title, extension, start_pos, is_parted) \
+    DataCore::obj().registerDataItem(sourceUid, { {JSON_TYPE_DATA_SUB_TYPE, dt_local_cue}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title}, \
+        {JSON_TYPE_EXTENSION, extension}, {JSON_TYPE_START_POS, start_pos}, {JSON_TYPE_PARTIAL, is_parted} \
+    });
+
 
 #define REGISTER_WEB_DATA(sourceUid, data_type, id, path, title, refresh_path, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \

@@ -129,6 +129,7 @@ namespace Core {
         QString fullPath() const;
         QUrl toUrl() const;
 
+        inline void setParted(const QVariant & isParted)        { attrs -> operator[](JSON_TYPE_PARTIAL) = isParted; }
         inline bool isParted() const                            { return attrs -> value(JSON_TYPE_PARTIAL, false).toBool(); }
 
         QVariantHash toHash();
@@ -136,8 +137,6 @@ namespace Core {
         virtual void toJson(QJsonObject & obj);
         QVariantHash toInnerAttrs(int itemType) const; // remove later
     protected:
-        inline void setParted(const QVariant & isParted)        { attrs -> operator[](JSON_TYPE_PARTIAL) = isParted; }
-
         QVariantHash * attrs;
     };
 }
