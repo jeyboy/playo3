@@ -1,4 +1,4 @@
-#include "modules/core/core_parts_index.h"
+#include "playlist.h"
 
 using namespace Core;
 
@@ -97,6 +97,7 @@ Playlist::~Playlist() {
         ++begin;
     }
 
+    children.clear();
     if (remove_marked)
         removePhysicalObject();
 }

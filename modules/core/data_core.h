@@ -4,7 +4,7 @@
 #include <qobject.h>
 
 #include "data_factory.h"
-#include "core_parts_index.h"
+#include "core_parts/item.h"
 #include "player/player_index.h"
 #include "modules/core/media/library.h"
 #include "modules/core/interfaces/singleton.h"

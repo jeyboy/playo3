@@ -1069,7 +1069,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 
         recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
 
-        parentFolder = item<Playlist>(dIndex);
+//        parentFolder = item<Playlist>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
         // UPDATE ME

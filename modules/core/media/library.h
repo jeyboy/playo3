@@ -6,7 +6,7 @@
 
 #include "modules/core/media/mediainfo.h"
 #include "modules/core/misc/format.h"
-#include "modules/core/core_parts/item_interface.h"
+#include "modules/core/core_parts/item.h"
 
 #include "library_base.h"
 

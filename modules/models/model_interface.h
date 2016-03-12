@@ -8,7 +8,7 @@
 #include <qdesktopservices.h>
 
 #include "modules/core/data_core.h"
-#include "modules/core/core_parts_index.h"
+#include "modules/core/core_parts/playlist.h"
 #include "modules/core/web/web_apis.h"
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/core/misc/file_utils/filesystem_watcher.h"

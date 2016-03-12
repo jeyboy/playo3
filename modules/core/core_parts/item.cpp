@@ -1,4 +1,4 @@
-#include "item_interface.h"
+#include "item.h"
 #include "playlist.h"
 #include "external_keys.h"
 #include "modules/core/data_core.h"

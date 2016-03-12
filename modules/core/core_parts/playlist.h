@@ -1,7 +1,7 @@
 #ifndef FOLDER_ITEM_H
 #define FOLDER_ITEM_H
 
-#include "item_interface.h"
+#include "item.h"
 #include <qdir.h>
 #include <qdatetime.h>
 

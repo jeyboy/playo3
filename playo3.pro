@@ -123,18 +123,8 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_fields.h \
     modules/core/core_parts/part_mixes/item_state.h \
     modules/core/core_parts/part_mixes/json_fields.h \
-    modules/core/core_parts/file.h \
     modules/core/core_parts/item_drop_formats.h \
-    modules/core/core_parts/item_interface.h \
-    modules/core/core_parts/od_file.h \
-    modules/core/core_parts/od_playlist.h \
     modules/core/core_parts/playlist.h \
-    modules/core/core_parts/soundcloud_file.h \
-    modules/core/core_parts/soundcloud_playlist.h \
-    modules/core/core_parts/vk_file.h \
-    modules/core/core_parts/vk_playlist.h \
-    modules/core/core_parts/web_file.h \
-    modules/core/core_parts/web_playlist.h \
     modules/core/web/grabber_keys.h \
     modules/core/web/interfaces/iapi.h \
     modules/core/web/interfaces/igrabber_api.h \
@@ -194,7 +184,6 @@ HEADERS += \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
-    modules/core/core_parts_index.h \
     modules/core/data_core.h \
     modules/core/playlist_types.h \
     modules/models/service/download_delegate.h \
@@ -290,8 +279,6 @@ HEADERS += \
     modules/core/web/apis/social/yandex_request_api.h \
     modules/core/misc/file_utils/filesystem_watcher.h \
     modules/core/media/library_base.h \
-    modules/core/core_parts/cue_file.h \
-    modules/core/core_parts/cue_playlist.h \
     modules/core/web/apis/social/youtube_api.h \
     modules/core/web/apis/social/youtube_api_keys.h \
     modules/core/web/apis/social/youtube_request_api.h \
@@ -304,7 +291,8 @@ HEADERS += \
     modules/core/data_factory.h \
     modules/core/data_item.h \
     modules/core/data_sub_types.h \
-    modules/core/core_parts/part_mixes/item_field_defines.h
+    modules/core/core_parts/part_mixes/item_field_defines.h \
+    modules/core/core_parts/item.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -334,17 +322,7 @@ SOURCES += \
     modules/controls/window_title.cpp \
     modules/core/core_parts/part_mixes/item_fields.cpp \
     modules/core/core_parts/part_mixes/item_state.cpp \
-    modules/core/core_parts/file.cpp \
-    modules/core/core_parts/item_interface.cpp \
-    modules/core/core_parts/od_file.cpp \
-    modules/core/core_parts/od_playlist.cpp \
     modules/core/core_parts/playlist.cpp \
-    modules/core/core_parts/soundcloud_file.cpp \
-    modules/core/core_parts/soundcloud_playlist.cpp \
-    modules/core/core_parts/vk_file.cpp \
-    modules/core/core_parts/vk_playlist.cpp \
-    modules/core/core_parts/web_file.cpp \
-    modules/core/core_parts/web_playlist.cpp \
     modules/core/web/grabber_keys.cpp \
     modules/core/media/cue/cue.cpp \
     modules/core/media/genres/genres_interface.cpp \
@@ -450,8 +428,7 @@ SOURCES += \
     modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/filesystem_watcher.cpp \
     modules/core/media/library_base.cpp \
-    modules/core/core_parts/cue_file.cpp \
-    modules/core/core_parts/cue_playlist.cpp \
     modules/core/web/apis/social/youtube_api_keys.cpp \
     modules/core/web/apis/social/youtube_api.cpp \
-    modules/pizduck/duktape.c
+    modules/pizduck/duktape.c \
+    modules/core/core_parts/item.cpp
