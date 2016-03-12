@@ -182,6 +182,12 @@ Playlist * Playlist::createPlaylistPath(QString path) { // usable only for tree
     return createPlaylist(list.takeFirst(), &list);
 }
 
+Playlist * Playlist::createPlaylist(const QString & uid, const QString & name, int pos) {
+    Playlist * curr = playlists.value(playlistUid(name, uid), 0);
+    if (curr) return curr;
+    return new Playlist(name, this, uid, pos);
+}
+
 Playlist * Playlist::createPlaylist(const QString & name, QStringList * list, int pos) {
     Playlist * curr = playlists.value(name, 0);
 

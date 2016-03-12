@@ -25,7 +25,7 @@ namespace Models {
 
         inline bool ignoreListContainUid(const QString & uid) { return IgnoreList::ignoreListContainUid(uid); } // overriding for model_interface
     protected:
-        int filesRoutine(const QString & filePath, Playlist * node);
+        int filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
         int filesRoutine(const QList<QUrl> & list, Playlist * node, int pos = -1);
 
     signals:

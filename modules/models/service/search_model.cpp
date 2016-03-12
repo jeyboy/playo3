@@ -173,7 +173,8 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //        }
 
         if (valid) {
-            new File(path, dir_it.fileName(), parent);
+            REGISTER_LOCAL_DATA(path, dir_it.fileName());
+            new IItem(path, parent);
             amount++;
         }
     }
@@ -274,8 +275,8 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     int not_finded = 0;
     for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
         if (!it.value().toBool()) {
-            WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
-            file -> setError(ItemErrors::err_not_finded);
+//            IItem * file = new IItem(QString(), it.key(), res);
+//            file -> setError(ItemErrors::err_not_finded);
             not_finded++;
         }
 

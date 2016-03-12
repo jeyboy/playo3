@@ -71,7 +71,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
             if (name.endsWith(cue_ext, Qt::CaseInsensitive))
                 local_res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
-                item = REGISTER_LOCAL_DATA(path, name);
+                REGISTER_LOCAL_DATA(path, name);
                 items.insert(path, new IItem(path, node));
                 local_res++;
             }
@@ -113,7 +113,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
                 if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
                     res += proceedCue(path, file.fileName(), node, pos, unproc_files, items);
                 else {
-                    item = REGISTER_LOCAL_DATA(path, file.fileName());
+                    REGISTER_LOCAL_DATA(path, file.fileName());
                     items.insert(path, new IItem(path, node, pos));
                     res++;
                 }

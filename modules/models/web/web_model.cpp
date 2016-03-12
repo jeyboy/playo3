@@ -18,22 +18,33 @@ void WebModel::toJson(QJsonObject & res) {
     ignoreListToJson(res);
 }
 
-int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
+int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
     int res = 0;
+    QString cue_ext = QStringLiteral(".cue");
 
     {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()));
+            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files, items);
         }
     }
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     while(dir_it.hasNext()) {
-        res++;
         QString path = dir_it.next();
-        new File(path, dir_it.fileName(), node);
+        QString name = dir_it.fileName();
+
+        DataItem * item = DataCore::obj().dataItem(path);
+        if (item) continue;
+
+        if (name.endsWith(cue_ext, Qt::CaseInsensitive))
+            res += proceedCue(path, name, node, -1, unproc_files, items);
+        else {
+            REGISTER_LOCAL_DATA(path, name);
+            new IItem(path, node);
+            res++;
+        }
     }
 
     if (res > 0)
@@ -46,15 +57,27 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
 
 int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
+    QString cue_ext = QStringLiteral("cue");
+    QHash<QString, bool> unproc_files;
+    QHash<QString, IItem *> items;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString && path = file.filePath();
+        QString && name = file.fileName();
+
         if (file.isDir())
-            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos));
-        else {
-            if (Extensions::obj().respondToExtension(file.suffix())) {
+            res += filesRoutine(path, node -> createPlaylist(name, 0, pos), unproc_files, items);
+        else if (Extensions::obj().respondToExtension(file.suffix())) {
+            DataItem * item = DataCore::obj().dataItem(path);
+            if (item) continue;
+
+            if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
+                res += proceedCue(path, name, node, pos, unproc_files, items);
+            else {
+                REGISTER_LOCAL_DATA(path, name);
+                new IItem(path, node, pos);
                 res++;
-                new File(file.filePath(), file.fileName(), node, pos);
             }
         }
     }

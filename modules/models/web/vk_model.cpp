@@ -62,7 +62,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
     {
         if (albums_count > 0) {
-            VkPlaylist * folder;
+            Playlist * folder;
             QJsonObject album;
 
             int pos = 0;
@@ -71,7 +71,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
 
                 QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
                 if (albumItems.size() > 0) {
-                    folder = rootItem -> createPlaylist<VkPlaylist>(
+                    folder = rootItem -> createPlaylist(
                         album.value(Vk::tkn_folder_id).toString(),
                         album.value(Vk::tkn_title).toString(),
                         pos
