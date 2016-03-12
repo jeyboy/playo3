@@ -236,7 +236,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
 
         id = QString::number(itm.value(Vk::tkn_id).toInt());
         owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
-        uid = WebFile::toUid(owner, id);
+        uid = IItem::toUid(owner, id);
         if (mdl && mdl -> ignoreListContainUid(uid)) continue;
 
         sourceUid = prefix % uid;
@@ -515,7 +515,7 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
 
         id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
         owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
-        uid = WebFile::toUid(owner, id);
+        uid = IItem::toUid(owner, id);
         if (mdl && mdl -> ignoreListContainUid(uid)) continue;
 
         uri = itm.value(Soundcloud::tkn_download_url).toString();

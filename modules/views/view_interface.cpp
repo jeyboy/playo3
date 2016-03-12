@@ -267,14 +267,14 @@ void IView::openRecomendationsforUser() {
     Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % sttngs.uid), settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
-    WebFile * it = mdl -> item<WebFile>(currentIndex());
+    IItem * it = mdl -> item(currentIndex());
     if (it -> owner().isValid()) {
         Params settings(playlist_vk_rel, false, false, false, true, it -> owner().toString(), playlist_user_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
-    WebFile * it = mdl -> item<WebFile>(currentIndex());
+    IItem * it = mdl -> item(currentIndex());
     if (it -> id().isValid()) {
         Params settings(playlist_vk_rel, false, false, false, true, it -> toUid(), playlist_song_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), settings, 0, true, true);
