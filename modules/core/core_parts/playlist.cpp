@@ -90,14 +90,17 @@ Playlist::~Playlist() {
 
     bool remove_marked = has(flag_mark_on_removing);
 
-    QList<IItem *>::Iterator begin = children.begin(), end = children.end();
-    while (begin != end) {
-        if (remove_marked) (*begin) -> set(flag_mark_on_removing);
-        delete *begin;
-        ++begin;
+    if (!children.isEmpty()) {
+        QList<IItem *>::Iterator begin = children.begin(), end = children.end();
+        while (begin != end) {
+            if (remove_marked) (*begin) -> set(flag_mark_on_removing);
+            delete *begin;
+            ++begin;
+        }
+
+        children.clear();
     }
 
-    children.clear();
     if (remove_marked)
         removePhysicalObject();
 }

@@ -16,7 +16,7 @@ namespace Core {
         Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
         Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
         Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        virtual ~Playlist();
+        ~Playlist();
 
         void linkNode(Playlist * node);
 

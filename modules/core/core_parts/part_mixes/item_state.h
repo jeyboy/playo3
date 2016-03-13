@@ -42,8 +42,8 @@ namespace Core {
             inline int saveStates() const { return (unsigned char)item_state; }
             inline int visualStates() const { return item_state & 7; }  // get 3 first bits
 
-            void copyBits(ItemState * other) { // need carefully test this
-                item_state = item_state - fieldStatePart(item_state) + fieldStatePart(other -> item_state);
+            void copyBits(int otherBits) { // need carefully test this
+                item_state = item_state - fieldStatePart(item_state) + otherBits;
             }
         protected:
             inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }

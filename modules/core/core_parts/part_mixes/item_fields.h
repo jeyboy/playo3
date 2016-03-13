@@ -24,7 +24,7 @@ namespace Core {
         inline virtual ~ItemFields() { delete attrs; }
         inline void connectToSource(ItemFields * newSource) {
             attrs = newSource -> attrs;
-            copyBits(newSource);
+            copyBits(newSource -> state());
         }
 
         inline ItemFields() : attrs(0) {}
