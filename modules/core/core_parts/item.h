@@ -73,7 +73,7 @@ namespace Core {
         virtual void setParent(Playlist * pNode, int pos = -1);
 
         inline QStringList sources() const { return _sources; }
-        inline void fixSourceLimit() { activeSourceIndexLimit = activeSourceIndex(); }
+        inline void fixSourceLimit() { activeSourceIndexLimit = activeSourceIndex; }
 //        bool addSource(QJsonObject * hash);
         bool addSource(const QString & sourceUid, bool setAsMain = false, bool checkExistance = true);
         bool useNextSource();
@@ -81,9 +81,9 @@ namespace Core {
         // this should be checked on global source registration
 //        bool eqlByLocation(IItem * itm) { return path() == itm -> path() && refresh_path() == itm -> refresh_path(); }
 
-        int activeSourceIndexLimit;
+        int activeSourceIndex, activeSourceIndexLimit;
         Playlist * _parent;
-        QStringList _sources; // move later to fields as string list
+        QStringList _sources;
 
         QString relationStr() const;
         QString errorStr(QString & key_name) const;

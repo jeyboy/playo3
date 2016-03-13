@@ -6,17 +6,22 @@
 using namespace Core;
 
 IItem::IItem(Playlist * parent, int initState)
-    : ItemFields(initState), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(initState), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) _parent -> declareChild(this);
 }
 IItem::IItem(Playlist * parent, QVariantHash & hash, int pos)
-    : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(hash), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) _parent -> declareChild(this, pos);
 }
 IItem::IItem(Playlist * parent, QJsonObject * hash)
-    : ItemFields(hash), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
+    _sources = hash -> value(JSON_TYPE_SOURCES).toVariant().toStringList();
+    if (!_sources.isEmpty()) {
+        activeSourceIndex = hash -> value(JSON_TYPE_ACTIVE_SOURCE).toInt();
+        connectToSource(DataCore::obj().dataItem(_sources[activeSourceIndex]));
+    }
 
     if (_parent) _parent -> declareChild(this);
 }
@@ -27,7 +32,7 @@ IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
 }
 
 IItem::IItem(const QString & sourceUid, Playlist * parent, int pos)
-    : ItemFields(), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) _parent -> declareChild(this, pos);
     _sources.append(sourceUid);
@@ -47,9 +52,10 @@ void IItem::toJson(QJsonObject & obj) {
 //    QJsonObject root = ItemFields::toJson();
 
     obj[JSON_TYPE_ITEM_STATE] = saveStates();
+    obj[JSON_TYPE_ACTIVE_SOURCE] = activeSourceIndex;
 
     if (!_sources.isEmpty())
-        obj[JSON_TYPE_SOURCES] = QJsonArray::fromStringList(_sources);
+        obj[JSON_TYPE_SOURCES] = QJsonValue::fromVariant(_sources);
 }
 
 int IItem::row() const {
@@ -227,7 +233,7 @@ bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExist
 
     if (setAsMain) {
         int newIndex = _sources.length() - 1;
-        setActiveSourceIndex(newIndex);
+        activeSourceIndex = newIndex;
         connectToSource(DataCore::obj().dataItem(_sources[newIndex]));
     }
 
@@ -239,11 +245,11 @@ bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExist
 bool IItem::useNextSource() {
     if (_sources.size() == 1) return false;
 
-    int currSourceIndex = activeSourceIndex() + 1;
+    int currSourceIndex = activeSourceIndex + 1;
     if (currSourceIndex >= _sources.size())
         currSourceIndex = 0;
 
-    setActiveSourceIndex(currSourceIndex);
+    activeSourceIndex = currSourceIndex;
     connectToSource(DataCore::obj().dataItem(_sources[currSourceIndex]));
     return currSourceIndex != activeSourceIndexLimit;
 }

@@ -43,9 +43,6 @@ namespace Core {
         void setError(const QVariant & error);
         inline QVariant error() const                           { return attrs -> value(JSON_TYPE_ERROR); }
 
-        inline void setActiveSourceIndex(int index)             { attrs -> operator[](JSON_TYPE_ACTIVE_SOURCE) = index; }
-        inline int activeSourceIndex() const                    { return attrs -> value(JSON_TYPE_ACTIVE_SOURCE, 0).toInt(); }
-
         inline void setTitle(const QVariant & newTitle)         { attrs -> operator[](JSON_TYPE_TITLE) = newTitle; }
         inline QVariant title() const                           { return attrs -> value(JSON_TYPE_TITLE); }
 
