@@ -1,7 +1,11 @@
 #include "playo.h"
 #include "ui_playo.h"
 
+#include "modules/core/data_core.h"
 #include "modules/core/misc/file_utils/filesystem_watcher.h"
+//#include "media/cue/cue.h"
+//#include "media/library.h"
+//#include "media/genres/music_genres.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -65,6 +69,7 @@ void Playo::initialization() {
     ///services loading
     ///////////////////////////////////////////////////////////
     Settings::obj().fromJson(settings -> read(SETTINGS_SET_KEY).toObject());
+    DataCore::obj().fromJson(settings -> read(SETTINGS_DATABASE_KEY).toArray());
     activation();
     Web::Apis::initiate(settings -> obj());
 
@@ -130,6 +135,10 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::obj().getEqualizerSettings());
     ToolBars::obj().save(settings);
     Dockbars::obj().save(settings);
+
+    QJsonArray dataset;
+    DataCore::obj().toJson(dataset);
+    settings -> write(SETTINGS_DATABASE_KEY, dataset);
 
     settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
     Web::Apis::close(settings -> obj());

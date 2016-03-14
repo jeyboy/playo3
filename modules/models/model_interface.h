@@ -21,8 +21,8 @@
 
 #define FUZZY_COMPARITY_PERCENT 80
 
-#define REGISTER_LOCAL_DATA(path, title) \
-    DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title} });
+#define REGISTER_LOCAL_DATA(path, title, extension) \
+    DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, _title}, {JSON_TYPE_EXTENSION, extension} });
 
 #define REGISTER_LOCAL_CUE_DATA(sourceUid, path, title, extension, start_pos, is_parted) \
     DataCore::obj().registerDataItem(sourceUid, { {JSON_TYPE_DATA_SUB_TYPE, dt_local_cue}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, title}, \

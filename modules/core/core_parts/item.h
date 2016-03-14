@@ -74,16 +74,15 @@ namespace Core {
 
         inline QStringList sources() const { return _sources; }
         inline void fixSourceLimit() { activeSourceIndexLimit = activeSourceIndex; }
-//        bool addSource(QJsonObject * hash);
         bool addSource(const QString & sourceUid, bool setAsMain = false, bool checkExistance = true);
         bool useNextSource();
     protected:
         // this should be checked on global source registration
 //        bool eqlByLocation(IItem * itm) { return path() == itm -> path() && refresh_path() == itm -> refresh_path(); }
 
-        int activeSourceIndex, activeSourceIndexLimit;
+        int activeSourceIndex, activeSourceIndexLimit; // maybe this should be in ItemFields ?
         Playlist * _parent;
-        QStringList _sources;
+        QStringList _sources; // maybe this should be in ItemFields ?
 
         QString relationStr() const;
         QString errorStr(QString & key_name) const;

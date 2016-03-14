@@ -218,8 +218,6 @@ void IItem::setParent(Playlist * pNode, int pos) {
         (pos == -1) ? _parent -> declareChild(this) : _parent -> declareChild(this, pos);
 }
 
-//bool IItem::addSource(QJsonObject * hash) { return addSource(Playlist::restoreItem(0, *hash), false, false); }
-
 bool IItem::addSource(const QString & sourceUid, bool setAsMain, bool checkExistance) {
     if (checkExistance) {
         for(QStringList::Iterator source = _sources.begin(); source != _sources.end(); source++)

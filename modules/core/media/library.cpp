@@ -295,6 +295,12 @@ void Library::initItemData(IItem * itm, bool dont_force_remote) {
     if (has_titles && has_info) return;
 
     MediaInfo m(itm -> toUrl(), itm -> extension(), has_info);
+
+    if (itm -> extension().toString() != m.getExtension()) {
+        itm -> setPath(m.getPath());
+        itm -> setExtension(m.getExtension());
+    }
+
     if (m.hasError()) return;
     if (!has_titles) initItemTitles(&m, itm);
     if (!has_info) initItemInfo(&m, itm);

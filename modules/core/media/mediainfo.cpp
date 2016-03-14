@@ -8,7 +8,7 @@ MediaInfo::MediaInfo(const QUrl & uri, const QVariant & extension, bool onlyTags
         ext = extension.toString();
 
     if (!remote) {
-        QString file_path = uri.toLocalFile();
+        file_path = uri.toLocalFile();
 
         // taglib not worked with files without extensions :(
         if (!extension.isValid())

@@ -173,7 +173,10 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //        }
 
         if (valid) {
-            REGISTER_LOCAL_DATA(path, dir_it.fileName());
+            QString _title = dir_it.fileName(), ext;
+            Extensions::obj().extractExtension(_title, ext);
+
+            REGISTER_LOCAL_DATA(path, _title, ext);
             new IItem(path, parent);
             amount++;
         }

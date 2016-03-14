@@ -59,7 +59,6 @@ namespace Core {
         }
         int removeChildren(int position, int count);
 
-
         void shuffle();
 
         void propagatePlaylistSetFlag(ItemStateFlag flag);

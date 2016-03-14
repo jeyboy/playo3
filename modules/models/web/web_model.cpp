@@ -41,7 +41,10 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
         if (name.endsWith(cue_ext, Qt::CaseInsensitive))
             res += proceedCue(path, name, node, -1, unproc_files, items);
         else {
-            REGISTER_LOCAL_DATA(path, name);
+            QString _title = name, ext;
+            Extensions::obj().extractExtension(_title, ext);
+
+            REGISTER_LOCAL_DATA(path, _title, ext);
             new IItem(path, node);
             res++;
         }
@@ -75,7 +78,10 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
             if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
                 res += proceedCue(path, name, node, pos, unproc_files, items);
             else {
-                REGISTER_LOCAL_DATA(path, name);
+                QString _title = name, ext;
+                Extensions::obj().extractExtension(_title, ext);
+
+                REGISTER_LOCAL_DATA(path, _title, ext);
                 new IItem(path, node, pos);
                 res++;
             }

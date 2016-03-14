@@ -13,8 +13,8 @@ namespace Core {
             clear();
         }
 
-        void loadJson(QJsonArray & arr) {
-            for(QJsonArray::Iterator it = arr.begin(); it != arr.end(); it++) {
+        void fromJson(const QJsonArray & arr) {
+            for(QJsonArray::ConstIterator it = arr.constBegin(); it != arr.constEnd(); it++) {
                 DataItem * item = DataItem::fromJson((*it).toObject());
                 insert(item -> databaseId(), item);
             }

@@ -9,6 +9,7 @@ using namespace Core::Media;
 
 class IMediaInfo {
 protected:
+    QString file_path;
     QString ext;
     QString artist;
     QString title;
@@ -42,6 +43,7 @@ public:
     inline QString getAlbum() const { return album; }
     inline int getGenre() const { return -1; /*genre*/; } //
     inline QString getExtension() const { return ext; }
+    inline QString getPath() const { return file_path; }
 
     inline void setArtist(QString newArtist) { artist = newArtist; }
     inline void setTitle(QString newTitle) { title = newTitle; }
