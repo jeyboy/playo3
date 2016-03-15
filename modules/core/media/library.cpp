@@ -155,8 +155,8 @@ void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * wat
         else
             emitItemAttrChanging(ind, flag_listened);
     }
-//    else if (!canceled)
-//        emitItemAttrChanging(ind, flag_new_item);
+    else if (!canceled)
+        emitItemAttrChanging(ind, flag_new_item);
 
     if (watcher) listSyncs[ind.model()] -> unlock();
 }

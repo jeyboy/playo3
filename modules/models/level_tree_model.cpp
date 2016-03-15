@@ -17,7 +17,7 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
         if (!nearestNode) {
             exIndex = index(rootItem);
             exRow = rootItem -> childCount();
-            node = rootItem -> createPlaylist(fName);
+            node = rootItem -> createPlaylist(dt_playlist_local, fName);
         } else {
             node = nearestNode;
             exIndex = index(nearestNode);
@@ -52,7 +52,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels, unproc_files, items);
+            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist_local, dir_it.fileName()), rels, unproc_files, items);
         }
     }
 
@@ -105,7 +105,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
         QString path = file.filePath();
 
         if (file.isDir())
-            res += filesRoutine(path, rootItem -> createPlaylist(Extensions::folderName(file)), relations, unproc_files, items);
+            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist_local, Extensions::folderName(file)), relations, unproc_files, items);
         else { 
             if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

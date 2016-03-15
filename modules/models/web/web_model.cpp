@@ -26,7 +26,7 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist_local, dir_it.fileName()), unproc_files, items);
         }
     }
 
@@ -70,7 +70,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
         QString && name = file.fileName();
 
         if (file.isDir())
-            res += filesRoutine(path, node -> createPlaylist(name, 0, pos), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist_local, name, 0, pos), unproc_files, items);
         else if (Extensions::obj().respondToExtension(file.suffix())) {
             DataItem * item = DataCore::obj().dataItem(path);
             if (item) continue;

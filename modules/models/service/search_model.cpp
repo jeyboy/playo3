@@ -213,7 +213,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             break;
 
         SearchRequest r = requests.takeFirst();
-        Playlist * parent = res -> createPlaylist(r.token());
+        Playlist * parent = res -> createPlaylist(dt_playlist, r.token());
         int propagate_count = searchProc(r, limitation, parent);
 
         if (propagate_count > 0) {

@@ -45,7 +45,7 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
                 int items_amount = playlist.value(QStringLiteral("count")).toInt();
                 if (items_amount > 0) {
                     QString pid = QString::number((qint64)playlist.value(QStringLiteral("id")).toDouble());
-                    folder = rootItem -> createPlaylist(pid, playlist.value(QStringLiteral("name")).toString());
+                    folder = rootItem -> createPlaylist(dt_playlist_od, pid, playlist.value(QStringLiteral("name")).toString());
                     folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
 
                     QJsonArray tracks = Od::Api::obj().playlistInfo(pid, items_amount);

@@ -13,9 +13,9 @@ namespace Core {
 
         inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) {}
         Playlist(QJsonObject * hash, Playlist * parent = 0);
-        Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_ITEM_STATE);
         ~Playlist();
 
         void linkNode(Playlist * node);
@@ -66,9 +66,9 @@ namespace Core {
         void updateCheckedState(bool checked);
         bool updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
-        Playlist * createPlaylistPath(QString path);
-        Playlist * createPlaylist(const QString & uid, const QString & name, int pos = -1);
-        Playlist * createPlaylist(const QString & name, QStringList * list = 0, int pos = -1);
+        Playlist * createPlaylistPath(const DataSubType & subType, const QString & path);
+        Playlist * createPlaylist(const DataSubType & subType, const QString & uid, const QString & name, int pos = -1);
+        Playlist * createPlaylist(const DataSubType & subType, const QString & name, QStringList * list = 0, int pos = -1);
         Playlist * findCompatblePlaylist(QStringList * list);
         inline void declarePlaylist(const QString & name, Playlist * playlist) { playlists.insert(name, playlist); }
         inline int undeclarePlaylist(const QString & name) { return playlists.remove(name); }

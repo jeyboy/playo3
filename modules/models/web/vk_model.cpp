@@ -27,7 +27,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
         QJsonArray audios;
         QJsonObject post;
         QString title;
-        Playlist * folder, * rootFolder = rootItem -> createPlaylist(QStringLiteral("!!!WALL!!!"));
+        Playlist * folder, * rootFolder = rootItem -> createPlaylist(dt_playlist_vk, QStringLiteral("!!!WALL!!!"));
         int index = rootItem -> childRow(rootFolder);
 
         beginInsertRows(QModelIndex(), index, index);
@@ -41,7 +41,7 @@ void VkModel::proceedWallList(QJsonArray & posts) {
             title = post.value(Vk::tkn_title).toString();
             title = QDateTime::fromTime_t(post.value(Vk::tkn_date).toInt()).toString() % (title.isEmpty() ? QString() : Vk::tkn_time_sep) % title;
 
-            folder = rootFolder -> createPlaylist(title);
+            folder = rootFolder -> createPlaylist(dt_playlist_vk, title);
             proceedVkList(audios, folder, this);
 //            if (folder -> childCount() == 0)
 //                removeFolderPrebuild(folder);
@@ -72,6 +72,7 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
                 QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
                 if (albumItems.size() > 0) {
                     folder = rootItem -> createPlaylist(
+                        dt_playlist_vk,
                         album.value(Vk::tkn_folder_id).toString(),
                         album.value(Vk::tkn_title).toString(),
                         pos

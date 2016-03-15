@@ -11,7 +11,7 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
 
         QStringList list = path.split('/', QString::SkipEmptyParts);
         Playlist * nearestNode = rootItem -> findCompatblePlaylist(&list);
-        Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(list.takeFirst(), &list);
+        Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(dt_playlist_local, list.takeFirst(), &list);
         exIndex = index(nearestNode);
 
         (const_cast<QModelIndex &>(dIndex)) = index(node);
@@ -41,7 +41,7 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist_local, dir_it.fileName()), unproc_files, items);
         }
     }
 
@@ -87,7 +87,7 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
         QString path = file.filePath();
 
         if (file.isDir()) {
-            res += filesRoutine(path, node -> createPlaylist(file.fileName(), 0, pos), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist_local, file.fileName(), 0, pos), unproc_files, items);
         } else {
             if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

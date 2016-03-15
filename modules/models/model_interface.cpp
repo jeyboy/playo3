@@ -440,7 +440,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 //    QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed
 //    return cueta -> initFiles(unproc_files, items);
 
-    Playlist * cuePlaylist = new Playlist(path, name, newParent, insertPos);
+    Playlist * cuePlaylist = new Playlist(dt_playlist_cue, path, name, newParent, insertPos);
 
     Media::Cue * cue = Media::Cue::fromPath(path);
     QList<Media::CueSong> songs = cue -> songs();
@@ -802,7 +802,7 @@ void IModel::importIds(const QStringList & ids) {
             if (path.isEmpty()) path = Extensions::folderName(file);
             parentNode = rootItem -> playlist(path);
             is_new = !parentNode;
-            if (is_new) parentNode = rootItem -> createPlaylist(path);
+            if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
         break;}
         default:;
     }

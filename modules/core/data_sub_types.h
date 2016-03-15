@@ -3,7 +3,8 @@
 
 namespace Core {
     enum DataSubType {
-        dt_playlist_local = -99,
+        dt_playlist = -99,
+        dt_playlist_local,
         dt_playlist_cue,
 
         dt_playlist_sc = -59,
