@@ -22,7 +22,7 @@ ItemFields::ItemFields(int state) : ItemState(state) {
     attrs = new QVariantHash();
 }
 
-void ItemFields::setError(const QVariant & error)            {
+void ItemFields::setError(const QVariant & error) {
     if (error.toInt() == err_none)
         attrs -> remove(JSON_TYPE_ERROR);
     else

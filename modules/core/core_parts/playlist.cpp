@@ -2,51 +2,15 @@
 
 using namespace Core;
 
-//IItem * Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantHash & attrs) {
-//    switch(item_type) {
-//        case SIMPLE_FILE:       { return new File(attrs, parent, pos); }
-//        case VK_FILE:           { return new VkFile(attrs, parent, pos); }
-//        case SOUNDCLOUD_FILE:   { return new SoundcloudFile(attrs, parent, pos); }
-//        case OD_FILE:           { return new OdFile(attrs, parent, pos); }
-//        case WEB_FILE:          { return new WebFile(attrs, parent, pos); }
-//        case CUE_FILE:          { return new CueFile(attrs, parent, pos); }
-//        default:                qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-//    }
-
-//    return 0;
-//}
-
-IItem * Playlist::restoreItem(Playlist * playlist, QJsonObject & iterObj) {
-//    switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-//        case SIMPLE_FILE:           return new File(&iterObj, playlist);
-//        case PLAYLIST:              return new Playlist(&iterObj, playlist);
-
-//        case WEB_FILE:              return new WebFile(&iterObj, playlist);
-//        case VK_FILE:               return new VkFile(&iterObj, playlist);
-//        case VK_PLAYLIST:           return new VkPlaylist(&iterObj, playlist);
-//        case SOUNDCLOUD_FILE:       return new SoundcloudFile(&iterObj, playlist);
-//        case SOUNDCLOUD_PLAYLIST:   return new SoundcloudPlaylist(&iterObj, playlist);
-//        case OD_FILE:               return new OdFile(&iterObj, playlist);
-//        case OD_PLAYLIST:           return new OdPlaylist(&iterObj, playlist);
-
-//        case CUE_FILE:              return new CueFile(&iterObj, playlist);
-//        case CUE_PLAYLIST:          return new CuePlaylist(&iterObj, playlist);
-
-//        default: return 0;
-//    }
-}
-
 ///////////////////////////////////////////////////////////
 Playlist::Playlist(QJsonObject * hash, Playlist * parent)
-    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
-      filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+    : IItem(parent), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
     if (hash -> contains(JSON_TYPE_CONTAINER_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CONTAINER_CHILDS).toArray();
-        QJsonObject iterObj;
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
-            iterObj = (*it).toObject();
+            QJsonObject iterObj = (*it).toObject();
             if (iterObj.value(JSON_TYPE_DATA_SUB_TYPE).toInt() < dt_none)
                 new Playlist(&iterObj, this);
             else
@@ -55,6 +19,8 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
     }
 
     attrs = new QVariantHash(hash -> toVariantHash());
+    ItemState::setStates(state());
+
     if (parent != 0)
         parent -> declarePlaylist(playlistUid(), this);
 }

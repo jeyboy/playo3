@@ -75,8 +75,10 @@ void Dockbars::save(DataStore * settings) {
             IView * v = view((*it));
 
             if ((*it) -> windowTitle() == COMMON_TAB) {
-                if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
+                if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab()) {
+                    delete v;
                     continue;
+                }
             }
 
             curr_bar = QJsonObject();

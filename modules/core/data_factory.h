@@ -18,6 +18,8 @@ namespace Core {
                 DataItem * item = DataItem::fromJson((*it).toObject());
                 insert(item -> databaseId(), item);
             }
+
+            qDebug() << "IN BASE " << size();
         }
 
         void toJson(QJsonArray & arr) {

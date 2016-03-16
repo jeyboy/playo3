@@ -16,7 +16,8 @@ namespace Core {
 
     class IItem : public ItemFields {
     public:
-        IItem(Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
+        inline IItem(Playlist * parent) : activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {}
+        IItem(Playlist * parent, int initState);
         IItem(Playlist * parent, QVariantHash & hash, int pos = -1);
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
