@@ -5,6 +5,10 @@
 
 using namespace Core;
 
+IItem::IItem(Playlist * parent) : activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
+    if (_parent) _parent -> declareChild(this);
+}
+
 IItem::IItem(Playlist * parent, int initState)
     : ItemFields(initState), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 

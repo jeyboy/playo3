@@ -19,7 +19,7 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
     }
 
     attrs = new QVariantHash(hash -> toVariantHash());
-    ItemState::setStates(state());
+    ItemState::setStates(attrs -> value(JSON_TYPE_ITEM_STATE).toInt());
 
     if (parent != 0)
         parent -> declarePlaylist(playlistUid(), this);

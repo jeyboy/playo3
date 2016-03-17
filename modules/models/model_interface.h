@@ -155,7 +155,7 @@ namespace Models {
         void shuffle();
         virtual inline void toJson(QJsonObject & obj) { return rootItem -> toJson(obj); }
 
-        QModelIndex fromPath(QString path, Direction direction = none);
+        QModelIndex fromPath(const QString & path, Direction direction = none);
 
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
         Qt::DropActions supportedDropActions() const;
