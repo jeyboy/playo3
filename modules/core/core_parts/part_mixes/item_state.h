@@ -2,7 +2,7 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Core {
-    #define DEFAULT_ITEM_STATE (flag_checked /*| flag_new_item*/ | flag_expanded)
+    #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
     #define fieldStatePart(x) (x & 15)
 
     enum ItemStateFlag {
