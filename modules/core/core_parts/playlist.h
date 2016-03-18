@@ -8,7 +8,9 @@
 namespace Core {
     class Playlist : public IItem {
     public:
-        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) { setDatatype(dt_playlist); }
+        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState, true), filesCount(0) {
+            setDatatype(dt_playlist);
+        }
         Playlist(QJsonObject * hash, Playlist * parent = 0);
         Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
         Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);

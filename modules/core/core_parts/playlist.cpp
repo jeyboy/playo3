@@ -3,8 +3,9 @@
 using namespace Core;
 
 ///////////////////////////////////////////////////////////
-Playlist::Playlist(QJsonObject * hash, Playlist * parent)
-    : IItem(parent), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+Playlist::Playlist(QJsonObject * hash, Playlist * parent) : IItem(parent, hash -> value(JSON_TYPE_ITEM_STATE).toInt(), false),
+    filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt())
+{
 
     if (hash -> contains(JSON_TYPE_CONTAINER_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CONTAINER_CHILDS).toArray();
@@ -19,7 +20,6 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
     }
 
     attrs = new QVariantHash(hash -> toVariantHash());
-    ItemState::setStates(attrs -> value(JSON_TYPE_ITEM_STATE).toInt());
 
     if (parent != 0)
         parent -> declarePlaylist(playlistUid(), this);
@@ -134,6 +134,7 @@ QVariant Playlist::data(int column) const {
 void Playlist::toJson(QJsonObject & obj) {
     ItemFields::toJson(obj);
 
+    obj[JSON_TYPE_ITEM_STATE] = saveStates();
     if (children.length() > 0) {
         obj[JSON_TYPE_CONTAINER_ITEMS_COUNT] = filesCount;
 

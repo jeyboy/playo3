@@ -14,12 +14,12 @@ ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> value(JSON_TYPE_S
 }
 
 ItemFields::ItemFields(const QString & title, int initState) : ItemState(initState) {
-    attrs = new QVariantHash();
-    attrs -> operator[](JSON_TYPE_TITLE) = title;
+    attrs = new QVariantHash({{JSON_TYPE_TITLE, title}});
 }
 
-ItemFields::ItemFields(int state) : ItemState(state) {
-    attrs = new QVariantHash();
+ItemFields::ItemFields(int state, bool init_attrs) : ItemState(state), attrs(0) {
+    if (init_attrs)
+        attrs = new QVariantHash();
 }
 
 void ItemFields::setError(const QVariant & error) {

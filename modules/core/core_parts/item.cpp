@@ -5,12 +5,8 @@
 
 using namespace Core;
 
-IItem::IItem(Playlist * parent) : activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
-    if (_parent) _parent -> declareChild(this);
-}
-
-IItem::IItem(Playlist * parent, int initState)
-    : ItemFields(initState), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
+IItem::IItem(Playlist * parent, int initState, bool init_attrs)
+    : ItemFields(initState, init_attrs), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) _parent -> declareChild(this);
 }
@@ -20,7 +16,7 @@ IItem::IItem(Playlist * parent, QVariantHash & hash, int pos)
     if (_parent) _parent -> declareChild(this, pos);
 }
 IItem::IItem(Playlist * parent, QJsonObject * hash)
-    : ItemFields(), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(hash -> value(JSON_TYPE_STATE).toInt()), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
     _sources = hash -> value(JSON_TYPE_SOURCES).toVariant().toStringList();
     if (!_sources.isEmpty()) {
         activeSourceIndex = hash -> value(JSON_TYPE_ACTIVE_SOURCE).toInt();
@@ -36,7 +32,7 @@ IItem::IItem(Playlist * parent, const QString & title, int pos, int initState)
 }
 
 IItem::IItem(const QString & sourceUid, Playlist * parent, int pos)
-    : ItemFields(), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
+    : ItemFields(DEFAULT_ITEM_STATE), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
 
     if (_parent) _parent -> declareChild(this, pos);
     _sources.append(sourceUid);

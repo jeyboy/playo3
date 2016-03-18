@@ -27,11 +27,10 @@ namespace Core {
             copyBits(newSource -> state());
         }
 
-        inline ItemFields() : attrs(0) {}
+        ItemFields(int state, bool init_attrs = true);
         ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
         ItemFields(const QString & title, int initState = DEFAULT_ITEM_STATE);
-        ItemFields(int state);
 
         // const info
         inline void setGenreID(const QVariant & newGenreID)     { attrs -> operator[](JSON_TYPE_GENRE_ID) = newGenreID; }
