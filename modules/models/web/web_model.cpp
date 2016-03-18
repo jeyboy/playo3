@@ -35,16 +35,17 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
-        DataItem * item = DataCore::obj().dataItem(path);
-        if (item) continue;
-
         if (name.endsWith(cue_ext, Qt::CaseInsensitive))
             res += proceedCue(path, name, node, -1, unproc_files, items);
         else {
-            QString _title = name, ext;
-            Extensions::obj().extractExtension(_title, ext);
+            DataItem * item = DataCore::obj().dataItem(path);
+            if (!item) {
+                QString _title = name, ext;
+                Extensions::obj().extractExtension(_title, ext);
+                REGISTER_LOCAL_DATA(path, _title, ext);
+            }
+            else DataCore::obj().registerDataItem(path);
 
-            REGISTER_LOCAL_DATA(path, _title, ext);
             new IItem(path, node);
             res++;
         }
@@ -72,16 +73,17 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
         if (file.isDir())
             res += filesRoutine(path, node -> createPlaylist(dt_playlist_local, name, 0, pos), unproc_files, items);
         else if (Extensions::obj().respondToExtension(file.suffix())) {
-            DataItem * item = DataCore::obj().dataItem(path);
-            if (item) continue;
-
             if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
                 res += proceedCue(path, name, node, pos, unproc_files, items);
             else {
-                QString _title = name, ext;
-                Extensions::obj().extractExtension(_title, ext);
+                DataItem * item = DataCore::obj().dataItem(path);
+                if (!item) {
+                    QString _title = file.fileName(), ext;
+                    Extensions::obj().extractExtension(_title, ext);
+                    REGISTER_LOCAL_DATA(path, _title, ext);
+                }
+                else DataCore::obj().registerDataItem(path);
 
-                REGISTER_LOCAL_DATA(path, _title, ext);
                 new IItem(path, node, pos);
                 res++;
             }
