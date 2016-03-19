@@ -436,10 +436,6 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
 }
 
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
-//    CuePlaylist * cueta = new CuePlaylist(path, name, newParent, insertPos);
-//    QHash<QString, bool> & filePathes, QHash<QString, IItem *> & existed
-//    return cueta -> initFiles(unproc_files, items);
-
     Playlist * cuePlaylist = new Playlist(dt_playlist_cue, path, name, newParent, insertPos);
 
     Media::Cue * cue = Media::Cue::fromPath(path);
@@ -473,19 +469,22 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
             }
         }
 
-        QString sourceUid = songPath % QString::number((*song).group);
+        QString sourceUid = songPath % QString::number((*song).startPos);
         DataItem * ditem = REGISTER_LOCAL_CUE_DATA(sourceUid, songPath, (*song).trackName, (*song).extension, (*song).startPos, (*song).isPartial);
 
-        if ((*song).duration > 0)
-            ditem -> setDuration(Duration::fromMillis((*song).duration));
+        if (ditem) {
+            if ((*song).duration > 0)
+                ditem -> setDuration(Duration::fromMillis((*song).duration));
 
-        if (res) {
-            if (!(*song).error.isEmpty()) // there should be other error status ?
+            if (res) {
+                if (!(*song).error.isEmpty()) // there should be other error status ?
+                    ditem -> setError(ItemErrors::err_not_existed);
+            } else {
+                ignore.insert(songPath, QString());
                 ditem -> setError(ItemErrors::err_not_existed);
-        } else {
-            ignore.insert(songPath, QString());
-            ditem -> setError(ItemErrors::err_not_existed);
+            }
         }
+        else qDebug() << "ITEM ALREADY EXISTS";
 
         new IItem(sourceUid, cuePlaylist);
         unproc_files.insert(songPath, res);
