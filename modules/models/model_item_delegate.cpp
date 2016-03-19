@@ -83,6 +83,7 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     int limit = 7;
     int scale = icon_size;
     float angleUnit = 6.28 / limit;
+    sources.clear();
 
     for(int i = 0; i < limit; i++) {
         sources.append(QPointF(
