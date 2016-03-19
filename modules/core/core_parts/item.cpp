@@ -10,11 +10,6 @@ IItem::IItem(Playlist * parent, int initState, bool init_attrs)
 
     if (_parent) _parent -> declareChild(this);
 }
-IItem::IItem(Playlist * parent, QVariantHash & hash, int pos)
-    : ItemFields(hash), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
-
-    if (_parent) _parent -> declareChild(this, pos);
-}
 IItem::IItem(Playlist * parent, QJsonObject * hash)
     : ItemFields(hash -> value(JSON_TYPE_ITEM_STATE).toInt()), activeSourceIndex(0), activeSourceIndexLimit(0), _parent(parent) {
     _sources = hash -> value(JSON_TYPE_SOURCES).toVariant().toStringList();
