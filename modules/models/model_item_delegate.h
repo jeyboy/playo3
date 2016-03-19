@@ -9,7 +9,7 @@
 
 #include "modules/core/core_parts/part_mixes/item_fields.h"
 
-#define SELECTION_ITER 50
+#define SELECTION_ITER 50000
 #define PIXMAP(path, size) \
     QPixmap(path).scaled(size, size, Qt::KeepAspectRatio, Qt::SmoothTransformation)
 

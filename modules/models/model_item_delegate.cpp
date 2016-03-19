@@ -424,7 +424,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             QPointF c = icoRect.center();
             int amount = qMin(attrs.value(Keys::sources_amount).toInt(), sources.size());
             painter -> setBrush(Qt::green); // by default all sources are green colored - accessible
-            qDebug() << amount;
             for(int i = 0; i < amount; i++)
                 painter -> drawEllipse(c + sources[i] / 2, 3, 3);
         } else {

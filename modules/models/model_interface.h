@@ -54,7 +54,7 @@
 
 #define REGISTER_OD_DATA(sourceUid, id, title, size, refresh_path, duration, extension) \
     DataCore::obj().registerDataItem(sourceUid, { \
-        {JSON_TYPE_DATA_SUB_TYPE, dt_site_sc}, {JSON_TYPE_TITLE, title}, \
+        {JSON_TYPE_DATA_SUB_TYPE, dt_site_od}, {JSON_TYPE_TITLE, title}, \
         {JSON_TYPE_ID, id}, {JSON_TYPE_BYTES_SIZE, size}, {JSON_TYPE_REFRESH_PATH, refresh_path}, \
         {JSON_TYPE_DURATION, duration}, {JSON_TYPE_EXTENSION, extension} \
     });
