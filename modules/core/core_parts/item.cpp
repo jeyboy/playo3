@@ -37,8 +37,9 @@ IItem::IItem(const QString & sourceUid, Playlist * parent, int pos)
 IItem::~IItem() {
     if (has(flag_mark_on_removing))
         removePhysicalObject();
-    if (!databaseId().isEmpty()) {
-        DataCore::obj().unregisterDataItem(databaseId(), _sources);
+    QString dataID = databaseId();
+    if (!dataID.isEmpty()) {
+        DataCore::obj().unregisterDataItem(dataID, _sources);
         attrs = 0;
     }
 }
