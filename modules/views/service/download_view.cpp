@@ -1,5 +1,6 @@
 #include "download_view.h"
 #include "modules/core/web/web_apis.h"
+#include "modules/core/data_core.h"
 
 using namespace Views;
 using namespace Core;
@@ -67,18 +68,18 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
     if (event -> mimeData() -> hasFormat(DROP_INNER_FORMAT)) {
         QByteArray encoded = event -> mimeData() -> data(DROP_INNER_FORMAT);
         QDataStream stream(&encoded, QIODevice::ReadOnly);
-        bool isRemote;
+        QString sourceUid;
 
         while (!stream.atEnd()) {
-            InnerData data;
-            stream >> data.url >> isRemote >> data.attrs;
+            stream >> sourceUid;
+            DataItem * ditem = DataCore::obj().dataItem(sourceUid);
 
             addRow(
-                data.url,
+                ditem -> toUrl(),
                 path,
-                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
-                data.attrs[JSON_TYPE_DATA_SUB_TYPE].toInt(),
-                data.attrs[JSON_TYPE_REFRESH_PATH].toString()
+                FilenameConversions::downloadTitle(ditem -> title().toString(), ditem -> extension().toString()),
+                ditem -> dataType(),
+                ditem -> refresh_path()
             );
         }
     } else if (event -> mimeData() -> hasUrls()) {

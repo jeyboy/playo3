@@ -8,13 +8,6 @@
 #define DROP_OUTER_FORMAT "text/uri-list"
 #define DROP_INNER_FORMAT "application/x-qabstractitemmodeldatalist"
 
-struct InnerData {
-    QUrl url;
-    QVariantHash attrs;
-    QModelIndex eIndex;
-    int eRow, dRow;
-};
-
 struct DropData {
     QModelIndex eIndex;
     int eRow, limitRow;

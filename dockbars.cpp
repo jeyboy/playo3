@@ -306,7 +306,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
     if (isFloating) return;
     if (!played) return;
 
-    if (lastTabData.index != -1)
+    if (lastTabData.tabbar) // if (lastTabData.index != -1)
         lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
 
     TabifyParams tabData = played -> tabIndex();
