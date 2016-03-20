@@ -1061,6 +1061,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 
         beginInsertRows(eIndex, eRow, eRow);
             counts[parentFolder]++;
+            REGISTER_EXISTED_DATA(sourceUid);
             new IItem(sourceUid, parentFolder, dRow);
         endInsertRows();
     }
