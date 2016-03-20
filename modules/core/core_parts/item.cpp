@@ -198,12 +198,13 @@ bool IItem::setData(int column, const QVariant &value) {
 void IItem::removeYouself() { if (_parent) _parent -> removeChildren(row(), 1); }
 
 void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
-    QUrl lastUrl = toUrl(); // maybe needed update for some services // need to retreive download link
+    if (!isRemote()) {
+        QUrl lastUrl = toUrl();
+        if (urls.contains(lastUrl)) return;
+        urls.insert(lastUrl, 0);
+    }
 
-    if (!lastUrl.isEmpty() && urls.contains(lastUrl)) return;
-
-    stream << lastUrl << isRemote() << toInnerAttrs(dataType());
-    urls.insert(lastUrl, 0);
+    stream << databaseId();
 }
 
 void IItem::setParent(Playlist * pNode, int pos) {

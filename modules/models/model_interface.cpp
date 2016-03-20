@@ -1042,51 +1042,27 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
 bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent, QDataStream & stream) {
     int totalAdded = 0;
-    QModelIndex dIndex;
-    InnerData * data;
-//    Playlist * parentFolder;
     QHash<Playlist *, int> counts;
-    bool containPath, isRemote, requirePath = !isRelative()/*, free_drop*/;
+    QString sourceUid;
 
-//    switch(playlistType()) {
-//        case Data::Type::tree:
-//        case Data::Type::level_tree: { free_drop = false; break; }
-//        default: free_drop = true;
-//    }
+    QModelIndex dIndex, eIndex;
+    int eRow, dRow;
 
     while (!stream.atEnd()) {
-        data = new InnerData();
-        stream >> data -> url >> isRemote >> data -> attrs;
+        stream >> sourceUid;
+        DataItem * ditem = DataCore::obj().dataItem(sourceUid);
+        QUrl url = ditem -> isRemote() ? QUrl() : ditem -> toUrl();
 
-        if (!isRemote) {
-            containPath = data -> attrs.contains(JSON_TYPE_PATH);
-
-            if (requirePath) {
-                if (!containPath)
-                    data -> attrs.insert(JSON_TYPE_PATH, data -> url.toLocalFile().section('/', 0, -2));
-
-                data -> url = QUrl();
-            } else {
-                if (containPath)
-                    data -> attrs.remove(JSON_TYPE_PATH);
-            }
-        }
-        else {
-            data -> url = /*free_drop ?*/ QUrl()/* : REMOTE_DND_URL*/;
-        }
-
-        data -> dRow = row;
+        dRow = row;
         dIndex = parent;
 
-        recalcParentIndex(dIndex, data -> dRow, data -> eIndex, data -> eRow, data -> url);
+        recalcParentIndex(dIndex, dRow, eIndex, eRow, url);
+        Playlist * parentFolder = item<Playlist>(dIndex);
 
-//        parentFolder = item<Playlist>(dIndex);
-
-        beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-        // UPDATE ME
-//            counts[parentFolder] += (int)(Playlist::restoreItem(data -> attrs.value(JSON_TYPE_DATA_SUB_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs) != 0);
+        beginInsertRows(eIndex, eRow, eRow);
+            counts[parentFolder]++;
+            new IItem(sourceUid, parentFolder, dRow);
         endInsertRows();
-        delete data;
     }
 
     QHash<Playlist *, int>::Iterator it = counts.begin();
