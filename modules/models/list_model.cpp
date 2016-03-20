@@ -40,7 +40,7 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
                     Extensions::obj().extractExtension(_title, ext);
                     REGISTER_LOCAL_DATA(path, _title, ext);
                 }
-                else DataCore::obj().registerDataItem(path);
+                else REGISTER_EXISTED_DATA(path);
 
                 items.insert(path, new IItem(path, node));
                 res++;
@@ -75,7 +75,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
                         Extensions::obj().extractExtension(_title, ext);
                         REGISTER_LOCAL_DATA(path, _title, ext);
                     }
-                    else DataCore::obj().registerDataItem(path);
+                    else REGISTER_EXISTED_DATA(path);
 
                     items.insert(path, new IItem(path, node, pos));
                     res++;

@@ -74,7 +74,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
                     Extensions::obj().extractExtension(_title, ext);
                     REGISTER_LOCAL_DATA(path, _title, ext);
                 }
-                else DataCore::obj().registerDataItem(path);
+                else REGISTER_EXISTED_DATA(path);
 
                 items.insert(path, new IItem(path, node));
                 local_res++;
@@ -120,7 +120,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
                         Extensions::obj().extractExtension(_title, ext);
                         REGISTER_LOCAL_DATA(path, _title, ext);
                     }
-                    else DataCore::obj().registerDataItem(path);
+                    else REGISTER_EXISTED_DATA(path);
 
                     items.insert(path, new IItem(path, node, pos));
                     res++;

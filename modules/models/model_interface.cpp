@@ -245,9 +245,10 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, IMod
         uri = itm.value(Vk::tkn_url).toString();
         uri = uri.section('?', 0, 0); // remove extra info from url
 
-        if (item)
+        if (item) {
             item -> setPath(uri);
-        else {
+            REGISTER_EXISTED_DATA(sourceUid);
+        } else {
             item = REGISTER_VK_DATA(
                 sourceUid,
                 id,
@@ -314,6 +315,7 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) 
             if (itm.contains(Yandex::tkn_fileSize))
                 item -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
         }
+        else REGISTER_EXISTED_DATA(sourceUid);
 
         itemsAmount++;
         new IItem(sourceUid, parent);
@@ -366,7 +368,7 @@ int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent)
                     item -> setError(ItemErrors::warn_not_permitted);
                 item -> setDuration(Duration::fromMillis(durMillis));
             }
-        }
+        } else REGISTER_EXISTED_DATA(sourceUid);
 
         new IItem(sourceUid, parent);
         itemsAmount++;
@@ -427,6 +429,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
                     )
                 );
         }
+        else REGISTER_EXISTED_DATA(sourceUid);
 
         itemsAmount++;
         new IItem(sourceUid, parent);
@@ -484,7 +487,10 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
                 ditem -> setError(ItemErrors::err_not_existed);
             }
         }
-        else qDebug() << "ITEM ALREADY EXISTS";
+        else {
+            REGISTER_EXISTED_DATA(sourceUid);
+            qDebug() << "ITEM ALREADY EXISTS";
+        }
 
         new IItem(sourceUid, cuePlaylist);
         unproc_files.insert(songPath, res);
@@ -543,7 +549,10 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, IMod
             if (itm.contains(Soundcloud::tkn_genre_id))
                 item -> setGenreID(itm.value(Soundcloud::tkn_genre_id).toInt());
         }
-        else item -> setPath(uri);
+        else {
+            item -> setPath(uri);
+            REGISTER_EXISTED_DATA(sourceUid);
+        }
 
         if (store.values(uid).isEmpty()) {
             itemsAmount++;
@@ -589,7 +598,10 @@ int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, IMod
                                     Od::tkn_default_extension
                                    );
         }
-        else item -> setRefreshPath(id);
+        else {
+            item -> setRefreshPath(id);
+            REGISTER_EXISTED_DATA(sourceUid);
+        }
 
         if (items.isEmpty()) {
             itemsAmount++;

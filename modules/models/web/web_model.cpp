@@ -44,7 +44,7 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
                 Extensions::obj().extractExtension(_title, ext);
                 REGISTER_LOCAL_DATA(path, _title, ext);
             }
-            else DataCore::obj().registerDataItem(path);
+            else REGISTER_EXISTED_DATA(path);
 
             new IItem(path, node);
             res++;
@@ -78,11 +78,11 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
             else {
                 DataItem * item = DataCore::obj().dataItem(path);
                 if (!item) {
-                    QString _title = file.fileName(), ext;
+                    QString _title = name, ext;
                     Extensions::obj().extractExtension(_title, ext);
                     REGISTER_LOCAL_DATA(path, _title, ext);
                 }
-                else DataCore::obj().registerDataItem(path);
+                else REGISTER_EXISTED_DATA(path);
 
                 new IItem(path, node, pos);
                 res++;

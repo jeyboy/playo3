@@ -21,6 +21,9 @@
 
 #define FUZZY_COMPARITY_PERCENT 80
 
+#define REGISTER_EXISTED_DATA(sourceUid) \
+    DataCore::obj().registerDataItem(sourceUid);
+
 #define REGISTER_LOCAL_DATA(path, title, extension) \
     DataCore::obj().registerDataItem(path, { {JSON_TYPE_DATA_SUB_TYPE, dt_local}, {JSON_TYPE_PATH, path}, {JSON_TYPE_TITLE, _title}, {JSON_TYPE_EXTENSION, extension} });
 
