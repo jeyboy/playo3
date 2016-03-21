@@ -127,7 +127,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const
     if (names.is(SCREEN_TAB)) {
         return 0; // stub
     } else if (names.is(COMMON_TAB)) {
-        return createDocBar(names, settings, &attrs, false);
+        return (common = createDocBar(names, settings, &attrs, false));
     } else if (names.is(DOWNLOADS_TAB)) {
         DockBar * bar = createDocBar(names, false);
         bar -> setWidget(&DownloadView::linked_obj_with_init(&attrs, container));
@@ -303,7 +303,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
     if (isFloating) return;
     if (!played) return;
 
-    if (lastTabData.index != -1)
+    if (lastTabData.tabbar)//    if (lastTabData.index != -1)
         lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
 
     TabifyParams tabData = played -> tabIndex();
