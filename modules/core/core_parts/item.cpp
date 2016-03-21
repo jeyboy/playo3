@@ -168,8 +168,7 @@ QVariant IItem::data(int column) const {
                 relationStr() +
                 (infoVar().isValid() ? ('\n' + infoVar().toString()) : "") +
                 '\n' + title().toString() +
-                (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "") +
-                (path().isValid() ? ('\n' + path().toString()) : "");
+                (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "");
         }
 
         case IEXTENSION:        return extension();
