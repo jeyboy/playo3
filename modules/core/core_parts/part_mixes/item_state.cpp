@@ -42,7 +42,7 @@ void ItemState::setStates(int flags) {
 }
 
 bool ItemState::reset() {
-    item_state = DEFAULT_FILE_STATE;
+    item_state = DEFAULT_ITEM_STATE;
     return true;
 }
 

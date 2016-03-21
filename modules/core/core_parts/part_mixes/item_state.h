@@ -2,8 +2,7 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Core {
-    #define DEFAULT_FILE_STATE (ItemState::checked | ItemState::new_item)
-    #define DEFAULT_PLAYLIST_STATE (ItemState::checked | ItemState::expanded)
+    #define DEFAULT_ITEM_STATE (ItemState::checked | ItemState::new_item | ItemState::expanded)
 
     class ItemState {
         public:
@@ -35,7 +34,7 @@ namespace Core {
                 liked = 1
             };
 
-            inline ItemState(int state = DEFAULT_FILE_STATE) { item_state = state; }
+            inline ItemState(int state = DEFAULT_ITEM_STATE) { item_state = state; }
             inline virtual ~ItemState() {}
 
             inline bool is(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }

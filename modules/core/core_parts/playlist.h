@@ -10,11 +10,11 @@ namespace Core {
     public:
         static int restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantMap & attrs);
 
-        inline Playlist(int initState = DEFAULT_PLAYLIST_STATE) : IItem(0, initState), filesCount(0) {}
+        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) {}
         Playlist(QJsonObject * hash, Playlist * parent = 0);
-        Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_PLAYLIST_STATE);
+        Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_ITEM_STATE);
         virtual ~Playlist();
 
         void linkNode(Playlist * node);

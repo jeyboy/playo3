@@ -42,8 +42,8 @@ namespace Core {
 
         ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
-        ItemFields(QString title, int initState = DEFAULT_FILE_STATE);
-        ItemFields(int state = DEFAULT_FILE_STATE);
+        ItemFields(QString title, int initState = DEFAULT_ITEM_STATE);
+        ItemFields(int state = DEFAULT_ITEM_STATE);
 
         inline QVariant uid() const                             { return attrs.value(JSON_TYPE_UID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
