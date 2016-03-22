@@ -1,5 +1,5 @@
-#ifndef DATA_CORE_H
-#define DATA_CORE_H
+#ifndef DATA_FACTORY_H
+#define DATA_FACTORY_H
 
 #include <qdebug.h>
 #include <qobject.h>
@@ -14,7 +14,7 @@
 #define MAX_ATTEMPTS 1
 
 namespace Core {
-    class DataFactory : public QObject, public QHash<QString, IItem *>, public Singleton<DataFactory> {
+    class DataFactory : public QObject, public Singleton<DataFactory> {
         Q_OBJECT
 
         IPlaylistable * current_playlist;
@@ -85,4 +85,4 @@ namespace Core {
     };
 }
 
-#endif // DATA_CORE_H
+#endif // DATA_FACTORY_H

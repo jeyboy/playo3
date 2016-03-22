@@ -15,7 +15,7 @@
 
 #include "tree_view_style.h"
 
-#include "modules/core/data_core.h"
+#include "modules/core/data_factory.h"
 #include "modules/models/model_item_delegate.h"
 #include "modules/models/model_interface.h"
 #include "service/download_view.h"

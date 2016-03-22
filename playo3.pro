@@ -198,7 +198,7 @@ HEADERS += \
     modules/core/web/web_apis.h \
     modules/core/web/web_sub_types.h \
     modules/core/core_parts_index.h \
-    modules/core/data_core.h \
+    modules/core/data_factory.h \
     modules/core/playlist_types.h \
     modules/models/service/download_delegate.h \
     modules/models/service/download_model.h \
@@ -379,7 +379,7 @@ SOURCES += \
     modules/core/web/utils/json_parser.cpp \
     modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \
-    modules/core/data_core.cpp \
+    modules/core/data_factory.cpp \
     modules/models/service/download_delegate.cpp \
     modules/models/service/download_model.cpp \
     modules/models/service/download_model_item.cpp \
