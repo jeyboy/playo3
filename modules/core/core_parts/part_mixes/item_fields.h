@@ -5,36 +5,14 @@
 
 #include "item_state.h"
 #include "json_fields.h"
+#include "item_field_defines.h"
 #include "item_errors.h"
 #include "settings.h"
+#include "modules/core/data_sub_types.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
-#include "modules/core/web/web_sub_types.h"
 #include "modules/core/misc/format.h"
 
 namespace Core {
-    #define IURL Qt::UserRole + 1
-    #define IFULLPATH IURL + 1
-    #define IPLAYABLE IFULLPATH + 1
-    #define IATTRS IPLAYABLE + 1
-    #define IEXECCOUNTS IATTRS + 1
-    #define ITREEPATH IEXECCOUNTS + 1
-    #define ITREESTR ITREEPATH + 1
-    #define ISTATERESTORE ITREESTR + 1
-    #define IUID ISTATERESTORE + 1
-    #define ITYPE IUID + 1
-    #define ISPOILITEM ITYPE + 1
-
-    #define ITITLE Qt::DisplayRole
-    #define IEXTENSION Qt::UserRole - 1
-    #define IPATH IEXTENSION - 1
-    #define IFOLDER IPATH - 1
-    #define ISTATE IFOLDER - 1
-    #define IINFO ISTATE - 1
-    #define ITITLESCACHE IINFO - 1
-    #define IADDFONT ITITLESCACHE - 1
-    #define IREMOTE IADDFONT - 1
-    #define IERROR IREMOTE - 1
-
     class ItemFields : public ItemState {
     public:
         inline ItemFields() {}
@@ -101,13 +79,31 @@ namespace Core {
 
         inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
-        inline virtual QString toUid() { return QString(); }
+
+
+
+        void openLocation();
+        bool removePhysicalObject();
+
+        bool isExist() const;
+        bool isShareable() const;
+        bool isRemote() const;
+
+        QString toUid();
+        QUrl toUrl() const;
+
+        QString fullPath() const;
+
+        inline void setParted(const QVariant & isParted)        { attrs -> operator[](JSON_TYPE_PARTIAL) = isParted; }
+        inline bool isParted() const                            { return attrs -> value(JSON_TYPE_PARTIAL, false).toBool(); }
+
+
+
+
+
         virtual QJsonObject toJson();
         QVariantMap toInnerAttrs(int itemType) const;
     protected:
-        inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
-        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
-
         QVariantMap attrs;
     };
 }
