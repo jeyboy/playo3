@@ -46,7 +46,7 @@ namespace Core {
         virtual bool isExist() const = 0;
         inline bool isPlayable() const {
             bool showBatch = Settings::obj().isCheckboxShow();
-            return !isContainer() && (!showBatch || (showBatch && is(checked)));
+            return !isContainer() && (!showBatch || (showBatch && is(flag_checked)));
         }
 
         virtual QUrl toUrl() const { return QUrl::fromLocalFile(fullPath()); }
@@ -61,7 +61,7 @@ namespace Core {
         inline virtual int columnCount() const { return 1; }
 
         inline virtual void updateCheckedState(bool setChecked) {
-            if (setChecked) set(checked); else unset(checked);
+            if (setChecked) set(flag_checked); else unset(flag_checked);
         }
 
         inline virtual bool updateCheckedStateByPredicate(ItemStateFlag pred_state) {

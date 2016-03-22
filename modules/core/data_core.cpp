@@ -32,7 +32,7 @@ namespace Core {
     }
 
     void DataFactory::playNext(bool onFail) {
-        setState(-ItemState::proccessing); // extra call for item clearing states!
+        setState(IItem::flag_not_proccessing); // extra call for item clearing states!
         if (!current_playlist) {
             qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
             return;
@@ -108,7 +108,7 @@ namespace Core {
                 if ((init_state_flag = state) != initiated)
                     player -> play(init_state_flag == paused);
 
-                emit likeChanged(current_item -> is(ItemState::liked));
+                emit likeChanged(current_item -> is(IItem::flag_liked));
             } else playNext(false);
         }
         else player -> setMedia(QUrl());
@@ -118,7 +118,7 @@ namespace Core {
         switch(status) {
             case InitMedia: {
                 qDebug() << "INIT MEDIA";
-                setState(ItemState::played | ItemState::proccessing);
+                setState(IItem::flag_played | IItem::flag_proccessing);
             break;}
 
             case PlaingMedia: {
@@ -127,14 +127,14 @@ namespace Core {
                 qDebug() << "PLAING MEDIA";
                 if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying()) {
                     Library::obj().initItemData(current_item, false);
-                    add_state = ItemFields::proceeded;
+                    add_state = IItem::flag_proceeded;
                 }
-                setState(ItemState::listened | add_state);
+                setState(IItem::flag_listened | add_state);
             break;}
 
             case CloseMedia: {
                 qDebug() << "CLOSE MEDIA";
-                setState(-(ItemState::proccessing | ItemState::played));
+                setState(IItem::flag_not_proccessing | IItem::flag_not_played);
             break;}
 
             case LoadingMedia: {
@@ -161,7 +161,7 @@ namespace Core {
             break;}
 
             case LoadedMedia: {
-                setState(ItemState::not_proccessing);
+                setState(IItem::flag_not_proccessing);
                 setError(ItemErrors::err_none);
             break;}
 
@@ -192,8 +192,8 @@ namespace Core {
         IItem * node = static_cast<IItem *>(ind.internalPointer());
         if (node -> isContainer()) return;
 
-        if (!node -> is(ItemState::proceeded)) {
-            node -> set(ItemState::proceeded);
+        if (!node -> is(IItem::flag_proceeded)) {
+            node -> set(IItem::flag_proceeded);
             Library::obj().restoreItemStateAsync(ind, node -> isRemote());
         }
     }

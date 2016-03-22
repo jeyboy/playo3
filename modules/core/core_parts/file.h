@@ -18,7 +18,7 @@ namespace Core {
         File(const QString & filePath, const QString & fileName, const QString & fileExtension, Playlist * parent = 0, int pos = -1);
 
         inline virtual ~File() {
-            if (is(mark_on_removing) && !isPartial())
+            if (is(flag_mark_on_removing) && !isPartial())
                 removePhysicalObject();
         }
 

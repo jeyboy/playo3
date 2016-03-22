@@ -117,7 +117,7 @@ QVariant IItem::data(int column) const {
         case IATTRS: {
             QVariantMap params;
             params.insert(Keys::name, title());
-            params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  is(checked) : QVariant());
+            params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  is(flag_checked) : QVariant());
             if (!isContainer()) {
                 if (Settings::obj().isShowSystemIcons())
                     params.insert(Keys::icon, IconProvider::fileIcon(fullPath(), extension().toString()));
@@ -132,10 +132,10 @@ QVariant IItem::data(int column) const {
 
                 params.insert(Keys::ext, extension());
                 params.insert(Keys::state, visualStates());
-                params.insert(Keys::played, is(played));
+                params.insert(Keys::played, is(flag_played));
                 params.insert(Keys::shareable, isShareable());
 
-                if (is(proccessing))
+                if (is(flag_proccessing))
                     params.insert(Keys::proccessing, true);
                 else {
                     int err_code = error().toInt();
@@ -175,7 +175,7 @@ QVariant IItem::data(int column) const {
 
         case Qt::CheckStateRole: {
             if (Settings::obj().isCheckboxShow())
-                return is(checked);
+                return is(flag_checked);
             else return QVariant();
         }
 
@@ -187,7 +187,7 @@ QVariant IItem::data(int column) const {
                 (_info().isValid() ? ('\n' + _info().toString()) : "") +
                 '\n' + title().toString() +
                 (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "") +
-                (path().isValid() ? ('\n' + path().toString()) : "");
+                (!isRemote() && path().isValid() ? ('\n' + path().toString()) : "");
         }
 
         case IEXTENSION:        return extension();

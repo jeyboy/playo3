@@ -282,7 +282,7 @@ void IView::openRecomendationsforItem() {
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    if (mdl -> item(index) -> is(ItemState::expanded)) // required for uncanonical delition and after loading state reconstruction
+    if (mdl -> item(index) -> is(IItem::flag_expanded)) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
     emit infoInvalidationAsync(index);
@@ -437,7 +437,7 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> isContainer() && !node -> is(ItemState::proceeded))
+        if (!node -> isContainer() && !node -> is(IItem::flag_proceeded))
             emit infoInvalidation(curr);
 
         node -> updateCheckedStateByPredicate(flag);
@@ -518,7 +518,7 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         }
 
         if (remove_file_with_item)
-            mdl -> setData(node, ItemState::mark_on_removing, ISTATERESTORE);
+            mdl -> setData(node, IItem::flag_mark_on_removing, ISTATERESTORE);
     }
 
     if (selectionUpdate != IModel::none) {
@@ -681,7 +681,7 @@ void IView::downloadChecked(QString & path, Playlist * root) {
     QModelIndexList list;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++)
-        if ((*it) -> is(IItem::checked)) {
+        if ((*it) -> is(IItem::flag_checked)) {
             if ((*it) -> isContainer())
                 downloadChecked(path, (Playlist *)*it);
             else
@@ -692,13 +692,13 @@ void IView::downloadChecked(QString & path, Playlist * root) {
 }
 
 void IView::markLikedAsChecked() {
-    checkByPredicate(IItem::liked);
+    checkByPredicate(IItem::flag_liked);
 }
 void IView::markNewAsChecked() {
-    checkByPredicate(IItem::new_item);
+    checkByPredicate(IItem::flag_new_item);
 }
 void IView::markListenedAsChecked() {
-    checkByPredicate(IItem::listened);
+    checkByPredicate(IItem::flag_listened);
 }
 
 void IView::moveCheckedToNewTab(Playlist * /*root*/) {
@@ -719,7 +719,7 @@ void IView::appendRows(QList<QUrl> & urls) {
 }
 
 void IView::markSelectedAsLiked(bool liked) {
-    int state = liked ? ItemState::liked : -ItemState::liked;
+    int state = liked ? IItem::flag_liked : IItem::flag_not_liked;
 
     QModelIndexList indexes = selectedIndexes();
     QModelIndexList::ConstIterator it = indexes.begin();
