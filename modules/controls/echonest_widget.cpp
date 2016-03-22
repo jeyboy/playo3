@@ -40,7 +40,7 @@ QStringList EchonestWidget::genresList() {
         genres.append(Core::Web::Echonest::Api::obj().genresList().genresList());
     }
 
-    return styles;
+    return genres;
 }
 
 QStringList EchonestWidget::stylesList() {
