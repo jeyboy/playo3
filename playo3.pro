@@ -185,7 +185,6 @@ HEADERS += \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
-    modules/core/core_parts_index.h \
     modules/core/data_factory.h \
     modules/core/playlist_types.h \
     modules/models/service/download_delegate.h \

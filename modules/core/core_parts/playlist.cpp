@@ -172,21 +172,21 @@ QJsonObject Playlist::toJson() {
     return root;
 }
 
-Playlist * Playlist::createPlaylistPath(QString path) { // usable only for tree
+Playlist * Playlist::createPlaylistPath(const DataSubType & subType, const QString & path) { // usable only for tree
     QStringList list = path.split('/', QString::SkipEmptyParts);
     if (list.isEmpty())
         return this;
-    return createPlaylist(list.takeFirst(), &list);
+    return createPlaylist(subType, list.takeFirst(), &list);
 }
 
-Playlist * Playlist::createPlaylist(const QString & name, QStringList * list, int pos) {
+Playlist * Playlist::createPlaylist(const DataSubType & subType, const QString & name, QStringList * list, int pos) {
     Playlist * curr = playlists.value(name, 0);
 
     if (!curr)
-        curr = new Playlist(name, this, pos);
+        curr = new Playlist(subType, name, this, pos);
 
     if (list && !list -> isEmpty())
-        return curr -> createPlaylist(list -> takeFirst(), list, pos);
+        return curr -> createPlaylist(subType, list -> takeFirst(), list, pos);
     else
         return curr;
 }

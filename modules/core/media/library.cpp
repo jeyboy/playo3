@@ -306,7 +306,7 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
     if (!itm -> duration().isValid() && duration > 0)
         itm -> setDuration(Duration::fromMillis(duration - itm -> startPos().toLongLong()));
 
-    if (itm -> isPartial()) { //TODO: need to calculate size of parts
+    if (itm -> isParted()) { //TODO: need to calculate size of parts
         iSize = 0;
     }
 
@@ -336,7 +336,7 @@ void Library::initItemTitles(MediaInfo * info, IItem * itm) {
     if (temp != title)
         list.append(temp);
 
-    if (!itm -> isPartial()) {
+    if (!itm -> isParted()) {
         QString tagTitle = FilenameConversions::cacheTitleFilter(info -> getArtist() + info -> getTitle());
         if (!tagTitle.isEmpty() && tagTitle != title && tagTitle != temp)
             list.append(tagTitle);

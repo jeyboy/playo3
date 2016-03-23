@@ -2,7 +2,7 @@
 
 namespace Core {
     namespace Web {
-        QHash<SubType, ISearchable *> Apis::sites = QHash<SubType, ISearchable *>();
+        QHash<DataSubType, ISearchable *> Apis::sites = QHash<DataSubType, ISearchable *>();
 
         void Apis::initiate(const QJsonObject & obj) {
             sites.insert(Youtube::Api::obj().siteType(), &Youtube::Api::obj());
@@ -22,12 +22,12 @@ namespace Core {
             sites.insert(MusicShara::obj().siteType(), &MusicShara::obj());
             sites.insert(RedMp3::obj().siteType(), &RedMp3::obj());
 
-            for(QHash<SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
+            for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
                 it.value() -> fromJson(obj);
         }
 
         void Apis::close(QJsonObject & obj) {
-            for(QHash<SubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
+            for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
                 it.value() -> toJson(obj);
         }
     }

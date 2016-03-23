@@ -20,7 +20,7 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return val_name; }
-                inline SubType siteType() { return site_youtube; }
+                inline DataSubType siteType() { return dt_site_youtube; }
                 inline QUrlQuery genDefaultParams() {
                     QUrlQuery query;
                     query.addQueryItem(tkn_key, val_client_tkn);

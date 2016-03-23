@@ -18,7 +18,7 @@ namespace Core {
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:
             inline QString name() const { return QStringLiteral("Myzuka"); }
-            inline SubType siteType() { return site_myzuka; }
+            inline DataSubType siteType() { return dt_site_myzuka; }
 
             // artists by genre
             QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2

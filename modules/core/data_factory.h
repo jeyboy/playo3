@@ -5,11 +5,11 @@
 #include <qobject.h>
 #include <qhash.h>
 
-#include "core_parts_index.h"
 #include "player/player_index.h"
 #include "modules/core/media/library.h"
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/interfaces/iplaylistable.h"
+#include "modules/core/core_parts/item.h"
 
 #define MAX_ATTEMPTS 1
 

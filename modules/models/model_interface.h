@@ -7,7 +7,7 @@
 #include <qfuturewatcher.h> // include async
 #include <qdesktopservices.h>
 
-#include "modules/core/core_parts_index.h"
+#include "modules/core/core_parts/playlist.h"
 #include "modules/core/web/web_apis.h"
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/core/misc/file_utils/filesystem_watcher.h"
@@ -83,7 +83,7 @@ namespace Models {
         int proceedOdList(QJsonArray & collection, Playlist * parent);
         int proceedYandexList(QJsonArray & collection, Playlist * parent);
         int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
-        int proceedGrabberList(Web::SubType wType, QJsonArray & collection, Playlist * parent);
+        int proceedGrabberList(const DataSubType & wType, QJsonArray & collection, Playlist * parent);
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
