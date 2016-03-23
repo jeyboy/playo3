@@ -11,7 +11,7 @@
 #include "modules/core/misc/logger.h"
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/core/media/genres/target_genres.h"
-#include "modules/core/web/web_sub_types.h"
+#include "modules/core/data_sub_types.h"
 
 #include "dialogs/user_action_dialog.h"
 #include "settings.h"
@@ -66,7 +66,7 @@ namespace Core {
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
-        virtual Web::SubType siteType() = 0;
+        virtual DataSubType siteType() = 0;
 
         virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
         virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub

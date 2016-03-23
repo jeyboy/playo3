@@ -15,7 +15,7 @@ namespace Core {
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
         IItem(const DataSubType & subType, Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
-        IItem(const DataSubType & subType, Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        IItem(const int & subType, Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
         virtual ~IItem();
 

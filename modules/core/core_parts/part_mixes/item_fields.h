@@ -53,7 +53,7 @@ namespace Core {
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
         inline int dataType() const                             { return attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
-        inline void setDatatype(const DataSubType & dataType)   { attrs.[JSON_TYPE_ITEM_TYPE] = dataType; }
+        inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void addArtistId(QString id)                     { attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
@@ -74,7 +74,6 @@ namespace Core {
         inline void setInfo(const QVariant & newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
         inline void setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
         inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
-        inline void setSubtype(Web::SubType subType)            { attrs[JSON_TYPE_SUB_TYPE] = subType; }
         inline void setError(const QVariant & error)            {
             if (error.toInt() == err_none)
                 attrs.remove(JSON_TYPE_ERROR);
@@ -99,8 +98,8 @@ namespace Core {
 
         QString fullPath() const;
 
-        inline void setParted(const QVariant & isParted)        { attrs -> operator[](JSON_TYPE_PARTIAL) = isParted; }
-        inline bool isParted() const                            { return attrs -> value(JSON_TYPE_PARTIAL, false).toBool(); }
+        inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
+        inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
 
 

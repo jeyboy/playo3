@@ -19,7 +19,7 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return val_name; }
-                inline SubType siteType() { return site_sc; }
+                inline DataSubType siteType() { return dt_site_sc; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_client_id % val_id_tkn); }
                 QString authUrl();
 

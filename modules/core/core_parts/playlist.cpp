@@ -1,4 +1,5 @@
 #include "playlist.h"
+#include <qdatetime.h>
 
 using namespace Core;
 
@@ -39,8 +40,8 @@ using namespace Core;
 //}
 
 ///////////////////////////////////////////////////////////
-Playlist::Playlist(QJsonObject * hash, Playlist * parent)
-    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+Playlist::Playlist(const DataSubType & data_type, QJsonObject * hash, Playlist * parent)
+    : IItem(data_type, parent, hash -> take(JSON_TYPE_STATE).toInt()), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
@@ -48,8 +49,9 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent)
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
             QJsonObject iterObj = (*it).toObject();
 
-            if (iterObj.value(JSON_TYPE_ITEM_TYPE).toInt() < dt_none)
-                new Playlist(&iterObj, this);
+            DataSubType item_data_type = (DataSubType)iterObj.value(JSON_TYPE_ITEM_TYPE).toInt();
+            if (item_data_type < dt_none)
+                new Playlist(item_data_type, &iterObj, this);
             else
                 new IItem(this, &iterObj);
         }
@@ -150,14 +152,6 @@ QVariant Playlist::data(int column) const {
         case IEXECCOUNTS:      return filesCount;
         default:               return IItem::data(column);
     }
-}
-
-// cue is not removable yet
-bool Playlist::removePhysicalObject() { // this is a little dangerous (   
-//    QDir delDir(fullPath());
-//    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
-//        return delDir.removeRecursively();
-    return false;
 }
 
 QJsonObject Playlist::toJson() {
