@@ -125,7 +125,6 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_types.h \
     modules/core/core_parts/part_mixes/json_fields.h \
     modules/core/core_parts/item_drop_formats.h \
-    modules/core/core_parts/item_interface.h \
     modules/core/core_parts/playlist.h \
     modules/core/web/grabber_keys.h \
     modules/core/web/interfaces/iapi.h \
@@ -292,7 +291,8 @@ HEADERS += \
     modules/core/web/apis/social/youtube_api_misc.h \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/core_parts/part_mixes/item_field_defines.h \
-    modules/core/data_sub_types.h
+    modules/core/data_sub_types.h \
+    modules/core/core_parts/item.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -322,7 +322,6 @@ SOURCES += \
     modules/controls/window_title.cpp \
     modules/core/core_parts/part_mixes/item_fields.cpp \
     modules/core/core_parts/part_mixes/item_state.cpp \
-    modules/core/core_parts/item_interface.cpp \
     modules/core/core_parts/playlist.cpp \
     modules/core/web/grabber_keys.cpp \
     modules/core/media/cue/cue.cpp \
@@ -431,4 +430,5 @@ SOURCES += \
     modules/core/media/library_base.cpp \
     modules/core/web/apis/social/youtube_api_keys.cpp \
     modules/core/web/apis/social/youtube_api.cpp \
-    modules/pizduck/duktape.c
+    modules/pizduck/duktape.c \
+    modules/core/core_parts/item.cpp

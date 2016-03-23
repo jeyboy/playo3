@@ -1,23 +1,21 @@
 #ifndef FOLDER_ITEM_H
 #define FOLDER_ITEM_H
 
-#include "item_interface.h"
+#include "item.h"
 #include <qdir.h>
-#include <qdatetime.h>
+//#include <qdatetime.h>
 
 namespace Core {
     class Playlist : public IItem {
     public:
-        static int restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantMap & attrs);
+//        static int restoreItem(int item_type, Playlist * parentFolder, int pos, QVariantMap & attrs);
 
-        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(0, initState), filesCount(0) {}
+        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(dt_playlist, 0, initState), filesCount(0) {}
         Playlist(QJsonObject * hash, Playlist * parent = 0);
-        Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        virtual ~Playlist();
-
-        void linkNode(Playlist * node);
+        Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, const QString & id, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        ~Playlist();
 
         void accumulateUids(QHash<QString, IItem *> & store);
         QStringList childrenUids(int position, int count);
@@ -28,11 +26,6 @@ namespace Core {
 
         QVariant data(int column) const;
 
-        inline void openLocation() { QDesktopServices::openUrl(toUrl()); }
-        inline int itemType() const { return PLAYLIST; }
-        bool removePhysicalObject();
-
-        inline bool isExist() const { return QDir(fullPath()).exists(); }
         inline bool isContainer() const { return true; }
 
         QJsonObject toJson();
@@ -52,8 +45,10 @@ namespace Core {
             return true;
         }
         virtual inline int childCount() const { return children.count(); }
-        inline void declareChild(IItem * child) { children.append(child); }
-        inline void declareChild(IItem * item, int pos) { children.insert(pos, item); }
+        inline void declareChild(IItem * child, int pos = -1) {
+            if (pos == -1) children.append(child);
+            else children.insert(pos, child);
+        }
         inline void declareChildren(QList<IItem *> & items) { children.append(items); }
         inline void undeclareChild(IItem * child) {
             if (children.removeOne(child) > 0)
@@ -76,6 +71,7 @@ namespace Core {
             return new T(uid, name, this, pos);
         }
         Playlist * createPlaylist(const QString & name, QStringList * list = 0, int pos = -1);
+//        void addPlaylist(Playlist * node);
         Playlist * findCompatblePlaylist(QStringList * list);
         inline void declarePlaylist(const QString & name, Playlist * playlist) { playlists.insert(name, playlist); }
         inline int undeclarePlaylist(const QString & name) { return playlists.remove(name); }
@@ -93,7 +89,7 @@ namespace Core {
             pNode -> declarePlaylist(playlistUid(), this);
         }
     protected:
-        inline QString playlistUid() const { return playlistUid(title().toString(), uid().toString()); }
+        inline QString playlistUid() const { return playlistUid(title().toString(), id().toString()); }
         inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QStringLiteral("*") % uid)); }
 
         QHash<QString, Playlist *> playlists;

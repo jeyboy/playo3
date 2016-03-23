@@ -13,11 +13,13 @@ ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_ST
     attrs = hash -> toVariantMap();
 }
 
-ItemFields::ItemFields(QString title, int initState) : ItemState(initState) {
+ItemFields::ItemFields(const DataSubType & subType, const QString & title, int initState) : ItemState(initState) {
     attrs[JSON_TYPE_TITLE] = title;
+    attrs[JSON_TYPE_ITEM_TYPE] = subType;
 }
 
-ItemFields::ItemFields(int state) : ItemState(state) {
+ItemFields::ItemFields(const DataSubType & subType, int state) : ItemState(state) {
+    attrs[JSON_TYPE_ITEM_TYPE] = subType;
 }
 
 QStringList ItemFields::info() const {

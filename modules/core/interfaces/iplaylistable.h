@@ -1,7 +1,7 @@
 #ifndef IPLAYLISTABLE
 #define IPLAYLISTABLE
 
-#include "modules/core/core_parts/item_interface.h"
+#include "modules/core/core_parts/item.h"
 
 #include <qabstractitemmodel.h>
 

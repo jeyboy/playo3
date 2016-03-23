@@ -2,6 +2,7 @@
 #define MODEL_ITEM_FIELDS_H
 
 #include <qjsonobject.h>
+#include <qstringbuilder.h>
 
 #include "item_state.h"
 #include "json_fields.h"
@@ -15,18 +16,22 @@
 namespace Core {
     class ItemFields : public ItemState {
     public:
+        static inline QString toUid(const QVariant & owner, const QVariant & id) {
+            return /*owner.isValid() &&*/ id.isValid() ? owner.toString() % QStringLiteral("_") % id.toString() : QString();
+        }
+
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
         ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
-        ItemFields(QString title, int initState = DEFAULT_ITEM_STATE);
-        ItemFields(int state = DEFAULT_ITEM_STATE);
+        ItemFields(const DataSubType & subType, const QString & title, int initState = DEFAULT_ITEM_STATE);
+        ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
-        inline QVariant uid() const                             { return attrs.value(JSON_TYPE_UID); }
+        inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
-        inline QVariant artistUids() const                      { return attrs.value(JSON_TYPE_ARTIST_UIDS); }
-        inline QVariant songUid() const                         { return attrs.value(JSON_TYPE_SONG_UID); }
+        inline QVariant artistIds() const                       { return attrs.value(JSON_TYPE_ARTIST_IDS); }
+        inline QVariant songId() const                          { return attrs.value(JSON_TYPE_SONG_ID); }
 
         inline QVariant title() const                           { return attrs.value(JSON_TYPE_TITLE); }
         inline QVariant path() const                            { return attrs.value(JSON_TYPE_PATH); }
@@ -44,16 +49,16 @@ namespace Core {
         inline QVariant genreID() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant bpm() const                             { return attrs.value(JSON_TYPE_BPM, 0); }
 
-        inline Web::SubType subtipe() const                     { return (Web::SubType)attrs.value(JSON_TYPE_SUB_TYPE, Web::site_none).toInt(); }
-
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
+        inline int dataType() const                             { return attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
+        inline void setDatatype(const DataSubType & dataType)   { attrs.[JSON_TYPE_ITEM_TYPE] = dataType; }
 
-        inline void setUid(const QVariant & newId)              { attrs[JSON_TYPE_UID] = newId; }
-        inline void addArtistUid(QString id)                    { attrs[JSON_TYPE_ARTIST_UIDS].toStringList() << id; }
-        inline void setArtistUids(const QStringList & ids)      { attrs[JSON_TYPE_ARTIST_UIDS] = ids; }
-        inline void setSongUid(const QVariant & newSongId)      { attrs[JSON_TYPE_SONG_UID] = newSongId; }
+        inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
+        inline void addArtistId(QString id)                     { attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
+        inline void setArtistIds(const QStringList & ids)       { attrs[JSON_TYPE_ARTIST_IDS] = ids; }
+        inline void setSongId(const QVariant & newSongId)       { attrs[JSON_TYPE_SONG_ID] = newSongId; }
 
         inline void setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
         inline void setBpm(const QVariant & newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }

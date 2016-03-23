@@ -1,123 +1,82 @@
-#include "modules/core/core_parts_index.h"
+#include "playlist.h"
 
 using namespace Core;
 
-int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
-    switch(item_type) {
-        case SIMPLE_FILE: {
-            new File(attrs, parent, pos);
-            return 1;
-        }
-        case VK_FILE: {
-            new VkFile(attrs, parent, pos);
-            return 1;
-        }
-        case SOUNDCLOUD_FILE: {
-            new SoundcloudFile(attrs, parent, pos);
-            return 1;
-        }
+//int Playlist::restoreItem(int item_type, Playlist * parent, int pos, QVariantMap & attrs) {
+//    switch(item_type) {
+//        case SIMPLE_FILE: {
+//            new File(attrs, parent, pos);
+//            return 1;
+//        }
+//        case VK_FILE: {
+//            new VkFile(attrs, parent, pos);
+//            return 1;
+//        }
+//        case SOUNDCLOUD_FILE: {
+//            new SoundcloudFile(attrs, parent, pos);
+//            return 1;
+//        }
 
-        case OD_FILE: {
-            new OdFile(attrs, parent, pos);
-            return 1;
-        }
+//        case OD_FILE: {
+//            new OdFile(attrs, parent, pos);
+//            return 1;
+//        }
 
-        case WEB_FILE: {
-            new WebFile(attrs, parent, pos);
-            return 1;
-        }
+//        case WEB_FILE: {
+//            new WebFile(attrs, parent, pos);
+//            return 1;
+//        }
 
-        case CUE_FILE: {
-            new CueFile(attrs, parent, pos);
-            return 1;
-        }
+//        case CUE_FILE: {
+//            new CueFile(attrs, parent, pos);
+//            return 1;
+//        }
 
-        default: qDebug() << "ITEM TYPE NOT SUPPORTED YET";
-    }
+//        default: qDebug() << "ITEM TYPE NOT SUPPORTED YET";
+//    }
 
-    return 0;
-}
+//    return 0;
+//}
 
 ///////////////////////////////////////////////////////////
 Playlist::Playlist(QJsonObject * hash, Playlist * parent)
-    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()),
-      filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+    : IItem(parent, hash -> take(JSON_TYPE_STATE).toInt()), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
     if (hash -> contains(JSON_TYPE_CHILDS)) {
         QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
-        QJsonObject iterObj;
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
-            iterObj = (*it).toObject();
-            switch(iterObj.take(JSON_TYPE_ITEM_TYPE).toInt()) {
-                case SIMPLE_FILE: {
-                    new File(&iterObj, this);
-                break;}
-                case PLAYLIST: {
-                    new Playlist(&iterObj, this);
-                break;}
+            QJsonObject iterObj = (*it).toObject();
 
-                case WEB_FILE: {
-                    new WebFile(&iterObj, this);
-                break;}
-
-                case VK_FILE: {
-                    new VkFile(&iterObj, this);
-                break;}
-                case VK_PLAYLIST: {
-                    new VkPlaylist(&iterObj, this);
-                break;}
-                case SOUNDCLOUD_FILE: {
-                    new SoundcloudFile(&iterObj, this);
-                break;}
-                case SOUNDCLOUD_PLAYLIST: {
-                    new SoundcloudPlaylist(&iterObj, this);
-                break;}
-                case OD_FILE: {
-                    new OdFile(&iterObj, this);
-                break;}
-                case OD_PLAYLIST: {
-                    new OdPlaylist(&iterObj, this);
-                break;}
-
-                case CUE_FILE: {
-                    new CueFile(&iterObj, this);
-                break;}
-                case CUE_PLAYLIST: {
-                   new CuePlaylist(&iterObj, this);
-                break;}
-            }
+            if (iterObj.value(JSON_TYPE_ITEM_TYPE).toInt() < dt_none)
+                new Playlist(&iterObj, this);
+            else
+                new IItem(this, &iterObj);
         }
     }
 
     attrs = hash -> toVariantMap();
-    if (parent != 0)
-        parent -> declarePlaylist(playlistUid(), this);
+    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
-Playlist::Playlist(const QString & folderPath, const QString & folderTitle, Playlist * parent, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
+Playlist::Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent, int pos, int initState)
+    : IItem(subType, parent, folderTitle, pos, initState), filesCount(0) {
 
     setPath(folderPath);
-
-    if (parent != 0)
-        parent -> declarePlaylist(playlistUid(), this);
+    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
-Playlist::Playlist(const QString & folderTitle, Playlist * parent, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
+Playlist::Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, int pos, int initState)
+    : IItem(subType, parent, folderTitle, pos, initState), filesCount(0) {
 
-    if (parent != 0)
-        parent -> declarePlaylist(playlistUid(), this);
+    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
-Playlist::Playlist(const QString & folderTitle, Playlist * parent, const QString & uid, int pos, int initState)
-    : IItem(parent, folderTitle, pos, initState), filesCount(0) {
+Playlist::Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, const QString & id, int pos, int initState)
+    : IItem(subType, parent, folderTitle, pos, initState), filesCount(0) {
 
-    setUid(uid);
-
-    if (parent != 0)
-        parent -> declarePlaylist(playlistUid(), this);
+    setId(id);
+    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
 Playlist::~Playlist() {
@@ -137,12 +96,12 @@ Playlist::~Playlist() {
         removePhysicalObject();
 }
 
-void Playlist::linkNode(Playlist * node) {
-    node -> setParent(this);
-    declarePlaylist(node -> playlistUid(), node);
-    declareChild(node);
-    node -> backPropagateItemsCountInBranch(node -> childCount() - node -> playlistsAmount());
-}
+//void Playlist::addPlaylist(Playlist * node) {
+//    node -> setParent(this);
+//    declarePlaylist(node -> playlistUid(), node);
+//    declareChild(node);
+//    node -> backPropagateItemsCountInBranch(node -> childCount() - node -> playlistsAmount());
+//}
 
 void Playlist::accumulateUids(QHash<QString, IItem *> & store) {
     QString item_uid;

@@ -25,6 +25,7 @@ namespace Core {
     #define IREMOTE IADDFONT - 1
     #define IERROR IREMOTE - 1
 
+    #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
     #define SHARE_DELIMITER QStringLiteral("^")
 //    #define SHARE_TYPE_VK QStringLiteral("vk")
 //    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
