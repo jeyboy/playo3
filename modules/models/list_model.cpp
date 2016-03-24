@@ -35,7 +35,7 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 res++;
-                items.insert(path, new File(path, name, node));
+                items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name)));
             }
         }
     }
@@ -51,6 +51,8 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString path = file.filePath();
+
         if (file.isDir())
             res += filesRoutine(file.filePath(), node, unproc_files, items);
         else {
@@ -60,7 +62,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
                     res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
                 else {
                     res++;
-                    items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
+                    items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, file.fileName()), pos));
                 }
             }
         }

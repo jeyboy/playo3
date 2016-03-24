@@ -1,6 +1,8 @@
 #ifndef ITEM_FIELD_DEFINES
 #define ITEM_FIELD_DEFINES
 
+#include <qstringbuilder.h>
+
 #include "item_errors.h"
 #include "json_fields.h"
 #include "item_state.h"
@@ -47,8 +49,21 @@ namespace Core {
             {JSON_TYPE_ITEM_TYPE, dt_local}, \
             {JSON_TYPE_PATH, path}, \
             {JSON_TYPE_TITLE, name}, \
-            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE} \
         }
+
+
+    #define VK_ITEM_ATTRS(id, uri, name, owner, refresh, duration) \
+        QVariantMap({\
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_ID, id}, \
+            {JSON_TYPE_ITEM_TYPE, dt_site_vk}, \
+            {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_OWNER_ID, owner}, \
+            {JSON_TYPE_REFRESH_PATH, refresh}, \
+            {JSON_TYPE_DURATION, duration} \
+        })
 }
 
 #endif // ITEM_FIELD_DEFINES

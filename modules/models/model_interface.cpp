@@ -8,7 +8,7 @@ using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> subtipe());
+    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType());
 
     qDebug() << itm -> refresh_path() << newUrl;
     if (!newUrl.isEmpty() && itm -> path().toString() != newUrl) {
@@ -21,7 +21,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) {
     sync = new QMutex(QMutex::NonRecursive);
-    rootItem = hash ? new Playlist(hash) : new Playlist();
+    rootItem = hash ? new Playlist(dt_playlist, hash) : new Playlist();
     qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME
 }
 
@@ -224,7 +224,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 
     int itemsAmount = 0;
     QJsonObject itm;
-    VkFile * newItem;
+    IItem * newItem;
     QString uri, id, owner, uid;
     QList<IItem *> items;
 
@@ -239,7 +239,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 
         id = QString::number(itm.value(Vk::tkn_id).toInt());
         owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
-        uid = WebFile::toUid(owner, id);
+        uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
         uri = itm.value(Vk::tkn_url).toString();
@@ -249,18 +249,12 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new VkFile(
-                id,
-                uri,
-                itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString(),
-                parent,
-                pos
-            );
-
-            newItem -> setSubtype(Web::site_vk);
-            newItem -> setOwner(owner);
-            newItem -> setRefreshPath(uid);
-            newItem -> setDuration(Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)));
+            newItem = new IItem(parent, VK_ITEM_ATTRS(
+                id, uri,
+                QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
+                owner, uid,
+                Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0))
+            ), pos);
 
 //                if (itm.contains(Vk::genre_id_key))
 //                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
@@ -284,7 +278,7 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
 
     int itemsAmount = 0;
     QJsonObject itm;
-    WebFile * newItem;
+    IItem * newItem;
     QString id, album_id, genre;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {

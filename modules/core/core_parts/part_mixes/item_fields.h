@@ -2,7 +2,6 @@
 #define MODEL_ITEM_FIELDS_H
 
 #include <qjsonobject.h>
-#include <qstringbuilder.h>
 
 #include "item_field_defines.h"
 #include "settings.h"
@@ -49,7 +48,7 @@ namespace Core {
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
-        inline int dataType() const                             { return attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
+        inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }

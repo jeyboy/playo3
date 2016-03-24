@@ -17,7 +17,7 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
         if (!nearestNode) {
             exIndex = index(rootItem);
             exRow = rootItem -> childCount();
-            node = rootItem -> createPlaylist(fName);
+            node = rootItem -> createPlaylist(dt_playlist, fName);
         } else {
             node = nearestNode;
             exIndex = index(nearestNode);
@@ -52,7 +52,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, rootItem -> createPlaylist(dir_it.fileName()), rels, unproc_files, items);
+            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist, dir_it.fileName()), rels, unproc_files, items);
         }
     }
 
@@ -69,7 +69,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
                 local_res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 local_res++;
-                items.insert(path, new File(path, name, node));
+                items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name)));
             }
         }
     }
@@ -97,7 +97,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(Extensions::folderName(file)), relations, unproc_files, items);
+            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(dt_playlist, Extensions::folderName(file)), relations, unproc_files, items);
         else { 
             if (unproc_files.contains(file.filePath())) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
@@ -105,7 +105,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
                     res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
                 else {
                     res++;
-                    items.insert(file.filePath(), new File(file.filePath(), file.fileName(), node, pos));
+                    items.insert(file.filePath(), new IItem(node, LOCAL_ITEM_ATTRS(file.filePath(), file.fileName()), pos));
                 }
             }
         }
