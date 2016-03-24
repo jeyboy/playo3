@@ -1,6 +1,10 @@
 #ifndef ITEM_FIELD_DEFINES
 #define ITEM_FIELD_DEFINES
 
+#include "item_errors.h"
+#include "json_fields.h"
+#include "item_state.h"
+
 namespace Core {
     #define IURL Qt::UserRole + 1
     #define IFULLPATH IURL + 1
@@ -29,6 +33,22 @@ namespace Core {
     #define SHARE_DELIMITER QStringLiteral("^")
 //    #define SHARE_TYPE_VK QStringLiteral("vk")
 //    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
+
+    #define NO_SOURCE_ITEM_ATTRS(name) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, dt_web}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_ERROR, err_not_existed} \
+        }
+
+    #define LOCAL_ITEM_ATTRS(path, name) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, dt_local}, \
+            {JSON_TYPE_PATH, path}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+        }
 }
 
 #endif // ITEM_FIELD_DEFINES

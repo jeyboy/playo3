@@ -34,9 +34,8 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
     int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size(), audios_count = audios.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count + playlists_count); // refresh all indexes // maybe this its not good idea
-
         if (playlists_count > 0) {
-            OdPlaylist * folder;
+            Playlist * folder;
             QJsonObject playlist;
 
             for(QJsonArray::Iterator it = playlists.begin(); it != playlists.end(); it++) {
@@ -46,7 +45,8 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
                 if (items_amount > 0) {
                     QString pid = QString::number((qint64)playlist.value(QStringLiteral("id")).toDouble());
 
-                    folder = rootItem -> createPlaylist<OdPlaylist>(
+                    folder = rootItem -> createPlaylist(
+                        dt_playlist_od,
                         pid,
                         playlist.value(QStringLiteral("name")).toString()
                     );

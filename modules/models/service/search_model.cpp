@@ -101,10 +101,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //        }
 
         if (valid) {
-            new IItem(parent, {
-                {JSON_TYPE_PATH, path},
-                {JSON_TYPE_TITLE, dir_it.fileName()},
-            });
+            new IItem(parent, LOCAL_ITEM_ATTRS(path, dir_it.fileName()));
             amount++;
         }
     }
@@ -267,8 +264,7 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
     int not_finded = 0;
     for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
         if (!it.value().toBool()) {
-            WebFile * file = new WebFile(QVariant(), QString(), it.key(), res);
-            file -> setError(ItemErrors::err_not_existed);
+            new IItem(res, NO_SOURCE_ITEM_ATTRS(it.key()));
             not_finded++;
         }
 

@@ -4,10 +4,7 @@
 #include <qjsonobject.h>
 #include <qstringbuilder.h>
 
-#include "item_state.h"
-#include "json_fields.h"
 #include "item_field_defines.h"
-#include "item_errors.h"
 #include "settings.h"
 #include "modules/core/data_sub_types.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"

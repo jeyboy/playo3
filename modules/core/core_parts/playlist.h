@@ -64,10 +64,10 @@ namespace Core {
         bool updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
         Playlist * createPlaylistPath(const DataSubType & subType, const QString & path);
-        template<class T> T * createPlaylist(const QString & uid, const QString & name, int pos = -1) {
-            T * curr = reinterpret_cast<T *>(playlists.value(playlistUid(name, uid), 0));
+        Playlist * createPlaylist(const DataSubType & subType, const QString & uid, const QString & name, int pos = -1) {
+            Playlist * curr = playlists.value(playlistUid(name, uid), 0);
             if (curr) return curr;
-            return new T(uid, name, this, pos);
+            return new Playlist(subType, name, this, uid, pos);
         }
         Playlist * createPlaylist(const DataSubType & subType, const QString & name, QStringList * list = 0, int pos = -1);
 //        void addPlaylist(Playlist * node);

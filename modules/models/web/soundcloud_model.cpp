@@ -20,7 +20,7 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
     {
         if (albums_count > 0) {
-            SoundcloudPlaylist * folder;
+            Playlist * folder;
             QJsonObject album;
 
             for(QJsonArray::Iterator it = albums.begin(); it != albums.end(); it++) {
@@ -28,7 +28,8 @@ void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
 
                 QJsonArray albumItems = album.value(Soundcloud::tkn_tracks).toArray();
                 if (albumItems.size() > 0) {
-                    folder = rootItem -> createPlaylist<SoundcloudPlaylist>(
+                    folder = rootItem -> createPlaylist(
+                        dt_playlist_sc,
                         album.value(Soundcloud::tkn_id).toString(),
                         album.value(Soundcloud::tkn_title).toString()
                     );

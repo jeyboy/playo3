@@ -2,7 +2,7 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Core {
-    #define DEFAULT_ITEM_STATE (flag_checked | flag_new_item | flag_expanded)
+    #define DEFAULT_ITEM_STATE (ItemState::flag_checked | ItemState::flag_new_item | ItemState::flag_expanded)
 
     class ItemState {
         public:

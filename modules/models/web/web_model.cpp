@@ -25,7 +25,7 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()));
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, dir_it.fileName()));
         }
     }
 
@@ -33,7 +33,7 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
     while(dir_it.hasNext()) {
         res++;
         QString path = dir_it.next();
-        new File(path, dir_it.fileName(), node);
+        new IItem(node, LOCAL_ITEM_ATTRS(path, dir_it.fileName()));
     }
 
     if (res > 0)
@@ -50,11 +50,11 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
         if (file.isDir())
-            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos));
+            res += filesRoutine(file.filePath(), node -> createPlaylist(dt_playlist, file.fileName(), 0, pos));
         else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
-                new File(file.filePath(), file.fileName(), node, pos);
+                new IItem(node, LOCAL_ITEM_ATTRS(file.filePath(), file.fileName()), pos);
             }
         }
     }

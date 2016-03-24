@@ -7,10 +7,6 @@
 
 #include "modules/core/misc/file_utils/icon_provider.h"
 
-#define EXTEND_HASH(hash) \
-    hash.insert(JSON_TYPE_STATE, DEFAULT_ITEM_STATE); \
-    hash
-
 namespace Core {
     class Playlist;
 
