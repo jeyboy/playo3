@@ -101,7 +101,10 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
 //        }
 
         if (valid) {
-            new File(path, dir_it.fileName(), parent);
+            new IItem(parent, {
+                {JSON_TYPE_PATH, path},
+                {JSON_TYPE_TITLE, dir_it.fileName()},
+            });
             amount++;
         }
     }
@@ -138,7 +141,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
         SearchRequest r = requests.takeFirst();
 
-        Playlist * parent = res -> createPlaylist(r.token());
+        Playlist * parent = res -> createPlaylist(dt_playlist, r.token());
         int propagate_count = 0;
 
         switch(r.search_type) {
@@ -158,11 +161,11 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
-                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
-                    case site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
-                    case site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
+                    case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
+                    case dt_site_sc: { propagate_count = proceedScList(items, parent); break;}
+                    case dt_site_od: { propagate_count = proceedOdList(items, parent); break;}
+                    case dt_site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
+                    case dt_site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 
@@ -225,9 +228,9 @@ void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
                 QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
 
                 switch (iface -> siteType()) {
-                    case site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case site_od: { propagate_count = proceedOdList(items, parent); break;}
+                    case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
+                    case dt_site_sc: { propagate_count = proceedScList(items, parent); break;}
+                    case dt_site_od: { propagate_count = proceedOdList(items, parent); break;}
                     default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
                 }
 

@@ -14,8 +14,7 @@ ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_ST
 }
 
 ItemFields::ItemFields(const DataSubType & subType, const QString & title, int initState) : ItemState(initState) {
-    attrs[JSON_TYPE_TITLE] = title;
-    attrs[JSON_TYPE_ITEM_TYPE] = subType;
+    attrs = {{JSON_TYPE_TITLE, title}, {JSON_TYPE_ITEM_TYPE, subType}};
 }
 
 ItemFields::ItemFields(const DataSubType & subType, int state) : ItemState(state) {

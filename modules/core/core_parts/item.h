@@ -7,6 +7,10 @@
 
 #include "modules/core/misc/file_utils/icon_provider.h"
 
+#define EXTEND_HASH(hash) \
+    hash.insert(JSON_TYPE_STATE, DEFAULT_ITEM_STATE); \
+    hash
+
 namespace Core {
     class Playlist;
 
@@ -14,6 +18,7 @@ namespace Core {
     public:
         IItem(Playlist * parent, QJsonObject * hash);
         IItem(Playlist * parent, QVariantMap & hash, int pos = -1);
+        IItem(Playlist * parent, const QVariantMap & hash, int pos = -1);
         IItem(const DataSubType & subType, Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
         IItem(const int & subType, Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 
