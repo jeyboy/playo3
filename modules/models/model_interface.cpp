@@ -522,41 +522,28 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
-    QJsonObject itm;
-    IItem * newItem;
-    QString id;
-    QList<IItem *> items;
-
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
-        id = QString::number(iid);
+        QString id = QString::number(iid);
         if (iid == 0 || ignoreListContainUid(id)) continue;
 
-        items = store.values(id);
+        QList<IItem *> items = store.values(id);
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new OdFile(
+            new IItem(parent, OD_ITEM_ATTRS(
                 id,
-                QString(),
-                itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString(),
-                parent
-            );
-
-            newItem -> setRefreshPath(id);
-
-            newItem -> setExtension(Od::tkn_default_extension);
-            newItem -> setDuration(Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)));
-            newItem -> setSize(itm.value(Od::tkn_size).toInt(0));
-            newItem -> setSubtype(Web::site_od);
-
+                QString(itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString()),
+                id,
+                Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)),
+                itm.value(Od::tkn_size).toInt(0)
+            ));
         } else {
             for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
                 (*it_it) -> setRefreshPath(id);
