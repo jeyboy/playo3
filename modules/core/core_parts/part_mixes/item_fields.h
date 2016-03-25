@@ -1,8 +1,11 @@
 #ifndef MODEL_ITEM_FIELDS_H
 #define MODEL_ITEM_FIELDS_H
 
+#include "settings.h"
 #include "item_field_defines.h"
 #include <qjsonobject.h>
+#include <qurl.h>
+#include <qvariant.h>
 
 #include "modules/core/data_sub_types.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
@@ -75,10 +78,7 @@ namespace Core {
             else
                 attrs[JSON_TYPE_ERROR] = error;
         }
-
-        bool hasInfo() const;
-
-
+        bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
 
         void openLocation();

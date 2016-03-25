@@ -37,23 +37,23 @@ namespace Core {
 //    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
 
     #define NO_SOURCE_ITEM_ATTRS(name) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_ITEM_TYPE, dt_web}, \
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_ERROR, err_not_existed} \
-        }
+        })
 
     #define LOCAL_ITEM_ATTRS(path, name) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_ITEM_TYPE, dt_local}, \
             {JSON_TYPE_PATH, path}, \
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE} \
-        }
+        })
 
     #define LOCAL_CUE_ITEM_ATTRS(path, name, extension, start_pos, is_parted) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_ITEM_TYPE, dt_local_cue}, \
             {JSON_TYPE_PATH, path}, \
             {JSON_TYPE_TITLE, name}, \
@@ -61,10 +61,10 @@ namespace Core {
             {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_START_POS, start_pos}, \
             {JSON_TYPE_PARTIAL, is_parted} \
-        }
+        })
 
     #define WEB_ITEM_ATTRS(id, uri, name, subtype, refresh, extension) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, subtype}, \
@@ -72,10 +72,10 @@ namespace Core {
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
-        }
+        })
 
     #define VK_ITEM_ATTRS(id, uri, name, owner, refresh, duration) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_vk}, \
@@ -84,29 +84,29 @@ namespace Core {
             {JSON_TYPE_OWNER_ID, owner}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
             {JSON_TYPE_DURATION, duration} \
-        }
+        })
 
     #define YANDEX_ITEM_ATTRS(id, name, refresh, duration) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_yandex}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
             {JSON_TYPE_DURATION, duration} \
-        }
+        })
 
     #define YOUTUBE_ITEM_ATTRS(id, name, refresh) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_youtube}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
-        }
+        })
 
     #define SC_ITEM_ATTRS(id, uri, name, owner, duration, extension) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_sc}, \
@@ -115,16 +115,17 @@ namespace Core {
             {JSON_TYPE_OWNER_ID, owner}, \
             {JSON_TYPE_DURATION, duration}, \
             {JSON_TYPE_EXTENSION, extension} \
-        }
+        })
 
     #define OD_ITEM_ATTRS(id, name, refresh, duration, size) \
-        {\
+        QVariantMap({\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_od}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_DURATION, duration}, \
             {JSON_TYPE_BYTES_SIZE, size} \
-        }
+        })
+}
 
 #endif // ITEM_FIELD_DEFINES
