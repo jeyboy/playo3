@@ -481,7 +481,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
     int itemsAmount = 0;
     QJsonObject itm;
-    SoundcloudFile * newItem;
+    IItem * newItem;
     QString uri, id, owner, uid;
     QList<IItem *> items;
     bool original;
@@ -496,7 +496,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
         id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
         owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
-        uid = WebFile::toUid(owner, id);
+        uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
         uri = itm.value(Soundcloud::tkn_download_url).toString();
@@ -510,20 +510,21 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new SoundcloudFile(
-                id,
-                uri,
-                itm.value(Soundcloud::tkn_title).toString(),
-                parent
+            newItem = new IItem(
+                parent,
+                SC_ITEM_ATTRS(id, uri,
+                    itm.value(Soundcloud::tkn_title).toString(),
+                    owner,
+                    Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)),
+                    original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension
+                )
             );
 
-            newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
-            newItem -> setExtension(original ? itm.value(Soundcloud::tkn_original_format).toString() : Soundcloud::tkn_default_extension);
-            newItem -> setOwner(owner);
-            newItem -> setDuration(Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)));
-            newItem -> setSubtype(Web::site_sc);
-
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
+
+            if (itm.contains(Soundcloud::tkn_video_url))
+                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+
             if (itm.contains(Soundcloud::tkn_genre_id))
                 newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
         } else {

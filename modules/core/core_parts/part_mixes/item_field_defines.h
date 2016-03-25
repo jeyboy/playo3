@@ -105,6 +105,18 @@ namespace Core {
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
         }
+
+    #define SC_ITEM_ATTRS(id, uri, name, owner, duration, extension) \
+        {\
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_ID, id}, \
+            {JSON_TYPE_ITEM_TYPE, dt_site_sc}, \
+            {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_OWNER_ID, owner}, \
+            {JSON_TYPE_DURATION, duration}, \
+            {JSON_TYPE_EXTENSION, extension} \
+        }
 }
 
 #endif // ITEM_FIELD_DEFINES
