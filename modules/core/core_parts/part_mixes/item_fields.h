@@ -97,12 +97,8 @@ namespace Core {
         inline void setParted(const QVariant & isParted)        { attrs[JSON_TYPE_PARTIAL] = isParted; }
         inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
-
-
-
-
         virtual QJsonObject toJson();
-        QVariantMap toInnerAttrs(int itemType) const;
+        QVariantMap toInnerAttrs() const;
     protected:
         QVariantMap attrs;
     };

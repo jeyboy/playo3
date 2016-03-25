@@ -719,7 +719,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         if (itm -> isShareable()) {
             QVariant uid = itm -> toUid();
             if (uid.isValid())
-                ret = ret % QStringLiteral(" ") % QString::number(itm -> itemType()) % SHARE_DELIMITER % uid.toString();
+                ret = ret % QStringLiteral(" ") % QString::number(itm -> dataType()) % SHARE_DELIMITER % uid.toString();
         }
     }
 
@@ -756,7 +756,7 @@ void IModel::importIds(const QStringList & ids) {
             if (path.isEmpty()) path = Extensions::folderName(file);
             parentNode = rootItem -> playlist(path);
             is_new = !parentNode;
-            if (is_new) parentNode = rootItem -> createPlaylist(path);
+            if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
         break;}
         default:;
     }
@@ -774,7 +774,7 @@ void IModel::importIds(const QStringList & ids) {
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         switch(map_it.key()) {
-            case VK_FILE: {
+            case dt_site_vk: {
                 Vk::Api::obj().connection();
 
                 if (Vk::Api::obj().isConnected()) {
@@ -783,7 +783,7 @@ void IModel::importIds(const QStringList & ids) {
                 }
             break;}
 
-            case SOUNDCLOUD_FILE: {
+            case dt_site_sc: {
                 Soundcloud::Api::obj().connection();
 
                 if (Soundcloud::Api::obj().isConnected()) {
@@ -792,7 +792,7 @@ void IModel::importIds(const QStringList & ids) {
                 }
             break;}
 
-             case OD_FILE: {
+             case dt_site_od: {
                 Od::Api::obj().connection();
 
                 if (Od::Api::obj().isConnected()) {
@@ -1026,7 +1026,9 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
         parentFolder = item<Playlist>(dIndex);
 
         beginInsertRows(data -> eIndex, data -> eRow, data -> eRow);
-            counts[parentFolder] += Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
+            new IItem(parentFolder, data -> attrs, data -> dRow);
+//            Playlist::restoreItem(data -> attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), parentFolder, data -> dRow, data -> attrs);
+            counts[parentFolder] ++;
         endInsertRows();
         delete data;
     }
@@ -1119,8 +1121,8 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
                 }
 
                 if (is_valid) {
-                    QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
-                    if (!attrs.contains(JSON_TYPE_PATH))
+                    QVariantMap attrs = (*it) -> toInnerAttrs();
+                    if (!(*it) -> isRemote() && !attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
                     amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
