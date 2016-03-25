@@ -300,20 +300,13 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
         id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
 
         itemsAmount++;
-        newItem = new WebFile(
-            id,
-            QString(),
-            artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString(),
-            parent
-        );
+        newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
+            QString(artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString()),
+            Grabber::default_extension, id,
+            Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0))
+        ));
 
-        newItem -> setSubtype(site_yandex);
-        newItem -> setRefreshPath(id);
-        newItem -> setExtension(Grabber::default_extension);
-
-        newItem -> setDuration(Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)));
         //newItem -> setGenre(genre); // need to convert genre to genre id
-
         if (itm.contains(Yandex::tkn_fileSize))
             newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
     }
@@ -326,7 +319,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 
     int itemsAmount = 0;
     QJsonObject itm, snippet;
-    WebFile * newItem;
+    IItem * newItem;
     QString id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
@@ -338,17 +331,12 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
         id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
 
         itemsAmount++;
-        newItem = new WebFile(
-            id,
-            QString(),
-            snippet.value(QStringLiteral("title")).toString(), // "description"
-            parent
-        );
+        newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
+            snippet.value(QStringLiteral("title")).toString(),
+            id
+        ));
 
         //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
-        newItem -> setSubtype(site_youtube);
-        newItem -> setRefreshPath(id);
-        newItem -> setExtension(Grabber::default_extension);
 
 
         snippet = itm.value(QStringLiteral("contentDetails")).toObject();
@@ -375,7 +363,7 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(SubType wType, QJsonArray & collection, Playlist * parent) {
+int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
 
     int itemsAmount = 0;
