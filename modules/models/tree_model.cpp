@@ -11,7 +11,7 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
 
         QStringList list = path.split('/', QString::SkipEmptyParts);
         Playlist * nearestNode = rootItem -> findCompatblePlaylist(&list);
-        Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(list.takeFirst(), &list);
+        Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(dt_playlist, list.takeFirst(), &list);
         exIndex = index(nearestNode);
 
         (const_cast<QModelIndex &>(dIndex)) = index(node);
@@ -41,7 +41,7 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dir_it.fileName()), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, dir_it.fileName()), unproc_files, items);
         }
     }
 
@@ -56,7 +56,7 @@ int TreeModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 res++;
-                items.insert(path, new File(name, node));
+                items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name)));
             }
         }
     }
@@ -77,16 +77,19 @@ int TreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString path = file.filePath();
+        QString name = file.fileName();
+
         if (file.isDir()) {
-            res += filesRoutine(file.filePath(), node -> createPlaylist(file.fileName(), 0, pos), unproc_files, items);
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, name, 0, pos), unproc_files, items);
         } else {
-            if (unproc_files.contains(file.filePath())) continue;
+            if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
-                    res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
+                    res += proceedCue(path, name, node, pos, unproc_files, items);
                 else {
                     res++;
-                    items.insert(file.filePath(), new File(file.fileName(), node, pos));
+                    items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos));
                 }
             }
         }
