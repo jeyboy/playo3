@@ -21,6 +21,7 @@ namespace Core {
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
+        ItemFields(const QVariantMap & hash) : ItemState() { attrs = QVariantMap(hash); }
         ItemFields(QVariantMap & hash);
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, const QString & title, int initState = DEFAULT_ITEM_STATE);
