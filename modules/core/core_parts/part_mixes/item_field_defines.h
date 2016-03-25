@@ -52,6 +52,27 @@ namespace Core {
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE} \
         }
 
+    #define LOCAL_CUE_ITEM_ATTRS(path, name, extension, start_pos, is_parted) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, dt_local_cue}, \
+            {JSON_TYPE_PATH, path}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_EXTENSION, extension}, \
+            {JSON_TYPE_START_POS, start_pos}, \
+            {JSON_TYPE_PARTIAL, is_parted} \
+        }
+
+    #define WEB_ITEM_ATTRS(id, uri, name, subtype, refresh, extension) \
+        {\
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_ID, id}, \
+            {JSON_TYPE_ITEM_TYPE, subtype}, \
+            {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_EXTENSION, extension}, \
+            {JSON_TYPE_REFRESH_PATH, refresh}, \
+        }
 
     #define VK_ITEM_ATTRS(id, uri, name, owner, refresh, duration) \
         {\

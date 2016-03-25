@@ -1,6 +1,7 @@
 #include <qpair.h>
 #include "model_interface.h"
 
+#include "modules/core/media/cue/cue.h"
 #include "modules/core/misc/fuzzy_comparison.h"
 
 using namespace Models;
@@ -368,7 +369,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
 
     int itemsAmount = 0;
     QJsonObject itm;
-    WebFile * newItem;
+    IItem * newItem;
     QString uri, refresh_url, id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
@@ -382,16 +383,11 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
         refresh_url = itm.value(Grabber::refresh_key).toString();
 
         itemsAmount++;
-        newItem = new WebFile(
-            id,
-            uri,
+        newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
             itm.value(Grabber::title_key).toString(),
-            parent
-        );
-
-        newItem -> setSubtype(wType);
-        newItem -> setRefreshPath(refresh_url);
-        newItem -> setExtension(itm.value(Grabber::extension_key).toString(Grabber::default_extension));
+            wType, refresh_url,
+            itm.value(Grabber::extension_key).toString(Grabber::default_extension)
+        ));
 
         if (itm.contains(Grabber::duration_key)) {
             if (itm.value(Grabber::duration_key).isDouble())
@@ -423,8 +419,60 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
     return itemsAmount;
 }
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
-    CuePlaylist * cueta = new CuePlaylist(path, name, newParent, insertPos);
-    return cueta -> initFiles(unproc_files, items);
+    Playlist * cuePlaylist = new Playlist(dt_playlist_cue, path, name, newParent, insertPos);
+
+    Media::Cue * cue = Media::Cue::fromPath(path);
+    QList<Media::CueSong> songs = cue -> songs();
+    QHash<QString, QString> ignore;
+    int amount = 0;
+
+    for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
+        QString songPath = (*song).filePath;
+        bool res = true;
+
+        if (ignore.contains((*song).filePath))
+            res = false;
+        else if (!unproc_files.contains(songPath)) {
+            //TODO: temp solution for removing from list already added cue parts
+            if (!items.isEmpty()) {
+                IItem * itm = items.take(songPath);
+                if (itm) {
+                    if (itm -> parent() -> childCount() == 1)
+                        itm -> parent() -> removeYouself();
+                    else
+                        itm -> removeYouself();
+                }
+            }
+
+            res = QFile::exists(songPath);
+
+            if (!res) {
+              //TODO: ask user about manual choosing of media source for cue
+            }
+        }
+
+        IItem * ditem = new IItem(cuePlaylist, LOCAL_CUE_ITEM_ATTRS(
+            songPath, (*song).trackName, (*song).extension, (*song).startPos, (*song).isPartial
+        ));
+
+        if ((*song).duration > 0)
+            ditem -> setDuration(Duration::fromMillis((*song).duration));
+
+        if (res) {
+            if (!(*song).error.isEmpty()) // there should be other error status ?
+                ditem -> setError(ItemErrors::err_not_existed);
+        } else {
+            ignore.insert(songPath, QString());
+            ditem -> setError(ItemErrors::err_not_existed);
+        }
+
+        unproc_files.insert(songPath, res);
+        amount++;
+    }
+
+    delete cue;
+    cuePlaylist -> updateItemsCountInBranch(amount);
+    return amount;
 }
 
 
