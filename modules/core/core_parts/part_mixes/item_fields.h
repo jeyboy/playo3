@@ -1,10 +1,9 @@
 #ifndef MODEL_ITEM_FIELDS_H
 #define MODEL_ITEM_FIELDS_H
 
+#include "item_field_defines.h"
 #include <qjsonobject.h>
 
-#include "item_field_defines.h"
-#include "settings.h"
 #include "modules/core/data_sub_types.h"
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/misc/format.h"
@@ -77,7 +76,7 @@ namespace Core {
                 attrs[JSON_TYPE_ERROR] = error;
         }
 
-        inline bool hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
+        bool hasInfo() const;
 
 
 

@@ -1,4 +1,5 @@
 #include "item_fields.h"
+#include "settings.h"
 #include "modules/core/web/apis/social/soundcloud_api.h"
 
 #include <qdesktopservices.h>
@@ -33,6 +34,8 @@ QStringList ItemFields::info() const {
 
     return list;
 }
+
+bool ItemFields::hasInfo() const {return !Settings::obj().isShowInfo() || (Settings::obj().isShowInfo() && _info().isValid());}
 
 void ItemFields::openLocation() { QDesktopServices::openUrl(toUrl()); }
 //void ItemFields::openLocation() {
