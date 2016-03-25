@@ -1125,7 +1125,9 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
                     if (!(*it) -> isRemote() && !attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                    amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+                    new IItem(destination, attrs);
+//                    Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
+                    amount ++;
                 }
             }
         }
@@ -1151,13 +1153,12 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
             bool is_valid = comparity >= 80;
 
             if (is_valid) {
-                QVariantMap attrs = (*it) -> toInnerAttrs((*it) -> itemType());
-                if (!attrs.contains(JSON_TYPE_PATH))
+                QVariantMap attrs = (*it) -> toInnerAttrs();
+                if (!(*it) -> isRemote() && !attrs.contains(JSON_TYPE_PATH))
                     attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
-                amount += Playlist::restoreItem(attrs.take(JSON_TYPE_ITEM_TYPE).toInt(), destination, -1, attrs);
-
-                if (amount == count) break;
+                new IItem(destination, attrs);
+                if (++amount == count) break;
             }
         }
     }

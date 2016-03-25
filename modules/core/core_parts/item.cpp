@@ -7,9 +7,6 @@ using namespace Core;
 IItem::IItem(Playlist * parent, QJsonObject * hash) : ItemFields(hash), _parent(parent) {
     if (_parent) _parent -> declareChild(this);
 }
-IItem::IItem(Playlist * parent, QVariantMap & hash, int pos) : ItemFields(hash), _parent(parent) {
-    if (_parent) _parent -> declareChild(this, pos);
-}
 IItem::IItem(Playlist * parent, const QVariantMap & hash, int pos) : ItemFields(hash), _parent(parent) {
     if (_parent) _parent -> declareChild(this, pos);
 }

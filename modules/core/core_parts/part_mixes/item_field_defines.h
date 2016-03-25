@@ -40,6 +40,7 @@ namespace Core {
         QVariantMap({\
             {JSON_TYPE_ITEM_TYPE, dt_web}, \
             {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_ERROR, err_not_existed} \
         })
 
@@ -47,7 +48,8 @@ namespace Core {
         QVariantMap({\
             {JSON_TYPE_ITEM_TYPE, dt_local}, \
             {JSON_TYPE_PATH, path}, \
-            {JSON_TYPE_TITLE, name} \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE} \
         })
 
     #define LOCAL_CUE_ITEM_ATTRS(path, name, extension, start_pos, is_parted) \
@@ -55,6 +57,7 @@ namespace Core {
             {JSON_TYPE_ITEM_TYPE, dt_local_cue}, \
             {JSON_TYPE_PATH, path}, \
             {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_START_POS, start_pos}, \
             {JSON_TYPE_PARTIAL, is_parted} \
@@ -66,6 +69,7 @@ namespace Core {
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, subtype}, \
             {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
         })
@@ -76,6 +80,7 @@ namespace Core {
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_vk}, \
             {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_OWNER_ID, owner}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
             {JSON_TYPE_DURATION, duration} \
@@ -86,6 +91,7 @@ namespace Core {
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_yandex}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
             {JSON_TYPE_DURATION, duration} \
         })
@@ -95,7 +101,8 @@ namespace Core {
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_youtube}, \
-            {JSON_TYPE_REFRESH_PATH, refresh} \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
+            {JSON_TYPE_REFRESH_PATH, refresh}, \
         })
 
     #define SC_ITEM_ATTRS(id, uri, name, owner, duration, extension) \
@@ -104,6 +111,7 @@ namespace Core {
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_sc}, \
             {JSON_TYPE_PATH, uri}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_OWNER_ID, owner}, \
             {JSON_TYPE_DURATION, duration}, \
             {JSON_TYPE_EXTENSION, extension} \
@@ -114,6 +122,7 @@ namespace Core {
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_od}, \
+            {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_DURATION, duration}, \
             {JSON_TYPE_BYTES_SIZE, size} \
         })

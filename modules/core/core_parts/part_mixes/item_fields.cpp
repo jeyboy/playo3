@@ -5,7 +5,7 @@
 
 using namespace Core;
 
-ItemFields::ItemFields(QVariantMap & hash) : ItemState(hash.take(JSON_TYPE_STATE).toInt()) {
+ItemFields::ItemFields(const QVariantMap & hash) : ItemState(const_cast<QVariantMap &>(hash).take(JSON_TYPE_STATE).toInt()) {
     attrs = QVariantMap(hash);
 }
 
