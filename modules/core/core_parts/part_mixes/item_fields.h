@@ -33,7 +33,7 @@ namespace Core {
         inline QVariant path() const                            { return attrs.value(JSON_TYPE_PATH); }
         virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
-        inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
+        inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION, QStringLiteral("mp3")); }
         inline QVariant startPos() const                        { return attrs.value(JSON_TYPE_START_POS); }
         inline qint64 startPosMillis() const                    { return attrs.value(JSON_TYPE_START_POS, 0).toLongLong(); }
         inline QVariant duration() const                        { return attrs.value(JSON_TYPE_DURATION); }

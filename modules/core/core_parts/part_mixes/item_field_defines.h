@@ -86,13 +86,12 @@ namespace Core {
             {JSON_TYPE_DURATION, duration} \
         }
 
-    #define YANDEX_ITEM_ATTRS(id, name, extension, refresh, duration) \
+    #define YANDEX_ITEM_ATTRS(id, name, refresh, duration) \
         {\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_site_yandex}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
-            {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_REFRESH_PATH, refresh}, \
             {JSON_TYPE_DURATION, duration} \
         }

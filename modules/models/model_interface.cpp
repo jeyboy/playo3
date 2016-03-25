@@ -222,35 +222,30 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
 
 int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
-    QJsonObject itm;
-    IItem * newItem;
-    QString uri, id, owner, uid;
-    QList<IItem *> items;
 
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
     int pos = parent -> playlistsAmount();
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+        QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
 
-        id = QString::number(itm.value(Vk::tkn_id).toInt());
-        owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
-        uid = IItem::toUid(owner, id);
+        QString id = QString::number(itm.value(Vk::tkn_id).toInt());
+        QString owner = QString::number(itm.value(Vk::tkn_owner_id).toInt());
+        QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
-        uri = itm.value(Vk::tkn_url).toString();
+        QString uri = itm.value(Vk::tkn_url).toString();
         uri = uri.section('?', 0, 0); // remove extra info from url
 
-        items = store.values(uid);
+        QList<IItem *> items = store.values(uid);
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new IItem(parent, VK_ITEM_ATTRS(
+            IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
                 QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
                 owner, uid,
@@ -276,14 +271,10 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
-    QJsonObject itm;
-    IItem * newItem;
-    QString id, album_id, genre;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
         QStringList artistUids;
@@ -296,14 +287,14 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
         };
 
         QJsonObject album = itm.value(Yandex::tkn_album).toObject();
-        genre = album.value(Yandex::tkn_genre).toString();
-        album_id = QString::number(album.value(Yandex::tkn_id).toInt());
-        id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
+        QString genre = album.value(Yandex::tkn_genre).toString();
+        QString album_id = QString::number(album.value(Yandex::tkn_id).toInt());
+        QString id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
 
         itemsAmount++;
-        newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
+        IItem * newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
             QString(artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString()),
-            Grabber::default_extension, id,
+            id,
             Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0))
         ));
 
@@ -317,22 +308,18 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
 
 int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
-    QJsonObject itm, snippet;
-    IItem * newItem;
-    QString id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+        QJsonObject itm = (*it).toObject();
         qDebug() << itm;
 
-        snippet = itm.value(QStringLiteral("snippet")).toObject();
+        QJsonObject snippet = itm.value(QStringLiteral("snippet")).toObject();
         QJsonValue idVal = itm.value(QStringLiteral("id"));
-        id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
+        QString id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
 
         itemsAmount++;
-        newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
+        IItem * newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
             snippet.value(QStringLiteral("title")).toString(),
             id
         ));
@@ -366,24 +353,19 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 
 int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
-    QJsonObject itm;
-    IItem * newItem;
-    QString uri, refresh_url, id;
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
+        QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
 
-        id = QString::number(itm.value(Grabber::id_key).toInt());
-
-        uri = itm.value(Grabber::url_key).toString();
-        refresh_url = itm.value(Grabber::refresh_key).toString();
+        QString id = QString::number(itm.value(Grabber::id_key).toInt());
+        QString uri = itm.value(Grabber::url_key).toString();
+        QString refresh_url = itm.value(Grabber::refresh_key).toString();
 
         itemsAmount++;
-        newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
+        IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
             itm.value(Grabber::title_key).toString(),
             wType, refresh_url,
             itm.value(Grabber::extension_key).toString(Grabber::default_extension)
@@ -478,39 +460,34 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 
 int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
-    QJsonObject itm;
-    IItem * newItem;
-    QString uri, id, owner, uid;
-    QList<IItem *> items;
-    bool original;
 
+    QList<IItem *> items;
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        itm = (*it).toObject();
-
+        QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
-        id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
-        owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
-        uid = IItem::toUid(owner, id);
+        bool original = true;
+        QString id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
+        QString owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
+        QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
-        uri = itm.value(Soundcloud::tkn_download_url).toString();
+        QString uri = itm.value(Soundcloud::tkn_download_url).toString();
         if (uri.isEmpty()) {
             uri = itm.value(Soundcloud::tkn_stream_url).toString();
             original = false;
-        } else { original = true;}
+        }
         if (uri.isEmpty()) continue;
 
         items = store.values(uid);
 
         if (items.isEmpty()) {
             itemsAmount++;
-            newItem = new IItem(
+            IItem * newItem = new IItem(
                 parent,
                 SC_ITEM_ATTRS(id, uri,
                     itm.value(Soundcloud::tkn_title).toString(),
@@ -543,10 +520,10 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
     if (collection.isEmpty()) return 0;
-
     int itemsAmount = 0;
+
     QJsonObject itm;
-    OdFile * newItem;
+    IItem * newItem;
     QString id;
     QList<IItem *> items;
 
