@@ -5,6 +5,7 @@
 #include "modules/core/web/web_apis.h"
 #include "dockbars.h"
 
+using namespace Core;
 using namespace Controls;
 
 void SearchConfigurator::initUI() {
@@ -197,12 +198,12 @@ void SearchConfigurator::initiateSources() {
         }
     }
 
-    QHash<Core::Web::SubType, Core::ISearchable *> sites = Core::Web::Apis::list();
+    QHash<DataSubType, ISearchable *> sites = Web::Apis::list();
     QListWidgetItem * item = new QListWidgetItem(QString(""));
     item -> setFlags(Qt::NoItemFlags);
     sitesList -> addItem(item);
 
-    for(QHash<Core::Web::SubType, Core::ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+    for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         if ((*it) -> isConnected()) {
             QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
@@ -210,10 +211,10 @@ void SearchConfigurator::initiateSources() {
             item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
 
             switch(it.key()) {
-                case Core::Web::SubType::site_vk:
-                case Core::Web::SubType::site_sc:
-                case Core::Web::SubType::site_od:
-                case Core::Web::SubType::site_fourshared: {
+                case dt_site_vk:
+                case dt_site_sc:
+                case dt_site_od:
+                case dt_site_fourshared: {
                     sitesList -> insertItem(0, item);
                 break;}
                 default: sitesList -> addItem(item);

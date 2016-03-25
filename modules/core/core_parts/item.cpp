@@ -21,7 +21,7 @@ IItem::IItem(const DataSubType & subType, Playlist * parent, const QString & tit
 }
 
 IItem::~IItem() {
-    if (has(flag_mark_on_removing))
+    if (is(flag_mark_on_removing))
         removePhysicalObject();
 }
 
@@ -97,10 +97,7 @@ QVariant IItem::data(int column) const {
                     params.insert((isRemote() ? Keys::undefined : Keys::not_exist), err_code > 0 && err_code < 1000);
                     params.insert(Keys::unsupported, err_code > 999 && err_code < 2000);
                 }
-                params.insert(
-                    Keys::type,
-                    subtipe() > 0 ? (itemType() + subtipe()) : itemType()
-                );
+                params.insert(Keys::type, dataType());
             }
             return params;
         }
@@ -150,7 +147,7 @@ QVariant IItem::data(int column) const {
         case IREMOTE:           return isRemote();
         case ISTATE:            return visualStates();
         case IFULLPATH:         return fullPath();
-        case ITYPE:             return itemType();
+        case ITYPE:             return dataType();
 
         default:                return QVariant();
     }
@@ -175,7 +172,7 @@ void IItem::packToStream(QHash<QUrl, int> & urls, QDataStream & stream) {
 
     if (!lastUrl.isEmpty() && urls.contains(lastUrl)) return;
 
-    stream << lastUrl << isRemote() << toInnerAttrs(itemType());
+    stream << lastUrl << isRemote() << toInnerAttrs();
     urls.insert(lastUrl, 0);
 }
 

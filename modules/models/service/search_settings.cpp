@@ -6,6 +6,8 @@
 #include "dockbars.h"
 #include "modules/core/web/web_apis.h"
 
+using namespace Core;
+
 QString SearchRequest::token() {
     bool has_predicate = !spredicate.isEmpty();
     bool has_genre = !sgenre.isEmpty();
@@ -42,7 +44,7 @@ void SearchRequest::fromJson(const QJsonArray & objs, QList<SearchRequest> & lis
 
             case remote: {
                 int subject_id = obj.value(JSON_SEARCH_SUBJECT).toInt();
-                subject = Core::Web::Apis::engine((Core::Web::SubType)subject_id);
+                subject = Web::Apis::engine((DataSubType)subject_id);
             break;}
 
             default: {
@@ -72,7 +74,7 @@ void SearchRequest::save(QJsonArray & arr) {
         break;}
 
         case remote: {
-            int subject = ((Core::ISearchable *)(search_interface)) -> siteType();
+            int subject = ((ISearchable *)(search_interface)) -> siteType();
             self.insert(JSON_SEARCH_SUBJECT, subject);
         break;}
 

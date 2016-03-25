@@ -267,15 +267,15 @@ void IView::openRecomendationsforUser() {
     Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % sttngs.uid), settings, 0, true, true);
 }
 void IView::openRecomendationsforItemUser() {
-    WebFile * it = mdl -> item<WebFile>(currentIndex());
+    IItem * it = mdl -> item(currentIndex());
     if (it -> owner().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> owner().toString(), Data::user_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), settings, 0, true, true);
     }
 }
 void IView::openRecomendationsforItem() {
-    WebFile * it = mdl -> item<WebFile>(currentIndex());
-    if (it -> uid().isValid()) {
+    IItem * it = mdl -> item(currentIndex());
+    if (it -> id().isValid()) {
         Params settings(Data::vk_rel, false, false, false, true, it -> toUid(), Data::song_rel);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), settings, 0, true, true);
     }
@@ -341,7 +341,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
-        if (ind.data(ITYPE).toInt() == VK_FILE) {
+        if (ind.data(ITYPE).toInt() == dt_site_vk) {
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
             menu.addSeparator();
