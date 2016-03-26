@@ -81,7 +81,9 @@ namespace Core {
             Library::obj().restoreItemState(ind);
         }
 
-        void proceedInfoAsync(const QModelIndex & ind);
+        void proceedInfoAsync(const QModelIndex & ind, const bool & isRemote) {
+            Library::obj().restoreItemStateAsync(ind, isRemote);
+        }
     };
 }
 

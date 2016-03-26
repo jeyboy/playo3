@@ -80,7 +80,7 @@ namespace Views {
         void discardSync(QAbstractItemModel * mdl);
         void changeCadrSize(QAbstractItemModel * mdl, int newSize);
         void infoInvalidation(const QModelIndex & node) const;
-        void infoInvalidationAsync(const QModelIndex & node) const;
+        void infoInvalidationAsync(const QModelIndex & node, const bool & isRemote) const;
 
         void showAlert(QWidget * parent, const QString & title, const QString & text, QMessageBox::StandardButtons buttons);
         void threadedRowRemoving(const QModelIndex & node, bool remove, int selectionUpdate, int flags);

@@ -4,7 +4,7 @@ using namespace Core;
 
 bool ItemState::set(enum ItemStateFlag flag) {
     switch(flag) {
-        case flag_new_item: return   reset();
+        case flag_new_item: return   setNewItem();
         case flag_listened: return   setListened();
         case flag_liked: return      setLiked();
         default: return         setBit(item_state, flag) == (int)flag;
@@ -66,6 +66,11 @@ void ItemState::setStates(int flags) {
 ////        if (bitIsSet(flags, supported))     unset(not_supported);
 //    }
 //}
+
+bool ItemState::setNewItem() {
+    setBit(item_state & (~(visualStates())), flag_new_item);
+    return true;
+}
 
 bool ItemState::reset() {
     item_state = DEFAULT_ITEM_STATE;

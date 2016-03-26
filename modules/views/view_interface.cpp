@@ -28,7 +28,7 @@ IView::IView(IModel * newModel, QWidget * parent, Params & settings)
     connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
     connect(this, SIGNAL(discardSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(discardSync(QAbstractItemModel*)), Qt::DirectConnection);
     connect(this, SIGNAL(infoInvalidation(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfo(QModelIndex)), Qt::DirectConnection);
-    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex)));
+    connect(this, SIGNAL(infoInvalidationAsync(QModelIndex, bool)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex, bool)));
     connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataFactory::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
 
     setModel(mdl);
@@ -282,10 +282,16 @@ void IView::openRecomendationsforItem() {
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
-    if (mdl -> item(index) -> is(IItem::flag_expanded)) // required for uncanonical delition and after loading state reconstruction
+    IItem * node = static_cast<IItem *>(index.internalPointer());
+
+    if (node -> expandRequired()) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
-    emit infoInvalidationAsync(index);
+    if (!node -> is(IItem::flag_proceeded)) {
+        node -> set(IItem::flag_proceeded);
+        emit infoInvalidationAsync(index, node -> isRemote());
+    }
+
     QTreeView::drawRow(painter, options, index);
 }
 

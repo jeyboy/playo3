@@ -31,6 +31,7 @@ namespace Core {
             bool showBatch = Settings::obj().isCheckboxShow();
             return !isContainer() && (!showBatch || (showBatch && is(flag_checked)));
         }
+        inline bool expandRequired() { return isContainer() && is(flag_expanded); }
 
         QString buildTreePath() const;
         QString buildTreeStr() const; // used for tree sorting on removing

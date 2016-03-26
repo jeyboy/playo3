@@ -187,14 +187,4 @@ namespace Core {
             default: { qDebug() << "WTF MEDIA"; }
         }
     }
-
-    void DataFactory::proceedInfoAsync(const QModelIndex & ind) {
-        IItem * node = static_cast<IItem *>(ind.internalPointer());
-        if (node -> isContainer()) return;
-
-        if (!node -> is(IItem::flag_proceeded)) {
-            node -> set(IItem::flag_proceeded);
-            Library::obj().restoreItemStateAsync(ind, node -> isRemote());
-        }
-    }
 }

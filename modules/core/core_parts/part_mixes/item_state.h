@@ -47,12 +47,13 @@ namespace Core {
 
         protected:
             bool reset();
+            bool setNewItem();
             bool setListened();
             bool setLiked();
             bool unsetLiked();
 
             inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
-            inline int setBit(int val, int pos) { return (item_state = val | pos) & pos; }
+            inline bool setBit(int val, int pos) { return (item_state = val | pos) & pos; }
             int unsetBit(int val, int pos) { return (item_state = val & (~(pos))); }
 
             int item_state;
