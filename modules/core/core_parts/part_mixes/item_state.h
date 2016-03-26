@@ -4,6 +4,14 @@
 namespace Core {
     #define DEFAULT_ITEM_STATE (ItemState::flag_checked | ItemState::flag_new_item | ItemState::flag_expanded)
 
+    #define BITS_IS_SET(res, cbits) ((res & cbits) == cbits)
+    #define SET_BITS(res, cbits) (BITS_IS_SET(res |= cbits, cbits) == cbits)
+    #define UNSET_BITS(res, cbits) res &= (~(cbits))
+
+    #define VISUAL_BITS(res) (res & 7)
+    #define SET_VISUAL_BIT(res, cbit) res = (res - VISUAL_BITS(res)) + cbit
+    #define UNSET_VISUAL_BIT(res, cbit) res = (res - VISUAL_BITS(res)) + (cbit == 1 ? cbit : cbit >> 1)
+
     class ItemState {
         public:
             enum ItemStateFlag {
@@ -26,35 +34,43 @@ namespace Core {
 //                not_exist = 32,
 //                not_supported = 16,
                 flag_proceeded = 8,
-                flag_new_item = 4,
-                flag_listened = 2,
-                flag_liked = 1
+                flag_listened = 4,
+                flag_liked = 2,
+                flag_new_item = 1
             };
 
             inline ItemState(int state = DEFAULT_ITEM_STATE) { item_state = state; }
             inline virtual ~ItemState() {}
 
-            inline bool is(enum ItemStateFlag flag) const { return bitIsSet(item_state, flag); }
-            inline void unset(enum ItemStateFlag flag) { unsetBit(item_state, flag); }
-            bool set(enum ItemStateFlag flag);
+            inline bool is(const enum ItemStateFlag & flag) const { return BITS_IS_SET(item_state, flag); }
+            bool set(const enum ItemStateFlag & flag);
+            void unset(const enum ItemStateFlag & flag);
 
-            void setStates(int flags);
+            void setStates(const int & flags);
 
             inline int states() const { return item_state; }
             inline int saveStates() const { return (unsigned char)item_state; }
-//            inline int innerStates() { return item_state & ((0 << 6) - 1) << 3; }
-            inline int visualStates() const { return item_state & 7; }
+            inline int visualStates() const { return VISUAL_BITS(item_state); }
 
         protected:
-            bool reset();
-            bool setNewItem();
-            bool setListened();
-            bool setLiked();
-            bool unsetLiked();
+            //bool reset() {
+            //    item_state = DEFAULT_ITEM_STATE;
+            //    return true;
+            //}
 
-            inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
-            inline bool setBit(int val, int pos) { return (item_state = val | pos) & pos; }
-            int unsetBit(int val, int pos) { return (item_state = val & (~(pos))); }
+
+//            bool setVisual(const enum ItemStateFlag & flag) {
+//                item_state = item_state - visualStates() + flag;
+//                return true;
+//            }
+//            bool unsetVisual(const enum ItemStateFlag & flag) {
+//                item_state = item_state - visualStates() + flag / 2 + flag % 2;
+//                return true;
+//            }
+
+//            inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
+//            inline bool setBit(int val, int pos) { return (item_state = val | pos) & pos; }
+//            int unsetBit(int val, int pos) { return (item_state = val & (~(pos))); }
 
             int item_state;
     };
