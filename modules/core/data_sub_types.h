@@ -2,7 +2,7 @@
 #define DATA_SUB_TYPES
 
 namespace Core {
-    enum DataSubType {
+    enum DataSubType : int {
         dt_playlist = -99,
         dt_playlist_local,
         dt_playlist_cue,
