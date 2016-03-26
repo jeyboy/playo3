@@ -437,8 +437,10 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
         if (!curr.isValid()) break;
 
         IItem * node = mdl -> item(curr);
-        if (!node -> isContainer() && !node -> is(IItem::flag_proceeded))
+        if (!node -> isContainer() && !node -> is(IItem::flag_proceeded)) {
+            node -> set(IItem::flag_proceeded);
             emit infoInvalidation(curr);
+        }
 
         node -> updateCheckedStateByPredicate(flag);
 
