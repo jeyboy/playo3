@@ -100,7 +100,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
     bodyRect.setTop(bodyRect.top() + 1); // space between items
     bodyRect.setHeight(bodyRect.height() - 2);  // space between items
 
-    QVariantMap attrs = index.data(IATTRS).toMap();
+    QVariantHash attrs = index.data(IATTRS).toHash();
     QVariant checkable = attrs.value(Keys::checkable);
 
     QString ext;
@@ -319,7 +319,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     bodyRect.setTop(bodyRect.top() + 1); // space between items
     bodyRect.setHeight(bodyRect.height() - 2);  // space between items
 
-    QVariantMap attrs = index.data(IATTRS).toMap();
+    QVariantHash attrs = index.data(IATTRS).toHash();
     QVariant checkable = attrs.value(Keys::checkable);
 
     int background_state = attrs.value(Keys::state).toInt();

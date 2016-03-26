@@ -5,12 +5,12 @@
 
 using namespace Core;
 
-ItemFields::ItemFields(const QVariantMap & hash) : ItemState(const_cast<QVariantMap &>(hash).take(JSON_TYPE_STATE).toInt()) {
-    attrs = QVariantMap(hash);
+ItemFields::ItemFields(const QVariantHash & hash) : ItemState(const_cast<QVariantHash &>(hash).take(JSON_TYPE_STATE).toInt()) {
+    attrs = QVariantHash(hash);
 }
 
 ItemFields::ItemFields(QJsonObject * hash) : ItemState(hash -> take(JSON_TYPE_STATE).toInt()) {
-    attrs = hash -> toVariantMap();
+    attrs = hash -> toVariantHash();
 }
 
 ItemFields::ItemFields(const DataSubType & subType, const QString & title, int initState) : ItemState(initState) {
@@ -118,13 +118,13 @@ QUrl ItemFields::toUrl() const {
 }
 
 QJsonObject ItemFields::toJson() {
-    QJsonObject root = QJsonObject::fromVariantMap(attrs);
+    QJsonObject root = QJsonObject::fromVariantHash(attrs);
     root[JSON_TYPE_STATE] = saveStates();
     return root;
 }
 
-QVariantMap ItemFields::toInnerAttrs() const {
-    QVariantMap a(attrs);
+QVariantHash ItemFields::toInnerAttrs() const {
+    QVariantHash a(attrs);
     a.insert(JSON_TYPE_STATE, saveStates());
     return a;
 }

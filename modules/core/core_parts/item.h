@@ -13,7 +13,7 @@ namespace Core {
     class IItem : public ItemFields {
     public:
         IItem(Playlist * parent, QJsonObject * hash);
-        IItem(Playlist * parent, const QVariantMap & hash, int pos = -1);
+        IItem(Playlist * parent, const QVariantHash & hash, int pos = -1);
         IItem(const DataSubType & subType, Playlist * parent = 0, int initState = DEFAULT_ITEM_STATE);
         IItem(const DataSubType & subType, Playlist * parent, const QString & title, int pos = -1, int initState = DEFAULT_ITEM_STATE);
 

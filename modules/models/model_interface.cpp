@@ -22,7 +22,7 @@ bool IModel::restoreUrl(IItem * itm) {
 
 IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) {
     sync = new QMutex(QMutex::NonRecursive);
-    rootItem = hash ? new Playlist(dt_playlist, hash) : new Playlist();
+    rootItem = hash ? new Playlist(hash, 0, hash -> take(JSON_TYPE_CHILDS)) : new Playlist();
     qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME
 }
 
@@ -245,7 +245,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
 
         if (items.isEmpty()) {
             itemsAmount++;
-            IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
+            /*IItem * newItem =*/ new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
                 QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
                 owner, uid,
@@ -1121,7 +1121,7 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
                 }
 
                 if (is_valid) {
-                    QVariantMap attrs = (*it) -> toInnerAttrs();
+                    QVariantHash attrs = (*it) -> toInnerAttrs();
                     if (!(*it) -> isRemote() && !attrs.contains(JSON_TYPE_PATH))
                         attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 
@@ -1153,7 +1153,7 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
             bool is_valid = comparity >= 80;
 
             if (is_valid) {
-                QVariantMap attrs = (*it) -> toInnerAttrs();
+                QVariantHash attrs = (*it) -> toInnerAttrs();
                 if (!(*it) -> isRemote() && !attrs.contains(JSON_TYPE_PATH))
                     attrs.insert(JSON_TYPE_PATH, (*it) -> toUrl().toLocalFile().section('/', 0, -2));
 

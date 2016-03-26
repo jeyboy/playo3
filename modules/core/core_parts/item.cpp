@@ -7,10 +7,11 @@ using namespace Core;
 IItem::IItem(Playlist * parent, QJsonObject * hash) : ItemFields(hash), _parent(parent) {
     if (_parent) _parent -> declareChild(this);
 }
-IItem::IItem(Playlist * parent, const QVariantMap & hash, int pos) : ItemFields(hash), _parent(parent) {
+IItem::IItem(Playlist * parent, const QVariantHash & hash, int pos) : ItemFields(hash), _parent(parent) {
     if (_parent) _parent -> declareChild(this, pos);
 }
 
+// need to check usage of this
 IItem::IItem(const DataSubType & subType, Playlist * parent, int initState) : ItemFields(subType, initState), _parent(parent) {
     if (_parent) _parent -> declareChild(this);
 }
@@ -70,7 +71,7 @@ QString IItem::buildTreeStr() const {
 QVariant IItem::data(int column) const {
     switch(column) {
         case IATTRS: {
-            QVariantMap params;
+            QVariantHash params;
             params.insert(Keys::name, title());
             params.insert(Keys::checkable, Settings::obj().isCheckboxShow() ?  is(flag_checked) : QVariant());
             if (!isContainer()) {

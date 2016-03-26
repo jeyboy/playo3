@@ -40,24 +40,22 @@ using namespace Core;
 //}
 
 ///////////////////////////////////////////////////////////
-Playlist::Playlist(const DataSubType & data_type, QJsonObject * hash, Playlist * parent)
-    : IItem(data_type, parent, hash -> take(JSON_TYPE_STATE).toInt()), filesCount(hash -> take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
+Playlist::Playlist(QJsonObject * hash, Playlist * parent, const QJsonValue & childArr)
+    : IItem(parent, hash), filesCount(attrs.take(JSON_TYPE_CONTAINER_ITEMS_COUNT).toInt()) {
 
-    if (hash -> contains(JSON_TYPE_CHILDS)) {
-        QJsonArray ar = hash -> take(JSON_TYPE_CHILDS).toArray();
+    if (!childArr.isNull()) {
+        QJsonArray ar = childArr.toArray();
 
         for(QJsonArray::Iterator it = ar.begin(); it!= ar.end(); it++) {
             QJsonObject iterObj = (*it).toObject();
 
             DataSubType item_data_type = (DataSubType)iterObj.value(JSON_TYPE_ITEM_TYPE).toInt();
             if (item_data_type < dt_none)
-                new Playlist(item_data_type, &iterObj, this);
+                new Playlist(&iterObj, this, iterObj.take(JSON_TYPE_CHILDS));
             else
                 new IItem(this, &iterObj);
         }
     }
-
-    attrs = hash -> toVariantMap();
     if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 

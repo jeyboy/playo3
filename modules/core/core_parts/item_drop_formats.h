@@ -10,7 +10,7 @@
 
 struct InnerData {
     QUrl url;
-    QVariantMap attrs;
+    QVariantHash attrs;
     QModelIndex eIndex;
     int eRow, dRow;
 };

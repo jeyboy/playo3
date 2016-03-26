@@ -21,7 +21,7 @@ namespace Core {
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
-        ItemFields(const QVariantMap & hash);
+        ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, const QString & title, int initState = DEFAULT_ITEM_STATE);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
@@ -97,9 +97,9 @@ namespace Core {
         inline bool isParted() const                            { return attrs.value(JSON_TYPE_PARTIAL, false).toBool(); }
 
         virtual QJsonObject toJson();
-        QVariantMap toInnerAttrs() const;
+        QVariantHash toInnerAttrs() const;
     protected:
-        QVariantMap attrs;
+        QVariantHash attrs;
     };
 }
 
