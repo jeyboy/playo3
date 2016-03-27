@@ -7,7 +7,7 @@ namespace Core {
     #define DEFAULT_CONTAINER_STATE (DEFAULT_STATE | ItemState::flag_proceeded | ItemState::flag_expanded)
 
     #define BITS_IS_SET(res, cbits) ((res & cbits) == cbits)
-    #define SET_BITS(res, cbits) (BITS_IS_SET(res |= cbits, cbits) == cbits)
+    #define SET_BITS(res, cbits) (res |= cbits, cbits)
     #define UNSET_BITS(res, cbits) res &= (~(cbits))
 
     #define VISUAL_BITS(res) (res & 7)
@@ -45,7 +45,7 @@ namespace Core {
             inline virtual ~ItemState() {}
 
             inline bool is(const enum ItemStateFlag & flag) const { return BITS_IS_SET(item_state, flag); }
-            bool set(const enum ItemStateFlag & flag);
+            void set(const enum ItemStateFlag & flag);
             void unset(const enum ItemStateFlag & flag);
 
             void setStates(const int & flags);

@@ -2,12 +2,12 @@
 
 using namespace Core;
 
-bool ItemState::set(const enum ItemStateFlag & flag) {
+void ItemState::set(const enum ItemStateFlag & flag) {
     switch(flag) {
         case flag_new_item:
         case flag_listened:
-        case flag_liked:    { SET_VISUAL_BIT(item_state, flag); return true; }
-        default:            return SET_BITS(item_state, flag);
+        case flag_liked:    { SET_VISUAL_BIT(item_state, flag); }
+        default:            SET_BITS(item_state, flag);
     }
 }
 
