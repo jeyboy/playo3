@@ -856,6 +856,7 @@ void IModel::finishingItemsAdding() {
 
     emit moveOutProcess();
     emit spoilNeeded(res -> eIndex);
+    delete res;
 }
 
 /////////////////////////////////////////////////////////
