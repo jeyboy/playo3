@@ -49,12 +49,15 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString path = file.filePath();
+        QString name = file.fileName();
+
         if (file.isDir())
-            res += filesRoutine(file.filePath(), node -> createPlaylist(dt_playlist, file.fileName(), 0, pos));
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, name, 0, pos));
         else {
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 res++;
-                new IItem(node, LOCAL_ITEM_ATTRS(file.filePath(), file.fileName()), pos);
+                new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos);
             }
         }
     }

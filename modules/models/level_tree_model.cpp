@@ -96,16 +96,19 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
+        QString path = file.filePath();
+        QString name = file.fileName();
+
         if (file.isDir())
-            res += filesRoutine(file.filePath(), rootItem -> createPlaylist(dt_playlist, Extensions::folderName(file)), relations, unproc_files, items);
+            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist, Extensions::folderName(file)), relations, unproc_files, items);
         else { 
-            if (unproc_files.contains(file.filePath())) continue;
+            if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
-                    res += proceedCue(file.filePath(), file.fileName(), node, pos, unproc_files, items);
+                    res += proceedCue(path, name, node, pos, unproc_files, items);
                 else {
                     res++;
-                    items.insert(file.filePath(), new IItem(node, LOCAL_ITEM_ATTRS(file.filePath(), file.fileName()), pos));
+                    items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos));
                 }
             }
         }

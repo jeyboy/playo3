@@ -26,7 +26,7 @@ namespace Core {
         QJsonObject toJson();
 
         inline QList<IItem *> childrenList() const { return children; }
-        inline int childRow(IItem * child) { return children.indexOf(child); }
+        inline int childRow(IItem * child) const { return children.indexOf(child); }
         inline IItem * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
         inline bool moveChild(int row, int newRow) {
             if (row < 0 || row >= children.size()) return false;
