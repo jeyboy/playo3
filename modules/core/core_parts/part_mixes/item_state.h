@@ -34,8 +34,8 @@ namespace Core {
 //                not_exist = 32,
 //                not_supported = 16,
                 flag_proceeded = 8,
-                flag_listened = 4,
-                flag_liked = 2,
+                flag_liked = 4,
+                flag_listened = 2,
                 flag_new_item = 1
             };
 
@@ -57,20 +57,6 @@ namespace Core {
             //    item_state = DEFAULT_ITEM_STATE;
             //    return true;
             //}
-
-
-//            bool setVisual(const enum ItemStateFlag & flag) {
-//                item_state = item_state - visualStates() + flag;
-//                return true;
-//            }
-//            bool unsetVisual(const enum ItemStateFlag & flag) {
-//                item_state = item_state - visualStates() + flag / 2 + flag % 2;
-//                return true;
-//            }
-
-//            inline bool bitIsSet(int val, int pos) const { return (val & pos) == pos; }
-//            inline bool setBit(int val, int pos) { return (item_state = val | pos) & pos; }
-//            int unsetBit(int val, int pos) { return (item_state = val & (~(pos))); }
 
             int item_state;
     };

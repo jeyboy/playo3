@@ -322,9 +322,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addSeparator();
     }
 
-    menu.addAction(QIcon(QStringLiteral(":/update")), QStringLiteral("Update flags for items"), this, SLOT(updateIds()));
-    menu.addSeparator();
-
     menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
     menu.addSeparator();
 
