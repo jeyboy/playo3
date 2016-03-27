@@ -10,15 +10,8 @@ IItem::IItem(Playlist * parent, QJsonObject * hash) : ItemFields(hash), _parent(
 IItem::IItem(Playlist * parent, const QVariantHash & hash, int pos) : ItemFields(hash), _parent(parent) {
     if (_parent) _parent -> declareChild(this, pos);
 }
-
-// need to check usage of this
 IItem::IItem(const DataSubType & subType, Playlist * parent, int initState) : ItemFields(subType, initState), _parent(parent) {
     if (_parent) _parent -> declareChild(this);
-}
-IItem::IItem(const DataSubType & subType, Playlist * parent, const QString & title, int pos, int initState)
-    : ItemFields(subType, title, initState), _parent(parent) {
-
-    if (_parent) _parent -> declareChild(this, pos);
 }
 
 IItem::~IItem() {

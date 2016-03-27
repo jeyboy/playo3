@@ -23,23 +23,7 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent, const QJsonValue & chi
     if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
-Playlist::Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent, int pos, int initState)
-    : IItem(subType, parent, folderTitle, pos, initState | IItem::flag_proceeded), filesCount(0) {
-
-    setPath(folderPath);
-    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
-}
-
-Playlist::Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, int pos, int initState)
-    : IItem(subType, parent, folderTitle, pos, initState | IItem::flag_proceeded), filesCount(0) {
-
-    if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
-}
-
-Playlist::Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, const QString & id, int pos, int initState)
-    : IItem(subType, parent, folderTitle, pos, initState | IItem::flag_proceeded), filesCount(0) {
-
-    setId(id);
+Playlist::Playlist(const QVariantHash & hash, Playlist * parent, int pos) : IItem(parent, hash, pos), filesCount(0) {
     if (parent != 0) parent -> declarePlaylist(playlistUid(), this);
 }
 
@@ -145,7 +129,7 @@ Playlist * Playlist::createPlaylist(const DataSubType & subType, const QString &
     Playlist * curr = playlists.value(name, 0);
 
     if (!curr)
-        curr = new Playlist(subType, name, this, pos);
+        curr = new Playlist(CONTAINER_ATTRS(subType, name), this, pos);
 
     if (list && !list -> isEmpty())
         return curr -> createPlaylist(subType, list -> takeFirst(), list, pos);

@@ -7,11 +7,9 @@
 namespace Core {
     class Playlist : public IItem {
     public:
-        inline Playlist(int initState = DEFAULT_ITEM_STATE) : IItem(dt_playlist, 0, initState), filesCount(0) {}
+        inline Playlist(int initState = DEFAULT_CONTAINER_STATE) : IItem(dt_playlist, 0, initState), filesCount(0) {}
         Playlist(QJsonObject * hash, Playlist * parent = 0, const QJsonValue & childArr = QJsonValue());
-        Playlist(const DataSubType & subType, const QString & folderPath, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent = 0, int pos = -1, int initState = DEFAULT_ITEM_STATE);
-        Playlist(const DataSubType & subType, const QString & folderTitle, Playlist * parent, const QString & id, int pos = -1, int initState = DEFAULT_ITEM_STATE);
+        Playlist(const QVariantHash & hash, Playlist * parent, int pos = -1);
         ~Playlist();
 
         void accumulateUids(QHash<QString, IItem *> & store);
@@ -65,7 +63,7 @@ namespace Core {
         Playlist * createPlaylist(const DataSubType & subType, const QString & uid, const QString & name, int pos = -1) {
             Playlist * curr = playlists.value(playlistUid(name, uid), 0);
             if (curr) return curr;
-            return new Playlist(subType, name, this, uid, pos);
+            return new Playlist(REMOTE_CONTAINER_ATTRS(subType, name, uid), this, pos);
         }
         Playlist * createPlaylist(const DataSubType & subType, const QString & name, QStringList * list = 0, int pos = -1);
 //        void addPlaylist(Playlist * node);

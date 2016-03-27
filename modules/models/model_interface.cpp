@@ -401,7 +401,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
     return itemsAmount;
 }
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
-    Playlist * cuePlaylist = new Playlist(dt_playlist_cue, path, name, newParent, insertPos);
+    Playlist * cuePlaylist = new Playlist(LOCAL_CONTAINER_ATTRS(dt_playlist_cue, path, name), newParent, insertPos);
 
     Media::Cue * cue = Media::Cue::fromPath(path);
     QList<Media::CueSong> songs = cue -> songs();

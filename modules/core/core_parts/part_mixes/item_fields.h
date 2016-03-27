@@ -23,7 +23,6 @@ namespace Core {
 
         ItemFields(const QVariantHash & hash);
         ItemFields(QJsonObject * hash);
-        ItemFields(const DataSubType & subType, const QString & title, int initState = DEFAULT_ITEM_STATE);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }

@@ -2,7 +2,9 @@
 #define MODEL_ITEM_STATE_H
 
 namespace Core {
-    #define DEFAULT_ITEM_STATE (ItemState::flag_checked | ItemState::flag_new_item | ItemState::flag_expanded)
+    #define DEFAULT_STATE (ItemState::flag_checked)
+    #define DEFAULT_ITEM_STATE (DEFAULT_STATE | ItemState::flag_new_item)
+    #define DEFAULT_CONTAINER_STATE (DEFAULT_STATE | ItemState::flag_proceeded | ItemState::flag_expanded)
 
     #define BITS_IS_SET(res, cbits) ((res & cbits) == cbits)
     #define SET_BITS(res, cbits) (BITS_IS_SET(res |= cbits, cbits) == cbits)

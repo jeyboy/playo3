@@ -33,8 +33,31 @@ namespace Core {
 
     #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
     #define SHARE_DELIMITER QStringLiteral("^")
-//    #define SHARE_TYPE_VK QStringLiteral("vk")
-//    #define SHARE_TYPE_SOUNDCLOUD QStringLiteral("sc")
+
+    #define CONTAINER_ATTRS(ctype, name) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, ctype}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_CONTAINER_STATE} \
+        }
+
+    #define LOCAL_CONTAINER_ATTRS(ctype, path, name) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, ctype}, \
+            {JSON_TYPE_PATH, path}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_CONTAINER_STATE} \
+        }
+
+    #define REMOTE_CONTAINER_ATTRS(ctype, name, id) \
+        {\
+            {JSON_TYPE_ITEM_TYPE, ctype}, \
+            {JSON_TYPE_ID, id}, \
+            {JSON_TYPE_TITLE, name}, \
+            {JSON_TYPE_STATE, DEFAULT_CONTAINER_STATE} \
+        }
+
+
 
     #define NO_SOURCE_ITEM_ATTRS(name) \
         {\
