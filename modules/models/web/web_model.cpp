@@ -18,22 +18,31 @@ QJsonObject WebModel::toJson() {
     return ignoreListToJson(res);
 }
 
-int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
+int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
     int res = 0;
 
     {
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, node -> createPlaylist(dt_playlist, dir_it.fileName()));
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, dir_it.fileName()), unproc_files, items);
         }
     }
 
+    QString cue_ext = QStringLiteral(".cue");
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     while(dir_it.hasNext()) {
-        res++;
         QString path = dir_it.next();
-        new IItem(node, LOCAL_ITEM_ATTRS(path, dir_it.fileName()));
+        QString name = dir_it.fileName();
+
+        if (!unproc_files.contains(path)) {
+            if (name.endsWith(cue_ext, Qt::CaseInsensitive))
+                res += proceedCue(path, name, node, -1, unproc_files, items);
+            else {
+                res++;
+                new IItem(node, LOCAL_ITEM_ATTRS(path, dir_it.fileName()));
+            }
+        }
     }
 
     if (res > 0)
@@ -46,6 +55,9 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node) {
 
 int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
+    QString cue_ext = QStringLiteral("cue");
+    QHash<QString, bool> unproc_files;
+    QHash<QString, IItem *> items;
 
     for(QList<QUrl>::ConstIterator it = list.begin(); it != list.end(); it++) {
         QFileInfo file = QFileInfo((*it).toLocalFile());
@@ -53,11 +65,16 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
         QString name = file.fileName();
 
         if (file.isDir())
-            res += filesRoutine(path, node -> createPlaylist(dt_playlist, name, 0, pos));
+            res += filesRoutine(path, node -> createPlaylist(dt_playlist, name, 0, pos), unproc_files, items);
         else {
+            if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                res++;
-                new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos);
+                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
+                    res += proceedCue(path, name, node, pos, unproc_files, items);
+                else {
+                    res++;
+                    new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos);
+                }
             }
         }
     }
