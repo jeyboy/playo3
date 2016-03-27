@@ -58,14 +58,13 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     int local_res = 0;
-    QString cue_ext = QStringLiteral(".cue");
 
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
         if (!unproc_files.contains(path)) {
-            if (name.endsWith(cue_ext, Qt::CaseInsensitive))
+            if (name.endsWith(Extensions::dot_cue_ext, Qt::CaseInsensitive))
                 local_res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 local_res++;
@@ -90,7 +89,6 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
 int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
     QHash<Playlist *, int> relations;
-    QString cue_ext = QStringLiteral("cue");
     QHash<QString, bool> unproc_files;
     QHash<QString, IItem *> items;
 
@@ -104,7 +102,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
         else { 
             if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
+                if (file.suffix().endsWith(Extensions::cue_ext, Qt::CaseInsensitive))
                     res += proceedCue(path, name, node, pos, unproc_files, items);
                 else {
                     res++;

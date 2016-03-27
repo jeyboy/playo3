@@ -17,6 +17,9 @@
 namespace Core {
     class Extensions : public Singleton<Extensions> {
     public:
+        static QString dot_cue_ext;
+        static QString cue_ext;
+
         static QString folderName(QFileInfo & info);
         ~Extensions();
 

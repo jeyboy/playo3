@@ -2,6 +2,9 @@
 
 using namespace Core;
 
+QString Extensions::cue_ext = QStringLiteral("cue");
+QString Extensions::dot_cue_ext = QStringLiteral(".") % Extensions::cue_ext;
+
 Extensions::Extensions() {
     ext = new DataStore(QStringLiteral("extensions.json"));
 

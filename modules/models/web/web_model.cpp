@@ -29,14 +29,13 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
         }
     }
 
-    QString cue_ext = QStringLiteral(".cue");
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS));
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
         QString name = dir_it.fileName();
 
         if (!unproc_files.contains(path)) {
-            if (name.endsWith(cue_ext, Qt::CaseInsensitive))
+            if (name.endsWith(Extensions::dot_cue_ext, Qt::CaseInsensitive))
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 res++;
@@ -55,7 +54,6 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
 
 int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
     int res = 0;
-    QString cue_ext = QStringLiteral("cue");
     QHash<QString, bool> unproc_files;
     QHash<QString, IItem *> items;
 
@@ -69,7 +67,7 @@ int WebModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) {
         else {
             if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {
-                if (file.suffix().endsWith(cue_ext, Qt::CaseInsensitive))
+                if (file.suffix().endsWith(Extensions::cue_ext, Qt::CaseInsensitive))
                     res += proceedCue(path, name, node, pos, unproc_files, items);
                 else {
                     res++;
