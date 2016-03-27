@@ -40,7 +40,7 @@ int WebModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QStr
                 res += proceedCue(path, name, node, -1, unproc_files, items);
             else {
                 res++;
-                new IItem(node, LOCAL_ITEM_ATTRS(path, dir_it.fileName()));
+                new IItem(node, LOCAL_ITEM_ATTRS(path, name));
             }
         }
     }
