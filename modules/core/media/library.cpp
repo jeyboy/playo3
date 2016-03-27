@@ -293,6 +293,13 @@ void Library::initItemData(IItem * itm, bool dont_force_remote) {
 
     if (has_titles && has_info) return;
 
+    if (!itm -> isRemote() && !itm -> extension().isValid()) {
+        QString title = itm -> title().toString(), ext;
+        Extensions::obj().extractExtension(title, ext);
+        itm -> setTitle(title);
+        itm -> setExtension(ext);
+    }
+
     MediaInfo m(itm -> toUrl(), itm -> extension(), has_info);
     if (m.hasError()) return;
     if (!has_titles) initItemTitles(&m, itm);
