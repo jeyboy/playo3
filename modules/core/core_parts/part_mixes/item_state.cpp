@@ -6,7 +6,7 @@ void ItemState::set(const enum ItemStateFlag & flag) {
     switch(flag) {
         case flag_new_item:
         case flag_listened:
-        case flag_liked:    { SET_VISUAL_BIT(item_state, flag); }
+        case flag_liked:    {SET_VISUAL_BIT(item_state, flag); break;}
         default:            SET_BITS(item_state, flag);
     }
 }
@@ -14,7 +14,7 @@ void ItemState::set(const enum ItemStateFlag & flag) {
 void ItemState::unset(const enum ItemStateFlag & flag) {
     switch(flag) {
         case flag_listened:
-        case flag_liked:    { UNSET_VISUAL_BIT(item_state, flag); break; }
+        case flag_liked:    {UNSET_VISUAL_BIT(item_state, flag); break;}
         case flag_new_item: return;
         default:            UNSET_BITS(item_state, flag);
     }
