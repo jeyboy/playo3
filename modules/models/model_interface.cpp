@@ -404,56 +404,9 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
     Playlist * cuePlaylist = new Playlist(LOCAL_CONTAINER_ATTRS(dt_playlist_cue, path, name), newParent, insertPos);
 
     Media::Cue * cue = Media::Cue::fromPath(path);
-    QList<Media::CueSong> songs = cue -> songs();
-    QHash<QString, QString> ignore;
-    int amount = 0;
-
-    for(QList<Media::CueSong>::Iterator song = songs.begin(); song != songs.end(); song++) {
-        QString songPath = (*song).filePath;
-        bool res = true;
-
-        if (ignore.contains((*song).filePath))
-            res = false;
-        else if (!unproc_files.contains(songPath)) {
-            //TODO: temp solution for removing from list already added cue parts
-            if (!items.isEmpty()) {
-                IItem * itm = items.take(songPath);
-                if (itm) {
-                    if (itm -> parent() -> childCount() == 1)
-                        itm -> parent() -> removeYouself();
-                    else
-                        itm -> removeYouself();
-                }
-            }
-
-            res = QFile::exists(songPath);
-
-            if (!res) {
-              //TODO: ask user about manual choosing of media source for cue
-            }
-        }
-
-        IItem * ditem = new IItem(cuePlaylist, LOCAL_CUE_ITEM_ATTRS(
-            songPath, (*song).trackName, (*song).extension, (*song).startPos, (*song).isPartial
-        ));
-
-        if ((*song).duration > 0)
-            ditem -> setDuration(Duration::fromMillis((*song).duration));
-
-        if (res) {
-            if (!(*song).error.isEmpty()) // there should be other error status ?
-                ditem -> setError(ItemErrors::err_not_existed);
-        } else {
-            ignore.insert(songPath, QString());
-            ditem -> setError(ItemErrors::err_not_existed);
-        }
-
-        unproc_files.insert(songPath, res);
-        amount++;
-    }
-
-    delete cue;
+    int amount = cue -> buildItems(cuePlaylist, unproc_files, items);
     cuePlaylist -> updateItemsCountInBranch(amount);
+    delete cue;
     return amount;
 }
 

@@ -129,7 +129,7 @@ namespace Core {
                     Library::obj().initItemData(current_item, false);
                     add_state = IItem::flag_proceeded;
                 }
-                setState(IItem::flag_listened | add_state);
+                setState(IItem::flag_not_proccessing | IItem::flag_listened | add_state); // IItem::flag_not_proccessing is duplicated for cue items
             break;}
 
             case CloseMedia: {

@@ -49,16 +49,19 @@ Cue * Cue::fromPath(const QString & path) {
     return 0;
 }
 
-void Cue::identifyFile(QString & file_path, QString & file_extension, bool isShareable) { // this method is very slow :(
-    if (!QFile::exists(file_path)) {
+bool Cue::identifyFile(QString & file_path, QString & file_extension, bool isShareable) { // this method is very slow :(
+    bool res = QFile::exists(file_path);
+
+    if (!res) {
         QString tPath = path % '/' % file_path;
-        if (!QFile::exists(tPath)) {
+        res = QFile::exists(tPath);
+
+        if (!res) {
             tPath = path;
             QString tExt, tName = file_path.split('/', QString::SkipEmptyParts).last();
             Extensions::obj().extractExtension(tName, tExt);
 
             QStringList music_filters = Extensions::obj().filterList(MUSIC_PRESET);
-            bool findCompatible = false;
             // try to find media file with name of cue or with name from cue file
             QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, QStringLiteral("*")) << PREPARE_SEARCH_PREDICATE(filename, QStringLiteral("*")),
                 QDir::NoDotAndDotDot | QDir::Files, QDirIterator::Subdirectories
@@ -67,7 +70,7 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
             while(dir_it.hasNext()) {
                 // in some cases extension is not eq to cue type and there we should to reinit real extension :(
                 if (QDir::match(music_filters, dir_it.next())) {
-                    findCompatible = true;
+                    res = true;
                     file_path = dir_it.filePath();
                     Extensions::obj().extractExtension(file_path, file_extension, false);
                     break;
@@ -75,10 +78,11 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
             }
 
             // if cue part contains more then 1 part (related to one big file) try to find any media file
-            if (!findCompatible && isShareable) {
+            if (!res && isShareable) {
                 QDirIterator dir_it(path, music_filters, QDir::NoDotAndDotDot | QDir::Files);
 
                 while(dir_it.hasNext()) {
+                    res = true;
                     file_path = dir_it.next();
                     Extensions::obj().extractExtension(file_path, file_extension, false);
                     break;
@@ -100,19 +104,43 @@ void Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
         }
     }
     #endif
+
+    return res;
 }
 
-QList<CueSong> Cue::songs() { // last element always missed at duration
-    QList<CueSong> res;
-    int group = 0;
+int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) { // last element always missed at duration
+    QHash<QString, bool> ignore;
+    int amount = 0;
 
-    for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++, group++) {
+    for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
         bool isShareable = (*file) -> tracks.length() > 1;
         QString file_path = QDir::fromNativeSeparators((*file) -> path);
         QString real_extension = (*file) -> extension;
         QHash<qint64, bool> time_marks;
+        IItem * prev_ditem = 0;
+        int prev_mark = 0;
 
-        identifyFile(file_path, real_extension, isShareable);
+        bool exists = identifyFile(file_path, real_extension, isShareable);
+        if (ignore.contains(file_path)) continue; // maybe this should be placed before identifyFile ?
+
+        if (!exists) {
+          //TODO: ask user about manual choosing of media source for cue
+        }
+
+
+        //////// TODO: temp solution for removing from list already added cue parts
+        if (!unproc_files.contains(file_path)) {
+            if (!items.isEmpty()) {
+                IItem * itm = items.take(file_path);
+                if (itm) {
+                    if (itm -> parent() -> childCount() == 1)
+                        itm -> parent() -> removeYouself();
+                    else
+                        itm -> removeYouself();
+                }
+            }
+        }
+        ////////
 
         for(QList<CueTrack *>::Iterator track = (*file) -> tracks.begin(); track != (*file) -> tracks.end(); track++)
             for(QList<CueTrackIndex *>::Iterator index = (*track) -> indexes.begin(); index != (*track) -> indexes.end(); index++) {
@@ -126,7 +154,6 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                     time_mark = 0;
                 }
 
-
                 QString title = (*track) -> toStr();
 
                 if (title.isEmpty()) {
@@ -135,36 +162,75 @@ QList<CueSong> Cue::songs() { // last element always missed at duration
                     Extensions::obj().extractExtension(title, tExt);
                 }
 
-                res.append(CueSong(
-                    time_mark, // need to add correction on pregap for current item and postgap for next
-                    title,
-                    file_path,
-                    real_extension,
-                    isShareable,
-                    group,
-                    error
+                //////////////////////////////////////////////////////////////
+
+                IItem * ditem = new IItem(cuePlaylist, LOCAL_CUE_ITEM_ATTRS(
+                    file_path, title, real_extension, time_mark, isShareable
                 ));
 
-                INIT_DURATION(res);
+                if (prev_ditem)
+                    prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
+
+                if (exists) {
+                    if (!error.isEmpty()) // there should be other error status ?
+                        ditem -> setError(ItemErrors::err_not_existed);
+                } else {
+                    ignore.insert(file_path, true);
+                    ditem -> setError(ItemErrors::err_not_existed);
+                }
+
+                prev_ditem = ditem;
+                prev_mark = time_mark;
+                amount++;
+
+                //////////////////////////////////////////////////////////////
                 time_marks.insert(time_mark, true);
+            }       
+
+        // this part is not tested on practice
+        if (!(*file) -> indexes.isEmpty()) {
+            prev_ditem = 0;
+            prev_mark = 0;
+
+            for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {
+                if ((*index) -> number == 0) continue;
+                QString error;
+                qint64 time_mark = (*index) -> toMillis();
+                if (time_marks.contains(time_mark)) {
+                    error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
+                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, true);
+                    time_mark = 0;
+                }
+
+                //////////////////////////////////////////////////////////////
+
+                IItem * ditem = new IItem(cuePlaylist, LOCAL_CUE_ITEM_ATTRS(
+                    file_path, title, real_extension, time_mark, isShareable
+                ));
+
+                if (prev_ditem)
+                    prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
+
+                if (exists) {
+                    if (!error.isEmpty()) // there should be other error status ?
+                        ditem -> setError(ItemErrors::err_not_existed);
+                } else {
+                    ignore.insert(file_path, true);
+                    ditem -> setError(ItemErrors::err_not_existed);
+                }
+
+                prev_ditem = ditem;
+                prev_mark = time_mark;
+                amount++;
+
+                //////////////////////////////////////////////////////////////
             }
-
-        for(QList<CueTrackIndex *>::Iterator index = (*file) -> indexes.begin(); index != (*file) -> indexes.end(); index++) {
-            if ((*index) -> number == 0) continue;
-
-            res.append(CueSong(
-                (*index) -> toMillis(),
-                file_path,
-                file_path,
-                real_extension,
-                true,
-                group
-            ));
-            INIT_DURATION(res);
         }
+
+        unproc_files.insert(file_path, exists);
     }
 
-    return res;
+    return amount;
 }
 
 void Cue::splitLine(QString & line, QList<QString> & res) {
