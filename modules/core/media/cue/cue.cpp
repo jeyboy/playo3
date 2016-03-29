@@ -293,10 +293,11 @@ void Cue::proceedLine(QString & line) {
                             }
                         return;}
 
+                        case Cue::catalog:
+                        case Cue::cdtextfile: { return; }
+
                         case Cue::title:
                         case Cue::songwriter:
-                        case Cue::catalog:
-                        case Cue::cdtextfile:
                         case Cue::performer: { _attrs.insert(token, parts[0]); return; }
                         default: ;
                     }
@@ -335,15 +336,15 @@ void Cue::proceedLine(QString & line) {
 
                         case Cue::title: { activeFile -> activeTrack -> title = parts[0]; return; }
                         case Cue::songwriter: { activeFile -> activeTrack -> songwriter = parts[0]; return; }
-                        case Cue::isrc: { activeFile -> activeTrack -> isrc = parts[0]; return; }
+                        case Cue::isrc: { /*activeFile -> activeTrack -> isrc = parts[0];*/ return; }
                         case Cue::performer: { activeFile -> activeTrack -> performer = parts[0]; return; }
-                        case Cue::flags: { activeFile -> activeTrack -> parseFlags(parts); return; }
+                        case Cue::flags: { /*activeFile -> activeTrack -> parseFlags(parts);*/ return; }
 
                         case Cue::pregap: { activeFile -> activeTrack -> setPregap(parts[0]); return; }
                         case Cue::postgap: { activeFile -> activeTrack -> setPostgap(parts[0]); return; }
                         // specification did not contain this case, but some cue generators inserted REM into track
                         // item store only ONE value
-                        case Cue::rem: { activeFile -> activeTrack -> addInfo(parts.join(' ')); return; }
+                        case Cue::rem: { /*activeFile -> activeTrack -> addInfo(parts.join(' '));*/ return; }
                         default: ;
                     }
                 break;}

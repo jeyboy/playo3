@@ -76,7 +76,7 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
             addRow(
                 data.url,
                 path,
-                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs[JSON_TYPE_EXTENSION].toString()),
+                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs.value(JSON_TYPE_EXTENSION, QStringLiteral("mp3")).toString()),
                 data.attrs[JSON_TYPE_ITEM_TYPE].toInt(),
                 data.attrs[JSON_TYPE_REFRESH_PATH].toString()
             );

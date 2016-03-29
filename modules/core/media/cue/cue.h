@@ -15,14 +15,6 @@
     if (str.startsWith('"')) \
         str = str.mid(1, str.length() - 2);
 
-//#define INIT_DURATION(res) \
-//    int length = res.length(); \
-//    if (length > 1) { \
-//        CueSong & updated = res[length - 2]; \
-//        CueSong & last = res[length - 1]; \
-//        updated.initDuration(last); \
-//    }
-
 #define ADD_LINE_PART(res, line, pos, offset) \
     QStringRef str = line.midRef(pos, offset - pos); \
     if (!str.isEmpty()) { \
@@ -33,25 +25,6 @@
 
 namespace Core {
     namespace Media {
-//        struct CueSong {
-//            CueSong(qint64 startPos = 0, const QString & trackName = QString(), const QString & filePath = QString(), const QString & extension = QString(), bool isPartial = true, int group = 0, const QString & error = QString())
-//                : startPos(startPos), trackName(trackName), filePath(filePath), extension(extension), isPartial(isPartial), group(group), error(error), duration(0) { }
-
-//            void initDuration(const CueSong & last) {
-//                if (last.group == group)
-//                    duration = last.startPos - startPos;
-//            }
-
-//            qint64 startPos;
-//            QString trackName;
-//            QString filePath;
-//            QString extension;
-//            bool isPartial;
-//            int group;
-//            QString error;
-//            qint64 duration;
-//        };
-
         class Cue {
                 enum CueTokens {
                     unknow = -1,
@@ -81,11 +54,6 @@ namespace Core {
 
                 QHash<CueTokens, QString> _attrs;
                 QHash<QString, QString> _infos;
-//                QString title;
-//                QString performer;
-//                QString songwriter;
-//                QString catalog; // 13 digits
-//                QString text_file;
 
                 QString path;
                 QString filename;
