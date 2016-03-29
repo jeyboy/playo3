@@ -55,7 +55,6 @@ void VkModel::proceedWallList(QJsonArray & posts) {
 
 void VkModel::proceedAudioList(QJsonObject & hash) {
     QJsonArray albums = hash.value(Vk::tkn_albums).toArray();
-    qDebug() << "YYY" << albums;
     QJsonArray audios = hash.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
     int itemsAmount = 0, albums_count = albums.size();
 
