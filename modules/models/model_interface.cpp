@@ -312,7 +312,6 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject itm = (*it).toObject();
-        qDebug() << itm;
 
         QJsonObject snippet = itm.value(QStringLiteral("snippet")).toObject();
         QJsonValue idVal = itm.value(QStringLiteral("id"));
