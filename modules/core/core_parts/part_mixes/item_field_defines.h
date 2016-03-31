@@ -147,7 +147,8 @@ namespace Core {
             {JSON_TYPE_ITEM_TYPE, dt_site_od}, \
             {JSON_TYPE_STATE, DEFAULT_ITEM_STATE}, \
             {JSON_TYPE_DURATION, duration}, \
-            {JSON_TYPE_BYTES_SIZE, size} \
+            {JSON_TYPE_BYTES_SIZE, size}, \
+            {JSON_TYPE_REFRESH_PATH, refresh} \
         }
 }
 
