@@ -53,7 +53,7 @@ void Playo::activation() {
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
-    PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings init and providing
+    PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings initialization
 }
 
 void Playo::initialization() {

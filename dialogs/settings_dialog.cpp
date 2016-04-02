@@ -112,6 +112,9 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
     }
 
     qDeleteAll(list);
+    if (Settings::obj().hotkeysIsDisabled())
+        HotkeyManager::obj().clear();
+
 }
 
 void SettingsDialog::on_cancelButton_clicked() {
@@ -446,6 +449,7 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 
+    qDebug() << "!!!" << ui -> outputDeviceSelect -> currentText() << Settings::obj().outputDevice();
     if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
         QVariant device = PlayerFactory::obj().currPlayer() -> deviceList().value(ui -> outputDeviceSelect -> currentText());
         if (PlayerFactory::obj().currPlayer() -> setDevice(device))

@@ -396,10 +396,13 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
 QVariant BassPlayer::currDevice() { return QVariant::fromValue(BASS_GetDevice()); }
 
 bool BassPlayer::setDevice(const QVariant & device) {
-    bool res = false/*, paused = isPaused(), played = isPlayed()*/;
-//    int currPos = 0, dur = 0;
     int currDevice = BASS_GetDevice();
     int newDevice = device.toInt();
+
+    if (currDevice == newDevice)
+        return true;
+
+    bool res = false;
 
     if ((res = initDevice(newDevice))) {
         res = BASS_SetDevice(newDevice);
@@ -409,24 +412,6 @@ bool BassPlayer::setDevice(const QVariant & device) {
 
     if (res)
         closeDevice(currDevice);
-
-
-//    if (played || paused) {
-//        currPos = position();
-//        dur = duration();
-//        stop();
-//    }
-
-//    if ((res = initDevice(device.toInt()))) {
-//        if (played || paused) {
-//            setMedia(media_url, currPos, dur);
-//            play(paused);
-//        }
-//    }
-
-    //    res = BASS_SetDevice(device.toInt());
-    //        if (res && isPlayed())
-    //            res &= BASS_ChannelSetDevice(chan, device.toInt());
 
     return res;
 }
