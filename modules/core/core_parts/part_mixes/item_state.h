@@ -11,7 +11,10 @@ namespace Core {
     #define UNSET_BITS(res, cbits) res &= (~(cbits))
 
     #define VISUAL_BITS(res) (res & 7)
-    #define SET_VISUAL_BIT(res, cbit) res = (res - VISUAL_BITS(res)) + cbit
+    #define SET_VISUAL_BIT(res, cbit) \
+        int visual_part = VISUAL_BITS(res); \
+        if (visual_part < cbit) \
+            res = (res - visual_part) + cbit
     #define UNSET_VISUAL_BIT(res, cbit) res = (res - VISUAL_BITS(res)) + (cbit == 1 ? cbit : cbit >> 1)
 
     class ItemState {
