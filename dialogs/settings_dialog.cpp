@@ -375,12 +375,14 @@ void SettingsDialog::initViewSettings() {
         ui -> partialyFilledItem -> setChecked(true);
 }
 void SettingsDialog::initHotkeysSettings() {
-    ui -> hotkeysArea -> setEditTriggers(QTreeView::AllEditTriggers);
-    ui -> hotkeysArea -> setItemDelegate(new HotkeyDelegate(ui -> hotkeysArea));
+    ui -> hotkeysList -> setEditTriggers(QTreeView::AllEditTriggers);
+    ui -> hotkeysList -> setItemDelegate(new HotkeyDelegate(ui -> hotkeysList));
     QList<HotkeyModelItem *> hotkeys = Settings::obj().hotKeys();
-    ui -> hotkeysArea -> setModel(new HotkeyModel(&hotkeys, this));
-    ui -> hotkeysArea -> hideColumn(2);
-    ui -> hotkeysArea -> setColumnWidth(0, 230);
+    ui -> hotkeysList -> setModel(new HotkeyModel(&hotkeys, this));
+    ui -> hotkeysList -> hideColumn(2);
+    ui -> hotkeysList -> setColumnWidth(0, 230);
+
+    ui -> disableHotkeys -> setChecked(Settings::obj().hotkeysIsDisabled());
 }
 void SettingsDialog::initSpectrumSettings() {
     ui -> autoBarsAmount -> setChecked(Settings::obj().isAutoBarsAmount());
@@ -497,15 +499,16 @@ void SettingsDialog::saveViewSettings() {
 }
 
 void SettingsDialog::saveHotkeysSettings() {
-    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> hotkeysArea -> model());
+    HotkeyModel * model = dynamic_cast<HotkeyModel *>(ui -> hotkeysList -> model());
     QList<HotkeyModelItem *> list = model -> toplevelItems();
     Settings::obj().setHotKeys(list);
+    Settings::obj().disableHotkeys(ui -> disableHotkeys -> isChecked());
 
     HotkeyManager::obj().clear();
 
-    QList<HotkeyModelItem *>::Iterator it = list.begin();
-    for(; it != list.end(); it++)
-        HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
+    if (!Settings::obj().hotkeysIsDisabled())
+        for(QList<HotkeyModelItem *>::Iterator it = list.begin(); it != list.end(); it++)
+            HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
 }
 
 void SettingsDialog::saveSpectrumSettings() {

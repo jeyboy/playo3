@@ -14,11 +14,13 @@ HotkeySettings::HotkeySettings() {
 }
 
 void HotkeySettings::fromJson(const QJsonObject & settings) {
-    setHotKeys(settings.value(QStringLiteral("hotkeys")).toObject());
+    _disabled = settings.value(SETTINGS_DISABLE_HOTKEYS_KEY).toBool();
+    setHotKeys(settings.value(SETTINGS_HOTKEYS_KEY).toObject());
 }
 
 void HotkeySettings::toJson(QJsonObject & settings) {
-    settings.insert(QStringLiteral("hotkeys"), _hotkeys);
+    settings.insert(SETTINGS_HOTKEYS_KEY, _hotkeys);
+    settings.insert(SETTINGS_DISABLE_HOTKEYS_KEY, _disabled);
 }
 
 QList<HotkeyModelItem *> HotkeySettings::hotKeys() const { //TODO: rewrite on iterator usage

@@ -7,6 +7,9 @@
 #include "modules/models/service/hotkey_model_item.h"
 #include "modules/models/service/hotkey_types.h"
 
+#define SETTINGS_DISABLE_HOTKEYS_KEY QStringLiteral("disable_hotkeys")
+#define SETTINGS_HOTKEYS_KEY QStringLiteral("hotkeys")
+
 class HotkeySettings {
 public:
     HotkeySettings();
@@ -18,9 +21,11 @@ public:
     void setHotKeys(QList<HotkeyModelItem *>);
     void setHotKeys(const QJsonObject & hotkeysHash = QJsonObject());
 
-protected:
-//    inline QJsonObject hotkeysJson() const { return _hotkeys; }
+    void disableHotkeys(bool disable) { _disabled = disable; }
+    bool hotkeysIsDisabled() { return _disabled; }
 
+protected:
+    bool _disabled;
     QJsonObject _hotkeys;
     QHash<int, QString> _humanizeHotkeyText;
 };
