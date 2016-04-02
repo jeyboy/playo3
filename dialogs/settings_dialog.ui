@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1026</width>
+    <width>1050</width>
     <height>949</height>
    </rect>
   </property>
@@ -1615,7 +1615,7 @@
      <x>700</x>
      <y>0</y>
      <width>91</width>
-     <height>431</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -1634,15 +1634,15 @@
     <string notr="true"/>
    </property>
    <property name="widgetResizable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents">
+   <widget class="QWidget" name="linksAreaBody">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>89</width>
-      <height>429</height>
+      <height>289</height>
      </rect>
     </property>
     <widget class="QPushButton" name="commonBtn">
@@ -1699,7 +1699,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>170</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -1743,7 +1743,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>210</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -1765,13 +1765,35 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>250</y>
        <width>71</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Extensions</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+     <property name="autoDefault">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="apisBtn">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Apis</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -1890,6 +1912,67 @@
      </property>
      <property name="text">
       <string>Disable hotkeys</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QScrollArea" name="apisArea">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>600</y>
+     <width>342</width>
+     <height>290</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="widgetResizable">
+    <bool>false</bool>
+   </property>
+   <widget class="QWidget" name="apisAreaBody">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>340</width>
+      <height>288</height>
+     </rect>
+    </property>
+    <widget class="QCheckBox" name="ignoreCaptcha">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>131</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ignore captcha</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_31">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>130</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Soon there should be other api settings</string>
      </property>
     </widget>
    </widget>

@@ -13,9 +13,10 @@
 #include "settings/spectrum_settings.h"
 #include "settings/tab_settings.h"
 #include "settings/library_settings.h"
+#include "settings/apis_settings.h"
 
 class Settings : public GlobalSettings, public HotkeySettings,
-        public ItemSettings, public SpectrumSettings,
+        public ItemSettings, public SpectrumSettings, public ApisSettings,
         public TabSettings, public LibrarySettings, public Core::Singleton<Settings> {
 
     Settings(); friend class Core::Singleton<Settings>;
@@ -41,6 +42,7 @@ public:
     inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
 
     void resetGlobalSettings();
+    void resetApisSettings();
     void resetHotkeySettings();
     void resetItemSettings();
     void resetSpectrumSettings();

@@ -291,7 +291,8 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/core_parts/part_mixes/item_field_defines.h \
     modules/core/data_sub_types.h \
-    modules/core/core_parts/item.h
+    modules/core/core_parts/item.h \
+    settings/apis_settings.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -430,4 +431,5 @@ SOURCES += \
     modules/core/web/apis/social/youtube_api_keys.cpp \
     modules/core/web/apis/social/youtube_api.cpp \
     modules/pizduck/duktape.c \
-    modules/core/core_parts/item.cpp
+    modules/core/core_parts/item.cpp \
+    settings/apis_settings.cpp

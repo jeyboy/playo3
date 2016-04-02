@@ -38,6 +38,7 @@ namespace Dialogs {
         }
 
         void initGlobalSettings();
+        void initApisSettings();
         void initItemsSettings();
         void initViewSettings();
         void initHotkeysSettings();
@@ -46,6 +47,7 @@ namespace Dialogs {
         void initExtensions();
 
         void saveGlobalSettings();
+        void saveApisSettings();
         void saveItemsSettings();
         void saveViewSettings();
         void saveHotkeysSettings();

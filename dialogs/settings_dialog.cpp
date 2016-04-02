@@ -25,6 +25,7 @@ void SettingsDialog::instantiation() {
     instantiateLayout();
 
     initGlobalSettings();
+    initApisSettings();
     initItemsSettings();
     initViewSettings();
     initHotkeysSettings();
@@ -44,6 +45,7 @@ void SettingsDialog::instantiateLayout() {
     grid -> addWidget(ui -> commonArea, 0, 1); ui -> commonArea -> setVisible(true);
     grid -> addWidget(ui -> viewsArea, 0, 1); ui -> viewsArea -> setVisible(false);
     grid -> addWidget(ui -> itemsArea, 0, 1); ui -> itemsArea -> setVisible(false);
+    grid -> addWidget(ui -> apisArea, 0, 1); ui -> apisArea -> setVisible(false);
     grid -> addWidget(ui -> hotkeysArea, 0, 1); ui -> hotkeysArea -> setVisible(false);
     grid -> addWidget(ui -> spectrumArea, 0, 1); ui -> spectrumArea -> setVisible(false);
     grid -> addWidget(ui -> extensionsArea, 0, 1); ui -> extensionsArea -> setVisible(false);
@@ -57,6 +59,7 @@ void SettingsDialog::instantiateLayout() {
     group -> addButton(ui -> commonBtn, (int)ui -> commonArea);
     group -> addButton(ui -> viewsBtn, (int)ui -> viewsArea);
     group -> addButton(ui -> itemsBtn, (int)ui -> itemsArea);
+    group -> addButton(ui -> apisBtn, (int)ui -> apisArea);
     group -> addButton(ui -> hotkeysBtn, (int)ui -> hotkeysArea);
     group -> addButton(ui -> spectrumBtn, (int)ui -> spectrumArea);
     group -> addButton(ui -> extensionsBtn, (int)ui -> extensionsArea);
@@ -65,8 +68,8 @@ void SettingsDialog::instantiateLayout() {
     ui -> commonBtn -> setDefault(true);
     ui -> commonBtn -> animateClick();
 
-    setMinimumSize(466, 360);
-    setMaximumSize(466, 360);
+    setMinimumSize(466, 380);
+    setMaximumSize(466, 380);
 }
 
 void SettingsDialog::registerHotkeys(QWidget * receiver) {
@@ -165,6 +168,7 @@ void SettingsDialog::on_resetButton_clicked() {
 
 void SettingsDialog::on_acceptButton_clicked() {
     saveGlobalSettings();
+    saveApisSettings();
     saveItemsSettings();
     saveViewSettings();
     saveHotkeysSettings();
@@ -311,6 +315,10 @@ void SettingsDialog::initGlobalSettings() {
     ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme() - 1);
 }
 
+void SettingsDialog::initApisSettings() {
+    ui -> ignoreCaptcha -> setChecked(Settings::obj().isIgnoreCaptcha());
+}
+
 void SettingsDialog::initItemsSettings() {
     ui -> useGradientCheck -> setChecked(Settings::obj().isUseGradient());
 
@@ -455,6 +463,10 @@ void SettingsDialog::saveGlobalSettings() {
         if (PlayerFactory::obj().currPlayer() -> setDevice(device))
             Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
     }
+}
+
+void SettingsDialog::saveApisSettings() {
+    Settings::obj().setIgnoreCaptcha(ui -> ignoreCaptcha -> isChecked());
 }
 
 void SettingsDialog::saveItemsSettings() {
