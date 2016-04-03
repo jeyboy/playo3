@@ -88,9 +88,12 @@ bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString 
     message = stat_obj.value(tkn_error_msg).toString();
     code = stat_obj.value(tkn_error_code).toInt();
 
-    if (code == 14)
-        return captchaProcessing(response, url);
-    else return code == 0;
+    if (code == 14) {
+        if (Settings::obj().isIgnoreCaptcha())
+            return false;
+        else
+            return captchaProcessing(response, url);
+    } else return code == 0;
 }
 
 QUrl Api::buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {
