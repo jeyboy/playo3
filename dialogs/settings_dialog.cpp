@@ -159,8 +159,8 @@ void SettingsDialog::on_resetButton_clicked() {
         return;
     }
 
-    if (ui -> spectrumBtn -> isChecked()) {
-        Settings::obj().resetSpectrumSettings();
+    if (ui -> apisBtn -> isChecked()) {
+        Settings::obj().resetApisSettings();
         initSpectrumSettings();
         return;
     }
