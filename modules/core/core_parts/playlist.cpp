@@ -92,6 +92,13 @@ void Playlist::backPropagateItemsCountInBranch(int offset) {
         _parent -> backPropagateItemsCountInBranch(offset);
 }
 
+void Playlist::backPropagateBytesInBranch(int bytes) {
+    setSize(size().toLongLong() + bytes);
+
+    if (_parent)
+        _parent -> backPropagateBytesInBranch(bytes);
+}
+
 QVariant Playlist::data(int column) const {
     switch(column) {
         case Qt::ToolTipRole:  return QVariant(title().toString() % QStringLiteral("(") % QString::number(filesCount) % QStringLiteral(" items)"));

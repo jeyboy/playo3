@@ -18,6 +18,7 @@ namespace Core {
         inline int itemsCountInBranch() const { return filesCount; }
         inline void updateItemsCountInBranch(int offset) { filesCount += offset; }
         void backPropagateItemsCountInBranch(int offset);
+        void backPropagateBytesInBranch(int bytes);
 
         QVariant data(int column) const;
 

@@ -26,6 +26,12 @@ int IItem::row() const {
     return 0;
 }
 
+void IItem::backPropagateBytesInBranch(int bytes) {
+    setSize(bytes);
+    if (_parent)
+        _parent -> backPropagateBytesInBranch(bytes);
+}
+
 //bool IItem::insertColumns(int position, int columns) {
 //    if (position < 0 || position > itemData.size())
 //        return false;
@@ -132,6 +138,7 @@ QVariant IItem::data(int column) const {
                 relationStr() +
                 (_info().isValid() ? ('\n' + _info().toString()) : "") +
                 '\n' + title().toString() +
+                '\n' + QString::number(size().toLongLong()) + QStringLiteral(" B") +
                 (error().isValid() ? ("\n " + err_key + ": " + err_msg) : "") +
                 (!isRemote() && path().isValid() ? ('\n' + path().toString()) : "");
         }

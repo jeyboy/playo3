@@ -317,7 +317,9 @@ void Library::initItemInfo(MediaInfo * info, IItem * itm) {
         iSize = 0;
     }
 
-    itm -> setSize(iSize);
+    // maybe need to prevent adding size of remote items or create settings option for this
+    itm -> backPropagateBytesInBranch(iSize);
+//    itm -> setSize(iSize);
 
     if (info -> isReaded())
         itm -> setInfo(Info::str(Info::toUnits(iSize), info -> getExtension(), info -> getBitrate(), info -> getSampleRate(), info -> getChannels()));

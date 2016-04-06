@@ -44,8 +44,8 @@ namespace Core {
         QStringList info() const;
         inline QVariant _info() const                           { return attrs.value(JSON_TYPE_INFO); }
 
-        inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
-        inline QVariant genreID() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
+        inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, 0); }
+        inline QVariant genreID() const                         { return attrs.value(JSON_TYPE_GENRE_ID, 0); }
         inline QVariant bpm() const                             { return attrs.value(JSON_TYPE_BPM, 0); }
 
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }

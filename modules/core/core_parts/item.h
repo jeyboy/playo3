@@ -25,6 +25,8 @@ namespace Core {
         int row() const;
 
         virtual inline int itemsCountInBranch() const { return 1; }
+        virtual void backPropagateBytesInBranch(int bytes);
+
         inline virtual bool isContainer() const { return false; }
         inline bool isPlayable() const {
             bool showBatch = Settings::obj().isCheckboxShow();
