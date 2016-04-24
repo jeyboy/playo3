@@ -62,10 +62,12 @@ QMenu * ToolBars::createPopupMenu() {
     }
 
     if (hasDocs) {
-        QMenu * docsMenu = menu -> addMenu(QStringLiteral("Dock bars"));
+        QMenu * docsMenu = menu -> addMenu(QStringLiteral("Tabs"));
 
         docsMenu -> addAction(QStringLiteral("Show all"), &Dockbars::obj(), SLOT(showAll()));
         docsMenu -> addAction(QStringLiteral("Hide all"), &Dockbars::obj(), SLOT(hideAll()));
+        docsMenu -> addSeparator();
+        docsMenu -> addAction(QStringLiteral("Close all"), &Dockbars::obj(), SLOT(closeAll()));
         docsMenu -> addSeparator();
 
 

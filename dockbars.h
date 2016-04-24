@@ -102,6 +102,8 @@ namespace Presentation {
         void updateAllViews();
         inline void hideAll() { changeBarsVisibility(true); }
         inline void showAll() { changeBarsVisibility(false); }
+        void closeAll();
+
 
         inline void createNewBar() { showViewSettingsDialog(); }
         inline void createNewBar(QString name, QUrl url) {

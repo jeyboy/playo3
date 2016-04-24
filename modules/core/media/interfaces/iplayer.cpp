@@ -40,9 +40,10 @@ void IPlayer::playPostprocessing() {
     if (isInitiating()) {
         initFileSize();
 
-        if (playPos > 0 && media_url.isLocalFile())
+        if (playPos > 0 && media_url.isLocalFile()) {
             setPosition(playPos);
-        else setPosition(0);
+            playPos = startPosition();
+        } else setPosition(0);
 
         setDuration(max_duration);
         emit statusChanged(PlaingMedia);

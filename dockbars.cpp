@@ -223,18 +223,33 @@ DockBar * Dockbars::createDocBar(const BarCreationNames & names, bool closable, 
 
 void Dockbars::useVeticalTitles(bool vertical) {
     QList<DockBar *> bars = dockbars();
-    QList<DockBar *>::Iterator it = bars.begin();
 
-    for(; it != bars.end(); it++)
+    for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++)
         (*it) -> useVerticalTitles(vertical);
 }
 
 void Dockbars::changeBarsVisibility(bool hide) {
     QList<DockBar *> bars = dockbars();
-    QList<DockBar *>::Iterator it = bars.begin();
 
-    for(; it != bars.end(); it++)
+    for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++)
         (*it) -> setHidden(hide);
+}
+
+void Dockbars::closeAll() {
+    UserDialogBox::obj().alert(
+        this,
+        QStringLiteral("Closing of tabs"),
+        QStringLiteral("Are you sure what you want to close all your tabs ?"),
+        QMessageBox::Yes | QMessageBox::No
+    );
+
+    if (UserDialogBox::obj().lastAnswer() == QMessageBox::No)
+        return;
+
+    QList<DockBar *> bars = dockbars();
+
+    for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++)
+        (*it) -> close();
 }
 
 void Dockbars::initPlayed() {
