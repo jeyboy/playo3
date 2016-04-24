@@ -69,16 +69,15 @@ public:
         startPos = startMili;
         playPos = playStartMili;
         setDuration(maxDuration);
-        updatePosition(playStartMili);
+        updatePosition(playPos); // update ui pos // real position changing proceed in post proc method
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
     inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration, playPos); }
     inline void updateMedia(qint64 startMili, qint64 maxDuration) {
-        startPos = startMili;
-        playPos = 0;
+        playPos = startPos = startMili;
         setDuration(maxDuration);
-        setPosition(0);
+        setPosition(playPos);
     }
 
     void closeMedia() {
