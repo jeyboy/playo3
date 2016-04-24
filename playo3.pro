@@ -186,7 +186,6 @@ HEADERS += \
     modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
     modules/core/data_factory.h \
-    modules/core/playlist_types.h \
     modules/models/service/download_delegate.h \
     modules/models/service/download_model.h \
     modules/models/service/download_model_item.h \
@@ -202,7 +201,6 @@ HEADERS += \
     modules/models/web/od_model.h \
     modules/models/web/soundcloud_model.h \
     modules/models/web/vk_model.h \
-    modules/models/web/vk_rel_model.h \
     modules/models/web/web_model.h \
     modules/models/level_tree_model.h \
     modules/models/list_model.h \
@@ -211,7 +209,6 @@ HEADERS += \
     modules/models/tree_model.h \
     modules/views/web/od_view.h \
     modules/views/web/soundcloud_view.h \
-    modules/views/web/vk_rel_view.h \
     modules/views/web/vk_view.h \
     modules/views/level_tree_view.h \
     modules/views/list_view.h \
@@ -219,7 +216,6 @@ HEADERS += \
     modules/views/tree_view_style.h \
     modules/views/view_index.h \
     modules/views/view_interface.h \
-    modules/views/view_settings.h \
     modules/views/service/download_view.h \
     modules/views/service/search_view.h \
     settings/global_settings.h \
@@ -292,7 +288,9 @@ HEADERS += \
     modules/core/core_parts/part_mixes/item_field_defines.h \
     modules/core/data_sub_types.h \
     modules/core/core_parts/item.h \
-    settings/apis_settings.h
+    settings/apis_settings.h \
+    modules/models/model_settings.h \
+    modules/core/interfaces/isource.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -371,7 +369,6 @@ SOURCES += \
     modules/models/web/od_model.cpp \
     modules/models/web/soundcloud_model.cpp \
     modules/models/web/vk_model.cpp \
-    modules/models/web/vk_rel_model.cpp \
     modules/models/web/web_model.cpp \
     modules/models/level_tree_model.cpp \
     modules/models/list_model.cpp \
@@ -380,7 +377,6 @@ SOURCES += \
     modules/models/tree_model.cpp \
     modules/views/web/od_view.cpp \
     modules/views/web/soundcloud_view.cpp \
-    modules/views/web/vk_rel_view.cpp \
     modules/views/web/vk_view.cpp \
     modules/views/level_tree_view.cpp \
     modules/views/list_view.cpp \

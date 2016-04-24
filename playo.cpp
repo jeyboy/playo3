@@ -231,7 +231,7 @@ void Playo::showSettingsDialog() {
 void Playo::openVKRecomendations() {
     Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Views::Params(vk_rel, Vk::Api::obj().userID(), user_rel), 0, true, true
+        Views::Params(vk, Vk::Api::obj().userID(), user_rel), 0, true, true
     );
 }
 
@@ -265,7 +265,7 @@ void Playo::showVKRelTabDialog() {
         Dockbars::obj().createLinkedDocBar(
             BarCreationNames(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"),
             Vk::Api::obj().uidStr(dialog.getId())),
-            Views::Params(vk_rel, dialog.getId()), 0, true, true
+            Views::Params(dt_site_vk, dialog.getId(), user_rel), 0, true, true
         );
 
     Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().lastError());
@@ -277,7 +277,18 @@ void Playo::showSoundcloudRelTabDialog() {
         Dockbars::obj().createLinkedDocBar(
             BarCreationNames(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"),
             Od::Api::obj().uidStr(dialog.getId())),
-            Views::Params(soundcloud, dialog.getId()), 0, true, true
+            Views::Params(dt_site_sc, dialog.getId(), user_rel), 0, true, true
+        );
+}
+
+
+void Playo::createRelationTab(ISource * source) {
+    RelationsDialog dialog(source, this);
+    if (dialog.exec() == QDialog::Accepted)
+        Dockbars::obj().createLinkedDocBar(
+            BarCreationNames(QStringLiteral(source -> name() % " [") % dialog.getName() % QStringLiteral("]"),
+            source -> uidStr(dialog.getId())),
+            Views::Params(source -> siteType(), dialog.getId(), user_rel), 0, true, true
         );
 }
 

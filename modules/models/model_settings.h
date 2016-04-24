@@ -1,16 +1,16 @@
-#ifndef VIEW_SETTINGS
-#define VIEW_SETTINGS
+#ifndef MODEL_SETTINGS
+#define MODEL_SETTINGS
 
-#include "modules/core/playlist_types.h"
+#include "modules/core/data_sub_types.h"
 #include <qjsonobject.h>
 
-namespace Views {
+namespace Models {
     struct Params {
-        Params(Data::Type cType, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(false), playlist(true),
+        Params(Core::DataSubType cType, const QString & uniq_id = QString(), Core::RelType rel = Core::none_rel) : deleteFile(false), playlist(true),
             interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
 
-        Params(Data::Type cType = Data::tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, const QString & uniq_id = QString(), Data::RelType rel = Data::none_rel) : deleteFile(delFile), playlist(isPlaylist),
+        Params(Core::DataSubType cType = Core::dt_tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
+            bool isPlaylist = false, const QString & uniq_id = QString(), Core::RelType rel = Core::none_rel) : deleteFile(delFile), playlist(isPlaylist),
             interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
 
         Params(const QJsonObject & obj) {

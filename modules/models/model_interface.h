@@ -7,6 +7,8 @@
 #include <qfuturewatcher.h> // include async
 #include <qdesktopservices.h>
 
+#include "model_settings.h"
+
 #include "modules/core/core_parts/playlist.h"
 #include "modules/core/web/web_apis.h"
 #include "modules/core/misc/file_utils/extensions.h"
@@ -25,6 +27,7 @@ namespace Models {
         Q_OBJECT
 
         QModelIndexList dndList;
+        Params sttngs;
     public:
         enum Direction {
             none = 0,
@@ -33,6 +36,9 @@ namespace Models {
         };
 
         static bool restoreUrl(IItem * itm);
+
+        inline Params settings() const { return sttngs; }
+        inline void setSettings(const Params & newSettings) { sttngs = newSettings; }
 
         IModel(QJsonObject * hash, QObject * parent);
         virtual ~IModel();

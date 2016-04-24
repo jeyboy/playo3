@@ -2,7 +2,18 @@
 #define DATA_SUB_TYPES
 
 namespace Core {
+    enum RelType {
+        rel_none = 0,
+        rel_user,
+        rel_song
+    };
+
     enum DataSubType : int {
+        dt_level = -199,
+        dt_level_tree,
+        dt_tree,
+        dt_search,
+
         dt_playlist = -99,
         dt_playlist_local,
         dt_playlist_cue,

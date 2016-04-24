@@ -10,7 +10,6 @@
 #include "dialogs/tabdialog.h"
 #include "dialogs/user_action_dialog.h"
 
-#include "view_settings.h"
 #include "settings.h"
 
 #include "tree_view_style.h"
@@ -44,7 +43,7 @@ namespace Views {
     public:
         inline void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
-        IView(IModel * model, QWidget * parent, Params & settins);
+        IView(IModel * model, QWidget * parent);
         virtual ~IView();
 
         inline QJsonObject toJson() { return mdl -> toJson(); }
@@ -53,15 +52,14 @@ namespace Views {
 
         bool restoreItem(IItem * itm) { return mdl -> restoreUrl(itm); }
 
-        inline bool isRemoveFileWithItem() const { return sttngs.deleteFile; }
-        inline bool isPlaylist() const { return sttngs.playlist; }
-        inline bool isCommon() const { return sttngs.common; }
-        inline bool isEditable() const { return sttngs.type < Data::vk && !isCommon(); }
-        inline bool isRequiredOnUpdate() const { return sttngs.type == Data::vk; }
-        inline bool isSearch() const { return sttngs.type == Data::search; }
+        inline bool isRemoveFileWithItem() const { return settings().deleteFile; }
+        inline bool isPlaylist() const { return settings().playlist; }
+        inline bool isCommon() const { return settings().common; }
+        inline bool isEditable() const { return settings().type < Data::vk && !isCommon(); }
+        inline bool isSearch() const { return settings().type == Data::search; }
 
-        inline Params settings() const { return sttngs; }
-        inline void setSettings(Params newSettings) { sttngs = newSettings; }
+        inline Params settings() const { return mdl -> settings(); }
+        inline void setSettings(const Params & newSettings) { mdl -> setSettings(newSettings); }
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
@@ -158,7 +156,6 @@ namespace Views {
         void mouseMoveEvent(QMouseEvent *);
 
         IModel * mdl;
-        Params sttngs;
         QPoint dragPoint;
         IModel::Direction direction;
         int _deleteFolderAnswer;

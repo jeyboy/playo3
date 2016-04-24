@@ -15,6 +15,7 @@
 
 #include "dialogs/user_action_dialog.h"
 #include "settings.h"
+#include "isource.h"
 
 #define DEFAULT_PREDICATE_NAME QString()
 #define REQUEST_DELAY 260 // ms
@@ -25,7 +26,7 @@
 namespace Core {
     using namespace Media;
 
-    class ISearchable {
+    class ISearchable : public ISource {
     public:
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
 
@@ -62,11 +63,7 @@ namespace Core {
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
-        virtual QString name() const = 0;
-
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
-
-        virtual DataSubType siteType() = 0;
 
         virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
         virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub

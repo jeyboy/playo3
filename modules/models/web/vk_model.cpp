@@ -3,17 +3,23 @@
 using namespace Models;
 /////////////////////////////////////////////////////////////
 void VkModel::refresh(bool retryPlaing) {
-//    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
-
-//    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
 
-    Vk::Api::obj().userInfo(
-        tab_uid,
-        tab_uid == Vk::Api::obj().userID(),
-        new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
-    );
+    if (rel_type == Data::none_rel) {
+        Vk::Api::obj().userInfo(
+            tab_uid,
+            tab_uid == Vk::Api::obj().userID(),
+            new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
+        );
+    } else {
+        Vk::Api::obj().audioRecomendations(
+            tab_uid,
+            rel_type == Data::user_rel,
+            true,
+            new Func(this, SLOT(proceedAudioList(QJsonObject &)))
+        );
+    }
 }
 
 //void VkModel::refreshWall() {

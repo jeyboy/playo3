@@ -13,7 +13,7 @@ namespace Models {
         inline Data::Type playlistType() const { return Data::vk; }
         inline ISearchable * api() { return &Vk::Api::obj(); }
     public slots:
-        virtual void refresh(bool retryPlaing = false);
+        void refresh(bool retryPlaing = false);
 //        virtual void refreshWall();
 
     protected slots:

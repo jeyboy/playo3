@@ -699,7 +699,6 @@ void IModel::importIds(const QStringList & ids) {
         case search:
         case soundcloud:
         case vk:
-        case vk_rel:
         case level: { parentNode = rootItem; break; }
         case tree:
         case level_tree: {
