@@ -10,12 +10,12 @@
 #include "modules/core/misc/format.h"
 #include "modules/core/misc/logger.h"
 #include "modules/core/web/utils/web_manager.h"
-#include "modules/core/media/genres/target_genres.h"
 #include "modules/core/data_sub_types.h"
 
 #include "dialogs/user_action_dialog.h"
 #include "settings.h"
 #include "isource.h"
+#include "igenreable.h"
 
 #define DEFAULT_PREDICATE_NAME QString()
 #define REQUEST_DELAY 260 // ms
@@ -23,9 +23,7 @@
 #define STYLES_MAX_PAGE 50
 
 namespace Core {
-    using namespace Media;
-
-    class ISearchable : public ISource {
+    class ISearchable : public ISource, public IGenreable {
     public:
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128 };
 
@@ -55,8 +53,6 @@ namespace Core {
 
         inline virtual ~ISearchable() {}
 
-        inline virtual bool isConnected() { return true; }
-
         inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
         inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
 
@@ -74,11 +70,6 @@ namespace Core {
                 return popular(genre);
 
             return QJsonArray();
-        }
-
-        inline TargetGenres genresList() {
-            if (genres.isEmpty()) genres_prepocessing();
-            return genres;
         }
 
         virtual QJsonArray byGenre(const QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
@@ -109,9 +100,6 @@ namespace Core {
         virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
         virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
-        virtual void genres_prepocessing() {}
-
-        TargetGenres genres;
 
         QString error;
         UserActionDialog * actionDialog;

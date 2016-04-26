@@ -49,8 +49,8 @@ namespace Core {
                 }
 
             public slots:
-                bool connection();
-                inline void disconnect() {
+                bool connect_user();
+                inline void disconnect_user() {
                     clearParams();
                     clearFriends();
                     clearGroups();

@@ -34,8 +34,8 @@ namespace Core {
                 inline bool isConnected() { return true; /*!token().isEmpty();*/ }
 
             public slots:
-                bool connection() { return true; }
-                inline void disconnect() {
+                bool connect_user() { return true; }
+                inline void disconnect_user() {
 //                    clearParams();
 //                    clearFriends();
 //                    clearGroups();

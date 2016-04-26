@@ -39,8 +39,8 @@ namespace Core {
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
             public slots:
-                bool connection();
-                inline void disconnect() {
+                bool connect_user();
+                inline void disconnect_user() {
                     clearParams();
                     clearFriends();
                     clearGroups();

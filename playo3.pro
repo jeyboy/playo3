@@ -290,7 +290,8 @@ HEADERS += \
     modules/core/core_parts/item.h \
     settings/apis_settings.h \
     modules/models/model_settings.h \
-    modules/core/interfaces/isource.h
+    modules/core/interfaces/isource.h \
+    modules/core/interfaces/igenreable.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
