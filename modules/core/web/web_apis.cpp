@@ -2,32 +2,41 @@
 
 namespace Core {
     namespace Web {
-        QHash<DataSubType, ISearchable *> Apis::sites = QHash<DataSubType, ISearchable *>();
+        QHash<DataSubType, ISource *> Apis::sources = QHash<DataSubType, ISource *>();
+        QHash<DataSubType, ISearchable *> Apis::searchers = QHash<DataSubType, ISearchable *>();
+        QHash<DataSubType, Sociable *> Apis::sociables = QHash<DataSubType, Sociable *>();
 
         void Apis::initiate(const QJsonObject & obj) {
-            sites.insert(Youtube::Api::obj().siteType(), &Youtube::Api::obj());
-            sites.insert(Yandex::Api::obj().siteType(), &Yandex::Api::obj());
-            sites.insert(Vk::Api::obj().siteType(), &Vk::Api::obj());
-            sites.insert(Soundcloud::Api::obj().siteType(), &Soundcloud::Api::obj());
-            sites.insert(Fourshared::Api::obj().siteType(), &Fourshared::Api::obj());
-            sites.insert(Od::Api::obj().siteType(), &Od::Api::obj());
-            sites.insert(MyzukaAlbum::obj().siteType(), &MyzukaAlbum::obj());
-            sites.insert(Zaycev::obj().siteType(), &Zaycev::obj());
-            sites.insert(Mp3Base::obj().siteType(), &Mp3Base::obj());
-            sites.insert(PromoDj::obj().siteType(), &PromoDj::obj());
-            sites.insert(Mp3cc::obj().siteType(), &Mp3cc::obj());
-            sites.insert(Mp3pm::obj().siteType(), &Mp3pm::obj());
-            sites.insert(Shmidt::obj().siteType(), &Shmidt::obj());
-            sites.insert(Jetune::obj().siteType(), &Jetune::obj());
-            sites.insert(MusicShara::obj().siteType(), &MusicShara::obj());
-            sites.insert(RedMp3::obj().siteType(), &RedMp3::obj());
+            sources.insert(Youtube::Api::obj().siteType(), &Youtube::Api::obj());
+            sources.insert(Yandex::Api::obj().siteType(), &Yandex::Api::obj());
+            sources.insert(Vk::Api::obj().siteType(), &Vk::Api::obj());
+            sources.insert(Soundcloud::Api::obj().siteType(), &Soundcloud::Api::obj());
+            sources.insert(Fourshared::Api::obj().siteType(), &Fourshared::Api::obj());
+            sources.insert(Od::Api::obj().siteType(), &Od::Api::obj());
+            sources.insert(MyzukaAlbum::obj().siteType(), &MyzukaAlbum::obj());
+            sources.insert(Zaycev::obj().siteType(), &Zaycev::obj());
+            sources.insert(Mp3Base::obj().siteType(), &Mp3Base::obj());
+            sources.insert(PromoDj::obj().siteType(), &PromoDj::obj());
+            sources.insert(Mp3cc::obj().siteType(), &Mp3cc::obj());
+            sources.insert(Mp3pm::obj().siteType(), &Mp3pm::obj());
+            sources.insert(Shmidt::obj().siteType(), &Shmidt::obj());
+            sources.insert(Jetune::obj().siteType(), &Jetune::obj());
+            sources.insert(MusicShara::obj().siteType(), &MusicShara::obj());
+            sources.insert(RedMp3::obj().siteType(), &RedMp3::obj());
 
-            for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
+            for(QHash<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
+                if (it.value() -> isSearchable())
+                    searchers.insert(it.key(), (ISearchable *)it.value());
+
+                if (it.value() -> isSociable())
+                    sociables.insert(it.key(), (Sociable *)it.value());
+
                 it.value() -> fromJson(obj);
+            }
         }
 
         void Apis::close(QJsonObject & obj) {
-            for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++)
+            for(QHash<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
                 it.value() -> toJson(obj);
         }
     }

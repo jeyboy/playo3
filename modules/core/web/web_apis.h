@@ -10,52 +10,28 @@
 namespace Core {
     namespace Web {
         class Apis {
-            static QHash<DataSubType, ISearchable *> sites;
+            static QHash<DataSubType, ISource *> sources;
+            static QHash<DataSubType, ISearchable *> searchers;
+            static QHash<DataSubType, Sociable *> sociables;
         public:
             static void initiate(const QJsonObject & obj);
-            static QHash<DataSubType, ISearchable *> list() { return sites; }
-            inline static ISearchable * engine(const DataSubType & item_type) { return sites.value(item_type); }
+
+            static QHash<DataSubType, ISearchable *> searchersList() { return searchers; }
+            inline static ISearchable * searcher(const DataSubType & item_type) { return searchers.value(item_type); }
+
+            static QHash<DataSubType, Sociable *> sociablesList() { return sociables; }
+            inline static Sociable * sociable(const DataSubType & item_type) { return sociables.value(item_type); }
+
             static void close(QJsonObject & obj);
 
-            static QString restoreUrl(const QString & refreshStr/*, int itemType*/, const DataSubType & itemSubType) {
+            static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType) {
                 qDebug() << "RESTORING" << itemSubType << refreshStr;
 
-//                switch(itemType) {
-////                    case VK_FILE: {
-////                        newUrl = Vk::Api::obj().refresh(refreshStr /*itm -> toUid()*/).section('?', 0, 0);
-////                    break;}
-
-////                    case OD_FILE: {
-////                        newUrl = Od::Api::obj().refresh(refreshStr/*itm -> refresh_path()*/);
-////                    break;}
-
-//                    case VK_FILE:
-//                    case OD_FILE:
-//                    case WEB_FILE: {
-                        switch(itemSubType) {
-            //                case Playo3::fourshared_site: {
-            //                    newUrl = Fourshared::Api::instance() -> refresh(itm -> refresh_path());
-            ////                    newUrl = Fourshared::Api::instance() -> downloadLink(itm -> refresh_path());
-            //                break;}
-
-            //                case jetune_site: {
-            //                    newUrl = itm -> refresh_path();
-            //                break;}
-
-                            default: {
-                                ISearchable * engine = Web::Apis::engine(itemSubType);
-                                if (engine == 0)
-                                    return QString();
-                                else {
-                                    QString res = engine -> refresh(refreshStr /*itm -> refresh_path()*/);
-                                    if (itemSubType == dt_site_vk) return res.section('?', 0, 0);
-                                    else return res;
-                                }
-                            }
-                        }
-//                    break;}
-//                    default: return QString();
-//                };
+                ISource * source = sources.value(itemSubType);
+                if (source == 0)
+                    return QString();
+                else
+                    return source -> refresh(refreshStr);
             }
         };
     }

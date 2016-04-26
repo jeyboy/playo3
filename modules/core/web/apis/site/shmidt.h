@@ -81,7 +81,7 @@ namespace Core {
 
     //        inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
-            inline QString refresh_postprocess(Response * reply) {
+            inline QString refresh_process(Response * reply) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".download p a");
 

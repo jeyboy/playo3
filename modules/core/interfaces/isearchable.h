@@ -9,8 +9,6 @@
 
 #include "modules/core/misc/format.h"
 #include "modules/core/misc/logger.h"
-#include "modules/core/web/utils/web_manager.h"
-#include "modules/core/data_sub_types.h"
 
 #include "dialogs/user_action_dialog.h"
 #include "settings.h"
@@ -50,16 +48,14 @@ namespace Core {
         inline QString lastError() const { return error; }
 
         inline ISearchable() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
-
         inline virtual ~ISearchable() {}
+
+        inline bool isSearchable() { return true; }
 
         inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
         inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
-
-        virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
-        virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub
 
         virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
             if (!predicate.isEmpty()) {
@@ -81,8 +77,6 @@ namespace Core {
         virtual QJsonArray popular(QString & /*genre*/) { return QJsonArray(); }
 
         //    virtual QJsonArray related(QUrl /*target_page*/) { return QJsonArray(); }
-
-        virtual QString refresh(const QString & refresh_page) = 0;
     signals:
         void errorReceived(int, QString);
     protected:

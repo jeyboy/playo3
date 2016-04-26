@@ -114,7 +114,7 @@ namespace Core {
             }
 
             // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
-            inline QString refresh_postprocess(Response * reply) {
+            inline QString refresh_process(Response * reply) {
                 return reply -> toJson().value(QStringLiteral("url")).toString();
             }
 

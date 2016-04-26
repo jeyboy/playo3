@@ -295,12 +295,12 @@ void Playo::createTab(ISource * source, const QString & userID) {
 }
 
 void Playo::createRelationTab(ISource * source) {
-    RelationsDialog dialog(source, this);
+    RelationsDialog dialog(Web::Apis::sociable(source -> siteType()), this);
     if (dialog.exec() == QDialog::Accepted)
         Dockbars::obj().createLinkedDocBar(
-            BarCreationNames(QStringLiteral(source -> name() % " [") % dialog.getName() % QStringLiteral("]"),
+            BarCreationNames(QString(source -> name() % " [") % dialog.getName() % QStringLiteral("]"),
             source -> uidStr(dialog.getId())),
-            Views::Params(source -> siteType(), dialog.getId(), user_rel), 0, true, true
+            Views::Params(source -> siteType(), dialog.getId(), rel_user), 0, true, true
         );
 }
 

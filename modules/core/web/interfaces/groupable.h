@@ -11,6 +11,8 @@ namespace Core {
 //            virtual QList<Linkable> findGroupById(const QString & uid) = 0;
 //            virtual QList<Linkable> findGroupByName(const QString & name) = 0;
 
+            inline virtual bool isSociable() { return true; }
+
             inline void addGroup(const Linkable & obj) { addLinkable(obj); }
 
             inline QHash<QString, Linkable> groupsList() const { return linkablesList(); }

@@ -92,7 +92,7 @@ namespace Core {
             void genres_prepocessing() {} // not supports genres
 
 
-            inline QString refresh_postprocess(Response * /*reply*/) {
+            inline QString refresh_process(Response * /*reply*/) {
 //                return reply -> toJson().value(QStringLiteral("url")).toString();
                 return QString();
             }

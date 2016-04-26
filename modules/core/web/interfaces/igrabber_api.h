@@ -11,19 +11,7 @@ namespace Core {
     class IGrabberApi : public ISearchable {
     public:
         enum toJsonType { songs1, songs2, artists1, artists2, genres1 };
-
-        virtual QString refresh(const QString & refresh_page) {
-            if (refresh_page.isEmpty()) return QString();
-
-            Web::Response * response = Web::Manager::prepare() -> followedGet(QUrl(refresh_page));
-            QString res = refresh_postprocess(response);
-            delete response;
-            return res;
-        }
-
     protected:
-        virtual QString refresh_postprocess(Web::Response * /*response*/) { return QString(); }
-
         virtual bool toJson(toJsonType, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) = 0;
 
         inline QJsonArray sQuery(QUrl url, toJsonType jtype) {

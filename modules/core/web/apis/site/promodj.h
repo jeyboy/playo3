@@ -104,7 +104,7 @@ namespace Core {
             inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
     //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
-    //        inline QString refresh_postprocess(WebResponse * reply) {
+    //        inline QString refresh_process(WebResponse * reply) {
     //            Html::Document parser(reply);
 
     //            QString url = parser.find("#flash_prelisten script").text();

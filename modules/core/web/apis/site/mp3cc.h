@@ -85,7 +85,7 @@ namespace Core {
                 return result;
             }
 
-    //        inline QString refresh_postprocess(WebResponse * reply) {
+    //        inline QString refresh_process(WebResponse * reply) {
     //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
     //        }
 

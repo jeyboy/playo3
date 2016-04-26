@@ -237,8 +237,10 @@ namespace Core {
                 }
 
                 QString refresh(const QString & audio_uid) {
-                    return audioInfo(audio_uid).value(tkn_url).toString();
+                    return refresh_postprocess(audioInfo(audio_uid).value(tkn_url).toString());
                 }
+
+                QString refresh_postprocess(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
                 //INFO not tested
 

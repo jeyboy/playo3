@@ -100,7 +100,7 @@ namespace Core {
 
             inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
 
-            QString refresh_postprocess(Response * reply) {
+            QString refresh_process(Response * reply) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".options a[itemprop='audio']");
 
