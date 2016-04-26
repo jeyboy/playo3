@@ -10,10 +10,8 @@ namespace Views {
     class SoundcloudView : public IView {
       Q_OBJECT
     public:
-        inline SoundcloudView(QWidget * parent, Params settings, QJsonObject * hash = 0)
-            : IView(new SoundcloudModel(settings.uid, hash), parent, settings) {}
-//        inline SoundcloudView(WebModel * newModel, QWidget * parent, Params settings)
-//            : IView(newModel, parent, settings) {}
+        inline SoundcloudView(QWidget * parent, const Params & settings, QJsonObject * hash = 0)
+            : IView(new SoundcloudModel(settings, hash), parent) {}
     };
 }
 

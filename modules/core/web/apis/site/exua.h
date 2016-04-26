@@ -14,7 +14,7 @@
 //        const Html::Selector searchIndexSelector, songTrSelector /*, artistSelector, songSelector, linksSelector, table_columns_selector*/;
 //    public:
 //        inline QString name() const { return QStringLiteral("EXua"); }
-//        inline Playo3::WebSubType siteType() { return Playo3::exua_site; }
+//        inline Playo3::WebSubType siteType() const { return Playo3::exua_site; }
 
 //        QJsonArray search(QString & predicate, QString & genre, int genre_id, bool popular_items, bool by_artist, int count) {
 //            QUrl url;

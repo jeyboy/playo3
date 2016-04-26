@@ -8,8 +8,8 @@ namespace Views {
     class ListView : public IView {
       Q_OBJECT
     public:
-        inline ListView(QWidget * parent, Params settings, QJsonObject * hash = 0)
-            : IView(new ListModel(hash), parent, settings) {
+        inline ListView(QWidget * parent, const Params & settings, QJsonObject * hash = 0)
+            : IView(new ListModel(settings, hash), parent) {
 //            setIndentation(4); // -2
         }
     };

@@ -11,7 +11,7 @@ namespace Core {
         class RedMp3 : public IGrabberApi, public Singleton<RedMp3> {
         public:
             inline QString name() const { return QStringLiteral("RedMp3"); }
-            inline DataSubType siteType() { return dt_site_redmp3; }
+            inline DataSubType siteType() const { return dt_site_redmp3; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

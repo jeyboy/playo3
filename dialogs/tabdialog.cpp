@@ -25,37 +25,37 @@ void TabDialog::setName(QString name) {
   ui -> tabName -> setText(name);
 }
 
-Views::Params TabDialog::getSettings() {
-    Views::Params settings;
+Models::Params TabDialog::getSettings() {
+    Models::Params settings;
 
     settings.deleteFile = ui -> deleteFile -> isChecked();
     settings.interactive = ui -> interactive -> isChecked(); //checkState() == Qt::Checked
     settings.playlist = ui -> playlist -> isChecked();
 
     if (ui -> isListRadio -> isChecked())
-        settings.type = Data::level;
+        settings.type = Core::dt_level;
     else if (ui -> isOneLevelTreeRadio -> isChecked())
-        settings.type = Data::level_tree;
+        settings.type = Core::dt_level_tree;
     else if (ui -> isTreeRadio -> isChecked())
-        settings.type = Data::tree;
+        settings.type = Core::dt_tree;
     else if (ui -> isVkRadio -> isChecked())
-        settings.type = Data::vk;
+        settings.type = Core::dt_site_vk;
     else if (ui -> isSoundcloudRadio -> isChecked())
-        settings.type = Data::soundcloud;
+        settings.type = Core::dt_site_sc;
 
     return settings;
 }
 
-void TabDialog::setSettings(Views::Params settings) {
+void TabDialog::setSettings(const Models::Params & settings) {
   ui -> deleteFile -> setChecked(settings.deleteFile);
   ui -> interactive -> setChecked(settings.interactive);
   ui -> playlist -> setChecked(settings.playlist);
 
-  ui -> isListRadio -> setChecked(settings.type == Data::level);
-  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Data::level_tree);
-  ui -> isTreeRadio -> setChecked(settings.type == Data::tree);
-  ui -> isVkRadio -> setChecked(settings.type == Data::vk);
-  ui -> isSoundcloudRadio -> setChecked(settings.type == Data::soundcloud);
+  ui -> isListRadio -> setChecked(settings.type == Core::dt_level);
+  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Core::dt_level_tree);
+  ui -> isTreeRadio -> setChecked(settings.type == Core::dt_tree);
+  ui -> isVkRadio -> setChecked(settings.type == Core::dt_site_vk);
+  ui -> isSoundcloudRadio -> setChecked(settings.type == Core::dt_site_sc);
 
   ui -> isListRadio -> setEnabled(false);
   ui -> isTreeRadio -> setEnabled(false);

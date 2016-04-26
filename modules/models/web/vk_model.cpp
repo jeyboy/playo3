@@ -6,16 +6,16 @@ void VkModel::refresh(bool retryPlaing) {
     emit moveInProcess();
     QApplication::processEvents();
 
-    if (rel_type == Data::none_rel) {
+    if (sttngs.rel_type == Core::rel_none) {
         Vk::Api::obj().userInfo(
-            tab_uid,
-            tab_uid == Vk::Api::obj().userID(),
+            sttngs.uid,
+            sttngs.uid == Vk::Api::obj().userID(),
             new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
         );
     } else {
         Vk::Api::obj().audioRecomendations(
-            tab_uid,
-            rel_type == Data::user_rel,
+            sttngs.uid,
+            sttngs.rel_type == Core::rel_user,
             true,
             new Func(this, SLOT(proceedAudioList(QJsonObject &)))
         );

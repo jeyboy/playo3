@@ -2,7 +2,7 @@
 #define TABDIALOG_H
 
 #include "base_dialog.h"
-#include "modules/views/view_settings.h"
+#include "modules/models/model_settings.h"
 
 namespace Ui { class TabDialog; }
 
@@ -16,8 +16,8 @@ namespace Dialogs {
       QString getName();
       void setName(QString name);
 
-      Views::Params getSettings();
-      void setSettings(Views::Params hash);
+      Models::Params getSettings();
+      void setSettings(const Models::Params & hash);
 
     private:
       Ui::TabDialog * ui;

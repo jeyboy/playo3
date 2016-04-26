@@ -12,13 +12,13 @@ namespace Models {
     class WebModel : public ListModel, public IgnoreList {
         Q_OBJECT
     public:
-        inline WebModel(const QString & uid, QJsonObject * hash = 0, QObject * parent = 0) :
-            ListModel(hash, parent), IgnoreList(hash), tab_uid(uid) {  }
+        inline WebModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) :
+            ListModel(settings, hash, parent), IgnoreList(hash) {  }
         inline virtual ~WebModel() {}
 
         inline bool isRelative() const { return false; }
-        virtual ISearchable * api() = 0;
-        inline QString tabUid() const { return tab_uid; }
+        virtual ISearchable * api() const = 0;
+        inline Core::DataSubType playlistType() const { return api() -> siteType(); }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);
         QJsonObject toJson();
@@ -32,9 +32,7 @@ namespace Models {
         void refreshNeeded();
 
     protected slots:
-            void errorReceived(int, QString);
-    protected:
-        QString tab_uid;
+        void errorReceived(int, QString);
     };
 }
 

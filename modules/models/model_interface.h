@@ -27,7 +27,7 @@ namespace Models {
         Q_OBJECT
 
         QModelIndexList dndList;
-        Params sttngs;
+        QFutureWatcher<DropData *> * addWatcher;
     public:
         enum Direction {
             none = 0,
@@ -37,20 +37,20 @@ namespace Models {
 
         static bool restoreUrl(IItem * itm);
 
-        inline Params settings() const { return sttngs; }
-        inline void setSettings(const Params & newSettings) { sttngs = newSettings; }
-
-        IModel(QJsonObject * hash, QObject * parent);
+        IModel(const Params & settings, QJsonObject * hash, QObject * parent);
         virtual ~IModel();
 
         inline Playlist * root() { return rootItem; }
 
-        virtual Data::Type playlistType() const = 0;
+        inline Params settings() const { return sttngs; }
+        inline void setSettings(const Params & newSettings) { sttngs = newSettings; }
+
+        virtual Core::DataSubType playlistType() const = 0;
         virtual bool isRelative() const = 0;
         inline bool hasFreeMoving() {
             switch(playlistType()) {
-                case Data::tree:
-                case Data::level_tree: return false;
+                case Core::dt_tree:
+                case Core::dt_level_tree: return false;
                 default: return true;
             }
         }
@@ -165,8 +165,7 @@ namespace Models {
         Qt::KeyboardModifiers dropKeyModifiers;
         QMutex * sync;
         Playlist * rootItem;
-    private:
-        QFutureWatcher<DropData *> * addWatcher;
+        Params sttngs;
     };
 
     struct modelIndexComparator {

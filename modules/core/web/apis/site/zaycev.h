@@ -11,7 +11,7 @@ namespace Core {
         class Zaycev : public IGrabberApi, public Singleton<Zaycev> {
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
-            inline DataSubType siteType() { return dt_site_zaycev; }
+            inline DataSubType siteType() const { return dt_site_zaycev; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

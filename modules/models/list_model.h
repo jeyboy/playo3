@@ -7,11 +7,11 @@ namespace Models {
     class ListModel : public IModel {
         Q_OBJECT
     public:
-        inline ListModel(QJsonObject * hash = 0, QObject * parent = 0) : IModel(hash, parent) {}
+        inline ListModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : IModel(settings, hash, parent) {}
         virtual ~ListModel() {}
 
         inline bool isRelative() const { return false; }
-        inline Data::Type playlistType() const { return Data::level; }
+        inline Core::DataSubType playlistType() const { return Core::dt_level; }
     protected:
         void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         void dropProcession(const QModelIndex & ind, int row, const QList<QUrl> & list);

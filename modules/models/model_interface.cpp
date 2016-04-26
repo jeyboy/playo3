@@ -20,7 +20,7 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0) {
+IModel::IModel(const Params & settings, QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0), sttngs(settings) {
     sync = new QMutex(QMutex::NonRecursive);
     rootItem = hash ? new Playlist(hash, 0, hash -> take(JSON_TYPE_CHILDS)) : new Playlist();
     qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME
@@ -200,8 +200,8 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     QUrl url;
 
     switch(playlistType()) {
-        case Data::Type::tree:
-        case Data::Type::level_tree: { url = list.first(); break; }
+        case Core::dt_tree:
+        case Core::dt_level_tree: { url = list.first(); break; }
         default: url = QUrl();
     }
 
@@ -682,8 +682,6 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
 }
 
 void IModel::importIds(const QStringList & ids) {
-    using namespace Data;
-
     emit moveInBackgroundProcess();
     QHash<int, QStringList> uidsMap;
 
@@ -696,12 +694,12 @@ void IModel::importIds(const QStringList & ids) {
     bool is_new = false;
 
     switch(playlistType()) {
-        case search:
-        case soundcloud:
-        case vk:
-        case level: { parentNode = rootItem; break; }
-        case tree:
-        case level_tree: {
+        case dt_search:
+        case dt_site_sc:
+        case dt_site_vk:
+        case dt_level: { parentNode = rootItem; break; }
+        case dt_tree:
+        case dt_level_tree: {
             QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
             QString path = file.path();
             if (path.isEmpty()) path = Extensions::folderName(file);

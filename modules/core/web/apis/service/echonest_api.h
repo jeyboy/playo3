@@ -28,7 +28,7 @@ namespace Core {
                 Q_OBJECT
             public:
                 inline QString name() const { return QStringLiteral("echonest"); }
-                inline DataSubType siteType() { return dt_site_echonest; }
+                inline DataSubType siteType() const { return dt_site_echonest; }
                 virtual ~Api() { }
             protected:
                 inline QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray();}

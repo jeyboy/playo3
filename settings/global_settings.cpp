@@ -10,7 +10,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
 
     _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
     _openDropPointInTab = settings.value(SETTINGS_OPEN_DROP_IN_TAB_KEY).toBool(false);
-    _openDropPointInTabType = (Data::Type)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Data::tree);
+    _openDropPointInTabType = (Core::DataSubType)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Core::dt_tree);
 
     _isAutorunned = settings.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
     _colorScheme = settings.value(SETTINGS_COLOR_SCHEME_KEY).toInt(1);

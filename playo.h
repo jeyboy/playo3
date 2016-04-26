@@ -65,6 +65,9 @@ private slots:
 
     void openFolderTriggered();
 protected:
+    void createTab(ISource * source, const QString & userID);
+    void createRelationTab(ISource * source);
+
     void activation();
     void initialization();
 

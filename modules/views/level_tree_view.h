@@ -8,8 +8,8 @@ namespace Views {
     class LevelTreeView : public IView {
       Q_OBJECT
     public:
-        inline LevelTreeView(QWidget * parent, Params settings, QJsonObject * hash = 0)
-            : IView(new LevelTreeModel(hash), parent, settings) {}
+        inline LevelTreeView(QWidget * parent, const Params & settings, QJsonObject * hash = 0)
+            : IView(new LevelTreeModel(settings, hash), parent) {}
     };
 }
 #endif // LEVEL_TREE_VIEW_H

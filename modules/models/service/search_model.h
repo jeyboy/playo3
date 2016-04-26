@@ -22,8 +22,8 @@ namespace Models {
         QList<SearchRequest> requests;
         QVariantHash search_reglament;
     public:
-        inline SearchModel(QJsonObject * hash = 0, QObject * parent = 0)
-            : LevelTreeModel(hash, parent), initiator(0) {
+        inline SearchModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0)
+            : LevelTreeModel(settings, hash, parent), initiator(0) {
             if (hash)
                 resumeSearch(*hash);
         }
@@ -31,7 +31,7 @@ namespace Models {
         ~SearchModel();
 
         inline bool isRelative() const { return false; }
-        inline Data::Type playlistType() const { return Data::search; }
+        inline Core::DataSubType playlistType() const { return Core::dt_search; }
 
         void initiateSearch(const SearchSettings & params);
         void declineSearch();

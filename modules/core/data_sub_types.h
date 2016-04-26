@@ -12,7 +12,8 @@ namespace Core {
         dt_level = -199,
         dt_level_tree,
         dt_tree,
-        dt_search,
+
+        dt_search = -159,
 
         dt_playlist = -99,
         dt_playlist_local,

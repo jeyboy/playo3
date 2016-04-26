@@ -16,7 +16,7 @@ namespace Core {
         class PromoDj : public IGrabberApi, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
-            inline DataSubType siteType() { return dt_site_promodj; }
+            inline DataSubType siteType() const { return dt_site_promodj; }
 
     //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;

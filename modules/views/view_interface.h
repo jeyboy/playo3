@@ -55,8 +55,8 @@ namespace Views {
         inline bool isRemoveFileWithItem() const { return settings().deleteFile; }
         inline bool isPlaylist() const { return settings().playlist; }
         inline bool isCommon() const { return settings().common; }
-        inline bool isEditable() const { return settings().type < Data::vk && !isCommon(); }
-        inline bool isSearch() const { return settings().type == Data::search; }
+        inline bool isEditable() const { return settings().type < dt_search && !isCommon(); }
+        inline bool isSearch() const { return settings().type == dt_search; }
 
         inline Params settings() const { return mdl -> settings(); }
         inline void setSettings(const Params & newSettings) { mdl -> setSettings(newSettings); }

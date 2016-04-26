@@ -18,7 +18,7 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return name_key; }
-                inline DataSubType siteType() { return dt_site_fourshared; }
+                inline DataSubType siteType() const { return dt_site_fourshared; }
                 inline QUrlQuery genDefaultParams() {
                     return QUrlQuery(oauth_consumer_key % (token().isEmpty() ? def_token_key : token()));
                 }

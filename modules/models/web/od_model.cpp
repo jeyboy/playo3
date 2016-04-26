@@ -7,7 +7,7 @@ void OdModel::refresh(bool retryPlaing) {
     emit moveInProcess();
 
     Od::Api::obj().objectInfo(
-        (tab_uid == Od::Api::obj().userID() ? QString() : tab_uid),
+        (sttngs.uid == Od::Api::obj().userID() ? QString() : sttngs.uid),
         new Func(
             this,
             retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))
@@ -119,9 +119,4 @@ void OdModel::proceedAudioList(QJsonObject & hash) {
     }
 
     emit moveOutProcess();
-}
-
-void OdModel::proceedAudioListAndRetry(QJsonObject & hash) {
-    proceedAudioList(hash);
-//    Settings::obj().currPlayer().playIndex(Player::obj().playedIndex());
 }

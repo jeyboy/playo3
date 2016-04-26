@@ -8,8 +8,8 @@ namespace Views {
     class SearchView : public IView {
       Q_OBJECT
     public:
-        inline SearchView(QWidget * parent, Views::Params settings, QJsonObject * hash = 0)
-            : IView(new SearchModel(hash), parent, settings) {}
+        inline SearchView(QWidget * parent, const Params & settings, QJsonObject * hash = 0)
+            : IView(new SearchModel(settings, hash), parent) {}
 
         ~SearchView() {}
         inline void search(const SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }

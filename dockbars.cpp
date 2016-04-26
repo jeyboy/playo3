@@ -3,7 +3,6 @@
 
 using namespace Presentation;
 using namespace Dialogs;
-using namespace Data;
 
 void Dockbars::load(const QJsonArray & bars) {
     int userTabsAmount = 0;
@@ -147,7 +146,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const
     }
 }
 
-Views::Params defSettings(level, true, false, false, true);
+Views::Params defSettings(dt_level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
     if (!common) common = createDocBar(BarCreationNames(COMMON_TAB), defSettings, 0, false);
@@ -193,7 +192,7 @@ DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Views::Pa
     bar -> initiateSearch();
 
     if (!attrs) {
-        if (settings.type != Data::Type::search)
+        if (settings.type != dt_search)
             ((IModel *)view -> model()) -> refresh();
         else
             ((SearchView *)view) -> search(*search_settings);

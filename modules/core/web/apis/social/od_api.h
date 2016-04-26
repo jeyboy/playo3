@@ -17,7 +17,7 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType siteType() { return dt_site_od; }
+                inline DataSubType siteType() const { return dt_site_od; }
                 inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_jsessionid % token()); }
 
                 void fromJson(const QJsonObject & hash);

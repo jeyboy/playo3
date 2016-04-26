@@ -21,7 +21,6 @@
 #define REQUEST_DELAY 260 // ms
 #define MAX_PAGE 99
 #define STYLES_MAX_PAGE 50
-#define UID_HEAD QStringLiteral("@")
 
 namespace Core {
     using namespace Media;
@@ -62,8 +61,6 @@ namespace Core {
         inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
-
-        inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
         virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
         virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub

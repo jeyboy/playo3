@@ -9,7 +9,7 @@ void SoundcloudModel::refresh(bool retryPlaing) {
 //    lastRefresh = QDateTime::currentMSecsSinceEpoch();
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::obj().objectInfo(tab_uid, new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
+    Soundcloud::Api::obj().objectInfo(sttngs.uid, new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
 }
 
 void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
@@ -95,9 +95,4 @@ void SoundcloudModel::proceedFriendsList(const QJsonArray & friends) {
             )
         );
     }
-}
-
-void SoundcloudModel::proceedAudioListAndRetry(QJsonObject & hash) {
-    proceedAudioList(hash);
-//    Player::obj().playIndex(Player::obj().playedIndex());
 }

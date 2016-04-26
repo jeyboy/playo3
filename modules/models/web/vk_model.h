@@ -8,10 +8,8 @@ namespace Models {
     class VkModel : public WebModel {
         Q_OBJECT
     public:
-        inline VkModel(QString uid, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(uid, hash, parent) {}
-
-        inline Data::Type playlistType() const { return Data::vk; }
-        inline ISearchable * api() { return &Vk::Api::obj(); }
+        inline VkModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
+        inline ISearchable * api() const { return &Vk::Api::obj(); }
     public slots:
         void refresh(bool retryPlaing = false);
 //        virtual void refreshWall();
