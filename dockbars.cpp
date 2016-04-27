@@ -34,14 +34,16 @@ void Dockbars::load(const QJsonArray & bars) {
 
             IView * v = view(qobject_cast<DockBar *>(curr_bar));
 
-            if (obj.value(QStringLiteral("selection")).isString())
-                v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
+            if (v) {
+                if (obj.value(QStringLiteral("selection")).isString())
+                    v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
 
-            if (obj.value(QStringLiteral("played")).toBool()) {
-                if (v) {
-                    QString path = obj.value(QStringLiteral("played_item")).toString();
-                    if (!path.isEmpty())
-                        v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt());
+                if (obj.value(QStringLiteral("played")).toBool()) {
+                    if (v) {
+                        QString path = obj.value(QStringLiteral("played_item")).toString();
+                        if (!path.isEmpty())
+                            v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt());
+                    }
                 }
             }
         }
