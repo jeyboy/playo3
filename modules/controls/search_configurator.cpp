@@ -188,7 +188,7 @@ void SearchConfigurator::initiateSources() {
         Views::IView * v = Presentation::Dockbars::obj().view(*it);
         if (v && !v -> isCommon()) {
             Models::IModel * mdl = (Models::IModel *)v -> model();
-            if (mdl -> playlistType() != Data::search) {
+            if (mdl -> playlistType() != dt_search) {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), tabsList);
                 item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
                 item -> setCheckState(Qt::Unchecked);
@@ -198,7 +198,7 @@ void SearchConfigurator::initiateSources() {
         }
     }
 
-    QHash<DataSubType, ISearchable *> sites = Web::Apis::list();
+    QHash<DataSubType, ISearchable *> sites = Web::Apis::searchersList();
     QListWidgetItem * item = new QListWidgetItem(QString(""));
     item -> setFlags(Qt::NoItemFlags);
     sitesList -> addItem(item);
@@ -245,7 +245,7 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
     res.type = Core::ISearchable::in_title;
 
     if (res.inSites) {
-        QList<Core::ISearchable *> searchables = Core::Web::Apis::list().values();
+        QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
         for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
             if ((*it) -> isConnected())
                 res.sites.append(*it);
