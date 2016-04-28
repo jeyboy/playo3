@@ -19,7 +19,7 @@ void Api::toJson(QJsonObject & hash) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connect_user() {
+bool Api::connect_user(bool /*onlyAuto*/) {
     if (isConnected()) return true;
 
     QUrl form_url = authUrl();

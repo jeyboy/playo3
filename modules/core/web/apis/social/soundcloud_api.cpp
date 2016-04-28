@@ -63,7 +63,7 @@ QJsonObject Api::objectInfo(QString & uid) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connect_user() {
+bool Api::connect_user(bool /*onlyAuto*/) {
     if (isConnected()) return true;
 
     QUrl auth_url = authUrl();

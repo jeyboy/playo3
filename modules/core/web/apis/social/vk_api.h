@@ -50,7 +50,7 @@ namespace Core {
                 }
 
             public slots:
-                bool connect_user();
+                bool connect_user(bool /*onlyAuto*/ = false);
                 inline void disconnect_user() {
                     clearParams();
                     clearFriends();

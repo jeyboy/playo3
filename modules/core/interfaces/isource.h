@@ -19,7 +19,7 @@ namespace Core {
         inline virtual bool isSociable() { return false; }
 
         inline virtual bool isConnected() { return true; }
-        virtual inline bool connect_user() { return false; }
+        virtual inline bool connect_user(bool /*onlyAuto*/ = false) { return false; }
         virtual inline void disconnect_user() { }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }

@@ -50,8 +50,8 @@ namespace Core {
                 }
 
             public slots:
-                bool connection(bool /*onlyAuto*/ = false) { return true; }
-                inline void disconnect() {}
+                bool connect_user(bool /*onlyAuto*/ = false) { return true; }
+                inline void disconnect_user() {}
             protected:
 //                bool hashConnection(bool onlyAuto);
 //                bool formConnection();

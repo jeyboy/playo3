@@ -33,8 +33,8 @@ namespace Core {
 
                 inline bool isConnected() { return true; /*!token().isEmpty();*/ }
 
-            public slots:
-                bool connect_user() { return true; }
+            public slots:               
+                bool connect_user(bool /*onlyAuto*/ = false) { return true; }
                 inline void disconnect_user() {
 //                    clearParams();
 //                    clearFriends();

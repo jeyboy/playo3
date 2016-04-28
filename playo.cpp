@@ -287,7 +287,7 @@ void Playo::showSoundcloudRelTabDialog() {
 
 
 void Playo::createTab(ISource * source, const QString & userID) {
-    if (source -> isConnected())
+    if (source -> connect_user())
         Dockbars::obj().createLinkedDocBar(
             BarCreationNames(QString(source -> name() % " [YOU]"), source -> uidStr(userID)),
             Views::Params(source -> siteType(), userID), 0, true, true
