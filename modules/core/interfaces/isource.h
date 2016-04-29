@@ -9,6 +9,12 @@
 #define UID_HEAD QStringLiteral("@")
 
 namespace Core {
+    enum ConnectionType : int {
+        connection_restore = 1,
+        connection_oauth = 2,
+        connection_manual = 4
+    };
+
     class ISource {
     public:
         virtual QString name() const = 0;
@@ -17,9 +23,10 @@ namespace Core {
         inline virtual bool isRestorable() { return true; }
         inline virtual bool isSearchable() { return false; }
         inline virtual bool isSociable() { return false; }
+        inline virtual bool isShareable() { return false; }
 
         inline virtual bool isConnected() { return true; }
-        virtual inline bool connect_user(bool /*onlyAuto*/ = false) { return false; }
+        virtual inline bool connect_user(ConnectionType /*conType*/ = connection_restore) { return false; }
         virtual inline void disconnect_user() { }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }

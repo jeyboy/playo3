@@ -3,13 +3,14 @@
 
 //https://vk.com/dev/execute
 
+#include "modules/core/interfaces/ishareable.h"
 #include "modules/core/web/interfaces/iapi.h"
 #include "vk_api_keys.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class RequestApi : public IApi {
+            class RequestApi : public IApi, public IShareable {
             protected:
                 inline QString boolToStr(bool val) { return val ? val_str_true : val_str_false; }
 

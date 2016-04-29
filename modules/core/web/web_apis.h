@@ -13,6 +13,7 @@ namespace Core {
             static QHash<DataSubType, ISource *> sources;
             static QHash<DataSubType, ISearchable *> searchers;
             static QHash<DataSubType, Sociable *> sociables;
+            static QHash<DataSubType, IShareable *> shareables;
         public:
             static void initiate(const QJsonObject & obj);
 
@@ -21,6 +22,9 @@ namespace Core {
 
             static QHash<DataSubType, Sociable *> sociablesList() { return sociables; }
             inline static Sociable * sociable(const DataSubType & item_type) { return sociables.value(item_type); }
+
+            static QHash<DataSubType, IShareable *> shareablesList() { return shareables; }
+            inline static IShareable * shareable(const DataSubType & item_type) { return shareables.value(item_type); }
 
             static void close(QJsonObject & obj);
 

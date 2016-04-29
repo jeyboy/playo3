@@ -5,6 +5,7 @@ namespace Core {
         QHash<DataSubType, ISource *> Apis::sources = QHash<DataSubType, ISource *>();
         QHash<DataSubType, ISearchable *> Apis::searchers = QHash<DataSubType, ISearchable *>();
         QHash<DataSubType, Sociable *> Apis::sociables = QHash<DataSubType, Sociable *>();
+        QHash<DataSubType, IShareable *> Apis::shareables = QHash<DataSubType, IShareable *>();
 
         void Apis::initiate(const QJsonObject & obj) {
             sources.insert(Youtube::Api::obj().siteType(), &Youtube::Api::obj());
@@ -30,6 +31,9 @@ namespace Core {
 
                 if (it.value() -> isSociable())
                     sociables.insert(it.key(), (Sociable *)it.value());
+
+                if (it.value() -> isShareable())
+                    shareables.insert(it.key(), (IShareable *)it.value());
 
                 it.value() -> fromJson(obj);
             }

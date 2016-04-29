@@ -3,6 +3,7 @@
 
 #include "od_api_misc.h"
 #include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/interfaces/ishareable.h"
 
 #define OD_OFFSET_LIMIT 2000
 #define OD_SEARCH_LIMIT 200
@@ -10,7 +11,7 @@
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
-            class RequestApi : public Misc, public TeuAuth {
+            class RequestApi : public Misc, public TeuAuth, public IShareable {
             protected:
                 RequestApi() {}
 

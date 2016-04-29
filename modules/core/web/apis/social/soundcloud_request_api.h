@@ -2,6 +2,7 @@
 #define SOUNDCLOUD_REQUEST_API
 
 #include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/interfaces/ishareable.h"
 #include "soundcloud_api_keys.h"
 
 #define SOUNDCLOUD_OFFSET_LIMIT 100
@@ -9,7 +10,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi {
+            class RequestApi : public IApi, public IShareable {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 

@@ -291,7 +291,8 @@ HEADERS += \
     settings/apis_settings.h \
     modules/models/model_settings.h \
     modules/core/interfaces/isource.h \
-    modules/core/interfaces/igenreable.h
+    modules/core/interfaces/igenreable.h \
+    modules/core/interfaces/ishareable.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

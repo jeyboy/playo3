@@ -752,6 +752,39 @@ void IModel::importIds(const QStringList & ids) {
 
             default: qDebug() << "UNSUPPORTED EXPORT TYPE";
         }
+
+
+
+//        switch(map_it.key()) {
+//            case dt_site_vk: {
+//                Vk::Api::obj().connect_user();
+
+//                if (Vk::Api::obj().isConnected()) {
+//                    QJsonArray obj = Vk::Api::obj().audioInfo(map_it.value());
+//                    proceedVkList(obj, parentNode);
+//                }
+//            break;}
+
+//            case dt_site_sc: {
+//                Soundcloud::Api::obj().connect_user();
+
+//                if (Soundcloud::Api::obj().isConnected()) {
+//                    QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
+//                    proceedScList(obj, parentNode);
+//                }
+//            break;}
+
+//             case dt_site_od: {
+//                Od::Api::obj().connect_user();
+
+//                if (Od::Api::obj().isConnected()) {
+//                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
+//                    proceedOdList(obj, parentNode);
+//                }
+//            break;}
+
+//            default: qDebug() << "UNSUPPORTED EXPORT TYPE";
+//        }
     }
 
     endInsertRows();
