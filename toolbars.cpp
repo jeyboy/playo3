@@ -442,15 +442,15 @@ SpectrumView * ToolBars::getSpectrum() {
 }
 
 void ToolBars::disconnectVk() {
-    Vk::Api::obj().disconnect();
+    Vk::Api::obj().disconnect_user();
     initiateVkButton();
 }
 void ToolBars::disconnectSoundcloud() {
-    Soundcloud::Api::obj().disconnect();
+    Soundcloud::Api::obj().disconnect_user();
     initiateSoundcloudButton();
 }
 void ToolBars::disconnectOd() {
-    Od::Api::obj().disconnect();
+    Od::Api::obj().disconnect_user();
     initiateOdButton();
 }
 
