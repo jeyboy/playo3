@@ -710,8 +710,7 @@ void IModel::importIds(const QStringList & ids) {
         default:;
     }
 
-    if (!parentNode)
-        qDebug() << "UNDEF FOLDER";
+    if (!parentNode) qDebug() << "UNDEF FOLDER";
 
     if (is_new) {
         int from = parentNode -> row();
@@ -722,69 +721,26 @@ void IModel::importIds(const QStringList & ids) {
     }
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
-        switch(map_it.key()) {
-            case dt_site_vk: {
-                Vk::Api::obj().connect_user();
+        IShareable * shareable = Web::Apis::shareable((DataSubType)map_it.key());
 
-                if (Vk::Api::obj().isConnected()) {
-                    QJsonArray obj = Vk::Api::obj().audioInfo(map_it.value());
-                    proceedVkList(obj, parentNode);
+        if (shareable) {
+            ISource * source = Web::Apis::source((DataSubType)map_it.key());
+            source -> connect_user(); // check connection and ask user to connect if it not
+
+            if (source -> isConnected()) {
+                QJsonArray obj = shareable -> audioInfo(map_it.value());
+
+                // need to move parse methods to apis for full abstractivity
+                switch(map_it.key()) {
+                    case dt_site_vk: { proceedVkList(obj, parentNode); break;}
+                    case dt_site_sc: { proceedScList(obj, parentNode); break;}
+                    case dt_site_od: { proceedOdList(obj, parentNode); break;}
+                    default: qDebug() << "UNSUPPORTED EXPORT TYPE";
                 }
-            break;}
-
-            case dt_site_sc: {
-                Soundcloud::Api::obj().connect_user();
-
-                if (Soundcloud::Api::obj().isConnected()) {
-                    QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
-                    proceedScList(obj, parentNode);
-                }
-            break;}
-
-             case dt_site_od: {
-                Od::Api::obj().connect_user();
-
-                if (Od::Api::obj().isConnected()) {
-                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
-                    proceedOdList(obj, parentNode);
-                }
-            break;}
-
-            default: qDebug() << "UNSUPPORTED EXPORT TYPE";
+            }
+//            else // some actions
         }
-
-
-
-//        switch(map_it.key()) {
-//            case dt_site_vk: {
-//                Vk::Api::obj().connect_user();
-
-//                if (Vk::Api::obj().isConnected()) {
-//                    QJsonArray obj = Vk::Api::obj().audioInfo(map_it.value());
-//                    proceedVkList(obj, parentNode);
-//                }
-//            break;}
-
-//            case dt_site_sc: {
-//                Soundcloud::Api::obj().connect_user();
-
-//                if (Soundcloud::Api::obj().isConnected()) {
-//                    QJsonArray obj = Soundcloud::Api::obj().audioInfo(map_it.value());
-//                    proceedScList(obj, parentNode);
-//                }
-//            break;}
-
-//             case dt_site_od: {
-//                Od::Api::obj().connect_user();
-
-//                if (Od::Api::obj().isConnected()) {
-//                    QJsonArray obj = Od::Api::obj().audioInfo(map_it.value());
-//                    proceedOdList(obj, parentNode);
-//                }
-//            break;}
-
-//            default: qDebug() << "UNSUPPORTED EXPORT TYPE";
-//        }
+        else qDebug() << "UNSUPPORTED EXPORT TYPE";
     }
 
     endInsertRows();

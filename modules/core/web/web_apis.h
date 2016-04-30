@@ -26,6 +26,8 @@ namespace Core {
             static QHash<DataSubType, IShareable *> shareablesList() { return shareables; }
             inline static IShareable * shareable(const DataSubType & item_type) { return shareables.value(item_type); }
 
+            inline static ISource * source(const DataSubType & item_type) { return sources.value(item_type); }
+
             static void close(QJsonObject & obj);
 
             static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType) {

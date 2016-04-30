@@ -108,18 +108,18 @@ namespace Core {
                 QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) { return lQuery(groupPlaylistsUrl(group_id), queryRules(count), wrap); }
 
 
-                QUrl audioInfoUrl(QString & audio_uid) { return baseUrl(path_track % audio_uid, genDefaultParams()); }
-                QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
+                QUrl audioInfoUrl(const QString & audio_uid) { return baseUrl(path_track % audio_uid, genDefaultParams()); }
+                QJsonObject audioInfo(const QString & audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 
-                QUrl audioUrl(QStringList & audio_uids) {
+                QUrl audioUrl(const QStringList & audio_uids) {
                     QUrlQuery query = genDefaultParams();
                     setIdsFilter(query, audio_uids);
                     return baseUrl(path_tracks, query);
                 }
                 //"id": 142370360,
                 //"permalink": "sam-smith-stay-with-me",
-                QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray(); }
+                QJsonArray audioInfo(const QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray(); }
 
 
                 QUrl userAudioUrl(QString & uid) { return baseUrl(path_user_tracks.arg(uid), genDefaultParams()); }

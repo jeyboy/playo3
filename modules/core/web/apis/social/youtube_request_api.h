@@ -187,7 +187,7 @@ namespace Core {
 
 
 //                QUrl audioInfoUrl(QString & audio_uid) { return baseUrl(path_track % audio_uid, genDefaultParams()); }
-//                QJsonObject audioInfo(QString audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
+//                QJsonObject audioInfo(const QString & audio_uid) { return sQuery(audioInfoUrl(audio_uid)); }
 
 
 //                QUrl audioUrl(QStringList & audio_uids) {
@@ -197,7 +197,7 @@ namespace Core {
 //                }
 //                //"id": 142370360,
 //                //"permalink": "sam-smith-stay-with-me",
-//                QJsonArray audioInfo(QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray(); }
+//                QJsonArray audioInfo(const QStringList & audio_uids) { return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray(); }
 
 
 //                QUrl userAudioUrl(QString & uid) { return baseUrl(path_user_tracks.arg(uid), genDefaultParams()); }

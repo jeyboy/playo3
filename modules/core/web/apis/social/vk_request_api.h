@@ -217,7 +217,7 @@ namespace Core {
                     return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).value(QStringLiteral("audio_list")).toArray();
                 }
 
-                QUrl audioRefreshUrl(QStringList & uids) {
+                QUrl audioRefreshUrl(const QStringList & uids) {
                     QUrlQuery query = genDefaultParams();
 
                     setParam(query, tkn_code,
@@ -226,7 +226,7 @@ namespace Core {
 
                     return baseUrl(tkn_execute, query);
                 }
-                QJsonArray audioInfo(QStringList & audio_uids) {
+                QJsonArray audioInfo(const QStringList & audio_uids) {
                     return sQuery(audioRefreshUrl(audio_uids)).value(tkn_response).toArray();
                 }
                 QJsonObject audioInfo(const QString & audio_uid) {
