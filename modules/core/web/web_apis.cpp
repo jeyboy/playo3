@@ -26,17 +26,23 @@ namespace Core {
             sources.insert(RedMp3::obj().siteType(),            &RedMp3::obj());
 
             for(QHash<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
-                if (it.value() -> isSearchable())
+                if (dynamic_cast<ISearchable *>(it.value()))
                     searchers.insert(it.key(), (ISearchable *)it.value());
 
-                if (it.value() -> isSociable())
+                if (dynamic_cast<Sociable *>(it.value()))
                     sociables.insert(it.key(), (Sociable *)it.value());
 
-                if (it.value() -> isShareable())
+                if (dynamic_cast<IShareable *>(it.value()))
                     shareables.insert(it.key(), (IShareable *)it.value());
 
                 it.value() -> fromJson(obj);
             }
+
+            qDebug() << "SOURCES: " << sources.size();
+            qDebug() << "SEARCHERS: " << searchers.size();
+            qDebug() << "SOCIABLES: " << sociables.size();
+            qDebug() << "SHAREABLES: " << shareables.size();
+            qDebug() << "------------------------------------------";
         }
 
         void Apis::close(QJsonObject & obj) {

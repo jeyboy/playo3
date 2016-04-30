@@ -13,7 +13,6 @@ namespace Core {
         namespace Vk {
             class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
-
                 friend class Singleton<Api>;
                 inline Api() {}
             public:

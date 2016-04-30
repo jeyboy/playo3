@@ -20,12 +20,7 @@ namespace Core {
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
 
-        inline virtual bool isRestorable() { return true; }
-        inline virtual bool isSearchable() { return false; }
-        inline virtual bool isSociable() { return false; }
-        inline virtual bool isShareable() { return false; }
-
-        inline virtual bool isConnected() { return true; }
+        virtual inline bool isConnected() { return true; }
         virtual inline bool connect_user(ConnectionType /*conType*/ = connection_restore) { return false; }
         virtual inline void disconnect_user() { }
 
@@ -35,7 +30,7 @@ namespace Core {
         virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub
 
         virtual inline QString refresh(const QString & refresh_page) {
-            if (refresh_page.isEmpty() || !isRestorable()) return QString();
+            if (refresh_page.isEmpty()) return QString();
             return refresh_process(take_refresh_page(refresh_page));
         }
     protected:

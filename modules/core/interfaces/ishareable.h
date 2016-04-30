@@ -6,7 +6,6 @@
 namespace Core {
   class IShareable {
   public:
-      inline bool isShareable() { return true; }
       virtual QJsonArray audioInfo(const QStringList & audio_uids) = 0;
   };
 }

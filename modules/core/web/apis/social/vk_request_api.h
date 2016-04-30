@@ -10,7 +10,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class RequestApi : public IApi, public IShareable {
+            class RequestApi : public IShareable, public IApi {
             protected:
                 inline QString boolToStr(bool val) { return val ? val_str_true : val_str_false; }
 

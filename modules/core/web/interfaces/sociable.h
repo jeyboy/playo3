@@ -18,8 +18,6 @@ namespace Core {
                 Friendable::toJson(hash);
                 Groupable::toJson(hash);
             }
-
-            inline bool isSociable() { return true; }
         };
     }
 }

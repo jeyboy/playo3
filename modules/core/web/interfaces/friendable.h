@@ -8,8 +8,6 @@ namespace Core {
         class Friendable : public LinkableList {
             QString jsonToken() const { return QStringLiteral("friends"); }
         public:
-            inline virtual bool isSociable() { return true; }
-
 //            virtual QList<Linkable> findFriendById(const QString & uid) = 0;
 //            virtual QList<Linkable> findFriendByName(const QString & name) = 0;
 

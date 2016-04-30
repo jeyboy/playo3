@@ -211,11 +211,11 @@ QString IItem::errorStr(QString & key_name) const {
     switch(error().toInt()) {
         case err_not_existed: {
             key_name = Keys::error;
-            return QStringLiteral("Not existed");
+            return QStringLiteral("Not exists");
         break;}
         case err_not_finded: {
             key_name = Keys::error;
-            return QStringLiteral("Noting founded");
+            return QStringLiteral("Nothing found");
         break;}
 
         case warn_not_supported: {
