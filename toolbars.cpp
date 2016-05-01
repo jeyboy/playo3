@@ -391,9 +391,9 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addWidget(listBtn);
 
 //    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
-    ptb -> addWidget(initiateVkButton());
-    ptb -> addWidget(initiateSoundcloudButton());
-    ptb -> addWidget(initiateOdButton());
+    ptb -> addWidget(Web::Vk::Api::obj().initButton(container));
+    ptb -> addWidget(Web::Soundcloud::Api::obj().initButton(container));
+    ptb -> addWidget(Web::Od::Api::obj().initButton(container));
     ptb -> addSeparator();
     ptb -> addWidget(initiateEchonestButton());
     ptb -> addSeparator();
@@ -441,19 +441,6 @@ SpectrumView * ToolBars::getSpectrum() {
     return spectrum;
 }
 
-void ToolBars::disconnectVk() {
-    Vk::Api::obj().disconnect_user();
-    initiateVkButton();
-}
-void ToolBars::disconnectSoundcloud() {
-    Soundcloud::Api::obj().disconnect_user();
-    initiateSoundcloudButton();
-}
-void ToolBars::disconnectOd() {
-    Od::Api::obj().disconnect_user();
-    initiateOdButton();
-}
-
 QToolButton * ToolBars::initiateEchonestButton() {
     QToolButton * echoToolButton = new QToolButton(container);
 
@@ -462,91 +449,6 @@ QToolButton * ToolBars::initiateEchonestButton() {
     echoToolButton -> setToolTip(QStringLiteral("Echonest(the.echonest.com)"));
 
     return echoToolButton;
-}
-
-// move to the vk class
-QToolButton * ToolBars::initiateVkButton() {
-    if (vkToolButton == 0)
-        vkToolButton = new QToolButton(container);
-    else {
-        vkToolButton -> setMenu(0);
-        disconnect(vkToolButton, SIGNAL(clicked()), container, SLOT(openVKTabDialog()));
-    }
-
-    if (Vk::Api::obj().isConnected()) {
-        vkToolButton -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
-        vkToolButton -> setPopupMode(QToolButton::InstantPopup);
-        vkToolButton -> setToolTip(QStringLiteral("VKontakte(vk.com)"));
-
-        QMenu * vkMenu = new QMenu(vkToolButton);
-        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectVk()));
-        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(openVKTabDialog()));
-        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(showVKRelTabDialog()));
-        vkMenu -> addAction(QStringLiteral("Open recommendations"), container, SLOT(openVKRecomendations()));
-        vkToolButton -> setMenu(vkMenu);
-    } else {
-        vkToolButton -> setIcon(QIcon(QStringLiteral(":/add_vk")));
-        vkToolButton -> setToolTip(QStringLiteral("Connect to VKontakte(vk.com)"));
-        connect(vkToolButton, SIGNAL(clicked()), container, SLOT(openVKTabDialog()));
-    }
-
-    return vkToolButton;
-}
-
-// move to the cloudsound class
-QToolButton * ToolBars::initiateSoundcloudButton() {
-    if (soundcloudToolButton == 0)
-        soundcloudToolButton = new QToolButton(container);
-    else {
-        soundcloudToolButton -> setMenu(0);
-        disconnect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(openSoundcloudTabDialog()));
-    }
-
-    if (Soundcloud::Api::obj().isConnected()) {
-        soundcloudToolButton -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
-        soundcloudToolButton -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
-        soundcloudToolButton -> setPopupMode(QToolButton::InstantPopup);
-
-        QMenu * vkMenu = new QMenu(soundcloudToolButton);
-        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectSoundcloud()));
-        vkMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(openSoundcloudTabDialog()));
-        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(showSoundcloudRelTabDialog()));
-        soundcloudToolButton -> setMenu(vkMenu);
-    } else {
-        soundcloudToolButton -> setIcon(QIcon(QStringLiteral(":/add_soundcloud")));
-        soundcloudToolButton -> setToolTip(QStringLiteral("Connect to Soundcloud(soundcloud.com)"));
-        connect(soundcloudToolButton, SIGNAL(clicked()), container, SLOT(openSoundcloudTabDialog()));
-    }
-
-    return soundcloudToolButton;
-}
-
-QToolButton * ToolBars::initiateOdButton() {
-    if (odToolButton == 0)
-        odToolButton = new QToolButton(container);
-    else {
-        odToolButton -> setMenu(0);
-        disconnect(odToolButton, SIGNAL(clicked()), container, SLOT(openOdTabDialog()));
-    }
-
-    if (Od::Api::obj().isConnected()) {
-        odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
-        odToolButton -> setToolTip(QStringLiteral("Od(ok.ru)"));
-        odToolButton -> setPopupMode(QToolButton::InstantPopup);
-
-        QMenu * odMenu = new QMenu(odToolButton);
-        odMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectOd()));
-//        vkMenu -> addAction(QStringLiteral("Reconect"), container, SLOT(openSoundcloudTabDialog()));
-        odMenu -> addAction(QStringLiteral("Open your tab"), container, SLOT(openOdTabDialog()));
-//        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(showSoundcloudRelTabDialog()));
-        odToolButton -> setMenu(odMenu);
-    } else {
-        odToolButton -> setIcon(QIcon(QStringLiteral(":/add_od")));
-        odToolButton -> setToolTip(QStringLiteral("Connect to Od(ok.ru)"));
-        connect(odToolButton, SIGNAL(clicked()), container, SLOT(openOdTabDialog()));
-    }
-
-    return odToolButton;
 }
 
 void ToolBars::addPanelButton(const QString & name, const QString & path, QToolBar * bar) {

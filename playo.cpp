@@ -223,17 +223,6 @@ void Playo::showSettingsDialog() {
     }
 }
 
-//void Playo::showEchonestDialog() {
-//    EchonestDialog(this).exec();
-//}
-
-void Playo::openVKRecomendations() {
-    Dockbars::obj().createDocBar(
-        QStringLiteral("Rec for YOU"),
-        Views::Params(dt_site_vk, Vk::Api::obj().userID(), rel_user), 0, true, true
-    );
-}
-
 void Playo::openSoundcloudTabDialog() {
     createTab(&Soundcloud::Api::obj(), Soundcloud::Api::obj().userID());
 //    if (Soundcloud::Api::obj().connectUser())
@@ -241,37 +230,6 @@ void Playo::openSoundcloudTabDialog() {
 //            BarCreationNames(QStringLiteral("SC [YOU]"), Soundcloud::Api::obj().uidStr(Soundcloud::Api::obj().userID())),
 //            Views::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true
 //        );
-}
-
-void Playo::openOdTabDialog() {
-    createTab(&Od::Api::obj(), Od::Api::obj().userID());
-//    if (Od::Api::obj().connectUser())
-//        Dockbars::obj().createLinkedDocBar(
-//            BarCreationNames(QStringLiteral("OD [YOU]"), Od::Api::obj().uidStr(Od::Api::obj().userID())),
-//            Views::Params(od, Od::Api::obj().userID()), 0, true, true
-//        );
-}
-
-void Playo::openVKTabDialog() {
-    createTab(&Vk::Api::obj(), Vk::Api::obj().userID());
-//    if (Vk::Api::obj().connectUser())
-//        Dockbars::obj().createLinkedDocBar(
-//            BarCreationNames(QStringLiteral("VK [YOU]"), Vk::Api::obj().uidStr(Vk::Api::obj().userID())),
-//            Views::Params(vk, Vk::Api::obj().userID()), 0, true, true
-//        );
-}
-
-void Playo::showVKRelTabDialog() {
-    createRelationTab(&Vk::Api::obj());
-//    RelationsDialog dialog(&Vk::Api::obj(), this);
-//    if (dialog.exec() == QDialog::Accepted)
-//        Dockbars::obj().createLinkedDocBar(
-//            BarCreationNames(QStringLiteral("VK [") % dialog.getName() % QStringLiteral("]"),
-//            Vk::Api::obj().uidStr(dialog.getId())),
-//            Views::Params(dt_site_vk, dialog.getId(), user_rel), 0, true, true
-//        );
-
-    Logger::obj().write(QStringLiteral("VkApi"), QStringLiteral("Open Relation"), Vk::Api::obj().lastError());
 }
 
 void Playo::showSoundcloudRelTabDialog() {

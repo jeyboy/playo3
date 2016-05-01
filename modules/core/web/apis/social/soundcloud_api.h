@@ -1,10 +1,11 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
+#include <qmenu.h>
+
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
-
 #include "modules/core/web/interfaces/sociable.h"
 
 #include "soundcloud_request_api.h"
@@ -38,12 +39,43 @@ namespace Core {
 
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
+
+                QToolButton * initButton(QWidget * parent) {
+                    if (button == 0)
+                        button = new QToolButton(parent);
+                    else {
+                        button -> setMenu(0);
+                        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+                    }
+
+                    if (isConnected()) {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
+                        button -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
+                        button -> setPopupMode(QToolButton::InstantPopup);
+
+                        QMenu * menu = new QMenu(button);
+                        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+                        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+                        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
+                        button -> setMenu(menu);
+                    } else {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud")));
+                        button -> setToolTip(QStringLiteral("Connect to Soundcloud(soundcloud.com)"));
+                        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+                    }
+
+                    return button;
+                }
             public slots:
+                void openTab();
+                void openRelationTab();
+
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
                 inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();
+                    initButton(button -> parentWidget());
                 }
 
             protected:

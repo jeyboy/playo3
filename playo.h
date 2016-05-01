@@ -1,17 +1,14 @@
 #ifndef PLAYO_H
 #define PLAYO_H
 
+#include <qsettings.h>
+
 #include "modules/controls/window.h"
 #include "modules/controls/tray.h"
 #include "modules/controls/user_dialog_box.h"
 
 #include "toolbars.h"
 #include "dockbars.h"
-
-#include <qsettings.h>
-
-//#include "media/library.h"
-//#include "media/genres/music_genres.h"
 
 #include "modules/core/misc/file_utils/data_store.h"
 #include "modules/core/data_factory.h"
@@ -51,22 +48,8 @@ private slots:
     void showSearchDialog();
     void showSettingsDialog();
 
-//    void showEchonestDialog();
-
-    void openOdTabDialog();
-
-    void openVKRecomendations();
-    void openVKTabDialog();
-    void showVKRelTabDialog();
-
-    void showSoundcloudRelTabDialog();
-    void openSoundcloudTabDialog();
-
     void openFolderTriggered();
 protected:
-    void createTab(ISource * source, const QString & userID);
-    void createRelationTab(ISource * source);
-
     void activation();
     void initialization();
 

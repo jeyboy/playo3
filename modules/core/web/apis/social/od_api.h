@@ -1,6 +1,8 @@
 #ifndef OD_API_H
 #define OD_API_H
 
+#include <qmenu.h>
+
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/thread_utils.h"
 #include "modules/core/web/interfaces/sociable.h"
@@ -39,12 +41,42 @@ namespace Core {
 
                 QString refresh(const QString & refresh_page); // here refresh_page must by eq to track id
 
+                QToolButton * initButton(QWidget * parent) {
+                    if (button == 0)
+                        button = new QToolButton(parent);
+                    else {
+                        button -> setMenu(0);
+                        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+                    }
+
+                    if (isConnected()) {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
+                        button -> setToolTip(QStringLiteral("Od(ok.ru)"));
+                        button -> setPopupMode(QToolButton::InstantPopup);
+
+                        QMenu * menu = new QMenu(button);
+                        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+                        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+                //        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(showSoundcloudRelTabDialog()));
+                        button -> setMenu(menu);
+                    } else {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_od")));
+                        button -> setToolTip(QStringLiteral("Connect to Od(ok.ru)"));
+                        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+                    }
+
+                    return button;
+                }
+
             public slots:
+                void openTab();
+
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore);//connect_user(bool onlyAuto = false);
                 inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();
+                    initButton(button -> parentWidget());
                 }
             protected:
                 bool hashConnection(bool onlyAuto);

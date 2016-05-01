@@ -1,4 +1,5 @@
 #include "od_api.h"
+#include "dockbars.h"
 
 using namespace Core::Web::Od;
 
@@ -35,6 +36,14 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
     query.addQueryItem(tkn_client_hash, calcMagicNumber(query.queryItemValue(tkn_md5)));
     url.setQuery(query);
     return url.toString();
+}
+
+void Api::openTab() {
+    if (connectUser())
+        Presentation::Dockbars::obj().createLinkedDocBar(
+            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
+            Models::Params(siteType(), userID()), 0, true, true
+        );
 }
 
 ///////////////////////////////////////////////////////////

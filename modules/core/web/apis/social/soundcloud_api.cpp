@@ -1,5 +1,8 @@
 #include "soundcloud_api.h"
 
+#include "dialogs/relations_dialog.h"
+#include "dockbars.h"
+
 using namespace Core::Web::Soundcloud;
 
 QString Api::authUrl() {
@@ -59,6 +62,25 @@ QJsonObject Api::objectInfo(QString & uid) {
 
     return res;
 }
+
+void Api::openTab() {
+    if (connectUser())
+        Presentation::Dockbars::obj().createLinkedDocBar(
+            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
+            Models::Params(siteType(), userID()), 0, true, true
+        );
+}
+
+void Api::openRelationTab() {
+    RelationsDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted)
+        Presentation::Dockbars::obj().createLinkedDocBar(
+            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
+            uidStr(dialog.getId())),
+            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
+        );
+}
+
 
 ///////////////////////////////////////////////////////////
 /// AUTH

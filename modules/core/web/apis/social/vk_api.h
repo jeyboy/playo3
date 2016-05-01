@@ -1,13 +1,11 @@
 #ifndef VK_API_H
 #define VK_API_H
 
+#include <qmenu.h>
+
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/web/interfaces/sociable.h"
-
-#include "dialogs/relations_dialog.h"
-
-#include "dockbars.h"
 
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
@@ -60,57 +58,37 @@ namespace Core {
                         disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
                     }
 
-                    if (Vk::Api::obj().isConnected()) {
+                    if (isConnected()) {
                         button -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
                         button -> setPopupMode(QToolButton::InstantPopup);
                         button -> setToolTip(QStringLiteral("VKontakte(vk.com)"));
 
-                        QMenu * vkMenu = new QMenu(button);
-                        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
-                        vkMenu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
-                        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(openRelationTab()));
-                        vkMenu -> addAction(QStringLiteral("Open recommendations"), container, SLOT(openRecomendations()));
-                        vkToolButton -> setMenu(vkMenu);
+                        QMenu * menu = new QMenu(button);
+                        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+                        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+                        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
+                        menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
+                        button -> setMenu(menu);
                     } else {
                         button -> setIcon(QIcon(QStringLiteral(":/add_vk")));
                         button -> setToolTip(QStringLiteral("Connect to VKontakte(vk.com)"));
-                        connect(button, SIGNAL(clicked()), container, SLOT(openTab()));
+                        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
                     }
 
                     return button;
                 }
 
             public slots:
-                void openTab() {
-                    if (connectUser())
-                        Presentation::Dockbars::obj().createLinkedDocBar(
-                            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
-                            Models::Params(siteType(), userID()), 0, true, true
-                        );
-                }
-
-                void openRecomendations() {
-                    Presentation::Dockbars::obj().createDocBar(
-                        QStringLiteral("Rec for YOU"),
-                        Models::Params(dt_site_vk, userID(), rel_user), 0, true, true
-                    );
-                }
-
-                void openRelationTab() {
-                    RelationsDialog dialog(this);
-                    if (dialog.exec() == QDialog::Accepted)
-                        Presentation::Dockbars::obj().createLinkedDocBar(
-                            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-                            uidStr(dialog.getId())),
-                            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
-                        );
-                }
+                void openTab();
+                void openRecomendations();
+                void openRelationTab();
 
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
                 inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();
+                    initButton(button -> parentWidget());
                 }
             protected:
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }

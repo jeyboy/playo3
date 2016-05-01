@@ -65,14 +65,7 @@ namespace Presentation {
         void removePanelButtonTriggered();
         void editPanelButtonTriggered();
 
-        void disconnectVk();
-        void disconnectSoundcloud();
-        void disconnectOd();
-
         QToolButton * initiateEchonestButton();
-        QToolButton * initiateVkButton();
-        QToolButton * initiateSoundcloudButton();
-        QToolButton * initiateOdButton();
 
     protected slots:
         void playerStateChanged(const PlayerState &);

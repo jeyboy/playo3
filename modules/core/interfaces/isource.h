@@ -17,7 +17,6 @@ namespace Core {
     };
 
     class ISource {
-        QToolButton * button;
     public:
         ISource() : button(0) {}
 
@@ -40,6 +39,8 @@ namespace Core {
 
         virtual QToolButton * initButton(QWidget * /*parent*/) { return button; }
     protected:
+        QToolButton * button;
+
         virtual Web::Response * take_refresh_page(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
         virtual QString refresh_process(Web::Response * response) { delete response; return QString(); }
     };
