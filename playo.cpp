@@ -1,7 +1,7 @@
 #include "playo.h"
 #include "ui_playo.h"
 
-#include "modules/core/misc/file_utils/filesystem_watcher.h"
+//#include "modules/core/misc/file_utils/filesystem_watcher.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -236,7 +236,7 @@ void Playo::openVKRecomendations() {
 
 void Playo::openSoundcloudTabDialog() {
     createTab(&Soundcloud::Api::obj(), Soundcloud::Api::obj().userID());
-//    if (Soundcloud::Api::obj().connect_user())
+//    if (Soundcloud::Api::obj().connectUser())
 //        Dockbars::obj().createLinkedDocBar(
 //            BarCreationNames(QStringLiteral("SC [YOU]"), Soundcloud::Api::obj().uidStr(Soundcloud::Api::obj().userID())),
 //            Views::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true
@@ -245,7 +245,7 @@ void Playo::openSoundcloudTabDialog() {
 
 void Playo::openOdTabDialog() {
     createTab(&Od::Api::obj(), Od::Api::obj().userID());
-//    if (Od::Api::obj().connect_user())
+//    if (Od::Api::obj().connectUser())
 //        Dockbars::obj().createLinkedDocBar(
 //            BarCreationNames(QStringLiteral("OD [YOU]"), Od::Api::obj().uidStr(Od::Api::obj().userID())),
 //            Views::Params(od, Od::Api::obj().userID()), 0, true, true
@@ -254,7 +254,7 @@ void Playo::openOdTabDialog() {
 
 void Playo::openVKTabDialog() {
     createTab(&Vk::Api::obj(), Vk::Api::obj().userID());
-//    if (Vk::Api::obj().connect_user())
+//    if (Vk::Api::obj().connectUser())
 //        Dockbars::obj().createLinkedDocBar(
 //            BarCreationNames(QStringLiteral("VK [YOU]"), Vk::Api::obj().uidStr(Vk::Api::obj().userID())),
 //            Views::Params(vk, Vk::Api::obj().userID()), 0, true, true
@@ -287,7 +287,7 @@ void Playo::showSoundcloudRelTabDialog() {
 
 
 void Playo::createTab(ISource * source, const QString & userID) {
-    if (source -> connect_user())
+    if (source -> connectUser())
         Dockbars::obj().createLinkedDocBar(
             BarCreationNames(QString(source -> name() % " [YOU]"), source -> uidStr(userID)),
             Views::Params(source -> siteType(), userID), 0, true, true

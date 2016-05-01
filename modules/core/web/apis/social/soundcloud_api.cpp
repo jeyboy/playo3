@@ -33,7 +33,7 @@ void Api::toJson(QJsonObject & hash) {
 /// COMMON
 //////////////////////////////////////////////////////////
 
-void Api::getGroupInfo(QString uid, QJsonObject & object) {
+void Api::getGroupInfo(QString & uid, QJsonObject & object) {
     object.insert(tkn_audio_list, groupAudio(uid));
     object.insert(tkn_playlist, groupPlaylists(uid));
 }
@@ -63,7 +63,7 @@ QJsonObject Api::objectInfo(QString & uid) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connect_user(bool /*onlyAuto*/) {
+bool Api::connectUser(const ConnectionType & /*conType*/ = connection_restore) {
     if (isConnected()) return true;
 
     QUrl auth_url = authUrl();

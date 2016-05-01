@@ -2,6 +2,7 @@
 #define ISOURCE
 
 #include <qstring.h>
+#include <qtoolbutton.h>
 
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/core/data_sub_types.h"
@@ -16,13 +17,16 @@ namespace Core {
     };
 
     class ISource {
+        QToolButton * button;
     public:
+        ISource() : button(0) {}
+
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
 
         virtual inline bool isConnected() { return true; }
-        virtual inline bool connect_user(ConnectionType /*conType*/ = connection_restore) { return false; }
-        virtual inline void disconnect_user() { }
+        virtual inline bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return false; }
+        virtual inline void disconnectUser() { }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
@@ -33,6 +37,8 @@ namespace Core {
             if (refresh_page.isEmpty()) return QString();
             return refresh_process(take_refresh_page(refresh_page));
         }
+
+        virtual QToolButton * initButton(QWidget * /*parent*/) { return button; }
     protected:
         virtual Web::Response * take_refresh_page(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
         virtual QString refresh_process(Web::Response * response) { delete response; return QString(); }

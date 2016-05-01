@@ -725,7 +725,7 @@ void IModel::importIds(const QStringList & ids) {
 
         if (shareable) {
             ISource * source = Web::Apis::source((DataSubType)map_it.key());
-            source -> connect_user(); // check connection and ask user to connect if it not
+            source -> connectUser(connection_manual); // check connection and ask user to connect if it not
 
             if (source -> isConnected()) {
                 QJsonArray obj = shareable -> audioInfo(map_it.value());

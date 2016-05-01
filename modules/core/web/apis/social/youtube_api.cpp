@@ -63,7 +63,7 @@ void Api::toJson(QJsonObject & /*hash*/) {
 /////////////////////////////////////////////////////////////
 ///// AUTH
 /////////////////////////////////////////////////////////////
-//bool Api::connect_user() {
+//bool Api::connectUser(const ConnectionType /*conType*/ & = connection_restore) {
 //    if (isConnected()) return true;
 
 //    QUrl auth_url = authUrl();

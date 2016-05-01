@@ -28,7 +28,7 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty(); }
 
-                void getGroupInfo(QString uid, QJsonObject & object);
+                void getGroupInfo(QString & uid, QJsonObject & object);
                 void getUserInfo(QString & uid, QJsonObject & object);
 
 //                QList<Linkable> findFriendById(const QString & uid) {}
@@ -39,8 +39,8 @@ namespace Core {
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
             public slots:
-                bool connect_user(bool /*onlyAuto*/ = false);
-                inline void disconnect_user() {
+                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
+                inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();

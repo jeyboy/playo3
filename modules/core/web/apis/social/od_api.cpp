@@ -10,7 +10,7 @@ void Api::fromJson(const QJsonObject & hash) {
 
     Manager::loadCookies(obj);
 
-    if (!connect_user(true)) disconnect_user();
+    if (!connectUser(true)) disconnectUser();
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
@@ -26,7 +26,7 @@ void Api::toJson(QJsonObject & hash) {
 QString Api::refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
     QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
     if (hasError(obj)) {
-        connect_user(true);
+        connectUser();
         obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
         qDebug() << "RECONECTION";
     }
@@ -40,10 +40,10 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connect_user(bool onlyAuto) {
+bool Api::connectUser(const ConnectionType & conType) {
     if (isConnected()) return true;
 
-    if (onlyAuto) return false;
+    if (conType == connection_restore) return false;
 
     bool auth_res = formConnection();
     if (auth_res) {

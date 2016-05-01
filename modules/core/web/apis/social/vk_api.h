@@ -5,6 +5,10 @@
 #include "modules/core/web/interfaces/teu_auth.h"
 #include "modules/core/web/interfaces/sociable.h"
 
+#include "dialogs/relations_dialog.h"
+
+#include "dockbars.h"
+
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
 
@@ -48,9 +52,62 @@ namespace Core {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::audioRecomendations, uid, byUser, randomize, func);
                 }
 
+                QToolButton * initButton(QWidget * parent) {
+                    if (button == 0)
+                        button = new QToolButton(parent);
+                    else {
+                        button -> setMenu(0);
+                        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+                    }
+
+                    if (Vk::Api::obj().isConnected()) {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
+                        button -> setPopupMode(QToolButton::InstantPopup);
+                        button -> setToolTip(QStringLiteral("VKontakte(vk.com)"));
+
+                        QMenu * vkMenu = new QMenu(button);
+                        vkMenu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+                        vkMenu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+                        vkMenu -> addAction(QStringLiteral("Open friend/group tab"), container, SLOT(openRelationTab()));
+                        vkMenu -> addAction(QStringLiteral("Open recommendations"), container, SLOT(openRecomendations()));
+                        vkToolButton -> setMenu(vkMenu);
+                    } else {
+                        button -> setIcon(QIcon(QStringLiteral(":/add_vk")));
+                        button -> setToolTip(QStringLiteral("Connect to VKontakte(vk.com)"));
+                        connect(button, SIGNAL(clicked()), container, SLOT(openTab()));
+                    }
+
+                    return button;
+                }
+
             public slots:
-                bool connect_user(bool /*onlyAuto*/ = false);
-                inline void disconnect_user() {
+                void openTab() {
+                    if (connectUser())
+                        Presentation::Dockbars::obj().createLinkedDocBar(
+                            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
+                            Models::Params(siteType(), userID()), 0, true, true
+                        );
+                }
+
+                void openRecomendations() {
+                    Presentation::Dockbars::obj().createDocBar(
+                        QStringLiteral("Rec for YOU"),
+                        Models::Params(dt_site_vk, userID(), rel_user), 0, true, true
+                    );
+                }
+
+                void openRelationTab() {
+                    RelationsDialog dialog(this);
+                    if (dialog.exec() == QDialog::Accepted)
+                        Presentation::Dockbars::obj().createLinkedDocBar(
+                            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
+                            uidStr(dialog.getId())),
+                            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
+                        );
+                }
+
+                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
+                inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();

@@ -18,7 +18,6 @@
 
 #include "dialogs/search_dialog.h"
 #include "dialogs/settings_dialog.h"
-#include "dialogs/relations_dialog.h"
 
 namespace Ui { class Playo; }
 

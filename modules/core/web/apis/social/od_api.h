@@ -40,8 +40,8 @@ namespace Core {
                 QString refresh(const QString & refresh_page); // here refresh_page must by eq to track id
 
             public slots:
-                bool connect_user(bool onlyAuto = false);
-                inline void disconnect_user() {
+                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);//connect_user(bool onlyAuto = false);
+                inline void disconnectUser() {
                     clearParams();
                     clearFriends();
                     clearGroups();
