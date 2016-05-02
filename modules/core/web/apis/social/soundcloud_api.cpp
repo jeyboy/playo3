@@ -72,7 +72,7 @@ void Api::openTab() {
 }
 
 void Api::openRelationTab() {
-    RelationsDialog dialog(this);
+    RelationsDialog dialog(this, Settings::obj().anchorWidget());
     if (dialog.exec() == QDialog::Accepted)
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
