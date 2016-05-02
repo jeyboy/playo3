@@ -2,7 +2,7 @@
 
 using namespace Controls;
 
-SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, const char * search_end_signal,
+SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, const char * search_end_slot, const char * search_end_signal,
                      const QObject * closeReceiver, const char * close_slot, QWidget * parent) : QWidget(parent)
 {
     setContentsMargins(2, 0, 12, 0);
@@ -22,6 +22,7 @@ SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, c
 
     ClickableLabel * closeButton = new ClickableLabel(QStringLiteral("Close"), QPixmap(QStringLiteral(":remove")).scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(onHide()));
     connect(closeButton, SIGNAL(clicked()), closeReceiver, close_slot);
+    connect(closeButton, SIGNAL(clicked()), receiver, search_end_slot);
     l -> addWidget(closeButton, 1);
 }
 

@@ -34,7 +34,7 @@ namespace Controls {
         void setVertical(bool isVertical);
         inline bool isVertical() const { return titleLabel -> isVertical(); }
 
-        void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal);
+        void initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_slot, const char * search_end_signal);
 
         inline bool isShowProgress() { return !spinner -> isHidden(); }
         inline void showProgress(bool show) {

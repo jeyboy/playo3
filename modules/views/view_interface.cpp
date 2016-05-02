@@ -203,8 +203,14 @@ bool IView::startInnerSearch(QString predicate, QModelIndex ind) {
 
     if (ind == QModelIndex())
         emit searchFinished();
+    else
+        scrollToTop();
 
     return has_item;
+}
+
+void IView::endInnerSearch() {
+    onSpoilNeeded(activeIndex());
 }
 
 void IView::onUpdateAttr(const QModelIndex & ind, int attr, const QVariant & val) {
@@ -224,7 +230,7 @@ void IView::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
 //        clearSelection();
         setCurrentIndex(node);
-        scrollTo(node, QAbstractItemView::PositionAtCenter);
+        scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
     }
 }
 

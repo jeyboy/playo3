@@ -133,9 +133,9 @@ void WindowTitle::invertWindowState() {
     }
 }
 
-void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_signal) {
+void WindowTitle::initiateSearch(QWidget * searchContainer, const char * search_start_slot, const char * search_end_slot, const char * search_end_signal) {
     if (searchContainer && !search) {
-        search = new SearchBar(searchContainer, search_start_slot, search_end_signal, this, SLOT(hideSearch()), this);
+        search = new SearchBar(searchContainer, search_start_slot, search_end_slot, search_end_signal, this, SLOT(hideSearch()), this);
         ((TitleLayout *)layout()) -> addWidget(search, 0, 2);
         search -> hide();
     }

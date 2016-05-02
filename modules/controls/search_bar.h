@@ -13,7 +13,7 @@ namespace Controls {
         Q_OBJECT
     public:
         SearchBar(
-            const QObject * receiver, const char * search_start_slot, const char * search_end_signal,
+            const QObject * receiver, const char * search_start_slot, const char * search_end_slot, const char * search_end_signal,
             const QObject * closeReceiver, const char * close_slot, QWidget * parent = 0
         );
 
