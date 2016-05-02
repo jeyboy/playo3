@@ -103,9 +103,8 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     {
         QJsonObject group;
         QJsonArray groups = hash.value(Vk::tkn_groups).toArray();
-        QJsonArray::Iterator it = groups.begin();
 
-        for(; it != groups.end(); it++) {
+        for(QJsonArray::Iterator it = groups.begin(); it != groups.end(); it++) {
             group = (*it).toObject();
 
             Vk::Api::obj().addGroup(
@@ -122,9 +121,8 @@ void VkModel::proceedAudioList(QJsonObject & hash) {
     {
         QJsonObject frend;
         QJsonArray friends = hash.value(Vk::tkn_friends).toArray();
-        QJsonArray::Iterator it = friends.begin();
 
-        for(; it != friends.end(); it++) {
+        for(QJsonArray::Iterator it = friends.begin(); it != friends.end(); it++) {
             frend = (*it).toObject();
 
             Vk::Api::obj().addFriend(
