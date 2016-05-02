@@ -36,7 +36,7 @@ void Api::toJson(QJsonObject & hash) {
 /// COMMON
 //////////////////////////////////////////////////////////
 
-void Api::getGroupInfo(QString & uid, QJsonObject & object) {
+void Api::getGroupInfo(QString uid, QJsonObject & object) {
     object.insert(tkn_audio_list, groupAudio(uid));
     object.insert(tkn_playlist, groupPlaylists(uid));
 }
@@ -64,7 +64,7 @@ QJsonObject Api::objectInfo(QString & uid) {
 }
 
 void Api::openTab() {
-    if (connectUser())
+    if (connectUser(connection_manual))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
             Models::Params(siteType(), userID()), 0, true, true
@@ -85,7 +85,7 @@ void Api::openRelationTab() {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connectUser(const ConnectionType & /*conType*/ = connection_restore) {
+bool Api::connectUser(const ConnectionType & /*conType*/) {
     if (isConnected()) return true;
 
     QUrl auth_url = authUrl();

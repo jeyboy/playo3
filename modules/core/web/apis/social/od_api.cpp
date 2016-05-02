@@ -11,7 +11,7 @@ void Api::fromJson(const QJsonObject & hash) {
 
     Manager::loadCookies(obj);
 
-    if (!connectUser(true)) disconnectUser();
+    if (!connectUser()) disconnectUser();
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;
@@ -39,7 +39,7 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
 }
 
 void Api::openTab() {
-    if (connectUser())
+    if (connectUser(connection_manual))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
             Models::Params(siteType(), userID()), 0, true, true
@@ -52,7 +52,7 @@ void Api::openTab() {
 bool Api::connectUser(const ConnectionType & conType) {
     if (isConnected()) return true;
 
-    if (conType == connection_restore) return false;
+    if (conType & connection_restore) return false;
 
     bool auth_res = formConnection();
     if (auth_res) {

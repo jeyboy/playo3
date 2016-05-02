@@ -29,7 +29,7 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty(); }
 
-                void getGroupInfo(QString & uid, QJsonObject & object);
+                void getGroupInfo(QString uid, QJsonObject & object);
                 void getUserInfo(QString & uid, QJsonObject & object);
 
 //                QList<Linkable> findFriendById(const QString & uid) {}

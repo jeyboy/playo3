@@ -96,12 +96,12 @@ namespace Core {
                 }
 
 
-                QUrl groupAudioUrl(QString & uid) {
+                QUrl groupAudioUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);
                     return baseUrl(path_group_tracks.arg(uid), query);
                 }
-                QJsonArray groupAudio(QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) { return lQuery(groupAudioUrl(group_id), queryRules(count), wrap); }
+                QJsonArray groupAudio(const QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) { return lQuery(groupAudioUrl(group_id), queryRules(count), wrap); }
 
 
                 QUrl groupPlaylistsUrl(QString & uid) { return baseUrl(path_group_playlists.arg(uid), genDefaultParams()); }

@@ -223,45 +223,6 @@ void Playo::showSettingsDialog() {
     }
 }
 
-void Playo::openSoundcloudTabDialog() {
-    createTab(&Soundcloud::Api::obj(), Soundcloud::Api::obj().userID());
-//    if (Soundcloud::Api::obj().connectUser())
-//        Dockbars::obj().createLinkedDocBar(
-//            BarCreationNames(QStringLiteral("SC [YOU]"), Soundcloud::Api::obj().uidStr(Soundcloud::Api::obj().userID())),
-//            Views::Params(soundcloud, Soundcloud::Api::obj().userID()), 0, true, true
-//        );
-}
-
-void Playo::showSoundcloudRelTabDialog() {
-    createRelationTab(&Soundcloud::Api::obj());
-//    RelationsDialog dialog(&Soundcloud::Api::obj(), this);
-//    if (dialog.exec() == QDialog::Accepted)
-//        Dockbars::obj().createLinkedDocBar(
-//            BarCreationNames(QStringLiteral("SC [") % dialog.getName() % QStringLiteral("]"),
-//            Od::Api::obj().uidStr(dialog.getId())),
-//            Views::Params(dt_site_sc, dialog.getId(), user_rel), 0, true, true
-//        );
-}
-
-
-void Playo::createTab(ISource * source, const QString & userID) {
-    if (source -> connectUser())
-        Dockbars::obj().createLinkedDocBar(
-            BarCreationNames(QString(source -> name() % " [YOU]"), source -> uidStr(userID)),
-            Views::Params(source -> siteType(), userID), 0, true, true
-        );
-}
-
-void Playo::createRelationTab(ISource * source) {
-    RelationsDialog dialog(Web::Apis::sociable(source -> siteType()), this);
-    if (dialog.exec() == QDialog::Accepted)
-        Dockbars::obj().createLinkedDocBar(
-            BarCreationNames(QString(source -> name() % " [") % dialog.getName() % QStringLiteral("]"),
-            source -> uidStr(dialog.getId())),
-            Views::Params(source -> siteType(), dialog.getId(), rel_user), 0, true, true
-        );
-}
-
 //void MainWindow::outputActiveItem(ModelItem *, ModelItem * to) {
 //    if (to && !this -> isActiveWindow())
 //        m_tray.showMessage("(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ") Now played:", to -> data(TITLEID).toString(), QSystemTrayIcon::Information, 20000);

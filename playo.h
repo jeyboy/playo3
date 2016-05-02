@@ -62,7 +62,7 @@ protected:
 private:
     Ui::Playo * ui;
 
-    DataStore * settings;
+    Core::DataStore * settings;
 };
 
 #endif // PLAYO_H

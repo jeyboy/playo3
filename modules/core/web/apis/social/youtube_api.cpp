@@ -33,7 +33,7 @@ void Api::toJson(QJsonObject & /*hash*/) {
 ///// COMMON
 ////////////////////////////////////////////////////////////
 
-//void Api::getGroupInfo(QString uid, QJsonObject & object) {
+//void Api::getGroupInfo(const QString & uid, QJsonObject & object) {
 //    object.insert(tkn_audio_list, groupAudio(uid));
 //    object.insert(tkn_playlist, groupPlaylists(uid));
 //}

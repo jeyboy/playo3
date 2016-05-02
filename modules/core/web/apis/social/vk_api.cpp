@@ -20,7 +20,7 @@ void Api::toJson(QJsonObject & hash) {
 }
 
 void Api::openTab() {
-    if (connectUser())
+    if (connectUser(connection_manual))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
             Models::Params(siteType(), userID()), 0, true, true
