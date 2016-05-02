@@ -37,7 +37,7 @@ namespace Core {
             return refresh_process(take_refresh_page(refresh_page));
         }
 
-        virtual QToolButton * initButton(QWidget * /*parent*/) { return button; }
+        virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
     protected:
         QToolButton * button;
 

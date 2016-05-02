@@ -102,6 +102,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
                 query.queryItemValue(tkn_expires_in)
             );
             emit authorized();
+            initButton();
             return true;
         }
     }

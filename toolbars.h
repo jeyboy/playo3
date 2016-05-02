@@ -97,18 +97,8 @@ namespace Presentation {
         QToolBar * createEqualizerButtonBar();
 
         friend class Core::Singleton<ToolBars>;
-        inline ToolBars() : QObject(),
-            vkToolButton(0), soundcloudToolButton(0), odToolButton(0), highlighted(0), equalizer(0), spectrum(0),
-            underMouseBar(0), underMouseButton(0) {
-
-            connect(&Vk::Api::obj(), SIGNAL(authorized()), this, SLOT(initiateVkButton()));
-            connect(&Soundcloud::Api::obj(), SIGNAL(authorized()), this, SLOT(initiateSoundcloudButton()));
-            connect(&Od::Api::obj(), SIGNAL(authorized()), this, SLOT(initiateOdButton()));
-        }
-
-        QToolButton * vkToolButton;
-        QToolButton * soundcloudToolButton;
-        QToolButton * odToolButton;
+        inline ToolBars() : QObject(), highlighted(0), equalizer(0), spectrum(0),
+            underMouseBar(0), underMouseButton(0) { }
 
         QAction * play_btn;
         QAction * pause_btn;

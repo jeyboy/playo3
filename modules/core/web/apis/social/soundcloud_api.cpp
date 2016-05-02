@@ -151,6 +151,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
 
                 setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
                 emit authorized();
+                initButton();
                 resp -> deleteLater();
                 return true;
             }

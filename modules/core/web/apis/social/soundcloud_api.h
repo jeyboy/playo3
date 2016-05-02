@@ -40,10 +40,14 @@ namespace Core {
                 QJsonObject objectInfo(QString & uid);
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
 
-                QToolButton * initButton(QWidget * parent) {
-                    if (button == 0)
+                QToolButton * initButton(QWidget * parent = 0) {
+                    if (button == 0) {
+                        if (!parent) {
+                            qDebug() << "PIPEC" << name();
+                            return 0;
+                        }
                         button = new QToolButton(parent);
-                    else {
+                    } else {
                         button -> setMenu(0);
                         disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
                     }
@@ -75,7 +79,7 @@ namespace Core {
                     clearParams();
                     clearFriends();
                     clearGroups();
-                    initButton(button -> parentWidget());
+                    initButton();
                 }
 
             protected:

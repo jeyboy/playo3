@@ -39,11 +39,12 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
 }
 
 void Api::openTab() {
-    if (connectUser(connection_manual))
+    if (connectUser(connection_manual)) {
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
             Models::Params(siteType(), userID()), 0, true, true
         );
+    }
 }
 
 ///////////////////////////////////////////////////////////
@@ -57,6 +58,7 @@ bool Api::connectUser(const ConnectionType & conType) {
     bool auth_res = formConnection();
     if (auth_res) {
         setParams(grabSID(), userID(), additional());
+        initButton();
         emit authorized();
     }
 
