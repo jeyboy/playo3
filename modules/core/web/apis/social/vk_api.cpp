@@ -23,7 +23,7 @@ void Api::openTab() {
     if (connectUser(connection_manual))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
-            Models::Params(siteType(), userID()), 0, true, true
+            Models::Params(siteType(), userID()), 0, true, true, 0, true
         );
 }
 

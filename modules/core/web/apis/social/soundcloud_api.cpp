@@ -77,7 +77,7 @@ void Api::openRelationTab() {
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
             uidStr(dialog.getId())),
-            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
+            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true, 0, true
         );
 }
 

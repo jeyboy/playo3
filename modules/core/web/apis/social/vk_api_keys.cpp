@@ -114,6 +114,52 @@ namespace Core {
                 "};"
             );
 
+
+            extern const QString query_user_rels      = QString(
+                "var curr; var proceed_groups = [];"
+                "var groups = API.groups.get({"
+                "            owner_id: %1, "
+                "            count: 1000, "
+                "            extended: 1"
+                "    }).items;"
+                "while(groups.length > 0) {"
+                "    curr = groups.pop();"
+                "    proceed_groups.push({"
+                "        " % tkn_id % ": curr.id, "
+                "        " % tkn_title % ": curr.name,"
+                "        " % tkn_screen_name % ": curr.screen_name,"
+                "        " % tkn_photo % ": curr." % tkn_photo % ""
+                "    });"
+                "};"
+
+                "var friends = API.friends.get({"
+                "            user_id: %1, "
+                "            order: \"name\", "
+                "            fields: \"" % tkn_domain % ", " % val_user_fields % "\""
+                "    });"
+                "var proceed_friends = [];"
+                "if (friends.count > 0) { "
+                "    while(friends.items.length > 0) { "
+                "        curr = friends.items.pop();"
+                "        proceed_friends.push({ "
+                "            " % tkn_id % ": curr.id, "
+                "            " % tkn_title % ": curr.first_name %2b \" \" %2b curr.last_name, "
+                "            " % tkn_screen_name % ": curr." % tkn_domain % ", "
+                "            " % tkn_photo % ": curr." % tkn_photo % ""
+                "        }); "
+                "    }; "
+                "};"
+
+                "return {"
+                "    " % tkn_audio_list % ": API.audio.get({ "
+                "        count: 6000, owner_id: %1"
+                "    }),"
+                "    " % tkn_albums % ": proceed_folders, "
+                "    " % tkn_groups % ": proceed_groups, "
+                "};"
+            );
+
+
             extern const QString query_user_info      = QString(
                 "var curr; var proceed_groups = [];"
                 "var groups = API.groups.get({"
@@ -179,7 +225,7 @@ namespace Core {
                 "};"
             );
 
-            extern const QString query_user_short_info = QString(
+            extern const QString query_user_audios = QString(
                 "var folders_result = API.audio.getAlbums({ "
                 "            count: " % val_api_call_limit % ", "
                 "            owner_id: %1"
@@ -209,8 +255,6 @@ namespace Core {
                 "    " % tkn_albums_finished % ": (folders_count < " % val_api_call_limit % ")"
                 "};"
             );
-
-//            extern const QString query_audio_recomend =
         }
     }
 }

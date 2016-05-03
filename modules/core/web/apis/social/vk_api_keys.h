@@ -91,8 +91,9 @@ namespace Core {
 
 
             extern const QString query_albums;
+            extern const QString query_user_rels;
             extern const QString query_user_info;
-            extern const QString query_user_short_info;
+            extern const QString query_user_audios;
 
         }
     }

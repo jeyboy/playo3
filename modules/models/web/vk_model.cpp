@@ -9,7 +9,7 @@ void VkModel::refresh(bool retryPlaing) {
     if (sttngs.rel_type == Core::rel_none) {
         Vk::Api::obj().userInfo(
             sttngs.uid,
-            sttngs.uid == Vk::Api::obj().userID(),
+            sttngs.uid == Vk::Api::obj().userID() ? Web::Vk::Api::info_all : Web::Vk::Api::info_music,
             new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &)))
         );
     } else {

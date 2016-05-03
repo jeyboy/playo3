@@ -193,7 +193,7 @@ void Playo::receiveMessage(QString message) {
 void Playo::openFolderTriggered() {
     ToolbarUserButton * button = (ToolbarUserButton *)QObject::sender();
     if (!(button -> keyboardModifiers() & Qt::ControlModifier) && Settings::obj().isOpenDropPointInTab()) {
-        Views::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
+        Models::Params settings(Settings::obj().openDropPointInTabType(), false, false, false, true);
         Dockbars::obj().createLinkedDocBar(BarCreationNames(button -> text(), button -> mainPath()), settings, 0, true, true);
     }
     else QDesktopServices::openUrl(QUrl::fromLocalFile(button -> mainPath()));
@@ -202,7 +202,7 @@ void Playo::openFolderTriggered() {
 void Playo::showSearchDialog() {    
     SearchDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        Views::Params settings(dt_search, false, false, false, true);
+        Models::Params settings(dt_search, false, false, false, true);
         SearchSettings prms = dialog.params();
         Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
     }

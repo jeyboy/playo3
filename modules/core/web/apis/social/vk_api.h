@@ -38,8 +38,8 @@ namespace Core {
 
                 inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
 
-                void userInfo(QString & uid, bool fullInfo, Func * func) {
-                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, fullInfo, func);
+                void userInfo(QString & uid, InfoType info_type, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, info_type, func);
                 }
             //    void wallAudio(QString & uid, Func func) {
             //        registerAsync(

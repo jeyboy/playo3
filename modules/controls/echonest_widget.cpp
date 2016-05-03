@@ -27,7 +27,7 @@ void EchonestWidget::moveInProcess() {
 }
 
 void EchonestWidget::playlistGenerationNeed(const QString & title, QStringList & predicates) {
-    Views::Params settings(Core::dt_search, QString());
+    Models::Params settings(Core::dt_search, QString());
     SearchSettings prms = Controls::SearchConfigurator::buildParams(1, Controls::SearchConfigurator::block_tabs_and_sites, predicates);
     Presentation::Dockbars::obj().createDocBar(title, settings, 0, true, true, &prms);
 

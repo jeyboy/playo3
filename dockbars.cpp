@@ -21,7 +21,7 @@ void Dockbars::load(const QJsonArray & bars) {
 
             curr_bar = linkNameToToolbars(
                 BarCreationNames(barName, obj.value(QStringLiteral("link")).toString(), obj.value(QStringLiteral("name")).toString()),
-                Views::Params(obj.value(QStringLiteral("set")).toObject()),
+                Models::Params(obj.value(QStringLiteral("set")).toObject()),
                 obj.value(QStringLiteral("cont")).toObject()
             );
 
@@ -56,7 +56,7 @@ void Dockbars::load(const QJsonArray & bars) {
     }
 
     QJsonObject def;
-    Views::Params defSettings;
+    Models::Params defSettings;
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
         widg -> hide();
@@ -124,7 +124,7 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const Views::Params & settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const Models::Params & settings, QJsonObject attrs) {
     if (names.is(SCREEN_TAB)) {
         return 0; // stub
     } else if (names.is(COMMON_TAB)) {
@@ -148,7 +148,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const
     }
 }
 
-Views::Params defSettings(dt_level, true, false, false, true);
+Models::Params defSettings(dt_level, true, false, false, true);
 
 DockBar * Dockbars::commonBar() {
     if (!common) common = createDocBar(BarCreationNames(COMMON_TAB), defSettings, 0, false);
@@ -164,8 +164,8 @@ DockBar * Dockbars::echonestBar() {
     return echonest;
 }
 
-DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Views::Params & settings, QJsonObject * attrs,
-        bool closable, bool addToView, SearchSettings * search_settings)
+DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs,
+        bool closable, bool addToView, SearchSettings * search_settings, bool refresh)
 {
     bool with_head = names.linkable_uid.startsWith(UID_HEAD);
     QString identifier = with_head ? names.linkable_uid : UID_HEAD % names.linkable_uid;
@@ -181,12 +181,15 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Vie
         }
         linkedTabs.insert(identifier, bar);
     }
-    else activate(bar);
+    else {
+        activate(bar);
+        if (refresh) view(bar) -> refresh();
+    }
 
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Views::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
     DockBar * bar = createDocBar(names, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
 

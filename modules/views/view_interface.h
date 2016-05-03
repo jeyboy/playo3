@@ -85,6 +85,7 @@ namespace Views {
         void searchFinished();
 
     public slots:
+        inline void refresh() { mdl -> refresh(); }
         bool startInnerSearch(QString, QModelIndex it = QModelIndex());
         void endInnerSearch();
         void onUpdateAttr(const QModelIndex &, int attr, const QVariant & val);

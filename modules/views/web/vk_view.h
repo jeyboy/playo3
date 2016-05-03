@@ -10,8 +10,6 @@ namespace Views {
     public:
         inline VkView(QWidget * parent, const Params & settings, QJsonObject * hash = 0)
             : IView(new VkModel(settings, hash), parent) {}
-//        inline VkView(WebModel * newModel, QWidget * parent, Params settings)
-//            : IView(newModel, parent, settings) {}
     };
 }
 

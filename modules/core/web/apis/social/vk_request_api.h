@@ -38,6 +38,12 @@ namespace Core {
                         return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.total_limit);
                 }
             public:
+                enum InfoType {
+                    info_music = 1,
+                    info_rels = 2,
+                    info_all = info_music | info_rels,
+                };
+
             //    QUrl wallUrl(QString & uid) {
             //        QUrlQuery query = genDefaultParams();
 
@@ -98,15 +104,24 @@ namespace Core {
                     setParam(query, tkn_code, query_user_info.arg(uid));
                     return baseUrl(tkn_execute, query);
                 }
-                QUrl userShortInfoUrl(QString & uid) {
+                QUrl userAudiosUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
-                    setParam(query, tkn_code, query_user_short_info.arg(uid));
+                    setParam(query, tkn_code, query_user_audios.arg(uid));
+                    return baseUrl(tkn_execute, query);
+                }
+                QUrl userRelsUrl(QString & uid) {
+                    QUrlQuery query = genDefaultParams();
+                    setParam(query, tkn_code, query_user_rels.arg(uid));
                     return baseUrl(tkn_execute, query);
                 }
 
+                QJsonObject userRels(QString & uid) {
+                    QUrl url = userRelsUrl(uid);
+                    return sQuery(url, extract);
+                }
 
-                QJsonObject userInfo(QString & uid, bool fullInfo = true) {
-                    QUrl url = fullInfo ? userFullInfoUrl(uid) : userShortInfoUrl(uid);
+                QJsonObject userInfo(QString & uid, InfoType fullInfo = info_all) {
+                    QUrl url = fullInfo == info_all ? userFullInfoUrl(uid) : userAudiosUrl(uid);
                     QJsonObject ret = sQuery(url, extract);
 
                     QJsonArray ar = ret.value(tkn_albums).toArray();
