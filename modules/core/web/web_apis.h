@@ -22,10 +22,12 @@ namespace Core {
 
             static QHash<DataSubType, Sociable *> sociablesList() { return sociables; }
             inline static Sociable * sociable(const DataSubType & item_type) { return sociables.value(item_type); }
+//            inline static bool isSociable(const DataSubType & item_type) { return sociables.contains(item_type); }
 
             static QHash<DataSubType, IShareable *> shareablesList() { return shareables; }
             inline static IShareable * shareable(const DataSubType & item_type) { return shareables.value(item_type); }
 
+            static QHash<DataSubType, ISource *> sourcesList() { return sources; }
             inline static ISource * source(const DataSubType & item_type) { return sources.value(item_type); }
 
             static void close(QJsonObject & obj);

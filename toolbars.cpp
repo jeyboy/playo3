@@ -391,9 +391,13 @@ QToolBar * ToolBars::createControlToolBar() {
     ptb -> addWidget(listBtn);
 
 //    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
-    ptb -> addWidget(Web::Vk::Api::obj().initButton(container));
-    ptb -> addWidget(Web::Soundcloud::Api::obj().initButton(container));
-    ptb -> addWidget(Web::Od::Api::obj().initButton(container));
+
+    QHash<DataSubType, ISource *> apis = Web::Apis::sourcesList();
+    for(QHash<DataSubType, ISource *>::Iterator api = apis.begin(); api != apis.end(); api++) {
+        QToolButton * btn = api.value() -> initButton(container);
+        if (btn) ptb -> addWidget(btn);
+    }
+
     ptb -> addSeparator();
     ptb -> addWidget(initiateEchonestButton());
     ptb -> addSeparator();

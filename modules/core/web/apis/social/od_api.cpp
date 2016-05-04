@@ -38,6 +38,37 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
     return url.toString();
 }
 
+QToolButton * Api::initButton(QWidget * parent) {
+    if (button == 0) {
+        if (!parent) {
+            qDebug() << "PIPEC" << name();
+            return 0;
+        }
+        button = new QToolButton(parent);
+    } else {
+        button -> setMenu(0);
+        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    if (isConnected()) {
+        button -> setIcon(QIcon(QStringLiteral(":/add_od_on")));
+        button -> setToolTip(QStringLiteral("Od(ok.ru)"));
+        button -> setPopupMode(QToolButton::InstantPopup);
+
+        QMenu * menu = new QMenu(button);
+        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+//        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(showSoundcloudRelTabDialog()));
+        button -> setMenu(menu);
+    } else {
+        button -> setIcon(QIcon(QStringLiteral(":/add_od")));
+        button -> setToolTip(QStringLiteral("Connect to Od(ok.ru)"));
+        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    return button;
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////

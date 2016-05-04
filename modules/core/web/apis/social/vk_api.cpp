@@ -16,6 +16,38 @@ void Api::toJson(QJsonObject & hash) {
     hash.insert(name(), root);
 }
 
+QToolButton * Api::initButton(QWidget * parent) {
+    if (button == 0) {
+        if (!parent) {
+            qDebug() << "PIPEC" << name();
+            return 0;
+        }
+        button = new QToolButton(parent);
+    } else {
+        button -> setMenu(0);
+        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    if (isConnected()) {
+        button -> setIcon(QIcon(QStringLiteral(":/add_vk_on")));
+        button -> setPopupMode(QToolButton::InstantPopup);
+        button -> setToolTip(QStringLiteral("VKontakte(vk.com)"));
+
+        QMenu * menu = new QMenu(button);
+        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
+        menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
+        button -> setMenu(menu);
+    } else {
+        button -> setIcon(QIcon(QStringLiteral(":/add_vk")));
+        button -> setToolTip(QStringLiteral("Connect to VKontakte(vk.com)"));
+        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    return button;
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////

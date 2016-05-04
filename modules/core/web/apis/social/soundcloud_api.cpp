@@ -63,6 +63,37 @@ QJsonObject Api::objectInfo(QString & uid) {
     return res;
 }
 
+QToolButton * Api::initButton(QWidget * parent) {
+    if (button == 0) {
+        if (!parent) {
+            qDebug() << "PIPEC" << name();
+            return 0;
+        }
+        button = new QToolButton(parent);
+    } else {
+        button -> setMenu(0);
+        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    if (isConnected()) {
+        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
+        button -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
+        button -> setPopupMode(QToolButton::InstantPopup);
+
+        QMenu * menu = new QMenu(button);
+        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
+        button -> setMenu(menu);
+    } else {
+        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud")));
+        button -> setToolTip(QStringLiteral("Connect to Soundcloud(soundcloud.com)"));
+        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
+    }
+
+    return button;
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
