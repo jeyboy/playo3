@@ -16,6 +16,8 @@ namespace Core {
         connection_manual = 4
     };
 
+    namespace Web { class Sociable; }
+
     class ISource {
     public:
         ISource() : button(0) {}
@@ -38,6 +40,10 @@ namespace Core {
         }
 
         virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
+
+        void openTab(const QString & userID);
+        void openRecomendations(const QString & userID);
+        void openRelationTab(Web::Sociable * currApi);
     protected:
         QToolButton * button;
 

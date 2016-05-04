@@ -38,15 +38,6 @@ QString Api::refresh(const QString & refresh_page) { // here refresh_page must b
     return url.toString();
 }
 
-void Api::openTab() {
-    if (connectUser(connection_manual)) {
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
-            Models::Params(siteType(), userID()), 0, true, true, 0, true
-        );
-    }
-}
-
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////

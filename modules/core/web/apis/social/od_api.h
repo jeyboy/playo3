@@ -73,7 +73,9 @@ namespace Core {
                 }
 
             public slots:
-                void openTab();
+                inline void openTab() { ISource::openTab(userID()); }
+//                inline void openRecomendations() { ISource::openRecomendations(userID()); }
+//                inline void openRelationTab() { ISource::openRelationTab(this); }
 
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore);//connect_user(bool onlyAuto = false);
                 inline void disconnectUser() {

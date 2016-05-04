@@ -63,25 +63,6 @@ QJsonObject Api::objectInfo(QString & uid) {
     return res;
 }
 
-void Api::openTab() {
-    if (connectUser(connection_manual))
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
-            Models::Params(siteType(), userID()), 0, true, true
-        );
-}
-
-void Api::openRelationTab() {
-    RelationsDialog dialog(this, Settings::obj().anchorWidget());
-    if (dialog.exec() == QDialog::Accepted)
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-            uidStr(dialog.getId())),
-            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true, 0, true
-        );
-}
-
-
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////

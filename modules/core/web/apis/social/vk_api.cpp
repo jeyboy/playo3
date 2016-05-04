@@ -1,8 +1,5 @@
 #include "vk_api.h"
 
-#include "dialogs/relations_dialog.h"
-#include "dockbars.h"
-
 using namespace Core::Web::Vk;
 
 void Api::fromJson(const QJsonObject & hash) {
@@ -17,31 +14,6 @@ void Api::toJson(QJsonObject & hash) {
     Sociable::toJson(root);
 
     hash.insert(name(), root);
-}
-
-void Api::openTab() {
-    if (connectUser(connection_manual))
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID())),
-            Models::Params(siteType(), userID()), 0, true, true, 0, true
-        );
-}
-
-void Api::openRecomendations() {
-    Presentation::Dockbars::obj().createDocBar(
-        QStringLiteral("Rec for YOU"),
-        Models::Params(siteType(), userID(), rel_user), 0, true, true
-    );
-}
-
-void Api::openRelationTab() {
-    RelationsDialog dialog(this, Settings::obj().anchorWidget());
-    if (dialog.exec() == QDialog::Accepted)
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-            uidStr(dialog.getId())),
-            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
-        );
 }
 
 ///////////////////////////////////////////////////////////

@@ -430,4 +430,5 @@ SOURCES += \
     modules/core/web/apis/social/youtube_api.cpp \
     modules/pizduck/duktape.c \
     modules/core/core_parts/item.cpp \
-    settings/apis_settings.cpp
+    settings/apis_settings.cpp \
+    modules/core/interfaces/isource.cpp
