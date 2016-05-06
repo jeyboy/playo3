@@ -241,7 +241,7 @@ void Dockbars::changeBarsVisibility(bool hide) {
 
 void Dockbars::closeAll() {
     UserDialogBox::obj().alert(
-        this,
+        Settings::obj().anchorWidget(),
         QStringLiteral("Closing of tabs"),
         QStringLiteral("Are you sure what you want to close all your tabs ?"),
         QMessageBox::Yes | QMessageBox::No
