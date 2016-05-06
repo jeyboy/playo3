@@ -299,8 +299,15 @@ void SettingsDialog::initGlobalSettings() {
     tab_types.append(QStringLiteral("Level Tree"));
     tab_types.append(QStringLiteral("Tree"));
 
+    int ind;
+    switch(Settings::obj().openDropPointInTabType()) {
+        case Core::dt_tree: ind = 2;
+        case Core::dt_level_tree: ind = 1;
+        default: ind = 0;
+    }
+
     ui -> dropPointTabTypeSelect -> insertItems(0, tab_types);
-    ui -> dropPointTabTypeSelect -> setCurrentIndex(Settings::obj().openDropPointInTabType() - 1);
+    ui -> dropPointTabTypeSelect -> setCurrentIndex(ind);
 
     ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
 
@@ -451,7 +458,15 @@ void SettingsDialog::saveGlobalSettings() {
 
     Settings::obj().setSaveCommonTab(ui -> saveCommonTab -> isChecked());
     Settings::obj().setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
-    Settings::obj().setOpenDropPointInTabType((Core::DataSubType)(ui -> dropPointTabTypeSelect -> currentIndex() + 1));
+
+    int ind;
+    switch(ui -> dropPointTabTypeSelect -> currentIndex()) {
+        case 2: ind = Core::dt_tree;
+        case 1: ind = Core::dt_level_tree;
+        default: ind = Core::dt_level;
+    }
+
+    Settings::obj().setOpenDropPointInTabType((Core::DataSubType)(ind));
 
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
