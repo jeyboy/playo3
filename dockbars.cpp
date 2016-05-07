@@ -25,24 +25,26 @@ void Dockbars::load(const QJsonArray & bars) {
                 obj.value(QStringLiteral("cont")).toObject()
             );
 
-            if (obj.value(QStringLiteral("stick")).toBool())
-                ((DockBar *)curr_bar) -> markAsSticked();
+            if (curr_bar) {
+                if (obj.value(QStringLiteral("stick")).toBool())
+                    ((DockBar *)curr_bar) -> markAsSticked();
 
-            ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
+                ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
 
-            container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
+                container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
-            IView * v = view(qobject_cast<DockBar *>(curr_bar));
+                IView * v = view(qobject_cast<DockBar *>(curr_bar));
 
-            if (v) {
-                if (obj.value(QStringLiteral("selection")).isString())
-                    v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
+                if (v) {
+                    if (obj.value(QStringLiteral("selection")).isString())
+                        v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
 
-                if (obj.value(QStringLiteral("played")).toBool()) {
-                    if (v) {
-                        QString path = obj.value(QStringLiteral("played_item")).toString();
-                        if (!path.isEmpty())
-                            v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt());
+                    if (obj.value(QStringLiteral("played")).toBool()) {
+                        if (v) {
+                            QString path = obj.value(QStringLiteral("played_item")).toString();
+                            if (!path.isEmpty())
+                                v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt());
+                        }
                     }
                 }
             }
@@ -59,8 +61,10 @@ void Dockbars::load(const QJsonArray & bars) {
     Models::Params defSettings;
     while(barsList.length() > 0) {
         QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
-        widg -> hide();
-        container -> addDockWidget(Qt::TopDockWidgetArea, widg);
+        if (widg) {
+            widg -> hide();
+            container -> addDockWidget(Qt::TopDockWidgetArea, widg);
+        }
     }
 }
 
@@ -128,6 +132,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const
     if (names.is(SCREEN_TAB)) {
         return 0; // stub
     } else if (names.is(COMMON_TAB)) {
+        if (common) return 0;
         return (common = createDocBar(names, settings, &attrs, false));
     } else if (names.is(DOWNLOADS_TAB)) {
         DockBar * bar = createDocBar(names, false);

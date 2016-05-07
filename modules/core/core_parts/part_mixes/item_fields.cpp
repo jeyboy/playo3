@@ -30,7 +30,12 @@ QStringList ItemFields::info() const {
     return list;
 }
 
-void ItemFields::openLocation() { QDesktopServices::openUrl(toUrl()); }
+void ItemFields::openLocation() {
+    if (!isRemote()) {
+        QString op = path().toString().section('/', 0, -2);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(op));
+    }
+}
 //void ItemFields::openLocation() {
 //    QFileInfo info(fullPath());
 //    QDesktopServices::openUrl(QUrl::fromLocalFile(info.path()));
