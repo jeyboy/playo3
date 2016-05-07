@@ -10,14 +10,6 @@
 
 namespace Core {
     namespace Web {
-    //    struct JsonQueryRules {
-    //        JsonQueryRules(QString _field, int _limit_per_request = 5, int _total_limit = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-    //            : field(_field), count(_total_limit), offset(_offset), limit(qMin(_limit_per_request, _total_limit)) , fact_count(0) {}
-
-    //        QString field;
-    //        int count, offset, limit, fact_count;
-    //    };
-
         class IQueriable {
         protected:
             bool request(QueriableArg * arg) {
@@ -28,9 +20,17 @@ namespace Core {
                 }
             }
 
-            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, bool /*removeReply*/ = false) { return false; }
+            // override for any type of poly
             virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; }
+
+            // for json
+            virtual QString offsetKey() const { return QString(); }
+            virtual QString limitKey() const { return QString(); }
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
+            virtual bool endReached(QJsonObject & response, int offset) { return false; }
+
+            // for html
+            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, bool /*removeReply*/ = false, QString & /*message*/) { return false; }
 
             bool sQuery(QueriableArg * arg) {
                 Logger::obj().startMark();
@@ -52,6 +52,7 @@ namespace Core {
                                     json.value(arg -> field).toObject() :
                                     json
                             );
+                            arg -> forse_completing = endReached(json, arg -> items_fact_count);
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, json.keys());
                         }
                     break;}
@@ -68,7 +69,7 @@ namespace Core {
                     default: return false;
                 }
 
-                Logger::obj().endMark(QStringLiteral("Grabber-") % QString::number(items.size()) % (status ? "true" : "false"), arg -> request_url);
+                Logger::obj().endMark(QStringLiteral("sQuery") % (status ? "true" : "false"), arg -> request_url);
                 return status;
             }
 
@@ -76,39 +77,7 @@ namespace Core {
                 bool status = true;
 
                 while ( (status &= sQuery(buildUrl(arg))) ) {
-                    switch(arg -> call_type) {
-                        case call_type_json: {
-//                            QJsonValue val = rules.field.isEmpty() ? QJsonValue(response) : response.value(rules.field);
-//                            bool invalid = val.isArray();
-
-//                            if (invalid) {
-//                                QJsonArray ar = val.toArray();
-//                                invalid = ar.isEmpty();
-//                                rules.fact_count += ar.size();
-//                            }
-
-//                            if (!invalid)
-//                                concatJsonArrays(result, val.toArray());
-
-//                            iterateOffset(rules.offset, response, url);
-//                            if (rules.offset >= rules.count || endReached(response, rules.offset)) break;
-                            if (arg -> isCompleted() || endReached(response, rules.offset)) return status;
-                        break;}
-
-                        case call_type_html: {
-                            if (arg -> isCompleted()) return status;
-//                            int page_limit = count + (start - 1);
-//                            while (sQuery(QUrl(url.arg(QString::number(start))), result, jtype)) {
-//                                if (result.isEmpty() || start++ >= page_limit || result.size() >= total) break;
-//                                QThread::msleep(REQUEST_DELAY);
-//                            }
-
-
-                        break;}
-
-                        default: return false;
-                    }
-
+                    if (arg -> isCompleted()) return status;
                     QThread::msleep(REQUEST_DELAY);
                 }
 
@@ -221,16 +190,6 @@ namespace Core {
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
-
-            virtual bool endReached(QJsonObject & response, int offset) = 0;
-            virtual int requestLimit() const = 0;
-            inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
-
-            virtual QString offsetKey() const = 0;
-            virtual QString limitKey() const = 0;
-
-            virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
-            virtual QJsonObject & extractBody(QJsonObject & response) = 0;
 
             virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             QUrl baseUrl(const QString & predicate, const QUrlQuery & query) {

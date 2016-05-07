@@ -25,7 +25,7 @@ namespace Core {
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QString & field = QString(), QObject * error_receiver = 0)
                 : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get), post_proc(post_proc),
-                  arr(arr), field(field), error_receiver(error_receiver), items_fact_count(0), requests_fact_count(0), last_result_is_empty(false)
+                  arr(arr), field(field), error_receiver(error_receiver), items_fact_count(0), requests_fact_count(0), last_result_is_empty(false), forse_completing(false)
             {}
 
             void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
@@ -64,9 +64,10 @@ namespace Core {
             QObject * error_receiver;
 
             bool last_result_is_empty;
+            bool forse_completing;
 
             bool isCompleted() {
-                return last_result_is_empty || items_fact_count >= items_total_limit || requests_fact_count >= requests_limit;
+                return last_result_is_empty || forse_completing || items_fact_count >= items_total_limit || requests_fact_count >= requests_limit;
             }
 
             void append(const QJsonObject & item) {
