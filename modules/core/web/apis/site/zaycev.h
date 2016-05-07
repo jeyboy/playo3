@@ -1,14 +1,13 @@
 #ifndef ZAYCEV
 #define ZAYCEV
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-        class Zaycev : public IGrabberApi, public Singleton<Zaycev> {
+        class Zaycev : public ISearchable, public Singleton<Zaycev> {
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
             inline DataSubType siteType() const { return dt_site_zaycev; }

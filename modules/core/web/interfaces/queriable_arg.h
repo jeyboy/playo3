@@ -1,10 +1,12 @@
 #ifndef QUERIABLE_ARG
 #define QUERIABLE_ARG
 
+#include <qstring.h>
 #include <qobject.h>
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+#define DEFAULT_PREDICATE_NAME QString()
 #define DEFAULT_ITEMS_LIMIT 1000
 #define DEFAULT_REQUESTS_LIMIT 25
 #define DEFAULT_ITEMS_LIMIT_PER_REQUEST 5
@@ -25,7 +27,7 @@ namespace Core {
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QString & field = QString(), QObject * error_receiver = 0)
                 : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get), post_proc(post_proc),
-                  arr(arr), field(field), error_receiver(error_receiver), items_fact_count(0), requests_fact_count(0), last_result_is_empty(false), forse_completing(false)
+                  arr(arr), field(field), items_fact_count(0), requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
             {}
 
             void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
@@ -72,7 +74,7 @@ namespace Core {
 
             void append(const QJsonObject & item) {
                 if (!(last_result_is_empty = item.isEmpty()))
-                    arr.append(item);
+                    arr -> append(item);
 
                 iterateCounters();
             }
@@ -80,7 +82,7 @@ namespace Core {
             void append(const QJsonArray & items) {
                 if (!(last_result_is_empty = items.isEmpty()))
                     for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
-                        arr.append(*it);
+                        arr -> append(*it);
 
                 iterateCounters();
             }

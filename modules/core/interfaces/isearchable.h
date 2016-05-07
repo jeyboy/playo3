@@ -15,7 +15,6 @@
 #include "isource.h"
 #include "igenreable.h"
 
-#define DEFAULT_PREDICATE_NAME QString()
 #define MAX_PAGE 99
 #define STYLES_MAX_PAGE 50
 

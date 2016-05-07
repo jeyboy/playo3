@@ -1,14 +1,13 @@
 #ifndef REDMP3
 #define REDMP3
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-        class RedMp3 : public IGrabberApi, public Singleton<RedMp3> {
+        class RedMp3 : public ISearchable, public Singleton<RedMp3> {
         public:
             inline QString name() const { return QStringLiteral("RedMp3"); }
             inline DataSubType siteType() const { return dt_site_redmp3; }

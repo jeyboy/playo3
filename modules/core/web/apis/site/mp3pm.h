@@ -1,16 +1,13 @@
 #ifndef MP3PM
 #define MP3PM
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-
-        using namespace Grabber;
-
-        class Mp3pm : public IGrabberApi, public Singleton<Mp3pm> {
+        class Mp3pm : public ISearchable, public Singleton<Mp3pm> {
         public:
             inline QString name() const { return QStringLiteral("Mp3pm"); }
             inline DataSubType siteType() const { return dt_site_mp3pm; }

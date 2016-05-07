@@ -1,7 +1,7 @@
 #ifndef MYZUKA_ALBUM
 #define MYZUKA_ALBUM
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 #define ITEMS_PER_PAGE 50
@@ -10,10 +10,7 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-
-        using namespace Grabber;
-
-        class MyzukaAlbum : public IGrabberApi, public Singleton<MyzukaAlbum> {
+        class MyzukaAlbum : public ISearchable, public Singleton<MyzukaAlbum> {
             const QString data_url_token, title_token, search_path_token, search_predicate_token;
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:

@@ -5,6 +5,7 @@
 #include <qtoolbutton.h>
 
 #include "modules/core/web/utils/web_manager.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/data_sub_types.h"
 
 #define UID_HEAD QStringLiteral("@")
@@ -18,7 +19,7 @@ namespace Core {
 
     namespace Web { class Sociable; }
 
-    class ISource {
+    class ISource : public Web::IQueriable {
     public:
         ISource() : button(0) {}
 

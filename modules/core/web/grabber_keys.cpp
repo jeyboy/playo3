@@ -1,6 +1,6 @@
 #include "grabber_keys.h"
 
-namespace Grabber {
+namespace Web {
     extern const QString title_key              = QStringLiteral("title");
     extern const QString duration_key           = QStringLiteral("duration");
     extern const QString size_key               = QStringLiteral("size");

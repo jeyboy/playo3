@@ -3,7 +3,7 @@
 
 #include <qstringbuilder.h>
 
-namespace Grabber {
+namespace Web {
     extern const QString title_key;
     extern const QString duration_key;
     extern const QString size_key;

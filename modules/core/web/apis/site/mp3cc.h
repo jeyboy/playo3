@@ -1,15 +1,13 @@
 #ifndef MP3CC
 #define MP3CC
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-
-        class Mp3cc : public IGrabberApi, public Singleton<Mp3cc> {
+        class Mp3cc : public ISearchable, public Singleton<Mp3cc> {
         public:
             inline QString name() const { return QStringLiteral("Mp3cc"); }
             inline DataSubType siteType() const { return dt_site_mp3cc; }

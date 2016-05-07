@@ -1,7 +1,7 @@
 #ifndef MP3BASE
 #define MP3BASE
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 //function playSong(id)
@@ -99,9 +99,7 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-
-        class Mp3Base : public IGrabberApi, public Singleton<Mp3Base> {
+        class Mp3Base : public ISearchable, public Singleton<Mp3Base> {
         public:
             inline QString name() const { return QStringLiteral("Mp3Base"); }
             inline DataSubType siteType() const { return dt_site_mp3base; }

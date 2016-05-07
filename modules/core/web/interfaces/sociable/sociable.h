@@ -3,8 +3,8 @@
 
 #include <qstringbuilder.h>
 
-#include "modules/core/web/interfaces/friendable.h"
-#include "modules/core/web/interfaces/groupable.h"
+#include "modules/core/web/interfaces/sociable/friendable.h"
+#include "modules/core/web/interfaces/sociable/groupable.h"
 
 namespace Core {
     namespace Web {

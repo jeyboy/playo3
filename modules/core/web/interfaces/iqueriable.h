@@ -20,6 +20,14 @@ namespace Core {
                 }
             }
 
+            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+            QUrl baseUrl(const QString & predicate, const QUrlQuery & query) {
+                QUrl url(baseUrlStr(predicate));
+                url.setQuery(query);
+                return url;
+            }
+            virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
             // override for any type of poly
             virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; }
 
@@ -27,10 +35,10 @@ namespace Core {
             virtual QString offsetKey() const { return QString(); }
             virtual QString limitKey() const { return QString(); }
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
-            virtual bool endReached(QJsonObject & response, int offset) { return false; }
+            virtual bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; }
 
             // for html
-            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, bool /*removeReply*/ = false, QString & /*message*/) { return false; }
+            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) { return false; }
 
             bool sQuery(QueriableArg * arg) {
                 Logger::obj().startMark();
@@ -190,14 +198,6 @@ namespace Core {
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
-
-            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-            QUrl baseUrl(const QString & predicate, const QUrlQuery & query) {
-                QUrl url(baseUrlStr(predicate));
-                url.setQuery(query);
-                return url;
-            }
-            virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
         };
     }
 }

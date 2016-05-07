@@ -4,9 +4,9 @@
 #include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
-#include "modules/core/web/interfaces/sociable.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
 
 #include "soundcloud_request_api.h"
 

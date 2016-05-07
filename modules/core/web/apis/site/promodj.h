@@ -1,7 +1,7 @@
 #ifndef PROMODJ
 #define PROMODJ
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 #define ITEMS_PER_PAGE 50
@@ -10,10 +10,7 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-
-        using namespace Grabber;
-
-        class PromoDj : public IGrabberApi, public Singleton<PromoDj> {
+        class PromoDj : public ISearchable, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
             inline DataSubType siteType() const { return dt_site_promodj; }

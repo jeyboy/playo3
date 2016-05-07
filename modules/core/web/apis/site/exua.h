@@ -1,14 +1,14 @@
 //#ifndef EXUA
 //#define EXUA
 
-//#include "modules/core/interfaces/igrabber_api.h"
+//#include "modules/core/interfaces/isearchable.h"
 //#include "modules/core/interfaces/singleton.h"
 
 //#define ITEMS_PER_PAGE 50
 //#define MAX_PAGES_PER_ARTIST 2
 
 //namespace Grabber {
-//    class Exua : public IGrabberApi, public Singleton<Exua> {
+//    class Exua : public ISearchable, public Singleton<Exua> {
 //        const QString search_predicate_song_token, search_predicate_artist_token;
 ////        const QString data_url_token, title_token, search_path_token, search_predicate_token;
 //        const Html::Selector searchIndexSelector, songTrSelector /*, artistSelector, songSelector, linksSelector, table_columns_selector*/;

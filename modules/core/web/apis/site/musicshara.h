@@ -1,15 +1,13 @@
 #ifndef MUSICSHARA
 #define MUSICSHARA
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-
-        class MusicShara : public IGrabberApi, public Singleton<MusicShara> {
+        class MusicShara : public ISearchable, public Singleton<MusicShara> {
         public:
             inline QString name() const { return QStringLiteral("MusicShara"); }
             inline DataSubType siteType() const { return dt_site_music_shara; }

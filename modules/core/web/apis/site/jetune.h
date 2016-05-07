@@ -1,15 +1,13 @@
 #ifndef JETUNE
 #define JETUNE
 
-#include "modules/core/web/interfaces/igrabber_api.h"
+#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-
-        class Jetune : public IGrabberApi, public Singleton<Jetune> {
+        class Jetune : public ISearchable, public Singleton<Jetune> {
         public:
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline DataSubType siteType() const { return dt_site_jetune; }
