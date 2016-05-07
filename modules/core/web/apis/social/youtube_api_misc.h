@@ -2,7 +2,7 @@
 #define YOUTUBE_API_MISC
 
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/web/utils/js_parser.h"
+#include "modules/core/web/utils/js_document.h"
 #include "youtube_api_keys.h"
 
 namespace Core {

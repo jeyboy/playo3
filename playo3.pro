@@ -179,9 +179,8 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_api.h \
     modules/core/web/apis/storage/fourshared_api_keys.h \
     modules/core/web/apis/storage/fourshared_request_api.h \
-    modules/core/web/interfaces/teu_auth.h \
+    modules/core/web/interfaces/auth/teu_auth.h \
     modules/core/web/utils/html_parser.h \
-    modules/core/web/utils/json_parser.h \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
     modules/core/web/web_apis.h \
@@ -249,13 +248,13 @@ HEADERS += \
     player/player_callback.h \
     modules/controls/time_label.h \
     modules/core/web/apis/service/recaptcha.h \
-    modules/core/web/interfaces/friendable.h \
-    modules/core/web/interfaces/groupable.h \
-    modules/core/web/interfaces/sociable.h \
-    modules/core/web/utils/html_parser_keys.h \
-    modules/core/web/interfaces/linkable.h \
-    modules/core/web/interfaces/linkable_list.h \
+    modules/core/web/interfaces/sociable/friendable.h \
+    modules/core/web/interfaces/sociable/groupable.h \
+    modules/core/web/interfaces/sociable/sociable.h \
+    modules/core/web/interfaces/sociable/linkable.h \
+    modules/core/web/interfaces/sociable/linkable_list.h \
     modules/models/service/relations_delegate.h \
+    modules/core/web/utils/html_parser_keys.h \
     settings/stylesheets/dark_stylesheets.h \
     settings/stylesheets/light_stylesheets.h \
     settings/stylesheets/istylesheets.h \
@@ -282,7 +281,6 @@ HEADERS += \
     modules/core/web/apis/social/yandex_api.h \
     modules/pizduck/duk_config.h \
     modules/pizduck/duktape.h \
-    modules/core/web/utils/js_parser.h \
     modules/core/web/apis/social/youtube_api_misc.h \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/core_parts/part_mixes/item_field_defines.h \
@@ -292,7 +290,10 @@ HEADERS += \
     modules/models/model_settings.h \
     modules/core/interfaces/isource.h \
     modules/core/interfaces/igenreable.h \
-    modules/core/interfaces/ishareable.h
+    modules/core/interfaces/ishareable.h \
+    modules/core/web/interfaces/iqueriable.h \
+    modules/core/web/interfaces/queriable_arg.h \
+    modules/core/web/utils/js_document.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -352,7 +353,7 @@ SOURCES += \
     modules/core/web/apis/social/vk_api.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
-    modules/core/web/interfaces/teu_auth.cpp \
+    modules/core/web/interfaces/auth/teu_auth.cpp \
     modules/core/web/utils/html_parser.cpp \
     modules/core/web/utils/json_parser.cpp \
     modules/core/web/utils/web_manager.cpp \

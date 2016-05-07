@@ -9,6 +9,7 @@
 #include "modules/core/misc/logger.h"
 #include "modules/core/web/utils/html_parser.h"
 
+#define REQUEST_DELAY 260 // ms
 #define COOKIES_KEY QStringLiteral("cookies")
 
 #ifdef Q_OS_WIN

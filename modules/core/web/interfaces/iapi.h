@@ -8,54 +8,44 @@
 #define DEFAULT_LIMIT_AMOUNT 99999
 
 namespace Core {
-    struct QueryRules {
-        QueryRules(QString _field, int _limit_per_request = 5, int _total_limit = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
-            : field(_field), count(_total_limit), offset(_offset), limit(qMin(_limit_per_request, _total_limit)) , fact_count(0) {}
+//    struct QueryRules {
+//        QueryRules(QString _field, int _limit_per_request = 5, int _total_limit = DEFAULT_LIMIT_AMOUNT, int _offset = 0)
+//            : field(_field), count(_total_limit), offset(_offset), limit(qMin(_limit_per_request, _total_limit)) , fact_count(0) {}
 
-        QString field;
-        int count, offset, limit, fact_count;
-    };
+//        QString field;
+//        int count, offset, limit, fact_count;
+//    };
 
     class IApi : public ISearchable {
     public:
         inline virtual ~IApi() {}
     protected:
-        enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
+//        enum JsonPostProc { none = 0, wrap = 1, extract = 2 };
 
         bool showingCaptcha(const QUrl & pict_url, QString & result);
         bool showingLogin(const QString & title, QString & login, QString & pass, const QString & err = QString());
         bool showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err = QString());
 
-        virtual bool endReached(QJsonObject & response, int offset) = 0;
-        virtual int requestLimit() const = 0;
-        inline virtual void iterateOffset(int & offset, QJsonObject & /*response*/, QUrl & /*url*/) { offset += requestLimit(); }
+//        QJsonObject sJsonQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+//            QJsonObject res;
+//            sQuery(url, res, post_proc, errorReceiver);
+//            return res;
+//        }
 
-        virtual QString offsetKey() const = 0;
-        virtual QString limitKey() const = 0;
+//        bool sJsonQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
 
-        virtual bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) = 0;
-        virtual QJsonObject & extractBody(QJsonObject & response) = 0;
+//        QJsonArray lJsonQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
+//            QJsonArray res;
+//            return lQuery(url, rules, res, post_proc, errorReceiver);
+//        }
 
-        QJsonObject sQuery(QUrl url, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-            QJsonObject res;
-            sQuery(url, res, post_proc, errorReceiver);
-            return res;
-        }
+//        QJsonArray & lJsonQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
 
-        bool sQuery(QUrl url, QJsonObject & response, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
-
-        QJsonArray lQuery(QUrl url, QueryRules rules, JsonPostProc post_proc = none, QObject * errorReceiver = 0) {
-            QJsonArray res;
-            return lQuery(url, rules, res, post_proc, errorReceiver);
-        }
-
-        QJsonArray & lQuery(QUrl url, QueryRules rules, QJsonArray & result, JsonPostProc post_proc = none, QObject * errorReceiver = 0);
-
-        inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
-            if (errorReceiver)
-                QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
-            else qDebug() << "ERROR: " << message;
-        }
+//        inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
+//            if (errorReceiver)
+//                QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
+//            else qDebug() << "ERROR: " << message;
+//        }
 
         void setLimit(QUrlQuery & query, int limit = DEFAULT_LIMIT_AMOUNT, QVariant offset = 0) {
             if (offset.type() == QVariant::Int) {
