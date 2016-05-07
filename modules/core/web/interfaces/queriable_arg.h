@@ -42,8 +42,9 @@ namespace Core {
             }
 
             void iterateCounters() {
+                requests_fact_count++;
+                start_offset += (call_iter == call_iter_page ? 1 : arr -> size() - items_fact_count);
                 items_fact_count = arr -> size();
-                requests_fact_count ++;
             }
 
             QString url_template;

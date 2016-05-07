@@ -20,20 +20,19 @@ namespace Core {
                 }
             }
 
-            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             QUrl baseUrl(const QString & predicate, const QUrlQuery & query) {
                 QUrl url(baseUrlStr(predicate));
                 url.setQuery(query);
                 return url;
             }
+
+            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
             // override for any type of poly
             virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; }
 
             // for json
-            virtual QString offsetKey() const { return QString(); }
-            virtual QString limitKey() const { return QString(); }
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
             virtual bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; }
 
@@ -43,7 +42,7 @@ namespace Core {
             bool sQuery(QueriableArg * arg) {
                 Logger::obj().startMark();
                 bool status = true;
-                int code;
+                int code = -1;
                 QString message;
 
                 switch(arg -> call_type) {
@@ -71,7 +70,12 @@ namespace Core {
                             case call_method_post: { response = Manager::prepare() -> followedPost(arg -> request_url); break; }
                             default: response = Manager::prepare() -> followedGet(arg -> request_url);
                         }
-                        status = htmlToJson(response, arg, true);
+                        status = htmlToJson(arg, response, message, true);
+
+                        if (!status) {
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
+                            sendError(arg -> error_receiver, message, code);
+                        }
                     break;}
 
                     default: return false;

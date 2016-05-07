@@ -1,7 +1,8 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-#include "modules/core/web/interfaces/iapi.h"
+//#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/ishareable.h"
 #include "soundcloud_api_keys.h"
 
@@ -10,7 +11,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi, public IShareable {
+            class RequestApi : public IQueriable, public IShareable {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
@@ -23,9 +24,9 @@ namespace Core {
                 inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
                 inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
 
-                QueryRules queryRules(int count = SOUNDCLOUD_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, SOUNDCLOUD_OFFSET_LIMIT), offset);
-                }
+//                QueryRules queryRules(int count = SOUNDCLOUD_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
+//                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, SOUNDCLOUD_OFFSET_LIMIT), offset);
+//                }
             public:
                 inline virtual ~RequestApi() {}
 
