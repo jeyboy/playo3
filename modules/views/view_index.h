@@ -25,7 +25,7 @@ namespace Views {
                 case dt_site_od: return new OdView(parent, settings, attrs);
                 case dt_search: return new SearchView(parent, settings, attrs);
 
-                default: return 0;
+                default: return new ListView(parent, settings, attrs); //0;
             }
         }
     };

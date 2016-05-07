@@ -70,7 +70,7 @@ namespace Views {
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void setIconSize(const QSize & size);
-        void appendRows(QList<QUrl> & urls);
+        void appendRows(const QList<QUrl> & urls);
         void markSelectedAsLiked(bool liked);
     signals:
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex);
