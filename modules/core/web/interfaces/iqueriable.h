@@ -12,6 +12,15 @@ namespace Core {
     namespace Web {
         class IQueriable {
         protected:
+            QJsonObject request(const QString & url, const ApiCallType & call_type,
+                                const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
+            {
+                QJsonArray arr;
+                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+                request(&arg);
+                return arr.isEmpty() ? QJsonObject() : arr.last().toObject();
+            }
+
             bool request(QueriableArg * arg) {
                 switch(arg -> call_amount) {
                     case call_solo: return sQuery(arg);
@@ -30,7 +39,7 @@ namespace Core {
             virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
             // override for any type of poly
-            virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; }
+            virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; } // by default url builded automatically
 
             // for json
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }

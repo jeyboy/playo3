@@ -11,6 +11,9 @@
 #define DEFAULT_REQUESTS_LIMIT 25
 #define DEFAULT_ITEMS_LIMIT_PER_REQUEST 5
 
+#define OFFSET_TEMPLATE QStringLiteral("^1")
+#define LIMIT_TEMPLATE QStringLiteral("^2")
+
 namespace Core {
     namespace Web {
         enum ApiCallType { call_type_html, call_type_json };
@@ -30,21 +33,29 @@ namespace Core {
                   arr(arr), field(field), items_fact_count(0), requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
             {}
 
-            void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
-                int _start_offset = 0, int _limit_per_request = DEFAULT_ITEMS_LIMIT_PER_REQUEST)
+            void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
+                                    int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0/*, int _limit_per_request = DEFAULT_ITEMS_LIMIT_PER_REQUEST*/)
             {
                 call_amount = call_poly;
                 requests_limit = _requests_limit;
                 call_iter = _call_iter;
                 items_total_limit = _items_total_limit;
-                limit_per_request = _limit_per_request;
+//                limit_per_request = _limit_per_request;
                 start_offset = _start_offset;
+                prepareRequestUrl();
             }
 
             void iterateCounters() {
                 requests_fact_count++;
                 start_offset += (call_iter == call_iter_page ? 1 : arr -> size() - items_fact_count);
                 items_fact_count = arr -> size();
+                prepareRequestUrl();
+            }
+
+            void prepareRequestUrl() {
+                request_url = url_template
+                    .replace(OFFSET_TEMPLATE, QString::number(start_offset))
+                    .replace(LIMIT_TEMPLATE, QString::number(call_iter == call_iter_page ? requests_limit : items_total_limit));
             }
 
             QString url_template;
@@ -61,7 +72,7 @@ namespace Core {
 
             QString field;
             int items_total_limit, requests_limit;
-            int start_offset, limit_per_request;
+            int start_offset/*, limit_per_request*/;
             int items_fact_count, requests_fact_count;
 
             QObject * error_receiver;

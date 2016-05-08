@@ -7,6 +7,7 @@
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/data_sub_types.h"
+#include "isearchable.h"
 
 #define UID_HEAD QStringLiteral("@")
 
@@ -19,12 +20,14 @@ namespace Core {
 
     namespace Web { class Sociable; }
 
-    class ISource : public Web::IQueriable {
+    class ISource : public Web::IQueriable, public ISearchable {
     public:
         ISource() : button(0) {}
 
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
+
+        inline QString lastError() const { return error; }
 
         virtual inline bool isConnected() { return true; }
         virtual inline bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return false; }
@@ -50,6 +53,8 @@ namespace Core {
 
         virtual Web::Response * take_refresh_page(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
         virtual QString refresh_process(Web::Response * response) { delete response; return QString(); }
+
+        QString error;
     };
 }
 

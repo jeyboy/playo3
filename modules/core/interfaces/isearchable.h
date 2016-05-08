@@ -12,24 +12,20 @@
 
 #include "dialogs/user_action_dialog.h"
 #include "settings.h"
-#include "isource.h"
 #include "igenreable.h"
 
-#define MAX_PAGE 99
-#define STYLES_MAX_PAGE 50
-
 namespace Core {
-    class ISearchable : public ISource, public IGenreable {
+    class ISearchable : public IGenreable {
     public:
         enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128, in_relative = 256 };
 
         struct SearchLimit {
-            SearchLimit(PredicateType predicate_type, int total_limit, int start_page = 1, int page_amount = MAX_PAGE) :
-                total_limit(total_limit), start_page(start_page), count_page(page_amount), predicate_type(predicate_type) {}
+            SearchLimit(const PredicateType & predicate_type, int items_limit, int start_page = 1, int pages_limit = 100) :
+                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit), predicate_type(predicate_type) {}
 
-            int total_limit;
+            int items_limit;
             int start_page;
-            int count_page;
+            int pages_limit;
             PredicateType predicate_type;
 
             inline bool by_artists() const { return predicate_type & in_artist; }
@@ -44,12 +40,8 @@ namespace Core {
             inline bool by_relativity() const { return predicate_type & in_relative; }
         };
 
-        inline QString lastError() const { return error; }
-
         inline ISearchable() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
         inline virtual ~ISearchable() {}
-
-        inline bool isSearchable() { return true; }
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
@@ -73,12 +65,8 @@ namespace Core {
         virtual QJsonArray popular(const QString & /*genre*/) { return QJsonArray(); }
 
         virtual QJsonArray related(const QString & /*predicate*/) { return QJsonArray(); }
-    signals:
-        void errorReceived(int, QString);
     protected:
         virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
-
-        QString error;
         UserActionDialog * actionDialog;
     };
 }
