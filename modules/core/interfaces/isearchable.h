@@ -7,11 +7,6 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#include "modules/core/misc/format.h"
-#include "modules/core/misc/logger.h"
-
-#include "dialogs/user_action_dialog.h"
-#include "settings.h"
 #include "igenreable.h"
 
 namespace Core {
@@ -40,7 +35,7 @@ namespace Core {
             inline bool by_relativity() const { return predicate_type & in_relative; }
         };
 
-        inline ISearchable() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
+        inline ISearchable() { }
         inline virtual ~ISearchable() {}
 
         enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
@@ -67,7 +62,6 @@ namespace Core {
         virtual QJsonArray related(const QString & /*predicate*/) { return QJsonArray(); }
     protected:
         virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
-        UserActionDialog * actionDialog;
     };
 }
 

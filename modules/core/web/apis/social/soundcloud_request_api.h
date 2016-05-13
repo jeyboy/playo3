@@ -1,8 +1,7 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-//#include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/web/interfaces/iqueriable.h"
+#include "modules/core/web/interfaces/iapi.h"
 #include "modules/core/interfaces/ishareable.h"
 #include "soundcloud_api_keys.h"
 
@@ -11,7 +10,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IQueriable, public IShareable {
+            class RequestApi : public IApi, public IShareable {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
