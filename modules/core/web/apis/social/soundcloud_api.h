@@ -7,13 +7,14 @@
 #include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
+#include "modules/core/interfaces/isource.h"
 
 #include "soundcloud_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public ISource, public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -58,9 +59,9 @@ namespace Core {
                 inline QString refresh(const QString & path) { return path; }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
 
-                inline QString offsetKey() const { return tkn_offset; }
-                inline QString limitKey() const { return tkn_limit; }
-                inline int requestLimit() const { return 200; }
+//                inline QString offsetKey() const { return tkn_offset; }
+//                inline QString limitKey() const { return tkn_limit; }
+//                inline int requestLimit() const { return 200; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_response).toArray().isEmpty(); }

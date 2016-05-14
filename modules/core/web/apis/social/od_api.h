@@ -5,14 +5,15 @@
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/thread_utils.h"
-#include "modules/core/web/interfaces/sociable.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
+#include "modules/core/interfaces/isource.h"
 
 #include "od_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public ISource, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

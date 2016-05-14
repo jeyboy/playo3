@@ -4,13 +4,14 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/thread_utils.h"
 //#include "modules/core/web/interfaces/sociable.h"
+#include "modules/core/interfaces/isource.h"
 
 #include "yandex_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Api : public RequestApi, public Singleton<Api>/*, public Sociable*/ {
+            class Api : public ISource, public RequestApi, public Singleton<Api>/*, public Sociable*/ {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -58,9 +59,9 @@ namespace Core {
 
                 inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
 
-                inline QString offsetKey() const { return QString(); /*tkn_offset;*/ }
-                inline QString limitKey() const { return QString(); /*tkn_limit;*/ }
-                inline int requestLimit() const { return 100; }
+//                inline QString offsetKey() const { return QString(); /*tkn_offset;*/ }
+//                inline QString limitKey() const { return QString(); /*tkn_limit;*/ }
+//                inline int requestLimit() const { return 100; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & /*response*/, int /*offset*/) {

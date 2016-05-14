@@ -2,7 +2,7 @@
 #define FOURSHARED_API
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
 //#include "modules/core/web/interfaces/friendable.h"
 //#include "modules/core/web/interfaces/groupable.h"
 
@@ -35,9 +35,9 @@ namespace Core {
             protected:
                 inline QString baseUrlStr(const QString & predicate) { return base_url % predicate % json_ext_key; }
 
-                inline QString offsetKey() const { return offset_key; }
-                inline QString limitKey() const { return limit_key; }
-                inline int requestLimit() const { return 100; }
+//                inline QString offsetKey() const { return offset_key; }
+//                inline QString limitKey() const { return limit_key; }
+//                inline int requestLimit() const { return 100; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(files_token_key).toArray().isEmpty(); }

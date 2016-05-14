@@ -2,7 +2,7 @@
 #define YANDEX_REQUEST_API
 
 #include "yandex_api_keys.h"
-#include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/interfaces/iapi.h"
 
 //#define YANDEX_OFFSET_LIMIT 2000

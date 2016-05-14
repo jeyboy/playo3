@@ -55,10 +55,12 @@ namespace Core {
             virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; } // by default url builded automatically
 
             // for json
+            // extract status and update request url if required
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
             virtual bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; }
 
             // for html
+            // extract content and update request url if required
             virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) { return false; }
 
             bool sQuery(QueriableArg * arg) {

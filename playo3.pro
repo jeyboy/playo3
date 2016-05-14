@@ -293,7 +293,8 @@ HEADERS += \
     modules/core/interfaces/ishareable.h \
     modules/core/web/interfaces/iqueriable.h \
     modules/core/web/interfaces/queriable_arg.h \
-    modules/core/web/utils/js_document.h
+    modules/core/web/utils/js_document.h \
+    modules/core/web/interfaces/quariable_defines.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

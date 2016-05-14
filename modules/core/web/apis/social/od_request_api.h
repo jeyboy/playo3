@@ -2,7 +2,7 @@
 #define OD_REQUEST_API
 
 #include "od_api_misc.h"
-#include "modules/core/web/interfaces/teu_auth.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/interfaces/ishareable.h"
 
 #define OD_OFFSET_LIMIT 2000

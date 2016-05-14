@@ -52,7 +52,6 @@ namespace Core {
             extern const QString tkn_items             = QStringLiteral("items");
             extern const QString tkn_folder_id         = QStringLiteral("folder_id");
             extern const QString tkn_predef1           = QStringLiteral("_1_");
-            extern const QString tkn_predef2           = QStringLiteral("_2_");
             extern const QString tkn_time_sep          = QStringLiteral(" : ");
             extern const QString tkn_q                 = QStringLiteral("q");
             extern const QString tkn_photo             = QStringLiteral("photo_200");

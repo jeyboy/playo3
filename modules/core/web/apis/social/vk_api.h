@@ -4,8 +4,9 @@
 #include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/teu_auth.h"
-#include "modules/core/web/interfaces/sociable.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
+#include "modules/core/interfaces/isource.h"
 
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
@@ -13,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public ISource, public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
                 Q_OBJECT
                 friend class Singleton<Api>;
                 inline Api() {}
@@ -51,6 +52,12 @@ namespace Core {
                 }
 
                 QToolButton * initButton(QWidget * parent = 0);
+
+                QString refresh(const QString & audio_uid) {
+                    return refresh_postprocess(audioInfo(audio_uid).value(tkn_url).toString());
+                }
+
+                QString refresh_postprocess(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
             public slots:
                 inline void openTab() { ISource::openTab(userID()); }

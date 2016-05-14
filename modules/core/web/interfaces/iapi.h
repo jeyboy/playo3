@@ -10,8 +10,6 @@
 
 //#include "misc/web_utils/json.h"
 
-#define DEFAULT_LIMIT_AMOUNT 99999
-
 namespace Core {
     namespace Web {
         class IApi : public IQueriable, public ISearchable {
@@ -36,13 +34,23 @@ namespace Core {
 //                setParam(query, limitKey(), QString::number(limit));
 //            }
 
-            inline void setParam(QUrlQuery & query, const QString & name, int value) { query.addQueryItem(name, QString::number(value)); }
-            inline void setParam(QUrlQuery & query, const QString & name, float value) { query.addQueryItem(name, QString::number(value)); }
+            inline void setParam(QUrlQuery & query, const QString & name, int value) {
+                if (value == IGNORE_PARAM) return;
+                query.addQueryItem(name, QString::number(value));
+            }
+            inline void setParam(QUrlQuery & query, const QString & name, float value) {
+                if (value == IGNORE_PARAM) return;
+                query.addQueryItem(name, QString::number(value));
+            }
             inline void setParam(QUrlQuery & query, const QString & name, const QString & value) { query.addQueryItem(name, value); }
-            inline void setParam(QUrlQuery & query, const QString & name, const QStringList & values) {
+            inline void setParam(QUrlQuery & query, const QString & name, const QStringList & values, bool as_one_key = true, char join_symb = ',') {
                 if (values.isEmpty()) return;
-                for(QStringList::ConstIterator val = values.constBegin(); val != values.constEnd(); val++)
-                    query.addQueryItem(name, *val);
+
+                if (as_one_key)
+                    setParam(query, name, values.join(join_symb));
+                else
+                    for(QStringList::ConstIterator val = values.constBegin(); val != values.constEnd(); val++)
+                        query.addQueryItem(name, *val);
             }
 
 //            virtual QUrl buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {

@@ -6,13 +6,7 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#define DEFAULT_PREDICATE_NAME QString()
-#define DEFAULT_ITEMS_LIMIT 10000
-#define DEFAULT_REQUESTS_LIMIT 25
-#define DEFAULT_ITEMS_LIMIT_PER_REQUEST 5
-
-#define OFFSET_TEMPLATE QStringLiteral("^1")
-#define LIMIT_TEMPLATE QStringLiteral("^2")
+#include "quariable_defines.h"
 
 namespace Core {
     namespace Web {
@@ -20,19 +14,22 @@ namespace Core {
         enum ApiCallAmount { call_solo, call_poly };
         enum ApiCallMethod { call_method_get, call_method_post };
         enum ApiCallIterType { call_iter_page, call_iter_item };
+        enum ApiCallIterMethod { call_iter_offset, call_iter_token };
         enum AdditionalProc {
             proc_none = 0, proc_json_wrap, proc_json_extract,
             proc_songs1, proc_songs2, proc_songs3, proc_artists1, proc_artists2, proc_artists3, proc_genres1, proc_genres2, proc_genres3
         };
 
         struct PolyQueryRules {
-            PolyQueryRules(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0) {
+            PolyQueryRules(ApiCallIterType _call_iter, ApiCallIterMethod _call_item_method = call_iter_offset, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0) {
                 call_iter = _call_iter;
+                call_item_method = _call_item_method;
                 items_total_limit = _items_total_limit;
                 requests_limit = _requests_limit;
                 start_offset = _start_offset;
             }
 
+            ApiCallIterMethod call_item_method;
             ApiCallIterType call_iter;
             int items_total_limit;
             int requests_limit;
@@ -47,14 +44,14 @@ namespace Core {
             {}
 
             void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
-                                    int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0/*, int _limit_per_request = DEFAULT_ITEMS_LIMIT_PER_REQUEST*/)
+                                    int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0, ApiCallIterMethod _call_item_method = call_iter_offset)
             {
                 call_amount = call_poly;
                 requests_limit = _requests_limit;
                 call_iter = _call_iter;
                 items_total_limit = _items_total_limit;
-//                limit_per_request = _limit_per_request;
                 start_offset = _start_offset;
+                call_item_method = _call_item_method;
                 prepareRequestUrl();
             }
 
@@ -63,7 +60,8 @@ namespace Core {
                     rules.call_iter,
                     rules.items_total_limit,
                     rules.requests_limit,
-                    rules.start_offset
+                    rules.start_offset,
+                    rules.call_item_method
                 );
             }
 
@@ -75,9 +73,8 @@ namespace Core {
             }
 
             void prepareRequestUrl() {
-                request_url = url_template
-                    .replace(OFFSET_TEMPLATE, QString::number(start_offset))
-                    .replace(LIMIT_TEMPLATE, QString::number(call_iter == call_iter_page ? requests_limit : items_total_limit));
+                if (call_item_method == call_iter_offset)
+                    request_url = url_template.replace(OFFSET_TEMPLATE, QString::number(start_offset));
             }
 
             QString url_template;
@@ -87,6 +84,7 @@ namespace Core {
             ApiCallAmount call_amount;
             ApiCallMethod call_method;
             ApiCallIterType call_iter;
+            ApiCallIterMethod call_item_method;
 
             AdditionalProc post_proc;
 
@@ -94,7 +92,7 @@ namespace Core {
 
             QString field;
             int items_total_limit, requests_limit;
-            int start_offset/*, limit_per_request*/;
+            int start_offset;
             int items_fact_count, requests_fact_count;
 
             QObject * error_receiver;

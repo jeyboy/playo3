@@ -7,14 +7,12 @@
 #include "modules/core/misc/file_utils/extensions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
-#include "modules/core/media/genres/music_genres.h"
+//#include "modules/core/media/genres/music_genres.h"
 
 #define FOURSHARED_OFFSET_LIMIT 1000
 
 namespace Core {
     namespace Web {
-        using namespace Grabber;
-
         namespace Fourshared {
             class RequestApi : public IApi {
                 enum CategoryTypes {

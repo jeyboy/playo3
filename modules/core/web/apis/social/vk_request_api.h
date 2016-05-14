@@ -252,12 +252,6 @@ namespace Core {
                     else return infos[0].toObject();
                 }
 
-                QString refresh(const QString & audio_uid) {
-                    return refresh_postprocess(audioInfo(audio_uid).value(tkn_url).toString());
-                }
-
-                QString refresh_postprocess(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
-
                 //INFO not tested
 
                 QJsonArray groupsByIdOrPermas(const QStringList & ids) {
