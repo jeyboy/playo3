@@ -5,7 +5,8 @@
 #include "modules/core/interfaces/ishareable.h"
 #include "soundcloud_api_keys.h"
 
-#define SOUNDCLOUD_OFFSET_LIMIT 100
+#define SOUNDCLOUD_PAGES_LIMIT 25
+#define SOUNDCLOUD_ITEMS_LIMIT 10000
 
 namespace Core {
     namespace Web {
@@ -23,9 +24,14 @@ namespace Core {
                 inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
                 inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
 
-//                QueryRules queryRules(int count = SOUNDCLOUD_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-//                    return QueryRules(tkn_response, qMin(per_request, requestLimit()), qMin(count, SOUNDCLOUD_OFFSET_LIMIT), offset);
-//                }
+                PolyQueryRules rules(int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_count = SOUNDCLOUD_PAGES_LIMIT, int offset = 0, ApiCallIterType call_type = call_iter_page) {
+                    return PolyQueryRules(
+                        call_type,
+                        qMin(items_limit, SOUNDCLOUD_ITEMS_LIMIT),
+                        qMin(pages_count, SOUNDCLOUD_PAGES_LIMIT),
+                        offset
+                    );
+                }
             public:
                 inline virtual ~RequestApi() {}
 
@@ -65,7 +71,7 @@ namespace Core {
                 /////////////////
                 /// API
                 ////////////////
-                QUrl audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
+                QString audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);
                     setOrder(query, hottest);
@@ -76,32 +82,54 @@ namespace Core {
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);
 
-                    return baseUrl(path_tracks, query);
+                    return baseUrl(path_tracks, query).toString();
                 }
 
                 QJsonArray popular(QString & genre) {
-                    return lQuery(
+                    return pRequest(
                         audioSearchUrl(QString(), genre, true),
-                        queryRules(100),
-                        wrap
+                        call_type_json,
+                        rules(),
+                        proc_json_wrap
                     );
+//                    return lQuery(
+//                        audioSearchUrl(QString(), genre, true),
+//                        queryRules(100),
+//                        wrap
+//                    );
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
-                    return lQuery(
+                    return pRequest(
                         audioSearchUrl(predicate, genre, limitations.by_popularity()),
-                        queryRules(limitations.total_limit),
-                        wrap
+                        call_type_json,
+                        rules(limitations.items_limit),
+                        proc_json_wrap
                     );
+
+//                    return lQuery(
+//                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
+//                        queryRules(limitations.total_limit),
+//                        wrap
+//                    );
                 }
 
 
-                QUrl groupAudioUrl(const QString & uid) {
+                QString groupAudioUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);
-                    return baseUrl(path_group_tracks.arg(uid), query);
+                    return baseUrl(path_group_tracks.arg(uid), query).toString();
                 }
-                QJsonArray groupAudio(const QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) { return lQuery(groupAudioUrl(group_id), queryRules(count), wrap); }
+                QJsonArray groupAudio(const QString & group_id, int count = SOUNDCLOUD_OFFSET_LIMIT) {
+                    return pRequest(
+                        groupAudioUrl(group_id),
+                        call_type_json,
+                        rules(limitations.total_limit),
+                        proc_json_wrap
+                    );
+
+//                    return lQuery(groupAudioUrl(group_id), queryRules(count), wrap);
+                }
 
 
                 QUrl groupPlaylistsUrl(QString & uid) { return baseUrl(path_group_playlists.arg(uid), genDefaultParams()); }

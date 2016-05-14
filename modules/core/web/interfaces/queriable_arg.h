@@ -7,7 +7,7 @@
 #include <qjsonarray.h>
 
 #define DEFAULT_PREDICATE_NAME QString()
-#define DEFAULT_ITEMS_LIMIT 1000
+#define DEFAULT_ITEMS_LIMIT 10000
 #define DEFAULT_REQUESTS_LIMIT 25
 #define DEFAULT_ITEMS_LIMIT_PER_REQUEST 5
 
@@ -20,10 +20,23 @@ namespace Core {
         enum ApiCallAmount { call_solo, call_poly };
         enum ApiCallMethod { call_method_get, call_method_post };
         enum ApiCallIterType { call_iter_page, call_iter_item };
-
         enum AdditionalProc {
             proc_none = 0, proc_json_wrap, proc_json_extract,
             proc_songs1, proc_songs2, proc_songs3, proc_artists1, proc_artists2, proc_artists3, proc_genres1, proc_genres2, proc_genres3
+        };
+
+        struct PolyQueryRules {
+            PolyQueryRules(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0) {
+                call_iter = _call_iter;
+                items_total_limit = _items_total_limit;
+                requests_limit = _requests_limit;
+                start_offset = _start_offset;
+            }
+
+            ApiCallIterType call_iter;
+            int items_total_limit;
+            int requests_limit;
+            int start_offset;
         };
 
         struct QueriableArg {
@@ -43,6 +56,15 @@ namespace Core {
 //                limit_per_request = _limit_per_request;
                 start_offset = _start_offset;
                 prepareRequestUrl();
+            }
+
+            void setPolyLimitations(const PolyQueryRules & rules) {
+                setPolyLimitations(
+                    rules.call_iter,
+                    rules.items_total_limit,
+                    rules.requests_limit,
+                    rules.start_offset
+                );
             }
 
             void iterateCounters() {
