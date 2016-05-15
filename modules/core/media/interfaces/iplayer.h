@@ -75,7 +75,8 @@ public:
 
     inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration, playPos); }
     inline void updateMedia(qint64 startMili, qint64 maxDuration) {
-        playPos = startPos = startMili;
+        startPos = startMili;
+        playPos = 0;
         setDuration(maxDuration);
         setPosition(playPos);
     }
