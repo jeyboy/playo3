@@ -12,7 +12,8 @@
 namespace Core {
     class ISearchable : public IGenreable {
     public:
-        enum PredicateType { in_title = 1, in_artist = 2, in_song = 4, in_tag = 8, in_owns = 16, in_originals = 32, in_foreign = 64, in_popular = 128, in_relative = 256 };
+        enum SearchContentType { sc_audio = 1, sc_video = 2 };
+        enum SearchPredicateType { in_abc = 1, in_title = 2, in_artist = 4, in_song = 8, in_tag = 16, in_owns = 32, in_originals = 64, in_foreign = 128, in_popular = 256, in_relative = 512, in_type_arg = 1024 };
 
         struct SearchLimit {
             SearchLimit(const PredicateType & predicate_type, int items_limit, int start_page = 1, int pages_limit = 100) :
@@ -23,6 +24,7 @@ namespace Core {
             int pages_limit;
             PredicateType predicate_type;
 
+            inline bool by_abc() const { return predicate_type & in_abc; }
             inline bool by_artists() const { return predicate_type & in_artist; }
             inline bool by_titles() const { return predicate_type & in_title; }
             inline bool by_songs() const { return predicate_type & in_song; }
@@ -33,20 +35,27 @@ namespace Core {
             inline bool by_originals() const { return predicate_type & in_originals; }
             inline bool by_foreign() const { return predicate_type & in_foreign; }
             inline bool by_relativity() const { return predicate_type & in_relative; }
+            inline bool by_type() const { return predicate_type & in_type_arg; }
         };
 
         inline ISearchable() { }
         inline virtual ~ISearchable() {}
 
-        enum ByTypeArg { sets, charts, soundtracks, by_genres, by_years, other, hits, fresh };
+        enum ByTypeArg { sets = 1, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
-        virtual QJsonArray search(QString & predicate, QString & genre, const SearchLimit & limitations) {
+        QJsonArray search(const SearchContentType & sc_type, const QString & predicate, const QString & genre, const SearchLimit & limitations) {
             if (!predicate.isEmpty()) {
-                return search_postprocess(predicate, genre, limitations);
+                if (limitations.by_abc())
+                    return byChar(predicate[0], limitations);
+
+                if (limitations.by_type())
+                    return byType((ByTypeArg)predicate.mid(0, 1).toInt(), limitations);
+
+                return search_proc(sc_type, predicate, genre, limitations);
             } else if (!genre.isEmpty())
-                return byGenre(genre, limitations);
+                return byGenre(sc_type, genre, limitations);
             else if (limitations.by_popularity() || predicate.isEmpty())
-                return popular(genre);
+                return popular(sc_type, genre);
 
             return QJsonArray();
         }
@@ -61,7 +70,7 @@ namespace Core {
 
         virtual QJsonArray related(const QString & /*predicate*/) { return QJsonArray(); }
     protected:
-        virtual QJsonArray search_postprocess(QString & /*predicate*/, QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
+        virtual QJsonArray search_proc(const QString & /*predicate*/, const QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
     };
 }
 

@@ -5,13 +5,14 @@
 #include "modules/core/web/interfaces/auth/teu_auth.h"
 //#include "modules/core/web/interfaces/friendable.h"
 //#include "modules/core/web/interfaces/groupable.h"
+#include "modules/core/interfaces/isource.h"
 
 #include "fourshared_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared { // auth is not realised yet
-            class Api: public TeuAuth, public RequestApi, public Singleton<Api> {
+            class Api: public ISource, public TeuAuth, public RequestApi, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -27,7 +28,20 @@ namespace Core {
                 void toJson(QJsonObject & hash);
 
                 inline bool isConnected() { return true/*!token().isEmpty()*/; }
-        //        QString downloadLink();
+
+                QString refresh(const QString & refresh_page) {
+                    if (refresh_page.isEmpty()) return QString();
+
+                    Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
+                    return doc.find("input.jsD1PreviewUrl").value();
+                }
+
+                QString downloadLink(const QString & refresh_page) {
+                    if (refresh_page.isEmpty()) return QString();
+
+                    Html::Document doc = Web::Manager::prepare() -> followedGet(QUrl(down_base_url % refresh_page.mid(12))) -> toHtml();
+                    return doc.find("a[href~'/download/']").link();
+                }
 
             public slots:
                 inline void disconnect() { clearParams(); }

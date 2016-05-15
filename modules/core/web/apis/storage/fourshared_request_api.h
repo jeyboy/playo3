@@ -2,6 +2,7 @@
 #define FOURSHARED_REQUEST_API
 
 #include "fourshared_api_keys.h"
+#include "modules/core/web/grabber_keys.h"
 
 #include "modules/core/web/interfaces/iapi.h"
 #include "modules/core/misc/file_utils/extensions.h"
@@ -9,7 +10,9 @@
 //#include "media/duration.h"
 //#include "modules/core/media/genres/music_genres.h"
 
-#define FOURSHARED_OFFSET_LIMIT 1000
+#define FOURSHARED_PAGES_LIMIT 25
+#define FOURSHARED_ITEMS_LIMIT 1000
+#define FOURSHARED_PER_REQUEST_LIMIT 100
 
 namespace Core {
     namespace Web {
@@ -23,63 +26,77 @@ namespace Core {
 
                 inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, category_token_key, (int)cType); }
                 inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, query_token_key, predicate); }
-            public:
-                QUrl audioSearchUrl(QString & predicate, CategoryTypes cType = music) {
-                    QUrlQuery query = genDefaultParams();
-                    setCategory(query, cType);
-                    setSearchPredicate(query, predicate);
 
-                    return IApi::baseUrl(files_token_key, query);
+                inline void setPagination(QUrlQuery & query, int per_request = FOURSHARED_PER_REQUEST_LIMIT) {
+                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
+                    setParam(query, tkn_limit, per_request);
+                }
+
+                PolyQueryRules rules(int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_count = FOURSHARED_PAGES_LIMIT, int offset = 0, ApiCallIterType call_type = call_iter_page) {
+                    return PolyQueryRules(
+                        call_type,
+                        call_iter_offset,
+                        qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
+                        qMin(pages_count, FOURSHARED_PAGES_LIMIT),
+                        offset
+                    );
+                }
+            public:
+                QString audioSearchUrl(const QString & predicate = QString(), CategoryTypes cType = music) {
+                    QUrlQuery query = genDefaultParams();
+
+                    if (!predicate.isEmpty())
+                        setSearchPredicate(query, predicate);
+
+                    setCategory(query, cType);
+                    setPagination(query);
+                    return baseUrl(files_token_key, query).toString();
                 }
 
 
-                QJsonArray popular(QString & /*genre*/) {
-                    QUrlQuery query = genDefaultParams();
-                    setCategory(query, music);
+                QJsonArray popular(const QString & /*genre*/) {
                     // http://search.4shared.com/q/lastmonth/CAQD/1/music
 
-                    QJsonArray res = lQuery(
-                        IApi::baseUrl(files_token_key, query),
-                        QueryRules(files_token_key, requestLimit(), FOURSHARED_OFFSET_LIMIT / 5),
-                        none
+                    QJsonArray res = pRequest(
+                        audioSearchUrl(),
+                        call_type_json,
+                        rules(),
+                        proc_none,
+                        files_token_key
                     );
+
+
+
+//                    QJsonArray res = lQuery(
+//                        IApi::baseUrl(files_token_key, query),
+//                        QueryRules(files_token_key, requestLimit(), FOURSHARED_OFFSET_LIMIT / 5),
+//                        none
+//                    );
 
                     return prepareAudios(res);
                 }
 
                 QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                    bool initInfo = false; // initInfo is too slow
-                    QJsonArray res = lQuery(
+                    QJsonArray res = pRequest(
                         audioSearchUrl(predicate),
-                        QueryRules(files_token_key, requestLimit(), qMin(limitations.total_limit, FOURSHARED_OFFSET_LIMIT)),
-                        none
+                        call_type_json,
+                        rules(limitations.total_limit),
+                        proc_none,
+                        files_token_key
                     );
 
-                    return prepareAudios(res, initInfo);
-                }
 
-                QString refresh(const QString & refresh_page) {
-                    if (refresh_page.isEmpty()) return QString();
+//                    QJsonArray res = lQuery(
+//                        audioSearchUrl(predicate),
+//                        QueryRules(files_token_key, requestLimit(), qMin(limitations.total_limit, FOURSHARED_OFFSET_LIMIT)),
+//                        none
+//                    );
 
-                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(refresh_page);
-                    QString res = Html::Document(response).find("input.jsD1PreviewUrl").value();
-
-                    delete response;
-                    return res;
-                }
-
-                QString downloadLink(const QString & refresh_page) {
-                    if (refresh_page.isEmpty()) return QString();
-
-                    QNetworkReply * response = Web::Manager::prepare() -> followedGet(QUrl(down_base_url % refresh_page.mid(12)));
-                    QString res = Html::Document(response).find("a[href~'/download/']").link();
-
-                    delete response;
-                    return res;
+                    return prepareAudios(res);
                 }
 
             private:
-                QJsonArray prepareAudios(QJsonArray & items, bool initInfo = false) {
+                QJsonArray prepareAudios(QJsonArray & items, bool initInfo = false) { // initInfo is very slow
                     if (items.isEmpty()) return items;
 
                     Html::Selector prevSelector("input.jsD1PreviewUrl");
