@@ -14,15 +14,20 @@ namespace Core {
     public:
         enum SearchContentType { sc_audio = 1, sc_video = 2 };
         enum SearchPredicateType { in_abc = 1, in_title = 2, in_artist = 4, in_song = 8, in_tag = 16, in_owns = 32, in_originals = 64, in_foreign = 128, in_popular = 256, in_relative = 512, in_type_arg = 1024 };
+        enum ByTypeArg { sets = 1, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
         struct SearchLimit {
-            SearchLimit(const PredicateType & predicate_type, int items_limit, int start_page = 1, int pages_limit = 100) :
-                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit), predicate_type(predicate_type) {}
+            SearchLimit(const SearchContentType & sc_type, const SearchPredicateType & predicate_type, const QString & predicate,
+                const QString & genre, int items_limit, int start_page = 1, int pages_limit = 100) :
+                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit), predicate_type(predicate_type), sc_type(sc_type) {}
 
             int items_limit;
             int start_page;
             int pages_limit;
-            PredicateType predicate_type;
+            SearchPredicateType predicate_type;
+            SearchContentType sc_type;
+            QString predicate;
+            QString genre;
 
             inline bool by_abc() const { return predicate_type & in_abc; }
             inline bool by_artists() const { return predicate_type & in_artist; }
@@ -41,36 +46,34 @@ namespace Core {
         inline ISearchable() { }
         inline virtual ~ISearchable() {}
 
-        enum ByTypeArg { sets = 1, charts, soundtracks, by_genres, by_years, other, hits, fresh };
-
-        QJsonArray search(const SearchContentType & sc_type, const QString & predicate, const QString & genre, const SearchLimit & limitations) {
-            if (!predicate.isEmpty()) {
+        QJsonArray search(const SearchLimit & limitations) {
+            if (!limitations.predicate.isEmpty()) {
                 if (limitations.by_abc())
-                    return byChar(predicate[0], limitations);
+                    return byChar(limitations);
 
                 if (limitations.by_type())
-                    return byType((ByTypeArg)predicate.mid(0, 1).toInt(), limitations);
+                    return byType(/*(ByTypeArg)predicate.mid(0, 1).toInt(), */limitations);
 
-                return search_proc(sc_type, predicate, genre, limitations);
+                return search_proc(limitations);
             } else if (!genre.isEmpty())
-                return byGenre(sc_type, genre, limitations);
+                return byGenre(limitations);
             else if (limitations.by_popularity() || predicate.isEmpty())
-                return popular(sc_type, genre);
+                return popular(limitations);
 
             return QJsonArray();
         }
 
-        virtual QJsonArray byGenre(const QString & /*genre*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray byGenre(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray byChar(const QChar /*target_char*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray byChar(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray byType(const ByTypeArg /*target_type*/, const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray byType(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray popular(const QString & /*genre*/) { return QJsonArray(); }
+        virtual QJsonArray popular(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray related(const QString & /*predicate*/) { return QJsonArray(); }
+        virtual QJsonArray related(const SearchLimit & /*limitations*/) { return QJsonArray(); }
     protected:
-        virtual QJsonArray search_proc(const QString & /*predicate*/, const QString & /*genre*/, const SearchLimit & /*limitations*/) = 0;
+        virtual QJsonArray search_proc(const SearchLimit & /*limitations*/) = 0;
     };
 }
 
