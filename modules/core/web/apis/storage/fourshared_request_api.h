@@ -8,7 +8,7 @@
 #include "modules/core/misc/file_utils/extensions.h"
 //#include "media/format.h"
 //#include "media/duration.h"
-//#include "modules/core/media/genres/music_genres.h"
+#include "modules/core/media/genres/music_genres.h"
 
 #define FOURSHARED_PAGES_LIMIT 25
 #define FOURSHARED_ITEMS_LIMIT 1000
@@ -109,7 +109,6 @@ namespace Core {
                     QString ext, title, path, song_path;
 
                     for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
-
                         QJsonObject obj, item_obj = (*item).toObject();
                         path = item_obj.value(tkn_download_page).toString();
 
@@ -122,39 +121,39 @@ namespace Core {
 
                             Html::Set tags = doc.find(&tagsSelector);
                             for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
-                                Html::Tag * span = (*tag) -> childTag(span_tag);
+                                Html::Tag * span = (*tag) -> childTag(tag_span);
                                 if (span) {
                                     QString tag_title = span -> text();
 
-                                    if (tag_title == filetype_tag)
-                                        obj.insert(extension_key, (*tag) -> text());
-                                    else if (tag_title == bitrate_tag)
-                                        obj.insert(bitrate_key, (*tag) -> text());
-                                    else if (tag_title == discretion_rate_tag)
-                                        obj.insert(discretion_rate_key, (*tag) -> text());
-                                    else if (tag_title == year_tag)
-                                        obj.insert(year_key, (*tag) -> text());
-                                    else if (tag_title == genre_tag) {
+                                    if (tag_title == tag_filetype)
+                                        obj.insert(tkn_grab_extension, (*tag) -> text());
+                                    else if (tag_title == tag_bitrate)
+                                        obj.insert(tkn_grab_bitrate, (*tag) -> text());
+                                    else if (tag_title == tag_discretion_rate)
+                                        obj.insert(tkn_grab_discretion_rate, (*tag) -> text());
+                                    else if (tag_title == tag_year)
+                                        obj.insert(tkn_grab_year, (*tag) -> text());
+                                    else if (tag_title == tag_genre) {
                                         int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
                                         if (Media::MusicGenres::obj().defaultInt() != genre_id)
-                                            obj.insert(genre_id_key, genre_id);
+                                            obj.insert(tkn_grab_genre_id, genre_id);
                                     }
                                 }
                             }
 
-                            obj.insert(url_key, song_path);
-                        } else obj.insert(skip_info_key, true);
+                            obj.insert(tkn_grab_url, song_path);
+                        } else obj.insert(tkn_skip_info, true);
 
                         if (!initInfo || !song_path.isEmpty()) {
-                            title = item_obj.value(name_token_key).toString();
+                            title = item_obj.value(tkn_name).toString();
 
                             if (Extensions::obj().extractExtension(title, ext))
-                                obj.insert(extension_key, ext);
+                                obj.insert(tkn_grab_extension, ext);
 
-                            obj.insert(title_key, title);
+                            obj.insert(tkn_grab_title, title);
 
-                            obj.insert(size_key, Info::toUnits(item_obj.value(size_token_key).toInt()));
-                            obj.insert(refresh_key, path);
+                            obj.insert(tkn_grab_size, Info::toUnits(item_obj.value(tkn_size).toInt()));
+                            obj.insert(tkn_grab_refresh, path);
 
                             ar << obj;
                         }
