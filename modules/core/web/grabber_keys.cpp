@@ -1,23 +1,26 @@
 #include "grabber_keys.h"
 
-namespace Web {
-    extern const QString title_key              = QStringLiteral("title");
-    extern const QString duration_key           = QStringLiteral("duration");
-    extern const QString size_key               = QStringLiteral("size");
-    extern const QString id_key                 = QStringLiteral("id");
-    extern const QString url_key                = QStringLiteral("url");
-    extern const QString refresh_key            = QStringLiteral("refresh_url");
-    extern const QString genre_id_key           = QStringLiteral("genre_id");
-    extern const QString extension_key          = QStringLiteral("extension");
-    extern const QString bitrate_key            = QStringLiteral("bitrate");
-    extern const QString bpm_key                = QStringLiteral("bpm");
-    extern const QString channels_key           = QStringLiteral("channels");
-    extern const QString discretion_rate_key    = QStringLiteral("discretion_rate");
-    extern const QString year_key               = QStringLiteral("year");
-    extern const QString album_key              = QStringLiteral("album");
-    extern const QString skip_info_key          = QStringLiteral("skip");
+namespace Core {
+    namespace Web {
+        extern const QString tkn_grab_title             = QStringLiteral("gtitle");
+        extern const QString tkn_grab_duration          = QStringLiteral("gduration");
+        extern const QString tkn_grab_size              = QStringLiteral("gsize");
+        extern const QString tkn_grab_id                = QStringLiteral("gid");
+        extern const QString tkn_grab_url               = QStringLiteral("gurl");
+        extern const QString tkn_grab_refresh           = QStringLiteral("grefresh_url");
+        extern const QString tkn_grab_genre_id          = QStringLiteral("ggenre_id");
+        extern const QString tkn_grab_extension         = QStringLiteral("gextension");
+        extern const QString tkn_grab_bitrate           = QStringLiteral("gbitrate");
+        extern const QString tkn_grab_bpm               = QStringLiteral("gbpm");
+        extern const QString tkn_grab_channels          = QStringLiteral("gchannels");
+        extern const QString tkn_grab_discretion_rate   = QStringLiteral("gdiscretion_rate");
+        extern const QString tkn_grab_year              = QStringLiteral("gyear");
+        extern const QString tkn_grab_album             = QStringLiteral("galbum");
 
-    extern const QString default_extension      = QStringLiteral("mp3");
+        extern const QString tkn_skip_info              = QStringLiteral("gskip");
 
-    extern const QString page_offset_key        = QStringLiteral("%1");
+        extern const QString val_def_extension          = QStringLiteral("mp3");
+
+    //    extern const QString page_offset_key        = QStringLiteral("%1");
+    }
 }

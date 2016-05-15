@@ -2,31 +2,31 @@
 
 namespace Core {
     namespace Web {
-        namespace Fourshared {
-        extern const QString name_key               = QStringLiteral("4shared");
-        extern const QString oauth_consumer_key     = QStringLiteral("oauth_consumer_key=");
-        extern const QString def_token_key          = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");
-        extern const QString json_ext_key           = QStringLiteral(".json");
-        extern const QString lang_cookie            = QStringLiteral("4langcookie=en; domain=.4shared.com; path=/");
+        namespace Fourshared {       
+            extern const QString tkn_oauth_consumer     = QStringLiteral("oauth_consumer_key=");
+            extern const QString tkn_offset             = QStringLiteral("offset");
+            extern const QString tkn_limit              = QStringLiteral("limit");
+            extern const QString tkn_files              = QStringLiteral("files");
+            extern const QString tkn_category           = QStringLiteral("category");
+            extern const QString tkn_query              = QStringLiteral("query");
+            extern const QString tkn_download_page      = QStringLiteral("downloadPage");
+            extern const QString tkn_name               = QStringLiteral("name");
+            extern const QString tkn_size               = QStringLiteral("size");
 
-        extern const QString down_base_url          = QStringLiteral("http://4server.info/download/");
-        extern const QString base_url               = QStringLiteral("https://api.4shared.com/v0/");
-        extern const QString offset_key             = QStringLiteral("offset");
-        extern const QString limit_key              = QStringLiteral("limit");
+            extern const QString tag_span               = QStringLiteral("span");
+            extern const QString tag_filetype           = QStringLiteral("File type");
+            extern const QString tag_bitrate            = QStringLiteral("Bit rate");
+            extern const QString tag_discretion_rate    = QStringLiteral("Sample rate");
+            extern const QString tag_genre              = QStringLiteral("Genre");
+            extern const QString tag_year               = QStringLiteral("Year");
 
-        extern const QString files_token_key        = QStringLiteral("files");
-        extern const QString category_token_key     = QStringLiteral("category");
-        extern const QString query_token_key        = QStringLiteral("query");
-        extern const QString download_page_key      = QStringLiteral("downloadPage");
-        extern const QString name_token_key         = QStringLiteral("name");
-        extern const QString size_token_key         = QStringLiteral("size");
+            extern const QString url_down_base          = QStringLiteral("http://4server.info/download/");
+            extern const QString url_base               = QStringLiteral("https://api.4shared.com/v0/");
 
-        extern const QString span_tag               = QStringLiteral("span");
-        extern const QString filetype_tag           = QStringLiteral("File type");
-        extern const QString bitrate_tag            = QStringLiteral("Bit rate");
-        extern const QString discretion_rate_tag    = QStringLiteral("Sample rate");
-        extern const QString genre_tag              = QStringLiteral("Genre");
-        extern const QString year_tag               = QStringLiteral("Year");
+            extern const QString val_name               = QStringLiteral("4shared");
+            extern const QString val_token              = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");
+            extern const QString val_json_ext           = QStringLiteral(".json");
+            extern const QString val_lang_cookie        = QStringLiteral("4langcookie=en; domain=.4shared.com; path=/");
         }
     }
 }

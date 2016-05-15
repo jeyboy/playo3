@@ -1,35 +1,33 @@
 #ifndef FOURSHARED_API_KEYS
 #define FOURSHARED_API_KEYS
 
-#include "modules/core/web/grabber_keys.h"
-
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            extern const QString name_key;
-            extern const QString oauth_consumer_key;
-            extern const QString def_token_key;
-            extern const QString json_ext_key;
-            extern const QString lang_cookie;
+            extern const QString tkn_oauth_consumer;
+            extern const QString tkn_offset;
+            extern const QString tkn_limit;
+            extern const QString tkn_files;
+            extern const QString tkn_category;
+            extern const QString tkn_query;
+            extern const QString tkn_download_page;
+            extern const QString tkn_name;
+            extern const QString tkn_size;
 
-            extern const QString down_base_url;
-            extern const QString base_url;
-            extern const QString offset_key;
-            extern const QString limit_key;
+            extern const QString tag_span;
+            extern const QString tag_filetype;
+            extern const QString tag_bitrate;
+            extern const QString tag_discretion_rate;
+            extern const QString tag_genre;
+            extern const QString tag_year;
 
-            extern const QString files_token_key;
-            extern const QString category_token_key;
-            extern const QString query_token_key;
-            extern const QString download_page_key;
-            extern const QString name_token_key;
-            extern const QString size_token_key;
+            extern const QString url_down_base;
+            extern const QString url_base;
 
-            extern const QString span_tag;
-            extern const QString filetype_tag;
-            extern const QString bitrate_tag;
-            extern const QString discretion_rate_tag;
-            extern const QString genre_tag;
-            extern const QString year_tag;
+            extern const QString val_name;
+            extern const QString val_token;
+            extern const QString val_json_ext;
+            extern const QString val_lang_cookie;
         }
     }
 }

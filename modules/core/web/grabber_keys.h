@@ -3,26 +3,27 @@
 
 #include <qstringbuilder.h>
 
-namespace Web {
-    extern const QString title_key;
-    extern const QString duration_key;
-    extern const QString size_key;
-    extern const QString id_key;
-    extern const QString url_key;
-    extern const QString refresh_key;
-    extern const QString genre_id_key;
-    extern const QString extension_key;
-    extern const QString bitrate_key;
-    extern const QString discretion_rate_key;
-    extern const QString year_key;
-    extern const QString album_key;
-    extern const QString channels_key;
-    extern const QString bpm_key;
-    extern const QString skip_info_key;
+namespace Core {
+    namespace Web {
+        extern const QString tkn_grab_title;
+        extern const QString tkn_grab_duration;
+        extern const QString tkn_grab_size;
+        extern const QString tkn_grab_id;
+        extern const QString tkn_grab_url;
+        extern const QString tkn_grab_refresh;
+        extern const QString tkn_grab_genre_id;
+        extern const QString tkn_grab_extension;
+        extern const QString tkn_grab_bitrate;
+        extern const QString tkn_grab_bpm;
+        extern const QString tkn_grab_channels;
+        extern const QString tkn_grab_discretion_rate;
+        extern const QString tkn_grab_year;
+        extern const QString tkn_grab_album;
 
-    extern const QString default_extension;
+        extern const QString tkn_skip_info;
 
-    extern const QString page_offset_key;
+        extern const QString val_def_extension;
+    }
 }
 
 #endif // GRABBER_KEYS

@@ -24,8 +24,8 @@ namespace Core {
                     android = 10
                 };
 
-                inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, category_token_key, (int)cType); }
-                inline void setSearchPredicate(QUrlQuery & query, QString & predicate) { setParam(query, query_token_key, predicate); }
+                inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, tkn_category, (int)cType); }
+                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_query, predicate); }
 
                 inline void setPagination(QUrlQuery & query, int per_request = FOURSHARED_PER_REQUEST_LIMIT) {
                     setParam(query, tkn_offset, OFFSET_TEMPLATE);
@@ -50,7 +50,7 @@ namespace Core {
 
                     setCategory(query, cType);
                     setPagination(query);
-                    return baseUrl(files_token_key, query).toString();
+                    return baseUrl(tkn_files, query).toString();
                 }
 
 
@@ -62,7 +62,7 @@ namespace Core {
                         call_type_json,
                         rules(),
                         proc_none,
-                        files_token_key
+                        tkn_files
                     );
 
 
@@ -80,9 +80,9 @@ namespace Core {
                     QJsonArray res = pRequest(
                         audioSearchUrl(limitations.predicate),
                         call_type_json,
-                        rules(limitations.total_limit),
+                        rules(limitations.items_limit),
                         proc_none,
-                        files_token_key
+                        tkn_files
                     );
 
 
@@ -111,14 +111,14 @@ namespace Core {
                     for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
 
                         QJsonObject obj, item_obj = (*item).toObject();
-                        path = item_obj.value(download_page_key).toString();
+                        path = item_obj.value(tkn_download_page).toString();
 
                         if (initInfo) {
                             Html::Document doc = manager -> followedGet(QUrl(path)) -> toHtml();
 
                             song_path = doc.find(&prevSelector).value();
 
-                            obj.insert(duration_key, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
+                            obj.insert(tkn_grab_duration, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
 
                             Html::Set tags = doc.find(&tagsSelector);
                             for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
