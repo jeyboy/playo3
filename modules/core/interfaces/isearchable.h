@@ -42,6 +42,9 @@ namespace Core {
             inline bool by_foreign() const { return predicate_type & in_foreign; }
             inline bool by_relativity() const { return predicate_type & in_relative; }
             inline bool by_type() const { return predicate_type & in_type_arg; }
+
+            inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
+            inline ByTypeArg typePredicate() { return predicate.isEmpty() ? other : (ByTypeArg)predicate.mid(0, 1).toInt(); }
         };
 
         inline ISearchable() { }
@@ -53,7 +56,7 @@ namespace Core {
                     return searchByChar(limitations);
 
                 if (limitations.by_type())
-                    return searchByType(/*(ByTypeArg)predicate.mid(0, 1).toInt(), */limitations);
+                    return searchByType(limitations);
 
                 return search_proc(limitations);
             } else if (!limitations.genre.isEmpty())

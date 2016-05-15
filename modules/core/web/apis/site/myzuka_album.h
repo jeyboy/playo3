@@ -1,8 +1,10 @@
 #ifndef MYZUKA_ALBUM
 #define MYZUKA_ALBUM
 
-#include "modules/core/interfaces/isearchable.h"
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2
@@ -10,7 +12,7 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class MyzukaAlbum : public ISearchable, public Singleton<MyzukaAlbum> {
+        class MyzukaAlbum : public ISource, public IApi, public Singleton<MyzukaAlbum> {
             const QString data_url_token, title_token, search_path_token, search_predicate_token;
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:
@@ -18,7 +20,7 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_myzuka; }
 
             // artists by genre
-            QJsonArray byGenre(QString /*genre*/, const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
                 QJsonArray json;
     //            if (genresList().isEmpty()) genresList();
 
@@ -46,11 +48,11 @@ namespace Core {
 
             // byChar and byType has too many items - parse it all at once is not good idea ?
 
-    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+    //        QJsonArray searchByChar(const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
     //            //TODO: realize later
     //        }
 
-    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+    //        QJsonArray searchByType(const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
     //            QList<QUrl> urls;
 
     //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -73,7 +75,9 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            inline QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
+            inline QJsonArray popular(const SearchLimit & /*limitations*/) {
+                return sQuery(QUrl(baseUrlStr()), songs1);
+            }
 
         protected:
             void prepareTables(Html::Set & tables, Html::Tag *& artists_table, Html::Tag *& songs_table) {
@@ -88,14 +92,16 @@ namespace Core {
                 }
             }
 
-            inline QString prepareSize(QString size) {
+            inline QString prepareSize(const QString & size) {
                 return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
             }
 
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
 
 
-            inline void genres_prepocessing() { lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE); }
+            inline void genres_proc() {
+                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);
+            }
 
             QString refresh_process(Response * reply) {
                 Html::Document parser(reply);
@@ -106,7 +112,7 @@ namespace Core {
                 else
                     return baseUrlStr(tracks.link());
             }
-            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+            QJsonArray search_proc(const SearchLimit & limitations) {
                 QUrl url = QUrl(baseUrlStr(search_path_token));
                 url.setQuery(search_predicate_token % predicate);
 
@@ -170,7 +176,8 @@ namespace Core {
                 }
             }
 
-            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+            bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) {
+//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 Html::Document parser(reply);
                 bool result = false;
 
