@@ -92,9 +92,9 @@ namespace Core {
                     return baseUrl(path_tracks, query).toString();
                 }
 
-                QJsonArray popular(QString & genre) {
+                QJsonArray popular(const SearchLimit & limitations) {
                     return pRequest(
-                        audioSearchUrl(QString(), genre, true),
+                        audioSearchUrl(QString(), limitations.genre, true),
                         call_type_json,
                         rules(),
                         proc_json_wrap
@@ -106,9 +106,9 @@ namespace Core {
 //                    );
                 }
 
-                QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
+                QJsonArray search_proc(const SearchLimit & limitations) {
                     return pRequest(
-                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
+                        audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
                         call_type_json,
                         rules(limitations.items_limit),
                         proc_json_wrap

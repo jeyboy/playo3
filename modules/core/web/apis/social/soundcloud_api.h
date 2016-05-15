@@ -14,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public ISource, public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public ISource, public RequestApi, public TeuAuth, public Sociable, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

@@ -19,15 +19,16 @@ namespace Core {
         struct SearchLimit {
             SearchLimit(const SearchContentType & sc_type, const SearchPredicateType & predicate_type, const QString & predicate,
                 const QString & genre, int items_limit, int start_page = 1, int pages_limit = 100) :
-                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit), predicate_type(predicate_type), sc_type(sc_type) {}
+                sc_type(sc_type), predicate_type(predicate_type), predicate(predicate), genre(genre),
+                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit) {}
 
+            SearchContentType sc_type;
+            SearchPredicateType predicate_type;
+            QString predicate;
+            QString genre;
             int items_limit;
             int start_page;
             int pages_limit;
-            SearchPredicateType predicate_type;
-            SearchContentType sc_type;
-            QString predicate;
-            QString genre;
 
             inline bool by_abc() const { return predicate_type & in_abc; }
             inline bool by_artists() const { return predicate_type & in_artist; }
@@ -49,25 +50,25 @@ namespace Core {
         QJsonArray search(const SearchLimit & limitations) {
             if (!limitations.predicate.isEmpty()) {
                 if (limitations.by_abc())
-                    return byChar(limitations);
+                    return searchByChar(limitations);
 
                 if (limitations.by_type())
-                    return byType(/*(ByTypeArg)predicate.mid(0, 1).toInt(), */limitations);
+                    return searchByType(/*(ByTypeArg)predicate.mid(0, 1).toInt(), */limitations);
 
                 return search_proc(limitations);
-            } else if (!genre.isEmpty())
-                return byGenre(limitations);
-            else if (limitations.by_popularity() || predicate.isEmpty())
+            } else if (!limitations.genre.isEmpty())
+                return searchByGenre(limitations);
+            else if (limitations.by_popularity() || limitations.predicate.isEmpty())
                 return popular(limitations);
 
             return QJsonArray();
         }
 
-        virtual QJsonArray byGenre(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray byChar(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByChar(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
-        virtual QJsonArray byType(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByType(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 
         virtual QJsonArray popular(const SearchLimit & /*limitations*/) { return QJsonArray(); }
 

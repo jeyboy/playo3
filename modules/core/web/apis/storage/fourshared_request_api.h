@@ -54,7 +54,7 @@ namespace Core {
                 }
 
 
-                QJsonArray popular(const QString & /*genre*/) {
+                QJsonArray popular(const SearchLimit & /*limitations*/) {
                     // http://search.4shared.com/q/lastmonth/CAQD/1/music
 
                     QJsonArray res = pRequest(
@@ -76,9 +76,9 @@ namespace Core {
                     return prepareAudios(res);
                 }
 
-                QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+                QJsonArray search_proc(const SearchLimit & limitations) {
                     QJsonArray res = pRequest(
-                        audioSearchUrl(predicate),
+                        audioSearchUrl(limitations.predicate),
                         call_type_json,
                         rules(limitations.total_limit),
                         proc_none,
