@@ -62,7 +62,7 @@ void Accordion::activate(int index) {
 
     tabs -> blockSignals(true);
     cells[index] -> title -> animateClick();
-    cells[index] -> setCollapse(false);
+//    cells[index] -> setCollapse(false);
     tabs -> blockSignals(false);
 }
 
