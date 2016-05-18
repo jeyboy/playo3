@@ -19,9 +19,10 @@ void Dockbars::load(const QJsonArray & bars) {
             barName = obj.value(QStringLiteral("title")).toString();
             userTabsAmount += (!barsList.removeOne(barName));
 
+            Models::Params params(obj.value(QStringLiteral("set")).toObject());
             curr_bar = linkNameToToolbars(
                 BarCreationNames(barName, obj.value(QStringLiteral("link")).toString(), obj.value(QStringLiteral("name")).toString()),
-                Models::Params(obj.value(QStringLiteral("set")).toObject()),
+                params,
                 obj.value(QStringLiteral("cont")).toObject()
             );
 
@@ -80,10 +81,8 @@ void Dockbars::save(DataStore * settings) {
 
             IView * v = view((*it));
 
-            if ((*it) -> windowTitle() == COMMON_TAB) {
-                if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
-                    continue;
-            }
+            if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
+                continue;
 
             curr_bar = QJsonObject();
             curr_bar.insert(QStringLiteral("title"), (*it) -> windowTitle());
@@ -128,11 +127,12 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, const Models::Params & settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs) {
     if (names.is(SCREEN_TAB)) {
         return 0; // stub
     } else if (names.is(COMMON_TAB)) {
         if (common) return 0;
+        settings.playlist = true; settings.common = true;
         return (common = createDocBar(names, settings, &attrs, false));
     } else if (names.is(DOWNLOADS_TAB)) {
         DockBar * bar = createDocBar(names, false);

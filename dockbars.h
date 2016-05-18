@@ -61,7 +61,7 @@ namespace Presentation {
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(const BarCreationNames & names, const Models::Params & settings, QJsonObject attrs);
+        QDockWidget * linkNameToToolbars(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs);
 
         inline QList<DockBar *> dockbars() { return container -> findChildren<DockBar *>(); }
 
