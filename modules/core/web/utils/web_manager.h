@@ -6,8 +6,7 @@
 #include <qpixmap.h>
 
 #include "modules/core/misc/func.h"
-#include "modules/core/misc/logger.h"
-#include "modules/core/web/utils/html_parser.h"
+#include "html_parser.h"
 
 #define REQUEST_DELAY 260 // ms
 #define COOKIES_KEY QStringLiteral("cookies")
@@ -56,8 +55,8 @@ namespace Core { // requests and response has memory leaks
             Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
             QString toText(bool destroy = true);
             QJsonObject toJson(const QString & wrap = QString(), bool destroy = true);
-            QPixmap toImage(bool destroy = true);
             Html::Document toHtml(bool destroy = true);
+            QPixmap toPixmap(bool destroy = true);
             QUrl toUrl(bool destroy = true);
             QUrl toRedirectUrl(bool destroy = true);
         };
@@ -149,7 +148,7 @@ namespace Core { // requests and response has memory leaks
                 return Request(this, url).withHeaders(headers);
             }
 
-            inline QPixmap getImage(const QUrl & url) { return followedGet(url) -> toImage(); }
+            inline QPixmap getPixmap(const QUrl & url) { return followedGet(url) -> toPixmap(); }
             inline QJsonObject getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
             inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
             inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
@@ -159,6 +158,12 @@ namespace Core { // requests and response has memory leaks
                 Response * resp = requestTo(url).viaGet(true);
                 asyncRequests.insert(resp -> url(), response);
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
+                return resp;
+            }
+            inline Response * getImageAsync(const QUrl & url, const Func & response) {
+                Response * resp = requestTo(url).viaGet(true)-> followByRedirect();
+                asyncRequests.insert(resp -> url(), response);
+                connect(resp, SIGNAL(finished()), this, SLOT(imageRequestFinished()));
                 return resp;
             }
 
@@ -185,7 +190,13 @@ namespace Core { // requests and response has memory leaks
                 if (!new_url.isEmpty()) {
                     source -> appendHeaders(new_url);
                     followedGetAsync(new_url, func);
-                } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QIODevice *, source), Q_ARG(void *, func.user_data));
+                } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(Response *, source), Q_ARG(void *, func.user_data));
+            }
+
+            inline void imageRequestFinished() {
+                Response * source = (Response *)sender();
+                Func func = asyncRequests.take(source -> url());
+                QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QPixmap, source -> toPixmap()));
             }
         protected:
             QHash<QUrl, Func> asyncRequests;
@@ -199,7 +210,6 @@ namespace Core { // requests and response has memory leaks
             inline void disconnectThread() {
                 qDebug() << "!!!!!!!!!!!!!!!!!!!! UNREGISTRATE MANAGER";
                 Manager * tmanager = Manager::managers.take(sender());
-                Logger::obj().write(QStringLiteral("Manager"), QStringLiteral("disconnection"));
                 if (tmanager) tmanager -> deleteLater();
                 deleteLater();
             }

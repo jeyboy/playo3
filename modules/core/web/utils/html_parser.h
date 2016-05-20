@@ -69,18 +69,18 @@ namespace Core {
                 QString text();
                 QString value(const QString & name = attr_default);
 
-                inline Set find(const Selector * selector) {
+                inline Set find(const Selector * selector, bool findFirst = false) {
                     Set set;
-                    return find(selector, set);
+                    return find(selector, set, findFirst);
                 }
-                inline Set find(const char * predicate) {
+                inline Set find(const char * predicate, bool findFirst = false) {
                     Selector selector(predicate);
-                    return find(&selector);
+                    return find(&selector, findFirst);
                 }
                 QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
                 inline Set & operator <<(const Set & l) { *this += l; return *this; }
             private:
-                Set & find(const Selector * selector, Set & set);
+                Set & find(const Selector * selector, Set & set, bool findFirst = false);
             };
 
             class Tag {
@@ -114,6 +114,7 @@ namespace Core {
                 inline bool is_script() { return _name == tag_script; }
                 inline bool is_head() { return _name == tag_head; }
                 inline bool is_meta() { return _name == tag_meta; }
+                inline bool is_xml_head() { return _name == tag_xml; }
 
                 inline Tag * parentTag() { return parent; }
                 inline Tag * childTag(int pos) const { return tags[pos]; }
@@ -133,6 +134,11 @@ namespace Core {
                 inline Set find(const char * predicate) {
                     Selector selector(predicate);
                     return tags.find(&selector);
+                }
+                inline Tag * findFirst(const char * predicate) {
+                    Selector selector(predicate);
+                    Set set = tags.find(&selector, true);
+                    return set.isEmpty() ? 0 : set.first();
                 }
                 inline QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links) {
                     return tags.findLinks(selector, links);
@@ -154,6 +160,7 @@ namespace Core {
                     QString tnm(tkn_comment_block);
                     Tag * newTag = appendTag(tnm);
                     QString nm(tkn_comment_block);
+                    val = val.mid(1, val.length() - 3);
                     newTag -> addAttr(nm, val); val.clear();
                 }
 
@@ -213,8 +220,8 @@ namespace Core {
                 };
 
             public:
-                inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) { parse(device); }
-                inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(utf8), charset_finded(false), using_default_charset(false) {
+                inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(unknown), charset_finded(false), using_default_charset(false) { parse(device); }
+                inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(unknown), charset_finded(false), using_default_charset(false) {
                     QByteArray ar = str.toUtf8();
                     QBuffer stream(&ar);
                     stream.open(QIODevice::ReadOnly);
@@ -224,6 +231,10 @@ namespace Core {
 
                 inline ~Document() { delete root; }
 
+                inline bool isXml() {
+                    QString name = root -> children().first() -> name();
+                    return name.contains(tag_xml, Qt::CaseInsensitive);
+                }
                 inline bool has(const char * predicate) { return root -> has(predicate); }
                 inline Set find(const Selector * selector) { return root -> children().find(selector); }
                 inline Set find(const char * predicate) {
@@ -234,6 +245,7 @@ namespace Core {
                 inline void output() { qDebug() << (*root); }
             private:
                 inline bool isSolo(Tag * tag) { return solo.contains(tag -> name()); }
+                inline bool isSolo(const QString & tag_name) { return solo.contains(tag_name); }
 
                 void initSoloTags();
 
@@ -257,27 +269,34 @@ namespace Core {
                 }
 
                 inline void checkCharset(Tag * tag) {
-                    if (!(charset_finded || using_default_charset)) {
-                        if (tag -> is_meta())
-                            proceedCharset(tag);
-                        else if (tag -> is_head())
-                            using_default_charset = true;
-                    }
+                    if (tag -> is_meta() || tag -> is_xml_head())
+                        proceedCharset(tag);
+                    else if (tag -> is_head())
+                        using_default_charset = true;
                 }
 
                 inline void proceedCharset(Tag * tag) {
-                    QString meta = tag -> value(tkn_charset);
-                    if (meta.isEmpty()) {                       
-                        if (tag -> value(tkn_http_equiv).toLower() == tkn_content_type) {
-                            meta = tag -> value(tkn_content);
-                            meta = meta.section(tkn_charset_attr, 1).section(' ', 0);
+                    if (tag -> is_xml_head()) {
+                        QString xml_encoding = tag -> value(tkn_encoding);
+                        qDebug() << xml_encoding;
+                        if (!xml_encoding.isEmpty()) {
+                            charset = toCharsetType(xml_encoding.toLower());
+                            charset_finded = true;
                         }
-                    }
+                    } else {
+                        QString meta = tag -> value(tkn_charset);
+                        if (meta.isEmpty()) {
+                            if (tag -> value(tkn_http_equiv).toLower() == tkn_content_type) {
+                                meta = tag -> value(tkn_content);
+                                meta = meta.section(tkn_charset_attr, 1).section(' ', 0);
+                            }
+                        }
 
-                    if (!meta.isEmpty()) {
-                        qDebug() << meta;
-                        charset = toCharsetType(meta.toLower());
-                        charset_finded = true;
+                        if (!meta.isEmpty()) {
+                            qDebug() << meta;
+                            charset = toCharsetType(meta.toLower());
+                            charset_finded = true;
+                        }
                     }
                 }
 

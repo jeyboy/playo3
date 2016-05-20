@@ -8,7 +8,7 @@ namespace Core {
                 QString Set::text() { return (isEmpty()) ? QString() : first() -> text(); }
                 QString Set::value(const QString & name) { return (isEmpty()) ? QString() : first() -> value(name); }
 
-                Set & Set::find(const Selector * selector, Set & set) {
+                Set & Set::find(const Selector * selector, Set & set, bool findFirst) {
                     for(Set::Iterator tag = begin(); tag != end(); tag++) {
                         if ((*tag) -> validTo(selector)) {
                                 if (selector -> next) {
@@ -17,7 +17,10 @@ namespace Core {
                                     else if (!(*tag) -> children().isEmpty())
                                         (*tag) -> children().find(selector -> next, set);
                                 }
-                                else set.append((*tag));
+                                else {
+                                    set.append((*tag));
+                                    if (findFirst) break;
+                                }
                         }
                         else if (!selector -> isDirect() && !(*tag) -> children().isEmpty())
                             (*tag) -> children().find(selector, set);
@@ -66,6 +69,7 @@ namespace Core {
                     token.clear();
                 }
 
+                //TODO: add :3 - position limitation
                 Selector::Selector(const char * predicate) : sType(forward), prev(0), next(0) {
                     Selector::SState state = Selector::tag;
                     Selector * selector = this;
@@ -266,12 +270,14 @@ namespace Core {
                     html_entities.insert(tkn_amp, '&');
                     html_entities.insert(tkn_lt, '<');
                     html_entities.insert(tkn_gt, '>');
+                    html_entities.insert(tkn_quot, '"');
 
                     solo.insert(tag_br, true);
                     solo.insert(tag_meta, true);
                     solo.insert(tag_link, true);
                     solo.insert(tag_img, true);
                     solo.insert(tag_doctype, true);
+                    solo.insert(tag_xml, true);
                     solo.insert(tag_input, true);
                 }
 
@@ -280,7 +286,7 @@ namespace Core {
                     initSoloTags();
                     PState state = content;
                     char * ch = new char[2](), last = 0, del = 0;
-                    QString curr, value; curr.reserve(1024); value.reserve(1024);
+                    QString name, value; name.reserve(1024); value.reserve(1024);
                     Tag * elem = (root = new Tag(tkn_any_elem));
                     bool is_closed = false;
 
@@ -298,7 +304,7 @@ namespace Core {
                                                 case val: { state = in_val; del = *ch; break;}
                                                 case in_val: {
                                                     if (del == *ch) {
-                                                        elem -> addAttr(curr, value);
+                                                        elem -> addAttr(name, value);
                                                         state = attr;
                                                     }
                                                     else value.append(*ch);
@@ -319,44 +325,53 @@ namespace Core {
                                     switch(*ch) {
                                         case open_tag: {
                                             if (last == close_tag_predicate && elem -> is_script())
-                                                curr.append(*ch); // javascript comments
+                                                name.append(*ch); // javascript comments
                                             else {
-                                                if (!(flags & skip_text) && !curr.isEmpty()) elem -> appendText(curr);
+                                                if (!(flags & skip_text) && !name.isEmpty()) elem -> appendText(name);
                                                 state = tag;
                                             }
                                         break;}
-                                        case code_start: { curr.append(parseCode(device, ch)); break; }
-                                        case space: if (curr.isEmpty()) continue;
+                                        case code_start: { name.append(parseCode(device, ch)); break; } // &quot; and etc
+                                        case space: if (name.isEmpty()) continue;
                                         default:
                                             if ((last = *ch) > 0)
-                                                curr.append(*ch);
+                                                name.append(*ch);
                                             else
-                                                toUtf8(charset, device, curr, ch[0]);
+                                                toUtf8(charset, device, name, ch[0]);
                                     }
                                 break;}
 
                                 case comment: {
                                     switch(*ch) {
-                                        case comment_post_token: break; // skip -
+//                                        case comment_post_token: break; // skip -
                                         case close_tag: {
-                                            if (flags & skip_comment) curr.clear();
-                                            else  elem -> appendComment(curr);
-                                            state = content;
-                                        break;}
+                                            if (last == comment_post_token) {
+                                                if (flags & skip_comment) name.clear();
+                                                else elem -> appendComment(name);
+                                                state = content;
+                                                break;
+                                            }
+                                        }
                                         default:
                                             if (*ch > 0)
-                                                curr.append(*ch);
+                                                name.append(*ch);
                                             else
-                                                toUtf8(charset, device, curr, ch[0]);
+                                                toUtf8(charset, device, name, ch[0]);
                                     }
+                                    last = *ch;
                                 break;}
 
                                 default: switch(*ch) {
                                     case space: {
                                         switch(state) {
                                             case attr:
-                                            case val: { if (!curr.isEmpty()) elem -> addAttr(curr, value); state = attr; break; } // proceed attrs without value
-                                            case tag: { elem = elem -> appendTag(curr); state = attr; break;}
+                                            case val: { if (!name.isEmpty()) elem -> addAttr(name, value); state = attr; break; } // proceed attrs without value
+                                            case tag: {
+                                                if (last != close_tag_predicate) {
+                                                    elem = elem -> appendTag(name);
+                                                    state = attr;
+                                                }
+                                            break;}
                                             default: /*continue*/; // else skip spaces
                                         }
                                     break;}
@@ -373,24 +388,26 @@ namespace Core {
                                     break; }
 
                                     case close_tag: {
-                                        if (!curr.isEmpty()) {
+                                        if (!(charset_finded || using_default_charset))
+                                            checkCharset(elem);
+
+                                        if (!name.isEmpty()) {
                                             if (state & attr_val) {
-                                                elem -> addAttr(curr, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
-                                                checkCharset(elem);
+                                                if (name[0] != '?') // ignore ?>
+                                                    elem -> addAttr(name, value); // proceed attrs without value // if (isSolo(elem)) elem = elem -> parentTag();
+
                                                 if (isSolo(elem)) elem = elem -> parentTag();
                                             } else {
-                                                checkCharset(elem);
                                                 if (is_closed) {
-                                                    if (elem -> name() == curr) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
-                                                    curr.clear(); is_closed = false;
+                                                    if (elem -> name() == name) elem = elem -> parentTag();// add ignoring of the close tag for solo tags
+                                                    name.clear(); is_closed = false;
                                                 } else {
-                                                    if (last != close_tag_predicate) elem = elem -> appendTag(curr);
-                                                    else elem -> appendTag(curr);
+                                                    if (last != close_tag_predicate && !isSolo(name)) elem = elem -> appendTag(name);
+                                                    else elem -> appendTag(name);
                                                 }
                                             }
                                         } else {
-                                            checkCharset(elem);
-                                            if (isSolo(elem)) elem = elem -> parentTag();
+                                            if (isSolo(elem) || last == close_tag_predicate) elem = elem -> parentTag();
                                         }
 
                                         state = content;
@@ -398,11 +415,11 @@ namespace Core {
 
                                     case comment_post_token: {
                                         switch(state) {
-                                            case tag: if (last == comment_token) { state = comment; curr.clear(); continue; }
+                                            case tag: if (last == comment_token) { state = comment; name.clear(); continue; }
                                             default: ;
                                         }
                                     }
-                                    default: { curr.append((last = *ch)); }
+                                    default: { name.append((last = *ch)); }
                                 }
                             }
                         } else break;

@@ -14,6 +14,7 @@ namespace Core {
             extern const QString tag_a;
             extern const QString tag_script;
             extern const QString tag_head;
+            extern const QString tag_xml;
             extern const QString tag_meta;
             extern const QString tag_link;
 
@@ -25,7 +26,9 @@ namespace Core {
             extern const QString tkn_amp;
             extern const QString tkn_lt;
             extern const QString tkn_gt;
+            extern const QString tkn_quot;
             extern const QString tkn_charset;
+            extern const QString tkn_encoding;
             extern const QString tkn_charset_attr;
             extern const QString tkn_http_equiv;
             extern const QString tkn_content_type;

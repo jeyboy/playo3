@@ -76,7 +76,7 @@ namespace Core {
     //        }
 
             inline QJsonArray popular(const SearchLimit & /*limitations*/) {
-                return sQuery(QUrl(baseUrlStr()), songs1);
+                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
 
         protected:
@@ -100,7 +100,7 @@ namespace Core {
 
 
             inline void genres_proc() {
-                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % page_offset_key), genres1, STYLES_MAX_PAGE);
+                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
             QString refresh_process(Response * reply) {
@@ -155,9 +155,9 @@ namespace Core {
                         }
 
                         QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
-                        track_obj.insert(title_key, title);
-                        track_obj.insert(size_key, prepareSize(size_tag -> text()));
-                        track_obj.insert(refresh_key, baseUrlStr(track_tag -> link()));
+                        track_obj.insert(tkn_grab_title, title);
+                        track_obj.insert(tkn_grab_size, prepareSize(size_tag -> text()));
+                        track_obj.insert(tkn_grab_refresh, baseUrlStr(track_tag -> link()));
 
                         json << track_obj;
                     }
@@ -170,19 +170,19 @@ namespace Core {
 
             void artistsToJson(QHash<QString, QString> & artists, QJsonArray & json) {
                 for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-                    QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % page_offset_key;
+                    QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
 
-                    lQuery(baseUrlStr(artistPage), json, songs1, MAX_PAGES_PER_ARTIST);
+                    lQuery(baseUrlStr(artistPage), json, proc_songs1, MAX_PAGES_PER_ARTIST);
                 }
             }
 
-            bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) {
+            bool htmlToJson(QueriableArg * /*arg*/, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                Html::Document parser(reply);
+                Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
                 switch(jtype) {
-                    case songs1: {
+                    case proc_songs1: {
                         Html::Set set;
                         Html::Tag * tag;
                         Html::Set tracks = parser.find("div[itemprop='tracks']");
@@ -195,22 +195,22 @@ namespace Core {
                             QJsonObject track_obj;
 
                             tag = (*track) -> find(&urlSelector).first();
-                            track_obj.insert(url_key, baseUrlStr(tag -> value(data_url_token)));
-                            track_obj.insert(title_key, tag -> value(title_token).section(' ', 1));
+                            track_obj.insert(tkn_grab_url, baseUrlStr(tag -> value(data_url_token)));
+                            track_obj.insert(tkn_grab_title, tag -> value(title_token).section(' ', 1));
 
                             set = (*track) -> find(&infoSelector);
                             if (!set.isEmpty()) {
-                                track_obj.insert(duration_key, set.text().section(' ', 0, 0));
-                                track_obj.insert(bitrate_key, set.last() -> text().section(' ', 0, 0));
+                                track_obj.insert(tkn_grab_duration, set.text().section(' ', 0, 0));
+                                track_obj.insert(tkn_grab_bitrate, set.last() -> text().section(' ', 0, 0));
                             }
 
                             set = (*track) -> find(&detailsSelector);
                             if (!set.isEmpty())
-                                track_obj.insert(size_key, prepareSize(set.text()));
+                                track_obj.insert(tkn_grab_size, prepareSize(set.text()));
 
                             set = (*track) -> find(&refreshSelector);
                             if (!set.isEmpty())
-                                track_obj.insert(refresh_key, baseUrlStr(set.link()));
+                                track_obj.insert(tkn_grab_refresh, baseUrlStr(set.link()));
 
                             json << track_obj;
                         }
@@ -218,7 +218,7 @@ namespace Core {
                         result = !tracks.isEmpty();
                     }
 
-                    case genres1: {
+                    case proc_genres1: {
                         Html::Set links = parser.find(&linksSelector);
 
                         for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
@@ -231,7 +231,6 @@ namespace Core {
                     default: ;
                 }
 
-                if (removeReply) delete reply;
                 return result;
             }
         private:

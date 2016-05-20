@@ -28,19 +28,12 @@ namespace Core {
             if (destroy) deleteLater();
             return QJsonDocument::fromJson(ar).object();
         }
-        QPixmap Response::toImage(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
-            QImage image;
+        QPixmap Response::toPixmap(bool destroy) {
+            if (error()) qDebug() << "IOERROR" << error() << url();
+            QPixmap image;
             image.loadFromData(readAll());
             if (destroy) deleteLater();
-            return QPixmap::fromImage(image);
-        }
-
-        Html::Document Response::toHtml(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
-            Html::Document doc(this);
-            if (destroy) deleteLater();
-            return doc;
+            return image;
         }
 
         QUrl Response::toUrl(bool destroy) {
@@ -48,6 +41,13 @@ namespace Core {
             QUrl uri = url();
             if (destroy) deleteLater();
             return uri;
+        }
+
+        Html::Document Response::toHtml(bool destroy) {
+            if (error()) qDebug() << "IOERROR" << error();
+            Html::Document doc(this);
+            if (destroy) deleteLater();
+            return doc;
         }
 
         QUrl Response::toRedirectUrl(bool destroy) {

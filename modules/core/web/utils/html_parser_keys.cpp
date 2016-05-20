@@ -12,6 +12,7 @@ namespace Core {
             extern const QString tag_script             = QStringLiteral("script");
             extern const QString tag_head               = QStringLiteral("head");
             extern const QString tag_meta               = QStringLiteral("meta");
+            extern const QString tag_xml                = QStringLiteral("?xml");
             extern const QString tag_link               = QStringLiteral("link");
 
             extern const QString tkn_split              = QStringLiteral(" ");
@@ -22,7 +23,10 @@ namespace Core {
             extern const QString tkn_amp                = QStringLiteral("amp");
             extern const QString tkn_lt                 = QStringLiteral("lt");
             extern const QString tkn_gt                 = QStringLiteral("gt");
+            extern const QString tkn_quot               = QStringLiteral("quot");
+
             extern const QString tkn_charset            = QStringLiteral("charset");
+            extern const QString tkn_encoding           = QStringLiteral("encoding");
             extern const QString tkn_charset_attr       = QStringLiteral("charset=");
             extern const QString tkn_http_equiv         = QStringLiteral("http-equiv");
             extern const QString tkn_content_type       = QStringLiteral("content-type");
