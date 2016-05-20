@@ -17,7 +17,7 @@ namespace Core {
         enum ApiCallIterMethod { call_iter_method_offset, call_iter_method_token };
         enum AdditionalProc {
             proc_none = 0, proc_json_wrap, proc_json_extract,
-            proc_songs1, proc_songs2, proc_songs3, proc_artists1, proc_artists2, proc_artists3, proc_genres1, proc_genres2, proc_genres3
+            proc_tracks1, proc_tracks2, proc_tracks3, proc_artists1, proc_artists2, proc_artists3, proc_genres1, proc_genres2, proc_genres3
         };
 
         struct PolyQueryRules {

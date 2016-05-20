@@ -1,8 +1,10 @@
 #ifndef MP3BASE
 #define MP3BASE
 
-#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/interfaces/isource.h"
+#include "modules/core/web/grabber_keys.h"
 
 //function playSong(id)
 //{
@@ -99,54 +101,27 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class Mp3Base : public ISearchable, public Singleton<Mp3Base> {
+        class Mp3Base : public ISource, public IApi, public Singleton<Mp3Base> {
         public:
             inline QString name() const { return QStringLiteral("Mp3Base"); }
             inline DataSubType siteType() const { return dt_site_mp3base; }
 
-    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
-    //            QJsonArray json;
-    //            if (genresList().isEmpty()) genresList();
+            QJsonArray popular(const SearchLimit & /*limitations*/) {
+                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
 
-    //            genre = genres.toString(genre_id);
-    //            if (genre.isEmpty()) return json;
-
-    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-    //            lQuery(url_str, json, songs1, MAX_PAGE);
-
-    //            return json;
-    //        }
-
-            // rus letters has specific presentation
-    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-    //            //TODO: realize later
-    //        }
-
-    //        // one page contains 30 albums
-    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
-    //            switch (target_type) { // need to modify grab processing of folder support in model
-    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-    //                default: return QJsonArray();
-    //            }
-    //            //TODO: stop if result not contains elements
-    //        }
-
-            QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
+//                return sQuery(QUrl(baseUrlStr()), songs1);
+            }
 
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3base.cc") % predicate; }
 
-            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                Html::Document parser(reply);
+            bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
+//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
-                switch(jtype) {
-                    case songs1: {
+                switch(arg -> post_proc) {
+                    case proc_tracks1: {
                         Html::Set songs = parser.find("table.files tr");
 
                         for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
@@ -169,7 +144,7 @@ namespace Core {
                                 song_obj.insert(duration_key, duration_tag -> toText());
                             else
                                 qDebug() << title << "DID NOT HAVE DURATION";
-                            song_obj.insert(skip_info_key, true);
+                            song_obj.insert(tkn_skip_info, true);
 
                             json << song_obj;
                         }
@@ -177,7 +152,7 @@ namespace Core {
                         result = !songs.isEmpty();
                     }
 
-                    case genres1: {
+                    case proc_genres1: {
                         Html::Set links = parser.find("a.genre");
 
                         for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
@@ -190,7 +165,6 @@ namespace Core {
                     default: ;
                 }
 
-                if (removeReply) delete reply;
                 return result;
             }
 

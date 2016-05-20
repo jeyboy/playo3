@@ -76,7 +76,7 @@ namespace Core {
     //        }
 
             inline QJsonArray popular(const SearchLimit & /*limitations*/) {
-                return saRequest(baseUrlStr(), call_type_html, proc_songs1);
+                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
 
@@ -108,8 +108,8 @@ namespace Core {
             }
 
             QString refresh_process(Response * reply) {
-                Html::Document parser(reply);
-                Html::Set tracks = parser.find(".options a[itemprop='audio']");
+                Html::Document doc = reply -> toHtml();
+                Html::Set tracks = doc.find(".options a[itemprop='audio']");
 
                 if (tracks.isEmpty())
                     return QString();
@@ -120,11 +120,9 @@ namespace Core {
                 QUrl url = QUrl(baseUrlStr(search_path_token));
                 url.setQuery(search_predicate_token % limitations.predicate);
 
+                QJsonArray arr;
                 Response * response = Manager::prepare() -> followedGet(url);
-
-                QJsonArray json;
-                Html::Document parser(response);
-                response -> deleteLater();
+                Html::Document parser = response -> toHtml();
 
                 Html::Set tables = parser.find(&searchTablesSelector);
                 Html::Tag * artists_table = 0, * songs_table = 0;
@@ -132,15 +130,11 @@ namespace Core {
 
                 if (limitations.by_artists() && artists_table) {
                     QHash<QString, QString> artistLinks;
-                    artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), json);
+                    artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), arr);
                 }
 
                 if (!limitations.by_artists() && songs_table) {
                     Html::Set songs = songs_table -> find(&songTrSelector);
-
-//                    if (limitations.total_limit < ITEMS_PER_PAGE)
-//                        while(songs.size() > limitations.total_limit)
-//                            songs.removeLast();
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
                         QJsonObject track_obj;
@@ -155,7 +149,7 @@ namespace Core {
                                 QStringLiteral("Search: parsing of songs"),
                                 QStringLiteral("Some shit happened"), true
                             );
-                            return json;
+                            return arr;
                         }
 
                         QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
@@ -163,11 +157,11 @@ namespace Core {
                         track_obj.insert(tkn_grab_size, prepareSize(size_tag -> text()));
                         track_obj.insert(tkn_grab_refresh, baseUrlStr(track_tag -> link()));
 
-                        json << track_obj;
+                        arr << track_obj;
                     }
                 }
 
-                return json;
+                return arr;
             }
 
 
@@ -177,7 +171,7 @@ namespace Core {
                     QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
 
                     PolyQueryRules rules(call_iter_type_page, call_iter_method_offset, DEFAULT_ITEMS_LIMIT, MAX_PAGES_PER_ARTIST);
-                    pRequest(baseUrlStr(artistPage), call_type_html, rules, proc_songs1, &arr);
+                    pRequest(baseUrlStr(artistPage), call_type_html, rules, proc_tracks1, &arr);
 
 //                    lQuery(baseUrlStr(artistPage), arr, proc_songs1, MAX_PAGES_PER_ARTIST);
                 }
@@ -189,7 +183,7 @@ namespace Core {
                 bool result = false;
 
                 switch(arg -> post_proc) {
-                    case proc_songs1: {
+                    case proc_tracks1: {
                         Html::Set set;
                         Html::Tag * tag;
                         Html::Set tracks = parser.find("div[itemprop='tracks']");

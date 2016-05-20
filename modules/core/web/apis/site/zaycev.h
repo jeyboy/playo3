@@ -1,18 +1,20 @@
 #ifndef ZAYCEV
 #define ZAYCEV
 
-#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/interfaces/isource.h"
+#include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class Zaycev : public ISearchable, public Singleton<Zaycev> {
+        class Zaycev : public ISource, public IApi, public Singleton<Zaycev> {
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
             inline DataSubType siteType() const { return dt_site_zaycev; }
 
-    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
+    //        QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { // http://zaycev.net/genres/shanson/index.html
     //            QJsonArray json;
     //            if (genresList().isEmpty()) genresList();
 
@@ -26,12 +28,12 @@ namespace Core {
     //        }
 
             // rus letters has specific presentation
-    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+    //        QJsonArray searchByChar(const SearchLimit & /*limitations*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
     //            //TODO: realize later
     //        }
 
     //        // one page contains 30 albums
-    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
+    //        QJsonArray searchByType(const SearchLimit & /*limitations*/) { //http://zaycev.net/musicset/more.html?page=1
     //            switch (target_type) { // need to modify grab processing of folder support in model
     //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
     //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
@@ -44,20 +46,25 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
+            QJsonArray popular(const SearchLimit & /*limitations*/) {
+                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
+
+//                return sQuery(QUrl(baseUrlStr()), songs1);
+            }
 
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
 
-            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                if (reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200) return false;
+            bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
+//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                if (reply -> status() != 200) return false; // if pagination overlimited - 302 status received
 
-                Html::Document parser(reply);
+                Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
-                switch(jtype) {
-                    case songs1: {
-                        Html::Set songs = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
+                switch(arg -> post_proc) {
+                    case proc_tracks1: {
+                        Html::Set tracks = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
 
                         QString ban_class = QStringLiteral("track-is-banned");
                         QString data_url = QStringLiteral("data-url");
@@ -65,32 +72,31 @@ namespace Core {
                         Html::Selector artist_selector(".musicset-track__artist a");
                         Html::Selector title_selector(".musicset-track__track-name a");
 
-                        qDebug() << "TRACKS AMOUNT" << songs.size();
-                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                            qDebug() << "TRACKS" << (*song) -> hasClass(ban_class);
-                            if ((*song) -> hasClass(ban_class)) continue;
+                        qDebug() << "TRACKS AMOUNT" << tracks.size();
+                        for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                            qDebug() << "TRACKS" << (*track) -> hasClass(ban_class);
+                            if ((*track) -> hasClass(ban_class)) continue;
 
-                            QJsonObject song_obj;
+                            QJsonObject track_obj;
 
-                            song_obj.insert(refresh_key, baseUrlStr((*song) -> value(data_url)));
-                            song_obj.insert(duration_key, Duration::fromSeconds((*song) -> value(QStringLiteral("data-duration")).toInt()));
-                            song_obj.insert(skip_info_key, true);
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr((*track) -> value(data_url)));
+                            track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
+                            track_obj.insert(tkn_skip_info, true);
 
-                            QString artist = (*song) -> find(&artist_selector).text();
-                            QString title = (*song) -> find(&title_selector).text();
+                            QString artist = (*track) -> find(&artist_selector).text();
+                            QString title = (*track) -> find(&title_selector).text();
                             title = artist % QStringLiteral(" - ") % title;
-                            song_obj.insert(title_key, title);
+                            track_obj.insert(tkn_grab_title, title);
 
-                            json << song_obj;
+                            arg -> append(track_obj, track + 1 == tracks.end());
                         }
 
-                        result = !songs.isEmpty();
+                        result = !tracks.isEmpty();
                     }
 
                     default: ;
                 }
 
-                if (removeReply) delete reply;
                 return result;
             }
 
@@ -117,20 +123,24 @@ namespace Core {
                 return reply -> toJson().value(QStringLiteral("url")).toString();
             }
 
-            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                QString url_str = baseUrlStr(QStringLiteral("/search.html?query_search=%1&page=%2").arg(
-                    encodeStr(predicate),
-                    page_offset_key
-                ));
+            QJsonArray search_proc(const SearchLimit & limits) {
+                QString url_str = baseUrlStr(
+                    QStringLiteral("/search.html?query_search=%1&page=%2")
+                        .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
+                );
 
-                QJsonArray json;
+                PolyQueryRules rules(
+                    call_iter_type_page, call_iter_method_offset,
+                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.pages_limit, 2)
+                );
+                return pRequest(url_str, call_type_html, rules, proc_tracks1);
 
-                lQuery(url_str, json, songs1, qMin(limitations.count_page, 2), limitations.start_page, limitations.total_limit); // 2 pages at this time // if pagination overlimited - 302 status received
 
-//                while(json.size() > limitations.count)
-//                    json.removeLast();
+//                QJsonArray json;
 
-                return json;
+//                lQuery(url_str, json, proc_tracks1, qMin(limitations.count_page, 2), limitations.start_page, limitations.total_limit); // 2 pages at this time
+
+//                return json;
             }
         private:
             friend class Singleton<Zaycev>;
