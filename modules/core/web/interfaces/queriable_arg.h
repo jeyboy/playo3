@@ -13,15 +13,15 @@ namespace Core {
         enum ApiCallType { call_type_html, call_type_json };
         enum ApiCallAmount { call_solo, call_poly };
         enum ApiCallMethod { call_method_get, call_method_post };
-        enum ApiCallIterType { call_iter_page, call_iter_item };
-        enum ApiCallIterMethod { call_iter_offset, call_iter_token };
+        enum ApiCallIterType { call_iter_type_page, call_iter_type_item };
+        enum ApiCallIterMethod { call_iter_method_offset, call_iter_method_token };
         enum AdditionalProc {
             proc_none = 0, proc_json_wrap, proc_json_extract,
             proc_songs1, proc_songs2, proc_songs3, proc_artists1, proc_artists2, proc_artists3, proc_genres1, proc_genres2, proc_genres3
         };
 
         struct PolyQueryRules {
-            PolyQueryRules(ApiCallIterType _call_iter, ApiCallIterMethod _call_item_method = call_iter_offset, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0) {
+            PolyQueryRules(ApiCallIterType _call_iter, ApiCallIterMethod _call_item_method = call_iter_method_offset, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0) {
                 call_iter = _call_iter;
                 call_item_method = _call_item_method;
                 items_total_limit = _items_total_limit;
@@ -44,7 +44,7 @@ namespace Core {
             {}
 
             void setPolyLimitations(ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
-                                    int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0, ApiCallIterMethod _call_item_method = call_iter_offset)
+                                    int _requests_limit = DEFAULT_REQUESTS_LIMIT, int _start_offset = 0, ApiCallIterMethod _call_item_method = call_iter_method_offset)
             {
                 call_amount = call_poly;
                 requests_limit = _requests_limit;
@@ -67,13 +67,13 @@ namespace Core {
 
             void iterateCounters() {
                 requests_fact_count++;
-                start_offset += (call_iter == call_iter_page ? 1 : arr -> size() - items_fact_count);
+                start_offset += (call_iter == call_iter_type_page ? 1 : arr -> size() - items_fact_count);
                 items_fact_count = arr -> size();
                 prepareRequestUrl();
             }
 
             void prepareRequestUrl() {
-                if (call_item_method == call_iter_offset)
+                if (call_item_method == call_iter_method_offset)
                     request_url = url_template.replace(OFFSET_TEMPLATE, QString::number(start_offset));
             }
 
@@ -104,11 +104,12 @@ namespace Core {
                 return last_result_is_empty || forse_completing || items_fact_count >= items_total_limit || requests_fact_count >= requests_limit;
             }
 
-            void append(const QJsonObject & item) {
+            void append(const QJsonObject & item, bool iterate = true) {
                 if (!(last_result_is_empty = item.isEmpty()))
                     arr -> append(item);
 
-                iterateCounters();
+                if (iterate)
+                    iterateCounters();
             }
 
             void append(const QJsonArray & items) {

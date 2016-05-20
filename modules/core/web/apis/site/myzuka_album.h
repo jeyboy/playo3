@@ -76,7 +76,8 @@ namespace Core {
     //        }
 
             inline QJsonArray popular(const SearchLimit & /*limitations*/) {
-                return sQuery(QUrl(baseUrlStr()), proc_songs1);
+                return saRequest(baseUrlStr(), call_type_html, proc_songs1);
+//                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
 
         protected:
@@ -100,7 +101,10 @@ namespace Core {
 
 
             inline void genres_proc() {
-                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
+                PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
+                pRequest(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, proc_genres1);
+
+//                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
             QString refresh_process(Response * reply) {
@@ -114,7 +118,7 @@ namespace Core {
             }
             QJsonArray search_proc(const SearchLimit & limitations) {
                 QUrl url = QUrl(baseUrlStr(search_path_token));
-                url.setQuery(search_predicate_token % predicate);
+                url.setQuery(search_predicate_token % limitations.predicate);
 
                 Response * response = Manager::prepare() -> followedGet(url);
 
@@ -168,20 +172,23 @@ namespace Core {
 
 
 
-            void artistsToJson(QHash<QString, QString> & artists, QJsonArray & json) {
+            void artistsToJson(QHash<QString, QString> & artists, QJsonArray & arr) {
                 for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
                     QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
 
-                    lQuery(baseUrlStr(artistPage), json, proc_songs1, MAX_PAGES_PER_ARTIST);
+                    PolyQueryRules rules(call_iter_type_page, call_iter_method_offset, DEFAULT_ITEMS_LIMIT, MAX_PAGES_PER_ARTIST);
+                    pRequest(baseUrlStr(artistPage), call_type_html, rules, proc_songs1, &arr);
+
+//                    lQuery(baseUrlStr(artistPage), arr, proc_songs1, MAX_PAGES_PER_ARTIST);
                 }
             }
 
-            bool htmlToJson(QueriableArg * /*arg*/, Response * reply, QString & /*message*/, bool removeReply = false) {
+            bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
-                switch(jtype) {
+                switch(arg -> post_proc) {
                     case proc_songs1: {
                         Html::Set set;
                         Html::Tag * tag;
@@ -212,7 +219,7 @@ namespace Core {
                             if (!set.isEmpty())
                                 track_obj.insert(tkn_grab_refresh, baseUrlStr(set.link()));
 
-                            json << track_obj;
+                            arg -> append(track_obj, track + 1 == tracks.end());
                         }
 
                         result = !tracks.isEmpty();

@@ -32,10 +32,10 @@ namespace Core {
                     setParam(query, tkn_limit, per_request);
                 }
 
-                PolyQueryRules rules(int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_count = FOURSHARED_PAGES_LIMIT, int offset = 0, ApiCallIterType call_type = call_iter_page) {
+                PolyQueryRules rules(int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_count = FOURSHARED_PAGES_LIMIT, int offset = 0, ApiCallIterType call_type = call_iter_type_page) {
                     return PolyQueryRules(
                         call_type,
-                        call_iter_offset,
+                        call_iter_method_offset,
                         qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
                         qMin(pages_count, FOURSHARED_PAGES_LIMIT),
                         offset
@@ -62,6 +62,7 @@ namespace Core {
                         call_type_json,
                         rules(),
                         proc_none,
+                        0,
                         tkn_files
                     );
 
@@ -82,6 +83,7 @@ namespace Core {
                         call_type_json,
                         rules(limitations.items_limit),
                         proc_none,
+                        0,
                         tkn_files
                     );
 
