@@ -1,86 +1,59 @@
 #ifndef PROMODJ
 #define PROMODJ
 
-#include "modules/core/interfaces/isearchable.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/interfaces/isource.h"
+#include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
-#define MAX_PAGES_PER_ARTIST 2
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class PromoDj : public ISearchable, public Singleton<PromoDj> {
+        class PromoDj : public ISource, public IApi, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
             inline DataSubType siteType() const { return dt_site_promodj; }
 
-    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
-    //            QJsonArray json;
-    //            if (genresList().isEmpty()) genresList();
-
-    //            genre = genres.toString(genre_id);
-    //            if (genre.isEmpty()) return json;
-
-    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-    //            lQuery(url_str, json, songs1, MAX_PAGE);
-
-    //            return json;
-    //        }
-
-            // rus letters has specific presentation
-    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-    //            //TODO: realize later
-    //        }
-
-    //        // one page contains 30 albums
-    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
-    //            switch (target_type) { // need to modify grab processing of folder support in model
-    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-    //                default: return QJsonArray();
-    //            }
-    //            //TODO: stop if result not contains elements
-    //        }
-
-            QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
+            QJsonArray popular(const SearchLimit & /*limits*/) {
+                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
+//                return sQuery(QUrl(baseUrlStr()), songs1);
+            }
 
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
 
-            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
-                Html::Document parser(reply);
+            bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
+//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
+                Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
-                switch(jtype) {
-                    case songs1: {
-                        Html::Set songs = parser.find("#content .track2");
+                switch(arg -> post_proc) {
+                    case proc_tracks1: {
+                        Html::Set tracks = parser.find("#content .track2");
 
-                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                            QJsonObject song_obj;
+                        for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                            QJsonObject track_obj;
 
-                            Html::Tag * title = (*song) -> find(".title a").first();
-                            QString link = (*song) -> find(".downloads_count a").link();
+                            Html::Tag * title = (*track) -> find(".title a").first();
+                            QString link = (*track) -> find(".downloads_count a").link();
                             if (link.isEmpty()) {
                                 link = title -> link();
                                 link = link.section('/', 0, 2) % QStringLiteral("/prelisten/") % link.section('/', 5);
                             }
 
-                            song_obj.insert(url_key, link);
-                            song_obj.insert(title_key, title -> text());
-                            song_obj.insert(skip_info_key, true);
+                            track_obj.insert(tkn_grab_url, link);
+                            track_obj.insert(tkn_grab_title, title -> text());
+                            track_obj.insert(tkn_skip_info, true);
 
-                            json << song_obj;
+                            arg -> append(track_obj, track + 1 == tracks.end());
                         }
 
-                        result = !songs.isEmpty();
+                        result = !tracks.isEmpty();
                     }
 
-                    case genres1: {
+                    case proc_genres1: {
                         Html::Set links = parser.find(".styles_tagcloud a");
 
                         for(Html::Set::Iterator link = links.begin(); link != links.end(); link++) {
@@ -94,34 +67,40 @@ namespace Core {
                     default: ;
                 }
 
-                if (removeReply) delete reply;
                 return result;
             }
 
-            inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
+            inline void genres_proc() {
+                sRequest(baseUrlStr(QStringLiteral("/music")), call_type_html, proc_genres1);
+//                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
+            }
 
     //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
-    //        inline QString refresh_process(WebResponse * reply) {
+    //        inline QString refresh_proc(WebResponse * reply) {
     //            Html::Document parser(reply);
 
     //            QString url = parser.find("#flash_prelisten script").text();
     //            return url.section("URL\":\"", 1).section("\"", 0, 0);
     //        }
 
-            QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
+            QJsonArray search_proc(const SearchLimit & limits) {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
-                QString alias = genresList().toAlias(genre);
+                QString alias = genresList().toAlias(limits.genre);
                 QString url_str = baseUrlStr(QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
-                            (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(predicate), page_offset_key);
+                            (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
-                QJsonArray json;
-                lQuery(url_str, json, songs1, qMin(limitations.count_page, 10), limitations.start_page, limitations.total_limit);
+                PolyQueryRules rules(
+                    call_iter_type_page, call_iter_method_offset,
+                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.pages_limit, 10),
+                    limits.start_page
+                );
+                return pRequest(url_str, call_type_html, rules, proc_tracks1);
 
-//                while(json.size() > limitations.count)
-//                    json.removeLast();
+//                QJsonArray json;
+//                lQuery(url_str, json, proc_tracks1, qMin(limits.pages_limit, 10), limits.start_page, limits.items_limit);
 
-                return json;
+//                return json;
             }
         private:
             friend class Singleton<PromoDj>;

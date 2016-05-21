@@ -29,13 +29,13 @@ namespace Core {
                     return url.toString();
                 }
 
-                QJsonArray popular(QString & genre) { return audioPopular(true, genre); }
+                QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
 
-                QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-                    if (predicate.isEmpty() && limitations.by_popularity())
-                        return popular(genre);
+                QJsonArray search_proc(const SearchLimit & limits) {
+                    if (predicate.isEmpty() && limits.by_popularity())
+                        return popular(limits);
                     else
-                        return audioSearch(predicate, limitations.by_artists(), limitations.by_owns(), limitations.by_popularity(), limitations.total_limit);
+                        return audioSearch(limits.predicate, limits.by_artists(), limits.by_owns(), limits.by_popularity(), limits.items_limit);
                 }
             public:
                 enum InfoType {

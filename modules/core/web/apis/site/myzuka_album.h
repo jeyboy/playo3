@@ -7,7 +7,6 @@
 #include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
-#define MAX_PAGES_PER_ARTIST 2
 
 // store all selectors in global variables
 namespace Core {
@@ -20,7 +19,7 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_myzuka; }
 
             // artists by genre
-            QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            QJsonArray searchByGenre(const SearchLimit & /*limits*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
                 QJsonArray json;
     //            if (genresList().isEmpty()) genresList();
 
@@ -48,11 +47,11 @@ namespace Core {
 
             // byChar and byType has too many items - parse it all at once is not good idea ?
 
-    //        QJsonArray searchByChar(const SearchLimit & limitations) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
+    //        QJsonArray searchByChar(const SearchLimit & limits) { // https://myzuka.org/Artist/5633/G-Playaz/Songs/Page
     //            //TODO: realize later
     //        }
 
-    //        QJsonArray searchByType(const SearchLimit & limitations) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+    //        QJsonArray searchByType(const SearchLimit & limits) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
     //            QList<QUrl> urls;
 
     //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -75,7 +74,7 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            inline QJsonArray popular(const SearchLimit & /*limitations*/) {
+            inline QJsonArray popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
@@ -97,7 +96,9 @@ namespace Core {
                 return size.trimmed().replace("Мб", "Mb").replace("Кб", "Kb");
             }
 
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("https://myzuka.org") % predicate; }
+            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) {
+                return QStringLiteral("https://myzuka.org") % predicate;
+            }
 
 
             inline void genres_proc() {
@@ -107,7 +108,7 @@ namespace Core {
 //                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
-            QString refresh_process(Response * reply) {
+            QString refresh_proc(Response * reply) {
                 Html::Document doc = reply -> toHtml();
                 Html::Set tracks = doc.find(".options a[itemprop='audio']");
 
@@ -116,9 +117,9 @@ namespace Core {
                 else
                     return baseUrlStr(tracks.link());
             }
-            QJsonArray search_proc(const SearchLimit & limitations) {
+            QJsonArray search_proc(const SearchLimit & limits) {
                 QUrl url = QUrl(baseUrlStr(search_path_token));
-                url.setQuery(search_predicate_token % limitations.predicate);
+                url.setQuery(search_predicate_token % limits.predicate);
 
                 QJsonArray arr;
                 Response * response = Manager::prepare() -> followedGet(url);
@@ -128,12 +129,12 @@ namespace Core {
                 Html::Tag * artists_table = 0, * songs_table = 0;
                 prepareTables(tables, artists_table, songs_table);
 
-                if (limitations.by_artists() && artists_table) {
+                if (limits.by_artists() && artists_table) {
                     QHash<QString, QString> artistLinks;
                     artistsToJson(artists_table -> findLinks(&artistSelector, artistLinks), arr);
                 }
 
-                if (!limitations.by_artists() && songs_table) {
+                if (!limits.by_artists() && songs_table) {
                     Html::Set songs = songs_table -> find(&songTrSelector);
 
                     for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {

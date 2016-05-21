@@ -12,39 +12,9 @@ namespace Core {
             inline QString name() const { return QStringLiteral("RedMp3"); }
             inline DataSubType siteType() const { return dt_site_redmp3; }
 
-    //        QJsonArray byGenre(QString genre, const SearchLimit & limitations) { // http://zaycev.net/genres/shanson/index.html
-    //            QJsonArray json;
-    //            if (genresList().isEmpty()) genresList();
-
-    //            genre = genres.toString(genre_id);
-    //            if (genre.isEmpty()) return json;
-
-    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-    //            lQuery(url_str, json, songs1, MAX_PAGE);
-
-    //            return json;
-    //        }
-
-            // rus letters has specific presentation
-    //        QJsonArray byChar(QChar /*target_char*/, const SearchLimit & limitations) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-    //            //TODO: realize later
-    //        }
-
-    //        // one page contains 30 albums
-    //        QJsonArray byType(ByTypeArg target_type, const SearchLimit & limitations) { //http://zaycev.net/musicset/more.html?page=1
-    //            switch (target_type) { // need to modify grab processing of folder support in model
-    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-    //                default: return QJsonArray();
-    //            }
-    //            //TODO: stop if result not contains elements
-    //        }
-
-            QJsonArray popular(QString & /*genre*/) { return sQuery(QUrl(baseUrlStr()), songs1); }
+            QJsonArray popular(const SearchLimit & /*limits*/) {
+                return sQuery(QUrl(baseUrlStr()), songs1);
+            }
 
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
@@ -88,15 +58,14 @@ namespace Core {
                 return result;
             }
 
-            void genres_prepocessing() {} // not supports genres
+            void genres_proc() {} // not supports genres
 
 
-            inline QString refresh_process(Response * /*reply*/) {
-//                return reply -> toJson().value(QStringLiteral("url")).toString();
+            inline QString refresh_proc(Response * /*reply*/) {
                 return QString();
             }
 
-            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
+            QJsonArray search_proc(const SearchLimit & limitations) {
                 QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(
                     encodeStr(predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
                     page_offset_key

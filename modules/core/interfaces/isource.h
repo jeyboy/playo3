@@ -38,7 +38,7 @@ namespace Core {
 
         virtual inline QString refresh(const QString & refresh_page) {
             if (refresh_page.isEmpty()) return QString();
-            return refresh_process(take_refresh_page(refresh_page));
+            return refresh_proc(take_refresh_page(refresh_page));
         }
 
         virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
@@ -50,7 +50,7 @@ namespace Core {
         QToolButton * button;
 
         virtual Web::Response * take_refresh_page(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
-        virtual QString refresh_process(Web::Response * response) { delete response; return QString(); }
+        virtual QString refresh_proc(Web::Response * response) { delete response; return QString(); }
 
         QString error;
     };

@@ -46,7 +46,7 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            QJsonArray popular(const SearchLimit & /*limitations*/) {
+            QJsonArray popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
@@ -100,7 +100,7 @@ namespace Core {
                 return result;
             }
 
-            void genres_prepocessing() { // manual init at this time
+            void genres_proc() { // manual init at this time
                 genres.addGenre(QStringLiteral("pop"), 13);
                 genres.addGenre(QStringLiteral("rock"), 17);
                 genres.addGenre(QStringLiteral("rap"), 15);
@@ -119,7 +119,7 @@ namespace Core {
             }
 
             // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
-            inline QString refresh_process(Response * reply) {
+            inline QString refresh_proc(Response * reply) {
                 return reply -> toJson().value(QStringLiteral("url")).toString();
             }
 

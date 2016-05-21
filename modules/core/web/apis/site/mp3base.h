@@ -122,34 +122,34 @@ namespace Core {
 
                 switch(arg -> post_proc) {
                     case proc_tracks1: {
-                        Html::Set songs = parser.find("table.files tr");
+                        Html::Set tracks = parser.find("table.files tr");
 
-                        for(Html::Set::Iterator song = songs.begin(); song != songs.end(); song++) {
-                            QJsonObject song_obj;
+                        for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                            QJsonObject track_obj;
 
-                            QString link = (*song) -> find(".play_icon").link();
+                            QString link = (*track) -> find(".play_icon").link();
                             if (link.isEmpty()) continue;
 
                             link = link.section('(', 1).section(')', 0, 0);
 
-                            song_obj.insert(refresh_key, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr(QStringLiteral("/user/player/?song=") % link));
 
-                            QString artist = (*song) -> childTag(QStringLiteral("td"), 2) -> toText();
-                            QString title = (*song) -> childTag(QStringLiteral("td"), 1) -> toText();
+                            QString artist = (*track) -> childTag(QStringLiteral("td"), 2) -> toText();
+                            QString title = (*track) -> childTag(QStringLiteral("td"), 1) -> toText();
                             title = artist % QStringLiteral(" - ") % title;
-                            song_obj.insert(title_key, title);
+                            track_obj.insert(tkn_grab_title, title);
 
-                            Html::Tag * duration_tag = (*song) -> childTag("td", 5);
+                            Html::Tag * duration_tag = (*track) -> childTag("td", 5);
                             if (duration_tag)
-                                song_obj.insert(duration_key, duration_tag -> toText());
+                                track_obj.insert(tkn_grab_duration, duration_tag -> toText());
                             else
                                 qDebug() << title << "DID NOT HAVE DURATION";
-                            song_obj.insert(tkn_skip_info, true);
+                            track_obj.insert(tkn_skip_info, true);
 
-                            json << song_obj;
+                            arg -> append(track_obj, track + 1 == tracks.end());
                         }
 
-                        result = !songs.isEmpty();
+                        result = !tracks.isEmpty();
                     }
 
                     case proc_genres1: {
@@ -168,25 +168,35 @@ namespace Core {
                 return result;
             }
 
-            inline void genres_prepocessing() { sQuery(baseUrlStr(QStringLiteral("/genres")), genres1); }
+            inline void genres_proc() {
+                sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, proc_genres1);
+//                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
+            }
 
-            inline QString refresh_process(Response * reply) {
+            inline QString refresh_proc(Response * reply) {
                 Html::Document parser(reply);
 
                 QString url = parser.find("#player_content script").text();
                 return url.section("mp3:\"", 1).section("\"", 0, 0);
             }
 
-            QJsonArray search_postprocess(QString & predicate, QString & /*genre*/, const SearchLimit & limitations) {
-                QString url_str = baseUrlStr(QStringLiteral("/search?q=%1&page=%2")).arg(encodeStr(predicate), page_offset_key);
+            QJsonArray search_proc(SearchLimit & limits) {
+                QString url_str = baseUrlStr(
+                    QStringLiteral("/search?q=%1&page=%2")
+                        .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
+                );
 
-                QJsonArray json;
-                lQuery(url_str, json, songs1, limitations.count_page, limitations.start_page, limitations.total_limit);
+                PolyQueryRules rules(
+                    call_iter_type_page, call_iter_method_offset,
+                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), limits.pages_limit,
+                    limits.start_page
+                );
+                return pRequest(url_str, call_type_html, rules, proc_tracks1);
 
-//                while(json.size() > limitations.count)
-//                    json.removeLast();
+//                QJsonArray json;
+//                lQuery(url_str, json, proc_songs1, limits.count_page, limits.start_page, limits.items_limit);
 
-                return json;
+//                return json;
             }
         private:
             friend class Singleton<Mp3Base>;

@@ -50,34 +50,34 @@ namespace Core {
         inline ISearchable() { }
         inline virtual ~ISearchable() {}
 
-        QJsonArray search(const SearchLimit & limitations) {
-            if (!limitations.predicate.isEmpty()) {
-                if (limitations.by_abc())
-                    return searchByChar(limitations);
+        QJsonArray search(const SearchLimit & limits) {
+            if (!limits.predicate.isEmpty()) {
+                if (limits.by_abc())
+                    return searchByChar(limits);
 
-                if (limitations.by_type())
-                    return searchByType(limitations);
+                if (limits.by_type())
+                    return searchByType(limits);
 
-                return search_proc(limitations);
-            } else if (!limitations.genre.isEmpty())
-                return searchByGenre(limitations);
-            else if (limitations.by_popularity() || limitations.predicate.isEmpty())
-                return popular(limitations);
+                return search_proc(limits);
+            } else if (!limits.genre.isEmpty())
+                return searchByGenre(limits);
+            else if (limits.by_popularity() || limits.predicate.isEmpty())
+                return popular(limits);
 
             return QJsonArray();
         }
 
-        virtual QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByGenre(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchByChar(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByChar(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchByType(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray searchByType(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray popular(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray related(const SearchLimit & /*limitations*/) { return QJsonArray(); }
+        virtual QJsonArray related(const SearchLimit & /*limits*/) { return QJsonArray(); }
     protected:
-        virtual QJsonArray search_proc(const SearchLimit & /*limitations*/) = 0;
+        virtual QJsonArray search_proc(const SearchLimit & /*limits*/) = 0;
     };
 }
 

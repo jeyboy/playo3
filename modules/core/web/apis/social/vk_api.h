@@ -54,10 +54,10 @@ namespace Core {
                 QToolButton * initButton(QWidget * parent = 0);
 
                 QString refresh(const QString & audio_uid) {
-                    return refresh_postprocess(audioInfo(audio_uid).value(tkn_url).toString());
+                    return refresh_postproc(audioInfo(audio_uid).value(tkn_url).toString());
                 }
 
-                QString refresh_postprocess(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
+                QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
             public slots:
                 inline void openTab() { ISource::openTab(userID()); }

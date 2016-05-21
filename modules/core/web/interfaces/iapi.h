@@ -10,6 +10,8 @@
 
 //#include "misc/web_utils/json.h"
 
+#define MAX_PAGES_PER_ARTIST 2
+
 namespace Core {
     namespace Web {
         class IApi : public IQueriable, public ISearchable {
