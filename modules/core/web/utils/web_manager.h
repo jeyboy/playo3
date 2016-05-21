@@ -160,10 +160,10 @@ namespace Core { // requests and response has memory leaks
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
                 return resp;
             }
-            inline Response * getImageAsync(const QUrl & url, const Func & response) {
+            inline Response * getPixmapAsync(const QUrl & url, const Func & response) {
                 Response * resp = requestTo(url).viaGet(true)-> followByRedirect();
                 asyncRequests.insert(resp -> url(), response);
-                connect(resp, SIGNAL(finished()), this, SLOT(imageRequestFinished()));
+                connect(resp, SIGNAL(finished()), this, SLOT(pixmapRequestFinished()));
                 return resp;
             }
 
@@ -193,7 +193,7 @@ namespace Core { // requests and response has memory leaks
                 } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(Response *, source), Q_ARG(void *, func.user_data));
             }
 
-            inline void imageRequestFinished() {
+            inline void pixmapRequestFinished() {
                 Response * source = (Response *)sender();
                 Func func = asyncRequests.take(source -> url());
                 QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QPixmap, source -> toPixmap()));

@@ -294,7 +294,10 @@ HEADERS += \
     modules/core/web/interfaces/iqueriable.h \
     modules/core/web/interfaces/queriable_arg.h \
     modules/core/web/utils/js_document.h \
-    modules/core/web/interfaces/quariable_defines.h
+    modules/core/web/interfaces/quariable_defines.h \
+    modules/core/feeder/aspect_ratio_label.h \
+    modules/core/feeder/feed_widget.h \
+    modules/core/feeder/feeder.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -433,4 +436,5 @@ SOURCES += \
     modules/pizduck/duktape.c \
     modules/core/core_parts/item.cpp \
     settings/apis_settings.cpp \
-    modules/core/interfaces/isource.cpp
+    modules/core/interfaces/isource.cpp \
+    modules/core/feeder/aspect_ratio_label.cpp

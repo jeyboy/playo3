@@ -32,7 +32,7 @@ namespace Core {
                 QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
 
                 QJsonArray search_proc(const SearchLimit & limits) {
-                    if (predicate.isEmpty() && limits.by_popularity())
+                    if (limits.predicate.isEmpty() && limits.by_popularity())
                         return popular(limits);
                     else
                         return audioSearch(limits.predicate, limits.by_artists(), limits.by_owns(), limits.by_popularity(), limits.items_limit);
@@ -190,7 +190,7 @@ namespace Core {
 
                     return baseUrl(tkn_execute, query);
                 }
-                QJsonArray audioSearch(QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
+                QJsonArray audioSearch(const QString & predicate, bool onlyArtist, bool inOwn, bool mostPopular, int limit) {
                     return sQuery(
                         audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)), extract
                     ).value(tkn_audio_list).toArray();
