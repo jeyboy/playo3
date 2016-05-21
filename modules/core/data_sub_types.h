@@ -31,7 +31,6 @@ namespace Core {
         dt_web = 50,
 
         dt_site_od,
-        dt_site_echonest,
         dt_site_vk,
         dt_site_sc,
 

@@ -65,8 +65,6 @@ namespace Presentation {
         void removePanelButtonTriggered();
         void editPanelButtonTriggered();
 
-        QToolButton * initiateEchonestButton();
-
     protected slots:
         void playerStateChanged(const PlayerState &);
         void onFolderDrop(const QString & name, const QString & path);

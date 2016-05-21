@@ -19,7 +19,7 @@ void SearchModel::startSearch(bool continues) {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
     initiator -> setFuture(QtConcurrent::run(this, (
-            request.limit(DEFAULT_LIMIT_AMOUNT) == 1 && (continues || !request.predicates.isEmpty()) ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
+            request.limit(DEFAULT_ITEMS_LIMIT) == 1 && (continues || !request.predicates.isEmpty()) ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
         ), initiator));
     emit updateRemovingBlockation(true);
 }

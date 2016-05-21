@@ -202,7 +202,6 @@ QString IItem::relationStr() const {
         case dt_playlist_sc:        return QStringLiteral("(Sc Folder) ");
         case dt_site_od:            return QStringLiteral("(Od) ");
         case dt_playlist_od:        return QStringLiteral("(Od Folder) ");
-        case dt_site_echonest:      return QStringLiteral("(Echonest) ");
         default:                    return QStringLiteral("(Unknow) ");
     }
 }

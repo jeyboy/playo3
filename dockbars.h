@@ -20,7 +20,6 @@
 #define COMMON_TAB "Common"
 #define DOWNLOADS_TAB "Downloads"
 #define LOGS_TAB "Logs"
-#define ECHONEST_TAB "Echonest"
 
 namespace Presentation {
     using namespace Views;
@@ -82,7 +81,6 @@ namespace Presentation {
                 bar -> raise();
         }
 
-        DockBar * echonestBar();
         DockBar * commonBar();
         DockBar * createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchSettings * search_settings = 0);
         DockBar * createDocBar(const BarCreationNames & names, bool closable = true, QWidget * content = 0);
@@ -93,11 +91,6 @@ namespace Presentation {
 
         inline void setContainer(QMainWindow * ct) { container = ct; }
     public slots:
-        void showEchonest() {
-            DockBar * bar = echonestBar();
-            bar -> show();
-            Dockbars::obj().activate(bar);
-        }
         void updateActiveTabIcon(bool isFloating = false);
         void updateAllViews();
         inline void hideAll() { changeBarsVisibility(true); }
@@ -136,13 +129,13 @@ namespace Presentation {
         void barClosed();
     private:
         TabifyParams lastTabData;
-        DockBar * active, * played, * common, * echonest;
+        DockBar * active, * played, * common;
         QMainWindow * container;
 
         QHash<QString, DockBar *> linkedTabs;
 
         friend class Singleton<Dockbars>;
-        inline Dockbars() : QWidget(), active(0), played(0), common(0), echonest(0) {
+        inline Dockbars() : QWidget(), active(0), played(0), common(0) {
             connect(&DataFactory::obj(), SIGNAL(newPlaylistNeed()), this, SLOT(playNext()));
         }
 

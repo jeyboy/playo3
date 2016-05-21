@@ -147,12 +147,6 @@ HEADERS += \
     modules/core/misc/format.h \
     modules/core/misc/logger.h \
     modules/core/misc/screen.h \
-    modules/core/web/apis/service/_services.h \
-    modules/core/web/apis/service/echonest_api.h \
-    modules/core/web/apis/service/echonest_artist_api.h \
-    modules/core/web/apis/service/echonest_genre_api.h \
-    modules/core/web/apis/service/echonest_playlist_api.h \
-    modules/core/web/apis/service/echonest_song_api.h \
     modules/core/web/apis/site/_sites.h \
     modules/core/web/apis/site/exua.h \
     modules/core/web/apis/site/jetune.h \
@@ -263,13 +257,8 @@ HEADERS += \
     modules/controls/toolbar_drop_button.h \
     modules/controls/toolbar_user_button.h \
     modules/controls/toolbar_new_list_button.h \
-    modules/controls/echonest_widget.h \
     modules/controls/search_configurator.h \
     modules/core/misc/fuzzy_comparison.h \
-    modules/controls/echonest_parts/artist_info.h \
-    modules/controls/echonest_parts/basic_playlist.h \
-    modules/controls/echonest_parts/song_search.h \
-    modules/core/web/apis/service/echonest_params.h \
     modules/core/web/apis/site/redmp3.h \
     modules/core/web/apis/social/yandex_api_keys.h \
     modules/core/web/apis/social/yandex_request_api.h \
@@ -341,7 +330,6 @@ SOURCES += \
     modules/core/misc/file_utils/icon_provider.cpp \
     modules/core/misc/format.cpp \
     modules/core/misc/logger.cpp \
-    modules/core/web/apis/service/echonest_api.cpp \
     modules/core/web/apis/site/exua.cpp \
     modules/core/web/apis/site/jetune.cpp \
     modules/core/web/apis/site/mp3base.cpp \
@@ -421,12 +409,8 @@ SOURCES += \
     modules/controls/toolbar_drop_button.cpp \
     modules/controls/toolbar_user_button.cpp \
     modules/controls/toolbar_new_list_button.cpp \
-    modules/controls/echonest_widget.cpp \
     modules/controls/search_configurator.cpp \
     modules/models/service/search_settings.cpp \
-    modules/controls/echonest_parts/artist_info.cpp \
-    modules/controls/echonest_parts/basic_playlist.cpp \
-    modules/controls/echonest_parts/song_search.cpp \
     modules/core/web/apis/site/redmp3.cpp \
     modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/filesystem_watcher.cpp \

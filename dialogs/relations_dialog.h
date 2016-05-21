@@ -4,7 +4,7 @@
 #include <qlistwidget.h>
 
 #include "base_dialog.h"
-#include "modules/core/web/interfaces/sociable.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
 
 namespace Ui { class RelationsDialog; }
 using namespace Core;

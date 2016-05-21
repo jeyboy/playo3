@@ -1,5 +1,4 @@
 #include "dockbars.h"
-#include "modules/controls/echonest_widget.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -77,8 +76,6 @@ void Dockbars::save(DataStore * settings) {
         QJsonObject curr_bar;
 
         for(QList<DockBar *>::Iterator it = bars.begin(); it != bars.end(); it++) {
-            if ((*it) -> windowTitle() == ECHONEST_TAB && (*it) -> isHidden()) continue;
-
             IView * v = view((*it));
 
             if (v && v -> isCommon() && !Settings::obj().isSaveCommonTab())
@@ -94,7 +91,7 @@ void Dockbars::save(DataStore * settings) {
             if (!path.isEmpty())
                 curr_bar.insert(QStringLiteral("link"), path);
 
-            if ((*it) -> windowTitle() == LOGS_TAB || (*it) -> windowTitle() == ECHONEST_TAB) {
+            if ((*it) -> windowTitle() == LOGS_TAB) {
                 //do nothing
             } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
                 curr_bar.insert(QStringLiteral("cont"), ((DownloadView *)(*it) -> mainWidget()) -> toJson());
@@ -143,8 +140,6 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, Model
         DockBar * bar = createDocBar(names, false);
         bar -> setWidget(Logger::obj().getEditor());
         return bar;
-    } else if (names.is(ECHONEST_TAB)) {
-        return echonestBar();
     } else {
         if (names.linkable_uid.isEmpty())
             return createDocBar(names, settings, &attrs);
@@ -158,15 +153,6 @@ Models::Params defSettings(dt_level, true, false, false, true);
 DockBar * Dockbars::commonBar() {
     if (!common) common = createDocBar(BarCreationNames(COMMON_TAB), defSettings, 0, false);
     return common;
-}
-
-DockBar * Dockbars::echonestBar() {
-    if (!echonest) {
-        echonest = createDocBar(BarCreationNames(ECHONEST_TAB), false, new EchonestWidget(this));
-        container -> addDockWidget(Qt::TopDockWidgetArea, echonest);
-    }
-
-    return echonest;
 }
 
 DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs,

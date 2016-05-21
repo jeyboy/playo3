@@ -399,8 +399,6 @@ QToolBar * ToolBars::createControlToolBar() {
     }
 
     ptb -> addSeparator();
-    ptb -> addWidget(initiateEchonestButton());
-    ptb -> addSeparator();
     ptb -> addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Search"), container, SLOT(showSearchDialog()));
     ptb -> addSeparator();
     ptb -> addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("Common setting"), container, SLOT(showSettingsDialog()));
@@ -443,16 +441,6 @@ SpectrumView * ToolBars::getSpectrum() {
     }
 
     return spectrum;
-}
-
-QToolButton * ToolBars::initiateEchonestButton() {
-    QToolButton * echoToolButton = new QToolButton(container);
-
-    echoToolButton -> setIcon(QIcon(QStringLiteral(":/echonest")));
-    connect(echoToolButton, SIGNAL(clicked()), &Dockbars::obj(), SLOT(showEchonest()));
-    echoToolButton -> setToolTip(QStringLiteral("Echonest(the.echonest.com)"));
-
-    return echoToolButton;
 }
 
 void ToolBars::addPanelButton(const QString & name, const QString & path, QToolBar * bar) {
