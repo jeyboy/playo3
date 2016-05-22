@@ -1,7 +1,7 @@
 #ifndef OD_API_H
 #define OD_API_H
 
-#include <qmenu.h>
+//#include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/thread_utils.h"
@@ -63,9 +63,9 @@ namespace Core {
 
                 inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
 
-                inline QString offsetKey() const { return tkn_offset; }
-                inline QString limitKey() const { return tkn_limit; }
-                inline int requestLimit() const { return 100; }
+//                inline QString offsetKey() const { return tkn_offset; }
+//                inline QString limitKey() const { return tkn_limit; }
+//                inline int requestLimit() const { return 100; }
 
                 inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) {

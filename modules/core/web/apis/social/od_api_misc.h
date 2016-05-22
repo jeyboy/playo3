@@ -34,8 +34,6 @@ namespace Core {
                             return results.link().section("st.uid=", 1).section('&', 0, 0);
                         }
                         else return results.link().section('/', 2).section('?', 0, 0);
-
-                        return QString();
                     }
 
                     inline QString grabSID() {

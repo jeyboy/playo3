@@ -294,7 +294,7 @@ namespace Core {
 
                     return baseUrlStr(tkn_execute, query);
                 }
-                QJsonArray audioPopular(bool onlyEng, const QString genre) {
+                QJsonArray audioPopular(bool onlyEng, const QString & genre) {
                     return sRequest(
                         audioPopularUrl(onlyEng, genres.toInt(genre)),
                         call_type_json,

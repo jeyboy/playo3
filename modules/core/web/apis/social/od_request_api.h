@@ -5,15 +5,27 @@
 #include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/interfaces/ishareable.h"
 
-#define OD_OFFSET_LIMIT 2000
-#define OD_SEARCH_LIMIT 200
-
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
             class RequestApi : public Misc, public TeuAuth, public IShareable {
             protected:
                 RequestApi() {}
+
+                inline void setPagination(QUrlQuery & query, int per_request = 100) {
+                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
+                    setParam(query, tkn_limit, qMin(per_request, 100));
+                }
+
+                PolyQueryRules rules(int offset = 0, int items_limit = 200, int pages_count = 10, ApiCallIterType call_type = call_iter_type_item) {
+                    return PolyQueryRules(
+                        call_type,
+                        call_iter_method_offset,
+                        qMin(items_limit, DEFAULT_ITEMS_LIMIT),
+                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
+                        offset
+                    );
+                }
 
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
 
@@ -23,59 +35,102 @@ namespace Core { // NOT FINISHED
 
                 inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % additional()); }
 
-                inline QUrl audioUrl(const QString & func, const QUrlQuery & query = QUrlQuery()) {
-                    QUrl url(url_base_audio % func % tkn_coma_dot % genDefaultParams().toString());
+                inline QString audioUrl(const QString & func, const QUrlQuery & query = QUrlQuery(), bool add_pagination = false, int per_request = 100) {
+                    QUrlQuery base_query = genDefaultParams();
+                    if (add_pagination)
+                        setPagination(base_query, per_request);
+
+                    QUrl url(url_base_audio % func % tkn_coma_dot % base_query.toString());
                     url.setQuery(query);
-                    return url;
+                    return url.toString();
                 }
 
-                inline QUrl addPlaylistUrl() { return audioUrl(path_audio_playlist_add); } // params : (name: '') (publicPlaylist: 'true')
-                inline QUrl removePlaylistUrl() { return audioUrl(path_audio_playlist_del); } // params : (pid: '' (id of playlist))
-                inline QUrl getPlaylistsUrl() { return audioUrl(path_audio_playlists); } // params: maybe has uid param ? need to check
-                inline QUrl addToPlaylistsUrl() { return audioUrl(path_audio_to_playlist); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
-                inline QUrl removeFromPlaylistsUrl() { return audioUrl(path_audio_del_from_playlist); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
+                inline QString addPlaylistUrl() { return audioUrl(path_audio_playlist_add); } // params : (name: '') (publicPlaylist: 'true')
+                inline QString removePlaylistUrl() { return audioUrl(path_audio_playlist_del); } // params : (pid: '' (id of playlist))
+                inline QString getPlaylistsUrl() { return audioUrl(path_audio_playlists); } // params: maybe has uid param ? need to check
+                inline QString addToPlaylistsUrl(int per_request = 100) { return audioUrl(path_audio_to_playlist, QUrlQuery(), true, per_request); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
+                inline QString removeFromPlaylistsUrl(int per_request = 100) { return audioUrl(path_audio_del_from_playlist, QUrlQuery(), true, per_request); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
 
-                inline QUrl searchUrl(const QString & predicate) { return audioUrl(path_audio_search, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
-                inline QUrl searchTracksUrl(const QString & predicate) { return audioUrl(path_audio_search_tracks, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
-                inline QUrl searchAlbumsUrl(const QString & predicate) { return audioUrl(path_audio_search_albums, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
-                inline QUrl searchArtistsUrl(const QString & predicate) { return audioUrl(path_audio_search_artists, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
+                inline QString searchUrl(const QString & predicate, int per_request = 100) { return audioUrl(path_audio_search, QUrlQuery(tkn_q_eq % predicate), true, per_request); } // params : (q: predicate) and pagination attrs
+                inline QString searchTracksUrl(const QString & predicate, int per_request = 100) { return audioUrl(path_audio_search_tracks, QUrlQuery(tkn_q_eq % predicate), true, per_request); } // params : (q: predicate) and pagination attrs
+                inline QString searchAlbumsUrl(const QString & predicate, int per_request = 100) { return audioUrl(path_audio_search_albums, QUrlQuery(tkn_q_eq % predicate), true, per_request); } // params : (q: predicate) and pagination attrs
+                inline QString searchArtistsUrl(const QString & predicate, int per_request = 100) { return audioUrl(path_audio_search_artists, QUrlQuery(tkn_q_eq % predicate), true, per_request); } // params : (q: predicate) and pagination attrs
 
-                inline QUrl albumAudiosUrl() { return audioUrl(path_audio_by_album_id); } // params : (albumId: album id)
-                inline QUrl artistAudiosUrl() { return audioUrl(path_audio_by_artist_id); } // params : (artistId: artist id)
+                inline QString albumAudiosUrl() { return audioUrl(path_audio_by_album_id); } // params : (albumId: album id)
+                inline QString artistAudiosUrl() { return audioUrl(path_audio_by_artist_id); } // params : (artistId: artist id)
 
 
-                inline QUrl collectionsAudioUrl() { return audioUrl(path_audio_collections); } // params: (collectionId: not used for index of collections) and pagination attrs
-                inline QUrl downloadedAudioUrl() { return audioUrl(path_audio_downloaded); } // params : pagination attrs
-                inline QUrl isDownloadedAudioUrl() { return audioUrl(path_audio_is_downloaded); } // params : (tid: track id)
-                inline QUrl listenedAudioUrl() { return audioUrl(path_audio_history); } // params : pagination attrs
-                inline QUrl popularAudioUrl() { return audioUrl(path_audio_popular_tracks); }
+                inline QString collectionsAudioUrl(int per_request = 100) { return audioUrl(path_audio_collections, QUrlQuery(), true, per_request); } // params: (collectionId: not used for index of collections) and pagination attrs
+                inline QString downloadedAudioUrl(int per_request = 100) { return audioUrl(path_audio_downloaded, QUrlQuery(), true, per_request); } // params : pagination attrs
+                inline QString isDownloadedAudioUrl() { return audioUrl(path_audio_is_downloaded); } // params : (tid: track id)
+                inline QString listenedAudioUrl(int per_request = 100) { return audioUrl(path_audio_history, QUrlQuery(), true, per_request); } // params : pagination attrs
+                inline QString popularAudioUrl() { return audioUrl(path_audio_popular_tracks); }
 
                 // artists // tracks // tuners // collections // albums
-                inline QUrl popAudioUrl() { return audioUrl(path_audio_popular); } // (locale: 'ru') and pagination attrs
-                inline QUrl customAudioUrl(const QStringList & ids) { return audioUrl(path_audio_info, QUrlQuery(tkn_ids % ids.join(','))); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
-        //        inline QUrl formaddplUrl() { return audioUrl(path_audio_add_to_playlist_form); } // params: (tid: track id) // used for adding new item to playlist
+                inline QString popAudioUrl(int per_request = 100) { return audioUrl(path_audio_popular, QUrlQuery(), true, per_request); } // (locale: 'ru') and pagination attrs
+                inline QString customAudioUrl(const QStringList & ids) { return audioUrl(path_audio_info, QUrlQuery(tkn_ids % ids.join(','))); } // param (ids: ids of (track / album / artist) splited by coma) ? // info request per ids for items
+        //        inline QString formaddplUrl() { return audioUrl(path_audio_add_to_playlist_form); } // params: (tid: track id) // used for adding new item to playlist
 
                 // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
-                inline QUrl playAudioUrl(QString tid/*, int item_type = 5*/) { return audioUrl(path_audio_play, QUrlQuery(tkn_tid_eq % tid)); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
-                inline QUrl play30AudioUrl() { return audioUrl(path_audio_play_30_sec); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: type as name val) (position: position in list (0))
+                inline QString playAudioUrl(QString tid/*, int item_type = 5*/) { return audioUrl(path_audio_play, QUrlQuery(tkn_tid_eq % tid)); } // params: (tid: track id) (pid: ? ('null')) (type: type as int val) (position: position in list (0))
+                inline QString play30AudioUrl() { return audioUrl(path_audio_play_30_sec); } // this request sended after 30 sec playing ? // params: (tid: track id) (pid: ? ('null')) (type: type as name val) (position: position in list (0))
 
-                inline QUrl tunersUrl() { return audioUrl(path_audio_tuners_for_radio); } // params: (locale: 'ru')  need to check pagination
-                inline QUrl radioUrl(QString /*tuner*/) { return audioUrl(path_audio_radio); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
+                inline QString tunersUrl(int per_request = 100) { return audioUrl(path_audio_tuners_for_radio, QUrlQuery(), true, per_request); } // params: (locale: 'ru')  need to check pagination
+                inline QString radioUrl(QString /*tuner*/, int per_request = 100) { return audioUrl(path_audio_radio, QUrlQuery(), true, per_request); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
-                QJsonArray popular(QString & /*genre*/) {
-                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
+                QJsonArray popular(const SearchLimit & /*limits*/) {
+                    return pRequest(
+                        popAudioUrl(),
+                        call_type_json,
+                        rules(),
+                        proc_json_extract,
+                        0,
+                        tkn_tracks
+                    );
+
+//                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
                 }
 
-                QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) {
-                    if (predicate.isEmpty() || limitations.by_popularity())
-                        return popular(genre);
+                QJsonArray search_proc(const SearchLimit & limits) {
+                    if (limits.predicate.isEmpty() || limits.by_popularity())
+                        return popular(limits);
                     else {
-                        if (limitations.by_artists())
-                            return lQuery(searchArtistsUrl(predicate), QueryRules(tkn_artists, qMin(requestLimit(), limitations.total_limit), qMin(OD_SEARCH_LIMIT, limitations.total_limit)));
-                        else if (limitations.by_songs())
-                            return lQuery(searchTracksUrl(predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.total_limit), qMin(OD_SEARCH_LIMIT, limitations.total_limit)));
+                        PolyQueryRules prules = rules(0, qMin(200, limits.items_limit));
+
+                        if (limits.by_artists())
+                            return pRequest(
+                                searchArtistsUrl(limits.predicate, limits.items_limit),
+                                call_type_json,
+                                prules,
+                                proc_json_extract,
+                                0,
+                                tkn_artists
+                            );
+
+//                            return lQuery(searchArtistsUrl(limits.predicate), QueryRules(tkn_artists, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
+                        else if (limits.by_songs())
+                            return pRequest(
+                                searchTracksUrl(limits.predicate, limits.items_limit),
+                                call_type_json,
+                                prules,
+                                proc_json_extract,
+                                0,
+                                tkn_tracks
+                            );
+
+
+//                            return lQuery(searchTracksUrl(limits.predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
                         else
-                            return lQuery(searchUrl(predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limitations.total_limit), qMin(OD_SEARCH_LIMIT, limitations.total_limit)));
+                            return pRequest(
+                                searchUrl(limits.predicate, limits.items_limit),
+                                call_type_json,
+                                prules,
+                                proc_json_extract,
+                                0,
+                                tkn_tracks
+                            );
+
+//                            return lQuery(searchUrl(limits.predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
                     }
                 }
             public:
