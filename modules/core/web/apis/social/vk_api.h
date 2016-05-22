@@ -79,11 +79,14 @@ namespace Core {
                 inline int requestLimit() const { return 200; }
                 inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-                inline QJsonObject & extractBody(QJsonObject & response) { return (response = response.value(tkn_response).toObject()); }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_finished).toBool(); }
-                bool extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message);
+                bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message);
 
-                QUrl buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & prev_response);
+                //QUrl Api::buildUrl(QueriableArg * arg) { //(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {
+                //    QString urlStr = tUrl.toString();
+                //    urlStr = urlStr.replace(tkn_predef1, QString::number(offset)).replace(tkn_predef2, QString::number(limit));
+                //    return QUrl(urlStr);
+                //}
                 bool captchaProcessing(QJsonObject & response, QUrl & url);
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
             };

@@ -53,9 +53,8 @@ namespace Core {
 //                inline QString limitKey() const { return limit_key; }
 //                inline int requestLimit() const { return 100; }
 
-                inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_files).toArray().isEmpty(); }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) { return true; } // stub
+                inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; } // stub
             };
         }
     }

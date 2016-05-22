@@ -63,18 +63,13 @@ namespace Core {
 //                inline QString limitKey() const { return QString(); /*tkn_limit;*/ }
 //                inline int requestLimit() const { return 100; }
 
-                inline QJsonObject & extractBody(QJsonObject & response) { return response; }
                 inline bool endReached(QJsonObject & /*response*/, int /*offset*/) {
 //                    QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
 //                    if (chunk_obj.isEmpty()) return false;
 //                    return chunk_obj.value(tkn_count).toInt() < requestLimit();
                     return true;
                 }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
-        //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
-        //            message = stat_obj.value(QStringLiteral("error_message")).toString();
-                    return true/*(code = stat_obj.value(QStringLiteral("error_code")).toInt()) == 0*/;
-                }
+                inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
             };
         }
     }

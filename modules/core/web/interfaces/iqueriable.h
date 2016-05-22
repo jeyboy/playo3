@@ -61,9 +61,6 @@ namespace Core {
             virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
 
-            // override for any type of poly
-            virtual QueriableArg * buildUrl(QueriableArg * arg) { return arg; } // by default url builded automatically
-
             // for json
             // extract status and update request url if required
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
@@ -122,7 +119,7 @@ namespace Core {
             bool lQuery(QueriableArg * arg) {
                 bool status = true;
 
-                while ( (status &= sQuery(buildUrl(arg))) ) {
+                while ( (status &= sQuery(arg)) ) {
                     if (arg -> isCompleted()) return status;
                     QThread::msleep(REQUEST_DELAY);
                 }

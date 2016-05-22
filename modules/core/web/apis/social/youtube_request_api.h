@@ -4,7 +4,8 @@
 #include "youtube_api_misc.h"
 //#include "modules/core/interfaces/ishareable.h"
 
-#define YOUTUBE_OFFSET_LIMIT 50
+#define YOUTUBE_INFO_ITEMS_LIMIT 50
+#define YOUTUBE_ITEMS_LIMIT 100
 
 namespace Core {
     namespace Web {
@@ -46,16 +47,34 @@ namespace Core {
                 }
 
 
-                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
+//                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
+//                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
+//                }
+
+                PolyQueryRules rules(int offset = 0, int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_count = DEFAULT_REQUESTS_LIMIT, ApiCallIterType call_type = call_iter_type_item) {
+                    return PolyQueryRules(
+                        call_type,
+                        call_iter_method_token,
+                        qMin(items_limit, YOUTUBE_ITEMS_LIMIT),
+                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
+                        offset
+                    );
                 }
 
-                void proceedDurationResult(QStringList & ids, QJsonArray & res) {
-                    lQuery(
+                void proceedDurationResult(QStringList & ids, QJsonArray & arr) {
+                    pRequest(
                         videosUrl(ids),
-                        queryRules(50),
-                        res
+                        call_type_json,
+                        rules(0, YOUTUBE_INFO_ITEMS_LIMIT),
+                        proc_none,
+                        &arr
                     );
+
+//                    lQuery(
+//                        videosUrl(ids),
+//                        queryRules(50),
+//                        res
+//                    );
                     ids.clear();
                 }
 
@@ -64,7 +83,7 @@ namespace Core {
                     QJsonArray res;
 
                     for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++)
-                        if (ids.length() == 50)
+                        if (ids.length() == YOUTUBE_INFO_ITEMS_LIMIT)
                             proceedDurationResult(ids, res);
                         else
                             ids << (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
@@ -109,13 +128,13 @@ namespace Core {
 //                    short – Only include videos that are less than four minutes long.
 
                 //encodeStr
-                QUrl searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
+                QString searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
                     QUrlQuery query = genDefaultParams();
                     setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
                     setEmbedable(query);
                     setParam(query, tkn_part, QStringLiteral("snippet"));
                     setParam(query, QStringLiteral("fields"), QStringLiteral("items(id,snippet),nextPageToken,pageInfo"));
-                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
+                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
 //                    setParam(query, QStringLiteral("safeSearch"), QStringLiteral("none"));
                     setMusicVideoCategory(query);
 
@@ -124,29 +143,10 @@ namespace Core {
                     else if (!relatedVideoId.isEmpty())
                         setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
 
-                    return baseUrl(path_search, query);
+                    return baseUrlStr(path_search, query);
                 }
 
-                QJsonArray popular(QString & /*genre*/) {
-                    return lQuery(
-                        videosUrl(),
-                        queryRules(100)
-                    );
-                }
-
-                QJsonArray search_postprocess(QString & predicate, QString & genre, const SearchLimit & limitations) { //count = 5
-                    QJsonArray res = lQuery(
-                        searchUrl(predicate, genre, limitations.by_popularity()),
-                        queryRules(limitations.total_limit)
-                    );
-
-                    initDuration(res);
-                    return res;
-                }
-
-
-
-                QUrl videosUrl(const QStringList & ids = QStringList()) {
+                QString videosUrl(const QStringList & ids = QStringList()) {
                     QUrlQuery query = genDefaultParams();
                     if (!ids.isEmpty())
                         setParam(query, QStringLiteral("id"), ids.join(','));
@@ -155,17 +155,42 @@ namespace Core {
 
                     setParam(query, tkn_part, QStringLiteral("snippet,contentDetails"));
                     setParam(query, QStringLiteral("fields"), QStringLiteral("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
-                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_OFFSET_LIMIT);
+                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
                     setParam(query, QStringLiteral("regionCode"), QStringLiteral("ua"));
                     setMusicVideoCategory(query);
 
-                    return baseUrl(QStringLiteral("videos"), query);
+                    return baseUrlStr(QStringLiteral("videos"), query);
                 }
 
+                QJsonArray popular(const SearchLimit & /*limits*/) {
+                    return pRequest(
+                        videosUrl(),
+                        call_type_json,
+                        rules()
+                    );
+
+//                    return lQuery(
+//                        videosUrl(),
+//                        queryRules(100)
+//                    );
+                }
+
+                QJsonArray search_proc(const SearchLimit & limits) { //count = 5
+//                    QJsonArray res = lQuery(
+//                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
+//                        queryRules(limits.items_limit)
+//                    );
 
 
+                    QJsonArray res = pRequest(
+                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
+                        call_type_json,
+                        rules(0, limits.items_limit)
+                    );
 
-
+                    initDuration(res);
+                    return res;
+                }
 
 
 

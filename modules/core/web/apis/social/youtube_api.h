@@ -42,33 +42,35 @@ namespace Core {
                 }
 
             protected:
-                QUrl buildUrl(QUrl tUrl, int /*offset*/, int limit, const QJsonObject & prev_response) {
-//                    "pageInfo": {
-//                      "totalResults": integer,
-//                      "resultsPerPage": integer
-//                    },
+//                QUrl buildUrl(QueriableArg * arg) { //(QUrl tUrl, int /*offset*/, int limit, const QJsonObject & prev_response) {
+////                    "pageInfo": {
+////                      "totalResults": integer,
+////                      "resultsPerPage": integer
+////                    },
 
-                    QUrl url(tUrl);
-                    QUrlQuery query = QUrlQuery(url);
-                    setLimit(query, limit, prev_response.value(QStringLiteral("nextPageToken")));
-                    url.setQuery(query);
-                    return url;
-                }
+//                    QUrl url(tUrl);
+//                    QUrlQuery query = QUrlQuery(url);
+//                    setLimit(query, limit, prev_response.value(QStringLiteral("nextPageToken")));
+//                    url.setQuery(query);
+//                    return url;
+//                }
 
                 inline QString refresh(const QString & path) { return idToUrl(path); }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
-                inline QString offsetKey() const { return tkn_page_token; }
-                inline QString limitKey() const { return tkn_max_results; }
-                inline int requestLimit() const { return 200; }
+//                inline QString offsetKey() const { return tkn_page_token; }
+//                inline QString limitKey() const { return tkn_max_results; }
+//                inline int requestLimit() const { return 200; }
 
-                inline QJsonObject & extractBody(QJsonObject & response) { return response; }
-                inline bool endReached(QJsonObject & /*response*/, int /*offset*/) { return false; /*response.value(tkn_response).toArray().isEmpty()*/; }
-                inline bool extractStatus(QUrl & /*url*/, QJsonObject & response, int & code, QString & message) {
-                    QJsonObject error = response.value(QStringLiteral("error")).toObject();
-                    if (error.isEmpty())
+                inline bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
+                    QJsonObject error = json.value(QStringLiteral("error")).toObject();
+                    if (error.isEmpty()) {
+                        arg -> prepareRequestUrlByToken(
+                            QStringLiteral("pageToken"),
+                            json.value(QStringLiteral("nextPageToken")).toString()
+                        );
                         return true;
-                    else {
+                    } else {
                         code = error.value(QStringLiteral("code")).toInt();
                         message = error.value(QStringLiteral("message")).toString();
                         return false;

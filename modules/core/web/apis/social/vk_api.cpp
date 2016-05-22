@@ -116,8 +116,8 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
 /// PROTECTED
 ///////////////////////////////////////////////////////////
 
-bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString & message) {
-    QJsonObject stat_obj = response.value(tkn_error).toObject();
+bool Api::extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
+    QJsonObject stat_obj = json.value(tkn_error).toObject();
     message = stat_obj.value(tkn_error_msg).toString();
     code = stat_obj.value(tkn_error_code).toInt();
 
@@ -125,14 +125,8 @@ bool Api::extractStatus(QUrl & url, QJsonObject & response, int & code, QString 
         if (Settings::obj().isIgnoreCaptcha())
             return false;
         else
-            return captchaProcessing(response, url);
+            return captchaProcessing(response, arg -> request_url);
     } else return code == 0;
-}
-
-QUrl Api::buildUrl(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {
-    QString urlStr = tUrl.toString();
-    urlStr = urlStr.replace(tkn_predef1, QString::number(offset)).replace(tkn_predef2, QString::number(limit));
-    return QUrl(urlStr);
 }
 
 bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {

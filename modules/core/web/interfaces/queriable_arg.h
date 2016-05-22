@@ -77,6 +77,13 @@ namespace Core {
                     request_url = url_template.replace(OFFSET_TEMPLATE, QString::number(start_offset));
             }
 
+            void prepareRequestUrlByToken(const QString & field, const QString & token) {
+                if (call_item_method == call_iter_method_token) {
+                    char delim = url_template.indexOf('?') == -1 ? '?' : '&';
+                    request_url = url_template + delim + QStringLiteral("%1=%2").arg(field, token);
+                }
+            }
+
             QString url_template;
             QString request_url;
 
