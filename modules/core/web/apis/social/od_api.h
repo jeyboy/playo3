@@ -71,7 +71,7 @@ namespace Core {
                 inline bool endReached(QJsonObject & response, int /*offset*/) {
                     QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
                     if (chunk_obj.isEmpty()) return false;
-                    return chunk_obj.value(tkn_count).toInt() < requestLimit();
+                    return chunk_obj.value(tkn_count).toInt() < OD_LIMIT_PER_REQUEST;
                 }
                 inline bool extractStatus(QUrl & /*url*/, QJsonObject & /*response*/, int & /*code*/, QString & /*message*/) {
         //            QJsonObject stat_obj = response.value(QStringLiteral("response")).toObject().value(QStringLiteral("errors")).toArray().first().toObject();
