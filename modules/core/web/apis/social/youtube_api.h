@@ -3,6 +3,7 @@
 
 #include <qregexp.h>
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/interfaces/isource.h"
 //#include "modules/core/web/interfaces/teu_auth.h"
 //#include "modules/core/web/apis/service/recaptcha.h"
 
@@ -13,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Api : public QObject,/*public TeuAuth,*/ public RequestApi, public Singleton<Api>/*, public Sociable*/ {
+            class Api : public QObject, public ISource,/*public TeuAuth,*/ public RequestApi, public Singleton<Api>/*, public Sociable*/ {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

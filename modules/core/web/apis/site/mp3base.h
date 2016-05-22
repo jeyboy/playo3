@@ -180,7 +180,7 @@ namespace Core {
                 return url.section("mp3:\"", 1).section("\"", 0, 0);
             }
 
-            QJsonArray search_proc(SearchLimit & limits) {
+            QJsonArray search_proc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/search?q=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
