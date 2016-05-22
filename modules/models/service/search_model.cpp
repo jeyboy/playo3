@@ -128,7 +128,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
     if (requests.isEmpty())
         prepareRequests(requests);
 
-    ISearchable::SearchLimit limitation((ISearchable::PredicateType)request.type, request.limit(DEFAULT_LIMIT_AMOUNT));
+    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), request.limit(DEFAULT_ITEMS_LIMIT));
 
     int offset = res -> childCount();
     float total = requests.size() / 100.0;
@@ -155,7 +155,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             case SearchRequest::remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
                 qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(r.spredicate, r.sgenre, limitation);
+                QJsonArray items = iface -> search(*limitation.updatePredicates(r.spredicate, r.sgenre));
 
                 switch (iface -> siteType()) {
                     case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }

@@ -8,11 +8,12 @@
 #include <qjsonarray.h>
 
 #include "igenreable.h"
+#include "modules/core/data_sub_types.h"
 
 namespace Core {
     class ISearchable : public IGenreable {
     public:
-        enum SearchContentType { sc_audio = 1, sc_video = 2 };
+        enum SearchContentType { sc_audio = 1, sc_video = 2, sc_all = sc_audio | sc_video };
         enum SearchPredicateType { in_abc = 1, in_title = 2, in_artist = 4, in_song = 8, in_tag = 16, in_owns = 32, in_originals = 64, in_foreign = 128, in_popular = 256, in_relative = 512, in_type_arg = 1024, in_lyrics = 2048 };
         enum ByTypeArg { sets = 1, charts, soundtracks, by_genres, by_years, other, hits, fresh };
 
@@ -30,6 +31,15 @@ namespace Core {
             int start_page;
             int pages_limit;
 
+            SearchLimit * updatePredicates(const QString & new_predicate, const QString & new_genre) {
+                predicate = new_predicate;
+                genre = new_genre;
+                return this;
+            }
+
+            inline bool include_audio() const { return sc_type & sc_audio; }
+            inline bool include_video() const { return sc_type & sc_video; }
+
             inline bool by_abc() const { return predicate_type & in_abc; }
             inline bool by_artists() const { return predicate_type & in_artist; }
             inline bool by_titles() const { return predicate_type & in_title; }
@@ -46,6 +56,8 @@ namespace Core {
             inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
             inline ByTypeArg typePredicate() { return predicate.isEmpty() ? other : (ByTypeArg)predicate.mid(0, 1).toInt(); }
         };
+
+        virtual DataSubType siteType() const = 0;
 
         inline ISearchable() { }
         inline virtual ~ISearchable() {}
