@@ -12,6 +12,17 @@ namespace Core {
     namespace Web {
         class IQueriable {
         protected:
+            bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
+                                const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
+            {
+                QJsonArray arr;
+                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+
+                bool res = request(&arg);
+                json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
+                return res;
+            }
+
             QJsonObject sRequest(const QString & url, const ApiCallType & call_type,
                                 const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
             {

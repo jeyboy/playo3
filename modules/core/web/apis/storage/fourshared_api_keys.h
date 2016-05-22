@@ -1,6 +1,8 @@
 #ifndef FOURSHARED_API_KEYS
 #define FOURSHARED_API_KEYS
 
+#include <qstring.h>
+
 namespace Core {
     namespace Web {
         namespace Fourshared {

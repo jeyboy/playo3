@@ -6,7 +6,7 @@ void Api::fromJson(const QJsonObject & hash) {
     QJsonObject obj = hash.value(name()).toObject();
     TeuAuth::fromJson(obj);
 
-    Manager::addCookie(lang_cookie);
+    Manager::addCookie(val_lang_cookie);
 }
 void Api::toJson(QJsonObject & hash) {
     QJsonObject root;

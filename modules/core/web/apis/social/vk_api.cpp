@@ -147,5 +147,6 @@ bool Api::captchaProcessing(QJsonObject & json, QString & url_str) {
 
     url.setQuery(query);
 
-    return sQuery(url, json);
+    return sRequest(url.toString(), json, call_type_json);
+//    return sQuery(url, json);
 }
