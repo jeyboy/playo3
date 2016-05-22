@@ -17,7 +17,7 @@ namespace Models {
         inline virtual ~WebModel() {}
 
         inline bool isRelative() const { return false; }
-        virtual ISearchable * api() const = 0;
+        virtual ISource * api() const = 0;
         inline Core::DataSubType playlistType() const { return api() -> siteType(); }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);

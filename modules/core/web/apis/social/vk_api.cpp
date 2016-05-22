@@ -125,18 +125,19 @@ bool Api::extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QStr
         if (Settings::obj().isIgnoreCaptcha())
             return false;
         else
-            return captchaProcessing(response, arg -> request_url);
+            return captchaProcessing(json, arg -> request_url);
     } else return code == 0;
 }
 
-bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {
-    QJsonObject stat_obj = response.value(tkn_error).toObject();
+bool Api::captchaProcessing(QJsonObject & json, QString & url_str) {
+    QJsonObject stat_obj = json.value(tkn_error).toObject();
 
     QString captchaText;
     showingCaptcha(QUrl(stat_obj.value(tkn_captcha_img).toString()), captchaText);
     if (captchaText.isEmpty())
         return false;
 
+    QUrl url(url_str);
     QUrlQuery query(url.query());
     query.removeQueryItem(tkn_captcha_sid);
     query.removeQueryItem(tkn_captcha);
@@ -146,5 +147,5 @@ bool Api::captchaProcessing(QJsonObject & response, QUrl & url) {
 
     url.setQuery(query);
 
-    return sQuery(url, response);
+    return sQuery(url, json);
 }

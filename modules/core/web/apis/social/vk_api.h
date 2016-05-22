@@ -87,7 +87,7 @@ namespace Core {
                 //    urlStr = urlStr.replace(tkn_predef1, QString::number(offset)).replace(tkn_predef2, QString::number(limit));
                 //    return QUrl(urlStr);
                 //}
-                bool captchaProcessing(QJsonObject & response, QUrl & url);
+                bool captchaProcessing(QJsonObject & response, QString & url);
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
             };
         }
