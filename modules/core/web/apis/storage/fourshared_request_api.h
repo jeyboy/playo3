@@ -50,7 +50,7 @@ namespace Core {
 
                     setCategory(query, cType);
                     setPagination(query);
-                    return baseUrl(tkn_files, query).toString();
+                    return baseUrlStr(tkn_files, query);
                 }
 
 

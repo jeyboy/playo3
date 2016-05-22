@@ -1,4 +1,5 @@
 #include "vk_api_keys.h"
+#include "modules/core/web/interfaces/quariable_defines.h"
 
 namespace Core {
     namespace Web {
@@ -51,7 +52,6 @@ namespace Core {
             extern const QString tkn_date              = QStringLiteral("date");
             extern const QString tkn_items             = QStringLiteral("items");
             extern const QString tkn_folder_id         = QStringLiteral("folder_id");
-            extern const QString tkn_predef1           = QStringLiteral("_1_");
             extern const QString tkn_time_sep          = QStringLiteral(" : ");
             extern const QString tkn_q                 = QStringLiteral("q");
             extern const QString tkn_photo             = QStringLiteral("photo_200");
@@ -90,7 +90,7 @@ namespace Core {
                 "var curr; var count = 5;"
                 "var folders_result = API.audio.getAlbums({"
                 "                count: count, "
-                "                offset: " % tkn_predef1 % ", "
+                "                offset: " % OFFSET_TEMPLATE % ", "
                 "                owner_id: %1"
                 "    });"
                 "var folders_result = folders_result.items;"
@@ -109,7 +109,7 @@ namespace Core {
                 "return { "
                 "    " % tkn_albums % ": proceed_folders, "
                 "    " % tkn_finished % ": (proceed_folders.length < count), "
-                "    " % tkn_offset % ": " % tkn_predef1 % " %2b count"
+                "    " % tkn_offset % ": " % OFFSET_TEMPLATE % " %2b count"
                 "};"
             );
 

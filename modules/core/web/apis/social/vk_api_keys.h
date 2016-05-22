@@ -54,7 +54,6 @@ namespace Core {
             extern const QString tkn_date;
             extern const QString tkn_items;
             extern const QString tkn_folder_id;
-            extern const QString tkn_predef1;
             extern const QString tkn_time_sep;
             extern const QString tkn_q;
             extern const QString tkn_photo;
