@@ -359,40 +359,40 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
 
         if (itm.isEmpty()) continue;
 
-        QString id = QString::number(itm.value(Grabber::id_key).toInt());
-        QString uri = itm.value(Grabber::url_key).toString();
-        QString refresh_url = itm.value(Grabber::refresh_key).toString();
+        QString id = QString::number(itm.value(tkn_grab_id).toInt());
+        QString uri = itm.value(tkn_grab_url).toString();
+        QString refresh_url = itm.value(tkn_grab_refresh).toString();
 
         itemsAmount++;
         IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
-            itm.value(Grabber::title_key).toString(),
+            itm.value(tkn_grab_title).toString(),
             wType, refresh_url,
-            itm.value(Grabber::extension_key).toString(Grabber::default_extension)
+            itm.value(tkn_grab_extension).toString(val_def_extension)
         ));
 
-        if (itm.contains(Grabber::duration_key)) {
-            if (itm.value(Grabber::duration_key).isDouble())
-                newItem -> setDuration(Duration::fromMillis(itm.value(Grabber::duration_key).toInt(0)));
+        if (itm.contains(tkn_grab_duration)) {
+            if (itm.value(tkn_grab_duration).isDouble())
+                newItem -> setDuration(Duration::fromMillis(itm.value(tkn_grab_duration).toInt(0)));
             else
-                newItem -> setDuration(itm.value(Grabber::duration_key));
+                newItem -> setDuration(itm.value(tkn_grab_duration));
         }
 
-        if (itm.contains(Grabber::genre_id_key))
-            newItem -> setGenre(itm.value(Grabber::genre_id_key).toInt());
+        if (itm.contains(tkn_grab_genre_id))
+            newItem -> setGenre(itm.value(tkn_grab_genre_id).toInt());
 
-        if (itm.contains(Grabber::bpm_key))
-            newItem -> setBpm(itm.value(Grabber::bpm_key).toInt());
+        if (itm.contains(tkn_grab_bpm))
+            newItem -> setBpm(itm.value(tkn_grab_bpm).toInt());
 
-        if (itm.contains(Grabber::size_key))
-            newItem -> setSize(Info::fromUnits(itm.value(Grabber::size_key).toString()));
+        if (itm.contains(tkn_grab_size))
+            newItem -> setSize(Info::fromUnits(itm.value(tkn_grab_size).toString()));
 
-        if (!itm.contains(Grabber::skip_info_key))
+        if (!itm.contains(tkn_skip_info))
             newItem -> setInfo(Info::str(
-                    itm.value(Grabber::size_key).toString("?"),
+                    itm.value(tkn_grab_size).toString("?"),
                     newItem -> extension().toString(),
-                    itm.value(Grabber::bitrate_key).toString("?"),
-                    itm.value(Grabber::discretion_rate_key).toString("?"),
-                    itm.value(Grabber::channels_key).toString("?")
+                    itm.value(tkn_grab_bitrate).toString("?"),
+                    itm.value(tkn_grab_discretion_rate).toString("?"),
+                    itm.value(tkn_grab_channels).toString("?")
                 )
             );
     }
