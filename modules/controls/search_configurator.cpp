@@ -204,8 +204,10 @@ void SearchConfigurator::initiateSources() {
     sitesList -> addItem(item);
 
     for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
-        if ((*it) -> isConnected()) {
-            QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
+        ISource * src = Web::Apis::source(it.key());
+
+        if (src -> isConnected()) {
+            QListWidgetItem * item = new QListWidgetItem(src -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);
             item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
@@ -247,7 +249,7 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
     if (res.inSites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
         for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
-            if ((*it) -> isConnected())
+            if (Web::Apis::source((*it) -> siteType()) -> isConnected())
                 res.sites.append(*it);
     }
 
