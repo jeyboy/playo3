@@ -16,6 +16,7 @@ namespace Core {
         extern const QString tkn_grab_discretion_rate   = QStringLiteral("gdiscretion_rate");
         extern const QString tkn_grab_year              = QStringLiteral("gyear");
         extern const QString tkn_grab_album             = QStringLiteral("galbum");
+        extern const QString tkn_grab_art_url           = QStringLiteral("gart");
 
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
 

@@ -19,6 +19,7 @@ namespace Core {
         extern const QString tkn_grab_discretion_rate;
         extern const QString tkn_grab_year;
         extern const QString tkn_grab_album;
+        extern const QString tkn_grab_art_url;
 
         extern const QString tkn_skip_info;
 

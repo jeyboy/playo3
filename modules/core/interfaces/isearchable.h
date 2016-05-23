@@ -13,9 +13,27 @@
 namespace Core {
     class ISearchable : public IGenreable {
     public:
-        enum SearchContentType { sc_audio = 1, sc_video = 2, sc_all = sc_audio | sc_video };
-        enum SearchPredicateType { in_abc = 1, in_title = 2, in_artist = 4, in_song = 8, in_tag = 16, in_owns = 32, in_originals = 64, in_foreign = 128, in_popular = 256, in_relative = 512, in_type_arg = 1024, in_lyrics = 2048 };
-        enum ByTypeArg { sets = 1, charts, soundtracks, by_genres, by_years, other, hits, fresh };
+        enum SearchContentType {
+            sc_audio = 1,
+            sc_video = 2,
+            sc_all = sc_audio | sc_video
+        };
+        enum SearchPredicateType {
+            in_abc = 1,
+            in_title = 2,
+            in_artist = 4,
+            in_song_name = 8,
+            in_tag = 16,
+            in_owns = 32,
+            in_originals = 64,
+            in_mixes = 128,
+            in_foreign = 256,
+            in_uk_ru = 512,
+            in_popular = 1024,
+            in_relative = 2048,
+            in_lyrics = 4096,
+            in_sets = 8192
+        };
 
         struct SearchLimit {
             SearchLimit(const SearchContentType & sc_type, const SearchPredicateType & predicate_type, const QString & predicate,
@@ -41,20 +59,28 @@ namespace Core {
             inline bool include_video() const { return sc_type & sc_video; }
 
             inline bool by_abc() const { return predicate_type & in_abc; }
+
             inline bool by_artists() const { return predicate_type & in_artist; }
             inline bool by_titles() const { return predicate_type & in_title; }
-            inline bool by_songs() const { return predicate_type & in_song; }
+            inline bool by_songs_name() const { return predicate_type & in_song_name; }
             inline bool by_tags() const { return predicate_type & in_tag; }
 
-            inline bool by_popularity() const { return predicate_type & in_popular; }
             inline bool by_owns() const { return predicate_type & in_owns; }
+
             inline bool by_originals() const { return predicate_type & in_originals; }
+            inline bool by_mixes() const { return predicate_type & in_mixes; }
+
             inline bool by_foreign() const { return predicate_type & in_foreign; }
+            inline bool by_uk_ru() const { return predicate_type & in_uk_ru; }
+
+
+            inline bool by_popularity() const { return predicate_type & in_popular; }
             inline bool by_relativity() const { return predicate_type & in_relative; }
-            inline bool by_type() const { return predicate_type & in_type_arg; }
+
+            inline bool by_lyrics() const { return predicate_type & in_lyrics; }
+            inline bool by_sets() const { return predicate_type & in_sets; }
 
             inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
-            inline ByTypeArg typePredicate() { return predicate.isEmpty() ? other : (ByTypeArg)predicate.mid(0, 1).toInt(); }
         };
 
         virtual DataSubType siteType() const = 0;
@@ -67,23 +93,29 @@ namespace Core {
                 if (limits.by_abc())
                     return searchByChar(limits);
 
-                if (limits.by_type())
-                    return searchByType(limits);
+                if (limits.by_lyrics())
+                    return searchInLyrics(limits);
+
+                if (limits.by_sets())
+                    return searchInSets(limits);
+
+                if (limits.by_relativity())
+                    return related(limits);
 
                 return search_proc(limits);
             } else if (!limits.genre.isEmpty())
                 return searchByGenre(limits);
-            else if (limits.by_popularity() || limits.predicate.isEmpty())
+            else
                 return popular(limits);
-
-            return QJsonArray();
         }
 
         virtual QJsonArray searchByGenre(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonArray searchByChar(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchByType(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonArray searchInLyrics(const SearchLimit & /*limits*/) { return QJsonArray(); }
+
+        virtual QJsonArray searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonArray popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
 

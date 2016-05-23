@@ -78,7 +78,7 @@ namespace Core {
                 inline int requestLimit() const { return 200; }
                 inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
-                inline bool endReached(QJsonObject & response, int /*offset*/) { return response.value(tkn_finished).toBool(); }
+                inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) { return response.value(tkn_finished).toBool(); }
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message);
 
                 //QUrl Api::buildUrl(QueriableArg * arg) { //(QUrl tUrl, int offset, int limit, const QJsonObject & /*prev_response*/) {

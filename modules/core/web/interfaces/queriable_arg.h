@@ -74,7 +74,7 @@ namespace Core {
             void setOffsetPolyLimitations(
                 ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
                 const QString & _offset_field = QString(), int _start_offset = 0,
-                const QString & _limit_field = QString(), int _per_request_limit = 25)
+                const QString & _limit_field = QString(), int _per_request_limit = 1)
             {
                 if (!_offset_field.isEmpty())
                     url_template = _attachField(url_template, _offset_field, OFFSET_TEMPLATE);
@@ -88,13 +88,14 @@ namespace Core {
                 items_total_limit = _items_total_limit;
                 start_offset = _start_offset;
                 call_item_method = call_iter_method_offset;
+                per_request_limit = _per_request_limit;
                 prepareRequestUrl();
             }
 
             void setTokenPolyLimitations(
                 int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
                 const QString & _token_field = QString(), const QString & _start_token = QString(),
-                const QString & _limit_field = QString(), int _per_request_limit = 25)
+                const QString & _limit_field = QString(), int _per_request_limit = 1)
             {
                 if (!_limit_field.isEmpty())
                     url_template = _attachField(url_template, _limit_field, QString::number(_per_request_limit));
@@ -104,6 +105,7 @@ namespace Core {
                 call_iter = call_iter_type_page;
                 items_total_limit = _items_total_limit;
                 call_item_method = call_iter_method_token;
+                per_request_limit = _per_request_limit;
 
                 if (!_start_token.isEmpty())
                     prepareRequestUrlByToken(_token_field, _start_token);
@@ -172,7 +174,7 @@ namespace Core {
             QJsonArray * arr;
 
             QString field;
-            int items_total_limit, requests_limit;
+            int items_total_limit, requests_limit, per_request_limit;
             int start_offset;
             int items_fact_count, requests_fact_count;
 

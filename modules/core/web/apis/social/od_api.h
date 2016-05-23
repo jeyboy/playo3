@@ -67,10 +67,10 @@ namespace Core {
 //                inline QString limitKey() const { return tkn_limit; }
 //                inline int requestLimit() const { return 100; }
 
-                inline bool endReached(QJsonObject & response, int /*offset*/) {
+                inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
                     if (chunk_obj.isEmpty()) return false;
-                    return chunk_obj.value(tkn_count).toInt() < OD_LIMIT_PER_REQUEST;
+                    return chunk_obj.value(tkn_count).toInt() < arg -> per_request_limit/*OD_LIMIT_PER_REQUEST*/;
                 }
                 inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
             };
