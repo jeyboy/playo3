@@ -3,6 +3,7 @@
 
 #include "modules/core/web/interfaces/iapi.h"
 #include "modules/core/interfaces/ishareable.h"
+#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "soundcloud_api_keys.h"
 
 #define SOUNDCLOUD_PAGES_LIMIT 25
@@ -12,7 +13,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi, public IShareable {
+            class RequestApi : public TeuAuth, public IApi, public IShareable {
             private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 

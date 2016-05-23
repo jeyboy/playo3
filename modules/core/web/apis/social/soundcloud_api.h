@@ -4,7 +4,6 @@
 #include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/apis/service/recaptcha.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
@@ -14,7 +13,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public ISource, public RequestApi, public TeuAuth, public Sociable, public Singleton<Api> {
+            class Api : public RequestApi, public ISource, public Sociable, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

@@ -13,7 +13,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public ISource, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public RequestApi, public ISource, public Singleton<Api>, public Sociable {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
