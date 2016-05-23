@@ -97,11 +97,16 @@ namespace Core {
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
                             sendError(arg -> error_receiver, message, code);
                         } else {
-                            arg -> append(
-                                (arg -> post_proc & proc_json_extract) ?
-                                    json.value(arg -> field).toObject() :
-                                    json
-                            );
+                            if (arg -> post_proc & proc_json_extract) {
+                                QJsonValue val = json.value(arg -> field);
+
+                                if (val.isArray())
+                                    arg -> append(val.toArray());
+                                else
+                                    arg -> append(val.toObject());
+                            }
+                            else arg -> append(json);
+
                             arg -> forse_completing = endReached(json, arg -> items_fact_count);
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, json.keys());
                         }
@@ -130,6 +135,9 @@ namespace Core {
 
             bool lQuery(QueriableArg * arg) {
                 bool status = true;
+
+                if (arg -> field.isEmpty())
+                    arg -> field = DEF_JSON_FIELD;
 
                 while ( (status &= sQuery(arg)) ) {
                     if (arg -> isCompleted()) return status;

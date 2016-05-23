@@ -11,6 +11,8 @@
 #define REQUEST_DELAY 260 // ms
 #define COOKIES_KEY QStringLiteral("cookies")
 
+#define DEF_JSON_FIELD QStringLiteral("response")
+
 #ifdef Q_OS_WIN
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
 #elif Q_OS_MAC // there should be agent for mac
@@ -150,9 +152,9 @@ namespace Core { // requests and response has memory leaks
 
             inline QPixmap getPixmap(const QUrl & url) { return followedGet(url) -> toPixmap(); }
             inline QJsonObject getJson(const QUrl & url, const QString & wrap) { return followedGet(url) -> toJson(wrap); }
-            inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
-            inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? QStringLiteral("response") : QString()); }
-            inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? QStringLiteral("response") : QString()); }
+            inline QJsonObject getJson(const QUrl & url, bool wrap = false) { return followedGet(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
 
             inline Response * followedGetAsync(const QUrl & url, const Func & response) {
                 Response * resp = requestTo(url).viaGet(true);
