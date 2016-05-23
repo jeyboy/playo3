@@ -2,7 +2,6 @@
 #define FOURSHARED_API
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 //#include "modules/core/web/interfaces/friendable.h"
 //#include "modules/core/web/interfaces/groupable.h"
 #include "modules/core/interfaces/isource.h"
@@ -12,7 +11,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared { // auth is not realised yet
-            class Api: public ISource, public TeuAuth, public RequestApi, public Singleton<Api> {
+            class Api: public RequestApi, public ISource, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

@@ -4,7 +4,6 @@
 #include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
 
@@ -14,7 +13,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public ISource, public TeuAuth, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public RequestApi, public ISource, public Singleton<Api>, public Sociable {
                 Q_OBJECT
                 friend class Singleton<Api>;
                 inline Api() {}

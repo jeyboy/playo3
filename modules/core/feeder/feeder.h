@@ -7,8 +7,8 @@
 #include <qdatetime.h>
 #include <qstringbuilder.h>
 
-#include "web_manager.h"
-#include "singleton.h"
+#include "modules/core/web/utils/web_manager.h"
+#include "modules/core/interfaces/singleton.h"
 
 #define FEED_SETTINGS_URL_PAGINATION_TEMPLATE QStringLiteral("^1")
 
