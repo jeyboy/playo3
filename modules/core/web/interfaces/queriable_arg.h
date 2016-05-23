@@ -38,6 +38,21 @@ namespace Core {
                 offset_token = _start_offset_token;
             }
 
+            PolyQueryRules(
+               ApiCallIterType _call_iter, int _start_offset = 0,
+               int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT
+            ) {
+                call_iter = _call_iter;
+                call_item_method = call_iter_method_offset;
+                items_total_limit = _items_total_limit;
+                requests_limit = _requests_limit;
+                start_offset = _start_offset;
+                per_request_limit = 0;
+                offset_field = QString();
+                limit_field = QString();
+                offset_token = QString();
+            }
+
             ApiCallIterMethod call_item_method;
             ApiCallIterType call_iter;
             int items_total_limit;

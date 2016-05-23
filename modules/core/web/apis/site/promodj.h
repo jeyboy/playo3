@@ -91,10 +91,10 @@ namespace Core {
                             (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(
-                    call_iter_type_page, call_iter_method_offset,
-                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.pages_limit, 10),
-                    limits.start_page
+                    call_iter_type_page, limits.start_page,
+                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.pages_limit, 10)
                 );
+
                 return pRequest(url_str, call_type_html, rules, proc_tracks1);
 
 //                QJsonArray json;
