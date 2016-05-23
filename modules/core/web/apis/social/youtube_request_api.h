@@ -6,6 +6,7 @@
 
 #define YOUTUBE_INFO_ITEMS_LIMIT 50
 #define YOUTUBE_ITEMS_LIMIT 100
+#define YOUTUBE_PAGES_LIMIT 10
 
 namespace Core {
     namespace Web {
@@ -51,13 +52,20 @@ namespace Core {
 //                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
 //                }
 
-                PolyQueryRules rules(int offset = 0, int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_count = DEFAULT_REQUESTS_LIMIT, ApiCallIterType call_type = call_iter_type_item) {
+                PolyQueryRules rules(
+                    QString start_token = QString(), int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_limit = YOUTUBE_PAGES_LIMIT,
+                    int per_request = YOUTUBE_INFO_ITEMS_LIMIT)
+                {
                     return PolyQueryRules(
-                        call_type,
+                        call_iter_type_page,
                         call_iter_method_token,
                         qMin(items_limit, YOUTUBE_ITEMS_LIMIT),
-                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
-                        offset
+                        qMin(pages_limit, YOUTUBE_PAGES_LIMIT),
+                        QString(),
+                        qMin(qMin(per_request, items_limit), YOUTUBE_INFO_ITEMS_LIMIT),
+                        QString(),
+                        0,
+                        start_token
                     );
                 }
 
@@ -65,7 +73,7 @@ namespace Core {
                     pRequest(
                         videosUrl(ids),
                         call_type_json,
-                        rules(0, YOUTUBE_INFO_ITEMS_LIMIT),
+                        rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
                         proc_none,
                         &arr
                     );
@@ -185,7 +193,7 @@ namespace Core {
                     QJsonArray res = pRequest(
                         searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
                         call_type_json,
-                        rules(0, limits.items_limit)
+                        rules(QString(), limits.items_limit)
                     );
 
                     initDuration(res);

@@ -39,15 +39,23 @@ namespace Core {
                         return audioSearch(limits.predicate, limits.by_artists(), limits.by_owns(), limits.by_popularity(), limits.items_limit);
                 }
 
-                PolyQueryRules rules(int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_count = DEFAULT_REQUESTS_LIMIT, ApiCallIterType call_type = call_iter_type_item) {
+                PolyQueryRules rules(
+                    int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_limit = DEFAULT_REQUESTS_LIMIT,
+                    int /*per_request*/ = 100,
+                    ApiCallIterType call_type = call_iter_type_item)
+                {
                     return PolyQueryRules(
                         call_type,
                         call_iter_method_offset,
                         qMin(items_limit, DEFAULT_ITEMS_LIMIT),
-                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
+                        qMin(pages_limit, DEFAULT_REQUESTS_LIMIT),
+                        QString(), // limit already inserted to scripts
+                        0, // per_request
+                        QString(), // template already inserted to scripts
                         offset
                     );
                 }
+
             public:
                 enum InfoType {
                     info_music = 1,

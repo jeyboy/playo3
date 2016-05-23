@@ -86,6 +86,7 @@ namespace Core {
                 bool status = true;
                 int code = -1;
                 QString message;
+                qDebug() << "REQUEST" << arg -> request_url;
 
                 switch(arg -> call_type) {
                     case call_type_json: {

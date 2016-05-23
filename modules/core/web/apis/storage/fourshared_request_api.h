@@ -28,17 +28,19 @@ namespace Core {
                 inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, tkn_category, (int)cType); }
                 inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_query, predicate); }
 
-                inline void setPagination(QUrlQuery & query, int per_request = FOURSHARED_PER_REQUEST_LIMIT) {
-                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
-                    setParam(query, tkn_limit, per_request);
-                }
-
-                PolyQueryRules rules(int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_count = FOURSHARED_PAGES_LIMIT, int offset = 0, ApiCallIterType call_type = call_iter_type_page) {
+                PolyQueryRules rules(
+                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
+                    int per_request = FOURSHARED_PER_REQUEST_LIMIT,
+                    ApiCallIterType call_type = call_iter_type_page)
+                {
                     return PolyQueryRules(
                         call_type,
                         call_iter_method_offset,
                         qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
-                        qMin(pages_count, FOURSHARED_PAGES_LIMIT),
+                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT),
+                        tkn_limit,
+                        qMin(qMin(per_request, items_limit), FOURSHARED_PER_REQUEST_LIMIT),
+                        tkn_offset,
                         offset
                     );
                 }
@@ -50,7 +52,6 @@ namespace Core {
                         setSearchPredicate(query, predicate);
 
                     setCategory(query, cType);
-                    setPagination(query);
                     return baseUrlStr(tkn_files, query);
                 }
 
@@ -61,7 +62,7 @@ namespace Core {
                     QJsonArray res = pRequest(
                         audioSearchUrl(),
                         call_type_json,
-                        rules(),
+                        rules(0),
                         proc_none,
                         0,
                         tkn_files
@@ -82,7 +83,7 @@ namespace Core {
                     QJsonArray res = pRequest(
                         audioSearchUrl(limitations.predicate),
                         call_type_json,
-                        rules(limitations.items_limit),
+                        rules(0, limitations.items_limit),
                         proc_none,
                         0,
                         tkn_files

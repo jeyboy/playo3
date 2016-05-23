@@ -28,6 +28,25 @@ namespace Core {
                     return QString(hash.result().toHex().toLower());
                 }
 
+
+//                PolyQueryRules rules(
+//                    int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
+//                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
+//                    ApiCallIterType call_type = call_iter_type_page)
+//                {
+//                    return PolyQueryRules(
+//                        call_type,
+//                        call_iter_method_offset,
+//                        qMin(items_limit, SOUNDCLOUD_ITEMS_LIMIT),
+//                        qMin(pages_limit, SOUNDCLOUD_PAGES_LIMIT),
+//                        tkn_limit,
+//                        qMin(qMin(per_request, items_limit), SOUNDCLOUD_PER_REQUEST_LIMIT),
+//                        tkn_offset,
+//                        offset
+//                    );
+//                }
+
+
                 //this maybe should presents in any request: external-domain=music.yandex.ua&overembed=false
                 // lang=ru
 
