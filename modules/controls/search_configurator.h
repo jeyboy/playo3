@@ -15,41 +15,48 @@ namespace Controls {
     class SearchConfigurator : public Accordion {
         Q_OBJECT
 
-        void initUI();
-        void initiateSources();
+        QScrollArea * predicatesArea;
+
+        QComboBox * stylePredicate;
+
+        QLineEdit * textPredicate;
 
         QPushButton * activationBtn;
-
-        QScrollArea * predicatesArea;
-        QWidget * predicatesAreaBody;
-        QListWidget * textPredicates;
         QPushButton * addStylePredicate;
         QPushButton * addPredicate;
-        QComboBox * stylePredicate;
+
+        QListWidget * textPredicates;
         QListWidget * stylePredicates;
-        QLineEdit * textPredicate;
-        QScrollArea * locationsArea;
-        QWidget * locationsAreaBody;
         QListWidget * sitesList;
-        QCheckBox * inSites;
         QListWidget * tabsList;
         QListWidget * driveList;
+
+        QCheckBox * inSites;
         QCheckBox * inComputer;
         QCheckBox * inTabs;
-        QScrollArea * limitationsArea;
-        QWidget * limitationsAreaBody;
-        QGroupBox * searchInGroup;
-        QCheckBox * byPopular;
-        QCheckBox * byOwns;
-        QCheckBox * byOrigins;
-        QCheckBox * byForeign;
-        QGroupBox * searchByGroup;
+
         QRadioButton * byTitle;
         QRadioButton * byTag;
         QRadioButton * byArtist;
-        QRadioButton * bySong;
+        QRadioButton * bySongName;
+        QRadioButton * bySets;
+        QRadioButton * byLyrics;
+        QRadioButton * byAbc;
+
+        QCheckBox * byPopular;
+        QCheckBox * byOwns;
+        QCheckBox * byOrigins;
+        QCheckBox * byMixes;
+        QCheckBox * byForeign;
+        QCheckBox * byCirillic;
+        QCheckBox * byRelativity;
 
         bool has_not_connected;
+
+        void initiateSources();
+        QScrollArea * initLocations();
+        QScrollArea * initPredicates();
+        QScrollArea * initLimitations();
     public:
         enum SearchSettingsBlocks {
             none = 0,

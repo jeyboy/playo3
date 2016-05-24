@@ -28,7 +28,7 @@ namespace Core {
             in_originals = 64,
             in_mixes = 128,
             in_foreign = 256,
-            in_uk_ru = 512,
+            in_cyrillic = 512,
             in_popular = 1024,
             in_relative = 2048,
             in_lyrics = 4096,
@@ -72,7 +72,7 @@ namespace Core {
             inline bool by_originals() const { return predicate_type & in_originals; }
             inline bool by_mixes() const { return predicate_type & in_mixes; }
             inline bool by_foreign() const { return predicate_type & in_foreign; }
-            inline bool by_uk_ru() const { return predicate_type & in_uk_ru; }
+            inline bool by_cyrillic() const { return predicate_type & in_cyrillic; }
 
             inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
         };
