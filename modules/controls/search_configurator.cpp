@@ -300,7 +300,7 @@ SearchSettings SearchConfigurator::params() {
     else if (byArtist -> isChecked())
         res.type = Core::ISearchable::in_artist;
     else if (bySong -> isChecked())
-        res.type = Core::ISearchable::in_song;
+        res.type = Core::ISearchable::in_song_name;
     else
         res.type = Core::ISearchable::in_tag;
 

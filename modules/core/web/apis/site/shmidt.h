@@ -66,7 +66,7 @@ namespace Core {
             QJsonArray search_proc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                     encodeStr(limits.predicate),
-                    (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
+                    (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs_name() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
                 );
 
                 PolyQueryRules rules(

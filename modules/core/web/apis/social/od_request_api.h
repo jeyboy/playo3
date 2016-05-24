@@ -114,7 +114,7 @@ namespace Core { // NOT FINISHED
                             );
 
 //                            return lQuery(searchArtistsUrl(limits.predicate), QueryRules(tkn_artists, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
-                        else if (limits.by_songs())
+                        else if (limits.by_songs_name())
                             return pRequest(
                                 searchTracksUrl(limits.predicate),
                                 call_type_json,
