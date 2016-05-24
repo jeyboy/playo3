@@ -200,7 +200,8 @@ namespace Core {
                     for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
                         arr -> append(*it);
 
-                iterateCounters();
+                if (!last_result_is_empty)
+                    iterateCounters();
             }
 
             QJsonValue last() { return arr -> last(); }
