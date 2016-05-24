@@ -83,6 +83,8 @@ namespace Core {
     //            return url.section("URL\":\"", 1).section("\"", 0, 0);
     //        }
 
+//            inline bool isRefreshable() { return false; }
+
             QJsonArray search_proc(const SearchLimit & limits) {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 

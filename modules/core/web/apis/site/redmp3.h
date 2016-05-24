@@ -64,10 +64,7 @@ namespace Core {
 
             void genres_proc() {} // not supports genres
 
-
-            inline QString refresh_proc(Response * /*reply*/) {
-                return QString();
-            }
+            inline bool isRefreshable() { return false; }
 
             QJsonArray search_proc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(

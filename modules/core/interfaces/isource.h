@@ -36,8 +36,9 @@ namespace Core {
         virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
         virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub
 
+        virtual inline bool isRefreshable() { return true; }
         virtual inline QString refresh(const QString & refresh_page) {
-            if (refresh_page.isEmpty()) return QString();
+            if (!isRefreshable() || refresh_page.isEmpty()) return QString();
             return refresh_proc(take_refresh_page(refresh_page));
         }
 

@@ -29,8 +29,6 @@ namespace Core {
                 inline bool isConnected() { return true/*!token().isEmpty()*/; }
 
                 QString refresh(const QString & refresh_page) {
-                    if (refresh_page.isEmpty()) return QString();
-
                     Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
                     return doc.find("input.jsD1PreviewUrl").value();
                 }

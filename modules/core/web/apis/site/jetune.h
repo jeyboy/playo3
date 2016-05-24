@@ -85,14 +85,7 @@ namespace Core {
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
 
-            inline QString refresh_proc(Response * /*reply*/) {
-    //            Html::Document parser(reply);
-
-    //            QString url = parser.find("#player_content script").text();
-    //            return url.section("mp3:\"", 1).section("\"", 0, 0);
-
-                return QString();
-            }
+            inline bool isRefreshable() { return false; }
 
             QJsonArray search_proc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(

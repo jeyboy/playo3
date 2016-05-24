@@ -59,26 +59,20 @@ namespace Core {
             inline bool include_video() const { return sc_type & sc_video; }
 
             inline bool by_abc() const { return predicate_type & in_abc; }
+            inline bool by_popularity() const { return predicate_type & in_popular; }
+            inline bool by_relativity() const { return predicate_type & in_relative; }
+            inline bool by_lyrics() const { return predicate_type & in_lyrics; }
+            inline bool by_sets() const { return predicate_type & in_sets; }
 
             inline bool by_artists() const { return predicate_type & in_artist; }
             inline bool by_titles() const { return predicate_type & in_title; }
             inline bool by_songs_name() const { return predicate_type & in_song_name; }
             inline bool by_tags() const { return predicate_type & in_tag; }
-
             inline bool by_owns() const { return predicate_type & in_owns; }
-
             inline bool by_originals() const { return predicate_type & in_originals; }
             inline bool by_mixes() const { return predicate_type & in_mixes; }
-
             inline bool by_foreign() const { return predicate_type & in_foreign; }
             inline bool by_uk_ru() const { return predicate_type & in_uk_ru; }
-
-
-            inline bool by_popularity() const { return predicate_type & in_popular; }
-            inline bool by_relativity() const { return predicate_type & in_relative; }
-
-            inline bool by_lyrics() const { return predicate_type & in_lyrics; }
-            inline bool by_sets() const { return predicate_type & in_sets; }
 
             inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
         };

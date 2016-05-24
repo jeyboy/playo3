@@ -55,7 +55,7 @@ namespace Core {
                 }
 
             protected:
-                inline QString refresh(const QString & path) { return path; }
+                inline bool isRefreshable() { return false; }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
 
 //                inline QString offsetKey() const { return tkn_offset; }

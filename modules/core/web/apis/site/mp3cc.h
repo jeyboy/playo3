@@ -57,9 +57,7 @@ namespace Core {
                 return result;
             }
 
-    //        inline QString refresh_proc(WebResponse * reply) {
-    //            return WebManager::replyToJson(reply).value(QStringLiteral("url")).toString();
-    //        }
+            inline bool isRefreshable() { return false; }
 
             inline void genres_proc() {
                 genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
