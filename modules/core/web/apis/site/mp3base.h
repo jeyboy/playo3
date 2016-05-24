@@ -187,7 +187,7 @@ namespace Core {
                 );
 
                 PolyQueryRules rules(
-                    call_iter_type_page, limits.start_page,
+                    call_iter_type_page, limits.start_offset,
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), limits.pages_limit
                 );
 

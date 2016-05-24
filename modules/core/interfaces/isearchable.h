@@ -37,16 +37,16 @@ namespace Core {
 
         struct SearchLimit {
             SearchLimit(const SearchContentType & sc_type, const SearchPredicateType & predicate_type, const QString & predicate,
-                const QString & genre, int items_limit, int start_page = 1, int pages_limit = 100) :
+                const QString & genre, int items_limit, int start_offset = 0, int pages_limit = 100) :
                 sc_type(sc_type), predicate_type(predicate_type), predicate(predicate), genre(genre),
-                items_limit(items_limit), start_page(start_page), pages_limit(pages_limit) {}
+                items_limit(items_limit), start_offset(start_offset), pages_limit(pages_limit) {}
 
             SearchContentType sc_type;
             SearchPredicateType predicate_type;
             QString predicate;
             QString genre;
             int items_limit;
-            int start_page;
+            int start_offset;
             int pages_limit;
 
             SearchLimit * updatePredicates(const QString & new_predicate, const QString & new_genre) {

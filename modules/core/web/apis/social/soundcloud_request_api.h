@@ -96,6 +96,11 @@ namespace Core {
                     return baseUrlStr(path_tracks, query);
                 }
 
+                QJsonArray searchInSets(const SearchLimit & limits) {
+                    QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
+                    return playlistByPredicate(predicate, limits.items_limit, limits.start_offset);
+                }
+
                 QJsonArray popular(const SearchLimit & limitations) {
                     return pRequest(
                         audioSearchUrl(QString(), limitations.genre, true),
@@ -325,14 +330,16 @@ namespace Core {
 //                    return lQuery(baseUrl(path_groups % uid, genDefaultParams()), queryRules(count), wrap);
                 }
 
-                QString playlistByNameUrl(QString & name) {
+                QString playlistByPredicateUrl(QString & name) {
                     QUrlQuery query = genDefaultParams();
                     setSearchPredicate(query, name);
                     return baseUrlStr(path_playlists, query);
                 }
-                QJsonArray playlistByName(QString & name, int count = 10, int offset = 0) {
+
+                // predicate is used for search in title - genre - tags - permalinks
+                QJsonArray playlistByPredicate(QString & predicate, int count = 10, int offset = 0) {
                     return pRequest(
-                        playlistByNameUrl(name),
+                        playlistByPredicateUrl(predicate),
                         call_type_json,
                         rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, 2), // playlists is very weighted for loading - so set limitation to 2 playlists per request
                         proc_patch
