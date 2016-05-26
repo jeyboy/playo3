@@ -64,7 +64,6 @@ QScrollArea * SearchConfigurator::initPredicates() {
 
     QGridLayout * l = new QGridLayout(predicatesAreaBody);
 
-
     QLabel * sentencesLabel = new QLabel(predicatesAreaBody);
     sentencesLabel -> setObjectName(QStringLiteral("sentencesLabel"));
     sentencesLabel -> setText(QApplication::translate("SearchDialog", "Sentences", 0));
@@ -84,7 +83,7 @@ QScrollArea * SearchConfigurator::initPredicates() {
     addPredicate = new QPushButton(predicatesAreaBody);
     addPredicate -> setObjectName(QStringLiteral("addPredicate"));
     addPredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
-    addPredicate -> setMaximumSize(32, 32);
+    addPredicate -> setMaximumSize(24, 32);
     l -> addWidget(addPredicate, 1, 1);
 
     textPredicates = new QListWidget(predicatesAreaBody);
@@ -100,7 +99,7 @@ QScrollArea * SearchConfigurator::initPredicates() {
     addStylePredicate = new QPushButton(predicatesAreaBody);
     addStylePredicate -> setObjectName(QStringLiteral("addStylePredicate"));
     addStylePredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
-    addStylePredicate -> setMaximumSize(32, 32);
+    addStylePredicate -> setMaximumSize(24, 32);
     l -> addWidget(addStylePredicate, 1, 3);
 
     stylePredicates = new QListWidget(predicatesAreaBody);
