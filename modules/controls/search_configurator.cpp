@@ -111,72 +111,80 @@ QScrollArea * SearchConfigurator::initPredicates() {
     predicatesArea -> setWidget(predicatesAreaBody);
     return predicatesArea;
 }
+
 QScrollArea * SearchConfigurator::initLimitations() {
     QScrollArea * limitationsArea = new QScrollArea(this);
-    limitationsArea->setObjectName(QStringLiteral("limitationsArea"));
-    limitationsArea->setGeometry(QRect(10, 350, 451, 171));
-    limitationsArea->setWidgetResizable(false);
+    limitationsArea -> setObjectName(QStringLiteral("limitationsArea"));
+//    limitationsArea->setWidgetResizable(false);
 
     QWidget * limitationsAreaBody = new QWidget();
-    limitationsAreaBody->setObjectName(QStringLiteral("limitationsAreaBody"));
-    limitationsAreaBody->setGeometry(QRect(0, 0, 448, 169));
+    limitationsAreaBody -> setObjectName(QStringLiteral("limitationsAreaBody"));
 
-    QGroupBox * searchInGroup = new QGroupBox(limitationsAreaBody);
-    searchInGroup->setObjectName(QStringLiteral("searchInGroup"));
-    searchInGroup->setGeometry(QRect(10, 100, 431, 61));
-    searchInGroup->setTitle(QApplication::translate("SearchDialog", "Search In", 0));
+    QVBoxLayout * l = new QVBoxLayout(limitationsAreaBody);
 
-    byPopular = new QCheckBox(searchInGroup);
-    byPopular->setObjectName(QStringLiteral("byPopular"));
-    byPopular->setGeometry(QRect(10, 16, 101, 17));
-    byPopular->setText(QApplication::translate("SearchDialog", "In popular", 0));
-
-    byOwns = new QCheckBox(searchInGroup);
-    byOwns->setObjectName(QStringLiteral("byOwns"));
-    byOwns->setGeometry(QRect(10, 40, 101, 17));
-    byOwns->setText(QApplication::translate("SearchDialog", "In owns", 0));
-
-    byOrigins = new QCheckBox(searchInGroup);
-    byOrigins->setObjectName(QStringLiteral("byOrigins"));
-    byOrigins->setGeometry(QRect(150, 20, 121, 17));
-    byOrigins->setText(QApplication::translate("SearchDialog", "In originals only", 0));
-
-    byForeign = new QCheckBox(searchInGroup);
-    byForeign->setObjectName(QStringLiteral("byForeign"));
-    byForeign->setGeometry(QRect(150, 40, 111, 17));
-    byForeign->setText(QApplication::translate("SearchDialog", "In foreign", 0));
 
     QGroupBox * searchByGroup = new QGroupBox(limitationsAreaBody);
-    searchByGroup->setObjectName(QStringLiteral("searchByGroup"));
-    searchByGroup->setGeometry(QRect(10, 10, 431, 81));
+    searchByGroup -> setObjectName(QStringLiteral("searchByGroup"));
+    searchByGroup -> setTitle(QApplication::translate("SearchDialog", "Search By", 0));
+
+    l -> addWidget(searchByGroup, 1);
+    QGridLayout * gl1 = new QGridLayout(searchByGroup);
 
     byTitle = new QRadioButton(searchByGroup);
-    byTitle->setObjectName(QStringLiteral("byTitle"));
-    byTitle->setGeometry(QRect(10, 20, 51, 17));
-    byTitle->setChecked(true);
-
-    byTag = new QRadioButton(searchByGroup);
-    byTag->setObjectName(QStringLiteral("byTag"));
-    byTag->setEnabled(false);
-    byTag->setGeometry(QRect(220, 20, 51, 17));
+    byTitle -> setObjectName(QStringLiteral("byTitle"));
+    byTitle -> setChecked(true);
+    byTitle -> setText(QApplication::translate("SearchDialog", "Title", 0));
+    gl1 -> addWidget(byTitle, 0, 0, 1, 2);
 
     byArtist = new QRadioButton(searchByGroup);
-    byArtist->setObjectName(QStringLiteral("byArtist"));
-    byArtist->setGeometry(QRect(30, 40, 161, 17));
-    byArtist->setChecked(false);
+    byArtist -> setObjectName(QStringLiteral("byArtist"));
+    byArtist -> setChecked(false);
+    byArtist -> setText(QApplication::translate("SearchDialog", "by artist if possible", 0));
+    gl1 -> addWidget(byArtist, 1, 1);
 
     bySongName = new QRadioButton(searchByGroup);
-    bySongName->setObjectName(QStringLiteral("bySong"));
-    bySongName->setGeometry(QRect(30, 60, 161, 17));
-    bySongName->setChecked(false);
+    bySongName -> setObjectName(QStringLiteral("bySong"));
+    bySongName -> setChecked(false);
+    bySongName -> setText(QApplication::translate("SearchDialog", "by song title if possible", 0));
+    gl1 -> addWidget(bySongName, 2, 1);
 
-    searchByGroup->setTitle(QApplication::translate("SearchDialog", "Search By", 0));
-    byTitle->setText(QApplication::translate("SearchDialog", "Title", 0));
-    byTag->setText(QApplication::translate("SearchDialog", "Tag", 0));
-    byArtist->setText(QApplication::translate("SearchDialog", "by artist if possible", 0));
-    bySongName->setText(QApplication::translate("SearchDialog", "by song title if possible", 0));
+    byTag = new QRadioButton(searchByGroup);
+    byTag -> setObjectName(QStringLiteral("byTag"));
+    byTag -> setEnabled(false);
+    byTag -> setText(QApplication::translate("SearchDialog", "Tag", 0));
+    gl1 -> addWidget(byTag, 0, 2);
 
-    limitationsArea->setWidget(limitationsAreaBody);
+
+
+    QGroupBox * searchInGroup = new QGroupBox(limitationsAreaBody);
+    searchInGroup -> setObjectName(QStringLiteral("searchInGroup"));
+    searchInGroup -> setTitle(QApplication::translate("SearchDialog", "Search In", 0));
+
+    l -> addWidget(searchInGroup, 1);
+    QGridLayout * gl2 = new QGridLayout(searchInGroup);
+
+    byPopular = new QCheckBox(searchInGroup);
+    byPopular -> setObjectName(QStringLiteral("byPopular"));
+    byPopular -> setText(QApplication::translate("SearchDialog", "In popular", 0));
+    gl2 -> addWidget(byPopular, 0, 0);
+
+    byOwns = new QCheckBox(searchInGroup);
+    byOwns -> setObjectName(QStringLiteral("byOwns"));
+    byOwns -> setText(QApplication::translate("SearchDialog", "In owns", 0));
+    gl2 -> addWidget(byOwns, 1, 0);
+
+    byOrigins = new QCheckBox(searchInGroup);
+    byOrigins -> setObjectName(QStringLiteral("byOrigins"));
+    byOrigins -> setText(QApplication::translate("SearchDialog", "In originals only", 0));
+    gl2 -> addWidget(byOrigins, 0, 1);
+
+    byForeign = new QCheckBox(searchInGroup);
+    byForeign -> setObjectName(QStringLiteral("byForeign"));
+    byForeign -> setText(QApplication::translate("SearchDialog", "In foreign", 0));
+    gl2 -> addWidget(byForeign, 1, 1);
+
+
+    limitationsArea -> setWidget(limitationsAreaBody);
     return limitationsArea;
 }
 
