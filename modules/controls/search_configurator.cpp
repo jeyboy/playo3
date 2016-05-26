@@ -10,98 +10,106 @@ using namespace Controls;
 
 QScrollArea * SearchConfigurator::initLocations() {
     QScrollArea * locationsArea = new QScrollArea(this);
-    locationsArea->setObjectName(QStringLiteral("locationsArea"));
-    locationsArea->setGeometry(QRect(490, 10, 451, 321));
-    locationsArea->setWidgetResizable(false);
+    locationsArea -> setObjectName(QStringLiteral("locationsArea"));
+//    locationsArea -> setWidgetResizable(false);
 
     QWidget * locationsAreaBody = new QWidget();
-    locationsAreaBody->setObjectName(QStringLiteral("locationsAreaBody"));
-    locationsAreaBody->setGeometry(QRect(0, 0, 449, 319));
+    locationsAreaBody -> setObjectName(QStringLiteral("locationsAreaBody"));
 
-    sitesList = new QListWidget(locationsAreaBody);
-    sitesList->setObjectName(QStringLiteral("sitesList"));
-    sitesList->setGeometry(QRect(10, 190, 431, 121));
+    QGridLayout * l = new QGridLayout(locationsAreaBody);
 
     inSites = new QCheckBox(locationsAreaBody);
-    inSites->setObjectName(QStringLiteral("inSites"));
-    inSites->setGeometry(QRect(10, 170, 121, 20));
-    inSites->setToolTip(QApplication::translate("SearchDialog", "Search in VKontakte", 0));
-    inSites->setText(QApplication::translate("SearchDialog", "Search in Sites", 0));
+    inSites -> setObjectName(QStringLiteral("inSites"));
+    inSites -> setText(QApplication::translate("SearchDialog", "Search in Sites", 0));
+    inSites -> setStyleSheet("font-weight: bold;");
+    l -> addWidget(inSites, 0, 0);
 
-    tabsList = new QListWidget(locationsAreaBody);
-    tabsList->setObjectName(QStringLiteral("tabsList"));
-    tabsList->setGeometry(QRect(190, 30, 251, 121));
+    sitesList = new QListWidget(locationsAreaBody);
+    sitesList -> setObjectName(QStringLiteral("sitesList"));
+    l -> addWidget(sitesList, 1, 0, 3, 1);
 
-    driveList = new QListWidget(locationsAreaBody);
-    driveList->setObjectName(QStringLiteral("driveList"));
-    driveList->setGeometry(QRect(10, 30, 171, 121));
 
     inComputer = new QCheckBox(locationsAreaBody);
-    inComputer->setObjectName(QStringLiteral("inComputer"));
-    inComputer->setGeometry(QRect(10, 10, 141, 21));
-    inComputer->setToolTip(QApplication::translate("SearchDialog", "Search in VKontakte", 0));
-    inComputer->setText(QApplication::translate("SearchDialog", "Search in Computer", 0));
+    inComputer -> setObjectName(QStringLiteral("inComputer"));
+    inComputer -> setText(QApplication::translate("SearchDialog", "Search in Computer", 0));
+    inComputer -> setStyleSheet("font-weight: bold;");
+    l -> addWidget(inComputer, 0, 1);
+
+    driveList = new QListWidget(locationsAreaBody);
+    driveList -> setObjectName(QStringLiteral("driveList"));
+    l -> addWidget(driveList, 1, 1);
+
 
     inTabs = new QCheckBox(locationsAreaBody);
-    inTabs->setObjectName(QStringLiteral("inTabs"));
-    inTabs->setGeometry(QRect(190, 10, 121, 20));
-    inTabs->setToolTip(QApplication::translate("SearchDialog", "Search in VKontakte", 0));
-    inTabs->setText(QApplication::translate("SearchDialog", "Search in Tabs", 0));
+    inTabs -> setObjectName(QStringLiteral("inTabs"));
+    inTabs -> setText(QApplication::translate("SearchDialog", "Search in Tabs", 0));
+    inTabs -> setStyleSheet("font-weight: bold;");
+    l -> addWidget(inTabs, 2, 1);
 
-    locationsArea->setWidget(locationsAreaBody);
+    tabsList = new QListWidget(locationsAreaBody);
+    tabsList -> setObjectName(QStringLiteral("tabsList"));
+    l -> addWidget(tabsList, 3, 1);
+
+    locationsArea -> setWidget(locationsAreaBody);
     return locationsArea;
 }
 
 QScrollArea * SearchConfigurator::initPredicates() {
     predicatesArea = new QScrollArea(this);
-    predicatesArea->setObjectName(QStringLiteral("predicatesArea"));
-    predicatesArea->setGeometry(QRect(10, 10, 451, 321));
-    predicatesArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
-    predicatesArea->setWidgetResizable(false);
+    predicatesArea -> setObjectName(QStringLiteral("predicatesArea"));
+//    predicatesArea->setWidgetResizable(false);
 
     QWidget * predicatesAreaBody = new QWidget();
-    predicatesAreaBody->setObjectName(QStringLiteral("predicatesAreaBody"));
-    predicatesAreaBody->setGeometry(QRect(0, 0, 449, 319));
+    predicatesAreaBody -> setObjectName(QStringLiteral("predicatesAreaBody"));
 
-    textPredicates = new QListWidget(predicatesAreaBody);
-    textPredicates->setObjectName(QStringLiteral("textPredicates"));
-    textPredicates->setGeometry(QRect(10, 60, 211, 251));
+    QGridLayout * l = new QGridLayout(predicatesAreaBody);
 
-    addStylePredicate = new QPushButton(predicatesAreaBody);
-    addStylePredicate->setObjectName(QStringLiteral("addStylePredicate"));
-    addStylePredicate->setGeometry(QRect(420, 29, 21, 24));
-    addStylePredicate->setText(QApplication::translate("SearchDialog", "+", 0));
-
-    addPredicate = new QPushButton(predicatesAreaBody);
-    addPredicate->setObjectName(QStringLiteral("addPredicate"));
-    addPredicate->setGeometry(QRect(200, 29, 21, 24));
-    addPredicate->setText(QApplication::translate("SearchDialog", "+", 0));
 
     QLabel * sentencesLabel = new QLabel(predicatesAreaBody);
-    sentencesLabel->setObjectName(QStringLiteral("sentencesLabel"));
-    sentencesLabel->setGeometry(QRect(90, 9, 61, 20));
-    sentencesLabel->setText(QApplication::translate("SearchDialog", "Sentences", 0));
+    sentencesLabel -> setObjectName(QStringLiteral("sentencesLabel"));
+    sentencesLabel -> setText(QApplication::translate("SearchDialog", "Sentences", 0));
+    l -> addWidget(sentencesLabel, 0, 0, 1, 2, Qt::AlignCenter);
 
-    stylePredicate = new QComboBox(predicatesAreaBody);
-    stylePredicate->setObjectName(QStringLiteral("stylePredicate"));
-    stylePredicate->setGeometry(QRect(230, 30, 191, 22));
-
-    stylePredicates = new QListWidget(predicatesAreaBody);
-    stylePredicates->setObjectName(QStringLiteral("stylePredicates"));
-    stylePredicates->setGeometry(QRect(230, 60, 211, 251));
-    stylePredicates->setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
-
-    textPredicate = new QLineEdit(predicatesAreaBody);
-    textPredicate->setObjectName(QStringLiteral("textPredicate"));
-    textPredicate->setGeometry(QRect(10, 30, 191, 22));
-    textPredicates->setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
 
     QLabel * genresLabel = new QLabel(predicatesAreaBody);
-    genresLabel->setObjectName(QStringLiteral("genresLabel"));
-    genresLabel->setGeometry(QRect(320, 9, 51, 20));
-    genresLabel->setText(QApplication::translate("SearchDialog", "Genres", 0));
+    genresLabel -> setObjectName(QStringLiteral("genresLabel"));
+    genresLabel -> setText(QApplication::translate("SearchDialog", "Genres", 0));
+    l -> addWidget(genresLabel, 0, 2, 1, 2, Qt::AlignCenter);
 
-    predicatesArea->setWidget(predicatesAreaBody);
+
+    textPredicate = new QLineEdit(predicatesAreaBody);
+    textPredicate -> setObjectName(QStringLiteral("textPredicate"));
+    l -> addWidget(textPredicate, 1, 0);
+
+    addPredicate = new QPushButton(predicatesAreaBody);
+    addPredicate -> setObjectName(QStringLiteral("addPredicate"));
+    addPredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
+    addPredicate -> setMaximumSize(32, 32);
+    l -> addWidget(addPredicate, 1, 1);
+
+    textPredicates = new QListWidget(predicatesAreaBody);
+    textPredicates -> setObjectName(QStringLiteral("textPredicates"));
+    textPredicates -> setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
+    l -> addWidget(textPredicates, 2, 0, 1, 2);
+
+
+    stylePredicate = new QComboBox(predicatesAreaBody);
+    stylePredicate -> setObjectName(QStringLiteral("stylePredicate"));
+    l -> addWidget(stylePredicate, 1, 2);
+
+    addStylePredicate = new QPushButton(predicatesAreaBody);
+    addStylePredicate -> setObjectName(QStringLiteral("addStylePredicate"));
+    addStylePredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
+    addStylePredicate -> setMaximumSize(32, 32);
+    l -> addWidget(addStylePredicate, 1, 3);
+
+    stylePredicates = new QListWidget(predicatesAreaBody);
+    stylePredicates -> setObjectName(QStringLiteral("stylePredicates"));
+    stylePredicates -> setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
+    l -> addWidget(stylePredicates, 2, 2, 1, 2);
+
+
+    predicatesArea -> setWidget(predicatesAreaBody);
     return predicatesArea;
 }
 QScrollArea * SearchConfigurator::initLimitations() {
