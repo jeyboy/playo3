@@ -8,11 +8,7 @@
 using namespace Core;
 using namespace Controls;
 
-QScrollArea * SearchConfigurator::initLocations() {
-    QScrollArea * locationsArea = new QScrollArea(this);
-    locationsArea -> setObjectName(QStringLiteral("locationsArea"));
-//    locationsArea -> setWidgetResizable(false);
-
+QWidget * SearchConfigurator::initLocations() {
     QWidget * locationsAreaBody = new QWidget();
     locationsAreaBody -> setObjectName(QStringLiteral("locationsAreaBody"));
 
@@ -50,16 +46,11 @@ QScrollArea * SearchConfigurator::initLocations() {
     tabsList -> setObjectName(QStringLiteral("tabsList"));
     l -> addWidget(tabsList, 3, 1);
 
-    locationsArea -> setWidget(locationsAreaBody);
-    return locationsArea;
+    return locationsAreaBody;
 }
 
-QScrollArea * SearchConfigurator::initPredicates() {
-    predicatesArea = new QScrollArea(this);
-    predicatesArea -> setObjectName(QStringLiteral("predicatesArea"));
-//    predicatesArea->setWidgetResizable(false);
-
-    QWidget * predicatesAreaBody = new QWidget();
+QWidget * SearchConfigurator::initPredicates() {
+    predicatesAreaBody = new QWidget();
     predicatesAreaBody -> setObjectName(QStringLiteral("predicatesAreaBody"));
 
     QGridLayout * l = new QGridLayout(predicatesAreaBody);
@@ -107,16 +98,10 @@ QScrollArea * SearchConfigurator::initPredicates() {
     stylePredicates -> setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
     l -> addWidget(stylePredicates, 2, 2, 1, 2);
 
-
-    predicatesArea -> setWidget(predicatesAreaBody);
-    return predicatesArea;
+    return predicatesAreaBody;
 }
 
-QScrollArea * SearchConfigurator::initLimitations() {
-    QScrollArea * limitationsArea = new QScrollArea(this);
-    limitationsArea -> setObjectName(QStringLiteral("limitationsArea"));
-//    limitationsArea->setWidgetResizable(false);
-
+QWidget * SearchConfigurator::initLimitations() {
     QWidget * limitationsAreaBody = new QWidget();
     limitationsAreaBody -> setObjectName(QStringLiteral("limitationsAreaBody"));
 
@@ -184,8 +169,7 @@ QScrollArea * SearchConfigurator::initLimitations() {
     gl2 -> addWidget(byForeign, 1, 1);
 
 
-    limitationsArea -> setWidget(limitationsAreaBody);
-    return limitationsArea;
+    return limitationsAreaBody;
 }
 
 void SearchConfigurator::initiateSources() {
@@ -277,7 +261,6 @@ SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const Sear
 }
 
 SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false) {
-
     setObjectName(QStringLiteral("searchConfigurator"));
     setExclusive(true);
     setToggleable(false);
@@ -288,6 +271,7 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
     initiateSources();
 
     QMetaObject::connectSlotsByName(this);
+    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(onFocusChanged(QWidget*,QWidget*)));
 }
 
 SearchSettings SearchConfigurator::params() {
@@ -457,9 +441,18 @@ void SearchConfigurator::on_sitesList_itemClicked(QListWidgetItem * item) {
     inSites -> blockSignals(false);
 }
 
-void SearchConfigurator::on_searchConfigurator_currentChanged(int index) {
-    bool predicable = index == (int)predicatesArea;
-
-    if (activationBtn) activationBtn -> setDefault(!predicable);
-    addPredicate -> setDefault(predicable);
+void SearchConfigurator::onFocusChanged(QWidget * /*old*/, QWidget * now) {
+    if (now == stylePredicate) {
+        activationBtn -> setDefault(false);
+        addPredicate -> setDefault(false);
+        addStylePredicate -> setDefault(true);
+    } else if (now == textPredicate) {
+        activationBtn -> setDefault(false);
+        addStylePredicate -> setDefault(false);
+        addPredicate -> setDefault(true);
+    } else {
+        addStylePredicate -> setDefault(false);
+        addPredicate -> setDefault(false);
+        activationBtn -> setDefault(true);
+    }
 }

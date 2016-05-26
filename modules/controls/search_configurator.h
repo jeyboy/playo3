@@ -15,7 +15,7 @@ namespace Controls {
     class SearchConfigurator : public Accordion {
         Q_OBJECT
 
-        QScrollArea * predicatesArea;
+        QWidget * predicatesAreaBody;
 
         QComboBox * stylePredicate;
 
@@ -54,9 +54,9 @@ namespace Controls {
         bool has_not_connected;
 
         void initiateSources();
-        QScrollArea * initLocations();
-        QScrollArea * initPredicates();
-        QScrollArea * initLimitations();
+        QWidget * initLocations();
+        QWidget * initPredicates();
+        QWidget * initLimitations();
     public:
         enum SearchSettingsBlocks {
             none = 0,
@@ -82,7 +82,7 @@ namespace Controls {
         void on_tabsList_itemClicked(QListWidgetItem * item);
         void on_inSites_toggled(bool checked);
         void on_sitesList_itemClicked(QListWidgetItem * item);
-        void on_searchConfigurator_currentChanged(int index);
+        void onFocusChanged(QWidget * old, QWidget * now);
     };
 }
 
