@@ -135,9 +135,24 @@ QWidget * SearchConfigurator::initLimitations() {
 
     byTag = new QRadioButton(searchByGroup);
     byTag -> setObjectName(QStringLiteral("byTag"));
-    byTag -> setEnabled(false);
     byTag -> setText(QApplication::translate("SearchDialog", "Tag", 0));
     gl1 -> addWidget(byTag, 0, 2);
+
+    bySet = new QRadioButton(searchByGroup);
+    bySet -> setObjectName(QStringLiteral("bySet"));
+    bySet -> setText(QApplication::translate("SearchDialog", "Set", 0));
+    gl1 -> addWidget(bySet, 1, 2);
+
+
+    byLyric = new QRadioButton(searchByGroup);
+    byLyric -> setObjectName(QStringLiteral("byLyric"));
+    byLyric -> setText(QApplication::translate("SearchDialog", "Lyric", 0));
+    gl1 -> addWidget(byLyric, 0, 3);
+
+    byAbc = new QRadioButton(searchByGroup);
+    byAbc -> setObjectName(QStringLiteral("byAbc"));
+    byAbc -> setText(QApplication::translate("SearchDialog", "Abc", 0));
+    gl1 -> addWidget(byAbc, 1, 3);
 
 
 
@@ -150,23 +165,40 @@ QWidget * SearchConfigurator::initLimitations() {
 
     byPopular = new QCheckBox(searchInGroup);
     byPopular -> setObjectName(QStringLiteral("byPopular"));
-    byPopular -> setText(QApplication::translate("SearchDialog", "In popular", 0));
+    byPopular -> setText(QApplication::translate("SearchDialog", "Popular", 0));
     gl2 -> addWidget(byPopular, 0, 0);
 
-    byOwns = new QCheckBox(searchInGroup);
-    byOwns -> setObjectName(QStringLiteral("byOwns"));
-    byOwns -> setText(QApplication::translate("SearchDialog", "In owns", 0));
-    gl2 -> addWidget(byOwns, 1, 0);
+    byRelativity = new QCheckBox(searchInGroup);
+    byRelativity -> setObjectName(QStringLiteral("byRelativity"));
+    byRelativity -> setText(QApplication::translate("SearchDialog", "Related", 0));
+    gl2 -> addWidget(byRelativity, 1, 0);
 
     byOrigins = new QCheckBox(searchInGroup);
     byOrigins -> setObjectName(QStringLiteral("byOrigins"));
     byOrigins -> setText(QApplication::translate("SearchDialog", "In originals only", 0));
     gl2 -> addWidget(byOrigins, 0, 1);
 
+    byMixes = new QCheckBox(searchInGroup);
+    byMixes -> setObjectName(QStringLiteral("byMixes"));
+    byMixes -> setText(QApplication::translate("SearchDialog", "In mixes only", 0));
+    gl2 -> addWidget(byMixes, 1, 1);
+
+
     byForeign = new QCheckBox(searchInGroup);
     byForeign -> setObjectName(QStringLiteral("byForeign"));
     byForeign -> setText(QApplication::translate("SearchDialog", "In foreign", 0));
-    gl2 -> addWidget(byForeign, 1, 1);
+    gl2 -> addWidget(byForeign, 0, 2);
+
+    byCyrillic = new QCheckBox(searchInGroup);
+    byCyrillic -> setObjectName(QStringLiteral("byCyrillic"));
+    byCyrillic -> setText(QApplication::translate("SearchDialog", "In cyrillic", 0));
+    gl2 -> addWidget(byCyrillic, 1, 2);
+
+
+    byOwns = new QCheckBox(searchInGroup);
+    byOwns -> setObjectName(QStringLiteral("byOwns"));
+    byOwns -> setText(QApplication::translate("SearchDialog", "In owns", 0));
+    gl2 -> addWidget(byOwns, 0, 3);
 
 
     return limitationsAreaBody;
@@ -291,13 +323,25 @@ SearchSettings SearchConfigurator::params() {
         res.type = Core::ISearchable::in_artist;
     else if (bySongName -> isChecked())
         res.type = Core::ISearchable::in_song_name;
+    else if (bySet -> isChecked())
+        res.type = Core::ISearchable::in_sets;
+    else if (byLyric -> isChecked())
+        res.type = Core::ISearchable::in_lyrics;
+    else if (byAbc -> isChecked())
+        res.type = Core::ISearchable::in_abc;
     else
         res.type = Core::ISearchable::in_tag;
 
     if (byPopular -> isChecked()) res.type |= Core::ISearchable::in_popular;
-    if (byOwns -> isChecked()) res.type |= Core::ISearchable::in_owns;
+    if (byRelativity -> isChecked()) res.type |= Core::ISearchable::in_relative;
+
+    if (byCyrillic -> isChecked()) res.type |= Core::ISearchable::in_cyrillic;
     if (byForeign -> isChecked()) res.type |= Core::ISearchable::in_foreign;
+
     if (byOrigins -> isChecked()) res.type |= Core::ISearchable::in_originals;
+    if (byMixes -> isChecked()) res.type |= Core::ISearchable::in_mixes;
+
+    if (byOwns -> isChecked()) res.type |= Core::ISearchable::in_owns;
 
 
     if (res.inSites) {

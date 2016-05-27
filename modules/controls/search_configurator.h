@@ -39,8 +39,8 @@ namespace Controls {
         QRadioButton * byTag;
         QRadioButton * byArtist;
         QRadioButton * bySongName;
-        QRadioButton * bySets;
-        QRadioButton * byLyrics;
+        QRadioButton * bySet;
+        QRadioButton * byLyric;
         QRadioButton * byAbc;
 
         QCheckBox * byPopular;
@@ -48,7 +48,7 @@ namespace Controls {
         QCheckBox * byOrigins;
         QCheckBox * byMixes;
         QCheckBox * byForeign;
-        QCheckBox * byCirillic;
+        QCheckBox * byCyrillic;
         QCheckBox * byRelativity;
 
         bool has_not_connected;
