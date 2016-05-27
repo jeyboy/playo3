@@ -119,40 +119,40 @@ QWidget * SearchConfigurator::initLimitations() {
     byTitle -> setObjectName(QStringLiteral("byTitle"));
     byTitle -> setChecked(true);
     byTitle -> setText(QApplication::translate("SearchDialog", "Title", 0));
-    gl1 -> addWidget(byTitle, 0, 0, 1, 2);
+    gl1 -> addWidget(byTitle, 0, 0);
 
     byArtist = new QRadioButton(searchByGroup);
     byArtist -> setObjectName(QStringLiteral("byArtist"));
     byArtist -> setChecked(false);
     byArtist -> setText(QApplication::translate("SearchDialog", "by artist if possible", 0));
-    gl1 -> addWidget(byArtist, 1, 1);
+    gl1 -> addWidget(byArtist, 1, 0);
 
     bySongName = new QRadioButton(searchByGroup);
     bySongName -> setObjectName(QStringLiteral("bySong"));
     bySongName -> setChecked(false);
     bySongName -> setText(QApplication::translate("SearchDialog", "by song title if possible", 0));
-    gl1 -> addWidget(bySongName, 2, 1);
+    gl1 -> addWidget(bySongName, 2, 0);
 
     byTag = new QRadioButton(searchByGroup);
     byTag -> setObjectName(QStringLiteral("byTag"));
     byTag -> setText(QApplication::translate("SearchDialog", "Tag", 0));
-    gl1 -> addWidget(byTag, 0, 2);
+    gl1 -> addWidget(byTag, 0, 1);
 
     bySet = new QRadioButton(searchByGroup);
     bySet -> setObjectName(QStringLiteral("bySet"));
     bySet -> setText(QApplication::translate("SearchDialog", "Set", 0));
-    gl1 -> addWidget(bySet, 1, 2);
+    gl1 -> addWidget(bySet, 1, 1);
 
 
     byLyric = new QRadioButton(searchByGroup);
     byLyric -> setObjectName(QStringLiteral("byLyric"));
     byLyric -> setText(QApplication::translate("SearchDialog", "Lyric", 0));
-    gl1 -> addWidget(byLyric, 0, 3);
+    gl1 -> addWidget(byLyric, 0, 2);
 
     byAbc = new QRadioButton(searchByGroup);
     byAbc -> setObjectName(QStringLiteral("byAbc"));
     byAbc -> setText(QApplication::translate("SearchDialog", "Abc", 0));
-    gl1 -> addWidget(byAbc, 1, 3);
+    gl1 -> addWidget(byAbc, 1, 2);
 
 
 
