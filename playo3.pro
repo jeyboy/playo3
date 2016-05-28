@@ -348,7 +348,6 @@ SOURCES += \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/interfaces/auth/teu_auth.cpp \
     modules/core/web/utils/html_parser.cpp \
-    modules/core/web/utils/json_parser.cpp \
     modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \
     modules/core/data_factory.cpp \

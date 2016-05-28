@@ -47,7 +47,7 @@ struct FeedItem {
     qint64 timestamp;
     QString title;
     QUrl link;
-    QList<QUrl> images;
+    QList<QString> images;
     QString desc;
 };
 
@@ -69,7 +69,7 @@ class FeederJob : public QObject {
             src = item -> link.resolved(QUrl(src)).toString();
 
             item -> desc.replace((offset = match.capturedStart(0)), match.capturedLength(0), QStringLiteral("(%1)").arg(item -> images.size()));
-            item -> images.append(QUrl(src));
+            item -> images.append(src);
         }
     }
 
@@ -188,14 +188,14 @@ public slots:
                                             if (prepareTeplate(src, gallery_template)) {
                                                 for(int i = settings.attrs.value(FEED_SETTINGS_IMAGE_GALLERY_FROM).toInt(); i < settings.attrs.value(FEED_SETTINGS_IMAGE_GALLERY_TO).toInt(); i++) {
                                                     QString prev = QString(src).replace(FEED_SETTINGS_URL_PAGINATION_TEMPLATE, QString::number(i));
-                                                    item -> images.append(QUrl(prev));
+                                                    item -> images.append(prev);
                                                 }
                                             }
                                             else ignore_src = false;
                                         }
 
                                         if (!ignore_src)
-                                            item -> images.append(QUrl(src));
+                                            item -> images.append(src);
                                     }
                                 }
 

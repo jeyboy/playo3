@@ -49,24 +49,19 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
 
     //GET TITLE, DESCRIPTION AND ICON
 
-
-
-    QUrl url = index.data(Qt::UserRole + 2).toString();
+    QString url = index.data(Qt::UserRole + 2).toString();
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
     int imageSpace = 10;
     if (ImageBank::obj().hasImage(url)) {
         QIcon ic = ImageBank::obj().icon(url);
-        //ICON
-        r = option.rect.adjusted(5, 10, -10, -10);
+        r = option.rect.adjusted(5, 5, -5, -5);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
         imageSpace = 45;
     }
-    // loading pict in setData() and repaint item
-    //            index.model() -> setData(index, QVariant(), Qt::UserRole + 2);
     else
-        ImageBank::obj().proceedPacket(index, QStringList() << url.toString());
+        ImageBank::obj().proceedPacket(index, QStringList() << url);
 
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);

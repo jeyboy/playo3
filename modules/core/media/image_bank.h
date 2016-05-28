@@ -18,12 +18,12 @@ using namespace Core::Web;
 class ImageBank : public QObject, public Core::Singleton<ImageBank> {
     Q_OBJECT
 
-    QHash<QUrl, bool> orders;
-    QHash<QUrl, QModelIndex> packet_requests;
+    QHash<QString, bool> orders;
+    QHash<QString, QModelIndex> packet_requests;
     QHash<QModelIndex, int> packet_limiters;
 
-    QHash<QUrl, QLabel *> requests;
-    QHash<QUrl, QUrl> locale_pathes;
+    QHash<QString, QLabel *> requests;
+    QHash<QString, QString> locale_pathes;
 
     ImageBank() {
         QDir dir(bankPath());
@@ -35,48 +35,55 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 public:
     QString bankPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/"); }
 
-    bool hasImage(const QUrl & url) {
+    bool hasImage(const QString & url) {
         return locale_pathes.contains(url);
     }
 
-    QPixmap pixmap(const QUrl & url) {
-        if (locale_pathes.contains(url))
-            return QPixmap(locale_pathes[url].toString());
-        else
+    QPixmap pixmap(const QString & url) {
+        if (locale_pathes.contains(url)) {
+            QString path = locale_pathes.value(url);
+            return QPixmap(path);
+        } else
             return QPixmap();
     }
 
-    QIcon icon(const QUrl & url) {
+    QIcon icon(const QString & url) {
         return QIcon(pixmap(url));
     }
 
-    void proceed(QLabel * obj, const QUrl & url) {
+    void proceed(QLabel * obj, const QString & url) {
         if (locale_pathes.contains(url)) {
-            obj -> setPixmap(QPixmap(locale_pathes.value(url).toLocalFile()));
-        } else {
-            if (!requests.contains(url)) {
-                requests.insert(url, obj);
+            obj -> setPixmap(pixmap(url));
+            return;
+        }
 
-                if (!orders.contains(url)) {
-                    orders.insert(url, true);
-                    Core::Web::Manager::prepare() -> followedGetAsync(url, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
-                }
+        if (!requests.contains(url)) {
+            requests.insert(url, obj);
+
+            if (!orders.contains(url)) {
+                orders.insert(url, true);
+                Core::Web::Manager::prepare() -> followedGetAsync(QUrl(url), Func(this, SLOT(pixmapDownloaded(Response*,void*))));
             }
         }
     }
 
     void proceedPacket(const QModelIndex & ind, const QStringList & urls) {
+        if (packet_limiters.contains(ind)) return;
+
         bool ready = true;
 
         for(QStringList::ConstIterator url = urls.cbegin(); url != urls.cend(); url++) {
             QUrl u = QUrl(*url);
-            if (!locale_pathes.contains(u)) {
+
+            if (!u.isValid()) continue;
+
+            if (!locale_pathes.contains(*url)) {
                 ready = false;
                 packet_limiters[ind]++;
-                packet_requests.insertMulti(u, ind);
+                packet_requests.insertMulti(*url, ind);
 
-                if (!orders.contains(u)) {
-                    orders.insert(u, true);
+                if (!orders.contains(*url)) {
+                    orders.insert(*url, true);
                     Core::Web::Manager::prepare() -> followedGetAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
                 }
             }
@@ -88,34 +95,42 @@ public:
 public slots:
     void pixmapDownloaded(Response * response, void * /*user_data*/) {
         QUrl url = response -> url();
+        QString url_str = url.toString();
         QString filename = bankPath() % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
 
+        bool has_errors = response -> hasErrors();
         QPixmap pix = response -> toPixmap();
-        QSize pix_size = pix.size();
-        QSize max_size = FEED_BANK_IMG_MAX_SIZE;
 
-        if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
-            pix = pix.scaled(FEED_BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (!(has_errors || pix.isNull())) {
+            QSize pix_size = pix.size();
+            QSize max_size = FEED_BANK_IMG_MAX_SIZE;
 
-        if (!pix.save(filename, 0, 100)) // without compression
-            qDebug() << "File is not saved" << filename;
+            if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
+                pix = pix.scaled(FEED_BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-        QLabel * obj = requests.take(url);
+            if (pix.save(filename, 0, 100)) // without compression
+                locale_pathes.insert(url_str, filename);
+            else
+                qDebug() << "File is not saved" << filename;
+        }
+        else qDebug() << "Pixmap is wrong";
+
+        QLabel * obj = requests.take(url_str);
         if (obj)
             obj -> setPixmap(pix);
 
-        QModelIndex ind = packet_requests[url];
+        QModelIndex ind = packet_requests[url_str];
 
         if (ind.isValid()) {
             if (--packet_limiters[ind] <= 0) {
                 packet_limiters.remove(ind);
-                packet_requests.remove(url);
+                packet_requests.remove(url_str);
 
                 emit const_cast<QAbstractItemModel *>(ind.model()) -> dataChanged(ind, ind);
             }
         }
 
-        orders.remove(url);
+        orders.remove(url_str);
     }
 };
 

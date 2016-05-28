@@ -24,7 +24,6 @@ public:
         QLabel * title = new QLabel(item -> title, this);
         l -> addWidget(title, 0, 0);
 
-
         int row = 1;
         for(int count = 0; count < item -> images.size(); row++, count += PICTS_LIMIT) {
             QWidget * images_panel = new QWidget(this);
