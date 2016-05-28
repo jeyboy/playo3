@@ -1,4 +1,5 @@
 #include "relations_delegate.h"
+#include "modules/core/media/image_bank.h"
 
 QSize RelationsDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
@@ -47,19 +48,25 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     }
 
     //GET TITLE, DESCRIPTION AND ICON
-    QIcon ic = QIcon(qvariant_cast<QIcon>(index.data(Qt::DecorationRole)));
+
+
+
+    QUrl url = index.data(Qt::UserRole + 2).toString();
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
     int imageSpace = 10;
-    if (!ic.isNull()) {
+    if (ImageBank::obj().hasImage(url)) {
+        QIcon ic = ImageBank::obj().icon(url);
         //ICON
         r = option.rect.adjusted(5, 10, -10, -10);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
         imageSpace = 45;
     }
     // loading pict in setData() and repaint item
-//    else { index.model() -> setData(index, QVariant(), Qt::UserRole + 2); }
+    //            index.model() -> setData(index, QVariant(), Qt::UserRole + 2);
+    else
+        ImageBank::obj().proceedPacket(index, QStringList() << url.toString());
 
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);

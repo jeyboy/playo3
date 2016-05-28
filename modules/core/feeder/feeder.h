@@ -3,12 +3,10 @@
 
 #include <qobject.h>
 #include <qthread.h>
-#include <qlabel.h>
 #include <qdatetime.h>
 #include <qstringbuilder.h>
 
-#include "modules/core/web/utils/web_manager.h"
-#include "modules/core/interfaces/singleton.h"
+#include "modules/core/media/image_bank.h"
 
 #define FEED_SETTINGS_URL_PAGINATION_TEMPLATE QStringLiteral("^1")
 
@@ -27,9 +25,6 @@
 #define FEED_SETTINGS_IMAGE_GALLERY_TO QStringLiteral("image_gallery_to")
 
 #define FEED_STEP 2
-#define FEED_BANK_IMG_MAX_SIZE QSize(640, 480)
-
-using namespace Core::Web;
 
 enum FeederType {
     feeder_rss,
@@ -54,49 +49,6 @@ struct FeedItem {
     QUrl link;
     QList<QUrl> images;
     QString desc;
-};
-
-class ImageBank : public QObject, public Core::Singleton<ImageBank> {
-    Q_OBJECT
-
-    QHash<QUrl, QLabel *> requests;
-    QHash<QUrl, QUrl> locale_pathes;
-
-    ImageBank() {
-        QDir dir(bankPath());
-        if (!dir.exists())
-            dir.mkpath(".");
-    }
-
-    friend class Core::Singleton<ImageBank>;
-public:
-    QString bankPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/"); }
-    void proceed(QLabel * obj, const QUrl & url) {
-        if (locale_pathes.contains(url)) {
-            obj -> setPixmap(QPixmap(locale_pathes.value(url).toLocalFile()));
-        } else {
-            requests.insert(url, obj);
-            Core::Web::Manager::prepare() -> followedGetAsync(url, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
-        }
-    }
-public slots:
-    void pixmapDownloaded(Response * response, void * /*user_data*/) {
-        QUrl url = response -> url();
-        QLabel * obj = requests.take(url);
-        QString filename = bankPath() % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
-
-        QPixmap pix = response -> toPixmap();
-        QSize pix_size = pix.size();
-        QSize max_size = FEED_BANK_IMG_MAX_SIZE;
-
-        if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
-            pix = pix.scaled(FEED_BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-        if (!pix.save(filename, 0, 100)) // without compression
-            qDebug() << "File is not saved" << filename;
-
-        obj -> setPixmap(pix);
-    }
 };
 
 class FeederJob : public QObject {

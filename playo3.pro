@@ -286,7 +286,8 @@ HEADERS += \
     modules/core/web/interfaces/quariable_defines.h \
     modules/core/feeder/aspect_ratio_label.h \
     modules/core/feeder/feed_widget.h \
-    modules/core/feeder/feeder.h
+    modules/core/feeder/feeder.h \
+    modules/core/media/image_bank.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -7,9 +7,7 @@
 #include <qstyleoption.h>
 #include <qstringbuilder.h>
 
-#include "download_model_item.h"
-
-//#include "download_editor.h"
+#include "modules/core/web/utils/web_manager.h"
 
 class RelationsDelegate : public QStyledItemDelegate {
     Q_OBJECT
@@ -18,6 +16,8 @@ public:
 
     void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+protected slots:
+
 };
 
 #endif // RELATIONS_DELEGATE_H
