@@ -11,75 +11,6 @@
 namespace Core {
     namespace Web {
         class IQueriable {
-        protected:
-            bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
-            {
-                QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
-
-                bool res = request(&arg);
-                json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
-                return res;
-            }
-
-            QJsonObject sRequest(const QString & url, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
-            {
-                QJsonArray arr = saRequest(url, call_type, post_proc, field, error_receiver);
-                return arr.isEmpty() ? QJsonObject() : arr.last().toObject();
-            }
-            QJsonArray saRequest(const QString & url, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = QString(), QObject * error_receiver = 0)
-            {
-                QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
-
-                request(&arg);
-                return arr;
-            }
-
-
-            QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules,
-                                const AdditionalProc & post_proc = proc_none, QJsonArray */*&*/ arr = 0, const QString & field = QString(), QObject * error_receiver = 0)
-            {
-                QJsonArray temp_arr;
-                if (!arr)
-                    arr = &temp_arr;
-
-                QueriableArg arg(arr, url, call_type, post_proc, field, error_receiver);
-                arg.setPolyLimitations(poly_rules);
-
-                request(&arg);
-                return *arr;
-            }
-
-            bool request(QueriableArg * arg) {
-                switch(arg -> call_amount) {
-                    case call_solo: return sQuery(arg);
-                    case call_poly: return lQuery(arg);
-                    default: return false;
-                }
-            }
-
-            QString baseUrlStr(const QString & predicate, const QUrlQuery & query) {
-                QUrl url(baseUrlStr(predicate));
-                url.setQuery(query);
-                return url.toString();
-            }
-
-            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-            virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
-
-            // for json
-            // extract status and update request url if required
-            virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
-            virtual bool endReached(QJsonObject & /*response*/, QueriableArg * /*arg*/) { return false; }
-
-            // for html
-            // extract content and update request url if required
-            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) { return false; }
-
             bool sQuery(QueriableArg * arg) {
                 Logger::obj().startMark();
                 bool status = true;
@@ -135,9 +66,6 @@ namespace Core {
             bool lQuery(QueriableArg * arg) {
                 bool status = true;
 
-                if (arg -> field.isEmpty())
-                    arg -> field = DEF_JSON_FIELD;
-
                 while ( (status &= sQuery(arg)) ) {
                     if (arg -> isCompleted()) return status;
                     QThread::msleep(REQUEST_DELAY);
@@ -145,6 +73,77 @@ namespace Core {
 
                 return status;
             }
+        protected:
+            bool request(QueriableArg * arg) {
+                if (arg -> field.isEmpty())
+                    arg -> field = DEF_JSON_FIELD;
+
+                switch(arg -> call_amount) {
+                    case call_solo: return sQuery(arg);
+                    case call_poly: return lQuery(arg);
+                    default: return false;
+                }
+            }
+
+            bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
+                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+            {
+                QJsonArray arr;
+                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+
+                bool res = request(&arg);
+                json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
+                return res;
+            }
+
+            QJsonObject sRequest(const QString & url, const ApiCallType & call_type,
+                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+            {
+                QJsonArray arr = saRequest(url, call_type, post_proc, field, error_receiver);
+                return arr.isEmpty() ? QJsonObject() : arr.last().toObject();
+            }
+            QJsonArray saRequest(const QString & url, const ApiCallType & call_type,
+                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+            {
+                QJsonArray arr;
+                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+
+                request(&arg);
+                return arr;
+            }
+
+
+            QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules,
+                                const AdditionalProc & post_proc = proc_none, QJsonArray */*&*/ arr = 0, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+            {
+                QJsonArray temp_arr;
+                if (!arr)
+                    arr = &temp_arr;
+
+                QueriableArg arg(arr, url, call_type, post_proc, field, error_receiver);
+                arg.setPolyLimitations(poly_rules);
+
+                request(&arg);
+                return *arr;
+            }
+
+            QString baseUrlStr(const QString & predicate, const QUrlQuery & query) {
+                QUrl url(baseUrlStr(predicate));
+                url.setQuery(query);
+                return url.toString();
+            }
+
+            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+            virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
+            // for json
+            // extract status and update request url if required
+            virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
+            virtual bool endReached(QJsonObject & /*response*/, QueriableArg * /*arg*/) { return false; }
+
+            // for html
+            // extract content and update request url if required
+            virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) { return false; }
 
             inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
                 if (errorReceiver)

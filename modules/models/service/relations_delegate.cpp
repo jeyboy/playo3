@@ -56,7 +56,7 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     int imageSpace = 10;
     if (ImageBank::obj().hasImage(url)) {
         QIcon ic = ImageBank::obj().icon(url);
-        r = option.rect.adjusted(5, 5, -5, -5);
+        r = option.rect.adjusted(2, 2, -2, -2);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
         imageSpace = 45;
     }

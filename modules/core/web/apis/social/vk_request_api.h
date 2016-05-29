@@ -30,15 +30,6 @@ namespace Core {
                     return url.toString();
                 }
 
-                QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
-
-                QJsonArray search_proc(const SearchLimit & limits) {
-                    if (limits.predicate.isEmpty() && limits.by_popularity())
-                        return popular(limits);
-                    else
-                        return audioSearch(limits.predicate, limits.by_artists(), limits.by_owns(), limits.by_popularity(), limits.items_limit);
-                }
-
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_limit = DEFAULT_REQUESTS_LIMIT,
                     int /*per_request*/ = 100,
@@ -56,6 +47,14 @@ namespace Core {
                     );
                 }
 
+                QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
+
+                QJsonArray search_proc(const SearchLimit & limits) {
+                    if (limits.predicate.isEmpty() && limits.by_popularity())
+                        return popular(limits);
+                    else
+                        return audioSearch(limits.predicate, limits.by_artists(), limits.by_owns(), limits.by_popularity(), limits.items_limit);
+                }
             public:
                 enum InfoType {
                     info_music = 1,
@@ -101,7 +100,7 @@ namespace Core {
                 QString audioAlbumsUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_albums.arg(uid));
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
                 }
                 QJsonArray audioAlbums(QString & uid, int offset = 0) {
                     return pRequest(

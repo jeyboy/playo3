@@ -3,6 +3,8 @@
 
 #include <qstringbuilder.h>
 
+#define VK_DEFAULT_OFFSET_TEMPLATE QStringLiteral("ZZZZ")
+
 namespace Core {
     namespace Web {
         namespace Vk {

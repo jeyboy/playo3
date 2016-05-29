@@ -1,5 +1,4 @@
 #include "vk_api_keys.h"
-#include "modules/core/web/interfaces/quariable_defines.h"
 
 namespace Core {
     namespace Web {
@@ -90,7 +89,7 @@ namespace Core {
                 "var curr; var count = 5;"
                 "var folders_result = API.audio.getAlbums({"
                 "                count: count, "
-                "                offset: " % OFFSET_TEMPLATE % ", "
+                "                offset: " % VK_DEFAULT_OFFSET_TEMPLATE % ", "
                 "                owner_id: %1"
                 "    });"
                 "var folders_result = folders_result.items;"
@@ -109,7 +108,7 @@ namespace Core {
                 "return { "
                 "    " % tkn_albums % ": proceed_folders, "
                 "    " % tkn_finished % ": (proceed_folders.length < count), "
-                "    " % tkn_offset % ": " % OFFSET_TEMPLATE % " %2b count"
+                "    " % tkn_offset % ": " % VK_DEFAULT_OFFSET_TEMPLATE % " %2b count"
                 "};"
             );
 
