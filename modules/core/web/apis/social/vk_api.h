@@ -26,7 +26,7 @@ namespace Core {
 
                     query.addQueryItem(tkn_version, val_version);
                     query.addQueryItem(tkn_access_token, token());
-                    query.addQueryItem(QStringLiteral("test_mode"), "1");
+                    query.addQueryItem(QStringLiteral("test_mode"), "1"); //TODO: remove me later
 
                     return query;
                 }

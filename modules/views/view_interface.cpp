@@ -272,7 +272,7 @@ void IView::copyIdsToClipboard() {
 void IView::openRecomendationsforUser() {
     if (Web::Vk::Api::obj().isConnected()) {
         QString user_uid = settings().uid;
-        Params bar_settings(dt_site_vk, false, false, false, true, user_uid, rel_user);
+        Params bar_settings(dt_site_vk, false, false, false, true, user_uid, rec_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % user_uid), bar_settings, 0, true, true);
     } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");
 }
@@ -281,7 +281,7 @@ void IView::openRecomendationsforItemUser() {
     if (Web::Vk::Api::obj().isConnected()) {
         IItem * it = mdl -> item(currentIndex());
         if (it -> owner().isValid()) {
-            Params bar_settings(dt_site_vk, false, false, false, true, it -> owner().toString(), rel_user);
+            Params bar_settings(dt_site_vk, false, false, false, true, it -> owner().toString(), rec_user);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), bar_settings, 0, true, true);
         }
     } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");
@@ -291,7 +291,7 @@ void IView::openRecomendationsforItem() {
     if (Web::Vk::Api::obj().isConnected()) {
         IItem * it = mdl -> item(currentIndex());
         if (it -> id().isValid()) {
-            Params bar_settings(dt_site_vk, false, false, false, true, it -> toUid(),rel_song);
+            Params bar_settings(dt_site_vk, false, false, false, true, it -> toUid(), rec_song);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
         }
     } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");

@@ -2,10 +2,10 @@
 #define DATA_SUB_TYPES
 
 namespace Core {
-    enum RelType {
-        rel_none = 0,
-        rel_user,
-        rel_song
+    enum RecType {
+        rec_none = 0,
+        rec_user,
+        rec_song
     };
 
     enum DataSubType : int {

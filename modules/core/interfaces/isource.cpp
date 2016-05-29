@@ -16,7 +16,7 @@ void ISource::openTab(const QString & userID) {
 void ISource::openRecomendations(const QString & userID) {
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(siteType(), userID, rel_user), 0, true, true
+        Models::Params(siteType(), userID, rec_user), 0, true, true
     );
 }
 
@@ -26,6 +26,6 @@ void ISource::openRelationTab(Web::Sociable * currApi) {
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
             uidStr(dialog.getId())),
-            Models::Params(siteType(), dialog.getId(), rel_user), 0, true, true
+            Models::Params(siteType(), dialog.getId()), 0, true, true
         );
 }

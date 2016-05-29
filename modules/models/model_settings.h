@@ -6,12 +6,12 @@
 
 namespace Models {
     struct Params {
-        Params(Core::DataSubType cType, const QString & uniq_id = QString(), Core::RelType rel = Core::rel_none) : deleteFile(false), playlist(true),
-            interactive(false), common(false), uid(uniq_id), rel_type(rel), type(cType) { }
+        Params(Core::DataSubType cType, const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none) : deleteFile(false), playlist(true),
+            interactive(false), common(false), uid(uniq_id), rec_type(rec), type(cType) { }
 
         Params(Core::DataSubType cType = Core::dt_tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, const QString & uniq_id = QString(), Core::RelType rel = Core::rel_none) : deleteFile(delFile), playlist(isPlaylist),
-            interactive(isInteractive), common(isCommon), uid(uniq_id), rel_type(rel), type(cType) { }
+            bool isPlaylist = false, const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none) : deleteFile(delFile), playlist(isPlaylist),
+            interactive(isInteractive), common(isCommon), uid(uniq_id), rec_type(rec), type(cType) { }
 
         Params(const QJsonObject & obj) {
             deleteFile = obj[QStringLiteral("del")].toBool();
@@ -20,7 +20,7 @@ namespace Models {
             common = obj[QStringLiteral("common")].toBool();
             type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
-            rel_type = (Core::RelType)obj[QStringLiteral("rel_type")].toInt();
+            rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
         }
 
         QJsonObject toJson() {
@@ -34,7 +34,7 @@ namespace Models {
             if (!uid.isEmpty())
                 obj[QStringLiteral("uid")] = uid;
 
-            obj[QStringLiteral("rel_type")] = rel_type;
+            obj[QStringLiteral("rec_type")] = rec_type;
 
             return obj;
         }
@@ -44,7 +44,7 @@ namespace Models {
         bool interactive;
         bool common;
         QString uid;
-        Core::RelType rel_type;
+        Core::RecType rec_type;
 
         Core::DataSubType type;
     };
