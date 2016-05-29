@@ -109,7 +109,7 @@ namespace Core {
                         rules(offset),
                         proc_json_extract,
                         0,
-                        tkn_albums
+                        QStringList() << tkn_albums
                     );
 
 //                    return lQuery(
@@ -125,7 +125,7 @@ namespace Core {
                         rules(offset),
                         proc_json_extract,
                         &arr,
-                        tkn_albums
+                        QStringList() << tkn_response << tkn_albums
                     );
 
 //                    lQuery(

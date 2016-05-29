@@ -91,7 +91,7 @@ namespace Core { // NOT FINISHED
                         rules(),
                         proc_json_extract,
                         0,
-                        tkn_tracks
+                        QStringList() << tkn_tracks
                     );
 
 //                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
@@ -110,7 +110,7 @@ namespace Core { // NOT FINISHED
                                 prules,
                                 proc_json_extract,
                                 0,
-                                tkn_artists
+                                QStringList() << tkn_artists
                             );
 
 //                            return lQuery(searchArtistsUrl(limits.predicate), QueryRules(tkn_artists, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
@@ -121,7 +121,7 @@ namespace Core { // NOT FINISHED
                                 prules,
                                 proc_json_extract,
                                 0,
-                                tkn_tracks
+                                QStringList() << tkn_tracks
                             );
 
 
@@ -133,7 +133,7 @@ namespace Core { // NOT FINISHED
                                 prules,
                                 proc_json_extract,
                                 0,
-                                tkn_tracks
+                                QStringList() << tkn_tracks
                             );
 
 //                            return lQuery(searchUrl(limits.predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
@@ -160,7 +160,7 @@ namespace Core { // NOT FINISHED
                         rules(0, count),
                         proc_json_extract,
                         0,
-                        tkn_tracks
+                        QStringList() << tkn_tracks
                     );
 
 //                    return lQuery(

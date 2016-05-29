@@ -66,9 +66,9 @@ namespace Core {
 
         struct QueriableArg {
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
-                const QString & field = QString(), QObject * error_receiver = 0)
+                const QStringList & fields = QStringList(), QObject * error_receiver = 0)
                 : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get), post_proc(post_proc),
-                  arr(arr), field(field), items_fact_count(0), requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
+                  arr(arr), fields(fields), items_fact_count(arr -> size()), requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
             {}
 
             void setOffsetPolyLimitations(
@@ -146,8 +146,10 @@ namespace Core {
             }
 
             void prepareRequestUrl() {
-                if (call_item_method == call_iter_method_offset)
-                    request_url = url_template.replace(OFFSET_TEMPLATE, QString::number(start_offset));
+                if (call_item_method == call_iter_method_offset) {
+                    request_url = url_template;
+                    request_url.replace(OFFSET_TEMPLATE, QString::number(start_offset));
+                }
             }
 
             void prepareRequestUrlByToken(const QString & field, const QString & token) {
@@ -173,7 +175,7 @@ namespace Core {
 
             QJsonArray * arr;
 
-            QString field;
+            QStringList fields;
             int items_total_limit, requests_limit, per_request_limit;
             int start_offset;
             int items_fact_count, requests_fact_count;

@@ -28,7 +28,10 @@ namespace Core {
                             sendError(arg -> error_receiver, message, code);
                         } else {
                             if (arg -> post_proc & proc_json_extract) {
-                                QJsonValue val = json.value(arg -> field);
+                                QJsonValue val = json;
+
+                                for(QStringList::Iterator field = arg -> fields.begin(); field != arg -> fields.end(); field++)
+                                    val = val.toObject().value(*field);
 
                                 if (val.isArray())
                                     arg -> append(val.toArray());
@@ -75,8 +78,8 @@ namespace Core {
             }
         protected:
             bool request(QueriableArg * arg) {
-                if (arg -> field.isEmpty())
-                    arg -> field = DEF_JSON_FIELD;
+                if (arg -> fields.isEmpty())
+                    arg -> fields = QStringList() << DEF_JSON_FIELD;
 
                 switch(arg -> call_amount) {
                     case call_solo: return sQuery(arg);
@@ -86,10 +89,10 @@ namespace Core {
             }
 
             bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
                 QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+                QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
 
                 bool res = request(&arg);
                 json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
@@ -97,16 +100,16 @@ namespace Core {
             }
 
             QJsonObject sRequest(const QString & url, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
-                QJsonArray arr = saRequest(url, call_type, post_proc, field, error_receiver);
+                QJsonArray arr = saRequest(url, call_type, post_proc, fields, error_receiver);
                 return arr.isEmpty() ? QJsonObject() : arr.last().toObject();
             }
             QJsonArray saRequest(const QString & url, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
                 QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, field, error_receiver);
+                QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
 
                 request(&arg);
                 return arr;
@@ -114,13 +117,13 @@ namespace Core {
 
 
             QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules,
-                                const AdditionalProc & post_proc = proc_none, QJsonArray */*&*/ arr = 0, const QString & field = DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, QJsonArray */*&*/ arr = 0, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
 
-                QueriableArg arg(arr, url, call_type, post_proc, field, error_receiver);
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
                 arg.setPolyLimitations(poly_rules);
 
                 request(&arg);

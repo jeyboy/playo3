@@ -65,7 +65,7 @@ namespace Core {
                         rules(0),
                         proc_none,
                         0,
-                        tkn_files
+                        QStringList() << tkn_files
                     );
 
 
@@ -86,7 +86,7 @@ namespace Core {
                         rules(0, limitations.items_limit),
                         proc_none,
                         0,
-                        tkn_files
+                        QStringList() << tkn_files
                     );
 
 
