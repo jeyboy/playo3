@@ -2,6 +2,7 @@
 #include "modules/core/web/apis/social/soundcloud_api.h"
 
 #include <qdesktopservices.h>
+#include <qfile.h>
 
 using namespace Core;
 
@@ -42,9 +43,16 @@ void ItemFields::openLocation() {
 //}
 bool ItemFields::removePhysicalObject() {
     switch(dataType()) {
-        case dt_local:
-            return QFile::remove(fullPath());
+        case dt_local: {
+            QString fpath = fullPath();
+            bool res = QFile::setPermissions(fpath, QFile::ReadOther | QFile::WriteOther);
+            qDebug() << "CHANGE PERM" << fpath << res;
+            res = QFile::remove(fpath);
+            qDebug() << "REMOVING" << fpath << res;
+            return res;
+        }
         case dt_local_cue: // this required on some additional checks
+        case dt_playlist_cue:
         case dt_playlist_local:
             //    QDir delDir(fullPath());
             //    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
