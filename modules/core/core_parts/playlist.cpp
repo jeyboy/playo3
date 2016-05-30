@@ -32,10 +32,20 @@ Playlist::~Playlist() {
         _parent -> undeclarePlaylist(playlistUid());
 
     bool remove_marked = is(flag_mark_on_removing);
+    QVariantHash cue_map = takeCueMap();
+    bool has_cue_map = !cue_map.isEmpty();
 
     QList<IItem *>::Iterator begin = children.begin(), end = children.end();
     while (begin != end) {
         if (remove_marked) (*begin) -> set(flag_mark_on_removing);
+        if (has_cue_map) {
+            QString fpath = fullPath();
+            if (cue_map.contains(fpath)) {
+                int counter = cue_map[fpath].toInt();
+                (*begin) -> setCueMap(--counter <= 0);
+                cue_map[fpath] = counter;
+            }
+        }
         delete *begin;
         ++begin;
     }

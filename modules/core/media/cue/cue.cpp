@@ -109,7 +109,7 @@ bool Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
 }
 
 int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) { // last element always missed at duration
-    QHash<QString, bool> ignore;
+    QVariantHash cue_map;
     int amount = 0;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
@@ -120,9 +120,9 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
         IItem * prev_ditem = 0;
         int prev_mark = 0;
 
-        bool exists = identifyFile(file_path, real_extension, isShareable);
-        if (ignore.contains(file_path)) continue; // maybe this should be placed before identifyFile ?
+        if (cue_map.contains(file_path)) continue;
 
+        bool exists = identifyFile(file_path, real_extension, isShareable);
         if (!exists) {
           //TODO: ask user about manual choosing of media source for cue
         }
@@ -168,14 +168,16 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                     file_path, title, real_extension, time_mark, isShareable
                 ));
 
-                if (prev_ditem)
+                if (prev_ditem) {
                     prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
+                    cue_map[file_path] = cue_map[file_path].toInt() + 1;
+                }
 
                 if (exists) {
                     if (!error.isEmpty()) // there should be other error status ?
                         ditem -> setError(ItemErrors::err_not_existed);
                 } else {
-                    ignore.insert(file_path, true);
+                    cue_map.insert(file_path, 1);
                     ditem -> setError(ItemErrors::err_not_existed);
                 }
 
@@ -208,14 +210,16 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                     file_path, title, real_extension, time_mark, isShareable
                 ));
 
-                if (prev_ditem)
+                if (prev_ditem) {
                     prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
+                    cue_map[file_path] = cue_map[file_path].toInt() + 1;
+                }
 
                 if (exists) {
                     if (!error.isEmpty()) // there should be other error status ?
                         ditem -> setError(ItemErrors::err_not_existed);
                 } else {
-                    ignore.insert(file_path, true);
+                    cue_map.insert(file_path, 1);
                     ditem -> setError(ItemErrors::err_not_existed);
                 }
 
@@ -228,6 +232,7 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
         }
 
         unproc_files.insert(file_path, exists);
+        cuePlaylist -> setCueMap(cue_map);
     }
 
     return amount;

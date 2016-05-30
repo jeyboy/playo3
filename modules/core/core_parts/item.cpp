@@ -15,6 +15,19 @@ IItem::IItem(const DataSubType & subType, Playlist * parent, int initState) : It
 }
 
 IItem::~IItem() {
+    if (_parent && dataType() == dt_local_cue) {
+        QVariantHash cue_map = _parent -> cueMap();
+
+        if (!cue_map.isEmpty()) {
+            QString fpath = fullPath();
+
+            int counter = cue_map[fpath].toInt();
+            setCueMap(--counter <= 0);
+            cue_map[fpath] = counter;
+            _parent -> setCueMap(cue_map);
+        }
+    }
+
     if (is(flag_mark_on_removing))
         removePhysicalObject();
 }

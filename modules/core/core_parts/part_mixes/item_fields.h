@@ -25,6 +25,9 @@ namespace Core {
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
+        inline QVariantHash cueMap()                            { return attrs[JSON_TYPE_CUE_MAP].toHash(); }
+        inline QVariantHash takeCueMap()                        { return attrs.take(JSON_TYPE_CUE_MAP).toHash(); }
+
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
         inline QVariant artistIds() const                       { return attrs.value(JSON_TYPE_ARTIST_IDS); }
@@ -53,6 +56,8 @@ namespace Core {
 
         inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
+
+        inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void addArtistId(QString id)                     { attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }

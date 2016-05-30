@@ -43,6 +43,11 @@ void ItemFields::openLocation() {
 //}
 bool ItemFields::removePhysicalObject() {
     switch(dataType()) {
+        case dt_local_cue: {// this required on some additional checks
+            if (!attrs[JSON_TYPE_CUE_MAP].toBool())
+                return false;
+        }
+        case dt_playlist_cue: // removing of cue file
         case dt_local: {
             QString fpath = fullPath();
             bool res = QFile::setPermissions(fpath, QFile::ReadOther | QFile::WriteOther);
@@ -51,8 +56,6 @@ bool ItemFields::removePhysicalObject() {
             qDebug() << "REMOVING" << fpath << res;
             return res;
         }
-        case dt_local_cue: // this required on some additional checks
-        case dt_playlist_cue:
         case dt_playlist_local:
             //    QDir delDir(fullPath());
             //    if (delDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System).count() == 0)
@@ -129,6 +132,8 @@ QUrl ItemFields::toUrl() const {
 QJsonObject ItemFields::toJson() {
     QJsonObject root = QJsonObject::fromVariantHash(attrs);
     root[JSON_TYPE_STATE] = saveStates();
+    if (dataType() == dt_playlist_cue)
+        int i = 0;
     return root;
 }
 
