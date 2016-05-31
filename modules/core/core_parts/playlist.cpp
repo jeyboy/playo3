@@ -39,7 +39,7 @@ Playlist::~Playlist() {
     while (begin != end) {
         if (remove_marked) (*begin) -> set(flag_mark_on_removing);
         if (has_cue_map) {
-            QString fpath = fullPath();
+            QString fpath = (*begin) -> fullPath();
             if (cue_map.contains(fpath)) {
                 int counter = cue_map[fpath].toInt();
                 (*begin) -> setCueMap(--counter <= 0);

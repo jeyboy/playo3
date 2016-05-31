@@ -109,7 +109,7 @@ bool Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
 }
 
 int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) { // last element always missed at duration
-    QVariantHash cue_map;
+    QVariantMap cue_map;
     int amount = 0;
 
     for(QList<CueFile *>::Iterator file = _files.begin(); file != _files.end(); file++) {
@@ -168,22 +168,20 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                     file_path, title, real_extension, time_mark, isShareable
                 ));
 
-                if (prev_ditem) {
+                if (prev_ditem)
                     prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
-                    cue_map[file_path] = cue_map[file_path].toInt() + 1;
-                }
+
 
                 if (exists) {
                     if (!error.isEmpty()) // there should be other error status ?
                         ditem -> setError(ItemErrors::err_not_existed);
-                } else {
-                    cue_map.insert(file_path, 1);
-                    ditem -> setError(ItemErrors::err_not_existed);
                 }
+                else ditem -> setError(ItemErrors::err_not_existed);
 
                 prev_ditem = ditem;
                 prev_mark = time_mark;
                 amount++;
+                cue_map[file_path] = cue_map.value(file_path, 0).toInt() + 1;
 
                 //////////////////////////////////////////////////////////////
                 time_marks.insert(time_mark, true);
@@ -210,22 +208,19 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                     file_path, title, real_extension, time_mark, isShareable
                 ));
 
-                if (prev_ditem) {
+                if (prev_ditem)
                     prev_ditem -> setDuration(Duration::fromMillis(time_mark - prev_mark));
-                    cue_map[file_path] = cue_map[file_path].toInt() + 1;
-                }
 
                 if (exists) {
                     if (!error.isEmpty()) // there should be other error status ?
                         ditem -> setError(ItemErrors::err_not_existed);
-                } else {
-                    cue_map.insert(file_path, 1);
+                } else
                     ditem -> setError(ItemErrors::err_not_existed);
-                }
 
                 prev_ditem = ditem;
                 prev_mark = time_mark;
                 amount++;
+                cue_map[file_path] = cue_map.value(file_path, 0).toInt() + 1;
 
                 //////////////////////////////////////////////////////////////
             }
