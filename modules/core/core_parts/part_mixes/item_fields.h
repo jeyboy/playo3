@@ -25,8 +25,8 @@ namespace Core {
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
-        inline QVariantHash cueMap()                            { return attrs[JSON_TYPE_CUE_MAP].toHash(); }
-        inline QVariantHash takeCueMap()                        { return attrs.take(JSON_TYPE_CUE_MAP).toHash(); }
+        inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
+        inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }
 
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }

@@ -32,7 +32,7 @@ Playlist::~Playlist() {
         _parent -> undeclarePlaylist(playlistUid());
 
     bool remove_marked = is(flag_mark_on_removing);
-    QVariantHash cue_map = takeCueMap();
+    QVariantMap cue_map = takeCueMap();
     bool has_cue_map = !cue_map.isEmpty();
 
     QList<IItem *>::Iterator begin = children.begin(), end = children.end();

@@ -16,7 +16,7 @@ IItem::IItem(const DataSubType & subType, Playlist * parent, int initState) : It
 
 IItem::~IItem() {
     if (_parent && dataType() == dt_local_cue) {
-        QVariantHash cue_map = _parent -> cueMap();
+        QVariantMap cue_map = _parent -> cueMap();
 
         if (!cue_map.isEmpty()) {
             QString fpath = fullPath();

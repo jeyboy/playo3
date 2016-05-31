@@ -132,8 +132,6 @@ QUrl ItemFields::toUrl() const {
 QJsonObject ItemFields::toJson() {
     QJsonObject root = QJsonObject::fromVariantHash(attrs);
     root[JSON_TYPE_STATE] = saveStates();
-    if (dataType() == dt_playlist_cue)
-        int i = 0;
     return root;
 }
 
