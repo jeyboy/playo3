@@ -16,7 +16,7 @@ class RelationsDialog : public BaseDialog {
     QString uid, name;
     Web::Sociable * api;
 
-    void prepareLinkablesList(QHash<QString, Web::Linkable> linkables, QListWidget * list);
+    void prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list);
 public:
     explicit RelationsDialog(Web::Sociable * currApi, QWidget * parent = 0);
     ~RelationsDialog();
@@ -26,10 +26,12 @@ public:
 
 private slots:
     void on_cancelButton_clicked();
-    void on_friendManually_clicked();
-    void on_groupManually_clicked();
     void on_friendsList_itemActivated(QListWidgetItem *item);
     void on_groupsList_itemActivated(QListWidgetItem *item);
+    void on_groupByName_clicked();
+    void on_friendByName_clicked();
+    void on_friendById_clicked();
+    void on_groupById_clicked();
 };
 
 #endif // RELATIONS_DIALOG_H

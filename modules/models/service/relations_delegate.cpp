@@ -59,8 +59,9 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
         r = option.rect.adjusted(2, 2, -2, -2);
         ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
     }
-    else
+    else {
         ImageBank::obj().proceedPacket(index, QStringList() << url);
+    }
 
     //TITLE
     r = option.rect.adjusted(imageSpace, 0, -10, -30);

@@ -1,6 +1,8 @@
 #ifndef VK_API_H
 #define VK_API_H
 
+// http://vk.com/support
+
 #include <qmenu.h>
 
 #include "modules/core/interfaces/singleton.h"
@@ -26,7 +28,7 @@ namespace Core {
 
                     query.addQueryItem(tkn_version, val_version);
                     query.addQueryItem(tkn_access_token, token());
-                    query.addQueryItem(QStringLiteral("test_mode"), "1"); //TODO: remove me later
+//                    query.addQueryItem(QStringLiteral("test_mode"), "1"); //TODO: remove me later
 
                     return query;
                 }
@@ -57,6 +59,30 @@ namespace Core {
                 }
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
+
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QJsonArray arr = usersByIdOrPerma(uid);
+                    int i = 0;
+
+//                    return QList<Linkable>();
+                }
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QJsonArray arr = usersByIdOrPerma(name);
+                    int i = 0;
+
+//                    QString uid, id_type;
+//                    permaToId(name, uid, id_type);
+//                    qDebug() << "BY NAME" << name << uid << id_type;
+
+                    return QList<Linkable>();
+                }
+
+                QList<Linkable> findGroupsById(const QString & /*uid*/) {
+                    return QList<Linkable>();
+                }
+                QList<Linkable> findGroupsByName(const QString & /*name*/) {
+                    return QList<Linkable>();
+                }
 
             public slots:
                 inline void openTab() { ISource::openTab(userID()); }

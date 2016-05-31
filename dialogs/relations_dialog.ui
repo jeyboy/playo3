@@ -42,7 +42,7 @@
     <attribute name="title">
      <string>Friends</string>
     </attribute>
-    <widget class="QPushButton" name="friendManually">
+    <widget class="QPushButton" name="friendById">
      <property name="geometry">
       <rect>
        <x>260</x>
@@ -52,7 +52,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Use inputed id</string>
+      <string>Find by id</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="friendId">
@@ -103,7 +103,7 @@
     <attribute name="title">
      <string>Groups</string>
     </attribute>
-    <widget class="QPushButton" name="groupManually">
+    <widget class="QPushButton" name="groupById">
      <property name="geometry">
       <rect>
        <x>260</x>
@@ -113,7 +113,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Use inputed id</string>
+      <string>Find by id</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="groupId">

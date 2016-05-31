@@ -76,7 +76,7 @@ namespace Core {
             extern const QString val_name              = QStringLiteral("Vk");
             extern const QString val_auth_title        = QStringLiteral("Vk auth");
             extern const QString val_api_call_limit    = QStringLiteral("20");
-            extern const QString val_version           = QStringLiteral("5.21");
+            extern const QString val_version           = QStringLiteral("5.52"); //"5.21");
             extern const QString val_page_token        = QStringLiteral("page");
             extern const QString val_client_token      = QStringLiteral("4332211");
             extern const QString val_response_token    = QStringLiteral("token");

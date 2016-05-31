@@ -8,8 +8,8 @@ namespace Core {
         class Groupable : public LinkableList {
             QString jsonToken() const { return QStringLiteral("groups"); }
         public:
-//            virtual QList<Linkable> findGroupById(const QString & uid) = 0;
-//            virtual QList<Linkable> findGroupByName(const QString & name) = 0;
+            virtual QList<Linkable> findGroupsById(const QString & /*uid*/) { return QList<Linkable>(); }
+            virtual QList<Linkable> findGroupsByName(const QString & /*name*/) { return QList<Linkable>(); }
 
             inline void addGroup(const Linkable & obj) { addLinkable(obj); }
 

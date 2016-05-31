@@ -6,13 +6,12 @@
 using namespace Core;
 using namespace Web;
 
-void RelationsDialog::prepareLinkablesList(QHash<QString, Web::Linkable> linkables, QListWidget * list) {
-    for(QHash<QString, Linkable>::Iterator linkable = linkables.begin(); linkable != linkables.end(); linkable++) {
-        // icons stubed at this time
-        QListWidgetItem * item = new QListWidgetItem(QIcon(":main"), linkable.value().humanName(), list);
-        item -> setData(Qt::UserRole + 2, linkable.value().imageUrl());
-        item -> setData(Qt::UserRole + 1, linkable.value().permaTitle());
-        item -> setData(Qt::UserRole, linkable.value().uid());
+void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list) {
+    for(QList<Web::Linkable>::ConstIterator linkable = linkables.cbegin(); linkable != linkables.cend(); linkable++) {
+        QListWidgetItem * item = new QListWidgetItem(QIcon(":main"), (*linkable).humanName(), list);
+        item -> setData(Qt::UserRole + 2, (*linkable).imageUrl());
+        item -> setData(Qt::UserRole + 1, (*linkable).permaTitle());
+        item -> setData(Qt::UserRole, (*linkable).uid());
         list -> addItem(item);
     }
 
@@ -26,8 +25,8 @@ RelationsDialog::RelationsDialog(Sociable * currApi, QWidget * parent)
 
     ui -> setupUi(this);
 
-    prepareLinkablesList(api -> friendsList(), ui -> friendsList);
-    prepareLinkablesList(api -> groupsList(), ui -> groupsList);
+    prepareLinkablesList(api -> friendsList().values(), ui -> friendsList);
+    prepareLinkablesList(api -> groupsList().values(), ui -> groupsList);
 }
 
 RelationsDialog::~RelationsDialog() {
@@ -49,21 +48,32 @@ void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
     accept();
 }
 
-void RelationsDialog::on_friendManually_clicked() {
-    uid = ui -> friendId -> text();
-
-    if (uid.isEmpty()) return;
-
-    name = QStringLiteral("User ") % uid;
-    accept();
+void RelationsDialog::on_friendById_clicked() {
+    ui -> friendsList -> clear();
+    QList<Linkable> friends = api -> findFriendsById(ui -> friendId -> text());
+    prepareLinkablesList(friends, ui -> friendsList);
 }
 
-void RelationsDialog::on_groupManually_clicked() {
-    uid = ui -> groupId -> text();
+void RelationsDialog::on_friendByName_clicked() {
+    ui -> friendsList -> clear();
+    QList<Linkable> friends = api -> findFriendsByName(ui -> friendName -> text());
+    prepareLinkablesList(friends, ui -> friendsList);
+}
 
-    if (uid.isEmpty()) return;
+void RelationsDialog::on_groupById_clicked() {
+    ui -> groupsList -> clear();
+    QList<Linkable> groups = api -> findGroupsById(ui -> groupId -> text());
+    prepareLinkablesList(groups, ui -> groupsList);
 
-    name = QStringLiteral("Group ") % uid;
-    uid = QStringLiteral("-") % uid;
-    accept();
+//    if (uid.isEmpty()) return;
+
+//    name = QStringLiteral("Group ") % uid;
+//    uid = QStringLiteral("-") % uid;
+//    accept();
+}
+
+void RelationsDialog::on_groupByName_clicked() {
+    ui -> groupsList -> clear();
+    QList<Linkable> groups = api -> findGroupsByName(ui -> groupName -> text());
+    prepareLinkablesList(groups, ui -> groupsList);
 }
