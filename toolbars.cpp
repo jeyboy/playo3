@@ -363,6 +363,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
     act -> setCheckable(true);
     PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
+    PlayerFactory::obj().registerCallback(out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
 
     ClickableSlider * slider = new ClickableSlider(ptb, QStringLiteral("volume"));
 

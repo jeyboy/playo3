@@ -118,6 +118,7 @@ signals:
     void stateChanged(const PlayerState &);
     void statusChanged(const PlayerStatus &);
 
+    void muteChanged(bool);
     void panChanged(int);
     void volumeChanged(int);
 //    void position64Changed(qint64);
@@ -155,6 +156,7 @@ public slots:
     inline void setVolume(int newVol) {
         newVolumeProcessing(volumeVal = newVol);
         emit volumeChanged(newVol);
+        emit muteChanged((muted = newVol == 0));
     }
     inline void setPan(int newPan) {
         newPanProcessing(panVal = newPan);
