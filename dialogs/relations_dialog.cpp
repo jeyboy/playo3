@@ -27,6 +27,26 @@ RelationsDialog::RelationsDialog(Sociable * currApi, QWidget * parent)
 
     prepareLinkablesList(api -> friendsList().values(), ui -> friendsList);
     prepareLinkablesList(api -> groupsList().values(), ui -> groupsList);
+
+    bool by_friend_id = api -> hasSearchByFriendId();
+
+    ui -> friendId -> setVisible(by_friend_id);
+    ui -> friendById -> setVisible(by_friend_id);
+
+    bool by_friend_name = api -> hasSearchByFriendName();
+
+    ui -> friendName -> setVisible(by_friend_name);
+    ui -> friendByName -> setVisible(by_friend_name);
+
+    bool by_group_id = api -> hasSearchByFriendId();
+
+    ui -> groupId -> setVisible(by_group_id);
+    ui -> groupById -> setVisible(by_group_id);
+
+    bool by_group_name = api -> hasSearchByFriendName();
+
+    ui -> groupName -> setVisible(by_group_name);
+    ui -> groupByName -> setVisible(by_group_name);
 }
 
 RelationsDialog::~RelationsDialog() {

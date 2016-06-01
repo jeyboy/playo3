@@ -10,6 +10,13 @@ namespace Core {
     namespace Web {
         class Sociable : public Friendable, public Groupable {
         public:
+            void setSearchLimitations(const bool & friend_by_id, const bool & friend_by_name,
+                                      const bool & group_by_id, const bool & group_by_name)
+            {
+                setFriendSearchLimitations(friend_by_id, friend_by_name);
+                setGroupSearchLimitations(group_by_id, group_by_name);
+            }
+
             void fromJson(const QJsonObject & hash) {
                 Friendable::fromJson(hash);
                 Groupable::fromJson(hash);

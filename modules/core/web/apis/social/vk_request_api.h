@@ -339,9 +339,11 @@ namespace Core {
 
                 //INFO not tested
 
-                QJsonArray groupsByIdOrPermas(const QStringList & ids) {
+                QJsonArray groupsByIdOrPermas(const QStringList & ids) { return groupsByIdOrPerma(ids.join(QStringLiteral(","))); }
+
+                QJsonArray groupsByIdOrPerma(const QString & id) {
                     QUrlQuery query;
-                    setParam(query, tkn_group_ids, ids);
+                    setParam(query, tkn_group_ids, id);
 
                     return sRequest(
                         baseUrlStr(path_groups_by_id, query),
