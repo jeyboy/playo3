@@ -379,36 +379,36 @@ namespace Core {
 //                    return sQuery(baseUrl(path_user_info, query)).value(tkn_response).toArray();
                 }
 
-//                void permaToId(const QString & name, QString & id, QString & id_type) {
-//                    QUrlQuery query;
-//                    setParam(query, tkn_screen_name, name);
+                void permaToId(const QString & name, QString & id, QString & id_type) {
+                    QUrlQuery query;
+                    setParam(query, tkn_screen_name, name);
 
-//                    QJsonObject ret = sRequest(
-//                        baseUrlStr(path_resole_user, query),
-//                        call_type_json
-//                    ).value(tkn_response).toObject();
+                    QJsonObject ret = sRequest(
+                        baseUrlStr(path_resole_user, query),
+                        call_type_json
+                    ).value(tkn_response).toObject();
 
-////                    QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
+//                    QJsonObject ret = sQuery(baseUrl(path_resole_user, query)).value(tkn_response).toObject();
 
-//                    id = QString::number(ret.value(tkn_object_id).toInt());
-//                    id_type = ret.value(tkn_type).toString();
-//                }
+                    id = QString::number(ret.value(tkn_object_id).toInt());
+                    id_type = ret.value(tkn_type).toString();
+                }
 
-//                QJsonArray usersByName(const QString & name) {
-//                    QUrlQuery query;
-//                    setParam(query, tkn_q, name);
-//                    setParam(query, tkn_fields, val_user_fields);
+                QJsonArray usersByName(const QString & name) {
+                    QUrlQuery query;
+                    setParam(query, tkn_q, name);
+                    setParam(query, tkn_fields, val_user_fields);
 
-//                    QJsonObject ret = sRequest(
-//                        baseUrlStr(path_users_search, query),
-//                        call_type_json
-//                    ).value(tkn_response).toObject();
+                    QJsonObject ret = sRequest(
+                        baseUrlStr(path_users_search, query),
+                        call_type_json
+                    ).value(tkn_response).toObject();
 
-////                    QJsonObject ret = sQuery(baseUrl(path_users_search, query)).value(tkn_response).toObject();
+//                    QJsonObject ret = sQuery(baseUrl(path_users_search, query)).value(tkn_response).toObject();
 
 
-//                    return ret.value(tkn_items).toArray();
-//                }
+                    return ret.value(tkn_items).toArray();
+                }
 
                 QString audioLyricsUrl(QString & lyrics_id) {
                     QUrlQuery query = genDefaultParams();

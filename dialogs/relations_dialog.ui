@@ -52,7 +52,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Find by id</string>
+      <string>Find by id or permalink</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="friendId">
@@ -113,7 +113,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Find by id</string>
+      <string>Find by id or permalink</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="groupId">

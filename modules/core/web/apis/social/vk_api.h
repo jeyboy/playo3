@@ -61,13 +61,24 @@ namespace Core {
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
                 QList<Linkable> findFriendsById(const QString & uid) {
+                    QString id = uid;
+
+                    if (uid.contains(QRegularExpression("\\w", QRegularExpression::CaseInsensitiveOption))) {
+                        QString id_type;
+                        permaToId(uid, id, id_type);
+
+                        if (id_type == QStringLiteral("group"))
+                            return QList<Linkable>();
+                    }
+
                     QJsonArray arr = usersByIdOrPerma(uid);
                     int i = 0;
 
 //                    return QList<Linkable>();
                 }
                 QList<Linkable> findFriendsByName(const QString & name) {
-                    QJsonArray arr = usersByIdOrPerma(name);
+//                    QJsonArray arr = usersByIdOrPerma(name);
+                    QJsonArray arr = usersByName(name);
                     int i = 0;
 
 //                    QString uid, id_type;
