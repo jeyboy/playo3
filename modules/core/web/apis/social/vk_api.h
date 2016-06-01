@@ -61,6 +61,8 @@ namespace Core {
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
                 QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
 //                    QString id = uid;
 
 //                    if (uid.contains(QRegularExpression("\\w", QRegularExpression::CaseInsensitiveOption))) {
@@ -74,9 +76,11 @@ namespace Core {
                     QJsonArray arr = usersByIdOrPerma(uid);
                     int i = 0;
 
-//                    return QList<Linkable>();
+                    return linkables;
                 }
                 QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
 //                    QJsonArray arr = usersByIdOrPerma(name);
                     QJsonArray arr = usersByName(name);
                     int i = 0;
@@ -85,20 +89,40 @@ namespace Core {
 //                    permaToId(name, uid, id_type);
 //                    qDebug() << "BY NAME" << name << uid << id_type;
 
-                    return QList<Linkable>();
+                    return linkables;
                 }
 
                 QList<Linkable> findGroupsById(const QString & uid) {
-                    QJsonArray arr = groupsByIdOrPerma(uid);
-                    int i = 0;
+                    QList<Linkable> linkables;
 
-                    return QList<Linkable>();
+                    QJsonArray arr = groupsByIdOrPerma(uid);
+                    for(QJsonArray::Iterator obj_iter = arr.begin(); obj_iter != arr.end(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            obj.value(QStringLiteral("name")).toString(),
+                            obj.value(tkn_screen_name).toString(),
+                            obj.value(tkn_photo).toString()
+                        );
+                    }
+
+                    return linkables;
                 }
                 QList<Linkable> findGroupsByName(const QString & name) {
-                    QJsonArray arr = groupsByName(name);
-                    int i = 0;
+                    QList<Linkable> linkables;
 
-                    return QList<Linkable>();
+                    QJsonArray arr = groupsByName(name);                   
+                    for(QJsonArray::Iterator obj_iter = arr.begin(); obj_iter != arr.end(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            obj.value(QStringLiteral("name")).toString(),
+                            obj.value(tkn_screen_name).toString(),
+                            obj.value(tkn_photo).toString()
+                        );
+                    }
+
+                    return linkables;
                 }
 
             public slots:
@@ -116,10 +140,10 @@ namespace Core {
             protected:
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
-                inline QString offsetKey() const { return tkn_offset; }
-                inline QString limitKey() const { return tkn_limit; }
-                inline int requestLimit() const { return 200; }
-                inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
+//                inline QString offsetKey() const { return tkn_offset; }
+//                inline QString limitKey() const { return tkn_limit; }
+//                inline int requestLimit() const { return 200; }
+//                inline void iterateOffset(int & offset, QJsonObject & response, QUrl & /*url*/) { offset = response.value(offsetKey()).toInt(); }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) { return response.value(tkn_finished).toBool(); }
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message);

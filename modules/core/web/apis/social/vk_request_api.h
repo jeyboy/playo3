@@ -342,7 +342,7 @@ namespace Core {
                 QJsonArray groupsByIdOrPermas(const QStringList & ids) { return groupsByIdOrPerma(ids.join(QStringLiteral(","))); }
 
                 QJsonArray groupsByIdOrPerma(const QString & id) {
-                    QUrlQuery query;
+                    QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_group_ids, id);
 
                     return sRequest(
@@ -354,14 +354,17 @@ namespace Core {
                 }
 
                 QJsonArray groupsByName(const QString & name) {
-                    QUrlQuery query;
+                    QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_type, val_group_types);
                     setParam(query, tkn_q, name);
+                    setParam(query, QStringLiteral("count"), 100/*0*/);
 
-                    return sRequest(
+                    return saRequest(
                         baseUrlStr(path_groups_search, query),
-                        call_type_json
-                    ).value(tkn_response).toArray();
+                        call_type_json,
+                        proc_json_extract,
+                        QStringList() << tkn_response << tkn_items
+                    );
 
 //                    return sQuery(baseUrl(path_groups_search, query)).value(tkn_response).toArray();
                 }
@@ -369,7 +372,7 @@ namespace Core {
                 QJsonArray usersByIdsOrPermas(const QStringList & ids) { return usersByIdOrPerma(ids.join(QStringLiteral(","))); }
 
                 QJsonArray usersByIdOrPerma(const QString & id) {
-                    QUrlQuery query;
+                    QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_user_ids, id);
                     setParam(query, tkn_fields, val_user_fields);
 
@@ -382,7 +385,7 @@ namespace Core {
                 }
 
                 void permaToId(const QString & name, QString & id, QString & id_type) {
-                    QUrlQuery query;
+                    QUrlQuery query;// = genDefaultParams();
                     setParam(query, tkn_screen_name, name);
 
                     QJsonObject ret = sRequest(
@@ -397,7 +400,7 @@ namespace Core {
                 }
 
                 QJsonArray usersByName(const QString & name) {
-                    QUrlQuery query;
+                    QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_q, name);
                     setParam(query, tkn_fields, val_user_fields);
 
@@ -407,7 +410,6 @@ namespace Core {
                     ).value(tkn_response).toObject();
 
 //                    QJsonObject ret = sQuery(baseUrl(path_users_search, query)).value(tkn_response).toObject();
-
 
                     return ret.value(tkn_items).toArray();
                 }
