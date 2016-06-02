@@ -28,6 +28,7 @@ namespace Core {
             extern const QString tkn_albums            = QStringLiteral("albums");
             extern const QString tkn_audios            = QStringLiteral("audios");
             extern const QString tkn_audio_list        = QStringLiteral("audio_list");
+            extern const QString tkn_video_list        = QStringLiteral("video_list");
             extern const QString tkn_groups            = QStringLiteral("groups");
             extern const QString tkn_friends           = QStringLiteral("friends");
             extern const QString tkn_albums_offset     = QStringLiteral("albums_offset");
@@ -84,7 +85,7 @@ namespace Core {
             extern const QString val_user_fields       = tkn_photo % QStringLiteral(",") % tkn_screen_name;
             extern const QString val_group_types       = QStringLiteral("group,page");
 
-            extern const QString query_albums          = QString(
+            extern const QString query_audio_albums    = QString(
                 "var curr; var count = 5;"
                 "var folders_result = API.audio.getAlbums({"
                 "                count: count, "
@@ -99,6 +100,33 @@ namespace Core {
                 "        " % tkn_folder_id % ": curr.id,"
                 "        " % tkn_title % ": curr.title,"
                 "        " % tkn_items % ": API.audio.get({"
+                "            owner_id: %1,"
+                "            album_id: curr.id"
+                "        }).items "
+                "    });"
+                "};"
+                "return { "
+                "    " % tkn_albums % ": proceed_folders, "
+                "    " % tkn_finished % ": (proceed_folders.length < count), "
+                "    " % tkn_offset % ": " % VK_DEFAULT_OFFSET_TEMPLATE % " %2b count"
+                "};"
+            );
+
+            extern const QString query_video_albums    = QString(
+                "var curr; var count = 5;"
+                "var folders_result = API.video.getAlbums({"
+                "                count: count, "
+                "                offset: " % VK_DEFAULT_OFFSET_TEMPLATE % ", "
+                "                owner_id: %1"
+                "    });"
+                "var folders_result = folders_result.items;"
+                "var proceed_folders = {};"
+                "while(folders_result.length > 0) {"
+                "    curr = folders_result.pop();"
+                "    proceed_folders.push({"
+                "        " % tkn_folder_id % ": curr.id,"
+                "        " % tkn_title % ": curr.title,"
+                "        " % tkn_items % ": API.video.get({"
                 "            owner_id: %1,"
                 "            album_id: curr.id"
                 "        }).items "

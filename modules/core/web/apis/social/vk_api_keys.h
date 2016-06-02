@@ -33,6 +33,7 @@ namespace Core {
             extern const QString tkn_albums;
             extern const QString tkn_audios;
             extern const QString tkn_audio_list;
+            extern const QString tkn_video_list;
             extern const QString tkn_groups;
             extern const QString tkn_friends;
             extern const QString tkn_albums_offset;
@@ -90,7 +91,8 @@ namespace Core {
             extern const QString val_group_types;
 
 
-            extern const QString query_albums;
+            extern const QString query_audio_albums;
+            extern const QString query_video_albums;
             extern const QString query_user_rels;
             extern const QString query_user_info;
             extern const QString query_user_audios;
