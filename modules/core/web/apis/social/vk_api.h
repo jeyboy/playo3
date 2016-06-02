@@ -63,31 +63,16 @@ namespace Core {
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-//                    QString id = uid;
-
-//                    if (uid.contains(QRegularExpression("\\w", QRegularExpression::CaseInsensitiveOption))) {
-//                        QString id_type;
-//                        permaToId(uid, id, id_type);
-
-//                        if (id_type == QStringLiteral("group"))
-//                            return QList<Linkable>();
-//                    }
-
                     QJsonArray arr = usersByIdOrPerma(uid);
-                    int i = 0;
+                    jsonToUsers(linkables, arr);
 
                     return linkables;
                 }
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-//                    QJsonArray arr = usersByIdOrPerma(name);
                     QJsonArray arr = usersByName(name);
-                    int i = 0;
-
-//                    QString uid, id_type;
-//                    permaToId(name, uid, id_type);
-//                    qDebug() << "BY NAME" << name << uid << id_type;
+                    jsonToUsers(linkables, arr);
 
                     return linkables;
                 }
@@ -96,31 +81,15 @@ namespace Core {
                     QList<Linkable> linkables;
 
                     QJsonArray arr = groupsByIdOrPerma(uid);
-                    for(QJsonArray::Iterator obj_iter = arr.begin(); obj_iter != arr.end(); obj_iter++) {
-                        QJsonObject obj = (*obj_iter).toObject();
-                        linkables << Linkable(
-                            QString::number(obj.value(tkn_id).toInt()),
-                            obj.value(QStringLiteral("name")).toString(),
-                            obj.value(tkn_screen_name).toString(),
-                            obj.value(tkn_photo).toString()
-                        );
-                    }
+                    jsonToGroups(linkables, arr);
 
                     return linkables;
                 }
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name);                   
-                    for(QJsonArray::Iterator obj_iter = arr.begin(); obj_iter != arr.end(); obj_iter++) {
-                        QJsonObject obj = (*obj_iter).toObject();
-                        linkables << Linkable(
-                            QString::number(obj.value(tkn_id).toInt()),
-                            obj.value(QStringLiteral("name")).toString(),
-                            obj.value(tkn_screen_name).toString(),
-                            obj.value(tkn_photo).toString()
-                        );
-                    }
+                    QJsonArray arr = groupsByName(name);
+                    jsonToGroups(linkables, arr);
 
                     return linkables;
                 }
@@ -138,6 +107,30 @@ namespace Core {
                     initButton();
                 }
             protected:
+                inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString()),
+                            obj.value(tkn_screen_name).toString(),
+                            obj.value(tkn_photo).toString()
+                        );
+                    }
+                }
+
+                inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            obj.value(QStringLiteral("name")).toString(),
+                            obj.value(tkn_screen_name).toString(),
+                            obj.value(tkn_photo).toString()
+                        );
+                    }
+                }
+
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
 //                inline QString offsetKey() const { return tkn_offset; }

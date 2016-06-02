@@ -84,7 +84,6 @@ namespace Core {
             extern const QString val_user_fields       = tkn_photo % QStringLiteral(",") % tkn_screen_name;
             extern const QString val_group_types       = QStringLiteral("group,page");
 
-
             extern const QString query_albums          = QString(
                 "var curr; var count = 5;"
                 "var folders_result = API.audio.getAlbums({"
