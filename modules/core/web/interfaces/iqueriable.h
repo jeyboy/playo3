@@ -99,25 +99,27 @@ namespace Core {
                 return res;
             }
 
-            QJsonObject sRequest(const QString & url, const ApiCallType & call_type,
+            QJsonObject sRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
                                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
-                QJsonArray arr = saRequest(url, call_type, post_proc, fields, error_receiver);
-                return arr.isEmpty() ? QJsonObject() : arr.last().toObject();
+                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, error_receiver);
+                return res.isEmpty() ? QJsonObject() : res.last().toObject();
             }
-            QJsonArray saRequest(const QString & url, const ApiCallType & call_type,
+            QJsonArray saRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
                                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
-                QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
+                QJsonArray temp_arr;
+                if (!arr)
+                    arr = &temp_arr;
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
 
                 request(&arg);
-                return arr;
+                return *arr;
             }
 
 
             QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules,
-                                const AdditionalProc & post_proc = proc_none, QJsonArray */*&*/ arr = 0, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, QJsonArray * arr = 0, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
                 if (!arr)

@@ -75,7 +75,7 @@ namespace Core {
     //        }
 
             inline QJsonArray popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
+                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
 

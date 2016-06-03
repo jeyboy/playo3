@@ -43,6 +43,10 @@ namespace Controls {
         QRadioButton * byLyric;
         QRadioButton * byAbc;
 
+        QRadioButton * byAllTypes;
+        QRadioButton * byAudioTypes;
+        QRadioButton * byVideoTypes;
+
         QCheckBox * byPopular;
         QCheckBox * byOwns;
         QCheckBox * byOrigins;

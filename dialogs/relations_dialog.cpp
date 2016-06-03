@@ -8,7 +8,7 @@ using namespace Web;
 
 void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list) {
     for(QList<Web::Linkable>::ConstIterator linkable = linkables.cbegin(); linkable != linkables.cend(); linkable++) {
-        QListWidgetItem * item = new QListWidgetItem(QIcon(":main"), (*linkable).humanName(), list);
+        QListWidgetItem * item = new QListWidgetItem((*linkable).humanName(), list);
         item -> setData(Qt::UserRole + 2, (*linkable).imageUrl());
         item -> setData(Qt::UserRole + 1, (*linkable).permaTitle());
         item -> setData(Qt::UserRole, (*linkable).uid());

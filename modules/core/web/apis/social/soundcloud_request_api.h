@@ -184,6 +184,7 @@ namespace Core {
                     return sRequest(
                         audioUrl(audio_uids),
                         call_type_json,
+                        0,
                         proc_patch
                     ).value(tkn_response).toArray();
 

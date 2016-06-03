@@ -56,9 +56,10 @@ void SearchRequest::fromJson(const QJsonArray & objs, QList<SearchRequest> & lis
         list << SearchRequest(
             search_type,
             subject,
+            obj.value(JSON_SEARCH_TYPE).toInt(),
+            obj.value(JSON_SEARCH_CONTENT_LIMIT).toInt(),
             obj.value(JSON_SEARCH_PREDICATE).toString(),
-            obj.value(JSON_SEARCH_GENRE).toString(),
-            obj.value(JSON_SEARCH_POPULAR).toBool()
+            obj.value(JSON_SEARCH_GENRE).toString()
         );
     }
 }
@@ -85,6 +86,7 @@ void SearchRequest::save(QJsonArray & arr) {
     }
 
     self.insert(JSON_SEARCH_TYPE, search_type);
+    self.insert(JSON_SEARCH_CONTENT_LIMIT, content_type);
 
     if (!spredicate.isEmpty())
         self.insert(JSON_SEARCH_PREDICATE, spredicate);
@@ -93,7 +95,7 @@ void SearchRequest::save(QJsonArray & arr) {
         self.insert(JSON_SEARCH_GENRE, sgenre);
 
     if (popular)
-        self.insert(JSON_SEARCH_POPULAR, popular);
+        self.insert(JSON_SEARCH_TYPE, source_type);
 
     arr << self;
 }

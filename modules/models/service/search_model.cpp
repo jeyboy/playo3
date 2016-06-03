@@ -291,16 +291,16 @@ void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
         for(QList<QString>::Iterator genre_it = request.genres.begin(); genre_it != request.genres.end(); genre_it++) {
             if (web_predicable && request.inSites)
                 for(QList<void *>::Iterator search_interface = request.sites.begin(); search_interface != request.sites.end(); search_interface++)
-                    requests.append(SearchRequest(SearchRequest::remote, (*search_interface), predicate, (*genre_it), request.popular));
+                    requests.append(SearchRequest(SearchRequest::remote, (*search_interface), request.ctype, predicate, (*genre_it), request.popular));
 
             if (request.inTabs) {
                 for(QList<void *>::Iterator tab = request.tabs.begin(); tab != request.tabs.end(); tab++)
-                    requests.append(SearchRequest(SearchRequest::inner, (*tab), predicate, (*genre_it), request.popular));
+                    requests.append(SearchRequest(SearchRequest::inner, (*tab), request.ctype, predicate, (*genre_it), request.popular));
             }
 
             if (request.inComputer)
                 for(QStringList::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)
-                    requests.append(SearchRequest(SearchRequest::local, new QString(*drive), predicate, (*genre_it), request.popular));
+                    requests.append(SearchRequest(SearchRequest::local, new QString(*drive), request.ctype, predicate, (*genre_it), request.popular));
         }
     }
 }

@@ -51,9 +51,16 @@ public:
         return QIcon(pixmap(url));
     }
 
-    void proceed(QLabel * obj, const QString & url) {
+    void proceed(QLabel * obj, const QString & url) {       
         if (locale_pathes.contains(url)) {
             obj -> setPixmap(pixmap(url));
+            return;
+        }
+
+        QUrl u = QUrl(url);
+        if (!u.isValid()) {
+            locale_pathes.insert(url, QStringLiteral(":main"));
+            obj -> setPixmap(pixmap(QStringLiteral(":main")));
             return;
         }
 
@@ -75,7 +82,10 @@ public:
         for(QStringList::ConstIterator url = urls.cbegin(); url != urls.cend(); url++) {
             QUrl u = QUrl(*url);
 
-            if (!u.isValid()) continue;
+            if (!u.isValid()) {
+                locale_pathes.insert(*url, QStringLiteral(":main"));
+                continue;
+            }
 
             if (!locale_pathes.contains(*url)) {
                 ready = false;

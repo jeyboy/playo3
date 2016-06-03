@@ -52,8 +52,17 @@ namespace Core {
                 QJsonArray search_proc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() && limits.by_popularity())
                         return popular(limits);
-                    else
-                        return audioSearch(limits);
+                    else {
+                        QJsonArray arr;
+
+                        if (limits.include_audio())
+                            return audioSearch(limits, &arr);
+
+                        if (limits.include_video())
+                            return videoSearch(limits, &arr);
+
+                        return arr;
+                    }
                 }
             public:
                 enum InfoType {
@@ -155,6 +164,7 @@ namespace Core {
                     return sRequest(
                         userRelsUrl(uid),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -168,6 +178,7 @@ namespace Core {
                     QJsonObject ret = sRequest(
                         url,
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -218,6 +229,7 @@ namespace Core {
                     return sRequest(
                         audioRecomendationsUrl(uid, byUser, randomize),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -254,10 +266,11 @@ namespace Core {
                 }
 
 
-                QJsonArray audioSearch(const SearchLimit & limits) {
+                QJsonArray audioSearch(const SearchLimit & limits, QJsonArray * arr = 0) {
                     return saRequest(
                         audioSearchUrl(limits),
                         call_type_json,
+                        arr,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_audio_list
                     ); //.value(tkn_audio_list).toArray();
@@ -284,6 +297,7 @@ namespace Core {
                     return sRequest(
                         audioSearchLimitedUrl(predicate, limitation),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -309,6 +323,7 @@ namespace Core {
                     return saRequest(
                         audioPopularUrl(onlyEng, genres.toInt(genre)),
                         call_type_json,
+                        0,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_audio_list
                     ); //.value(QStringLiteral("audio_list")).toArray();
@@ -329,6 +344,7 @@ namespace Core {
                     return saRequest(
                         audioRefreshUrl(audio_uids),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );//.value(tkn_response).toArray();
 
@@ -358,6 +374,7 @@ namespace Core {
                     return saRequest(
                         baseUrlStr(path_groups_by_id, query),
                         call_type_json,
+                        0,
                         proc_json_extract
                     ); //.value(tkn_response).toArray();
 
@@ -373,6 +390,7 @@ namespace Core {
                     return saRequest(
                         baseUrlStr(path_groups_search, query),
                         call_type_json,
+                        0,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_items
                     );
@@ -390,6 +408,7 @@ namespace Core {
                     return saRequest(
                         baseUrlStr(path_user_info, query),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -403,6 +422,7 @@ namespace Core {
                     QJsonObject ret = sRequest(
                         baseUrlStr(path_resole_user, query),
                         call_type_json,
+                        0,
                         proc_json_extract
                     );
 
@@ -420,6 +440,7 @@ namespace Core {
                     return saRequest(
                         baseUrlStr(path_users_search, query),
                         call_type_json,
+                        0,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_items
                     );
@@ -440,6 +461,7 @@ namespace Core {
                     return saRequest(
                         baseUrlStr(QStringLiteral("newsfeed.get"), query),
                         call_type_json,
+                        0,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_items
                     );
@@ -492,17 +514,15 @@ namespace Core {
                     return baseUrlStr(tkn_execute, query);
                 }
 
-                QJsonArray videoSearch(const SearchLimit & limits) {
+                QJsonArray videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) {
                     return saRequest(
                         videoSearchUrl(limits),
                         call_type_json,
+                        arr,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_video_list
-                    ); //.value(tkn_audio_list).toArray();
+                    );
                 }
-
-
-
             };
         }
     }

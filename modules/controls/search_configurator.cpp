@@ -107,6 +107,32 @@ QWidget * SearchConfigurator::initLimitations() {
 
     QVBoxLayout * l = new QVBoxLayout(limitationsAreaBody);
 
+    QGroupBox * searchByTypesGroup = new QGroupBox(limitationsAreaBody);
+    searchByTypesGroup -> setObjectName(QStringLiteral("searchByTypesGroup"));
+    searchByTypesGroup -> setTitle(QApplication::translate("SearchDialog", "Search By Types", 0));
+
+    l -> addWidget(searchByTypesGroup, 1);
+
+    QHBoxLayout * hl = new QHBoxLayout(searchByTypesGroup);
+
+    byAllTypes = new QRadioButton(searchByTypesGroup);
+    byAllTypes -> setObjectName(QStringLiteral("byAllTypes"));
+    byAllTypes -> setChecked(true);
+    byAllTypes -> setText(QApplication::translate("SearchDialog", "by all types", 0));
+    hl -> addWidget(byAllTypes, 1);
+
+    byAudioTypes = new QRadioButton(searchByTypesGroup);
+    byAudioTypes -> setObjectName(QStringLiteral("byAudioTypes"));
+    byAudioTypes -> setChecked(false);
+    byAudioTypes -> setText(QApplication::translate("SearchDialog", "by audio", 0));
+    hl -> addWidget(byAudioTypes, 1);
+
+    byVideoTypes = new QRadioButton(searchByTypesGroup);
+    byVideoTypes -> setObjectName(QStringLiteral("byVideoTypes"));
+    byVideoTypes -> setChecked(false);
+    byVideoTypes -> setText(QApplication::translate("SearchDialog", "by video", 0));
+    hl -> addWidget(byVideoTypes, 1);
+
 
     QGroupBox * searchByGroup = new QGroupBox(limitationsAreaBody);
     searchByGroup -> setObjectName(QStringLiteral("searchByGroup"));
@@ -261,12 +287,16 @@ void SearchConfigurator::initiateSources() {
     }
 }
 
-SearchSettings SearchConfigurator::buildParams(int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates, const QStringList & genres) {
+SearchSettings SearchConfigurator::buildParams(
+        int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates,
+        const QStringList & genres, int source_types = Core::ISearchable::in_title, int content_type = Core::ISearchable::sc_all)
+{
     SearchSettings res(blocks & block_sites, blocks & block_tabs, blocks & block_computer, limitPerPredicate);
 
     res.predicates.append(predicates);
     res.genres.append(genres);
-    res.type = Core::ISearchable::in_title;
+    res.stype = source_types;
+    res.ctype = content_type;
 
     if (res.inSites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
@@ -317,31 +347,40 @@ SearchSettings SearchConfigurator::params() {
     for(int i = 0; i < count; i++)
         res.genres.append(stylePredicates -> item(i) -> text());
 
+
     if (byTitle -> isChecked())
-        res.type = Core::ISearchable::in_title;
+        res.stype = Core::ISearchable::in_title;
     else if (byArtist -> isChecked())
-        res.type = Core::ISearchable::in_artist;
+        res.stype = Core::ISearchable::in_artist;
     else if (bySongName -> isChecked())
-        res.type = Core::ISearchable::in_song_name;
+        res.stype = Core::ISearchable::in_song_name;
     else if (bySet -> isChecked())
-        res.type = Core::ISearchable::in_sets;
+        res.stype = Core::ISearchable::in_sets;
     else if (byLyric -> isChecked())
-        res.type = Core::ISearchable::in_lyrics;
+        res.stype = Core::ISearchable::in_lyrics;
     else if (byAbc -> isChecked())
-        res.type = Core::ISearchable::in_abc;
+        res.stype = Core::ISearchable::in_abc;
     else
-        res.type = Core::ISearchable::in_tag;
+        res.stype = Core::ISearchable::in_tag;
 
-    if (byPopular -> isChecked()) res.type |= Core::ISearchable::in_popular;
-    if (byRelativity -> isChecked()) res.type |= Core::ISearchable::in_relative;
+    if (byPopular -> isChecked()) res.stype |= Core::ISearchable::in_popular;
+    if (byRelativity -> isChecked()) res.stype |= Core::ISearchable::in_relative;
 
-    if (byCyrillic -> isChecked()) res.type |= Core::ISearchable::in_cyrillic;
-    if (byForeign -> isChecked()) res.type |= Core::ISearchable::in_foreign;
+    if (byCyrillic -> isChecked()) res.stype |= Core::ISearchable::in_cyrillic;
+    if (byForeign -> isChecked()) res.stype |= Core::ISearchable::in_foreign;
 
-    if (byOrigins -> isChecked()) res.type |= Core::ISearchable::in_originals;
-    if (byMixes -> isChecked()) res.type |= Core::ISearchable::in_mixes;
+    if (byOrigins -> isChecked()) res.stype |= Core::ISearchable::in_originals;
+    if (byMixes -> isChecked()) res.stype |= Core::ISearchable::in_mixes;
 
-    if (byOwns -> isChecked()) res.type |= Core::ISearchable::in_owns;
+    if (byOwns -> isChecked()) res.stype |= Core::ISearchable::in_owns;
+
+
+    if (byAllTypes -> isChecked())
+        res.ctype = Core::ISearchable::sc_all;
+    else if (byAudioTypes -> isChecked())
+        res.ctype = Core::ISearchable::sc_audio;
+    else
+        res.ctype = Core::ISearchable::sc_video;
 
 
     if (res.inSites) {

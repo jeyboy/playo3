@@ -21,7 +21,7 @@ namespace Core {
             }
 
             inline QJsonArray popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, proc_tracks1);
+                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -80,7 +80,7 @@ namespace Core {
             }
 
             inline void genres_proc() {
-                sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, proc_genres1);
+                sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }

@@ -8,10 +8,10 @@
 
 #define JSON_SEARCH_PREDICATE QStringLiteral("p")
 #define JSON_SEARCH_GENRE QStringLiteral("g")
-#define JSON_SEARCH_POPULAR QStringLiteral("r")
 #define JSON_SEARCH_TYPE QStringLiteral("t")
 #define JSON_SEARCH_SUBJECT QStringLiteral("s")
 #define JSON_SEARCH_LIMIT QStringLiteral("l")
+#define JSON_SEARCH_CONTENT_LIMIT QStringLiteral("c")
 
 struct SearchSettings {   
     inline SearchSettings(bool sites = false, bool tabs = false, bool comp = false, int predicateLimitation = 999999) : inSites(sites), inTabs(tabs), inComputer(comp), limitPerPredicate(predicateLimitation) { }
@@ -20,13 +20,15 @@ struct SearchSettings {
 
     QJsonObject toJson() {
         QJsonObject set;
-        set.insert(JSON_SEARCH_TYPE, type);
+        set.insert(JSON_SEARCH_TYPE, stype);
         set.insert(JSON_SEARCH_LIMIT, limitPerPredicate);
+        set.insert(JSON_SEARCH_CONTENT_LIMIT, ctype);
         return set;
     }
 
     void fromJson(const QJsonObject & obj) {
-        type = obj.value(JSON_SEARCH_TYPE).toInt();
+        stype = obj.value(JSON_SEARCH_TYPE).toInt();
+        ctype = obj.value(JSON_SEARCH_CONTENT_LIMIT).toInt();
         limitPerPredicate = obj.value(JSON_SEARCH_LIMIT).toInt();
     }
 
@@ -37,26 +39,28 @@ struct SearchSettings {
     int limitPerPredicate;
 
     QList<QString> genres;
-
     QStringList drives;
     QList<void *> sites;
     QList<void *> tabs;
     QStringList predicates;
-    int type;
-    bool popular;
+
+    int stype;
+    int ctype;
 };
 
 struct SearchRequest {
     enum RequestType { local, inner, remote };
 
-    inline SearchRequest(RequestType request_type, void * search_interface, QString predicate = QString(), QString genre = QString(), bool most_popular = true)
-        : spredicate(predicate), sgenre(genre), popular(most_popular), search_interface(search_interface), search_type(request_type) {}
+    inline SearchRequest(RequestType request_type, void * search_interface, int source_type, int content_type, QString predicate = QString(), QString genre = QString())
+        : spredicate(predicate), sgenre(genre), search_interface(search_interface), search_type(request_type),
+          content_type(content_type), source_type(source_type) {}
 
     QString spredicate;
     QString sgenre;
-    bool popular;
     void * search_interface;
     RequestType search_type;
+    int content_type;
+    int source_type;
 
     ~SearchRequest() {}
 
