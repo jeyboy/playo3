@@ -8,7 +8,7 @@
 #include <qgroupbox.h>
 #include <qradiobutton.h>
 
-#include "modules/models/service/search_settings.h"
+#include "modules/core/interfaces/search_limits.h"
 #include "modules/controls/accordion.h"
 
 namespace Controls {
@@ -71,10 +71,14 @@ namespace Controls {
             block_tabs_and_sites = block_tabs | block_sites
         };
 
-        static SearchSettings buildParams(int limitPerPredicate = 999999, const SearchSettingsBlocks & blocks = block_all, const QStringList & predicates = QStringList(), const QStringList & ganres = QStringList());
+        static Core::SearchLimitLayers buildParams(
+            int limitPerPredicate = 999999, const SearchSettingsBlocks & blocks = block_all,
+            const QStringList & predicates = QStringList(), const QStringList & genres = QStringList(),
+            int source_types = Core::sp_title, int content_type = Core::sc_all
+        );
 
         SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0);
-        SearchSettings params();
+        Core::SearchLimitLayers params();
     protected slots:
         void on_addPredicate_clicked();
         void on_textPredicates_itemActivated(QListWidgetItem * item);

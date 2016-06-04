@@ -287,9 +287,9 @@ void SearchConfigurator::initiateSources() {
     }
 }
 
-SearchSettings SearchConfigurator::buildParams(
-        int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates,
-        const QStringList & genres, int source_types = Core::ISearchable::in_title, int content_type = Core::ISearchable::sc_all)
+Core::SearchLimitLayers SearchConfigurator::buildParams(
+    int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates,
+    const QStringList & genres, int source_types, int content_type)
 {
     SearchSettings res(blocks & block_sites, blocks & block_tabs, blocks & block_computer, limitPerPredicate);
 
@@ -336,7 +336,7 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
     connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(onFocusChanged(QWidget*,QWidget*)));
 }
 
-SearchSettings SearchConfigurator::params() {
+Core::SearchLimitLayers SearchConfigurator::params() {
     SearchSettings res(inSites -> isChecked(), inTabs -> isChecked(), inComputer -> isChecked());
 
     int count = textPredicates -> count();

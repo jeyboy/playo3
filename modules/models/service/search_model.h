@@ -8,24 +8,26 @@
 #define SEARCH_SET_JSON_KEY QStringLiteral("search_set")
 #define SEARCH_REGLAMENT_JSON_KEY QStringLiteral("search_reglament")
 
+#define STOP_SEARCH() \
+    initiator -> cancel(); \
+    initiator -> waitForFinished();
+
 namespace Models {
     class SearchModel : public LevelTreeModel {
         Q_OBJECT
 
         void searchRoutine(QFutureWatcher<void> * watcher);
-        void searchSingleRoutine(QFutureWatcher<void> * watcher);
-        void prepareRequests(QList<SearchRequest> & requests);
-        void startSearch(bool continues = false);
+        void start();
 
-        SearchSettings request;
+        SearchLimitLayers layers;
+        QList<SearchLimitLayer> requests;
+
         QFutureWatcher<void> * initiator;
-        QList<SearchRequest> requests;
         QVariantHash search_reglament;
     public:
         inline SearchModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0)
             : LevelTreeModel(settings, hash, parent), initiator(0) {
-            if (hash)
-                resumeSearch(*hash);
+            if (hash) load(*hash);
         }
 
         ~SearchModel();
@@ -33,10 +35,10 @@ namespace Models {
         inline bool isRelative() const { return false; }
         inline Core::DataSubType playlistType() const { return Core::dt_search; }
 
-        void initiateSearch(const SearchSettings & params);
-        void declineSearch();
-        void suspendSearch(QJsonObject & obj);
-        void resumeSearch(const QJsonObject & obj);
+        void initiate(const SearchLimitLayers & params);
+        void decline();
+        void save(QJsonObject & obj);
+        void load(const QJsonObject & obj);
 
         inline bool inProccess() { return initiator && initiator -> isRunning(); }
         inline QJsonObject toJson() {
@@ -45,8 +47,8 @@ namespace Models {
             return res;
         }
     protected slots:
-        int proceedTabs(SearchRequest & params, Playlist * parent);
-        int proceedMyComputer(SearchRequest & params, Playlist * parent);
+        int proceedTabs(SearchLimit & limit, Playlist * parent);
+        int proceedMyComputer(SearchLimit & limit, Playlist * parent);
         void searchFinished();
     };
 }

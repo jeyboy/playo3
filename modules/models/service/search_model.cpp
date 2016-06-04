@@ -4,9 +4,8 @@ using namespace Models;
 using namespace Core::Web;
 
 SearchModel::~SearchModel() {
-    if (initiator && initiator -> isRunning()) {
-        initiator -> cancel();
-        initiator -> waitForFinished();
+    if (inProccess()) {
+        STOP_SEARCH();
     }
 
     delete initiator;
@@ -15,32 +14,28 @@ SearchModel::~SearchModel() {
     endResetModel();
 }
 
-void SearchModel::startSearch(bool continues) {
+void SearchModel::start() {
     initiator = new QFutureWatcher<void>();
     connect(initiator, SIGNAL(finished()), this, SLOT(searchFinished()));
-    initiator -> setFuture(QtConcurrent::run(this, (
-            request.limit(DEFAULT_ITEMS_LIMIT) == 1 && (continues || !request.predicates.isEmpty()) ? &SearchModel::searchSingleRoutine : &SearchModel::searchRoutine
-        ), initiator));
+    initiator -> setFuture(QtConcurrent::run(this, &SearchModel::searchRoutine, initiator));
     emit updateRemovingBlockation(true);
 }
 
-void SearchModel::initiateSearch(const SearchSettings & params) {
-    request = params;
-    startSearch();
+void SearchModel::initiate(const SearchLimitLayers & params) {
+    layers = params;
+    start();
 }
 
-void SearchModel::declineSearch() {
-    if (initiator && initiator -> isRunning()) {
-        initiator -> cancel();
-        initiator -> waitForFinished();
+void SearchModel::decline() {
+    if (inProccess()) {
+        STOP_SEARCH();
         requests.clear();
         search_reglament.clear();
     }
 }
-void SearchModel::suspendSearch(QJsonObject & obj) {
-    if (initiator && initiator -> isRunning()) {
-        initiator -> cancel();
-        initiator -> waitForFinished();
+void SearchModel::save(QJsonObject & obj) {
+    if (inProccess()) {
+        STOP_SEARCH();
 
         if (!requests.isEmpty()) {
             QJsonArray res;
@@ -58,16 +53,16 @@ void SearchModel::suspendSearch(QJsonObject & obj) {
     }
 }
 
-void SearchModel::resumeSearch(const QJsonObject & obj) {
+void SearchModel::load(const QJsonObject & obj) {
     QJsonArray res = obj.value(SEARCH_JSON_KEY).toArray();
 
     if (res.isEmpty()) return;
 
-    request.fromJson(obj.value(SEARCH_SET_JSON_KEY).toObject());
+    layers.fromJson(obj.value(SEARCH_SET_JSON_KEY).toObject());
     SearchRequest::fromJson(res, requests);
     search_reglament = obj.value(SEARCH_REGLAMENT_JSON_KEY).toObject().toVariantHash();
 
-    startSearch(true);
+    startSearch();
 }
 
 int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
@@ -86,9 +81,7 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
             filters.append("*" + params.spredicate + (*it));
     }
 
-    //System.Music.Artist:(Beethoven OR Mozart)
-
-//    int genre_id = MusicGenres::instance() -> toInt();
+    //    int genre_id = MusicGenres::instance() -> toInt();
     QDirIterator dir_it(*(QString *)(params.search_interface), filters,  (QDir::Filter)FILE_FILTERS, QDirIterator::Subdirectories);
 
     while(dir_it.hasNext()) {
@@ -128,34 +121,34 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
     if (requests.isEmpty())
         prepareRequests(requests);
 
-    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), request.limit(DEFAULT_ITEMS_LIMIT));
+    bool singular = requests.first().items_limit == 1;
+
+//    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), request.limit(DEFAULT_ITEMS_LIMIT));
 
     int offset = res -> childCount();
     float total = requests.size() / 100.0;
     while(!requests.isEmpty()) {
-        if (watcher -> isCanceled())
-            break;
+        if (watcher -> isCanceled()) break;
 
-        SearchRequest r = requests.takeFirst();
-
+        SearchLimitLayer r = requests.takeFirst();
         Playlist * parent = res -> createPlaylist(dt_playlist, r.token());
         int propagate_count = 0;
 
         switch(r.search_type) {
-            case SearchRequest::local: {
+            case sr_local: {
 //                qDebug() << "SO COMP";
                 propagate_count = proceedMyComputer(r, parent);
             break;}
 
-            case SearchRequest::inner: {
+            case sr_inner: {
                 qDebug() << "SO INNER";
                 propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
             break;}
 
-            case SearchRequest::remote: {
+            case sr_remote: {
                 ISearchable * iface = (ISearchable *) r.search_interface;
                 qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(*limitation.updatePredicates(r.spredicate, r.sgenre));
+                QJsonArray items = iface -> search(r);
 
                 switch (iface -> siteType()) {
                     case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
@@ -172,135 +165,150 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             default:;
         }
 
-        if (propagate_count > 0) {
-            // hack for view updating
-            beginInsertRows(QModelIndex(), offset, offset);
-            endInsertRows();
-            parent -> backPropagateItemsCountInBranch(propagate_count);
-//            emit collapseNeeded(index(parent));
-        }
-        offset += 1;
-        emit setBackgroundProgress(requests.size() / total);
-    }
 
-    qDebug() << "SO END";
-    emit moveOutBackgroundProcess();
-}
+        if (singular) {
+            if (propagate_count > 0) {
+                int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
+                parent -> removeYouself();
 
-void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
-    Playlist * res = rootItem;
+                if (taked_amount > 0) {
+                    search_reglament.insert(r.token(), true);
 
-    emit moveInBackgroundProcess();
-    if (requests.isEmpty())
-        prepareRequests(requests);
+                    while (true) {
+                        if (requests.isEmpty()) break;
+                        if (requests.first().spredicate == r.token())
+                            requests.removeFirst();
+                        else break;
+                    }
 
-    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), 1);
-
-    int offset = res -> childCount();
-    float total = requests.size() / 100.0;
-    while(!requests.isEmpty()) {
-        if (watcher -> isCanceled())
-            break;
-
-        SearchRequest r = requests.takeFirst();
-
-        Playlist * parent = new Playlist();
-        search_reglament.insert(r.token(), false);
-        int propagate_count = 0;
-
-        switch(r.search_type) {
-            case SearchRequest::local: {
-                qDebug() << "SO LOCAL";
-                propagate_count = proceedMyComputer(r, parent);
-            break;}
-
-            case SearchRequest::inner: {
-                qDebug() << "SO INNER";
-                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
-            break;}
-
-            case SearchRequest::remote: {
-                ISearchable * iface = (ISearchable *) r.search_interface;
-                qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(*limitation.updatePredicates(r.spredicate, r.sgenre));
-
-                switch (iface -> siteType()) {
-                    case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case dt_site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case dt_site_od: { propagate_count = proceedOdList(items, parent); break;}
-                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
+                    beginInsertRows(QModelIndex(), offset, offset);
+                    endInsertRows();
+                    res -> backPropagateItemsCountInBranch(taked_amount);
+                    offset += taked_amount;
+                    QThread::msleep(250); //delay for getting away from captches
                 }
-
-                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
-            break;}
-
-            default:;
-        }
-
-        if (propagate_count > 0) {
-            int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
-            parent -> removeYouself();
-
-            if (taked_amount > 0) {
-                search_reglament.insert(r.token(), true);
-
-                while (true) {
-                    if (requests.isEmpty()) break;
-                    if (requests.first().spredicate == r.token())
-                        requests.removeFirst();
-                    else break;
-                }
-
+            }
+        } else {
+            if (propagate_count > 0) {
+                // hack for view updating
                 beginInsertRows(QModelIndex(), offset, offset);
                 endInsertRows();
-                res -> backPropagateItemsCountInBranch(taked_amount);
-                offset += taked_amount;
-                QThread::msleep(250); //delay for getting away from captches
+                parent -> backPropagateItemsCountInBranch(propagate_count);
+    //            emit collapseNeeded(index(parent));
             }
+            offset += 1;
         }
+
         emit setBackgroundProgress(requests.size() / total);
     }
 
-    int not_finded = 0;
-    for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
-        if (!it.value().toBool()) {
-            new IItem(res, NO_SOURCE_ITEM_ATTRS(it.key()));
-            not_finded++;
+    if (singular) {
+        int not_finded = 0;
+        for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
+            if (!it.value().toBool()) {
+                new IItem(res, NO_SOURCE_ITEM_ATTRS(it.key()));
+                not_finded++;
+            }
+
+        if (not_finded > 0) {
+            beginInsertRows(QModelIndex(), offset, offset + (not_finded - 1));
+            endInsertRows();
+            res -> backPropagateItemsCountInBranch(not_finded);
         }
-
-    if (not_finded > 0) {
-        beginInsertRows(QModelIndex(), offset, offset + (not_finded - 1));
-        endInsertRows();
-        res -> backPropagateItemsCountInBranch(not_finded);
     }
-
 
     qDebug() << "SO END";
     emit moveOutBackgroundProcess();
 }
 
-void SearchModel::prepareRequests(QList<SearchRequest> & requests) {
-    bool web_predicable = !(request.predicates.isEmpty() && request.genres.isEmpty()) || request.popular;
+//void SearchModel::searchSingleRoutine(QFutureWatcher<void> * watcher) {
+//    Playlist * res = rootItem;
 
-    if (request.predicates.isEmpty()) request.predicates << QString();
-    if (request.genres.isEmpty()) request.genres << QString();
+//    emit moveInBackgroundProcess();
+//    if (requests.isEmpty())
+//        prepareRequests(requests);
 
-    for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
-        QString predicate = (*it).replace(QRegularExpression("['\"]"), " ");
+//    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), 1);
 
-        for(QList<QString>::Iterator genre_it = request.genres.begin(); genre_it != request.genres.end(); genre_it++) {
-            if (web_predicable && request.inSites)
-                for(QList<void *>::Iterator search_interface = request.sites.begin(); search_interface != request.sites.end(); search_interface++)
-                    requests.append(SearchRequest(SearchRequest::remote, (*search_interface), request.ctype, predicate, (*genre_it), request.popular));
+//    int offset = res -> childCount();
+//    float total = requests.size() / 100.0;
+//    while(!requests.isEmpty()) {
+//        if (watcher -> isCanceled())
+//            break;
 
-            if (request.inTabs) {
-                for(QList<void *>::Iterator tab = request.tabs.begin(); tab != request.tabs.end(); tab++)
-                    requests.append(SearchRequest(SearchRequest::inner, (*tab), request.ctype, predicate, (*genre_it), request.popular));
-            }
+//        SearchRequest r = requests.takeFirst();
 
-            if (request.inComputer)
-                for(QStringList::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)
-                    requests.append(SearchRequest(SearchRequest::local, new QString(*drive), request.ctype, predicate, (*genre_it), request.popular));
-        }
-    }
-}
+//        Playlist * parent = new Playlist();
+//        search_reglament.insert(r.token(), false);
+//        int propagate_count = 0;
+
+//        switch(r.search_type) {
+//            case SearchRequest::local: {
+//                qDebug() << "SO LOCAL";
+//                propagate_count = proceedMyComputer(r, parent);
+//            break;}
+
+//            case SearchRequest::inner: {
+//                qDebug() << "SO INNER";
+//                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
+//            break;}
+
+//            case SearchRequest::remote: {
+//                ISearchable * iface = (ISearchable *) r.search_interface;
+//                qDebug() << "SO START" << iface -> siteType();
+//                QJsonArray items = iface -> search(*limitation.updatePredicates(r.spredicate, r.sgenre));
+
+//                switch (iface -> siteType()) {
+//                    case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
+//                    case dt_site_sc: { propagate_count = proceedScList(items, parent); break;}
+//                    case dt_site_od: { propagate_count = proceedOdList(items, parent); break;}
+//                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
+//                }
+
+//                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
+//            break;}
+
+//            default:;
+//        }
+
+//        if (propagate_count > 0) {
+//            int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
+//            parent -> removeYouself();
+
+//            if (taked_amount > 0) {
+//                search_reglament.insert(r.token(), true);
+
+//                while (true) {
+//                    if (requests.isEmpty()) break;
+//                    if (requests.first().spredicate == r.token())
+//                        requests.removeFirst();
+//                    else break;
+//                }
+
+//                beginInsertRows(QModelIndex(), offset, offset);
+//                endInsertRows();
+//                res -> backPropagateItemsCountInBranch(taked_amount);
+//                offset += taked_amount;
+//                QThread::msleep(250); //delay for getting away from captches
+//            }
+//        }
+//        emit setBackgroundProgress(requests.size() / total);
+//    }
+
+//    int not_finded = 0;
+//    for(QVariantHash::Iterator it = search_reglament.begin(); it != search_reglament.end(); it++)
+//        if (!it.value().toBool()) {
+//            new IItem(res, NO_SOURCE_ITEM_ATTRS(it.key()));
+//            not_finded++;
+//        }
+
+//    if (not_finded > 0) {
+//        beginInsertRows(QModelIndex(), offset, offset + (not_finded - 1));
+//        endInsertRows();
+//        res -> backPropagateItemsCountInBranch(not_finded);
+//    }
+
+
+//    qDebug() << "SO END";
+//    emit moveOutBackgroundProcess();
+//}

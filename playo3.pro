@@ -287,7 +287,8 @@ HEADERS += \
     modules/core/feeder/aspect_ratio_label.h \
     modules/core/feeder/feed_widget.h \
     modules/core/feeder/feeder.h \
-    modules/core/media/image_bank.h
+    modules/core/media/image_bank.h \
+    modules/core/interfaces/search_limits.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -421,4 +422,5 @@ SOURCES += \
     modules/core/core_parts/item.cpp \
     settings/apis_settings.cpp \
     modules/core/interfaces/isource.cpp \
-    modules/core/feeder/aspect_ratio_label.cpp
+    modules/core/feeder/aspect_ratio_label.cpp \
+    modules/core/interfaces/search_limits.cpp
