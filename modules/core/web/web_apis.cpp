@@ -2,10 +2,10 @@
 
 namespace Core {
     namespace Web {
-        QHash<DataSubType, ISource *> Apis::sources = QHash<DataSubType, ISource *>();
-        QHash<DataSubType, ISearchable *> Apis::searchers = QHash<DataSubType, ISearchable *>();
-        QHash<DataSubType, Sociable *> Apis::sociables = QHash<DataSubType, Sociable *>();
-        QHash<DataSubType, IShareable *> Apis::shareables = QHash<DataSubType, IShareable *>();
+        QMap<DataSubType, ISource *> Apis::sources = QMap<DataSubType, ISource *>();
+        QMap<DataSubType, ISearchable *> Apis::searchers = QMap<DataSubType, ISearchable *>();
+        QMap<DataSubType, Sociable *> Apis::sociables = QMap<DataSubType, Sociable *>();
+        QMap<DataSubType, IShareable *> Apis::shareables = QMap<DataSubType, IShareable *>();
 
         void Apis::initiate(const QJsonObject & obj) {
             sources.insert(Youtube::Api::obj().siteType(),      &Youtube::Api::obj());
@@ -25,7 +25,7 @@ namespace Core {
             sources.insert(MusicShara::obj().siteType(),        &MusicShara::obj());
             sources.insert(RedMp3::obj().siteType(),            &RedMp3::obj());
 
-            for(QHash<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
+            for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
 
                 ISearchable * ser = dynamic_cast<ISearchable *>(it.value());
                 if (ser) searchers.insert(it.key(), ser);
@@ -47,7 +47,7 @@ namespace Core {
         }
 
         void Apis::close(QJsonObject & obj) {
-            for(QHash<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
+            for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
                 it.value() -> toJson(obj);
         }
     }

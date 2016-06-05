@@ -1038,23 +1038,23 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     return false;
 }
 
-int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playlist * search_source) {
+int IModel::search(SearchLimit & params, Playlist * destination, Playlist * search_source) {
     int amount = 0;
 
     if (search_source == 0)
         search_source = rootItem;
 
     QList<IItem *> child = search_source -> childrenList();
-    bool has_empty_predicate = params.spredicate.isEmpty();
+    bool has_empty_predicate = params.predicate.isEmpty();
 
     for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
         if ((*it) -> isContainer()) {
-            initiateSearch(params, destination, (Playlist *) *it);
+            search(params, destination, (Playlist *) *it);
         } else {
-            bool is_valid = has_empty_predicate || (*it) -> title().toString().contains(params.spredicate, Qt::CaseInsensitive);
+            bool is_valid = has_empty_predicate || (*it) -> title().toString().contains(params.predicate, Qt::CaseInsensitive);
 
             if (is_valid) {
-                if (!params.sgenre.isEmpty()) {
+                if (!params.genre.isEmpty()) {
 //                    int genre_id = (*it) -> genreID().toInt();
 //                    is_valid |= params.sgenre_id == genre_id;
                 }
@@ -1075,7 +1075,7 @@ int IModel::initiateSearch(SearchRequest & params, Playlist * destination, Playl
     return amount;
 }
 
-int IModel::innerSearch(const QString & predicate, Playlist * destination, Playlist * search_source, int count) {
+int IModel::search(const QString & predicate, Playlist * destination, Playlist * search_source, int count) {
     int amount = 0;
 
     if (search_source == 0)
@@ -1085,7 +1085,7 @@ int IModel::innerSearch(const QString & predicate, Playlist * destination, Playl
 
     for(QList<IItem *>::Iterator it = child.begin(); it != child.end(); it++) {
         if ((*it) -> isContainer()) {
-            innerSearch(predicate, destination, (Playlist *) *it, count);
+            search(predicate, destination, (Playlist *) *it, count);
         } else {
             int comparity = FuzzyComparison::compareStrings((*it) -> title().toString(), predicate);
             qDebug() << "COMPATIBILITY CHECK" << predicate << " (VS) " << (*it) -> title().toString() << " ||| " << comparity;

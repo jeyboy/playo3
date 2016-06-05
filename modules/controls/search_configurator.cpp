@@ -240,25 +240,25 @@ void SearchConfigurator::initiateSources() {
                 QListWidgetItem * item = new QListWidgetItem((*it) -> windowTitle(), tabsList);
                 item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
                 item -> setCheckState(Qt::Unchecked);
-                item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) mdl));
+                item -> setData(Qt::UserRole + 1, mdl -> name());
                 tabsList -> addItem(item);
             }
         }
     }
 
-    QHash<DataSubType, ISearchable *> sites = Web::Apis::searchersList();
+    QMap<DataSubType, ISearchable *> sites = Web::Apis::searchersList();
     QListWidgetItem * item = new QListWidgetItem(QString(""));
     item -> setFlags(Qt::NoItemFlags);
     sitesList -> addItem(item);
 
-    for(QHash<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
+    for(QMap<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         ISource * src = Web::Apis::source(it.key());
 
         if (src -> isConnected()) {
             QListWidgetItem * item = new QListWidgetItem(src -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);
-            item -> setData(Qt::UserRole + 1, qVariantFromValue((void *) it.value()));
+            item -> setData(Qt::UserRole + 1, it.key());
 
             switch(it.key()) {
                 case dt_site_vk:
@@ -288,32 +288,30 @@ void SearchConfigurator::initiateSources() {
 }
 
 Core::SearchLimitLayers SearchConfigurator::buildParams(
-    int limitPerPredicate, const SearchSettingsBlocks & blocks, const QStringList & predicates,
-    const QStringList & genres, int source_types, int content_type)
-{
-    SearchSettings res(blocks & block_sites, blocks & block_tabs, blocks & block_computer, limitPerPredicate);
+    int items_limit, const SearchSettingsBlocks & blocks, const QStringList & predicates,
+    const QStringList & genres, int predicate_types, int content_type)
+{   
+    SearchLimitLayers res((SearchContentType)content_type, (SearchPredicateType)predicate_types, items_limit);
 
     res.predicates.append(predicates);
     res.genres.append(genres);
-    res.stype = source_types;
-    res.ctype = content_type;
 
-    if (res.inSites) {
+    if (blocks & block_sites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
         for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
             if (Web::Apis::source((*it) -> siteType()) -> isConnected())
-                res.sites.append(*it);
+                res.sites.append((*it) -> siteType());
     }
 
-    if (res.inTabs) {
+    if (blocks & block_tabs) {
         QList<Controls::DockBar *> dockbars = Presentation::Dockbars::obj().dockbars();
         for(QList<Controls::DockBar *>::Iterator it = dockbars.begin(); it != dockbars.end(); it++) {
             Views::IView * v = Presentation::Dockbars::obj().view(*it);
-            if (v && !v -> isCommon()) res.tabs.append((Models::IModel *)v -> model());
+            if (v && !v -> isCommon()) res.tabs.append(((Models::IModel *)v -> model()) -> name());
         }
     }
 
-    if (res.inComputer) {
+    if (blocks & block_computer) {
         QFileInfoList drives = QDir::drives();
         for(QFileInfoList::Iterator it = drives.begin(); it != drives.end(); it++)
             res.drives.append((*it).absolutePath());
@@ -337,7 +335,42 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
 }
 
 Core::SearchLimitLayers SearchConfigurator::params() {
-    SearchSettings res(inSites -> isChecked(), inTabs -> isChecked(), inComputer -> isChecked());
+    int predicate_types = Core::sp_title;
+
+    if (byArtist -> isChecked())
+        predicate_types = Core::sp_artist;
+    else if (bySongName -> isChecked())
+        predicate_types = Core::sp_song_name;
+    else if (bySet -> isChecked())
+        predicate_types = Core::sp_sets;
+    else if (byLyric -> isChecked())
+        predicate_types = Core::sp_lyrics;
+    else if (byAbc -> isChecked())
+        predicate_types = Core::sp_abc;
+    else
+        predicate_types = Core::sp_tag;
+
+    if (byPopular -> isChecked()) predicate_types |= Core::sp_popular;
+    if (byRelativity -> isChecked()) predicate_types |= Core::sp_relative;
+
+    if (byCyrillic -> isChecked()) predicate_types |= Core::sp_cyrillic;
+    if (byForeign -> isChecked()) predicate_types |= Core::sp_foreign;
+
+    if (byOrigins -> isChecked()) predicate_types |= Core::sp_originals;
+    if (byMixes -> isChecked()) predicate_types |= Core::sp_mixes;
+
+    if (byOwns -> isChecked()) predicate_types |= Core::sp_owns;
+
+
+    SearchContentType content_types = sc_all;
+
+    if (byAudioTypes -> isChecked())
+        content_types = Core::sc_audio;
+    else if (byVideoTypes -> isChecked())
+        content_types = Core::sc_video;
+
+
+    SearchLimitLayers res(content_types, (SearchPredicateType)predicate_types);
 
     int count = textPredicates -> count();
     for(int i = 0; i < count; i++)
@@ -347,63 +380,27 @@ Core::SearchLimitLayers SearchConfigurator::params() {
     for(int i = 0; i < count; i++)
         res.genres.append(stylePredicates -> item(i) -> text());
 
-
-    if (byTitle -> isChecked())
-        res.stype = Core::ISearchable::in_title;
-    else if (byArtist -> isChecked())
-        res.stype = Core::ISearchable::in_artist;
-    else if (bySongName -> isChecked())
-        res.stype = Core::ISearchable::in_song_name;
-    else if (bySet -> isChecked())
-        res.stype = Core::ISearchable::in_sets;
-    else if (byLyric -> isChecked())
-        res.stype = Core::ISearchable::in_lyrics;
-    else if (byAbc -> isChecked())
-        res.stype = Core::ISearchable::in_abc;
-    else
-        res.stype = Core::ISearchable::in_tag;
-
-    if (byPopular -> isChecked()) res.stype |= Core::ISearchable::in_popular;
-    if (byRelativity -> isChecked()) res.stype |= Core::ISearchable::in_relative;
-
-    if (byCyrillic -> isChecked()) res.stype |= Core::ISearchable::in_cyrillic;
-    if (byForeign -> isChecked()) res.stype |= Core::ISearchable::in_foreign;
-
-    if (byOrigins -> isChecked()) res.stype |= Core::ISearchable::in_originals;
-    if (byMixes -> isChecked()) res.stype |= Core::ISearchable::in_mixes;
-
-    if (byOwns -> isChecked()) res.stype |= Core::ISearchable::in_owns;
-
-
-    if (byAllTypes -> isChecked())
-        res.ctype = Core::ISearchable::sc_all;
-    else if (byAudioTypes -> isChecked())
-        res.ctype = Core::ISearchable::sc_audio;
-    else
-        res.ctype = Core::ISearchable::sc_video;
-
-
-    if (res.inSites) {
+    if (inSites) {
         int count = sitesList -> count();
 
         for(int i = 0; i < count; i++) {
             QListWidgetItem * item = sitesList -> item(i);
             if (item -> checkState() == Qt::Checked)
-                res.sites.append(item -> data(Qt::UserRole + 1).value<void *>());
+                res.sites.append(item -> data(Qt::UserRole + 1).toInt());
         }
     }
 
-    if (res.inTabs) {
+    if (inTabs) {
         int count = tabsList -> count();
 
         for(int i = 0; i < count; i++) {
             QListWidgetItem * item = tabsList -> item(i);
             if (item -> checkState() == Qt::Checked)
-                res.tabs.append(item -> data(Qt::UserRole + 1).value<void *>());
+                res.tabs.append(item -> data(Qt::UserRole + 1).toString());
         }
     }
 
-    if (res.inComputer) {
+    if (inComputer) {
         int count = driveList -> count();
 
         for(int i = 0; i < count; i++) {

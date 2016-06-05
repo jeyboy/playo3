@@ -393,8 +393,8 @@ QToolBar * ToolBars::createControlToolBar() {
 
 //    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
 
-    QHash<DataSubType, ISource *> apis = Web::Apis::sourcesList();
-    for(QHash<DataSubType, ISource *>::Iterator api = apis.begin(); api != apis.end(); api++) {
+    QMap<DataSubType, ISource *> apis = Web::Apis::sourcesList();
+    for(QMap<DataSubType, ISource *>::Iterator api = apis.begin(); api != apis.end(); api++) {
         QToolButton * btn = api.value() -> initButton(container);
         if (btn) ptb -> addWidget(btn);
     }

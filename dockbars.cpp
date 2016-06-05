@@ -156,7 +156,7 @@ DockBar * Dockbars::commonBar() {
 }
 
 DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs,
-        bool closable, bool addToView, SearchSettings * search_settings, bool refresh)
+        bool closable, bool addToView, SearchLimitLayers * search_settings, bool refresh)
 {
     bool with_head = names.linkable_uid.startsWith(UID_HEAD);
     QString identifier = with_head ? names.linkable_uid : UID_HEAD % names.linkable_uid;
@@ -180,7 +180,7 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Mod
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchSettings * search_settings) {
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchLimitLayers * search_settings) {
     DockBar * bar = createDocBar(names, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
 

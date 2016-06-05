@@ -9,24 +9,24 @@
 namespace Core {
     namespace Web {
         class Apis {
-            static QHash<DataSubType, ISource *> sources;
-            static QHash<DataSubType, ISearchable *> searchers;
-            static QHash<DataSubType, Sociable *> sociables;
-            static QHash<DataSubType, IShareable *> shareables;
+            static QMap<DataSubType, ISource *> sources;
+            static QMap<DataSubType, ISearchable *> searchers;
+            static QMap<DataSubType, Sociable *> sociables;
+            static QMap<DataSubType, IShareable *> shareables;
         public:
             static void initiate(const QJsonObject & obj);
 
-            static QHash<DataSubType, ISearchable *> searchersList() { return searchers; }
+            static QMap<DataSubType, ISearchable *> searchersList() { return searchers; }
             inline static ISearchable * searcher(const DataSubType & item_type) { return searchers.value(item_type); }
 
-            static QHash<DataSubType, Sociable *> sociablesList() { return sociables; }
+            static QMap<DataSubType, Sociable *> sociablesList() { return sociables; }
             inline static Sociable * sociable(const DataSubType & item_type) { return sociables.value(item_type); }
 //            inline static bool isSociable(const DataSubType & item_type) { return sociables.contains(item_type); }
 
-            static QHash<DataSubType, IShareable *> shareablesList() { return shareables; }
+            static QMap<DataSubType, IShareable *> shareablesList() { return shareables; }
             inline static IShareable * shareable(const DataSubType & item_type) { return shareables.value(item_type); }
 
-            static QHash<DataSubType, ISource *> sourcesList() { return sources; }
+            static QMap<DataSubType, ISource *> sourcesList() { return sources; }
             inline static ISource * source(const DataSubType & item_type) { return sources.value(item_type); }
 
             static void close(QJsonObject & obj);

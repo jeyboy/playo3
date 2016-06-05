@@ -20,6 +20,8 @@
 
 #include "modules/controls/user_dialog_box.h"
 
+#define MODEL_POSTFIX QStringLiteral("_mdl")
+
 namespace Models {
     using namespace Core;
 
@@ -41,6 +43,11 @@ namespace Models {
         virtual ~IModel();
 
         inline Playlist * root() { return rootItem; }
+
+        inline QString name() {
+            QString subject = objectName();
+            return subject.mid(0, subject.length() - MODEL_POSTFIX.length());
+        }
 
         inline Params settings() const { return sttngs; }
         inline void setSettings(const Params & newSettings) { sttngs = newSettings; }

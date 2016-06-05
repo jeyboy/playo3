@@ -26,6 +26,7 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
+                inline bool connectionRequired() { return true; }
                 inline bool isConnected() {
                     if (!additional().isEmpty())
                         setParams(grabSID(), userID(), additional());

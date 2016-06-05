@@ -27,6 +27,7 @@ namespace Core {
 
         inline QString lastError() const { return error; }
 
+        virtual inline bool connectionRequired() { return false; }
         virtual inline bool isConnected() { return true; }
         virtual inline bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return false; }
         virtual inline void disconnectUser() { }

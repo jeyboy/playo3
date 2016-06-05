@@ -62,7 +62,7 @@ void SearchModel::save(QJsonObject & obj) {
     }
 }
 
-int SearchModel::proceedMyComputer(SearchLimit & params, Playlist * parent) {
+int SearchModel::proceedMyComputer(SearchLimitLayer & params, Playlist * parent) {
     int amount = 0;
     QStringList filters;
 
@@ -75,7 +75,7 @@ int SearchModel::proceedMyComputer(SearchLimit & params, Playlist * parent) {
     }
 
     //    int genre_id = MusicGenres::instance() -> toInt();
-    QDirIterator dir_it(*(QString *)(params.search_interface), filters,  (QDir::Filter)FILE_FILTERS, QDirIterator::Subdirectories);
+    QDirIterator dir_it(params.context.toString(), filters, (QDir::Filter)FILE_FILTERS, QDirIterator::Subdirectories);
 
     while(dir_it.hasNext()) {
         QString path = dir_it.next();
@@ -135,7 +135,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
         Playlist * parent = res -> createPlaylist(dt_playlist, r.token());
         int propagate_count = 0;
 
-        switch(r.search_type) {
+        switch(r.req_type) {
             case sr_local: {
 //                qDebug() << "SO COMP";
                 propagate_count = proceedMyComputer(r, parent);
@@ -144,11 +144,11 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             case sr_inner: {
                 IModel * _mdl = ((IModel *) inners.value(r.context.toString(), 0));
                 qDebug() << "SO INNER" << r.context << _mdl;
-                propagate_count = _mdl -> initiateSearch(r, parent);
+                propagate_count = _mdl -> search(r, parent);
             break;}
 
             case sr_remote: {
-                ISearchable * iface = Web::Apis::searcher(r.context.toInt());
+                ISearchable * iface = Web::Apis::searcher((DataSubType)r.context.toInt());
                 qDebug() << "SO START" << iface -> siteType();
                 QJsonArray items = iface -> search(r);
 
@@ -170,7 +170,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
         if (singular) {
             if (propagate_count > 0) {
-                int taked_amount = innerSearch(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
+                int taked_amount = search(r.token(), res, parent, 1); // need to rework algo - at this time taked first compatible item - not better
                 parent -> removeYouself();
 
                 if (taked_amount > 0) {

@@ -45,8 +45,8 @@ namespace Models {
             return res;
         }
     protected slots:
-        int proceedTabs(SearchLimit & limit, Playlist * parent);
-        int proceedMyComputer(SearchLimit & limit, Playlist * parent);
+//        int proceedTabs(SearchLimitLayer & limit, Playlist * parent);
+        int proceedMyComputer(SearchLimitLayer & limit, Playlist * parent);
         void searchFinished();
     };
 }

@@ -72,9 +72,9 @@ namespace Controls {
         };
 
         static Core::SearchLimitLayers buildParams(
-            int limitPerPredicate = 999999, const SearchSettingsBlocks & blocks = block_all,
+            int items_limit = DEFAULT_ITEMS_LIMIT, const SearchSettingsBlocks & blocks = block_all,
             const QStringList & predicates = QStringList(), const QStringList & genres = QStringList(),
-            int source_types = Core::sp_title, int content_type = Core::sc_all
+            int predicate_types = Core::sp_title, int content_type = Core::sc_all
         );
 
         SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0);

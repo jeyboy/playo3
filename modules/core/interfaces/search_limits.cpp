@@ -100,12 +100,6 @@ void SearchLimitLayer::fromJson(const QJsonArray & objs, QList<SearchLimitLayer>
 void SearchLimitLayer::save(QJsonArray & arr) {
     QJsonObject self;
 
-//        case inner: {
-//            QString subject = ((Models::IModel *)(search_interface)) -> objectName();
-//            subject = subject.mid(0, subject.length() - MODEL_POSTFIX.length());
-//            self.insert(JSON_SEARCH_SUBJECT, subject);
-//        break;}
-
     self.insert(JSON_SEARCH_REQUEST_TYPE, req_type);
     self.insert(JSON_SEARCH_CONTENT_TYPE, sc_type);
     self.insert(JSON_SEARCH_PREDICATE_TYPE, predicate_type);

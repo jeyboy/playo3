@@ -27,6 +27,7 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
+                inline bool connectionRequired() { return true; }
                 inline bool isConnected() { return !token().isEmpty(); }
 
                 void getGroupInfo(QString uid, QJsonObject & object);

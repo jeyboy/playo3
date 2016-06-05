@@ -111,6 +111,10 @@ namespace Core {
     };
 
     struct SearchLimitLayers : public SearchLimitBase {
+        SearchLimitLayers(const SearchContentType & sc_type = sc_all, const SearchPredicateType & predicate_type = sp_popular,
+            int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
+            SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit) {}
+
         QStringList tabs;
         QStringList drives;
         QList<int> sites;
