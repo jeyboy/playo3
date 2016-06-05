@@ -1,4 +1,6 @@
 #include "search_model.h"
+#include "dockbars.h"
+#include "modules/core/web/web_apis.h"
 
 using namespace Models;
 using namespace Core::Web;
@@ -33,52 +35,49 @@ void SearchModel::decline() {
         search_reglament.clear();
     }
 }
-void SearchModel::save(QJsonObject & obj) {
-    if (inProccess()) {
-        STOP_SEARCH();
-
-        if (!requests.isEmpty()) {
-            QJsonArray res;
-            for(QList<SearchRequest>::Iterator request = requests.begin(); request != requests.end(); request++)
-                (*request).save(res);
-
-            obj.insert(SEARCH_JSON_KEY, res);
-            obj.insert(SEARCH_SET_JSON_KEY, request.toJson());
-            obj.insert(SEARCH_REGLAMENT_JSON_KEY, QJsonObject::fromVariantHash(search_reglament));
-        }
-    } else { // wtf - why this keys apppers in json ?
-        obj.remove(SEARCH_JSON_KEY);
-        obj.remove(SEARCH_SET_JSON_KEY);
-        obj.remove(SEARCH_REGLAMENT_JSON_KEY);
-    }
-}
 
 void SearchModel::load(const QJsonObject & obj) {
     QJsonArray res = obj.value(SEARCH_JSON_KEY).toArray();
 
     if (res.isEmpty()) return;
 
-    layers.fromJson(obj.value(SEARCH_SET_JSON_KEY).toObject());
-    SearchRequest::fromJson(res, requests);
+    SearchLimitLayer::fromJson(res, requests);
     search_reglament = obj.value(SEARCH_REGLAMENT_JSON_KEY).toObject().toVariantHash();
 
-    startSearch();
+    start();
 }
 
-int SearchModel::proceedTabs(SearchRequest & params, Playlist * parent) {
+void SearchModel::save(QJsonObject & obj) {
+    if (inProccess()) {
+        STOP_SEARCH();
+
+        if (!requests.isEmpty()) {
+            QJsonArray res;
+            for(QList<SearchLimitLayer>::Iterator request = requests.begin(); request != requests.end(); request++)
+                (*request).save(res);
+
+            obj.insert(SEARCH_REQUESTS_JSON_KEY, res);
+            obj.insert(SEARCH_REGLAMENT_JSON_KEY, QJsonObject::fromVariantHash(search_reglament));
+        }
+    }
+}
+
+
+
+int SearchModel::proceedTabs(SearchLimit & params, Playlist * parent) {
     return ((IModel *) params.search_interface) -> initiateSearch(params, parent);
 }
 
-int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
+int SearchModel::proceedMyComputer(SearchLimit & params, Playlist * parent) {
     int amount = 0;
     QStringList filters;
 
-    if (params.spredicate.isEmpty()) {
+    if (params.predicate.isEmpty()) {
         filters = Extensions::obj().filterList("music");
     } else {
         QStringList res = Extensions::obj().filterList("music");
         for(QStringList::Iterator it = res.begin(); it != res.end(); it++)
-            filters.append("*" + params.spredicate + (*it));
+            filters.append("*" + params.predicate + (*it));
     }
 
     //    int genre_id = MusicGenres::instance() -> toInt();
@@ -99,7 +98,6 @@ int SearchModel::proceedMyComputer(SearchRequest & params, Playlist * parent) {
         }
     }
 
-    params.clearInterface();
     return amount;
 }
 
@@ -119,14 +117,23 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
     emit moveInBackgroundProcess();
     if (requests.isEmpty())
-        prepareRequests(requests);
+        layers.prepareLayers(requests);
+
+
+    QHash<QString, QAbstractItemModel *> inners;
+
+    QList<Controls::DockBar *> bars = Presentation::Dockbars::obj().dockbars();
+
+    for(QList<Controls::DockBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
+        Views::IView * v = Presentation::Dockbars::obj().view(*bar);
+        if (v) inners.insert((*bar) -> objectName(), v -> model());
+    }
+
 
     bool singular = requests.first().items_limit == 1;
-
-//    ISearchable::SearchLimit limitation(ISearchable::sc_all, (ISearchable::SearchPredicateType)request.type, QString(), QString(), request.limit(DEFAULT_ITEMS_LIMIT));
-
     int offset = res -> childCount();
     float total = requests.size() / 100.0;
+
     while(!requests.isEmpty()) {
         if (watcher -> isCanceled()) break;
 
@@ -176,7 +183,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
                     while (true) {
                         if (requests.isEmpty()) break;
-                        if (requests.first().spredicate == r.token())
+                        if (requests.first().predicate == r.token())
                             requests.removeFirst();
                         else break;
                     }

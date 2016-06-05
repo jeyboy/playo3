@@ -10,10 +10,16 @@
 
 #define JSON_SEARCH_PREDICATE QStringLiteral("p")
 #define JSON_SEARCH_GENRE QStringLiteral("g")
-#define JSON_SEARCH_SUBJECT QStringLiteral("s")
-#define JSON_SEARCH_LIMIT QStringLiteral("l")
+
+#define JSON_SEARCH_CONTEXT QStringLiteral("s")
+
+#define JSON_SEARCH_ITEMS_LIMIT QStringLiteral("l")
+#define JSON_SEARCH_REQUESTS_LIMIT QStringLiteral("r")
+#define JSON_SEARCH_OFFSET QStringLiteral("o")
+
 #define JSON_SEARCH_REQUEST_TYPE QStringLiteral("t")
-#define JSON_SEARCH_CONTENT_LIMIT QStringLiteral("c")
+#define JSON_SEARCH_CONTENT_TYPE QStringLiteral("c")
+#define JSON_SEARCH_PREDICATE_TYPE QStringLiteral("z")
 
 namespace Core {
     enum SearchRequestType { sr_local, sr_inner, sr_remote };
@@ -86,16 +92,6 @@ namespace Core {
 
         QString predicate;
         QString genre;
-
-//        SearchLimit * updatePredicates(const QString & new_predicate, const QString & new_genre) {
-//            predicate = new_predicate;
-//            genre = new_genre;
-//            return this;
-//        }
-
-        QString token();
-        static void fromJson(const QJsonArray & objs, QList<SearchLimit> & list);
-        void save(QJsonArray & arr);
     };
 
 
@@ -107,44 +103,24 @@ namespace Core {
         QList<QString> genres;
         QStringList predicates;
 
-        void prepareLayers(QList<SearchLimitLayer> & requests) {
-            bool web_predicable = !(request.predicates.isEmpty() && request.genres.isEmpty()) || request.popular;
-
-            if (request.predicates.isEmpty()) request.predicates << QString();
-            if (request.genres.isEmpty()) request.genres << QString();
-
-            for(QStringList::Iterator it = request.predicates.begin(); it != request.predicates.end(); it++) {
-                QString predicate = (*it).replace(QRegularExpression("['\"]"), " ");
-
-                for(QList<QString>::Iterator genre_it = request.genres.begin(); genre_it != request.genres.end(); genre_it++) {
-                    if (web_predicable && request.inSites)
-                        for(QList<void *>::Iterator search_interface = request.sites.begin(); search_interface != request.sites.end(); search_interface++)
-                            requests.append(SearchRequest(SearchRequest::remote, (*search_interface), request.ctype, predicate, (*genre_it), request.popular));
-
-                    if (request.inTabs) {
-                        for(QList<void *>::Iterator tab = request.tabs.begin(); tab != request.tabs.end(); tab++)
-                            requests.append(SearchRequest(SearchRequest::inner, (*tab), request.ctype, predicate, (*genre_it), request.popular));
-                    }
-
-                    if (request.inComputer)
-                        for(QStringList::Iterator drive = request.drives.begin(); drive != request.drives.end(); drive++)
-                            requests.append(SearchRequest(SearchRequest::local, new QString(*drive), request.ctype, predicate, (*genre_it), request.popular));
-                }
-            }
-        }
+        void prepareLayers(QList<SearchLimitLayer> & requests);
     };
 
 
     struct SearchLimitLayer : public SearchLimit {
         SearchLimitLayer(
-            const SearchRequestType & rt, const QString & subject, const SearchContentType & sc_type,
+            const SearchRequestType & rt, const QVariant & context, const SearchContentType & sc_type,
             const SearchPredicateType & predicate_type, const QString & predicate, const QString & genre,
             int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimit(sc_type, predicate_type, predicate, genre, items_limit, start_offset, requests_limit),
-            context(subject), req_type(rt) {}
+            context(context), req_type(rt) {}
 
-        QString context;
+        QVariant context;
         SearchRequestType req_type;
+
+        QString token();
+        static void fromJson(const QJsonArray & objs, QList<SearchLimit> & list);
+        void save(QJsonArray & arr);
     };
 }
 

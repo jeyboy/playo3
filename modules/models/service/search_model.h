@@ -2,10 +2,8 @@
 #define SEARCH_MODEL_H
 
 #include "modules/models/level_tree_model.h"
-#include "search_settings.h"
 
-#define SEARCH_JSON_KEY QStringLiteral("search")
-#define SEARCH_SET_JSON_KEY QStringLiteral("search_set")
+#define SEARCH_REQUESTS_JSON_KEY QStringLiteral("search_requests")
 #define SEARCH_REGLAMENT_JSON_KEY QStringLiteral("search_reglament")
 
 #define STOP_SEARCH() \

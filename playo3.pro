@@ -189,7 +189,6 @@ HEADERS += \
     modules/models/service/hotkey_model_item.h \
     modules/models/service/hotkey_types.h \
     modules/models/service/search_model.h \
-    modules/models/service/search_settings.h \
     modules/models/web/ignore_list.h \
     modules/models/web/od_model.h \
     modules/models/web/soundcloud_model.h \
@@ -411,7 +410,6 @@ SOURCES += \
     modules/controls/toolbar_user_button.cpp \
     modules/controls/toolbar_new_list_button.cpp \
     modules/controls/search_configurator.cpp \
-    modules/models/service/search_settings.cpp \
     modules/core/web/apis/site/redmp3.cpp \
     modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/filesystem_watcher.cpp \
