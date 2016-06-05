@@ -15,7 +15,7 @@ public:
     explicit SearchDialog(QWidget * parent = 0);
     ~SearchDialog();
 
-    SearchSettings params();
+    Core::SearchLimitLayers params();
 private slots:
     void on_cancelButton_clicked();
     void on_acceptButton_clicked();

@@ -41,7 +41,7 @@ namespace Models {
         inline bool inProccess() { return initiator && initiator -> isRunning(); }
         inline QJsonObject toJson() {
             QJsonObject res = LevelTreeModel::toJson();
-            suspendSearch(res);
+            save(res);
             return res;
         }
     protected slots:

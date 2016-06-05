@@ -37,7 +37,7 @@ void SearchModel::decline() {
 }
 
 void SearchModel::load(const QJsonObject & obj) {
-    QJsonArray res = obj.value(SEARCH_JSON_KEY).toArray();
+    QJsonArray res = obj.value(SEARCH_REQUESTS_JSON_KEY).toArray();
 
     if (res.isEmpty()) return;
 
@@ -60,12 +60,6 @@ void SearchModel::save(QJsonObject & obj) {
             obj.insert(SEARCH_REGLAMENT_JSON_KEY, QJsonObject::fromVariantHash(search_reglament));
         }
     }
-}
-
-
-
-int SearchModel::proceedTabs(SearchLimit & params, Playlist * parent) {
-    return ((IModel *) params.search_interface) -> initiateSearch(params, parent);
 }
 
 int SearchModel::proceedMyComputer(SearchLimit & params, Playlist * parent) {
@@ -148,12 +142,13 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             break;}
 
             case sr_inner: {
-                qDebug() << "SO INNER";
-                propagate_count = ((IModel *) r.search_interface) -> initiateSearch(r, parent);
+                IModel * _mdl = ((IModel *) inners.value(r.context.toString(), 0));
+                qDebug() << "SO INNER" << r.context << _mdl;
+                propagate_count = _mdl -> initiateSearch(r, parent);
             break;}
 
             case sr_remote: {
-                ISearchable * iface = (ISearchable *) r.search_interface;
+                ISearchable * iface = Web::Apis::searcher(r.context.toInt());
                 qDebug() << "SO START" << iface -> siteType();
                 QJsonArray items = iface -> search(r);
 

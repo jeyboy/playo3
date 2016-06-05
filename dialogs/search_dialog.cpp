@@ -20,7 +20,7 @@ SearchDialog::~SearchDialog() {
     delete ui;
 }
 
-SearchSettings SearchDialog::params() {
+Core::SearchLimitLayers SearchDialog::params() {
     return configurator -> params();
 }
 

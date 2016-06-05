@@ -12,7 +12,7 @@ namespace Views {
             : IView(new SearchModel(settings, hash), parent) {}
 
         ~SearchView() {}
-        inline void search(const SearchSettings & params) { ((SearchModel *)mdl) -> initiateSearch(params); }
+        inline void search(const SearchLimitLayers & params) { ((SearchModel *)mdl) -> initiate(params); }
     };
 }
 #endif // SEARCH_VIEW_H

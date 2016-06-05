@@ -47,7 +47,7 @@ namespace Core {
     };
 
     struct SearchLimitBase {
-        SearchLimitBase(const SearchContentType & sc_type, const SearchPredicateType & predicate_type,
+        SearchLimitBase(const SearchContentType & sc_type = sc_all, const SearchPredicateType & predicate_type = sp_popular,
             int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             sc_type(sc_type), predicate_type(predicate_type), items_limit(items_limit), start_offset(start_offset),
             requests_limit(requests_limit) {}
@@ -77,8 +77,6 @@ namespace Core {
         inline bool by_mixes() const { return predicate_type & sp_mixes; }
         inline bool by_foreign() const { return predicate_type & sp_foreign; }
         inline bool by_cyrillic() const { return predicate_type & sp_cyrillic; }
-
-        inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
     };
 
 
@@ -92,20 +90,9 @@ namespace Core {
 
         QString predicate;
         QString genre;
+
+        inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
     };
-
-
-    struct SearchLimitLayers : public SearchLimitBase {
-        QStringList tabs;
-        QStringList drives;
-        QList<int> sites;
-
-        QList<QString> genres;
-        QStringList predicates;
-
-        void prepareLayers(QList<SearchLimitLayer> & requests);
-    };
-
 
     struct SearchLimitLayer : public SearchLimit {
         SearchLimitLayer(
@@ -119,8 +106,19 @@ namespace Core {
         SearchRequestType req_type;
 
         QString token();
-        static void fromJson(const QJsonArray & objs, QList<SearchLimit> & list);
+        static void fromJson(const QJsonArray & objs, QList<SearchLimitLayer> & list);
         void save(QJsonArray & arr);
+    };
+
+    struct SearchLimitLayers : public SearchLimitBase {
+        QStringList tabs;
+        QStringList drives;
+        QList<int> sites;
+
+        QList<QString> genres;
+        QStringList predicates;
+
+        void prepareLayers(QList<SearchLimitLayer> & requests);
     };
 }
 

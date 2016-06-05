@@ -188,7 +188,7 @@ namespace Core {
 
                 PolyQueryRules rules(
                     call_iter_type_page, limits.start_offset,
-                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), limits.pages_limit
+                    qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), limits.requests_limit
                 );
 
                 return pRequest(url_str, call_type_html, rules, proc_tracks1);
