@@ -86,7 +86,10 @@ namespace Controls {
                 return QStringLiteral("You must choose at least one source");
 
             if (limits.predicates.isEmpty() && limits.genres.isEmpty()) {
-                if (limits.by_popularity() && limits.sites.isEmpty())
+                if (limits.by_popularity()) {
+                    if (limits.sites.isEmpty())
+                        return QStringLiteral("Requests of popular items available only for queries to sites");
+                } else
                     return QStringLiteral("Requests of popular items available only for queries to sites");
             }
 
