@@ -26,7 +26,7 @@ namespace Core {
                 if (limits.by_sets())
                     return searchInSets(limits);
 
-                if (limits.by_relativity())
+                if (limits.in_relative())
                     return related(limits);
 
                 return search_proc(limits);

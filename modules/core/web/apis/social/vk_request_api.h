@@ -13,6 +13,9 @@ namespace Core {
         namespace Vk {
             class RequestApi : public TeuAuth, public IApi, public IShareable {
             protected:
+                enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
+                enum VideoSearchSort { vss_creation_date = 0, vss_duration = 1, vss_relativity = 2 };
+
                 inline QString boolToStr(bool val) { return val ? val_str_true : val_str_false; }
 
                 QString authUrl() {
@@ -236,9 +239,6 @@ namespace Core {
 //                    return sQuery(audioRecomendationsUrl(uid, byUser, randomize), extract);
                 }
 
-
-                enum SearchSort { creation_date = 0, duration = 1, popularity = 2 };
-
                 QString audioSearchUrl(const SearchLimit & limits, bool autoFix = false) {
                     // count max eq 300 , limit is 1000
                     QUrlQuery query = genDefaultParams();
@@ -253,8 +253,8 @@ namespace Core {
                         "        q: \"" % encodeStr(limits.predicate) % "\", count: count, offset: search.length, lyrics: 0,"
                         "        auto_complete: " % boolToStr(autoFix) % ","
                         "        performer_only: " % boolToStr(limits.by_artists()) % ","
-                        "        sort: " % QString::number(limits.by_popularity() ? popularity : creation_date) % ","
-                        "        search_own: " % boolToStr(limits.by_owns()) % ""
+                        "        sort: " % QString::number(limits.by_popularity() ? ass_popularity : ass_creation_date) % ","
+                        "        search_own: " % boolToStr(limits.in_owns()) % ""
                         "    }).items;"
                         "    search = search %2b items;"
                         "    rule = search.length < limit && items.length != 0;"
@@ -502,8 +502,8 @@ namespace Core {
                         "    var items = API.video.search({"
                         "        q: \"" % encodeStr(limits.predicate) % "\", count: count, offset: search.length, lyrics: 0,"
                         "        adult: " % boolToStr(true) % ","
-                        "        sort: " % QString::number(limits.by_relativity() ? popularity : creation_date) % ","
-                        "        search_own: " % boolToStr(limits.by_owns()) % ""
+                        "        sort: " % QString::number(limits.in_relative() ? vss_relativity : vss_creation_date) % ","
+                        "        search_own: " % boolToStr(limits.in_owns()) % ""
                         "    }).items;"
                         "    search = search %2b items;"
                         "    rule = search.length < limit && items.length != 0;"

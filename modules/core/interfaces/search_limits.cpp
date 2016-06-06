@@ -64,18 +64,37 @@ void SearchLimitLayers::prepareLayers(QList<SearchLimitLayer> & requests) {
     }
 }
 
+QString SearchLimitLayer::tokenPrefix() {
+    QString prefix = QStringLiteral("By titles: ");
+
+    if (by_artists())
+        prefix = QStringLiteral("By artists: ");
+    else if (by_songs_name())
+        prefix = QStringLiteral("By songs: ");
+    else if (by_sets())
+        prefix = QStringLiteral("By sets: ");
+    else if (by_abc())
+        prefix = QStringLiteral("By abc: ");
+    else if (by_lyrics())
+        prefix = QStringLiteral("By lyrics: ");
+    else if (by_tags())
+        prefix = QStringLiteral("By tags: ");
+
+    return QString();
+}
+
 QString SearchLimitLayer::token() {
     bool has_predicate = !predicate.isEmpty();
     bool has_genre = !genre.isEmpty();
 
     if (has_predicate) {
         if (has_genre)
-            return predicate % QStringLiteral(" (") % genre % QStringLiteral(") ");
+            return tokenPrefix() % predicate % QStringLiteral(" (") % genre % QStringLiteral(") ");
         else
-            return predicate;
+            return tokenPrefix() % predicate;
     }
     else if (has_genre) return genre;
-    else if (popular && req_type == sr_remote) return QStringLiteral("Popular");
+    else if (by_popularity() && req_type == sr_remote) return QStringLiteral("By popularity");
     else return QStringLiteral("All");
 }
 
@@ -104,7 +123,7 @@ void SearchLimitLayer::save(QJsonArray & arr) {
     self.insert(JSON_SEARCH_CONTENT_TYPE, sc_type);
     self.insert(JSON_SEARCH_PREDICATE_TYPE, predicate_type);
 
-    self.insert(JSON_SEARCH_CONTEXT, context);
+    self.insert(JSON_SEARCH_CONTEXT, QJsonValue::fromVariant(context));
     self.insert(JSON_SEARCH_ITEMS_LIMIT, items_limit);
     self.insert(JSON_SEARCH_REQUESTS_LIMIT, requests_limit);
 

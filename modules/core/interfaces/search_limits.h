@@ -1,6 +1,8 @@
 #ifndef SEARCH_LIMITS
 #define SEARCH_LIMITS
 
+#include <qvariant.h>
+#include <qregularexpression.h>
 #include <qstringlist.h>
 #include <qstringbuilder.h>
 #include <qjsonobject.h>
@@ -63,20 +65,20 @@ namespace Core {
         inline bool include_video() const { return sc_type & sc_video; }
 
         inline bool by_abc() const { return predicate_type & sp_abc; }
-        inline bool by_popularity() const { return predicate_type & sp_popular; }
-        inline bool by_relativity() const { return predicate_type & sp_relative; }
         inline bool by_lyrics() const { return predicate_type & sp_lyrics; }
         inline bool by_sets() const { return predicate_type & sp_sets; }
-
         inline bool by_artists() const { return predicate_type & sp_artist; }
         inline bool by_titles() const { return predicate_type & sp_title; }
         inline bool by_songs_name() const { return predicate_type & sp_song_name; }
         inline bool by_tags() const { return predicate_type & sp_tag; }
-        inline bool by_owns() const { return predicate_type & sp_owns; }
-        inline bool by_originals() const { return predicate_type & sp_originals; }
-        inline bool by_mixes() const { return predicate_type & sp_mixes; }
-        inline bool by_foreign() const { return predicate_type & sp_foreign; }
-        inline bool by_cyrillic() const { return predicate_type & sp_cyrillic; }
+        inline bool by_popularity() const { return predicate_type & sp_popular; }
+
+        inline bool in_relative() const { return predicate_type & sp_relative; }
+        inline bool in_owns() const { return predicate_type & sp_owns; }
+        inline bool in_originals() const { return predicate_type & sp_originals; }
+        inline bool in_mixes() const { return predicate_type & sp_mixes; }
+        inline bool in_foreign() const { return predicate_type & sp_foreign; }
+        inline bool in_cyrillic() const { return predicate_type & sp_cyrillic; }
     };
 
 
@@ -105,6 +107,7 @@ namespace Core {
         QVariant context;
         SearchRequestType req_type;
 
+        QString tokenPrefix();
         QString token();
         static void fromJson(const QJsonArray & objs, QList<SearchLimitLayer> & list);
         void save(QJsonArray & arr);
