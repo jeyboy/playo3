@@ -1,6 +1,8 @@
 #include "search_dialog.h"
 #include "ui_search_dialog.h"
 
+#include <qmessagebox.h>
+
 SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::SearchDialog) {
     ui -> setupUi(this);
 
@@ -26,4 +28,11 @@ Core::SearchLimitLayers SearchDialog::params() {
 
 void SearchDialog::on_cancelButton_clicked() { reject(); }
 
-void SearchDialog::on_acceptButton_clicked() { accept(); }
+void SearchDialog::on_acceptButton_clicked() {
+    QString err = configurator -> validate();
+
+    if (err.isEmpty())
+        accept();
+    else
+        QMessageBox::warning(this, QStringLiteral("Warning"), err);
+}

@@ -335,7 +335,8 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
 }
 
 Core::SearchLimitLayers SearchConfigurator::params() {
-    int predicate_types = Core::sp_title;
+    int predicate_types = inSites -> isChecked() &&
+        textPredicates -> count() == 0 && stylePredicates -> count() == 0 ? Core::sp_popular : Core::sp_title;
 
     if (byArtist -> isChecked())
         predicate_types = Core::sp_artist;
@@ -347,7 +348,7 @@ Core::SearchLimitLayers SearchConfigurator::params() {
         predicate_types = Core::sp_lyrics;
     else if (byAbc -> isChecked())
         predicate_types = Core::sp_abc;
-    else
+    else if (byTag -> isChecked())
         predicate_types = Core::sp_tag;
 
     if (byPopular -> isChecked()) predicate_types |= Core::sp_popular;
@@ -380,7 +381,7 @@ Core::SearchLimitLayers SearchConfigurator::params() {
     for(int i = 0; i < count; i++)
         res.genres.append(stylePredicates -> item(i) -> text());
 
-    if (inSites) {
+    if (inSites -> isChecked()) {
         int count = sitesList -> count();
 
         for(int i = 0; i < count; i++) {
@@ -390,7 +391,7 @@ Core::SearchLimitLayers SearchConfigurator::params() {
         }
     }
 
-    if (inTabs) {
+    if (inTabs -> isChecked()) {
         int count = tabsList -> count();
 
         for(int i = 0; i < count; i++) {
@@ -400,7 +401,7 @@ Core::SearchLimitLayers SearchConfigurator::params() {
         }
     }
 
-    if (inComputer) {
+    if (inComputer -> isChecked()) {
         int count = driveList -> count();
 
         for(int i = 0; i < count; i++) {
