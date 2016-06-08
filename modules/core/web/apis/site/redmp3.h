@@ -62,11 +62,11 @@ namespace Core {
                 return result;
             }
 
-            void genres_proc() {} // not supports genres
+            void genresProc() {} // not supports genres
 
             inline bool isRefreshable() { return false; }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(
                     encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
                     OFFSET_TEMPLATE

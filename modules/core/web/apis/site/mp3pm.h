@@ -61,9 +61,9 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-    //        inline void genres_proc() { sQuery(baseUrlStr(QStringLiteral("/genres")), proc_genres1); }
+    //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/genres")), proc_genres1); }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/s/f/%1/page/%2/")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)

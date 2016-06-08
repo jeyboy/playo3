@@ -34,13 +34,13 @@ namespace Core {
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
-        virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "TO JSON"; } // stub
-        virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "FROM JSON"; } // stub
+        virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "STUB TO JSON"; } // stub
+        virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "STUB FROM JSON"; } // stub
 
         virtual inline bool isRefreshable() { return true; }
         virtual inline QString refresh(const QString & refresh_page) {
             if (!isRefreshable() || refresh_page.isEmpty()) return QString();
-            return refresh_proc(take_refresh_page(refresh_page));
+            return refreshProc(takeRefreshPage(refresh_page));
         }
 
         virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
@@ -51,8 +51,8 @@ namespace Core {
     protected:
         QToolButton * button;
 
-        virtual Web::Response * take_refresh_page(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
-        virtual QString refresh_proc(Web::Response * response) { delete response; return QString(); }
+        virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
+        virtual QString refreshProc(Web::Response * response) { delete response; return QString(); }
 
         QString error;
     };

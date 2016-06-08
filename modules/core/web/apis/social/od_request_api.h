@@ -97,7 +97,7 @@ namespace Core { // NOT FINISHED
 //                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
                 }
 
-                QJsonArray search_proc(const SearchLimit & limits) {
+                QJsonArray searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() || limits.by_popularity())
                         return popular(limits);
                     else {

@@ -23,7 +23,7 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_vk; }
 
-                inline QUrlQuery genDefaultParams() {
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
                     QUrlQuery query = QUrlQuery();
 
                     query.addQueryItem(tkn_version, val_version);

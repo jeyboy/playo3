@@ -59,7 +59,7 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-            inline void genres_proc() {
+            inline void genresProc() {
                 genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
                 genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
                 genres.addGenre(QStringLiteral("Rap"), QStringLiteral("rap"));
@@ -82,7 +82,7 @@ namespace Core {
                 genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
             }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search/%1/%2/page/%3/")).arg(
                     QString(limits.by_artists() ? 'a' : (limits.by_songs_name() ? 't' : 'f')),
                     encodeStr(limits.predicate),

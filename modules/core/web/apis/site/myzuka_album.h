@@ -101,14 +101,14 @@ namespace Core {
             }
 
 
-            inline void genres_proc() {
+            inline void genresProc() {
                 PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
                 pRequest(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, proc_genres1);
 
 //                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
-            QString refresh_proc(Response * reply) {
+            QString refreshProc(Response * reply) {
                 Html::Document doc = reply -> toHtml();
                 Html::Set tracks = doc.find(".options a[itemprop='audio']");
 
@@ -117,7 +117,7 @@ namespace Core {
                 else
                     return baseUrlStr(tracks.link());
             }
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QUrl url = QUrl(baseUrlStr(search_path_token));
                 url.setQuery(search_predicate_token % limits.predicate);
 

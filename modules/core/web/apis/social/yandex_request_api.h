@@ -103,7 +103,7 @@ namespace Core {
 //                    return sQuery(topUrl(tkn_tracks, limits.genre)).value(tkn_tracks).toArray();
                 }
 
-                QJsonArray search_proc(const SearchLimit & limits) {
+                QJsonArray searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() || limits.by_popularity()) {
                         return popular(limits);
                     } else {

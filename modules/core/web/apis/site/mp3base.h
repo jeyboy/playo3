@@ -168,19 +168,19 @@ namespace Core {
                 return result;
             }
 
-            inline void genres_proc() {
+            inline void genresProc() {
                 sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
 
-            inline QString refresh_proc(Response * reply) {
+            inline QString refreshProc(Response * reply) {
                 Html::Document parser(reply);
 
                 QString url = parser.find("#player_content script").text();
                 return url.section("mp3:\"", 1).section("\"", 0, 0);
             }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/search?q=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)

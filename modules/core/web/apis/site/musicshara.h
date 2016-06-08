@@ -23,7 +23,7 @@ namespace Core {
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
 
-            QString refresh_proc(Response * reply) {
+            QString refreshProc(Response * reply) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".options a[itemprop='audio']");
                 qDebug() << "IN RESTORING" << tracks.count();
@@ -34,7 +34,7 @@ namespace Core {
                     return baseUrlStr(tracks.link());
             }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(

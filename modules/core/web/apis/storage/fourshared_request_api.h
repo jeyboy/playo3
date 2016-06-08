@@ -6,10 +6,8 @@
 
 #include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/misc/file_utils/extensions.h"
-//#include "media/format.h"
-//#include "media/duration.h"
-#include "modules/core/media/genres/music_genres.h"
+//#include "modules/core/misc/file_utils/extensions.h"
+//#include "modules/core/media/genres/music_genres.h"
 
 #define FOURSHARED_PAGES_LIMIT 25
 #define FOURSHARED_ITEMS_LIMIT 1000
@@ -18,7 +16,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class RequestApi : public TeuAuth, public IApi {
+            class RequestApiAuth : public TeuAuth, public IApi {
                 enum CategoryTypes {
                     music = 1, video = 2, photo = 3, archive = 4,
                     book = 5,  program = 6, web = 7, mobile = 8,
@@ -44,128 +42,162 @@ namespace Core {
                         offset
                     );
                 }
-            public:
-                QString audioSearchUrl(const QString & predicate = QString(), CategoryTypes cType = music) {
+
+                QString searchUrl(const QString & predicate = QString(), const CategoryTypes & ctype = music) {
                     QUrlQuery query = genDefaultParams();
 
-                    if (!predicate.isEmpty())
-                        setSearchPredicate(query, predicate);
+                    setSearchPredicate(query, predicate);
 
-                    setCategory(query, cType);
+                    setCategory(query, ctype);
                     return baseUrlStr(tkn_files, query);
                 }
 
+                QString audioSearchUrl(const QString & predicate = QString()) {
+                    return searchUrl(predicate, music);
+                }
 
-                QJsonArray popular(const SearchLimit & /*limitations*/) {
-                    // http://search.4shared.com/q/lastmonth/CAQD/1/music
+                QString videoSearchUrl(const QString & predicate = QString()) {
+                    return searchUrl(predicate, video);
+                }
+            protected:
+                QJsonArray popularAuth(const SearchLimit & limits) {
+                    QJsonArray arr;
 
-                    QJsonArray res = pRequest(
-                        audioSearchUrl(),
-                        call_type_json,
-                        rules(0),
-                        proc_none,
-                        0,
-                        QStringList() << tkn_files
-                    );
+                    if (limits.include_audio())
+                        return pRequest(
+                            audioSearchUrl(),
+                            call_type_json,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_none,
+                            &arr,
+                            QStringList() << tkn_files
+                        );
+
+                    if (limits.include_video())
+                        return pRequest(
+                            videoSearchUrl(),
+                            call_type_json,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_none,
+                            &arr,
+                            QStringList() << tkn_files
+                        );
 
 
+                    return arr;
 
 //                    QJsonArray res = lQuery(
 //                        IApi::baseUrl(files_token_key, query),
 //                        QueryRules(files_token_key, requestLimit(), FOURSHARED_OFFSET_LIMIT / 5),
 //                        none
 //                    );
-
-                    return prepareAudios(res);
                 }
 
-                QJsonArray search_proc(const SearchLimit & limitations) {
-                    QJsonArray res = pRequest(
-                        audioSearchUrl(limitations.predicate),
-                        call_type_json,
-                        rules(0, limitations.items_limit),
-                        proc_none,
-                        0,
-                        QStringList() << tkn_files
-                    );
+                QJsonArray searchProcAuth(const SearchLimit & limits) {
+                    QJsonArray arr;
 
+                    if (limits.include_audio())
+                        return pRequest(
+                            audioSearchUrl(limits.predicate),
+                            call_type_json,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_none,
+                            &arr,
+                            QStringList() << tkn_files
+                        );
+
+                    if (limits.include_video())
+                        return pRequest(
+                            videoSearchUrl(limits.predicate),
+                            call_type_json,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_none,
+                            &arr,
+                            QStringList() << tkn_files
+                        );
+
+
+                    return arr;
 
 //                    QJsonArray res = lQuery(
 //                        audioSearchUrl(predicate),
 //                        QueryRules(files_token_key, requestLimit(), qMin(limitations.total_limit, FOURSHARED_OFFSET_LIMIT)),
 //                        none
 //                    );
+                }
+            };
 
-                    return prepareAudios(res);
+            class RequestApiNoAuth : virtual public Api {
+                PolyQueryRules rules(
+                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
+                    ApiCallIterType call_type = call_iter_type_item)
+                {
+                    return PolyQueryRules(
+                        call_type,
+                        offset,
+                        qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
+                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT),
+                    );
                 }
 
-            private:
-                QJsonArray prepareAudios(QJsonArray & items, bool initInfo = false) { // initInfo is very slow
-                    if (items.isEmpty()) return items;
+                QJsonArray popularNoAuth(const SearchLimit & limits) {
+                    QJsonArray arr;
 
-                    Html::Selector prevSelector("input.jsD1PreviewUrl");
-                    Html::Selector durSelector("input.jsD1Duration");
-                    Html::Selector tagsSelector(".generalID3tags .id3tag");
+                    if (limits.include_audio())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                            call_type_html,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_tracks1,
+                            &arr
+                        );
 
-                    Web::Manager * manager = Web::Manager::prepare();
+                    if (limits.include_video())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                            call_type_html,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_video1,
+                            &arr
+                        );
 
-                    QJsonArray ar;
-                    QString ext, title, path, song_path;
+                    return arr;
+                }
 
-                    for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
-                        QJsonObject obj, item_obj = (*item).toObject();
-                        path = item_obj.value(tkn_download_page).toString();
+                virtual QJsonArray searchProcNoAuth(const SearchLimit & limits) {
+                    QJsonArray arr;
 
-                        if (initInfo) {
-                            Html::Document doc = manager -> followedGet(QUrl(path)) -> toHtml();
+                    if (limits.include_audio())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                            call_type_html,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_tracks1,
+                            &arr
+                        );
 
-                            song_path = doc.find(&prevSelector).value();
+                    if (limits.include_video())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                            call_type_html,
+                            rules(limits.start_offset, limits.items_limit),
+                            proc_video1,
+                            &arr
+                        );
 
-                            obj.insert(tkn_grab_duration, Duration::fromMillis(doc.find(&durSelector).value().toInt()));
+                    return arr;
+                }
+            };
 
-                            Html::Set tags = doc.find(&tagsSelector);
-                            for(Html::Set::Iterator tag = tags.begin(); tag != tags.end(); tag++) {
-                                Html::Tag * span = (*tag) -> childTag(tag_span);
-                                if (span) {
-                                    QString tag_title = span -> text();
+            class RequestApi : public RequestApiAuth, public RequestApiNoAuth {
+                virtual bool isConnected() = 0;
 
-                                    if (tag_title == tag_filetype)
-                                        obj.insert(tkn_grab_extension, (*tag) -> text());
-                                    else if (tag_title == tag_bitrate)
-                                        obj.insert(tkn_grab_bitrate, (*tag) -> text());
-                                    else if (tag_title == tag_discretion_rate)
-                                        obj.insert(tkn_grab_discretion_rate, (*tag) -> text());
-                                    else if (tag_title == tag_year)
-                                        obj.insert(tkn_grab_year, (*tag) -> text());
-                                    else if (tag_title == tag_genre) {
-                                        int genre_id = Media::MusicGenres::obj().toInt((*tag) -> text().trimmed());
-                                        if (Media::MusicGenres::obj().defaultInt() != genre_id)
-                                            obj.insert(tkn_grab_genre_id, genre_id);
-                                    }
-                                }
-                            }
+                QJsonArray popular(const SearchLimit & limits) {
+                    return isConnected() ? popularAuth(limits) : popularNoAuth(limits);
+                }
 
-                            obj.insert(tkn_grab_url, song_path);
-                        } else obj.insert(tkn_skip_info, true);
-
-                        if (!initInfo || !song_path.isEmpty()) {
-                            title = item_obj.value(tkn_name).toString();
-
-                            if (Extensions::obj().extractExtension(title, ext))
-                                obj.insert(tkn_grab_extension, ext);
-
-                            obj.insert(tkn_grab_title, title);
-
-                            obj.insert(tkn_grab_size, Info::toUnits(item_obj.value(tkn_size).toInt()));
-                            obj.insert(tkn_grab_refresh, path);
-
-                            ar << obj;
-                        }
-
-                        if (initInfo) QThread::msleep(REQUEST_DELAY);
-                    }
-
-                    return ar;
+                QJsonArray searchProc(const SearchLimit & limits) {
+                    return isConnected() ? searchProcAuth(limits) : searchProcNoAuth(limits);
                 }
             };
         }

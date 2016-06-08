@@ -139,7 +139,10 @@ namespace Core {
             }
 
             virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-            virtual inline QUrlQuery genDefaultParams() { return QUrlQuery(); }
+
+            enum QueryParamsType {json, html};
+
+            virtual inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) { return QUrlQuery(); }
 
             // for json
             // extract status and update request url if required

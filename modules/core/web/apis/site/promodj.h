@@ -70,13 +70,13 @@ namespace Core {
                 return result;
             }
 
-            inline void genres_proc() {
+            inline void genresProc() {
                 sRequest(baseUrlStr(QStringLiteral("/music")), call_type_html, 0, proc_genres1);
 //                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
             }
 
     //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
-    //        inline QString refresh_proc(WebResponse * reply) {
+    //        inline QString refreshProc(WebResponse * reply) {
     //            Html::Document parser(reply);
 
     //            QString url = parser.find("#flash_prelisten script").text();
@@ -85,7 +85,7 @@ namespace Core {
 
 //            inline bool isRefreshable() { return false; }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
                 QString alias = genresList().toAlias(limits.genre);

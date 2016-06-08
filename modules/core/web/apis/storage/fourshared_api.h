@@ -2,15 +2,13 @@
 #define FOURSHARED_API
 
 #include "modules/core/interfaces/singleton.h"
-//#include "modules/core/web/interfaces/friendable.h"
-//#include "modules/core/web/interfaces/groupable.h"
 #include "modules/core/interfaces/isource.h"
 
 #include "fourshared_request_api.h"
 
 namespace Core {
     namespace Web {
-        namespace Fourshared { // auth is not realised yet
+        namespace Fourshared {
             class Api: public RequestApi, public ISource, public Singleton<Api> {
                 Q_OBJECT
 
@@ -19,15 +17,14 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_fourshared; }
-                inline QUrlQuery genDefaultParams() {
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
                     return QUrlQuery(tkn_oauth_consumer % (token().isEmpty() ? val_token : token()));
                 }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-//                inline bool connectionRequired() { return true; }
-                inline bool isConnected() { return true/*!token().isEmpty()*/; }
+                inline bool isConnected() { return !token().isEmpty(); }
 
                 QString refresh(const QString & refresh_page) {
                     Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
@@ -40,7 +37,6 @@ namespace Core {
                     Html::Document doc = Web::Manager::prepare() -> followedGet(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
                     return doc.find("a[href~'/download/']").link();
                 }
-
             public slots:
                 inline void disconnect() { clearParams(); }
 
@@ -50,6 +46,10 @@ namespace Core {
 //                inline QString offsetKey() const { return offset_key; }
 //                inline QString limitKey() const { return limit_key; }
 //                inline int requestLimit() const { return 100; }
+
+                bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) {
+                    //TODO: realize me
+                }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
                 inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; } // stub

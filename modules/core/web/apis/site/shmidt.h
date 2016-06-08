@@ -51,9 +51,9 @@ namespace Core {
                 return result;
             }
 
-    //        inline void genres_proc() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
+    //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
-            inline QString refresh_proc(Response * reply) {
+            inline QString refreshProc(Response * reply) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".download p a");
 
@@ -63,7 +63,7 @@ namespace Core {
                     return baseUrlStr(tracks.link());
             }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                     encodeStr(limits.predicate),
                     (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs_name() ? QStringLiteral("songtitle") : QStringLiteral("entire"))

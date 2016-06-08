@@ -79,7 +79,7 @@ namespace Core {
                 return result;
             }
 
-            inline void genres_proc() {
+            inline void genresProc() {
                 sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
@@ -87,7 +87,7 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),

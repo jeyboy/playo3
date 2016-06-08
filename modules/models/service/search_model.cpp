@@ -115,14 +115,12 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
 
     QHash<QString, QAbstractItemModel *> inners;
-
     QList<Controls::DockBar *> bars = Presentation::Dockbars::obj().dockbars();
 
     for(QList<Controls::DockBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
         Views::IView * v = Presentation::Dockbars::obj().view(*bar);
         if (v) inners.insert((*bar) -> objectName(), v -> model());
     }
-
 
     bool singular = requests.first().items_limit == 1;
     int offset = res -> childCount();

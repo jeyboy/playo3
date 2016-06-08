@@ -100,7 +100,7 @@ namespace Core {
                 return result;
             }
 
-            void genres_proc() { // manual init at this time
+            void genresProc() { // manual init at this time
                 genres.addGenre(QStringLiteral("pop"), 13);
                 genres.addGenre(QStringLiteral("rock"), 17);
                 genres.addGenre(QStringLiteral("rap"), 15);
@@ -119,11 +119,11 @@ namespace Core {
             }
 
             // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
-            inline QString refresh_proc(Response * reply) {
+            inline QString refreshProc(Response * reply) {
                 return reply -> toJson().value(QStringLiteral("url")).toString();
             }
 
-            QJsonArray search_proc(const SearchLimit & limits) {
+            QJsonArray searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/search.html?query_search=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)

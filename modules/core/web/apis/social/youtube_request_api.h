@@ -183,7 +183,7 @@ namespace Core {
 //                    );
                 }
 
-                QJsonArray search_proc(const SearchLimit & limits) { //count = 5
+                QJsonArray searchProc(const SearchLimit & limits) { //count = 5
 //                    QJsonArray res = lQuery(
 //                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
 //                        queryRules(limits.items_limit)

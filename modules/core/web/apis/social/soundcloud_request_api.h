@@ -115,7 +115,7 @@ namespace Core {
 //                    );
                 }
 
-                QJsonArray search_proc(const SearchLimit & limitations) {
+                QJsonArray searchProc(const SearchLimit & limitations) {
                     return pRequest(
                         audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
                         call_type_json,

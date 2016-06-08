@@ -29,7 +29,7 @@ namespace Core {
                 if (limits.in_relative())
                     return related(limits);
 
-                return search_proc(limits);
+                return searchProc(limits);
             } else if (!limits.genre.isEmpty())
                 return searchByGenre(limits);
             else
@@ -48,7 +48,7 @@ namespace Core {
 
         virtual QJsonArray related(const SearchLimit & /*limits*/) { return QJsonArray(); }
     protected:
-        virtual QJsonArray search_proc(const SearchLimit & /*limits*/) = 0;
+        virtual QJsonArray searchProc(const SearchLimit & /*limits*/) = 0;
     };
 }
 

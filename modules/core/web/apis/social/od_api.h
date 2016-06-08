@@ -21,7 +21,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_od; }
-                inline QUrlQuery genDefaultParams() { return QUrlQuery(tkn_jsessionid % token()); }
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) { return QUrlQuery(tkn_jsessionid % token()); }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);

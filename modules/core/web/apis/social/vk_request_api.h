@@ -52,7 +52,7 @@ namespace Core {
 
                 QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
 
-                QJsonArray search_proc(const SearchLimit & limits) {
+                QJsonArray searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() && limits.by_popularity())
                         return popular(limits);
                     else {
