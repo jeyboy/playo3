@@ -25,6 +25,8 @@ namespace Core {
 
                 inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, tkn_category, (int)cType); }
                 inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_query, predicate); }
+                inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
+                inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
@@ -68,8 +70,8 @@ namespace Core {
                             audioSearchUrl(),
                             call_type_json,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_none,
                             &arr,
+                            proc_json_extract,
                             QStringList() << tkn_files
                         );
 
@@ -78,8 +80,8 @@ namespace Core {
                             videoSearchUrl(),
                             call_type_json,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_none,
                             &arr,
+                            proc_json_extract,
                             QStringList() << tkn_files
                         );
 
@@ -101,8 +103,8 @@ namespace Core {
                             audioSearchUrl(limits.predicate),
                             call_type_json,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_none,
                             &arr,
+                            proc_json_extract,
                             QStringList() << tkn_files
                         );
 
@@ -111,8 +113,8 @@ namespace Core {
                             videoSearchUrl(limits.predicate),
                             call_type_json,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_none,
                             &arr,
+                            proc_json_extract,
                             QStringList() << tkn_files
                         );
 
@@ -127,16 +129,17 @@ namespace Core {
                 }
             };
 
-            class RequestApiNoAuth : virtual public Api {
+            class RequestApiNoAuth : public IApi {
+            protected:
                 PolyQueryRules rules(
-                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
-                    ApiCallIterType call_type = call_iter_type_item)
+                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT,
+                    int pages_limit = FOURSHARED_PAGES_LIMIT, ApiCallIterType call_type = call_iter_type_item)
                 {
                     return PolyQueryRules(
                         call_type,
                         offset,
                         qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
-                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT),
+                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT)
                     );
                 }
 
@@ -148,8 +151,8 @@ namespace Core {
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                             call_type_html,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_tracks1,
-                            &arr
+                            &arr,
+                            proc_tracks1
                         );
 
                     if (limits.include_video())
@@ -157,8 +160,8 @@ namespace Core {
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                             call_type_html,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_video1,
-                            &arr
+                            &arr,
+                            proc_video1
                         );
 
                     return arr;
@@ -172,8 +175,8 @@ namespace Core {
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_tracks1,
-                            &arr
+                            &arr,
+                            proc_tracks1
                         );
 
                     if (limits.include_video())
@@ -181,8 +184,8 @@ namespace Core {
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
                             rules(limits.start_offset, limits.items_limit),
-                            proc_video1,
-                            &arr
+                            &arr,
+                            proc_video1
                         );
 
                     return arr;

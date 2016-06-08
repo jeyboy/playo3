@@ -12,6 +12,8 @@ namespace Core {
             extern const QString tkn_download_page      = QStringLiteral("downloadPage");
             extern const QString tkn_name               = QStringLiteral("name");
             extern const QString tkn_size               = QStringLiteral("size");
+            extern const QString tkn_genre              = QStringLiteral("genre");
+            extern const QString tkn_artist             = QStringLiteral("artist");
 
             extern const QString tag_span               = QStringLiteral("span");
             extern const QString tag_filetype           = QStringLiteral("File type");

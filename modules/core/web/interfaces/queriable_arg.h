@@ -67,10 +67,15 @@ namespace Core {
 
         struct QueriableArg {
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
-                const QStringList & fields = QStringList(), QObject * error_receiver = 0)
-                : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get), post_proc(post_proc),
-                  arr(arr), fields(fields), items_fact_count(arr -> size()), requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
-            {}
+                const QStringList & fields = QStringList(), QObject * error_receiver = 0, bool ignore_arr_content = true)
+                : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get),
+                  post_proc(post_proc), arr(arr), fields(fields), counter(0),
+                  requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
+            {
+                ignoreArrContent(ignore_arr_content);
+            }
+
+            void ignoreArrContent(bool ignore = true) { items_fact_count = ignore ? 0 : arr -> size(); }
 
             void setOffsetPolyLimitations(
                 ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
@@ -139,9 +144,9 @@ namespace Core {
                 }
             }
 
-            void iterateCounters() {
+            void iterateCounters(int new_amount) {
                 requests_fact_count++;
-                start_offset += (call_iter == call_iter_type_page ? 1 : arr -> size() - items_fact_count);
+                start_offset += (call_iter == call_iter_type_page ? 1 : new_amount);
                 items_fact_count = arr -> size();
                 prepareRequestUrl();
             }
@@ -178,7 +183,7 @@ namespace Core {
 
             QStringList fields;
             int items_total_limit, requests_limit, per_request_limit;
-            int start_offset;
+            int start_offset, counter;
             int items_fact_count, requests_fact_count;
 
             QObject * error_receiver;
@@ -191,11 +196,15 @@ namespace Core {
             }
 
             void append(const QJsonObject & item, bool iterate = true) {
-                if (!(last_result_is_empty = item.isEmpty()))
+                if (!(last_result_is_empty = item.isEmpty())) {
                     arr -> append(item);
+                    counter++;
+                }
 
-                if (iterate)
-                    iterateCounters();
+                if (iterate) {
+                    iterateCounters(counter);
+                    counter = 0;
+                }
             }
 
             void append(const QJsonArray & items) {
@@ -204,7 +213,7 @@ namespace Core {
                         arr -> append(*it);
 
                 if (!last_result_is_empty)
-                    iterateCounters();
+                    iterateCounters(items.count());
             }
 
             QJsonValue last() { return arr -> last(); }

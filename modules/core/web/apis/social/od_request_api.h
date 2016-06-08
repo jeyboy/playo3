@@ -89,8 +89,8 @@ namespace Core { // NOT FINISHED
                         popAudioUrl(),
                         call_type_json,
                         rules(),
-                        proc_json_extract,
                         0,
+                        proc_json_extract,
                         QStringList() << tkn_tracks
                     );
 
@@ -108,8 +108,8 @@ namespace Core { // NOT FINISHED
                                 searchArtistsUrl(limits.predicate),
                                 call_type_json,
                                 prules,
-                                proc_json_extract,
                                 0,
+                                proc_json_extract,
                                 QStringList() << tkn_artists
                             );
 
@@ -119,8 +119,8 @@ namespace Core { // NOT FINISHED
                                 searchTracksUrl(limits.predicate),
                                 call_type_json,
                                 prules,
-                                proc_json_extract,
                                 0,
+                                proc_json_extract,
                                 QStringList() << tkn_tracks
                             );
 
@@ -131,8 +131,8 @@ namespace Core { // NOT FINISHED
                                 searchUrl(limits.predicate),
                                 call_type_json,
                                 prules,
-                                proc_json_extract,
                                 0,
+                                proc_json_extract,
                                 QStringList() << tkn_tracks
                             );
 
@@ -158,8 +158,8 @@ namespace Core { // NOT FINISHED
                         playlistAudioUrl(pid),
                         call_type_json,
                         rules(0, count),
-                        proc_json_extract,
                         0,
+                        proc_json_extract,
                         QStringList() << tkn_tracks
                     );
 

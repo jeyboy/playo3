@@ -74,7 +74,6 @@ namespace Core {
                         videosUrl(ids),
                         call_type_json,
                         rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
-                        proc_none,
                         &arr
                     );
 

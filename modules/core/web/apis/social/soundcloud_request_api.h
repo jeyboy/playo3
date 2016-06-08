@@ -106,6 +106,7 @@ namespace Core {
                         audioSearchUrl(QString(), limitations.genre, true),
                         call_type_json,
                         rules(),
+                        0,
                         proc_patch
                     );
 //                    return lQuery(
@@ -119,7 +120,8 @@ namespace Core {
                     return pRequest(
                         audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
                         call_type_json,
-                        rules(0, limitations.items_limit),
+                        rules(limitations.start_offset, limitations.items_limit),
+                        0,
                         proc_patch
                     );
 
@@ -141,6 +143,7 @@ namespace Core {
                         groupAudioUrl(group_id),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -157,6 +160,7 @@ namespace Core {
                         groupPlaylistsUrl(group_id),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
                 }
@@ -201,6 +205,7 @@ namespace Core {
                         userAudioUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -217,6 +222,7 @@ namespace Core {
                         userPlaylistsUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -233,6 +239,7 @@ namespace Core {
                         userFollowingsUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -249,6 +256,7 @@ namespace Core {
                         userFollowersUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -265,6 +273,7 @@ namespace Core {
                         userGroupsUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -283,6 +292,7 @@ namespace Core {
                         userByNameUrl(name),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -293,6 +303,7 @@ namespace Core {
                         baseUrlStr(path_users % uid, genDefaultParams()),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 //                    return lQuery(baseUrl(path_users % uid, genDefaultParams()), queryRules(count), wrap);
@@ -310,6 +321,7 @@ namespace Core {
                         groupByNameUrl(name),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -325,6 +337,7 @@ namespace Core {
                         groupByIdUrl(uid),
                         call_type_json,
                         rules(0, count),
+                        0,
                         proc_patch
                     );
 
@@ -343,6 +356,7 @@ namespace Core {
                         playlistByPredicateUrl(predicate),
                         call_type_json,
                         rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, 2), // playlists is very weighted for loading - so set limitation to 2 playlists per request
+                        0,
                         proc_patch
                     );
 

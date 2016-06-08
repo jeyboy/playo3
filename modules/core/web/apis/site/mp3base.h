@@ -191,7 +191,7 @@ namespace Core {
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), limits.requests_limit
                 );
 
-                return pRequest(url_str, call_type_html, rules, proc_tracks1);
+                return pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
 
 //                QJsonArray json;
 //                lQuery(url_str, json, proc_songs1, limits.count_page, limits.start_page, limits.items_limit);

@@ -103,7 +103,7 @@ namespace Core {
 
             inline void genresProc() {
                 PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
-                pRequest(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, proc_genres1);
+                pRequest(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
 
 //                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
@@ -172,7 +172,7 @@ namespace Core {
                     QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
 
                     PolyQueryRules rules(call_iter_type_page, call_iter_method_offset, DEFAULT_ITEMS_LIMIT, MAX_PAGES_PER_ARTIST);
-                    pRequest(baseUrlStr(artistPage), call_type_html, rules, proc_tracks1, &arr);
+                    pRequest(baseUrlStr(artistPage), call_type_html, rules, &arr, proc_tracks1);
 
 //                    lQuery(baseUrlStr(artistPage), arr, proc_songs1, MAX_PAGES_PER_ARTIST);
                 }

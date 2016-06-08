@@ -76,7 +76,7 @@ namespace Core {
                     call_iter_type_page, limits.start_offset,
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.requests_limit, 2)
                 );
-                return pRequest(url_str, call_type_html, rules, proc_tracks1);
+                return pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
 
 //                QJsonArray json;
 //                lQuery(url_str, json, songs1, qMin(limitations.count_page, 10), limitations.start_page - 1, limitations.total_limit); // pages at this site started from zero so we should put correction on the wind

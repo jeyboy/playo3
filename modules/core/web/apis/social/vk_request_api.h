@@ -119,8 +119,8 @@ namespace Core {
                         audioAlbumsUrl(uid),
                         call_type_json,
                         rules(offset),
-                        proc_json_extract,
                         0,
+                        proc_json_extract,
                         QStringList() << tkn_albums
                     );
 
@@ -135,9 +135,11 @@ namespace Core {
                         audioAlbumsUrl(uid),
                         call_type_json,
                         rules(offset),
-                        proc_json_extract,
                         &arr,
-                        QStringList() << tkn_response << tkn_albums
+                        proc_json_extract,
+                        QStringList() << tkn_response << tkn_albums,
+                        0,
+                        false
                     );
 
 //                    lQuery(
@@ -477,8 +479,8 @@ namespace Core {
                         videoAlbumsUrl(uid),
                         call_type_json,
                         rules(offset),
-                        proc_json_extract,
                         0,
+                        proc_json_extract,
                         QStringList() << tkn_albums
                     );
 

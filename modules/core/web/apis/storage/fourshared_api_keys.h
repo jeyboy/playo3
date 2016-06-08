@@ -15,6 +15,8 @@ namespace Core {
             extern const QString tkn_download_page;
             extern const QString tkn_name;
             extern const QString tkn_size;
+            extern const QString tkn_genre;
+            extern const QString tkn_artist;
 
             extern const QString tag_span;
             extern const QString tag_filetype;

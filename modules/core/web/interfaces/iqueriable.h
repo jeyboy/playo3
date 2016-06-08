@@ -118,14 +118,15 @@ namespace Core {
             }
 
 
-            QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules,
-                                const AdditionalProc & post_proc = proc_none, QJsonArray * arr = 0, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
+            QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0, bool ignore_arr_content = true)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
 
                 QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                arg.ignoreArrContent(ignore_arr_content);
                 arg.setPolyLimitations(poly_rules);
 
                 request(&arg);
