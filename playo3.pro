@@ -287,7 +287,8 @@ HEADERS += \
     modules/core/feeder/feed_widget.h \
     modules/core/feeder/feeder.h \
     modules/core/media/image_bank.h \
-    modules/core/interfaces/search_limits.h
+    modules/core/interfaces/search_limits.h \
+    modules/core/web/interfaces/auth/oauth.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -23,12 +23,14 @@ namespace Core {
             extern const QString tag_year               = QStringLiteral("Year");
 
             extern const QString url_down_base          = QStringLiteral("http://4server.info/download/");
-            extern const QString url_base               = QStringLiteral("https://api.4shared.com/v0/");
+            extern const QString url_api_base           = QStringLiteral("https://api.4shared.com/%1/");
+            extern const QString url_api_search         = QStringLiteral("https://search.4shared.com/%1/");
 
             extern const QString val_name               = QStringLiteral("4shared");
             extern const QString val_token              = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");
             extern const QString val_json_ext           = QStringLiteral(".json");
             extern const QString val_lang_cookie        = QStringLiteral("4langcookie=en; domain=.4shared.com; path=/");
+            extern const QString val_version            = QStringLiteral("1_2");
         }
     }
 }

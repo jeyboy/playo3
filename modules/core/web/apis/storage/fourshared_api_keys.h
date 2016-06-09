@@ -26,12 +26,14 @@ namespace Core {
             extern const QString tag_year;
 
             extern const QString url_down_base;
-            extern const QString url_base;
+            extern const QString url_api_base;
+            extern const QString url_api_search;
 
             extern const QString val_name;
             extern const QString val_token;
             extern const QString val_json_ext;
             extern const QString val_lang_cookie;
+            extern const QString val_version;
         }
     }
 }

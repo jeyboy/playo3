@@ -3,8 +3,6 @@
 
 // http://vk.com/support
 
-#include <qmenu.h>
-
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
@@ -32,8 +30,6 @@ namespace Core {
 
                     return query;
                 }
-
-                inline QString authUrl() { return RequestApi::authUrl(); }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);

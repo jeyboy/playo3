@@ -156,12 +156,6 @@ namespace Core { // requests and response has memory leaks
             inline QJsonObject postJson(const QUrl & url, bool wrap = false) { return followedPost(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
             inline QJsonObject postJson(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return followedPost(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
 
-            inline Response * followedGetAsync(const QUrl & url, const Func & response) {
-                Response * resp = requestTo(url).viaGet(true);
-                asyncRequests.insert(resp -> url(), response);
-                connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
-                return resp;
-            }
             inline Response * getPixmapAsync(const QUrl & url, const Func & response) {
                 Response * resp = requestTo(url).viaGet(true)-> followByRedirect();
                 asyncRequests.insert(resp -> url(), response);
@@ -169,8 +163,15 @@ namespace Core { // requests and response has memory leaks
                 return resp;
             }
 
+//            inline Response * unfollowedGet(const QUrl & url) { return requestTo(url).viaGet(); }
             inline Response * followedGet(const QUrl & url) { return requestTo(url).viaGet() -> followByRedirect(); }
             inline Response * followedGet(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaGet() -> followByRedirect(); }
+            inline Response * followedGetAsync(const QUrl & url, const Func & response) {
+                Response * resp = requestTo(url).viaGet(true);
+                asyncRequests.insert(resp -> url(), response);
+                connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
+                return resp;
+            }
 
             inline Response * followedPost(const QUrl & url) { return requestTo(url).viaPost() -> followByRedirect(); }
             inline Response * followedPost(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaPost() -> followByRedirect(); }

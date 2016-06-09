@@ -1,5 +1,7 @@
 #include "vk_api.h"
 
+#include <qmenu.h>
+
 using namespace Core::Web::Vk;
 
 void Api::fromJson(const QJsonObject & hash) {

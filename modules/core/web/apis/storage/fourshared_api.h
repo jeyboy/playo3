@@ -3,6 +3,7 @@
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/web/interfaces/auth/oauth.h"
 
 #include "fourshared_request_api.h"
 
@@ -25,6 +26,7 @@ namespace Core {
                 void toJson(QJsonObject & hash);
 
                 inline bool isConnected() { return !token().isEmpty(); }
+                QToolButton * initButton(QWidget * parent = 0);
 
                 QString refresh(const QString & refresh_page) {
                     Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
@@ -38,16 +40,24 @@ namespace Core {
                     return doc.find("a[href~'/download/']").link();
                 }
             public slots:
-                inline void disconnect() { clearParams(); }
+                inline void openTab() { ISource::openTab(userID()); }
+                bool connectUser(const ConnectionType & /*conType*/ = connection_restore) {
+                    if (isConnected()) return true;
+
+                    OAuth auth;
+                    auth.initiate(QStringLiteral("https://api.4shared.com/v1_2/oauth/initiate"));
+                    int i = 0;
+                }
+                inline void disconnectUser() {
+                    clearParams();
+                    initButton();
+                }
 
             protected:
-                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_json_ext; }
+                inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 
-//                inline QString offsetKey() const { return offset_key; }
-//                inline QString limitKey() const { return limit_key; }
-//                inline int requestLimit() const { return 100; }
-
-                bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) {
+                bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
+                    int i = 0;
                     //TODO: realize me
                 }
 

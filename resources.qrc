@@ -42,6 +42,8 @@
         <file alias="equalizer">images/elements/equalizer.png</file>
         <file alias="add_od">images/elements/add_od.png</file>
         <file alias="add_od_on">images/elements/add_od_on.png</file>
+        <file alias="add_4shared">images/elements/add_4shared.png</file>
+        <file alias="add_4shared_on">images/elements/add_4shared_on.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>
