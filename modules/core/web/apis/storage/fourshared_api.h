@@ -46,6 +46,7 @@ namespace Core {
 
                     OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
                     auth.initiatePost(QStringLiteral("https://api.4shared.com/v1_2/oauth/initiate"));
+
                     int i = 0;
                 }
                 inline void disconnectUser() {

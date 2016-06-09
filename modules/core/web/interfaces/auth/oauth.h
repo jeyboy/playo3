@@ -111,8 +111,13 @@ namespace Core {
                     QUrl::toPercentEncoding(base_params.mid(1))
                 );
 
+                qDebug() << "BASE_STR" << base_str;
+
                 QString secret = QString(QUrl::toPercentEncoding(consumer_key)) % '&' % QString(QUrl::toPercentEncoding(token));
-                return hmacSha1(base_str, secret);
+                QString token = hmacSha1(base_str, secret);
+                qDebug() << "TOKEN" << token;
+
+                return token;
             }
 
         public:
@@ -169,7 +174,7 @@ namespace Core {
 
                 QMap<QString, QString> attrs = {
                     {QStringLiteral("oauth_consumer_key"), consumer_key},
-//                    {QStringLiteral("oauth_token"), token},
+                    {QStringLiteral("oauth_token"), token},
                     {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
                     {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
                     {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
