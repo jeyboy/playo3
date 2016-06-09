@@ -83,10 +83,10 @@ namespace Core {
 //                the port MUST be excluded when making an HTTP request [RFC2616]
 //                to port 80 or when making an HTTPS request [RFC2818] to port 443.
 //                All other non-default port numbers MUST be included.
-            QString signature(const QString & html_method = QStringLiteral("POST"), const QUrl & uri, const QMap<QString, QString> & attrs) {
+            QString signature(const QString & html_method, const QUrl & uri, const QMap<QString, QString> & attrs) {
                 QString base_uri_path = uri.path();
 
-                QUrl::UrlFormattingOption opts = QUrl::RemovePath;
+                int opts = QUrl::RemovePath | QUrl::RemoveQuery | QUrl::RemoveFragment;
                 int port = uri.port();
 
                 if (port != -1) {
@@ -97,30 +97,35 @@ namespace Core {
                         opts |= QUrl::RemovePort;
                 }
 
-                QString base_uri = uri.toDisplayString(opts).toLower();
-//                QString base_uri = uri.toDisplayString(QUrl::RemoveQuery | QUrl::RemoveFragment | QUrl::RemoveUserInfo);
+                QString base_uri = uri.toDisplayString((QUrl::UrlFormattingOption)opts).toLower();
+
+                QString base_params;
+                for(QMap<QString, QString>::ConstIterator it = attrs.cbegin(); it != attrs.cend(); it++)
+                    base_params = base_params % QStringLiteral("&%1=%2").arg(QUrl::toPercentEncoding(it.key()), it.value());
 
 
-                QString base_str = QStringLiteral("%1&%2&%3").arg(
+                QString base_str = QStringLiteral("%1&%2%3&%4").arg(
                     html_method.toUpper(),
-                    base_uri % '/' % base_uri_path,
-
+                    QUrl::toPercentEncoding(base_uri),
+                    QUrl::toPercentEncoding(base_uri_path),
+                    QUrl::toPercentEncoding(base_params.mid(1))
                 );
 
                 QString secret = QString(QUrl::toPercentEncoding(consumer_key)) % '&' % QString(QUrl::toPercentEncoding(token));
                 return hmacSha1(base_str, secret);
             }
+
         public:
             OAuth(const QString & consumer_key, const QString & token) : consumer_key(consumer_key), token(token) {}
 
-            bool initiatePost(const QString & url) {
+            bool initiateGet(const QString & url) { // not tested
                 QUrl uri(url);
 
                 quint64 timestamp = QDateTime::currentMSecsSinceEpoch();
 
                 QMap<QString, QString> attrs = {
                     {QStringLiteral("oauth_consumer_key"), consumer_key},
-                    {QStringLiteral("oauth_token"), token},
+//                    {QStringLiteral("oauth_token"), token},
                     {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
                     {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
                     {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
@@ -131,26 +136,61 @@ namespace Core {
                     "oauth_signature=\"%2\","
                     "oauth_version=\"1.0\""
                 );
+//                oauth_callback="http%3A%2F%2Fprinter.example.com%2Fready",
 
                 for(QMap<QString, QString>::Iterator it = attrs.begin(); it != attrs.end(); it++)
-                    oauth_header = oauth_header % QStringLiteral(",%1=%2").arg(QUrl::toPercentEncoding(it.key()), it.value());
+                    oauth_header = oauth_header % QStringLiteral(",%1=%2").arg(it.key(), it.value());
 
                 QUrlQuery query(uri.query());
 
                 QList<QPair<QString, QString> > items = query.queryItems();
 
                 for(QList<QPair<QString, QString> >::Iterator it = items.begin(); it != items.end(); it++)
-                    attrs.insert((*it).first, (*it).second);
+                    attrs.insert(QUrl::toPercentEncoding((*it).first), QUrl::toPercentEncoding((*it).second));
 
                 oauth_header = oauth_header.arg(
                     uri.host(),
-                    signature(QStringLiteral("POST"), uri, attrs);
+                    signature(QStringLiteral("GET"), uri, attrs)
                 );
 
                 QHash<QString, QString> headers;
                 headers.insert(QStringLiteral("Authorization"), oauth_header);
 
                 Response * resp = Manager::prepare() -> followedPost(url, headers);
+                qDebug() << "SOSO" << resp -> toText();
+
+                return false;
+            }
+
+            bool initiatePost(const QString & url) {
+                QUrl uri(url);
+
+                quint64 timestamp = QDateTime::currentMSecsSinceEpoch() / 1000;
+
+                QMap<QString, QString> attrs = {
+                    {QStringLiteral("oauth_consumer_key"), consumer_key},
+//                    {QStringLiteral("oauth_token"), token},
+                    {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
+                    {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
+                    {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
+                };
+
+                QUrlQuery query(uri.query());
+
+                QList<QPair<QString, QString> > items = query.queryItems();
+                for(QList<QPair<QString, QString> >::Iterator it = items.begin(); it != items.end(); it++)
+                    attrs.insert(QUrl::toPercentEncoding((*it).first), QUrl::toPercentEncoding((*it).second));
+
+                attrs.insert(QStringLiteral("oauth_signature"), signature(QStringLiteral("POST"), uri, attrs));
+
+                QUrlQuery new_query;
+
+                for(QMap<QString, QString>::ConstIterator it = attrs.cbegin(); it != attrs.cend(); it++)
+                    new_query.addQueryItem(it.key(), it.value());
+
+                uri.setQuery(new_query);
+
+                Response * resp = Manager::prepare() -> followedForm(uri);
                 qDebug() << "SOSO" << resp -> toText();
 
                 return false;
