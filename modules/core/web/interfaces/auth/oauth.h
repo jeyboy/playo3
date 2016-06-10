@@ -8,7 +8,8 @@
 
 namespace Core {
     namespace Web {
-        class OAuth {
+        class OAuth { // not finished
+            QString redirect_url;
             QString consumer_key;
             QString consumer_secret;
 
@@ -56,10 +57,10 @@ namespace Core {
                     QUrl::toPercentEncoding(base_params.mid(1))
                 );
 
-//                qDebug() << "BASE_STR" << base_str;
+                qDebug() << "BASE_STR" << base_str;
 
                 QString secret = QString(QUrl::toPercentEncoding(consumer_secret)) % '&' % QString(QUrl::toPercentEncoding(oauth_token_secret));
-//                qDebug() << "SECRET" << secret;
+                qDebug() << "SECRET" << secret;
 
                 QByteArray res = QMessageAuthenticationCode::hash(base_str.toUtf8(), secret.toUtf8(), QCryptographicHash::Sha1);
 
@@ -69,53 +70,11 @@ namespace Core {
             }
 
         public:
-            OAuth(const QString & consumer_key, const QString & consumer_secret) : consumer_key(consumer_key), consumer_secret(consumer_secret) {}
+            OAuth(const QString & consumer_key, const QString & consumer_secret,
+                  const QString & redirect_url = QString()/*QStringLiteral("http://localhost/")*/) :
+                consumer_key(consumer_key), consumer_secret(consumer_secret), redirect_url(redirect_url) {}
 
-            bool initiateGet(const QString & url) { // not tested
-                QUrl uri(url);
-
-                quint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-
-                QMap<QString, QString> attrs = {
-                    {QStringLiteral("oauth_consumer_key"), consumer_key},
-//                    {QStringLiteral("oauth_token"), token},
-                    {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
-                    {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
-                    {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
-                };
-
-                QString oauth_header = QString(
-                    "OAuth realm=\"%1\","
-                    "oauth_signature=\"%2\","
-                    "oauth_version=\"1.0\""
-                );
-//                oauth_callback="http%3A%2F%2Fprinter.example.com%2Fready",
-
-                for(QMap<QString, QString>::Iterator it = attrs.begin(); it != attrs.end(); it++)
-                    oauth_header = oauth_header % QStringLiteral(",%1=%2").arg(it.key(), it.value());
-
-                QUrlQuery query(uri.query());
-
-                QList<QPair<QString, QString> > items = query.queryItems();
-
-                for(QList<QPair<QString, QString> >::Iterator it = items.begin(); it != items.end(); it++)
-                    attrs.insert(QUrl::toPercentEncoding((*it).first), QUrl::toPercentEncoding((*it).second));
-
-                oauth_header = oauth_header.arg(
-                    uri.host(),
-                    signature(QStringLiteral("GET"), uri, attrs)
-                );
-
-                QHash<QString, QString> headers;
-                headers.insert(QStringLiteral("Authorization"), oauth_header);
-
-                Response * resp = Manager::prepare() -> followedPost(url, headers);
-                qDebug() << "SOSO" << resp -> toText();
-
-                return false;
-            }
-
-            bool initiatePost(const QString & url) {
+            bool initiate(const QString & url, const QString & http_method = QStringLiteral("POST")) {
                 QUrl uri(url);
 
                 quint64 timestamp = QDateTime::currentMSecsSinceEpoch() / 1000;
@@ -128,22 +87,41 @@ namespace Core {
                     {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
                 };
 
+                if (!redirect_url.isEmpty())
+                    attrs.insert(QStringLiteral("oauth_callback"), QUrl::toPercentEncoding(redirect_url));
+
                 QUrlQuery query(uri.query());
 
                 QList<QPair<QString, QString> > items = query.queryItems();
                 for(QList<QPair<QString, QString> >::Iterator it = items.begin(); it != items.end(); it++)
                     attrs.insert(QUrl::toPercentEncoding((*it).first), QUrl::toPercentEncoding((*it).second));
 
-                attrs.insert(QStringLiteral("oauth_signature"), signature(QStringLiteral("POST"), uri, attrs));
+                attrs.insert(QStringLiteral("oauth_signature"), signature(http_method, uri, attrs));
 
                 QUrlQuery new_query;
+                QString oauth_header("OAuth ");
 
-                for(QMap<QString, QString>::ConstIterator it = attrs.cbegin(); it != attrs.cend(); it++)
+                for(QMap<QString, QString>::ConstIterator it = attrs.cbegin(); it != attrs.cend(); it++) {
                     new_query.addQueryItem(it.key(), it.value());
 
+                    if (it.key().startsWith(QStringLiteral("oauth_")))
+                        oauth_header = oauth_header % QStringLiteral("%1=\"%2\",").arg(it.key(), it.value());
+                }
+
+                oauth_header.chop(1);
+
+                Response * resp;
+
+                QHash<QString, QString> headers;
+                headers.insert(QStringLiteral("Authorization"), oauth_header);
                 uri.setQuery(new_query);
 
-                Response * resp = Manager::prepare() -> followedForm(uri);
+                if (http_method == QStringLiteral("GET")) {
+                    resp = Manager::prepare() -> followedGet(uri, headers);
+                } else {
+                    resp = Manager::prepare() -> followedForm(uri, new_query.toString().toUtf8(), headers);
+                }
+
                 QUrlQuery result_params = resp -> toQuery();
                 qDebug() << "SOSO" << result_params.toString();
 
@@ -161,10 +139,20 @@ namespace Core {
             bool autorize(const QString & url) {
 //                https://api.4shared.com/v1_2/oauth/authorize?oauth_token=42cac70e531abd3ac1152bd7bfcb58a2&oauth_callback=http%3A%2F%2Fterm.ie%2Foauth%2Fexample%2Fclient.php%3Fkey%3D22abeb63487b7f6b75051079b7e610b1%26secret%3D71970e08961f3a78e821f51f989e6cb568cbd0ce%26token%3D42cac70e531abd3ac1152bd7bfcb58a2%26token_secret%3De11ef020926484b3a2ef46eff509706808cc2ab8%26endpoint%3Dhttps%253A%252F%252Fapi.4shared.com%252Fv1_2%252Foauth%252Fauthorize
 
+                QUrl uri(url);
+                QUrlQuery query(uri.query());
+                query.addQueryItem(QStringLiteral("oauth_token"), oauth_token);
+                uri.setQuery(query);
+                qDebug() << "ACCESS URI" << uri;
+
+                Response * resp = Manager::prepare() -> followedForm(uri);
+                Html::Document doc = resp -> toHtml();
+                doc.output();
+
                 return false;
             }
 
-            bool access(const QString & url) {
+            bool access(const QString & /*url*/) {
                 return false;
             }
         };

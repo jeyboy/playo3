@@ -174,14 +174,19 @@ namespace Core { // requests and response has memory leaks
                 return resp;
             }
 
-            inline Response * followedPost(const QUrl & url) { return requestTo(url).viaPost() -> followByRedirect(); }
+            inline Response * followedPost(const QUrl & url, bool duplicate_payload = false) {
+                QByteArray payload = duplicate_payload ? url.query().toUtf8() : QByteArray();
+                return requestTo(url).viaPost(payload) -> followByRedirect();
+            }
             inline Response * followedPost(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaPost() -> followByRedirect(); }
 
             inline Response * unfollowedForm(const QUrl & url) { return requestTo(url).viaForm(); }
             inline Response * unfollowedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaForm(); }
+
             inline Response * followedForm(const QUrl & url) { return requestTo(url).viaForm() -> followByRedirect(); }
             inline Response * followedForm(const QUrl & url, const QByteArray & data) { return requestTo(url).viaForm(data) -> followByRedirect(); }
             inline Response * followedForm(const QUrl & url, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaForm() -> followByRedirect(); }
+            inline Response * followedForm(const QUrl & url, const QByteArray & data, QHash<QString, QString> headers) { return requestTo(url).withHeaders(headers).viaForm(data) -> followByRedirect(); }
 
         public slots:
             inline void sendGet(QString & url) { followedGet(url) -> deleteLater(); }

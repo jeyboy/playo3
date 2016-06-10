@@ -44,12 +44,10 @@ namespace Core {
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) {
                     if (isConnected()) return true;
 
-                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
-                    bool res = auth.initiatePost(QStringLiteral("https://api.4shared.com/v1_2/oauth/initiate"));
-                    if (res)
-                        auth.autorize(QStringLiteral("https://api.4shared.com/v1_2/oauth/authorize"));
+                    bool res = connectApi();
+                    res &= connectSite();
 
-                    int i = 0;
+                    return res;
                 }
                 inline void disconnectUser() {
                     clearParams();
@@ -57,6 +55,32 @@ namespace Core {
                 }
 
             protected:
+                bool connectApi() {
+//                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
+//                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
+//                    if (res)
+//                        res = auth.autorize(url_api_base.arg(val_version) % QStringLiteral("oauth/authorize"));
+//                    if (res)
+//                        res = auth.access(url_api_base.arg(val_version) % QStringLiteral("oauth/token"));
+
+//                    return res;
+
+                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", QStringLiteral("http://localhost:3000/"));
+                    bool res = auth.initiate(QStringLiteral("https://api.twitter.com/oauth/request_token"));
+                    if (res)
+                        res = auth.autorize(QStringLiteral("https://api.twitter.com/oauth/authenticate"));
+                    if (res)
+                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
+
+                    return res;
+
+                    return true;
+                }
+
+                bool connectSite() {
+                    return false;
+                }
+
                 inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {

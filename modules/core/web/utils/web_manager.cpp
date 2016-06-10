@@ -19,7 +19,7 @@ namespace Core {
         QUrlQuery Response::toQuery(bool destroy) {
             QByteArray ar = readAll();
             if (destroy) deleteLater();
-            return QUrlQuery(ar);
+            return QUrlQuery(QUrl::fromPercentEncoding(ar));
         }
 
         QString Response::toText(bool destroy) {
