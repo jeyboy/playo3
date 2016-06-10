@@ -45,7 +45,9 @@ namespace Core {
                     if (isConnected()) return true;
 
                     OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
-                    auth.initiatePost(QStringLiteral("https://api.4shared.com/v1_2/oauth/initiate"));
+                    bool res = auth.initiatePost(QStringLiteral("https://api.4shared.com/v1_2/oauth/initiate"));
+                    if (res)
+                        auth.autorize(QStringLiteral("https://api.4shared.com/v1_2/oauth/authorize"));
 
                     int i = 0;
                 }

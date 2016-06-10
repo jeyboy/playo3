@@ -2,6 +2,7 @@
 #define OAUTH
 
 #include "modules/core/web/utils/web_manager.h"
+#include <QMessageAuthenticationCode>
 
 #define NOUNCE_SET QStringLiteral("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
 
@@ -9,7 +10,10 @@ namespace Core {
     namespace Web {
         class OAuth {
             QString consumer_key;
-            QString token;
+            QString consumer_secret;
+
+            QString oauth_token;
+            QString oauth_token_secret;
 
             QString nonce(int length, quint64 seed) {
                 qsrand(seed);
@@ -24,65 +28,6 @@ namespace Core {
                 return randomString;
             }
 
-            QString hmacSha1(const QString & message, const QString & key) {
-                QByteArray keyBytes = key.toLatin1();
-                int keyLength = keyBytes.size();              // Lenght of key word
-                const int blockSize = 64;   // Both MD5 and SHA-1 have a block size of 64.
-
-                // If key is longer than block size, we need to hash the key
-                if (keyLength > blockSize) {
-                    QCryptographicHash hash(QCryptographicHash::Sha1);
-                    hash.addData(keyBytes);
-                    keyBytes = hash.result();
-                }
-
-                // Create the opad and ipad for the hash function.
-                QByteArray ipad, opad;
-
-                ipad.fill(0, blockSize);
-                opad.fill(0, blockSize);
-
-                ipad.replace(0, keyBytes.length(), keyBytes);
-                opad.replace(0, keyBytes.length(), keyBytes);
-
-                /* http://tools.ietf.org/html/rfc2104 - (2) & (5) */
-                for (int i=0; i<64; i++) {
-                    ipad[i] = ipad[i] ^ 0x36;
-                    opad[i] = opad[i] ^ 0x5c;
-                }
-
-                QByteArray workArray;
-                workArray.clear();
-
-                workArray.append(ipad, 64);
-                /* http://tools.ietf.org/html/rfc2104 - (3) */
-                workArray.append(message.toLatin1());
-
-
-                /* http://tools.ietf.org/html/rfc2104 - (4) */
-                QByteArray sha1 = QCryptographicHash::hash(workArray, QCryptographicHash::Sha1);
-
-                /* http://tools.ietf.org/html/rfc2104 - (6) */
-                workArray.clear();
-                workArray.append(opad, 64);
-                workArray.append(sha1);
-
-                sha1.clear();
-
-                /* http://tools.ietf.org/html/rfc2104 - (7) */
-                sha1 = QCryptographicHash::hash(workArray, QCryptographicHash::Sha1);
-                return QString(sha1.toBase64());
-            }
-
-//            1.  The scheme and host MUST be in lowercase.
-
-//            2.  The host and port values MUST match the content of the HTTP
-//                request "Host" header field.
-//            3.  The port MUST be included if it is not the default port for the
-//                scheme, and MUST be excluded if it is the default.  Specifically,
-//                the port MUST be excluded when making an HTTP request [RFC2616]
-//                to port 80 or when making an HTTPS request [RFC2818] to port 443.
-//                All other non-default port numbers MUST be included.
             QString signature(const QString & html_method, const QUrl & uri, const QMap<QString, QString> & attrs) {
                 QString base_uri_path = uri.path();
 
@@ -111,17 +56,20 @@ namespace Core {
                     QUrl::toPercentEncoding(base_params.mid(1))
                 );
 
-                qDebug() << "BASE_STR" << base_str;
+//                qDebug() << "BASE_STR" << base_str;
 
-                QString secret = QString(QUrl::toPercentEncoding(consumer_key)) % '&' % QString(QUrl::toPercentEncoding(token));
-                QString token = hmacSha1(base_str, secret);
-                qDebug() << "TOKEN" << token;
+                QString secret = QString(QUrl::toPercentEncoding(consumer_secret)) % '&' % QString(QUrl::toPercentEncoding(oauth_token_secret));
+//                qDebug() << "SECRET" << secret;
 
-                return token;
+                QByteArray res = QMessageAuthenticationCode::hash(base_str.toUtf8(), secret.toUtf8(), QCryptographicHash::Sha1);
+
+                qDebug() << "RES" << res.toBase64();
+
+                return res.toBase64();
             }
 
         public:
-            OAuth(const QString & consumer_key, const QString & token) : consumer_key(consumer_key), token(token) {}
+            OAuth(const QString & consumer_key, const QString & consumer_secret) : consumer_key(consumer_key), consumer_secret(consumer_secret) {}
 
             bool initiateGet(const QString & url) { // not tested
                 QUrl uri(url);
@@ -173,8 +121,8 @@ namespace Core {
                 quint64 timestamp = QDateTime::currentMSecsSinceEpoch() / 1000;
 
                 QMap<QString, QString> attrs = {
+                    {QStringLiteral("oauth_version"), QStringLiteral("1.0")},
                     {QStringLiteral("oauth_consumer_key"), consumer_key},
-                    {QStringLiteral("oauth_token"), token},
                     {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
                     {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
                     {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
@@ -196,16 +144,27 @@ namespace Core {
                 uri.setQuery(new_query);
 
                 Response * resp = Manager::prepare() -> followedForm(uri);
-                qDebug() << "SOSO" << resp -> toText();
+                QUrlQuery result_params = resp -> toQuery();
+                qDebug() << "SOSO" << result_params.toString();
+
+                if (result_params.hasQueryItem(QStringLiteral("oauth_token"))) {
+                    oauth_token = result_params.queryItemValue(QStringLiteral("oauth_token"));
+                    oauth_token_secret = result_params.queryItemValue(QStringLiteral("oauth_token_secret"));
+//                    oauth_callback_confirmed=true
+
+                    return true;
+                }
 
                 return false;
             }
 
-            bool autorize() {
+            bool autorize(const QString & url) {
+//                https://api.4shared.com/v1_2/oauth/authorize?oauth_token=42cac70e531abd3ac1152bd7bfcb58a2&oauth_callback=http%3A%2F%2Fterm.ie%2Foauth%2Fexample%2Fclient.php%3Fkey%3D22abeb63487b7f6b75051079b7e610b1%26secret%3D71970e08961f3a78e821f51f989e6cb568cbd0ce%26token%3D42cac70e531abd3ac1152bd7bfcb58a2%26token_secret%3De11ef020926484b3a2ef46eff509706808cc2ab8%26endpoint%3Dhttps%253A%252F%252Fapi.4shared.com%252Fv1_2%252Foauth%252Fauthorize
+
                 return false;
             }
 
-            bool access() {
+            bool access(const QString & url) {
                 return false;
             }
         };

@@ -16,6 +16,12 @@ namespace Core {
             return this;
         }
 
+        QUrlQuery Response::toQuery(bool destroy) {
+            QByteArray ar = readAll();
+            if (destroy) deleteLater();
+            return QUrlQuery(ar);
+        }
+
         QString Response::toText(bool destroy) {
             QByteArray ar = readAll();
             if (destroy) deleteLater();

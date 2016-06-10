@@ -55,6 +55,7 @@ namespace Core { // requests and response has memory leaks
             inline QString paramVal(const QString & param) { return QUrlQuery(url()).queryItemValue(param); }
 
             Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
+            QUrlQuery toQuery(bool destroy = true);
             QString toText(bool destroy = true);
             QJsonObject toJson(const QString & wrap = QString(), bool destroy = true);
             Html::Document toHtml(bool destroy = true);
