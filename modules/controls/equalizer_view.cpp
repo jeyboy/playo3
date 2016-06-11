@@ -5,7 +5,7 @@ using namespace Controls;
 
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     enabled = new QCheckBox(QStringLiteral("On"), this);  
-    PlayerFactory::obj().registerCallback(in, enabled, SIGNAL(toggled(bool)), SLOT(activateEQ(bool)));
+    PlayerFactory::obj().registerCallback(call_in, enabled, SIGNAL(toggled(bool)), SLOT(activateEQ(bool)));
     layout -> addWidget(enabled, 0, Qt::AlignCenter);
 
     QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
@@ -16,9 +16,9 @@ void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     presetTypesList = new QComboBox(this);
     presetTypesList -> insertItems(0, PlayerFactory::obj().currPlayer() -> presetTypesList());
     presetTypesList -> setCurrentText(PlayerFactory::obj().currPlayer() -> currentPresetType());
-    PlayerFactory::obj().registerCallback(in, presetTypesList, SIGNAL(currentTextChanged(QString)), SLOT(changePresetType(QString)));
+    PlayerFactory::obj().registerCallback(call_in, presetTypesList, SIGNAL(currentTextChanged(QString)), SLOT(changePresetType(QString)));
     layout -> addWidget(presetTypesList, 3, Qt::AlignCenter);
-    PlayerFactory::obj().registerCallback(out, this, SIGNAL(presetTypeChanged()), SLOT(presetTypeChanged()));
+    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(presetTypeChanged()), SLOT(presetTypeChanged()));
 
 
     presetsList = new QComboBox(this);

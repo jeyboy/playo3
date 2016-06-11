@@ -164,7 +164,7 @@ public slots:
     }
 protected slots:
     void recalcPosition() {
-        int new_pos = position();
+        int new_pos = position() + 250;
         updatePosition(new_pos);
 
         // cue tweak

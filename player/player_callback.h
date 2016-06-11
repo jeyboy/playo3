@@ -4,8 +4,8 @@
 #include <qobject.h>
 
 enum CallbackTurn {
-    in = 0,
-    out
+    call_in = 1,
+    call_out
 };
 
 class PlayerCallback {
@@ -16,7 +16,7 @@ class PlayerCallback {
 public:
     PlayerCallback(CallbackTurn turn, QObject * obj, const char * signal, const char * slot) : _signal(signal), _slot(slot), _obj(obj), _turn(turn) {}
     void use(QObject * player) {
-        if (_turn == in)
+        if (_turn == call_in)
             QObject::connect(_obj, _signal, player, _slot);
         else
             QObject::connect(player, _signal, _obj, _slot);

@@ -9,7 +9,7 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
     itimer = new QTimer(parent);
     connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
     connect(this, SIGNAL(playbackEnding()), this, SLOT(endOfPlayback()));
-    itimer -> setInterval(500);
+    itimer -> setInterval(300);
 }
 
 void IPlayer::updateState(PlayerState new_state) {

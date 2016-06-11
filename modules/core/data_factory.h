@@ -32,7 +32,7 @@ namespace Core {
         void proceedStalledState();
     public:
         inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
-            PlayerFactory::obj().registerCallback(out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
+            PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
         }
         ~DataFactory() {}
 

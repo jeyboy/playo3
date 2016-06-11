@@ -250,22 +250,22 @@ QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
     play_btn = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
-    PlayerFactory::obj().registerCallback(in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
+    PlayerFactory::obj().registerCallback(call_in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
 
     pause_btn = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
-    PlayerFactory::obj().registerCallback(in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
+    PlayerFactory::obj().registerCallback(call_in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
     pause_btn -> setVisible(false);
 
     stop_btn = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
-    PlayerFactory::obj().registerCallback(in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
+    PlayerFactory::obj().registerCallback(call_in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
     stop_btn -> setVisible(false);
 
 
     QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
     act -> setCheckable(true);
-    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
+    PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
 
-    PlayerFactory::obj().registerCallback(out, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
+    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
 
     ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
@@ -305,9 +305,9 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMinimum(0);
     slider -> setMaximum(0);
 
-    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
-    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
-    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
+    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
+    PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
     ptb -> addWidget(slider);
     ptb -> setMinimumWidth(70);
@@ -324,8 +324,8 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
 
-    PlayerFactory::obj().registerCallback(in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
-    PlayerFactory::obj().registerCallback(out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(call_in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
+    PlayerFactory::obj().registerCallback(call_out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
     pslider -> setMinimum(-1000);
     pslider -> setMaximum(1000);
@@ -345,8 +345,8 @@ QToolBar * ToolBars::createTimeMediaBar() {
     Settings::currentStyle -> applyProperty(timeLabel, "timer", true);
     ptb -> addWidget(timeLabel);
 
-    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
-    PlayerFactory::obj().registerCallback(out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
+    PlayerFactory::obj().registerCallback(call_out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
+    PlayerFactory::obj().registerCallback(call_out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
 
 //    ptb -> adjustSize();
 
@@ -362,8 +362,8 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
     act -> setCheckable(true);
-    PlayerFactory::obj().registerCallback(in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
-    PlayerFactory::obj().registerCallback(out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
+    PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
+    PlayerFactory::obj().registerCallback(call_out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
 
     ClickableSlider * slider = new ClickableSlider(ptb, QStringLiteral("volume"));
 
@@ -373,8 +373,8 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setMaximum(10000);
     slider -> setValue(10000);
 
-    PlayerFactory::obj().registerCallback(in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
-    PlayerFactory::obj().registerCallback(out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
+    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     ptb -> addWidget(slider);
     ptb -> setMinimumWidth(55);

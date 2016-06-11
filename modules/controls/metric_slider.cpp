@@ -11,7 +11,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlide
 
     setMouseTracking(show_position);
 
-    PlayerFactory::obj().registerCallback(out, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
+    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
 //    connect(Settings::obj().currPlayer(), SIGNAL(prebufferingChanged(float)), this, SLOT(prebufferingChanged(float)));
 }
 
