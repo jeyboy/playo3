@@ -254,7 +254,7 @@ void SearchConfigurator::initiateSources() {
     for(QMap<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         ISource * src = Web::Apis::source(it.key());
 
-        if (src -> isConnected()) {
+        if (src -> isPermitted(pf_search)) {
             QListWidgetItem * item = new QListWidgetItem(src -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);
@@ -272,8 +272,8 @@ void SearchConfigurator::initiateSources() {
         } else has_not_connected = true;
     }
 
-    if (has_not_connected)
-         setWindowTitle(windowTitle() % QStringLiteral(" (some search services is not connected)"));
+    if (has_not_connected && errors_output)
+        errors_output -> setText(QStringLiteral("Some services is not acceptable at this time."));
 
     QStringList genres = MusicGenres::obj().genresList();   genres.sort();
     stylePredicate -> addItems(genres);
@@ -320,7 +320,7 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
     return res;
 }
 
-SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false) {
+SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn, QLabel * errors_output) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false), errors_output(errors_output) {
     setObjectName(QStringLiteral("searchConfigurator"));
     setExclusive(true);
     setToggleable(false);

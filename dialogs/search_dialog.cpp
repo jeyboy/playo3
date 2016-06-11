@@ -6,10 +6,13 @@
 SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::SearchDialog) {
     ui -> setupUi(this);
 
-    configurator = new Controls::SearchConfigurator(this, ui -> acceptButton);
-
     QGridLayout * newLayout = new QGridLayout(this);
-    newLayout -> addWidget(configurator, 0, 0, 1, 2);
+    QLabel * err_output = new QLabel(this);
+
+    configurator = new Controls::SearchConfigurator(this, ui -> acceptButton, err_output);
+
+    newLayout -> addWidget(err_output, 0, 0, 1, 2);
+    newLayout -> addWidget(configurator, 1, 0, 1, 2);
     newLayout -> addWidget(ui -> cancelButton, 1, 0);
     newLayout -> addWidget(ui -> acceptButton, 1, 1);
     setLayout(newLayout);

@@ -61,6 +61,8 @@ namespace Controls {
         QWidget * initLocations();
         QWidget * initPredicates();
         QWidget * initLimitations();
+
+        QLabel * errors_output;
     public:
         enum SearchSettingsBlocks {
             none = 0,
@@ -77,7 +79,7 @@ namespace Controls {
             int predicate_types = Core::sp_title, int content_type = Core::sc_all
         );
 
-        SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0);
+        SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0, QLabel * errors_output = 0);
         Core::SearchLimitLayers params();
         QString validate() {
             Core::SearchLimitLayers limits = params();
