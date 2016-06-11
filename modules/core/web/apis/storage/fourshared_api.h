@@ -25,8 +25,8 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                inline bool isConnected() { return !token().isEmpty(); }
-                QToolButton * initButton(QWidget * parent = 0);
+                inline bool isConnected() { return true; /*!token().isEmpty();*/ }
+//                QToolButton * initButton(QWidget * parent = 0);
 
                 QString refresh(const QString & refresh_page) {
                     Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
@@ -44,10 +44,12 @@ namespace Core {
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) {
                     if (isConnected()) return true;
 
-                    bool res = connectApi();
-                    res &= connectSite();
+//                    bool res = connectApi();
+//                    res &= connectSite();
 
-                    return res;
+//                    return res;
+
+                    return false;
                 }
                 inline void disconnectUser() {
                     clearParams();
@@ -55,31 +57,34 @@ namespace Core {
                 }
 
             protected:
-                bool connectApi() {
-//                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
-//                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
-//                    if (res)
-//                        res = auth.autorize(url_api_base.arg(val_version) % QStringLiteral("oauth/authorize"));
-//                    if (res)
-//                        res = auth.access(url_api_base.arg(val_version) % QStringLiteral("oauth/token"));
+//                bool connectApi() {
+////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
+////                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
+////                    if (res)
+////                        res = auth.autorize(url_api_base.arg(val_version) % QStringLiteral("oauth/authorize"));
+////                    if (res)
+////                        res = auth.access(url_api_base.arg(val_version) % QStringLiteral("oauth/token"));
+
+////                    return res;
+
+////                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", QStringLiteral("http://localhost:3000/"));
+////                    bool res = auth.initiate(QStringLiteral("https://api.twitter.com/oauth/request_token"));
+////                    if (res)
+////                        res = auth.autorize(QStringLiteral("https://api.twitter.com/oauth/authenticate"));
+////                    if (res)
+////                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
 
 //                    return res;
 
-                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", QStringLiteral("http://localhost:3000/"));
-                    bool res = auth.initiate(QStringLiteral("https://api.twitter.com/oauth/request_token"));
-                    if (res)
-                        res = auth.autorize(QStringLiteral("https://api.twitter.com/oauth/authenticate"));
-                    if (res)
-                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
+//                    return true;
+//                }
 
-                    return res;
+//                bool connectSite() {
 
-                    return true;
-                }
 
-                bool connectSite() {
-                    return false;
-                }
+
+//                    return false;
+//                }
 
                 inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 

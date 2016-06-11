@@ -16,7 +16,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class RequestApiAuth : public TeuAuth, public IApi {
+            class RequestApi : public TeuAuth, public IApi {
                 enum CategoryTypes {
                     music = 1, video = 2, photo = 3, archive = 4,
                     book = 5,  program = 6, web = 7, mobile = 8,
@@ -28,7 +28,7 @@ namespace Core {
                 inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
                 inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
-                PolyQueryRules rules(
+                PolyQueryRules rulesAuth(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
                     int per_request = FOURSHARED_PER_REQUEST_LIMIT,
                     ApiCallIterType call_type = call_iter_type_page)
@@ -42,6 +42,18 @@ namespace Core {
                         qMin(qMin(per_request, items_limit), FOURSHARED_PER_REQUEST_LIMIT),
                         tkn_offset,
                         offset
+                    );
+                }
+
+                PolyQueryRules rulesNoAuth(
+                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT,
+                    int pages_limit = FOURSHARED_PAGES_LIMIT, ApiCallIterType call_type = call_iter_type_item)
+                {
+                    return PolyQueryRules(
+                        call_type,
+                        offset,
+                        qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
+                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT)
                     );
                 }
 
@@ -61,7 +73,7 @@ namespace Core {
                 QString videoSearchUrl(const QString & predicate = QString()) {
                     return searchUrl(predicate, video);
                 }
-            protected:
+
                 QJsonArray popularAuth(const SearchLimit & limits) {
                     QJsonArray arr;
 
@@ -69,7 +81,7 @@ namespace Core {
                         return pRequest(
                             audioSearchUrl(),
                             call_type_json,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -79,7 +91,7 @@ namespace Core {
                         return pRequest(
                             videoSearchUrl(),
                             call_type_json,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -95,6 +107,30 @@ namespace Core {
 //                    );
                 }
 
+                QJsonArray popularNoAuth(const SearchLimit & limits) {
+                    QJsonArray arr;
+
+                    if (limits.include_audio())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                            call_type_html,
+                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            &arr,
+                            proc_tracks1
+                        );
+
+                    if (limits.include_video())
+                        return pRequest(
+                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                            call_type_html,
+                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            &arr,
+                            proc_video1
+                        );
+
+                    return arr;
+                }
+
                 QJsonArray searchProcAuth(const SearchLimit & limits) {
                     QJsonArray arr;
 
@@ -102,7 +138,7 @@ namespace Core {
                         return pRequest(
                             audioSearchUrl(limits.predicate),
                             call_type_json,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -112,7 +148,7 @@ namespace Core {
                         return pRequest(
                             videoSearchUrl(limits.predicate),
                             call_type_json,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -127,54 +163,15 @@ namespace Core {
 //                        none
 //                    );
                 }
-            };
 
-            class RequestApiNoAuth : public IApi {
-            protected:
-                PolyQueryRules rules(
-                    int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT,
-                    int pages_limit = FOURSHARED_PAGES_LIMIT, ApiCallIterType call_type = call_iter_type_item)
-                {
-                    return PolyQueryRules(
-                        call_type,
-                        offset,
-                        qMin(items_limit, FOURSHARED_ITEMS_LIMIT),
-                        qMin(pages_limit, FOURSHARED_PAGES_LIMIT)
-                    );
-                }
-
-                QJsonArray popularNoAuth(const SearchLimit & limits) {
-                    QJsonArray arr;
-
-                    if (limits.include_audio())
-                        return pRequest(
-                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
-                            call_type_html,
-                            rules(limits.start_offset, limits.items_limit),
-                            &arr,
-                            proc_tracks1
-                        );
-
-                    if (limits.include_video())
-                        return pRequest(
-                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
-                            call_type_html,
-                            rules(limits.start_offset, limits.items_limit),
-                            &arr,
-                            proc_video1
-                        );
-
-                    return arr;
-                }
-
-                virtual QJsonArray searchProcNoAuth(const SearchLimit & limits) {
+                QJsonArray searchProcNoAuth(const SearchLimit & limits) {
                     QJsonArray arr;
 
                     if (limits.include_audio())
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_tracks1
                         );
@@ -183,16 +180,15 @@ namespace Core {
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
-                            rules(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit),
                             &arr,
                             proc_video1
                         );
 
                     return arr;
                 }
-            };
 
-            class RequestApi : public RequestApiAuth, public RequestApiNoAuth {
+            protected:
                 virtual bool isConnected() = 0;
 
                 QJsonArray popular(const SearchLimit & limits) {

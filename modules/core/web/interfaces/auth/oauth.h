@@ -9,9 +9,9 @@
 namespace Core {
     namespace Web {
         class OAuth { // not finished
-            QString redirect_url;
             QString consumer_key;
             QString consumer_secret;
+            QString redirect_url;
 
             QString oauth_token;
             QString oauth_token_secret;
@@ -74,7 +74,7 @@ namespace Core {
                   const QString & redirect_url = QString()/*QStringLiteral("http://localhost/")*/) :
                 consumer_key(consumer_key), consumer_secret(consumer_secret), redirect_url(redirect_url) {}
 
-            bool initiate(const QString & url, const QString & http_method = QStringLiteral("POST")) {
+            bool initiate(const QString & url, const QString & http_method = QStringLiteral("POST")) { // tested
                 QUrl uri(url);
 
                 quint64 timestamp = QDateTime::currentMSecsSinceEpoch() / 1000;
@@ -136,7 +136,7 @@ namespace Core {
                 return false;
             }
 
-            bool autorize(const QString & url) {
+            bool autorize(const QString & url) { // not finished
 //                https://api.4shared.com/v1_2/oauth/authorize?oauth_token=42cac70e531abd3ac1152bd7bfcb58a2&oauth_callback=http%3A%2F%2Fterm.ie%2Foauth%2Fexample%2Fclient.php%3Fkey%3D22abeb63487b7f6b75051079b7e610b1%26secret%3D71970e08961f3a78e821f51f989e6cb568cbd0ce%26token%3D42cac70e531abd3ac1152bd7bfcb58a2%26token_secret%3De11ef020926484b3a2ef46eff509706808cc2ab8%26endpoint%3Dhttps%253A%252F%252Fapi.4shared.com%252Fv1_2%252Foauth%252Fauthorize
 
                 QUrl uri(url);
@@ -147,7 +147,7 @@ namespace Core {
 
                 Response * resp = Manager::prepare() -> followedForm(uri);
                 Html::Document doc = resp -> toHtml();
-                doc.output();
+//                doc.output();
 
                 return false;
             }
