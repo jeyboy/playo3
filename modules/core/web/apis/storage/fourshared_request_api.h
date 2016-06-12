@@ -6,7 +6,6 @@
 
 #include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/interfaces/isource.h"
 //#include "modules/core/misc/file_utils/extensions.h"
 //#include "modules/core/media/genres/music_genres.h"
 
@@ -17,7 +16,8 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class RequestApi : public TeuAuth, public ISource, public IApi {
+            class RequestApi : public TeuAuth, public IApi {
+            protected:
                 enum CategoryTypes {
                     music = 1, video = 2, photo = 3, archive = 4,
                     book = 5,  program = 6, web = 7, mobile = 8,
@@ -187,15 +187,6 @@ namespace Core {
                         );
 
                     return arr;
-                }
-
-            protected:
-                QJsonArray popular(const SearchLimit & limits) {
-                    return isConnected() ? popularAuth(limits) : popularNoAuth(limits);
-                }
-
-                QJsonArray searchProc(const SearchLimit & limits) {
-                    return isConnected() ? searchProcAuth(limits) : searchProcNoAuth(limits);
                 }
             };
         }

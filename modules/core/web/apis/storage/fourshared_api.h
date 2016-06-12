@@ -3,13 +3,14 @@
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/auth/oauth.h"
+#include "modules/core/interfaces/isource.h"
 
 #include "fourshared_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Api: public RequestApi, public Singleton<Api> {
+            class Api: public RequestApi, public ISource, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -20,12 +21,25 @@ namespace Core {
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
                     return QUrlQuery(tkn_oauth_consumer % (token().isEmpty() ? val_token : token()));
                 }
-                inline SourceFlags defaultFlags() { return (SourceFlags)(sf_auth_api_has | sf_auth_site_has); }
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        sf_auth_api_has | sf_auth_site_has |
+                        sf_api_search_auth_only | sf_api_user_content_auth_only
+                    );
+                }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
 //                QToolButton * initButton(QWidget * parent = 0);
+
+                QJsonArray popular(const SearchLimit & limits) {
+                    return isConnected() ? popularAuth(limits) : popularNoAuth(limits);
+                }
+
+                QJsonArray searchProc(const SearchLimit & limits) {
+                    return isConnected() ? searchProcAuth(limits) : searchProcNoAuth(limits);
+                }
 
                 QString refresh(const QString & refresh_page) {
                     Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();

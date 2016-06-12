@@ -34,10 +34,12 @@ namespace Core {
         sf_site_search_auth_only = 32,
         sf_site_media_content_auth_only = 64,
         sf_site_user_content_auth_only = 128,
+//        sf_site_genres_auth_only = 256,
 
-        sf_api_search_auth_only = 256,
-        sf_api_media_content_auth_only = 512,
-        sf_api_user_content_auth_only = 1024,
+        sf_api_search_auth_only = 512,
+        sf_api_media_content_auth_only = 1024,
+        sf_api_user_content_auth_only = 2048,
+//        sf_api_genres_auth_only = 4096,
 
         sf_auth_mandatory =
             sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only |
@@ -68,27 +70,34 @@ namespace Core {
         virtual inline SourceFlags defaultFlags() { return sf_none; }
 
         inline bool isPermitted(const PermitFlags & perm_flag = pf_search) {
+            SourceFlags api_flag, site_flag;
+
             switch(perm_flag) {
                 case pf_search: {
-                    bool mand = (flags & sf_search_auth_only) > 0;
-                    return mand == isAuthedFor(sf_search_auth_only);
+                    api_flag = sf_api_search_auth_only;
+                    site_flag = sf_site_search_auth_only;
                 }
                 case pf_media_content: {
-                    bool mand = (flags & sf_media_content_auth_only) > 0;
-                    return mand == isAuthedFor(sf_media_content_auth_only);
+                    api_flag = sf_api_media_content_auth_only;
+                    site_flag = sf_site_media_content_auth_only;
                 }
                 case pf_user_content: {
-                    bool mand = (flags & sf_user_content_auth_only) > 0;
-                    return mand == isAuthedFor(sf_user_content_auth_only);
+                    api_flag = sf_api_user_content_auth_only;
+                    site_flag = sf_site_user_content_auth_only;
                 }
                 default: return true;
             }
+
+            bool api_flag_permit = HAS_FLAG(flags, api_flag);
+            bool site_flag_permit = HAS_FLAG(flags, site_flag);
+
+            return !api_flag_permit || api_flag_permit == apiConnected() ||
+                   !site_flag_permit || site_flag_permit == siteConnected();
         }
         inline bool hasApiConnection()      { return HAS_FLAG(flags, sf_auth_api_has); }
         inline bool apiConnected()          { return HAS_FLAG(flags, sf_auth_api_done); }
         inline bool hasSiteConnection()     { return HAS_FLAG(flags, sf_auth_site_has); }
         inline bool siteConnected()         { return HAS_FLAG(flags, sf_auth_site_done); }
-        inline bool searchWithAuthOnly()    { return HAS_FLAG(flags, sf_search_auth_only); }
         inline bool preferApi()             { return HAS_FLAG(flags, sf_prefer_api); }
 
         inline bool isConnected() { return apiConnected() || siteConnected(); }
