@@ -8,6 +8,11 @@
 #include "modules/core/data_sub_types.h"
 
 #define UID_HEAD QStringLiteral("@")
+#define SOURCE_FLAGS_JSON QStringLiteral("flags")
+
+#define HAS_FLAG(flags, flag) (flags & flag) == flag;
+#define APPEND_FLAG(flags, flag) flags |= flag;
+#define REJECT_FLAG(flags, flag) flags &= (~(flag));
 
 namespace Core {
     enum ConnectionType : int {
@@ -19,16 +24,24 @@ namespace Core {
     enum SourceFlags {
         sf_none = 0,
 
+        sf_prefer_api = 1,
+
         sf_auth_api_has = 2,
         sf_auth_api_done = 4,
         sf_auth_site_has = 8,
         sf_auth_site_done = 16,
 
-        sf_search_auth_only = 32,
-        sf_media_content_auth_only = 64,
-        sf_user_content_auth_only = 128,
+        sf_site_search_auth_only = 32,
+        sf_site_media_content_auth_only = 64,
+        sf_site_user_content_auth_only = 128,
 
-        sf_auth_mandatory = sf_search_auth_only | sf_media_content_auth_only | sf_user_content_auth_only
+        sf_api_search_auth_only = 256,
+        sf_api_media_content_auth_only = 512,
+        sf_api_user_content_auth_only = 1024,
+
+        sf_auth_mandatory =
+            sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only |
+            sf_api_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only
     };
 
     enum PermitFlags {
@@ -42,11 +55,11 @@ namespace Core {
 
     class ISource {
         inline bool isAuthedFor(const SourceFlags & flag) {
-            bool manda_con = flags & flag > 0;
+            bool manda_con = HAS_FLAG(flags, flag);
             return !manda_con || (manda_con && (apiConnected() || siteConnected()));
         }
     public:
-        ISource() : button(0), flags(sf_none) {}
+        ISource() : button(0), flags(defaultFlags()) {}
 
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
@@ -71,11 +84,12 @@ namespace Core {
                 default: return true;
             }
         }
-        inline bool hasApiConnection() { return flags & sf_auth_api_has; }
-        inline bool apiConnected() { return flags & sf_auth_api_done; }
-        inline bool hasSiteConnection() { return flags & sf_auth_site_has; }
-        inline bool siteConnected() { return flags & sf_auth_site_done; }
-        inline bool searchWithAuthOnly() { return flags & sf_search_auth_only; }
+        inline bool hasApiConnection()      { return HAS_FLAG(flags, sf_auth_api_has); }
+        inline bool apiConnected()          { return HAS_FLAG(flags, sf_auth_api_done); }
+        inline bool hasSiteConnection()     { return HAS_FLAG(flags, sf_auth_site_has); }
+        inline bool siteConnected()         { return HAS_FLAG(flags, sf_auth_site_done); }
+        inline bool searchWithAuthOnly()    { return HAS_FLAG(flags, sf_search_auth_only); }
+        inline bool preferApi()             { return HAS_FLAG(flags, sf_prefer_api); }
 
         inline bool isConnected() { return apiConnected() || siteConnected(); }
         virtual inline bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return false; }
@@ -83,8 +97,18 @@ namespace Core {
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
-        virtual void toJson(QJsonObject & /*hash*/) { qDebug() << name() << "STUB TO JSON"; } // stub
-        virtual void fromJson(const QJsonObject & /*hash*/) { qDebug() << name() << "STUB FROM JSON"; } // stub
+        virtual void toJson(QJsonObject & hash) {
+            if (flags != defaultFlags())
+                hash.insert(SOURCE_FLAGS_JSON, flags);
+
+            qDebug() << name() << "STUB TO JSON";
+        }
+        virtual void fromJson(const QJsonObject & hash) {
+            if (hash.contains(SOURCE_FLAGS_JSON))
+                flags = (SourceFlags)hash.value(SOURCE_FLAGS_JSON).toInt();
+
+            qDebug() << name() << "STUB FROM JSON";
+        }
 
         virtual inline bool isRefreshable() { return true; }
         virtual inline QString refresh(const QString & refresh_page) {

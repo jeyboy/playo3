@@ -2,7 +2,6 @@
 #define FOURSHARED_API
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/auth/oauth.h"
 
 #include "fourshared_request_api.h"
@@ -10,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Api: public RequestApi, public ISource, public Singleton<Api> {
+            class Api: public RequestApi, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -21,11 +20,11 @@ namespace Core {
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
                     return QUrlQuery(tkn_oauth_consumer % (token().isEmpty() ? val_token : token()));
                 }
+                inline SourceFlags defaultFlags() { return (SourceFlags)(sf_auth_api_has | sf_auth_site_has); }
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                inline bool isConnected() { return true; /*!token().isEmpty();*/ }
 //                QToolButton * initButton(QWidget * parent = 0);
 
                 QString refresh(const QString & refresh_page) {
@@ -74,14 +73,15 @@ namespace Core {
 ////                    if (res)
 ////                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
 
+//                        APPEND_FLAG(flags, sf_auth_api_done);
+
 //                    return res;
 
 //                    return true;
 //                }
 
 //                bool connectSite() {
-
-
+//                    APPEND_FLAG(flags, sf_auth_site_done);
 
 //                    return false;
 //                }
