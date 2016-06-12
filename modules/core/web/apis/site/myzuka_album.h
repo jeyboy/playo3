@@ -122,7 +122,7 @@ namespace Core {
                 url.setQuery(search_predicate_token % limits.predicate);
 
                 QJsonArray arr;
-                Response * response = Manager::prepare() -> followedGet(url);
+                Response * response = Manager::prepare() -> getFollowed(url);
                 Html::Document parser = response -> toHtml();
 
                 Html::Set tables = parser.find(&searchTablesSelector);

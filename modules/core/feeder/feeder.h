@@ -113,7 +113,7 @@ public slots:
                 for(int offset = settings.attrs.value(FEED_SETTINGS_FROM, 0).toInt(); offset <= settings.attrs.value(FEED_SETTINGS_TO, 0).toInt(); offset += settings.attrs.value(FEED_SETTINGS_STEP, 1).toInt()) {
                     QUrl url(QString(settings.url).replace(FEED_SETTINGS_URL_PAGINATION_TEMPLATE, QString::number(offset)));
 
-                    Core::Web::Response * response = Core::Web::Manager::prepare() -> followedGet(url);
+                    Core::Web::Response * response = Core::Web::Manager::prepare() -> getFollowed(url);
                     Core::Web::Html::Document doc = response -> toHtml();
 
 //                    doc.output();

@@ -17,7 +17,7 @@ namespace Core {
                 friend class Singleton<Api>;
                 inline Api() {
                     // need to add checking presents of cookies
-                    Manager::prepare() -> followedGet(QUrl(url_root));
+                    Manager::prepare() -> getFollowed(QUrl(url_root));
                 }
             public:
                 inline QString name() const { return val_name; }
@@ -41,8 +41,8 @@ namespace Core {
 //                }
 
                 QString refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
-                    QJsonObject obj = Manager::prepare() -> getJson(trackDownloadingUrl(refresh_page));
-                    obj = Manager::prepare() -> getJson(QString(obj.value(QStringLiteral("src")).toString() % QStringLiteral("&format=json")));
+                    QJsonObject obj = Manager::prepare() -> jsonGet(trackDownloadingUrl(refresh_page));
+                    obj = Manager::prepare() -> jsonGet(QString(obj.value(QStringLiteral("src")).toString() % QStringLiteral("&format=json")));
                     QString path = obj.value(QStringLiteral("path")).toString();
                     return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
                         obj.value(QStringLiteral("host")).toString(), calcKey(path, obj.value(QStringLiteral("s")).toString()),

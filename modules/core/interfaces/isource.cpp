@@ -6,7 +6,7 @@
 using namespace Core;
 
 void ISource::openTab(const QString & userID) {
-    if (connectUser(connection_manual))
+    if (connectUser(connection_new))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(userID)),
             Models::Params(siteType(), userID), 0, true, true, 0, true

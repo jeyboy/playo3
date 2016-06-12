@@ -132,7 +132,7 @@ namespace Core {
                 //                l1I;
 
                 void extractFromPage(const QString & id, QHash<int, FmtOption> & options) {
-                    QString response = Web::Manager::prepare() -> followedGet(url_embed.arg(id)) -> toText();
+                    QString response = Web::Manager::prepare() -> getFollowed(url_embed.arg(id)) -> toText();
 
                     QString jsUrl;
                     if (extractJsUrl(response, jsUrl)) {
@@ -235,7 +235,7 @@ namespace Core {
 
 
                 JsMethod extractJsMethod(const QString & jsUrl) {
-                    QString js = Web::Manager::prepare() -> followedGet(jsUrl) -> toText();
+                    QString js = Web::Manager::prepare() -> getFollowed(jsUrl) -> toText();
 
                     QString methodName;
                     JsMethod res;
@@ -306,7 +306,7 @@ namespace Core {
                 QString idToUrl(const QString & id) {
                     QHash<int, FmtOption> options;
 
-                    QString response = Web::Manager::prepare() -> followedGet(url_info.arg(id)) -> toText();
+                    QString response = Web::Manager::prepare() -> getFollowed(url_info.arg(id)) -> toText();
                     QUrlQuery query(response);
 
                     if (query.queryItemValue(tkn_use_cipher_signature) != "True") {

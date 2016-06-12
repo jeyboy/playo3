@@ -20,7 +20,7 @@ namespace Core {
 
                 switch(arg -> call_type) {
                     case call_type_json: {
-                        QJsonObject json = Web::Manager::prepare() -> getJson(arg -> request_url, arg -> post_proc & proc_json_wrap);
+                        QJsonObject json = Web::Manager::prepare() -> jsonGet(arg -> request_url, arg -> post_proc & proc_json_wrap);
 
                         status = extractStatus(arg, json, code, message);
                         if (!status) {
@@ -48,8 +48,8 @@ namespace Core {
                     case call_type_html: {
                         Response * response = 0;
                         switch(arg -> call_method) {
-                            case call_method_post: { response = Manager::prepare() -> followedPost(arg -> request_url); break; }
-                            default: response = Manager::prepare() -> followedGet(arg -> request_url);
+                            case call_method_post: { response = Manager::prepare() -> postFollowed(arg -> request_url); break; }
+                            default: response = Manager::prepare() -> getFollowed(arg -> request_url);
                         }
                         status = htmlToJson(arg, response, message, true);
 

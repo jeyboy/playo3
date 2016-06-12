@@ -121,7 +121,7 @@ bool DownloadView::initiateDownloading(DownloadModelItem * item) {
             }
         }
 
-        source = networkManager -> followedGetAsync(from, Func(this, SLOT(asyncRequestFinished(QIODevice*,void*)), item));
+        source = networkManager -> getFollowedAsync(from, Func(this, SLOT(asyncRequestFinished(QIODevice*,void*)), item));
         emit updateAttr(item, REMOTE_PROGRESS, 0);
         downIndexes.insert(source, item);
         connect(source, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadRemoteProgress(qint64,qint64)));

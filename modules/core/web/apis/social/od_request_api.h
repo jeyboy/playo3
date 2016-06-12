@@ -36,7 +36,7 @@ namespace Core { // NOT FINISHED
                     );
                 }
 
-                bool sessionIsValid() { return !hasError(Manager::prepare() -> getJson(initAudioUrl())); }
+                bool sessionIsValid() { return !hasError(Manager::prepare() -> jsonGet(initAudioUrl())); }
 
                 inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
                     return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));
@@ -147,9 +147,9 @@ namespace Core { // NOT FINISHED
                 QJsonObject userInfo(const QString & uid) {
                     if (uid.isEmpty()) {
                         qDebug() << initAudioUrl();
-                        return Manager::prepare() -> getJson(initAudioUrl());
+                        return Manager::prepare() -> jsonGet(initAudioUrl());
                     } else
-                        return Manager::prepare() -> getJson(myAudioUrl(uid));
+                        return Manager::prepare() -> jsonGet(myAudioUrl(uid));
                 }
 
                 inline QString playlistAudioUrl(const QString & pid) { return audioUrl(tkn_my, QUrlQuery(tkn_pid_eq % pid)); } // params: (pid: playlist id) and pagination attrs

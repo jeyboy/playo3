@@ -37,7 +37,7 @@ namespace Core {
                     }
 
                     inline QString grabSID() {
-                        QJsonObject obj = Manager::prepare() -> postJson(authSidUrl(), initHeaders()); // calculate sid for requests
+                        QJsonObject obj = Manager::prepare() -> jsonPost(authSidUrl(), initHeaders()); // calculate sid for requests
                         if (obj.contains(tkn_sid))
                             return obj.value(tkn_sid).toString();
                         else {
@@ -59,7 +59,7 @@ namespace Core {
                                 QHash<QString, QString> attrs;
                                 attrs.insert(tkn_captcha, actionDialog -> getValue(tkn_code));
                                 QUrl url = QUrl(url_root).resolved(forms.first() -> serializeFormToUrl(attrs));
-                                QNetworkReply * reply = Manager::prepare() -> followedForm(url, initHeaders());
+                                QNetworkReply * reply = Manager::prepare() -> formFollowed(url, initHeaders());
                                 //TODO: check session
                                 reply -> deleteLater();
                             }

@@ -11,14 +11,13 @@
 #define SOURCE_FLAGS_JSON QStringLiteral("flags")
 
 #define HAS_FLAG(flags, flag) (flags & flag) == flag;
-#define APPEND_FLAG(flags, flag) flags |= flag;
+#define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag);
 #define REJECT_FLAG(flags, flag) flags &= (~(flag));
 
 namespace Core {
     enum ConnectionType : int {
         connection_restore = 1,
-        connection_oauth = 2,
-        connection_manual = 4
+        connection_new = 2
     };
 
     enum SourceFlags {
@@ -101,7 +100,28 @@ namespace Core {
         inline bool preferApi()             { return HAS_FLAG(flags, sf_prefer_api); }
 
         inline bool isConnected() { return apiConnected() || siteConnected(); }
-        virtual inline bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return false; }
+        bool connectUser(const ConnectionType & conType = connection_restore) {
+            bool res = true;
+
+            if (conType == connection_restore) {
+                res &= restoreUserConnection();
+            } else {
+                if (!apiConnected() && hasApiConnection()) {
+                    res &= connectApi();
+                    if (res) APPEND_FLAG(flags, sf_auth_api_done);
+                }
+
+                if (!siteConnected() && hasSiteConnection()) {
+                    res &= connectSite();
+                    if (res) APPEND_FLAG(flags, sf_auth_site_done);
+                }
+            }
+
+            return res;
+        }
+        virtual bool restoreUserConnection() { return false; }
+        virtual bool connectApi() { return false; }
+        virtual bool connectSite() { return false; }
         virtual inline void disconnectUser() { }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
@@ -134,7 +154,7 @@ namespace Core {
         QToolButton * button;
         SourceFlags flags;
 
-        virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> followedGet(QUrl(refresh_page)); }
+        virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> getFollowed(QUrl(refresh_page)); }
         virtual QString refreshProc(Web::Response * response) { delete response; return QString(); }
 
         QString error;

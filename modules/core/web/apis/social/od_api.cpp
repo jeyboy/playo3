@@ -25,10 +25,10 @@ void Api::toJson(QJsonObject & hash) {
 }
 
 QString Api::refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
-    QJsonObject obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
+    QJsonObject obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
     if (hasError(obj)) {
         connectUser();
-        obj = Manager::prepare() -> getJson(playAudioUrl(refresh_page));
+        obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
         qDebug() << "RECONECTION";
     }
     QUrl url(obj.value(tkn_play).toString());
@@ -104,11 +104,11 @@ bool Api::formConnection() {
     while(true) {
         if (!showingLogin(val_login_title, authE, authP, err)) return false;
 
-        Response * reply = Manager::prepare() -> unfollowedForm(authRequestUrl(authE, authP), initHeaders());
+        Response * reply = Manager::prepare() -> form(authRequestUrl(authE, authP), initHeaders());
         QUrl url = reply -> toRedirectUrl();
         QString hash_key = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
 
-        reply = Manager::prepare() -> followedGet(url, initHeaders());
+        reply = Manager::prepare() -> getFollowed(url, initHeaders());
         err = reply -> paramVal(tkn_form_error);
         if (!err.isEmpty()) {
             reply -> deleteLater();

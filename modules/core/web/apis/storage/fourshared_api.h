@@ -23,7 +23,7 @@ namespace Core {
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_auth_api_has | sf_auth_site_has |
+                        sf_auth_api_has | sf_auth_site_has | sf_site_user_content_auth_only |
                         sf_api_search_auth_only | sf_api_user_content_auth_only
                     );
                 }
@@ -34,43 +34,39 @@ namespace Core {
 //                QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonArray popular(const SearchLimit & limits) {
+                    if (!isPermitted(pf_media_content)) return QJsonArray();
+
                     return isConnected() ? popularAuth(limits) : popularNoAuth(limits);
                 }
 
                 QJsonArray searchProc(const SearchLimit & limits) {
+                    if (!isPermitted(pf_search)) return QJsonArray();
+
                     return isConnected() ? searchProcAuth(limits) : searchProcNoAuth(limits);
                 }
 
                 QString refresh(const QString & refresh_page) {
-                    Html::Document doc = Web::Manager::prepare() -> followedGet(refresh_page) -> toHtml();
+                    if (!isPermitted(pf_media_content)) return QString();
+
+                    Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
                     return doc.find("input.jsD1PreviewUrl").value();
                 }
 
                 QString downloadLink(const QString & refresh_page) {
                     if (refresh_page.isEmpty()) return QString();
 
-                    Html::Document doc = Web::Manager::prepare() -> followedGet(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
+                    Html::Document doc = Web::Manager::prepare() -> getFollowed(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
                     return doc.find("a[href~'/download/']").link();
                 }
             public slots:
                 inline void openTab() { ISource::openTab(userID()); }
-                bool connectUser(const ConnectionType & /*conType*/ = connection_restore) {
-                    if (isConnected()) return true;
-
-//                    bool res = connectApi();
-//                    res &= connectSite();
-
-//                    return res;
-
-                    return false;
-                }
                 inline void disconnectUser() {
                     clearParams();
                     initButton();
                 }
 
             protected:
-//                bool connectApi() {
+                bool connectApi() {
 ////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
 ////                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
 ////                    if (res)
@@ -87,18 +83,16 @@ namespace Core {
 ////                    if (res)
 ////                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
 
-//                        APPEND_FLAG(flags, sf_auth_api_done);
-
 //                    return res;
 
-//                    return true;
-//                }
+                    return false;
+                }
 
-//                bool connectSite() {
-//                    APPEND_FLAG(flags, sf_auth_site_done);
+                bool connectSite() {
+//                    Html::Document html = Manager::prepare() -> getFollowed();
 
-//                    return false;
-//                }
+                    return false;
+                }
 
                 inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 

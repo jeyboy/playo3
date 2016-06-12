@@ -117,9 +117,9 @@ namespace Core {
                 uri.setQuery(new_query);
 
                 if (http_method == QStringLiteral("GET")) {
-                    resp = Manager::prepare() -> followedGet(uri, headers);
+                    resp = Manager::prepare() -> getFollowed(uri, headers);
                 } else {
-                    resp = Manager::prepare() -> followedForm(uri, new_query.toString().toUtf8(), headers);
+                    resp = Manager::prepare() -> formFollowed(uri, new_query.toString().toUtf8(), headers);
                 }
 
                 QUrlQuery result_params = resp -> toQuery();
@@ -145,7 +145,7 @@ namespace Core {
                 uri.setQuery(query);
                 qDebug() << "ACCESS URI" << uri;
 
-                Response * resp = Manager::prepare() -> followedForm(uri);
+                Response * resp = Manager::prepare() -> formFollowed(uri);
                 Html::Document doc = resp -> toHtml();
 //                doc.output();
 

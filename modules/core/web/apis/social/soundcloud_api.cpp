@@ -102,7 +102,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
 
     QUrl auth_url = authUrl();
     QUrl form_url = auth_url;
-    Response * resp = Manager::prepare() -> followedGet(form_url);
+    Response * resp = Manager::prepare() -> getFollowed(form_url);
     QHash<QString, QString> vals;
 
     while(true) {
@@ -145,7 +145,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
 
         QHash<QString, QString> headers;
         headers.insert(tkn_referer, form_url.toString());
-        resp = Manager::prepare() -> followedForm(form_url, headers);
+        resp = Manager::prepare() -> formFollowed(form_url, headers);
 
         QUrlQuery query(resp->toUrl(false).query());
 
@@ -155,11 +155,11 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
             resp -> deleteLater();
             return false;
         } else if (query.hasQueryItem(tkn_code)) {
-            QJsonObject doc = Web::Manager::prepare() -> followedForm(authTokenUrl(), authTokenUrlParams(query.queryItemValue(tkn_code))) -> toJson();
+            QJsonObject doc = Web::Manager::prepare() -> formFollowed(authTokenUrl(), authTokenUrlParams(query.queryItemValue(tkn_code))) -> toJson();
 
             if (doc.contains(tkn_access_token)) {
                 QString newToken = doc.value(tkn_access_token).toString();
-                doc = Web::Manager::prepare() -> getJson(confirmAuthUrl(newToken));
+                doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
 
                 setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
                 emit authorized();

@@ -30,7 +30,7 @@ namespace Core {
             public:
                 QUrl takeNewImageUrl(const QString & key, QString & challenge, const QString & lang = QStringLiteral("en"), const QString & content_type = QStringLiteral("image")) {
                     QUrl rel_url = buildReloadUrl(key, challenge, lang, content_type);
-                    QString response = Manager::prepare() -> followedGet(rel_url) -> toText();
+                    QString response = Manager::prepare() -> getFollowed(rel_url) -> toText();
                     challenge = response.section(QStringLiteral("finish_reload('"), -1).section('\'', 0, 0);
                     return buildPictUrl(challenge);
                 }
@@ -38,7 +38,7 @@ namespace Core {
                 QUrl takeImageUrl(const QString & key, QString & challenge) {
                     QString key_str = key.section(QStringLiteral("?k="), -1);
                     QUrl challenge_url = buildChallengeUrl(key_str);
-                    QString challenge_manifest = Manager::prepare() -> followedGet(challenge_url) -> toText();
+                    QString challenge_manifest = Manager::prepare() -> getFollowed(challenge_url) -> toText();
                     challenge = challenge_manifest.section(QStringLiteral("challenge : '"), -1).section('\'', 0, 0);
                     return takeNewImageUrl(key_str, challenge);
 //                    return buildPictUrl(challenge);

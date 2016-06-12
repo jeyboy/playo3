@@ -59,7 +59,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
     QUrl form_url = authUrl();
 
     while(true) {
-        Response * resp = Manager::prepare() -> followedGet(form_url);
+        Response * resp = Manager::prepare() -> getFollowed(form_url);
         QString err;
         Html::Document html = resp -> toHtml(false);
 
@@ -92,7 +92,7 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
             }
 
             form_url = form -> serializeFormToUrl(vals);
-            resp = Manager::prepare() -> followedForm(form_url);
+            resp = Manager::prepare() -> formFollowed(form_url);
         }
 
         form_url = resp -> toUrl();

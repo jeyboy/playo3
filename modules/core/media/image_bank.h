@@ -69,7 +69,7 @@ public:
 
             if (!orders.contains(url)) {
                 orders.insert(url, true);
-                Core::Web::Manager::prepare() -> followedGetAsync(QUrl(url), Func(this, SLOT(pixmapDownloaded(Response*,void*))));
+                Core::Web::Manager::prepare() -> getFollowedAsync(QUrl(url), Func(this, SLOT(pixmapDownloaded(Response*,void*))));
             }
         }
     }
@@ -94,7 +94,7 @@ public:
 
                 if (!orders.contains(*url)) {
                     orders.insert(*url, true);
-                    Core::Web::Manager::prepare() -> followedGetAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
+                    Core::Web::Manager::prepare() -> getFollowedAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
                 }
             }
         }
