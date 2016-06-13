@@ -13,8 +13,8 @@ SearchDialog::SearchDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::Se
 
     newLayout -> addWidget(err_output, 0, 0, 1, 2);
     newLayout -> addWidget(configurator, 1, 0, 1, 2);
-    newLayout -> addWidget(ui -> cancelButton, 1, 0);
-    newLayout -> addWidget(ui -> acceptButton, 1, 1);
+    newLayout -> addWidget(ui -> cancelButton, 2, 0);
+    newLayout -> addWidget(ui -> acceptButton, 2, 1);
     setLayout(newLayout);
 
     setMinimumSize(480, 480);

@@ -4,6 +4,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/auth/oauth.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/misc/file_utils/extensions.h"
 
 #include "fourshared_request_api.h"
 
@@ -89,7 +90,58 @@ namespace Core {
                 }
 
                 bool connectSite() {
-//                    Html::Document html = Manager::prepare() -> getFollowed();
+//                    Html::Document html = Manager::prepare() -> getFollowed(url_site_base);
+
+//                    <form name="loginForm" autocomplete="on" method="post" action="https://www.4shared.com/web/login" class="loginform jsLoginForm">
+
+//                          <div class="i round4 headLoginDropdown">
+//                            <div class="dropdownTopArrow"></div>
+//                            <div style="display:none;" id="iloginRejectReason" class="round1 alert jsErrorPlace"></div>
+//                            <div class="wr">
+//                              <div data-element="h10_1" class="input-light-small round4 marginT5 gaClick">
+//                                <input type="text" autocomplete="on" placeholder="Логин" name="login" class="jsInputLogin">
+//                              </div>
+//                              <div data-element="h10.2" class="input-light-small round4 marginT5 gaClick">
+//                                <input type="password" autocomplete="on" placeholder="Пароль" name="password" class="jsInputPassword">
+//                              </div>
+
+//                              <input type="hidden" value="http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp" name="returnTo">
+
+//                              <div style="display: none; padding: 3px 0px 0 0 ; text-align:right" class="capsWarning small red">Caps Lock включён</div>
+
+//                              <div class="rememberMeBlock f12 paddingT10 floatLeft">
+//                                <input type="checkbox" class="absmid" checked="checked" id="remember" name="remember">
+//                                <input type="hidden" name="_remember" value="on">
+//                                <label class="absmid" for="remember">Запомнить меня</label>
+//                              </div>
+
+//                              <div class="paddingT10 floatRight">
+//                                <input type="submit" style="width: 100%;" data-element="h11" class="submit-light round4 gaClick" value="Вход">
+//                              </div>
+
+//                              <div class="clear"></div>
+
+//                              <div class="socialLogin f11">
+//                                <div class="ii lucida">
+//                                  <a data-element="h10.3" class="gaClick remindPassLink marginT5" href="/remindPassword.jsp">Забыли пароль?</a>
+
+//                                  <div class="socialButtons">
+//                                    <div class="floatLeft langCorrection">
+//                                      Войти с помощью :
+//                                    </div>
+//                                    <div class="floatRight">
+//                                      <a data-element="h12" class="tw floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/twitter?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
+//                                      <a data-element="h13" class="fb floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/facebook?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
+//                                      <a data-element="h14" class="go floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/google?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
+//                                      </div>
+//                                    <div class="clear"></div>
+//                                  </div>
+//                                </div>
+//                              </div>
+
+//                            </div>
+//                          </div>
+//                        </form>
 
                     return false;
                 }
@@ -97,8 +149,48 @@ namespace Core {
                 inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
-                    int i = 0;
-                    //TODO: realize me
+                    Html::Document doc = reply -> toHtml(removeReply);
+
+                    bool result = false;
+
+                    switch(arg -> post_proc) {
+                        case proc_tracks1: {
+                            Html::Set tracks = doc.find(".listView.res_table tr[valign='top']");;
+
+                            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                                QJsonObject track_obj;
+
+                                Html::Tag * name_tag = (*track) -> findFirst(".fname a");
+
+                                QString name = name_tag -> text().trimmed(), ext;
+                                Extensions::obj().extractExtension(name, ext);
+
+                                Html::Tag * img = (*track) -> findFirst(".playThumb img");
+                                QString js = img -> value(QStringLiteral("onclick"));
+                                int url_index = js.indexOf(QStringLiteral("'http")) + 1;
+
+                                if (url_index != -1) {
+                                    int end_url_index = js.indexOf(QChar('\''), url_index);
+                                    track_obj.insert(tkn_grab_url, js.mid(url_index, end_url_index - url_index));
+                                }
+
+
+//                                track_obj.insert(tkn_grab_album, album_and_year.first());
+//                                track_obj.insert(tkn_grab_year, album_and_year.last());
+                                track_obj.insert(tkn_grab_refresh, name_tag -> link());
+//                                track_obj.insert(tkn_skip_info, true);
+                                track_obj.insert(tkn_grab_title, name);
+
+                                arg -> append(track_obj, track + 1 == tracks.end());
+                            }
+
+                            result = !tracks.isEmpty();
+                        }
+
+                        default: ;
+                    }
+
+                    return result;
                 }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
