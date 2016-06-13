@@ -9,7 +9,7 @@
 //#include "modules/core/misc/file_utils/extensions.h"
 //#include "modules/core/media/genres/music_genres.h"
 
-#define FOURSHARED_PAGES_LIMIT 25
+#define FOURSHARED_PAGES_LIMIT 10
 #define FOURSHARED_ITEMS_LIMIT 1000
 #define FOURSHARED_PER_REQUEST_LIMIT 100
 
@@ -19,9 +19,8 @@ namespace Core {
             class RequestApi : public TeuAuth, public IApi {
             protected:
                 enum CategoryTypes {
-                    music = 1, video = 2, photo = 3, archive = 4,
-                    book = 5,  program = 6, web = 7, mobile = 8,
-                    android = 10
+                    music = 1, video = 2, photo = 3, archive = 4, book = 5,
+                    program = 6, web = 7, mobile = 8, android = 10
                 };
 
                 inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, tkn_category, (int)cType); }
@@ -82,7 +81,7 @@ namespace Core {
                         return pRequest(
                             audioSearchUrl(),
                             call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -92,7 +91,7 @@ namespace Core {
                         return pRequest(
                             videoSearchUrl(),
                             call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -115,7 +114,7 @@ namespace Core {
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                             call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_tracks1
                         );
@@ -124,7 +123,7 @@ namespace Core {
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                             call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_video1
                         );
@@ -139,7 +138,7 @@ namespace Core {
                         return pRequest(
                             audioSearchUrl(limits.predicate),
                             call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -149,7 +148,7 @@ namespace Core {
                         return pRequest(
                             videoSearchUrl(limits.predicate),
                             call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit),
+                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_json_extract,
                             QStringList() << tkn_files
@@ -157,12 +156,6 @@ namespace Core {
 
 
                     return arr;
-
-//                    QJsonArray res = lQuery(
-//                        audioSearchUrl(predicate),
-//                        QueryRules(files_token_key, requestLimit(), qMin(limitations.total_limit, FOURSHARED_OFFSET_LIMIT)),
-//                        none
-//                    );
                 }
 
                 QJsonArray searchProcNoAuth(const SearchLimit & limits) {
@@ -172,7 +165,7 @@ namespace Core {
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_tracks1
                         );
@@ -181,7 +174,7 @@ namespace Core {
                         return pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit),
+                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
                             &arr,
                             proc_video1
                         );

@@ -174,11 +174,8 @@ namespace Core {
                                     track_obj.insert(tkn_grab_url, js.mid(url_index, end_url_index - url_index));
                                 }
 
-
-//                                track_obj.insert(tkn_grab_album, album_and_year.first());
-//                                track_obj.insert(tkn_grab_year, album_and_year.last());
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
-//                                track_obj.insert(tkn_skip_info, true);
+                                track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);
 
                                 arg -> append(track_obj, track + 1 == tracks.end());
