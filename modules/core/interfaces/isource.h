@@ -8,14 +8,21 @@
 #include "modules/core/data_sub_types.h"
 
 #define UID_HEAD QStringLiteral("@")
-#define SOURCE_FLAGS_JSON QStringLiteral("flags")
+
+#define SOURCE_API_AUTH_JSON QStringLiteral("api_auth")
+#define SOURCE_SITE_AUTH_JSON QStringLiteral("site_auth")
+
+#define SOURCE_API_EXPIRED_AT_JSON QStringLiteral("_aa")
+#define SOURCE_API_TOKEN_JSON QStringLiteral("_at")
+#define SOURCE_API_USER_ID_JSON QStringLiteral("_au")
+
+#define SOURCE_SITE_TOKEN_JSON QStringLiteral("_st")
+#define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
+
 
 #define HAS_FLAG(flags, flag) (flags & flag) == flag;
 #define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag);
 #define REJECT_FLAG(flags, flag) flags &= (~(flag));
-
-#define SOURCE_ATTR_API_AUTH QStringLiteral("api_auth")
-#define SOURCE_ATTR_SITE_AUTH QStringLiteral("site_auth")
 
 namespace Core {
     enum ConnectionType : int {
@@ -57,7 +64,7 @@ namespace Core {
 
     class ISource {
     public:
-        ISource() : button(0), flags(defaultFlags()) {}
+        ISource() : button(0) {}
 
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
@@ -91,12 +98,13 @@ namespace Core {
                    !site_flag_permit || site_flag_permit == siteConnected();
         }
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
-        inline bool apiConnected()          { return attrs.value(SOURCE_ATTR_API_AUTH, false); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
-        inline bool siteConnected()         { return attrs.value(SOURCE_ATTR_SITE_AUTH, false); }
-        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
+//        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
 
-        inline bool isConnected() { return apiConnected() || siteConnected(); }
+        inline bool isConnected()           { return apiConnected() || siteConnected(); }
+        inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false); }
+        inline bool siteConnected()         { return attrs.value(SOURCE_SITE_AUTH_JSON, false); }
+
         bool connectUser(const ConnectionType & conType = connection_restore) {
             bool res = true;
 
@@ -105,12 +113,12 @@ namespace Core {
             } else {
                 if (!apiConnected() && hasApiConnection()) {
                     res &= connectUserApi();
-                    if (res) attrs[SOURCE_ATTR_API_AUTH] = true;
+                    if (res) attrs[SOURCE_API_AUTH_JSON] = true;
                 }
 
                 if (!siteConnected() && hasSiteConnection()) {
                     res &= connectUserSite();
-                    if (res) attrs[SOURCE_ATTR_SITE_AUTH] = true;
+                    if (res) attrs[SOURCE_SITE_AUTH_JSON] = true;
                 }
 
                 if (res) initButton();
@@ -121,23 +129,25 @@ namespace Core {
         virtual bool restoreUserConnection() { return false; }
         virtual bool connectUserApi() { return false; }
         virtual bool connectUserSite() { return false; }
-        virtual inline void disconnectUser() { }
+        inline void disconnectUser() {
+            attrs.remove(SOURCE_API_AUTH_JSON); attrs.remove(SOURCE_SITE_AUTH_JSON);
+            attrs.remove(SOURCE_API_EXPIRED_AT_JSON); attrs.remove(SOURCE_API_TOKEN_JSON);
+            attrs.remove(SOURCE_API_EXPIRED_AT_JSON); attrs.remove(SOURCE_API_TOKEN_JSON);
+            attrs.remove(SOURCE_API_USER_ID_JSON); attrs.remove(SOURCE_SITE_TOKEN_JSON);
+            attrs.remove(SOURCE_SITE_EXPIRED_AT_JSON);
+
+//            Web::Manager::removeCookies(name());
+
+            initButton();
+        }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
-        virtual void toJson(QJsonObject & hash) {
-            if (flags != sf_none && flags != defaultFlags())
-                hash.insert(SOURCE_FLAGS_JSON, flags);
-
-            qDebug() << name() << "STUB TO JSON";
+        void toJson(QJsonObject & hash) {
+            hash.insert(name(), QJsonObject::fromVariantHash(attrs));
         }
-        virtual void fromJson(const QJsonObject & hash) {
-            flags = defaultFlags();
-
-            if (hash.contains(SOURCE_FLAGS_JSON))
-                flags = (SourceFlags)(flags | hash.value(SOURCE_FLAGS_JSON).toInt());
-
-            qDebug() << name() << "STUB FROM JSON";
+        void fromJson(const QJsonObject & hash) {
+            attrs = hash.value(name()).toObject().toVariantHash();
         }
 
         virtual inline bool isRefreshable() { return true; }

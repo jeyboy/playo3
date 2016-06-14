@@ -15,7 +15,7 @@ namespace Core {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
-                inline Api() { }
+                inline Api() { Manager::addCookie(val_lang_cookie); }
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_fourshared; }
@@ -61,10 +61,7 @@ namespace Core {
                 }
             public slots:
                 inline void openTab() { ISource::openTab(userID()); }
-                inline void disconnectUser() {
-                    clearParams();
-                    initButton();
-                }
+                inline void disconnectUser() { ISource::disconnectUser(); }
 
             protected:
                 bool connectUserApi() {

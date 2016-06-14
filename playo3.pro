@@ -173,7 +173,6 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_api.h \
     modules/core/web/apis/storage/fourshared_api_keys.h \
     modules/core/web/apis/storage/fourshared_request_api.h \
-    modules/core/web/interfaces/auth/teu_auth.h \
     modules/core/web/utils/html_parser.h \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
@@ -347,7 +346,6 @@ SOURCES += \
     modules/core/web/apis/social/vk_api.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
-    modules/core/web/interfaces/auth/teu_auth.cpp \
     modules/core/web/utils/html_parser.cpp \
     modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \

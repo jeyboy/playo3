@@ -4,22 +4,6 @@
 
 using namespace Core::Web::Fourshared;
 
-void Api::fromJson(const QJsonObject & hash) {
-    QJsonObject obj = hash.value(name()).toObject();
-    ISource::fromJson(obj);
-    TeuAuth::fromJson(obj);
-
-    Manager::addCookie(val_lang_cookie);
-}
-void Api::toJson(QJsonObject & hash) {
-    QJsonObject root;
-
-    ISource::toJson(root);
-    TeuAuth::toJson(root);
-
-    hash.insert(name(), root);
-}
-
 QToolButton * Api::initButton(QWidget * parent) {
     if (button == 0) {
         if (!parent) {
