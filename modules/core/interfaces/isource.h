@@ -71,6 +71,7 @@ namespace Core {
 
         inline QString lastError() const { return error; }
         virtual inline SourceFlags defaultFlags() { return sf_none; }
+        inline QString userID() const { return attrs[SOURCE_API_USER_ID_JSON].toString(); }
 
         inline bool isPermitted(const PermitFlags & perm_flag = pf_search) {
             SourceFlags api_flag, site_flag;
@@ -91,6 +92,7 @@ namespace Core {
                 default: return true;
             }
 
+            SourceFlags flags = defaultFlags();
             bool api_flag_permit = HAS_FLAG(flags, api_flag);
             bool site_flag_permit = HAS_FLAG(flags, site_flag);
 
@@ -102,8 +104,8 @@ namespace Core {
 //        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
 
         inline bool isConnected()           { return apiConnected() || siteConnected(); }
-        inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false); }
-        inline bool siteConnected()         { return attrs.value(SOURCE_SITE_AUTH_JSON, false); }
+        inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false).toBool(); }
+        inline bool siteConnected()         { return attrs.value(SOURCE_SITE_AUTH_JSON, false).toBool(); }
 
         bool connectUser(const ConnectionType & conType = connection_restore) {
             bool res = true;
@@ -138,17 +140,28 @@ namespace Core {
 
 //            Web::Manager::removeCookies(name());
 
+            clearAdditionals();
             initButton();
         }
+        virtual void clearAdditionals() {}
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
         void toJson(QJsonObject & hash) {
-            hash.insert(name(), QJsonObject::fromVariantHash(attrs));
+            QJsonObject root;
+            root.insert(QStringLiteral("attrs"), QJsonObject::fromVariantHash(attrs));
+            saveAdditionals(root);
+
+            hash.insert(name(), root);
         }
+        virtual void saveAdditionals(QJsonObject & /*obj*/) {}
         void fromJson(const QJsonObject & hash) {
-            attrs = hash.value(name()).toObject().toVariantHash();
+            QJsonObject root = hash.value(name()).toObject();
+
+            attrs = root.value(QStringLiteral("attrs")).toObject().toVariantHash();
+            loadAdditionals(root);
         }
+        virtual void loadAdditionals(QJsonObject & /*obj*/) {}
 
         virtual inline bool isRefreshable() { return true; }
         virtual inline QString refresh(const QString & refresh_page) {

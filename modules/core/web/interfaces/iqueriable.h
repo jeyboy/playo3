@@ -147,7 +147,7 @@ namespace Core {
 
             // for json
             // extract status and update request url if required
-            virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return false; }
+            virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
             virtual bool endReached(QJsonObject & /*response*/, QueriableArg * /*arg*/) { return false; }
 
             // for html

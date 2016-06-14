@@ -18,20 +18,6 @@ QString Api::authUrl() {
     return url.toString();
 }
 
-void Api::fromJson(const QJsonObject & hash) {
-    QJsonObject obj = hash.value(name()).toObject();
-    TeuAuth::fromJson(obj);
-    Sociable::fromJson(obj);
-}
-void Api::toJson(QJsonObject & hash) {
-    QJsonObject root;
-
-    TeuAuth::toJson(root);
-    Sociable::toJson(root);
-
-    hash.insert(name(), root);
-}
-
 //////////////////////////////////////////////////////////
 /// COMMON
 //////////////////////////////////////////////////////////
@@ -97,9 +83,7 @@ QToolButton * Api::initButton(QWidget * parent) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connectUser(const ConnectionType & /*conType*/) {
-    if (isConnected()) return true;
-
+bool Api::connectUserApi() {
     QUrl auth_url = authUrl();
     QUrl form_url = auth_url;
     Response * resp = Manager::prepare() -> getFollowed(form_url);
@@ -109,14 +93,12 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
         QString err;
         Html::Document html = resp -> toHtml();
 
-        Html::Set forms = html.find("form.authorize-token");
+        Html::Tag * form = html.findFirst("form.authorize-token");
 
-        if (forms.isEmpty()) {
+        if (!form) {
             Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
             return false;
         }
-
-        Html::Tag * form = forms.first();
 
         if (form -> has("input[name='password']")) { // if user not authorized
             err = html.find(".warning").text();
@@ -162,8 +144,6 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
                 doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
 
                 setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
-                emit authorized();
-                initButton();
                 resp -> deleteLater();
                 return true;
             }

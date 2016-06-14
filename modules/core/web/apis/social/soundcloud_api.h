@@ -24,11 +24,8 @@ namespace Core {
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) { return QUrlQuery(tkn_client_id % val_id_tkn); }
                 QString authUrl();
 
-                void fromJson(const QJsonObject & hash);
-                void toJson(QJsonObject & hash);
-
-                inline bool connectionRequired() { return true; }
-                inline bool isConnected() { return !token().isEmpty(); }
+                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
+                void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
 
                 void getGroupInfo(QString uid, QJsonObject & object);
                 void getUserInfo(QString & uid, QJsonObject & object);
@@ -47,12 +44,11 @@ namespace Core {
 //                inline void openRecomendations() { ISource::openRecomendations(userID()); }
                 inline void openRelationTab() { ISource::openRelationTab(this); }
 
-                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
-                inline void disconnectUser() {
-                    clearParams();
+                bool connectUserApi();
+//                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
+                void clearAdditionals() {
                     clearFriends();
                     clearGroups();
-                    initButton();
                 }
 
             protected:

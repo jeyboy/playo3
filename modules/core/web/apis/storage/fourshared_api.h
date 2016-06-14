@@ -29,9 +29,6 @@ namespace Core {
                     );
                 }
 
-                void fromJson(const QJsonObject & hash);
-                void toJson(QJsonObject & hash);
-
                 QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonArray popular(const SearchLimit & limits) {
@@ -107,57 +104,6 @@ namespace Core {
                         if (!form) return true;
                     }
 
-//                    <form name="loginForm" autocomplete="on" method="post" action="https://www.4shared.com/web/login" class="loginform jsLoginForm">
-
-//                          <div class="i round4 headLoginDropdown">
-//                            <div class="dropdownTopArrow"></div>
-//                            <div style="display:none;" id="iloginRejectReason" class="round1 alert jsErrorPlace"></div>
-//                            <div class="wr">
-//                              <div data-element="h10_1" class="input-light-small round4 marginT5 gaClick">
-//                                <input type="text" autocomplete="on" placeholder="Логин" name="login" class="jsInputLogin">
-//                              </div>
-//                              <div data-element="h10.2" class="input-light-small round4 marginT5 gaClick">
-//                                <input type="password" autocomplete="on" placeholder="Пароль" name="password" class="jsInputPassword">
-//                              </div>
-
-//                              <input type="hidden" value="http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp" name="returnTo">
-
-//                              <div style="display: none; padding: 3px 0px 0 0 ; text-align:right" class="capsWarning small red">Caps Lock включён</div>
-
-//                              <div class="rememberMeBlock f12 paddingT10 floatLeft">
-//                                <input type="checkbox" class="absmid" checked="checked" id="remember" name="remember">
-//                                <input type="hidden" name="_remember" value="on">
-//                                <label class="absmid" for="remember">Запомнить меня</label>
-//                              </div>
-
-//                              <div class="paddingT10 floatRight">
-//                                <input type="submit" style="width: 100%;" data-element="h11" class="submit-light round4 gaClick" value="Вход">
-//                              </div>
-
-//                              <div class="clear"></div>
-
-//                              <div class="socialLogin f11">
-//                                <div class="ii lucida">
-//                                  <a data-element="h10.3" class="gaClick remindPassLink marginT5" href="/remindPassword.jsp">Забыли пароль?</a>
-
-//                                  <div class="socialButtons">
-//                                    <div class="floatLeft langCorrection">
-//                                      Войти с помощью :
-//                                    </div>
-//                                    <div class="floatRight">
-//                                      <a data-element="h12" class="tw floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/twitter?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
-//                                      <a data-element="h13" class="fb floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/facebook?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
-//                                      <a data-element="h14" class="go floatLeft sprite1 gaClick" href="http://www.4shared.com/servlet/signin/google?fp=http%3A%2F%2Fwww.4shared.com%2Faccount%2Fhome.jsp"></a>
-//                                      </div>
-//                                    <div class="clear"></div>
-//                                  </div>
-//                                </div>
-//                              </div>
-
-//                            </div>
-//                          </div>
-//                        </form>
-
                     return false;
                 }
 
@@ -182,12 +128,7 @@ namespace Core {
 
                                 Html::Tag * img = (*track) -> findFirst(".playThumb img");
                                 QString js = img -> value(QStringLiteral("onclick"));
-                                int url_index = js.indexOf(QStringLiteral("'http")) + 1;
-
-                                if (url_index != -1) {
-                                    int end_url_index = js.indexOf(QChar('\''), url_index);
-                                    track_obj.insert(tkn_grab_url, js.mid(url_index, end_url_index - url_index));
-                                }
+                                Info::extract(js, QStringLiteral("'http"), QStringLiteral("'"), track_obj[tkn_grab_url], 1);
 
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
                                 track_obj.insert(tkn_skip_info, true);
@@ -206,7 +147,6 @@ namespace Core {
                 }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
-                inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; } // stub
             };
         }
     }

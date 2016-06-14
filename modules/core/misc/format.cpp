@@ -3,6 +3,17 @@
 
 QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
 
+bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res, int offset) {
+    int part_index = info.indexOf(start_predicate) + offset;
+
+    if (part_index != -1) {
+        int end_part_index = js.indexOf(end_predicate, part_index);
+        res = info.mid(part_index, end_part_index - part_index);
+        return true;
+    }
+    else return false;
+}
+
 QString Info::str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount) {
     return str(size, ext) % " :: " % channelsCount % " ch :: " % bitrate % " kbps :: " % freq % " kHz";
 }

@@ -5,7 +5,6 @@
 
 #include "modules/core/interfaces/ishareable.h"
 #include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "vk_api_keys.h"
 
 namespace Core {
