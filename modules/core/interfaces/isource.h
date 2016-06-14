@@ -14,6 +14,9 @@
 #define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag);
 #define REJECT_FLAG(flags, flag) flags &= (~(flag));
 
+#define SOURCE_ATTR_API_AUTH QStringLiteral("api_auth")
+#define SOURCE_ATTR_SITE_AUTH QStringLiteral("site_auth")
+
 namespace Core {
     enum ConnectionType : int {
         connection_restore = 1,
@@ -26,9 +29,7 @@ namespace Core {
         sf_prefer_api = 1,
 
         sf_auth_api_has = 2,
-        sf_auth_api_done = 4,
         sf_auth_site_has = 8,
-        sf_auth_site_done = 16,
 
         sf_site_search_auth_only = 32,
         sf_site_media_content_auth_only = 64,
@@ -55,10 +56,6 @@ namespace Core {
     namespace Web { class Sociable; }
 
     class ISource {
-        inline bool isAuthedFor(const SourceFlags & flag) {
-            bool manda_con = HAS_FLAG(flags, flag);
-            return !manda_con || (manda_con && (apiConnected() || siteConnected()));
-        }
     public:
         ISource() : button(0), flags(defaultFlags()) {}
 
@@ -93,11 +90,11 @@ namespace Core {
             return !api_flag_permit || api_flag_permit == apiConnected() ||
                    !site_flag_permit || site_flag_permit == siteConnected();
         }
-        inline bool hasApiConnection()      { return HAS_FLAG(flags, sf_auth_api_has); }
-        inline bool apiConnected()          { return HAS_FLAG(flags, sf_auth_api_done); }
-        inline bool hasSiteConnection()     { return HAS_FLAG(flags, sf_auth_site_has); }
-        inline bool siteConnected()         { return HAS_FLAG(flags, sf_auth_site_done); }
-        inline bool preferApi()             { return HAS_FLAG(flags, sf_prefer_api); }
+        inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
+        inline bool apiConnected()          { return attrs.value(SOURCE_ATTR_API_AUTH, false); }
+        inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
+        inline bool siteConnected()         { return attrs.value(SOURCE_ATTR_SITE_AUTH, false); }
+        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
 
         inline bool isConnected() { return apiConnected() || siteConnected(); }
         bool connectUser(const ConnectionType & conType = connection_restore) {
@@ -107,34 +104,38 @@ namespace Core {
                 res &= restoreUserConnection();
             } else {
                 if (!apiConnected() && hasApiConnection()) {
-                    res &= connectApi();
-                    if (res) APPEND_FLAG(flags, sf_auth_api_done);
+                    res &= connectUserApi();
+                    if (res) attrs[SOURCE_ATTR_API_AUTH] = true;
                 }
 
                 if (!siteConnected() && hasSiteConnection()) {
-                    res &= connectSite();
-                    if (res) APPEND_FLAG(flags, sf_auth_site_done);
+                    res &= connectUserSite();
+                    if (res) attrs[SOURCE_ATTR_SITE_AUTH] = true;
                 }
+
+                if (res) initButton();
             }
 
             return res;
         }
         virtual bool restoreUserConnection() { return false; }
-        virtual bool connectApi() { return false; }
-        virtual bool connectSite() { return false; }
+        virtual bool connectUserApi() { return false; }
+        virtual bool connectUserSite() { return false; }
         virtual inline void disconnectUser() { }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
 
         virtual void toJson(QJsonObject & hash) {
-            if (flags != defaultFlags())
+            if (flags != sf_none && flags != defaultFlags())
                 hash.insert(SOURCE_FLAGS_JSON, flags);
 
             qDebug() << name() << "STUB TO JSON";
         }
         virtual void fromJson(const QJsonObject & hash) {
+            flags = defaultFlags();
+
             if (hash.contains(SOURCE_FLAGS_JSON))
-                flags = (SourceFlags)hash.value(SOURCE_FLAGS_JSON).toInt();
+                flags = (SourceFlags)(flags | hash.value(SOURCE_FLAGS_JSON).toInt());
 
             qDebug() << name() << "STUB FROM JSON";
         }
@@ -152,7 +153,7 @@ namespace Core {
         void openRelationTab(Web::Sociable * currApi);
     protected:
         QToolButton * button;
-        SourceFlags flags;
+        QVariantHash attrs;
 
         virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> getFollowed(QUrl(refresh_page)); }
         virtual QString refreshProc(Web::Response * response) { delete response; return QString(); }

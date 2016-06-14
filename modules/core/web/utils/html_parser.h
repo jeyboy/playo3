@@ -77,6 +77,11 @@ namespace Core {
                     Selector selector(predicate);
                     return find(&selector, findFirst);
                 }
+                inline Tag * findFirst(const char * predicate) {
+                    Set set = find(predicate, true);
+                    return set.isEmpty() ? 0 : set.first();
+                }
+
                 QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
                 inline Set & operator <<(const Set & l) { *this += l; return *this; }
             private:
@@ -236,10 +241,15 @@ namespace Core {
                     return name.contains(tag_xml, Qt::CaseInsensitive);
                 }
                 inline bool has(const char * predicate) { return root -> has(predicate); }
-                inline Set find(const Selector * selector) { return root -> children().find(selector); }
+                inline Set find(const Selector * selector, bool findFirst = false) { return root -> children().find(selector, findFirst); }
                 inline Set find(const char * predicate) {
                     Selector selector(predicate);
                     return find(&selector);
+                }
+                inline Tag * findFirst(const char * predicate) {
+                    Selector selector(predicate);
+                    Set set = find(&selector, true);
+                    return set.isEmpty() ? 0 : set.first();
                 }
 
                 inline void output() { qDebug() << (*root); }

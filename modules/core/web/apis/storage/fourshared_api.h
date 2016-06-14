@@ -24,7 +24,7 @@ namespace Core {
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_auth_api_has | sf_auth_site_has | sf_site_user_content_auth_only |
+                        /*sf_auth_api_has | */sf_auth_site_has | sf_site_user_content_auth_only |
                         sf_api_search_auth_only | sf_api_user_content_auth_only
                     );
                 }
@@ -32,7 +32,7 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-//                QToolButton * initButton(QWidget * parent = 0);
+                QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonArray popular(const SearchLimit & limits) {
                     if (!isPermitted(pf_media_content)) return QJsonArray();
@@ -67,7 +67,8 @@ namespace Core {
                 }
 
             protected:
-                bool connectApi() {
+                bool connectUserApi() {
+                    // INFO: эти ебанные пидорасы не могут полгода уже как починить свой oauth
 ////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
 ////                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
 ////                    if (res)
@@ -89,8 +90,25 @@ namespace Core {
                     return false;
                 }
 
-                bool connectSite() {
-//                    Html::Document html = Manager::prepare() -> getFollowed(url_site_base);
+                bool connectUserSite() {
+                    Html::Document html = Manager::prepare() -> getFollowed(url_site_base);
+
+                    Html::Tag * form = html.findFirst("form[name='loginForm']");
+                    if (!form) return false;
+                    QHash<QString, QString> vals;
+                    QString err;
+
+                    while(true) {
+                        if (!showingLogin(QStringLiteral("4shared auth"), vals[QStringLiteral("login")], vals[QStringLiteral("password")], err))
+                            return false;
+
+                        QUrl form_url = form -> serializeFormToUrl(vals);
+                        Html::Document doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
+
+                        form = doc.findFirst("form[name='loginForm']");
+
+                        if (!form) return true;
+                    }
 
 //                    <form name="loginForm" autocomplete="on" method="post" action="https://www.4shared.com/web/login" class="loginform jsLoginForm">
 

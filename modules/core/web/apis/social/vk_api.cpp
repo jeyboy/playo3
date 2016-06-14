@@ -68,13 +68,12 @@ bool Api::connectUser(const ConnectionType & /*conType*/) {
             QHash<QString, QString> vals;
             err = html.find(".service_msg_warning").text();
 
-            Html::Set forms = html.find("form");
+            Html::Tag * form = html.findFirst("form");
 
-            if (forms.isEmpty()) {
+            if (!form) {
                 Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
                 return false;
             }
-            Html::Tag * form = forms.first();
 
             QString captcha_src;
             Html::Set captcha_set = form -> find("img#captcha");
