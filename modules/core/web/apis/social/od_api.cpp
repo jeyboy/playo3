@@ -3,27 +3,6 @@
 
 using namespace Core::Web::Od;
 
-void Api::fromJson(const QJsonObject & hash) {
-    QJsonObject obj = hash.value(name()).toObject();
-
-    TeuAuth::fromJson(obj);
-    Sociable::fromJson(obj);
-
-    Manager::loadCookies(obj);
-
-    if (!connectUser()) disconnectUser();
-}
-void Api::toJson(QJsonObject & hash) {
-    QJsonObject root;
-
-    TeuAuth::toJson(root);
-    Sociable::toJson(root);
-
-    Manager::saveCookies(root, QUrl(url_root));
-
-    hash.insert(name(), root);
-}
-
 QString Api::refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
     QJsonObject obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
     if (hasError(obj)) {
@@ -72,16 +51,10 @@ QToolButton * Api::initButton(QWidget * parent) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connectUser(const ConnectionType & conType) {
-    if (isConnected()) return true;
-
-    if (conType & connection_restore) return false;
-
+bool Api::connectUserSite() {
     bool auth_res = formConnection();
     if (auth_res) {
         setParams(grabSID(), userID(), additional());
-        initButton();
-        emit authorized();
     }
 
     return auth_res;

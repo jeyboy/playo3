@@ -3,13 +3,14 @@
 
 #include "od_api_misc.h"
 #include "modules/core/interfaces/ishareable.h"
+#include "modules/core/interfaces/isource.h"
 
 #define OD_LIMIT_PER_REQUEST 100
 
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
-            class RequestApi : public Misc, public IShareable {
+            class RequestApi : public ISource, public Misc, public IShareable {
             protected:
                 RequestApi() {}
 
@@ -41,7 +42,7 @@ namespace Core { // NOT FINISHED
                     return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));
                 }
 
-                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % additional()); }
+                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
 
                 inline QString audioUrl(const QString & func, const QUrlQuery & query = QUrlQuery()) {
                     QUrlQuery base_query = genDefaultParams();

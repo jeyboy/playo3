@@ -47,9 +47,9 @@ namespace Core {
                     }
 
                     inline void checkSecurity(Html::Document & doc) {
-                        Html::Set forms = doc.find("[id^'hook_Form'] form");
+                        Html::Tag * form = doc.findFirst("[id^'hook_Form'] form");
 
-                        if (!forms.isEmpty()) {
+                        if (!form) {
                             QList<FormInput> inputs;
                             inputs << FormInput::createStr(tkn_code, val_sms_code_title);
                             inputs << FormInput(val_resend_sms_title, forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
@@ -58,7 +58,7 @@ namespace Core {
                             if (actionDialog -> exec() == QDialog::Accepted) {
                                 QHash<QString, QString> attrs;
                                 attrs.insert(tkn_captcha, actionDialog -> getValue(tkn_code));
-                                QUrl url = QUrl(url_root).resolved(forms.first() -> serializeFormToUrl(attrs));
+                                QUrl url = QUrl(url_root).resolved(form -> serializeFormToUrl(attrs));
                                 QNetworkReply * reply = Manager::prepare() -> formFollowed(url, initHeaders());
                                 //TODO: check session
                                 reply -> deleteLater();

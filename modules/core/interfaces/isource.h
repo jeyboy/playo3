@@ -16,6 +16,7 @@
 #define SOURCE_API_TOKEN_JSON QStringLiteral("_at")
 #define SOURCE_API_USER_ID_JSON QStringLiteral("_au")
 
+#define SOURCE_SITE_HASH_JSON QStringLiteral("_sh")
 #define SOURCE_SITE_TOKEN_JSON QStringLiteral("_st")
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
 
@@ -74,7 +75,12 @@ namespace Core {
         virtual inline SourceFlags defaultFlags() { return sf_none; }
 
         inline QString userID() const { return attrs[SOURCE_API_USER_ID_JSON].toString(); }
-        inline QString token() const { return attrs[SOURCE_API_TOKEN_JSON].toString(); }
+        inline void setApiToken(const QString & token) { attrs[SOURCE_API_TOKEN_JSON] = token; }
+        inline QString apiToken() const { return attrs[SOURCE_API_TOKEN_JSON].toString(); }
+        inline void setSiteToken(const QString & token) { attrs[SOURCE_SITE_TOKEN_JSON] = token; }
+        inline QString siteToken() const { return attrs[SOURCE_SITE_TOKEN_JSON].toString(); }
+        inline void setSiteHash(const QString & token) { attrs[SOURCE_SITE_HASH_JSON] = token; }
+        inline QString siteHash() const { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
         bool isPermitted(const PermitFlags & perm_flag = pf_search);
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }

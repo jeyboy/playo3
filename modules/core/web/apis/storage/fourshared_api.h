@@ -56,10 +56,6 @@ namespace Core {
                     Html::Document doc = Web::Manager::prepare() -> getFollowed(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
                     return doc.find("a[href~'/download/']").link();
                 }
-            public slots:
-                inline void openTab() { ISource::openTab(userID()); }
-                inline void disconnectUser() { ISource::disconnectUser(); }
-
             protected:
                 bool connectUserApi() {
                     // INFO: эти ебанные пидорасы не могут полгода уже как починить свой oauth

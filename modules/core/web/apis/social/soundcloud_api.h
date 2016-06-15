@@ -39,10 +39,6 @@ namespace Core {
                 inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
 
                 QToolButton * initButton(QWidget * parent = 0);
-            public slots:
-                inline void openTab() { ISource::openTab(userID()); }
-//                inline void openRecomendations() { ISource::openRecomendations(userID()); }
-                inline void openRelationTab() { ISource::openRelationTab(this); }
 
                 bool connectUserApi();
 //                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
