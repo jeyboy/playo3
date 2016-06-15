@@ -2,7 +2,6 @@
 #define YANDEX_REQUEST_API
 
 #include "yandex_api_keys.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/web/interfaces/iapi.h"
 
 #define YANDEX_SEARCH_LIMIT 200
@@ -10,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class RequestApi : public TeuAuth, public IApi {
+            class RequestApi : public IApi {
             protected:
                 RequestApi() {} // uid should be in format track_id:album_id (25358347:2988319)
 

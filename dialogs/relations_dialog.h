@@ -4,6 +4,7 @@
 #include <qlistwidget.h>
 
 #include "base_dialog.h"
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
 namespace Ui { class RelationsDialog; }
@@ -18,7 +19,7 @@ class RelationsDialog : public BaseDialog {
 
     void prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list);
 public:
-    explicit RelationsDialog(Web::Sociable * currApi, QWidget * parent = 0);
+    explicit RelationsDialog(ISource * currApi, QWidget * parent = 0);
     ~RelationsDialog();
 
     inline QString getId() const { return uid; }

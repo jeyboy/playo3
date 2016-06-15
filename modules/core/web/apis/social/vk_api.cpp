@@ -4,20 +4,6 @@
 
 using namespace Core::Web::Vk;
 
-void Api::fromJson(const QJsonObject & hash) {
-    QJsonObject obj = hash.value(name()).toObject();
-    TeuAuth::fromJson(obj);
-    Sociable::fromJson(obj);
-}
-void Api::toJson(QJsonObject & hash) {
-    QJsonObject root;
-
-    TeuAuth::toJson(root);
-    Sociable::toJson(root);
-
-    hash.insert(name(), root);
-}
-
 QToolButton * Api::initButton(QWidget * parent) {
     if (button == 0) {
         if (!parent) {
@@ -53,9 +39,7 @@ QToolButton * Api::initButton(QWidget * parent) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connectUser(const ConnectionType & /*conType*/) {
-    if (isConnected()) return true;
-
+bool Api::connectUserApi() {
     QUrl form_url = authUrl();
 
     while(true) {

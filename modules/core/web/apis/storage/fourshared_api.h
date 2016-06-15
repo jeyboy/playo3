@@ -127,9 +127,10 @@ namespace Core {
                                 Extensions::obj().extractExtension(name, ext);
 
                                 Html::Tag * img = (*track) -> findFirst(".playThumb img");
-                                QString js = img -> value(QStringLiteral("onclick"));
-                                Info::extract(js, QStringLiteral("'http"), QStringLiteral("'"), track_obj[tkn_grab_url], 1);
+                                QString js = img -> value(QStringLiteral("onclick")), url;
+                                Info::extract(js, QStringLiteral("'http"), QStringLiteral("'"), url, 1);
 
+                                track_obj.insert(tkn_grab_url, url);
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
                                 track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);

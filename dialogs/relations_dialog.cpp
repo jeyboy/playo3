@@ -2,6 +2,7 @@
 #include "ui_relations_dialog.h"
 
 #include "modules/models/service/relations_delegate.h"
+#include "modules/core/web/web_apis.h"
 
 using namespace Core;
 using namespace Web;
@@ -20,8 +21,10 @@ void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkable
     list -> sortItems();
 }
 
-RelationsDialog::RelationsDialog(Sociable * currApi, QWidget * parent)
-    : BaseDialog(parent), ui(new Ui::RelationsDialog), api(currApi) {
+RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
+    : BaseDialog(parent), ui(new Ui::RelationsDialog) {
+
+    api = Web::Apis::sociable(currApi -> siteType());
 
     ui -> setupUi(this);
 

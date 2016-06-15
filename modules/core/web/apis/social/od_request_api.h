@@ -2,7 +2,6 @@
 #define OD_REQUEST_API
 
 #include "od_api_misc.h"
-#include "modules/core/web/interfaces/auth/teu_auth.h"
 #include "modules/core/interfaces/ishareable.h"
 
 #define OD_LIMIT_PER_REQUEST 100
@@ -10,7 +9,7 @@
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
-            class RequestApi : public Misc, public TeuAuth, public IShareable {
+            class RequestApi : public Misc, public IShareable {
             protected:
                 RequestApi() {}
 

@@ -21,6 +21,10 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_vk; }
 
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
+                }
+
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
                     QUrlQuery query = QUrlQuery();
 
@@ -31,11 +35,8 @@ namespace Core {
                     return query;
                 }
 
-                void fromJson(const QJsonObject & hash);
-                void toJson(QJsonObject & hash);
-
-                inline bool connectionRequired() { return true; }
-                inline bool isConnected() { return !token().isEmpty() && !userID().isEmpty(); }
+                void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
+                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
 
                 void userInfo(QString & uid, InfoType info_type, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, info_type, func);
@@ -91,18 +92,13 @@ namespace Core {
                     return linkables;
                 }
 
-            public slots:
-                inline void openTab() { ISource::openTab(userID()); }
-                inline void openRecomendations() { ISource::openRecomendations(userID()); }
-                inline void openRelationTab() { ISource::openRelationTab(this); }
-
-                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
-                inline void disconnectUser() {
-                    clearParams();
+                bool connectUserApi();
+                bool connectUserSite() { return false; } // TODO: write me
+                void clearAdditionals() {
                     clearFriends();
                     clearGroups();
-                    initButton();
                 }
+
             protected:
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
