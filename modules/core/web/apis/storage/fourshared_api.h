@@ -19,8 +19,9 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_fourshared; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
-                    return QUrlQuery(tkn_oauth_consumer % (token().isEmpty() ? val_token : token()));
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
+//                    QString token = ptype == qpt_json ? apiToken() : siteToken();
+                    return QUrlQuery(/*tkn_oauth_consumer % token*/);
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(

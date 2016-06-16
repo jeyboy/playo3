@@ -25,12 +25,13 @@ namespace Core {
                     return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
                 }
 
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
+                inline QUrlQuery genDefaultParams(const QueryParamsType & ptype = qpt_json) {
                     QUrlQuery query = QUrlQuery();
 
-                    query.addQueryItem(tkn_version, val_version);
-                    query.addQueryItem(tkn_access_token, token());
-//                    query.addQueryItem(QStringLiteral("test_mode"), "1"); //TODO: remove me later
+                    if (ptype == qpt_json) {
+                        query.addQueryItem(tkn_version, val_version);
+                        query.addQueryItem(tkn_access_token, apiToken());
+                    }
 
                     return query;
                 }

@@ -28,7 +28,7 @@ namespace Core {
             extern const QString url_site_base          = QStringLiteral("http://www.4shared.com/");
 
             extern const QString val_name               = QStringLiteral("4shared");
-            extern const QString val_token              = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");
+//            extern const QString val_token              = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");
             extern const QString val_json_ext           = QStringLiteral(".json");
             extern const QString val_lang_cookie        = QStringLiteral("4langcookie=en; domain=.4shared.com; path=/");
             extern const QString val_version            = QStringLiteral("1_2");

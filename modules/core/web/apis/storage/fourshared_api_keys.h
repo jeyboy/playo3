@@ -31,7 +31,7 @@ namespace Core {
             extern const QString url_site_base;
 
             extern const QString val_name;
-            extern const QString val_token;
+//            extern const QString val_token;
             extern const QString val_json_ext;
             extern const QString val_lang_cookie;
             extern const QString val_version;

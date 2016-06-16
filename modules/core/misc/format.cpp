@@ -7,7 +7,7 @@ bool Info::extract(const QString & info, const QString & start_predicate, const 
     int part_index = info.indexOf(start_predicate) + offset;
 
     if (part_index != -1) {
-        int end_part_index = js.indexOf(end_predicate, part_index);
+        int end_part_index = info.indexOf(end_predicate, part_index);
         res = info.mid(part_index, end_part_index - part_index);
         return true;
     }

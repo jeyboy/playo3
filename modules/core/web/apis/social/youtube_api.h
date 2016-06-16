@@ -14,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Api : public QObject, public ISource,/*public TeuAuth,*/ public RequestApi, public Singleton<Api>/*, public Sociable*/ {
+            class Api : public QObject, public ISource, public RequestApi, public Singleton<Api>/*, public Sociable*/ {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -22,7 +22,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_youtube; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = json) {
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
                     QUrlQuery query;
                     query.addQueryItem(tkn_key, val_client_tkn);
                     return query;

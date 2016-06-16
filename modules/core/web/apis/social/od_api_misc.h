@@ -52,7 +52,7 @@ namespace Core {
                         if (!form) {
                             QList<FormInput> inputs;
                             inputs << FormInput::createStr(tkn_code, val_sms_code_title);
-                            inputs << FormInput(val_resend_sms_title, forms.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
+                            inputs << FormInput(val_resend_sms_title, doc.find("#accRcvrSent").link(), Manager::prepare(), "sendGet");
                             actionDialog -> proceedForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
