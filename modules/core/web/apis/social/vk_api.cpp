@@ -85,13 +85,15 @@ bool Api::connectUserApi() {
             error = query.queryItemValue(tkn_error_description);
             return false;
         } else if (query.hasQueryItem(tkn_access_token)) {
-            setParams(
-                query.queryItemValue(tkn_access_token),
-                query.queryItemValue(tkn_user_id),
-                query.queryItemValue(tkn_expires_in)
-            );
-            emit authorized();
-            initButton();
+            setApiToken(query.queryItemValue(tkn_access_token));
+            setUserID(query.queryItemValue(tkn_user_id));
+            setApiExpiration(query.queryItemValue(tkn_expires_in));
+
+//            setParams(
+//                query.queryItemValue(tkn_access_token),
+//                query.queryItemValue(tkn_user_id),
+//                query.queryItemValue(tkn_expires_in)
+//            );
             return true;
         }
     }

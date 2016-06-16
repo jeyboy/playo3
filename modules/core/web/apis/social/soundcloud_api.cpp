@@ -143,7 +143,9 @@ bool Api::connectUserApi() {
                 QString newToken = doc.value(tkn_access_token).toString();
                 doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
 
-                setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
+                setApiToken(newToken);
+                setUserID(QString::number(doc.value(tkn_id).toInt()));
+//                setParams(newToken, QString::number(doc.value(tkn_id).toInt()), QString());
                 resp -> deleteLater();
                 return true;
             }

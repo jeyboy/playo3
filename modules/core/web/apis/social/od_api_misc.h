@@ -56,8 +56,7 @@ namespace Core {
                             actionDialog -> proceedForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
-                                QHash<QString, QString> attrs;
-                                attrs.insert(tkn_captcha, actionDialog -> getValue(tkn_code));
+                                QHash<QString, QString> attrs = {{tkn_captcha, actionDialog -> getValue(tkn_code)}};
                                 QUrl url = QUrl(url_root).resolved(form -> serializeFormToUrl(attrs));
                                 QNetworkReply * reply = Manager::prepare() -> formFollowed(url, initHeaders());
                                 //TODO: check session

@@ -29,17 +29,6 @@ namespace Core {
                     Manager::loadCookies(obj);
                 }
 
-                inline bool isConnected() {
-                    if (!siteHash().isEmpty())
-                        setSiteToken(grabSID());
-//                        setParams(grabSID(), userID(), additional());
-
-                    if (sessionIsValid()) // maybe use grabSID() ?
-                        return true;
-
-                    return false;
-                }
-
                 void objectInfo(const QString & uid, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
@@ -47,14 +36,18 @@ namespace Core {
                 QString refresh(const QString & refresh_page); // here refresh_page must by eq to track id
 
                 QToolButton * initButton(QWidget * parent = 0);
-//            public slots:
-                bool connectUserSite();
+
+                bool connectUserSite() { return formConnection() && restoreUserConnection(); }
+                bool restoreUserConnection() {
+                    if (!siteHash().isEmpty())
+                        setSiteToken(grabSID());
+                    return sessionIsValid();
+                }
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
                 }
             protected:
-                bool hashConnection(bool onlyAuto);
                 bool formConnection();
 
                 inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }

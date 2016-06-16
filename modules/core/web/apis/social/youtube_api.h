@@ -14,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Api : public QObject, public ISource, public RequestApi, public Singleton<Api>/*, public Sociable*/ {
+            class Api : public ISource, public RequestApi, public Singleton<Api>/*, public Sociable*/ {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

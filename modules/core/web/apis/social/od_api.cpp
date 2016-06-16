@@ -51,26 +51,6 @@ QToolButton * Api::initButton(QWidget * parent) {
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
-bool Api::connectUserSite() {
-    bool auth_res = formConnection();
-    if (auth_res) {
-        setParams(grabSID(), userID(), additional());
-    }
-
-    return auth_res;
-}
-
-//bool Api::hashConnection(bool onlyAuto) {
-//    Manager::prepare() -> followedGet(initUrl(), initHeaders()) -> deleteLater();
-
-//    if (!sessionIsValid())
-//        if (!onlyAuto && !formConnection())
-//            return false;
-
-//    setParams(grabSID(), userID(), additional());
-//    return true;
-//}
-
 bool Api::formConnection() {
     QString err, authE, authP;
 
@@ -92,7 +72,9 @@ bool Api::formConnection() {
         checkSecurity(doc);
 
         if (!Manager::cookie(tkn_authcode).isEmpty()) {
-            setParams(QString(), grabUserId(doc), hash_key);
+            setUserID(grabUserId(doc));
+            setSiteHash(hash_key);
+//            setParams(QString(), grabUserId(doc), hash_key);
             break;
         }
         else err = doc.find(".anonym_e").text();

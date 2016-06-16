@@ -74,6 +74,10 @@ namespace Core {
 
         virtual inline SourceFlags defaultFlags() { return sf_none; }
 
+        inline void setApiExpiration(const QString & expiration) { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
+        inline QString apiExpiration() const { return attrs[SOURCE_API_EXPIRED_AT_JSON].toString(); }
+
+        inline void setUserID(const QString & user_id) { attrs[SOURCE_API_USER_ID_JSON] = user_id; }
         inline QString userID() const { return attrs[SOURCE_API_USER_ID_JSON].toString(); }
         inline void setApiToken(const QString & token) { attrs[SOURCE_API_TOKEN_JSON] = token; }
         inline QString apiToken() const { return attrs[SOURCE_API_TOKEN_JSON].toString(); }
