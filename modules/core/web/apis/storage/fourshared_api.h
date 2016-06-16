@@ -21,7 +21,7 @@ namespace Core {
                 inline DataSubType siteType() const { return dt_site_fourshared; }
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
 //                    QString token = ptype == qpt_json ? apiToken() : siteToken();
-                    return QUrlQuery(/*tkn_oauth_consumer % token*/);
+                    return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
