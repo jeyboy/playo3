@@ -101,7 +101,7 @@ namespace Core {
             }
 
 
-            inline void genresProc() {
+            inline void genresProc() { // not tested
                 PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
                 pRequest(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
 
@@ -155,6 +155,7 @@ namespace Core {
 
                         QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
                         track_obj.insert(tkn_grab_title, title);
+                        track_obj.insert(tkn_skip_info, true);
                         track_obj.insert(tkn_grab_size, prepareSize(size_tag -> text()));
                         track_obj.insert(tkn_grab_refresh, baseUrlStr(track_tag -> link()));
 

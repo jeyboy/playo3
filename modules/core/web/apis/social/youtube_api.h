@@ -27,35 +27,20 @@ namespace Core {
                     query.addQueryItem(tkn_key, val_client_tkn);
                     return query;
                 }
-                QString authUrl();
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        /*sf_auth_api_has | */sf_auth_site_has | sf_site_user_content_auth_only |
+                        sf_api_search_auth_only | sf_api_user_content_auth_only
+                    );
+                }
+//                QString authUrl();
 
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                inline bool isConnected() { return true; /*!token().isEmpty();*/ }
-
-            public slots:               
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
-                inline void disconnectUser() {
-//                    clearParams();
-//                    clearFriends();
-//                    clearGroups();
-                }
 
             protected:
-//                QUrl buildUrl(QueriableArg * arg) { //(QUrl tUrl, int /*offset*/, int limit, const QJsonObject & prev_response) {
-////                    "pageInfo": {
-////                      "totalResults": integer,
-////                      "resultsPerPage": integer
-////                    },
-
-//                    QUrl url(tUrl);
-//                    QUrlQuery query = QUrlQuery(url);
-//                    setLimit(query, limit, prev_response.value(QStringLiteral("nextPageToken")));
-//                    url.setQuery(query);
-//                    return url;
-//                }
-
                 inline QString refresh(const QString & path) { return idToUrl(path); }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 

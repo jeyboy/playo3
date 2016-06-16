@@ -35,7 +35,7 @@ namespace Core {
                 qDebug() << "RESTORING" << itemSubType << refreshStr;
 
                 ISource * source = sources.value(itemSubType);
-                if (source == 0 || !source -> isConnected())
+                if (source == 0)
                     return QString();
                 else
                     return source -> refresh(refreshStr);

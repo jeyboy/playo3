@@ -30,7 +30,6 @@ namespace Core {
             inline QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & message, bool removeReply = false) {
-//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
