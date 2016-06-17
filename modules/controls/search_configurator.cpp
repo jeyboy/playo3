@@ -189,30 +189,37 @@ QWidget * SearchConfigurator::initLimitations() {
     l -> addWidget(searchInGroup, 1);
     QGridLayout * gl2 = new QGridLayout(searchInGroup);
 
+
+
+    byFresh = new QCheckBox(searchInGroup);
+    byFresh -> setObjectName(QStringLiteral("byFresh"));
+    byFresh -> setText(QApplication::translate("SearchDialog", "Fresh", 0));
+    gl2 -> addWidget(byFresh, 0, 0);
+
     byNew = new QCheckBox(searchInGroup);
     byNew -> setObjectName(QStringLiteral("byNew"));
     byNew -> setText(QApplication::translate("SearchDialog", "New", 0));
-    gl2 -> addWidget(byNew, 0, 0);
+    gl2 -> addWidget(byNew, 1, 0);
 
     byPopular = new QCheckBox(searchInGroup);
     byPopular -> setObjectName(QStringLiteral("byPopular"));
     byPopular -> setText(QApplication::translate("SearchDialog", "Popular", 0));
-    gl2 -> addWidget(byPopular, 1, 0);
+    gl2 -> addWidget(byPopular, 2, 0);
 
     byRelativity = new QCheckBox(searchInGroup);
     byRelativity -> setObjectName(QStringLiteral("byRelativity"));
     byRelativity -> setText(QApplication::translate("SearchDialog", "Related", 0));
-    gl2 -> addWidget(byRelativity, 2, 0);
+    gl2 -> addWidget(byRelativity, 0, 1);
 
     byOrigins = new QCheckBox(searchInGroup);
     byOrigins -> setObjectName(QStringLiteral("byOrigins"));
     byOrigins -> setText(QApplication::translate("SearchDialog", "In originals only", 0));
-    gl2 -> addWidget(byOrigins, 0, 1);
+    gl2 -> addWidget(byOrigins, 1, 1);
 
     byMixes = new QCheckBox(searchInGroup);
     byMixes -> setObjectName(QStringLiteral("byMixes"));
     byMixes -> setText(QApplication::translate("SearchDialog", "In mixes only", 0));
-    gl2 -> addWidget(byMixes, 1, 1);
+    gl2 -> addWidget(byMixes, 2, 1);
 
 
     byForeign = new QCheckBox(searchInGroup);
@@ -298,8 +305,11 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
 {   
     SearchLimitLayers res((SearchContentType)content_type, (SearchPredicateType)predicate_types, items_limit);
 
-    res.predicates.append(predicates);
-    res.genres.append(genres);
+    for(QStringList::ConstIterator predicate = predicates.cbegin(); predicate != predicates.cend(); predicate++)
+        res.predicates.append((*predicate).toLower());
+
+    for(QStringList::ConstIterator genre = genres.cbegin(); genre != genres.cend(); genre++)
+        res.genres.append((*genre).toLower());
 
     if (blocks & block_sites) {
         QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
@@ -356,6 +366,7 @@ Core::SearchLimitLayers SearchConfigurator::params() {
     else if (byTag -> isChecked())
         predicate_types = Core::sp_tag;
 
+    if (byFresh -> isChecked()) predicate_types |= Core::sp_fresh;
     if (byNew -> isChecked()) predicate_types |= Core::sp_new;
     if (byPopular -> isChecked()) predicate_types |= Core::sp_popular;
     if (byRelativity -> isChecked()) predicate_types |= Core::sp_relative;
@@ -381,11 +392,11 @@ Core::SearchLimitLayers SearchConfigurator::params() {
 
     int count = textPredicates -> count();
     for(int i = 0; i < count; i++)
-        res.predicates.append(textPredicates -> item(i) -> text());
+        res.predicates.append(textPredicates -> item(i) -> text().toLower());
 
     count = stylePredicates -> count();
     for(int i = 0; i < count; i++)
-        res.genres.append(stylePredicates -> item(i) -> text());
+        res.genres.append(stylePredicates -> item(i) -> text().toLower());
 
     if (inSites -> isChecked()) {
         int count = sitesList -> count();

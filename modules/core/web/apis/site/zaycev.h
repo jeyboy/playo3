@@ -10,56 +10,78 @@
 namespace Core {
     namespace Web {
         class Zaycev : public ISource, public IApi, public Singleton<Zaycev> {
+            QHash<QString, QString> letters {
+                {QStringLiteral("1"), QStringLiteral("0")}, {QStringLiteral("2"), QStringLiteral("0")}, {QStringLiteral("3"), QStringLiteral("0")},
+                {QStringLiteral("4"), QStringLiteral("0")}, {QStringLiteral("5"), QStringLiteral("0")}, {QStringLiteral("6"), QStringLiteral("0")},
+                {QStringLiteral("7"), QStringLiteral("0")}, {QStringLiteral("8"), QStringLiteral("0")}, {QStringLiteral("9"), QStringLiteral("0")},
+
+                {QStringLiteral("а"), QStringLiteral("rus-a")}, {QStringLiteral("б"), QStringLiteral("rus-b")}, {QStringLiteral("в"), QStringLiteral("rus-v")},
+                {QStringLiteral("г"), QStringLiteral("rus-g")}, {QStringLiteral("д"), QStringLiteral("rus-d")}, {QStringLiteral("е"), QStringLiteral("rus-e")},
+                {QStringLiteral("ё"), QStringLiteral("rus-e")}, {QStringLiteral("ж"), QStringLiteral("rus-zh")}, {QStringLiteral("з"), QStringLiteral("rus-z")},
+                {QStringLiteral("и"), QStringLiteral("rus-i")}, {QStringLiteral("к"), QStringLiteral("rus-k")}, {QStringLiteral("л"), QStringLiteral("rus-l")},
+                {QStringLiteral("м"), QStringLiteral("rus-m")}, {QStringLiteral("н"), QStringLiteral("rus-n")}, {QStringLiteral("о"), QStringLiteral("rus-o")},
+                {QStringLiteral("п"), QStringLiteral("rus-p")}, {QStringLiteral("р"), QStringLiteral("rus-r")}, {QStringLiteral("с"), QStringLiteral("rus-s")},
+                {QStringLiteral("т"), QStringLiteral("rus-t")}, {QStringLiteral("у"), QStringLiteral("rus-u")}, {QStringLiteral("ф"), QStringLiteral("rus-f")},
+                {QStringLiteral("х"), QStringLiteral("rus-h")}, {QStringLiteral("ц"), QStringLiteral("rus-c")}, {QStringLiteral("ч"), QStringLiteral("rus-ch")},
+                {QStringLiteral("ш"), QStringLiteral("rus-sh")}, {QStringLiteral("щ"), QStringLiteral("rus-sch")}, {QStringLiteral("э"), QStringLiteral("rus-ee")},
+                {QStringLiteral("ю"), QStringLiteral("rus-yu")}, {QStringLiteral("я"), QStringLiteral("rus-ya")}
+            };
+            PolyQueryRules rules(const SearchLimit & limits) {
+                return PolyQueryRules(call_iter_type_page,
+                    limits.start_offset == 0 ? limits.start_offset : 1,
+                    limits.items_limit,
+                    limits.requests_limit
+                );
+            }
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
             inline DataSubType siteType() const { return dt_site_zaycev; }
 
-    //        QJsonArray searchByGenre(const SearchLimit & /*limitations*/) { // http://zaycev.net/genres/shanson/index.html
-    //            QJsonArray json;
-    //            if (genresList().isEmpty()) genresList();
+            QJsonArray searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/genres/%1/%2_%3.html")
+                        .arg(limits.genre, // need to convert genre !!!
+                             limits.by_fresh() ? QStringLiteral("fresh") : limits.by_newest() ? QStringLiteral("new") : QStringLiteral("index"),
+                             OFFSET_TEMPLATE),
+                    call_type_html, rules(limits), 0, proc_tracks1
+                );
+            }
 
-    //            genre = genres.toString(genre_id);
-    //            if (genre.isEmpty()) return json;
+            // http://zaycev.net/artist/letter-rus-zh-more.html?page=1
+            QJsonArray searchByChar(const SearchLimit & limits) {
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/artist/letter-%1-more.html?page=%2")
+                        .arg(prepareLetter(limits), OFFSET_TEMPLATE),
+                    call_type_html, rules(limits), 0, proc_tracks1
+                );
+            }
 
-    //            QString url_str = baseUrlStr(QStringLiteral("/genres/%1/index_%2.html").arg(genre, page_offset_key));
-    //            lQuery(url_str, json, songs1, MAX_PAGE);
+            QJsonArray searchInSets(const SearchLimit & limits) {
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/musicset%1/more.html?page=")
+                        .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
+                    call_type_html, rules(limits), 0, proc_tracks1
+                );
+            }
 
-    //            return json;
-    //        }
+            QJsonArray fresh(const SearchLimit & limits) {
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/fresh/more.html?page=") % OFFSET_TEMPLATE,
+                    call_type_html, rules(limits), 0, proc_tracks1
+                );
+            }
 
-            // rus letters has specific presentation
-    //        QJsonArray searchByChar(const SearchLimit & /*limitations*/) { http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-    //            //TODO: realize later
-    //        }
-
-    //        // one page contains 30 albums
-    //        QJsonArray searchByType(const SearchLimit & /*limitations*/) { //http://zaycev.net/musicset/more.html?page=1
-    //            switch (target_type) { // need to modify grab processing of folder support in model
-    //                case sets: break; // http://zaycev.net/musicset/more.html?page=2
-    //                case soundtracks: break; // http://zaycev.net/musicset/soundtrack/more.html?page=2
-    //                case by_genres: break; // http://zaycev.net/musicset/zhanry/more.html?page=2
-    //                case by_years: break; // http://zaycev.net/musicset/years/more.html?page=2
-    //                case other: break; // http://zaycev.net/musicset/other/more.html?page=2
-    //                case fresh: break; // http://zaycev.net/new/more.html?page=2
-    //                default: return QJsonArray();
-    //            }
-    //            //TODO: stop if result not contains elements
-    //        }
-
-            QJsonArray newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
+            QJsonArray newest(const SearchLimit & limits) {
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/new/more.html?page=") % OFFSET_TEMPLATE,
+                    call_type_html, rules(limits), 0, proc_tracks1
+                );
+            }
 
             QJsonArray popular(const SearchLimit & limits) {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/top/more.html?page=") % OFFSET_TEMPLATE,
-                    call_type_html,
-                    PolyQueryRules(
-                        call_iter_type_page,
-                        limits.start_offset == 0 ? limits.start_offset : 1,
-                        limits.items_limit,
-                        limits.requests_limit
-                    ),
-                    0,
-                    proc_tracks1
+                    call_type_html, rules(limits), 0, proc_tracks1
                 );
 
 //                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
@@ -111,6 +133,14 @@ namespace Core {
                 }
 
                 return result;
+            }
+
+            QString prepareLetter(const SearchLimit & limits) {
+                QString letter = limits.predicate.mid(0, 1);
+                if (letters.contains(letter))
+                    return letters[letter];
+
+                return letter;
             }
 
             void genresProc() { // manual init at this time

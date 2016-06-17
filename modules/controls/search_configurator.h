@@ -47,6 +47,7 @@ namespace Controls {
         QRadioButton * byAudioTypes;
         QRadioButton * byVideoTypes;
 
+        QCheckBox * byFresh;
         QCheckBox * byNew;
         QCheckBox * byPopular;
         QCheckBox * byOwns;

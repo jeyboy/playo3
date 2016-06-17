@@ -19,7 +19,10 @@ namespace Core {
             if (limits.by_newest())
                 return newest(limits);
 
-            if (!limits.predicate.isEmpty()) {
+            if (limits.by_fresh())
+                return fresh(limits);
+
+            if (!limits.predicate.isEmpty()) {               
                 if (limits.by_abc())
                     return searchByChar(limits);
 
@@ -47,7 +50,11 @@ namespace Core {
 
         virtual QJsonArray searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
+        // newest on site
         virtual QJsonArray newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
+
+        // newest by creation
+        virtual QJsonArray fresh(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonArray popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
