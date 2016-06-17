@@ -18,7 +18,7 @@ namespace Core {
         enum AdditionalProc {
             proc_none = 0, proc_json_wrap = 1, proc_json_extract = 2, proc_patch = proc_json_wrap | proc_json_extract, // patch used if returned [] as response
             proc_tracks1 = 4, proc_tracks2, proc_tracks3, proc_artists1, proc_artists2, proc_artists3, proc_genres1,
-            proc_genres2, proc_genres3, proc_video1, proc_video2, proc_video3
+            proc_genres2, proc_genres3, proc_video1, proc_video2, proc_video3, proc_set1, proc_set2, proc_set3
         };
 
         struct PolyQueryRules {

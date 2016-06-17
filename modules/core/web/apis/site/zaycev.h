@@ -60,7 +60,7 @@ namespace Core {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/musicset%1/more.html?page=")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
-                    call_type_html, rules(limits), 0, proc_tracks1
+                    call_type_html, rules(limits), 0, proc_set1
                 );
             }
 
@@ -127,7 +127,11 @@ namespace Core {
                         }
 
                         result = !tracks.isEmpty();
-                    }
+                    break;}
+
+                    case proc_set1: {
+
+                    break;}
 
                     default: ;
                 }
