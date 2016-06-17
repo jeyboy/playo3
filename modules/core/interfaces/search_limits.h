@@ -45,7 +45,8 @@ namespace Core {
         sp_popular = 1024,
         sp_relative = 2048,
         sp_lyrics = 4096,
-        sp_sets = 8192
+        sp_sets = 8192,
+        sp_new = 16384
     };
 
     struct SearchLimitBase {
@@ -72,6 +73,7 @@ namespace Core {
         inline bool by_songs_name() const { return predicate_type & sp_song_name; }
         inline bool by_tags() const { return predicate_type & sp_tag; }
         inline bool by_popularity() const { return predicate_type & sp_popular; }
+        inline bool by_newest() const { return predicate_type & sp_new; }
 
         inline bool in_relative() const { return predicate_type & sp_relative; }
         inline bool in_owns() const { return predicate_type & sp_owns; }

@@ -46,10 +46,23 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+            QJsonArray newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-//                return sQuery(QUrl(baseUrlStr()), songs1);
+            QJsonArray popular(const SearchLimit & limits) {
+                return pRequest(
+                    QStringLiteral("http://zaycev.net/top/more.html?page=") % OFFSET_TEMPLATE,
+                    call_type_html,
+                    PolyQueryRules(
+                        call_iter_type_page,
+                        limits.start_offset == 0 ? limits.start_offset : 1,
+                        limits.items_limit,
+                        limits.requests_limit
+                    ),
+                    0,
+                    proc_tracks1
+                );
+
+//                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
             }
 
         protected:

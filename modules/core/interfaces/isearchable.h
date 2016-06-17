@@ -16,6 +16,9 @@ namespace Core {
         inline virtual ~ISearchable() {}
 
         QJsonArray search(const SearchLimit & limits) {
+            if (limits.by_newest())
+                return newest(limits);
+
             if (!limits.predicate.isEmpty()) {
                 if (limits.by_abc())
                     return searchByChar(limits);
@@ -43,6 +46,8 @@ namespace Core {
         virtual QJsonArray searchInLyrics(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonArray searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
+
+        virtual QJsonArray newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonArray popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
