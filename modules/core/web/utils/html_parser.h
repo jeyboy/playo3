@@ -225,8 +225,8 @@ namespace Core {
                 };
 
             public:
-                inline Document(QIODevice * device, Flags parse_flags = skip_comment) : flags(parse_flags), charset(unknown), charset_finded(false), using_default_charset(false) { parse(device); }
-                inline Document(const QString & str, Flags parse_flags = skip_comment) : flags(parse_flags), charset(unknown), charset_finded(false), using_default_charset(false) {
+                inline Document(QIODevice * device, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) { parse(device); }
+                inline Document(const QString & str, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) {
                     QByteArray ar = str.toUtf8();
                     QBuffer stream(&ar);
                     stream.open(QIODevice::ReadOnly);
@@ -281,8 +281,10 @@ namespace Core {
                 inline void checkCharset(Tag * tag) {
                     if (tag -> is_meta() || tag -> is_xml_head())
                         proceedCharset(tag);
-                    else if (tag -> is_head())
+                    else if (tag -> is_head()) {
                         using_default_charset = true;
+                        charset = charset_utf8;
+                    }
                 }
 
                 inline void proceedCharset(Tag * tag) {

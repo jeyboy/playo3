@@ -9,9 +9,9 @@ namespace Core {
         class UnicodeDecoding {
         protected:
             enum CharsetType {
-                unknown,
-                utf8,
-                cp1251
+                charset_unknown,
+                charset_utf8,
+                charset_cp1251
             };
 
             const int cp1251_table[64] = {
@@ -37,17 +37,17 @@ namespace Core {
 
             inline CharsetType toCharsetType(const QString & ch_name) {
                 if (ch_name == QStringLiteral("utf-8"))
-                    return utf8;
+                    return charset_utf8;
                 else if (ch_name == QStringLiteral("windows-1251"))
-                    return cp1251;
+                    return charset_cp1251;
 
-                return unknown;
+                return charset_unknown;
             }
 
             inline void toUtf8(CharsetType charset, QIODevice * io, QString & result, char & in) {
                 switch(charset) {
-                    case utf8: { scanUtf8Char(io, result, in); break;}
-                    case cp1251: { scanRuChar(io, result, in); break;}
+                    case charset_utf8: { scanUtf8Char(io, result, in); break;}
+                    case charset_cp1251: { scanRuChar(io, result, in); break;}
                     default: result.append(in);
                 }
             }

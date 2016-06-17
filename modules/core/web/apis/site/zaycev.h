@@ -28,7 +28,7 @@ namespace Core {
             };
             PolyQueryRules rules(const SearchLimit & limits) {
                 return PolyQueryRules(call_iter_type_page,
-                    limits.start_offset == 0 ? limits.start_offset : 1,
+                    limits.start_offset == 0 ? 1 : limits.start_offset,
                     limits.items_limit,
                     limits.requests_limit
                 );
@@ -64,12 +64,7 @@ namespace Core {
                 );
             }
 
-            QJsonArray fresh(const SearchLimit & limits) {
-                return pRequest(
-                    QStringLiteral("http://zaycev.net/fresh/more.html?page=") % OFFSET_TEMPLATE,
-                    call_type_html, rules(limits), 0, proc_tracks1
-                );
-            }
+            QJsonArray fresh(const SearchLimit & limits) { return newest(limits); }
 
             QJsonArray newest(const SearchLimit & limits) {
                 return pRequest(
