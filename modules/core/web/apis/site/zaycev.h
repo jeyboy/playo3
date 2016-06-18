@@ -56,7 +56,7 @@ namespace Core {
                 );
             }
 
-            QJsonArray searchInSets(const SearchLimit & limits) {
+            QJsonArray searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
                 return pRequest(
                     QStringLiteral("http://zaycev.net/musicset%1/more.html?page=")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"

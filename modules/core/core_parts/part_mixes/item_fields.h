@@ -28,6 +28,10 @@ namespace Core {
         inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
         inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }
 
+        inline bool isLoadable()                                { return attrs.contains(JSON_TYPE_CONTAINER_LOADABLE); }
+        inline bool removeLoadability()                         { return attrs.remove(JSON_TYPE_CONTAINER_LOADABLE); }
+        inline QVariant loadableAttrs()                         { return attrs[JSON_TYPE_CONTAINER_LOADABLE]; }
+
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
         inline QVariant artistIds() const                       { return attrs.value(JSON_TYPE_ARTIST_IDS); }
@@ -58,9 +62,10 @@ namespace Core {
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
 
         inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
+        inline void setLoadableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_LOADABLE] = data; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
-        inline void addArtistId(QString id)                     { attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
+        inline void addArtistId(const QString & id)             { attrs[JSON_TYPE_ARTIST_IDS] = attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
         inline void setArtistIds(const QStringList & ids)       { attrs[JSON_TYPE_ARTIST_IDS] = ids; }
         inline void setSongId(const QVariant & newSongId)       { attrs[JSON_TYPE_SONG_ID] = newSongId; }
 

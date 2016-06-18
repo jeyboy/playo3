@@ -4,6 +4,8 @@
 #include <qstringbuilder.h>
 
 namespace Core {
+    const QString JSON_TYPE_CONTAINER_LOADABLE = QStringLiteral("0");
+
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");

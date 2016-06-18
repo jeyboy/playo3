@@ -70,6 +70,19 @@ namespace Models {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
+        void fetchMore(const QModelIndex & parent) {
+            Playlist * playlist = item<Playlist>(parent);
+
+            if (playlist -> isLoadable())
+                proceedLoadable(playlist, playlist -> loadableAttrs());
+
+            QAbstractItemModel::fetchMore(parent);
+        }
+        bool canFetchMore(const QModelIndex & parent) const {
+            if (item(parent) -> isLoadable()) return true;
+            return QAbstractItemModel::canFetchMore(parent);
+        }
+
         inline QModelIndex index(IItem * item) const {
             if (item == rootItem)
                 return QModelIndex();
@@ -90,6 +103,14 @@ namespace Models {
 
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
+
+        void proceedLoadable(Playlist * /*parent*/, const QVariant & /*loadable_attrs*/) { // not finished
+//            QVariantHash hash = loadable_attrs.toHash();
+//            ISource * source = Web::Apis::source(parent -> )
+
+            //TODO: need realize data loading
+            //TODO: need to realize proc of attrs and parsing of results, based on type of source
+        }
 
         int proceedVkList(QJsonArray & collection, Playlist * parent);
         int proceedScList(QJsonArray & collection, Playlist * parent);
