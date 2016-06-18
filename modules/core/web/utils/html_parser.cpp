@@ -8,13 +8,14 @@ namespace Core {
                 QString Set::text() { return (isEmpty()) ? QString() : first() -> text(); }
                 QString Set::value(const QString & name) { return (isEmpty()) ? QString() : first() -> value(name); }
 
-                Set & Set::find(const Selector * selector, Set & set, bool findFirst) {
-                    for(Set::Iterator tag = begin(); tag != end(); tag++) {
+                Set & Set::find(const Selector * selector, Set & set, bool findFirst) const {
+                    for(Set::ConstIterator tag = cbegin(); tag != cend(); tag++) {
                         if ((*tag) -> validTo(selector)) {
                                 if (selector -> next) {
-                                    if (selector -> next -> isBackward())
+                                    if (selector -> next -> isBackward()) {
                                         (*tag) -> backwardFind(selector -> next, set);
-                                    else if (!(*tag) -> children().isEmpty())
+                                        if (findFirst) break;
+                                    } else if (!(*tag) -> children().isEmpty())
                                         (*tag) -> children().find(selector -> next, set);
                                 }
                                 else {
@@ -243,8 +244,12 @@ namespace Core {
 
                     if (!selector)
                         set.append(parent);
-                    else if (selector -> isBackward() && parent -> parent)
-                        parent -> backwardFind(selector, set);
+                    else
+                        if (selector -> isBackward()) {
+                            if (parent -> parent)
+                                parent -> backwardFind(selector, set);
+                        }
+                        else parent -> children().find(selector, set);
 
                     return set;
                 }

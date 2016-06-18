@@ -44,6 +44,7 @@ namespace Core {
                     if (prev_selector) prev_selector -> next = this;
                 }
                 inline ~Selector() { delete next; }
+                Selector operator= (const char * x) { return Selector(x); }
 
                 void addToken(SState & tType, QString & token, char & rel);
 
@@ -69,23 +70,28 @@ namespace Core {
                 QString text();
                 QString value(const QString & name = attr_default);
 
-                inline Set find(const Selector * selector, bool findFirst = false) {
+                inline Set find(const Selector * selector, bool findFirst = false) const {
                     Set set;
                     return find(selector, set, findFirst);
                 }
-                inline Set find(const char * predicate, bool findFirst = false) {
+                inline Set find(const char * predicate, bool findFirst = false) const {
                     Selector selector(predicate);
                     return find(&selector, findFirst);
                 }
-                inline Tag * findFirst(const char * predicate) {
+                inline Tag * findFirst(const char * predicate) const {
                     Set set = find(predicate, true);
+                    return set.isEmpty() ? 0 : set.first();
+                }
+                inline Tag * findFirst(const Selector * selector) const {
+                    Set set = find(selector, true);
                     return set.isEmpty() ? 0 : set.first();
                 }
 
                 QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links);
                 inline Set & operator <<(const Set & l) { *this += l; return *this; }
             private:
-                Set & find(const Selector * selector, Set & set, bool findFirst = false);
+                Set & find(const Selector * selector, Set & set, bool findFirst = false) const;
+                friend class Tag;
             };
 
             class Tag {
@@ -134,17 +140,21 @@ namespace Core {
                 }
                 inline int childrenCount() { return tags.size(); }
 
-                inline bool has(const char * predicate) { return !find(predicate).isEmpty(); }
-                inline Set find(const Selector * selector) { return tags.find(selector); }
-                inline Set find(const char * predicate) {
+                inline bool has(const char * predicate) const { return !find(predicate).isEmpty(); }
+                inline Set find(const Selector * selector) const { return tags.find(selector); }
+                inline Set find(const char * predicate) const {
                     Selector selector(predicate);
                     return tags.find(&selector);
                 }
-                inline Tag * findFirst(const char * predicate) {
+                inline Tag * findFirst(const char * predicate) const {
                     Selector selector(predicate);
-                    Set set = tags.find(&selector, true);
+                    return findFirst(&selector);
+                }
+                inline Tag * findFirst(const Selector * selector) const {
+                    Set set = tags.find(selector, true);
                     return set.isEmpty() ? 0 : set.first();
                 }
+
                 inline QHash<QString, QString> & findLinks(const Selector * selector, QHash<QString, QString> & links) {
                     return tags.findLinks(selector, links);
                 }
@@ -240,13 +250,13 @@ namespace Core {
                     QString name = root -> children().first() -> name();
                     return name.contains(tag_xml, Qt::CaseInsensitive);
                 }
-                inline bool has(const char * predicate) { return root -> has(predicate); }
-                inline Set find(const Selector * selector, bool findFirst = false) { return root -> children().find(selector, findFirst); }
-                inline Set find(const char * predicate) {
+                inline bool has(const char * predicate) const { return root -> has(predicate); }
+                inline Set find(const Selector * selector, bool findFirst = false) const { return root -> children().find(selector, findFirst); }
+                inline Set find(const char * predicate) const {
                     Selector selector(predicate);
                     return find(&selector);
                 }
-                inline Tag * findFirst(const char * predicate) {
+                inline Tag * findFirst(const char * predicate) const {
                     Selector selector(predicate);
                     Set set = find(&selector, true);
                     return set.isEmpty() ? 0 : set.first();

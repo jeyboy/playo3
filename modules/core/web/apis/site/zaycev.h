@@ -48,11 +48,11 @@ namespace Core {
             }
 
             // http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-            QJsonArray searchByChar(const SearchLimit & limits) {
+            QJsonArray searchByChar(const SearchLimit & limits) { // by default - sort by popularity
                 return pRequest(
                     QStringLiteral("http://zaycev.net/artist/letter-%1-more.html?page=%2")
                         .arg(prepareLetter(limits), OFFSET_TEMPLATE),
-                    call_type_html, rules(limits), 0, proc_tracks1
+                    call_type_html, rules(limits), 0, proc_char1
                 );
             }
 
@@ -83,43 +83,47 @@ namespace Core {
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
 
+            bool parseTracks(QueriableArg * arg, const Html::Document & parser, const Html::Selector & artist_selector) {
+                QString ban_class = QStringLiteral("track-is-banned");
+                Html::Set tracks = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
+                QString data_url = QStringLiteral("data-url");
+                Html::Selector title_selector(".musicset-track__track-name a");
+
+                qDebug() << "TRACKS AMOUNT" << tracks.size();
+                for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                    qDebug() << "TRACKS" << (*track) -> hasClass(ban_class);
+                    if ((*track) -> hasClass(ban_class)) continue;
+
+                    QJsonObject track_obj;
+
+                    track_obj.insert(tkn_grab_refresh, baseUrlStr((*track) -> value(data_url)));
+                    track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
+                    track_obj.insert(tkn_skip_info, true);
+
+
+                    QString artist = (*track) -> findFirst(&artist_selector) -> text();
+                    QString title = (*track) -> findFirst(&title_selector) -> text();
+                    title = artist % QStringLiteral(" - ") % title;
+                    track_obj.insert(tkn_grab_title, title);
+
+                    arg -> append(track_obj, track + 1 == tracks.end());
+                }
+
+                return !tracks.isEmpty();
+            }
+
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
-//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 if (reply -> status() != 200) return false; // if pagination overlimited - 302 status received
 
                 Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 
                 switch(arg -> post_proc) {
+                    case proc_char1: {
+                        result = parseTracks(arg, parser, Html::Selector("< .artist-item__info .artist-item-info__top a"));
+                    break;}
                     case proc_tracks1: {
-                        Html::Set tracks = parser.find(".musicset-track-list__items .musicset-track"); //.track-is-banned // banned track is not playable for some countries
-
-                        QString ban_class = QStringLiteral("track-is-banned");
-                        QString data_url = QStringLiteral("data-url");
-
-                        Html::Selector artist_selector(".musicset-track__artist a");
-                        Html::Selector title_selector(".musicset-track__track-name a");
-
-                        qDebug() << "TRACKS AMOUNT" << tracks.size();
-                        for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
-                            qDebug() << "TRACKS" << (*track) -> hasClass(ban_class);
-                            if ((*track) -> hasClass(ban_class)) continue;
-
-                            QJsonObject track_obj;
-
-                            track_obj.insert(tkn_grab_refresh, baseUrlStr((*track) -> value(data_url)));
-                            track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
-                            track_obj.insert(tkn_skip_info, true);
-
-                            QString artist = (*track) -> find(&artist_selector).text();
-                            QString title = (*track) -> find(&title_selector).text();
-                            title = artist % QStringLiteral(" - ") % title;
-                            track_obj.insert(tkn_grab_title, title);
-
-                            arg -> append(track_obj, track + 1 == tracks.end());
-                        }
-
-                        result = !tracks.isEmpty();
+                        result = parseTracks(arg, parser, Html::Selector(".musicset-track__artist a"));
                     break;}
 
                     case proc_set1: {
