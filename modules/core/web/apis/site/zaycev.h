@@ -58,7 +58,7 @@ namespace Core {
 
             QJsonArray searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
                 return pRequest(
-                    QStringLiteral("http://zaycev.net/musicset%1/more.html?page=")
+                    QStringLiteral("http://zaycev.net/musicset%1/more.html?page=%2")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
                     call_type_html, rules(limits), 0, proc_set1
                 );
@@ -127,7 +127,42 @@ namespace Core {
                     break;}
 
                     case proc_set1: {
-                        int i = 0;
+                        Html::Set sets = parser.find(".musicset-list__item");
+                        Html::Selector title_selector(".musicset-item__title a");
+                        Html::Selector link_selector(".musicset-item__pic .musicset-item__pic-link");
+                        Html::Selector tracks_amount(".musicset-item__details p");
+
+                        QUrl base_url(QStringLiteral("http://zaycev.net"));
+                        QString digit;
+
+                        qDebug() << "SETS AMOUNT" << sets.size();
+                        for(Html::Set::Iterator set = sets.begin(); set != sets.end(); set++) {
+                            QJsonObject set_obj;
+
+                            set_obj.insert(tkn_grab_title, (*set) -> findFirst(&title_selector) -> text());
+
+                            Html::Tag * link_tag = (*set) -> findFirst(&link_selector);
+
+                            set_obj.insert(
+                                tkn_grab_refresh,
+                                base_url.resolved(QUrl(link_tag -> link())).toString()
+                            );
+
+                            set_obj.insert(
+                                tkn_grab_art_url,
+                                base_url.resolved(QUrl(link_tag -> findFirst("img") -> value(QStringLiteral("src")))).toString()
+                            );
+
+                            if (Info::extractNumber((*set) -> findFirst(&tracks_amount) -> text(), digit))
+                                set_obj.insert(
+                                    tkn_grab_items_amount,
+                                    digit.toInt()
+                                );
+
+                            arg -> append(set_obj, set + 1 == sets.end());
+                        }
+
+                        return !sets.isEmpty();
                     break;}
 
                     default: ;

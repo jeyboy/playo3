@@ -7,6 +7,7 @@
 class Info {
     static QString unitList[];
 public:
+    static bool extractNumber(const QString & info, QString & res, int index = 0);
     static bool extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res, int offset = 0);
     static inline QString str(const QString & size, const QString & ext) { return size % " :: " % ext.toLower(); }
     static QString str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount);

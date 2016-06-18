@@ -1,7 +1,17 @@
 #include "format.h"
 #include <qdebug.h>
+#include <qregularexpression.h>
 
 QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
+
+bool Info::extractNumber(const QString & info, QString & res, int index) {
+    QStringList digits = info.split(QRegularExpression("\\D+"), QString::SkipEmptyParts);
+
+    if (digits.length() < index) return false;
+
+    res = digits[index];
+    return true;
+}
 
 bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res, int offset) {
     int part_index = info.indexOf(start_predicate) + offset;
