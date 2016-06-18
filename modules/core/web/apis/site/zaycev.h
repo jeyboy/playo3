@@ -41,7 +41,7 @@ namespace Core {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/genres/%1/%2_%3.html")
                         .arg(limits.genre, // need to convert genre !!!
-                             limits.by_fresh() ? QStringLiteral("fresh") : limits.by_newest() ? QStringLiteral("new") : QStringLiteral("index"),
+                             limits.by_newest() ? QStringLiteral("new") : QStringLiteral("index"),
                              OFFSET_TEMPLATE),
                     call_type_html, rules(limits), 0, proc_tracks1
                 );
@@ -63,8 +63,6 @@ namespace Core {
                     call_type_html, rules(limits), 0, proc_set1
                 );
             }
-
-            QJsonArray fresh(const SearchLimit & limits) { return newest(limits); }
 
             QJsonArray newest(const SearchLimit & limits) {
                 return pRequest(
@@ -125,7 +123,7 @@ namespace Core {
                     break;}
 
                     case proc_set1: {
-
+                        int i = 0;
                     break;}
 
                     default: ;

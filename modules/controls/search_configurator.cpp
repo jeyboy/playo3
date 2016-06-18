@@ -191,20 +191,15 @@ QWidget * SearchConfigurator::initLimitations() {
 
 
 
-    byFresh = new QCheckBox(searchInGroup);
-    byFresh -> setObjectName(QStringLiteral("byFresh"));
-    byFresh -> setText(QApplication::translate("SearchDialog", "Fresh", 0));
-    gl2 -> addWidget(byFresh, 0, 0);
-
     byNew = new QCheckBox(searchInGroup);
     byNew -> setObjectName(QStringLiteral("byNew"));
     byNew -> setText(QApplication::translate("SearchDialog", "New", 0));
-    gl2 -> addWidget(byNew, 1, 0);
+    gl2 -> addWidget(byNew, 0, 0);
 
     byPopular = new QCheckBox(searchInGroup);
     byPopular -> setObjectName(QStringLiteral("byPopular"));
     byPopular -> setText(QApplication::translate("SearchDialog", "Popular", 0));
-    gl2 -> addWidget(byPopular, 2, 0);
+    gl2 -> addWidget(byPopular, 1, 0);
 
     byRelativity = new QCheckBox(searchInGroup);
     byRelativity -> setObjectName(QStringLiteral("byRelativity"));
@@ -366,7 +361,6 @@ Core::SearchLimitLayers SearchConfigurator::params() {
     else if (byTag -> isChecked())
         predicate_types = Core::sp_tag;
 
-    if (byFresh -> isChecked()) predicate_types |= Core::sp_fresh;
     if (byNew -> isChecked()) predicate_types |= Core::sp_new;
     if (byPopular -> isChecked()) predicate_types |= Core::sp_popular;
     if (byRelativity -> isChecked()) predicate_types |= Core::sp_relative;
