@@ -17,7 +17,11 @@ namespace Core {
         extern const QString tkn_grab_year              = QStringLiteral("gyear");
         extern const QString tkn_grab_album             = QStringLiteral("galbum");
         extern const QString tkn_grab_art_url           = QStringLiteral("gart");
-        extern const QString tkn_grab_items_amount      = QStringLiteral("gamount");
+
+        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
+        extern const QString tkn_grab_set_items         = QStringLiteral("gset_items");
+        extern const QString tkn_grab_set_parser        = QStringLiteral("gset_parser");
+        extern const QString tkn_grab_set_items_amount  = QStringLiteral("gamount");
 
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
 

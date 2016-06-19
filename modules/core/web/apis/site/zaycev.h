@@ -64,6 +64,15 @@ namespace Core {
                 );
             }
 
+            QJsonArray loadSet(const QVariantHash & attrs) {
+                return saRequest(
+                    attrs.value(tkn_grab_refresh).toString(),
+                    call_type_html,
+                    0,
+                    (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt()
+                );
+            }
+
             QJsonArray newest(const SearchLimit & limits) {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/new/more.html?page=") % OFFSET_TEMPLATE,
@@ -139,6 +148,8 @@ namespace Core {
                         for(Html::Set::Iterator set = sets.begin(); set != sets.end(); set++) {
                             QJsonObject set_obj;
 
+                            set_obj.insert(tkn_grab_is_set, true);
+                            set_obj.insert(tkn_grab_set_parser, proc_tracks1);
                             set_obj.insert(tkn_grab_title, (*set) -> findFirst(&title_selector) -> text());
 
                             Html::Tag * link_tag = (*set) -> findFirst(&link_selector);
@@ -155,7 +166,7 @@ namespace Core {
 
                             if (Info::extractNumber((*set) -> findFirst(&tracks_amount) -> text(), digit))
                                 set_obj.insert(
-                                    tkn_grab_items_amount,
+                                    tkn_grab_set_items_amount,
                                     digit.toInt()
                                 );
 

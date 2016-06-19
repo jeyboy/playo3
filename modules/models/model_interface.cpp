@@ -359,42 +359,56 @@ int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collectio
 
         if (itm.isEmpty()) continue;
 
-        QString id = QString::number(itm.value(tkn_grab_id).toInt());
-        QString uri = itm.value(tkn_grab_url).toString();
-        QString refresh_url = itm.value(tkn_grab_refresh).toString();
-
-        itemsAmount++;
-        IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
-            itm.value(tkn_grab_title).toString(),
-            wType, refresh_url,
-            itm.value(tkn_grab_extension).toString(val_def_extension)
-        ));
-
-        if (itm.contains(tkn_grab_duration)) {
-            if (itm.value(tkn_grab_duration).isDouble())
-                newItem -> setDuration(Duration::fromMillis(itm.value(tkn_grab_duration).toInt(0)));
-            else
-                newItem -> setDuration(itm.value(tkn_grab_duration));
-        }
-
-        if (itm.contains(tkn_grab_genre_id))
-            newItem -> setGenre(itm.value(tkn_grab_genre_id).toInt());
-
-        if (itm.contains(tkn_grab_bpm))
-            newItem -> setBpm(itm.value(tkn_grab_bpm).toInt());
-
-        if (itm.contains(tkn_grab_size))
-            newItem -> setSize(Info::fromUnits(itm.value(tkn_grab_size).toString()));
-
-        if (!itm.contains(tkn_skip_info))
-            newItem -> setInfo(Info::str(
-                    itm.value(tkn_grab_size).toString("?"),
-                    newItem -> extension().toString(),
-                    itm.value(tkn_grab_bitrate).toString("?"),
-                    itm.value(tkn_grab_discretion_rate).toString("?"),
-                    itm.value(tkn_grab_channels).toString("?")
-                )
+        if (itm.contains(tkn_grab_is_set)) {
+            Playlist * playlist = parent -> createLoadablePlaylist(
+                {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString(), tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}},
+                itm.value(tkn_grab_title).toString(),
+                itm.value(tkn_grab_id).toString()
             );
+
+            if (itm.contains(tkn_grab_set_items)) {
+                itemsAmount += proceedGrabberList(wType, itm.value(tkn_grab_set_items).toArray(), playlist);
+            } else {
+
+            }
+        } else {
+            QString id = QString::number(itm.value(tkn_grab_id).toInt());
+            QString uri = itm.value(tkn_grab_url).toString();
+            QString refresh_url = itm.value(tkn_grab_refresh).toString();
+
+            itemsAmount++;
+            IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
+                itm.value(tkn_grab_title).toString(),
+                wType, refresh_url,
+                itm.value(tkn_grab_extension).toString(val_def_extension)
+            ));
+
+            if (itm.contains(tkn_grab_duration)) {
+                if (itm.value(tkn_grab_duration).isDouble())
+                    newItem -> setDuration(Duration::fromMillis(itm.value(tkn_grab_duration).toInt(0)));
+                else
+                    newItem -> setDuration(itm.value(tkn_grab_duration));
+            }
+
+            if (itm.contains(tkn_grab_genre_id))
+                newItem -> setGenre(itm.value(tkn_grab_genre_id).toInt());
+
+            if (itm.contains(tkn_grab_bpm))
+                newItem -> setBpm(itm.value(tkn_grab_bpm).toInt());
+
+            if (itm.contains(tkn_grab_size))
+                newItem -> setSize(Info::fromUnits(itm.value(tkn_grab_size).toString()));
+
+            if (!itm.contains(tkn_skip_info))
+                newItem -> setInfo(Info::str(
+                        itm.value(tkn_grab_size).toString("?"),
+                        newItem -> extension().toString(),
+                        itm.value(tkn_grab_bitrate).toString("?"),
+                        itm.value(tkn_grab_discretion_rate).toString("?"),
+                        itm.value(tkn_grab_channels).toString("?")
+                    )
+                );
+        }
     }
 
     return itemsAmount;
