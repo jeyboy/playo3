@@ -822,7 +822,7 @@ void IModel::finishingItemsAdding() {
 void IModel::finishSetLoading(QJsonArray & arr, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
-    QVariantHash hash = playlist -> loadableAttrs().toHash();
+    QVariantMap hash = playlist -> loadableAttrs().toMap();
     DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
     playlist -> unset(IItem::flag_in_proc);
     playlist -> removeLoadability();
