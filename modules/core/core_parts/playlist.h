@@ -49,7 +49,7 @@ namespace Core {
             if (children.removeOne(child) > 0)
                 backPropagateItemsCountInBranch(-((child -> isContainer()) ? ((Playlist *)child) -> childCount() : 1));
         }
-        int removeChildren(int position, int count);
+        int removeChildren(int position, int count = 1);
 
 
         void shuffle();

@@ -26,7 +26,13 @@ namespace Core {
             if (response -> obj && !initiator -> isCanceled() && response) {
                 T result = initiator -> result();
                 QGenericArgument arg = QArgument<T>(response -> arg, result);
-                QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
+
+                if (response -> user_data) {
+                    QGenericArgument arg = QArgument<T>(response -> arg, result);
+                    QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg, Q_ARG(void *, response -> user_data));
+                }
+                else
+                    QMetaObject::invokeMethod(response -> obj, response -> slot, Qt::AutoConnection, arg);
             }
         }
     };

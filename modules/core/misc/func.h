@@ -17,6 +17,12 @@ struct Func {
 
             if (entry2) {
                 len = entry2 - entry;
+
+                const char * comma_entry = strchr(entry, ',');
+
+                if (comma_entry)
+                    len = comma_entry - entry;
+
                 strncpy(arg, entry + 1, len - 1); arg[len - 1] = '\0';
             }
         } else arg[0] = '\0';

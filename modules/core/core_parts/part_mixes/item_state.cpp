@@ -26,6 +26,7 @@ void ItemState::setStates(const int & flags) {
     if (BITS_IS_SET(flags, flag_checked))                   set(flag_checked);
     if (BITS_IS_SET(flags, flag_expanded))                  set(flag_expanded);
     if (BITS_IS_SET(flags, flag_mark_on_removing))          set(flag_mark_on_removing);
+    if (BITS_IS_SET(flags, flag_in_proc))                   set(flag_in_proc);
 
     if (BITS_IS_SET(flags, flag_not_proccessing))           unset(flag_proccessing);
     if (BITS_IS_SET(flags, flag_not_played))                unset(flag_played);

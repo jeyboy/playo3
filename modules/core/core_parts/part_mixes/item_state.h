@@ -33,7 +33,7 @@ namespace Core {
                 flag_proccessing = 2048,
                 flag_mark_on_removing = 1024,
                 flag_played = 512,
-//                if_proceeded = 256,
+                flag_in_proc = 256,
                 flag_checked = 128,
                 flag_expanded = 64,
 //                not_exist = 32,

@@ -73,8 +73,18 @@ namespace Models {
         void fetchMore(const QModelIndex & parent) {
             Playlist * playlist = item<Playlist>(parent);
 
-            if (playlist -> isLoadable())
-                proceedLoadable(playlist, playlist -> loadableAttrs());
+            if (playlist -> isLoadable() && !playlist -> is(IItem::flag_in_proc)) {
+                playlist -> setStates(IItem::flag_in_proc);
+
+                Func * func = new Func(
+                    this,
+                    SLOT(finishSetLoading(QJsonArray&, void*)),
+                    playlist
+                );
+                ThreadUtils::obj().run(
+                    (IModel *)this, &IModel::proceedLoadable, playlist -> loadableAttrs(), func
+                );
+            }
 
             QAbstractItemModel::fetchMore(parent);
         }
@@ -104,12 +114,12 @@ namespace Models {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        void proceedLoadable(Playlist * /*parent*/, const QVariant & /*loadable_attrs*/) { // not finished
-//            QVariantHash hash = loadable_attrs.toHash();
-//            ISource * source = Web::Apis::source(parent -> )
-
-            //TODO: need realize data loading
-            //TODO: need to realize proc of attrs and parsing of results, based on type of source
+        QJsonArray proceedLoadable(const QVariant & loadable_attrs) {
+            QVariantHash hash = loadable_attrs.toHash();
+            DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
+            ISource * source = Web::Apis::source(data_type);
+            QJsonArray set = source -> loadSet(hash);
+            return set;
         }
 
         int proceedVkList(const QJsonArray & collection, Playlist * parent);
@@ -169,6 +179,7 @@ namespace Models {
 
     protected slots:
         void finishingItemsAdding();
+        void finishSetLoading(QJsonArray&, void*);
 
     signals:
         void updateRemovingBlockation(bool isBlocked);

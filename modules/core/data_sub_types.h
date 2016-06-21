@@ -28,6 +28,8 @@ namespace Core {
         dt_local,
         dt_local_cue,
 
+        dt_dummy,
+
         dt_web = 50,
 
         dt_site_od,

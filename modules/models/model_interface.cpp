@@ -369,9 +369,15 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
             );
 
             if (itm.contains(tkn_grab_set_items)) {
-                itemsAmount += proceedGrabberList(wType, itm.value(tkn_grab_set_items).toArray(), playlist);
+                int taked_amount = proceedGrabberList(wType, itm.value(tkn_grab_set_items).toArray(), playlist);
+                itemsAmount += taked_amount;
+                playlist -> updateItemsCountInBranch(taked_amount);
             } else {
-
+                playlist -> setStates(IItem::flag_not_expanded);
+                IItem * dummy = new IItem(dt_dummy, playlist, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
+                dummy -> setTitle(QStringLiteral("Loading..."));
+                itemsAmount++;
+                playlist -> updateItemsCountInBranch(1);
             }
         } else {
             QString id = QString::number(itm.value(tkn_grab_id).toInt());
@@ -811,6 +817,29 @@ void IModel::finishingItemsAdding() {
     emit moveOutProcess();
     emit spoilNeeded(res -> eIndex);
     delete res;
+}
+
+void IModel::finishSetLoading(QJsonArray & arr, void * _playlist) {
+    Playlist * playlist = (Playlist *)_playlist;
+
+    QVariantHash hash = playlist -> loadableAttrs().toHash();
+    DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
+    playlist -> unset(IItem::flag_in_proc);
+    playlist -> removeLoadability();
+
+    int row_index = playlist -> childCount() - 1;
+    int added = proceedGrabberList(data_type, arr, playlist);
+
+    if (added > 0) {
+        playlist -> removeChildren(row_index);
+        playlist -> backPropagateItemsCountInBranch(added);
+
+        beginInsertRows(index(playlist), row_index, row_index);
+        endInsertRows();
+    } else {
+        IItem * item = playlist -> child(row_index);
+        item -> setTitle(QStringLiteral("Error!!"));
+    }
 }
 
 /////////////////////////////////////////////////////////
