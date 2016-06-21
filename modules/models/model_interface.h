@@ -112,12 +112,12 @@ namespace Models {
             //TODO: need to realize proc of attrs and parsing of results, based on type of source
         }
 
-        int proceedVkList(QJsonArray & collection, Playlist * parent);
-        int proceedScList(QJsonArray & collection, Playlist * parent);
-        int proceedOdList(QJsonArray & collection, Playlist * parent);
-        int proceedYandexList(QJsonArray & collection, Playlist * parent);
-        int proceedYoutubeList(QJsonArray & collection, Playlist * parent);
-        int proceedGrabberList(const DataSubType & wType, QJsonArray & collection, Playlist * parent);
+        int proceedVkList(const QJsonArray & collection, Playlist * parent);
+        int proceedScList(const QJsonArray & collection, Playlist * parent);
+        int proceedOdList(const QJsonArray & collection, Playlist * parent);
+        int proceedYandexList(const QJsonArray & collection, Playlist * parent);
+        int proceedYoutubeList(const QJsonArray & collection, Playlist * parent);
+        int proceedGrabberList(const DataSubType & wType, const QJsonArray & collection, Playlist * parent);
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());

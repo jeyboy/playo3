@@ -220,7 +220,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
@@ -228,7 +228,7 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     parent -> accumulateUids(store);
 
     int pos = parent -> playlistsAmount();
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -267,13 +267,13 @@ int IModel::proceedVkList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
@@ -306,11 +306,11 @@ int IModel::proceedYandexList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         QJsonObject snippet = itm.value(QStringLiteral("snippet")).toObject();
@@ -350,18 +350,20 @@ int IModel::proceedYoutubeList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(const DataSubType & wType, QJsonArray & collection, Playlist * parent) {
+int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
 
         if (itm.contains(tkn_grab_is_set)) {
+            QVariantHash hash = {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()}, {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}};
+
             Playlist * playlist = parent -> createLoadablePlaylist(
-                {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString(), tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}},
+                hash,
                 itm.value(tkn_grab_title).toString(),
                 itm.value(tkn_grab_id).toString()
             );
@@ -424,7 +426,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 }
 
 
-int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedScList(const QJsonArray & collection, Playlist * parent) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
@@ -432,7 +434,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
@@ -481,7 +483,7 @@ int IModel::proceedScList(QJsonArray & collection, Playlist * parent) {
     return itemsAmount;
 }
 
-int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
+int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
@@ -491,7 +493,7 @@ int IModel::proceedOdList(QJsonArray & collection, Playlist * parent) {
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
