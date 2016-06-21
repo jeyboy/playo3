@@ -19,15 +19,15 @@ namespace Core {
             if (limits.by_newest())
                 return newest(limits);
 
+            if (limits.by_sets())
+                return searchInSets(limits);
+
             if (!limits.predicate.isEmpty()) {               
                 if (limits.by_abc())
                     return searchByChar(limits);
 
                 if (limits.by_lyrics())
                     return searchInLyrics(limits);
-
-                if (limits.by_sets())
-                    return searchInSets(limits);
 
                 if (limits.in_relative())
                     return related(limits);

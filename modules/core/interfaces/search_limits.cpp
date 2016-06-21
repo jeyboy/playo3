@@ -3,7 +3,7 @@
 using namespace Core;
 
 void SearchLimitLayers::prepareLayers(QList<SearchLimitLayer> & requests) {
-    bool web_predicable = !(predicates.isEmpty() && genres.isEmpty()) || by_popularity();
+    bool web_predicable = !(predicates.isEmpty() && genres.isEmpty()) || by_popularity() || by_newest() || by_sets();
 
     if (predicates.isEmpty()) predicates << QString();
     if (genres.isEmpty()) genres << QString();

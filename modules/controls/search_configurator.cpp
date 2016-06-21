@@ -203,7 +203,7 @@ QWidget * SearchConfigurator::initLimitations() {
 
     byRelativity = new QCheckBox(searchInGroup);
     byRelativity -> setObjectName(QStringLiteral("byRelativity"));
-    byRelativity -> setText(QApplication::translate("SearchDialog", "Related", 0));
+    byRelativity -> setText(QApplication::translate("SearchDialog", "In related", 0));
     gl2 -> addWidget(byRelativity, 0, 1);
 
     byOrigins = new QCheckBox(searchInGroup);
@@ -345,8 +345,8 @@ SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activatio
 }
 
 Core::SearchLimitLayers SearchConfigurator::params() {
-    int predicate_types = inSites -> isChecked() &&
-        textPredicates -> count() == 0 && stylePredicates -> count() == 0 ? Core::sp_popular : Core::sp_title;
+    int predicate_types = textPredicates -> count() == 0 && stylePredicates -> count() == 0 &&
+        inSites -> isChecked() ? Core::sp_popular : Core::sp_title;
 
     if (byArtist -> isChecked())
         predicate_types = Core::sp_artist;
@@ -360,9 +360,11 @@ Core::SearchLimitLayers SearchConfigurator::params() {
         predicate_types = Core::sp_abc;
     else if (byTag -> isChecked())
         predicate_types = Core::sp_tag;
+    else if (byNew -> isChecked())
+        predicate_types = Core::sp_new;
+    else if (byPopular -> isChecked())
+        predicate_types = Core::sp_popular;
 
-    if (byNew -> isChecked()) predicate_types |= Core::sp_new;
-    if (byPopular -> isChecked()) predicate_types |= Core::sp_popular;
     if (byRelativity -> isChecked()) predicate_types |= Core::sp_relative;
 
     if (byCyrillic -> isChecked()) predicate_types |= Core::sp_cyrillic;
