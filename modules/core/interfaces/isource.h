@@ -124,7 +124,7 @@ namespace Core {
             if (!isRefreshable() || refresh_page.isEmpty()) return QString();
             return refreshProc(takeRefreshPage(refresh_page));
         }
-        virtual inline QJsonArray loadSet(const QVariantHash & /*attrs*/) { return QJsonArray(); }
+        virtual inline QJsonArray loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
         virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
 

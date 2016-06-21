@@ -115,7 +115,7 @@ namespace Models {
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
         QJsonArray proceedLoadable(const QVariant & loadable_attrs) {
-            QVariantHash hash = loadable_attrs.toHash();
+            QVariantMap hash = loadable_attrs.toMap();
             DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
             ISource * source = Web::Apis::source(data_type);
             QJsonArray set = source -> loadSet(hash);

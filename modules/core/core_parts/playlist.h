@@ -60,7 +60,7 @@ namespace Core {
         bool updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
         Playlist * createPlaylistPath(const DataSubType & subType, const QString & path);
-        Playlist * createLoadablePlaylist(const QVariantHash & attrs, const QString & name, const QString & uid = QString(), int pos = -1) {
+        Playlist * createLoadablePlaylist(const QVariantMap & attrs, const QString & name, const QString & uid = QString(), int pos = -1) {
             Playlist * curr = playlists.value(playlistUid(name, uid), 0);
             if (curr) {
                 curr -> setLoadableAttrs(attrs);

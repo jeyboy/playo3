@@ -64,7 +64,7 @@ namespace Core {
                 );
             }
 
-            QJsonArray loadSet(const QVariantHash & attrs) {
+            QJsonArray loadSet(const QVariantMap & attrs) {
                 return saRequest(
                     attrs.value(tkn_grab_refresh).toString(),
                     call_type_html,

@@ -360,7 +360,7 @@ int IModel::proceedGrabberList(const DataSubType & wType, const QJsonArray & col
         if (itm.isEmpty()) continue;
 
         if (itm.contains(tkn_grab_is_set)) {
-            QVariantHash hash = {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()}, {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}};
+            QVariantMap hash = {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()}, {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}};
 
             Playlist * playlist = parent -> createLoadablePlaylist(
                 hash,
