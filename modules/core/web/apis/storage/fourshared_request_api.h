@@ -77,7 +77,7 @@ namespace Core {
                     QJsonArray arr;
 
                     if (limits.include_audio())
-                        return pRequest(
+                        pRequest(
                             audioSearchUrl(),
                             call_type_json,
                             rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -87,7 +87,7 @@ namespace Core {
                         );
 
                     if (limits.include_video())
-                        return pRequest(
+                        pRequest(
                             videoSearchUrl(),
                             call_type_json,
                             rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -110,7 +110,7 @@ namespace Core {
                     QJsonArray arr;
 
                     if (limits.include_audio())
-                        return pRequest(
+                        pRequest(
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                             call_type_html,
                             rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -119,7 +119,7 @@ namespace Core {
                         );
 
                     if (limits.include_video())
-                        return pRequest(
+                        pRequest(
                             QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                             call_type_html,
                             rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -134,7 +134,7 @@ namespace Core {
                     QJsonArray arr;
 
                     if (limits.include_audio())
-                        return pRequest(
+                        pRequest(
                             audioSearchUrl(limits.predicate),
                             call_type_json,
                             rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -144,7 +144,7 @@ namespace Core {
                         );
 
                     if (limits.include_video())
-                        return pRequest(
+                        pRequest(
                             videoSearchUrl(limits.predicate),
                             call_type_json,
                             rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -161,7 +161,7 @@ namespace Core {
                     QJsonArray arr;
 
                     if (limits.include_audio())
-                        return pRequest(
+                        pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
                             rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
@@ -170,7 +170,7 @@ namespace Core {
                         );
 
                     if (limits.include_video())
-                        return pRequest(
+                        pRequest(
                             QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                             call_type_html,
                             rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),

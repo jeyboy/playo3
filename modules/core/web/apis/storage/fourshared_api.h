@@ -35,13 +35,13 @@ namespace Core {
                 QJsonArray popular(const SearchLimit & limits) {
                     if (!isPermitted(pf_media_content)) return QJsonArray();
 
-                    return isConnected() ? popularAuth(limits) : popularNoAuth(limits);
+                    return /*isConnected() ? popularAuth(limits) :*/ popularNoAuth(limits);
                 }
 
                 QJsonArray searchProc(const SearchLimit & limits) {
                     if (!isPermitted(pf_search)) return QJsonArray();
 
-                    return isConnected() ? searchProcAuth(limits) : searchProcNoAuth(limits);
+                    return /*isConnected() ? searchProcAuth(limits) :*/ searchProcNoAuth(limits);
                 }
 
                 QString refresh(const QString & refresh_page) {
@@ -123,20 +123,53 @@ namespace Core {
                                 QString name = name_tag -> text().trimmed(), ext;
                                 Extensions::obj().extractExtension(name, ext);
 
-                                Html::Tag * img = (*track) -> findFirst(".playThumb img");
-                                QString js = img -> value(QStringLiteral("onclick")), url;
+                                Html::Tag * play_img = (*track) -> findFirst(".playThumb img");
+                                QString js = play_img -> value(QStringLiteral("onclick")), url;
                                 Info::extract(js, QStringLiteral("'http"), QStringLiteral("'"), url, 1);
+
+                                Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
+
+                                if (img)
+                                    track_obj.insert(tkn_grab_art_url, img -> value(QStringLiteral("src")));
 
                                 track_obj.insert(tkn_grab_url, url);
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
                                 track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);
+                                track_obj.insert(tkn_grab_extension, ext);
 
                                 arg -> append(track_obj, track + 1 == tracks.end());
                             }
 
                             result = !tracks.isEmpty();
-                        }
+                        break;}
+
+                        case proc_video1: {
+                            Html::Set tracks = doc.find(".listView.res_table tr[valign='top']");;
+
+                            for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
+                                QJsonObject track_obj;
+
+                                Html::Tag * name_tag = (*track) -> findFirst(".fname a");
+
+                                QString name = name_tag -> text().trimmed(), ext;
+                                Extensions::obj().extractExtension(name, ext);
+
+                                Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
+
+                                if (img)
+                                    track_obj.insert(tkn_grab_art_url, img -> value(QStringLiteral("src")));
+
+                                track_obj.insert(tkn_grab_refresh, name_tag -> link());
+                                track_obj.insert(tkn_skip_info, true);
+                                track_obj.insert(tkn_grab_title, name);
+                                track_obj.insert(tkn_grab_extension, ext);
+
+                                arg -> append(track_obj, track + 1 == tracks.end());
+                            }
+
+                            result = !tracks.isEmpty();
+                        break;}
 
                         default: ;
                     }
