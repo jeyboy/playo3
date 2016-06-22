@@ -40,7 +40,7 @@ namespace Core {
 //                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
 //                }
 
-                QString refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
+                QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) { // here refresh_page must by eq to track id
                     QJsonObject obj = Manager::prepare() -> jsonGet(trackDownloadingUrl(refresh_page));
                     obj = Manager::prepare() -> jsonGet(QString(obj.value(QStringLiteral("src")).toString() % QStringLiteral("&format=json")));
                     QString path = obj.value(QStringLiteral("path")).toString();

@@ -44,7 +44,7 @@ namespace Core {
                     return /*isConnected() ? searchProcAuth(limits) :*/ searchProcNoAuth(limits);
                 }
 
-                QString refresh(const QString & refresh_page) {
+                QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) {
                     if (!isPermitted(pf_media_content)) return QString();
 
                     Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
@@ -137,6 +137,7 @@ namespace Core {
                                 track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);
                                 track_obj.insert(tkn_grab_extension, ext);
+                                track_obj.insert(tkn_media_type, dmt_audio);
 
                                 arg -> append(track_obj, track + 1 == tracks.end());
                             }
@@ -164,6 +165,7 @@ namespace Core {
                                 track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);
                                 track_obj.insert(tkn_grab_extension, ext);
+                                track_obj.insert(tkn_media_type, dmt_video);
 
                                 arg -> append(track_obj, track + 1 == tracks.end());
                             }

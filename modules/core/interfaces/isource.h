@@ -120,9 +120,9 @@ namespace Core {
         virtual void loadAdditionals(QJsonObject & /*obj*/) {}
 
         virtual inline bool isRefreshable() { return true; }
-        virtual inline QString refresh(const QString & refresh_page) {
+        virtual inline QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
             if (!isRefreshable() || refresh_page.isEmpty()) return QString();
-            return refreshProc(takeRefreshPage(refresh_page));
+            return refreshProc(takeRefreshPage(refresh_page), itemMediaType);
         }
         virtual inline QJsonArray loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
@@ -140,7 +140,7 @@ namespace Core {
         QVariantHash attrs;
 
         virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> getFollowed(QUrl(refresh_page)); }
-        virtual QString refreshProc(Web::Response * response) { delete response; return QString(); }
+        virtual QString refreshProc(Web::Response * response, const DataMediaType & /*itemMediaType*/) { delete response; return QString(); }
 
         QString error;
     };

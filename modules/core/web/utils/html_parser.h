@@ -50,8 +50,8 @@ namespace Core {
 
                 inline bool isDirect() const { return sType == direct; }
                 inline bool isBackward() const { return sType == backward; }
-                bool validTo(int index) const;
-                bool skipable(int index) const;
+//                bool validTo(int index) const;
+//                bool skipable(int index) const;
 
                 QStringList klasses;
                 QHash<SState, QString> _tokens;

@@ -23,7 +23,7 @@ namespace Core {
         protected:
             QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
 
-            QString refreshProc(Response * reply) {
+            QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".options a[itemprop='audio']");
                 qDebug() << "IN RESTORING" << tracks.count();

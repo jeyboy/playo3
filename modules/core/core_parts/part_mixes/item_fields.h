@@ -58,6 +58,10 @@ namespace Core {
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
+        inline DataMediaType mediaType() const                  { return (DataMediaType)attrs.value(JSON_TYPE_MEDIA_TYPE, dmt_unknow).toInt(); }
+        inline void setDataMediaType(const DataMediaType & mediaType)
+                                                                { attrs[JSON_TYPE_MEDIA_TYPE] = mediaType; }
+
         inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
         inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
 

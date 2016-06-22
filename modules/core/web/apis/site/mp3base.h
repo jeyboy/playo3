@@ -172,7 +172,7 @@ namespace Core {
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
 
-            inline QString refreshProc(Response * reply) {
+            inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document parser(reply);
 
                 QString url = parser.find("#player_content script").text();

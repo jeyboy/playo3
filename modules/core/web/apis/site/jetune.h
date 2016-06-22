@@ -14,12 +14,6 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline DataSubType siteType() const { return dt_site_jetune; }
 
-            QString refresh(const QString & refresh_page) {
-                qDebug() << "IN JETUNE";
-
-                return refresh_page;
-            }
-
             inline QJsonArray popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 

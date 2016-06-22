@@ -31,14 +31,14 @@ namespace Core {
 
             static void close(QJsonObject & obj);
 
-            static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType) {
+            static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType, const DataMediaType & itemMediaType) {
                 qDebug() << "RESTORING" << itemSubType << refreshStr;
 
                 ISource * source = sources.value(itemSubType);
                 if (source == 0)
                     return QString();
                 else
-                    return source -> refresh(refreshStr);
+                    return source -> refresh(refreshStr, itemMediaType);
             }
         };
     }

@@ -9,7 +9,7 @@ using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType());
+    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType(), itm -> mediaType());
 
     qDebug() << itm -> refresh_path() << newUrl;
     if (!newUrl.isEmpty() && itm -> path().toString() != newUrl) {
@@ -249,7 +249,8 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent) {
                 id, uri,
                 QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
                 owner, uid,
-                Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0))
+                Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)),
+                mdtype
             ), pos);
 
 //                if (itm.contains(Vk::genre_id_key))

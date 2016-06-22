@@ -3,7 +3,7 @@
 
 using namespace Core::Web::Od;
 
-QString Api::refresh(const QString & refresh_page) { // here refresh_page must by eq to track id
+QString Api::refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) { // here refresh_page must by eq to track id
     QJsonObject obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
     if (hasError(obj)) {
         connectUser();

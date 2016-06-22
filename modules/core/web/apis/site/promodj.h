@@ -76,7 +76,7 @@ namespace Core {
             }
 
     //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
-    //        inline QString refreshProc(WebResponse * reply) {
+    //        inline QString refreshProc(WebResponse * reply, const DataMediaType & itemMediaType) {
     //            Html::Document parser(reply);
 
     //            QString url = parser.find("#flash_prelisten script").text();

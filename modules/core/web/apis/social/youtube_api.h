@@ -41,7 +41,7 @@ namespace Core {
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
 
             protected:
-                inline QString refresh(const QString & path) { return idToUrl(path); }
+                inline QString refresh(const QString & path, const DataMediaType & /*itemMediaType*/) { return idToUrl(path); }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
 //                inline QString offsetKey() const { return tkn_page_token; }

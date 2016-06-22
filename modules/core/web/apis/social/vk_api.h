@@ -53,7 +53,7 @@ namespace Core {
 
                 QToolButton * initButton(QWidget * parent = 0);
 
-                QString refresh(const QString & audio_uid) {
+                QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) {
                     return refresh_postproc(audioInfo(audio_uid).value(tkn_url).toString());
                 }
 

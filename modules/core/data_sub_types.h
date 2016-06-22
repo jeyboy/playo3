@@ -8,6 +8,12 @@ namespace Core {
         rec_song
     };
 
+    enum DataMediaType : int {
+        dmt_unknow = 0,
+        dmt_audio,
+        dmt_video
+    };
+
     enum DataSubType : int {
         dt_level = -199,
         dt_level_tree,

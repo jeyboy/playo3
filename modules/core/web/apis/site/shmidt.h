@@ -53,7 +53,7 @@ namespace Core {
 
     //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
 
-            inline QString refreshProc(Response * reply) {
+            inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document parser(reply);
                 Html::Set tracks = parser.find(".download p a");
 

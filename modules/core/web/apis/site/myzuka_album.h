@@ -108,7 +108,7 @@ namespace Core {
 //                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
-            QString refreshProc(Response * reply) {
+            QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document doc = reply -> toHtml();
                 Html::Set tracks = doc.find(".options a[itemprop='audio']");
 

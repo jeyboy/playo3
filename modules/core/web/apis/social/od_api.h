@@ -33,7 +33,7 @@ namespace Core {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, func);
                 }
 
-                QString refresh(const QString & refresh_page); // here refresh_page must by eq to track id
+                QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType); // here refresh_page must by eq to track id
 
                 QToolButton * initButton(QWidget * parent = 0);
 
