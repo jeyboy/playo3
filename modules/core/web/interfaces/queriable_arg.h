@@ -77,6 +77,7 @@ namespace Core {
             }
 
             void ignoreArrContent(bool ignore = true) { items_fact_count = ignore ? 0 : arr -> size(); }
+            void changeCallMethod(const ApiCallMethod & meth) { call_method = meth; }
 
             void setOffsetPolyLimitations(
                 ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,

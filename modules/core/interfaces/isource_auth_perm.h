@@ -66,8 +66,8 @@ namespace Core {
     enum PermitResult : int {
         pr_none = 0,
         pr_site = 1,
-        pr_api = 2,
-        pr_any = pr_site | pr_api
+        pr_api = 2
+//        pr_any = pr_site | pr_api
     };
 
     enum PermitFlags {

@@ -89,10 +89,11 @@ namespace Core {
             }
 
             bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
             {
                 QJsonArray arr;
                 QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
+                arg.changeCallMethod(call_method);
 
                 bool res = request(&arg);
                 json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
@@ -100,18 +101,19 @@ namespace Core {
             }
 
             QJsonObject sRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
             {
-                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, error_receiver);
+                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, error_receiver);
                 return res.isEmpty() ? QJsonObject() : res.last().toObject();
             }
             QJsonArray saRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0)
+                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
                 QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                arg.changeCallMethod(call_method);
 
                 request(&arg);
                 return *arr;

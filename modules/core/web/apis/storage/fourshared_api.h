@@ -25,23 +25,43 @@ namespace Core {
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        /*sf_auth_api_has | */sf_auth_site_has | sf_site_user_content_auth_only |
-                        sf_api_search_auth_only | sf_api_user_content_auth_only
+                        /*sf_auth_api_has | sf_api_user_content_auth_only | */sf_auth_site_has
+                            | sf_site_user_content_auth_only | sf_api_search_auth_only
                     );
                 }
 
                 QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonValue popular(const SearchLimit & limits) {
-                    if (!isPermitted(pf_media_content)) return QJsonArray();
+                    PermitResult res = isPermitted(pf_media_content);
+                    if (!res) return QJsonArray();
 
-                    return /*isConnected() ? popularApi(limits) :*/ popularSite(limits);
+                    return res == pr_api ? popularApi(limits) : popularSite(limits);
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    if (!isPermitted(pf_search)) return QJsonArray();
+                    PermitResult res = isPermitted(pf_search);
+                    if (!res) return QJsonArray();
 
-                    return /*isConnected() ? searchProcApi(limits) :*/ searchProcSite(limits);
+                    return res == pr_api ? searchProcApi(limits) : searchProcSite(limits);
+                }
+
+                QJsonValue userInfo(/*QString & uid, InfoType fullInfo = info_all*/) {
+                    PermitResult res = isPermitted(pf_user_content);
+                    if (!res) return QJsonArray();
+
+                    return loadSet({{tkn_grab_refresh, siteToken()}});
+                }
+
+                QJsonValue loadSet(const QVariantMap & attrs) {
+                    QUrl url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
+
+                    return saRequest(
+                        attrs.value(tkn_grab_refresh).toString(),
+                        call_type_html,
+                        0,
+                        (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt()
+                    );
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) {
@@ -82,7 +102,7 @@ namespace Core {
                 }
 
                 bool connectUserSite() {
-                    Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base);
+                    Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base) -> toHtml();
 
                     Html::Tag * form = html.findFirst("form[name='loginForm']");
                     if (!form) return false;
@@ -98,7 +118,15 @@ namespace Core {
 
                         form = doc.findFirst("form[name='loginForm']");
 
-                        if (!form) return true;
+                        if (!form) {
+                            html = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
+                            Html::Tag * root_id_tag = html.findFirst("input.jsRootId");
+                            if (root_id_tag)
+                                setSiteToken(root_id_tag -> value());
+                            else
+                                qDebug() << "Cannot find root id for current user";
+                            return true;
+                        }
                     }
 
                     return false;
