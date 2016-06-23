@@ -27,7 +27,7 @@ namespace Core {
             extern const QString url_api_search         = QStringLiteral("https://search.4shared.com/v%1/");
 
             extern const QString url_html_site_base     = QStringLiteral("http://www.4shared.com/");
-            extern const QString url_html_user_dir_base = url_html_site_base % QStringLiteral("account/home.jsp#dir=");
+            extern const QString url_html_user_dir_base = url_html_site_base + QStringLiteral("account/home.jsp#dir=");
 
             extern const QString val_name               = QStringLiteral("4shared");
             extern const QString val_token              = QStringLiteral("22abeb63487b7f6b75051079b7e610b1");

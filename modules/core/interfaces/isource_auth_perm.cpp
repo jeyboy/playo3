@@ -26,7 +26,7 @@ PermitResult ISourceAuthPerm::isPermitted(const PermitFlags & perm_flag) {
             site_flag = sf_site_feeds_auth_only;
             site_prefer = sf_prefer_site_feeds;
         break;}
-        default: return true;
+        default: return pr_none;
     }
 
     SourceFlags flags = defaultFlags();
