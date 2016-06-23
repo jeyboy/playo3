@@ -304,7 +304,8 @@ QUrl DownloadView::restoreUrl(DownloadModelItem * item) {
         return QUrl(
             Core::Web::Apis::restoreUrl(
                 item -> data(DOWNLOAD_REFRESH_ATTRS).toString(),
-                (DataSubType)item -> data(DOWNLOAD_TYPE).toInt()
+                (DataSubType)item -> data(DOWNLOAD_TYPE).toInt(),
+                (DataMediaType)item -> data(DOWNLOAD_MEDIA_TYPE).toInt()
             )
         );
     }
