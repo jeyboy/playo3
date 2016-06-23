@@ -78,6 +78,7 @@ namespace Core {
 
             void ignoreArrContent(bool ignore = true) { items_fact_count = ignore ? 0 : arr -> size(); }
             void changeCallMethod(const ApiCallMethod & meth) { call_method = meth; }
+            void setRequestHeaders(const QHash<QString, QString> & new_headers) { headers = new_headers; }
 
             void setOffsetPolyLimitations(
                 ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
@@ -182,6 +183,8 @@ namespace Core {
             AdditionalProc post_proc;
 
             QJsonArray * arr;
+
+            QHash<QString, QString> headers;
 
             QStringList fields;
             int items_total_limit, requests_limit, per_request_limit;

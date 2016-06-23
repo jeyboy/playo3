@@ -153,7 +153,11 @@ namespace Core { // requests and response has memory leaks
 
             inline QJsonObject jsonGet(const QUrl & url, const QString & wrap) { return getFollowed(url) -> toJson(wrap); }
             inline QJsonObject jsonGet(const QUrl & url, bool wrap = false) { return getFollowed(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonGet(const QUrl & url, QHash<QString, QString> headers, const QString & wrap) { return getFollowed(url, headers) -> toJson(wrap); }
+            inline QJsonObject jsonGet(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return getFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonPost(const QUrl & url, const QString & wrap) { return postFollowed(url) -> toJson(wrap); }
             inline QJsonObject jsonPost(const QUrl & url, bool wrap = false) { return postFollowed(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonPost(const QUrl & url, QHash<QString, QString> headers, const QString & wrap) { return postFollowed(url, headers) -> toJson(wrap); }
             inline QJsonObject jsonPost(const QUrl & url, QHash<QString, QString> headers, bool wrap = false) { return postFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
 
             inline QPixmap pixmapGet(const QUrl & url) { return getFollowed(url) -> toPixmap(); }

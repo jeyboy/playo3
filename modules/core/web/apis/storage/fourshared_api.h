@@ -46,7 +46,8 @@ namespace Core {
                     return res == perm_api ? searchProcApi(limits) : searchProcSite(limits);
                 }
 
-                QJsonValue userInfo(QString & uid/*, InfoType fullInfo = info_all*/) {
+                inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::userInfo, uid, func); }
+                QJsonValue userInfo(QString & uid) {
                     Permissions res = permissions(pr_user_content);
                     if (!res) return QJsonArray();
 
@@ -56,8 +57,10 @@ namespace Core {
                 QJsonValue loadSet(const QVariantMap & attrs) {
                     QUrl url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
 
+//                    'x-security: 815437060'
+
                     return saRequest(
-                        attrs.value(tkn_grab_refresh).toString(),
+                        url,
                         call_type_html,
                         0,
                         (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt()

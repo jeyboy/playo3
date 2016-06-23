@@ -20,7 +20,13 @@ namespace Core {
 
                 switch(arg -> call_type) {
                     case call_type_json: {
-                        QJsonObject json = Web::Manager::prepare() -> jsonGet(arg -> request_url, arg -> post_proc & proc_json_wrap);
+
+                        QJsonObject json;
+
+                        switch(arg -> call_method) {
+                            case call_method_post: { json = Manager::prepare() -> jsonPost(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap); break; }
+                            default: json = Manager::prepare() -> jsonGet(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap);
+                        }
 
                         status = extractStatus(arg, json, code, message);
                         if (!status) {
@@ -48,8 +54,8 @@ namespace Core {
                     case call_type_html: {
                         Response * response = 0;
                         switch(arg -> call_method) {
-                            case call_method_post: { response = Manager::prepare() -> postFollowed(arg -> request_url); break; }
-                            default: response = Manager::prepare() -> getFollowed(arg -> request_url);
+                            case call_method_post: { response = Manager::prepare() -> postFollowed(arg -> request_url, arg -> headers); break; }
+                            default: response = Manager::prepare() -> getFollowed(arg -> request_url, arg -> headers);
                         }
                         status = htmlToJson(arg, response, message, true);
 
@@ -88,40 +94,51 @@ namespace Core {
                 }
             }
 
-            bool sRequest(const QString & url, QJsonObject & json, const ApiCallType & call_type,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
+            bool sRequest(
+                const QString & url, QJsonObject & json, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
+                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
             {
                 QJsonArray arr;
                 QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
                 arg.changeCallMethod(call_method);
+                arg.setRequestHeaders(headers);
 
                 bool res = request(&arg);
                 json = arr.isEmpty() ? QJsonObject() : arr.last().toObject();
                 return res;
             }
 
-            QJsonObject sRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
+            QJsonObject sRequest(
+                const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
+                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
             {
-                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, error_receiver);
+                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, headers, error_receiver);
                 return res.isEmpty() ? QJsonObject() : res.last().toObject();
             }
-            QJsonArray saRequest(const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get, QObject * error_receiver = 0)
+            QJsonArray saRequest(
+                const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
+                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
                 QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
                 arg.changeCallMethod(call_method);
+                arg.setRequestHeaders(headers);
 
                 request(&arg);
                 return *arr;
             }
 
 
-            QJsonArray pRequest(const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
-                                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD, QObject * error_receiver = 0, bool ignore_arr_content = true)
+            QJsonArray pRequest(
+                const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
+                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD,
+                const ApiCallMethod & call_method = call_method_get, const QHash<QString, QString> & headers = QHash<QString, QString>(),
+                QObject * error_receiver = 0, bool ignore_arr_content = true)
             {
                 QJsonArray temp_arr;
                 if (!arr)
@@ -129,6 +146,8 @@ namespace Core {
 
                 QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
                 arg.ignoreArrContent(ignore_arr_content);
+                arg.changeCallMethod(call_method);
+                arg.setRequestHeaders(headers);
                 arg.setPolyLimitations(poly_rules);
 
                 request(&arg);
