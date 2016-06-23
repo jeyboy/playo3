@@ -72,7 +72,7 @@ bool Api::formConnection() {
         checkSecurity(doc);
 
         if (!Manager::cookie(tkn_authcode).isEmpty()) {
-            setUserID(grabUserId(doc));
+            setSiteUserID(grabUserId(doc));
             setSiteHash(hash_key);
 //            setParams(QString(), grabUserId(doc), hash_key);
             break;

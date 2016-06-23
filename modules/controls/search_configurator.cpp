@@ -261,7 +261,7 @@ void SearchConfigurator::initiateSources() {
     for(QMap<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
         ISource * src = Web::Apis::source(it.key());
 
-        if (src -> isPermitted(pf_search)) {
+        if (src -> permissions(pr_search)) {
             QListWidgetItem * item = new QListWidgetItem(src -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);

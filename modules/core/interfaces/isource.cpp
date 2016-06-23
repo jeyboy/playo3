@@ -16,7 +16,7 @@ void ISource::openTab() {
 }
 
 void ISource::openRecomendations() {
-    QString user_id = userID();
+    QString user_id = userID(pr_media_content);
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),

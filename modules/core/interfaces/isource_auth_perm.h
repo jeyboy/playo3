@@ -13,6 +13,7 @@
 #define SOURCE_API_TOKEN_JSON QStringLiteral("_at")
 #define SOURCE_API_USER_ID_JSON QStringLiteral("_au")
 
+#define SOURCE_SITE_USER_ID_JSON QStringLiteral("_su")
 #define SOURCE_SITE_HASH_JSON QStringLiteral("_sh")
 #define SOURCE_SITE_TOKEN_JSON QStringLiteral("_st")
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
@@ -63,19 +64,18 @@ namespace Core {
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };
 
-    enum PermitResult : int {
-        pr_none = 0,
-        pr_site = 1,
-        pr_api = 2
-//        pr_any = pr_site | pr_api
+    enum Permissions : int {
+        perm_none = 0,
+        perm_site = 1,
+        perm_api = 2
     };
 
-    enum PermitFlags {
-        pf_none = 0,
-        pf_search = 1,
-        pf_media_content = 2,
-        pf_user_content = 4,
-        pf_feed = 8
+    enum PermitRequest {
+        pr_none = 0,
+        pr_search = 1,
+        pr_media_content = 2,
+        pr_user_content = 4,
+        pr_feed = 8
     };
 
     class ISourceAuthPerm : public QObject {
@@ -88,8 +88,17 @@ namespace Core {
         inline void setApiExpiration(const QString & expiration) { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
         inline QString apiExpiration() const { return attrs[SOURCE_API_EXPIRED_AT_JSON].toString(); }
 
-        inline void setUserID(const QString & user_id) { attrs[SOURCE_API_USER_ID_JSON] = user_id; }
-        inline QString userID() const { return attrs[SOURCE_API_USER_ID_JSON].toString(); }
+        inline void setApiUserID(const QString & user_id) { attrs[SOURCE_API_USER_ID_JSON] = user_id; }
+        inline QString apiUserID() const { return attrs[SOURCE_API_USER_ID_JSON].toString(); }
+
+        inline void setSiteUserID(const QString & user_id) { attrs[SOURCE_SITE_USER_ID_JSON] = user_id; }
+        inline QString siteUserID() const { return attrs[SOURCE_SITE_USER_ID_JSON].toString(); }
+
+        QString userID(const PermitRequest & req_perm = pr_user_content) {
+            Permissions perm = permissions(req_perm);
+            return perm == perm_site ? siteUserID() : apiUserID();
+        }
+
         inline void setApiToken(const QString & token) { attrs[SOURCE_API_TOKEN_JSON] = token; }
         inline QString apiToken() const { return attrs[SOURCE_API_TOKEN_JSON].toString(); }
         inline void setSiteToken(const QString & token) { attrs[SOURCE_SITE_TOKEN_JSON] = token; }
@@ -97,7 +106,7 @@ namespace Core {
         inline void setSiteHash(const QString & token) { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
-        PermitResult isPermitted(const PermitFlags & perm_flag = pf_search);
+        Permissions permissions(const PermitRequest & req_perm = pr_search);
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
 //        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }

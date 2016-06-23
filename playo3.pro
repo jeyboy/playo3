@@ -289,7 +289,9 @@ HEADERS += \
     modules/core/web/interfaces/auth/oauth.h \
     modules/core/interfaces/isource_auth_perm.h \
     modules/core/interfaces/isource_feeds.h \
-    modules/core/feeder/feed_item.h
+    modules/core/feeder/feed_item.h \
+    modules/views/web/fourshared_view.h \
+    modules/models/web/fourshared_model.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -423,4 +425,6 @@ SOURCES += \
     modules/core/interfaces/isource.cpp \
     modules/core/feeder/aspect_ratio_label.cpp \
     modules/core/interfaces/search_limits.cpp \
-    modules/core/interfaces/isource_auth_perm.cpp
+    modules/core/interfaces/isource_auth_perm.cpp \
+    modules/views/web/fourshared_view.cpp \
+    modules/models/web/fourshared_model.cpp

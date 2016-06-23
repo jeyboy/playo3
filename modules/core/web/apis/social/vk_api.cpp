@@ -86,7 +86,7 @@ bool Api::connectUserApi() {
             return false;
         } else if (query.hasQueryItem(tkn_access_token)) {
             setApiToken(query.queryItemValue(tkn_access_token));
-            setUserID(query.queryItemValue(tkn_user_id));
+            setApiUserID(query.queryItemValue(tkn_user_id));
             setApiExpiration(query.queryItemValue(tkn_expires_in));
 
 //            setParams(

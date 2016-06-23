@@ -33,24 +33,24 @@ namespace Core {
                 QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonValue popular(const SearchLimit & limits) {
-                    PermitResult res = isPermitted(pf_media_content);
+                    Permissions res = permissions(pr_media_content);
                     if (!res) return QJsonArray();
 
-                    return res == pr_api ? popularApi(limits) : popularSite(limits);
+                    return res == perm_api ? popularApi(limits) : popularSite(limits);
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    PermitResult res = isPermitted(pf_search);
+                    Permissions res = permissions(pr_search);
                     if (!res) return QJsonArray();
 
-                    return res == pr_api ? searchProcApi(limits) : searchProcSite(limits);
+                    return res == perm_api ? searchProcApi(limits) : searchProcSite(limits);
                 }
 
-                QJsonValue userInfo(/*QString & uid, InfoType fullInfo = info_all*/) {
-                    PermitResult res = isPermitted(pf_user_content);
+                QJsonValue userInfo(QString & uid/*, InfoType fullInfo = info_all*/) {
+                    Permissions res = permissions(pr_user_content);
                     if (!res) return QJsonArray();
 
-                    return loadSet({{tkn_grab_refresh, siteToken()}});
+                    return loadSet({{tkn_grab_refresh, uid}});
                 }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
@@ -65,7 +65,7 @@ namespace Core {
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) {
-                    if (!isPermitted(pf_media_content)) return QString();
+                    if (!permissions(pr_media_content)) return QString();
 
                     Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
                     return doc.find("input.jsD1PreviewUrl").value();
@@ -121,7 +121,7 @@ namespace Core {
                             Html::Document acc_doc = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
                             Html::Tag * root_id_tag = acc_doc.findFirst("input.jsRootId");
                             if (root_id_tag)
-                                setSiteToken(root_id_tag -> value());
+                                setSiteUserID(root_id_tag -> value());
                             else
                                 qDebug() << "Cannot find root id for current user";
                             return true;
