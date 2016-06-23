@@ -2,26 +2,30 @@
 
 using namespace Core;
 
-bool ISourceAuthPerm::isPermitted(const PermitFlags & perm_flag) {
-    SourceFlags api_flag, site_flag;
+PermitResult ISourceAuthPerm::isPermitted(const PermitFlags & perm_flag) {
+    SourceFlags api_flag, site_flag, site_prefer;
 
     switch(perm_flag) {
         case pf_search: {
             api_flag = sf_api_search_auth_only;
             site_flag = sf_site_search_auth_only;
-        }
+            site_prefer = sf_prefer_site_search;
+        break;}
         case pf_media_content: {
             api_flag = sf_api_media_content_auth_only;
             site_flag = sf_site_media_content_auth_only;
-        }
+            site_prefer = sf_prefer_site_media_content;
+        break;}
         case pf_user_content: {
             api_flag = sf_api_user_content_auth_only;
             site_flag = sf_site_user_content_auth_only;
-        }
+            site_prefer = sf_prefer_site_user_content;
+        break;}
         case pf_feed: {
             api_flag = sf_api_feeds_auth_only;
             site_flag = sf_site_feeds_auth_only;
-        }
+            site_prefer = sf_prefer_site_feeds;
+        break;}
         default: return true;
     }
 
@@ -29,8 +33,17 @@ bool ISourceAuthPerm::isPermitted(const PermitFlags & perm_flag) {
     bool api_flag_permit = HAS_FLAG(flags, api_flag);
     bool site_flag_permit = HAS_FLAG(flags, site_flag);
 
-    return !api_flag_permit || api_flag_permit == apiConnected() ||
-           !site_flag_permit || site_flag_permit == siteConnected();
+    PermitResult res = pr_none;
+
+    if (!api_flag_permit || api_flag_permit == apiConnected())
+        res = pr_api;
+
+    if (!site_flag_permit || site_flag_permit == siteConnected()) {
+        if (res > 0 || HAS_FLAG(flags, site_prefer))
+            res = pr_site;
+    }
+
+    return res;
 }
 
 bool ISourceAuthPerm::connectUser(const ConnectionType & conType) {

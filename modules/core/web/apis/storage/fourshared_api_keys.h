@@ -28,7 +28,8 @@ namespace Core {
             extern const QString url_down_base;
             extern const QString url_api_base;
             extern const QString url_api_search;
-            extern const QString url_site_base;
+            extern const QString url_html_site_base;
+            extern const QString url_html_dir_base;
 
             extern const QString val_name;
             extern const QString val_token;

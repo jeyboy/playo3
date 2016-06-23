@@ -27,7 +27,7 @@ namespace Core {
                 inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
                 inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
-                PolyQueryRules rulesAuth(
+                PolyQueryRules rulesApi(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
                     int per_request = FOURSHARED_PER_REQUEST_LIMIT,
                     ApiCallIterType call_type = call_iter_type_page)
@@ -44,7 +44,7 @@ namespace Core {
                     );
                 }
 
-                PolyQueryRules rulesNoAuth(
+                PolyQueryRules rulesSite(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT,
                     int pages_limit = FOURSHARED_PAGES_LIMIT, ApiCallIterType call_type = call_iter_type_item)
                 {
@@ -56,7 +56,7 @@ namespace Core {
                     );
                 }
 
-                QString searchUrl(const QString & predicate = QString(), const CategoryTypes & ctype = music) {
+                QString searchApiUrl(const QString & predicate = QString(), const CategoryTypes & ctype = music) {
                     QUrlQuery query = genDefaultParams();
 
                     setSearchPredicate(query, predicate);
@@ -65,24 +65,24 @@ namespace Core {
                     return baseUrlStr(tkn_files, query);
                 }
 
-                QString audioSearchUrl(const QString & predicate = QString()) {
-                    return searchUrl(predicate, music);
+                QString audioSearchApiUrl(const QString & predicate = QString()) {
+                    return searchApiUrl(predicate, music);
                 }
 
-                QString videoSearchUrl(const QString & predicate = QString()) {
-                    return searchUrl(predicate, video);
+                QString videoSearchApiUrl(const QString & predicate = QString()) {
+                    return searchApiUrl(predicate, video);
                 }
 
-                QJsonValue popularAuth(const SearchLimit & limits) {
+                QJsonValue popularApi(const SearchLimit & limits) {
                     QJsonObject res;
 
                     if (limits.include_audio())
                         res.insert(
                             DMT_AUDIO,
                             pRequest(
-                                audioSearchUrl(),
+                                audioSearchApiUrl(),
                                 call_type_json,
-                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_json_extract,
                                 QStringList() << tkn_files
@@ -93,9 +93,9 @@ namespace Core {
                         res.insert(
                             DMT_VIDEO,
                             pRequest(
-                                videoSearchUrl(),
+                                videoSearchApiUrl(),
                                 call_type_json,
-                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_json_extract,
                                 QStringList() << tkn_files
@@ -106,7 +106,7 @@ namespace Core {
                     return res;
                 }
 
-                QJsonValue popularNoAuth(const SearchLimit & limits) {
+                QJsonValue popularSite(const SearchLimit & limits) {
                     QJsonObject res;
 
                     if (limits.include_audio())
@@ -115,7 +115,7 @@ namespace Core {
                             pRequest(
                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                                 call_type_html,
-                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_tracks1
                             )
@@ -127,7 +127,7 @@ namespace Core {
                             pRequest(
                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                                 call_type_html,
-                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_video1
                             )
@@ -136,16 +136,16 @@ namespace Core {
                     return res;
                 }
 
-                QJsonValue searchProcAuth(const SearchLimit & limits) {
+                QJsonValue searchProcApi(const SearchLimit & limits) {
                     QJsonObject res;
 
                     if (limits.include_audio())
                         res.insert(
                             DMT_AUDIO,
                             pRequest(
-                                audioSearchUrl(limits.predicate),
+                                audioSearchApiUrl(limits.predicate),
                                 call_type_json,
-                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_json_extract,
                                 QStringList() << tkn_files
@@ -156,9 +156,9 @@ namespace Core {
                         res.insert(
                             DMT_VIDEO,
                             pRequest(
-                                videoSearchUrl(limits.predicate),
+                                videoSearchApiUrl(limits.predicate),
                                 call_type_json,
-                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_json_extract,
                                 QStringList() << tkn_files
@@ -169,7 +169,7 @@ namespace Core {
                     return res;
                 }
 
-                QJsonValue searchProcNoAuth(const SearchLimit & limits) {
+                QJsonValue searchProcSite(const SearchLimit & limits) {
                     QJsonObject res;
 
                     if (limits.include_audio())
@@ -178,7 +178,7 @@ namespace Core {
                             pRequest(
                                 QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                                 call_type_html,
-                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_tracks1
                             )
@@ -190,7 +190,7 @@ namespace Core {
                             pRequest(
                                 QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
                                 call_type_html,
-                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                 0,
                                 proc_video1
                             )
@@ -198,6 +198,28 @@ namespace Core {
 
                     return res;
                 }
+
+//                QJsonValue userInfo(/*QString & uid, InfoType fullInfo = info_all*/) {
+//                    QString url = fullInfo == info_all ? userFullInfoUrl(uid) : userAudiosUrl(uid);
+
+//                    QJsonObject ret = sRequest(
+//                        url,
+//                        call_type_json,
+//                        0,
+//                        proc_json_extract
+//                    );
+
+
+////                    QJsonObject ret = sQuery(url, extract);
+
+//                    QJsonArray ar = ret.value(tkn_albums).toArray();
+
+//                    if (!ret.value(tkn_albums_finished).toBool())
+//                        audioAlbums(uid, ar, ret.value(tkn_albums_offset).toInt());
+
+//                    ret.insert(tkn_albums, ar);
+//                    return ret;
+//                }
             };
         }
     }

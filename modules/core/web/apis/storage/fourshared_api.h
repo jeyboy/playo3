@@ -35,13 +35,13 @@ namespace Core {
                 QJsonValue popular(const SearchLimit & limits) {
                     if (!isPermitted(pf_media_content)) return QJsonArray();
 
-                    return /*isConnected() ? popularAuth(limits) :*/ popularNoAuth(limits);
+                    return /*isConnected() ? popularApi(limits) :*/ popularSite(limits);
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
                     if (!isPermitted(pf_search)) return QJsonArray();
 
-                    return /*isConnected() ? searchProcAuth(limits) :*/ searchProcNoAuth(limits);
+                    return /*isConnected() ? searchProcApi(limits) :*/ searchProcSite(limits);
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) {
@@ -82,7 +82,7 @@ namespace Core {
                 }
 
                 bool connectUserSite() {
-                    Html::Document html = Manager::prepare() -> getFollowed(url_site_base);
+                    Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base);
 
                     Html::Tag * form = html.findFirst("form[name='loginForm']");
                     if (!form) return false;

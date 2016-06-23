@@ -18,9 +18,9 @@
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
 
 
-#define HAS_FLAG(flags, flag) (flags & flag) == flag;
-#define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag);
-#define REJECT_FLAG(flags, flag) flags &= (~(flag));
+#define HAS_FLAG(flags, flag) (flags & flag) == flag
+#define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag)
+#define REJECT_FLAG(flags, flag) flags &= (~(flag))
 
 namespace Core {
     enum ConnectionType : int {
@@ -42,15 +42,31 @@ namespace Core {
         sf_site_user_content_auth_only = 128,
         sf_site_feeds_auth_only = 256,
 
-        sf_api_search_auth_only = 512,
-        sf_api_media_content_auth_only = 1024,
-        sf_api_user_content_auth_only = 2048,
-        sf_api_feeds_auth_only = 4096,
+        sf_prefer_site_search = 512,
+        sf_prefer_site_media_content = 1024,
+        sf_prefer_site_user_content = 2048,
+        sf_prefer_site_feeds = 4096,
+
+        sf_api_search_auth_only = 8192,
+        sf_api_media_content_auth_only = 16384,
+        sf_api_user_content_auth_only = 32768,
+        sf_api_feeds_auth_only = 65536,
+
+//        sf_prefer_api_search = 131072,
+//        sf_prefer_api_media_content = 262144,
+//        sf_prefer_api_user_content = 524288,
+//        sf_prefer_api_feeds = 1048576,
 
         sf_site_auth_mandatory = sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only | sf_site_feeds_auth_only,
         sf_api_auth_mandatory = sf_api_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only | sf_api_feeds_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
+    };
+
+    enum PermitResult : int {
+        pr_none = 0,
+        pr_site = 1,
+        pr_api = 2
     };
 
     enum PermitFlags {
@@ -80,7 +96,7 @@ namespace Core {
         inline void setSiteHash(const QString & token) { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
-        bool isPermitted(const PermitFlags & perm_flag = pf_search);
+        PermitResult isPermitted(const PermitFlags & perm_flag = pf_search);
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
 //        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
