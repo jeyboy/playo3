@@ -115,12 +115,11 @@ namespace Core {
 
                         QUrl form_url = form -> serializeFormToUrl(vals);
                         Html::Document doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
-
                         form = doc.findFirst("form[name='loginForm']");
 
                         if (!form) {
-                            html = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
-                            Html::Tag * root_id_tag = html.findFirst("input.jsRootId");
+                            Html::Document acc_doc = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
+                            Html::Tag * root_id_tag = acc_doc.findFirst("input.jsRootId");
                             if (root_id_tag)
                                 setSiteToken(root_id_tag -> value());
                             else
