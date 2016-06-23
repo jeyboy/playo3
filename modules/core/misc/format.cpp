@@ -13,6 +13,7 @@ bool Info::extractNumber(const QString & info, QString & res, int index) {
     return true;
 }
 
+//url.section("mp3:\"", 1).section("\"", 0, 0);
 bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res, int offset) {
     int part_index = info.indexOf(start_predicate) + offset;
 

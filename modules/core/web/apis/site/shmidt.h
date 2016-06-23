@@ -14,7 +14,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Shmidt"); }
             inline DataSubType siteType() const { return dt_site_shmidt; }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
+            QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
@@ -63,7 +63,7 @@ namespace Core {
                     return baseUrlStr(tracks.link());
             }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                     encodeStr(limits.predicate),
                     (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs_name() ? QStringLiteral("songtitle") : QStringLiteral("entire"))

@@ -3,9 +3,9 @@
 
 #include <qobject.h>
 #include <qthread.h>
-#include <qdatetime.h>
 #include <qstringbuilder.h>
 
+#include "feed_item.h"
 #include "modules/core/media/image_bank.h"
 
 #define FEED_SETTINGS_URL_PAGINATION_TEMPLATE QStringLiteral("^1")
@@ -41,14 +41,6 @@ struct FeederSettings {
     QString last_link;
     int freq;
     QHash<QString, QVariant> attrs;
-};
-
-struct FeedItem {
-    qint64 timestamp;
-    QString title;
-    QUrl link;
-    QList<QString> images;
-    QString desc;
 };
 
 class FeederJob : public QObject {

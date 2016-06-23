@@ -37,7 +37,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Zaycev"); }
             inline DataSubType siteType() const { return dt_site_zaycev; }
 
-            QJsonArray searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
+            QJsonValue searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
                 return pRequest(
                     QStringLiteral("http://zaycev.net/genres/%1/%2_%3.html")
                         .arg(limits.genre, // need to convert genre !!!
@@ -48,7 +48,7 @@ namespace Core {
             }
 
             // http://zaycev.net/artist/letter-rus-zh-more.html?page=1
-            QJsonArray searchByChar(const SearchLimit & limits) { // by default - sort by popularity
+            QJsonValue searchByChar(const SearchLimit & limits) { // by default - sort by popularity
                 return pRequest(
                     QStringLiteral("http://zaycev.net/artist/letter-%1-more.html?page=%2")
                         .arg(prepareLetter(limits), OFFSET_TEMPLATE),
@@ -56,7 +56,7 @@ namespace Core {
                 );
             }
 
-            QJsonArray searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
+            QJsonValue searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
                 return pRequest(
                     QStringLiteral("http://zaycev.net/musicset%1/more.html?page=%2")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
@@ -64,7 +64,7 @@ namespace Core {
                 );
             }
 
-            QJsonArray loadSet(const QVariantMap & attrs) {
+            QJsonValue loadSet(const QVariantMap & attrs) {
                 return saRequest(
                     attrs.value(tkn_grab_refresh).toString(),
                     call_type_html,
@@ -73,14 +73,14 @@ namespace Core {
                 );
             }
 
-            QJsonArray newest(const SearchLimit & limits) {
+            QJsonValue newest(const SearchLimit & limits) {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/new/more.html?page=") % OFFSET_TEMPLATE,
                     call_type_html, rules(limits), 0, proc_tracks1
                 );
             }
 
-            QJsonArray popular(const SearchLimit & limits) {
+            QJsonValue popular(const SearchLimit & limits) {
                 return pRequest(
                     QStringLiteral("http://zaycev.net/top/more.html?page=") % OFFSET_TEMPLATE,
                     call_type_html, rules(limits), 0, proc_tracks1
@@ -213,7 +213,7 @@ namespace Core {
                 return reply -> toJson().value(QStringLiteral("url")).toString();
             }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/search.html?query_search=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)

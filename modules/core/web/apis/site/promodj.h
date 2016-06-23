@@ -16,7 +16,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("PromoDJ"); }
             inline DataSubType siteType() const { return dt_site_promodj; }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
+            QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -85,7 +85,7 @@ namespace Core {
 
 //            inline bool isRefreshable() { return false; }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
                 QString alias = genresList().toAlias(limits.genre);

@@ -71,7 +71,6 @@ namespace Core {
             extern const QString tkn_duration =                     QStringLiteral("duration");
             extern const QString tkn_size =                         QStringLiteral("size");
             extern const QString tkn_ensemble =                     QStringLiteral("ensemble");
-            extern const QString tkn_default_extension =            QStringLiteral("mp3");
 
             extern const QString val_login_title =                  QStringLiteral("Odnoklassniki auth");
             extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");

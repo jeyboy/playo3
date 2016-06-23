@@ -84,7 +84,7 @@ namespace Core { // NOT FINISHED
                 inline QString tunersUrl() { return audioUrl(path_audio_tuners_for_radio); } // params: (locale: 'ru')  need to check pagination
                 inline QString radioUrl(QString /*tuner*/) { return audioUrl(path_audio_radio); } // params: (locale: 'ru') (tuner: taked from tunersUrl() returned list) and pagination attrs
 
-                QJsonArray popular(const SearchLimit & /*limits*/) {
+                QJsonValue popular(const SearchLimit & /*limits*/) {
                     return pRequest(
                         popAudioUrl(),
                         call_type_json,
@@ -97,11 +97,11 @@ namespace Core { // NOT FINISHED
 //                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
                 }
 
-                QJsonArray searchProc(const SearchLimit & limits) {
+                QJsonValue searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() || limits.by_popularity())
                         return popular(limits);
                     else {
-                        PolyQueryRules prules = rules(0, qMin(200, limits.items_limit));
+                        PolyQueryRules prules = rules(limits.start_offset, qMin(200, limits.items_limit));
 
                         if (limits.by_artists())
                             return pRequest(
@@ -153,7 +153,7 @@ namespace Core { // NOT FINISHED
                 }
 
                 inline QString playlistAudioUrl(const QString & pid) { return audioUrl(tkn_my, QUrlQuery(tkn_pid_eq % pid)); } // params: (pid: playlist id) and pagination attrs
-                QJsonArray playlistInfo(QString & pid, int count) {
+                QJsonArray playlistInfo(const QString & pid, int count) {
                     return pRequest(
                         playlistAudioUrl(pid),
                         call_type_json,

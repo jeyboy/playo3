@@ -78,7 +78,7 @@ namespace Models {
 
                 Func * func = new Func(
                     this,
-                    SLOT(finishSetLoading(QJsonArray&, void*)),
+                    SLOT(finishSetLoading(QJsonValue&, void*)),
                     playlist
                 );
                 ThreadUtils::obj().run(
@@ -114,20 +114,23 @@ namespace Models {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        QJsonArray proceedLoadable(const QVariant & loadable_attrs) {
+        QJsonValue proceedLoadable(const QVariant & loadable_attrs) {
             QVariantMap hash = loadable_attrs.toMap();
             DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
             ISource * source = Web::Apis::source(data_type);
-            QJsonArray set = source -> loadSet(hash);
+            QJsonValue set = source -> loadSet(hash);
             return set;
         }
 
-        int proceedVkList(const QJsonArray & collection, Playlist * parent);
-        int proceedScList(const QJsonArray & collection, Playlist * parent);
-        int proceedOdList(const QJsonArray & collection, Playlist * parent);
-        int proceedYandexList(const QJsonArray & collection, Playlist * parent);
-        int proceedYoutubeList(const QJsonArray & collection, Playlist * parent);
-        int proceedGrabberList(const DataSubType & wType, const QJsonArray & collection, Playlist * parent);
+        int proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent);
+
+        int proceedVkList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
+        int proceedScList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
+        int proceedOdList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
+        int proceedYandexList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
+        int proceedYoutubeList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
+        int proceedGrabberList( const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType);
+
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
@@ -179,7 +182,7 @@ namespace Models {
 
     protected slots:
         void finishingItemsAdding();
-        void finishSetLoading(QJsonArray&, void*);
+        void finishSetLoading(QJsonValue&, void*);
 
     signals:
         void updateRemovingBlockation(bool isBlocked);

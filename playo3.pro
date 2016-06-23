@@ -148,7 +148,6 @@ HEADERS += \
     modules/core/misc/logger.h \
     modules/core/misc/screen.h \
     modules/core/web/apis/site/_sites.h \
-    modules/core/web/apis/site/exua.h \
     modules/core/web/apis/site/jetune.h \
     modules/core/web/apis/site/mp3base.h \
     modules/core/web/apis/site/mp3cc.h \
@@ -287,7 +286,10 @@ HEADERS += \
     modules/core/feeder/feeder.h \
     modules/core/media/image_bank.h \
     modules/core/interfaces/search_limits.h \
-    modules/core/web/interfaces/auth/oauth.h
+    modules/core/web/interfaces/auth/oauth.h \
+    modules/core/interfaces/isource_auth_perm.h \
+    modules/core/interfaces/isource_feeds.h \
+    modules/core/feeder/feed_item.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -420,4 +422,5 @@ SOURCES += \
     settings/apis_settings.cpp \
     modules/core/interfaces/isource.cpp \
     modules/core/feeder/aspect_ratio_label.cpp \
-    modules/core/interfaces/search_limits.cpp
+    modules/core/interfaces/search_limits.cpp \
+    modules/core/interfaces/isource_auth_perm.cpp

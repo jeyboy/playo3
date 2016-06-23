@@ -19,7 +19,7 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_myzuka; }
 
             // artists by genre
-            QJsonArray searchByGenre(const SearchLimit & /*limits*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
+            QJsonValue searchByGenre(const SearchLimit & /*limits*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2
                 QJsonArray json;
     //            if (genresList().isEmpty()) genresList();
 
@@ -51,7 +51,7 @@ namespace Core {
     //            //TODO: realize later
     //        }
 
-    //        QJsonArray searchByType(const SearchLimit & limits) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
+    //        QJsonValue searchByType(const SearchLimit & limits) { // https://myzuka.org/Hits/2014 //https://myzuka.org/Hits/Top100Weekly //https://myzuka.org/Hits/Top100Monthly
     //            QList<QUrl> urls;
 
     //            switch (target_type) { // need to modify grab processing of folder support in model
@@ -74,7 +74,7 @@ namespace Core {
     //            //TODO: stop if result not contains elements
     //        }
 
-            inline QJsonArray popular(const SearchLimit & /*limits*/) {
+            inline QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
@@ -117,7 +117,8 @@ namespace Core {
                 else
                     return baseUrlStr(tracks.link());
             }
-            QJsonArray searchProc(const SearchLimit & limits) {
+
+            QJsonValue searchProc(const SearchLimit & limits) { // this should be rewritten
                 QUrl url = QUrl(baseUrlStr(search_path_token));
                 url.setQuery(search_predicate_token % limits.predicate);
 
@@ -165,8 +166,6 @@ namespace Core {
 
                 return arr;
             }
-
-
 
             void artistsToJson(QHash<QString, QString> & artists, QJsonArray & arr) {
                 for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {

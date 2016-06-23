@@ -14,7 +14,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("RedMp3"); }
             inline DataSubType siteType() const { return dt_site_redmp3; }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
+            QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -66,7 +66,7 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(
                     encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
                     OFFSET_TEMPLATE

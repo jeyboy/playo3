@@ -15,7 +15,7 @@ namespace Core {
         inline ISearchable() { }
         inline virtual ~ISearchable() {}
 
-        QJsonArray search(const SearchLimit & limits) {
+        QJsonValue search(const SearchLimit & limits) {
             if (limits.by_newest())
                 return newest(limits);
 
@@ -39,21 +39,21 @@ namespace Core {
                 return popular(limits);
         }
 
-        virtual QJsonArray searchByGenre(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue searchByGenre(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchByChar(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue searchByChar(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchInLyrics(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue searchInLyrics(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue popular(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
-        virtual QJsonArray related(const SearchLimit & /*limits*/) { return QJsonArray(); }
+        virtual QJsonValue related(const SearchLimit & /*limits*/) { return QJsonArray(); }
     protected:
-        virtual QJsonArray searchProc(const SearchLimit & /*limits*/) = 0;
+        virtual QJsonValue searchProc(const SearchLimit & /*limits*/) = 0;
     };
 }
 

@@ -14,7 +14,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Mp3pm"); }
             inline DataSubType siteType() const { return dt_site_mp3pm; }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
+            QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
@@ -63,7 +63,7 @@ namespace Core {
 
     //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/genres")), proc_genres1); }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/s/f/%1/page/%2/")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)

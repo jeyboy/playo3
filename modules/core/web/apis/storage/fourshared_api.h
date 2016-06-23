@@ -32,13 +32,13 @@ namespace Core {
 
                 QToolButton * initButton(QWidget * parent = 0);
 
-                QJsonArray popular(const SearchLimit & limits) {
+                QJsonValue popular(const SearchLimit & limits) {
                     if (!isPermitted(pf_media_content)) return QJsonArray();
 
                     return /*isConnected() ? popularAuth(limits) :*/ popularNoAuth(limits);
                 }
 
-                QJsonArray searchProc(const SearchLimit & limits) {
+                QJsonValue searchProc(const SearchLimit & limits) {
                     if (!isPermitted(pf_search)) return QJsonArray();
 
                     return /*isConnected() ? searchProcAuth(limits) :*/ searchProcNoAuth(limits);

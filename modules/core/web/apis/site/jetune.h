@@ -14,10 +14,8 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Jetune"); }
             inline DataSubType siteType() const { return dt_site_jetune; }
 
-            inline QJsonArray popular(const SearchLimit & /*limits*/) {
+            inline QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
-
-//                return sQuery(QUrl(baseUrlStr()), songs1);
             }
 
         protected:
@@ -80,7 +78,7 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(
                     QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),

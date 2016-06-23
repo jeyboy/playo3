@@ -49,21 +49,31 @@ namespace Core {
                     );
                 }
 
-                QJsonArray popular(const SearchLimit & limits) { return audioPopular(true, limits.genre); }
+                QJsonValue popular(const SearchLimit & limits) {
+                    QJsonObject res;
 
-                QJsonArray searchProc(const SearchLimit & limits) {
+                    if (limits.include_audio())
+                        res.insert(DMT_AUDIO, audioPopular(true, limits.genre));
+
+                    if (limits.include_video())
+                        res.insert(DMT_VIDEO, videoPopular(limits));
+
+                    return res;
+                }
+
+                QJsonValue searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() && limits.by_popularity())
                         return popular(limits);
                     else {
-                        QJsonArray arr;
+                        QJsonObject res;
 
                         if (limits.include_audio())
-                            return audioSearch(limits, &arr);
+                            res.insert(DMT_AUDIO, audioSearch(limits));
 
                         if (limits.include_video())
-                            return videoSearch(limits, &arr);
+                            res.insert(DMT_VIDEO, videoSearch(limits));
 
-                        return arr;
+                        return res;
                     }
                 }
             public:
@@ -72,41 +82,6 @@ namespace Core {
                     info_rels = 2,
                     info_all = info_music | info_rels,
                 };
-
-            //    QUrl wallUrl(QString & uid) {
-            //        QUrlQuery query = genDefaultParams();
-
-            //        setParam(query, code_key, QString(
-            //            "var limit = 100; var offset = _1_; var finished = false; "
-            //            "var response = []; var look_window = limit * " + api_call_limit_val + " %2b offset; var post_items = [];"
-
-            //            "while (offset < look_window && !finished) {"
-            //            "   var items = API.wall.get({ count: limit, offset: offset, owner_id: " + uid + "}).items;"
-            //            "   finished = items.length < limit;"
-            //            "   post_items.push(items);"
-            //            "   offset = offset %2b limit;"
-            //            "}"
-
-            //            "while(post_items.length > 0) {"
-            //            "   var curr = post_items.pop();"
-            //            "   var audios = curr.attachments@.audio %2b"
-            //            "       curr.copy_history[0].attachments@.audio %2b"
-            //            "       curr.copy_history[1].attachments@.audio %2b"
-            //            "       curr.copy_history[2].attachments@.audio %2b"
-            //            "       curr.copy_history[3].attachments@.audio;"
-            //            "   if (audios.length > 0) {"
-            //            "       response.unshift({ title: curr.text, date: curr.date, audios: audios });"
-            //            "   }"
-            //            "}"
-
-            //            "return { offset: offset, posts: response, " % finished_key % ": finished };"
-            //        ));
-
-            //        return baseUrl(execute_key, query);
-            //    }
-            //    QJsonArray wallAudio(QString & uid) {
-            //        return lQuery(wallUrl(uid), DEFAULT_LIMIT_AMOUNT, "posts");
-            //    }
 
                 QString audioAlbumsUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
@@ -450,6 +425,7 @@ namespace Core {
 //                    return ret.value(tkn_items).toArray();
                 }
 
+                // https://new.vk.com/dev/newsfeed.getRecommended
                 // not finished
                 QJsonArray usersFeeds(const QStringList & sources = QStringList()) {
                     QUrlQuery query = genDefaultParams();
@@ -523,6 +499,17 @@ namespace Core {
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_video_list
                     );
+                }
+
+                QJsonArray videoPopular(const SearchLimit & /*limits*/, QJsonArray * /*arr*/ = 0) { // write me
+                    return QJsonArray();
+//                    return saRequest(
+//                        audioPopularUrl(onlyEng, genres.toInt(genre)),
+//                        call_type_json,
+//                        0,
+//                        proc_json_extract,
+//                        QStringList() << tkn_response << tkn_audio_list
+//                    ); //.value(QStringLiteral("audio_list")).toArray();
                 }
             };
         }

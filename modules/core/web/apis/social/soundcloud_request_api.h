@@ -95,12 +95,12 @@ namespace Core {
                     return baseUrlStr(path_tracks, query);
                 }
 
-                QJsonArray searchInSets(const SearchLimit & limits) {
+                QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
                     return playlistByPredicate(predicate, limits.items_limit, limits.start_offset);
                 }
 
-                QJsonArray popular(const SearchLimit & limitations) {
+                QJsonValue popular(const SearchLimit & limitations) {
                     return pRequest(
                         audioSearchUrl(QString(), limitations.genre, true),
                         call_type_json,
@@ -115,7 +115,7 @@ namespace Core {
 //                    );
                 }
 
-                QJsonArray searchProc(const SearchLimit & limitations) {
+                QJsonValue searchProc(const SearchLimit & limitations) {
                     return pRequest(
                         audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
                         call_type_json,

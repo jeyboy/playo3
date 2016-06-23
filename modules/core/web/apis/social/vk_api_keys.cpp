@@ -81,7 +81,7 @@ namespace Core {
             extern const QString val_page_token        = QStringLiteral("page");
             extern const QString val_client_token      = QStringLiteral("4332211");
             extern const QString val_response_token    = QStringLiteral("token");
-            extern const QString val_scope             = QStringLiteral("audio,video,friends,groups,offline");
+            extern const QString val_scope             = QStringLiteral("audio,video,friends,groups,offline,wall");
             extern const QString val_user_fields       = tkn_photo % QStringLiteral(",") % tkn_screen_name;
             extern const QString val_group_types       = QStringLiteral("group,page");
 

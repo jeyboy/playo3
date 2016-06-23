@@ -75,7 +75,6 @@ namespace Core {
             extern const QString tkn_duration;
             extern const QString tkn_size;
             extern const QString tkn_ensemble;
-            extern const QString tkn_default_extension;
 
             extern const QString val_login_title;
             extern const QString val_resend_sms_title;

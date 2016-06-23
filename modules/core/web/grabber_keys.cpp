@@ -23,6 +23,7 @@ namespace Core {
         extern const QString tkn_grab_set_parser        = QStringLiteral("gset_parser");
         extern const QString tkn_grab_set_items_amount  = QStringLiteral("gamount");
 
+        extern const QString tkn_media_content          = QStringLiteral("gmedia_content");
         extern const QString tkn_media_type             = QStringLiteral("gmedia_type");
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
 

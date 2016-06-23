@@ -72,7 +72,6 @@ namespace Core {
 //            extern const QString tkn_stream_url;
 //            extern const QString tkn_video_url;
 //            extern const QString tkn_original_format;
-//            extern const QString tkn_default_extension;
 //            extern const QString tkn_duration;
 //            extern const QString tkn_genre_id;
 //            extern const QString tkn_types;

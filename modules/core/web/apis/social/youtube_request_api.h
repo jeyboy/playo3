@@ -169,7 +169,7 @@ namespace Core {
                     return baseUrlStr(QStringLiteral("videos"), query);
                 }
 
-                QJsonArray popular(const SearchLimit & /*limits*/) {
+                QJsonValue popular(const SearchLimit & /*limits*/) {
                     return pRequest(
                         videosUrl(),
                         call_type_json,
@@ -182,7 +182,7 @@ namespace Core {
 //                    );
                 }
 
-                QJsonArray searchProc(const SearchLimit & limits) { //count = 5
+                QJsonValue searchProc(const SearchLimit & limits) { //count = 5
 //                    QJsonArray res = lQuery(
 //                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
 //                        queryRules(limits.items_limit)

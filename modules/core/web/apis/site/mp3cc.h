@@ -14,7 +14,7 @@ namespace Core {
             inline QString name() const { return QStringLiteral("Mp3cc"); }
             inline DataSubType siteType() const { return dt_site_mp3cc; }
 
-            QJsonArray popular(const SearchLimit & /*limits*/) {
+            QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -82,7 +82,7 @@ namespace Core {
                 genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
             }
 
-            QJsonArray searchProc(const SearchLimit & limits) {
+            QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(QStringLiteral("/search/%1/%2/page/%3/")).arg(
                     QString(limits.by_artists() ? 'a' : (limits.by_songs_name() ? 't' : 'f')),
                     encodeStr(limits.predicate),

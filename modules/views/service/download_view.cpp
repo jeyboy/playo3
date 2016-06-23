@@ -78,7 +78,8 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
                 path,
                 FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs.value(JSON_TYPE_EXTENSION, QStringLiteral("mp3")).toString()),
                 data.attrs[JSON_TYPE_ITEM_TYPE].toInt(),
-                data.attrs[JSON_TYPE_REFRESH_PATH].toString()
+                data.attrs[JSON_TYPE_REFRESH_PATH].toString(),
+                data.attrs[JSON_TYPE_MEDIA_TYPE].toInt()
             );
         }
     } else if (event -> mimeData() -> hasUrls()) {
@@ -177,15 +178,18 @@ void DownloadView::savingCompleted() {
     proceedDownload();
 }
 
-void DownloadView::addRow(const QUrl & from, const QString & to, const QString & name, int dtype, const QString & refresh_attrs) {
+void DownloadView::addRow(const QUrl & from, const QString & to, const QString & name, int dtype, const QString & refresh_attrs, int media_type) {
     QVariantMap data;
     data.insert(QString::number(DOWNLOAD_FROM), from);
     data.insert(QString::number(DOWNLOAD_TO), to.endsWith('/') ? to.mid(0, to.size() - 1) : to);
     data.insert(QString::number(DOWNLOAD_TITLE), name);
     data.insert(QString::number(DOWNLOAD_TYPE), dtype);
 
-    if (!refresh_attrs.isEmpty())
+
+    if (!refresh_attrs.isEmpty()) {
         data.insert(QString::number(DOWNLOAD_REFRESH_ATTRS), refresh_attrs);
+        data.insert(QString::number(DOWNLOAD_MEDIA_TYPE), media_type);
+    }
     data.insert(QString::number(DOWNLOAD_IS_REMOTE), !from.isLocalFile());
 
     DownloadModelItem * itm = mdl -> appendRow(data);

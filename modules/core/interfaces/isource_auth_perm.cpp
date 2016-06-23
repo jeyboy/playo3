@@ -1,0 +1,68 @@
+#include "isource_auth_perm.h"
+
+using namespace Core;
+
+bool ISourceAuthPerm::isPermitted(const PermitFlags & perm_flag) {
+    SourceFlags api_flag, site_flag;
+
+    switch(perm_flag) {
+        case pf_search: {
+            api_flag = sf_api_search_auth_only;
+            site_flag = sf_site_search_auth_only;
+        }
+        case pf_media_content: {
+            api_flag = sf_api_media_content_auth_only;
+            site_flag = sf_site_media_content_auth_only;
+        }
+        case pf_user_content: {
+            api_flag = sf_api_user_content_auth_only;
+            site_flag = sf_site_user_content_auth_only;
+        }
+        case pf_feed: {
+            api_flag = sf_api_feeds_auth_only;
+            site_flag = sf_site_feeds_auth_only;
+        }
+        default: return true;
+    }
+
+    SourceFlags flags = defaultFlags();
+    bool api_flag_permit = HAS_FLAG(flags, api_flag);
+    bool site_flag_permit = HAS_FLAG(flags, site_flag);
+
+    return !api_flag_permit || api_flag_permit == apiConnected() ||
+           !site_flag_permit || site_flag_permit == siteConnected();
+}
+
+bool ISourceAuthPerm::connectUser(const ConnectionType & conType) {
+    bool res = true;
+
+    if (conType == connection_restore) {
+        res &= restoreUserConnection();
+    } else {
+        if (!apiConnected() && hasApiConnection()) {
+            res &= connectUserApi();
+            if (res) attrs[SOURCE_API_AUTH_JSON] = true;
+        }
+
+        if (!siteConnected() && hasSiteConnection()) {
+            res &= connectUserSite();
+            if (res) attrs[SOURCE_SITE_AUTH_JSON] = true;
+        }
+
+        if (res) initButton();
+    }
+
+    return res;
+}
+void ISourceAuthPerm::disconnectUser() {
+    attrs.remove(SOURCE_API_AUTH_JSON); attrs.remove(SOURCE_SITE_AUTH_JSON);
+    attrs.remove(SOURCE_API_EXPIRED_AT_JSON); attrs.remove(SOURCE_API_TOKEN_JSON);
+    attrs.remove(SOURCE_API_EXPIRED_AT_JSON); attrs.remove(SOURCE_API_TOKEN_JSON);
+    attrs.remove(SOURCE_API_USER_ID_JSON); attrs.remove(SOURCE_SITE_TOKEN_JSON);
+    attrs.remove(SOURCE_SITE_EXPIRED_AT_JSON);
+
+//            Web::Manager::removeCookies(name());
+
+    clearAdditionals();
+    initButton();
+}

@@ -73,7 +73,6 @@ namespace Core {
 //            extern const QString tkn_stream_url        = QStringLiteral("stream_url");
 //            extern const QString tkn_video_url         = QStringLiteral("video_url");
 //            extern const QString tkn_original_format   = QStringLiteral("original_format");
-//            extern const QString tkn_default_extension = QStringLiteral("mp3");
 //            extern const QString tkn_duration          = QStringLiteral("duration");
 //            extern const QString tkn_genre_id          = QStringLiteral("genre_id");
 //            extern const QString tkn_types             = QStringLiteral("types");

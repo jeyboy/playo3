@@ -148,17 +148,8 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
             case sr_remote: {
                 ISearchable * iface = Web::Apis::searcher((DataSubType)r.context.toInt());
                 qDebug() << "SO START" << iface -> siteType();
-                QJsonArray items = iface -> search(r);
-
-                switch (iface -> siteType()) {
-                    case dt_site_vk: { propagate_count = proceedVkList(items, parent); break; }
-                    case dt_site_sc: { propagate_count = proceedScList(items, parent); break;}
-                    case dt_site_od: { propagate_count = proceedOdList(items, parent); break;}
-                    case dt_site_yandex: { propagate_count = proceedYandexList(items, parent); break;}
-                    case dt_site_youtube: { propagate_count = proceedYoutubeList(items, parent); break;}
-                    default: propagate_count = proceedGrabberList(iface -> siteType(), items, parent);
-                }
-
+                QJsonValue json = iface -> search(r);
+                propagate_count = proceedList(iface -> siteType(), json, parent);
                 qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
             break;}
 

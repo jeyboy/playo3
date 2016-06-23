@@ -47,7 +47,7 @@ namespace Views {
         void initiateSaving(DownloadModelItem * item, QIODevice * source);
         void savingCompleted();
 
-        void addRow(const QUrl & from, const QString & to, const QString & name, int dtype = 0, const QString & refresh_attrs = QString());
+        void addRow(const QUrl & from, const QString & to, const QString & name, int dtype = 0, const QString & refresh_attrs = QString(), int media_type = 0);
         bool removeRow(DownloadModelItem * item);
 
     protected slots:

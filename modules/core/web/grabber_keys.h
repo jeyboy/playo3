@@ -27,6 +27,8 @@ namespace Core {
         extern const QString tkn_grab_set_items_amount;
 
         extern const QString tkn_skip_info;
+        extern const QString tkn_media_type;
+        extern const QString tkn_media_content;
 
         extern const QString val_def_extension;
     }
