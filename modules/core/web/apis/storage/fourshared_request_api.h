@@ -73,112 +73,130 @@ namespace Core {
                     return searchUrl(predicate, video);
                 }
 
-                QJsonArray popularAuth(const SearchLimit & limits) {
-                    QJsonArray arr;
+                QJsonValue popularAuth(const SearchLimit & limits) {
+                    QJsonObject res;
 
                     if (limits.include_audio())
-                        pRequest(
-                            audioSearchUrl(),
-                            call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_json_extract,
-                            QStringList() << tkn_files
+                        res.insert(
+                            DMT_AUDIO,
+                            pRequest(
+                                audioSearchUrl(),
+                                call_type_json,
+                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_json_extract,
+                                QStringList() << tkn_files
+                            )
                         );
 
                     if (limits.include_video())
-                        pRequest(
-                            videoSearchUrl(),
-                            call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_json_extract,
-                            QStringList() << tkn_files
+                        res.insert(
+                            DMT_VIDEO,
+                            pRequest(
+                                videoSearchUrl(),
+                                call_type_json,
+                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_json_extract,
+                                QStringList() << tkn_files
+                            )
                         );
 
 
-                    return arr;
-
-//                    QJsonArray res = lQuery(
-//                        IApi::baseUrl(files_token_key, query),
-//                        QueryRules(files_token_key, requestLimit(), FOURSHARED_OFFSET_LIMIT / 5),
-//                        none
-//                    );
+                    return res;
                 }
 
-                QJsonArray popularNoAuth(const SearchLimit & limits) {
-                    QJsonArray arr;
+                QJsonValue popularNoAuth(const SearchLimit & limits) {
+                    QJsonObject res;
 
                     if (limits.include_audio())
-                        pRequest(
-                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
-                            call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_tracks1
+                        res.insert(
+                            DMT_AUDIO,
+                            pRequest(
+                                QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                call_type_html,
+                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_tracks1
+                            )
                         );
 
                     if (limits.include_video())
-                        pRequest(
-                            QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
-                            call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_video1
+                        res.insert(
+                            DMT_VIDEO,
+                            pRequest(
+                                QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                call_type_html,
+                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_video1
+                            )
                         );
 
-                    return arr;
+                    return res;
                 }
 
-                QJsonArray searchProcAuth(const SearchLimit & limits) {
-                    QJsonArray arr;
+                QJsonValue searchProcAuth(const SearchLimit & limits) {
+                    QJsonObject res;
 
                     if (limits.include_audio())
-                        pRequest(
-                            audioSearchUrl(limits.predicate),
-                            call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_json_extract,
-                            QStringList() << tkn_files
+                        res.insert(
+                            DMT_AUDIO,
+                            pRequest(
+                                audioSearchUrl(limits.predicate),
+                                call_type_json,
+                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_json_extract,
+                                QStringList() << tkn_files
+                            )
                         );
 
                     if (limits.include_video())
-                        pRequest(
-                            videoSearchUrl(limits.predicate),
-                            call_type_json,
-                            rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_json_extract,
-                            QStringList() << tkn_files
+                        res.insert(
+                            DMT_VIDEO,
+                            pRequest(
+                                videoSearchUrl(limits.predicate),
+                                call_type_json,
+                                rulesAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_json_extract,
+                                QStringList() << tkn_files
+                            )
                         );
 
 
-                    return arr;
+                    return res;
                 }
 
-                QJsonArray searchProcNoAuth(const SearchLimit & limits) {
-                    QJsonArray arr;
+                QJsonValue searchProcNoAuth(const SearchLimit & limits) {
+                    QJsonObject res;
 
                     if (limits.include_audio())
-                        pRequest(
-                            QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
-                            call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_tracks1
+                        res.insert(
+                            DMT_AUDIO,
+                            pRequest(
+                                QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                                call_type_html,
+                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_tracks1
+                            )
                         );
 
                     if (limits.include_video())
-                        pRequest(
-                            QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
-                            call_type_html,
-                            rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
-                            &arr,
-                            proc_video1
+                        res.insert(
+                            DMT_VIDEO,
+                            pRequest(
+                                QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                                call_type_html,
+                                rulesNoAuth(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0,
+                                proc_video1
+                            )
                         );
 
-                    return arr;
+                    return res;
                 }
             };
         }
