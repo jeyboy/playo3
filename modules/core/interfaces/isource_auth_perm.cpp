@@ -74,8 +74,6 @@ void ISourceAuthPerm::disconnectUser() {
     attrs.remove(SOURCE_API_USER_ID_JSON); attrs.remove(SOURCE_SITE_TOKEN_JSON);
     attrs.remove(SOURCE_SITE_EXPIRED_AT_JSON);
 
-//            Web::Manager::removeCookies(name());
-
     clearAdditionals();
     initButton();
 }

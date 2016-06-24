@@ -6,13 +6,14 @@
 using namespace Core;
 
 void ISource::openTab() {
-    QString user_id = userID();
+    if (connectUser(connection_new)) {
+        QString user_id = userID();
 
-    if (connectUser(connection_new))
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
             Models::Params(siteType(), user_id), 0, true, true, 0, true
         );
+    }
 }
 
 void ISource::openRecomendations() {

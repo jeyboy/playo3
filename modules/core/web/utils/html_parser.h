@@ -1,6 +1,7 @@
 #ifndef HTML_PARSER
 #define HTML_PARSER
 
+//#include <qapplication.h>
 #include <qstringbuilder.h>
 #include <qhash.h>
 #include <qbuffer.h>
@@ -261,6 +262,18 @@ namespace Core {
                     Set set = find(&selector, true);
                     return set.isEmpty() ? 0 : set.first();
                 }
+
+//                inline void dump() {
+//                    QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
+//                    QFile f(p);
+//                    if (f.open(QFile::WriteOnly)) {
+//                        QString;
+
+
+//                        f.write(readAll());
+//                        f.close();
+//                    }
+//                }
 
                 inline void output() { qDebug() << (*root); }
             private:

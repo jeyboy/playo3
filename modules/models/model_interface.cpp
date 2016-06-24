@@ -343,16 +343,12 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent, 
     return itemsAmount;
 }
 
-int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
+int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent, const DataMediaType & /*dmtype*/, const DataSubType & /*wType*/) {
     if (collection.isEmpty()) return 0;
-    DataMediaType dm_type = dmtype;
     int itemsAmount = 0;
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
-
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
 
         QJsonObject snippet = itm.value(QStringLiteral("snippet")).toObject();
         QJsonValue idVal = itm.value(QStringLiteral("id"));

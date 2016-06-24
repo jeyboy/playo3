@@ -178,7 +178,7 @@ namespace Models {
         void expandeAll();
         void collapsed(const QModelIndex & index);
         void collapseAll();
-        virtual inline void refresh(bool /*retryPlaing*/ = false) {} // for web models
+        virtual inline void refresh() {} // for web models
 
     protected slots:
         void finishingItemsAdding();

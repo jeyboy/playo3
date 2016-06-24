@@ -29,13 +29,13 @@ namespace Core {
                             | sf_site_user_content_auth_only | sf_api_search_auth_only
                     );
                 }
+                inline Headers siteHeaders() {
+                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
+                }
 
-                void saveAdditionals(QJsonObject & obj) {
-                    Manager::saveCookies(obj, QUrl(url_html_site_base));
-                }
-                void loadAdditionals(QJsonObject & obj) {
-                    Manager::loadCookies(obj);
-                }
+                void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
+                void loadAdditionals(QJsonObject & obj) { Manager::loadCookies(obj); }
+                void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
 
                 QToolButton * initButton(QWidget * parent = 0);
 
@@ -54,34 +54,61 @@ namespace Core {
                 }
 
                 inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::userInfo, uid, func); }
-                QJsonValue userInfo(QString & uid) {
+                QJsonObject userInfo(QString & uid) {
                     Permissions res = permissions(pr_user_content);
-                    if (!res) return QJsonArray();
+                    if (!res) return QJsonObject();
 
-                    return loadSet({{tkn_grab_refresh, uid}});
+                    return loadSet({{tkn_grab_refresh, uid}}).toObject();
                 }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
-                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
+                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % siteUserID());
 
-                    Headers headers = {{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}};
-
-                    return saRequest(
+                    return procUserData(sRequest(
                         url,
-                        call_type_html,
+                        call_type_json,
                         0,
                         (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt(),
                         QStringList(),
                         call_method_post,
-                        headers
-                    );
+                        siteHeaders()
+                    ));
                 }
 
-                QString refresh(const QString & refresh_page, const DataMediaType & /*itemMediaType*/) {
+                QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     if (!permissions(pr_media_content)) return QString();
 
-                    Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
-                    return doc.find("input.jsD1PreviewUrl").value();
+//                    QStringList parts = refresh_page.split('|', QString::SkipEmptyParts);
+
+                    switch(itemMediaType) {
+                        case dmt_audio: {
+                            QUrl url(refresh_page);
+
+                            if (url.isValid()) {
+                                Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
+                                return doc.find("input.jsD1PreviewUrl").value();
+                            } else { // get link from uid
+                                url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
+                                QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
+                                Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
+                                return res;
+                            }
+                        }
+
+                        case dmt_video: {
+                            QUrl url(refresh_page);
+
+                            if (url.isValid()) {
+                                //TODO: write me
+                            } else { // get link from uid
+                                url = QUrl(QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % refresh_page);
+                                QString res = Manager::prepare() -> getFollowed(url, siteHeaders()) -> toText();
+                                res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
+                                return res;
+                            }
+                        }
+                        default: return QString();
+                    }
                 }
 
                 QString downloadLink(const QString & refresh_page) {
@@ -91,6 +118,59 @@ namespace Core {
                     return doc.find("a[href~'/download/']").link();
                 }
             protected:
+                QJsonArray procUserData(const QJsonObject & user_data) {
+                    QJsonObject info = user_data[QStringLiteral("info")].toObject();
+
+                    QJsonArray dirs = info.value(QStringLiteral("dirs")).toArray();
+                    QJsonArray files = info.value(QStringLiteral("files")).toArray();
+
+                    QJsonArray res;
+
+                    for(QJsonArray::Iterator dir = dirs.begin(); dir != dirs.end(); dir++) {
+                        QJsonObject dir_obj = (*dir).toObject();
+
+                        if (dir_obj.value(QStringLiteral("canPlay")).toBool()) { // check on audio fides only :(
+                            QJsonObject set_obj;
+
+
+                            set_obj.insert(tkn_grab_is_set, true);
+                            set_obj.insert(tkn_grab_title, dir_obj.value(QStringLiteral("name")).toString());
+                            set_obj.insert(tkn_grab_refresh, dir_obj.value(QStringLiteral("id")).toString());
+
+                            res.append(set_obj);
+                        }
+                    }
+
+                    for(QJsonArray::Iterator file = files.begin(); file != files.end(); file++) {
+                        QJsonObject file_obj = (*file).toObject();
+
+                        QString fileType = file_obj.value(QStringLiteral("typeCss")).toString();
+                        bool isAudio = fileType == QStringLiteral("audio");
+                        bool isVideo = fileType == QStringLiteral("video");
+
+                        if (isAudio || isVideo) {
+                            QJsonObject item_obj;
+                            bool isAudio = file_obj.value(QStringLiteral("typeCss")).toString() == QStringLiteral("audio");
+
+                            QString name = file_obj.value(QStringLiteral("name")).toString(), ext;
+                            Extensions::obj().extractExtension(name, ext);
+
+                            if (file_obj.contains(QStringLiteral("prStyle")))
+                                item_obj.insert(tkn_grab_art_url, file_obj[QStringLiteral("prStyle")].toString());
+
+                            item_obj.insert(tkn_grab_refresh, file_obj.value(QStringLiteral("id")).toString());
+                            item_obj.insert(tkn_grab_title, name);
+                            item_obj.insert(tkn_grab_extension, ext);
+
+                            item_obj.insert(tkn_media_type, isAudio ? dmt_audio : dmt_video);
+
+                            res.append(item_obj);
+                        }
+                    }
+
+                    return res;
+                }
+
                 bool connectUserApi() {
                     // INFO: эти ебанные пидорасы не могут полгода уже как починить свой oauth
 ////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
@@ -167,7 +247,7 @@ namespace Core {
 
                                 Html::Tag * play_img = (*track) -> findFirst(".playThumb img");
                                 QString js = play_img -> value(QStringLiteral("onclick")), url;
-                                Info::extract(js, QStringLiteral("'http"), QStringLiteral("'"), url, 1);
+                                Info::extract(js, QStringLiteral("http"), QStringLiteral("'"), url);
 
                                 Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
 

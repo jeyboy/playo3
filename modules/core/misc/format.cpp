@@ -13,9 +13,12 @@ bool Info::extractNumber(const QString & info, QString & res, int index) {
     return true;
 }
 
-//url.section("mp3:\"", 1).section("\"", 0, 0);
-bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res, int offset) {
-    int part_index = info.indexOf(start_predicate) + offset;
+QString Info::extractLimitedBy(const QString & info, const QString & before_predicate, const QString & after_predicate) {
+    return info.section(before_predicate, 1).section(after_predicate, 0, 0);
+}
+
+bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res) {
+    int part_index = info.indexOf(start_predicate);
 
     if (part_index != -1) {
         int end_part_index = info.indexOf(end_predicate, part_index);

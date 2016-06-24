@@ -13,8 +13,6 @@ void FoursharedModel::refresh() {
 }
 
 void FoursharedModel::proceedJson(QJsonObject & hash) {
-    int i = 0;
-
 //    QJsonArray albums = hash.value(Fourshared::tkn_playlist).toArray();
 //    QJsonArray audios = hash.value(Fourshared::tkn_items).toArray();
 //    int itemsAmount = 0, albums_count = albums.size(), audios_count = audios.size();
