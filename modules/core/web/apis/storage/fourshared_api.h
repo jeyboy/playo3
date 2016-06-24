@@ -30,6 +30,13 @@ namespace Core {
                     );
                 }
 
+                void saveAdditionals(QJsonObject & obj) {
+                    Manager::saveCookies(obj, QUrl(url_html_site_base));
+                }
+                void loadAdditionals(QJsonObject & obj) {
+                    Manager::loadCookies(obj);
+                }
+
                 QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonValue popular(const SearchLimit & limits) {
@@ -57,13 +64,16 @@ namespace Core {
                 QJsonValue loadSet(const QVariantMap & attrs) {
                     QString url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
 
-//                    'x-security: 815437060'
+                    Headers headers = {{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}};
 
                     return saRequest(
                         url,
                         call_type_html,
                         0,
-                        (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt()
+                        (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt(),
+                        QStringList(),
+                        call_method_post,
+                        headers
                     );
                 }
 
@@ -105,6 +115,7 @@ namespace Core {
                 }
 
                 bool connectUserSite() {
+                    Manager::removeCookies(url_html_site_base);
                     Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base) -> toHtml();
 
                     Html::Tag * form = html.findFirst("form[name='loginForm']");
@@ -127,6 +138,7 @@ namespace Core {
                                 setSiteUserID(root_id_tag -> value());
                             else
                                 qDebug() << "Cannot find root id for current user";
+
                             return true;
                         }
                     }

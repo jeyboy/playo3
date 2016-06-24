@@ -11,14 +11,9 @@ namespace Models {
         inline VkModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
         inline ISearchable * api() const { return &Vk::Api::obj(); }
     public slots:
-        void refresh(bool retryPlaing = false);
-//        virtual void refreshWall();
-
+        void refresh();
     protected slots:
-        void proceedWallList(QJsonArray &);
-
-        void proceedAudioList(QJsonObject &);
-        void proceedAudioListAndRetry(QJsonObject &);
+        void proceedJson(QJsonObject &);
     };
 }
 

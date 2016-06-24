@@ -3,16 +3,16 @@
 using namespace Models;
 /////////////////////////////////////////////////////////////
 
-void SoundcloudModel::refresh(bool retryPlaing) {
-//    if (QDateTime::currentMSecsSinceEpoch() - lastRefresh < UPDATE_INTERVAL) return;
-
-//    lastRefresh = QDateTime::currentMSecsSinceEpoch();
+void SoundcloudModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::obj().objectInfo(sttngs.uid, new Func(this, retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))));
+    Soundcloud::Api::obj().objectInfo(
+        sttngs.uid,
+        new Func(this, SLOT(proceedJson(QJsonObject &)))
+    );
 }
 
-void SoundcloudModel::proceedAudioList(QJsonObject & hash) {
+void SoundcloudModel::proceedJson(QJsonObject & hash) {
     QJsonArray albums = hash.value(Soundcloud::tkn_playlist).toArray();
     QJsonArray audios = hash.value(Soundcloud::tkn_audio_list).toArray();
     int itemsAmount = 0, albums_count = albums.size(), audios_count = audios.size();

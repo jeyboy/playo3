@@ -11,6 +11,7 @@
 #include "web/vk_view.h"
 #include "web/soundcloud_view.h"
 #include "web/od_view.h"
+#include "web/fourshared_view.h"
 
 namespace Views {
     class ViewFactory {
@@ -23,6 +24,7 @@ namespace Views {
                 case dt_site_vk: return new VkView(parent, settings, attrs);
                 case dt_site_sc: return new SoundcloudView(parent, settings, attrs);
                 case dt_site_od: return new OdView(parent, settings, attrs);
+                case dt_site_fourshared: return new FoursharedView(parent, settings, attrs);
                 case dt_search: return new SearchView(parent, settings, attrs);
 
                 default: return new ListView(parent, settings, attrs); //0;

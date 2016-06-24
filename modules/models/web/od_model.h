@@ -10,10 +10,10 @@ namespace Models {
         inline OdModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
         inline ISearchable * api() const { return &Od::Api::obj(); }
     public slots:
-        void refresh(bool retryPlaing = false);
+        void refresh();
 
     protected slots:
-        void proceedAudioList(QJsonObject &);
+        void proceedJson(QJsonObject &);
     };
 }
 

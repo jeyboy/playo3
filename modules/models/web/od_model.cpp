@@ -3,19 +3,16 @@
 using namespace Models;
 /////////////////////////////////////////////////////////////
 
-void OdModel::refresh(bool retryPlaing) {
+void OdModel::refresh() {
     emit moveInProcess();
 
     Od::Api::obj().objectInfo(
         (sttngs.uid == Od::Api::obj().userID() ? QString() : sttngs.uid),
-        new Func(
-            this,
-            retryPlaing ? SLOT(proceedAudioListAndRetry(QJsonObject &)) : SLOT(proceedAudioList(QJsonObject &))
-        )
+        new Func(this, SLOT(proceedJson(QJsonObject &)))
     );
 }
 
-void OdModel::proceedAudioList(QJsonObject & hash) {
+void OdModel::proceedJson(QJsonObject & hash) {
     //{"albums":[{"ensemble":"","id":82297694950393,"name":"Другие песни"}],"artists":[{"id":82297693897464,"name":"Kaka 47"}],"chunk":{"count":10},"friends":[{"fullName":"Юрий Бойко","gender":1,"id":"511343312018","name":"Юрий","surname":"Бойко"}],"totalTracks":1,"tracks":[{"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}]}
 
     QJsonArray audios = hash.value(QStringLiteral("tracks")).toArray();
