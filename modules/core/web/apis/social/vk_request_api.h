@@ -112,6 +112,8 @@ namespace Core {
                         &arr,
                         proc_json_extract,
                         QStringList() << tkn_response << tkn_albums,
+                        call_method_get,
+                        Headers(),
                         0,
                         false
                     );

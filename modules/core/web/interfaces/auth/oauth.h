@@ -111,9 +111,7 @@ namespace Core {
                 oauth_header.chop(1);
 
                 Response * resp;
-
-                QHash<QString, QString> headers;
-                headers.insert(QStringLiteral("Authorization"), oauth_header);
+                Headers headers = {{QStringLiteral("Authorization"), oauth_header}};
                 uri.setQuery(new_query);
 
                 if (http_method == QStringLiteral("GET")) {

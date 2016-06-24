@@ -97,7 +97,7 @@ namespace Core {
             bool sRequest(
                 const QString & url, QJsonObject & json, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
-                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray arr;
                 QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
@@ -112,7 +112,7 @@ namespace Core {
             QJsonObject sRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
-                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, headers, error_receiver);
                 return res.isEmpty() ? QJsonObject() : res.last().toObject();
@@ -120,7 +120,7 @@ namespace Core {
             QJsonArray saRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
-                const QHash<QString, QString> & headers = QHash<QString, QString>(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
                 if (!arr)
@@ -137,7 +137,7 @@ namespace Core {
             QJsonArray pRequest(
                 const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD,
-                const ApiCallMethod & call_method = call_method_get, const QHash<QString, QString> & headers = QHash<QString, QString>(),
+                const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
                 QObject * error_receiver = 0, bool ignore_arr_content = true)
             {
                 QJsonArray temp_arr;

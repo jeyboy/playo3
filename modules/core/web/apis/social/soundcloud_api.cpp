@@ -125,9 +125,7 @@ bool Api::connectUserApi() {
         if (form_url.isRelative())
             form_url = auth_url.resolved(form_url);
 
-        QHash<QString, QString> headers;
-        headers.insert(tkn_referer, form_url.toString());
-        resp = Manager::prepare() -> formFollowed(form_url, headers);
+        resp = Manager::prepare() -> formFollowed(form_url, {{tkn_referer, form_url.toString()}});
 
         QUrlQuery query(resp->toUrl(false).query());
 

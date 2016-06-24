@@ -21,11 +21,7 @@ namespace Core {
                         return obj.contains(tkn_error);
                     }
 
-                    inline QHash<QString, QString> initHeaders() {
-                        QHash<QString, QString> headers;
-                        headers.insert(tkn_header_user_agent, DEFAULT_AGENT);
-                        return headers;
-                    }
+                    inline Headers initHeaders() { return {{tkn_header_user_agent, DEFAULT_AGENT}}; }
 
                     inline QString grabUserId(Html::Document & doc) {
                         Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");

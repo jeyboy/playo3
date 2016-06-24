@@ -65,8 +65,8 @@ namespace Core {
 
         //////////////////////////     WEB_REQUEST     /////////////////////////////
 
-        Request Request::withHeaders(const QHash<QString, QString> & headers) {
-            for(QHash<QString, QString>::ConstIterator header = headers.cbegin(); header != headers.cend(); header++)
+        Request Request::withHeaders(const Headers & headers) {
+            for(Headers::ConstIterator header = headers.cbegin(); header != headers.cend(); header++)
                 setRawHeader(header.key().toUtf8(), header.value().toUtf8());
 
             // in some cases referer broke the link - od is one of it

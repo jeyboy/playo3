@@ -291,7 +291,8 @@ HEADERS += \
     modules/core/interfaces/isource_feeds.h \
     modules/core/feeder/feed_item.h \
     modules/views/web/fourshared_view.h \
-    modules/models/web/fourshared_model.h
+    modules/models/web/fourshared_model.h \
+    modules/core/web/utils/web_headers.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -55,7 +55,7 @@ namespace Core {
                 }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
-                    QUrl url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
+                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % siteToken());
 
 //                    'x-security: 815437060'
 
