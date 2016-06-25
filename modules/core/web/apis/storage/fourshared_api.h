@@ -62,13 +62,13 @@ namespace Core {
                 }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
-                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % siteUserID());
+                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % attrs.value(tkn_grab_refresh).toString());
 
                     return procUserData(sRequest(
                         url,
                         call_type_json,
                         0,
-                        (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt(),
+                        proc_none,
                         QStringList(),
                         call_method_post,
                         siteHeaders()
