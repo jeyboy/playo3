@@ -25,7 +25,7 @@ namespace Core {
                 }
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        /*sf_auth_api_has | sf_api_user_content_auth_only | */sf_auth_site_has
+                        /*sf_auth_api_has | */sf_api_user_content_auth_only | sf_auth_site_has
                             | sf_site_user_content_auth_only | sf_api_search_auth_only
                     );
                 }

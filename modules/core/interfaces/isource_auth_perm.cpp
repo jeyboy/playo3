@@ -39,7 +39,7 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
         res = perm_api;
 
     if (!site_flag_permit || site_flag_permit == siteConnected()) {
-        if (res > 0 || HAS_FLAG(flags, site_prefer))
+        if (!res || (res > 0 && HAS_FLAG(flags, site_prefer)))
             res = perm_site;
     }
 
