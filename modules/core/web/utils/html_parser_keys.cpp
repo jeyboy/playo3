@@ -19,6 +19,7 @@ namespace Core {
             extern const QString tkn_any_elem           = QStringLiteral("*");
             extern const QString tkn_text_block         = QStringLiteral("text");
             extern const QString tkn_comment_block      = QStringLiteral("comment");
+            extern const QString tkn_service_block      = QStringLiteral("service");
             extern const QString tkn_nbsp               = QStringLiteral("nbsp");
             extern const QString tkn_amp                = QStringLiteral("amp");
             extern const QString tkn_lt                 = QStringLiteral("lt");

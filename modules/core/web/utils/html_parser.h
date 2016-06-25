@@ -176,7 +176,14 @@ namespace Core {
                     QString tnm(tkn_comment_block);
                     Tag * newTag = appendTag(tnm);
                     QString nm(tkn_comment_block);
-                    val = val.mid(1, val.length() - 3);
+                    val = val.mid(2, val.length() - 4);
+                    newTag -> addAttr(nm, val); val.clear();
+                }
+
+                inline void appendService(QString & val) {
+                    QString tnm(tkn_service_block);
+                    Tag * newTag = appendTag(tnm);
+                    QString nm(tkn_service_block);
                     newTag -> addAttr(nm, val); val.clear();
                 }
 
@@ -215,10 +222,10 @@ namespace Core {
             };
 
             class Document : public UnicodeDecoding {
-                enum Flags { none = 0, skip_text, skip_comment };
+                enum Flags { none = 0, skip_text = 1, skip_comment = 2, skip_service = 4 };
 
                 enum PState {
-                    content = 1, tag = 2, attr = 4, in_attr = 8, val = 16, in_val = 32, comment = 64, attr_val = attr | val
+                    content = 1, tag = 2, attr = 4, /*in_attr = 8,*/ val = 16, in_val = 32, comment = 64, service = 128, attr_val = attr | val
                 };
 
                 enum PToken {
@@ -226,12 +233,12 @@ namespace Core {
                     close_tag_predicate = 47, // /
                     close_tag = 62, // >
                     space = 32,
-                    comment_token = 33, // !
+                    service_token = 33, // !
                     comment_post_token = 45, // -
                     attr_rel = 61, // =
                     content_del1 = 34, // "
                     content_del2 = 39, // '
-                    mean_sym = 92, // \\
+                    mean_sym = 92, /* \ */
                     code_start = 38, // &
                     code_unicode = 35, // #
                     code_end = 59 // ;

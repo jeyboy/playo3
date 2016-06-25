@@ -287,7 +287,7 @@ namespace Core {
 
                     while(true) {
                         if (device -> getChar(ch)) {
-                            if (*ch > 0 && *ch < 31) continue; // skip not printable trash
+                            if (*ch > 0 && *ch < 32) continue; // skip not printable trash
 
                             switch (state) {
                                 case val:
@@ -309,10 +309,8 @@ namespace Core {
                                         break;}
                                         case code_start: { value.append(parseCode(device, ch)); break; }
                                         default:
-                                            if (*ch > 0)
-                                                value.append(*ch);
-                                            else
-                                                toUtf8(charset, device, value, ch[0]);
+                                            if (*ch > 0) value.append(*ch);
+                                            else toUtf8(charset, device, value, ch[0]);
                                     }
                                 break;}
 
@@ -329,11 +327,30 @@ namespace Core {
                                         case code_start: { name.append(parseCode(device, ch)); break; } // &quot; and etc
                                         case space: if (name.isEmpty()) continue;
                                         default:
-                                            if ((last = *ch) > 0)
-                                                name.append(*ch);
-                                            else
-                                                toUtf8(charset, device, name, ch[0]);
+                                            if ((last = *ch) > 0) name.append(*ch);
+                                            else toUtf8(charset, device, name, ch[0]);
                                     }
+                                break;}
+
+                                case service: {
+                                    switch(*ch) {
+                                        case close_tag: {
+                                            // block closing on > in middle of text
+                                            bool closed_correctly = last == ']';
+                                            bool started_correctly = name[0] == '[';
+
+                                            if (started_correctly == closed_correctly) { // <![CDATA[ */ @import url(/css/al/ie6.css?26); /* ]]>
+                                                if (flags & skip_service) name.clear();
+                                                else elem -> appendService(name);
+                                                state = content; // need to check
+                                                continue;
+                                            }
+                                        }
+                                        default:
+                                            if (*ch > 0) name.append(*ch);
+                                            else toUtf8(charset, device, name, ch[0]);
+                                    }
+                                    last = *ch;
                                 break;}
 
                                 case comment: {
@@ -348,12 +365,9 @@ namespace Core {
                                             }
                                         }
                                         default:
-                                            if (*ch > 0)
-                                                name.append(*ch);
-                                            else
-                                                toUtf8(charset, device, name, ch[0]);
+                                            if ((last = *ch) > 0) name.append(*ch);
+                                            else toUtf8(charset, device, name, ch[0]);
                                     }
-                                    last = *ch;
                                 break;}
 
                                 default: switch(*ch) {
@@ -406,15 +420,18 @@ namespace Core {
                                         }
 
                                         state = content;
-                                    break;}
 
-                                    case comment_post_token: {
-                                        switch(state) {
-                                            case tag: if (last == comment_token) { state = comment; name.clear(); continue; }
-                                            default: ;
-                                        }
+                                        break;}
+
+                                    default: {
+                                        if (state == tag && last == service_token) {
+                                            name.clear();
+                                            state = (*ch == comment_post_token) ? comment : service;
+                                            name.append((last = *ch));
+                                        continue;}
+
+                                        name.append((last = *ch));
                                     }
-                                    default: { name.append((last = *ch)); }
                                 }
                             }
                         } else break;
