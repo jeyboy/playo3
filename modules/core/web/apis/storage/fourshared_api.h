@@ -78,13 +78,12 @@ namespace Core {
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     if (!permissions(pr_media_content)) return QString();
 
-//                    QStringList parts = refresh_page.split('|', QString::SkipEmptyParts);
+                    QUrl url(refresh_page);
+                    bool is_uid = url.host().isEmpty(); // get link from uid
 
                     switch(itemMediaType) {
                         case dmt_audio: {
-                            QUrl url(refresh_page);
-
-                            if (url.host().isEmpty()) { // get link from uid
+                            if (is_uid) {
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
                                 QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
                                 Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
@@ -96,9 +95,7 @@ namespace Core {
                         }
 
                         case dmt_video: {
-                            QUrl url(refresh_page);
-
-                            if (url.host().isEmpty()) { // get link from uid
+                            if (is_uid) {
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % refresh_page);
                                 QString res = Manager::prepare() -> getFollowed(url, siteHeaders()) -> toText();
                                 res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
@@ -111,12 +108,12 @@ namespace Core {
                     }
                 }
 
-                QString downloadLink(const QString & refresh_page) {
-                    if (refresh_page.isEmpty()) return QString();
+//                QString downloadLink(const QString & refresh_page) {
+//                    if (refresh_page.isEmpty()) return QString();
 
-                    Html::Document doc = Web::Manager::prepare() -> getFollowed(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
-                    return doc.find("a[href~'/download/']").link();
-                }
+//                    Html::Document doc = Web::Manager::prepare() -> getFollowed(QUrl(url_down_base % refresh_page.mid(12))) -> toHtml();
+//                    return doc.find("a[href~'/download/']").link();
+//                }
             protected:
                 QJsonArray procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
