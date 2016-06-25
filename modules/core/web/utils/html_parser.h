@@ -215,24 +215,26 @@ namespace Core {
             };
 
             class Document : public UnicodeDecoding {
-                enum Flags { none, skip_text = 1, skip_comment = 2};
+                enum Flags { none = 0, skip_text, skip_comment };
 
-                enum PState { content = 1, tag = 2, attr = 4, val = 8, in_val = 16, comment = 32, attr_val = attr | val };
+                enum PState {
+                    content = 1, tag = 2, attr = 4, in_attr = 8, val = 16, in_val = 32, comment = 64, attr_val = attr | val
+                };
 
                 enum PToken {
-                    open_tag = 60,
-                    close_tag_predicate = 47,
-                    close_tag = 62,
+                    open_tag = 60, // <
+                    close_tag_predicate = 47, // /
+                    close_tag = 62, // >
                     space = 32,
-                    comment_token = 33,
-                    comment_post_token = 45,
-                    attr_rel = 61,
-                    content_del1 = 34,
-                    content_del2 = 39,
-                    mean_sym = 92,
-                    code_start = 38,
-                    code_unicode = 35,
-                    code_end = 59
+                    comment_token = 33, // !
+                    comment_post_token = 45, // -
+                    attr_rel = 61, // =
+                    content_del1 = 34, // "
+                    content_del2 = 39, // '
+                    mean_sym = 92, // \\
+                    code_start = 38, // &
+                    code_unicode = 35, // #
+                    code_end = 59 // ;
                 };
 
             public:
@@ -279,8 +281,6 @@ namespace Core {
             private:
                 inline bool isSolo(Tag * tag) { return solo.contains(tag -> name()); }
                 inline bool isSolo(const QString & tag_name) { return solo.contains(tag_name); }
-
-                void initSoloTags();
 
                 void parse(QIODevice * device);
                 inline QString parseCode(QIODevice * device, char * ch) {
@@ -335,12 +335,13 @@ namespace Core {
                     }
                 }
 
-                QHash<QString, bool> solo;
-                QHash<QString, QChar> html_entities;
                 Tag * root;
                 Flags flags;
                 CharsetType charset;
                 bool charset_finded, using_default_charset;
+
+                static QHash<QString, bool> solo;
+                static QHash<QString, QChar> html_entities;
             };
         }
     }

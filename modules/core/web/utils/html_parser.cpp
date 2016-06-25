@@ -271,25 +271,14 @@ namespace Core {
 
                 ////////  Document //////////
 
-                void Document::initSoloTags() {
-                    html_entities.insert(tkn_nbsp, ' ');
-                    html_entities.insert(tkn_amp, '&');
-                    html_entities.insert(tkn_lt, '<');
-                    html_entities.insert(tkn_gt, '>');
-                    html_entities.insert(tkn_quot, '"');
-
-                    solo.insert(tag_br, true);
-                    solo.insert(tag_meta, true);
-                    solo.insert(tag_link, true);
-                    solo.insert(tag_img, true);
-                    solo.insert(tag_doctype, true);
-                    solo.insert(tag_xml, true);
-                    solo.insert(tag_input, true);
-                }
-
+                QHash<QString, bool> Document::solo = {
+                    {tag_br, true}, {tag_meta, true}, {tag_link, true}, {tag_img, true}, {tag_doctype, true}, {tag_xml, true}, {tag_input, true}
+                };
+                QHash<QString, QChar> Document::html_entities = {
+                    {tkn_nbsp, ' '}, {tkn_amp, '&'}, {tkn_lt, '<'}, {tkn_gt, '>'}, {tkn_quot, '"'}
+                };
 
                 void Document::parse(QIODevice * device) {
-                    initSoloTags();
                     PState state = content;
                     char * ch = new char[2](), last = 0, del = 0;
                     QString name, value; name.reserve(1024); value.reserve(1024);

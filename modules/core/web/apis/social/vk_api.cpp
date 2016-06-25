@@ -47,8 +47,6 @@ bool Api::connectUserApi() {
         Response * resp = Manager::prepare() -> getFollowed(form_url);
         QString err;
         Html::Document html = resp -> toHtml(false);
-        html.output();
-
 
         if (html.has("input[name='pass']")) { // if user not authorized
             resp -> deleteLater();
