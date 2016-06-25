@@ -81,14 +81,22 @@ namespace Core {
 
         Response * Request::viaGet(bool async) { return manager -> get(*this, async); }
 
-        Response * Request::viaPost(const QByteArray & data, const QString & content_type) {
+        Response * Request::viaPost(const QString & content_type) {
+            QUrl curl = url();
+            QByteArray payload = extractParams(curl);
+            setUrl(curl);
+
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
-            return manager -> post(*this, data);
+            return manager -> post(*this, payload);
         }
 
-        Response * Request::viaPut(const QByteArray & data, const QString & content_type) {
+        Response * Request::viaPut(const QString & content_type) {
+            QUrl curl = url();
+            QByteArray payload = extractParams(curl);
+            setUrl(curl);
+
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
-            return manager -> put(*this, data);
+            return manager -> put(*this, payload);
         }
 
         Response * Request::viaForm(const QByteArray & data) {

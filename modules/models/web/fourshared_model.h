@@ -12,7 +12,7 @@ namespace Models {
     public slots:
         void refresh();
     protected slots:
-        void proceedJson(QJsonObject &);
+        void proceedJson(QJsonArray &);
     };
 }
 

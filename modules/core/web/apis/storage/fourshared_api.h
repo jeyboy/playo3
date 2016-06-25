@@ -54,11 +54,11 @@ namespace Core {
                 }
 
                 inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::userInfo, uid, func); }
-                QJsonObject userInfo(QString & uid) {
+                QJsonArray userInfo(QString & uid) {
                     Permissions res = permissions(pr_user_content);
-                    if (!res) return QJsonObject();
+                    if (!res) return QJsonArray();
 
-                    return loadSet({{tkn_grab_refresh, uid}}).toObject();
+                    return loadSet({{tkn_grab_refresh, uid}}).toArray();
                 }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
@@ -84,27 +84,27 @@ namespace Core {
                         case dmt_audio: {
                             QUrl url(refresh_page);
 
-                            if (url.isValid()) {
-                                Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
-                                return doc.find("input.jsD1PreviewUrl").value();
-                            } else { // get link from uid
+                            if (url.host().isEmpty()) { // get link from uid
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
                                 QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
                                 Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
                                 return res;
+                            } else {
+                                Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
+                                return doc.find("input.jsD1PreviewUrl").value();
                             }
                         }
 
                         case dmt_video: {
                             QUrl url(refresh_page);
 
-                            if (url.isValid()) {
-                                //TODO: write me
-                            } else { // get link from uid
+                            if (url.host().isEmpty()) { // get link from uid
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % refresh_page);
                                 QString res = Manager::prepare() -> getFollowed(url, siteHeaders()) -> toText();
                                 res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
                                 return res;
+                            } else {
+                                //TODO: write me
                             }
                         }
                         default: return QString();
@@ -150,7 +150,6 @@ namespace Core {
 
                         if (isAudio || isVideo) {
                             QJsonObject item_obj;
-                            bool isAudio = file_obj.value(QStringLiteral("typeCss")).toString() == QStringLiteral("audio");
 
                             QString name = file_obj.value(QStringLiteral("name")).toString(), ext;
                             Extensions::obj().extractExtension(name, ext);
@@ -158,6 +157,7 @@ namespace Core {
                             if (file_obj.contains(QStringLiteral("prStyle")))
                                 item_obj.insert(tkn_grab_art_url, file_obj[QStringLiteral("prStyle")].toString());
 
+                            item_obj.insert(tkn_skip_info, true);
                             item_obj.insert(tkn_grab_refresh, file_obj.value(QStringLiteral("id")).toString());
                             item_obj.insert(tkn_grab_title, name);
                             item_obj.insert(tkn_grab_extension, ext);

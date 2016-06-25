@@ -8,11 +8,11 @@ void FoursharedModel::refresh() {
     QApplication::processEvents();
     Fourshared::Api::obj().userInfo(
         sttngs.uid,
-        new Func(this, SLOT(proceedJson(QJsonObject &)))
+        new Func(this, SLOT(proceedJson(QJsonArray &)))
     );
 }
 
-void FoursharedModel::proceedJson(QJsonObject & hash) {
+void FoursharedModel::proceedJson(QJsonArray & hash) {
     int added = proceedList(dt_site_fourshared, hash, rootItem);
 
     if (added > 0) {
