@@ -8,6 +8,7 @@
 #include <qdatetime.h>
 #include <qscrollbar.h>
 #include <qstringbuilder.h>
+#include <qapplication.h>
 
 #include "modules/core/misc/format.h"
 #include "modules/core/interfaces/singleton.h"
@@ -16,6 +17,15 @@ class Logger : public QObject, public Core::Singleton<Logger> {
     Q_OBJECT
 public:
     ~Logger();
+
+    static void dump(const QByteArray & content) {
+        QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
+        QFile f(p);
+        if (f.open(QFile::WriteOnly)) {
+            f.write(content);
+            f.close();
+        }
+    }
 
     void write(const QString & initiator, const QString & value, bool error = false);
     void write(const QString & initiator, const QString & value, const QString & attr, bool error = false);

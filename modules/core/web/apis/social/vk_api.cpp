@@ -41,11 +41,13 @@ QToolButton * Api::initButton(QWidget * parent) {
 ///////////////////////////////////////////////////////////
 bool Api::connectUserApi() {
     QUrl form_url = authUrl();
-    qDebug() << form_url;
 
     while(true) {
         Response * resp = Manager::prepare() -> getFollowed(form_url);
         QString err;
+
+//        Logger::dump(resp -> toText().toUtf8());
+
         Html::Document html = resp -> toHtml(false);
 
         if (html.has("input[name='pass']")) { // if user not authorized
