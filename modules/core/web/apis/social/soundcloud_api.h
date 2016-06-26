@@ -84,18 +84,23 @@ namespace Core {
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
-//                        linkables << Linkable(
-//                            QString::number(obj.value(tkn_id).toInt()),
-//                            QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString()),
-//                            obj.value(tkn_screen_name).toString(),
-//                            obj.value(tkn_photo).toString()
-//                        );
+
+                        QString full_name = obj.value(tkn_full_name).toString();
+                        QString perma = obj.value(tkn_permalink).toString();
+
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            full_name.isEmpty() ? obj.value(tkn_username).toString() : full_name,
+                            perma,
+                            obj.value(tkn_avatar_url).toString()
+                        );
                     }
                 }
 
                 inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
+
 //                        linkables << Linkable(
 //                            QString::number(obj.value(tkn_id).toInt()),
 //                            obj.value(QStringLiteral("name")).toString(),

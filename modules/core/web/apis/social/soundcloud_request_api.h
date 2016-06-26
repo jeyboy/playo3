@@ -364,7 +364,7 @@ namespace Core {
                 }
                 QJsonArray userById(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
-                        baseUrlStr(path_users % uid, genDefaultParams()),
+                        baseUrlStr(path_users % '/' % uid, genDefaultParams()),
                         call_type_json,
                         rules(0, count),
                         0,
@@ -377,7 +377,7 @@ namespace Core {
                 QString groupsByNameUrl(const QString & name) {
                     QUrlQuery query = genDefaultParams();
                     setSearchPredicate(query, name);
-                    return baseUrlStr(path_users, query);
+                    return baseUrlStr(path_groups, query);
                 }
 
                 QJsonArray groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT) {
@@ -394,7 +394,7 @@ namespace Core {
 
                 QString groupByIdUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
-                    return baseUrlStr(path_groups % uid, query);
+                    return baseUrlStr(path_groups % '/' % uid, query);
                 }
                 QJsonArray groupById(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(

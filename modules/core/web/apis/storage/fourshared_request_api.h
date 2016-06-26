@@ -198,28 +198,6 @@ namespace Core {
 
                     return res;
                 }
-
-//                QJsonValue userInfo(/*QString & uid, InfoType fullInfo = info_all*/) {
-//                    QString url = fullInfo == info_all ? userFullInfoUrl(uid) : userAudiosUrl(uid);
-
-//                    QJsonObject ret = sRequest(
-//                        url,
-//                        call_type_json,
-//                        0,
-//                        proc_json_extract
-//                    );
-
-
-////                    QJsonObject ret = sQuery(url, extract);
-
-//                    QJsonArray ar = ret.value(tkn_albums).toArray();
-
-//                    if (!ret.value(tkn_albums_finished).toBool())
-//                        audioAlbums(uid, ar, ret.value(tkn_albums_offset).toInt());
-
-//                    ret.insert(tkn_albums, ar);
-//                    return ret;
-//                }
             };
         }
     }

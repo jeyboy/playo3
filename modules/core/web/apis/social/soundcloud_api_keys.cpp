@@ -12,11 +12,11 @@ namespace Core {
             extern const QString path_playlists        = QStringLiteral("playlists/");
             extern const QString path_tracks           = QStringLiteral("tracks");
             extern const QString path_track            = QStringLiteral("tracks/");
-            extern const QString path_groups           = QStringLiteral("groups/");
+            extern const QString path_groups           = QStringLiteral("groups");
             extern const QString path_group_tracks     = QStringLiteral("groups/%1/tracks");
             extern const QString path_group_playlists  = QStringLiteral("groups/%1/playlists");
             //            /groups/{id}/members
-            extern const QString path_users            = QStringLiteral("users/");
+            extern const QString path_users            = QStringLiteral("users");
             extern const QString path_user_tracks      = QStringLiteral("users/%1/tracks");
             extern const QString path_user_favorites   = QStringLiteral("users/%1/favorites");
             extern const QString path_user_playlists   = QStringLiteral("users/%1/playlists");
