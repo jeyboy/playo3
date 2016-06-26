@@ -18,7 +18,6 @@ namespace Core {
             extern const QString path_track;
             extern const QString path_groups;
             extern const QString path_group_tracks;
-            extern const QString path_group_playlists;
             extern const QString path_users;
             extern const QString path_user_tracks;
             extern const QString path_user_playlists;

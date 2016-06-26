@@ -146,7 +146,6 @@ namespace Core {
 
                 void getGroupInfo(const QString & uid, QJsonObject & object) {
                     object.insert(tkn_audio_list, groupAudio(uid));
-                    object.insert(tkn_playlist, groupPlaylists(uid));
                 }
 
                 void getUserInfo(const QString & uid, QJsonObject & object) {
@@ -186,22 +185,6 @@ namespace Core {
 
 //                    return lQuery(groupAudioUrl(group_id), queryRules(count), wrap);
                 }
-
-
-                QString groupPlaylistsUrl(const QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    return baseUrlStr(path_group_playlists.arg(uid), query);
-                }
-                QJsonArray groupPlaylists(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    return pRequest(
-                        groupPlaylistsUrl(group_id),
-                        call_type_json,
-                        rules(0, count),
-                        0,
-                        proc_patch
-                    );
-                }
-
 
                 QString audioInfoUrl(const QString & audio_uid) { return baseUrlStr(path_track % audio_uid, genDefaultParams()); }
                 QJsonObject audioInfo(const QString & audio_uid) {
