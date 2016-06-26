@@ -18,7 +18,6 @@ void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkable
 
     list -> setItemDelegate(new RelationsDelegate(list));
     list -> setEditTriggers(QListView::NoEditTriggers);
-    list -> sortItems();
 }
 
 RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
@@ -29,7 +28,9 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     ui -> setupUi(this);
 
     prepareLinkablesList(api -> friendsList().values(), ui -> friendsList);
+    ui -> friendsList -> sortItems();
     prepareLinkablesList(api -> groupsList().values(), ui -> groupsList);
+    ui -> groupsList -> sortItems();
 
     bool by_friend_id = api -> hasSearchByFriendId();
 

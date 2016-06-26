@@ -38,7 +38,7 @@ namespace Core {
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name);
+                    QJsonArray arr = usersByName(name, 400);
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -55,7 +55,7 @@ namespace Core {
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name);
+                    QJsonArray arr = groupsByName(name, 400);
                     jsonToGroups(linkables, arr);
 
                     return linkables;
@@ -101,12 +101,12 @@ namespace Core {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
 
-//                        linkables << Linkable(
-//                            QString::number(obj.value(tkn_id).toInt()),
-//                            obj.value(QStringLiteral("name")).toString(),
-//                            obj.value(tkn_screen_name).toString(),
-//                            obj.value(tkn_photo).toString()
-//                        );
+                        linkables << Linkable(
+                            QString::number(obj.value(tkn_id).toInt()),
+                            obj.value(QStringLiteral("name")).toString(),
+                            obj.value(tkn_permalink).toString(),
+                            obj.value(tkn_artwork_url).toString()
+                        );
                     }
                 }
 

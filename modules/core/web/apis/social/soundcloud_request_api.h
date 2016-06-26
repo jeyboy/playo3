@@ -6,8 +6,9 @@
 #include "soundcloud_api_keys.h"
 
 #define SOUNDCLOUD_PAGES_LIMIT 25
-#define SOUNDCLOUD_ITEMS_LIMIT 10000
+#define SOUNDCLOUD_ITEMS_LIMIT 2000
 #define SOUNDCLOUD_PER_REQUEST_LIMIT 200
+#define SOUNDCLOUD_PER_REQUEST_LIMIT_SET 2
 
 namespace Core {
     namespace Web {
@@ -285,7 +286,7 @@ namespace Core {
                     return pRequest(
                         userPlaylistsUrl(uid),
                         call_type_json,
-                        rules(0, count),
+                        rules(0, count, SOUNDCLOUD_PAGES_LIMIT, 25),
                         0,
                         proc_patch
                     );
@@ -419,7 +420,7 @@ namespace Core {
                     return pRequest(
                         playlistByPredicateUrl(predicate),
                         call_type_json,
-                        rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, 2), // playlists is very weighted for loading - so set limitation to 2 playlists per request
+                        rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), // playlists is very weighted for loading - so set limitation to 2 playlists per request
                         0,
                         proc_patch
                     );

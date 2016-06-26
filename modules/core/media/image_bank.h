@@ -74,7 +74,7 @@ public:
         }
     }
 
-    void proceedPacket(const QModelIndex & ind, const QStringList & urls) {
+    void proceedPacket(const QModelIndex & ind, const QStringList & urls) { // TODO: need to use order with slide window
         if (packet_limiters.contains(ind)) return;
 
         bool ready = true;
