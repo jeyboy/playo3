@@ -60,15 +60,16 @@ RelationsDialog::~RelationsDialog() {
 void RelationsDialog::on_cancelButton_clicked() { reject(); }
 
 void RelationsDialog::on_friendsList_itemActivated(QListWidgetItem * item) {
-    Linkable linkable = api -> friendsList().value((uid = item -> data(Qt::UserRole).toString()));
-    name = linkable.humanName();
+    uid = item -> data(Qt::UserRole).toString();
+    name = item -> text();
+
     accept();
 }
 
 void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
-    Linkable linkable = api -> groupsList().value((uid = item -> data(Qt::UserRole).toString()));
-    name = linkable.humanName();
-    uid = QStringLiteral("-") % uid;
+    uid = QStringLiteral("-") % item -> data(Qt::UserRole).toString();
+    name = item -> text();
+
     accept();
 }
 
