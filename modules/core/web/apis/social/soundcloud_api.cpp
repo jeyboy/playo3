@@ -5,49 +5,9 @@
 
 using namespace Core::Web::Soundcloud;
 
-QString Api::authUrl() {
-    QUrl url(url_connect);
-
-    QUrlQuery query = genDefaultParams();
-    setParam(query, tkn_response_type, val_response_type);
-    setParam(query, tkn_scope, val_scope);
-    setParam(query, tkn_redirect_uri, url_redirect);
-    setParam(query, tkn_display, val_display);
-
-    url.setQuery(query);
-    return url.toString();
-}
-
 //////////////////////////////////////////////////////////
 /// COMMON
 //////////////////////////////////////////////////////////
-
-void Api::getGroupInfo(QString uid, QJsonObject & object) {
-    object.insert(tkn_audio_list, groupAudio(uid));
-    object.insert(tkn_playlist, groupPlaylists(uid));
-}
-
-void Api::getUserInfo(QString & uid, QJsonObject & object) {
-    object.insert(tkn_audio_list, userAudio(uid));
-    object.insert(tkn_playlist, userPlaylists(uid));
-    QThread::msleep(REQUEST_DELAY);
-    object.insert(tkn_followings, userFollowings(uid)); // return bad request error
-    object.insert(tkn_followers, userFollowers(uid));
-    QThread::msleep(REQUEST_DELAY);
-    object.insert(tkn_groups, userGroups(uid));
-}
-
-
-QJsonObject Api::objectInfo(QString & uid) {
-    QJsonObject res;
-
-    if (uid[0] == '-')
-        getGroupInfo(uid.mid(1), res);
-    else
-        getUserInfo(uid, res);
-
-    return res;
-}
 
 QToolButton * Api::initButton(QWidget * parent) {
     if (button == 0) {

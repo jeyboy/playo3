@@ -19,25 +19,6 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_fourshared; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
-//                    QString token = ptype == qpt_json ? apiToken() : siteToken();
-                    return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
-                }
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        /*sf_auth_api_has | */sf_api_user_content_auth_only | sf_auth_site_has
-                            | sf_site_user_content_auth_only | sf_api_search_auth_only
-                    );
-                }
-                inline Headers siteHeaders() {
-                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
-                }
-
-                void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
-                void loadAdditionals(QJsonObject & obj) { Manager::loadCookies(obj); }
-                void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
-
-                QToolButton * initButton(QWidget * parent = 0);
 
                 QJsonValue popular(const SearchLimit & limits) {
                     Permissions res = permissions(pr_media_content);
@@ -115,6 +96,26 @@ namespace Core {
 //                    return doc.find("a[href~'/download/']").link();
 //                }
             protected:
+                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
+//                    QString token = ptype == qpt_json ? apiToken() : siteToken();
+                    return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
+                }
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        /*sf_auth_api_has | */sf_api_user_content_auth_only | sf_auth_site_has
+                            | sf_site_user_content_auth_only | sf_api_search_auth_only
+                    );
+                }
+                inline Headers siteHeaders() {
+                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
+                }
+
+                void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
+                void loadAdditionals(QJsonObject & obj) { Manager::loadCookies(obj); }
+                void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
+
+                QToolButton * initButton(QWidget * parent = 0);
+
                 QJsonArray procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 

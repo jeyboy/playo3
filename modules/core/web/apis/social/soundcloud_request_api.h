@@ -13,7 +13,6 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class RequestApi : public IApi, public IShareable {
-            private:
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
                 // add to search
@@ -43,6 +42,19 @@ namespace Core {
                 }
             public:
                 inline virtual ~RequestApi() {}
+
+                QString authUrl() {
+                    QUrl url(url_connect);
+
+                    QUrlQuery query = genDefaultParams();
+                    setParam(query, tkn_response_type, val_response_type);
+                    setParam(query, tkn_scope, val_scope);
+                    setParam(query, tkn_redirect_uri, url_redirect);
+                    setParam(query, tkn_display, val_display);
+
+                    url.setQuery(query);
+                    return url.toString();
+                }
 
                 /////////////////
                 /// AUTH
@@ -131,6 +143,31 @@ namespace Core {
 //                    );
                 }
 
+                void getGroupInfo(const QString & uid, QJsonObject & object) {
+                    object.insert(tkn_audio_list, groupAudio(uid));
+                    object.insert(tkn_playlist, groupPlaylists(uid));
+                }
+
+                void getUserInfo(const QString & uid, QJsonObject & object) {
+                    object.insert(tkn_audio_list, userAudio(uid));
+                    object.insert(tkn_playlist, userPlaylists(uid));
+                    QThread::msleep(REQUEST_DELAY);
+                    object.insert(tkn_followings, userFollowings(uid)); // return bad request error
+                    object.insert(tkn_followers, userFollowers(uid));
+                    QThread::msleep(REQUEST_DELAY);
+                    object.insert(tkn_groups, userGroups(uid));
+                }
+                QJsonObject objectInfo(const QString & uid) {
+                    QJsonObject res;
+
+                    if (uid[0] == '-')
+                        getGroupInfo(uid.mid(1), res);
+                    else
+                        getUserInfo(uid, res);
+
+                    return res;
+                }
+
 
                 QString groupAudioUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
@@ -150,11 +187,11 @@ namespace Core {
                 }
 
 
-                QString groupPlaylistsUrl(QString & uid) {
+                QString groupPlaylistsUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_group_playlists.arg(uid), query);
                 }
-                QJsonArray groupPlaylists(QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray groupPlaylists(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         groupPlaylistsUrl(group_id),
                         call_type_json,
@@ -195,11 +232,11 @@ namespace Core {
                 }
 
 
-                QString userAudioUrl(QString & uid) {
+                QString userAudioUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_user_tracks.arg(uid), query);
                 }
-                QJsonArray userAudio(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userAudio(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         userAudioUrl(uid),
                         call_type_json,
@@ -211,12 +248,40 @@ namespace Core {
 //                    return lQuery(userAudioUrl(uid), queryRules(count), wrap);
                 }
 
+                QString userAudioFavoritesUrl(const QString & user_uid) {
+                    QUrlQuery query = genDefaultParams();
+                    return baseUrlStr(path_user_favorites.arg(user_uid), query);
+                }
+                QJsonArray userAudioFavorites(QString & user_uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                    return pRequest(
+                        userAudioFavoritesUrl(user_uid),
+                        call_type_json,
+                        rules(0, count),
+                        0,
+                        proc_patch
+                    );
 
-                QString userPlaylistsUrl(QString & uid) {
+//                    return lQuery(userAudioUrl(uid), queryRules(count), wrap);
+                }
+
+                QString userAppendAudioFavoritesUrl(const QString & user_uid, const QString & track_uid) {
+                    QUrlQuery query = genDefaultParams();
+                    return baseUrlStr(path_user_favorites.arg(user_uid) % '/' % track_uid, query);
+                }
+                void userAppendAudioFavorites(const QString & user_uid, const QString & track_uid) {
+                    QString res = Manager::prepare() -> putFollowed(
+                        userAppendAudioFavoritesUrl(user_uid, track_uid),
+                        Headers()
+                    ) -> toText();
+                    qDebug() << "FAV" << res;
+                }
+
+
+                QString userPlaylistsUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_user_playlists.arg(uid), query);
                 }
-                QJsonArray userPlaylists(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userPlaylists(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         userPlaylistsUrl(uid),
                         call_type_json,
@@ -229,11 +294,11 @@ namespace Core {
                 }
 
 
-                QString userFollowingsUrl(QString & uid) {
+                QString userFollowingsUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_user_followings.arg(uid), query);
                 }
-                QJsonArray userFollowings(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userFollowings(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         userFollowingsUrl(uid),
                         call_type_json,
@@ -246,11 +311,11 @@ namespace Core {
                 }
 
 
-                QString userFollowersUrl(QString & uid) {
+                QString userFollowersUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_user_followers.arg(uid), query);
                 }
-                QJsonArray userFollowers(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userFollowers(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         userFollowersUrl(uid),
                         call_type_json,
@@ -263,11 +328,11 @@ namespace Core {
                 }
 
 
-                QString userGroupsUrl(QString & uid) {
+                QString userGroupsUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_user_groups.arg(uid), query);
                 }
-                QJsonArray userGroups(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userGroups(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         userGroupsUrl(uid),
                         call_type_json,
@@ -280,15 +345,15 @@ namespace Core {
                 }
 
 
-                QString userByNameUrl(QString & name) {
+                QString usersByNameUrl(const QString & name) {
                     QUrlQuery query = genDefaultParams();
                     setSearchPredicate(query, name);
                     return baseUrlStr(path_users, query);
                 }
 
-                QJsonArray usersByName(QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
-                        userByNameUrl(name),
+                        usersByNameUrl(name),
                         call_type_json,
                         rules(0, count),
                         0,
@@ -297,7 +362,7 @@ namespace Core {
 
 //                    return lQuery(userByNameUrl(name), queryRules(count), wrap);
                 }
-                QJsonArray userById(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray userById(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         baseUrlStr(path_users % uid, genDefaultParams()),
                         call_type_json,
@@ -309,15 +374,15 @@ namespace Core {
                 }
 
 
-                QString groupByNameUrl(QString & name) {
+                QString groupsByNameUrl(const QString & name) {
                     QUrlQuery query = genDefaultParams();
                     setSearchPredicate(query, name);
                     return baseUrlStr(path_users, query);
                 }
 
-                QJsonArray groupByName(QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
-                        groupByNameUrl(name),
+                        groupsByNameUrl(name),
                         call_type_json,
                         rules(0, count),
                         0,
@@ -327,11 +392,11 @@ namespace Core {
 //                    return lQuery(groupByNameUrl(name), queryRules(count), wrap);
                 }
 
-                QString groupByIdUrl(QString & uid) {
+                QString groupByIdUrl(const QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     return baseUrlStr(path_groups % uid, query);
                 }
-                QJsonArray groupById(QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonArray groupById(const QString & uid, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     return pRequest(
                         groupByIdUrl(uid),
                         call_type_json,

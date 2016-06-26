@@ -25,6 +25,7 @@ namespace Core {
             extern const QString path_user_followings;
             extern const QString path_user_followers;
             extern const QString path_user_groups;
+            extern const QString path_user_favorites;
 
 
             extern const QString tkn_avatar_url;

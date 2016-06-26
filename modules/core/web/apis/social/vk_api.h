@@ -21,11 +21,11 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_vk; }
 
-                void userInfo(const QString & uid, const InfoType & info_type, Func * func) {
+                void userInfoAsync(const QString & uid, const InfoType & info_type, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::userInfo, uid, info_type, func);
                 }
 
-                void audioRecomendations(const QString & uid, bool byUser, bool randomize, Func * func) {
+                void audioRecomendationsAsync(const QString & uid, bool byUser, bool randomize, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::audioRecomendations, uid, byUser, randomize, func);
                 }
 
@@ -68,20 +68,16 @@ namespace Core {
                 }
 
             protected:
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
+                }
+
                 QToolButton * initButton(QWidget * parent = 0);
 
                 bool connectUserApi();
                 bool connectUserSite() { return false; } // TODO: write me
-                void clearAdditionals() {
-                    clearFriends();
-                    clearGroups();
-                }
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
-
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
-                }
 
                 inline QUrlQuery genDefaultParams(const QueryParamsType & ptype = qpt_json) {
                     QUrlQuery query = QUrlQuery();
@@ -96,6 +92,10 @@ namespace Core {
 
                 void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
                 void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
+                void clearAdditionals() {
+                    clearFriends();
+                    clearGroups();
+                }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {

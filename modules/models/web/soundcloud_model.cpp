@@ -6,7 +6,7 @@ using namespace Models;
 void SoundcloudModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::obj().objectInfo(
+    Soundcloud::Api::obj().objectInfoAsync(
         sttngs.uid,
         new Func(this, SLOT(proceedJson(QJsonObject &)))
     );

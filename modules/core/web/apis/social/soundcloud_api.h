@@ -17,43 +17,96 @@ namespace Core {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
-                inline Api() { }
+                inline Api() { setSearchLimitations(true, true, true, true); }
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }
                 inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) { return QUrlQuery(tkn_client_id % val_id_tkn); }
-                QString authUrl();
 
-                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
-                void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
+                inline void objectInfoAsync(const QString & uid, Func * func) {
+                    ThreadUtils::obj().run((RequestApi *)this, &RequestApi::objectInfo, uid, func);
+                }
 
-                void getGroupInfo(QString uid, QJsonObject & object);
-                void getUserInfo(QString & uid, QJsonObject & object);
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
 
-//                QList<Linkable> findFriendById(const QString & uid) {}
-//                QList<Linkable> findFriendByName(const QString & name) {}
-//                QList<Linkable> findGroupById(const QString & uid) {}
-//                QList<Linkable> findGroupByName(const QString & name) {}
+                    QJsonArray arr = userById(uid);
+                    jsonToUsers(linkables, arr);
 
-                QJsonObject objectInfo(QString & uid);
-                inline void objectInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::objectInfo, uid, func); }
+                    return linkables;
+                }
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = usersByName(name);
+                    jsonToUsers(linkables, arr);
+
+                    return linkables;
+                }
+
+                QList<Linkable> findGroupsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupById(uid);
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
+                }
+                QList<Linkable> findGroupsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupsByName(name);
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
+                }
+
+            protected:
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        sf_auth_api_has | sf_api_auth_mandatory
+                        /*| sf_site_user_content_auth_only | sf_site_feeds_auth_only*/
+                    );
+                }
 
                 QToolButton * initButton(QWidget * parent = 0);
 
                 bool connectUserApi();
-//                bool connectUser(const ConnectionType & /*conType*/ = connection_restore);
+                bool connectUserSite() { return false; } // TODO: write me
+
+                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
+                void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
                 }
 
-            protected:
+                inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+//                        linkables << Linkable(
+//                            QString::number(obj.value(tkn_id).toInt()),
+//                            QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString()),
+//                            obj.value(tkn_screen_name).toString(),
+//                            obj.value(tkn_photo).toString()
+//                        );
+                    }
+                }
+
+                inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+//                        linkables << Linkable(
+//                            QString::number(obj.value(tkn_id).toInt()),
+//                            obj.value(QStringLiteral("name")).toString(),
+//                            obj.value(tkn_screen_name).toString(),
+//                            obj.value(tkn_photo).toString()
+//                        );
+                    }
+                }
+
                 inline bool isRefreshable() { return false; }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
-
-//                inline QString offsetKey() const { return tkn_offset; }
-//                inline QString limitKey() const { return tkn_limit; }
-//                inline int requestLimit() const { return 200; }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     return response.value(tkn_response).toArray().size() < arg -> per_request_limit;
