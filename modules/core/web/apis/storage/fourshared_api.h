@@ -5,13 +5,14 @@
 #include "modules/core/web/interfaces/auth/oauth.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/misc/file_utils/extensions.h"
+#include "modules/core/interfaces/iuser_interaction.h"
 
 #include "fourshared_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Api: public ISource, public RequestApi, public Singleton<Api> {
+            class Api: public ISource, public RequestApi, public IUserInteraction, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

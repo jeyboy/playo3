@@ -2,14 +2,14 @@
 #define SHMIDT
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class Shmidt : public ISource, public IApi, public Singleton<Shmidt> {
+        class Shmidt : public ISource, public IQueriable, public Singleton<Shmidt> {
         public:
             inline QString name() const { return QStringLiteral("Shmidt"); }
             inline DataSubType siteType() const { return dt_site_shmidt; }

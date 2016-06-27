@@ -4,7 +4,7 @@
 #include "fourshared_api_keys.h"
 #include "modules/core/web/grabber_keys.h"
 
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 //#include "modules/core/misc/file_utils/extensions.h"
 //#include "modules/core/media/genres/music_genres.h"
 
@@ -15,7 +15,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class RequestApi : public IApi {
+            class RequestApi : public IQueriable {
             protected:
                 enum CategoryTypes {
                     music = 1, video = 2, photo = 3, archive = 4, book = 5,

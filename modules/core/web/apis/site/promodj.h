@@ -2,7 +2,7 @@
 #define PROMODJ
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/grabber_keys.h"
 
@@ -11,7 +11,7 @@
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class PromoDj : public ISource, public IApi, public Singleton<PromoDj> {
+        class PromoDj : public ISource, public IQueriable, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
             inline DataSubType siteType() const { return dt_site_promodj; }

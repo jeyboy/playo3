@@ -3,15 +3,16 @@
 
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
+#define MAX_PAGES_PER_ARTIST 2
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class MyzukaAlbum : public ISource, public IApi, public Singleton<MyzukaAlbum> {
+        class MyzukaAlbum : public ISource, public IQueriable, public Singleton<MyzukaAlbum> {
             const QString data_url_token, title_token, search_path_token, search_predicate_token;
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:

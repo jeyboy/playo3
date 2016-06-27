@@ -127,7 +127,6 @@ HEADERS += \
     modules/core/core_parts/item_drop_formats.h \
     modules/core/core_parts/playlist.h \
     modules/core/web/grabber_keys.h \
-    modules/core/web/interfaces/iapi.h \
     modules/core/web/interfaces/igrabber_api.h \
     modules/core/interfaces/isearchable.h \
     modules/core/media/cue/cue.h \
@@ -276,7 +275,6 @@ HEADERS += \
     modules/models/model_settings.h \
     modules/core/interfaces/isource.h \
     modules/core/interfaces/igenreable.h \
-    modules/core/interfaces/ishareable.h \
     modules/core/web/interfaces/iqueriable.h \
     modules/core/web/interfaces/queriable_arg.h \
     modules/core/web/utils/js_document.h \
@@ -292,7 +290,8 @@ HEADERS += \
     modules/core/feeder/feed_item.h \
     modules/views/web/fourshared_view.h \
     modules/models/web/fourshared_model.h \
-    modules/core/web/utils/web_headers.h
+    modules/core/web/utils/web_headers.h \
+    modules/core/interfaces/iuser_interaction.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -400,7 +399,6 @@ SOURCES += \
     modules/core/media/interfaces/ispectrumable.cpp \
     modules/core/media/interfaces/iequalizable.cpp \
     player/bass_player.cpp \
-    modules/core/web/interfaces/iapi.cpp \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
     modules/core/web/apis/social/vk_api_keys.cpp \
@@ -428,4 +426,5 @@ SOURCES += \
     modules/core/interfaces/search_limits.cpp \
     modules/core/interfaces/isource_auth_perm.cpp \
     modules/views/web/fourshared_view.cpp \
-    modules/models/web/fourshared_model.cpp
+    modules/models/web/fourshared_model.cpp \
+    modules/core/interfaces/iuser_interaction.cpp

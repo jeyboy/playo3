@@ -2,14 +2,14 @@
 #define YANDEX_REQUEST_API
 
 #include "yandex_api_keys.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 
 #define YANDEX_SEARCH_LIMIT 200
 
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class RequestApi : public IApi {
+            class RequestApi : public IQueriable {
             protected:
                 RequestApi() {} // uid should be in format track_id:album_id (25358347:2988319)
 

@@ -2,14 +2,14 @@
 #define MP3PM
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class Mp3pm : public ISource, public IApi, public Singleton<Mp3pm> {
+        class Mp3pm : public ISource, public IQueriable, public Singleton<Mp3pm> {
         public:
             inline QString name() const { return QStringLiteral("Mp3pm"); }
             inline DataSubType siteType() const { return dt_site_mp3pm; }

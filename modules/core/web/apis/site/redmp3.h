@@ -2,14 +2,14 @@
 #define REDMP3
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class RedMp3 : public ISource, public IApi, public Singleton<RedMp3> {
+        class RedMp3 : public ISource, public IQueriable, public Singleton<RedMp3> {
         public:
             inline QString name() const { return QStringLiteral("RedMp3"); }
             inline DataSubType siteType() const { return dt_site_redmp3; }

@@ -29,37 +29,41 @@ namespace Core {
         connection_new = 2
     };
 
-    enum SourceFlags {
+    enum SourceFlags : quint32 {
         sf_none = 0,
 
-        sf_prefer_api = 1,
+        sf_sociable = 1,
+        sf_feedable = 2,
+        sf_shareable = 4,
 
-        sf_auth_api_has = 2,
-        sf_auth_site_has = 8,
-        sf_feeds_has = 16,
+        sf_auth_api_has = 8,
+        sf_auth_site_has = 16,
+
 
         sf_site_search_auth_only = 32,
-        sf_site_media_content_auth_only = 64,
-        sf_site_user_content_auth_only = 128,
-        sf_site_feeds_auth_only = 256,
+        sf_prefer_site_search = 64,
+        sf_api_search_auth_only = 128,
 
-        sf_prefer_site_search = 512,
-        sf_prefer_site_media_content = 1024,
-        sf_prefer_site_user_content = 2048,
-        sf_prefer_site_feeds = 4096,
+        sf_site_media_content_auth_only = 256,
+        sf_prefer_site_media_content = 512,
+        sf_api_media_content_auth_only = 1024,
 
-        sf_api_search_auth_only = 8192,
-        sf_api_media_content_auth_only = 16384,
-        sf_api_user_content_auth_only = 32768,
+        sf_site_user_content_auth_only = 2048,
+        sf_prefer_site_user_content = 4096,
+        sf_api_user_content_auth_only = 8192,
+
+        sf_site_feeds_auth_only = 16384,
+        sf_prefer_site_feeds = 32768,
         sf_api_feeds_auth_only = 65536,
 
-//        sf_prefer_api_search = 131072,
-//        sf_prefer_api_media_content = 262144,
-//        sf_prefer_api_user_content = 524288,
+        sf_site_restore_link_auth_only = 131072,
+        sf_prefer_site_restore_link = 262144,
+        sf_api_restore_link_auth_only = 524288,
+
 //        sf_prefer_api_feeds = 1048576,
 
-        sf_site_auth_mandatory = sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only | sf_site_feeds_auth_only,
-        sf_api_auth_mandatory = sf_api_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only | sf_api_feeds_auth_only,
+        sf_site_auth_mandatory = sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only | sf_site_feeds_auth_only | sf_site_restore_link_auth_only,
+        sf_api_auth_mandatory = sf_api_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only | sf_api_feeds_auth_only | sf_api_restore_link_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };
@@ -75,7 +79,8 @@ namespace Core {
         pr_search = 1,
         pr_media_content = 2,
         pr_user_content = 4,
-        pr_feed = 8
+        pr_feed = 8,
+        pr_restore_link = 16,
     };
 
     class ISourceAuthPerm : public QObject {
@@ -109,7 +114,9 @@ namespace Core {
         Permissions permissions(const PermitRequest & req_perm = pr_search);
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
-//        inline bool preferApi()             { return HAS_FLAG(defaultFlags(), sf_prefer_api); }
+
+        inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable); }
+        inline bool isShareable()            { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool isConnected()           { return apiConnected() || siteConnected(); }
         inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false).toBool(); }

@@ -6,6 +6,7 @@
 #include "search_limits.h"
 #include "igenreable.h"
 #include "modules/core/data_sub_types.h"
+#include "modules/core/misc/format.h"
 
 namespace Core {
     class ISearchable : public IGenreable {

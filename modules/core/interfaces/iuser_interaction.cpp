@@ -1,15 +1,15 @@
 #include "iapi.h"
 
-using namespace Core::Web;
+using namespace Core;
 
-bool IApi::showingCaptcha(const QUrl & pict_url, QString & result) {
+bool IUserInteraction::showingCaptcha(const QUrl & pict_url, QString & result) {
     actionDialog -> buildCaptchaForm(Manager::prepare() -> pixmapGet(pict_url));
     bool res = actionDialog -> exec();
     result = actionDialog -> getValue(actionDialog -> captcha_key);
     return res;
 }
 
-bool IApi::showingLogin(const QString & title, QString & login, QString & pass, const QString & err) {
+bool IUserInteraction::showingLogin(const QString & title, QString & login, QString & pass, const QString & err) {
     actionDialog -> buildLoginForm(err, login, pass);
     actionDialog -> setWindowTitle(title);
 
@@ -21,7 +21,7 @@ bool IApi::showingLogin(const QString & title, QString & login, QString & pass, 
     return res;
 }
 
-bool IApi::showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err) {
+bool IUserInteraction::showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err) {
     actionDialog -> buildLoginWithCaptchaForm(Manager::prepare() -> pixmapGet(pict_url), err, login, pass);
     actionDialog -> setWindowTitle(title);
 

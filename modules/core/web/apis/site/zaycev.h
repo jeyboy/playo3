@@ -2,14 +2,14 @@
 #define ZAYCEV
 
 #include "modules/core/interfaces/singleton.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
     namespace Web {
-        class Zaycev : public ISource, public IApi, public Singleton<Zaycev> {
+        class Zaycev : public ISource, public IQueriable, public Singleton<Zaycev> {
             QHash<QString, QString> letters {
                 {QStringLiteral("1"), QStringLiteral("0")}, {QStringLiteral("2"), QStringLiteral("0")}, {QStringLiteral("3"), QStringLiteral("0")},
                 {QStringLiteral("4"), QStringLiteral("0")}, {QStringLiteral("5"), QStringLiteral("0")}, {QStringLiteral("6"), QStringLiteral("0")},

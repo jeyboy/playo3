@@ -1,14 +1,16 @@
 #ifndef ISOURCE
 #define ISOURCE
 
+#include "isearchable.h"
 #include "isource_auth_perm.h"
 #include "isource_feeds.h"
 #include "modules/core/data_sub_types.h"
+#include "modules/core/misc/thread_utils.h"
 
 #define UID_HEAD QStringLiteral("@")
 
 namespace Core {
-    class ISource : public ISourceAuthPerm, public ISourceFeeds {
+    class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable {
         Q_OBJECT
     public:
         virtual QString name() const = 0;
@@ -32,9 +34,10 @@ namespace Core {
             loadAdditionals(root);
         }
 
-        virtual inline bool isRefreshable() { return true; }
+//        virtual QJsonArray audioInfo(const QStringList & audio_uids) = 0;
+
         virtual inline QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
-            if (!isRefreshable() || refresh_page.isEmpty()) return QString();
+            if (refresh_page.isEmpty() || !isShareable()) return QString();
             return refreshProc(takeRefreshPage(refresh_page), itemMediaType);
         }
         virtual inline QJsonValue loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }

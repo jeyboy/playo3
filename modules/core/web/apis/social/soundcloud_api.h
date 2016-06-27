@@ -110,7 +110,22 @@ namespace Core {
                     }
                 }
 
-                inline bool isRefreshable() { return false; }
+//                inline bool isRefreshable() { return false; }
+                QJsonValue searchProc(const SearchLimit & limitations) {
+                    return pRequest(
+                        audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
+                        call_type_json,
+                        rules(limitations.start_offset, limitations.items_limit),
+                        0,
+                        proc_patch
+                    );
+
+//                    return lQuery(
+//                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
+//                        queryRules(limitations.total_limit),
+//                        wrap
+//                    );
+                }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {

@@ -1,8 +1,7 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-#include "modules/core/web/interfaces/iapi.h"
-#include "modules/core/interfaces/ishareable.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 #include "soundcloud_api_keys.h"
 
 #define SOUNDCLOUD_PAGES_LIMIT 25
@@ -13,7 +12,7 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IApi, public IShareable {
+            class RequestApi : public IQueriable {
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
                 // add to search
@@ -24,7 +23,7 @@ namespace Core {
                 inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids.join(',')); }
                 inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
                 inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
-
+            protected:
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
                     int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
@@ -132,22 +131,6 @@ namespace Core {
 //                    return lQuery(
 //                        audioSearchUrl(QString(), genre, true),
 //                        queryRules(100),
-//                        wrap
-//                    );
-                }
-
-                QJsonValue searchProc(const SearchLimit & limitations) {
-                    return pRequest(
-                        audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
-                        call_type_json,
-                        rules(limitations.start_offset, limitations.items_limit),
-                        0,
-                        proc_patch
-                    );
-
-//                    return lQuery(
-//                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
-//                        queryRules(limitations.total_limit),
 //                        wrap
 //                    );
                 }

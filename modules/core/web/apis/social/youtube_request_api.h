@@ -2,7 +2,6 @@
 #define YOUTUBE_REQUEST_API
 
 #include "youtube_api_misc.h"
-//#include "modules/core/interfaces/ishareable.h"
 
 #define YOUTUBE_INFO_ITEMS_LIMIT 50
 #define YOUTUBE_ITEMS_LIMIT 100

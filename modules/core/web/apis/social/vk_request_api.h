@@ -3,14 +3,14 @@
 
 //https://vk.com/dev/execute
 
-#include "modules/core/interfaces/ishareable.h"
-#include "modules/core/web/interfaces/iapi.h"
+#include "modules/core/web/interfaces/iqueriable.h"
+#include "modules/core/interfaces/igenreable.h"
 #include "vk_api_keys.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class RequestApi : public IApi, public IShareable {
+            class RequestApi : public IQueriable, public IGenreable {
             protected:
                 enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
                 enum VideoSearchSort { vss_creation_date = 0, vss_duration = 1, vss_relativity = 2 };

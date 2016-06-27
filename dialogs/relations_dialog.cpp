@@ -23,7 +23,7 @@ void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkable
 RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     : BaseDialog(parent), ui(new Ui::RelationsDialog) {
 
-    api = Web::Apis::sociable(currApi -> siteType());
+    api = (Web::Sociable *)currApi;
 
     ui -> setupUi(this);
 

@@ -183,6 +183,25 @@ namespace Core {
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
+
+            inline void setParam(QUrlQuery & query, const QString & name, int value) {
+                if (value == IGNORE_PARAM) return;
+                query.addQueryItem(name, QString::number(value));
+            }
+            inline void setParam(QUrlQuery & query, const QString & name, float value) {
+                if (value == IGNORE_PARAM) return;
+                query.addQueryItem(name, QString::number(value));
+            }
+            inline void setParam(QUrlQuery & query, const QString & name, const QString & value) { query.addQueryItem(name, value); }
+            inline void setParam(QUrlQuery & query, const QString & name, const QStringList & values, bool as_one_key = true, char join_symb = ',') {
+                if (values.isEmpty()) return;
+
+                if (as_one_key)
+                    setParam(query, name, values.join(join_symb));
+                else
+                    for(QStringList::ConstIterator val = values.constBegin(); val != values.constEnd(); val++)
+                        query.addQueryItem(name, *val);
+            }
         };
     }
 }
