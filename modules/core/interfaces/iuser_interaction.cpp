@@ -1,11 +1,8 @@
 #include "iuser_interaction.h"
 
-#include "settings.h"
 #include "modules/core/web/utils/web_manager.h"
 
 using namespace Core;
-
-IUserInteraction::IUserInteraction() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
 
 bool IUserInteraction::showingCaptcha(const QUrl & pict_url, QString & result) {
     actionDialog -> buildCaptchaForm(Web::Manager::prepare() -> pixmapGet(pict_url));
