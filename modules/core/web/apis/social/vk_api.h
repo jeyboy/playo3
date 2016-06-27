@@ -6,6 +6,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/interfaces/iuser_interaction.h"
 
 //#include "modules/data_struct/search/search_settings.h"
 #include "vk_request_api.h"
@@ -13,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Api : public ISource, public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public ISource, public RequestApi, public IUserInteraction, public Singleton<Api>, public Sociable {
                 Q_OBJECT
                 friend class Singleton<Api>;
                 inline Api() { setSearchLimitations(true, true, true, true); }
@@ -78,6 +79,34 @@ namespace Core {
                 bool connectUserSite() { return false; } // TODO: write me
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
+
+                QJsonValue popular(const SearchLimit & limits) {
+                    QJsonObject res;
+
+                    if (limits.include_audio())
+                        res.insert(DMT_AUDIO, audioPopular(true, limits.genre));
+
+                    if (limits.include_video())
+                        res.insert(DMT_VIDEO, videoPopular(limits));
+
+                    return res;
+                }
+
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    if (limits.predicate.isEmpty() && limits.by_popularity())
+                        return popular(limits);
+                    else {
+                        QJsonObject res;
+
+                        if (limits.include_audio())
+                            res.insert(DMT_AUDIO, audioSearch(limits));
+
+                        if (limits.include_video())
+                            res.insert(DMT_VIDEO, videoSearch(limits));
+
+                        return res;
+                    }
+                }
 
                 inline QUrlQuery genDefaultParams(const QueryParamsType & ptype = qpt_json) {
                     QUrlQuery query = QUrlQuery();

@@ -49,33 +49,6 @@ namespace Core {
                     );
                 }
 
-                QJsonValue popular(const SearchLimit & limits) {
-                    QJsonObject res;
-
-                    if (limits.include_audio())
-                        res.insert(DMT_AUDIO, audioPopular(true, limits.genre));
-
-                    if (limits.include_video())
-                        res.insert(DMT_VIDEO, videoPopular(limits));
-
-                    return res;
-                }
-
-                QJsonValue searchProc(const SearchLimit & limits) {
-                    if (limits.predicate.isEmpty() && limits.by_popularity())
-                        return popular(limits);
-                    else {
-                        QJsonObject res;
-
-                        if (limits.include_audio())
-                            res.insert(DMT_AUDIO, audioSearch(limits));
-
-                        if (limits.include_video())
-                            res.insert(DMT_VIDEO, videoSearch(limits));
-
-                        return res;
-                    }
-                }
             public:
                 enum InfoType {
                     info_music = 1,

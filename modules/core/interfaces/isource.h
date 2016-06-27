@@ -34,7 +34,7 @@ namespace Core {
             loadAdditionals(root);
         }
 
-//        virtual QJsonArray audioInfo(const QStringList & audio_uids) = 0;
+        virtual QJsonArray itemsInfo(const QStringList & /*items_uids*/) { return QJsonArray(); }
 
         virtual inline QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
             if (refresh_page.isEmpty() || !isShareable()) return QString();

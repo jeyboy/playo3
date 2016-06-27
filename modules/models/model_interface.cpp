@@ -795,22 +795,14 @@ void IModel::importIds(const QStringList & ids) {
     }
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
-        IShareable * shareable = Web::Apis::shareable((DataSubType)map_it.key());
+        ISource * source = Web::Apis::source((DataSubType)map_it.key());
 
-        if (shareable) {
-            ISource * source = Web::Apis::source((DataSubType)map_it.key());
+        if (source -> isShareable()) {
             source -> connectUser(connection_new); // check connection and ask user to connect if it not
 
             if (source -> isConnected()) {
-                QJsonArray obj = shareable -> audioInfo(map_it.value());
-
-                // need to move parse methods to apis for full abstractivity
-                switch(map_it.key()) {
-                    case dt_site_vk: { proceedVkList(obj, parentNode); break;}
-                    case dt_site_sc: { proceedScList(obj, parentNode); break;}
-                    case dt_site_od: { proceedOdList(obj, parentNode); break;}
-                    default: qDebug() << "UNSUPPORTED EXPORT TYPE";
-                }
+                QJsonValue obj = source -> itemsInfo(map_it.value());
+                proceedList(source -> siteType(), obj, parentNode);
             }
 //            else // some actions
         }

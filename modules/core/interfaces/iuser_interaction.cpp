@@ -1,9 +1,14 @@
-#include "iapi.h"
+#include "iuser_interaction.h"
+
+#include "settings.h"
+#include "modules/core/web/utils/web_manager.h"
 
 using namespace Core;
 
+IUserInteraction::IUserInteraction() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
+
 bool IUserInteraction::showingCaptcha(const QUrl & pict_url, QString & result) {
-    actionDialog -> buildCaptchaForm(Manager::prepare() -> pixmapGet(pict_url));
+    actionDialog -> buildCaptchaForm(Web::Manager::prepare() -> pixmapGet(pict_url));
     bool res = actionDialog -> exec();
     result = actionDialog -> getValue(actionDialog -> captcha_key);
     return res;
@@ -22,7 +27,7 @@ bool IUserInteraction::showingLogin(const QString & title, QString & login, QStr
 }
 
 bool IUserInteraction::showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err) {
-    actionDialog -> buildLoginWithCaptchaForm(Manager::prepare() -> pixmapGet(pict_url), err, login, pass);
+    actionDialog -> buildLoginWithCaptchaForm(Web::Manager::prepare() -> pixmapGet(pict_url), err, login, pass);
     actionDialog -> setWindowTitle(title);
 
     bool res = actionDialog -> exec();

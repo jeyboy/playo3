@@ -253,16 +253,14 @@ void SearchConfigurator::initiateSources() {
         }
     }
 
-    QMap<DataSubType, ISearchable *> sites = Web::Apis::searchersList();
+    QMap<DataSubType, ISource *> sources = Web::Apis::sourcesList();
     QListWidgetItem * item = new QListWidgetItem(QString(""));
     item -> setFlags(Qt::NoItemFlags);
     sitesList -> addItem(item);
 
-    for(QMap<DataSubType, ISearchable *>::Iterator it = sites.begin(); it != sites.end(); it++) {
-        ISource * src = Web::Apis::source(it.key());
-
-        if (src -> permissions(pr_search)) {
-            QListWidgetItem * item = new QListWidgetItem(src -> name());
+    for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
+        if (it.value() -> permissions(pr_search)) {
+            QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);
             item -> setData(Qt::UserRole + 1, it.key());
@@ -307,9 +305,9 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
         res.genres.append((*genre).toLower());
 
     if (blocks & block_sites) {
-        QList<Core::ISearchable *> searchables = Core::Web::Apis::searchersList().values();
-        for(QList<Core::ISearchable *>::Iterator it = searchables.begin(); it != searchables.end(); it++)
-            if (Web::Apis::source((*it) -> siteType()) -> isConnected())
+        QList<Core::ISource *> sources = Core::Web::Apis::sourcesList().values();
+        for(QList<Core::ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
+            if ((*it) -> permissions(pr_search))
                 res.sites.append((*it) -> siteType());
     }
 

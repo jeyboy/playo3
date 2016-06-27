@@ -54,8 +54,32 @@ namespace Core {
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
                 inline void disconnectUser() {}
             protected:
-//                bool hashConnection(bool onlyAuto);
-//                bool formConnection();
+                QJsonValue popular(const SearchLimit & limits) {
+                    return sRequest(
+                        topUrl(tkn_tracks, limits.genre),
+                        call_type_json
+                    ).value(tkn_tracks).toArray();
+
+//                    return sQuery(topUrl(tkn_tracks, limits.genre)).value(tkn_tracks).toArray();
+                }
+
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    if (limits.predicate.isEmpty() || limits.by_popularity()) {
+                        return popular(limits);
+                    } else {
+                        QString tkn = limits.by_artists() ? tkn_artists : tkn_tracks;
+
+                        return sRequest(
+                            searchUrl(limits.predicate, tkn),
+                            call_type_json
+                        ).value(tkn).toObject().value(QStringLiteral("items")).toArray();
+
+//                        if (limits.by_artists())
+//                            return sQuery(searchUrl(limits.predicate, tkn_artists)).value(tkn_artists).toObject().value(tkn).toArray();
+//                        else
+//                            return sQuery(searchUrl(limits.predicate, tkn_tracks)).value(tkn_tracks).toObject().value(tkn).toArray();
+                    }
+                }
 
                 inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
 

@@ -92,33 +92,6 @@ namespace Core {
 
                 // title, kind, trackCount, tracks, owner: {uid, login, name, verified}, cover: {type, dir, version, uri}, trackIds, modified
                 inline QString playlistUrl(const QString & owner) { return url_api_v1 + QStringLiteral("playlist.jsx?owner=%1&kinds=1267&light=true").arg(owner); }
-
-                QJsonValue popular(const SearchLimit & limits) {
-                    return sRequest(
-                        topUrl(tkn_tracks, limits.genre),
-                        call_type_json
-                    ).value(tkn_tracks).toArray();
-
-//                    return sQuery(topUrl(tkn_tracks, limits.genre)).value(tkn_tracks).toArray();
-                }
-
-                QJsonValue searchProc(const SearchLimit & limits) {
-                    if (limits.predicate.isEmpty() || limits.by_popularity()) {
-                        return popular(limits);
-                    } else {
-                        QString tkn = limits.by_artists() ? tkn_artists : tkn_tracks;
-
-                        return sRequest(
-                            searchUrl(limits.predicate, tkn),
-                            call_type_json
-                        ).value(tkn).toObject().value(QStringLiteral("items")).toArray();
-
-//                        if (limits.by_artists())
-//                            return sQuery(searchUrl(limits.predicate, tkn_artists)).value(tkn_artists).toObject().value(tkn).toArray();
-//                        else
-//                            return sQuery(searchUrl(limits.predicate, tkn_tracks)).value(tkn_tracks).toObject().value(tkn).toArray();
-                    }
-                }
             public:
                 inline virtual ~RequestApi() {}
 

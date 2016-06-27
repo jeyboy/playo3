@@ -51,6 +51,23 @@ namespace Core {
 //                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
 //                }
 
+                void proceedDurationResult(QStringList & ids, QJsonArray & arr) {
+                    pRequest(
+                        videosUrl(ids),
+                        call_type_json,
+                        rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
+                        &arr
+                    );
+
+//                    lQuery(
+//                        videosUrl(ids),
+//                        queryRules(50),
+//                        res
+//                    );
+                    ids.clear();
+                }
+
+            protected:
                 PolyQueryRules rules(
                     QString start_token = QString(), int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_limit = YOUTUBE_PAGES_LIMIT,
                     int per_request = YOUTUBE_INFO_ITEMS_LIMIT)
@@ -66,22 +83,6 @@ namespace Core {
                         0,
                         start_token
                     );
-                }
-
-                void proceedDurationResult(QStringList & ids, QJsonArray & arr) {
-                    pRequest(
-                        videosUrl(ids),
-                        call_type_json,
-                        rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
-                        &arr
-                    );
-
-//                    lQuery(
-//                        videosUrl(ids),
-//                        queryRules(50),
-//                        res
-//                    );
-                    ids.clear();
                 }
 
                 void initDuration(QJsonArray & arr) {
@@ -167,40 +168,6 @@ namespace Core {
 
                     return baseUrlStr(QStringLiteral("videos"), query);
                 }
-
-                QJsonValue popular(const SearchLimit & /*limits*/) {
-                    return pRequest(
-                        videosUrl(),
-                        call_type_json,
-                        rules()
-                    );
-
-//                    return lQuery(
-//                        videosUrl(),
-//                        queryRules(100)
-//                    );
-                }
-
-                QJsonValue searchProc(const SearchLimit & limits) { //count = 5
-//                    QJsonArray res = lQuery(
-//                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
-//                        queryRules(limits.items_limit)
-//                    );
-
-
-                    QJsonArray res = pRequest(
-                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
-                        call_type_json,
-                        rules(QString(), limits.items_limit)
-                    );
-
-                    initDuration(res);
-                    return res;
-                }
-
-
-
-
 
 
 

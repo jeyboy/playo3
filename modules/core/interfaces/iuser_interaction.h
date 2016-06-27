@@ -1,15 +1,13 @@
 #ifndef IUSER_INTERACTION
 #define IUSER_INTERACTION
 
-#include "settings.h"
+#include <qurl.h>
 #include "dialogs/user_action_dialog.h"
-#include "modules/core/web/utils/web_manager.h"
-
 
 namespace Core {
         class IUserInteraction {
         public:
-            inline IUserInteraction() { actionDialog = new UserActionDialog(Settings::obj().anchorWidget()); }
+            IUserInteraction();
             inline virtual ~IUserInteraction() {}
         protected:
             UserActionDialog * actionDialog;

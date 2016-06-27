@@ -7,13 +7,14 @@
 #include "modules/core/web/apis/service/recaptcha.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/interfaces/iuser_interaction.h"
 
 #include "soundcloud_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public ISource, public RequestApi, public Sociable, public Singleton<Api> {
+            class Api : public ISource, public RequestApi, public IUserInteraction, public Sociable, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;

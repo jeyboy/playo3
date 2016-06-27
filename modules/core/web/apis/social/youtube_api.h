@@ -41,6 +41,36 @@ namespace Core {
                 bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
 
             protected:
+                QJsonValue popular(const SearchLimit & /*limits*/) {
+                    return pRequest(
+                        videosUrl(),
+                        call_type_json,
+                        rules()
+                    );
+
+//                    return lQuery(
+//                        videosUrl(),
+//                        queryRules(100)
+//                    );
+                }
+
+                QJsonValue searchProc(const SearchLimit & limits) { //count = 5
+//                    QJsonArray res = lQuery(
+//                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
+//                        queryRules(limits.items_limit)
+//                    );
+
+
+                    QJsonArray res = pRequest(
+                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
+                        call_type_json,
+                        rules(QString(), limits.items_limit)
+                    );
+
+                    initDuration(res);
+                    return res;
+                }
+
                 inline QString refresh(const QString & path, const DataMediaType & /*itemMediaType*/) { return idToUrl(path); }
                 inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
 
