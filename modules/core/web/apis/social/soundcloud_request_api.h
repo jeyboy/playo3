@@ -94,6 +94,14 @@ namespace Core {
                 ///
                 /// API
                 ////////////////
+
+//                GET /tracks/{id}/related
+
+
+                // TODO: realize me!!
+                // https://soundcloud.com/charts/top // charts by genres
+                // https://soundcloud.com/discover // recommendations
+
                 QString audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
                     QUrlQuery query = genDefaultParams();
                     setAudioTypesParam(query);

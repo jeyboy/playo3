@@ -87,6 +87,7 @@ namespace Core {
             setUrl(curl);
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
+//            setRawHeader(QStringLiteral("Accept-Encoding"), QStringLiteral("gzip, deflate, br"));
             return manager -> post(*this, payload);
         }
 
