@@ -29,41 +29,80 @@ namespace Core {
         connection_new = 2
     };
 
-    enum SourceFlags : quint32 {
+    enum SourceFlags : quint64 {
         sf_none = 0,
 
-        sf_sociable = 1,
-        sf_feedable = 2,
-        sf_shareable = 4,
+        sf_auth_api_has                     = 1,
+        sf_auth_site_has                    = (quint64(1)) << 1,
 
-        sf_auth_api_has = 8,
-        sf_auth_site_has = 16,
+        sf_items_serachable                 = (quint64(1)) << 2,
+        sf_sets_serachable                  = (quint64(1)) << 3,
+        sf_users_serachable                 = (quint64(1)) << 4,
+        sf_groups_serachable                = (quint64(1)) << 5,
+
+        sf_searchable =
+            sf_items_serachable | sf_sets_serachable |
+            sf_users_serachable | sf_groups_serachable,
+
+        sf_sociable_users                   = (quint64(1)) << 6, // user content
+        sf_sociable_groups                  = (quint64(1)) << 7, // user content
+        sf_feedable                         = (quint64(1)) << 8,
+        sf_shareable                        = (quint64(1)) << 9, // site media content
+        sf_charteable                       = (quint64(1)) << 10,
+
+        sf_content_audio_has                = (quint64(1)) << 11,
+        sf_content_video_has                = (quint64(1)) << 12,
+        sf_content_photo_has                = (quint64(1)) << 13,
+        sf_content_news_has                 = (quint64(1)) << 14,
+        sf_content_radio_has                = (quint64(1)) << 15,
+
+        /////////////////////////////
+
+        sf_site_items_search_auth_only      = (quint64(1)) << 16,
+        sf_prefer_site_items_search         = (quint64(1)) << 17,
+        sf_api_items_search_auth_only       = (quint64(1)) << 18,
+
+        sf_site_sets_search_auth_only       = (quint64(1)) << 19,
+        sf_prefer_site_sets_search          = (quint64(1)) << 20,
+        sf_api_sets_search_auth_only        = (quint64(1)) << 21,
+
+        sf_site_users_search_auth_only      = (quint64(1)) << 22,
+        sf_prefer_site_users_search         = (quint64(1)) << 23,
+        sf_api_users_search_auth_only       = (quint64(1)) << 24,
+
+        sf_site_groups_search_auth_only     = (quint64(1)) << 25,
+        sf_prefer_site_groups_search        = (quint64(1)) << 26,
+        sf_api_groups_search_auth_only      = (quint64(1)) << 27,
 
 
-        sf_site_search_auth_only = 32,
-        sf_prefer_site_search = 64,
-        sf_api_search_auth_only = 128,
+        sf_site_media_content_auth_only     = (quint64(1)) << 28,
+        sf_prefer_site_media_content        = (quint64(1)) << 29,
+        sf_api_media_content_auth_only      = (quint64(1)) << 30,
 
-        sf_site_media_content_auth_only = 256,
-        sf_prefer_site_media_content = 512,
-        sf_api_media_content_auth_only = 1024,
+        sf_site_user_content_auth_only      = (quint64(1)) << 31,
+        sf_prefer_site_user_content         = (quint64(1)) << 32,
+        sf_api_user_content_auth_only       = (quint64(1)) << 33,
 
-        sf_site_user_content_auth_only = 2048,
-        sf_prefer_site_user_content = 4096,
-        sf_api_user_content_auth_only = 8192,
+        sf_site_feeds_auth_only             = (quint64(1)) << 34,
+        sf_prefer_site_feeds                = (quint64(1)) << 35,
+        sf_api_feeds_auth_only              = (quint64(1)) << 36,
 
-        sf_site_feeds_auth_only = 16384,
-        sf_prefer_site_feeds = 32768,
-        sf_api_feeds_auth_only = 65536,
+        sf_site_shareable_auth_only         = (quint64(1)) << 37,
+        sf_prefer_site_shareable            = (quint64(1)) << 38,
+        sf_api_shareable_auth_only          = (quint64(1)) << 39,
 
-        sf_site_restore_link_auth_only = 131072,
-        sf_prefer_site_restore_link = 262144,
-        sf_api_restore_link_auth_only = 524288,
+        sf_site_charteable_auth_only        = (quint64(1)) << 40,
+        sf_prefer_site_charteable           = (quint64(1)) << 41,
+        sf_api_charteable_auth_only         = (quint64(1)) << 42,
 
-//        sf_prefer_api_feeds = 1048576,
-
-        sf_site_auth_mandatory = sf_site_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only | sf_site_feeds_auth_only | sf_site_restore_link_auth_only,
-        sf_api_auth_mandatory = sf_api_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only | sf_api_feeds_auth_only | sf_api_restore_link_auth_only,
+        sf_site_auth_mandatory =
+            sf_site_items_search_auth_only | sf_site_sets_search_auth_only | sf_site_users_search_auth_only |
+            sf_site_groups_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only |
+            sf_site_feeds_auth_only | sf_site_shareable_auth_only,
+        sf_api_auth_mandatory =
+            sf_api_items_search_auth_only | sf_api_sets_search_auth_only | sf_api_users_search_auth_only |
+            sf_api_groups_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only |
+            sf_api_feeds_auth_only | sf_api_shareable_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };
@@ -75,12 +114,15 @@ namespace Core {
     };
 
     enum PermitRequest {
-        pr_none = 0,
-        pr_search = 1,
-        pr_media_content = 2,
-        pr_user_content = 4,
-        pr_feed = 8,
-        pr_restore_link = 16,
+        pr_none                 = 0,
+        pr_search_items         = 1,
+        pr_search_sets          = 2,
+        pr_search_users         = 4,
+        pr_search_groups        = 8,
+        pr_media_content        = 16,
+        pr_user_content         = 32,
+        pr_feed                 = 64,
+        pr_shareable            = 128,
     };
 
     class ISourceAuthPerm : public QObject {
@@ -115,7 +157,7 @@ namespace Core {
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
 
-        inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable); }
+        inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable_users) || HAS_FLAG(defaultFlags(), sf_sociable_groups); }
         inline bool isShareable()            { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool isConnected()           { return apiConnected() || siteConnected(); }
