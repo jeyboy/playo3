@@ -35,6 +35,7 @@ namespace Core {
         sf_auth_api_has                     = 1,
         sf_auth_site_has                    = (quint64(1)) << 1,
 
+
         sf_items_serachable                 = (quint64(1)) << 2,
         sf_sets_serachable                  = (quint64(1)) << 3,
         sf_users_serachable                 = (quint64(1)) << 4,
@@ -46,9 +47,14 @@ namespace Core {
 
         sf_sociable_users                   = (quint64(1)) << 6, // user content
         sf_sociable_groups                  = (quint64(1)) << 7, // user content
-        sf_feedable                         = (quint64(1)) << 8,
+        sf_taggable                         = (quint64(1)) << 8,
         sf_shareable                        = (quint64(1)) << 9, // site media content
         sf_charteable                       = (quint64(1)) << 10,
+        sf_recomendable                     = (quint64(1)) << 11,
+        sf_newable                          = (quint64(1)) << 12,
+        sf_populable                        = (quint64(1)) << 13,
+        sf_genreable                        = (quint64(1)) << 14,
+//        sf_streamable                       = (quint64(1)) << 15,
 
         sf_content_audio_has                = (quint64(1)) << 11,
         sf_content_video_has                = (quint64(1)) << 12,
@@ -115,14 +121,17 @@ namespace Core {
 
     enum PermitRequest {
         pr_none                 = 0,
+
         pr_search_items         = 1,
         pr_search_sets          = 2,
         pr_search_users         = 4,
         pr_search_groups        = 8,
+
         pr_media_content        = 16,
         pr_user_content         = 32,
         pr_feed                 = 64,
         pr_shareable            = 128,
+        pr_chart                = 256,
     };
 
     class ISourceAuthPerm : public QObject {
