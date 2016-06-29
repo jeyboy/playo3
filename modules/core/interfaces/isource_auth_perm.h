@@ -35,80 +35,65 @@ namespace Core {
         sf_auth_api_has                     = 1,
         sf_auth_site_has                    = (quint64(1)) << 1,
 
+        sf_items_serachable                 = (quint64(1)) << 2, // search by item names
+        sf_sets_serachable                  = (quint64(1)) << 3, // search by sets
+        sf_users_serachable                 = (quint64(1)) << 4, // search by users
+        sf_groups_serachable                = (quint64(1)) << 5, // search by groups
+        sf_tags_serachable                  = (quint64(1)) << 6, // search by tags
+        sf_genres_serachable                = (quint64(1)) << 7, // search by genres
+        sf_moods_serachable                 = (quint64(1)) << 8, // search by moods
 
-        sf_items_serachable                 = (quint64(1)) << 2,
-        sf_sets_serachable                  = (quint64(1)) << 3,
-        sf_users_serachable                 = (quint64(1)) << 4,
-        sf_groups_serachable                = (quint64(1)) << 5,
+        sf_sociable_users                   = (quint64(1)) << 8, // user content
+        sf_sociable_groups                  = (quint64(1)) << 9, // user content
+        sf_shareable                        = (quint64(1)) << 10, // restore item by id
+        sf_charteable                       = (quint64(1)) << 11, // build charts
+        sf_recomendable                     = (quint64(1)) << 12, // give recomendations by user or by item
+        sf_newable                          = (quint64(1)) << 13, // has section with new items
+        sf_populable                        = (quint64(1)) << 14, // has section with popular items
+        sf_taggable                         = (quint64(1)) << 15, // has grouping by tags
+        sf_genreable                        = (quint64(1)) << 16, // has grouping by genres
+        sf_moodable                         = (quint64(1)) << 17, // has grouping by moods
+//        sf_streamable                       = (quint64(1)) << 18,
 
-        sf_searchable =
-            sf_items_serachable | sf_sets_serachable |
-            sf_users_serachable | sf_groups_serachable,
 
-        sf_sociable_users                   = (quint64(1)) << 6, // user content
-        sf_sociable_groups                  = (quint64(1)) << 7, // user content
-        sf_taggable                         = (quint64(1)) << 8,
-        sf_shareable                        = (quint64(1)) << 9, // site media content
-        sf_charteable                       = (quint64(1)) << 10,
-        sf_recomendable                     = (quint64(1)) << 11,
-        sf_newable                          = (quint64(1)) << 12,
-        sf_populable                        = (quint64(1)) << 13,
-        sf_genreable                        = (quint64(1)) << 14,
-//        sf_streamable                       = (quint64(1)) << 15,
-
-        sf_content_audio_has                = (quint64(1)) << 11,
-        sf_content_video_has                = (quint64(1)) << 12,
-        sf_content_photo_has                = (quint64(1)) << 13,
-        sf_content_news_has                 = (quint64(1)) << 14,
-        sf_content_radio_has                = (quint64(1)) << 15,
+        sf_content_audio_has                = (quint64(1)) << 19,
+        sf_content_video_has                = (quint64(1)) << 20,
+        sf_content_photo_has                = (quint64(1)) << 21,
+        sf_content_news_has                 = (quint64(1)) << 22,
+        sf_content_radio_has                = (quint64(1)) << 23,
 
         /////////////////////////////
 
-        sf_site_items_search_auth_only      = (quint64(1)) << 16,
-        sf_prefer_site_items_search         = (quint64(1)) << 17,
-        sf_api_items_search_auth_only       = (quint64(1)) << 18,
+        sf_site_search_auth_only            = (quint64(1)) << 24,
+        sf_api_search_auth_only             = (quint64(1)) << 25,
+        sf_prefer_site_search               = (quint64(1)) << 26,
 
-        sf_site_sets_search_auth_only       = (quint64(1)) << 19,
-        sf_prefer_site_sets_search          = (quint64(1)) << 20,
-        sf_api_sets_search_auth_only        = (quint64(1)) << 21,
+        sf_site_media_content_auth_only     = (quint64(1)) << 27,
+        sf_prefer_site_media_content        = (quint64(1)) << 28,
+        sf_api_media_content_auth_only      = (quint64(1)) << 29,
 
-        sf_site_users_search_auth_only      = (quint64(1)) << 22,
-        sf_prefer_site_users_search         = (quint64(1)) << 23,
-        sf_api_users_search_auth_only       = (quint64(1)) << 24,
+        sf_site_user_content_auth_only      = (quint64(1)) << 30,
+        sf_prefer_site_user_content         = (quint64(1)) << 31,
+        sf_api_user_content_auth_only       = (quint64(1)) << 32,
 
-        sf_site_groups_search_auth_only     = (quint64(1)) << 25,
-        sf_prefer_site_groups_search        = (quint64(1)) << 26,
-        sf_api_groups_search_auth_only      = (quint64(1)) << 27,
+        sf_site_feeds_auth_only             = (quint64(1)) << 33,
+        sf_prefer_site_feeds                = (quint64(1)) << 34,
+        sf_api_feeds_auth_only              = (quint64(1)) << 35,
 
+//        sf_site_chart_auth_only             = (quint64(1)) << 36,
+//        sf_prefer_site_chart                = (quint64(1)) << 37,
+//        sf_api_chart_auth_only              = (quint64(1)) << 38,
 
-        sf_site_media_content_auth_only     = (quint64(1)) << 28,
-        sf_prefer_site_media_content        = (quint64(1)) << 29,
-        sf_api_media_content_auth_only      = (quint64(1)) << 30,
-
-        sf_site_user_content_auth_only      = (quint64(1)) << 31,
-        sf_prefer_site_user_content         = (quint64(1)) << 32,
-        sf_api_user_content_auth_only       = (quint64(1)) << 33,
-
-        sf_site_feeds_auth_only             = (quint64(1)) << 34,
-        sf_prefer_site_feeds                = (quint64(1)) << 35,
-        sf_api_feeds_auth_only              = (quint64(1)) << 36,
-
-        sf_site_shareable_auth_only         = (quint64(1)) << 37,
-        sf_prefer_site_shareable            = (quint64(1)) << 38,
-        sf_api_shareable_auth_only          = (quint64(1)) << 39,
-
-        sf_site_charteable_auth_only        = (quint64(1)) << 40,
-        sf_prefer_site_charteable           = (quint64(1)) << 41,
-        sf_api_charteable_auth_only         = (quint64(1)) << 42,
+        sf_site_recomendations_auth_only    = (quint64(1)) << 39,
+        sf_prefer_site_recomendations       = (quint64(1)) << 40,
+        sf_api_recomendations_auth_only     = (quint64(1)) << 41,
 
         sf_site_auth_mandatory =
-            sf_site_items_search_auth_only | sf_site_sets_search_auth_only | sf_site_users_search_auth_only |
-            sf_site_groups_search_auth_only | sf_site_media_content_auth_only | sf_site_user_content_auth_only |
-            sf_site_feeds_auth_only | sf_site_shareable_auth_only,
+            sf_site_search_auth_only | sf_site_media_content_auth_only |
+            sf_site_user_content_auth_only | sf_site_feeds_auth_only,
         sf_api_auth_mandatory =
-            sf_api_items_search_auth_only | sf_api_sets_search_auth_only | sf_api_users_search_auth_only |
-            sf_api_groups_search_auth_only | sf_api_media_content_auth_only | sf_api_user_content_auth_only |
-            sf_api_feeds_auth_only | sf_api_shareable_auth_only,
+            sf_api_search_auth_only | sf_api_media_content_auth_only |
+            sf_api_user_content_auth_only | sf_api_feeds_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };
@@ -122,16 +107,13 @@ namespace Core {
     enum PermitRequest {
         pr_none                 = 0,
 
-        pr_search_items         = 1,
-        pr_search_sets          = 2,
-        pr_search_users         = 4,
-        pr_search_groups        = 8,
+        pr_search               = 1,
 
-        pr_media_content        = 16,
-        pr_user_content         = 32,
-        pr_feed                 = 64,
-        pr_shareable            = 128,
-        pr_chart                = 256,
+        pr_media_content        = 2,
+        pr_user_content         = 4,
+        pr_feed                 = 8,
+//        pr_chart                = 16,
+        pr_recommendations      = 32
     };
 
     class ISourceAuthPerm : public QObject {
@@ -163,23 +145,24 @@ namespace Core {
         inline QString siteHash() const { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
         Permissions permissions(const PermitRequest & req_perm = pr_search);
-        inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
-        inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
 
         inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable_users) || HAS_FLAG(defaultFlags(), sf_sociable_groups); }
         inline bool isShareable()            { return HAS_FLAG(defaultFlags(), sf_shareable); }
+
+        inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
+        inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
 
         inline bool isConnected()           { return apiConnected() || siteConnected(); }
         inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false).toBool(); }
         inline bool siteConnected()         { return attrs.value(SOURCE_SITE_AUTH_JSON, false).toBool(); }
 
-        virtual bool restoreUserConnection() { return false; }
         virtual bool connectUserApi() { return false; }
         virtual bool connectUserSite() { return false; }
+        virtual bool restoreUserConnection() { return false; }
 
-        virtual void clearAdditionals() {}
         virtual void saveAdditionals(QJsonObject & /*obj*/) {}
         virtual void loadAdditionals(QJsonObject & /*obj*/) {}
+        virtual void clearAdditionals() {}
 
         virtual QToolButton * initButton(QWidget * /*parent*/ = 0) { return button; }
     public slots:

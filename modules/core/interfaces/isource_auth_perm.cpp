@@ -26,6 +26,11 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
             site_flag = sf_site_feeds_auth_only;
             site_prefer = sf_prefer_site_feeds;
         break;}
+        case pr_recommendations: {
+            api_flag = sf_api_recomendations_auth_only;
+            site_flag = sf_site_recomendations_auth_only;
+            site_prefer = sf_prefer_site_recomendations;
+        break;}
         default: return perm_none;
     }
 
