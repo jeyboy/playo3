@@ -66,7 +66,7 @@ namespace Core {
 //                    return doc.find("a[href~'/download/']").link();
 //                }
             protected:
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) {
 //                    QString token = ptype == qpt_json ? apiToken() : siteToken();
                     return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
                 }
@@ -115,7 +115,7 @@ namespace Core {
 
                 bool connectUserSite();
 
-                inline QString baseUrlStr(const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false);
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }

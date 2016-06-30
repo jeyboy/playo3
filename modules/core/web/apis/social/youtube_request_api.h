@@ -150,7 +150,7 @@ namespace Core {
                     else if (!relatedVideoId.isEmpty())
                         setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
 
-                    return baseUrlStr(path_search, query);
+                    return baseUrlStr(qst_json, path_search, query);
                 }
 
                 QString videosUrl(const QStringList & ids = QStringList()) {
@@ -166,7 +166,7 @@ namespace Core {
                     setParam(query, QStringLiteral("regionCode"), QStringLiteral("ua"));
                     setMusicVideoCategory(query);
 
-                    return baseUrlStr(QStringLiteral("videos"), query);
+                    return baseUrlStr(qst_json, QStringLiteral("videos"), query);
                 }
 
 

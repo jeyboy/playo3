@@ -90,7 +90,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://zaycev.net") % predicate; }
 
             bool parseTracks(QueriableArg * arg, const Html::Document & parser, const Html::Selector & artist_selector) {
                 QString ban_class = QStringLiteral("track-is-banned");
@@ -105,7 +105,7 @@ namespace Core {
 
                     QJsonObject track_obj;
 
-                    track_obj.insert(tkn_grab_refresh, baseUrlStr((*track) -> value(data_url)));
+                    track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, (*track) -> value(data_url)));
                     track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
                     track_obj.insert(tkn_skip_info, true);
 
@@ -214,7 +214,7 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(
+                QString url_str = baseUrlStr(qst_html,
                     QStringLiteral("/search.html?query_search=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );

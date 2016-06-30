@@ -62,7 +62,7 @@ namespace Core {
                     setSearchPredicate(query, predicate);
 
                     setCategory(query, ctype);
-                    return baseUrlStr(tkn_files, query);
+                    return baseUrlStr(qst_json, tkn_files, query);
                 }
 
                 QString audioSearchApiUrl(const QString & predicate = QString()) {

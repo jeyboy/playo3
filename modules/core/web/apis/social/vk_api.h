@@ -70,7 +70,10 @@ namespace Core {
 
             protected:
                 inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
+                    return (SourceFlags)(
+                        sf_recomendable |
+                        sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory
+                    );
                 }
 
                 bool connectUserApi();
@@ -106,10 +109,10 @@ namespace Core {
                     }
                 }
 
-                inline QUrlQuery genDefaultParams(const QueryParamsType & ptype = qpt_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_json) {
                     QUrlQuery query = QUrlQuery();
 
-                    if (ptype == qpt_json) {
+                    if (stype == qst_json) {
                         query.addQueryItem(tkn_version, val_version);
                         query.addQueryItem(tkn_access_token, apiToken());
                     }
@@ -148,7 +151,7 @@ namespace Core {
                     }
                 }
 
-                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_base % predicate; }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) { return response.value(tkn_finished).toBool(); }
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message);

@@ -22,17 +22,17 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_youtube; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) {
                     QUrlQuery query;
                     query.addQueryItem(tkn_key, val_client_tkn);
                     return query;
                 }
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        /*sf_auth_api_has | */sf_auth_site_has | sf_site_user_content_auth_only |
-                        sf_api_search_auth_only | sf_api_user_content_auth_only
-                    );
-                }
+//                inline SourceFlags defaultFlags() {
+//                    return (SourceFlags)(
+//                        /*sf_auth_api_has | */sf_auth_site_has | sf_site_user_content_auth_only |
+//                        sf_api_search_auth_only | sf_api_user_content_auth_only
+//                    );
+//                }
 //                QString authUrl();
 
                 void fromJson(const QJsonObject & hash);
@@ -72,7 +72,7 @@ namespace Core {
                 }
 
                 inline QString refresh(const QString & path, const DataMediaType & /*itemMediaType*/) { return idToUrl(path); }
-                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_base % predicate; }
 
 //                inline QString offsetKey() const { return tkn_page_token; }
 //                inline QString limitKey() const { return tkn_max_results; }

@@ -83,6 +83,11 @@ namespace Core {
                 return status;
             }
         protected:
+            enum QuerySourceType {
+//                qst_connection,
+                qst_json, qst_html
+            };
+
             bool request(QueriableArg * arg) {
                 if (arg -> fields.isEmpty())
                     arg -> fields = QStringList() << DEF_JSON_FIELD;
@@ -154,18 +159,6 @@ namespace Core {
                 return *arr;
             }
 
-            QString baseUrlStr(const QString & predicate, const QUrlQuery & query) {
-                QUrl url(baseUrlStr(predicate));
-                url.setQuery(query);
-                return url.toString();
-            }
-
-            virtual QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-
-            enum QueryParamsType {qpt_json, qpt_html};
-
-            virtual inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) { return QUrlQuery(); }
-
             // for json
             // extract status and update request url if required
             virtual bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
@@ -180,6 +173,16 @@ namespace Core {
                     QMetaObject::invokeMethod(errorReceiver, "errorReceived", Q_ARG(int, code), Q_ARG(QString, message));
                 else qDebug() << "ERROR: " << message;
             }
+
+            QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
+                QUrl url(baseUrlStr(stype, predicate));
+                url.setQuery(query);
+                return url.toString();
+            }
+
+            virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+
+            virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) { return QUrlQuery(); }
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }

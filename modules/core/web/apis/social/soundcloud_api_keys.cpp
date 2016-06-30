@@ -3,7 +3,8 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            extern const QString url_base              = QStringLiteral("https://api.soundcloud.com/");
+            extern const QString url_api_base          = QStringLiteral("https://api.soundcloud.com/");
+            extern const QString url_site_base         = QStringLiteral("http://soundcloud.com/");
             extern const QString url_connect           = QStringLiteral("https://soundcloud.com/connect");
             extern const QString url_redirect          = QStringLiteral("http://sos.com");
             extern const QString url_auth_token        = QStringLiteral("https://api.soundcloud.com/oauth2/token");

@@ -18,7 +18,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_od; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) { return QUrlQuery(tkn_jsessionid % siteToken()); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_html) { return QUrlQuery(tkn_jsessionid % siteToken()); }
 
                 void saveAdditionals(QJsonObject & obj) {
                     Sociable::toJson(obj);
@@ -48,7 +48,7 @@ namespace Core {
             protected:
                 bool formConnection();
 
-                inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_root % predicate; }
 
 //                inline QString offsetKey() const { return tkn_offset; }
 //                inline QString limitKey() const { return tkn_limit; }

@@ -20,7 +20,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) { return QUrlQuery(tkn_client_id % val_id_tkn); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) { return QUrlQuery(tkn_client_id % val_id_tkn); }
 
                 inline void objectInfoAsync(const QString & uid, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::objectInfo, uid, func);
@@ -76,7 +76,12 @@ namespace Core {
                 bool connectUserSite();
 
                 bool hasOfflineCredentials()     { return false; }
-                bool takeOfflineCredentials()    { return false; }
+                bool takeOfflineCredentials()    {
+//                    QString html = Manager::prepare() -> getFollowed() -> toText();
+
+
+//                    sc_version = "1467192015"
+                }
 
                 void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
                 void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
@@ -130,7 +135,7 @@ namespace Core {
 //                        wrap
 //                    );
                 }
-                inline QString baseUrlStr(const QString & predicate) { return url_base % predicate % val_default_format; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_api_base % predicate % val_default_format; }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     return response.value(tkn_response).toArray().size() < arg -> per_request_limit;

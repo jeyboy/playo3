@@ -59,7 +59,7 @@ namespace Core {
                 QString audioAlbumsUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_audio_albums.arg(uid));
-                    return baseUrlStr(tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
+                    return baseUrlStr(qst_json, tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
                 }
                 QJsonArray audioAlbums(QString & uid, int offset = 0) {
                     return pRequest(
@@ -101,17 +101,17 @@ namespace Core {
                 QString userFullInfoUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_user_info.arg(uid));
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
                 QString userAudiosUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_user_audios.arg(uid));
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
                 QString userRelsUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_user_rels.arg(uid));
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
 
                 QJsonObject userRels(QString & uid) {
@@ -154,7 +154,7 @@ namespace Core {
                     setParam(query, tkn_user_ids, uid);
 
                     QJsonObject ret = sRequest(
-                        baseUrlStr(path_user_info, query),
+                        baseUrlStr(qst_json, path_user_info, query),
                         call_type_json
                     );
 
@@ -176,7 +176,7 @@ namespace Core {
                        )
                     );
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
 
                 QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
@@ -213,7 +213,7 @@ namespace Core {
                         "return {" % tkn_audio_list % ": search};"
                     ));
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
 
 
@@ -241,7 +241,7 @@ namespace Core {
                         "return {" % tkn_audio_list % ": search};"
                     ));
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
 
                 QJsonObject audioSearchLimited(QString & predicate, int limitation) {
@@ -268,7 +268,7 @@ namespace Core {
                        )
                     );
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
                 QJsonArray audioPopular(bool onlyEng, const QString & genre) {
                     return saRequest(
@@ -289,7 +289,7 @@ namespace Core {
                        QStringLiteral("return API.audio.getById({ audios: \"") % uids.join(',') % QStringLiteral("\"});")
                     );
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
                 QJsonArray audioInfo(const QStringList & audio_uids) {
                     return saRequest(
@@ -312,7 +312,7 @@ namespace Core {
                 QString audioLyricsUrl(QString & lyrics_id) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_lyrics_id, lyrics_id);
-                    return baseUrlStr(path_lyrics, query);
+                    return baseUrlStr(qst_json, path_lyrics, query);
                 }
 
 
@@ -323,7 +323,7 @@ namespace Core {
                     setParam(query, tkn_group_ids, id);
 
                     return saRequest(
-                        baseUrlStr(path_groups_by_id, query),
+                        baseUrlStr(qst_json, path_groups_by_id, query),
                         call_type_json,
                         0,
                         proc_json_extract
@@ -339,7 +339,7 @@ namespace Core {
                     setParam(query, QStringLiteral("count"), 100/*0*/);
 
                     return saRequest(
-                        baseUrlStr(path_groups_search, query),
+                        baseUrlStr(qst_json, path_groups_search, query),
                         call_type_json,
                         0,
                         proc_json_extract,
@@ -357,7 +357,7 @@ namespace Core {
                     setParam(query, tkn_fields, val_user_fields);
 
                     return saRequest(
-                        baseUrlStr(path_user_info, query),
+                        baseUrlStr(qst_json, path_user_info, query),
                         call_type_json,
                         0,
                         proc_json_extract
@@ -371,7 +371,7 @@ namespace Core {
                     setParam(query, tkn_screen_name, name);
 
                     QJsonObject ret = sRequest(
-                        baseUrlStr(path_resole_user, query),
+                        baseUrlStr(qst_json, path_resole_user, query),
                         call_type_json,
                         0,
                         proc_json_extract
@@ -389,7 +389,7 @@ namespace Core {
                     setParam(query, tkn_fields, val_user_fields);
 
                     return saRequest(
-                        baseUrlStr(path_users_search, query),
+                        baseUrlStr(qst_json, path_users_search, query),
                         call_type_json,
                         0,
                         proc_json_extract,
@@ -411,7 +411,7 @@ namespace Core {
                         setParam(query, QStringLiteral("source_ids"), sources);
 
                     return saRequest(
-                        baseUrlStr(QStringLiteral("newsfeed.get"), query),
+                        baseUrlStr(qst_json, QStringLiteral("newsfeed.get"), query),
                         call_type_json,
                         0,
                         proc_json_extract,
@@ -422,7 +422,7 @@ namespace Core {
                 QString videoAlbumsUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_code, query_audio_albums.arg(uid));
-                    return baseUrlStr(tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
+                    return baseUrlStr(qst_json, tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
                 }
                 QJsonArray videoAlbums(QString & uid, int offset = 0) {
                     return pRequest(
@@ -463,7 +463,7 @@ namespace Core {
                         "return {" % tkn_video_list % ": search};"
                     ));
 
-                    return baseUrlStr(tkn_execute, query);
+                    return baseUrlStr(qst_json, tkn_execute, query);
                 }
 
                 QJsonArray videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) {

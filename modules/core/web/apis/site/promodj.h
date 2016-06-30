@@ -17,12 +17,12 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_promodj; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
 
         protected:
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -71,7 +71,7 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(QStringLiteral("/music")), call_type_html, 0, proc_genres1);
+                sRequest(baseUrlStr(qst_html, QStringLiteral("/music")), call_type_html, 0, proc_genres1);
 //                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
             }
 
@@ -89,7 +89,7 @@ namespace Core {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
                 QString alias = genresList().toAlias(limits.genre);
-                QString url_str = baseUrlStr(QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
+                QString url_str = baseUrlStr(qst_html, QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
                             (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(

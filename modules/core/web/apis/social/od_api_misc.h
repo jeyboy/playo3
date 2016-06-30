@@ -16,7 +16,7 @@ namespace Core {
                 protected:
                     inline Misc() {}
 
-                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(path_sid)); }
+                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_html, path_sid)); }
 
                     inline bool hasError(const QJsonObject & obj) {
                         return obj.contains(tkn_error);

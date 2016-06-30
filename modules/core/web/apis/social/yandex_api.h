@@ -22,7 +22,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_yandex; }
-                inline QUrlQuery genDefaultParams(const QueryParamsType & /*ptype*/ = qpt_json) { return QUrlQuery(); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) { return QUrlQuery(); }
 
                 void fromJson(const QJsonObject & /*hash*/) {}
                 void toJson(QJsonObject & /*hash*/) {}
@@ -81,7 +81,7 @@ namespace Core {
                     }
                 }
 
-                inline QString baseUrlStr(const QString & predicate) { return url_root % predicate; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_root % predicate; }
 
 //                inline QString offsetKey() const { return QString(); /*tkn_offset;*/ }
 //                inline QString limitKey() const { return QString(); /*tkn_limit;*/ }
