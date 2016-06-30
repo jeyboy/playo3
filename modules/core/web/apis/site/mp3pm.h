@@ -15,13 +15,13 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_mp3pm; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
 
         protected:
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -64,7 +64,7 @@ namespace Core {
     //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/genres")), proc_genres1); }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(
+                QString url_str = baseUrlStr(qst_html,
                     QStringLiteral("/s/f/%1/page/%2/")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );

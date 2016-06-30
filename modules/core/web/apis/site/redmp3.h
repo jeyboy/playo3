@@ -15,12 +15,12 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_redmp3; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
 
         protected:
-            QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -43,10 +43,10 @@ namespace Core {
                             Html::Set infos = (*track) -> find(".track-info");
                             QStringList album_and_year = infos.text().split(',');
 
-                            track_obj.insert(tkn_grab_url, url_template.arg(baseUrlStr((*track) -> value(data_url)), baseUrlStr()));
+                            track_obj.insert(tkn_grab_url, url_template.arg(baseUrlStr(qst_html, (*track) -> value(data_url)), baseUrlStr(qst_html)));
                             track_obj.insert(tkn_grab_album, album_and_year.first());
                             track_obj.insert(tkn_grab_year, album_and_year.last());
-                            track_obj.insert(tkn_grab_refresh, baseUrlStr(infos.find(".track-title").link()));
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, infos.find(".track-title").link()));
                             track_obj.insert(tkn_skip_info, true);
                             track_obj.insert(tkn_grab_title, (*track) -> value(data_title).replace(QString("—"), QString("-")));
 
@@ -67,7 +67,7 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(QStringLiteral("/mp3-%1/%2").arg(
+                QString url_str = baseUrlStr(qst_html, QStringLiteral("/mp3-%1/%2").arg(
                     encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
                     OFFSET_TEMPLATE
                 ));

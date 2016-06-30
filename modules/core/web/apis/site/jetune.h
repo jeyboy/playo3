@@ -15,11 +15,11 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_jetune; }
 
             inline QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
             }
 
         protected:
-            inline QString baseUrlStr(const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
+            inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & message, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
@@ -38,8 +38,8 @@ namespace Core {
                                 QString link = link_tag -> childTag("a") -> link();
                                 link = link.section('/', 2, 2);
 
-                                track_obj.insert(tkn_grab_url, baseUrlStr(QStringLiteral("/freedownload.php?id=") % link));
-                                track_obj.insert(tkn_grab_refresh, baseUrlStr(QStringLiteral("/myplayer.php?id=") % link));
+                                track_obj.insert(tkn_grab_url, baseUrlStr(qst_html, QStringLiteral("/freedownload.php?id=") % link));
+                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, QStringLiteral("/myplayer.php?id=") % link));
                                 track_obj.insert(tkn_skip_info, true);
 
                                 Html::Set links = (*track) -> childTag("td", 0) -> find("a");
@@ -71,7 +71,7 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
+                sRequest(baseUrlStr(qst_html, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
@@ -79,7 +79,7 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(
+                QString url_str = baseUrlStr(qst_html,
                     QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),
                         limits.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),
