@@ -35,6 +35,8 @@ namespace Core {
         sf_auth_api_has                     = 1,
         sf_auth_site_has                    = (quint64(1)) << 1,
 
+        ///////////////////////////// info flags ///////////////////////
+
         sf_items_serachable                 = (quint64(1)) << 2, // search by item names
         sf_sets_serachable                  = (quint64(1)) << 3, // search by sets
         sf_users_serachable                 = (quint64(1)) << 4, // search by users
@@ -58,11 +60,11 @@ namespace Core {
 
         sf_content_audio_has                = (quint64(1)) << 19,
         sf_content_video_has                = (quint64(1)) << 20,
-        sf_content_photo_has                = (quint64(1)) << 21,
-        sf_content_news_has                 = (quint64(1)) << 22,
+//        sf_content_photo_has                = (quint64(1)) << 21,
+//        sf_content_news_has                 = (quint64(1)) << 22,
         sf_content_radio_has                = (quint64(1)) << 23,
 
-        /////////////////////////////
+        ///////////////////////////// control flags ///////////////////////
 
         sf_site_search_auth_only            = (quint64(1)) << 24,
         sf_api_search_auth_only             = (quint64(1)) << 25,
@@ -147,7 +149,16 @@ namespace Core {
         Permissions permissions(const PermitRequest & req_perm = pr_search);
 
         inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable_users) || HAS_FLAG(defaultFlags(), sf_sociable_groups); }
-        inline bool isShareable()            { return HAS_FLAG(defaultFlags(), sf_shareable); }
+        inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_shareable); }
+
+        inline bool hasCharts()             { return HAS_FLAG(defaultFlags(), sf_charteable); }
+        inline bool hasRecomendations()     { return HAS_FLAG(defaultFlags(), sf_recomendable); }
+        inline bool hasNewItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_newable); }
+        inline bool hasPopularItemsBlock()  { return HAS_FLAG(defaultFlags(), sf_populable); }
+        inline bool hasGenres()             { return HAS_FLAG(defaultFlags(), sf_genreable); }
+        inline bool hasTags()               { return HAS_FLAG(defaultFlags(), sf_taggable); }
+        inline bool hasMoods()              { return HAS_FLAG(defaultFlags(), sf_moodable); }
+
 
         inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
         inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }

@@ -65,8 +65,12 @@ namespace Core {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_auth_api_has | sf_api_auth_mandatory
-                        /*| sf_site_user_content_auth_only | sf_site_feeds_auth_only*/
+                        sf_auth_api_has | sf_auth_site_has |
+                        sf_content_audio_has |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable | sf_tags_serachable | sf_genres_serachable |
+                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_charteable | sf_recomendable | sf_newable | sf_taggable | sf_genreable |
+                        sf_api_auth_mandatory |
+                        sf_site_recomendations_auth_only | sf_site_user_content_auth_only
                     );
                 }
 
