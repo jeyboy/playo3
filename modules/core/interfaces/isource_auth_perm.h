@@ -92,10 +92,12 @@ namespace Core {
 
         sf_site_auth_mandatory =
             sf_site_search_auth_only | sf_site_media_content_auth_only |
-            sf_site_user_content_auth_only | sf_site_feeds_auth_only,
+            sf_site_user_content_auth_only | sf_site_feeds_auth_only |
+            sf_site_recomendations_auth_only,
         sf_api_auth_mandatory =
             sf_api_search_auth_only | sf_api_media_content_auth_only |
-            sf_api_user_content_auth_only | sf_api_feeds_auth_only,
+            sf_api_user_content_auth_only | sf_api_feeds_auth_only |
+            sf_api_recomendations_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };
