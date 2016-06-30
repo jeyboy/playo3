@@ -51,7 +51,7 @@ namespace Core {
                 }
 
             public slots:
-                bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
+                bool connectUser() { return true; }
                 inline void disconnectUser() {}
             protected:
                 QJsonValue popular(const SearchLimit & limits) {

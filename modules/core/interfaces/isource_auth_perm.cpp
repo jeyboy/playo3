@@ -51,24 +51,26 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
     return res;
 }
 
-bool ISourceAuthPerm::connectUser(const ConnectionType & conType) {
+bool ISourceAuthPerm::connectUser() {
     bool res = true;
 
-    if (conType == connection_restore) {
-        res &= restoreUserConnection();
-    } else {
-        if (!apiConnected() && hasApiConnection()) {
-            res &= connectUserApi();
-            if (res) attrs[SOURCE_API_AUTH_JSON] = true;
-        }
-
-        if (!siteConnected() && hasSiteConnection()) {
-            res &= connectUserSite();
-            if (res) attrs[SOURCE_SITE_AUTH_JSON] = true;
-        }
-
-        if (res) initButton();
+    if (!apiConnected() && hasApiConnection()) {
+        res &= connectUserApi();
+        if (res) attrs[SOURCE_API_AUTH_JSON] = true;
     }
+
+    if (!siteConnected() && hasSiteConnection()) {
+        res &= requireOfflineCredentials() == takeOfflineCredentials();
+
+        res &= connectUserSite();
+        if (res)
+            attrs[SOURCE_SITE_AUTH_JSON] = true;
+    }
+
+    if (siteConnected()) // take / refresh online attrs
+        res &= requireOnlineCredentials() == takeOnlineCredentials();
+
+    if (res) initButton();
 
     return res;
 }

@@ -1,44 +1,8 @@
 #include "soundcloud_api.h"
 
 #include "dialogs/relations_dialog.h"
-#include "dockbars.h"
 
 using namespace Core::Web::Soundcloud;
-
-//////////////////////////////////////////////////////////
-/// COMMON
-//////////////////////////////////////////////////////////
-
-QToolButton * Api::initButton(QWidget * parent) {
-    if (button == 0) {
-        if (!parent) {
-            qDebug() << "PIPEC" << name();
-            return 0;
-        }
-        button = new QToolButton(parent);
-    } else {
-        button -> setMenu(0);
-        disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
-    }
-
-    if (isConnected()) {
-        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud_on")));
-        button -> setToolTip(QStringLiteral("Soundcloud(soundcloud.com)"));
-        button -> setPopupMode(QToolButton::InstantPopup);
-
-        QMenu * menu = new QMenu(button);
-        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
-        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
-        menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
-        button -> setMenu(menu);
-    } else {
-        button -> setIcon(QIcon(QStringLiteral(":/add_soundcloud")));
-        button -> setToolTip(QStringLiteral("Connect to Soundcloud(soundcloud.com)"));
-        connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
-    }
-
-    return button;
-}
 
 ///////////////////////////////////////////////////////////
 /// AUTH
@@ -109,4 +73,37 @@ bool Api::connectUserApi() {
             }
         }
     }
+}
+
+bool Api::connectUserSite() {
+//    curl 'https://sign-in.soundcloud.com/sign-in/password?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1467192015' -X POST -H
+//    'DNT: 1' -H 'Host: sign-in.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com'
+
+//    payload:
+
+//        client_id
+//            "02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea"
+
+//        credentials
+//            Object { identifier="jeyboy1985@gmail.com",  password="5675675675"}
+
+//        identifier
+//            "jeyboy1985@gmail.com"
+
+//        password
+//            "5675675675"
+
+//        recaptcha_response
+//            ""
+
+//        scope
+//            "fast-connect non-expiring purchase signup upload"
+
+
+
+//    respond:
+
+//        {"session":{"access_token":"1-138878-99021496-..."},"sign_in":{"user_urn":"soundcloud:users:9902","method":"password"}}
+
+    return false;
 }

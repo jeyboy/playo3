@@ -35,10 +35,8 @@ namespace Core {
 
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType); // here refresh_page must by eq to track id
 
-                QToolButton * initButton(QWidget * parent = 0);
-
-                bool connectUserSite() { return formConnection() && restoreUserConnection(); }
-                bool restoreUserConnection() {
+                bool connectUserSite() { return formConnection() && takeCredentials(); }
+                bool takeCredentials() {
                     if (!siteHash().isEmpty())
                         setSiteToken(grabSID());
                     return sessionIsValid();

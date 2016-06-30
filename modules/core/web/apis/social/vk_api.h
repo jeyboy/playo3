@@ -73,8 +73,6 @@ namespace Core {
                     return (SourceFlags)(sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory);
                 }
 
-                QToolButton * initButton(QWidget * parent = 0);
-
                 bool connectUserApi();
                 bool connectUserSite() { return false; } // TODO: write me
 

@@ -42,6 +42,8 @@ namespace Core {
         }
         virtual inline QJsonValue loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
+        QToolButton * initButton(QWidget * parent = 0);
+
     public slots:
         void openTab();
         void openRecomendations();

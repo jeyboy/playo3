@@ -1,8 +1,6 @@
 #ifndef SOUNDCLOUD_API_H
 #define SOUNDCLOUD_API_H
 
-#include <qmenu.h>
-
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/apis/service/recaptcha.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -65,7 +63,7 @@ namespace Core {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_auth_api_has | sf_auth_site_has |
+                        sf_auth_api_has | sf_auth_site_has | sf_site_offline_credentials_req |
                         sf_content_audio_has |
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable | sf_tags_serachable | sf_genres_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_charteable | sf_recomendable | sf_newable | sf_taggable | sf_genreable |
@@ -74,10 +72,11 @@ namespace Core {
                     );
                 }
 
-                QToolButton * initButton(QWidget * parent = 0);
-
                 bool connectUserApi();
-                bool connectUserSite() { return false; } // TODO: write me
+                bool connectUserSite();
+
+                bool hasOfflineCredentials()     { return false; }
+                bool takeOfflineCredentials()    { return false; }
 
                 void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
                 void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }

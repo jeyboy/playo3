@@ -38,7 +38,7 @@ namespace Core {
                 void fromJson(const QJsonObject & hash);
                 void toJson(QJsonObject & hash);
 
-                bool connectUser(const ConnectionType & /*conType*/ = connection_restore) { return true; }
+                bool connectUser() { return true; }
 
             protected:
                 QJsonValue popular(const SearchLimit & /*limits*/) {
