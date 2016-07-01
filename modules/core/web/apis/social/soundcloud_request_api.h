@@ -1,18 +1,12 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-#include "modules/core/web/interfaces/iqueriable.h"
-#include "soundcloud_api_keys.h"
-
-#define SOUNDCLOUD_PAGES_LIMIT 25
-#define SOUNDCLOUD_ITEMS_LIMIT 2000
-#define SOUNDCLOUD_PER_REQUEST_LIMIT 200
-#define SOUNDCLOUD_PER_REQUEST_LIMIT_SET 2
+#include "soundcloud_defines.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public IQueriable {
+            class RequestApi : public virtual IQueriable {
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
                 // add to search
@@ -89,17 +83,27 @@ namespace Core {
                     return query.toString(QUrl::FullyEncoded).toUtf8();
                 }
 
-                /////////////////
-                ///
+                ////////////////
                 /// API
                 ////////////////
 
 //                GET /tracks/{id}/related
+                QString audioRecomendationsUrl(const QString & track_id) {
+                    QUrlQuery query = genDefaultParams();
+                    return baseUrlStr(qst_json, path_related_tracks.arg(track_id), query);
+                }
+
+                QJsonArray audioRecomendations(const QString & track_id, int count = 200) {
+                    return pRequest(
+                        audioRecomendationsUrl(track_id),
+                        call_type_json,
+                        rules(0, count),
+                        0,
+                        proc_json_patch
+                    );
+                }
 
 
-                // TODO: realize me!!
-                // https://soundcloud.com/charts/top // charts by genres
-                // https://soundcloud.com/discover // recommendations
 
                 QString audioSearchUrl(const QString & predicate, const QString & genre, bool hottest = false) {
                     QUrlQuery query = genDefaultParams();
@@ -126,7 +130,7 @@ namespace Core {
                         call_type_json,
                         rules(),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 //                    return lQuery(
 //                        audioSearchUrl(QString(), genre, true),
@@ -171,13 +175,13 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(groupAudioUrl(group_id), queryRules(count), wrap);
                 }
 
-                QString audioInfoUrl(const QString & audio_uid) { return baseUrlStr(qst_json, path_track % audio_uid, genDefaultParams()); }
+                QString audioInfoUrl(const QString & audio_uid) { return baseUrlStr(qst_json, path_tracks % '/' % audio_uid, genDefaultParams()); }
                 QJsonObject audioInfo(const QString & audio_uid) {
                     return sRequest(
                         audioInfoUrl(audio_uid),
@@ -200,7 +204,7 @@ namespace Core {
                         audioUrl(audio_uids),
                         call_type_json,
                         0,
-                        proc_patch
+                        proc_json_patch
                     ).value(tkn_response).toArray();
 
 //                    return sQuery(audioUrl(audio_uids), wrap).value(tkn_response).toArray();
@@ -217,7 +221,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userAudioUrl(uid), queryRules(count), wrap);
@@ -233,7 +237,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userAudioUrl(uid), queryRules(count), wrap);
@@ -262,7 +266,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count, SOUNDCLOUD_PAGES_LIMIT, 25),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userPlaylistsUrl(uid), queryRules(count), wrap);
@@ -279,7 +283,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userFollowingsUrl(uid), queryRules(count), wrap);
@@ -296,7 +300,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userFollowersUrl(uid), queryRules(count), wrap);
@@ -313,7 +317,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userGroupsUrl(uid), queryRules(count), wrap);
@@ -332,7 +336,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(userByNameUrl(name), queryRules(count), wrap);
@@ -343,7 +347,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 //                    return lQuery(baseUrl(path_users % uid, genDefaultParams()), queryRules(count), wrap);
                 }
@@ -361,7 +365,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(groupByNameUrl(name), queryRules(count), wrap);
@@ -377,7 +381,7 @@ namespace Core {
                         call_type_json,
                         rules(0, count),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(baseUrl(path_groups % uid, genDefaultParams()), queryRules(count), wrap);
@@ -396,7 +400,7 @@ namespace Core {
                         call_type_json,
                         rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), // playlists is very weighted for loading - so set limitation to 2 playlists per request
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(playlistByNameUrl(name), queryRules(count, offset, 2), wrap);

@@ -291,7 +291,11 @@ HEADERS += \
     modules/views/web/fourshared_view.h \
     modules/models/web/fourshared_model.h \
     modules/core/web/utils/web_headers.h \
-    modules/core/interfaces/iuser_interaction.h
+    modules/core/interfaces/iuser_interaction.h \
+    modules/core/web/apis/storage/fourshared_request_site.h \
+    modules/core/web/apis/storage/fourshared_defines.h \
+    modules/core/web/apis/social/soundcloud_request_site.h \
+    modules/core/web/apis/social/soundcloud_defines.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

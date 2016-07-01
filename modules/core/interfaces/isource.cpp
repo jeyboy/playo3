@@ -33,7 +33,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
         if (isSociable())
             menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
 
-        if (hasRecomendations())
+        if (hasUserRecomendations())
             menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
 
         button -> setMenu(menu);

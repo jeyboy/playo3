@@ -71,7 +71,7 @@ namespace Core {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_recomendable |
+                        sf_recomendable_by_item | sf_recomendable_by_user |
                         sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory
                     );
                 }

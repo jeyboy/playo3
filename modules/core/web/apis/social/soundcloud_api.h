@@ -8,11 +8,12 @@
 #include "modules/core/interfaces/iuser_interaction.h"
 
 #include "soundcloud_request_api.h"
+#include "soundcloud_request_site.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Api : public ISource, public RequestApi, public IUserInteraction, public Sociable, public Singleton<Api> {
+            class Api : public ISource, public RequestApi, public RequestSite, public IUserInteraction, public Sociable, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
@@ -20,7 +21,12 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) { return QUrlQuery(tkn_client_id % val_id_tkn); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_json) {
+                    switch(stype) {
+                        case qst_json: return QUrlQuery(tkn_client_id % val_id_tkn);
+                        case qst_html: return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
+                    }
+                }
 
                 inline void objectInfoAsync(const QString & uid, Func * func) {
                     ThreadUtils::obj().run((RequestApi *)this, &RequestApi::objectInfo, uid, func);
@@ -65,8 +71,10 @@ namespace Core {
                     return (SourceFlags)(
                         sf_auth_api_has | sf_auth_site_has | sf_site_offline_credentials_req |
                         sf_content_audio_has |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable | sf_tags_serachable | sf_genres_serachable |
-                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_charteable | sf_recomendable | sf_newable | sf_taggable | sf_genreable |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
+                        sf_groups_serachable | sf_tags_serachable | sf_genres_serachable |
+                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_charteable |
+                        sf_recomendable_by_item | sf_newable | sf_taggable | sf_genreable |
                         sf_api_auth_mandatory |
                         sf_site_recomendations_auth_only | sf_site_user_content_auth_only
                     );
@@ -76,35 +84,7 @@ namespace Core {
                 bool connectUserSite();
 
                 bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
-                bool takeOfflineCredentials()    {
-                    if (hasOfflineCredentials()) return true;
-
-                    QString html = Manager::prepare() -> getFollowed(url_site_base) -> toText();
-                    QRegularExpression reg("sc_version = \"(\\d+)\"");
-                    QRegularExpressionMatch match = reg.match(html);
-
-                    if (match.hasMatch()) {
-                        QString app_id = match.captured(1);
-                        setSiteHash(app_id);
-
-                        QRegularExpression js_reg("(http[:\\/\\w\\.\\-]+app-[\\w-]+\\.js)");
-                        match = js_reg.match(html);
-                        if (match.hasMatch()) {
-                            QString js_url = match.captured(1);
-                            QString js_content = Manager::prepare() -> getFollowed(js_url) -> toText();
-
-                            QRegularExpression id("client_id:\"(\\w+)\"");
-                            match = id.match(js_content);
-                            if (match.hasMatch()) {
-                                QString token = match.captured(1);
-                                setSiteToken(token);
-                                return true;
-                            }
-                        }
-                    }
-
-                    return false;
-                }
+                bool takeOfflineCredentials();
 
                 void loadAdditionals(QJsonObject & obj) {
                     Sociable::fromJson(obj);
@@ -145,14 +125,13 @@ namespace Core {
                     }
                 }
 
-//                inline bool isRefreshable() { return false; }
                 QJsonValue searchProc(const SearchLimit & limitations) {
                     return pRequest(
                         audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
                         call_type_json,
                         rules(limitations.start_offset, limitations.items_limit),
                         0,
-                        proc_patch
+                        proc_json_patch
                     );
 
 //                    return lQuery(

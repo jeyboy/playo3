@@ -48,14 +48,14 @@ namespace Core {
         sf_sociable_groups                  = (quint64(1)) << 13, // user content
         sf_shareable                        = (quint64(1)) << 14, // restore item by id
         sf_charteable                       = (quint64(1)) << 15, // build charts
-        sf_recomendable                     = (quint64(1)) << 16, // give recomendations by user or by item
-        sf_newable                          = (quint64(1)) << 17, // has section with new items
-        sf_populable                        = (quint64(1)) << 18, // has section with popular items
-        sf_taggable                         = (quint64(1)) << 19, // has grouping by tags
-        sf_genreable                        = (quint64(1)) << 20, // has grouping by genres
-        sf_moodable                         = (quint64(1)) << 21, // has grouping by moods
-//        sf_streamable                       = (quint64(1)) << 22,
-//                                            = (quint64(1)) << 23, // reserved
+        sf_recomendable_by_item             = (quint64(1)) << 16, // give recomendations by item
+        sf_recomendable_by_user             = (quint64(1)) << 17, // give recomendations by user
+        sf_newable                          = (quint64(1)) << 18, // has section with new items
+        sf_populable                        = (quint64(1)) << 19, // has section with popular items
+        sf_taggable                         = (quint64(1)) << 20, // has grouping by tags
+        sf_genreable                        = (quint64(1)) << 21, // has grouping by genres
+        sf_moodable                         = (quint64(1)) << 22, // has grouping by moods
+//        sf_streamable                       = (quint64(1)) << 23,
 //                                            = (quint64(1)) << 24, // reserved
 
 
@@ -163,7 +163,8 @@ namespace Core {
         inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool hasCharts()             { return HAS_FLAG(defaultFlags(), sf_charteable); }
-        inline bool hasRecomendations()     { return HAS_FLAG(defaultFlags(), sf_recomendable); }
+        inline bool hasItemRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_item); }
+        inline bool hasUserRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_user); }
         inline bool hasNewItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_newable); }
         inline bool hasPopularItemsBlock()  { return HAS_FLAG(defaultFlags(), sf_populable); }
         inline bool hasGenres()             { return HAS_FLAG(defaultFlags(), sf_genreable); }

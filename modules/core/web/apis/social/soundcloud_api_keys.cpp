@@ -12,17 +12,17 @@ namespace Core {
 
             extern const QString path_playlists        = QStringLiteral("playlists/");
             extern const QString path_tracks           = QStringLiteral("tracks");
-            extern const QString path_track            = QStringLiteral("tracks/");
+            extern const QString path_related_tracks   = path_tracks % QStringLiteral("/%1/related");
             extern const QString path_groups           = QStringLiteral("groups");
-            extern const QString path_group_tracks     = QStringLiteral("groups/%1/tracks");
+            extern const QString path_group_tracks     = path_groups % QStringLiteral("/%1/tracks");
             //            /groups/{id}/members
             extern const QString path_users            = QStringLiteral("users");
-            extern const QString path_user_tracks      = QStringLiteral("users/%1/tracks");
-            extern const QString path_user_favorites   = QStringLiteral("users/%1/favorites");
-            extern const QString path_user_playlists   = QStringLiteral("users/%1/playlists");
-            extern const QString path_user_followings  = QStringLiteral("users/%1/followings");
-            extern const QString path_user_followers   = QStringLiteral("users/%1/followers");
-            extern const QString path_user_groups      = QStringLiteral("users/%1/groups");
+            extern const QString path_user_tracks      = path_users % QStringLiteral("/%1/tracks");
+            extern const QString path_user_favorites   = path_users % QStringLiteral("/%1/favorites");
+            extern const QString path_user_playlists   = path_users % QStringLiteral("/%1/playlists");
+            extern const QString path_user_followings  = path_users % QStringLiteral("/%1/followings");
+            extern const QString path_user_followers   = path_users % QStringLiteral("/%1/followers");
+            extern const QString path_user_groups      = path_users % QStringLiteral("/%1/groups");
 
             extern const QString tkn_avatar_url        = QStringLiteral("avatar_url");
             extern const QString tkn_artwork_url       = QStringLiteral("artwork_url");

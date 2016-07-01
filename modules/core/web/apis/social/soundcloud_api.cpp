@@ -4,6 +4,36 @@
 
 using namespace Core::Web::Soundcloud;
 
+bool Api::takeOfflineCredentials()    {
+    if (hasOfflineCredentials()) return true;
+
+    QString html = Manager::prepare() -> getFollowed(url_site_base) -> toText();
+    QRegularExpression reg("sc_version = \"(\\d+)\"");
+    QRegularExpressionMatch match = reg.match(html);
+
+    if (match.hasMatch()) {
+        QString app_id = match.captured(1);
+        setSiteHash(app_id);
+
+        QRegularExpression js_reg("(http[:\\/\\w\\.\\-]+app-[\\w-]+\\.js)");
+        match = js_reg.match(html);
+        if (match.hasMatch()) {
+            QString js_url = match.captured(1);
+            QString js_content = Manager::prepare() -> getFollowed(js_url) -> toText();
+
+            QRegularExpression id("client_id:\"(\\w+)\"");
+            match = id.match(js_content);
+            if (match.hasMatch()) {
+                QString token = match.captured(1);
+                setSiteToken(token);
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 ///////////////////////////////////////////////////////////
 /// AUTH
 ///////////////////////////////////////////////////////////
