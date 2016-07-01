@@ -20,7 +20,7 @@ namespace Core {
                     top_50
                 };
 
-                QString idToPath(const QString & track_id) {
+                QString idToPathSite(const QString & track_id) {
                     QUrl url(QStringLiteral("https://api.soundcloud.com/i1/tracks/%1/streams").arg(track_id));
                     url.setQuery(genDefaultParams(qst_html));
 
@@ -33,7 +33,7 @@ namespace Core {
                     return res;
                 }
 
-                QJsonArray chart(const ChartType & chartType, const QString & genre = QStringLiteral("all-music")) {
+                QJsonArray chartSite(const ChartType & chartType, const QString & genre = QStringLiteral("all-music")) {
                     QUrl url(QStringLiteral("https://api-v2.soundcloud.com/charts"));
                     QUrlQuery query = genDefaultParams(qst_html);
                     query.addQueryItem(QStringLiteral("genre"), QStringLiteral("soundcloud:genres:") % genre);

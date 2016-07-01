@@ -25,6 +25,7 @@ namespace Core {
                     switch(stype) {
                         case qst_json: return QUrlQuery(tkn_client_id % val_id_tkn);
                         case qst_html: return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
+                        default: return QUrlQuery();
                     }
                 }
 
@@ -66,6 +67,10 @@ namespace Core {
                     return linkables;
                 }
 
+                QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) {
+                    return idToPathSite(audio_uid);
+                }
+
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
@@ -79,6 +84,9 @@ namespace Core {
                         sf_site_recomendations_auth_only | sf_site_user_content_auth_only
                     );
                 }
+
+//                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
+//                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
 
                 bool connectUserApi();
                 bool connectUserSite();
