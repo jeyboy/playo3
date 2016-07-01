@@ -75,15 +75,41 @@ namespace Core {
                 bool connectUserApi();
                 bool connectUserSite();
 
-                bool hasOfflineCredentials()     { return false; }
+                bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
                 bool takeOfflineCredentials()    {
-//                    QString html = Manager::prepare() -> getFollowed() -> toText();
+                    if (hasOfflineCredentials()) return true;
 
+                    QString html = Manager::prepare() -> getFollowed(url_site_base) -> toText();
+                    QRegularExpression reg("sc_version = \"(\\d+)\"");
+                    QRegularExpressionMatch match = reg.match(html);
 
-//                    sc_version = "1467192015"
+                    if (match.hasMatch()) {
+                        QString app_id = match.captured(1);
+                        setSiteHash(app_id);
+
+                        QRegularExpression js_reg("(http[:\\/\\w\\.\\-]+app-[\\w-]+\\.js)");
+                        match = js_reg.match(html);
+                        if (match.hasMatch()) {
+                            QString js_url = match.captured(1);
+                            QString js_content = Manager::prepare() -> getFollowed(js_url) -> toText();
+
+                            QRegularExpression id("client_id:\"(\\w+)\"");
+                            match = id.match(js_content);
+                            if (match.hasMatch()) {
+                                QString token = match.captured(1);
+                                setSiteToken(token);
+                                return true;
+                            }
+                        }
+                    }
+
+                    return false;
                 }
 
-                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
+                void loadAdditionals(QJsonObject & obj) {
+                    Sociable::fromJson(obj);
+                    takeOfflineCredentials();
+                }
                 void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
                 void clearAdditionals() {
                     clearFriends();
@@ -135,7 +161,9 @@ namespace Core {
 //                        wrap
 //                    );
                 }
-                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_api_base % predicate % val_default_format; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
+                    return url_api_base % predicate % val_default_format;
+                }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     return response.value(tkn_response).toArray().size() < arg -> per_request_limit;
