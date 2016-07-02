@@ -14,6 +14,14 @@ namespace Core {
                         {QStringLiteral("Referer"), QStringLiteral("https://soundcloud.com")}
                     };
                 }
+
+                QJsonObject request(const QUrl & url, const AdditionalProc & proc = proc_json_patch) {
+                    return sRequest(
+                        url.toString(), call_type_json, 0, proc,
+                        QStringList() << DEF_JSON_FIELD, call_method_get,
+                        headers()
+                    );
+                }
             protected:
                 enum ChartType {
                     new_hot = 1,
@@ -24,11 +32,7 @@ namespace Core {
                     QUrl url(QStringLiteral("https://api.soundcloud.com/i1/tracks/%1/streams").arg(track_id));
                     url.setQuery(genDefaultParams(qst_html));
 
-                    QJsonObject obj = sRequest(
-                        url.toString(), call_type_json, 0, proc_json_patch,
-                        QStringList() << DEF_JSON_FIELD, call_method_get,
-                        headers()
-                    );
+                    QJsonObject obj = request(url);
                     QString res = obj.value(QStringLiteral("http_mp3_128_url")).toString();
                     return res;
                 }
@@ -41,12 +45,7 @@ namespace Core {
                     // linked_partitioning=1
                     url.setQuery(query);
 
-                    QJsonObject obj = sRequest(
-                        url.toString(), call_type_json, 0, proc_json_patch,
-                        QStringList() << DEF_JSON_FIELD, call_method_get,
-                        headers()
-                    );
-
+                    QJsonObject obj = request(url);
                     QJsonArray res; // "last_updated":"2016-07-01T05:27:38Z"
 
                     QJsonArray collection = obj.value(QStringLiteral("collection")).toArray();
@@ -54,6 +53,35 @@ namespace Core {
                         res.append((*it).toObject().value(QStringLiteral("track")));
 
                     return res;
+                }
+
+                QJsonArray userGroupsSite(const QString & user_id) {
+                    QUrl url(QStringLiteral("https://api.soundcloud.com/users/%1/groups").arg(user_id));
+                    QUrlQuery query = genDefaultParams(qst_html);
+                    setParam(query, QStringLiteral("representation"), QStringLiteral("mini"));
+                    setParam(query, QStringLiteral("limit"), 5000);
+//                    setParam(query, QStringLiteral("offset"), 0);
+                    setParam(query, QStringLiteral("linked_partitioning"), 1);
+                    url.setQuery(query);
+
+                    QJsonObject obj = request(url);
+                    return obj.value(QStringLiteral("collection")).toArray();
+                }
+
+                QJsonArray tracksInfoSite(const QStringList & track_ids) {
+                    QUrl url(QStringLiteral("https://api-v2.soundcloud.com/tracks"));
+                    QUrlQuery query = genDefaultParams(qst_html);
+                    setParam(query, QStringLiteral("ids"), track_ids);
+                    url.setQuery(query);
+
+                    QJsonObject obj = request(url);
+                    return obj.value(DEF_JSON_FIELD).toArray();
+                }
+
+                QJsonObject groupInfoSite(const QString & group_id) {
+                    QUrl url(QStringLiteral("https://api-v2.soundcloud.com/groups/") % group_id);
+                    url.setQuery(genDefaultParams(qst_html));
+                    return request(url);
                 }
 
 //                PolyQueryRules rules(
