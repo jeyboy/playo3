@@ -7,8 +7,8 @@
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/interfaces/iuser_interaction.h"
 
-#include "soundcloud_request_api.h"
-#include "soundcloud_request_site.h"
+#include "soundcloud/request_api.h"
+#include "soundcloud/request_site.h"
 
 namespace Core {
     namespace Web {

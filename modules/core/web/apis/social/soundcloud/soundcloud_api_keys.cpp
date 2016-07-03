@@ -1,4 +1,4 @@
-#include "soundcloud_api_keys.h"
+#include "api_keys.h"
 
 namespace Core {
     namespace Web {

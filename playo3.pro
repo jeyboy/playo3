@@ -162,8 +162,6 @@ HEADERS += \
     modules/core/web/apis/social/od_api_misc.h \
     modules/core/web/apis/social/od_request_api.h \
     modules/core/web/apis/social/soundcloud_api.h \
-    modules/core/web/apis/social/soundcloud_api_keys.h \
-    modules/core/web/apis/social/soundcloud_request_api.h \
     modules/core/web/apis/social/vk_api.h \
     modules/core/web/apis/social/vk_api_keys.h \
     modules/core/web/apis/social/vk_request_api.h \
@@ -294,8 +292,15 @@ HEADERS += \
     modules/core/interfaces/iuser_interaction.h \
     modules/core/web/apis/storage/fourshared_request_site.h \
     modules/core/web/apis/storage/fourshared_defines.h \
-    modules/core/web/apis/social/soundcloud_request_site.h \
-    modules/core/web/apis/social/soundcloud_defines.h
+    modules/core/web/apis/social/soundcloud/track.h \
+    modules/core/web/apis/social/soundcloud/defines.h \
+    modules/core/web/apis/social/soundcloud/api_keys.h \
+    modules/core/web/apis/social/soundcloud/request_api.h \
+    modules/core/web/apis/social/soundcloud/request_site.h \
+    modules/core/web/apis/social/soundcloud/playlist.h \
+    modules/core/web/apis/social/soundcloud/group.h \
+    modules/core/web/apis/social/soundcloud/user.h \
+    modules/core/web/apis/social/soundcloud/auth.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -406,7 +411,7 @@ SOURCES += \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
     modules/core/web/apis/social/vk_api_keys.cpp \
-    modules/core/web/apis/social/soundcloud_api_keys.cpp \
+    modules/core/web/apis/social/soundcloud/soundcloud_api_keys.cpp \
     modules/models/service/relations_delegate.cpp \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \

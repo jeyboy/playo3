@@ -1,12 +1,12 @@
 #ifndef SOUNDCLOUD_REQUEST_API
 #define SOUNDCLOUD_REQUEST_API
 
-#include "soundcloud_defines.h"
+#include "defines.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestApi : public virtual IQueriable {
+            class RequestApi : public ApiBase {
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
                 // add to search
@@ -17,23 +17,6 @@ namespace Core {
                 inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids.join(',')); }
                 inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
                 inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
-            protected:
-                PolyQueryRules rules(
-                    int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
-                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
-                    ApiCallIterType call_type = call_iter_type_item)
-                {
-                    return PolyQueryRules(
-                        call_type,
-                        call_iter_method_offset,
-                        qMin(items_limit, SOUNDCLOUD_ITEMS_LIMIT),
-                        qMin(pages_limit, SOUNDCLOUD_PAGES_LIMIT),
-                        tkn_limit,
-                        qMin(qMin(per_request, items_limit), SOUNDCLOUD_PER_REQUEST_LIMIT),
-                        tkn_offset,
-                        offset
-                    );
-                }
             public:
                 inline virtual ~RequestApi() {}
 
@@ -122,6 +105,22 @@ namespace Core {
                 QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
                     return playlistByPredicate(predicate, limits.items_limit, limits.start_offset);
+                }
+
+                QJsonValue searchInItems(const SearchLimit & limitations) {
+                    return pRequest(
+                        audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
+                        call_type_json,
+                        rules(limitations.start_offset, limitations.items_limit),
+                        0,
+                        proc_json_patch
+                    );
+
+//                    return lQuery(
+//                        audioSearchUrl(predicate, genre, limitations.by_popularity()),
+//                        queryRules(limitations.total_limit),
+//                        wrap
+//                    );
                 }
 
                 QJsonValue popular(const SearchLimit & limitations) {
@@ -387,14 +386,14 @@ namespace Core {
 //                    return lQuery(baseUrl(path_groups % uid, genDefaultParams()), queryRules(count), wrap);
                 }
 
-                QString playlistByPredicateUrl(QString & name) {
+                QString playlistByPredicateUrl(const QString & name) {
                     QUrlQuery query = genDefaultParams();
                     setSearchPredicate(query, name);
                     return baseUrlStr(qst_json, path_playlists, query);
                 }
 
                 // predicate is used for search in title - genre - tags - permalinks
-                QJsonArray playlistByPredicate(QString & predicate, int count = 10, int offset = 0) {
+                QJsonArray playlistByPredicate(const QString & predicate, int count = 10, int offset = 0) {
                     return pRequest(
                         playlistByPredicateUrl(predicate),
                         call_type_json,
