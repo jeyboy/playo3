@@ -6,9 +6,9 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-//            class SiteAuth : SiteBase {
-//            protected:
-//            };
+            class SiteAuth : SiteBase {
+            protected:
+            };
 
             class ApiAuth : ApiBase {
             protected:

@@ -9,9 +9,11 @@
 #define SOUNDCLOUD_PER_REQUEST_LIMIT 200
 #define SOUNDCLOUD_PER_REQUEST_LIMIT_SET 2
 #define SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET 10
+#define SOUNDCLOUD_IDS_PER_REQUEST 25
 
-#define OFFLINE_RESTPOINT_V1 QStringLiteral("https://api.soundcloud.com/")
-#define OFFLINE_RESTPOINT_V2 QStringLiteral("https://api-v2.soundcloud.com/")
+//#define OFFLINE_RESTPOINT_V1 QStringLiteral("https://api.soundcloud.com/")
+//#define OFFLINE_RESTPOINT_V2 QStringLiteral("https://api-v2.soundcloud.com/")
+#define COLLECTION_FIELDS IQUERY_DEF_FIELDS << QStringLiteral("collection")
 
 namespace Core {
     namespace Web {
@@ -73,13 +75,13 @@ namespace Core {
                     };
                 }
 
-                QJsonObject request(const QString & url, const AdditionalProc & proc = proc_json_patch) {
-                    return sRequest(
-                        url, call_type_json, 0, proc,
-                        QStringList() << DEF_JSON_FIELD, call_method_get,
-                        headers()
-                    );
-                }
+//                QJsonObject request(const QString & url, const AdditionalProc & proc = proc_json_patch) {
+//                    return sRequest(
+//                        url, call_type_json, 0, proc,
+//                        IQUERY_DEF_FIELDS, call_method_get,
+//                        headers()
+//                    );
+//                }
             };
         }
     }

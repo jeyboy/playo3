@@ -9,23 +9,27 @@ namespace Core {
             class SiteUser : SiteBase {
             protected:
                 QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
-                    QUrl url(OFFLINE_RESTPOINT_V2 % QStringLiteral("search/users"));
-                    QUrlQuery query = genDefaultParams(qst_html);
-                    setParam(query, QStringLiteral("q"), name);
+                    QUrlQuery query = genDefaultParams(qst_html_alt1);
+                    setSearchPredicate(query, name);
 //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
                     setParam(query, QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base));
                     setParam(query, QStringLiteral("sc_a_id"), generateMark());
                     setParam(query, QStringLiteral("facet"), QStringLiteral("place"));
-                    url.setQuery(query);
 
                     return pRequest(
-                        url.toString(),
-                        call_type_json,
-                        rules(offset, count),
-                        0,
-                        proc_json_patch
+                        baseUrlStr(
+                            qst_html_alt1,
+                            QStringLiteral("search/users"),
+                            query
+                        ),
+                        call_type_json, rules(offset, count), 0, proc_json_patch,
+                        IQUERY_DEF_FIELDS, call_method_get, headers()
                     );
                 }
+            };
+
+            class ApiUser : public ApiBase {
+            protected:
             };
         }
     }

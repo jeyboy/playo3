@@ -3,10 +3,18 @@
 
 #include "defines.h"
 
+#include "auth.h"
+#include "group.h"
+#include "playlist.h"
+#include "set.h"
+#include "track.h"
+#include "user.h"
+
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class RequestSite : public SiteBase {
+            class RequestSite : public SiteAuth, public SiteGroup, public SitePlaylist,
+                    public SiteSet, public SiteTrack, public SiteUser {
             protected:
                 // standart step for all search requests is 10
 

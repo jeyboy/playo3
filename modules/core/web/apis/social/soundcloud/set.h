@@ -11,14 +11,23 @@ namespace Core {
                 enum ChartType { new_hot = 1, top_50 };
 
                 QJsonValue chart(const ChartType & chartType, const QString & genre = QStringLiteral("all-music")) { // next_href
-                    QUrl url(OFFLINE_RESTPOINT_V2 % QStringLiteral("charts"));
-                    QUrlQuery query = genDefaultParams(qst_html);
+                    QUrlQuery query = genDefaultParams(qst_html_alt1);
                     query.addQueryItem(QStringLiteral("genre"), QStringLiteral("soundcloud:genres:") % genre);
-                    query.addQueryItem(QStringLiteral("kind"), chartType == new_hot ? QStringLiteral("trending") : QStringLiteral("top"));
+                    query.addQueryItem(QStringLiteral("kind"),
+                        chartType == new_hot ? QStringLiteral("trending") : QStringLiteral("top")
+                    );
                     // linked_partitioning=1
-                    url.setQuery(query);
 
-                    QJsonObject obj = request(url);
+                    QJsonObject obj = sRequest(
+                        baseUrlStr(
+                            qst_html_alt1,
+                            QStringLiteral("charts"),
+                            query
+                        ),
+                        call_type_json, 0, proc,
+                        IQUERY_DEF_FIELDS, call_method_get,
+                        headers()
+                    );
                     QJsonArray res; // "last_updated":"2016-07-01T05:27:38Z"
 
                     QJsonArray collection = obj.value(QStringLiteral("collection")).toArray();
@@ -27,6 +36,10 @@ namespace Core {
 
                     return res;
                 }
+            };
+
+            class ApiSet : public ApiBase {
+            protected:
             };
         }
     }
