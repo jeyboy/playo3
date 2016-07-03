@@ -301,7 +301,32 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/group.h \
     modules/core/web/apis/social/soundcloud/user.h \
     modules/core/web/apis/social/soundcloud/auth.h \
-    modules/core/web/apis/social/soundcloud/set.h
+    modules/core/web/apis/social/soundcloud/set.h \
+    modules/core/web/apis/social/soundcloud/api/auth.h \
+    modules/core/web/apis/social/soundcloud/api/defines.h \
+    modules/core/web/apis/social/soundcloud/api/group.h \
+    modules/core/web/apis/social/soundcloud/api/playlist.h \
+    modules/core/web/apis/social/soundcloud/api/set.h \
+    modules/core/web/apis/social/soundcloud/api/track.h \
+    modules/core/web/apis/social/soundcloud/api/user.h \
+    modules/core/web/apis/social/soundcloud/site/auth.h \
+    modules/core/web/apis/social/soundcloud/site/defines.h \
+    modules/core/web/apis/social/soundcloud/site/group.h \
+    modules/core/web/apis/social/soundcloud/site/playlist.h \
+    modules/core/web/apis/social/soundcloud/site/set.h \
+    modules/core/web/apis/social/soundcloud/site/track.h \
+    modules/core/web/apis/social/soundcloud/site/user.h \
+    modules/core/web/apis/social/soundcloud/api/keys.h \
+    modules/core/web/apis/social/soundcloud/interfaces/defines.h \
+    modules/core/web/apis/social/soundcloud/interfaces/keys.h \
+    modules/core/web/apis/social/soundcloud/interfaces/igroup.h \
+    modules/core/web/apis/social/soundcloud/interfaces/iplaylist.h \
+    modules/core/web/apis/social/soundcloud/interfaces/iset.h \
+    modules/core/web/apis/social/soundcloud/interfaces/itrack.h \
+    modules/core/web/apis/social/soundcloud/interfaces/iuser.h \
+    modules/core/web/apis/social/soundcloud/api/requests.h \
+    modules/core/web/apis/social/soundcloud/site/requests.h \
+    modules/core/web/apis/social/soundcloud/requests.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -437,4 +462,6 @@ SOURCES += \
     modules/views/web/fourshared_view.cpp \
     modules/models/web/fourshared_model.cpp \
     modules/core/interfaces/iuser_interaction.cpp \
-    modules/core/web/apis/social/soundcloud/api_keys.cpp
+    modules/core/web/apis/social/soundcloud/api_keys.cpp \
+    modules/core/web/apis/social/soundcloud/api/keys.cpp \
+    modules/core/web/apis/social/soundcloud/interfaces/keys.cpp

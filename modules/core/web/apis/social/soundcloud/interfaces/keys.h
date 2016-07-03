@@ -1,11 +1,11 @@
-#ifndef SOUNDCLOUD_API_KEYS
-#define SOUNDCLOUD_API_KEYS
+#ifndef SOUNDCLOUD_KEYS
+#define SOUNDCLOUD_KEYS
 
 #include <qstringbuilder.h>
 
 namespace Core {
     namespace Web {
-        namespace Soundcloud {       
+        namespace Soundcloud {
             extern const QString url_site_base;
             extern const QString url_connect;
 
@@ -99,4 +99,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_API_KEYS
+#endif // SOUNDCLOUD_KEYS

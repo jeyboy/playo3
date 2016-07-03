@@ -87,7 +87,7 @@ namespace Core {
         protected:
             enum QuerySourceType {
 //                qst_oauth_request, qst_oauth_token, qst_oauth_confirm
-                qst_json_def, qst_json_alt1, qst_json_alt2, qst_html_def, qst_html_alt1, qst_html_alt2
+                qst_api_def, qst_api_alt1, qst_api_alt2, qst_site_def, qst_site_alt1, qst_site_alt2
             };
 
             bool request(QueriableArg * arg) {
