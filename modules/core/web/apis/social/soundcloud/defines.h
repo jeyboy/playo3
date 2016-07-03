@@ -18,6 +18,9 @@ namespace Core {
         namespace Soundcloud {
             class Base {
             protected:
+                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
+                inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids); }
+
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
                     int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
@@ -38,7 +41,15 @@ namespace Core {
 
             class ApiBase : public Base, public virtual IQueriable {
             protected:
+                inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
+                // add to search
+                inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, tkn_types, val_audio_org_types); }
+                inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, tkn_types, val_audio_rmx_types); }
+
+
+                inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
+                inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
             };
 
             class SiteBase : public Base, public virtual IQueriable {
@@ -62,9 +73,9 @@ namespace Core {
                     };
                 }
 
-                QJsonObject request(const QUrl & url, const AdditionalProc & proc = proc_json_patch) {
+                QJsonObject request(const QString & url, const AdditionalProc & proc = proc_json_patch) {
                     return sRequest(
-                        url.toString(), call_type_json, 0, proc,
+                        url, call_type_json, 0, proc,
                         QStringList() << DEF_JSON_FIELD, call_method_get,
                         headers()
                     );

@@ -300,7 +300,8 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/playlist.h \
     modules/core/web/apis/social/soundcloud/group.h \
     modules/core/web/apis/social/soundcloud/user.h \
-    modules/core/web/apis/social/soundcloud/auth.h
+    modules/core/web/apis/social/soundcloud/auth.h \
+    modules/core/web/apis/social/soundcloud/set.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -411,7 +412,6 @@ SOURCES += \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
     modules/core/web/apis/social/vk_api_keys.cpp \
-    modules/core/web/apis/social/soundcloud/soundcloud_api_keys.cpp \
     modules/models/service/relations_delegate.cpp \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \
@@ -436,4 +436,5 @@ SOURCES += \
     modules/core/interfaces/isource_auth_perm.cpp \
     modules/views/web/fourshared_view.cpp \
     modules/models/web/fourshared_model.cpp \
-    modules/core/interfaces/iuser_interaction.cpp
+    modules/core/interfaces/iuser_interaction.cpp \
+    modules/core/web/apis/social/soundcloud/api_keys.cpp

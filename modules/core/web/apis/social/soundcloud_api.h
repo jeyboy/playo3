@@ -21,10 +21,13 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }
-                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_json_def) {
                     switch(stype) {
-                        case qst_json: return QUrlQuery(tkn_client_id % val_id_tkn);
-                        case qst_html: return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
+                        case qst_json_def:
+                            return QUrlQuery(tkn_client_id % val_id_tkn);
+                        case qst_html_def:
+                        case qst_html_alt1:
+                            return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
                         default: return QUrlQuery();
                     }
                 }
@@ -148,8 +151,12 @@ namespace Core {
 //                        wrap
 //                    );
                 }
-                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
-                    return url_api_base % predicate % val_default_format;
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                    switch(stype) {
+                        case qst_json_def: return url_api_base % predicate % val_default_format;
+                        case qst_html_def: return url_api_base % predicate;
+                        case qst_html_alt1: return url_api_base2 % predicate;
+                    }
                 }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {

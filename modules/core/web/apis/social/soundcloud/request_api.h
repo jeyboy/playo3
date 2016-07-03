@@ -7,68 +7,9 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class RequestApi : public ApiBase {
-                inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
 
-                // add to search
-                inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, tkn_types, val_audio_org_types); }
-                inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, tkn_types, val_audio_rmx_types); }
-
-                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
-                inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids.join(',')); }
-                inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
-                inline void setOrder(QUrlQuery & query, bool hottest) { setParam(query, tkn_order, hottest ? val_hotness_order : val_created_at_order); }
             public:
                 inline virtual ~RequestApi() {}
-
-                QString authUrl() {
-                    QUrl url(url_connect);
-
-                    QUrlQuery query = genDefaultParams();
-                    setParam(query, tkn_response_type, val_response_type);
-                    setParam(query, tkn_scope, val_scope);
-                    setParam(query, tkn_redirect_uri, url_redirect);
-                    setParam(query, tkn_display, val_display);
-
-                    url.setQuery(query);
-                    return url.toString();
-                }
-
-                /////////////////
-                /// AUTH
-                ////////////////
-
-                //QString authTokenUrl() const {
-                //    QUrl url("https://api.soundcloud.com/oauth2/token");
-                //    QUrlQuery query = genDefaultParams();
-
-
-                //    query.addQueryItem("client_secret", val_client_tkn);
-                //    query.addQueryItem("scope", "non-expiring");
-
-                ////    query.addQueryItem("grant_type", "password");
-                ////    query.addQueryItem("username", "USERNAME");
-                ////    query.addQueryItem("password", "PASSWORD");
-
-                //    url.setQuery(query);
-                //    return url.toString();
-                //}
-                inline QUrl authTokenUrl() const { return QUrl(url_auth_token); }
-                inline QString confirmAuthUrl(const QString & access_token) { return url_auth_confirm % access_token; }
-
-                QByteArray authTokenUrlParams(QString code) {
-                    QUrlQuery query = genDefaultParams();
-
-                    setParam(query, tkn_client_secret, val_client_tkn);
-                    setParam(query, tkn_grant_type, val_grant_type);
-                    setParam(query, tkn_redirect_uri, url_redirect);
-                    setParam(query, tkn_code, code);
-
-                    return query.toString(QUrl::FullyEncoded).toUtf8();
-                }
-
-                ////////////////
-                /// API
-                ////////////////
 
 //                GET /tracks/{id}/related
                 QString audioRecomendationsUrl(const QString & track_id) {

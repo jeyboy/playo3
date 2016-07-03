@@ -8,6 +8,8 @@
 #include "modules/core/misc/logger.h"
 #include "queriable_arg.h"
 
+#define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
+
 namespace Core {
     namespace Web {
         class IQueriable {
@@ -84,8 +86,8 @@ namespace Core {
             }
         protected:
             enum QuerySourceType {
-//                qst_connection,
-                qst_json, qst_html
+//                qst_oauth_request, qst_oauth_token, qst_oauth_confirm
+                qst_json_def, qst_json_alt1, qst_json_alt2, qst_html_def, qst_html_alt1, qst_html_alt2
             };
 
             bool request(QueriableArg * arg) {
@@ -101,7 +103,7 @@ namespace Core {
 
             bool sRequest(
                 const QString & url, QJsonObject & json, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
-                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
                 const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray arr;
@@ -116,7 +118,7 @@ namespace Core {
 
             QJsonObject sRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
-                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
                 const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, headers, error_receiver);
@@ -124,7 +126,7 @@ namespace Core {
             }
             QJsonArray saRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
-                const QStringList & fields = QStringList() << DEF_JSON_FIELD, const ApiCallMethod & call_method = call_method_get,
+                const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
                 const Headers & headers = Headers(), QObject * error_receiver = 0)
             {
                 QJsonArray temp_arr;
@@ -141,7 +143,7 @@ namespace Core {
 
             QJsonArray pRequest(
                 const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
-                const AdditionalProc & post_proc = proc_none, const QStringList & fields = QStringList() << DEF_JSON_FIELD,
+                const AdditionalProc & post_proc = proc_none, const QStringList & fields = IQUERY_DEF_FIELDS,
                 const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
                 QObject * error_receiver = 0, bool ignore_arr_content = true)
             {

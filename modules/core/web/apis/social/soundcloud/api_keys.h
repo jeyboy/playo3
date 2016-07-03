@@ -6,12 +6,15 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {       
-            extern const QString url_api_base;
             extern const QString url_site_base;
             extern const QString url_connect;
-            extern const QString url_redirect;
+
+            extern const QString url_api_base;
             extern const QString url_auth_token;
             extern const QString url_auth_confirm;
+            extern const QString url_redirect;
+
+            extern const QString url_api_base2;
 
 
             extern const QString path_playlists;
