@@ -2,12 +2,14 @@
 #define SOUNDCLOUD_API_AUTH
 
 #include "defines.h"
+#include "modules/core/interfaces/iuser_interaction.h"
+#include "modules/core/web/apis/service/recaptcha.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
             namespace Api {
-                class Auth : public QueryBase {
+                class Auth : public QueryBase, public IUserInteraction {
                 protected:
                     QString authUrl() {
                         QUrl url(url_connect);
@@ -53,6 +55,71 @@ namespace Core {
                         setParam(query, tkn_code, code);
 
                         return query.toString(QUrl::FullyEncoded).toUtf8();
+                    }
+
+                    bool connectUser(QString & newToken, QString & userID) {
+                        QUrl auth_url = authUrl();
+                        QUrl form_url = auth_url;
+                        Response * resp = Manager::prepare() -> getFollowed(form_url);
+                        QHash<QString, QString> vals;
+
+                        while(true) {
+                            QString err;
+                            Html::Document html = resp -> toHtml();
+
+                            Html::Tag * form = html.findFirst("form.authorize-token");
+
+                            if (!form) {
+                                Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
+                                return false;
+                            }
+
+                            if (form -> has("input[name='password']")) { // if user not authorized
+                                err = html.find(".warning").text();
+
+                                QString captcha_src;
+                                Html::Set captcha_set = form -> find(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
+
+                                if (!captcha_set.isEmpty())
+                                    captcha_src = captcha_set.first() -> value(tkn_src);
+
+                                if (captcha_src.isEmpty()) {
+                                    if (!showingLogin(val_auth_title, vals[tkn_username], vals[tkn_password], err))
+                                        return false;
+                                } else {
+                                    if (!showingLoginWithCaptcha(
+                                        val_auth_title, Recaptcha::V1::obj().takeImageUrl(captcha_src, vals[tkn_recaptcha_challenge_field]),
+                                        vals[tkn_username], vals[tkn_password], vals[tkn_recaptcha_response_field], err
+                                    )) return false;
+                                }
+                            }
+
+                            form_url = form -> serializeFormToUrl(vals, true);
+
+                            if (form_url.isRelative())
+                                form_url = auth_url.resolved(form_url);
+
+                            resp = Manager::prepare() -> formFollowed(form_url, {{tkn_referer, form_url.toString()}});
+
+                            QUrlQuery query(resp->toUrl(false).query());
+
+                            if (query.hasQueryItem(tkn_error)) {
+                                error = query.queryItemValue(tkn_error_description);
+                                qDebug() << "ERRRRRRRRRR" << error;
+                                resp -> deleteLater();
+                                return false;
+                            } else if (query.hasQueryItem(tkn_code)) {
+                                QJsonObject doc = Web::Manager::prepare() -> formFollowed(authTokenUrl(), authTokenUrlParams(query.queryItemValue(tkn_code))) -> toJson();
+
+                                if (doc.contains(tkn_access_token)) {
+                                    newToken = doc.value(tkn_access_token).toString();
+                                    doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
+                                    userID = QString::number(doc.value(tkn_id).toInt());
+                                    resp -> deleteLater();
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 };
             }

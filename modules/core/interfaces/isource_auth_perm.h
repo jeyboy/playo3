@@ -123,15 +123,8 @@ namespace Core {
 
     class ISourceAuthPerm : public QObject {
         Q_OBJECT
-    public:
-        ISourceAuthPerm() : button(0) {}
-
-        virtual inline SourceFlags defaultFlags() { return sf_none; }
-
-        QString userID(const PermitRequest & req_perm = pr_user_content) {
-            Permissions perm = permissions(req_perm);
-            return perm == perm_site ? siteUserID() : apiUserID();
-        }
+    protected:
+        virtual QToolButton * initButton(QWidget * parent = 0) = 0;
 
         inline void setApiExpiration(const QString & expiration)
                                             { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
@@ -157,6 +150,31 @@ namespace Core {
         inline QString siteHash() const     { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
         Permissions permissions(const PermitRequest & req_perm = pr_search);
+
+        virtual bool connectUserApi()       { return false; }
+        virtual bool connectUserSite()      { return false; }
+
+        virtual bool hasOfflineCredentials()     { return false; }
+        virtual bool takeOfflineCredentials()    { return false; }
+        virtual bool takeOnlineCredentials()     { return false; }
+
+        virtual void saveAdditionals(QJsonObject & /*obj*/) {}
+        virtual void loadAdditionals(QJsonObject & /*obj*/) {}
+        virtual void clearAdditionals() {}
+
+        QToolButton * button;
+
+        QVariantHash attrs;
+        QString error;
+    public:
+        ISourceAuthPerm() : button(0) {}
+
+        virtual inline SourceFlags defaultFlags() { return sf_none; }
+
+        QString userID(const PermitRequest & req_perm = pr_user_content) {
+            Permissions perm = permissions(req_perm);
+            return perm == perm_site ? siteUserID() : apiUserID();
+        }
 
         inline bool isPrimary()             { return HAS_FLAG(defaultFlags(), sf_primary_source); }
         inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable_users) || HAS_FLAG(defaultFlags(), sf_sociable_groups); }
@@ -185,28 +203,9 @@ namespace Core {
         inline bool isConnected()           { return apiConnected() || siteConnected(); }
         inline bool apiConnected()          { return attrs.value(SOURCE_API_AUTH_JSON, false).toBool(); }
         inline bool siteConnected()         { return attrs.value(SOURCE_SITE_AUTH_JSON, false).toBool(); }
-
-        virtual bool connectUserApi()       { return false; }
-        virtual bool connectUserSite()      { return false; }
-
-        virtual bool hasOfflineCredentials()     { return false; }
-        virtual bool takeOfflineCredentials()    { return false; }
-        virtual bool takeOnlineCredentials()     { return false; }
-
-        virtual void saveAdditionals(QJsonObject & /*obj*/) {}
-        virtual void loadAdditionals(QJsonObject & /*obj*/) {}
-        virtual void clearAdditionals() {}
     public slots:
         bool connectUser();
         void disconnectUser();
-
-    protected:
-        virtual QToolButton * initButton(QWidget * parent = 0) = 0;
-
-        QToolButton * button;
-
-        QVariantHash attrs;
-        QString error;
     };
 }
 
