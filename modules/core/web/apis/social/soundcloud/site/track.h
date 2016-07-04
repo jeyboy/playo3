@@ -9,7 +9,7 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class Track : public QueryBase, public ITrack {
-                protected:
+                public:
                     QString trackUrl(const QString & track_id) {
                         QJsonObject obj = sRequest(
                             baseUrlStr(

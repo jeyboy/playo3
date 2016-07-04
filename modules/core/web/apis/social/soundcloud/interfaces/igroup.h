@@ -8,10 +8,10 @@ namespace Core {
         namespace Soundcloud {
             class IGroup {
             protected:
+                QJsonObject groupInfo(const QString & group_id) = 0;
                 QJsonValue groupsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
                 QJsonValue groupsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
                 QJsonValue groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonObject groupInfo(const QString & group_id) = 0;
             };
         }
     }

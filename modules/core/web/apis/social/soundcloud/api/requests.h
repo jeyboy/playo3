@@ -10,14 +10,16 @@
 #include "track.h"
 #include "user.h"
 
+#include "modules/core/interfaces/singleton.h"
+
 namespace Core {
     namespace Web {
         namespace Soundcloud {
             namespace Api {
                 class Requests : public Auth, public Group, public Playlist,
-                        public Set, public Track, public User {
-                public:
+                        public Set, public Track, public User, public Singleton<Requests> {
                     inline virtual ~Requests() {}
+                    friend class Singleton<Requests>;
                 };
             }
         }

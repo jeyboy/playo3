@@ -9,7 +9,7 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class Auth : public QueryBase, public IUserInteraction {
-                protected:
+                public:
                     bool connectUser() {
                     //    curl 'https://sign-in.soundcloud.com/sign-in/password?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1467192015' -X POST -H
                     //    'DNT: 1' -H 'Host: sign-in.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com'

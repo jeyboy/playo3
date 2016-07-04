@@ -9,7 +9,7 @@ namespace Core {
         namespace Soundcloud {
             namespace Api {
                 class Track : public QueryBase, public ITrack {
-                protected:
+                public:
                     QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
                         return pRequest(
                             baseUrlStr(

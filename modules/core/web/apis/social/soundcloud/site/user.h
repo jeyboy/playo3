@@ -9,9 +9,9 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class User : public QueryBase, public IUser {
-                protected:
+                public:
                     QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
-                        QUrlQuery query = genDefaultParams(qst_html_alt1);
+                        QUrlQuery query = genDefaultParams(qst_site_alt1);
                         setSearchPredicate(query, name);
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
                         setParam(query, QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base));
@@ -20,7 +20,7 @@ namespace Core {
 
                         return pRequest(
                             baseUrlStr(
-                                qst_html_alt1,
+                                qst_site_alt1,
                                 QStringLiteral("search/users"),
                                 query
                             ),

@@ -9,7 +9,7 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class Playlist : public QueryBase, public IPlaylist {
-                protected:
+                public:
                     QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT) { // next_href
                         QUrlQuery query = genDefaultParams(qst_html_alt1);
                         setParam(query, QStringLiteral("tag"), tag);

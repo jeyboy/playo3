@@ -9,7 +9,7 @@ namespace Core {
         namespace Soundcloud {
             namespace Api {
                 class User : public QueryBase, public IUser {
-                protected:
+                public:
                     QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                         return pRequest(
                             baseUrlStr(

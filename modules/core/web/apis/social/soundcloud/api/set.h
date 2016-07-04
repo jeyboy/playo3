@@ -9,7 +9,9 @@ namespace Core {
         namespace Soundcloud {
             namespace Api {
                 class Set : public QueryBase, public ISet {
-                protected:
+                public:
+//                    QJsonValue byType(const SetType & setType, const QString & genre = QString());
+
                     QJsonValue popular(const SearchLimit & limitations) {
                         return pRequest(
                             baseUrlStr(

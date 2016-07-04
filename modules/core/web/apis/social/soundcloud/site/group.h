@@ -9,7 +9,19 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class Group : public QueryBase, public IGroup {
-                protected:
+                public:
+                    QJsonObject groupInfo(const QString & group_id) {
+                        sRequest(
+                            baseUrlStr(
+                                qst_site_def,
+                                path_groups % '/' % group_id,
+                                genDefaultParams(qst_site_def)
+                            ),
+                            call_type_json, 0, proc,
+                            IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
+                    }
+
                     QJsonValue groupsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
                         return pRequest(
                             baseUrlStr(
@@ -57,17 +69,7 @@ namespace Core {
                         );
                     }
 
-                    QJsonObject groupInfo(const QString & group_id) {
-                        sRequest(
-                            baseUrlStr(
-                                qst_site_def,
-                                path_groups % '/' % group_id,
-                                genDefaultParams(qst_site_def)
-                            ),
-                            call_type_json, 0, proc,
-                            IQUERY_DEF_FIELDS, call_method_get, headers()
-                        );
-                    }
+
                 };
             }
         }

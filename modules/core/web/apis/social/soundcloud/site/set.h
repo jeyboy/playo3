@@ -9,14 +9,12 @@ namespace Core {
         namespace Soundcloud {
             namespace Site {
                 class Set : public QueryBase, public ISet {
-                protected:
-                    enum ChartType { new_hot = 1, top_50 };
-
-                    QJsonValue chart(const ChartType & chartType, const QString & genre = QStringLiteral("all-music")) { // next_href
+                public:
+                    QJsonValue byType(const SetType & setType, const QString & genre = QStringLiteral("all-music")) { // next_href
                         QUrlQuery query = genDefaultParams(qst_html_alt1);
                         query.addQueryItem(QStringLiteral("genre"), QStringLiteral("soundcloud:genres:") % genre);
                         query.addQueryItem(QStringLiteral("kind"),
-                            chartType == new_hot ? QStringLiteral("trending") : QStringLiteral("top")
+                            setType == new_hot ? QStringLiteral("trending") : QStringLiteral("top")
                         );
                         // linked_partitioning=1
 

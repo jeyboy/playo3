@@ -57,6 +57,7 @@ namespace Core {
                         return query.toString(QUrl::FullyEncoded).toUtf8();
                     }
 
+                public:
                     bool connectUser(QString & newToken, QString & userID) {
                         QUrl auth_url = authUrl();
                         QUrl form_url = auth_url;
@@ -101,7 +102,7 @@ namespace Core {
 
                             resp = Manager::prepare() -> formFollowed(form_url, {{tkn_referer, form_url.toString()}});
 
-                            QUrlQuery query(resp->toUrl(false).query());
+                            QUrlQuery query(resp -> toUrl(false).query());
 
                             if (query.hasQueryItem(tkn_error)) {
                                 error = query.queryItemValue(tkn_error_description);
