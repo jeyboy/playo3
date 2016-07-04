@@ -12,14 +12,8 @@ namespace Core {
                 public:
                     QString trackUrl(const QString & track_id) {
                         QJsonObject obj = sRequest(
-                            baseUrlStr(
-                                qst_html_def,
-                                QStringLiteral("i1/tracks/%1/streams").arg(track_id),
-                                genDefaultParams(qst_html_def)
-                            ),
-                            call_type_json, 0, proc,
-                            IQUERY_DEF_FIELDS, call_method_get,
-                            headers()
+                            baseUrlStr(qst_site_def, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
+                            call_type_json, 0, proc, IQUERY_DEF_FIELDS, call_method_get, headers()
                         );
 
                         QString res = obj.value(QStringLiteral("http_mp3_128_url")).toString();
@@ -50,29 +44,25 @@ namespace Core {
 
                     QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
                         return pRequest(
-                            baseUrlStr(
-                                qst_html_alt1,
-                                path_related_tracks.arg(track_id),
-                                genDefaultParams(qst_html_alt1)
-                            ),
+                            baseUrlStr(qst_site_alt1, path_related_tracks.arg(track_id), {}),
                             call_type_json, rules(offset, count), 0,
                             proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                         );
                     }
 
                     QJsonValue tracksSearch(const SearchLimit & limitations) {
-                        QUrlQuery query = genDefaultParams(qst_html_alt1);
-                        setSearchPredicate(query, limitations.predicate);
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
-                        setParam(query, QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base));
-                        setParam(query, QStringLiteral("sc_a_id"), generateMark());
-                        setParam(query, QStringLiteral("facet"), QStringLiteral("genre"));
 
                         return pRequest(
                             baseUrlStr(
-                                qst_html_alt1,
+                                qst_site_alt1,
                                 QStringLiteral("search/tracks"),
-                                query
+                                {
+                                    { tkn_q, limitations.predicate },
+                                    { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
+                                    { QStringLiteral("sc_a_id"), generateMark() },
+                                    { QStringLiteral("facet"), QStringLiteral("genre") }
+                                }
                             ),
                             call_type_json, rules(limitations.start_offset, limitations.items_limit), 0,
                             proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
@@ -80,16 +70,15 @@ namespace Core {
                     }
 
                     QJsonValue tracksByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { // next_href
-                        QUrlQuery query = genDefaultParams(qst_html_def);
-                        setSearchPredicate(query, QStringLiteral("*"));
-                        setParam(query, QStringLiteral("filter.genre"), tag); // its a genius !!!
-    //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
+//                        setParam(query, QStringLiteral("linked_partitioning"), 1);
 
                         QJsonArray res = pRequest(
                             baseUrlStr(
-                                qst_html_def,
-                                QStringLiteral("search/sounds"),
-                                query
+                                qst_site_def, QStringLiteral("search/sounds"),
+                                {
+                                    { tkn_q, QStringLiteral("*") },
+                                    { QStringLiteral("filter.genre"), tag } // its a genius !!!
+                                }
                             ),
                             call_type_json, rules(offset, count), 0,
                             proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
