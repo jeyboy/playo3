@@ -11,11 +11,11 @@ namespace Core {
                 class Playlist : public QueryBase, public IPlaylist {
                 public:
                     QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { // next_href
-                        QUrlQuery query = genDefaultParams(qst_json_def);
+                        QUrlQuery query = genDefaultParams(qst_api_def);
 
                         QJsonArray res = pRequest(
                             baseUrlStr(
-                                qst_json_def,
+                                qst_api_def,
                                 path_user_playlists.arg(user_id),
                                 query
                             ),

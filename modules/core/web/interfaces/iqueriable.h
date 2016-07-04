@@ -176,24 +176,64 @@ namespace Core {
                 else qDebug() << "ERROR: " << message;
             }
 
+            virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
                 QUrl url(baseUrlStr(stype, predicate));
                 url.setQuery(query);
                 return url.toString();
             }
 
-            virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
+            QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params) {
+                QUrlQuery query = genDefaultParams(stype);
 
+                if (params.size() > 0)
+                    for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = params.begin(); it != params.end(); ++it)
+                        setParam(query, it -> first, it -> second);
+
+                return baseUrlStr(stype, predicate, query);
+            }
+
+
+            virtual inline QString boolToStr(const bool val) { val ? QStringLiteral("true") : QStringLiteral("false"); }
             virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) { return QUrlQuery(); }
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
 
-            inline void setParam(QUrlQuery & query, const QString & name, int value) {
+            inline void setParam(QUrlQuery & query, const QString & name, const QVariant & value) {
+                switch (value.type()) {
+                    case QVariant::Int:
+                    case QVariant::LongLong: { setParam(query, name, value.toLongLong()); break;}
+
+                    case QVariant::UInt:
+                    case QVariant::ULongLong: { setParam(query, name, value.toULongLong()); break;}
+
+                    case QVariant::Double: { setParam(query, name, value.toDouble()); break;}
+
+                    case QVariant::String: { setParam(query, name, value.toString()); break;}
+                    case QVariant::StringList: { setParam(query, name, value.toStringList()); break;}
+
+                    case QVariant::Bool: { setParam(query, name, value.toBool()); break;}
+
+                    //                    case QVariant::Bool: {}
+                    //                Char = QMetaType::QChar,
+                    //                Map = QMetaType::QVariantMap,
+                    //                List = QMetaType::QVariantList,
+//                    ByteArray = QMetaType::QByteArray,
+//                    BitArray = QMetaType::QBitArray,
+                }
+
+                query.addQueryItem(name, QString::number(value));
+            }
+
+            inline void setParam(QUrlQuery & query, const QString & name, const bool value) {
+                query.addQueryItem(name, boolToStr(value));
+            }
+            inline void setParam(QUrlQuery & query, const QString & name, const quint64 value) {
                 if (value == IGNORE_PARAM) return;
                 query.addQueryItem(name, QString::number(value));
             }
-            inline void setParam(QUrlQuery & query, const QString & name, float value) {
+            inline void setParam(QUrlQuery & query, const QString & name, const double value) {
                 if (value == IGNORE_PARAM) return;
                 query.addQueryItem(name, QString::number(value));
             }

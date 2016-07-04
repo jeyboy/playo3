@@ -13,9 +13,9 @@ namespace Core {
                     QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
                         return pRequest(
                             baseUrlStr(
-                                qst_json_def,
+                                qst_api_def,
                                 path_related_tracks.arg(track_id),
-                                genDefaultParams(qst_json_def)
+                                genDefaultParams(qst_api_def)
                             ),
                             call_type_json, rules(offset, count), 0, proc_json_patch
                         );
@@ -36,9 +36,9 @@ namespace Core {
                     QJsonObject trackInfo(const QString & track_id) {
                         return sRequest(
                             baseUrlStr(
-                                qst_json_def,
+                                qst_api_def,
                                 path_tracks % '/' % track_id,
-                                genDefaultParams(qst_json_def)
+                                genDefaultParams(qst_api_def)
                             ),
                             call_type_json
                         );
