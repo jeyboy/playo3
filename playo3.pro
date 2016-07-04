@@ -466,4 +466,6 @@ SOURCES += \
     modules/core/web/apis/social/soundcloud/api/keys.cpp \
     modules/core/web/apis/social/soundcloud/interfaces/keys.cpp \
     modules/core/web/apis/social/soundcloud/requests.cpp \
-    modules/core/web/apis/social/soundcloud/api/group.cpp
+    modules/core/web/apis/social/soundcloud/api/group.cpp \
+    modules/core/web/apis/social/soundcloud/api/set.cpp \
+    modules/core/web/apis/social/soundcloud/site/set.cpp

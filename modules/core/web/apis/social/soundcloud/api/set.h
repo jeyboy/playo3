@@ -10,18 +10,7 @@ namespace Core {
             namespace Api {
                 class Set : public QueryBase, public ISet {
                 public:
-//                    QJsonValue byType(const SetType & setType, const QString & genre = QString());
-
-                    QJsonValue popular(const SearchLimit & limitations) {
-                        return pRequest(
-                            baseUrlStr(
-                                qst_api_def,
-                                path_tracks,
-                                trackSearchQuery(QString(), limitations.genre, true)
-                            ),
-                            call_type_json, rules(), 0, proc_json_patch
-                        );
-                    }
+                    QJsonValue setByType(const SetType & setType, const QString & genre = QString());
                 };
             }
         }

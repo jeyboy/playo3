@@ -203,27 +203,24 @@ namespace Core {
             inline void setParam(QUrlQuery & query, const QString & name, const QVariant & value) {
                 switch (value.type()) {
                     case QVariant::Int:
-                    case QVariant::LongLong: { setParam(query, name, value.toLongLong()); break;}
+                    case QVariant::LongLong:        { setParam(query, name, value.toLongLong()); break;}
 
                     case QVariant::UInt:
-                    case QVariant::ULongLong: { setParam(query, name, value.toULongLong()); break;}
+                    case QVariant::ULongLong:       { setParam(query, name, value.toULongLong()); break;}
 
-                    case QVariant::Double: { setParam(query, name, value.toDouble()); break;}
+                    case QVariant::Double:          { setParam(query, name, value.toDouble()); break;}
 
-                    case QVariant::String: { setParam(query, name, value.toString()); break;}
-                    case QVariant::StringList: { setParam(query, name, value.toStringList()); break;}
+                    case QVariant::String:          { setParam(query, name, value.toString()); break;}
+                    case QVariant::StringList:      { setParam(query, name, value.toStringList()); break;}
 
-                    case QVariant::Bool: { setParam(query, name, value.toBool()); break;}
+                    case QVariant::Bool:            { setParam(query, name, value.toBool()); break;}
 
-                    //                    case QVariant::Bool: {}
                     //                Char = QMetaType::QChar,
                     //                Map = QMetaType::QVariantMap,
                     //                List = QMetaType::QVariantList,
 //                    ByteArray = QMetaType::QByteArray,
 //                    BitArray = QMetaType::QBitArray,
                 }
-
-                query.addQueryItem(name, QString::number(value));
             }
 
             inline void setParam(QUrlQuery & query, const QString & name, const bool value) {
