@@ -88,8 +88,12 @@ namespace Core {
                     }
                 }
 
+                //                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
+                //                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
+
+
                 QJsonObject groupInfo(const QString & group_id) {
-                    Permissions perm = permissions(pr_user_content);
+                    Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_site: Site::Requests::groupInfo(group_id);
@@ -97,16 +101,80 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "group info is not accessable", true);
                     }
                 }
-                QJsonValue groupsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue groupsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue groupsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
 
-                QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue playlistsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) = 0;
-                QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                    switch(perm) {
+                        case perm_site: Site::Requests::groupsByTrack(track_id, count, offset);
+                        case perm_api: Api::Requests::groupsByTrack(track_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by track is not accessable", true);
+                    }
+                }
+                QJsonValue groupsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
 
-                QJsonValue setByType(const SetType & chartType, const QString & genre = QStringLiteral("all-music"));
+                    switch(perm) {
+                        case perm_site: Site::Requests::groupsByUser(user_id, count, offset);
+                        case perm_api: Api::Requests::groupsByUser(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::groupsByName(name, count, offset);
+                        case perm_api: Api::Requests::groupsByName(name, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+
+                QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::playlistsByTag(tag, count, offset);
+                        case perm_api: Api::Requests::playlistsByTag(tag, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue playlistsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::playlistsByTrack(track_id, count, offset);
+                        case perm_api: Api::Requests::playlistsByTrack(track_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::playlistsByPredicate(predicate, count, offset);
+                        case perm_api: Api::Requests::playlistsByPredicate(predicate, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::playlistsByUser(user_id, count, offset);
+                        case perm_api: Api::Requests::playlistsByUser(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+
+                QJsonValue setByType(const SetType & chartType, const QString & genre = QString()) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::setByType(chartType, genre);
+                        case perm_api: Api::Requests::setByType(chartType, genre);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
 
                 QString trackUrl(const QString & track_id) = 0;
                 bool likeTrack(const QString & user_id, const QString & track_id) = 0;
@@ -126,9 +194,6 @@ namespace Core {
                 QJsonValue usersByTrackReposting(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
                 QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
                 QJsonValue userFollowers(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-
-//                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
-//                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
             };
         }
     }

@@ -10,7 +10,7 @@ namespace Core {
             namespace Site {
                 class Set : public QueryBase, public ISet {
                 public:
-                    QJsonValue setByType(const SetType & setType, const QString & genre = QStringLiteral("all-music"));
+                    QJsonValue setByType(const SetType & setType, const QString & genre = QString());
                 };
             }
         }

@@ -13,7 +13,7 @@ QJsonValue Set::setByType(const SetType & setType, const QString & genre) { // n
                     QStringLiteral("charts"),
                     {
                         // linked_partitioning=1
-                        { QStringLiteral("genre"), QStringLiteral("soundcloud:genres:") % genre },
+                        { QStringLiteral("genre"), QStringLiteral("soundcloud:genres:") % genre.isEmpty() ? QStringLiteral("all-music") : genre },
                         { QStringLiteral("kind"), setType == new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
                     }
                 ),
