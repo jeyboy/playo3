@@ -6,13 +6,15 @@
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
-#include "modules/core/web/interfaces/iqueriable.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public ISource, public Sociable, public IQueriable {
+            class Requests : public ISource, public Sociable, public Api::Requests, public Site::Requests, public Singleton<Requests> {
+                friend class Singleton<Requests>;
             protected:
+                inline virtual ~Requests() {}
+
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
                         sf_auth_api_has | sf_auth_site_has | sf_site_offline_credentials_req |
@@ -31,6 +33,7 @@ namespace Core {
                         case qst_api_def: return url_api_base % predicate % val_default_format;
                         case qst_site_def: return url_api_base % predicate;
                         case qst_site_alt1: return url_api_base2 % predicate;
+                        default: return QString();
                     }
                 }
 
@@ -48,7 +51,7 @@ namespace Core {
 
                 bool connectUserApi() {
                     QString new_token, user_id;
-                    bool res = Api::Requests::obj().connectUser(new_token, user_id, error);
+                    bool res = Api::Requests::connectUser(new_token, user_id, error);
 
                     if (res) {
                         setApiToken(new_token);
@@ -58,7 +61,7 @@ namespace Core {
                     return res;
                 }
 
-                bool connectUserSite() { return Site::Requests::obj().connectUser(); } // not realized yet
+                bool connectUserSite() { return Site::Requests::connectUser(); } // not realized yet
 
                 bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
                 bool takeOfflineCredentials();
@@ -74,8 +77,6 @@ namespace Core {
                 }
 
             public:
-                inline virtual ~Requests() {}
-
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api_def) {
                     switch(stype) {
                         case qst_api_def:

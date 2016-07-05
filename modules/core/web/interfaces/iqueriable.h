@@ -202,11 +202,11 @@ namespace Core {
 
             inline void setParam(QUrlQuery & query, const QString & name, const QVariant & value) {
                 switch (value.type()) {
-                    case QVariant::Int:
-                    case QVariant::LongLong:        { setParam(query, name, value.toLongLong()); break;}
+                    case QVariant::Int:             { setParam(query, name, value.toInt()); break;}
+//                    case QVariant::LongLong:        { setParam(query, name, value.toLongLong()); break;}
 
-                    case QVariant::UInt:
-                    case QVariant::ULongLong:       { setParam(query, name, value.toULongLong()); break;}
+//                    case QVariant::UInt:
+//                    case QVariant::ULongLong:       { setParam(query, name, value.toULongLong()); break;}
 
                     case QVariant::Double:          { setParam(query, name, value.toDouble()); break;}
 
@@ -215,25 +215,25 @@ namespace Core {
 
                     case QVariant::Bool:            { setParam(query, name, value.toBool()); break;}
 
-                    //                Char = QMetaType::QChar,
-                    //                Map = QMetaType::QVariantMap,
-                    //                List = QMetaType::QVariantList,
-//                    ByteArray = QMetaType::QByteArray,
-//                    BitArray = QMetaType::QBitArray,
+                    // Char = QMetaType::QChar,
+                    // Map = QMetaType::QVariantMap,
+                    // List = QMetaType::QVariantList,
+                    // ByteArray = QMetaType::QByteArray,
+                    // BitArray = QMetaType::QBitArray,
+                    default: ;
                 }
             }
 
             inline void setParam(QUrlQuery & query, const QString & name, const bool value) {
                 query.addQueryItem(name, boolToStr(value));
             }
-            inline void setParam(QUrlQuery & query, const QString & name, const qint64 value) {
+            inline void setParam(QUrlQuery & query, const QString & name, const int value) {
                 if (value == IGNORE_PARAM) return;
                 query.addQueryItem(name, QString::number(value));
             }
-            inline void setParam(QUrlQuery & query, const QString & name, const quint64 value) {
-                if (value == IGNORE_PARAM) return;
-                query.addQueryItem(name, QString::number(value));
-            }
+//            inline void setParam(QUrlQuery & query, const QString & name, const quint64 value) {
+//                query.addQueryItem(name, QString::number(value));
+//            }
             inline void setParam(QUrlQuery & query, const QString & name, const double value) {
                 if (value == IGNORE_PARAM) return;
                 query.addQueryItem(name, QString::number(value));

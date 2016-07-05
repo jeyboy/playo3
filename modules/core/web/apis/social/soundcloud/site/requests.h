@@ -10,17 +10,15 @@
 #include "track.h"
 #include "user.h"
 
-#include "modules/core/interfaces/singleton.h"
-
 namespace Core {
     namespace Web {
         namespace Soundcloud {
             namespace Site {
                 class Requests : public Auth, public Group, public Playlist,
-                        public Set, public Track, public User, public Singleton<Requests> {
-                    inline virtual ~Requests() {}
-                    friend class Singleton<Requests>;
+                        public Set, public Track, public User {
                 public:
+                    inline virtual ~Requests() {}
+
                     // standart step for all search requests is 10
 
                     // mixed search with autocomplete - users / groups/ tracks

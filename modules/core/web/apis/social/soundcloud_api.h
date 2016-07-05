@@ -89,16 +89,6 @@ namespace Core {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
                     return playlistByPredicate(predicate, limits.items_limit, limits.start_offset);
                 }
-
-                QJsonValue searchProc(const SearchLimit & limitations) {
-                    return pRequest(
-                        audioSearchUrl(limitations.predicate, limitations.genre, limitations.by_popularity()),
-                        call_type_json,
-                        rules(limitations.start_offset, limitations.items_limit),
-                        0,
-                        proc_json_patch
-                    );
-                }             
             };
         }
     }
