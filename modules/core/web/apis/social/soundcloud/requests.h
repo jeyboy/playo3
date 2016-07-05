@@ -88,6 +88,45 @@ namespace Core {
                     }
                 }
 
+                QJsonObject groupInfo(const QString & group_id) {
+                    Permissions perm = permissions(pr_user_content);
+
+                    switch(perm) {
+                        case perm_site: Site::Requests::groupInfo(group_id);
+                        case perm_api: Api::Requests::groupInfo(group_id);
+                        default: Logger::obj().write("Soundcloud", "group info is not accessable", true);
+                    }
+                }
+                QJsonValue groupsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue groupsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue groupsByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+
+                QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue playlistsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) = 0;
+                QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+
+                QJsonValue setByType(const SetType & chartType, const QString & genre = QStringLiteral("all-music"));
+
+                QString trackUrl(const QString & track_id) = 0;
+                bool likeTrack(const QString & user_id, const QString & track_id) = 0;
+                QJsonObject trackInfo(const QString & track_id) = 0;
+                QJsonValue tracksInfo(const QStringList & track_ids) = 0;
+                QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue tracksSearch(const SearchLimit & limitations) = 0;
+
+                QJsonValue tracksByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue tracksByUserLikes(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+
+                QJsonValue usersById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue usersByTrackLikes(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue usersByTrackReposting(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                QJsonValue userFollowers(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+
 //                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
 //                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
             };
