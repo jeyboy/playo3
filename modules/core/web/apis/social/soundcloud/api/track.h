@@ -15,12 +15,13 @@ namespace Core {
                         return obj.value(QStringLiteral("stream_url")).toString();
                     }
 
-                    void likeTrack(const QString & user_id, const QString & track_id) {
+                    bool likeTrack(const QString & user_id, const QString & track_id) {
                         QString res = Manager::prepare() -> putFollowed(
                             baseUrlStr(qst_api_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
                             Headers()
                         ) -> toText();
                         qDebug() << "FAV" << res;
+                        return false; // TODO: update me
                     }
 
                     QJsonObject trackInfo(const QString & track_id) {

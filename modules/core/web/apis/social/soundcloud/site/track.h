@@ -20,22 +20,32 @@ namespace Core {
                         return res;
                     }
 
-//                    void likeTrack(const QString & user_id, const QString & track_id) = 0;
-//                    QJsonObject trackInfo(const QString & track_id) = 0;
+                    bool likeTrack(const QString & user_id, const QString & track_id) {
+                        // alt // https://api.soundcloud.com/e1/me/track_likes/265476609
+                        QJsonObject obj = Manager::prepare() -> putFollowed(
+                            baseUrlStr(qst_site_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
+                            headers()
+                        ) -> toJson();
+
+                        return obj.value(QStringLiteral("status")).toString().startsWith(QStringLiteral("201"));
+                    }
+
+                    QJsonObject trackInfo(const QString & track_id) { //TODO: test me
+                        QJsonObject obj = sRequest(
+                            baseUrlStr(qst_site_alt1, path_tracks, {{ tkn_ids, track_id }}),
+                            call_type_json, 0, proc, IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
+
+                        return obj;
+                    }
 
                     QJsonValue tracksInfo(const QStringList & track_ids) { //TODO: test me
-                        QUrl url(baseUrlStr(qst_html_alt1, path_tracks));
-                        QUrlQuery query = genDefaultParams(qst_html_alt1);
-
                         QJsonArray arr;
                         int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
                         for(int step = 0; step < limiter; step++) {
-                            setIdsFilter(query, track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST));
-                            url.setQuery(query);
-
                             QJsonObject obj = sRequest(
-                                url.toString(), call_type_json, 0, proc_json_wrap,
-                                IQUERY_DEF_FIELDS, call_method_get, headers()
+                                baseUrlStr(qst_site_alt1, path_tracks, {{ tkn_ids, track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}),
+                                call_type_json, 0, proc_json_wrap, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
 
                             QJsonArray new_items = obj.value(DEF_JSON_FIELD).toArray();
@@ -91,7 +101,12 @@ namespace Core {
                     }
 
                     QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
-
+                        return pRequest(
+                            baseUrlStr(
+                                qst_site_def, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
+                            call_type_json, rules(offset, count), 0,
+                            proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
+                        );
                     }
 
                     QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {

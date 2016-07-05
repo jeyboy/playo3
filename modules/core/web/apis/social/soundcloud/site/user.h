@@ -10,6 +10,14 @@ namespace Core {
             namespace Site {
                 class User : public QueryBase, public IUser {
                 public:
+                    QJsonValue usersById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                        return pRequest(
+                            baseUrlStr(qst_site_def, path_users % '/' % user_id, {}),
+                            call_type_json, rules(offset, count), 0, proc_json_patch,
+                            IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
+                    }
+
                     QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
 

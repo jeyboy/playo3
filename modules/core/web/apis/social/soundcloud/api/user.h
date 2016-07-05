@@ -12,7 +12,7 @@ namespace Core {
                 public:
                     QJsonArray userById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                         return pRequest(
-                            baseUrlStr(qst_json_def, path_users % '/' % user_id, {}),
+                            baseUrlStr(qst_api_def, path_users % '/' % user_id, {}),
                             call_type_json, rules(offset, count), 0, proc_json_patch
                         );
                     }

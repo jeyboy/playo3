@@ -9,7 +9,7 @@ namespace Core {
             class ITrack {
             protected:
                 QString trackUrl(const QString & track_id) = 0;
-                void likeTrack(const QString & user_id, const QString & track_id) = 0;
+                bool likeTrack(const QString & user_id, const QString & track_id) = 0;
 
                 QJsonObject trackInfo(const QString & track_id) = 0;
                 QJsonValue tracksInfo(const QStringList & track_ids) = 0;

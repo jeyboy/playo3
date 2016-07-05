@@ -33,14 +33,6 @@ namespace Core {
                         );
                     }
 
-                    QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
-                        return pRequest(
-                            baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
-                            call_type_json, rules(offset, count), 0, proc_json_patch,
-                            COLLECTION_FIELDS, call_method_get, headers()
-                        );
-                    }
-
                     QJsonArray playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) {
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
 
@@ -56,6 +48,14 @@ namespace Core {
                             ),
                             call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0,
                             proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
+                    }
+
+                    QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
+                        return pRequest(
+                            baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
+                            call_type_json, rules(offset, count), 0, proc_json_patch,
+                            COLLECTION_FIELDS, call_method_get, headers()
                         );
                     }
                 };

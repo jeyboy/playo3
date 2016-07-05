@@ -4,7 +4,7 @@
 
 using namespace Core::Web::Soundcloud::Api;
 
-QJsonValue Set::setByType(const SetType & setType, const QString & genre = QString()) {
+QJsonValue Set::setByType(const SetType & setType, const QString & genre) {
     switch(setType) {
         case popular: {
             return pRequest(
