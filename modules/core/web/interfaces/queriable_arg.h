@@ -68,9 +68,9 @@ namespace Core {
         };
 
         struct QueriableArg {
-            static arrAppend(QJsonArray & arr, const QJsonArray & items) {
+            static void arrAppend(QJsonArray & arr, const QJsonArray & items) {
                 for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
-                    arr -> append(*it);
+                    arr.append(*it);
             }
 
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
@@ -220,7 +220,7 @@ namespace Core {
 
             void append(const QJsonArray & items) {
                 if (!(last_result_is_empty = items.isEmpty()))
-                    arrAppend(arr, items);
+                    arrAppend(*arr, items);
 
                 if (!last_result_is_empty)
                     iterateCounters(items.count());

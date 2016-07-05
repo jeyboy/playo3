@@ -13,7 +13,7 @@ namespace Core {
                     program = 6, web = 7, mobile = 8, android = 10
                 };
 
-                inline void setCategory(QUrlQuery & query, CategoryTypes cType) { setParam(query, tkn_category, (int)cType); }
+                inline void setCategory(QUrlQuery & query, const CategoryTypes & cType) { setParam(query, tkn_category, (int)cType); }
                 inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_query, predicate); }
                 inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
                 inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
@@ -36,12 +36,12 @@ namespace Core {
                 }
 
                 QString searchApiUrl(const QString & predicate = QString(), const CategoryTypes & ctype = music) {
-                    QUrlQuery query = genDefaultParams();
+                    QUrlQuery query = genDefaultParams(qst_api_def);
 
                     setSearchPredicate(query, predicate);
 
                     setCategory(query, ctype);
-                    return baseUrlStr(qst_json, tkn_files, query);
+                    return baseUrlStr(qst_api_def, tkn_files, query);
                 }
 
                 QString audioSearchApiUrl(const QString & predicate = QString()) {
