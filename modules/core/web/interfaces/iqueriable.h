@@ -226,6 +226,10 @@ namespace Core {
             inline void setParam(QUrlQuery & query, const QString & name, const bool value) {
                 query.addQueryItem(name, boolToStr(value));
             }
+            inline void setParam(QUrlQuery & query, const QString & name, const qint64 value) {
+                if (value == IGNORE_PARAM) return;
+                query.addQueryItem(name, QString::number(value));
+            }
             inline void setParam(QUrlQuery & query, const QString & name, const quint64 value) {
                 if (value == IGNORE_PARAM) return;
                 query.addQueryItem(name, QString::number(value));

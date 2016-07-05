@@ -34,16 +34,16 @@ namespace Core {
                     //"id": 142370360,
                     //"permalink": "sam-smith-stay-with-me",
                     QJsonValue tracksInfo(const QStringList & track_ids) { //TODO: test me
-                        QUrl url(baseUrlStr(qst_json_def, path_tracks));
-                        QUrlQuery query = genDefaultParams(qst_json_def);
-
                         QJsonArray arr;
                         int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
                         for(int step = 0; step < limiter; step++) {
-                            setIdsFilter(query, track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST));
-                            url.setQuery(query);
-
-                            QJsonObject obj = sRequest(url.toString(), call_type_json, 0, proc_json_wrap);
+                            QJsonObject obj = sRequest(
+                                baseUrlStr(
+                                    qst_api_def, path_tracks,
+                                    {{ tkn_ids, (QStringList)track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}
+                                ),
+                                call_type_json, 0, proc_json_wrap
+                            );
 
                             QJsonArray new_items = obj.value(DEF_JSON_FIELD).toArray();
                             QueriableArg::arrAppend(arr, new_items);

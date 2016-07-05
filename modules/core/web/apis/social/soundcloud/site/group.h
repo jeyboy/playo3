@@ -13,7 +13,7 @@ namespace Core {
                     QJsonObject groupInfo(const QString & group_id) {
                         sRequest(
                             baseUrlStr(qst_site_def, path_groups % '/' % group_id, {}),
-                            call_type_json, 0, proc, IQUERY_DEF_FIELDS, call_method_get, headers()
+                            call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                         );
                     }
 

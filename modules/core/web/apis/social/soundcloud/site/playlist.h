@@ -33,7 +33,7 @@ namespace Core {
                         );
                     }
 
-                    QJsonArray playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) {
+                    QJsonValue playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) {
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
 
                         return pRequest(

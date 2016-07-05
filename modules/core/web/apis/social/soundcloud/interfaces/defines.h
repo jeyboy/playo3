@@ -15,9 +15,6 @@ namespace Core {
         namespace Soundcloud {
             class Base {
             protected:
-                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
-                inline void setIdsFilter(QUrlQuery & query, const QStringList & uids) { setParam(query, tkn_ids, uids); }
-
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
                     int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,

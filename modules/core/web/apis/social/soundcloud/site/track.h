@@ -13,7 +13,7 @@ namespace Core {
                     QString trackUrl(const QString & track_id) {
                         QJsonObject obj = sRequest(
                             baseUrlStr(qst_site_def, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
-                            call_type_json, 0, proc, IQUERY_DEF_FIELDS, call_method_get, headers()
+                            call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                         );
 
                         QString res = obj.value(QStringLiteral("http_mp3_128_url")).toString();
@@ -33,7 +33,7 @@ namespace Core {
                     QJsonObject trackInfo(const QString & track_id) { //TODO: test me
                         QJsonObject obj = sRequest(
                             baseUrlStr(qst_site_alt1, path_tracks, {{ tkn_ids, track_id }}),
-                            call_type_json, 0, proc, IQUERY_DEF_FIELDS, call_method_get, headers()
+                            call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                         );
 
                         return obj;
@@ -44,7 +44,10 @@ namespace Core {
                         int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
                         for(int step = 0; step < limiter; step++) {
                             QJsonObject obj = sRequest(
-                                baseUrlStr(qst_site_alt1, path_tracks, {{ tkn_ids, track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}),
+                                baseUrlStr(
+                                    qst_site_alt1, path_tracks,
+                                    {{ tkn_ids, (QStringList)track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}
+                                ),
                                 call_type_json, 0, proc_json_wrap, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
 

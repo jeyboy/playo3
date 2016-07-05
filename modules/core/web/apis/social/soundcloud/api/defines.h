@@ -31,7 +31,7 @@ namespace Core {
                             setGenreLimitation(query, genre);
 
                         if (!predicate.isEmpty())
-                            setSearchPredicate(query, predicate);
+                            setParam(query, tkn_q, predicate);
 
                         return query;
                     }

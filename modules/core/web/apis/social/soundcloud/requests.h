@@ -6,11 +6,12 @@
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/web/interfaces/iqueriable.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public ISource, public Sociable, public Api::Requests, public Site::Requests {
+            class Requests : public ISource, public Sociable, public IQueriable {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
@@ -46,18 +47,18 @@ namespace Core {
                 void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr);
 
                 bool connectUserApi() {
-                    QString newToken, userID
-                    bool res = Api::Requests::connectUser(newToken, userID);
+                    QString new_token, user_id;
+                    bool res = Api::Requests::obj().connectUser(new_token, user_id, error);
 
                     if (res) {
-                        setApiToken(newToken);
-                        setApiUserID(userID);
+                        setApiToken(new_token);
+                        setApiUserID(user_id);
                     }
 
                     return res;
                 }
 
-                bool connectUserSite() { return Site::Requests::connectUser(); } // not realized yet
+                bool connectUserSite() { return Site::Requests::obj().connectUser(); } // not realized yet
 
                 bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
                 bool takeOfflineCredentials();
@@ -77,10 +78,10 @@ namespace Core {
 
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api_def) {
                     switch(stype) {
-                        case qst_json_def:
+                        case qst_api_def:
                             return QUrlQuery(tkn_client_id % val_id_tkn);
-                        case qst_html_def:
-                        case qst_html_alt1:
+                        case qst_site_def:
+                        case qst_site_alt1:
                             return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
                         default: return QUrlQuery();
                     }

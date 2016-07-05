@@ -39,4 +39,3 @@ namespace Core {
 }
 
 #endif // SOUNDCLOUD_API_GROUP
-0

@@ -10,7 +10,7 @@ namespace Core {
             protected:
                 enum SetType { new_hot = 1, top_50, popular };
 
-                QJsonValue setByType(const SetType & chartType, const QString & genre = QStringLiteral("all-music"));
+                virtual QJsonValue setByType(const SetType & chartType, const QString & genre = QStringLiteral("all-music"));
             };
         }
     }
