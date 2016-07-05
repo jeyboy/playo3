@@ -10,22 +10,17 @@ namespace Core {
             namespace Api {
                 class Track : public QueryBase, public ITrack {
                 public:
-                    QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
-                        return pRequest(
-                            baseUrlStr(qst_api_def, path_related_tracks.arg(track_id), {}),
-                            call_type_json, rules(offset, count), 0, proc_json_patch
-                        );
+                    QString trackUrl(const QString & track_id) {
+                        QJsonObject obj = trackInfo(track_id);
+                        return obj.value(QStringLiteral("stream_url")).toString();
                     }
 
-                    QJsonValue tracksSearch(const SearchLimit & limitations) {
-                        return pRequest(
-                            baseUrlStr(
-                                qst_api_def, path_tracks,
-                                trackSearchQuery(limitations.predicate, limitations.genre, limitations.by_popularity())
-                            ),
-                            call_type_json,
-                            rules(limitations.start_offset, limitations.items_limit), 0, proc_json_patch
-                        );
+                    void likeTrack(const QString & user_id, const QString & track_id) {
+                        QString res = Manager::prepare() -> putFollowed(
+                            baseUrlStr(qst_api_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
+                            Headers()
+                        ) -> toText();
+                        qDebug() << "FAV" << res;
                     }
 
                     QJsonObject trackInfo(const QString & track_id) {
@@ -34,7 +29,6 @@ namespace Core {
                             call_type_json
                         );
                     }
-
 
                     //"id": 142370360,
                     //"permalink": "sam-smith-stay-with-me",
@@ -57,13 +51,39 @@ namespace Core {
                         return arr;
                     }
 
+                    QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { //TODO: test me
+                        return pRequest(
+                            baseUrlStr(qst_api_def, path_related_tracks.arg(track_id), {}),
+                            call_type_json, rules(offset, count), 0, proc_json_patch
+                        );
+                    }
+
+                    QJsonValue tracksSearch(const SearchLimit & limitations) {
+                        return pRequest(
+                            baseUrlStr(
+                                qst_api_def, path_tracks,
+                                trackSearchQuery(limitations.predicate, limitations.genre, limitations.by_popularity())
+                            ),
+                            call_type_json,
+                            rules(limitations.start_offset, limitations.items_limit), 0, proc_json_patch
+                        );
+                    }
+
+
+                    // support a comma separated list of tags
+                    QJsonValue tracksByTag(const QString & tags, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                        return pRequest(
+                            baseUrlStr(qst_api_def, path_tracks, {{ QStringLiteral("tags"), tags }}),
+                            call_type_json, rules(offset, count), 0, proc_json_patch
+                        );
+                    }
+
+
                     QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { // next_href
-                        QJsonArray res = pRequest(
+                        return pRequest(
                             baseUrlStr(qst_api_def, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
                             call_type_json, rules(offset, count), 0, proc_json_patch
                         );
-
-                        return res;
                     }
 
                     QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { // next_href
@@ -82,14 +102,6 @@ namespace Core {
                         );
 
                         return res;
-                    }
-
-                    void likeTrack(const QString & user_id, const QString & track_id) {
-                        QString res = Manager::prepare() -> putFollowed(
-                            baseUrlStr(qst_api_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
-                            Headers()
-                        ) -> toText();
-                        qDebug() << "FAV" << res;
                     }
                 };
             }

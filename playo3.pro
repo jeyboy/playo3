@@ -468,4 +468,6 @@ SOURCES += \
     modules/core/web/apis/social/soundcloud/requests.cpp \
     modules/core/web/apis/social/soundcloud/api/group.cpp \
     modules/core/web/apis/social/soundcloud/api/set.cpp \
-    modules/core/web/apis/social/soundcloud/site/set.cpp
+    modules/core/web/apis/social/soundcloud/site/set.cpp \
+    modules/core/web/apis/social/soundcloud/api/playlist.cpp \
+    modules/core/web/apis/social/soundcloud/api/user.cpp

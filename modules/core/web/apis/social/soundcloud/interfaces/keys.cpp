@@ -17,6 +17,7 @@ namespace Core {
             extern const QString path_playlists        = QStringLiteral("playlists/");
             extern const QString path_tracks           = QStringLiteral("tracks");
             extern const QString path_related_tracks   = path_tracks % QStringLiteral("/%1/related");
+            extern const QString path_track_favorites  = path_tracks % QStringLiteral("/%1/favorites");
             extern const QString path_groups           = QStringLiteral("groups");
             extern const QString path_group_tracks     = path_groups % QStringLiteral("/%1/tracks");
             //            /groups/{id}/members

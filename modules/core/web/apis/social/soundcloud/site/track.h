@@ -20,6 +20,9 @@ namespace Core {
                         return res;
                     }
 
+//                    void likeTrack(const QString & user_id, const QString & track_id) = 0;
+//                    QJsonObject trackInfo(const QString & track_id) = 0;
+
                     QJsonValue tracksInfo(const QStringList & track_ids) { //TODO: test me
                         QUrl url(baseUrlStr(qst_html_alt1, path_tracks));
                         QUrlQuery query = genDefaultParams(qst_html_alt1);
@@ -77,7 +80,7 @@ namespace Core {
                                 qst_site_def, QStringLiteral("search/sounds"),
                                 {
                                     { tkn_q, QStringLiteral("*") },
-                                    { QStringLiteral("filter.genre"), tag } // its a genius !!!
+                                    { QStringLiteral("filter.genre"), tag } // its a genius !!! // try to use a comma separated list of tags
                                 }
                             ),
                             call_type_json, rules(offset, count), 0,
@@ -85,6 +88,31 @@ namespace Core {
                         );
 
                         return res;
+                    }
+
+                    QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+
+                    }
+
+                    QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                        // linked_partitioning=1
+
+                        return pRequest(
+                            baseUrlStr(
+                                qst_site_alt1, QStringLiteral("users/%1/tracks").arg(user_id),
+                                {{ QStringLiteral("representation"), QString() }}
+                            ),
+                            call_type_json, rules(offset, count), 0,
+                            proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
+                    }
+
+                    QJsonValue tracksByUserLikes(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                        return pRequest(
+                            baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
+                            call_type_json, rules(offset, count), 0,
+                            proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
+                        );
                     }
                 };
             }
