@@ -10,7 +10,7 @@ namespace Core {
             namespace Site {
                 class Playlist : public QueryBase, public IPlaylist {
                 public:
-                    QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT) { // next_href
+                    QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) { // next_href
     //                    setParam(query, QStringLiteral("linked_partitioning"), 1);
 
                         QJsonArray res = pRequest(
@@ -18,7 +18,7 @@ namespace Core {
                                 qst_site_alt1, QStringLiteral("playlists/discovery"),
                                 {{ QStringLiteral("tag"), tag }}
                             ),
-                            call_type_json, rules(0, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
+                            call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
                             0, proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                         );
 

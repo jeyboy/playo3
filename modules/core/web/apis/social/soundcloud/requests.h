@@ -96,8 +96,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::groupInfo(group_id);
-                        case perm_api: Api::Requests::groupInfo(group_id);
+                        case perm_site: return Site::Requests::groupInfo(group_id);
+                        case perm_api: return Api::Requests::groupInfo(group_id);
                         default: Logger::obj().write("Soundcloud", "group info is not accessable", true);
                     }
                 }
@@ -105,8 +105,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::groupsByTrack(track_id, count, offset);
-                        case perm_api: Api::Requests::groupsByTrack(track_id, count, offset);
+                        case perm_site: return Site::Requests::groupsByTrack(track_id, count, offset);
+                        case perm_api: return Api::Requests::groupsByTrack(track_id, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by track is not accessable", true);
                     }
                 }
@@ -114,8 +114,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::groupsByUser(user_id, count, offset);
-                        case perm_api: Api::Requests::groupsByUser(user_id, count, offset);
+                        case perm_site: return Site::Requests::groupsByUser(user_id, count, offset);
+                        case perm_api: return Api::Requests::groupsByUser(user_id, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -123,8 +123,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::groupsByName(name, count, offset);
-                        case perm_api: Api::Requests::groupsByName(name, count, offset);
+                        case perm_site: return Site::Requests::groupsByName(name, count, offset);
+                        case perm_api: return Api::Requests::groupsByName(name, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -133,8 +133,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::playlistsByTag(tag, count, offset);
-                        case perm_api: Api::Requests::playlistsByTag(tag, count, offset);
+                        case perm_site: return Site::Requests::playlistsByTag(tag, count, offset);
+                        case perm_api: return Api::Requests::playlistsByTag(tag, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -142,8 +142,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::playlistsByTrack(track_id, count, offset);
-                        case perm_api: Api::Requests::playlistsByTrack(track_id, count, offset);
+                        case perm_site: return Site::Requests::playlistsByTrack(track_id, count, offset);
+                        case perm_api: return Api::Requests::playlistsByTrack(track_id, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -151,8 +151,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::playlistsByPredicate(predicate, count, offset);
-                        case perm_api: Api::Requests::playlistsByPredicate(predicate, count, offset);
+                        case perm_site: return Site::Requests::playlistsByPredicate(predicate, count, offset);
+                        case perm_api: return Api::Requests::playlistsByPredicate(predicate, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -160,8 +160,8 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::playlistsByUser(user_id, count, offset);
-                        case perm_api: Api::Requests::playlistsByUser(user_id, count, offset);
+                        case perm_site: return Site::Requests::playlistsByUser(user_id, count, offset);
+                        case perm_api: return Api::Requests::playlistsByUser(user_id, count, offset);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
@@ -170,30 +170,158 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: Site::Requests::setByType(chartType, genre);
-                        case perm_api: Api::Requests::setByType(chartType, genre);
+                        case perm_site: return Site::Requests::setByType(chartType, genre);
+                        case perm_api: return Api::Requests::setByType(chartType, genre);
                         default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
                     }
                 }
 
-                QString trackUrl(const QString & track_id) = 0;
-                bool likeTrack(const QString & user_id, const QString & track_id) = 0;
-                QJsonObject trackInfo(const QString & track_id) = 0;
-                QJsonValue tracksInfo(const QStringList & track_ids) = 0;
-                QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue tracksSearch(const SearchLimit & limitations) = 0;
+                QString trackUrl(const QString & track_id) {
+                    Permissions perm = permissions(pr_media_content);
 
-                QJsonValue tracksByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue tracksByUserLikes(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                    switch(perm) {
+                        case perm_site: return Site::Requests::trackUrl(track_id);
+                        case perm_api: return Api::Requests::trackUrl(track_id);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                bool likeTrack(const QString & user_id, const QString & track_id) {
+                    Permissions perm = permissions(pr_media_content);
 
-                QJsonValue usersById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue usersByTrackLikes(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue usersByTrackReposting(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
-                QJsonValue userFollowers(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) = 0;
+                    switch(perm) {
+                        case perm_site: return Site::Requests::likeTrack(user_id, track_id);
+                        case perm_api: return Api::Requests::likeTrack(user_id, track_id);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonObject trackInfo(const QString & track_id) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::trackInfo(track_id);
+                        case perm_api: return Api::Requests::trackInfo(track_id);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue tracksInfo(const QStringList & track_ids) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksInfo(track_ids);
+                        case perm_api: return Api::Requests::tracksInfo(track_ids);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::trackRelations(track_id, count, offset);
+                        case perm_api: return Api::Requests::trackRelations(track_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue tracksSearch(const SearchLimit & limitations) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksSearch(limitations);
+                        case perm_api: return Api::Requests::tracksSearch(limitations);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+
+                QJsonValue tracksByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksByTag(tag, count, offset);
+                        case perm_api: return Api::Requests::tracksByTag(tag, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksByGroup(group_id, count, offset);
+                        case perm_api: return Api::Requests::tracksByGroup(group_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksByUser(user_id, count, offset);
+                        case perm_api: return Api::Requests::tracksByUser(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue tracksByUserLikes(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::tracksByUserLikes(user_id, count, offset);
+                        case perm_api: return Api::Requests::tracksByUserLikes(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+
+                QJsonValue usersById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::usersById(user_id, count, offset);
+                        case perm_api: return Api::Requests::usersById(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::usersByName(name, count, offset);
+                        case perm_api: return Api::Requests::usersByName(name, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue usersByTrackLikes(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::usersByTrackLikes(track_id, count, offset);
+                        case perm_api: return Api::Requests::usersByTrackLikes(track_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue usersByTrackReposting(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::usersByTrackReposting(track_id, count, offset);
+                        case perm_api: return Api::Requests::usersByTrackReposting(track_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::userFollowings(user_id, count, offset);
+                        case perm_api: return Api::Requests::userFollowings(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
+                QJsonValue userFollowers(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site: return Site::Requests::userFollowers(user_id, count, offset);
+                        case perm_api: return Api::Requests::userFollowers(user_id, count, offset);
+                        default: Logger::obj().write("Soundcloud", "group by user is not accessable", true);
+                    }
+                }
             };
         }
     }
