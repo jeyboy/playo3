@@ -58,7 +58,7 @@ namespace Core {
                     }
 
                 public:
-                    bool connectUser(QString & newToken, QString & userID) {
+                    bool connectUser(QString & newToken, QString & userID, QString & error) {
                         QUrl auth_url = authUrl();
                         QUrl form_url = auth_url;
                         Response * resp = Manager::prepare() -> getFollowed(form_url);

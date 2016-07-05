@@ -18,7 +18,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_od; }
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_html) { return QUrlQuery(tkn_jsessionid % siteToken()); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_site_def) { return QUrlQuery(tkn_jsessionid % siteToken()); }
 
                 void saveAdditionals(QJsonObject & obj) {
                     Sociable::toJson(obj);

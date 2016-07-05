@@ -67,7 +67,7 @@ namespace Core {
 //                    return doc.find("a[href~'/download/']").link();
 //                }
             protected:
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) {
 //                    QString token = ptype == qpt_json ? apiToken() : siteToken();
                     return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
                 }

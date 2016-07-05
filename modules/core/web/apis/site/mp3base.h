@@ -107,7 +107,7 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_mp3base; }
 
             QJsonValue popular(const SearchLimit & /*limitations*/) {
-                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -131,7 +131,7 @@ namespace Core {
 
                             link = link.section('(', 1).section(')', 0, 0);
 
-                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, QStringLiteral("/user/player/?song=") % link));
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, QStringLiteral("/user/player/?song=") % link));
 
                             QString artist = (*track) -> childTag(QStringLiteral("td"), 2) -> toText();
                             QString title = (*track) -> childTag(QStringLiteral("td"), 1) -> toText();
@@ -168,7 +168,7 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(qst_html, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
+                sRequest(baseUrlStr(qst_site_def, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
 
@@ -180,7 +180,7 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_html,
+                QString url_str = baseUrlStr(qst_site_def,
                     QStringLiteral("/search?q=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );

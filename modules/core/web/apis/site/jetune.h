@@ -15,7 +15,7 @@ namespace Core {
             inline DataSubType siteType() const { return dt_site_jetune; }
 
             inline QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);
             }
 
         protected:
@@ -38,8 +38,8 @@ namespace Core {
                                 QString link = link_tag -> childTag("a") -> link();
                                 link = link.section('/', 2, 2);
 
-                                track_obj.insert(tkn_grab_url, baseUrlStr(qst_html, QStringLiteral("/freedownload.php?id=") % link));
-                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, QStringLiteral("/myplayer.php?id=") % link));
+                                track_obj.insert(tkn_grab_url, baseUrlStr(qst_site_def, QStringLiteral("/freedownload.php?id=") % link));
+                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, QStringLiteral("/myplayer.php?id=") % link));
                                 track_obj.insert(tkn_skip_info, true);
 
                                 Html::Set links = (*track) -> childTag("td", 0) -> find("a");
@@ -71,7 +71,7 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(qst_html, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
+                sRequest(baseUrlStr(qst_site_def, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
 
 //                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
             }
@@ -79,7 +79,7 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_html,
+                QString url_str = baseUrlStr(qst_site_def,
                     QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),
                         limits.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),

@@ -109,10 +109,10 @@ namespace Core {
                     }
                 }
 
-                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_json) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api_def) {
                     QUrlQuery query = QUrlQuery();
 
-                    if (stype == qst_json) {
+                    if (stype == qst_api_def) {
                         query.addQueryItem(tkn_version, val_version);
                         query.addQueryItem(tkn_access_token, apiToken());
                     }

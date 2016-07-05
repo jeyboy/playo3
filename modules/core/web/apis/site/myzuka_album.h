@@ -76,7 +76,7 @@ namespace Core {
     //        }
 
             inline QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(qst_html), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), proc_songs1);
             }
 
@@ -104,7 +104,7 @@ namespace Core {
 
             inline void genresProc() { // not tested
                 PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
-                pRequest(baseUrlStr(qst_html, QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
+                pRequest(baseUrlStr(qst_site_def, QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
 
 //                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
@@ -116,11 +116,11 @@ namespace Core {
                 if (tracks.isEmpty())
                     return QString();
                 else
-                    return baseUrlStr(qst_html, tracks.link());
+                    return baseUrlStr(qst_site_def, tracks.link());
             }
 
             QJsonValue searchProc(const SearchLimit & limits) { // this should be rewritten
-                QUrl url = QUrl(baseUrlStr(qst_html, search_path_token));
+                QUrl url = QUrl(baseUrlStr(qst_site_def, search_path_token));
                 url.setQuery(search_predicate_token % limits.predicate);
 
                 QJsonArray arr;
@@ -159,7 +159,7 @@ namespace Core {
                         track_obj.insert(tkn_grab_title, title);
                         track_obj.insert(tkn_skip_info, true);
                         track_obj.insert(tkn_grab_size, prepareSize(size_tag -> text()));
-                        track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, track_tag -> link()));
+                        track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, track_tag -> link()));
 
                         arr << track_obj;
                     }
@@ -173,7 +173,7 @@ namespace Core {
                     QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
 
                     PolyQueryRules rules(call_iter_type_page, call_iter_method_offset, DEFAULT_ITEMS_LIMIT, MAX_PAGES_PER_ARTIST);
-                    pRequest(baseUrlStr(qst_html, artistPage), call_type_html, rules, &arr, proc_tracks1);
+                    pRequest(baseUrlStr(qst_site_def, artistPage), call_type_html, rules, &arr, proc_tracks1);
 
 //                    lQuery(baseUrlStr(artistPage), arr, proc_songs1, MAX_PAGES_PER_ARTIST);
                 }
@@ -198,7 +198,7 @@ namespace Core {
                             QJsonObject track_obj;
 
                             tag = (*track) -> find(&urlSelector).first();
-                            track_obj.insert(tkn_grab_url, baseUrlStr(qst_html, tag -> value(data_url_token)));
+                            track_obj.insert(tkn_grab_url, baseUrlStr(qst_site_def, tag -> value(data_url_token)));
                             track_obj.insert(tkn_grab_title, tag -> value(title_token).section(' ', 1));
 
                             set = (*track) -> find(&infoSelector);
@@ -213,7 +213,7 @@ namespace Core {
 
                             set = (*track) -> find(&refreshSelector);
                             if (!set.isEmpty())
-                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_html, set.link()));
+                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, set.link()));
 
                             arg -> append(track_obj, track + 1 == tracks.end());
                         }
