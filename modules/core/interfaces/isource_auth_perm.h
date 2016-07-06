@@ -132,8 +132,6 @@ namespace Core {
                                             { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const     { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
 
-        Permissions permissions(const PermitRequest & req_perm = pr_search);
-
         virtual bool connectUserApi()       { return false; }
         virtual bool connectUserSite()      { return false; }
 
@@ -158,6 +156,8 @@ namespace Core {
             Permissions perm = permissions(req_perm);
             return perm == perm_site ? siteUserID() : apiUserID();
         }
+
+        Permissions permissions(const PermitRequest & req_perm = pr_search);
 
         inline bool isPrimary()             { return HAS_FLAG(defaultFlags(), sf_primary_source); }
         inline bool isSociable()            { return HAS_FLAG(defaultFlags(), sf_sociable_users) || HAS_FLAG(defaultFlags(), sf_sociable_groups); }
