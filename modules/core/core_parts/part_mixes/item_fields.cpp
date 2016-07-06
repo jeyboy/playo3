@@ -121,7 +121,7 @@ QUrl ItemFields::toUrl() const {
     if (isRemote()) {
         QUrl url = QUrl(path().toString());
         switch(dataType()) {
-            case dt_site_sc: { url.setQuery(Web::Soundcloud::Api::obj().genDefaultParams()); break;}
+            case dt_site_sc: { url.setQuery(Web::Soundcloud::Queries::obj().genDefaultParams()); break;}
             default: ;
         }
         return url;

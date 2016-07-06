@@ -9,7 +9,7 @@ namespace Models {
         Q_OBJECT
     public:
         inline VkModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
-        inline ISearchable * api() const { return &Vk::Api::obj(); }
+        inline ISource * api() const { return &Vk::Api::obj(); }
     public slots:
         void refresh();
     protected slots:

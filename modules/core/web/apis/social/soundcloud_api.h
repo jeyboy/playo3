@@ -53,7 +53,7 @@ namespace Core {
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = userById(uid).toArray();
+                    QJsonArray arr = usersById(uid).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -70,7 +70,7 @@ namespace Core {
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupById(uid).toArray();
+                    QJsonArray arr = groupsById(uid).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;
@@ -87,8 +87,10 @@ namespace Core {
             protected:
                 QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
-                    return playlistByPredicate(predicate, limits.items_limit, limits.start_offset);
+                    return playlistsByPredicate(predicate, limits.items_limit, limits.start_offset);
                 }
+
+                QJsonValue searchProc(const SearchLimit & limits) { return tracksSearch(limits); }
             };
         }
     }

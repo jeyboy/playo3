@@ -6,7 +6,7 @@ using namespace Models;
 void SoundcloudModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Api::obj().objectInfoAsync(
+    Soundcloud::Queries::obj().objectInfoAsync(
         sttngs.uid,
         new Func(this, SLOT(proceedJson(QJsonObject &)))
     );
@@ -57,7 +57,7 @@ void SoundcloudModel::proceedJson(QJsonObject & hash) {
         for(QJsonArray::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
             group = (*group_it).toObject();
 
-            Soundcloud::Api::obj().addGroup(
+            Soundcloud::Queries::obj().addGroup(
                 Linkable(
                     QString::number(group.value(Soundcloud::tkn_id).toInt()),
                     group.value(Soundcloud::tkn_name).toString(),
@@ -86,7 +86,7 @@ void SoundcloudModel::proceedFriendsList(const QJsonArray & friends) {
         if (name.isEmpty())
             name = frend.value(Soundcloud::tkn_username).toString();
 
-        Soundcloud::Api::obj().addFriend(
+        Soundcloud::Queries::obj().addFriend(
             Linkable(
                 QString::number(frend.value(Soundcloud::tkn_id).toInt()),
                 name,

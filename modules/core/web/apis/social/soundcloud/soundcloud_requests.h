@@ -33,6 +33,8 @@ namespace Core {
                     );
                 }
 
+                Permissions permissions(const PermitRequest & req_perm = pr_search) { return ISource::permissions(req_perm); }
+
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_api_def: return url_api_base % predicate % val_default_format;

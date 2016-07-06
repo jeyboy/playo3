@@ -448,5 +448,5 @@ SOURCES += \
     modules/core/interfaces/iuser_interaction.cpp \
     modules/core/web/apis/social/soundcloud/api_keys.cpp \
     modules/core/web/apis/social/soundcloud/api/keys.cpp \
-    modules/core/web/apis/social/soundcloud/keys.cpp \
-    modules/core/web/apis/social/soundcloud/requests.cpp
+    modules/core/web/apis/social/soundcloud/soundcloud_keys.cpp \
+    modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp

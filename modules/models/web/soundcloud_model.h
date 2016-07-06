@@ -10,7 +10,7 @@ namespace Models {
         void proceedFriendsList(const QJsonArray & friends);
     public:       
         inline SoundcloudModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
-        inline ISearchable * api() const { return &Web::Soundcloud::Api::obj(); }
+        inline ISource * api() const { return &Web::Soundcloud::Queries::obj(); }
     public slots:
         void refresh();
 
