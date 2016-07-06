@@ -4,6 +4,7 @@
 #include <qstring.h>
 #include <qtoolbutton.h>
 
+#include "isource_perm_flags.h"
 #include "modules/core/web/utils/web_manager.h"
 
 #define SOURCE_API_AUTH_JSON QStringLiteral("api_auth")
@@ -101,24 +102,6 @@ namespace Core {
             sf_api_recomendations_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
-    };
-
-    enum Permissions : int {
-        perm_none = 0,
-        perm_site = 1,
-        perm_api = 2
-    };
-
-    enum PermitRequest {
-        pr_none                 = 0,
-
-        pr_search               = 1,
-
-        pr_media_content        = 2,
-        pr_user_content         = 4,
-        pr_feed                 = 8,
-    //        pr_chart                = 16,
-        pr_recommendations      = 32
     };
 
     class ISourceAuthPerm : public QObject {

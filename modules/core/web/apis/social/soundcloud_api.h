@@ -2,7 +2,7 @@
 #define SOUNDCLOUD_API_H
 
 #include "modules/core/interfaces/singleton.h"
-#include "soundcloud/requests.h"
+#include "soundcloud/soundcloud_requests.h"
 
 namespace Core {
     namespace Web {
@@ -20,14 +20,14 @@ namespace Core {
                     QJsonObject res;
 
                     if (oid[0] == '-')
-                        getGroupInfo(oid.mid(1), res);
+                        groupInfo(oid.mid(1), res);
                     else
-                        getUserInfo(oid, res);
+                        userInfo(oid, res);
 
                     return res;
                 }
                 inline void objectInfoAsync(const QString & oid, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::objectInfo, oid, func);
+                    ThreadUtils::obj().run(this, &Queries::objectInfo, oid, func);
                 }
 
 
@@ -36,24 +36,24 @@ namespace Core {
                 }
 
                 void userInfo(const QString & user_id, QJsonObject & object) {
-                    object.insert(tkn_audio_list, userAudio(user_id));
-                    object.insert(tkn_playlist, userPlaylists(user_id));
+                    object.insert(tkn_audio_list, tracksByUser(user_id));
+                    object.insert(tkn_playlist, playlistsByUser(user_id));
                     QThread::msleep(REQUEST_DELAY);
                     object.insert(tkn_followings, userFollowings(user_id)); // return bad request error
                     object.insert(tkn_followers, userFollowers(user_id));
                     QThread::msleep(REQUEST_DELAY);
-                    object.insert(tkn_groups, userGroups(user_id));
+                    object.insert(tkn_groups, groupsByUser(user_id));
                 }
 
 
-                QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) {
-                    return idToPathSite(audio_uid);
+                QString refresh(const QString & track_id, const DataMediaType & /*itemMediaType*/) {
+                    return trackUrl(track_id);
                 }
 
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = userById(uid);
+                    QJsonArray arr = userById(uid).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -61,7 +61,7 @@ namespace Core {
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name, 400);
+                    QJsonArray arr = usersByName(name, 400).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -70,7 +70,7 @@ namespace Core {
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupById(uid);
+                    QJsonArray arr = groupById(uid).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;
@@ -78,7 +78,7 @@ namespace Core {
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name, 400);
+                    QJsonArray arr = groupsByName(name, 400).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;

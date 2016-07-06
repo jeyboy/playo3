@@ -293,40 +293,24 @@ HEADERS += \
     modules/core/web/apis/storage/fourshared_request_site.h \
     modules/core/web/apis/storage/fourshared_defines.h \
     modules/core/web/apis/social/soundcloud/track.h \
-    modules/core/web/apis/social/soundcloud/defines.h \
     modules/core/web/apis/social/soundcloud/api_keys.h \
     modules/core/web/apis/social/soundcloud/request_api.h \
     modules/core/web/apis/social/soundcloud/request_site.h \
     modules/core/web/apis/social/soundcloud/playlist.h \
     modules/core/web/apis/social/soundcloud/group.h \
     modules/core/web/apis/social/soundcloud/user.h \
-    modules/core/web/apis/social/soundcloud/auth.h \
     modules/core/web/apis/social/soundcloud/set.h \
-    modules/core/web/apis/social/soundcloud/api/auth.h \
-    modules/core/web/apis/social/soundcloud/api/defines.h \
-    modules/core/web/apis/social/soundcloud/api/group.h \
-    modules/core/web/apis/social/soundcloud/api/playlist.h \
-    modules/core/web/apis/social/soundcloud/api/set.h \
-    modules/core/web/apis/social/soundcloud/api/track.h \
-    modules/core/web/apis/social/soundcloud/api/user.h \
-    modules/core/web/apis/social/soundcloud/site/auth.h \
-    modules/core/web/apis/social/soundcloud/site/defines.h \
-    modules/core/web/apis/social/soundcloud/site/group.h \
-    modules/core/web/apis/social/soundcloud/site/playlist.h \
-    modules/core/web/apis/social/soundcloud/site/set.h \
-    modules/core/web/apis/social/soundcloud/site/track.h \
-    modules/core/web/apis/social/soundcloud/site/user.h \
     modules/core/web/apis/social/soundcloud/api/keys.h \
-    modules/core/web/apis/social/soundcloud/interfaces/defines.h \
-    modules/core/web/apis/social/soundcloud/interfaces/keys.h \
-    modules/core/web/apis/social/soundcloud/interfaces/igroup.h \
-    modules/core/web/apis/social/soundcloud/interfaces/iplaylist.h \
-    modules/core/web/apis/social/soundcloud/interfaces/iset.h \
-    modules/core/web/apis/social/soundcloud/interfaces/itrack.h \
-    modules/core/web/apis/social/soundcloud/interfaces/iuser.h \
-    modules/core/web/apis/social/soundcloud/api/requests.h \
-    modules/core/web/apis/social/soundcloud/site/requests.h \
-    modules/core/web/apis/social/soundcloud/requests.h
+    modules/core/interfaces/isource_perm_flags.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_auth.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_defines.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_group.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_playlist.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_set.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_track.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_user.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_keys.h \
+    modules/core/web/apis/social/soundcloud/soundcloud_requests.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -464,10 +448,5 @@ SOURCES += \
     modules/core/interfaces/iuser_interaction.cpp \
     modules/core/web/apis/social/soundcloud/api_keys.cpp \
     modules/core/web/apis/social/soundcloud/api/keys.cpp \
-    modules/core/web/apis/social/soundcloud/interfaces/keys.cpp \
-    modules/core/web/apis/social/soundcloud/requests.cpp \
-    modules/core/web/apis/social/soundcloud/api/group.cpp \
-    modules/core/web/apis/social/soundcloud/api/set.cpp \
-    modules/core/web/apis/social/soundcloud/site/set.cpp \
-    modules/core/web/apis/social/soundcloud/api/playlist.cpp \
-    modules/core/web/apis/social/soundcloud/api/user.cpp
+    modules/core/web/apis/social/soundcloud/keys.cpp \
+    modules/core/web/apis/social/soundcloud/requests.cpp
