@@ -56,7 +56,7 @@ namespace Core {
 
                 bool connectUserApi() {
                     QString new_token, user_id;
-                    bool res = Api::Requests::connectUser(new_token, user_id, error);
+                    bool res = connectApi(new_token, user_id, error);
 
                     if (res) {
                         setApiToken(new_token);
@@ -66,7 +66,7 @@ namespace Core {
                     return res;
                 }
 
-                bool connectUserSite() { return Site::Requests::connectUser(); } // not realized yet
+                bool connectUserSite() { return connectSite(); } // not realized yet
 
                 bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
                 bool takeOfflineCredentials();

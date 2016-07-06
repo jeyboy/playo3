@@ -56,7 +56,6 @@ namespace Core {
                     return query.toString(QUrl::FullyEncoded).toUtf8();
                 }
 
-            public:
                 bool connectApi(QString & newToken, QString & userID, QString & error) {
                     QUrl auth_url = authUrl();
                     QUrl form_url = auth_url;
@@ -154,7 +153,6 @@ namespace Core {
 
                     return false;
                 }
-            };
             };
         }
     }
