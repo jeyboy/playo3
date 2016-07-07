@@ -2,6 +2,7 @@
 
 #include <qmenu.h>
 
+#include "settings.h"
 #include "dialogs/relations_dialog.h"
 #include "dockbars.h"
 
@@ -30,6 +31,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
     }
 
     bool is_connected = isConnected();
+    button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
 
     if (is_connected || offline_respondable) {
         QMenu * menu = new QMenu(button);
@@ -46,7 +48,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
         else
             menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
 
-        if (is_sociable)
+//        if (is_sociable)
             menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
 
         if (is_packable)
@@ -56,7 +58,6 @@ QToolButton * ISource::initButton(QWidget * parent) {
         button -> setPopupMode(QToolButton::InstantPopup);
         button -> setMenu(menu);
     } else {
-        button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
         button -> setToolTip(QStringLiteral("Connect to %1").arg(name()));
         connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
     }
