@@ -1,5 +1,5 @@
 #include "item_fields.h"
-#include "modules/core/web/apis/social/soundcloud_api.h"
+#include "modules/core/web/apis/social/soundcloud_queries.h"
 
 #include <qdesktopservices.h>
 #include <qfile.h>
@@ -121,7 +121,18 @@ QUrl ItemFields::toUrl() const {
     if (isRemote()) {
         QUrl url = QUrl(path().toString());
         switch(dataType()) {
-            case dt_site_sc: { url.setQuery(Web::Soundcloud::Queries::obj().genDefaultParams()); break;}
+            case dt_site_sc: {
+                QString query = url.query();
+                QString def_query = Web::Soundcloud::Queries::obj().genDefaultParams().toString();
+
+                if (query.isEmpty())
+                    query = def_query;
+                else
+                    query = query % '&' % def_query;
+
+                url.setQuery(query);
+                break;
+            }
             default: ;
         }
         return url;

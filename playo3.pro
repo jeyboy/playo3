@@ -161,7 +161,6 @@ HEADERS += \
     modules/core/web/apis/social/od_api_keys.h \
     modules/core/web/apis/social/od_api_misc.h \
     modules/core/web/apis/social/od_request_api.h \
-    modules/core/web/apis/social/soundcloud_api.h \
     modules/core/web/apis/social/vk_api.h \
     modules/core/web/apis/social/vk_api_keys.h \
     modules/core/web/apis/social/vk_request_api.h \
@@ -301,7 +300,8 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/soundcloud_track.h \
     modules/core/web/apis/social/soundcloud/soundcloud_user.h \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_requests.h
+    modules/core/web/apis/social/soundcloud/soundcloud_requests.h \
+    modules/core/web/apis/social/soundcloud_queries.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -356,7 +356,6 @@ SOURCES += \
     modules/core/web/apis/site/shmidt.cpp \
     modules/core/web/apis/site/zaycev.cpp \
     modules/core/web/apis/social/od_api.cpp \
-    modules/core/web/apis/social/soundcloud_api.cpp \
     modules/core/web/apis/social/vk_api.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
@@ -438,4 +437,5 @@ SOURCES += \
     modules/models/web/fourshared_model.cpp \
     modules/core/interfaces/iuser_interaction.cpp \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.cpp \
-    modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp
+    modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp \
+    modules/core/web/apis/social/soundcloud_queries.cpp

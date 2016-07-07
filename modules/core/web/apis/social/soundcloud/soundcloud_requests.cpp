@@ -31,7 +31,7 @@ void Requests::jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr)
     }
 }
 
-bool Requests::takeOfflineCredentials()    {
+bool Requests::takeOfflineCredentials() {
     if (hasOfflineCredentials()) return true;
 
     QString html = Manager::prepare() -> getFollowed(url_site_base) -> toText();

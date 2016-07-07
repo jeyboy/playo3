@@ -113,7 +113,16 @@ namespace Core { // requests and response has memory leaks
                     cookies -> deleteCookie(*cookie);
             }
 
-            static inline void printCookies() { qDebug() << "COOKIE" << cookies -> allCookies(); }
+            static inline void printCookies() {
+//                qDebug() << "COOKIE" << cookies -> allCookies();
+
+                qDebug() << " ----------------------- COOKIES LIST ----------------------------";
+
+                for(QNetworkCookie cookie : cookies -> allCookies())
+                    qDebug() << cookie.toRawForm();
+
+                qDebug() << " -----------------------------------------------------------------";
+            }
             static inline QString cookie(const QString & name, QUrl url = QUrl()) {
                 const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
                 for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++)

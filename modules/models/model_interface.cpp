@@ -224,11 +224,11 @@ int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Play
     int (IModel::*proc_func)(const QJsonArray &, Playlist *, const DataMediaType &, const DataSubType &);
 
     switch(wType) {
-        case dt_site_vk: proc_func = &IModel::proceedVkList;
-        case dt_site_sc: proc_func = &IModel::proceedScList;
-        case dt_site_od: proc_func = &IModel::proceedOdList;
-        case dt_site_yandex: proc_func = &IModel::proceedYandexList;
-        case dt_site_youtube: proc_func = &IModel::proceedYoutubeList;
+        case dt_site_vk: { proc_func = &IModel::proceedVkList; break;}
+        case dt_site_sc: { proc_func = &IModel::proceedScList; break;}
+        case dt_site_od: { proc_func = &IModel::proceedOdList; break;}
+        case dt_site_yandex: { proc_func = &IModel::proceedYandexList; break;}
+        case dt_site_youtube: { proc_func = &IModel::proceedYoutubeList; break;}
         default: proc_func = &IModel::proceedGrabberList;
     }
 
@@ -491,7 +491,6 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, cons
             uri = itm.value(Soundcloud::tkn_stream_url).toString();
             original = false;
         }
-        if (uri.isEmpty()) continue;
 
         items = store.values(uid);
 

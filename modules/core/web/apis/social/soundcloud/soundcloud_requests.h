@@ -81,6 +81,7 @@ namespace Core {
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
+                    takeOfflineCredentials();
                 }
 
             public:
@@ -102,7 +103,7 @@ namespace Core {
                             return QUrlQuery(tkn_client_id % val_id_tkn);
                         case qst_site_def:
                         case qst_site_alt1:
-                            return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("app_version=") % siteHash());
+                            return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("&app_version=") % siteHash());
                         default: return QUrlQuery();
                     }
                 }
