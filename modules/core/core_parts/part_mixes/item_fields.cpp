@@ -122,17 +122,9 @@ QUrl ItemFields::toUrl() const {
         QUrl url = QUrl(path().toString());
         switch(dataType()) {
             case dt_site_sc: {
-                QString query = url.query();
-                QString def_query = Web::Soundcloud::Queries::obj().genDefaultParams().toString();
-
-                if (query.isEmpty())
-                    query = def_query;
-                else
-                    query = query % '&' % def_query;
-
-                url.setQuery(query);
-                break;
-            }
+                if (url.query().isEmpty())
+                    url.setQuery(Web::Soundcloud::Queries::obj().genDefaultParams());
+            break;}
             default: ;
         }
         return url;
