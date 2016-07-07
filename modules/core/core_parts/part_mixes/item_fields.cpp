@@ -122,7 +122,7 @@ QUrl ItemFields::toUrl() const {
         QUrl url = QUrl(path().toString());
         switch(dataType()) {
             case dt_site_sc: {
-                if (url.query().isEmpty())
+                if (url.query().isEmpty()) // links with hashed policy should not be attachable for additional fields - this action broke policy
                     url.setQuery(Web::Soundcloud::Queries::obj().genDefaultParams());
             break;}
             default: ;

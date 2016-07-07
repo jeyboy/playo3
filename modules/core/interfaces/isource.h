@@ -52,6 +52,7 @@ namespace Core {
         void openTab();
         void openRecomendations();
         void openRelationTab();
+        void openPackageTab();
     protected:
         virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> getFollowed(QUrl(refresh_page)); }
         virtual QString refreshProc(Web::Response * response, const DataMediaType & /*itemMediaType*/) { delete response; return QString(); }

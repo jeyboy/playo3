@@ -5,27 +5,40 @@ using namespace Core;
 Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
     SourceFlags api_flag, site_flag, site_prefer;
 
+//    pr_search_media         = 1,
+//    pr_search_objects       = 2, // user or group
+
+//    pr_media_content        = 4,
+//    pr_object_content       = 8, // user or group
+
+
     switch(req_perm) {
-        case pr_search: {
-            api_flag = sf_api_search_auth_only;
-            site_flag = sf_site_search_auth_only;
-            site_prefer = sf_prefer_site_search;
+        case pr_search_media: {
+            api_flag = sf_api_search_media_auth_only;
+            site_flag = sf_site_search_media_auth_only;
+            site_prefer = sf_prefer_site_search_media;
         break;}
         case pr_media_content: {
             api_flag = sf_api_media_content_auth_only;
             site_flag = sf_site_media_content_auth_only;
             site_prefer = sf_prefer_site_media_content;
         break;}
-        case pr_user_content: {
-            api_flag = sf_api_user_content_auth_only;
-            site_flag = sf_site_user_content_auth_only;
-            site_prefer = sf_prefer_site_user_content;
+
+        case pr_search_objects: {
+            api_flag = sf_api_search_objects_auth_only;
+            site_flag = sf_site_search_objects_auth_only;
+            site_prefer = sf_prefer_site_search_objects;
         break;}
-        case pr_feed: {
-            api_flag = sf_api_feeds_auth_only;
-            site_flag = sf_site_feeds_auth_only;
-            site_prefer = sf_prefer_site_feeds;
+        case pr_object_content: {
+            api_flag = sf_api_object_content_auth_only;
+            site_flag = sf_site_object_content_auth_only;
+            site_prefer = sf_prefer_site_object_content;
         break;}
+//        case pr_feed: {
+//            api_flag = sf_api_feeds_auth_only;
+//            site_flag = sf_site_feeds_auth_only;
+//            site_prefer = sf_prefer_site_feeds;
+//        break;}
         case pr_recommendations: {
             api_flag = sf_api_recomendations_auth_only;
             site_flag = sf_site_recomendations_auth_only;

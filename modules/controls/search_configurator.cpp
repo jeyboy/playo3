@@ -259,7 +259,7 @@ void SearchConfigurator::initiateSources() {
     sitesList -> addItem(item);
 
     for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
-        if (it.value() -> permissions(pr_search)) {
+        if (it.value() -> permissions(pr_search_media)) {
             QListWidgetItem * item = new QListWidgetItem(it.value() -> name());
             item -> setFlags(item -> flags() | Qt::ItemIsUserCheckable);
             item -> setCheckState(Qt::Unchecked);
@@ -307,7 +307,7 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
     if (blocks & block_sites) {
         QList<Core::ISource *> sources = Core::Web::Apis::sourcesList().values();
         for(QList<Core::ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
-            if ((*it) -> permissions(pr_search))
+            if ((*it) -> permissions(pr_search_media))
                 res.sites.append((*it) -> siteType());
     }
 

@@ -30,7 +30,7 @@ namespace Core {
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    Permissions res = permissions(pr_search);
+                    Permissions res = permissions(pr_search_media);
                     if (!res) return QJsonArray();
 
                     return res == perm_api ? searchProcApi(limits) : searchProcSite(limits);
@@ -38,7 +38,7 @@ namespace Core {
 
                 inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::userInfo, uid, func); }
                 QJsonArray userInfo(QString & uid) {
-                    Permissions res = permissions(pr_user_content);
+                    Permissions res = permissions(pr_object_content);
                     if (!res) return QJsonArray();
 
                     return loadSet({{tkn_grab_refresh, uid}}).toArray();
@@ -77,8 +77,8 @@ namespace Core {
                         sf_content_audio_has | sf_content_video_has |
                         sf_items_serachable |
                         sf_populable | sf_shareable |
-                        sf_api_user_content_auth_only | sf_api_search_auth_only |
-                        sf_site_user_content_auth_only
+                        sf_api_object_content_auth_only | sf_api_search_media_auth_only |
+                        sf_site_object_content_auth_only
                     );
                 }
                 inline Headers siteHeaders() {

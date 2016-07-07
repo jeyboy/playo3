@@ -11,12 +11,13 @@ namespace Core {
     enum PermitRequest {
         pr_none                 = 0,
 
-        pr_search               = 1,
+        pr_search_media         = 1,
+        pr_search_objects       = 2, // user or group
 
-        pr_media_content        = 2,
-        pr_user_content         = 4,
-        pr_feed                 = 8,
-    //        pr_chart                = 16,
+        pr_media_content        = 4,
+        pr_object_content       = 8, // user or group
+//        pr_feed                 = 8,
+        pr_pack                 = 16, // charts // tops // etc ...
         pr_recommendations      = 32
     };
 }

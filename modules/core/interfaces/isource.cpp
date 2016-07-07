@@ -8,7 +8,15 @@
 using namespace Core;
 
 QToolButton * ISource::initButton(QWidget * parent) {
-    if (!isConnectable()) return button;
+    bool is_sociable = isSociable();
+    bool is_packable = hasPacks();
+
+    bool offline_sociable = is_sociable && hasOfflineSociable();
+    bool offline_packable = is_packable && hasOfflinePacks();
+
+    bool offline_respondable = offline_sociable || offline_packable;
+
+    if (!isConnectable() && !offline_respondable) return button;
 
     if (button == 0) {
         if (!parent) {
@@ -21,21 +29,31 @@ QToolButton * ISource::initButton(QWidget * parent) {
         disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
     }
 
-    if (isConnected()) {
-        button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
-        button -> setToolTip(name());
-        button -> setPopupMode(QToolButton::InstantPopup);
+    bool is_connected = isConnected();
 
+    if (is_connected || offline_respondable) {
         QMenu * menu = new QMenu(button);
-        menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
-        menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
-        if (isSociable())
+        if (is_connected) {
+            button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
+
+            menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+            menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+
+            if (hasUserRecomendations())
+                menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
+        }
+        else
+            menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
+
+        if (is_sociable)
             menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
 
-        if (hasUserRecomendations())
-            menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
+        if (is_packable)
+            menu -> addAction(QStringLiteral("Open package tab"), this, SLOT(openPackageTab()));
 
+        button -> setToolTip(name());
+        button -> setPopupMode(QToolButton::InstantPopup);
         button -> setMenu(menu);
     } else {
         button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
@@ -74,4 +92,8 @@ void ISource::openRelationTab() {
             uidStr(dialog.getId())),
             Models::Params(siteType(), dialog.getId()), 0, true, true
         );
+}
+
+void ISource::openPackageTab() {
+
 }
