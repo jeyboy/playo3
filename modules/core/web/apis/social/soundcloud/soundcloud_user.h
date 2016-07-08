@@ -55,7 +55,7 @@ namespace Core {
                                     }
                                 ),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS, call_method_get, headers()
+                                COLLECTION_FIELDS, call_method_get, headers()
                             );
                         }
 

@@ -170,9 +170,9 @@ namespace Core { // requests and response has memory leaks
 
             inline QPixmap pixmapGet(const QUrl & url) { return getFollowed(url) -> toPixmap(); }
             inline Response * pixmapGetAsync(const QUrl & url, const Func & response) {
-                Response * resp = requestTo(url).viaGet(true)-> followByRedirect();
-                asyncRequests.insert(resp -> url(), response);
+                Response * resp = requestTo(url).viaGet(true) -> followByRedirect();
                 connect(resp, SIGNAL(finished()), this, SLOT(pixmapRequestFinished()));
+                asyncRequests.insert(resp -> url(), response);
                 return resp;
             }
 
@@ -180,8 +180,8 @@ namespace Core { // requests and response has memory leaks
             inline Response * getFollowed(const QUrl & url, const Headers & headers) { return requestTo(url).withHeaders(headers).viaGet() -> followByRedirect(); }
             inline Response * getFollowedAsync(const QUrl & url, const Func & response) {
                 Response * resp = requestTo(url).viaGet(true);
-                asyncRequests.insert(resp -> url(), response);
                 connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
+                asyncRequests.insert(resp -> url(), response);
                 return resp;
             }
 
@@ -236,6 +236,7 @@ namespace Core { // requests and response has memory leaks
             Q_OBJECT
         protected slots:
             inline void disconnectThread() {
+                qDebug() << "!!!!!!!!!!!!!!!!!!!! UNREGISTRATE MANAGER";
                 Manager * tmanager = Manager::managers.take(sender());
                 if (tmanager) tmanager -> deleteLater();
                 deleteLater();

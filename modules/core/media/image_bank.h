@@ -10,28 +10,56 @@
 
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/core/interfaces/singleton.h"
+#include "modules/core/misc/thread_utils.h"
 
-#define FEED_BANK_IMG_MAX_SIZE QSize(640, 480)
+#define BANK_IMG_MAX_SIZE QSize(640, 480)
+#define BANK_IMG_SLOTS_AMOUNT 8
 
 using namespace Core::Web;
 
 class ImageBank : public QObject, public Core::Singleton<ImageBank> {
     Q_OBJECT
 
-    QHash<QString, bool> orders;
+    QFutureWatcher<void> * initiator;
+
+    int in_proc;
+    QList<QString> orders;
+
+    QHash<QString, QLabel *> requests;
     QHash<QString, QModelIndex> packet_requests;
     QHash<QModelIndex, int> packet_limiters;
 
-    QHash<QString, QLabel *> requests;
     QHash<QString, QString> locale_pathes;
 
-    ImageBank() {
+    ImageBank() : initiator(0), in_proc(0) {
         QDir dir(bankPath());
         if (!dir.exists())
             dir.mkpath(".");
     }
 
+    ~ImageBank() { QDir().rmdir(bankPath()); }
+
     friend class Core::Singleton<ImageBank>;
+
+    Core::Web::Response * procImageCall(const QUrl & url) { return Core::Web::Manager::prepare() -> getFollowed(url); }
+
+    void procOrder() {
+        if (initiator) {
+            if (initiator -> isRunning()) return;
+        } else initiator = new QFutureWatcher<void>();
+
+        while(!orders.isEmpty()) {
+            if (in_proc < BANK_IMG_SLOTS_AMOUNT) {
+                Core::ThreadUtils::obj().run(
+                    this, &ImageBank::procImageCall,
+                    QUrl(orders.takeLast()),
+                    new Func(this, SLOT(pixmapDownloaded(Response*)))
+                );
+
+                in_proc++;
+            } else break;
+        }
+    }
 public:
     QString bankPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/"); }
 
@@ -66,12 +94,10 @@ public:
 
         if (!requests.contains(url)) {
             requests.insert(url, obj);
-
-            if (!orders.contains(url)) {
-                orders.insert(url, true);
-                Core::Web::Manager::prepare() -> getFollowedAsync(QUrl(url), Func(this, SLOT(pixmapDownloaded(Response*,void*))));
-            }
+            orders.append(url);
         }
+
+        procOrder();
     }
 
     void proceedPacket(const QModelIndex & ind, const QStringList & urls) { // TODO: need to use order with slide window
@@ -89,21 +115,23 @@ public:
 
             if (!locale_pathes.contains(*url)) {
                 ready = false;
-                packet_limiters[ind]++;
-                packet_requests.insertMulti(*url, ind);
 
-                if (!orders.contains(*url)) {
-                    orders.insert(*url, true);
-                    Core::Web::Manager::prepare() -> getFollowedAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
+                if (!packet_requests.contains(*url)) {
+                    packet_limiters[ind]++;
+                    packet_requests.insertMulti(*url, ind);
+                    orders.append(*url);
+//                    Core::Web::Manager::prepare() -> getFollowedAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
                 }
             }
         }
 
         if (ready)
             emit const_cast<QAbstractItemModel *>(ind.model()) -> dataChanged(ind, ind);
+        else
+            procOrder();
     }
 public slots:
-    void pixmapDownloaded(Response * response, void * /*user_data*/) {
+    void pixmapDownloaded(Response * response) {
         QUrl url = response -> url();
         QString url_str = url.toString();
         QString filename = bankPath() % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
@@ -113,17 +141,20 @@ public slots:
 
         if (!(has_errors || pix.isNull())) {
             QSize pix_size = pix.size();
-            QSize max_size = FEED_BANK_IMG_MAX_SIZE;
+            QSize max_size = BANK_IMG_MAX_SIZE;
 
             if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
-                pix = pix.scaled(FEED_BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                pix = pix.scaled(BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
             if (pix.save(filename, 0, 100)) // without compression
                 locale_pathes.insert(url_str, filename);
             else
                 qDebug() << "File is not saved" << filename;
         }
-        else qDebug() << "Pixmap is wrong";
+        else {
+            qDebug() << "Pixmap is wrong";
+            locale_pathes.insert(url_str, QString()); // blocking retry of requests
+        }
 
         QLabel * obj = requests.take(url_str);
         if (obj)
@@ -140,7 +171,8 @@ public slots:
             }
         }
 
-        orders.remove(url_str);
+        in_proc--;
+        procOrder();
     }
 };
 
