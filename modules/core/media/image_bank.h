@@ -20,7 +20,7 @@ using namespace Core::Web;
 class ImageBank : public QObject, public Core::Singleton<ImageBank> {
     Q_OBJECT
 
-    QFutureWatcher<void> * initiator;
+    QString bank_temp_dir;
 
     int in_proc;
     QList<QString> orders;
@@ -31,23 +31,19 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 
     QHash<QString, QString> locale_pathes;
 
-    ImageBank() : initiator(0), in_proc(0) {
-        QDir dir(bankPath());
+    ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/")), in_proc(0) {
+        QDir dir(bank_temp_dir);
         if (!dir.exists())
             dir.mkpath(".");
     }
 
-    ~ImageBank() { QDir().rmdir(bankPath()); }
+    ~ImageBank() { clear(); }
 
     friend class Core::Singleton<ImageBank>;
 
     Core::Web::Response * procImageCall(const QUrl & url) { return Core::Web::Manager::prepare() -> getFollowed(url); }
 
     void procOrder() {
-        if (initiator) {
-            if (initiator -> isRunning()) return;
-        } else initiator = new QFutureWatcher<void>();
-
         while(!orders.isEmpty()) {
             if (in_proc < BANK_IMG_SLOTS_AMOUNT) {
                 Core::ThreadUtils::obj().run(
@@ -61,7 +57,10 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
         }
     }
 public:
-    QString bankPath() { return QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/"); }
+    void clear() {
+        QDir dir(bank_temp_dir);
+        qDebug() << "REM BANK" << dir.removeRecursively();
+    }
 
     bool hasImage(const QString & url) {
         return locale_pathes.contains(url);
@@ -134,7 +133,7 @@ public slots:
     void pixmapDownloaded(Response * response) {
         QUrl url = response -> url();
         QString url_str = url.toString();
-        QString filename = bankPath() % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
+        QString filename = bank_temp_dir % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
 
         bool has_errors = response -> hasErrors();
         QPixmap pix = response -> toPixmap();
