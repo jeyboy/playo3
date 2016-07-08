@@ -10,6 +10,8 @@ namespace Core {
     namespace Web {
         class Sociable : public Friendable, public Groupable {
         public:
+            virtual ~Sociable() {}
+
             void setSearchLimitations(const bool & friend_by_id, const bool & friend_by_name,
                                       const bool & group_by_id, const bool & group_by_name)
             {

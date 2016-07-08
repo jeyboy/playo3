@@ -14,7 +14,7 @@ public:
     bool isRunning();
     bool sendMessage(const QString & message);
 
-    bool notify(QObject * receiver, QEvent * even);
+//    bool notify(QObject * receiver, QEvent * even);
 
 public slots:
     void checkForMessage();

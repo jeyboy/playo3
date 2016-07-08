@@ -11,6 +11,8 @@
 namespace Core {
     class ISourceFeeds {
     public:
+        virtual ~ISourceFeeds() {}
+
         virtual quint64 getFeeds(const QVariantMap & /*attrs*/, const quint64 & /*timemark*/, QMap<quint64, FeedItem *> & /*feeds*/) { return QDateTime::currentMSecsSinceEpoch(); }
         virtual QVariant getFeeds(const QVariantMap & /*attrs*/, const QVariant & /*limiter*/, QMap<quint64, FeedItem *> & /*feeds*/) { return QVariant(); }
     };

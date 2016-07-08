@@ -11,6 +11,7 @@ namespace Core {
             bool search_by_friend_id, search_by_friend_name;
         public:
             Friendable() : search_by_friend_id(false), search_by_friend_name(false) {}
+            virtual ~Friendable() {}
 
             void setFriendSearchLimitations(const bool & by_id, const bool & by_name) {
                 search_by_friend_id = by_id;
@@ -25,7 +26,7 @@ namespace Core {
 
             inline void addFriend(const Linkable & obj) { addLinkable(obj); }
 
-            inline QHash<QString, Linkable> friendsList() const { return linkablesList(); }
+            inline QList<Linkable> friendsList() const { return linkablesList(); }
             inline void clearFriends() { clearLinkables(); }
         };
     }

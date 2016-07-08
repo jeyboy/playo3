@@ -3,6 +3,7 @@
 
 #include <qstring.h>
 #include <qtoolbutton.h>
+#include <qmenu.h>
 
 #include "isource_perm_flags.h"
 #include "modules/core/web/utils/web_manager.h"
@@ -158,11 +159,13 @@ namespace Core {
         virtual void clearAdditionals() {}
 
         QToolButton * button;
+        QMenu * menu;
 
         QVariantHash attrs;
         QString error;
     public:
-        ISourceAuthPerm() : button(0) {}
+        ISourceAuthPerm() : button(0), menu(0) {}
+        virtual ~ISourceAuthPerm() {}
 
         virtual inline SourceFlags defaultFlags() { return sf_none; }
 

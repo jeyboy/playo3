@@ -23,14 +23,14 @@ void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkable
 RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     : BaseDialog(parent), ui(new Ui::RelationsDialog) {
 
-    api = (Web::Sociable *)currApi;
+    api = dynamic_cast<Web::Sociable *>(currApi);
 
     ui -> setupUi(this);
 
-    QHash<QString, Linkable> friends = api -> friendsList();
-    prepareLinkablesList(friends.values(), ui -> friendsList);
+    QList<Linkable> friends = api -> friendsList();
+    prepareLinkablesList(friends, ui -> friendsList);
     ui -> friendsList -> sortItems();
-    prepareLinkablesList(api -> groupsList().values(), ui -> groupsList);
+    prepareLinkablesList(api -> groupsList(), ui -> groupsList);
     ui -> groupsList -> sortItems();
 
     bool by_friend_id = api -> hasSearchByFriendId();

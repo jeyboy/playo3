@@ -13,6 +13,8 @@ namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable {
         Q_OBJECT
     public:
+        virtual ~ISource() {}
+
         virtual QString name() const = 0;
         virtual DataSubType siteType() const = 0;
 

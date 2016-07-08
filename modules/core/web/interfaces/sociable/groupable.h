@@ -11,6 +11,7 @@ namespace Core {
             bool search_by_group_id, search_by_group_name;
         public:
             Groupable() : search_by_group_id(false), search_by_group_name(false) {}
+            virtual ~Groupable() {}
 
             void setGroupSearchLimitations(const bool & by_id, const bool & by_name) {
                 search_by_group_id = by_id;
@@ -24,7 +25,7 @@ namespace Core {
 
             inline void addGroup(const Linkable & obj) { addLinkable(obj); }
 
-            inline QHash<QString, Linkable> groupsList() const { return linkablesList(); }
+            inline QList<Linkable> groupsList() const { return linkablesList(); }
             inline void clearGroups() { clearLinkables(); }
         };
     }
