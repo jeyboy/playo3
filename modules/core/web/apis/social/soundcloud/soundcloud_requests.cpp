@@ -3,6 +3,8 @@
 using namespace Core::Web::Soundcloud;
 
 void Requests::jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
+    if (arr.size() == 1 && arr[0].toObject().contains(QStringLiteral("errors"))) return;
+
     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
         QJsonObject obj = (*obj_iter).toObject();
 
@@ -19,6 +21,8 @@ void Requests::jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) 
 }
 
 void Requests::jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
+    if (arr.size() == 1 && arr[0].toObject().contains(QStringLiteral("errors"))) return;
+
     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
         QJsonObject obj = (*obj_iter).toObject();
 

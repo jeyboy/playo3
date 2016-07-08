@@ -4,6 +4,11 @@
 
 QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
 
+bool Info::isNumber(const QString & str) {
+    QRegularExpression r("\\D+");
+    return !r.match(str).hasMatch();
+}
+
 bool Info::extractNumber(const QString & info, QString & res, int index) {
     QStringList digits = info.split(QRegularExpression("\\D+"), QString::SkipEmptyParts);
 

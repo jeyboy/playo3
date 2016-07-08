@@ -247,7 +247,7 @@ namespace Core {
                             return pRequest(
                                 baseUrlStr(qst_site_def, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
-                                proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
+                                proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
                         }
 

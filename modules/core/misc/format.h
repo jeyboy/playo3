@@ -7,6 +7,7 @@
 class Info {
     static QString unitList[];
 public:
+    static bool isNumber(const QString & str);
     static bool extractNumber(const QString & info, QString & res, int index = 0);
     static QString extractLimitedBy(const QString & info, const QString & before_predicate, const QString & after_predicate);
     static bool extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res);

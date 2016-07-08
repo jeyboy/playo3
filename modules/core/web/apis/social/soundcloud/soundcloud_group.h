@@ -2,6 +2,7 @@
 #define SOUNDCLOUD_IGROUP
 
 #include "soundcloud_defines.h"
+#include "modules/core/misc/format.h"
 
 namespace Core {
     namespace Web {
@@ -35,17 +36,20 @@ namespace Core {
                 QJsonValue groupsById(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
 
+                    if (!Info::isNumber(group_id))
+                        return groupsByName(group_id);
+
                     switch(perm) {
                         case perm_api: {
                             return pRequest(
-                                baseUrlStr(qst_api_def, path_groups % group_id, {}),
+                                baseUrlStr(qst_api_def, path_groups % '/' % group_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             return pRequest(
-                                baseUrlStr(qst_site_def, path_groups % group_id, {}),
+                                baseUrlStr(qst_site_def, path_groups % '/' % group_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -125,7 +129,7 @@ namespace Core {
                                     }
                                 ),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS, call_method_get, headers()
+                                COLLECTION_FIELDS, call_method_get, headers()
                             );
                         }
 
