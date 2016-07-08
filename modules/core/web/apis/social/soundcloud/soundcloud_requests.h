@@ -22,7 +22,7 @@ namespace Core {
 
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_auth_api_has | sf_auth_site_has | sf_site_offline_credentials_req |
+                        sf_auth_api_has | /*sf_auth_site_has |*/ sf_site_offline_credentials_req |
                         sf_content_audio_has |
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable |
                         sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |

@@ -27,8 +27,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
 
     ui -> setupUi(this);
 
-    QList<Linkable> friends = api -> friendsList();
-    prepareLinkablesList(friends, ui -> friendsList);
+    prepareLinkablesList(api -> friendsList(), ui -> friendsList);
     ui -> friendsList -> sortItems();
     prepareLinkablesList(api -> groupsList(), ui -> groupsList);
     ui -> groupsList -> sortItems();

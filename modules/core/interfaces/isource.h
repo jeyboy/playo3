@@ -8,6 +8,7 @@
 #include "modules/core/misc/thread_utils.h"
 
 #define UID_HEAD QStringLiteral("@")
+#define ISOURCE_ATTRS_KEY QStringLiteral("attrs")
 
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable {
@@ -24,7 +25,7 @@ namespace Core {
 
         void toJson(QJsonObject & hash) {
             QJsonObject root;
-            root.insert(QStringLiteral("attrs"), QJsonObject::fromVariantHash(attrs));
+            root.insert(ISOURCE_ATTRS_KEY, QJsonObject::fromVariantHash(attrs));
             saveAdditionals(root);
 
             hash.insert(name(), root);
@@ -32,7 +33,7 @@ namespace Core {
         void fromJson(const QJsonObject & hash) {
             QJsonObject root = hash.value(name()).toObject();
 
-            attrs = root.value(QStringLiteral("attrs")).toObject().toVariantHash();
+            attrs = root.value(ISOURCE_ATTRS_KEY).toObject().toVariantHash();
             loadAdditionals(root);
         }
 

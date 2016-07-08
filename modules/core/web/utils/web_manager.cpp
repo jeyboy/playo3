@@ -28,7 +28,7 @@ namespace Core {
             return QString(ar);
         }
         QJsonObject Response::toJson(const QString & wrap, bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error() << url();
             QByteArray ar = readAll();
             if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
             if (destroy) deleteLater();
@@ -43,21 +43,21 @@ namespace Core {
         }
 
         QUrl Response::toUrl(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error() << url();
             QUrl uri = url();
             if (destroy) deleteLater();
             return uri;
         }
 
         Html::Document Response::toHtml(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error() << url();
             Html::Document doc(this);
             if (destroy) deleteLater();
             return doc;
         }
 
         QUrl Response::toRedirectUrl(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error();
+            if (error()) qDebug() << "IOERROR" << error() << url();
             QUrl uri = redirectUrl();
             if (destroy) deleteLater();
             return uri;
