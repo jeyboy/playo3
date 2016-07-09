@@ -9,6 +9,7 @@
 #include "queriable_arg.h"
 
 #define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
+#define QUERY_RETRY_AMOUNT 3
 
 namespace Core {
     namespace Web {
@@ -24,10 +25,17 @@ namespace Core {
                     case call_type_json: {
 
                         QJsonObject json;
+                        Manager * manager = Manager::prepare();
+                        int retries = 0;
 
-                        switch(arg -> call_method) {
-                            case call_method_post: { json = Manager::prepare() -> jsonPost(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap); break; }
-                            default: json = Manager::prepare() -> jsonGet(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap);
+                        while (++retries <= QUERY_RETRY_AMOUNT) {
+                            switch(arg -> call_method) {
+                                case call_method_post: { json = manager -> jsonPost(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap); break; }
+                                default: json = manager -> jsonGet(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap);
+                            }
+
+                            if (manager -> statusCode() < 300) break;
+                            else qDebug() << "RETRY" << retries;
                         }
 
                         status = extractStatus(arg, json, code, message);

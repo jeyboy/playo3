@@ -33,7 +33,7 @@ namespace Core { // requests and response has memory leaks
 
         class Response : public QNetworkReply {
         public:
-            static inline Response * fromReply(QNetworkReply * reply) { return (Response *)reply; }
+            static Response * fromReply(QNetworkReply * reply);
 
             inline bool hasErrors() { return error() != NoError; }
             inline int status() { return attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
@@ -92,6 +92,7 @@ namespace Core { // requests and response has memory leaks
 
             QSsl::SslProtocol protocol;
             QSslSocket::PeerVerifyMode mode;
+            int last_code;
 
             static Cookies * cookies;
             static QHash<QObject *, Manager *> managers;
@@ -100,6 +101,9 @@ namespace Core { // requests and response has memory leaks
             static Manager * prepare();
 
             Manager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
+
+            void setStatusCode(int code) { last_code = code; }
+            int statusCode() { return last_code; }
 
             static inline void addCookie(const QString & cookie_str) {
                 QList<QNetworkCookie> items = QNetworkCookie::parseCookies(cookie_str.toUtf8());

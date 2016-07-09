@@ -44,12 +44,9 @@ namespace Core {
                         QThread::msleep(REQUEST_DELAY);
                         jsonToUsers(Friendable::linkables, userFollowings(user_id).toArray());
                         jsonToUsers(Friendable::linkables, userFollowers(user_id).toArray());
-    //                    object.insert(block_followings, userFollowings(user_id)); // return bad request error
-    //                    object.insert(block_followers, userFollowers(user_id));
                         clearGroups();
                         QThread::msleep(REQUEST_DELAY);
                         jsonToGroups(Groupable::linkables, groupsByUser(user_id).toArray());
-    //                    object.insert(block_groups, groupsByUser(user_id));
                     }
                 }
 

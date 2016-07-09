@@ -22,43 +22,11 @@ void VkModel::refresh() {
     }
 }
 
-//void VkModel::proceedWallList(QJsonArray & posts) {
-//    if (posts.count() > 0) {
-//        QJsonArray audios;
-//        QJsonObject post;
-//        QString title;
-//        Playlist * folder, * rootFolder = rootItem -> createPlaylist(dt_playlist, QStringLiteral("!!!WALL!!!"));
-//        int index = rootItem -> childRow(rootFolder);
-
-//        beginInsertRows(QModelIndex(), index, index);
-
-//        QJsonArray::Iterator it = posts.begin();
-
-//        for(; it != posts.end(); it++) {
-//            post = (*it).toObject();
-//            audios = post.value(Vk::tkn_audios).toArray();
-
-//            title = post.value(Vk::tkn_title).toString();
-//            title = QDateTime::fromTime_t(post.value(Vk::tkn_date).toInt()).toString() % (title.isEmpty() ? QString() : Vk::tkn_time_sep) % title;
-
-//            folder = rootFolder -> createPlaylist(dt_playlist, title);
-//            proceedVkList(audios, folder);
-////            if (folder -> childCount() == 0)
-////                removeFolderPrebuild(folder);
-//        }
-//        endInsertRows();
-//    }
-
-////    emit expandNeeded(index(rootFolder));
-//    emit moveOutProcess();
-//}
-
 void VkModel::proceedJson(QJsonObject & hash) {
     QJsonArray albums = hash.value(Vk::tkn_albums).toArray();
     QJsonArray audios = hash.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
     int itemsAmount = 0, albums_count = albums.size();
 
-//    beginResetModel();
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
     {
         if (albums_count > 0) {
@@ -92,7 +60,6 @@ void VkModel::proceedJson(QJsonObject & hash) {
     }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
-//    endResetModel();
     /////////////////////////////////////////////////////////////////////
     {
         QJsonObject group;

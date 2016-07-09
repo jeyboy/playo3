@@ -2,6 +2,12 @@
 
 namespace Core {
     namespace Web {
+        Response * Response::fromReply(QNetworkReply * reply) {
+            Response * resp = (Response *)reply;
+            ((Manager *)reply -> manager()) -> setStatusCode(resp -> status());
+            return resp;
+        }
+
         Response * Response::followByRedirect(QHash<QUrl, bool> prev_urls) {
             QUrl new_url = redirectUrl();
             if (!new_url.isEmpty()) {

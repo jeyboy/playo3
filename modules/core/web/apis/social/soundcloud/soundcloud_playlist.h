@@ -43,8 +43,8 @@ namespace Core {
                         case perm_site: {
                             return pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
-                                call_type_json, rules(offset, count), 0, proc_json_patch,
-                                COLLECTION_FIELDS, call_method_get, headers()
+                                call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
+                                0, proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
                         }
 
@@ -93,14 +93,14 @@ namespace Core {
                         case perm_api: {
                             return pRequest(
                                 baseUrlStr(qst_api_def, path_user_playlists.arg(user_id), {}),
-                                call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, 25), 0, proc_json_patch
+                                call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             return pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
-                                call_type_json, rules(offset, count), 0, proc_json_patch,
+                                call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );
                         }
