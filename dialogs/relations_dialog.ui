@@ -13,92 +13,92 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="cancelButton">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>340</y>
-     <width>391</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Cancel</string>
-   </property>
-  </widget>
-  <widget class="QTabWidget" name="tabWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>0</y>
-     <width>391</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <widget class="QWidget" name="tab">
-    <attribute name="title">
-     <string>Friends</string>
-    </attribute>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLineEdit" name="friendId"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="friendById">
-       <property name="text">
-        <string>Find by id or permalink</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="friendName"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="friendByName">
-       <property name="text">
-        <string>Find by name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="QListWidget" name="friendsList"/>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="tab_2">
-    <attribute name="title">
-     <string>Groups</string>
-    </attribute>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLineEdit" name="groupId"/>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="groupById">
-       <property name="text">
-        <string>Find by id or permalink</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="groupName"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="groupByName">
-       <property name="text">
-        <string>Find by name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="QListWidget" name="groupsList"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="errorStr">
+     <property name="styleSheet">
+      <string notr="true">color:red;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Friends</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="friendId"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="friendById">
+         <property name="text">
+          <string>Find by id or permalink</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="friendName"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="friendByName">
+         <property name="text">
+          <string>Find by name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QListWidget" name="friendsList"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Groups</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="groupId"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="groupById">
+         <property name="text">
+          <string>Find by id or permalink</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="groupName"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="groupByName">
+         <property name="text">
+          <string>Find by name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QListWidget" name="groupsList"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="cancelButton">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

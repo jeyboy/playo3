@@ -23,9 +23,13 @@ void RelationsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkable
 RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     : BaseDialog(parent), ui(new Ui::RelationsDialog) {
 
+    connect(qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(onFocusChanged(QWidget*,QWidget*)));
+
     api = dynamic_cast<Web::Sociable *>(currApi);
 
     ui -> setupUi(this);
+    ui -> errorStr -> setVisible(false);
+    default_btn = ui -> cancelButton;
 
     prepareLinkablesList(api -> friendsList(), ui -> friendsList);
     ui -> friendsList -> sortItems();
@@ -53,9 +57,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     ui -> groupByName -> setVisible(by_group_name);
 }
 
-RelationsDialog::~RelationsDialog() {
-    delete ui;
-}
+RelationsDialog::~RelationsDialog() { delete ui; }
 
 void RelationsDialog::on_cancelButton_clicked() { reject(); }
 
@@ -74,31 +76,68 @@ void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
 }
 
 void RelationsDialog::on_friendById_clicked() {
+    ui -> errorStr -> setVisible(false);
     ui -> friendsList -> clear();
     QList<Linkable> friends = api -> findFriendsById(ui -> friendId -> text());
-    prepareLinkablesList(friends, ui -> friendsList);
+    if (friends.isEmpty()) {
+        ui -> errorStr -> setVisible(true);
+        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+    }
+    else prepareLinkablesList(friends, ui -> friendsList);
 }
 
 void RelationsDialog::on_friendByName_clicked() {
+    ui -> errorStr -> setVisible(false);
     ui -> friendsList -> clear();
     QList<Linkable> friends = api -> findFriendsByName(ui -> friendName -> text());
-    prepareLinkablesList(friends, ui -> friendsList);
+
+    if (friends.isEmpty()) {
+        ui -> errorStr -> setVisible(true);
+        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+    }
+    else prepareLinkablesList(friends, ui -> friendsList);
 }
 
 void RelationsDialog::on_groupById_clicked() {
+    ui -> errorStr -> setVisible(false);
     ui -> groupsList -> clear();
     QList<Linkable> groups = api -> findGroupsById(ui -> groupId -> text());
-    prepareLinkablesList(groups, ui -> groupsList);
 
-//    if (uid.isEmpty()) return;
-
-//    name = QStringLiteral("Group ") % uid;
-//    uid = QStringLiteral("-") % uid;
-//    accept();
+    if (groups.isEmpty()) {
+        ui -> errorStr -> setVisible(true);
+        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+    }
+    else prepareLinkablesList(groups, ui -> groupsList);
 }
 
 void RelationsDialog::on_groupByName_clicked() {
+    ui -> errorStr -> setVisible(false);
     ui -> groupsList -> clear();
     QList<Linkable> groups = api -> findGroupsByName(ui -> groupName -> text());
-    prepareLinkablesList(groups, ui -> groupsList);
+    if (groups.isEmpty()) {
+        ui -> errorStr -> setVisible(true);
+        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+    }
+    else prepareLinkablesList(groups, ui -> groupsList);
+}
+
+void RelationsDialog::onFocusChanged(QWidget * /*old*/, QWidget * now) {
+    default_btn -> setDefault(false);
+
+    bool fid = now == ui -> friendId;
+    if (fid) default_btn = ui -> friendById;
+
+    bool fname = now == ui -> friendName;
+    if (fname) default_btn = ui -> friendByName;
+
+    bool gid = now == ui -> groupId;
+    if (gid) default_btn = ui -> groupById;
+
+    bool gname = now == ui -> groupName;
+    if (gname) default_btn = ui -> groupByName;
+
+    if (!(fid | fname | gid | gname))
+        default_btn = ui -> cancelButton;
+
+    default_btn -> setDefault(true);
 }

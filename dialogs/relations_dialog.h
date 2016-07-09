@@ -16,6 +16,7 @@ class RelationsDialog : public BaseDialog {
     Ui::RelationsDialog * ui;
     QString uid, name;
     Web::Sociable * api;
+    QPushButton * default_btn;
 
     void prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list);
 public:
@@ -33,6 +34,7 @@ private slots:
     void on_friendByName_clicked();
     void on_friendById_clicked();
     void on_groupById_clicked();
+    void onFocusChanged(QWidget * old, QWidget * now);
 };
 
 #endif // RELATIONS_DIALOG_H
