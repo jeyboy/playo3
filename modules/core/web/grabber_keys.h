@@ -3,7 +3,7 @@
 
 #include <qstringbuilder.h>
 
-#define PACKAGE_REPLACE_FRAGMENT QStringLiteral("Custom genre...")
+#define PACKAGE_REPLACE_FRAGMENT QStringLiteral("Custom filter...")
 
 namespace Core {
     namespace Web {
