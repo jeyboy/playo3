@@ -13,86 +13,40 @@ void SoundcloudModel::refresh() {
 }
 
 void SoundcloudModel::proceedJson(QJsonObject & hash) {
-    QJsonArray albums = hash.value(Soundcloud::tkn_playlist).toArray();
-    QJsonArray audios = hash.value(Soundcloud::tkn_audio_list).toArray();
-    int itemsAmount = 0, albums_count = albums.size(), audios_count = audios.size();
+    QJsonArray items = hash.value(block_items).toArray();
+    QJsonArray sets = hash.value(block_sets).toArray();
+    int total_amount = 0, sets_amount = sets.size(), items_amount = items.size();
 
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count); // refresh all indexes // maybe this its not good idea
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + sets_amount + items_amount);
     {
-        if (albums_count > 0) {
-            Playlist * folder;
-            QJsonObject album;
+        if (sets_amount > 0) {
+            for(QJsonArray::Iterator it = sets.begin(); it != sets.end(); it++) {
+                QJsonObject set = (*it).toObject();
 
-            for(QJsonArray::Iterator it = albums.begin(); it != albums.end(); it++) {
-                album = (*it).toObject();
-
-                QJsonArray albumItems = album.value(Soundcloud::tkn_tracks).toArray();
-                if (albumItems.size() > 0) {
-                    folder = rootItem -> createPlaylist(
+                QJsonArray set_items = set.value(Soundcloud::tkn_tracks).toArray();
+                if (set_items.size() > 0) {
+                    Playlist * playlist = rootItem -> createPlaylist(
                         dt_playlist_sc,
-                        album.value(Soundcloud::tkn_id).toString(),
-                        album.value(Soundcloud::tkn_title).toString()
+                        set.value(Soundcloud::tkn_id).toString(),
+                        set.value(Soundcloud::tkn_title).toString()
                     );
 
-                    int folderItemsAmount = proceedScList(albumItems, folder);
-                    folder -> updateItemsCountInBranch(folderItemsAmount);
-                    itemsAmount += folderItemsAmount;
+                    int playlistSize = proceedScList(set_items, playlist);
+                    playlist -> updateItemsCountInBranch(playlistSize);
+                    total_amount += playlistSize;
                 }
             }
         }
 
     /////////////////////////////////////////////////////////////////////
 
-        if (audios_count > 0)
-            itemsAmount += proceedScList(audios, rootItem);
+        if (items_amount > 0)
+            total_amount += proceedScList(items, rootItem);
     }
-    rootItem -> updateItemsCountInBranch(itemsAmount);
+
+    rootItem -> updateItemsCountInBranch(total_amount);
     endInsertRows();
     /////////////////////////////////////////////////////////////////////
 
-    {
-        QJsonObject group;
-        QJsonArray groups = hash.value(Soundcloud::tkn_groups).toArray();
-
-        for(QJsonArray::Iterator group_it = groups.begin(); group_it != groups.end(); group_it++) {
-            group = (*group_it).toObject();
-
-            Soundcloud::Queries::obj().addGroup(
-                Linkable(
-                    QString::number(group.value(Soundcloud::tkn_id).toInt()),
-                    group.value(Soundcloud::tkn_name).toString(),
-                    group.value(Soundcloud::tkn_permalink).toString(),
-                    group.value(Soundcloud::tkn_artwork_url).toString()
-                )
-            );
-        }
-    }
-    /////////////////////////////////////////////////////////////////////
-
-    proceedFriendsList(hash.value(Soundcloud::tkn_followings).toArray());
-    proceedFriendsList(hash.value(Soundcloud::tkn_followers).toArray());
-
     emit moveOutProcess();
-}
-
-void SoundcloudModel::proceedFriendsList(const QJsonArray & friends) {
-    QJsonObject frend;
-    QString name;
-
-    for(QJsonArray::ConstIterator friend_it = friends.constBegin(); friend_it != friends.constEnd(); friend_it++) {
-        frend = (*friend_it).toObject();
-
-        name = frend.value(Soundcloud::tkn_full_name).toString();
-        if (name.isEmpty())
-            name = frend.value(Soundcloud::tkn_username).toString();
-
-        Soundcloud::Queries::obj().addFriend(
-            Linkable(
-                QString::number(frend.value(Soundcloud::tkn_id).toInt()),
-                name,
-                frend.value(Soundcloud::tkn_permalink).toString(),
-                frend.value(Soundcloud::tkn_avatar_url).toString()
-            )
-        );
-    }
 }

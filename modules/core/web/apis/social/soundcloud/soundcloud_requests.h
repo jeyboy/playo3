@@ -108,8 +108,8 @@ namespace Core {
                     }
                 }
 
-                //                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
-                //                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
+//                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
+//                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
             };
         }
     }

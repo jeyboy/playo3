@@ -114,7 +114,7 @@ namespace Core {
                         case perm_api: {
                             return pRequest(
                                 baseUrlStr(qst_api_def, path_user_followings.arg(user_id), {}),
-                                call_type_json, rules(offset, count), 0, proc_json_patch
+                                call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
                         }
 
@@ -138,7 +138,7 @@ namespace Core {
                         case perm_api: {
                             return pRequest(
                                 baseUrlStr(qst_api_def, path_user_followers.arg(user_id), {}),
-                                call_type_json, rules(offset, count), 0, proc_json_patch
+                                call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
                         }
 

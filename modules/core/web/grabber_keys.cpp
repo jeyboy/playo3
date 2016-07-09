@@ -2,6 +2,13 @@
 
 namespace Core {
     namespace Web {
+        extern const QString block_items                = QStringLiteral("blk_items");
+        extern const QString block_likes                = QStringLiteral("blk_likes");
+        extern const QString block_sets                 = QStringLiteral("blk_sets");
+        extern const QString block_followings           = QStringLiteral("blk_followings");
+        extern const QString block_followers            = QStringLiteral("blk_followers");
+        extern const QString block_groups               = QStringLiteral("blk_groups");
+
         extern const QString tkn_grab_title             = QStringLiteral("gtitle");
         extern const QString tkn_grab_duration          = QStringLiteral("gduration");
         extern const QString tkn_grab_size              = QStringLiteral("gsize");

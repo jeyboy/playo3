@@ -58,11 +58,11 @@ namespace Core {
             extern const QString tkn_error_code;
             extern const QString tkn_offset;
             extern const QString tkn_limit;
-            extern const QString tkn_audio_list;
-            extern const QString tkn_playlist;
-            extern const QString tkn_followings;
-            extern const QString tkn_followers;
-            extern const QString tkn_groups;
+//            extern const QString tkn_audio_list;
+//            extern const QString tkn_playlist;
+//            extern const QString tkn_followings;
+//            extern const QString tkn_followers;
+//            extern const QString tkn_groups;
             extern const QString tkn_tracks;
             extern const QString tkn_id;
             extern const QString tkn_title;

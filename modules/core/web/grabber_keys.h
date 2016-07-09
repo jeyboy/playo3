@@ -5,6 +5,13 @@
 
 namespace Core {
     namespace Web {
+        extern const QString block_items;
+        extern const QString block_likes;
+        extern const QString block_sets;
+        extern const QString block_followings;
+        extern const QString block_followers;
+        extern const QString block_groups;
+
         extern const QString tkn_grab_title;
         extern const QString tkn_grab_duration;
         extern const QString tkn_grab_size;

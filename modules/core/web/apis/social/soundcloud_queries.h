@@ -32,17 +32,25 @@ namespace Core {
 
 
                 void groupInfo(const QString & group_id, QJsonObject & object) {
-                    object.insert(tkn_audio_list, tracksByGroup(group_id));
+                    object.insert(block_items, tracksByGroup(group_id));
                 }
 
                 void userInfo(const QString & user_id, QJsonObject & object) {
-                    object.insert(tkn_audio_list, tracksByUser(user_id));
-                    object.insert(tkn_playlist, playlistsByUser(user_id));
-                    QThread::msleep(REQUEST_DELAY);
-                    object.insert(tkn_followings, userFollowings(user_id)); // return bad request error
-                    object.insert(tkn_followers, userFollowers(user_id));
-                    QThread::msleep(REQUEST_DELAY);
-                    object.insert(tkn_groups, groupsByUser(user_id));
+                    object.insert(block_items, tracksByUser(user_id));
+                    object.insert(block_sets, playlistsByUser(user_id));
+
+                    if (user_id == userID()) { // ignore socials for not current user
+                        clearFriends();
+                        QThread::msleep(REQUEST_DELAY);
+                        jsonToUsers(Friendable::linkables, userFollowings(user_id).toArray());
+                        jsonToUsers(Friendable::linkables, userFollowers(user_id).toArray());
+    //                    object.insert(block_followings, userFollowings(user_id)); // return bad request error
+    //                    object.insert(block_followers, userFollowers(user_id));
+                        clearGroups();
+                        QThread::msleep(REQUEST_DELAY);
+                        jsonToGroups(Groupable::linkables, groupsByUser(user_id).toArray());
+    //                    object.insert(block_groups, groupsByUser(user_id));
+                    }
                 }
 
 
