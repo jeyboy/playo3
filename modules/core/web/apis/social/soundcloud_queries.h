@@ -37,6 +37,7 @@ namespace Core {
 
                 void userInfo(const QString & user_id, QJsonObject & object) {
                     object.insert(block_items, tracksByUser(user_id));
+                    object.insert(block_likes, tracksByUserLikes(user_id));
                     object.insert(block_sets, playlistsByUser(user_id));
 
                     if (user_id == userID()) { // ignore socials for not current user

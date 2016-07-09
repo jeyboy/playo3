@@ -14,11 +14,19 @@ void SoundcloudModel::refresh() {
 
 void SoundcloudModel::proceedJson(QJsonObject & hash) {
     QJsonArray items = hash.value(block_items).toArray();
+    QJsonArray liked_items = hash.value(block_likes).toArray();
     QJsonArray sets = hash.value(block_sets).toArray();
-    int total_amount = 0, sets_amount = sets.size(), items_amount = items.size();
+    int total_amount = 0, sets_amount = sets.size(), items_amount = items.size(), likes_amount = liked_items.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + sets_amount + items_amount);
     {
+        if (likes_amount > 0) {
+            Playlist * playlist = rootItem -> createPlaylist(dt_playlist_sc, QStringLiteral("User Likes"));
+            total_amount += proceedScList(liked_items, playlist);
+        }
+
+    /////////////////////////////////////////////////////////////////////
+
         if (sets_amount > 0) {
             for(QJsonArray::Iterator it = sets.begin(); it != sets.end(); it++) {
                 QJsonObject set = (*it).toObject();
