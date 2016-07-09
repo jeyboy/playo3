@@ -8,7 +8,7 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Group : public Base {
-            protected:
+            public:
                 QJsonObject groupInfo(const QString & group_id) {
                     Permissions perm = permissions(pr_media_content);
 

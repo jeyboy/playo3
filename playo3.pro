@@ -303,7 +303,8 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.h \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.h \
     modules/core/web/apis/social/soundcloud_queries.h \
-    dialogs/packages_dialog.h
+    dialogs/packages_dialog.h \
+    modules/core/web/apis/social/vk/vk_auth.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -136,17 +136,12 @@ namespace Core {
 
                     return res;
                 }
-                inline QJsonObject procCustom(const QString & custom_params) {
+                inline QJsonValue procCustom(const QString & custom_params) {
                     QStringList params = custom_params.split('|', QString::SkipEmptyParts);
                     SetType set_type = (SetType)params.first().toInt();
                     QString genre = params.last();
 
-                    QJsonArray set = setByType(set_type, genre).toArray();
-
-                    QJsonObject obj;
-                    obj.insert(block_items, set);
-
-                    return obj;
+                    return setByType(set_type, genre).toArray();
                 }
             };
         }

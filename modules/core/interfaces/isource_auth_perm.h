@@ -174,6 +174,7 @@ namespace Core {
             return perm == perm_site ? siteUserID() : apiUserID();
         }
 
+        bool respondableTo(const PermitRequest & req_perm = pr_search_media) { return permissions(req_perm) > 0; }
         Permissions permissions(const PermitRequest & req_perm = pr_search_media);
 
         inline bool isPrimary()             { return HAS_FLAG(defaultFlags(), sf_primary_source); }

@@ -270,31 +270,37 @@ void IView::copyIdsToClipboard() {
 
 // need to use tab type or item type for api identification
 void IView::openRecomendationsforUser() {
-    if (Web::Vk::Api::obj().isConnected()) {
+    ISource * src = Web::Apis::source(mdl -> playlistType());
+
+    if (src -> respondableTo(pr_recommendations)) {
         QString user_uid = settings().uid;
-        Params bar_settings(dt_site_vk, false, false, false, true, user_uid, rec_user);
+        Params bar_settings(mdl -> playlistType(), false, false, false, true, user_uid, rec_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % user_uid), bar_settings, 0, true, true);
-    } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");
+    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
 // need to use tab type or item type for api identification
 void IView::openRecomendationsforItemUser() {
-    if (Web::Vk::Api::obj().isConnected()) {
-        IItem * it = mdl -> item(currentIndex());
+    IItem * it = mdl -> item(currentIndex());
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_recommendations)) {
         if (it -> owner().isValid()) {
-            Params bar_settings(dt_site_vk, false, false, false, true, it -> owner().toString(), rec_user);
+            Params bar_settings(it -> dataType(), false, false, false, true, it -> owner().toString(), rec_user);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), bar_settings, 0, true, true);
         }
-    } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");
+    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
 // need to use tab type or item type for api identification
 void IView::openRecomendationsforItem() {
-    if (Web::Vk::Api::obj().isConnected()) {
-        IItem * it = mdl -> item(currentIndex());
+    IItem * it = mdl -> item(currentIndex());
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_recommendations)) {
         if (it -> id().isValid()) {
-            Params bar_settings(dt_site_vk, false, false, false, true, it -> toUid(), rec_song);
+            Params bar_settings(it -> dataType(), false, false, false, true, it -> toUid(), rec_song);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
         }
-    } else QMessageBox::warning(this, "Auth required", "This action required on auth in vk service");
+    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
@@ -352,7 +358,9 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addSeparator();
     }
 
-    if (mdl -> playlistType() == dt_site_vk) {
+    ISource * src = Web::Apis::source(mdl -> playlistType());
+
+    if (src -> hasUserRecomendations()) {
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
@@ -360,11 +368,14 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
-        if (ind.data(ITYPE).toInt() == dt_site_vk) {
+        src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
+
+        if (src -> hasUserRecomendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
+
+        if (src -> hasItemRecomendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
-            menu.addSeparator();
-        }
+        menu.addSeparator();
 
         menu.addAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
         menu.addSeparator();

@@ -7,7 +7,7 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Playlist : public Base {
-            protected:
+            public:
                 QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
 

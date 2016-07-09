@@ -8,25 +8,40 @@ void SoundcloudModel::refresh() {
     QApplication::processEvents();
 
     switch(sttngs.rec_type) {
+        case rec_song: {
+            Soundcloud::Queries::obj().trackRelationsAsync(
+                sttngs.uid,
+                new Func(this, SLOT(proceedJson(QJsonValue &)))
+            );
+        break;}
+
         case rec_set: {
             Soundcloud::Queries::obj().procCustomAsync(
                 sttngs.uid,
-                new Func(this, SLOT(proceedJson(QJsonObject &)))
+                new Func(this, SLOT(proceedJson(QJsonValue &)))
             );
         break;}
 
         default:
             Soundcloud::Queries::obj().objectInfoAsync(
                 sttngs.uid,
-                new Func(this, SLOT(proceedJson(QJsonObject &)))
+                new Func(this, SLOT(proceedJson(QJsonValue &)))
             );
     }
 }
 
-void SoundcloudModel::proceedJson(QJsonObject & hash) {
-    QJsonArray items = hash.value(block_items).toArray();
-    QJsonArray liked_items = hash.value(block_likes).toArray();
-    QJsonArray sets = hash.value(block_sets).toArray();
+void SoundcloudModel::proceedJson(QJsonValue & hash) {
+    QJsonArray items, liked_items, sets;
+
+    if (hash.isArray()) {
+        items = hash.toArray();
+    } else {
+        QJsonObject hash_obj = hash.toObject();
+        items = hash_obj.value(block_items).toArray();
+        liked_items = hash_obj.value(block_likes).toArray();
+        sets = hash_obj.value(block_sets).toArray();
+    }
+
     int total_amount = 0, sets_amount = sets.size(), items_amount = items.size(), likes_amount = liked_items.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + sets_amount + items_amount + likes_amount);

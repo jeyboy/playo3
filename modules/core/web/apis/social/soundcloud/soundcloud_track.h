@@ -7,14 +7,15 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Track : public Base {
-            protected:
+            public:
                 QString trackUrl(const QString & track_id) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_api: {
                             QJsonObject obj = trackInfo(track_id);
-                            return obj.value(QStringLiteral("stream_url")).toString();
+                            QString url = obj.value(QStringLiteral("stream_url")).toString();
+                            if (!url.isEmpty()) return url;
                         }
 
                         case perm_site: {

@@ -9,7 +9,7 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Set : public Base {
-            protected:
+            public:
                 enum SetType { set_new_hot = 1, set_top_50, set_popular };
 
                 QString setTypeToStr(const SetType & stype) {

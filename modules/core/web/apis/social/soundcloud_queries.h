@@ -16,7 +16,7 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }
 
-                QJsonObject objectInfo(const QString & oid) {
+                QJsonValue objectInfo(const QString & oid) {
                     QJsonObject res;
 
                     if (oid[0] == '-')
@@ -32,6 +32,10 @@ namespace Core {
 
                 inline void procCustomAsync(const QString & cutomParams, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::procCustom, cutomParams, func);
+                }
+
+                inline void trackRelationsAsync(const QString & track_id, Func * func) {
+                    ThreadUtils::obj().run((Track *)this, &Track::trackRelations, track_id, SOUNDCLOUD_ITEMS_LIMIT, 0, func);
                 }
 
 

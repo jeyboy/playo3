@@ -47,7 +47,7 @@ namespace Core {
 
         // proc charts / tops and other ...
         virtual inline QMap<QString, QString> customsList() { return QMap<QString, QString>(); }
-        virtual inline QJsonObject procCustom(const QString & /*custom_params*/) { return QJsonObject(); }
+        virtual inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
 
         QToolButton * initButton(QWidget * parent = 0);
 
